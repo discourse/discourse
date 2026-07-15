@@ -1207,6 +1207,9 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
+        push_level:
+          none: "Deaktivert"
+          all: "Aktivert"
         not_supported: "Varsler er ikke støttet på denne nettleseren. Beklager."
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         each_browser_note: "Merk: Du må endre denne innstillingen i hver nettleser du bruker. Alle varsler deaktiveres hvis du setter varsler på pause fra brukermenyen, uavhengig av denne innstillingen."
@@ -3015,6 +3018,7 @@ nb_NO:
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i %{categoryLink} eller <a href='%{latestLink}'>se de nyeste emnene</a>."
       read_more: "Vil du lese mer? <a href='%{categoryLink}'>Se alle kategorier</a> eller <a href='%{latestLink}'>se de nyeste emnene</a>."
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
+      sr_read: "les"
       participant_groups: "Deltakergrupper"
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"

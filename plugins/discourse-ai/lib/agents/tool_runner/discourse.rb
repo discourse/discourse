@@ -394,7 +394,6 @@ module DiscourseAi
                       "top_p",
                       "vision_enabled",
                       "tools",
-                      "max_context_posts",
                       "allow_chat_channel_mentions",
                       "allow_chat_direct_messages",
                       "allow_topic_mentions",

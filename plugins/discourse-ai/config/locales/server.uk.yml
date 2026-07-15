@@ -394,6 +394,8 @@ uk:
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
       thinking: "Мислення"
       tool_pending_approval: "Ця дія потребує схвалення модератора, перш ніж її можна буде виконати."
+      chat_tool_approval:
+        unexpected_error: "сталась непередбачена помилка"
       agents:
         default_llm_required: "Перед увімкненням чату потрібно встановити модель LLM за замовчуванням"
         cannot_delete_system_agent: "Системних агентів неможливо видалити, будь ласка, вимкніть їх."

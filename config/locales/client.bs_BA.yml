@@ -960,6 +960,9 @@ bs_BA:
       notifications: "Obavijest"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Neomogućen"
+          all: "Omogućen"
         not_supported: "Obavjesti nisu podržane na ovom web pregledniku."
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
@@ -2079,6 +2082,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      sr_read: "čitao"
       bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:

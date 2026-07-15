@@ -55,9 +55,10 @@ en:
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
-        access_permission_remove_description: "Remove permission for this group"
-        add_group: "Add group"
-        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
+        access_permission_remove_description: "Remove permission for this grantee"
+        add_group: "Add user or group"
+        mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
+        mandatory: "Mandatory"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -940,6 +941,7 @@ en:
         help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this item from the review queue?"
       settings:
         saved: "Saved"
         save_changes: "Save Changes"
@@ -1741,12 +1743,18 @@ en:
       statistics: "Stats"
       desktop_notifications:
         label: "Live notifications"
+        push_level:
+          title: "Push notifications are…"
+          none: "Disabled"
+          all: "Enabled"
+          chat_only: "Enabled for chat only"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn on notifications"
         perm_denied_btn: "Permission denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable notifications"
         enable: "Enable notifications"
+        enable_failed: "Could not enable notifications. Your browser blocked the request or its push service is unavailable."
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -6922,6 +6930,31 @@ en:
               title: "Posts & topics"
             stats_and_thresholds:
               title: "Stats & thresholds"
+        category_management:
+          title: "Category management"
+          header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
+          keywords: "categories|category types|discussion|category management"
+          tabs:
+            settings: "Settings"
+          types:
+            unavailable: "The category type %{categoryType} is not available."
+            all:
+              title: "All categories"
+              description: "All categories across every configured category type."
+          filter_placeholder: "Filter categories"
+          no_results: "No %{type} categories found."
+          open_settings: "Open settings"
+          table:
+            category: "Category"
+            visibility: "Visibility"
+            topics: "Topics"
+          visibility:
+            public: "Public"
+            restricted: "Restricted"
+          visibility_filter:
+            all: "All categories"
+            public: "Public categories"
+            restricted: "Restricted categories"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"

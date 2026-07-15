@@ -99,6 +99,30 @@ RSpec.describe Category do
     end
   end
 
+  describe ".matching_name_or_slug_ref" do
+    fab!(:guides_category) { Fabricate(:category, name: "Alpha Guides", slug: "alpha-guides") }
+    fab!(:support_category) { Fabricate(:category, name: "Support", slug: "support") }
+    fab!(:bugs_subcategory) do
+      Fabricate(:category, name: "Bug reports", slug: "bugs", parent_category: support_category)
+    end
+
+    it "matches category names, slugs, and parent slug refs" do
+      expect(Category.matching_name_or_slug_ref("alpha")).to contain_exactly(guides_category)
+      expect(Category.matching_name_or_slug_ref("#alpha-guides")).to contain_exactly(
+        guides_category,
+      )
+      expect(Category.matching_name_or_slug_ref("support/bugs")).to contain_exactly(
+        bugs_subcategory,
+      )
+    end
+
+    it "returns the current relation when the filter is blank" do
+      expect(
+        Category.where(id: guides_category.id).matching_name_or_slug_ref(" "),
+      ).to contain_exactly(guides_category)
+    end
+  end
+
   describe "#topic_posting_review_mode" do
     fab!(:category)
     fab!(:group)

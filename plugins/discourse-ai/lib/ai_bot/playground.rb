@@ -306,16 +306,12 @@ module DiscourseAi
 
         context_post_ids = nil if !channel.direct_message_channel?
 
-        max_chat_messages = 40
-        if bot.agent.class.respond_to?(:max_context_posts)
-          max_chat_messages = bot.agent.class.max_context_posts || 40
-        end
-
         if !channel.direct_message_channel?
           # we are interacting via mentions ... strip mention
           instruction_message = message.message.gsub(/@#{bot.bot_user.username}/i, "").strip
         end
 
+        context_llm = bot.llm
         context =
           DiscourseAi::Agents::BotContext.new(
             participants: participants,
@@ -330,7 +326,9 @@ module DiscourseAi
                 include_image_uploads: include_image_uploads?,
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
-                max_messages: max_chat_messages,
+                max_messages: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
+                context_token_budget: context_token_budget(context_llm),
+                tokenizer: context_llm.tokenizer,
                 bot_user_ids: available_bot_user_ids,
                 instruction_message: instruction_message,
               ),
@@ -370,6 +368,9 @@ module DiscourseAi
 
         reply = streamer.reply
         if new_prompts.length > 1 && reply
+          # Note: messages_from_chat does not read these back, so compressed
+          # context checkpoints only persist across turns for post-based
+          # replies; chat rebuilds context from the raw messages each turn.
           ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: new_prompts)
         end
 
@@ -485,12 +486,7 @@ module DiscourseAi
             end
           )
 
-        # safeguard
-        max_context_posts = 40
-        if bot.agent.class.respond_to?(:max_context_posts)
-          max_context_posts = bot.agent.class.max_context_posts || 40
-        end
-
+        context_llm = bot.llm
         context =
           DiscourseAi::Agents::BotContext.new(
             post: post,
@@ -502,7 +498,9 @@ module DiscourseAi
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 post,
                 style: context_style,
-                max_posts: max_context_posts,
+                max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
+                context_token_budget: context_token_budget(context_llm),
+                tokenizer: context_llm.tokenizer,
                 include_image_uploads: include_image_uploads?,
                 include_document_uploads: include_document_uploads?,
                 allowed_attachment_types: bot.model.allowed_attachment_types,
@@ -739,6 +737,10 @@ module DiscourseAi
         if reply_post && post.post_number == 1 && post.topic.private_message? && auto_set_title
           title_playground(reply_post, post.user)
         end
+      end
+
+      def context_token_budget(llm)
+        DiscourseAi::Agents::Bot.context_token_budget(llm, bot.agent.class.max_turn_tokens)
       end
 
       def available_bot_usernames

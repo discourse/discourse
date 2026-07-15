@@ -271,8 +271,6 @@ tr_TR:
       no_public_channels_cta: "Kanallara göz at"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       chat_notifications_title: "Sohbet bildirimleri"
-      only_chat_push_notifications:
-        title: "Yalnızca sohbet anlık bildirimleri gönder"
       personalization_title: "Kişiselleştirme"
       ignore_channel_wide_mention:
         title: "Kanal genelindeki bahsetmeleri yok say"

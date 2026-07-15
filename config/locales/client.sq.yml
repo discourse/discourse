@@ -1233,6 +1233,9 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
+        push_level:
+          none: "E çaktivizuar"
+          all: "Aktivizuar"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
@@ -3081,6 +3084,7 @@ sq:
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfletoni tema të tjera në %{categoryLink} ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       read_more: "Dëshironi të lexoni më shumë? <a href='%{categoryLink}'>Shfletoni të gjitha kategoritë</a> ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       unread_indicator: "Asnjë anëtar nuk e ka lexuar ende postimin e fundit të kësaj teme."
+      sr_read: "lexuar"
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"

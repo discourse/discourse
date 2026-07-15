@@ -391,24 +391,25 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "interface"
+    area: "categories|interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "interface"
+    area: "categories|interface"
   category_colors:
     client: true
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
-    area: "interface"
+    area: "categories|interface"
   max_category_nesting:
     client: true
     default: 2
     min: 2
     max: 3
     hidden: true
+    area: "categories"
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -446,11 +447,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
-    area: "interface"
+    area: "categories|interface"
   fixed_category_positions_on_create:
     client: true
     default: false
-    area: "interface"
+    area: "categories|interface"
   enable_badges:
     client: true
     default: true
@@ -1270,6 +1271,7 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+    area: "group_permissions|categories"
   max_automatic_membership_email_domains:
     default: 50
     hidden: true
@@ -1606,7 +1608,7 @@ posting:
   default_subcategory_on_read_only_category:
     client: true
     default: false
-    area: "posts_and_topics"
+    area: "posts_and_topics|categories"
   hide_disabled_create_topic_button:
     client: true
     default: false
@@ -2043,7 +2045,7 @@ email:
   digest_suppress_categories:
     type: category_list
     default: ""
-    area: "email"
+    area: "email|categories"
   digest_suppress_tags:
     type: tag_list
     default: ""
@@ -3459,7 +3461,7 @@ navigation:
     type: category_list
     default: ""
     client: true
-    area: "navigation"
+    area: "navigation|categories"
   default_navigation_menu_tags:
     type: tag_list
     default: ""
@@ -3653,10 +3655,12 @@ search:
     default: 0.8
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+    area: "categories"
   category_search_priority_high_weight:
     default: 1.2
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+    area: "categories"
   search_page_size:
     default: 50
     hidden: true
@@ -3693,7 +3697,7 @@ uncategorized:
   header_dropdown_category_count:
     client: true
     default: 8
-    area: "navigation"
+    area: "navigation|categories"
 
   slug_generation_method:
     default: "ascii"
@@ -3846,21 +3850,25 @@ uncategorized:
     default: -1
     hidden: true
     client: true
+    area: "categories"
   meta_category_id:
     default: -1
     hidden: true
+    area: "categories"
   staff_category_id:
     default: -1
     hidden: true
+    area: "categories"
   uncategorized_category_id:
     default: -1
     hidden: true
+    area: "categories"
   default_composer_category:
     client: true
     type: category
     default: ""
     validator: "DefaultComposerCategoryValidator"
-    area: "posts_and_topics"
+    area: "posts_and_topics|categories"
 
   moderator_guide_topic:
     type: "topic"
@@ -4049,6 +4057,7 @@ uncategorized:
     default: false
     hidden: true
     client: true
+    area: "categories"
 
   max_topic_query_page_param:
     default: 2000
@@ -4198,27 +4207,27 @@ user_preferences:
   default_categories_watching:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_tracking:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_muted:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_watching_first_post:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_normal:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   mute_all_categories_by_default:
     default: false
     client: true
-    area: "user_defaults"
+    area: "categories|user_defaults"
 
   default_tags_watching:
     type: tag_list
@@ -4446,10 +4455,10 @@ tags:
     area: "categories_and_tags"
   create_post_for_category_and_tag_changes:
     default: false
-    area: "categories_and_tags"
+    area: "categories_and_tags|categories"
   automatically_clean_unused_tags:
     default: false
-    area: "categories_and_tags"
+    area: "categories_and_tags|categories"
 
 dashboard:
   dashboard_hidden_reports:
@@ -4542,6 +4551,14 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
+  prioritize_recently_used_tags:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true

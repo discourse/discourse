@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import {
+  stripWordLangAttributes,
   stripWordReviewMarkup,
   transformWordHtml,
   transformWordLists,
@@ -295,5 +296,52 @@ module("Unit | Static | ProseMirror | Extensions | word-paste", function () {
     stripWordReviewMarkup(doc.body);
 
     assert.strictEqual(doc.querySelectorAll("a.msocomanchor").length, 0);
+  });
+
+  test("strips the document-language lang attribute from Word for the web runs", function (assert) {
+    const html = `<div class="OutlineElement"><p class="Paragraph"><span
+      class="TextRun" lang="EN-GB"><span class="NormalTextRun"
+      lang="EN-GB">Hello</span></span></p></div>`;
+    const doc = createDoc(transformWordHtml(html));
+
+    assert.strictEqual(doc.querySelectorAll("[lang]").length, 0);
+    assert.true(doc.body.textContent.includes("Hello"));
+  });
+
+  test("does not strip lang from non-Word HTML", function (assert) {
+    const html = `<p><span lang="ja">日本語</span></p>`;
+    const doc = createDoc(transformWordHtml(html));
+
+    assert.strictEqual(doc.querySelectorAll("span[lang='ja']").length, 1);
+  });
+
+  test("does not treat a generic TextRun class as Word (no content loss)", function (assert) {
+    const html = `<p class="TextRun">Keep <del>this</del> <span lang="fr">bonjour</span></p>`;
+    const doc = createDoc(transformWordHtml(html));
+
+    assert.strictEqual(doc.querySelectorAll("del").length, 1);
+    assert.strictEqual(doc.querySelectorAll("span[lang='fr']").length, 1);
+  });
+
+  test("keeps an intentional lang span inside a Word paste", function (assert) {
+    const html = `<div class="OutlineElement"><p class="Paragraph">
+      <span class="TextRun" lang="EN-GB">Note </span>
+      <span lang="fr">bonjour</span>
+    </p></div>`;
+    const doc = createDoc(transformWordHtml(html));
+
+    assert.strictEqual(doc.querySelectorAll("span.TextRun[lang]").length, 0);
+    assert.strictEqual(doc.querySelectorAll("span[lang='fr']").length, 1);
+  });
+
+  test("stripWordLangAttributes modifies DOM in place", function (assert) {
+    const doc = createDoc(
+      `<p><span class="TextRun" lang="EN-GB">Text</span></p>`
+    );
+
+    stripWordLangAttributes(doc.body);
+
+    assert.strictEqual(doc.querySelectorAll("[lang]").length, 0);
+    assert.true(doc.body.textContent.includes("Text"));
   });
 });

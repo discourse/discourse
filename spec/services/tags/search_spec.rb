@@ -78,6 +78,49 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "with prioritizeRecentTags on the blank composer dropdown" do
+      fab!(:popular_tag) { Fabricate(:tag, name: "popular", public_topic_count: 100) }
+      fab!(:recent_tag_a) { Fabricate(:tag, name: "recenta") }
+      fab!(:recent_tag_b) { Fabricate(:tag, name: "recentb") }
+
+      let(:params) { { prioritizeRecentTags: true, filterForInput: true } }
+
+      before { SiteSetting.prioritize_recently_used_tags = true }
+
+      def tag_names(call_params, guardian: Guardian.new(user))
+        described_class.call(params: call_params, guardian:)[:tags].map { |tag| tag[:name] }
+      end
+
+      it "surfaces tags from the user's recent topics first, most recently used first" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+        Fabricate(:topic, user: user, tags: [recent_tag_b])
+
+        names = tag_names(params)
+        expect(names.first(2)).to eq(%w[recentb recenta])
+        expect(names.index("recentb")).to be < names.index("popular")
+      end
+
+      it "falls back to popularity ordering when the upcoming change is disabled" do
+        SiteSetting.prioritize_recently_used_tags = false
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+
+        expect(tag_names(params).first).to eq("popular")
+      end
+
+      it "falls back to popularity ordering for anonymous users" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+
+        expect(tag_names(params, guardian: Guardian.new).first).to eq("popular")
+      end
+
+      it "does not reorder once the user starts typing a term" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+        Fabricate(:topic, user: user, tags: [recent_tag_b])
+
+        expect(tag_names(params.merge(q: "recent"))).to eq(%w[recenta recentb])
+      end
+    end
+
     context "with a category" do
       fab!(:category)
 

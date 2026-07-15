@@ -172,7 +172,10 @@ export default class PostMetaDataPosterName extends Component {
                 user=this.user
               }}
             >
-              <DUserLink @user={{this.user}}>
+              <DUserLink
+                @ariaLabel={{i18n "user.profile_possessive" username=this.name}}
+                @user={{this.user}}
+              >
                 {{this.name}}
                 {{#if this.showGlyph}}
                   {{#if (or this.user.moderator @post.group_moderator)}}
@@ -204,7 +207,7 @@ export default class PostMetaDataPosterName extends Component {
                     user=this.user
                   }}
                 >
-                  <DUserLink @user={{this.user}}>
+                  <DUserLink @ariaHidden={{true}} @user={{this.user}}>
                     {{#if this.nameFirst}}
                       {{formatUsername this.user.username}}
                     {{else}}

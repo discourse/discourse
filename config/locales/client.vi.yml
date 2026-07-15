@@ -1410,6 +1410,9 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
+        push_level:
+          none: "Vô hiệu hóa"
+          all: "Đã bật"
         not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
         each_browser_note: "Lưu ý: Bạn phải thay đổi cài đặt này trên mọi trình duyệt bạn sử dụng. Tất cả thông báo sẽ bị tắt nếu bạn tạm dừng thông báo từ menu người dùng, bất kể cài đặt này như thế nào."
@@ -3356,6 +3359,7 @@ vi:
       read_more_in_category: "Muốn đọc thêm? Duyệt những chủ đề khác trong %{categoryLink} hoặc <a href='%{latestLink}'>xem những chủ đề mới nhất</a>."
       read_more: "Bạn muốn đọc thêm? <a href='%{categoryLink}'>Duyệt tất cả chuyên mục</a> hoặc <a href='%{latestLink}'>xem các chủ đề mới nhất</a>."
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
+      sr_read: "đọc"
       participant_groups: "Các nhóm tham gia"
       reply_count_link:
         other: "%{count} trả lời, chuyển đến tút đầu tiên"
@@ -5324,7 +5328,6 @@ vi:
             apple_touch_icon:
               title: "Icon Apple touch"
               description: "Icon này được sử dụng cho các thiết bị cảm ứng của Apple. Nếu để trống, large_icon sẽ được sử dụng."
-              help_text: "Kích thước đề xuất là 180x180 pixel. Không nên sử dụng nền trong suốt."
             digest_logo:
               title: "Logo digest"
               description: "Hình ảnh logo thay thế được sử dụng ở đầu phần tóm tắt email của trang web bạn. Nếu để trống, hình ảnh từ cài đặt `logo` sẽ được sử dụng."

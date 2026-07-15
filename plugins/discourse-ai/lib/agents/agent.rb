@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def execution_mode
-          "default"
-        end
-
         def max_turn_tokens
           nil
         end
@@ -115,6 +111,7 @@ module DiscourseAi
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
+            Tools::ChangeSiteSetting,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,

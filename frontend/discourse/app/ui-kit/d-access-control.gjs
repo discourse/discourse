@@ -1,16 +1,23 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import ComboBox from "discourse/select-kit/components/combo-box";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import { prioritizeNameFallback } from "discourse/lib/settings";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DAccessControlGranteeChooser, {
+  granteeValue,
+  groupGranteeResult,
+} from "./d-access-control-grantee-chooser";
 
 const EDIT_PERMISSION = "edit";
 const READ_ONLY_PERMISSION = "view";
@@ -19,6 +26,10 @@ const READ_ONLY_DEFAULT_AUTO_GROUPS = [
   AUTO_GROUPS.everyone.id,
   AUTO_GROUPS.trust_level_0.id,
 ];
+const ROW_TYPE_SORT_ORDER = {
+  group: 0,
+  user: 1,
+};
 const REMOVE_ACTION = {
   id: "remove",
   name: i18n("access_control.manage.access_permission_remove"),
@@ -48,10 +59,26 @@ function defaultPermissions() {
   ];
 }
 
+function rowTypeSortOrder(type) {
+  return ROW_TYPE_SORT_ORDER[type] ?? 2;
+}
+
+const AccessControlPermissionTrigger = <template>
+  <button
+    type="button"
+    class="btn btn-default d-access-control__permission"
+    disabled={{@disabled}}
+    ...attributes
+  >
+    <span class="d-button-label">
+      {{@label}}
+    </span>
+    {{dIcon "angle-down"}}
+  </button>
+</template>;
+
 export default class DAccessControl extends Component {
   @service site;
-
-  @tracked addingGroup = false;
 
   constructor() {
     super(...arguments);
@@ -75,34 +102,7 @@ export default class DAccessControl extends Component {
       this.args.transformPermissionOptions?.(defaultPermissions()) ||
       defaultPermissions();
 
-    return [
-      ...permissions.sort((a, b) => a.level - b.level),
-      {
-        ...REMOVE_ACTION,
-        classNames:
-          "d-access-control__permission-divider d-access-control__permission-remove",
-      },
-    ];
-  }
-
-  get availableGroups() {
-    const taken = new Set(this.selectedGroupIds);
-    return (this.args.groups || [])
-      .filter((group) => !taken.has(group.id))
-      .sort((a, b) => {
-        if (a.automatic !== b.automatic) {
-          return a.automatic ? -1 : 1;
-        }
-
-        return (a.full_name || a.name).localeCompare(b.full_name || b.name);
-      });
-  }
-
-  // TODO (martin) Handle user type ACLs here in next PR
-  get selectedGroupIds() {
-    return this.acl
-      .filter((entry) => entry.type === "group")
-      .map((entry) => entry.id);
+    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
 
   /**
@@ -146,111 +146,188 @@ export default class DAccessControl extends Component {
     }
 
     const mandatoryEntryKeys = new Set(
-      this.mandatoryAcl.map((entry) => `${entry.type}-${entry.id}`)
-    );
-    const acl = (this.args.acl || []).filter(
-      (entry) => !mandatoryEntryKeys.has(`${entry.type}-${entry.id}`)
+      this.mandatoryAcl.map((entry) => granteeValue(entry.type, entry.id))
     );
 
-    // TODO (martin) Handle user type ACLs here in next PR
+    // The passed in ACL (if any) without the mandatory entries, which are
+    // added back in below.
+    const resolvedAcl = (this.args.acl || []).filter(
+      (entry) => !mandatoryEntryKeys.has(granteeValue(entry.type, entry.id))
+    );
+
     this.mandatoryAcl.forEach((entry) => {
-      if (entry.type !== "group") {
-        return;
-      }
-
-      const group = (this.args.groups || []).find((g) => g.id === entry.id);
-      if (group) {
-        acl.push({
-          type: "group",
-          id: entry.id,
-          display_name: group.full_name || group.name,
-          permission: entry.permission,
-          metadata: {
-            auto_group: group.automatic,
-          },
-          mandatory: true,
-        });
+      // NOTE (martin) This is groups only for now...not sure we will need mandatory
+      // user ACLs, but we can figure that out later.
+      if (entry.type === "group") {
+        const group = (this.args.groups || []).find((g) => g.id === entry.id);
+        if (group) {
+          resolvedAcl.push({
+            type: "group",
+            id: entry.id,
+            name: group.name,
+            display_name: group.full_name || group.name,
+            permission: entry.permission,
+            metadata: {
+              auto_group: group.automatic,
+            },
+            mandatory: true,
+          });
+        }
       }
     });
 
-    return acl;
+    return resolvedAcl;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    return this.acl
-      .map((entry) => ({
-        key: `${entry.type}-${entry.id}-${entry.permission}`,
-        id: entry.id,
-        permission: entry.permission,
-        display_name: entry.display_name,
-        type: entry.type,
-        mandatory: entry.mandatory,
-      }))
+    const mappedAcl = this.acl.map((entry) => ({
+      key: `${granteeValue(entry.type, entry.id)}:${entry.permission}`,
+      id: entry.id,
+      permission: entry.permission,
+      display_name: entry.display_name,
+      sort_name: entry.sort_name || entry.name || entry.display_name,
+      username: entry.username,
+      name: entry.name,
+      avatar_template: entry.avatar_template,
+      type: entry.type,
+      mandatory: Boolean(entry.mandatory),
+    }));
+
+    return mappedAcl.sort((a, b) => {
+      if (a.mandatory !== b.mandatory) {
+        return a.mandatory ? -1 : 1;
+      }
+
+      const nameSort = (a.sort_name || "").localeCompare(b.sort_name || "");
+
+      if (a.mandatory && b.mandatory) {
+        return nameSort;
+      }
+
+      if (a.type !== b.type) {
+        return rowTypeSortOrder(a.type) - rowTypeSortOrder(b.type);
+      }
+
+      return nameSort;
+    });
+  }
+
+  /**
+   * The default available grantees which are shown in the preloaded
+   * search results for DAccessControlGranteeChooser. This is used to show
+   * the available groups which can be added to the ACL, with users
+   * gated behind an async search request.
+   */
+  get defaultAvailableGrantees() {
+    return this.availableGroups.map(groupGranteeResult);
+  }
+
+  get availableGroups() {
+    const takenGroupIds = new Set(
+      this.acl
+        .filter((entry) => entry.type === "group")
+        .map((entry) => entry.id)
+    );
+
+    return (this.args.groups || [])
+      .filter((group) => !takenGroupIds.has(group.id))
       .sort((a, b) => {
-        if (a.mandatory !== b.mandatory) {
-          return a.mandatory ? -1 : 1;
+        if (a.automatic !== b.automatic) {
+          return a.automatic ? -1 : 1;
         }
 
-        return (a.display_name || "").localeCompare(b.display_name || "");
+        return (a.full_name || a.name).localeCompare(b.full_name || b.name);
       });
   }
 
-  @action
-  startAdding() {
-    this.addingGroup = true;
+  /**
+   * Grantees which should not show in the search results for
+   * DAccessControlGranteeChooser. This is used to prevent users from adding the
+   * same grantee (a user or group) multiple times.
+   */
+  get excludedGrantees() {
+    return this.acl.map((entry) => granteeValue(entry.type, entry.id));
   }
 
+  /**
+   * Fired when a grantee is chosen from the DAccessControlGranteeChooser
+   * search results.
+   */
   @action
-  onGroupChosen(groupId) {
-    if (groupId == null) {
-      this.addingGroup = false;
-      return;
-    }
+  onGranteeChosen(_value, selectedGrantees) {
+    const selectedGrantee = selectedGrantees?.[0];
 
-    const selectedGroup = (this.args.groups || []).find(
-      (group) => group.id === groupId
-    );
+    const isReadOnlyDefaultGroup =
+      selectedGrantee.aclType === "group" &&
+      READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGrantee.aclId);
 
     const newPermission = {
-      id: selectedGroup.id,
-      display_name: selectedGroup.full_name || selectedGroup.name,
-      type: "group",
-      permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGroup.id)
+      id: selectedGrantee.aclId,
+      type: selectedGrantee.aclType,
+      permission: isReadOnlyDefaultGroup
         ? READ_ONLY_PERMISSION
         : EDIT_PERMISSION,
-      metadata: {
-        auto_group: selectedGroup.automatic,
-      },
     };
+
+    if (selectedGrantee.aclType === "group") {
+      newPermission.name = selectedGrantee.id;
+      newPermission.display_name =
+        selectedGrantee.full_name || selectedGrantee.id;
+      newPermission.metadata = {
+        auto_group: selectedGrantee.automatic,
+      };
+    }
+
+    if (selectedGrantee.aclType === "user") {
+      const sortName =
+        selectedGrantee.sort_name ||
+        selectedGrantee.name ||
+        selectedGrantee.display_name ||
+        selectedGrantee.username;
+
+      newPermission.username = selectedGrantee.username;
+      newPermission.name = selectedGrantee.name;
+      newPermission.sort_name = sortName;
+      newPermission.display_name = prioritizeNameFallback(
+        selectedGrantee.name,
+        selectedGrantee.username
+      );
+      newPermission.avatar_template = selectedGrantee.avatar_template;
+    }
 
     const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
-    this.addingGroup = false;
   }
 
-  // TODO (martin) Handle user type ACLs here in next PR
   @action
-  onPermissionChange(groupId, permission) {
+  onRowPermissionChange(close, granteeType, granteeId, permission) {
+    close?.();
+
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.acl.filter(
-          (entry) => !(entry.type === "group" && entry.id === groupId)
+          (entry) => !(entry.type === granteeType && entry.id === granteeId)
         )
       );
       return;
     }
 
     const next = this.acl.map((entry) =>
-      entry.type === "group" && entry.id === groupId
+      entry.type === granteeType && entry.id === granteeId
         ? { ...entry, permission }
         : entry
     );
+
     this.args.onChange(next);
   }
 
+  /**
+   * Certain ACL permissions are banned so we need to filter these out
+   * based on grantee type and the available permissions for a row.
+   */
   @action
   excludeBannedPermissions(permissions, grantee) {
     if (!this.bannedAcl.length) {
@@ -267,74 +344,133 @@ export default class DAccessControl extends Component {
     });
   }
 
+  @action
+  permissionLabel(permissionId) {
+    return this.permissionOptions.find((option) => option.id === permissionId)
+      .name;
+  }
+
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
 
   <template>
     <div class="d-access-control">
+      <DAccessControlGranteeChooser
+        class="d-access-control__chooser"
+        @value={{null}}
+        @onChange={{this.onGranteeChosen}}
+        @labelProperty="name"
+        @filterPlaceholder="access_control.manage.add_group"
+        @options={{hash
+          aclTarget=@aclTarget
+          customSearchOptions=(hash
+            defaultSearchResults=this.defaultAvailableGrantees
+          )
+          excludedGrantees=this.excludedGrantees
+          filterable=true
+          includeGroups=true
+          maximum=1
+          none="access_control.manage.add_group"
+        }}
+      />
       {{#if this.rows.length}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
             <div
               class={{dConcatClass
                 "d-access-control__row"
+                (if (eq row.type "user") "--user" "--group")
                 (if row.mandatory "--mandatory")
               }}
               data-row-type={{row.type}}
               data-row-id={{row.id}}
             >
-              <span class="d-access-control__group-name">{{#if row.mandatory}}
-                  <DTooltip
-                    @content={{i18n
-                      "access_control.manage.mandatory_acl_tooltip"
-                    }}
-                  >
-                    <:trigger>
-                      {{dIcon "lock"}}
-                    </:trigger>
-                  </DTooltip>
-                {{/if}}
-                {{row.display_name}}
+              <span class="d-access-control__item">
+                <span class="d-access-control__item-icon">
+                  {{#if (eq row.type "user")}}
+                    {{dAvatar row imageSize="small"}}
+                  {{/if}}
+                  {{#if (eq row.type "group")}}
+                    {{dIcon "user-group"}}
+                  {{/if}}
+                </span>
+                <span class="d-access-control__item-name">
+                  {{row.display_name}}
+                  {{#if row.mandatory}}
+                    <DTooltip
+                      @content={{i18n
+                        "access_control.manage.mandatory_acl_tooltip"
+                        name=row.display_name
+                      }}
+                    >
+                      <:trigger>
+                        <span class="d-access-control__tooltip">{{dIcon "lock"}}
+                          {{i18n "access_control.manage.mandatory"}}
+                        </span>
+                      </:trigger>
+                    </DTooltip>
+                  {{/if}}
+                </span>
               </span>
-              <DropdownSelectBox
-                class="d-access-control__permission"
-                @value={{row.permission}}
-                @content={{this.excludeBannedPermissions
-                  this.permissionOptions
-                  row
-                }}
-                @onChange={{fn this.onPermissionChange row.id}}
-                @options={{hash
-                  showCaret=true
-                  showFullTitle=true
+              <DMenu
+                @identifier="d-access-control__permission-menu"
+                @modalForMobile={{true}}
+                @autofocus={{false}}
+                @triggerComponent={{component
+                  AccessControlPermissionTrigger
+                  label=(this.permissionLabel row.permission)
                   disabled=row.mandatory
                 }}
-              />
+                data-permission={{row.permission}}
+              >
+                <:content as |args|>
+                  <DDropdownMenu as |dropdown|>
+                    {{#each
+                      (this.excludeBannedPermissions this.permissionOptions row)
+                      key="id"
+                      as |option|
+                    }}
+                      {{#if (eq option.id "remove")}}
+                        <dropdown.divider />
+                      {{/if}}
+                      <dropdown.item>
+                        <DButton
+                          class={{dConcatClass
+                            "d-access-control__permission-option"
+                            "--with-description"
+                            (if (eq option.id "remove") "--remove")
+                            (if (eq option.id row.permission) "-selected")
+                          }}
+                          data-permission-id={{option.id}}
+                          @action={{fn
+                            this.onRowPermissionChange
+                            args.close
+                            row.type
+                            row.id
+                            option.id
+                          }}
+                        >
+                          <div class="d-access-control__permission-texts">
+                            <span class="d-access-control__permission-label">
+                              {{option.name}}
+                            </span>
+                            {{#if option.description}}
+                              <span
+                                class="d-access-control__permission-description"
+                              >
+                                {{option.description}}
+                              </span>
+                            {{/if}}
+                          </div>
+                        </DButton>
+                      </dropdown.item>
+                    {{/each}}
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
             </div>
           {{/each}}
         </div>
-      {{/if}}
-
-      {{#if this.addingGroup}}
-        <ComboBox
-          class="d-access-control__chooser"
-          @value={{null}}
-          @content={{this.availableGroups}}
-          @onChange={{this.onGroupChosen}}
-          @labelProperty="full_name"
-          @options={{hash
-            none="access_control.manage.add_group"
-            expandedOnInsert=true
-            filterable=true
-          }}
-        />
-      {{else}}
-        <DButton
-          class="d-access-control__add btn-default"
-          @icon="plus"
-          @label="access_control.manage.add_group"
-          @action={{this.startAdding}}
-        />
       {{/if}}
     </div>
   </template>

@@ -10,14 +10,46 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class DFilterInput extends Component {
+interface DFilterInputSignature {
+  Args: {
+    /** The current input value. */
+    value?: string;
+
+    /** Handler fired on each `input` event. */
+    filterAction?: (event: Event) => void;
+
+    /** Handler fired when the clear button is clicked. */
+    onClearInput?: (event: Event) => void;
+
+    /** Icons displayed inside the input. */
+    icons?: {
+      /** ID of the icon displayed at the start of the input. */
+      left?: string;
+
+      /** ID of the icon displayed at the end of the input. */
+      right?: string;
+    };
+
+    /** Extra class applied to the container wrapping the input. */
+    containerClass?: string;
+  };
+
+  Element: HTMLInputElement;
+
+  Blocks: {
+    /** Content rendered inside the container, after the input. */
+    default: [];
+  };
+}
+
+export default class DFilterInput extends Component<DFilterInputSignature> {
   @tracked isFocused = false;
 
-  registerInput = modifier((element) => {
-    this.input = element;
+  registerInput = modifier((element: HTMLInputElement) => {
+    this.#input = element;
   });
 
-  focusState = modifier((element) => {
+  focusState = modifier((element: HTMLInputElement) => {
     const focusInHandler = () => {
       this.isFocused = true;
     };
@@ -34,10 +66,12 @@ export default class DFilterInput extends Component {
     };
   });
 
+  #input?: HTMLInputElement;
+
   @action
-  onClearInput(event) {
-    this.args.onClearInput(event);
-    this.input?.focus();
+  onClearInput(event: Event) {
+    this.args.onClearInput?.(event);
+    this.#input?.focus();
   }
 
   <template>

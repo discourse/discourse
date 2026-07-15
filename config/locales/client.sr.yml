@@ -1221,6 +1221,9 @@ sr:
       statistics: "Statistike"
       desktop_notifications:
         label: "Obaveštenja uživo"
+        push_level:
+          none: "Isključeno"
+          all: "Omogućeno"
         not_supported: "Notifikacije nisu podržane u ovom pregledaču. Izvinite."
         perm_default: "Uključi obaveštenja"
         perm_denied_btn: "Dozvola odbijena"
@@ -2078,6 +2081,7 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
+      sr_read: "pročitano"
       suggest_create_topic: Spremni da <a href>otvorite novu temu?</a>
       deleted: "Tema je obrisana"
       slow_mode_update:

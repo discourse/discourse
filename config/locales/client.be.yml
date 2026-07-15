@@ -952,6 +952,9 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
+      desktop_notifications:
+        push_level:
+          none: "Адключаныя"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -1518,6 +1521,7 @@ be:
       back_to_list: "Вярнуцца да спісу тэм"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
+      sr_read: "счытванне"
       deleted: "Тэма была выдалена"
       slow_mode_update:
         enable: "Уключыць"

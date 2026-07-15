@@ -27,7 +27,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { clipboardHelpers } from "discourse/lib/utilities";
+import { clipboardHelpers, slugify } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
@@ -207,6 +207,16 @@ export default class AiBotConversations extends Component {
       // Fail open - allow usage if credit check fails
       this.creditStatus = null;
     }
+  }
+
+  @action
+  onSelectionChanged({ agentName, llmName }) {
+    if (!this.controller) {
+      return;
+    }
+
+    this.controller.agent = agentName ? slugify(agentName) || agentName : null;
+    this.controller.llm = llmName ? slugify(llmName) || llmName : null;
   }
 
   @action
@@ -396,6 +406,7 @@ export default class AiBotConversations extends Component {
         @setTargetRecipient={{this.setTargetRecipient}}
         @agentName={{@controller.agent}}
         @llmName={{@controller.llm}}
+        @onSelectionChanged={{this.onSelectionChanged}}
       />
 
       <div class="ai-bot-conversations__content-wrapper">
