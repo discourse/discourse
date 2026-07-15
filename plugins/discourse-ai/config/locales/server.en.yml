@@ -177,7 +177,7 @@ en:
       description: "This report provides sentiment analysis for posts, grouped by category, with positive, negative, and neutral scores for each post and category."
     overall_sentiment:
       title: "Overall sentiment"
-      description: 'The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Classified with "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      description: "The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Depending on the selected sentiment classification method, posts are classified with either the configured sentiment classification model ('cardiffnlp/twitter-roberta-base-sentiment-latest') or the configured sentiment classification agent."
       xaxis: "Positive(%)"
       yaxis: "Date"
     emotion_admiration:
