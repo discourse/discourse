@@ -221,6 +221,24 @@ module DiscourseWorkflows
     USER_ADDED_TO_GROUP_SCHEMA = group_membership_event("added")
     USER_REMOVED_FROM_GROUP_SCHEMA = group_membership_event("removed")
 
+    BADGE_PROPERTIES = JSON.parse(<<~JSON).freeze
+      {
+        "id": { "type": "integer" },
+        "name": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "badge_type_id": { "type": "integer" },
+        "icon": { "type": ["string", "null"] },
+        "image_url": { "type": ["string", "null"] },
+        "grant_count": { "type": "integer" },
+        "system": { "type": "boolean" },
+        "multiple_grant": { "type": "boolean" }
+      }
+    JSON
+
+    BADGE_SCHEMA = entity("badge", BADGE_PROPERTIES, "Badge involved in the grant event")
+    BADGE_GRANTED_SCHEMA =
+      document(USER_SCHEMA.fetch("properties").merge(BADGE_SCHEMA.fetch("properties")))
+
     class << self
       def normalize(schema)
         return {} if schema.blank?
