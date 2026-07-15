@@ -15,14 +15,4 @@ RSpec.describe "Enable Topic Voting badges by default upcoming change" do
       expect(Badge.where(name: badge_names).pluck(:enabled)).to all(eq(true))
     end
   end
-
-  describe "conditional display" do
-    it "is displayed on sites where the Topic Voting plugin is enabled" do
-      SiteSetting.topic_voting_enabled = true
-
-      expect(
-        UpcomingChanges::ConditionalDisplay.should_display?(:enable_topic_voting_badges),
-      ).to eq(true)
-    end
-  end
 end

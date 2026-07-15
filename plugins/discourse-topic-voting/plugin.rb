@@ -227,10 +227,6 @@ after_initialize do
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
-  register_upcoming_change_conditional_display(:enable_topic_voting_badges) do
-    SiteSetting.topic_voting_enabled
-  end
-
   on(:upcoming_change_enabled) do |setting_name|
     if setting_name == :enable_topic_voting_badges
       DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: true)
