@@ -12,6 +12,10 @@ module DiscourseAi
       def valid_value?(val)
         return true if val.to_s == DEFAULT_AGENT_ID
 
+        valid_agent_value?(val)
+      end
+
+      def valid_agent_value?(val)
         agent = AiAgent.find_by(id: val.to_i)
         return invalid(:agent_missing) if agent.blank?
 

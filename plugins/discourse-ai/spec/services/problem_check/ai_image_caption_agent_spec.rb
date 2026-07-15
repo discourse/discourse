@@ -14,12 +14,13 @@ describe ProblemCheck::AiImageCaptionAgent do
     SiteSetting.remove_override!(:ai_image_caption_agent)
     SiteSetting.refresh!
     enable_current_plugin
-    SiteSetting.ai_post_image_captions_enabled = true
     caption_agent.update!(enabled: true, vision_enabled: true, default_llm_id: vision_llm.id)
+    SiteSetting.ai_post_image_captions_enabled = true
   end
 
   def caption_agent
-    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i)
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i) ||
+      Fabricate(:ai_agent, id: SiteSetting.ai_image_caption_agent.to_i)
   end
 
   it "returns no problem when post image captions are disabled" do

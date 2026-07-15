@@ -190,6 +190,7 @@ discourse_ai:
   ai_post_image_captions_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::ImageCaptionEnabledValidator"
     area: "ai-features/image_caption"
   ai_post_image_captions_per_post_limit:
     default: 10
