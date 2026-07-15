@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { eq, not, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -157,7 +157,6 @@ export default class AdminConfigAreasEmojisImport extends Component {
   @tracked resolutions = {};
   @tracked isUploading = false;
   @tracked isConfirming = false;
-  @tracked globalError = null;
 
   get isPreviewPhase() {
     return this.previewRows !== null;
@@ -180,23 +179,17 @@ export default class AdminConfigAreasEmojisImport extends Component {
     return grouped;
   }
 
-  get canConfirm() {
-    return !this.isConfirming;
-  }
-
   get summaryCounts() {
     if (!this.previewRows) {
       return null;
     }
     return {
-      no_action: (this.rowsByCategory["no_action"] || []).length,
-      newCount: (this.previewRows || []).filter((r) => r.category === "new")
+      no_action: this.rowsByCategory["no_action"].length,
+      newCount: this.previewRows.filter((r) => r.category === "new").length,
+      identicalCount: this.previewRows.filter((r) => r.category === "identical")
         .length,
-      identicalCount: (this.previewRows || []).filter(
-        (r) => r.category === "identical"
-      ).length,
-      conflicts: (this.rowsByCategory["conflict"] || []).length,
-      invalid: (this.rowsByCategory["invalid"] || []).length,
+      conflicts: this.rowsByCategory["conflict"].length,
+      invalid: this.rowsByCategory["invalid"].length,
     };
   }
 
@@ -208,7 +201,6 @@ export default class AdminConfigAreasEmojisImport extends Component {
     }
 
     this.isUploading = true;
-    this.globalError = null;
 
     const formData = new FormData();
     formData.append("file", file);
@@ -240,24 +232,14 @@ export default class AdminConfigAreasEmojisImport extends Component {
   @action
   async confirm() {
     this.isConfirming = true;
-    this.globalError = null;
-
-    const resolutions = {};
-    for (const row of this.previewRows) {
-      if (this.resolutions[row.name]) {
-        resolutions[row.name] = this.resolutions[row.name];
-      }
-    }
 
     try {
       await ajax("/admin/config/emoji/import_confirm", {
         type: "POST",
-        data: { token: this.previewToken, resolutions },
+        data: { token: this.previewToken, resolutions: this.resolutions },
       });
 
-      // Refresh emoji list in service
-      const refreshed = await ajax("/admin/config/emoji.json");
-      this.adminEmojis.emojis = refreshed.map((e) => EmberObject.create(e));
+      await this.adminEmojis.refresh();
 
       this.router.transitionTo("adminEmojis.index");
     } catch (err) {
@@ -272,7 +254,6 @@ export default class AdminConfigAreasEmojisImport extends Component {
     this.previewRows = null;
     this.previewToken = null;
     this.resolutions = {};
-    this.globalError = null;
   }
 
   <template>
@@ -296,8 +277,7 @@ export default class AdminConfigAreasEmojisImport extends Component {
         {{/if}}
 
         {{#each-in this.rowsByCategory as |category rows|}}
-          {{#if @rows.length}}
-
+          {{#if rows.length}}
             <ImportSection
               @category={{category}}
               @rows={{rows}}
@@ -313,7 +293,7 @@ export default class AdminConfigAreasEmojisImport extends Component {
           <DButton
             @action={{this.confirm}}
             @label="admin.emoji.import_confirm"
-            @disabled={{not this.canConfirm}}
+            @disabled={{this.isConfirming}}
             @isLoading={{this.isConfirming}}
             class="btn-primary"
           />

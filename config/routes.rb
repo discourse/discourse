@@ -508,11 +508,11 @@ Discourse::Application.routes.draw do
 
         resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new do
           collection do
+            post :export
             post :import_preview
             post :import_confirm
           end
         end
-        post "emoji/export" => "emoji#export", :constraints => AdminConstraint.new
         get "emoji/new" => "emoji#index"
         get "emoji/settings" => "emoji#index"
         get "emoji/import" => "emoji#index"

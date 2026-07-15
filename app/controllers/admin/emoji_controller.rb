@@ -125,6 +125,7 @@ class Admin::EmojiController < Admin::AdminController
           csv_rows = CSV.parse(csv_data, headers: true)
 
           filenames_seen = {}
+          parsed_rows = []
 
           csv_rows.each_with_index do |row, idx|
             name = row["name"].to_s.strip
@@ -134,6 +135,25 @@ class Admin::EmojiController < Admin::AdminController
 
             errors = validate_import_row(name, group, filename, filenames_seen)
             filenames_seen[filename] = true
+
+            parsed_rows << {
+              idx: idx,
+              name: name,
+              group: group,
+              filename: filename,
+              errors: errors,
+            }
+          end
+
+          valid_names = parsed_rows.filter_map { |r| r[:name] if r[:errors].empty? }
+          existing_by_name = CustomEmoji.where(name: valid_names).includes(:upload).index_by(&:name)
+
+          parsed_rows.each do |parsed|
+            idx = parsed[:idx]
+            name = parsed[:name]
+            group = parsed[:group]
+            filename = parsed[:filename]
+            errors = parsed[:errors]
 
             if errors.any?
               rows << {
@@ -193,7 +213,8 @@ class Admin::EmojiController < Admin::AdminController
               upload.update_columns(retain_hours: 3)
               upload_map[filename] = upload.id
 
-              category, existing_url, existing_group = classify_import_row(name, group, upload)
+              category, existing_url, existing_group =
+                classify_import_row(name, group, upload, existing_by_name[name])
 
               rows << {
                 index: idx,
@@ -255,6 +276,13 @@ class Admin::EmojiController < Admin::AdminController
     updated = 0
     skipped = 0
 
+    actionable_names =
+      rows
+        .map { |r| r.transform_keys(&:to_s) }
+        .reject { |r| %w[invalid identical].include?(r["category"]) }
+        .filter_map { |r| r["name"] if (resolutions[r["name"].to_s] || "incoming") != "keep" }
+    existing_by_name = CustomEmoji.where(name: actionable_names).index_by(&:name)
+
     ActiveRecord::Base.transaction do
       rows.each do |row|
         row = row.transform_keys(&:to_s)
@@ -277,7 +305,7 @@ class Admin::EmojiController < Admin::AdminController
         upload = Upload.find_by(id: upload_id)
         next if upload.nil?
 
-        existing = CustomEmoji.find_by(name: name)
+        existing = existing_by_name[name]
 
         if existing
           existing.update!(upload: upload, group: group)
@@ -358,8 +386,8 @@ class Admin::EmojiController < Admin::AdminController
     errors
   end
 
-  def classify_import_row(name, group, upload)
-    existing = CustomEmoji.find_by(name: name)
+  def classify_import_row(name, group, upload, existing = nil)
+    existing ||= CustomEmoji.find_by(name: name)
     return "new", nil unless existing
 
     existing_url = existing.upload&.url

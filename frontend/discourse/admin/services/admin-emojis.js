@@ -39,13 +39,7 @@ export default class AdminEmojis extends Service {
   }
 
   get sortedEmojis() {
-    const selected = this.selectedEmojis;
-    return this.filteredEmojis
-      .toSorted((a, b) => a.name.localeCompare(b.name))
-      .map((e) => {
-        e.set("isSelected", selected.has(e.get("name")));
-        return e;
-      });
+    return this.filteredEmojis.toSorted((a, b) => a.name.localeCompare(b.name));
   }
 
   get emojiGroups() {
@@ -71,10 +65,6 @@ export default class AdminEmojis extends Service {
       !this.allVisibleSelected &&
       this.sortedEmojis.some((e) => this.selectedEmojis.has(e.get("name")))
     );
-  }
-
-  get selectedCount() {
-    return this.selectedEmojis.size;
   }
 
   get exportDisabled() {
@@ -157,11 +147,12 @@ export default class AdminEmojis extends Service {
 
   @action
   toggleAllVisible() {
+    const emojis = this.sortedEmojis;
     const next = new Set(this.selectedEmojis);
     if (this.allVisibleSelected) {
-      this.sortedEmojis.forEach((e) => next.delete(e.get("name")));
+      emojis.forEach((e) => next.delete(e.get("name")));
     } else {
-      this.sortedEmojis.forEach((e) => next.add(e.get("name")));
+      emojis.forEach((e) => next.add(e.get("name")));
     }
     this.selectedEmojis = next;
   }
@@ -174,6 +165,10 @@ export default class AdminEmojis extends Service {
       }),
       didConfirm: () => this.#destroyEmoji(emoji),
     });
+  }
+
+  async refresh() {
+    await this.#fetchEmojis();
   }
 
   async #fetchEmojis() {

@@ -286,4 +286,78 @@ acceptance("Admin - Emoji", function (needs) {
       .dom(".admin-emoji-import__file-input")
       .exists("back to file picker after cancel");
   });
+
+  test("preview renders a section for each category with rows", async function (assert) {
+    await visit("/admin/config/emoji/import");
+
+    const file = createFile("emojis.zip", "application/zip");
+    await triggerEvent(".admin-emoji-import__file-input", "change", {
+      files: [file],
+    });
+
+    assert
+      .dom(".admin-emoji-import__section")
+      .exists(
+        { count: 3 },
+        "three sections rendered (new/identical, conflict, invalid)"
+      );
+
+    assert
+      .dom(".admin-emoji-import__table")
+      .exists({ count: 3 }, "each section has a table");
+
+    assert
+      .dom(".admin-emoji-import__table .d-table__row")
+      .exists("at least one row is rendered in the tables");
+  });
+
+  test("new emoji section shows incoming image", async function (assert) {
+    await visit("/admin/config/emoji/import");
+
+    const file = createFile("emojis.zip", "application/zip");
+    await triggerEvent(".admin-emoji-import__file-input", "change", {
+      files: [file],
+    });
+
+    assert
+      .dom(".admin-emoji-import__table img.emoji-custom")
+      .exists("incoming emoji images are shown in the preview tables");
+  });
+
+  test("conflict section shows resolution radio buttons", async function (assert) {
+    await visit("/admin/config/emoji/import");
+
+    const file = createFile("emojis.zip", "application/zip");
+    await triggerEvent(".admin-emoji-import__file-input", "change", {
+      files: [file],
+    });
+
+    assert
+      .dom(".admin-emoji-import__conflict-resolution")
+      .exists("conflict resolution controls are shown");
+
+    assert
+      .dom(".admin-emoji-import__conflict-resolution input[type='radio']")
+      .exists({ count: 2 }, "two radio options (incoming / keep existing)");
+  });
+
+  test("invalid section shows error message", async function (assert) {
+    await visit("/admin/config/emoji/import");
+
+    const file = createFile("emojis.zip", "application/zip");
+    await triggerEvent(".admin-emoji-import__file-input", "change", {
+      files: [file],
+    });
+
+    assert
+      .dom(".admin-emoji-import__error")
+      .exists("error message shown for invalid row");
+
+    assert
+      .dom(".admin-emoji-import__error")
+      .hasText(
+        "File extension .bmp is not supported",
+        "error text matches the validation message"
+      );
+  });
 });

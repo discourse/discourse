@@ -35,30 +35,30 @@ export default class AdminConfigAreasEmojisList extends Component {
           @nameProperty={{null}}
           @valueProperty={{null}}
         />
-      </div>
 
-      {{#if this.adminEmojis.isSelecting}}
-        <DButton
-          @action={{this.adminEmojis.exportSelected}}
-          @translatedLabel={{this.adminEmojis.exportLabel}}
-          @icon="download"
-          @disabled={{this.adminEmojis.exportDisabled}}
-          @isLoading={{this.adminEmojis.isExporting}}
-          class="btn-primary admin-emoji-list__export-btn"
-        />
-        <DButton
-          @action={{this.adminEmojis.cancelSelecting}}
-          @label="cancel"
-          class="btn-default admin-emoji-list__cancel-btn"
-        />
-      {{else}}
-        <DButton
-          @action={{this.adminEmojis.startSelecting}}
-          @label="admin.emoji.select_to_export"
-          @icon="download"
-          class="btn-default admin-emoji-list__select-to-export"
-        />
-      {{/if}}
+        {{#if this.adminEmojis.isSelecting}}
+          <DButton
+            @action={{this.adminEmojis.exportSelected}}
+            @translatedLabel={{this.adminEmojis.exportLabel}}
+            @icon="download"
+            @disabled={{this.adminEmojis.exportDisabled}}
+            @isLoading={{this.adminEmojis.isExporting}}
+            class="btn-primary admin-emoji-list__export-btn"
+          />
+          <DButton
+            @action={{this.adminEmojis.cancelSelecting}}
+            @label="cancel"
+            class="btn-default admin-emoji-list__cancel-btn"
+          />
+        {{else}}
+          <DButton
+            @action={{this.adminEmojis.startSelecting}}
+            @label="admin.emoji.select_to_export"
+            @icon="download"
+            class="btn-default admin-emoji-list__select-to-export"
+          />
+        {{/if}}
+      </div>
     </div>
 
     {{#if this.emojis}}

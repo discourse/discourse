@@ -20,12 +20,12 @@ const AdminEmojisTemplate = <template>
         />
       </:breadcrumbs>
       <:actions as |actions|>
+        <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
         <actions.Default
           @route="adminEmojis.import"
           @label="admin.emoji.import"
           class="admin-emoji__import"
         />
-        <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
       </:actions>
       <:tabs>
         <DNavItem
