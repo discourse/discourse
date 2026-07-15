@@ -132,59 +132,68 @@ export default class DashboardReports extends Component {
       @endDate={{@endDate}}
       ...attributes
     >
-      <div
-        class="db-reports"
-        {{didUpdate this.loadPayloads @data @startDate @endDate}}
-      >
-        {{#each this.cards key="key" as |card|}}
-          <div class="db-report__card" data-identifier={{card.key}}>
-            <div class="db-report__header">
-              <a href={{card.url}} class="db-report__name">{{card.title}}</a>
-              {{#if card.label}}
-                <div
-                  class={{dConcatClass
-                    "db-report__label"
-                    (concat "--" card.source)
-                  }}
-                  data-source={{card.source}}
-                >{{card.label}}</div>
-              {{/if}}
-            </div>
-            <div class="db-report__chart">
-              {{#if card.payload}}
-                {{#if card.payload.empty}}
-                  <DashboardReportEmptyState />
-                {{else}}
-                  {{#let
-                    (lookupAdminDashboardReportRenderer card.source)
-                    as |Renderer|
-                  }}
-                    {{#if Renderer}}
-                      <Renderer
-                        @item={{card}}
-                        @payload={{card.payload}}
-                        @filters={{hash startDate=@startDate endDate=@endDate}}
-                      />
-                    {{/if}}
-                  {{/let}}
+      {{#if @fetchError}}
+        <div class="db-section__error" role="alert">
+          {{i18n "admin.dashboard.sections.reports.fetch_error"}}
+        </div>
+      {{else}}
+        <div
+          class="db-reports"
+          {{didUpdate this.loadPayloads @data @startDate @endDate}}
+        >
+          {{#each this.cards key="key" as |card|}}
+            <div class="db-report__card" data-identifier={{card.key}}>
+              <div class="db-report__header">
+                <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+                {{#if card.label}}
+                  <div
+                    class={{dConcatClass
+                      "db-report__label"
+                      (concat "--" card.source)
+                    }}
+                    data-source={{card.source}}
+                  >{{card.label}}</div>
                 {{/if}}
-              {{/if}}
+              </div>
+              <div class="db-report__chart">
+                {{#if card.payload}}
+                  {{#if card.payload.empty}}
+                    <DashboardReportEmptyState />
+                  {{else}}
+                    {{#let
+                      (lookupAdminDashboardReportRenderer card.source)
+                      as |Renderer|
+                    }}
+                      {{#if Renderer}}
+                        <Renderer
+                          @item={{card}}
+                          @payload={{card.payload}}
+                          @filters={{hash
+                            startDate=@startDate
+                            endDate=@endDate
+                          }}
+                        />
+                      {{/if}}
+                    {{/let}}
+                  {{/if}}
+                {{/if}}
+              </div>
             </div>
-          </div>
-        {{/each}}
+          {{/each}}
 
-        {{#if this.addTileVisible}}
-          <button
-            type="button"
-            class="db-report__add-report"
-            aria-label={{i18n "admin.dashboard.reports_section.add"}}
-            {{on "click" this.openReportsConfig}}
-          >
-            <span>{{dIcon "plus"}}
-              {{i18n "admin.dashboard.reports_section.add"}}</span>
-          </button>
-        {{/if}}
-      </div>
+          {{#if this.addTileVisible}}
+            <button
+              type="button"
+              class="db-report__add-report"
+              aria-label={{i18n "admin.dashboard.reports_section.add"}}
+              {{on "click" this.openReportsConfig}}
+            >
+              <span>{{dIcon "plus"}}
+                {{i18n "admin.dashboard.reports_section.add"}}</span>
+            </button>
+          {{/if}}
+        </div>
+      {{/if}}
 
       <PluginOutlet
         @name="admin-dashboard-reports-section-after"
