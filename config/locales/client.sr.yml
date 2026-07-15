@@ -2891,6 +2891,17 @@ sr:
               title: "Podešavanje"
         badges:
           title: "Značke"
+        category_management:
+          tabs:
+            settings: "Podešavanje"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            topics: "Teme"
+          visibility_filter:
+            all: "Sve kategorije"
         emoji:
           title: "Emoji"
         email_logs:
@@ -3016,6 +3027,7 @@ sr:
             table:
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           modal:
             enabled_heading: "Omogućeno"
             apply: "Primeni"

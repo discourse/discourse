@@ -154,6 +154,8 @@ fr:
               description: "Lorsqu'il est spécifié, il fixe une limite supérieure au nombre maximum de jetons que le modèle peut générer. Cette valeur respecte la limite maximale de jetons de sortie du LLM"
     discourse_ai:
       title: "IA"
+      post_image_descriptions:
+        description: "Description"
       ai_tool_approval:
         loading: "Chargement…"
         tool: "Action"
@@ -227,7 +229,6 @@ fr:
           translate: "Traduire"
           markdown_tables: "Générer un tableau Markdown"
           custom_prompt: "Invite personnalisée"
-          image_caption: "Images de légende"
           translator: "Traducteur"
           post_illustrator: "Illustrateur de publications"
           setting_groups:
@@ -364,8 +365,6 @@ fr:
         overwrite: "Remplacer"
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
-        max_context_posts: "Nombre maximal de publications contextuelles"
-        max_context_posts_help: "Le nombre maximal de publications à utiliser comme contexte pour l'IA lorsqu'elle répond à un utilisateur. (vide par défaut)"
         vision_max_pixel_sizes:
           low: Qualité faible - moins cher (256x256)
           medium: Qualité moyenne (512x512)
@@ -668,11 +667,6 @@ fr:
           select: "Sélectionner"
           selected: "Sélectionné"
           try_again: "Réessayer"
-        image_caption:
-          button_label: "Légende avec IA"
-          generating: "Génération de la légende..."
-          credits: "Légende par l'IA"
-          save_caption: "Enregistrer"
         no_content_error: "Ajoutez d'abord du contenu pour y effectuer des actions d'IA"
       reviewables:
         model_used: "Modèle utilisé :"
@@ -744,7 +738,7 @@ fr:
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
         title: "Robot IA"
-        llm: "Modèle"
+        llm: "Modèle:"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
         try_again: "Réessayer"

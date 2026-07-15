@@ -228,8 +228,6 @@ fr:
         explain: "Expliquer"
         illustrate_post: "Illustrer la publication"
         replace_dates: "Dates intelligentes"
-      image_caption:
-        attribution: "Légende par l'IA"
     share_ai:
       read_more: "Lire la transcription complète"
       onebox_title: "Conversation IA avec %{llm_name}"

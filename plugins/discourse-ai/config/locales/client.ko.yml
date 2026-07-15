@@ -38,6 +38,8 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      post_image_descriptions:
+        description: "내용"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -216,8 +218,6 @@ ko:
         thumbnail_suggestions:
           select: "선택"
           try_again: "다시 시도"
-        image_caption:
-          save_caption: "저장"
       embeddings:
         save: "저장"
         delete: "삭제"

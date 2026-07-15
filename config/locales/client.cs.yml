@@ -6358,6 +6358,21 @@ cs:
               title: "Příspěvky a témata"
             stats_and_thresholds:
               title: "Statistiky a prahové hodnoty"
+        category_management:
+          tabs:
+            settings: "Nastavení"
+          types:
+            all:
+              title: "Všechny kategorie"
+          filter_placeholder: "Filtrovat kategorie"
+          table:
+            category: "Kategorie"
+            visibility: "Viditelnost"
+            topics: "Témata"
+          visibility:
+            public: "Veřejná"
+          visibility_filter:
+            all: "Všechny kategorie"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Přesměrování se použije pro adresy URL, které fórum nezná"
@@ -6580,6 +6595,7 @@ cs:
               searches: "Hledání"
               status: "Stav"
         reports_section:
+          header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
           modal:
             enabled_heading: "Zapnuto"

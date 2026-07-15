@@ -352,8 +352,6 @@ zh_CN:
         explain: "解释"
         illustrate_post: "为帖子创建插图"
         replace_dates: "智能日期"
-      image_caption:
-        attribution: "由 AI 生成标题"
     share_ai:
       read_more: "阅读完整语音稿"
       onebox_title: "与 %{llm_name} 的 AI 对话"

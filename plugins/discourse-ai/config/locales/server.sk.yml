@@ -228,8 +228,6 @@ sk:
         explain: "Vysvetlite"
         illustrate_post: "Ilustrovať príspevok"
         replace_dates: "Inteligentné dátumy"
-      image_caption:
-        attribution: "S titulkami od AI"
     share_ai:
       read_more: "Prečítať celý prepis"
       onebox_title: "Konverzácia AI s %{llm_name}"

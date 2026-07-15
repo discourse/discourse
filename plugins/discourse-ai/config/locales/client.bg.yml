@@ -34,6 +34,8 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      post_image_descriptions:
+        description: "Описание"
       ai_tool_approval:
         loading: "Зарежда се..."
         tool: "Действия"
@@ -185,8 +187,6 @@ bg:
           cancel: "Отмени"
         thumbnail_suggestions:
           try_again: "Опитайте отново"
-        image_caption:
-          save_caption: "Запази"
       embeddings:
         save: "Запази"
         delete: "Изтрий"

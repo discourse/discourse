@@ -4996,6 +4996,21 @@ fa_IR:
           sub_pages:
             posts_and_topics:
               title: "فرسته‌ها و موضوعات"
+        category_management:
+          tabs:
+            settings: "تنظیم"
+          types:
+            all:
+              title: "همه‌ی دسته‌بندی‌ها"
+          filter_placeholder: "فیلتر دسته‌بندی‌ها"
+          table:
+            category: "دسته‌بندی"
+            visibility: "قابل مشاهده"
+            topics: "موضوعات"
+          visibility:
+            public: "عمومی"
+          visibility_filter:
+            all: "همه‌ی دسته‌بندی‌ها"
         permalinks:
           title: " پیوند دائمی"
         user_fields:
@@ -5163,6 +5178,7 @@ fa_IR:
               searches: "جستجوها"
               status: "وضعیت"
         reports_section:
+          header_action: "مدیریت"
           modal:
             enabled_heading: "فعال شده"
             all_heading: "تمامی گزارشات"

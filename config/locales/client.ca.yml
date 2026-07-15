@@ -3205,6 +3205,20 @@ ca:
               title: "Configuració"
         badges:
           title: "Insígnies"
+        category_management:
+          tabs:
+            settings: "Configuració"
+          types:
+            all:
+              title: "Totes les categories"
+          table:
+            category: "Categoria"
+            visibility: "Visibilitat"
+            topics: "Temes"
+          visibility:
+            public: "Públic"
+          visibility_filter:
+            all: "Totes les categories"
         permalinks:
           title: "Enllaços permanents"
         emoji:
@@ -3330,6 +3344,7 @@ ca:
               searches: "Cerques"
               status: "Estat"
         reports_section:
+          header_action: "Gestiona"
           modal:
             enabled_heading: "Activat"
             all_heading: "Tots els reports"

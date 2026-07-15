@@ -297,8 +297,6 @@ pt_BR:
         explain: "Explicar"
         illustrate_post: "Ilustrar postagem"
         replace_dates: "Datas inteligentes"
-      image_caption:
-        attribution: "Legendado por IA"
     share_ai:
       read_more: "Ler a transcrição completa"
       onebox_title: "Conversa de IA com %{llm_name}"

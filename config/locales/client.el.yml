@@ -6072,6 +6072,21 @@ el:
               title: "Αναρτήσεις & θέματα"
             stats_and_thresholds:
               title: "Στατιστικά & όρια"
+        category_management:
+          tabs:
+            settings: "Ρυθμίσεις"
+          types:
+            all:
+              title: "Όλες οι κατηγορίες"
+          filter_placeholder: "Φιλτράρισμα κατηγοριών"
+          table:
+            category: "Κατηγορία"
+            visibility: "Ορατότητα"
+            topics: "Θέματα"
+          visibility:
+            public: "Δημόσια"
+          visibility_filter:
+            all: "Όλες οι κατηγορίες"
         permalinks:
           title: "Permalinks"
           header_description: "Ανακατευθύνσεις προς εφαρμογή σε διευθύνσεις URL που δεν είναι γνωστές στο forum"
@@ -6308,6 +6323,7 @@ el:
                 poor_match: "Φτωχή αντιστοιχία"
                 poor_match_tooltip: "Όροι αναζήτησης με ποσοστό κλικ (CTR) μεταξύ 1-20%."
         reports_section:
+          header_action: "Διαχειριστείτε"
           add: "Προσθήκη αναφοράς"
           remove: "Αφαίρεση αναφοράς"
           no_data: "Δεν υπάρχουν δεδομένα για προβολή"

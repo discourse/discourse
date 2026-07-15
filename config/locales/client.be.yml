@@ -2138,6 +2138,19 @@ be:
               title: "Налады"
         badges:
           title: "Значкі"
+        category_management:
+          tabs:
+            settings: "Налады"
+          types:
+            all:
+              title: "Усе катэгорыі"
+          table:
+            category: "Катэгорыя"
+            topics: "тэмы"
+          visibility:
+            public: "Публічная"
+          visibility_filter:
+            all: "Усе катэгорыі"
         permalinks:
           title: "Пастаянныя спасылкі"
         emoji:

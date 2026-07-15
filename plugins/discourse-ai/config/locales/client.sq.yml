@@ -34,6 +34,8 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      post_image_descriptions:
+        description: "Përshkrimi"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -184,8 +186,6 @@ sq:
         thumbnail_suggestions:
           select: "Zgjidhni"
           try_again: "Provoni përsëri"
-        image_caption:
-          save_caption: "Ruani"
       embeddings:
         save: "Ruani"
         delete: "Fshij"

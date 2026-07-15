@@ -36,6 +36,8 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      post_image_descriptions:
+        description: "వివరణ"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"
@@ -179,8 +181,6 @@ te:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
           try_again: "మళ్ళీ ప్రయత్నించండి"
-        image_caption:
-          save_caption: "సేవ్ చేయండి"
       embeddings:
         save: "సేవ్ చేయండి"
         delete: "తొలగించండి"

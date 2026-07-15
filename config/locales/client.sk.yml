@@ -5847,6 +5847,21 @@ sk:
               title: "Príspevky a témy"
             stats_and_thresholds:
               title: "Štatistiky a prahové hodnoty"
+        category_management:
+          tabs:
+            settings: "Nastavení"
+          types:
+            all:
+              title: "Všetky kategórie"
+          filter_placeholder: "Filtrovanie kategórií"
+          table:
+            category: "Kategória"
+            visibility: "Viditeľnosť"
+            topics: "Témy"
+          visibility:
+            public: "Verejné"
+          visibility_filter:
+            all: "Všetky kategórie"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Presmerovanie na adresy URL, ktoré fórum nepozná"
@@ -6065,6 +6080,7 @@ sk:
               searches: "Vyhľadávania"
               status: "Stav"
         reports_section:
+          header_action: "Spravovať"
           no_data: "Žiadne údaje na zobrazenie"
           modal:
             enabled_heading: "Povolené"

@@ -233,6 +233,8 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      post_image_descriptions:
+        description: "描述"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -348,7 +350,6 @@ zh_CN:
           translate: "翻译"
           markdown_tables: "生成 Markdown 表"
           custom_prompt: "自定义提示"
-          image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建工具"
           chat_thread_titles: "聊天消息串标题"
@@ -544,16 +545,6 @@ zh_CN:
         description: "描述"
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
-        max_context_posts: "最大上下文帖子数"
-        max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
-        execution_mode: "执行模式"
-        execution_mode_help: "控制智能体如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用 token 预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
-        execution_mode_options:
-          default: "默认值（固定限值）"
-          agentic: "Agentic（Token 预算）"
-        max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
-        compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传功能
         vision_enabled_help: 如果启用，当所选模型支持图像输入时，此代理可以包含帖子和聊天中的图像。
@@ -1038,11 +1029,6 @@ zh_CN:
           select: "选择"
           selected: "已选择"
           try_again: "重试"
-        image_caption:
-          button_label: "使用 AI 生成标题"
-          generating: "正在生成标题…"
-          credits: "由 AI 生成标题"
-          save_caption: "保存"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
       errors:
         credit_limit_dialog:
@@ -1132,8 +1118,8 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体"
-        llm: "模型"
+        agent: "智能体:"
+        llm: "模型:"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"

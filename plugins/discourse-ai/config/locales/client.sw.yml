@@ -34,6 +34,8 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      post_image_descriptions:
+        description: "Maelezo"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -160,8 +162,6 @@ sw:
           cancel: "Batili"
         thumbnail_suggestions:
           try_again: "Jaribu Tena"
-        image_caption:
-          save_caption: "Hifadhi"
       embeddings:
         save: "Hifadhi"
         delete: "Futa"

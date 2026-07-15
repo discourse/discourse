@@ -3259,6 +3259,20 @@ bs_BA:
               title: "Postavke"
         badges:
           title: "Bedž"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Topics"
+          visibility:
+            public: "Javno"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Permalink-ovi"
         emoji:
@@ -3384,6 +3398,7 @@ bs_BA:
               searches: "Pretraživanja"
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućen"

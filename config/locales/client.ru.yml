@@ -6499,6 +6499,21 @@ ru:
               title: "Публикации и темы"
             stats_and_thresholds:
               title: "Статистика и пороговые значения"
+        category_management:
+          tabs:
+            settings: "Настроек"
+          types:
+            all:
+              title: "Все разделы"
+          filter_placeholder: "Фильтрация категорий"
+          table:
+            category: "Категория"
+            visibility: "Видимость"
+            topics: "Новые темы"
+          visibility:
+            public: "Публичное"
+          visibility_filter:
+            all: "Все разделы"
         permalinks:
           title: "Постоянные ссылки"
           header_description: "Перенаправления для URL-адресов, неизвестных форуму"
@@ -6727,6 +6742,7 @@ ru:
               searches: "Поисковые запросы"
               status: "Статус"
         reports_section:
+          header_action: "Управление"
           no_data: "Нет данных для отображения"
           modal:
             enabled_heading: "Включено"

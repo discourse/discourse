@@ -3916,6 +3916,20 @@ hy:
               title: "Կարգավորումներ"
         badges:
           title: "Կրծքանշաններ"
+        category_management:
+          tabs:
+            settings: "Կարգավորումներ"
+          types:
+            all:
+              title: "Բոլոր կատեգորիաները"
+          table:
+            category: "Կատեգորիա"
+            visibility: "Տեսանելիություն"
+            topics: "Թեմաներ"
+          visibility:
+            public: "Հանրային"
+          visibility_filter:
+            all: "Բոլոր կատեգորիաները"
         permalinks:
           title: "Մշտահղումներ"
         emoji:
@@ -4035,6 +4049,7 @@ hy:
               searches: "Որոնումներ"
               status: "Ստատուս"
         reports_section:
+          header_action: "Կառավարել"
           modal:
             all_heading: "Բոլոր հաշվետվությունները"
             apply: "Կիրառել"

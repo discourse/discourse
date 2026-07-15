@@ -34,6 +34,8 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      post_image_descriptions:
+        description: "Opis"
       ai_tool_approval:
         loading: "Obrađuje..."
         tool: "Action"
@@ -173,8 +175,6 @@ bs_BA:
           cancel: "Odustani"
         thumbnail_suggestions:
           try_again: "Pokušaj ponovo"
-        image_caption:
-          save_caption: "Sačuvaj"
       embeddings:
         save: "Sačuvaj"
         delete: "Delete"

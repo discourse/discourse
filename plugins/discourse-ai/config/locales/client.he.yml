@@ -191,6 +191,8 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      post_image_descriptions:
+        description: "תיאור"
       ai_tool_approval:
         loading: "בטעינה…"
         tool: "פעולה"
@@ -267,7 +269,6 @@ he:
           translate: "תרגום"
           markdown_tables: "יצירת טבלה ב־Markdown"
           custom_prompt: "בקשה מותאמת אישית"
-          image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
         translation:
@@ -436,8 +437,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        max_context_posts: "כמות מרבית של פוסטים להקשר"
-        max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
         vision_max_pixel_sizes:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
@@ -752,11 +751,6 @@ he:
           select: "בחירה"
           selected: "נבחרים"
           try_again: "ניסיון נוסף"
-        image_caption:
-          button_label: "מתן כותרת עם בינה מלאכותית"
-          generating: "הכותרת מתחוללת…"
-          credits: "הכותרת נוספה ע״י בינה מלאכותית"
-          save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
       errors:
         credit_limit_dialog:
@@ -824,7 +818,7 @@ he:
         click_to_run_label: "הרצת תוצר"
       ai_bot:
         title: "בוט בינה מלאכותית"
-        llm: "מודל"
+        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"

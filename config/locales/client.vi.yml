@@ -5509,6 +5509,21 @@ vi:
               title: "Tút & chủ đề"
             stats_and_thresholds:
               title: "Thống kê & ngưỡng"
+        category_management:
+          tabs:
+            settings: "Cài đặt"
+          types:
+            all:
+              title: "Tất cả danh mục"
+          filter_placeholder: "Lọc theo chuyên mục"
+          table:
+            category: "Danh mục"
+            visibility: "Khả năng hiển thị"
+            topics: "Các chủ đề"
+          visibility:
+            public: "Công khai"
+          visibility_filter:
+            all: "Tất cả danh mục"
         permalinks:
           title: "Liên kết cố định"
           header_description: "Chuyển hướng để áp dụng cho các URL mà diễn đàn không biết"
@@ -5723,6 +5738,7 @@ vi:
               searches: "Số lần tìm kiếm"
               status: "Trạng thái"
         reports_section:
+          header_action: "Quản lý"
           no_data: "Không có dữ liệu để hiển thị"
           modal:
             enabled_heading: "Đã bật"

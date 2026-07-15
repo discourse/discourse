@@ -34,6 +34,8 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      post_image_descriptions:
+        description: "Նկարագրություն"
       ai_tool_approval:
         loading: "Բեռնվում է..."
         tool: "Գործողություն"
@@ -181,8 +183,6 @@ hy:
           cancel: "Չեղարկել"
         thumbnail_suggestions:
           try_again: "Կրկին Փորձել"
-        image_caption:
-          save_caption: "Պահպանել"
       embeddings:
         save: "Պահպանել"
         delete: "Ջնջել"

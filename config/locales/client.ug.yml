@@ -5758,6 +5758,21 @@ ug:
               title: "يازما ۋە تېما"
             stats_and_thresholds:
               title: "ئىستاتىستىكا ۋە بوسۇغا قىممىتى"
+        category_management:
+          tabs:
+            settings: "تەڭشەك"
+          types:
+            all:
+              title: "ھەممە سەھىپە"
+          filter_placeholder: "سەھىپە سۈزگۈچ"
+          table:
+            category: "سەھىپە"
+            visibility: "كۆرۈنۈشچانلىقى"
+            topics: "تېما"
+          visibility:
+            public: "ئاممىۋى"
+          visibility_filter:
+            all: "ھەممە سەھىپە"
         permalinks:
           title: "ئۆزگەرمەس ئۇلانما"
           header_description: "مۇنبەر تونۇيالمىغان تور ئادرېسى قوللىنىشىنىڭ قايتا نىشانلىنىشى"
@@ -5969,6 +5984,7 @@ ug:
               searches: "ئىزدەش نەتىجىسى"
               status: "ھالەت"
         reports_section:
+          header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:
             enabled_heading: "قوزغىتىلدى"

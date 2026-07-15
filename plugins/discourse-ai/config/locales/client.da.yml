@@ -42,6 +42,8 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      post_image_descriptions:
+        description: "Beskrivelse"
       ai_tool_approval:
         loading: "Indlæser…"
         tool: "Handling"
@@ -214,8 +216,6 @@ da:
         thumbnail_suggestions:
           select: "Vælg"
           try_again: "Prøv igen"
-        image_caption:
-          save_caption: "Gem"
       embeddings:
         save: "Gem"
         delete: "Slet"
@@ -228,6 +228,7 @@ da:
           google: "Google"
           fake: "Tilpasset"
       ai_bot:
+        llm: "Model:"
         debug_ai_modal:
           request: "Anmod om medlemskab"
           response: "Svar"

@@ -51,6 +51,8 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      post_image_descriptions:
+        description: "Descriere"
       ai_tool_approval:
         loading: "Se încarcă..."
         tool: "Acțiune"
@@ -248,8 +250,6 @@ ro:
           cancel: "Anulează"
         thumbnail_suggestions:
           try_again: "Încearcă din nou"
-        image_caption:
-          save_caption: "Salvează"
       embeddings:
         save: "Salvează"
         delete: "Șterge"

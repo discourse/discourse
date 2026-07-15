@@ -271,8 +271,6 @@ ru:
         explain: "Объяснить"
         illustrate_post: "Проиллюстрировать публикацию"
         replace_dates: "Умные даты"
-      image_caption:
-        attribution: "Подпись к изображению от AI"
     share_ai:
       read_more: "Прочитать полное содержимое"
       onebox_title: "Разговор AI с пользователем %{llm_name}"

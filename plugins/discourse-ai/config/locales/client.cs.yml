@@ -38,6 +38,8 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      post_image_descriptions:
+        description: "Popis"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -275,11 +277,6 @@ cs:
           select: "Vybrat"
           selected: "Zaškrtnuté"
           try_again: "Zkusit znovu"
-        image_caption:
-          button_label: "Popisek pomocí AI"
-          generating: "Generování popisku..."
-          credits: "Popisek od AI"
-          save_caption: "Uložit"
         no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
       reviewables:
         ai_tool_action:
@@ -308,6 +305,7 @@ cs:
       ai_artifact:
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
       ai_bot:
+        llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
         try_again: "Zkusit znovu"

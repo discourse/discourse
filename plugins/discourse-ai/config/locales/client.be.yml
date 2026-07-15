@@ -34,6 +34,8 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      post_image_descriptions:
+        description: "Апісанне"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"
@@ -157,8 +159,6 @@ be:
           cancel: "Адмяніць"
         thumbnail_suggestions:
           try_again: "Паспрабаваць яшчэ раз"
-        image_caption:
-          save_caption: "Захаваць"
       embeddings:
         save: "Захаваць"
         delete: "Выдаліць"

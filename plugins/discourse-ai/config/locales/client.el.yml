@@ -92,6 +92,8 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      post_image_descriptions:
+        description: "Περιγραφή"
       bot_chats:
         tab_label: "Συνομιλίες bot"
       ai_tool_approval:
@@ -326,8 +328,6 @@ el:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
           try_again: "Δοκίμασε ξανά"
-        image_caption:
-          save_caption: "Αποθήκευση"
       errors:
         credit_limit_dialog:
           message_user: "Αυτή η κοινότητα έχει φτάσει το όριο πίστωσης AI για σήμερα. Δοκιμάστε ξανά μετά από %{reset_time} ή επικοινωνήστε με τον διαχειριστή του ιστότοπού σας για περισσότερες πληροφορίες."
@@ -344,7 +344,7 @@ el:
           fake: "Προσαρμοσμένο"
       ai_bot:
         title: "AI bot"
-        llm: "Μοντέλο"
+        llm: "Μοντέλο:"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"

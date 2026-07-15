@@ -337,8 +337,6 @@ de:
         explain: "Erklären"
         illustrate_post: "Beitrag illustrieren"
         replace_dates: "Intelligente Termine"
-      image_caption:
-        attribution: "Beschriftet durch KI"
     share_ai:
       read_more: "Vollständiges Transkript lesen"
       onebox_title: "KI-Unterhaltung mit %{llm_name}"

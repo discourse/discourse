@@ -34,6 +34,8 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      post_image_descriptions:
+        description: "Descripció"
       ai_tool_approval:
         loading: "Carregant..."
         tool: "Acció"
@@ -183,8 +185,6 @@ ca:
           cancel: "Cancel·la"
         thumbnail_suggestions:
           try_again: "Torna-ho a intentar"
-        image_caption:
-          save_caption: "Desa"
       embeddings:
         save: "Desa"
         delete: "Suprimeix"

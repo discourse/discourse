@@ -229,6 +229,8 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      post_image_descriptions:
+        description: "Açıklama"
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
@@ -341,7 +343,6 @@ tr_TR:
           translate: "Çevir"
           markdown_tables: "Markdown tablosu oluştur"
           custom_prompt: "Özel istem"
-          image_caption: "Görüntülere alt yazı ekle"
           translator: "Çevirmen"
           post_illustrator: "Gönderi illüstratörü"
           chat_thread_titles: "Sohbet başlıkları"
@@ -546,16 +547,6 @@ tr_TR:
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
         use_parent_llm: "Ajanın dil modelini kullan"
-        max_context_posts: "Maksimum bağlam gönderisi sayısı"
-        max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
-        execution_mode: "Yürütme Modu"
-        execution_mode_help: "Ajanın araç çalıştırma ve konuşma bağlamını nasıl yönettiğini belirler. Varsayılan ayar, sabit sıra/araç sınırları kullanır. Agentic, daha uzun ve daha kapsamlı araç kullanım oturumları için otomatik bağlam sıkıştırma özelliğine sahip bir jeton bütçesi kullanır."
-        execution_mode_options:
-          default: "Varsayılan (Sabit Limitler)"
-          agentic: "Agentic (Token Bütçesi)"
-        max_turn_tokens: "Maksimum Dönüş Jetonları"
-        max_turn_tokens_help: "Tek bir bot yanıtı sırasında tüm LLM çağrıları boyunca tüketilen maksimum toplam jeton (giriş + çıkış). Ayarlandığında, sabit tamamlama/araç sınırlarını bir jeton bütçesi ile değiştirerek daha fazla ajan davranışı sağlar. Varsayılan sınırlar için boş bırakın."
-        compression_threshold: "Sıkıştırma Eşiği"
         compression_threshold_help: "Otomatik sıkıştırmanın devreye girdiği bağlam kullanım yüzdesi (20–99). Daha düşük değerler sıkıştırmayı daha erken tetikler ve daha fazla boşluk bırakır."
         vision_max_pixel_sizes:
           low: Düşük kalite - en ucuz (256x256)
@@ -1028,11 +1019,6 @@ tr_TR:
           select: "Seç"
           selected: "Seçili"
           try_again: "Tekrar Dene"
-        image_caption:
-          button_label: "YZ ile alt yazı"
-          generating: "Alt yazı oluşturuluyor..."
-          credits: "Alt yazı YZ tarafından hazırlandı"
-          save_caption: "Kaydet"
         no_content_error: "Üzerinde YZ eylemleri gerçekleştirmek için önce içerik ekleyin"
       errors:
         credit_limit_dialog:
@@ -1123,8 +1109,8 @@ tr_TR:
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
         title: "YZ botu"
-        agent: "Ajan"
-        llm: "Model"
+        agent: "Ajan:"
+        llm: "Model:"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
         try_again: "Tekrar deneyin"

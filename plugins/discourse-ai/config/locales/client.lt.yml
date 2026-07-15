@@ -132,6 +132,8 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      post_image_descriptions:
+        description: "Aprašymas"
       ai_tool_approval:
         loading: "Kraunasi..."
         tool: "Veiksmai"
@@ -203,7 +205,6 @@ lt:
           translate: "Versti"
           markdown_tables: "Sukurti Markdown lentelę"
           custom_prompt: "Pasirinktinis raginimas"
-          image_caption: "Antraštės vaizdai"
           setting_groups:
             access_permissions: "Prieiga ir leidimai"
             enabled_features: "Įjungtos funkcijos"
@@ -396,11 +397,6 @@ lt:
         thumbnail_suggestions:
           select: "Pasirinkite"
           try_again: "Bandyti dar kartą"
-        image_caption:
-          button_label: "Antraštė su AI"
-          generating: "Generuojama antraštė..."
-          credits: "Antraštė teikiama AI"
-          save_caption: "Saugoti"
       reviewables:
         ai_tool_action:
           tool: "Įrankis"
@@ -415,7 +411,7 @@ lt:
           google: "Google"
           fake: "Išskirtinės"
       ai_bot:
-        llm: "Modelis"
+        llm: "Modelis:"
         debug_ai_modal:
           request: "Užklausa"
           response: "Atsakymas"

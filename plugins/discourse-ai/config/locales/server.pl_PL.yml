@@ -368,8 +368,6 @@ pl_PL:
         explain: "Wyjaśnij"
         illustrate_post: "Zilustruj post"
         replace_dates: "Inteligentne daty"
-      image_caption:
-        attribution: "Napisy z AI"
     share_ai:
       read_more: "Przeczytaj pełną transkrypcję"
       onebox_title: "Rozmowa AI z %{llm_name}"
@@ -624,6 +622,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
+        change_site_setting: "Zmień ustawienia witryny"
         dall_e: "Wygeneruj obraz"
         search_meta_discourse: "Wyszukaj Discourse Meta"
         javascript_evaluator: "Oceń JavaScript"
@@ -674,6 +673,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
+        change_site_setting: "Zmień wartość ustawienia witryny"
         dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
         search_meta_discourse: "Wyszukaj Discourse Meta"
         javascript_evaluator: "Oceń JavaScript"
@@ -761,6 +761,7 @@ pl_PL:
           few: "Znaleziono %{count} wyniki dla '%{query}'"
           many: "Znaleziono %{count} wyników dla '%{query}'"
           other: "Znaleziono %{count} wyników dla '%{query}'"
+        change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:
         continue_conversation:
           title: "Rozmowa odkrywcza: Wyszukaj %{query}"
@@ -911,6 +912,19 @@ pl_PL:
           no_note: "Aby dodać notatkę do elementu kolejki przeglądu, wymagana jest notatka"
           failed: "Nie udało się dodać notatki"
         success: "Pomyślnie dodano notatkę do elementu kolejki przeglądu %{reviewable_id}"
+      change_site_setting:
+        errors:
+          no_reason: "Aby zmienić ustawienia witryny, trzeba podać powód."
+          not_found: "Ustawienie witryny '%{setting_name}' nie istnieje."
+          not_allowed: "Nie masz uprawnień do zmiany ustawień witryny."
+          hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj zmienić."
+          deprecated: "Ustawienie witryny „%{setting_name}” jest przestarzałe; zamiast niego należy używać „%{new_name}”."
+          shadowed: "Ustawienie witryny '%{setting_name}' jest globalnie zastępowane i nie można go zmienić."
+          unconfigurable: "Ustawienie witryny „%{setting_name}” należy do wtyczki, której nie można skonfigurować."
+          unsupported_type: "Ustawień witryny typu „%{type}” nie można zmienić za pomocą bota AI."
+          invalid_value: "Nieprawidłowa wartość: %{error}"
+          failed: "Nie udało się zmienić ustawień witryny."
+        success: "Ustawienie witryny %{setting_name} zostało zmienione na „%{value}”."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"

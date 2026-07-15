@@ -38,6 +38,8 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      post_image_descriptions:
+        description: "Leírás"
       ai_tool_approval:
         loading: "Betöltés…"
         tool: "Művelet"
@@ -226,8 +228,6 @@ hu:
           select: "Kiválasztás"
           selected: "Kiválasztott"
           try_again: "Újrapróbálkozás"
-        image_caption:
-          save_caption: "Mentés"
       embeddings:
         save: "Mentés"
         delete: "Törlés"

@@ -4719,6 +4719,20 @@ pt:
               title: "Configurações"
         badges:
           title: "Crachás"
+        category_management:
+          tabs:
+            settings: "Configurações"
+          types:
+            all:
+              title: "Todas as categorias"
+          table:
+            category: "Categoria"
+            visibility: "Visibilidade"
+            topics: "Tópicos"
+          visibility:
+            public: "Público"
+          visibility_filter:
+            all: "Todas as categorias"
         permalinks:
           title: "Hiperligações Permanentes"
         emoji:
@@ -4848,6 +4862,7 @@ pt:
               searches: "Pesquisas"
               status: "Estado"
         reports_section:
+          header_action: "Gerir"
           no_data: "Sem dados para exibir"
           modal:
             enabled_heading: "Ativado"

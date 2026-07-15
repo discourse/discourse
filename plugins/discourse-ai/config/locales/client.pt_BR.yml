@@ -204,6 +204,8 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      post_image_descriptions:
+        description: "Descrição"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -302,7 +304,6 @@ pt_BR:
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Markdown"
           custom_prompt: "Prompt personalizado"
-          image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
           chat_thread_titles: "Títulos de threads de chat"
@@ -484,8 +485,6 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        max_context_posts: "Máximo de postagens de contexto"
-        max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
@@ -830,11 +829,6 @@ pt_BR:
           select: "Selecionar"
           selected: "Selecionado(a)"
           try_again: "Tentar novamente"
-        image_caption:
-          button_label: "Legenda com IA"
-          generating: "Gerando legenda..."
-          credits: "Legendado por IA"
-          save_caption: "Salvar"
         no_content_error: "Primeiro adicione conteúdo para realizar ações de IA nele"
       errors:
         credit_limit_dialog:
@@ -917,7 +911,7 @@ pt_BR:
         click_to_run_label: "Rodar artefato"
       ai_bot:
         title: "Bot de IA"
-        llm: "Modelo"
+        llm: "Modelo:"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"
         try_again: "Tentar novamente"

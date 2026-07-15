@@ -84,6 +84,8 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      post_image_descriptions:
+        description: "Deskripsi"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -233,11 +235,6 @@ id:
           select: "Pilih"
           selected: "Dipilih"
           try_again: "Coba Lagi"
-        image_caption:
-          button_label: "Keterangan dengan AI"
-          generating: "Menghasilkan keterangan..."
-          credits: "Keterangan oleh AI"
-          save_caption: "Simpan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
@@ -256,7 +253,7 @@ id:
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
       ai_bot:
-        llm: "Model"
+        llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
         cancel_streaming: "Berhenti membalas"
         default_pm_prefix: "[PM bot AI tanpa judul]"

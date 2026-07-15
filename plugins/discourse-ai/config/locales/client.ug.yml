@@ -46,6 +46,8 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      post_image_descriptions:
+        description: "چۈشەندۈرۈش"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -221,8 +223,6 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
         save: "ساقلا"
         delete: "ئۆچۈر"

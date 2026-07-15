@@ -7370,6 +7370,21 @@ ar:
               title: "المنشورات والموضوعات"
             stats_and_thresholds:
               title: "الإحصائيات والحدود"
+        category_management:
+          tabs:
+            settings: "الإعدادان"
+          types:
+            all:
+              title: "كل الفئات"
+          filter_placeholder: "تصفية الفئات"
+          table:
+            category: "الفئة"
+            visibility: "الرؤية"
+            topics: "الموضوعات"
+          visibility:
+            public: "عام"
+          visibility_filter:
+            all: "كل الفئات"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي تُطبَّق على عناوين URL التي لا يعرفها المنتدى"
@@ -7621,6 +7636,7 @@ ar:
                 no_match: "لا يوجد تطابق"
                 poor_match: "تطابق ضعيف"
         reports_section:
+          header_action: "إدارة"
           no_data: "لا توجد بيانات لعرضها"
           modal:
             enabled_heading: "مفعَّلة"

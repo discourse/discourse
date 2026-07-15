@@ -5516,6 +5516,21 @@ ja:
               title: "投稿とトピック"
             stats_and_thresholds:
               title: "統計としきい値"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "すべてのカテゴリ"
+          filter_placeholder: "カテゴリをフィルタする"
+          table:
+            category: "カテゴリ"
+            visibility: "表示状態"
+            topics: "トピック"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "すべてのカテゴリ"
         permalinks:
           title: "パーマリンク"
           header_description: "フォーラムが認識していない URL に適用するリダイレクト"
@@ -5732,6 +5747,7 @@ ja:
               searches: "検索数"
               status: "ステータス"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "有効"
             all_heading: "すべてのレポート"

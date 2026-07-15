@@ -259,8 +259,6 @@ he:
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      image_caption:
-        attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
       read_more: "הצגת התמליל המלא"
       onebox_title: "דיון בינה מלאכותית עם %{llm_name}"

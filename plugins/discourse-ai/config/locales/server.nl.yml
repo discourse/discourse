@@ -337,8 +337,6 @@ nl:
         explain: "Uitleggen"
         illustrate_post: "Bericht illustreren"
         replace_dates: "Slimme datums"
-      image_caption:
-        attribution: "Bijschrift door AI"
     share_ai:
       read_more: "Volledig transcript lezen"
       onebox_title: "AI-conversatie met %{llm_name}"
