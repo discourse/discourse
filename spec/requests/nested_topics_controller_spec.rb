@@ -145,6 +145,53 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["page"]).to eq(0)
     end
 
+    it "keeps hot selected while a missing snapshot safely uses top and requests a refresh" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      low_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 1)
+      high_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+      3.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreQueue.clear
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sort"]).to eq("hot")
+      expect(response.parsed_body["roots"].map { |root| root["id"] }.first(2)).to eq(
+        [high_root.id, low_root.id],
+      )
+      expect(NestedReplies::HotScoreQueue.pop).to eq(topic.id)
+    ensure
+      NestedReplies::HotScoreQueue.clear
+    end
+
+    it "orders a deleted placeholder by the heat of its public descendant" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      deleted_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hot_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: deleted_root.post_number)
+      liked_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 20)
+      2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      deleted_root.update_columns(deleted_at: Time.current)
+      hot_child.update_columns(like_score: 100, created_at: 1.hour.ago)
+      liked_root.update_columns(like_score: 10, created_at: 1.hour.ago)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["roots"].first["id"]).to eq(deleted_root.id)
+      expect(response.parsed_body["roots"].first["deleted_post_placeholder"]).to eq(true)
+    end
+
     it "piggybacks suggested topics at the top level when the first page is the last page" do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       suggested = Fabricate(:post).topic
@@ -931,6 +978,33 @@ RSpec.describe NestedTopicsController, type: :request do
         json = response.parsed_body
         child_ids = json["children"].map { |c| c["id"] }
         expect(child_ids).to eq([first.id, second.id])
+      end
+
+      it "sorts children by a fresh hot snapshot" do
+        SiteSetting.nested_replies_hot_sort_enabled = true
+        Fabricate(:nested_topic, topic: topic)
+        liked_child =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: root.post_number,
+            like_count: 20,
+          )
+        hot_branch =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        hot_grandchild =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_branch.post_number)
+        liked_child.update_columns(like_score: 10, created_at: 1.hour.ago)
+        hot_grandchild.update_columns(like_score: 100, created_at: 1.hour.ago)
+        topic.update_columns(posts_count: 6)
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+        sign_in(user)
+
+        get children_url(topic, root.post_number, sort: "hot")
+
+        child_ids = response.parsed_body["children"].map { |child| child["id"] }
+        expect(child_ids).to eq([hot_branch.id, liked_child.id])
       end
 
       it "respects sort at max nesting depth" do

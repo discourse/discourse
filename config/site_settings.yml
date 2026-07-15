@@ -1967,12 +1967,20 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+  nested_replies_hot_sort_enabled:
+    default: false
+    client: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
   nested_replies_default_sort:
     default: "top"
     client: true
     type: enum
     choices:
       - top
+      - hot
       - new
       - old
     area: "posts_and_topics"

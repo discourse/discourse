@@ -2924,6 +2924,7 @@ en:
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     nested_replies_enabled: "Enable the nested replies view for topics."
     nested_replies_default: "Use nested replies as the default view for all topics."
+    nested_replies_hot_sort_enabled: "Allow people to sort nested replies by a demand-driven hot score. Hot scores are calculated in the background only for topics where hot sorting is requested."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
     nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
