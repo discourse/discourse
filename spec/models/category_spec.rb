@@ -31,6 +31,26 @@ RSpec.describe Category do
     expect(category.errors.to_hash.keys).to contain_exactly(:search_priority)
   end
 
+  describe "#default_top_period" do
+    it "keeps a supported period" do
+      category = Fabricate(:category, user: user, default_top_period: "weekly")
+
+      expect(category.reload.default_top_period).to eq("weekly")
+    end
+
+    it "is nil for an unsupported period" do
+      category = Fabricate(:category, user: user, default_top_period: "hourly")
+
+      expect(category.reload.default_top_period).to be_nil
+    end
+
+    it "is nil for a blank period" do
+      category = Fabricate(:category, user: user, default_top_period: "")
+
+      expect(category.reload.default_top_period).to be_nil
+    end
+  end
+
   it "validates uniqueness in case insensitive way" do
     Fabricate(:category_with_definition, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
