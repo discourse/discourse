@@ -30,6 +30,14 @@ import SelectEngine, {
 } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
+const SELECT_VARIANTS = {
+  typeahead: "typeahead",
+  button: "button",
+  static: "static",
+} as const;
+export type SelectVariant =
+  (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
+
 interface DSelectSignature {
   Args: {
     value?: SelectValue;
@@ -57,7 +65,7 @@ interface DSelectSignature {
      * `role="combobox"` input; `"button"` keeps a button trigger with the filter in the
      * panel; `"static"` is a short, unsearchable list (the native-`<select>` replacement).
      */
-    variant?: "typeahead" | "button" | "static";
+    variant?: SelectVariant;
   };
   Element: HTMLElement;
   Blocks: {
@@ -161,8 +169,8 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /** The trigger style; defaults to `typeahead`. */
-  get variant(): "typeahead" | "button" | "static" {
-    return this.args.variant ?? "typeahead";
+  get variant(): SelectVariant {
+    return this.args.variant ?? SELECT_VARIANTS.typeahead;
   }
 
   /**
@@ -171,12 +179,12 @@ export default class DSelect extends Component<DSelectSignature> {
    * item), so `typeahead` only takes effect for single-select.
    */
   get isTypeahead(): boolean {
-    return this.variant === "typeahead" && !this.args.multiple;
+    return this.variant === SELECT_VARIANTS.typeahead && !this.args.multiple;
   }
 
   /** Static/simple mode: a short unsearchable list; the listbox takes focus. */
   get isStatic(): boolean {
-    return this.variant === "static";
+    return this.variant === SELECT_VARIANTS.static;
   }
 
   /**
