@@ -1,24 +1,17 @@
 .chat-channel-preview-card {
   padding: var(--space-4);
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   z-index: 3;
   border: 1px solid var(--tertiary-medium);
   background: rgb(var(--tertiary-rgb), 0.075);
   box-shadow: var(--shadow-card);
   border-radius: var(--d-border-radius-large);
-  margin: var(--space-4);
+  margin: var(--space-4) auto;
   margin-top: var(--space-1);
-
-  .chat-channel__placeholder {
-    color: var(--primary-medium);
-  }
-
-  &.--anon {
-    gap: var(--space-3);
-  }
+  width: max-content;
+  min-width: 60%;
+  gap: var(--space-3);
 
   &__icon {
     display: flex;
@@ -43,6 +36,8 @@
 
   &__actions {
     display: flex;
+    margin-left: auto;
+    padding-left: var(--space-4);
     align-items: center;
     gap: var(--space-2);
   }

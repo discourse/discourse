@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
@@ -16,14 +15,14 @@ export default class ChatChannelPreviewCard extends Component {
     return this.args.channel?.isOpen && this.args.channel?.canJoin;
   }
 
-  get channelPlaceholder() {
-    return i18n("chat.placeholder_channel", {
+  get guestTitle() {
+    return i18n("chat.channel.preview_card.guest_title", {
       channelName: `#${this.args.channel.title}`,
     });
   }
 
-  get guestTitle() {
-    return i18n("chat.channel.preview_card.guest_title", {
+  get noAccessTitle() {
+    return i18n("chat.channel.preview_card.no_access_title", {
       channelName: `#${this.args.channel.title}`,
     });
   }
@@ -40,23 +39,44 @@ export default class ChatChannelPreviewCard extends Component {
 
   <template>
     {{#if this.currentUser}}
-      <div
-        class={{dConcatClass
-          "chat-channel-preview-card"
-          (unless this.showJoinButton "-no-button")
-        }}
-      >
-        {{#if this.showJoinButton}}
-          <div class="chat-channel__placeholder">
-            {{this.channelPlaceholder}}
+      {{#if this.showJoinButton}}
+        <div class="chat-channel-preview-card --logged-in">
+          <div class="chat-channel-preview-card__icon">
+            {{dIcon "lock"}}
           </div>
 
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash joinClass="btn-primary" labelType="short"}}
-          />
-        {{/if}}
-      </div>
+          <div class="chat-channel-preview-card__content">
+            <div class="chat-channel-preview-card__title">
+              {{this.guestTitle}}
+            </div>
+            <div class="chat-channel-preview-card__body">
+              {{i18n "chat.channel.preview_card.join_body"}}
+            </div>
+          </div>
+
+          <div class="chat-channel-preview-card__actions">
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash joinClass="btn-primary" labelType="short"}}
+            />
+          </div>
+        </div>
+      {{else}}
+        <div class="chat-channel-preview-card --logged-in --no-access">
+          <div class="chat-channel-preview-card__icon">
+            {{dIcon "lock"}}
+          </div>
+
+          <div class="chat-channel-preview-card__content">
+            <div class="chat-channel-preview-card__title">
+              {{this.noAccessTitle}}
+            </div>
+            <div class="chat-channel-preview-card__body">
+              {{i18n "chat.channel.preview_card.no_access_body"}}
+            </div>
+          </div>
+        </div>
+      {{/if}}
     {{else}}
       <div class="chat-channel-preview-card --anon">
         <div class="chat-channel-preview-card__icon">

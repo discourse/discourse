@@ -463,13 +463,19 @@ en:
           other: "%{count} members"
         empty_state:
           title: "This is the start of %{channelName}"
+          joined_title: "You're the first in %{channelName}"
           guest_tip: "You're reading along as a guest. The conversation starts the moment members post — join in to be one of them."
+          joined_tip: "Be the first to post and start the conversation."
           members_here:
             one: "<strong>%{count} member</strong> here"
             other: "<strong>%{count} members</strong> here"
+          no_other_members: "No other members yet"
         preview_card:
           guest_title: "Join %{channelName} to start chatting"
           guest_body: "Reading is free for everyone. Sign up to post, react, and reply — it takes about 30 seconds."
+          join_body: "You'll be able to post and reply, and it'll show up in your channel list."
+          no_access_title: "You can't join %{channelName}"
+          no_access_body: "This channel isn't open to new members right now."
           log_in: "Log in"
           sign_up: "Sign up"
 
