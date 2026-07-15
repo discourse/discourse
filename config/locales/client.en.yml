@@ -3215,6 +3215,10 @@ en:
     filter_input:
       clear: "Clear filter"
 
+    filter_controls:
+      reset: "Reset filter"
+      toggle: "Toggle dropdown filters"
+
     d_icon_grid_picker:
       select_icon: "Select icon"
       search_placeholder: "Search icons..."
@@ -6479,8 +6483,6 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset filter"
-    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"

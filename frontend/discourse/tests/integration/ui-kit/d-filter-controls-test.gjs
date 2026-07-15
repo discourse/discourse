@@ -3,8 +3,8 @@ import Evented from "@ember/object/evented";
 import Service from "@ember/service";
 import { click, fillIn, render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 
 const SAMPLE_DATA = [
   {
@@ -53,7 +53,7 @@ class RouterStub extends Service.extend(Evented) {
   }
 }
 
-module("Integration | Component | AdminFilterControls", function (hooks) {
+module("Integration | ui-kit | DFilterControls", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders text filter input", async function (assert) {
@@ -61,7 +61,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls @array={{this.data}} @inputPlaceholder="Search...">
+        <DFilterControls @array={{this.data}} @inputPlaceholder="Search...">
           <:content as |filteredData|>
             <div class="results">
               {{#each filteredData as |item|}}
@@ -69,13 +69,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
-    assert
-      .dom(".admin-filter-controls__input")
-      .exists("renders text filter input");
+    assert.dom(".d-filter-controls__input").exists("renders text filter input");
     assert
       .dom(".filter-input")
       .hasAttribute("placeholder", "Search...", "has correct placeholder");
@@ -87,7 +85,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @inputPlaceholder="Search..."
@@ -99,7 +97,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -119,7 +117,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
         >
@@ -130,12 +128,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .exists("renders dropdown filter");
   });
 
@@ -145,7 +143,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
         >
@@ -156,13 +154,13 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert.dom(".item").exists({ count: 3 }, "shows all items initially");
 
-    await select(".admin-filter-controls__dropdown", "feature");
+    await select(".d-filter-controls__dropdown", "feature");
 
     assert
       .dom(".item")
@@ -181,7 +179,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
@@ -193,13 +191,13 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert.dom(".item").exists({ count: 3 }, "shows all items initially");
 
-    await select(".admin-filter-controls__dropdown", "feature");
+    await select(".d-filter-controls__dropdown", "feature");
 
     assert
       .dom(".item")
@@ -219,7 +217,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
         >
@@ -230,21 +228,21 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls__reset")
+      .dom(".d-filter-controls__reset")
       .doesNotExist("no reset button initially");
 
     await fillIn(".filter-input", "nonexistent");
 
     assert
-      .dom(".admin-filter-controls__no-results")
+      .dom(".d-filter-controls__no-results")
       .exists("shows no results message");
     assert
-      .dom(".admin-filter-controls__reset")
+      .dom(".d-filter-controls__reset")
       .exists("shows reset button after filtering");
   });
 
@@ -254,7 +252,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
         >
@@ -265,7 +263,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -278,7 +276,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
       .dom(".item")
       .doesNotExist("does not show any results when filters find none");
 
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.dom(".item").exists({ count: 3 }, "shows all items after reset");
     assert.dom(".filter-input").hasValue("", "clears text input");
@@ -290,7 +288,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
         >
@@ -301,13 +299,13 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     await fillIn(".filter-input", "first");
     assert
-      .dom(".admin-filter-controls > .admin-filter-controls__reset")
+      .dom(".d-filter-controls > .d-filter-controls__reset")
       .exists("shows reset button after filter controls");
   });
 
@@ -316,7 +314,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls @array={{this.data}} @minItemsForFilter={{2}}>
+        <DFilterControls @array={{this.data}} @minItemsForFilter={{2}}>
           <:content as |filteredData|>
             <div class="results">
               {{#each filteredData as |item|}}
@@ -324,12 +322,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls")
+      .dom(".d-filter-controls")
       .doesNotExist("hides filters when items below minimum");
     assert
       .dom(".item")
@@ -344,7 +342,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @onTextFilterChange={{this.textFilterCallback}}
         >
@@ -355,7 +353,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -376,7 +374,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
           @onDropdownFilterChange={{this.dropdownFilterCallback}}
@@ -388,11 +386,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
-    await select(".admin-filter-controls__dropdown", "feature");
+    await select(".d-filter-controls__dropdown", "feature");
 
     assert.verifySteps(
       ["dropdown-filter:feature"],
@@ -409,7 +407,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @onResetFilters={{this.resetCallback}}
@@ -421,12 +419,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     await fillIn(".filter-input", "test");
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.verifySteps(["reset-filters"], "calls reset callback");
   });
@@ -438,7 +436,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @onTextFilterChange={{this.textFilterCallback}}
@@ -450,7 +448,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -469,7 +467,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls @array={{this.data}}>
+        <DFilterControls @array={{this.data}}>
           <:actions>
             <button type="button" class="custom-action">Custom Action</button>
           </:actions>
@@ -480,7 +478,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -494,7 +492,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls @array={{this.data}}>
+        <DFilterControls @array={{this.data}}>
           <:aboveContent>
             <div class="above-content">Above Content Area</div>
           </:aboveContent>
@@ -505,7 +503,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -520,7 +518,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @noResultsMessage="No items found matching your criteria"
@@ -532,14 +530,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     await fillIn(".filter-input", "nonexistent");
 
     assert
-      .dom(".admin-filter-controls__no-results p")
+      .dom(".d-filter-controls__no-results p")
       .hasText(
         "No items found matching your criteria",
         "shows custom no results message"
@@ -552,7 +550,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
         >
@@ -563,12 +561,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .doesNotExist("hides dropdown when only one option");
   });
 
@@ -587,7 +585,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
         >
@@ -598,18 +596,18 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .exists({ count: 2 }, "renders two dropdowns");
     assert
-      .dom(".admin-filter-controls__dropdown--category")
+      .dom(".d-filter-controls__dropdown--category")
       .exists("renders category dropdown");
     assert
-      .dom(".admin-filter-controls__dropdown--enabled")
+      .dom(".d-filter-controls__dropdown--enabled")
       .exists("renders enabled dropdown");
   });
 
@@ -636,7 +634,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
         >
@@ -647,19 +645,19 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert.dom(".item").exists({ count: 3 }, "shows all items initially");
 
-    await select(".admin-filter-controls__dropdown--category", "feature");
+    await select(".d-filter-controls__dropdown--category", "feature");
 
     assert
       .dom(".item")
       .exists({ count: 2 }, "shows only feature items after category filter");
 
-    await select(".admin-filter-controls__dropdown--enabled", "enabled");
+    await select(".d-filter-controls__dropdown--enabled", "enabled");
 
     assert
       .dom(".item")
@@ -687,7 +685,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
@@ -699,17 +697,17 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
-    await select(".admin-filter-controls__dropdown--category", "feature");
+    await select(".d-filter-controls__dropdown--category", "feature");
     await fillIn(".filter-input", "first");
 
     assert.dom(".item").exists({ count: 1 }, "shows filtered results");
 
     await fillIn(".filter-input", "firstblah");
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.dom(".item").exists({ count: 3 }, "shows all items after reset");
   });
@@ -732,7 +730,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
           @onDropdownFilterChange={{this.dropdownFilterCallback}}
@@ -744,12 +742,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
-    await select(".admin-filter-controls__dropdown--category", "feature");
-    await select(".admin-filter-controls__dropdown--enabled", "enabled");
+    await select(".d-filter-controls__dropdown--category", "feature");
+    await select(".d-filter-controls__dropdown--enabled", "enabled");
 
     assert.verifySteps(
       ["dropdown-filter:category:feature", "dropdown-filter:enabled:enabled"],
@@ -773,7 +771,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
           @defaultDropdownValue={{this.defaultDropdownValue}}
@@ -785,7 +783,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
@@ -796,7 +794,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
         "shows only feature items initially because of defaultDropdownValue"
       );
 
-    await select(".admin-filter-controls__dropdown--category", "all");
+    await select(".d-filter-controls__dropdown--category", "all");
 
     assert
       .dom(".item")
@@ -812,7 +810,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @dropdownOptions={{this.dropdownOptions}}
@@ -826,21 +824,21 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert.dom(".item").exists({ count: 3 }, "renders all items");
 
-    await fillIn(".admin-filter-controls__input", "second");
+    await fillIn(".d-filter-controls__input", "second");
     assert.dom(".item").exists({ count: 1 }, "text filtering still works");
 
-    await select(".admin-filter-controls__dropdown", "feature");
+    await select(".d-filter-controls__dropdown", "feature");
     assert
       .dom(".item")
       .doesNotExist("dropdown filtering still combines with text");
 
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
     assert.dom(".item").exists({ count: 3 }, "reset still works");
   });
 
@@ -850,7 +848,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @searchableProps={{this.searchableProps}}
           @textFilterQueryParam="filter"
@@ -863,11 +861,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
-    assert.dom(".admin-filter-controls__input").hasValue("third");
+    assert.dom(".d-filter-controls__input").hasValue("third");
     assert.dom(".item").exists({ count: 1 }, "applies the seeded filter");
   });
 
@@ -883,7 +881,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @dropdownOptions={{this.dropdownOptions}}
           @dropdownFilterQueryParams={{this.dropdownFilterQueryParams}}
@@ -896,12 +894,12 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
               {{/each}}
             </div>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 
     assert
-      .dom(".admin-filter-controls__dropdown--category")
+      .dom(".d-filter-controls__dropdown--category")
       .doesNotExist("keeps inactive dropdown filters collapsed initially");
 
     this.owner
@@ -910,7 +908,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await settled();
 
     assert
-      .dom(".admin-filter-controls__dropdown--category")
+      .dom(".d-filter-controls__dropdown--category")
       .hasValue("feature", "reveals the URL-owned active dropdown");
     assert
       .dom(".item")
@@ -922,7 +920,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await render(
       <template>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.data}}
           @showCustomEmptyState={{true}}
           @minItemsForFilter={{1}}
@@ -933,7 +931,7 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
           <:customEmptyState>
             <div class="custom-empty-state">Custom Empty State</div>
           </:customEmptyState>
-        </AdminFilterControls>
+        </DFilterControls>
       </template>
     );
 

@@ -4,7 +4,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -13,6 +12,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -203,7 +203,7 @@ export default class AdminCategoryManagementList extends Component {
       {{/unless}}
 
       {{#if (availableCategoryType @categoryType)}}
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.categories}}
           @dropdownOptions={{VISIBILITY_FILTER_OPTIONS}}
           @inputPlaceholder={{i18n
@@ -378,7 +378,7 @@ export default class AdminCategoryManagementList extends Component {
               </DLoadMore>
             {{/if}}
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       {{/if}}
     </div>
   </template>
