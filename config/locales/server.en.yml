@@ -3343,6 +3343,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."

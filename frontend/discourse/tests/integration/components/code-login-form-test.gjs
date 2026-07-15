@@ -32,7 +32,11 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
     assert.dom(".code-login-form__email-step").exists();
     assert.form().field("email").hasValue("foo@example.com");
+    assert
+      .dom(".code-login-form__email-step .form-kit__control-input")
+      .hasAttribute("autocomplete", "username");
     assert.dom(".d-otp-input").doesNotExist();
+    assert.dom(".code-login-form__hidden-email").doesNotExist();
   });
 
   test("rejects an invalid email address", async function (assert) {
@@ -56,6 +60,22 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       .includesText("user@example.com");
     assert.dom(".d-otp-input").exists();
     assert.dom(".code-login-form__resend").exists();
+  });
+
+  test("keeps a hidden email field for password managers after the email step", async function (assert) {
+    stubCodeRequest();
+
+    await goToCodeStep();
+
+    assert
+      .dom(".code-login-form__hidden-email")
+      .hasValue("user@example.com")
+      .hasAttribute("autocomplete", "username")
+      .hasAttribute("readonly");
+
+    await click(".code-login-form__change-email");
+
+    assert.dom(".code-login-form__hidden-email").doesNotExist();
   });
 
   test("shows an error and clears the input for a wrong code", async function (assert) {
@@ -88,6 +108,58 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
 
     assert.dom(".code-login-form__second-factor-step").exists();
     assert.dom("#second-factor").exists();
+  });
+
+  test("collects a required full name before completing signup", async function (assert) {
+    stubCodeRequest();
+
+    const verifyRequests = [];
+    pretender.post("/session/login-code/verify", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      verifyRequests.push(params);
+
+      if (params.get("name")) {
+        return response({
+          account_created: true,
+          user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+          can_edit_username: true,
+          prefill_username: false,
+        });
+      }
+
+      return response({ name_required: true });
+    });
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.dom(".code-login-form__user-fields-step").exists();
+    assert
+      .dom("#code-login-name")
+      .exists()
+      .hasAttribute("autocomplete", "name");
+
+    await click(".code-login-form__verify");
+
+    assert
+      .dom(".code-login-form__name-field .code-login-form__error")
+      .hasText(i18n("user.name.required"));
+    assert.strictEqual(
+      verifyRequests.length,
+      1,
+      "an empty name is not submitted"
+    );
+
+    await fillIn("#code-login-name", "  Jane Doe  ");
+    await click(".code-login-form__verify");
+
+    assert.strictEqual(verifyRequests.length, 2);
+    assert.strictEqual(
+      verifyRequests[1].get("name"),
+      "Jane Doe",
+      "the trimmed name is sent"
+    );
+    assert.dom(".code-login-form__complete-step").exists();
   });
 
   test("returns to the email step when using a different email", async function (assert) {
