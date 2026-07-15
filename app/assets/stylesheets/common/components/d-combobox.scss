@@ -7,17 +7,40 @@
   gap: 0.25em;
   width: 100%;
   justify-content: space-between;
-  background: var(--secondary);
-  color: var(--primary);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-input-border-radius, 0.25em);
+  background: var(--d-input-bg-color);
+  color: var(--d-input-text-color);
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
 }
 
 // Typeahead: the trigger is a composite [presentation] · [input] · [caret] box. The box
 // owns border/background/padding; the query input is transparent and grows to fill.
 .d-combobox__trigger.--typeahead {
-  padding: 0.25em 0.5em;
+  @include form-item-sizing;
+  border: var(--d-input-border);
   cursor: text;
+
+  &:focus-within {
+    @include default-focus;
+  }
+
+  .d-combobox__input {
+    flex: 1 1 4em;
+    min-width: 4em;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+
+    &::placeholder {
+      color: var(--primary-medium);
+      opacity: 1;
+    }
+  }
 }
 
 .d-combobox__presentation {
@@ -25,21 +48,6 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.d-combobox__input {
-  flex: 1 1 4em;
-  min-width: 4em;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-
-  &:focus {
-    outline: none;
-  }
 }
 
 .d-combobox__placeholder {
@@ -51,9 +59,14 @@
   flex-shrink: 0;
 }
 
+.d-combobox__content > .fk-d-menu__inner-content {
+  width: 100%;
+}
+
 .d-combobox__panel {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-width: 0;
 }
 
@@ -120,7 +133,9 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25em;
+  box-sizing: border-box;
   width: 100%;
+  padding-inline-start: $hpad;
 }
 
 .d-combobox__chip {

@@ -1,5 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import type Owner from "@ember/owner";
+import { trackedMap } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import {
@@ -44,6 +45,13 @@ export interface SelectItem {
 
   /** Arbitrary domain fields, addressed dynamically by `valueField` / `labelField`. */
   [key: string]: unknown;
+}
+
+export function selectItemLabel(
+  item: SelectItem | null | undefined,
+  labelField = "name"
+): string {
+  return String(item?.[labelField] ?? "");
 }
 
 /** Options threaded into a source (`load` / `resolveValue`) call. */
@@ -204,7 +212,7 @@ export default class SelectEngine {
   #state = new SelectState();
 
   /** value → resolved item, so a re-render or reopen never re-fetches a label. */
-  #resolvedCache = new Map<SelectItemId, SelectItem>();
+  #resolvedCache = trackedMap<SelectItemId, SelectItem>();
 
   #multiple: boolean;
   #identifiers: string[];
@@ -326,6 +334,18 @@ export default class SelectEngine {
   /** Whether the source is server-backed (drives debouncing). */
   get isAsync(): boolean {
     return this.#isAsync;
+  }
+
+  getItemLabel(item: SelectItem | null | undefined): string {
+    return selectItemLabel(item, this.#labelField);
+  }
+
+  getSingleSelectionLabel(value: SelectValue): string {
+    if (value == null || Array.isArray(value)) {
+      return "";
+    }
+
+    return this.getItemLabel(this.#resolveOneSync(value));
   }
 
   /** Whether this is a multi-select. */
@@ -677,21 +697,26 @@ export default class SelectEngine {
     const result = this.#resolveValue?.(value, opts);
     if (this.#isPromise(result)) {
       return result.then((item) => {
-        if (item) {
-          this.#resolvedCache.set(value, item);
-        }
+        this.#cacheResolvedValue(value, item);
         return item;
       });
     }
-    if (result) {
-      this.#resolvedCache.set(value, result);
-    }
+    this.#cacheResolvedValue(value, result);
     return result;
   }
 
   #cacheResolved(item: SelectItem | null | undefined): void {
     if (item) {
-      this.#resolvedCache.set(this.#itemValue(item), item);
+      this.#cacheResolvedValue(this.#itemValue(item), item);
+    }
+  }
+
+  #cacheResolvedValue(
+    value: SelectItemId,
+    item: SelectItem | null | undefined
+  ): void {
+    if (item && this.#resolvedCache.get(value) !== item) {
+      this.#resolvedCache.set(value, item);
     }
   }
 
