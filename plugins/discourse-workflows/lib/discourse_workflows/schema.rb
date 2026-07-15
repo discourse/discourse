@@ -143,18 +143,6 @@ module DiscourseWorkflows
 
     TOPIC_LIST_ITEM_SCHEMA = entity("topic", TOPIC_PROPERTIES, "TopicListItemSerializer payload")
     POST_SCHEMA = entity("post", POST_PROPERTIES, "DiscourseWorkflows::PostSerializer payload")
-    WEBHOOK_POST_SCHEMA =
-      entity(
-        "post",
-        POST_PROPERTIES.except(
-          "category_name",
-          "excerpt",
-          "like_count",
-          "tags",
-          "upload_ids",
-        ).merge("category_slug" => { "type" => "string" }),
-        "WebHookPostSerializer payload",
-      )
     BASIC_USER_SCHEMA = entity("user", BASIC_USER_PROPERTIES, "BasicUserSerializer payload")
     USER_SCHEMA = entity("user", USER_PROPERTIES, "Basic safe user attributes")
     USER_ACTION_SCHEMA =
