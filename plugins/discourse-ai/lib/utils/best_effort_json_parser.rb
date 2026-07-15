@@ -67,17 +67,13 @@ module DiscourseAi
         # object (observed: a duplicated opening brace-quote). Restart parsing
         # from the object brace that precedes the schema key.
         def parse_from_key_object(cleaned, key)
-          ["\"#{key}\"", "'#{key}'"].each do |quoted_key|
-            key_idx = cleaned.index(quoted_key)
-            next if key_idx.nil?
+          key_idx = cleaned.index("\"#{key}\"") || cleaned.index("'#{key}'")
+          return if key_idx.nil?
 
-            start = cleaned.rindex("{", key_idx)
-            next if start.nil? || start.zero?
+          start = cleaned.rindex("{", key_idx)
+          return if start.nil? || start.zero?
 
-            return JsonCompleter.parse(escape_control_characters(cleaned[start..]))
-          end
-
-          nil
+          JsonCompleter.parse(escape_control_characters(cleaned[start..]))
         end
 
         def remove_markdown_fences(text)
