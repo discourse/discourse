@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
-import { imageBase62Sha1 } from "discourse/plugins/discourse-ai/discourse/lib/post-image-description-editor";
+import { imageBase62Sha1 } from "discourse/plugins/discourse-ai/discourse/lib/post-image-caption-editor";
 
-module("Unit | Lib | post-image-description-editor", function () {
+module("Unit | Lib | post-image-caption-editor", function () {
   test("imageBase62Sha1 reads data-base62-sha1", function (assert) {
     const image = document.createElement("img");
     image.dataset.base62Sha1 = "abc123XYZ";

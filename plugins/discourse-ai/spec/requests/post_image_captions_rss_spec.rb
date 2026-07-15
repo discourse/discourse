@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI post image descriptions in RSS" do
+describe "AI post image captions in RSS" do
   fab!(:upload) do
     UploadCreator.new(
       file_from_fixtures(
@@ -23,7 +23,7 @@ describe "AI post image descriptions in RSS" do
 
   it "omits generated descriptions from topic feeds", :aggregate_failures do
     description = "A generated RSS-only 字 description"
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -34,7 +34,7 @@ describe "AI post image descriptions in RSS" do
           attempts: 0,
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
 
     processor = CookedPostProcessor.new(post)

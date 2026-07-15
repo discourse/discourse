@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit AI post image descriptions" do
+describe "Edit AI post image captions" do
   fab!(:admin)
   fab!(:first_cat_upload) { create_image_upload("100x100.jpg", "first-cat.jpg") }
   fab!(:second_cat_upload) do
@@ -59,7 +59,7 @@ describe "Edit AI post image descriptions" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:captions) { PageObjects::Components::AiPostImageDescriptions.new }
+  let(:captions) { PageObjects::Components::AiPostImageCaptions.new }
 
   let(:first_cat_caption) { "An old caption for the first cat" }
   let(:second_cat_caption) { "An old caption for the shared second cat" }
@@ -94,39 +94,27 @@ describe "Edit AI post image descriptions" do
     expect(captions).to have_post_image_count(first_post, count: 0)
     expect(captions).to have_post_image_count(second_post, count: 2)
     expect(captions).to have_post_image_count(third_post, count: 1)
-    expect(captions).to have_image_description(
-      second_post,
-      image: 2,
-      description: second_cat_caption,
-    )
-    expect(captions).to have_image_description(
-      third_post,
-      image: 1,
-      description: second_cat_caption,
-    )
+    expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
+    expect(captions).to have_image_caption(third_post, image: 1, description: second_cat_caption)
 
     topic_page.expand_post_actions(second_post)
     topic_page.click_post_action_button(second_post, :edit)
     expect(composer).to be_opened
     expect(captions).to have_editor_button_count(count: 2)
 
-    captions.edit_preview_image_description(image: 2, description: edited_second_cat_caption)
+    captions.edit_preview_image_caption(image: 2, description: edited_second_cat_caption)
     process_description_cooked(post_id: second_post.id, locale: "en")
     composer.close
     expect(composer).to be_closed
 
     topic_page.visit_topic(cat_topic)
 
-    expect(captions).to have_image_description(
+    expect(captions).to have_image_caption(
       second_post,
       image: 2,
       description: edited_second_cat_caption,
     )
-    expect(captions).to have_image_description(
-      third_post,
-      image: 1,
-      description: second_cat_caption,
-    )
+    expect(captions).to have_image_caption(third_post, image: 1, description: second_cat_caption)
   end
 
   it "shows locale-specific captions and original-locale fallback", :aggregate_failures do
@@ -139,19 +127,14 @@ describe "Edit AI post image descriptions" do
     Fabricate(:topic_localization, topic: cat_topic, locale: "ja", fancy_title: "猫についての話題")
     create_japanese_localization(second_post)
     seed_english_descriptions
-    seed_image_description(second_post, first_cat_upload, japanese_first_cat_caption, locale: "ja")
-    seed_image_description(
-      second_post,
-      second_cat_upload,
-      japanese_second_cat_caption,
-      locale: "ja",
-    )
+    seed_image_caption(second_post, first_cat_upload, japanese_first_cat_caption, locale: "ja")
+    seed_image_caption(second_post, second_cat_upload, japanese_second_cat_caption, locale: "ja")
     process_description_cooked(post_id: second_post.id, locale: "ja")
 
     sign_in(admin)
     topic_page.visit_topic(cat_topic)
 
-    expect(captions).to have_image_description(
+    expect(captions).to have_image_caption(
       second_post,
       image: 2,
       description: japanese_second_cat_caption,
@@ -160,11 +143,7 @@ describe "Edit AI post image descriptions" do
     admin.user_option.update!(show_original_content: true)
     topic_page.visit_topic(cat_topic)
 
-    expect(captions).to have_image_description(
-      second_post,
-      image: 2,
-      description: second_cat_caption,
-    )
+    expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
   end
 
   def create_image_upload(filename, original_filename)
@@ -185,18 +164,18 @@ describe "Edit AI post image descriptions" do
   end
 
   def seed_english_descriptions
-    seed_image_description(second_post, first_cat_upload, first_cat_caption)
-    seed_image_description(second_post, second_cat_upload, second_cat_caption)
-    seed_image_description(third_post, second_cat_upload, second_cat_caption)
-    seed_image_description(other_post, dog_upload, dog_caption)
+    seed_image_caption(second_post, first_cat_upload, first_cat_caption)
+    seed_image_caption(second_post, second_cat_upload, second_cat_caption)
+    seed_image_caption(third_post, second_cat_upload, second_cat_caption)
+    seed_image_caption(other_post, dog_upload, dog_caption)
 
     process_description_cooked(post_id: second_post.id, locale: "en")
     process_description_cooked(post_id: third_post.id, locale: "en")
     process_description_cooked(post_id: other_post.id, locale: "en")
   end
 
-  def seed_image_description(post, upload, description, locale: "en")
-    AiPostImageDescription.create!(
+  def seed_image_caption(post, upload, description, locale: "en")
+    AiPostImageCaption.create!(
       post_id: post.id,
       upload_id: upload.id,
       base62_sha1: upload.base62_sha1,
@@ -223,9 +202,9 @@ describe "Edit AI post image descriptions" do
 
   def process_description_cooked(post_id:, locale:)
     post = Post.find(post_id)
-    locale = locale.presence || DiscourseAi::PostImageDescriptions.original_locale(post)
+    locale = locale.presence || DiscourseAi::PostImageCaptions.original_locale(post)
 
-    if locale == DiscourseAi::PostImageDescriptions.original_locale(post)
+    if locale == DiscourseAi::PostImageCaptions.original_locale(post)
       Jobs::ProcessPost.new.execute(post_id: post.id, bypass_bump: true)
     else
       PostLocalization

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PostImageDescriptionsBackfill do
+describe Jobs::PostImageCaptionsBackfill do
   fab!(:upload) do
     UploadCreator.new(
       file_from_fixtures(
@@ -29,7 +29,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   def store_description(target_upload)
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -40,14 +40,14 @@ describe Jobs::PostImageDescriptionsBackfill do
           attempts: 0,
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
   end
 
   def store_attempt(created_at:, target_post: nil, last_attempted_at: nil)
     target_post ||= Fabricate(:post)
 
-    AiPostImageDescription.create!(
+    AiPostImageCaption.create!(
       post_id: target_post.id,
       upload_id: upload.id,
       base62_sha1: upload.base62_sha1,
@@ -62,25 +62,21 @@ describe Jobs::PostImageDescriptionsBackfill do
   it "does nothing when backfill is disabled" do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 0
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
-  it "does nothing when post image descriptions are disabled" do
+  it "does nothing when post image captions are disabled" do
     SiteSetting.ai_post_image_captions_enabled = false
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "enqueues posts without existing descriptions" do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -92,7 +88,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -108,7 +104,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     described_class.new.execute({})
 
     jobs =
-      Jobs::GeneratePostImageDescriptions
+      Jobs::GeneratePostImageCaptions
         .jobs
         .last(2)
         .map { |job| job["args"].first.slice("post_id", "locale") }
@@ -124,27 +120,21 @@ describe Jobs::PostImageDescriptionsBackfill do
     SiteSetting.ai_post_image_captions_backfill_max_age_days = 30
     post.update_column(:created_at, 31.days.ago)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "respects the hourly backfill budget" do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
     store_attempt(created_at: 10.minutes.ago)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "counts recent retry attempts against the backfill budget" do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
     store_attempt(created_at: 2.days.ago, last_attempted_at: 10.minutes.ago)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "does not repeatedly enqueue described posts with image attachments" do
@@ -169,22 +159,18 @@ describe Jobs::PostImageDescriptionsBackfill do
 
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "does not enqueue posts with an original locale description" do
     store_description(upload)
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "does not immediately re-enqueue recently attempted posts" do
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -197,14 +183,12 @@ describe Jobs::PostImageDescriptionsBackfill do
           last_error: "blank_response",
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
 
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "re-enqueues posts with retryable image attempts" do
@@ -226,7 +210,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     post.link_post_uploads
     store_description(upload)
 
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -239,13 +223,13 @@ describe Jobs::PostImageDescriptionsBackfill do
           last_error: "rate limited",
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
 
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -257,9 +241,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
     LlmCreditAllocation.stubs(:credits_available?).returns(false)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 
   it "uses post image ids for backfill candidates" do
@@ -267,7 +249,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     post.update_column(:cooked, "<p>No upload marker</p>")
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -279,8 +261,6 @@ describe Jobs::PostImageDescriptionsBackfill do
     SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
     post.update_column(:image_upload_id, nil)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
-      described_class.new.execute({})
-    end
+    expect_not_enqueued_with(job: :generate_post_image_captions) { described_class.new.execute({}) }
   end
 end

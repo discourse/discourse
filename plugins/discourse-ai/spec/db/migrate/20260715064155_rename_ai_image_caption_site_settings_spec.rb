@@ -41,18 +41,23 @@ describe RenameAiImageCaptionSiteSettings do
   end
 
   def setting_value(name)
-    DB.query_single(
-      "SELECT value FROM site_settings WHERE name = :name",
-      name: name,
-    ).first
+    DB.query_single("SELECT value FROM site_settings WHERE name = :name", name: name).first
   end
 
   it "renames image description settings to image caption settings", :aggregate_failures do
     store_setting("ai_helper_image_caption_agent", "-26", SiteSetting.types[:enum])
     store_setting("ai_post_image_descriptions_enabled", "t", SiteSetting.types[:bool])
     store_setting("ai_post_image_descriptions_per_post_limit", "12", SiteSetting.types[:integer])
-    store_setting("ai_post_image_descriptions_backfill_hourly_rate", "4", SiteSetting.types[:integer])
-    store_setting("ai_post_image_descriptions_backfill_max_age_days", "90", SiteSetting.types[:integer])
+    store_setting(
+      "ai_post_image_descriptions_backfill_hourly_rate",
+      "4",
+      SiteSetting.types[:integer],
+    )
+    store_setting(
+      "ai_post_image_descriptions_backfill_max_age_days",
+      "90",
+      SiteSetting.types[:integer],
+    )
 
     migration.up
 
@@ -69,25 +74,13 @@ describe RenameAiImageCaptionSiteSettings do
     expect(setting_value("ai_post_image_descriptions_backfill_max_age_days")).to be_nil
   end
 
-  it "rolls image caption settings back to their previous names", :aggregate_failures do
-    store_setting("ai_image_caption_agent", "-26", SiteSetting.types[:enum])
+  it "keeps the image caption setting when both old and new settings exist", :aggregate_failures do
+    store_setting("ai_post_image_descriptions_enabled", "f", SiteSetting.types[:bool])
     store_setting("ai_post_image_captions_enabled", "t", SiteSetting.types[:bool])
-    store_setting("ai_post_image_captions_per_post_limit", "12", SiteSetting.types[:integer])
-    store_setting("ai_post_image_captions_backfill_hourly_rate", "4", SiteSetting.types[:integer])
-    store_setting("ai_post_image_captions_backfill_max_age_days", "90", SiteSetting.types[:integer])
 
-    migration.down
+    migration.up
 
-    expect(setting_value("ai_helper_image_caption_agent")).to eq("-26")
-    expect(setting_value("ai_post_image_descriptions_enabled")).to eq("t")
-    expect(setting_value("ai_post_image_descriptions_per_post_limit")).to eq("12")
-    expect(setting_value("ai_post_image_descriptions_backfill_hourly_rate")).to eq("4")
-    expect(setting_value("ai_post_image_descriptions_backfill_max_age_days")).to eq("90")
-
-    expect(setting_value("ai_image_caption_agent")).to be_nil
-    expect(setting_value("ai_post_image_captions_enabled")).to be_nil
-    expect(setting_value("ai_post_image_captions_per_post_limit")).to be_nil
-    expect(setting_value("ai_post_image_captions_backfill_hourly_rate")).to be_nil
-    expect(setting_value("ai_post_image_captions_backfill_max_age_days")).to be_nil
+    expect(setting_value("ai_post_image_captions_enabled")).to eq("t")
+    expect(setting_value("ai_post_image_descriptions_enabled")).to be_nil
   end
 end

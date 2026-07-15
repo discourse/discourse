@@ -398,12 +398,12 @@ en:
         agent_vision_disabled: "The AI image caption agent must have image uploads enabled."
         llm_missing: "The AI image caption agent must use an LLM."
         llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."
-    post_image_descriptions:
+    post_image_captions:
       errors:
-        description_blank: "Description can't be blank."
+        description_blank: "Caption can't be blank."
         description_too_long:
-          one: "Description must be %{count} character or fewer."
-          other: "Description must be %{count} characters or fewer."
+          one: "Caption must be %{count} character or fewer."
+          other: "Caption must be %{count} characters or fewer."
 
     share_ai:
       read_more: "Read full transcript"

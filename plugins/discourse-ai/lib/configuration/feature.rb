@@ -401,7 +401,7 @@ module DiscourseAi
             when DiscourseAi::Configuration::Module::AI_HELPER
               DiscourseAi::AiHelper::Assistant.find_ai_helper_model(name, agent_klass)
             when DiscourseAi::Configuration::Module::IMAGE_CAPTION
-              DiscourseAi::PostImageDescriptions.image_caption_llm_model(agent)
+              DiscourseAi::PostImageCaptions.image_caption_llm_model(agent)
             when DiscourseAi::Configuration::Module::TRANSLATION
               DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
             when DiscourseAi::Configuration::Module::EMBEDDINGS

@@ -232,12 +232,12 @@ en:
 
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        edit: "Edit AI image description"
-        title: "Edit AI image description"
-        description: "Description"
-        save: "Save description"
-        saved: "AI image description saved"
+      post_image_captions:
+        edit: "Edit AI image caption"
+        title: "Edit AI image caption"
+        description: "Caption"
+        save: "Save caption"
+        saved: "AI image caption saved"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"

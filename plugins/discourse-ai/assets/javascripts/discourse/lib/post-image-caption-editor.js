@@ -71,16 +71,16 @@ function base62Encode(number) {
   return encoded;
 }
 
-export function ensureImageDescriptionTarget(imageWrapper) {
+export function ensureImageCaptionTarget(imageWrapper) {
   const buttonWrapper = imageWrapper.querySelector(".button-wrapper");
   if (!buttonWrapper) {
     return;
   }
 
-  let target = buttonWrapper.querySelector(".ai-post-image-description-editor");
+  let target = buttonWrapper.querySelector(".ai-post-image-caption-editor");
   if (!target) {
     target = document.createElement("span");
-    target.className = "ai-post-image-description-editor";
+    target.className = "ai-post-image-caption-editor";
     buttonWrapper.appendChild(target);
   }
 

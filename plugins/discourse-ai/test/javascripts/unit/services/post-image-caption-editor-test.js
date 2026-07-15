@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { EDIT } from "discourse/models/composer";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
-module("Unit | Service | post-image-description-editor", function (hooks) {
+module("Unit | Service | post-image-caption-editor", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -18,61 +18,51 @@ module("Unit | Service | post-image-description-editor", function (hooks) {
 
     owner.lookup("service:site-settings").ai_post_image_captions_enabled = true;
 
-    const service = owner.lookup("service:post-image-description-editor");
-    service.descriptions = new Map();
+    const service = owner.lookup("service:post-image-caption-editor");
+    service.captions = new Map();
     service.loadedKey = null;
     service.loadingKey = null;
   });
 
-  test("ensureLoaded fetches descriptions for the edited post", async function (assert) {
-    pretender.get(
-      "/discourse-ai/post-image-descriptions/:post_id",
-      (request) => {
-        assert.strictEqual(request.params.post_id, "42");
-        assert.strictEqual(request.queryParams.locale, "ja");
+  test("ensureLoaded fetches captions for the edited post", async function (assert) {
+    pretender.get("/discourse-ai/post-image-captions/:post_id", (request) => {
+      assert.strictEqual(request.params.post_id, "42");
+      assert.strictEqual(request.queryParams.locale, "ja");
 
-        return response({
-          descriptions: [
-            { base62_sha1: "abc123", description: "A stored description" },
-          ],
-        });
-      }
-    );
+      return response({
+        captions: [
+          { base62_sha1: "abc123", description: "A stored description" },
+        ],
+      });
+    });
 
-    const service = getOwner(this).lookup(
-      "service:post-image-description-editor"
-    );
+    const service = getOwner(this).lookup("service:post-image-caption-editor");
 
     await service.ensureLoaded();
 
-    assert.strictEqual(
-      service.descriptionFor("abc123"),
-      "A stored description"
-    );
+    assert.strictEqual(service.captionFor("abc123"), "A stored description");
   });
 
   test("ensureLoaded skips non-edit composers", async function (assert) {
     let requestCount = 0;
-    pretender.get("/discourse-ai/post-image-descriptions/:post_id", () => {
+    pretender.get("/discourse-ai/post-image-captions/:post_id", () => {
       requestCount += 1;
-      return response({ descriptions: [] });
+      return response({ captions: [] });
     });
 
     const composer = getOwner(this).lookup("service:composer");
     composer.model.action = "reply";
 
-    const service = getOwner(this).lookup(
-      "service:post-image-description-editor"
-    );
+    const service = getOwner(this).lookup("service:post-image-caption-editor");
 
     await service.ensureLoaded();
 
     assert.strictEqual(requestCount, 0);
   });
 
-  test("save updates the local description", async function (assert) {
+  test("save updates the local caption", async function (assert) {
     pretender.put(
-      "/discourse-ai/post-image-descriptions/:post_id/:base62_sha1",
+      "/discourse-ai/post-image-captions/:post_id/:base62_sha1",
       (request) => {
         assert.strictEqual(request.params.post_id, "42");
         assert.strictEqual(request.params.base62_sha1, "abc123");
@@ -87,15 +77,10 @@ module("Unit | Service | post-image-description-editor", function (hooks) {
       }
     );
 
-    const service = getOwner(this).lookup(
-      "service:post-image-description-editor"
-    );
+    const service = getOwner(this).lookup("service:post-image-caption-editor");
 
     await service.save("abc123", "An edited description");
 
-    assert.strictEqual(
-      service.descriptionFor("abc123"),
-      "An edited description"
-    );
+    assert.strictEqual(service.captionFor("abc123"), "An edited description");
   });
 });

@@ -5,13 +5,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { EDIT } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
-export default class PostImageDescriptionEditor extends Service {
+export default class PostImageCaptionEditor extends Service {
   @service a11y;
   @service composer;
   @service siteSettings;
   @service toasts;
 
-  @tracked descriptions = new Map();
+  @tracked captions = new Map();
   @tracked loadedKey = null;
   @tracked loadingKey = null;
 
@@ -39,12 +39,12 @@ export default class PostImageDescriptionEditor extends Service {
     return `${this.currentPostId}:${this.currentLocale || ""}`;
   }
 
-  descriptionFor(base62Sha1) {
+  captionFor(base62Sha1) {
     if (!this.canEditCurrentComposer || this.loadedKey !== this.currentKey) {
       return;
     }
 
-    return this.descriptions.get(base62Sha1);
+    return this.captions.get(base62Sha1);
   }
 
   async ensureLoaded() {
@@ -60,28 +60,28 @@ export default class PostImageDescriptionEditor extends Service {
 
     this.loadingKey = key;
     this.loadedKey = null;
-    this.descriptions = new Map();
+    this.captions = new Map();
 
     try {
       const result = await ajax(
-        `/discourse-ai/post-image-descriptions/${this.currentPostId}`,
+        `/discourse-ai/post-image-captions/${this.currentPostId}`,
         {
           data: this.currentLocale ? { locale: this.currentLocale } : {},
         }
       );
 
       if (this.currentKey === key) {
-        this.descriptions = new Map(
-          result.descriptions.map((description) => [
-            description.base62_sha1,
-            description.description,
+        this.captions = new Map(
+          result.captions.map((caption) => [
+            caption.base62_sha1,
+            caption.description,
           ])
         );
         this.loadedKey = key;
       }
     } catch {
       if (this.currentKey === key) {
-        this.descriptions = new Map();
+        this.captions = new Map();
         this.loadedKey = key;
       }
     } finally {
@@ -94,7 +94,7 @@ export default class PostImageDescriptionEditor extends Service {
   async save(base62Sha1, description) {
     try {
       const result = await ajax(
-        `/discourse-ai/post-image-descriptions/${this.currentPostId}/${base62Sha1}`,
+        `/discourse-ai/post-image-captions/${this.currentPostId}/${base62Sha1}`,
         {
           type: "PUT",
           data: {
@@ -104,12 +104,12 @@ export default class PostImageDescriptionEditor extends Service {
         }
       );
 
-      const descriptions = new Map(this.descriptions);
-      descriptions.set(result.base62_sha1, result.description);
-      this.descriptions = descriptions;
+      const captions = new Map(this.captions);
+      captions.set(result.base62_sha1, result.description);
+      this.captions = captions;
       this.loadedKey = this.currentKey;
 
-      const message = i18n("discourse_ai.post_image_descriptions.saved");
+      const message = i18n("discourse_ai.post_image_captions.saved");
       this.toasts.success({
         duration: "short",
         data: { message },
@@ -124,7 +124,7 @@ export default class PostImageDescriptionEditor extends Service {
   }
 
   #reset() {
-    this.descriptions = new Map();
+    this.captions = new Map();
     this.loadedKey = null;
     this.loadingKey = null;
   }

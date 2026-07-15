@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::GeneratePostImageDescriptions do
+describe Jobs::GeneratePostImageCaptions do
   fab!(:upload) do
     UploadCreator.new(
       file_from_fixtures(
@@ -47,10 +47,10 @@ describe Jobs::GeneratePostImageDescriptions do
       end
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
     prompt = prompts.first
 
-    expect(image_description.description).to eq(description)
+    expect(image_caption.description).to eq(description)
     expect(post.reload.post_search_data.raw_data).to include(description)
     expect(prompt.post_id).to eq(post.id)
     expect(prompt.topic_id).to eq(post.topic_id)
@@ -64,7 +64,7 @@ describe Jobs::GeneratePostImageDescriptions do
     )
     existing_post.link_post_uploads
 
-    AiPostImageDescription.create!(
+    AiPostImageCaption.create!(
       post_id: existing_post.id,
       upload_id: upload.id,
       base62_sha1: upload.base62_sha1,
@@ -83,10 +83,10 @@ describe Jobs::GeneratePostImageDescriptions do
       expect(canned_response.completions).to eq(0)
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to eq("A reusable description")
-    expect(image_description.attempts).to eq(0)
+    expect(image_caption.description).to eq("A reusable description")
+    expect(image_caption.attempts).to eq(0)
   end
 
   it "replaces retryable rows with reused descriptions", :aggregate_failures do
@@ -97,7 +97,7 @@ describe Jobs::GeneratePostImageDescriptions do
     )
     existing_post.link_post_uploads
 
-    AiPostImageDescription.create!(
+    AiPostImageCaption.create!(
       post_id: existing_post.id,
       upload_id: upload.id,
       base62_sha1: upload.base62_sha1,
@@ -106,7 +106,7 @@ describe Jobs::GeneratePostImageDescriptions do
       attempts: 1,
     )
 
-    AiPostImageDescription.create!(
+    AiPostImageCaption.create!(
       post_id: post.id,
       upload_id: upload.id,
       base62_sha1: upload.base62_sha1,
@@ -127,12 +127,12 @@ describe Jobs::GeneratePostImageDescriptions do
       expect(canned_response.completions).to eq(0)
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to eq("A reusable retry description")
-    expect(image_description.attempts).to eq(0)
-    expect(image_description.last_attempted_at).to be_nil
-    expect(image_description.last_error).to be_nil
+    expect(image_caption.description).to eq("A reusable retry description")
+    expect(image_caption.attempts).to eq(0)
+    expect(image_caption.last_attempted_at).to be_nil
+    expect(image_caption.last_error).to be_nil
   end
 
   it "ignores images that are no longer in the post" do
@@ -146,7 +146,7 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    expect(AiPostImageDescription.exists?(post_id: post.id)).to eq(false)
+    expect(AiPostImageCaption.exists?(post_id: post.id)).to eq(false)
   end
 
   it "records uncaptionable backfill candidates" do
@@ -154,11 +154,11 @@ describe Jobs::GeneratePostImageDescriptions do
 
     described_class.new.execute(post_id: post.id, locale: SiteSetting.default_locale)
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to be_nil
-    expect(image_description.attempts).to eq(1)
-    expect(image_description.last_error).to eq("no_post_image_nodes")
+    expect(image_caption.description).to be_nil
+    expect(image_caption.attempts).to eq(1)
+    expect(image_caption.last_error).to eq("no_post_image_nodes")
   end
 
   it "records blank responses without retrying immediately", :aggregate_failures do
@@ -170,11 +170,11 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to be_nil
-    expect(image_description.attempts).to eq(1)
-    expect(image_description.last_error).to eq("blank_response")
+    expect(image_caption.description).to be_nil
+    expect(image_caption.attempts).to eq(1)
+    expect(image_caption.last_error).to eq("blank_response")
 
     DiscourseAi::Completions::Llm.with_prepared_responses(["second attempt"]) do
       described_class.new.execute(
@@ -184,10 +184,10 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to be_nil
-    expect(image_description.attempts).to eq(1)
+    expect(image_caption.description).to be_nil
+    expect(image_caption.attempts).to eq(1)
   end
 
   it "updates retryable attempt rows", :aggregate_failures do
@@ -199,7 +199,7 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    AiPostImageDescription.where(
+    AiPostImageCaption.where(
       post_id: post.id,
       locale: SiteSetting.default_locale,
       base62_sha1: upload.base62_sha1,
@@ -213,16 +213,16 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    image_description =
-      AiPostImageDescription.find_by(
+    image_caption =
+      AiPostImageCaption.find_by(
         post_id: post.id,
         locale: SiteSetting.default_locale,
         base62_sha1: upload.base62_sha1,
       )
 
-    expect(image_description.description).to eq("second attempt")
-    expect(image_description.attempts).to eq(2)
-    expect(image_description.last_error).to be_nil
+    expect(image_caption.description).to eq("second attempt")
+    expect(image_caption.attempts).to eq(2)
+    expect(image_caption.last_error).to be_nil
   end
 
   it "limits generated descriptions per post", :aggregate_failures do
@@ -257,14 +257,14 @@ describe Jobs::GeneratePostImageDescriptions do
     end
 
     expect(
-      AiPostImageDescription.exists?(
+      AiPostImageCaption.exists?(
         post_id: post.id,
         base62_sha1: upload.base62_sha1,
         description: "first generated description",
       ),
     ).to eq(true)
     expect(
-      AiPostImageDescription.exists?(post_id: post.id, base62_sha1: second_upload.base62_sha1),
+      AiPostImageCaption.exists?(post_id: post.id, base62_sha1: second_upload.base62_sha1),
     ).to eq(false)
   end
 
@@ -287,7 +287,7 @@ describe Jobs::GeneratePostImageDescriptions do
     post.link_post_uploads
 
     DiscourseAi::Completions::Llm.with_prepared_responses(
-      ["A generated first image description", StandardError.new("rate limited")],
+      ["A generated first image caption", StandardError.new("rate limited")],
     ) do
       described_class.new.execute(
         post_id: post.id,
@@ -296,11 +296,11 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
+    expect(AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id).description).to eq(
+      "A generated first image caption",
+    )
     expect(
-      AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id).description,
-    ).to eq("A generated first image description")
-    expect(
-      AiPostImageDescription.find_by(post_id: post.id, upload_id: second_upload.id).last_error,
+      AiPostImageCaption.find_by(post_id: post.id, upload_id: second_upload.id).last_error,
     ).to eq("rate limited")
   end
 
@@ -317,10 +317,10 @@ describe Jobs::GeneratePostImageDescriptions do
       expect(canned_response.completions).to eq(0)
     end
 
-    image_description = AiPostImageDescription.find_by(post_id: post.id, upload_id: upload.id)
+    image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
-    expect(image_description.description).to be_nil
-    expect(image_description.last_error).to eq("upload_not_captionable")
+    expect(image_caption.description).to be_nil
+    expect(image_caption.last_error).to eq("upload_not_captionable")
   end
 
   it "skips generation when credits are unavailable" do
@@ -334,7 +334,7 @@ describe Jobs::GeneratePostImageDescriptions do
       )
     end
 
-    expect(AiPostImageDescription.exists?(post_id: post.id)).to eq(false)
+    expect(AiPostImageCaption.exists?(post_id: post.id)).to eq(false)
   end
 
   it "keeps localized descriptions out of original search data", :aggregate_failures do
@@ -349,7 +349,7 @@ describe Jobs::GeneratePostImageDescriptions do
     end
 
     expect(
-      AiPostImageDescription.exists?(post_id: post.id, locale: "ja", description: description),
+      AiPostImageCaption.exists?(post_id: post.id, locale: "ja", description: description),
     ).to eq(true)
     expect(post.reload.post_search_data.raw_data).not_to include(description)
   end

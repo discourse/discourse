@@ -845,10 +845,10 @@ ALTER SEQUENCE public.ai_moderation_settings_id_seq OWNED BY public.ai_moderatio
 
 
 --
--- Name: ai_post_image_descriptions; Type: TABLE; Schema: public; Owner: -
+-- Name: ai_post_image_captions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.ai_post_image_descriptions (
+CREATE TABLE public.ai_post_image_captions (
     id bigint NOT NULL,
     post_id integer NOT NULL,
     upload_id integer NOT NULL,
@@ -864,10 +864,10 @@ CREATE TABLE public.ai_post_image_descriptions (
 
 
 --
--- Name: ai_post_image_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.ai_post_image_descriptions_id_seq
+CREATE SEQUENCE public.ai_post_image_captions_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -876,10 +876,10 @@ CREATE SEQUENCE public.ai_post_image_descriptions_id_seq
 
 
 --
--- Name: ai_post_image_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.ai_post_image_descriptions_id_seq OWNED BY public.ai_post_image_descriptions.id;
+ALTER SEQUENCE public.ai_post_image_captions_id_seq OWNED BY public.ai_post_image_captions.id;
 
 
 --
@@ -12375,10 +12375,10 @@ ALTER TABLE ONLY public.ai_moderation_settings ALTER COLUMN id SET DEFAULT nextv
 
 
 --
--- Name: ai_post_image_descriptions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ai_post_image_captions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.ai_post_image_descriptions ALTER COLUMN id SET DEFAULT nextval('public.ai_post_image_descriptions_id_seq'::regclass);
+ALTER TABLE ONLY public.ai_post_image_captions ALTER COLUMN id SET DEFAULT nextval('public.ai_post_image_captions_id_seq'::regclass);
 
 
 --
@@ -14596,11 +14596,11 @@ ALTER TABLE ONLY public.ai_moderation_settings
 
 
 --
--- Name: ai_post_image_descriptions ai_post_image_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ai_post_image_captions ai_post_image_captions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.ai_post_image_descriptions
-    ADD CONSTRAINT ai_post_image_descriptions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.ai_post_image_captions
+    ADD CONSTRAINT ai_post_image_captions_pkey PRIMARY KEY (id);
 
 
 --
@@ -17173,17 +17173,17 @@ CREATE UNIQUE INDEX idx_ai_bot_conversation_stars_user_topic ON public.discourse
 
 
 --
--- Name: idx_ai_post_image_descriptions_lookup; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_ai_post_image_captions_lookup; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_ai_post_image_descriptions_lookup ON public.ai_post_image_descriptions USING btree (post_id, locale, base62_sha1);
+CREATE UNIQUE INDEX idx_ai_post_image_captions_lookup ON public.ai_post_image_captions USING btree (post_id, locale, base62_sha1);
 
 
 --
--- Name: idx_ai_post_image_descriptions_reuse; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_ai_post_image_captions_reuse; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_ai_post_image_descriptions_reuse ON public.ai_post_image_descriptions USING btree (base62_sha1, locale);
+CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions USING btree (base62_sha1, locale);
 
 
 --
@@ -22648,6 +22648,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715090434'),
+('20260715090355'),
 ('20260715064155'),
 ('20260713180615'),
 ('20260708095336'),

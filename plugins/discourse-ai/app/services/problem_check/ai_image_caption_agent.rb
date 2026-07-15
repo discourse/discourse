@@ -15,7 +15,7 @@ class ProblemCheck::AiImageCaptionAgent < ProblemCheck
     agent_class = agent.class_instance
     return agent_problem(:agent_vision_disabled, agent_id: agent_id) if !agent_class&.vision_enabled
 
-    llm_model = DiscourseAi::PostImageDescriptions.image_caption_llm_model(agent)
+    llm_model = DiscourseAi::PostImageCaptions.image_caption_llm_model(agent)
     return agent_problem(:llm_missing, agent_id: agent_id) if llm_model.blank?
     return agent_problem(:llm_vision_disabled, agent_id: agent_id) if !llm_model.vision_enabled?
 
