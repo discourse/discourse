@@ -65,7 +65,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 **Admin page** — `admin/templates/admin-config/upcoming-changes.gjs` renders the page header, `admin/components/admin-config-areas/upcoming-changes.gjs` is the container with filtering, and `admin/components/admin-config-areas/upcoming-change-item.gjs` renders each row.
 
 **Key frontend patterns:**
-- Filtering by status, impact type, impact role, and enabled/disabled state via `AdminFilterControls`
+- Filtering by status, impact type, impact role, and enabled/disabled state via `DFilterControls`
 - Group selection uses a multi-select dropdown with debounced API saves
 - Toast notifications for all toggle/group changes
 - Lightbox integration for preview images

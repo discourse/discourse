@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-describe "AdminFilterControls" do
+describe "DFilterControls" do
   fab!(:admin)
 
-  let(:filter_controls) do
-    PageObjects::Components::AdminFilterControls.new(".admin-filter-controls")
-  end
+  let(:filter_controls) { PageObjects::Components::DFilterControls.new(".d-filter-controls") }
 
   before do
     sign_in(admin)
@@ -22,7 +20,7 @@ describe "AdminFilterControls" do
     it "filters plugins by text input" do
       page.visit("/admin/plugins")
 
-      expect(page).to have_css(".admin-filter-controls")
+      expect(page).to have_css(".d-filter-controls")
       expect(page).to have_css(".admin-plugins-list__row", count: 2)
 
       filter_controls.type_in_search("poll")
@@ -37,7 +35,7 @@ describe "AdminFilterControls" do
     it "filters plugins by dropdown selection" do
       page.visit("/admin/plugins")
 
-      expect(page).to have_css(".admin-filter-controls")
+      expect(page).to have_css(".d-filter-controls")
 
       filter_controls.select_dropdown_option("Enabled")
       expect(page).to have_css(".admin-plugins-list__row", count: 2)
@@ -54,7 +52,7 @@ describe "AdminFilterControls" do
     it "shows reset button when filters are active and no results" do
       page.visit("/admin/plugins")
 
-      expect(page).to have_css(".admin-filter-controls")
+      expect(page).to have_css(".d-filter-controls")
 
       expect(filter_controls).to have_no_no_results_reset_button
       filter_controls.type_in_search("xyznonexistent")
@@ -69,7 +67,7 @@ describe "AdminFilterControls" do
     it "also shows reset button when there are results and active filters" do
       page.visit("/admin/plugins")
 
-      expect(page).to have_css(".admin-filter-controls")
+      expect(page).to have_css(".d-filter-controls")
 
       expect(filter_controls).to have_no_reset_button
       filter_controls.type_in_search("poll")
@@ -86,7 +84,7 @@ describe "AdminFilterControls" do
     it "shows configurable no results message" do
       page.visit("/admin/plugins")
 
-      expect(page).to have_css(".admin-filter-controls")
+      expect(page).to have_css(".d-filter-controls")
 
       filter_controls.type_in_search("xyznonexistent")
       expect(page).to have_css(".admin-plugins-list__row", count: 0)

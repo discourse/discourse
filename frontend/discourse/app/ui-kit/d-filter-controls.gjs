@@ -21,12 +21,12 @@ import DSelect from "discourse/ui-kit/d-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
- * admin filter controls component that support both client-side and server-side filtering
+ * filter controls component that support both client-side and server-side filtering
  *
  * client: provide searchableProps and filterFn in dropdownOptions
  * server: provide onTextFilterChange or onDropdownFilterChange callbacks
  *
- * @component AdminFilterControls
+ * @component DFilterControls
  * @param {Array} array - The dataset to display
  * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
  *                                for nested properties (e.g. "user.name")
@@ -45,9 +45,11 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
+ * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
+ *                                           if minItemsForFilter is set and the array is empty
  */
 
-export default class AdminFilterControls extends Component {
+export default class DFilterControls extends Component {
   @service router;
 
   @tracked dropdownFilter = "all";
@@ -381,7 +383,7 @@ export default class AdminFilterControls extends Component {
     }
 
     schedule("afterRender", () => {
-      document.querySelector(".admin-filter-controls__input")?.focus();
+      document.querySelector(".d-filter-controls__input")?.focus();
     });
   }
 
@@ -396,7 +398,7 @@ export default class AdminFilterControls extends Component {
     {{#if this.showFilters}}
       <div
         class={{dConcatClass
-          "admin-filter-controls"
+          "d-filter-controls"
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.applyDropdownsFromUrl}}
@@ -406,34 +408,34 @@ export default class AdminFilterControls extends Component {
           @dropdownValue
         }}
       >
-        <div class="admin-filter-controls__inputs">
+        <div class="d-filter-controls__inputs">
           <DFilterInput
             placeholder={{@inputPlaceholder}}
             @filterAction={{this.onTextFilterChange}}
             @value={{this.textFilter}}
-            class="admin-filter-controls__input"
+            class="d-filter-controls__input"
             @icons={{hash left="magnifying-glass"}}
           />
 
           {{#if this.hasMultipleDropdowns}}
             <DButton
-              class="btn-transparent admin-filter-controls__toggle-filters"
+              class="btn-transparent d-filter-controls__toggle-filters"
               @icon="filter"
-              @title="toggle_filters"
+              @title="filter_controls.toggle"
               @action={{this.toggleFilters}}
             />
           {{/if}}
         </div>
 
         {{#if this.showDropdownFilter}}
-          <div class="admin-filter-controls__dropdowns">
+          <div class="d-filter-controls__dropdowns">
             {{#if this.hasMultipleDropdowns}}
               {{#each-in this.dropdownOptions as |key options|}}
                 <DSelect
                   @value={{get this.dropdownFilters key}}
                   @includeNone={{false}}
                   @onChange={{fn this.onDropdownFilterChange key}}
-                  class="admin-filter-controls__dropdown admin-filter-controls__dropdown--{{key}}"
+                  class="d-filter-controls__dropdown d-filter-controls__dropdown--{{key}}"
                   data-dropdown-key={{key}}
                   as |select|
                 >
@@ -449,7 +451,7 @@ export default class AdminFilterControls extends Component {
                 @value={{this.dropdownFilter}}
                 @includeNone={{false}}
                 @onChange={{this.onDropdownFilterChange}}
-                class="admin-filter-controls__dropdown"
+                class="d-filter-controls__dropdown"
                 as |select|
               >
                 {{#each this.dropdownOptions as |option|}}
@@ -465,9 +467,9 @@ export default class AdminFilterControls extends Component {
         {{#if (and this.hasActiveFilters (not @loading))}}
           <DButton
             @icon="arrow-rotate-left"
-            @label="reset_filter"
+            @label="filter_controls.reset"
             @action={{this.resetFilters}}
-            class="btn-default admin-filter-controls__reset"
+            class="btn-default d-filter-controls__reset"
           />
         {{/if}}
 
@@ -481,20 +483,24 @@ export default class AdminFilterControls extends Component {
       {{yield this.filteredData to="content"}}
     {{else if this.showFilters}}
       {{#if (and this.hasActiveFilters (not @loading))}}
-        <div class="admin-filter-controls__no-results">
+        <div class="d-filter-controls__no-results">
           {{#if @noResultsMessage}}
             <p>{{@noResultsMessage}}</p>
           {{/if}}
           <DButton
             @icon="arrow-rotate-left"
-            @label="reset_filter"
+            @label="filter_controls.reset"
             @action={{this.resetFilters}}
-            class="btn-default admin-filter-controls__reset"
+            class="btn-default d-filter-controls__reset"
           />
         </div>
       {{/if}}
     {{else}}
-      {{yield this.array to="content"}}
+      {{#if @showCustomEmptyState}}
+        {{yield to="customEmptyState"}}
+      {{else}}
+        {{yield this.array to="content"}}
+      {{/if}}
     {{/if}}
   </template>
 }
