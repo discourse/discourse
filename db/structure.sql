@@ -6454,7 +6454,8 @@ CREATE TABLE public.invites (
     expires_at timestamp without time zone NOT NULL,
     email_token character varying,
     domain character varying,
-    description character varying(100)
+    description character varying(100),
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -22648,6 +22649,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715183411'),
 ('20260715090434'),
 ('20260715090355'),
 ('20260715064155'),

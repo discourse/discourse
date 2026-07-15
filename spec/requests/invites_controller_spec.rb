@@ -631,6 +631,133 @@ RSpec.describe InvitesController do
       end
     end
 
+    context "with admin invite" do
+      before { SiteSetting.enable_admin_invites = true }
+
+      it "creates a single-use admin invite" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["is_admin"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.email).to eq("test@example.com")
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "ignores the max_redemptions_allowed parameter" do
+        sign_in(admin)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               max_redemptions_allowed: 10,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invite.last.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails when enable_admin_invites is disabled" do
+        SiteSetting.enable_admin_invites = false
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails for moderators and regular users" do
+        sign_in(Fabricate(:moderator))
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+
+        sign_in(user)
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails when combined with a topic, groups or a domain" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               topic_id: topic.id,
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json", params: { is_admin: "true", domain: "example.com" }
+        expect(response.status).to eq(400)
+      end
+
+      it "cannot escalate an existing member invite to admin via #update" do
+        sign_in(admin)
+        invite = Fabricate(:invite, invited_by: admin, email: "member@example.com")
+
+        put "/invites/#{invite.id}", params: { is_admin: "true", admin: "true" }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.admin).to eq(false)
+      end
+
+      it "does not create admin invites via bulk create" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: %w[bulk1@example.com bulk2@example.com],
+               is_admin: "true",
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invite.where(email: %w[bulk1@example.com bulk2@example.com]).pluck(:admin)).to eq(
+          [false, false],
+        )
+      end
+
+      it "cannot strip the email from an admin invite via #update" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { domain: "example.com" }
+
+        expect(response.status).to eq(422)
+        expect(invite.reload.email).to eq("test@example.com")
+        expect(invite.admin).to eq(true)
+      end
+
+      it "is rate limited" do
+        sign_in(admin)
+        RateLimiter.enable
+
+        10.times do |i|
+          post "/invites.json", params: { email: "test#{i}@example.com", is_admin: "true" }
+          expect(response.status).to eq(200)
+        end
+
+        post "/invites.json", params: { email: "test-over@example.com", is_admin: "true" }
+        expect(response.status).to eq(429)
+      end
+    end
+
     context "with link invite" do
       it "works" do
         sign_in(admin)

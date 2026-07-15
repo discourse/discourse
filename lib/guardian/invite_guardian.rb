@@ -9,6 +9,10 @@ module InviteGuardian
     is_staff? || is_me?(user)
   end
 
+  def can_create_admin_invite?
+    is_admin? && @user.upcoming_change_enabled?(:enable_admin_invites)
+  end
+
   def can_invite_to_forum?(groups = nil)
     return false if !authenticated?
     return false if !@user.in_any_groups?(SiteSetting.invite_allowed_groups_map)
