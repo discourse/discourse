@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import bodyClass from "discourse/helpers/body-class";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { loadZoomMeetingSdk } from "discourse/lib/load-zoom-meeting-sdk";
@@ -154,6 +155,7 @@ export default class LivestreamZoomPage extends Component {
   }
 
   <template>
+    {{bodyClass "discourse-calendar-livestream-zoom-full"}}
     <div class="discourse-calendar-livestream-zoom-page">
       {{#if this.canJoinNow}}
         {{#if this.errorMessage}}
