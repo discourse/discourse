@@ -103,6 +103,10 @@ en:
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
+    ai_post_image_descriptions_enabled: "Enable AI image descriptions for post images. Generating missing descriptions requires a vision-capable image caption agent."
+    ai_post_image_descriptions_per_post_limit: "Maximum number of post images to describe per post."
+    ai_post_image_descriptions_backfill_hourly_rate: "Maximum number of posts per hour to backfill with AI-generated image descriptions. Set to 0 to disable backfill."
+    ai_post_image_descriptions_backfill_max_age_days: "Maximum age in days of posts to backfill with AI-generated image descriptions."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_post_illustrator_agent: "The agent to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
     ai_helper_chat_thread_title_agent: "The agent to use for generating chat thread titles."
@@ -378,7 +382,13 @@ en:
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
       image_caption:
-        attribution: "Captioned by AI"
+        aria_description: "%{description} (Captioned by AI)"
+    post_image_descriptions:
+      errors:
+        description_blank: "Description can't be blank."
+        description_too_long:
+          one: "Description must be %{count} character or fewer."
+          other: "Description must be %{count} characters or fewer."
 
     share_ai:
       read_more: "Read full transcript"

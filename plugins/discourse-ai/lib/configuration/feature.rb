@@ -116,12 +116,6 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
-              "image_caption",
-              "ai_helper_image_caption_agent",
-              DiscourseAi::Configuration::Module::AI_HELPER_ID,
-              DiscourseAi::Configuration::Module::AI_HELPER,
-            ),
-            new(
               "post_illustrator",
               "ai_helper_post_illustrator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,

@@ -47,11 +47,14 @@ module DiscourseAi
           end
         end
 
-        if SiteSetting.ai_helper_enabled_features.split("|").include?("image_caption")
+        if SiteSetting.ai_post_image_descriptions_enabled
           image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent)
-          model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
 
-          rval[model_id] << { type: :ai_helper_image_caption }
+          if image_caption_agent.present?
+            model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+            rval[model_id] << { type: :ai_helper_image_caption }
+          end
         end
 
         if SiteSetting.ai_summarization_enabled
