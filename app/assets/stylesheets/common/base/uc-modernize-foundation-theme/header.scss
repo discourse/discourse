@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .d-header {
     height: 3.25em;
   }
