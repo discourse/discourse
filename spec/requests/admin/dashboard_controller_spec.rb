@@ -412,6 +412,39 @@ RSpec.describe Admin::DashboardController do
         expect(ids).to eq(%w[reports highlights])
       end
 
+      it "returns successful sections when another section fails to build" do
+        error = StandardError.new("boom")
+        configure_dashboard_sections(%w[highlights search])
+        AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
+        AdminDashboardSearch.stubs(:build).raises(error)
+        Discourse.expects(:warn_exception).with(
+          error,
+          message: "Failed to build admin dashboard section",
+          env: {
+            section_id: "search",
+          },
+        )
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(section_payloads).to eq(
+          "highlights" => {
+            "id" => "highlights",
+            "data" => {
+              "value" => "highlights",
+            },
+          },
+          "search" => {
+            "id" => "search",
+            "data" => nil,
+            "error" => true,
+          },
+        )
+        expect(response.parsed_body["configuration"]).to be_present
+        expect(response.parsed_body).to have_key("problems")
+      end
+
       it "omits hidden sections from the data payload" do
         configure_dashboard_sections(%w[highlights reports])
 

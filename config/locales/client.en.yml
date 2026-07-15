@@ -7168,6 +7168,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        fetch_error: "Couldn't load the dashboard. Try refreshing the page."
         stable: "stable"
 
         sections:
@@ -7175,6 +7176,7 @@ en:
             title: "Highlights"
           reports:
             title: "Reports"
+            fetch_error: "Couldn't load reports. Try refreshing the page."
           traffic:
             title: "Site traffic"
           engagement:
