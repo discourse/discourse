@@ -45,7 +45,15 @@ RSpec.describe "upcoming change metadata integrity checks" do
 
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
-      allowed_keys = %i[status impact learn_more_url allow_enabled_for body_class hide_settings]
+      allowed_keys = %i[
+        status
+        impact
+        learn_more_url
+        allow_enabled_for
+        body_class
+        permanent_warning
+        hide_settings
+      ]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
@@ -56,6 +64,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
       learn_more_url = metadata[:learn_more_url]
       allow_enabled_for = metadata[:allow_enabled_for]
       body_class = metadata[:body_class]
+      permanent_warning = metadata[:permanent_warning]
       hide_settings = metadata[:hide_settings]
 
       aggregate_failures do
@@ -115,6 +124,11 @@ RSpec.describe "upcoming change metadata integrity checks" do
         unless body_class.nil?
           expect([true, false]).to include(body_class),
           "#{label} `upcoming_change.body_class` must be a boolean"
+        end
+
+        unless permanent_warning.nil?
+          expect([true, false]).to include(permanent_warning),
+          "#{label} `upcoming_change.permanent_warning` must be a boolean"
         end
 
         if hide_settings.present?

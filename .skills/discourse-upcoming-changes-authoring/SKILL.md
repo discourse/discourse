@@ -178,6 +178,33 @@ enable_your_feature_name:
 - **Enabled-for-user gated**: The class only appears for users the change is enabled for (via `currentUserUpcomingChanges`), not globally. Anonymous/ineligible users won't get it.
 - **Integrity-checked**: `body_class` is in the integrity spec's `allowed_keys` and must be a boolean — see [Mocking Metadata](#mocking-metadata) for how to set it in tests.
 
+### Permanent Soon Warning
+
+Once a change reaches `stable` status, the admin page shows a warning on its row: "This change will become permanent soon. You will no longer be able to opt-out." This is **opt-out** via the `permanent_warning:` metadata key — every stable change shows the warning unless it explicitly sets `permanent_warning: false`.
+
+```yaml
+enable_your_feature_name:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: "stable"
+    impact: "site_setting_default,all_members"
+    permanent_warning: false
+```
+
+#### How It Works
+
+1. **Parsing** — `lib/site_setting_extension.rb` reads `permanent_warning` from the `upcoming_change:` metadata and normalizes it to a boolean (`!= false`, so an omitted key becomes `true`) in `upcoming_change_metadata`.
+2. **Rendering** — `UpcomingChangeItem#showPermanentSoonNotice` (`admin/components/admin-config-areas/upcoming-change-item.gjs`) renders the notice when `status === "stable"` and `permanent_warning !== false`. The `!== false` comparison (rather than a truthy check) means metadata that omits the key — including hashes built by `mock_upcoming_change_metadata` — still shows the notice.
+
+#### Key Behaviors
+
+- **Opt-out, not opt-in**: The default is to warn. Suppress it only when the warning would be misleading — the usual case is a `site_setting_default` change, where becoming permanent just changes another setting's default and the admin can still set that setting to whatever they want.
+- **Stable-only**: The key has no effect below `stable`, and `permanent` changes don't show the notice either (they already are permanent).
+- **Independent of `impact_type`**: Before this key existed, the notice was implicitly suppressed for every `site_setting_default` change. That coupling is gone — impact type no longer affects the notice.
+- **Integrity-checked**: `permanent_warning` is in the integrity spec's `allowed_keys` and must be a boolean.
+
 ### Hiding Settings While Enabled
 
 A change can declare other site settings that should be hidden from admins while it is enabled, via the optional `hide_settings:` metadata key. This is for *legacy* settings that stop making sense once the change replaces them — they disappear from the admin UI rather than being deleted, and reappear if the change is disabled.
@@ -373,6 +400,7 @@ mock_upcoming_change_metadata(
       impact_type: "feature",
       impact_role: "all_members",
       body_class: true, # optional — opts into the uc-{name} body class
+      permanent_warning: false, # optional — suppresses the "becomes permanent soon" notice at stable
       hide_settings: %i[legacy_setting_one], # optional — settings hidden while enabled
     },
   },

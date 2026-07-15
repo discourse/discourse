@@ -37,6 +37,10 @@
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
 #                          - body_class: (optional boolean) to include a uc-NAME CSS class on the <body> element when the change is enabled
+#                          - permanent_warning: (optional boolean, defaults to true) when the change reaches
+#                            `stable` status admins are warned that it will become permanent and they will no
+#                            longer be able to opt out. Set to false when that warning does not apply, for
+#                            example a change that only alters the default value of another site setting.
 #                          - allow_enabled_for: (optional array) restricts which "Enabled for"
 #                            dropdown options the admin can pick for this upcoming change.
 #                            Valid values: everyone, staff, specific_groups.
@@ -1700,6 +1704,7 @@ posting:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
+      permanent_warning: false
   klipy_api_key:
     default: ""
     secret: true
@@ -2091,6 +2096,7 @@ email:
       allow_enabled_for:
         - everyone
       learn_more_url: "https://meta.discourse.org/t/-/395927"
+      permanent_warning: false
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
@@ -4622,6 +4628,7 @@ experimental:
       status: "permanent"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   experimental_topic_category_change_notification:
@@ -4646,6 +4653,7 @@ experimental:
       status: "stable"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402843"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   granular_anonymous_and_logged_in_groups_permissions:
