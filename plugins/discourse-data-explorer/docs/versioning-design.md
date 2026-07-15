@@ -433,13 +433,24 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
 
 ## 3. Open questions (discovered, deliberately parked)
 
-- **Non-representational breaking changes need a per-kind policy** (raised by David in the topic review,
-  2026-07-13): removing an endpoint, removing a filter, changing a default sort are all *contract-visible*
-  (the guard fires on each) but not *representational* — no transform can reproduce behavior whose code is
-  gone. The taxonomy's answer ("that's a new endpoint / a sunset") covers the endpoint case; filter removal
-  and default-sort changes need an explicit stance each (sunset window? pinned clients keep a gated code
-  path? documented as unversioned behavior?). Notably the spike itself changed `default_sort` twice with no
-  `VersionChange` — silently changing bare-listing order for every pinned client.
+- **Non-representational breaking changes — per-kind direction sketched** (raised by David in the topic
+  review, 2026-07-13; all contract-visible — the guard fires on each — but not reproducible by a document
+  transform). Per kind:
+  - *Endpoint removal:* following Stripe, sunset shouldn't happen — pinned versions are supported
+    effectively forever (Stripe reference §10: no documented force-retirement since 2011), so a removed
+    endpoint keeps existing for clients pinned before the removal. Cadwyn's `endpoint … existed`
+    instructions are the mechanism; honestly unbuilt because mapping per-version route resurrection onto
+    Rails routing (Cadwyn generates per-version FastAPI routes) hasn't been dug into.
+  - *Default-sort change:* a `changed_default_sort from: {…}` keyword — pinned-older clients' unsorted
+    requests get the old default applied. Both orderings stay computable from current code; near-
+    representational.
+  - *Filter removal:* the version change **carries** the removed block (`removed_filter :q do |scope, v| …
+    end`) — old behavior lives on, encapsulated and version-gated inside the dated change (Stripe's
+    "tightly encapsulate old behavior" principle); new clients get the strict 400. NB this deliberately
+    relaxes the "transforms are pure document reshapes" rule for the *query-surface* migration class —
+    scoped, dated, and grep-able, unlike conditionals in app code.
+  None built. Context: the spike changed `default_sort` twice with no `VersionChange`, silently reordering
+  bare listings for pinned clients — the incident that named this class.
 - **Query-surface scoping: per-resource, by convention** (from the same review — David's
   `/users` vs `/leaderboard` example). Position: the spec scopes *document vocabulary* by type and leaves
   *query capability* per-endpoint, so this is a design choice — and the coherent choice is per-resource,
