@@ -6046,6 +6046,8 @@ en:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
     post_restored_by_author: "Post was restored by the author"
+    post_deleted_by_author_after_penalty: >-
+      Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6095,6 +6097,10 @@ en:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
         complete: "Post kept hidden."
+      agree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Agree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
@@ -6160,6 +6166,10 @@ en:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
+      unsilence_user_and_ignore:
+        title: "Unsilence user and ignore"
+        description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
+        complete: "User unsilenced and flag ignored."
       approve:
         title: "Yes"
         complete: "Post approved."
