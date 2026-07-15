@@ -272,6 +272,31 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasValue("Banana", "the string value '2' selects the numeric-id item");
   });
 
+  test("renders and selects a @valueField list that has no id field", async function (assert) {
+    const items = [
+      { slug: "apple", name: "Apple" },
+      { slug: "banana", name: "Banana" },
+    ];
+
+    await render(
+      <template>
+        <DSelect @items={{items}} @value="banana" @valueField="slug" />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the id-less selection resolves via @valueField");
+
+    await click("[role='combobox']");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 2 }, "both id-less rows render (keyed by @valueField)");
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .hasText("Banana", "the row matching @value is flagged selected");
+  });
+
   test("custom blocks override label-field fallbacks independently", async function (assert) {
     const items = [
       { id: 1, title: "First" },

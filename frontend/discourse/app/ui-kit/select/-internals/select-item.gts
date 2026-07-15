@@ -4,13 +4,14 @@ import { action } from "@ember/object";
 import booleanString from "discourse/helpers/boolean-string";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import SelectEngine, {
+  SelectDescriptor,
   SelectItem as SelectItemModel,
 } from "discourse/ui-kit/select/select-engine";
 
 interface SelectItemSignature {
   Args: {
     engine: SelectEngine;
-    item: SelectItemModel;
+    descriptor: SelectDescriptor;
   };
   Element: HTMLLIElement;
   Blocks: {
@@ -28,21 +29,16 @@ interface SelectItemSignature {
  * roving highlight via `activeClass`. This part is internal to the select family.
  */
 export default class SelectItem extends Component<SelectItemSignature> {
-  /** Whether this item is currently selected. */
-  get selected(): boolean {
-    return this.args.engine.isSelected(this.args.item);
-  }
-
   /**
    * Activates the item unless it is disabled (the modifier already skips disabled
    * items for the keyboard; this guards the pointer path).
    */
   @action
   handleClick(): void {
-    if (this.args.item?.disabled) {
+    if (this.args.descriptor.flags.disabled) {
       return;
     }
-    this.args.engine.activate(this.args.item);
+    this.args.engine.activate(this.args.descriptor.item);
   }
 
   <template>
@@ -50,15 +46,15 @@ export default class SelectItem extends Component<SelectItemSignature> {
       role="option"
       class={{dConcatClass
         "d-combobox__option"
-        (if this.selected "--selected")
-        (if @item.__create "--create")
+        (if @descriptor.flags.selected "--selected")
+        (if @descriptor.flags.__create "--create")
       }}
-      aria-selected={{booleanString this.selected omitFalse=false}}
-      aria-disabled={{booleanString @item.disabled}}
+      aria-selected={{booleanString @descriptor.flags.selected omitFalse=false}}
+      aria-disabled={{booleanString @descriptor.flags.disabled}}
       {{on "click" this.handleClick}}
       ...attributes
     >
-      {{yield @item}}
+      {{yield @descriptor.item}}
     </li>
   </template>
 }

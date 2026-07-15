@@ -131,9 +131,32 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const items = engine.buildItems([{ id: 1 }, { id: 2 }]);
       assert.deepEqual(
-        items.map((i) => i.id),
+        items.map((d) => d.value),
         [2],
         "a selected item is filtered out of the list"
+      );
+    });
+
+    test("normalizes each row into a { key, value, item, flags } descriptor", function (assert) {
+      const apple = { id: 1, name: "Apple", disabled: true };
+      const { engine } = controlled({ value: 2 });
+
+      const [first, second] = engine.buildItems([apple, { id: 2, name: "B" }]);
+      assert.strictEqual(first.key, "1", "key is the normalized value");
+      assert.strictEqual(first.value, 1, "value is the raw id");
+      assert.strictEqual(
+        first.item,
+        apple,
+        "item is the raw model (by identity)"
+      );
+      assert.false(
+        first.flags.selected,
+        "an unselected row is not flagged selected"
+      );
+      assert.true(first.flags.disabled, "disabled is lifted onto flags");
+      assert.true(
+        second.flags.selected,
+        "the row matching @value is flagged selected"
       );
     });
 
@@ -145,8 +168,11 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.setFilter("new-tag");
 
       const items = engine.buildItems([{ id: 1, name: "existing" }]);
-      assert.true(items.at(-1).__create, "the last item is the create item");
-      assert.strictEqual(items.at(-1).name, "new-tag");
+      assert.true(
+        items.at(-1).flags.__create,
+        "the last item is the create item"
+      );
+      assert.strictEqual(items.at(-1).item.name, "new-tag");
     });
 
     test("does not offer create when an exact match already exists", function (assert) {
@@ -158,7 +184,7 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 
       const items = engine.buildItems([{ id: 1, name: "apple" }]);
       assert.false(
-        items.some((i) => i.__create),
+        items.some((d) => d.flags.__create),
         "no create item when the term already matches an item"
       );
     });
@@ -168,9 +194,9 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       const engine = new SelectEngine({ specialItems: () => [none] });
 
       const items = engine.buildItems([{ id: 1 }]);
-      assert.true(items[0].__special, "special items lead the list");
+      assert.true(items[0].item.__special, "special items lead the list");
       assert.deepEqual(
-        items.map((i) => i.id),
+        items.map((d) => d.value),
         [null, 1]
       );
     });
