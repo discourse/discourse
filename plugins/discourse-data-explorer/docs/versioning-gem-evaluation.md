@@ -5,7 +5,7 @@
 **Question:** do either of these give us the *transform layer* for the JSON:API Kit's date-based versioning
 ("System A" in the [Cadwyn review](./cadwyn-review.md) — a pipeline of reversible transforms over
 request/response hashes), so we can adopt rather than build? Judged against our concrete needs: a mandatory
-`Discourse-Api-Version: YYYY-MM-DD` header, an always-latest internal representation, transforms that migrate
+`Api-Version: YYYY-MM-DD` header, an always-latest internal representation, transforms that migrate
 DOWN (response) and UP (request) over jsonapi-serializer documents + inbound params, writes via `Service::Base`,
 and a **plugin-extensible** transform registry.
 
@@ -96,7 +96,7 @@ end
 ```
 
 **Version transport — flexible, fits us directly.** A `config.request_version_resolver` proc is handed the
-request and returns the target version (`configuration.rb:16-18`), so it reads any header — `Discourse-Api-Version`
+request and returns the target version (`configuration.rb:16-18`), so it reads any header — `Api-Version`
 works as-is. **`:date` is a first-class format** (`Date.parse`, `version.rb:21` — verified). Omitting the
 latest-fallback + rescuing `UnsupportedVersionError`/`InvalidVersionError` into a 400 gives us the **mandatory**
 header we want. The `Migrator` selects versions `between?(target, current)` and applies them directionally —
@@ -113,7 +113,7 @@ nothing like the global `JoinDependency` patch (Ransack/Polyamorous) that broke 
 
 | Our need | `request_migrations` | Gap |
 |---|---|---|
-| Mandatory `Discourse-Api-Version: YYYY-MM-DD` header | ✅ resolver proc + first-class `:date` | — |
+| Mandatory `Api-Version: YYYY-MM-DD` header | ✅ resolver proc + first-class `:date` | — |
 | Always-latest; migrate DOWN on response | ✅ | — |
 | Migrate UP on request/params | ✅ (you wire the rewrites) | — |
 | Transforms over jsonapi-serializer document | ⚠️ content-agnostic: you `JSON.parse`/`generate` the response **body** per migration | **No JSON:API/document helpers** |

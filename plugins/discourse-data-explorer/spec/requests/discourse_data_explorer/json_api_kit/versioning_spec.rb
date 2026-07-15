@@ -40,13 +40,13 @@ RSpec.describe "JSON:API Kit versioning" do
          },
          as: :json,
          headers: {
-           "Discourse-Api-Version" => version,
+           "Api-Version" => version,
          }
   end
 
   describe "Trace A — response down" do
     context "when the client is pinned before the rename" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:) }
 
@@ -54,12 +54,12 @@ RSpec.describe "JSON:API Kit versioning" do
         expect(response.status).to eq(200)
         expect(parsed_attributes["sql"]).to eq(query.sql)
         expect(parsed_attributes).not_to have_key("query")
-        expect(response.headers["Discourse-Api-Version"]).to eq(initial_version)
+        expect(response.headers["Api-Version"]).to eq(initial_version)
       end
     end
 
     context "when the client is pinned after the rename" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+      let(:headers) { { "Api-Version" => "2026-07-08" } }
 
       before { get_queries(headers:) }
 
@@ -67,14 +67,14 @@ RSpec.describe "JSON:API Kit versioning" do
         expect(response.status).to eq(200)
         expect(parsed_attributes["query"]).to eq(query.sql)
         expect(parsed_attributes).not_to have_key("sql")
-        expect(response.headers["Discourse-Api-Version"]).to eq(current_version)
+        expect(response.headers["Api-Version"]).to eq(current_version)
       end
     end
   end
 
   describe "Trace B — query params up (sparse fieldsets)" do
     context "when an old client's fieldset names the old attribute" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { fields: { queries: "name,sql" } }) }
 
@@ -152,7 +152,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when the client predates both changes" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { include: "user" }) }
 
@@ -164,7 +164,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when the client sits between the two changes" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-06-20" } }
+      let(:headers) { { "Api-Version" => "2026-06-20" } }
 
       before { get_queries(headers:, params: { include: "user" }) }
 
@@ -176,7 +176,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when the client is current" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-01" } }
+      let(:headers) { { "Api-Version" => "2026-07-01" } }
 
       before { get_queries(headers:, params: { include: "user" }) }
 
@@ -187,7 +187,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when an old client's fieldset targets the included type" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { include: "user", fields: { users: "username" } }) }
 
@@ -198,7 +198,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when an old client requests a deep nested include" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before do
         group.add(admin)
@@ -229,7 +229,7 @@ RSpec.describe "JSON:API Kit versioning" do
     let(:data_ids) { parsed_document["data"].map { it["id"].to_i } }
 
     context "when an old client sorts by the renamed derived key" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { sort: "-last_run_at" }) }
 
@@ -242,7 +242,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when a current client sorts by the latest derived key" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+      let(:headers) { { "Api-Version" => "2026-07-08" } }
 
       before { get_queries(headers:, params: { sort: "-ran_at" }) }
 
@@ -258,7 +258,7 @@ RSpec.describe "JSON:API Kit versioning" do
     # they get the profile's typed unsupported-sort. The rename still runs first —
     # the old client's error names the key in the LATEST vocabulary.
     context "when an old client uses the renamed virtual sort" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { sort: "username" }) }
 
@@ -269,7 +269,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when a current client uses the latest virtual sort key" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+      let(:headers) { { "Api-Version" => "2026-07-08" } }
 
       before { get_queries(headers:, params: { sort: "-user.username" }) }
 
@@ -282,7 +282,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when an old client uses the renamed virtual filter" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { filter: { search: "Older run" } }) }
 
@@ -293,7 +293,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when a current client uses the latest filter key" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+      let(:headers) { { "Api-Version" => "2026-07-08" } }
 
       before { get_queries(headers:, params: { filter: { q: "Older run" } }) }
 
@@ -304,7 +304,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when an old client's fieldset names the renamed attribute" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+      let(:headers) { { "Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { fields: { queries: "name,last_run_at" } }) }
 
@@ -325,7 +325,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "with a malformed version" do
-      let(:headers) { { "Discourse-Api-Version" => "garbage" } }
+      let(:headers) { { "Api-Version" => "garbage" } }
 
       before { get_queries(headers:) }
 
@@ -335,7 +335,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "with a version predating the first API version" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-04-01" } }
+      let(:headers) { { "Api-Version" => "2026-04-01" } }
 
       before { get_queries(headers:) }
 
@@ -345,7 +345,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "with a future version" do
-      let(:headers) { { "Discourse-Api-Version" => "2027-01-01" } }
+      let(:headers) { { "Api-Version" => "2027-01-01" } }
 
       before { get_queries(headers:) }
 

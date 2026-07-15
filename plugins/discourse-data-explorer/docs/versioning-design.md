@@ -8,7 +8,7 @@
 ## 0. Decisions so far
 
 - **Date-based versioning** (Stripe-style), built into the Kit — we own the design ([gem evaluation](./versioning-gem-evaluation.md) verdict).
-- **Transport:** mandatory `Discourse-Api-Version: YYYY-MM-DD` request header from day one. Missing/invalid → 400 whose body teaches the current version. The resolved version is echoed back in a response header. No per-API-key pin (the mandatory header *is* the pin, client-side; a server-side default could be added later, additively). No `latest` alias.
+- **Transport:** mandatory `Api-Version: YYYY-MM-DD` request header from day one (renamed from `Discourse-Api-Version` after review — consistency with the existing `Api-Key`/`Api-Username` headers). Missing/invalid → 400 whose body teaches the current version. The resolved version is echoed back in a response header. No per-API-key pin (the mandatory header *is* the pin, client-side; a server-side default could be added later, additively). No `latest` alias.
 - **Resolution: snap down** — any valid date resolves to the newest version ≤ it. Reject dates before the first version, and dates in the future (relative to the server's today): a future pin would silently re-resolve to a different contract once the next version ships — exactly the drift versioning exists to kill. *(Refines an earlier note that said "after the latest version → 400" — that was wrong: a date after the latest release but not in the future is the normal case for a freshly integrated client, and snaps down.)*
 - **Always-latest internal representation.** Controllers, services, serializers only ever speak the newest shape. Version logic exists in exactly two places: `VersionChange` classes and the pipeline that applies them. Nothing else may branch on version (grep-able invariant).
 - **Transforms are representation-only** (the bucket taxonomy): (1) reshapes of the same facts → transform; (2) meaning changed but the old value is cheap to keep → keep it in the model, transform picks by date; (3) behavior/data genuinely changed → *not* a transform → new endpoint/resource. Never version stored data.
@@ -70,7 +70,7 @@ The machinery only invokes `up`/`down` when the targeted structure exists (`data
 
 ### Trace A — response down (GET)
 
-**Old client:** `GET /data-explorer/api/queries` with `Discourse-Api-Version: 2026-05-20`.
+**Old client:** `GET /data-explorer/api/queries` with `Api-Version: 2026-05-20`.
 
 ```
 resolve header → 2026-05-20 → snap → 2026-05-01 → gap = [RenameQueriesSqlToQuery]
@@ -83,7 +83,7 @@ pipeline.down(document, gap):
   walks data[] and included[], dispatching each resource object by its type;
   type == "queries" → applies down → attributes.query renamed back to sql
    ↓
-render json: document          + echo header: Discourse-Api-Version: 2026-05-01
+render json: document          + echo header: Api-Version: 2026-05-01
 ```
 
 Wire effect (abbreviated):
@@ -432,6 +432,23 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   (MAY) remains unemitted.
 
 ## 3. Open questions (discovered, deliberately parked)
+
+- **Non-representational breaking changes need a per-kind policy** (raised by David in the topic review,
+  2026-07-13): removing an endpoint, removing a filter, changing a default sort are all *contract-visible*
+  (the guard fires on each) but not *representational* — no transform can reproduce behavior whose code is
+  gone. The taxonomy's answer ("that's a new endpoint / a sunset") covers the endpoint case; filter removal
+  and default-sort changes need an explicit stance each (sunset window? pinned clients keep a gated code
+  path? documented as unversioned behavior?). Notably the spike itself changed `default_sort` twice with no
+  `VersionChange` — silently changing bare-listing order for every pinned client.
+- **Query-surface scoping: per-resource, by convention** (from the same review — David's
+  `/users` vs `/leaderboard` example). Position: the spec scopes *document vocabulary* by type and leaves
+  *query capability* per-endpoint, so this is a design choice — and the coherent choice is per-resource,
+  matching Graphiti and our type-keyed renames: **same primary type ⇒ same collection semantics ⇒ same
+  query surface (and shared renames); different semantics ⇒ different type** (a leaderboard is
+  `leaderboard-entries` with `include=user`, not "users with extra sorts"). Follow-up for the real
+  implementation: move the query-surface declarations from the controller to a resource-level home so
+  declarations and renames live at the same level; endpoint-specific *extensions* to a shared type are
+  deliberately unsupported until a real case demands endpoint-scoped renames.
 
 - ~~**Error-pipeline context**~~ — RESOLVED in ④: the endpoint's primary type (from the DSL config) suffices;
   no dedicated error scope needed in the DSL. Revisit only if an error ever concerns a non-primary type.
