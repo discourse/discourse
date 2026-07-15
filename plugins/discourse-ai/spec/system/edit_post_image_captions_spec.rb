@@ -73,6 +73,7 @@ describe "Edit AI post image captions" do
   before do
     enable_current_plugin
     SiteSetting.default_locale = "en"
+    configure_valid_caption_agent
     SiteSetting.ai_post_image_captions_enabled = true
     SearchIndexer.enable
 
@@ -161,6 +162,15 @@ describe "Edit AI post image captions" do
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
     post.update_column(:image_upload_id, image_upload.id) if image_upload
+  end
+
+  def configure_valid_caption_agent
+    llm_model = assign_fake_provider_to(:ai_default_llm_model)
+    llm_model.update!(vision_enabled: true)
+    caption_agent =
+      AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i) ||
+        Fabricate(:ai_agent, id: SiteSetting.ai_image_caption_agent.to_i)
+    caption_agent.update!(enabled: true, vision_enabled: true, default_llm_id: llm_model.id)
   end
 
   def seed_english_descriptions
