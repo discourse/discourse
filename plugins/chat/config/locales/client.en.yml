@@ -461,6 +461,17 @@ en:
         memberships_count:
           one: "%{count} member"
           other: "%{count} members"
+        empty_state:
+          title: "This is the start of %{channelName}"
+          guest_tip: "You're reading along as a guest. The conversation starts the moment members post — join in to be one of them."
+          members_here:
+            one: "<strong>%{count} member</strong> here"
+            other: "<strong>%{count} members</strong> here"
+        preview_card:
+          guest_title: "Join %{channelName} to start chatting"
+          guest_body: "Reading is free for everyone. Sign up to post, react, and reply — it takes about 30 seconds."
+          log_in: "Log in"
+          sign_up: "Sign up"
 
       create_channel:
         threading:
