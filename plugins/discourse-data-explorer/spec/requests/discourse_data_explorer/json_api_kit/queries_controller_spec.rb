@@ -14,7 +14,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
         params: params,
         headers: {
           "Accept" => "application/vnd.api+json",
-          "Discourse-Api-Version" => "2026-07-08",
+          "Api-Version" => "2026-07-08",
         }
     JSON.parse(response.body)
   end
@@ -107,7 +107,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
           params: request_params,
           headers: {
             "Accept" => "application/vnd.api+json;profile=\"#{profile_uri}\"",
-            "Discourse-Api-Version" => "2026-07-08",
+            "Api-Version" => "2026-07-08",
           }
       JSON.parse(response.body)
     end

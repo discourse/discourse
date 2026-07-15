@@ -19,7 +19,7 @@ module DiscourseDataExplorer
       # jsonapi-serializer (rendering) and pagy (keyset pagination engine, via
       # CursorPaginator). See the helpers in the private section.
 
-      API_VERSION_HEADER = "Discourse-Api-Version"
+      API_VERSION_HEADER = "Api-Version"
       # The registry's canonical (https, no trailing slash) form — profile URIs are
       # compared as strings, so one form must be used consistently.
       CURSOR_PAGINATION_PROFILE_URI = "https://jsonapi.org/profiles/ethanresnick/cursor-pagination"
