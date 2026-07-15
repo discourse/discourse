@@ -191,7 +191,7 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_helper.expects(:download_file).once
+      inventory.s3_client.expects(:get_object).once
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
@@ -212,7 +212,7 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_helper.expects(:download_file).never
+      inventory.s3_client.expects(:get_object).never
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
 
