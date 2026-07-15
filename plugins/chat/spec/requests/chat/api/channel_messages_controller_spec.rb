@@ -156,6 +156,22 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
     end
+
+    context "when message is too long" do
+      let(:message) { "a" * 25_000 }
+
+      it "does not create the message" do
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          Chat::Message.count
+        }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to eq(
+          [
+            "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+          ],
+        )
+      end
+    end
   end
 
   describe "#update" do
@@ -176,6 +192,25 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
 
           expect(response.status).to eq(400)
+        end
+      end
+
+      context "when message is too long" do
+        it "does not change the message" do
+          original_message = message_1.message
+
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "a" * 25_000,
+              }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to eq(
+            [
+              "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+            ],
+          )
+          expect(message_1.reload.message).to eq(original_message)
         end
       end
 

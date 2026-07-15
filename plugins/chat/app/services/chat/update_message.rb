@@ -33,6 +33,7 @@ module Chat
 
       validates :message_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
+      validates :message, length: { maximum: -> { SiteSetting.chat_maximum_message_length } }
 
       after_validation do
         next if message.blank?

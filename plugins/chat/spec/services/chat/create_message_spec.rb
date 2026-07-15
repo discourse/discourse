@@ -482,10 +482,13 @@ RSpec.describe Chat::CreateMessage do
                 end
 
                 context "when nor thread nor reply is provided" do
-                  context "when message is not valid" do
+                  context "when message is too long" do
                     let(:content) { "a" * (SiteSetting.chat_maximum_message_length + 1) }
 
-                    it { is_expected.to fail_with_an_invalid_model(:message_instance) }
+                    it "fails the contract" do
+                      expect(result).to fail_a_contract
+                      expect(result.params.errors.of_kind?(:message, :too_long)).to eq(true)
+                    end
                   end
 
                   context "when message is valid" do
