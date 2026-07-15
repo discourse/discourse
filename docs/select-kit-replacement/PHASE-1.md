@@ -26,9 +26,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     type/click/ArrowDown, Escape, IME composition gating, combobox ARIA).
   - ☑ Composite typeahead trigger (non-button `div` host; query reset on `@onClose`;
     pointer-blur guard for action rows). Without a custom `:selection` block, the input displays
-    the resolved label until the first edit, selects it on focus, and restores it on close. Rich
-    custom selection markup remains a sibling and is hidden while editing. The caret is
-    decorative; clicking anywhere in the trigger opens the control.
+    the resolved label until the first edit and restores it on close. A keyboard focus (Tab-in)
+    selects the label for overtype; a pointer press keeps the caret where the click landed, and
+    the label is never re-selected after a selection. Rich custom selection markup remains a
+    sibling and is hidden while editing. The caret is decorative; clicking anywhere in the
+    trigger opens the control.
   - ☑ `:item` and `:selection` are optional. All variants, multi chips, and mobile fall back
     to `@labelField` (default `name`), while either block can still override its corresponding
     presentation independently. Resolved labels are held in a reactive engine cache so an
@@ -66,8 +68,9 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   `@minChars`/`@debounceMs`, `:empty` block override, create-on-the-fly (`validateCreate`).
 - ☐ **Group/section-aware model** (Decision 2): flat engine list + `role="group"` +
   `@groupBy`; UI exercised later by the category family.
-- ☐ **`castInteger`/value-equality contract**: fix the strict-`===` engine compare
-  (string-id vs number-id) before any real picker binds a string id.
+- ☑ **Value-equality contract**: the engine matches ids by a normalized string key
+  (`#valueKey`), so a bound `"5"` selects item id `5` (both directions) and the resolved
+  cache no longer misses on a string/number mismatch. Always-on, no `castInteger` opt-in.
 - ☐ Re-home `DIconGridPicker` on the engine (grid variant).
 
 ## Exit criteria
