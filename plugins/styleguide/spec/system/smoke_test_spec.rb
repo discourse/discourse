@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Styleguide Smoke Test" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   # keep this hash updated when adding, removing or renaming components
@@ -60,6 +62,17 @@ RSpec.describe "Styleguide Smoke Test" do
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
+  end
+
+  it "lets the user view the select examples" do
+    visit "/styleguide/molecules/select"
+
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    screenshot_marker(label: "styleguide-select")
+
+    click_button("Choose an option", match: :first)
+    expect(page).to have_text("Orange")
+    screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
   # this test will check if the index page is rendering correctly and also ensures that all component pages are

@@ -25,6 +25,7 @@ import SelectItem from "discourse/ui-kit/select/-internals/select-item";
 import SelectEngine, {
   type SelectEngineOptions,
   type SelectItem as SelectItemModel,
+  selectItemLabel,
   type SelectLoadOptions,
   type SelectValue,
 } from "discourse/ui-kit/select/select-engine";
@@ -69,8 +70,8 @@ interface DSelectSignature {
   };
   Element: HTMLElement;
   Blocks: {
-    item: [SelectItemModel];
-    selection: [SelectItemModel];
+    item?: [SelectItemModel];
+    selection?: [SelectItemModel];
   };
 }
 
@@ -82,17 +83,18 @@ interface DSelectSignature {
  * `a11y` service.
  *
  * The trigger style is chosen with `@variant` (default `typeahead`):
- * - `typeahead` — the trigger IS a `role="combobox"` input. The selected value renders as
- *   a sibling presentation (resolved from a bare id on its own `DAsyncContent`, never
- *   flashing the id), hidden while the user types; on mobile the input moves into the modal.
+ * - `typeahead` — the trigger IS a `role="combobox"` input. The default selection label
+ *   renders in that input until editing begins; a custom `:selection` renders as a sibling
+ *   presentation hidden while the user types. A bare id resolves through `DAsyncContent`
+ *   without flashing the id; on mobile the input moves into the modal.
  * - `button` — a button trigger with the filter input inside the panel.
  * - `static` — a short, unsearchable list whose listbox takes focus (the native-`<select>`
  *   replacement).
  *
- * Consumers pass a data source (`@items` or `@load`) plus an `:item` block (and an optional
- * `:selection` block for the trigger); everything else — filtering, async state, keyboard,
- * ARIA, positioning, mobile — is handled. Presets wrap this with a domain source and row
- * markup.
+ * Consumers pass a data source (`@items` or `@load`) and can override the label-field
+ * fallback with `:item` and `:selection` blocks. Everything else — filtering, async state,
+ * keyboard, ARIA, positioning, mobile — is handled. Presets wrap this with a domain source
+ * and row markup.
  */
 export default class DSelect extends Component<DSelectSignature> {
   @service declare a11y: A11y;
@@ -104,6 +106,8 @@ export default class DSelect extends Component<DSelectSignature> {
    * the trigger input; in `button` it is the in-panel filter.
    */
   @tracked filterInput: HTMLElement | null = null;
+
+  @tracked queryActive = false;
 
   /**
    * Empty `@untriggers` for `typeahead`: keeps DMenu's default click-to-open on the whole
@@ -215,12 +219,12 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.isTypeahead && this.site.mobileView;
   }
 
-  /**
-   * Whether the user is actively typing a query. Single typeahead hides its selection
-   * presentation while true so the query owns the box; multi (later) keeps its chips.
-   */
-  get queryActive(): boolean {
-    return this.engine.filter.length > 0;
+  get fallbackSelectionLabel(): string {
+    return this.engine.getSingleSelectionLabel(this.args.value);
+  }
+
+  get labelField(): string {
+    return this.args.labelField ?? "name";
   }
 
   /** The filter input's placeholder (the consumer's `@searchPlaceholder` or a default). */
@@ -271,6 +275,12 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   handleMenuClose(): void {
     this.engine.setFilter("");
+    this.queryActive = false;
+  }
+
+  @action
+  beginQuery(): void {
+    this.queryActive = true;
   }
 
   /**
@@ -415,6 +425,7 @@ export default class DSelect extends Component<DSelectSignature> {
       @identifier={{@identifier}}
       @modalForMobile={{true}}
       @matchTriggerWidth={{true}}
+      @contentClass="d-combobox__content"
       @trapTab={{false}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
         overlay) but disable close-on-click so clicking the already-open trigger/input does
@@ -440,28 +451,68 @@ export default class DSelect extends Component<DSelectSignature> {
           it resolves, so a bare id never flashes. }}
         {{#if this.isTypeahead}}
           {{! Composite box: [selection presentation] · [query input] · [caret]. The input
-            carries only the query; the presentation is a sibling, hidden while typing so the
-            query owns the box. A click anywhere on the trigger opens the overlay (DMenu's
-            trigger-root click; onShow focuses the input). On mobile the query input lives in
-            the modal (below), so tapping the trigger opens it there. }}
+            displays either the selected-label fallback or the query; custom selection markup
+            is a sibling, hidden from the first edit until close. A click anywhere on the
+            trigger opens the overlay (DMenu's trigger-root click; onShow focuses the input).
+            On mobile the query input lives in the modal (below), so tapping the trigger opens
+            it there. }}
           {{#unless this.queryActive}}
-            <span class="d-combobox__presentation">
+            {{#if this.isMobileTypeahead}}
+              <span class="d-combobox__presentation">
+                {{#if this.engine.hasValue}}
+                  <DAsyncContent
+                    @asyncData={{this.resolveSingle}}
+                    @context={{@value}}
+                  >
+                    <:loading><DSkeleton
+                        @variant="text"
+                        @width="8ch"
+                      /></:loading>
+                    <:content as |selected|>
+                      {{#if (has-block "selection")}}
+                        {{yield selected to="selection"}}
+                      {{else}}
+                        {{selectItemLabel selected this.labelField}}
+                      {{/if}}
+                    </:content>
+                  </DAsyncContent>
+                {{else}}
+                  <span class="d-combobox__placeholder">
+                    {{or @placeholder (i18n "d_select.placeholder")}}
+                  </span>
+                {{/if}}
+              </span>
+            {{else if (has-block "selection")}}
+              {{#if this.engine.hasValue}}
+                <span class="d-combobox__presentation">
+                  <DAsyncContent
+                    @asyncData={{this.resolveSingle}}
+                    @context={{@value}}
+                  >
+                    <:loading><DSkeleton
+                        @variant="text"
+                        @width="8ch"
+                      /></:loading>
+                    <:content as |selected|>{{yield
+                        selected
+                        to="selection"
+                      }}</:content>
+                  </DAsyncContent>
+                </span>
+              {{/if}}
+            {{else if this.engine.hasValue}}
               <DAsyncContent
                 @asyncData={{this.resolveSingle}}
                 @context={{@value}}
               >
-                <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
-                <:content as |selected|>{{yield
-                    selected
-                    to="selection"
-                  }}</:content>
-                <:empty>
-                  <span class="d-combobox__placeholder">
-                    {{or @placeholder (i18n "d_select.placeholder")}}
+                <:loading>
+                  <span class="d-combobox__presentation">
+                    <DSkeleton @variant="text" @width="8ch" />
                   </span>
-                </:empty>
+                </:loading>
+                <:content></:content>
               </DAsyncContent>
-            </span>
+            {{/if}}
           {{/unless}}
           {{#if this.isDesktopTypeahead}}
             <ComboboxQueryInput
@@ -469,10 +520,18 @@ export default class DSelect extends Component<DSelectSignature> {
               @listboxId={{this.listboxId}}
               @expanded={{menuArgs.expanded}}
               @label={{this.ariaLabelText}}
+              @placeholder={{or @placeholder (i18n "d_select.placeholder")}}
+              @displayValue={{if
+                (has-block "selection")
+                ""
+                this.fallbackSelectionLabel
+              }}
+              @editing={{this.queryActive}}
               @ariaOwns={{true}}
               @onOpen={{menuArgs.show}}
               @onRequestClose={{menuArgs.close}}
               @onBlur={{this.handleTriggerBlur}}
+              @onEdit={{this.beginQuery}}
               @registerInput={{this.registerTriggerInput}}
             />
           {{/if}}
@@ -489,10 +548,13 @@ export default class DSelect extends Component<DSelectSignature> {
                     title={{i18n "d_select.remove"}}
                     {{on "click" (fn this.removeItem item)}}
                   >
-                    <span class="d-combobox__chip-label">{{yield
-                        item
-                        to="selection"
-                      }}</span>
+                    <span class="d-combobox__chip-label">
+                      {{#if (has-block "selection")}}
+                        {{yield item to="selection"}}
+                      {{else}}
+                        {{selectItemLabel item this.labelField}}
+                      {{/if}}
+                    </span>
                     {{dIcon "xmark" class="d-combobox__chip-remove"}}
                   </button>
                 {{/each}}
@@ -514,10 +576,13 @@ export default class DSelect extends Component<DSelectSignature> {
           <DAsyncContent @asyncData={{this.resolveSingle}} @context={{@value}}>
             <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
             <:content as |selected|>
-              <span class="d-combobox__value">{{yield
-                  selected
-                  to="selection"
-                }}</span>
+              <span class="d-combobox__value">
+                {{#if (has-block "selection")}}
+                  {{yield selected to="selection"}}
+                {{else}}
+                  {{selectItemLabel selected this.labelField}}
+                {{/if}}
+              </span>
             </:content>
             <:empty>
               <span class="d-combobox__placeholder">
@@ -558,6 +623,8 @@ export default class DSelect extends Component<DSelectSignature> {
               @placeholder={{this.searchPlaceholderText}}
               @onOpen={{menuArgs.show}}
               @onRequestClose={{menuArgs.close}}
+              @editing={{this.queryActive}}
+              @onEdit={{this.beginQuery}}
               @registerInput={{this.captureFilter}}
             />
           {{/if}}
@@ -614,7 +681,11 @@ export default class DSelect extends Component<DSelectSignature> {
                       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
                       {{on "mousedown" this.preventPointerBlur}}
                     >
-                      {{yield item to="item"}}
+                      {{#if (has-block "item")}}
+                        {{yield item to="item"}}
+                      {{else}}
+                        {{selectItemLabel item this.labelField}}
+                      {{/if}}
                     </SelectItem>
                   {{/each}}
                 </ul>

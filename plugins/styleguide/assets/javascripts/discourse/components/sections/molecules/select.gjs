@@ -38,10 +38,7 @@ export default class Select extends Component {
   @items={{this.items}}
   @value={{this.value}}
   @onChange={{this.onChange}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   asyncButtonCode = `<DSelect
   @load={{this.loadOptions}}
@@ -176,10 +173,7 @@ export default class Select extends Component {
           @value={{this.defaultValue}}
           @onChange={{this.updateDefault}}
           @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
+        />
       </div>
     </StyleguideExample>
 

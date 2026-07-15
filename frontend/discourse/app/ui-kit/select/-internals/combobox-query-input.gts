@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 interface ComboboxQueryInputSignature {
@@ -17,6 +18,10 @@ interface ComboboxQueryInputSignature {
     label?: string;
     /** The input placeholder. */
     placeholder?: string;
+    /** Selected label displayed in the input before query editing begins. */
+    displayValue?: string;
+    /** Whether the input is displaying the active query. */
+    editing?: boolean;
     /**
      * Emit `aria-owns` (in addition to `aria-controls`) while open. Needed on desktop,
      * where the listbox is portaled out of the input's subtree; omitted on mobile, where
@@ -29,6 +34,8 @@ interface ComboboxQueryInputSignature {
     onRequestClose: () => void;
     /** Focus left the input; the parent decides whether that should close the overlay. */
     onBlur?: (event: FocusEvent) => void;
+    /** Marks the first edit so the query replaces the selected label. */
+    onEdit?: () => void;
     /** Captures the input element (fed to `dRovingFocus` as the combobox controller). */
     registerInput: (element: HTMLElement) => void;
   };
@@ -36,11 +43,10 @@ interface ComboboxQueryInputSignature {
 
 /**
  * The `role="combobox"` text input at the heart of the typeahead trigger. It is
- * deliberately **arity-agnostic**: it carries only the engine's `filter` (the query) —
- * never a selected label or chips, which live as siblings in the composite trigger box —
- * so single- and multi-select reuse it verbatim (multi later adds a backspace-removes-last
- * handler on this same input). It owns the combobox keyboard model that DMenu's default
- * button trigger does not:
+ * deliberately **arity-agnostic**: it carries the engine's `filter` and can display a
+ * selected-label fallback until query editing begins. Custom selection markup and chips
+ * remain siblings in the composite trigger box. It owns the combobox keyboard model that
+ * DMenu's default button trigger does not:
  *
  * - **Tab** is stopped from bubbling to DMenu's trigger-root `forwardTabToContent`, so it
  *   exits the widget (and the resulting blur closes the overlay) instead of being pulled
@@ -55,6 +61,12 @@ interface ComboboxQueryInputSignature {
  * user can keep typing while navigating results.
  */
 export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
+  get value(): string {
+    return this.args.editing
+      ? this.args.engine.filter
+      : (this.args.displayValue ?? this.args.engine.filter);
+  }
+
   /** `aria-controls` only resolves to a live element while the listbox is rendered. */
   get controlsId(): string | undefined {
     return this.args.expanded ? this.args.listboxId : undefined;
@@ -80,6 +92,11 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   @action
   handleCompositionEnd(event: CompositionEvent): void {
     this.#commitQuery((event.target as HTMLInputElement).value);
+  }
+
+  @action
+  handleFocus(event: FocusEvent): void {
+    this.#selectDisplayValue(event.target as HTMLInputElement);
   }
 
   @action
@@ -126,7 +143,23 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     this.args.onBlur?.(event);
   }
 
+  @action
+  selectUpdatedDisplayValue(element: HTMLInputElement): void {
+    this.#selectDisplayValue(element);
+  }
+
+  #selectDisplayValue(element: HTMLInputElement): void {
+    if (
+      !this.args.editing &&
+      this.args.displayValue &&
+      document.activeElement === element
+    ) {
+      element.select();
+    }
+  }
+
   #commitQuery(value: string): void {
+    this.args.onEdit?.();
     this.args.engine.setFilter(value);
     if (!this.args.expanded) {
       this.args.onOpen();
@@ -146,12 +179,14 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       aria-controls={{this.controlsId}}
       aria-owns={{this.ownsId}}
       placeholder={{@placeholder}}
-      value={{@engine.filter}}
+      value={{this.value}}
       {{on "input" this.handleInput}}
       {{on "compositionend" this.handleCompositionEnd}}
       {{on "keydown" this.handleKeydown}}
+      {{on "focus" this.handleFocus}}
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
+      {{didUpdate this.selectUpdatedDisplayValue @displayValue}}
       ...attributes
     />
   </template>
