@@ -34,6 +34,27 @@ describe Chat::ReviewQueue do
       expect(reviewable.payload["message_cooked"]).to eq(message.cooked)
     end
 
+    it "stores the message uploads inside the reviewable" do
+      upload = Fabricate(:image_upload, user: message_poster)
+      message.uploads = [upload]
+
+      queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+      reviewable = Chat::ReviewableMessage.last
+
+      expect(reviewable.payload["message_uploads"].map { |upload_json| upload_json["id"] }).to eq(
+        [upload.id],
+      )
+    end
+
+    it "does not store an uploads key when the message has no uploads" do
+      queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+      reviewable = Chat::ReviewableMessage.last
+
+      expect(reviewable.payload).not_to have_key("message_uploads")
+    end
+
     context "when the user already flagged the post" do
       let(:second_flag_result) do
         queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
