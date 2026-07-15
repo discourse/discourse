@@ -21,10 +21,6 @@ end
 # getaddrinfo patch. Instead, open the socket with `Socket.tcp`, then set up a `TCPSocket`
 # instance with the result.
 module FinalDestinationTCPSocketPatch
-  # open_timeout is read from kwargs rather than declared as a parameter so that
-  # `super` (below) forwards exactly the arguments the caller passed. Declaring it
-  # would make bare `super` re-inject open_timeout: nil into the real C
-  # TCPSocket.open, which rejects the keyword and breaks every non-token call.
   def open(host, port, local_host = nil, local_port = nil, **kwargs)
     return super unless FinalDestination::Connector.token?(host)
 
