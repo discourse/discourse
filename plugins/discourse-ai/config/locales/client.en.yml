@@ -16,7 +16,7 @@ en:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "The table lists a count of posts classified with a determined emotion. Classified with the model 'SamLowe/roberta-base-go_emotions'."
+          description: "The table lists a count of posts classified with a determined emotion. Depending on the selected emotion classification method, posts are classified with either the configured emotion classification model ('SamLowe/roberta-base-go_emotions') or the configured emotion classification agent."
         reports:
           filters:
             group_by:
