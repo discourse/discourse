@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -8,6 +9,10 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasEmojisList extends Component {
   @service adminEmojis;
+
+  isEmojiSelected = (name) => {
+    return this.adminEmojis.selectedEmojis.has(name);
+  };
 
   get emojis() {
     return this.adminEmojis.emojis;
@@ -22,7 +27,7 @@ export default class AdminConfigAreasEmojisList extends Component {
   }
 
   <template>
-    <div class="form-horizontal">
+    <div class="admin-emoji-list__controls">
       <div class="inline-form">
         <ComboBox
           @value={{this.adminEmojis.filter}}
@@ -31,12 +36,47 @@ export default class AdminConfigAreasEmojisList extends Component {
           @valueProperty={{null}}
         />
       </div>
+
+      {{#if this.adminEmojis.isSelecting}}
+        <DButton
+          @action={{this.adminEmojis.exportSelected}}
+          @translatedLabel={{this.adminEmojis.exportLabel}}
+          @icon="download"
+          @disabled={{this.adminEmojis.exportDisabled}}
+          @isLoading={{this.adminEmojis.isExporting}}
+          class="btn-primary admin-emoji-list__export-btn"
+        />
+        <DButton
+          @action={{this.adminEmojis.cancelSelecting}}
+          @label="cancel"
+          class="btn-default admin-emoji-list__cancel-btn"
+        />
+      {{else}}
+        <DButton
+          @action={{this.adminEmojis.startSelecting}}
+          @label="admin.emoji.select_to_export"
+          @icon="download"
+          class="btn-default admin-emoji-list__select-to-export"
+        />
+      {{/if}}
     </div>
 
     {{#if this.emojis}}
-      <table id="custom_emoji" class="d-table">
+      <table id="custom_emoji" class="d-table admin-emoji-list">
         <thead class="d-table__header">
           <tr class="d-table__row">
+            {{#if this.adminEmojis.isSelecting}}
+              <th class="d-table__header-cell admin-emoji-list__select-col">
+                <input
+                  type="checkbox"
+                  class="admin-emoji-list__select-all"
+                  aria-label={{i18n "admin.emoji.select_all"}}
+                  checked={{this.adminEmojis.allVisibleSelected}}
+                  indeterminate={{this.adminEmojis.someVisibleSelected}}
+                  {{on "change" this.adminEmojis.toggleAllVisible}}
+                />
+              </th>
+            {{/if}}
             <th class="d-table__header-cell">{{i18n "admin.emoji.image"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.emoji.name"}}</th>
             <th class="d-table__header-cell">{{i18n "admin.emoji.group"}}</th>
@@ -49,6 +89,20 @@ export default class AdminConfigAreasEmojisList extends Component {
           <tbody class="d-table__body">
             {{#each this.sortedEmojis as |emoji|}}
               <tr class="d-table__row">
+                {{#if this.adminEmojis.isSelecting}}
+                  <td class="d-table__cell admin-emoji-list__select-col">
+                    <input
+                      type="checkbox"
+                      class="admin-emoji-list__select"
+                      aria-label={{i18n "admin.emoji.select" name=emoji.name}}
+                      checked={{this.isEmojiSelected emoji.name}}
+                      {{on
+                        "change"
+                        (fn this.adminEmojis.toggleEmojiSelected emoji)
+                      }}
+                    />
+                  </td>
+                {{/if}}
                 <td class="d-table__cell --overview">
                   <img
                     class="emoji emoji-custom"
@@ -75,13 +129,15 @@ export default class AdminConfigAreasEmojisList extends Component {
                   </div>
                   {{emoji.created_by}}
                 </td>
-                <td class="d-table__cell --controls action">
-                  <DButton
-                    @action={{fn this.adminEmojis.destroyEmoji emoji}}
-                    @label="admin.emoji.delete"
-                    class="btn-default btn-small d-table__cell-action-delete"
-                  />
-                </td>
+                {{#unless this.adminEmojis.isSelecting}}
+                  <td class="d-table__cell --controls action">
+                    <DButton
+                      @action={{fn this.adminEmojis.destroyEmoji emoji}}
+                      @label="admin.emoji.delete"
+                      class="btn-default btn-small d-table__cell-action-delete"
+                    />
+                  </td>
+                {{/unless}}
               </tr>
             {{/each}}
           </tbody>

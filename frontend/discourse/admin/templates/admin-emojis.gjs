@@ -1,14 +1,16 @@
+import { not } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
-export default <template>
+const AdminEmojisTemplate = <template>
   <div class="admin-emoji admin-config-page">
     <DPageHeader
       @titleLabel={{i18n "admin.config.emoji.title"}}
       @descriptionLabel={{i18n "admin.config.emoji.header_description"}}
       @hideTabs={{@controller.hideTabs}}
+      @shouldDisplay={{not @controller.hideTabs}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
@@ -18,6 +20,11 @@ export default <template>
         />
       </:breadcrumbs>
       <:actions as |actions|>
+        <actions.Default
+          @route="adminEmojis.import"
+          @label="admin.emoji.import"
+          class="admin-emoji__import"
+        />
         <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
       </:actions>
       <:tabs>
@@ -38,4 +45,6 @@ export default <template>
       {{outlet}}
     </div>
   </div>
-</template>
+</template>;
+
+export default AdminEmojisTemplate;
