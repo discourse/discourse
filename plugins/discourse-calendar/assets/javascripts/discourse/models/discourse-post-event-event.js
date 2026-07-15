@@ -20,8 +20,16 @@ const DEFAULT_REMINDER = {
 const EARLY_ACCESS_MINUTES = 30;
 const GRACE_PERIOD_MINUTES = 10;
 
-export function isWithinEventTimeframe(startsAt, endsAt) {
+export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
   const now = moment();
+
+  if (allDay) {
+    const opensAt = moment(startsAt).startOf("day");
+    const closesAt = moment(startsAt).endOf("day");
+
+    return now.isBetween(opensAt, closesAt);
+  }
+
   const opensAt = moment(startsAt).subtract(EARLY_ACCESS_MINUTES, "minutes");
   const closesAt = moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
 
@@ -181,7 +189,7 @@ export default class DiscoursePostEventEvent {
   }
 
   get currentlyWithinEventTimeframe() {
-    return isWithinEventTimeframe(this.startsAt, this.endsAt);
+    return isWithinEventTimeframe(this.allDay, this.startsAt, this.endsAt);
   }
 
   // An event without an end time never falls past its timeframe, since

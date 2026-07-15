@@ -630,10 +630,11 @@ describe DiscoursePostEvent::Event do
     let(:topic) { Fabricate(:topic, user: user) }
     let!(:first_post) { Fabricate(:post, topic: topic) }
 
-    def event_with(starts_at:, ends_at: nil)
+    def event_with(starts_at:, ends_at: nil, all_day: false)
       DiscoursePostEvent::Event.create!(
         original_starts_at: starts_at,
         original_ends_at: ends_at,
+        all_day:,
         post: first_post,
       )
     end
@@ -679,6 +680,26 @@ describe DiscoursePostEvent::Event do
 
     it "is true for a started event without an end time" do
       expect(event_with(starts_at: 1.day.ago).currently_within_event_timeframe?).to be(true)
+    end
+
+    context "for an all day event" do
+      it "is true when now is between the start + end of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(true)
+      end
+
+      it "is false when now is before the start of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.tomorrow.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(false)
+      end
     end
   end
 

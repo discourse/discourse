@@ -170,6 +170,13 @@ module DiscoursePostEvent
       return false if starts_at.nil?
 
       now = Time.zone.now
+
+      if all_day
+        opens_at = starts_at.beginning_of_day
+        closes_at = starts_at.end_of_day
+        return opens_at <= now && now <= closes_at
+      end
+
       return false if now < starts_at - EARLY_ACCESS_MINUTES.minutes
       ends_at.nil? || now < ends_at + GRACE_PERIOD_MINUTES.minutes
     end

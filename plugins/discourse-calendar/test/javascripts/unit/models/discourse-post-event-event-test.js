@@ -1,5 +1,7 @@
 import { module, test } from "qunit";
-import DiscoursePostEventEvent from "../../discourse/models/discourse-post-event-event";
+import DiscoursePostEventEvent, {
+  isWithinEventTimeframe,
+} from "../../discourse/models/discourse-post-event-event";
 
 module("Unit | Model | DiscoursePostEventEvent", function () {
   test("maps description fields from API response", function (assert) {
@@ -120,6 +122,64 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
     assert.strictEqual(
       event.descriptionHtml,
       'Visit <a href="https://example.com">https://example.com</a>'
+    );
+  });
+
+  test("isWithinEventTimeframe returns true for all-day events on the same day", function (assert) {
+    const startsAt = moment().startOf("day").toISOString();
+    const allDayEvent = DiscoursePostEventEvent.create({
+      id: 1,
+      starts_at: startsAt,
+      ends_at: null,
+      all_day: true,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(
+        allDayEvent.allDay,
+        allDayEvent.startsAt,
+        allDayEvent.endsAt
+      ),
+      "returns true for all-day events on the same day"
+    );
+  });
+
+  test("isWithinEventTimeframe returns false for all-day events on a different day", function (assert) {
+    const startsAt = moment().add(1, "day").toISOString();
+    const allDayEvent = DiscoursePostEventEvent.create({
+      id: 2,
+      starts_at: startsAt,
+      ends_at: null,
+      all_day: true,
+    });
+
+    assert.false(
+      isWithinEventTimeframe(
+        allDayEvent.allDay,
+        allDayEvent.startsAt,
+        allDayEvent.endsAt
+      ),
+      "returns false for all-day events on a different day"
+    );
+  });
+
+  test("isWithinEventTimeframe returns true for non-all-day events within the timeframe", function (assert) {
+    const startsAt = moment().subtract(15, "minutes").toISOString();
+    const endsAt = moment().add(15, "minutes").toISOString();
+    const nonAllDayEvent = DiscoursePostEventEvent.create({
+      id: 3,
+      starts_at: startsAt,
+      ends_at: endsAt,
+      all_day: false,
+    });
+
+    assert.true(
+      isWithinEventTimeframe(
+        nonAllDayEvent.allDay,
+        nonAllDayEvent.startsAt,
+        nonAllDayEvent.endsAt
+      ),
+      "returns true for non-all-day events within the timeframe"
     );
   });
 });
