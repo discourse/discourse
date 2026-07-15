@@ -7,20 +7,16 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 
 ## Tasks
 
-- ◐ **Typeahead-default rework** (Decision 1) — DESKTOP done (committed `0082efb5af8`, then
-  amended to revert an un-deep-planned mobile opener; lint/types + DSelect suite green). Invert
-  the trigger so `typeahead` (input-as-trigger) is the default; keep focus in the input; keep the
-  Phase-0 button+filter-in-panel as `@variant="button"`; `static` stays. Auto-highlight the first
-  match. **⚠ OPEN AFFORDANCE UNRESOLVED (pending its own deep-plan):** desktop opens only via the
-  query input (label/caret inert); **mobile has no opener** (trigger holds no input). See the
-  `skip`-ped test + the `TODO(select-kit-typeahead-open-affordance)` in `d-select.gts`, and the
-  next planning cycle. The permanent `/styleguide/molecules/select` harness now covers the
-  current variants and async states. Deferred: visual/SR pixel review. Plan
-  `~/.claude/plans/vivid-drifting-puffin.md`. **Scope: single-select only** (multi = a later
-  item; Decision-1b data model = below). **Overlay = reuse `DMenu`** (not `DInlineFloat` — Fork A
-  chosen: `DMenu` honors a non-button `@triggerComponent`, and blocks can't cross a service-
-  rendered list; Fork B rejected). **Hybrid taming:** intercept Tab locally + one additive
-  `DMenu` change (yield `expanded` in `componentArgs`).
+- ◐ **Typeahead-default rework** (Decision 1) — the single-select desktop and mobile baseline
+  is implemented. `typeahead` (input-as-trigger) is the default; the Phase-0
+  button+filter-in-panel remains `@variant="button"`; `static` remains unsearchable. The whole
+  trigger opens the control: desktop keeps focus in its input, while mobile opens `DMenu`'s
+  modal and focuses the query input there. The first match is auto-highlighted. **Scope:
+  single-select only** (multi's typeahead interaction is a later item; the current Phase-0
+  multi trigger remains). **Overlay = reuse `DMenu`** (not `DInlineFloat` — Fork A chosen:
+  `DMenu` honors a non-button `@triggerComponent`, and blocks can't cross a service-rendered
+  list; Fork B rejected). **Hybrid taming:** intercept Tab locally + one additive `DMenu`
+  change (yield `expanded` in `componentArgs`).
   - ☑ Base: rebased `select-kit-rework` onto `floatkit-to-ts` (PR #41633) for real `DMenu`
     types — **this branch now stacks on #41633 and can't merge until it does**.
   - ☑ Dropped the `ComponentLike` `DMenu` cast; `DMenu` yields `expanded` in `componentArgs`.
@@ -28,17 +24,29 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     template branch; `focusListboxIfSimple` re-gated on `isStatic`.
   - ☑ `combobox-query-input.gts` (arity-agnostic query input: Tab `stopPropagation`, open on
     type/click/ArrowDown, Escape, IME composition gating, combobox ARIA).
-  - ☑ Composite typeahead trigger (non-button `div` host; presentation sibling hidden while
-    typing; query reset on `@onClose`; pointer-blur guard for action rows). Caret is a decorative
-    icon (an interactive caret opener was reverted — see the open-affordance decision).
+  - ☑ Composite typeahead trigger (non-button `div` host; query reset on `@onClose`;
+    pointer-blur guard for action rows). Without a custom `:selection` block, the input displays
+    the resolved label until the first edit, selects it on focus, and restores it on close. Rich
+    custom selection markup remains a sibling and is hidden while editing. The caret is
+    decorative; clicking anywhere in the trigger opens the control.
+  - ☑ `:item` and `:selection` are optional. All variants, multi chips, and mobile fall back
+    to `@labelField` (default `name`), while either block can still override its corresponding
+    presentation independently. Resolved labels are held in a reactive engine cache so an
+    async label can populate an already-mounted input without remounting it.
   - ☑ `autoActivateFirst` on `dRovingFocus` + `itemsKey={{items}}` for re-seed on async land.
-  - ☑ SCSS (`--typeahead` box) · `pnpm lint:types` + `bin/lint` green.
+  - ☑ Form-control styling is shared across variants: input sizing, themed background,
+    border, text/placeholder colors, focus treatment, and inline inset. The dropdown content
+    and panel both fill the matched trigger width.
+  - ☑ `pnpm lint:types` + `bin/lint` green.
   - ☑ Tests green (rendered-DOM integration: typing, keyboard, focus/ARIA, Escape/blur, action-row
-    keep-open). The mobile arm + the open affordance are a `skip`-ped pending-design marker.
-  - ☐ Open affordance decision (next cycle) — desktop click target + mobile opener + surface
-    (DModal vs d-sheet); coordinate with RFC Decision 1/1b/3 and button/static/multi.
+    keep-open, optional-block fallbacks, stable async resolution, cross-variant sizing/colors,
+    matched dropdown width, and the mobile arm).
+  - ☑ Open affordance decision — use the whole `DMenu` trigger as the click target; use its
+    `DModal` surface on mobile and keep the input in the host trigger on desktop.
   - ☑ Permanent Styleguide harness for variants, async states, retry, empty results, and multi.
-  - ☐ Visual/SR pixel review (implementation-time).
+  - ☑ Theme screenshot coverage for Foundation/Horizon × light/dark × desktop/mobile;
+    visual review confirms empty-control and dropdown-width parity. Manual on-device SR review
+    remains part of the phase exit criteria.
   - ☐ **Backlog (skipped review items)** — add tests when next editing these paths:
     `handleTriggerBlur` keep-open branch; auto-highlight skipping a disabled first item;
     `preventPointerBlur` static no-op; `legacy.getElement` host-DOM invariant (incl. mobile).

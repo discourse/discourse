@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import {
   click,
   fillIn,
+  find,
   focus,
   render,
   triggerEvent,
@@ -50,6 +51,127 @@ class Host extends Component {
   </template>
 }
 
+class DefaultHost extends Component {
+  @tracked value = this.args.value ?? (this.args.multiple ? [] : null);
+
+  get items() {
+    return this.args.items ?? ITEMS;
+  }
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @items={{this.items}}
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @variant={{@variant}}
+      @multiple={{@multiple}}
+      @labelField={{@labelField}}
+      @placeholder="Pick one"
+    />
+  </template>
+}
+
+module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("empty variants use the same field height", async function (assert) {
+    await render(
+      <template>
+        <DSelect class="layout-typeahead" @items={{ITEMS}} />
+        <DSelect class="layout-button" @items={{ITEMS}} @variant="button" />
+        <DSelect class="layout-static" @items={{ITEMS}} @variant="static" />
+        <DSelect class="layout-multi" @items={{ITEMS}} @multiple={{true}} />
+      </template>
+    );
+
+    const heights = [
+      ".layout-typeahead.d-combobox__trigger",
+      ".layout-button.d-combobox__trigger",
+      ".layout-static.d-combobox__trigger",
+      ".layout-multi.d-combobox__trigger",
+    ].map((selector) => find(selector).getBoundingClientRect().height);
+
+    assert.deepEqual(
+      heights,
+      Array(heights.length).fill(heights[0]),
+      "every empty variant uses the typeahead field height"
+    );
+
+    const insets = [
+      [".layout-typeahead.d-combobox__trigger", ".d-combobox__input"],
+      [".layout-button.d-combobox__trigger", ".d-combobox__placeholder"],
+      [".layout-static.d-combobox__trigger", ".d-combobox__placeholder"],
+      [".layout-multi.d-combobox__trigger", ".d-combobox__placeholder"],
+    ].map(([triggerSelector, contentSelector]) => {
+      const trigger = find(triggerSelector);
+      const content = trigger.querySelector(contentSelector);
+      return (
+        content.getBoundingClientRect().left -
+        trigger.getBoundingClientRect().left
+      );
+    });
+
+    assert.deepEqual(
+      insets,
+      Array(insets.length).fill(insets[0]),
+      "every empty variant uses the typeahead field inset"
+    );
+
+    const typeaheadInput = find(
+      ".layout-typeahead.d-combobox__trigger .d-combobox__input"
+    );
+    const colors = [
+      getComputedStyle(typeaheadInput, "::placeholder").color,
+      getComputedStyle(
+        find(".layout-button.d-combobox__trigger .d-combobox__placeholder")
+      ).color,
+      getComputedStyle(
+        find(".layout-static.d-combobox__trigger .d-combobox__placeholder")
+      ).color,
+      getComputedStyle(
+        find(".layout-multi.d-combobox__trigger .d-combobox__placeholder")
+      ).color,
+    ];
+
+    assert.deepEqual(
+      colors,
+      Array(colors.length).fill(colors[0]),
+      "every empty variant uses the typeahead placeholder color"
+    );
+  });
+
+  test("the dropdown content fills the matched trigger width", async function (assert) {
+    await render(
+      <template>
+        <div style="width: 24rem;">
+          <DSelect @items={{ITEMS}} @variant="button" />
+        </div>
+      </template>
+    );
+    await click(".d-combobox__trigger");
+
+    const triggerWidth = find(".d-combobox__trigger").getBoundingClientRect()
+      .width;
+
+    const innerContent = find(".fk-d-menu__inner-content");
+    assert.strictEqual(
+      innerContent.getBoundingClientRect().width,
+      triggerWidth,
+      "the visible dropdown surface fills the trigger width"
+    );
+    assert.true(
+      find(".d-combobox__panel").getBoundingClientRect().width >=
+        triggerWidth - 2,
+      "the dropdown panel fills the surface within its border"
+    );
+  });
+});
+
 module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -66,8 +188,124 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
         "Options",
         "the input has an accessible name"
       );
-    assert.dom(".d-combobox__placeholder").hasText("Pick one");
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "placeholder",
+        "Pick one",
+        "the input shows the placeholder"
+      );
     assert.dom("[role='listbox']").doesNotExist("closed on render");
+  });
+
+  test("the empty trigger renders as one input field", async function (assert) {
+    await render(<template><Host /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "placeholder",
+        "Pick one",
+        "the input owns the placeholder"
+      );
+    assert
+      .dom(".d-combobox__placeholder")
+      .doesNotExist("no separate placeholder sits beside the input");
+
+    const inputStyle = getComputedStyle(find("[role='combobox']"));
+    assert.strictEqual(
+      inputStyle.borderTopStyle,
+      "none",
+      "the inner input does not draw a second border"
+    );
+    assert.strictEqual(
+      inputStyle.backgroundColor,
+      "rgba(0, 0, 0, 0)",
+      "the inner input does not draw a second background"
+    );
+    assert.strictEqual(
+      inputStyle.marginBottom,
+      "0px",
+      "the inner input does not enlarge the composite field"
+    );
+  });
+
+  test("falls back to the label field when presentation blocks are omitted", async function (assert) {
+    await render(<template><DefaultHost @value={{2}} /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the selected label is the input value");
+
+    await focus("[role='combobox']");
+    const input = find("[role='combobox']");
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, 6],
+      "focusing selects the fallback label"
+    );
+
+    await fillIn("[role='combobox']", "cherry");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 1 }, "the fallback input becomes the query")
+      .hasText("Cherry pie", "options also fall back to the label field");
+
+    await fillIn("[role='combobox']", "");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("", "an emptied query stays in editing mode");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "closing restores the selected label");
+  });
+
+  test("custom blocks override label-field fallbacks independently", async function (assert) {
+    const items = [
+      { id: 1, title: "First" },
+      { id: 2, title: "Second" },
+    ];
+
+    await render(
+      <template>
+        <DSelect
+          @items={{items}}
+          @value={{1}}
+          @labelField="title"
+          @placeholder="Pick one"
+        >
+          <:selection as |item|><strong>{{item.title}}</strong></:selection>
+        </DSelect>
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__presentation strong")
+      .hasText("First", "the supplied selection block wins");
+
+    await click("[role='combobox']");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 2 }, "the omitted item block uses the fallback")
+      .hasText("First", "the fallback reads the custom label field");
+  });
+
+  test("a custom selection stays replaced after the query is emptied", async function (assert) {
+    await render(<template><Host @value={{1}} /></template>);
+
+    await fillIn("[role='combobox']", "ban");
+    await fillIn("[role='combobox']", "");
+
+    assert
+      .dom(".d-combobox__presentation")
+      .doesNotExist("editing mode continues until the menu closes");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert
+      .dom(".d-combobox__presentation")
+      .hasText("Apple", "closing restores the custom selection");
   });
 
   test("does not open on focus; opens on ArrowDown, on click, and on typing", async function (assert) {
@@ -302,6 +540,14 @@ module(
       assert.dom("[role='option']").exists({ count: 1 });
       assert.dom("[role='option']").hasText("Banana");
     });
+
+    test("the closed trigger uses the default selection label", async function (assert) {
+      await render(<template><DefaultHost @value={{2}} /></template>);
+
+      assert
+        .dom(".d-combobox__presentation")
+        .hasText("Banana", "mobile has the same block-free fallback");
+    });
   }
 );
 
@@ -370,6 +616,22 @@ module(
         .dom(".d-combobox__value")
         .exists("the trigger shows the selection");
     });
+
+    test("uses default labels when presentation blocks are omitted", async function (assert) {
+      await render(
+        <template><DefaultHost @variant="button" @value={{2}} /></template>
+      );
+
+      assert
+        .dom(".d-combobox__value")
+        .hasText("Banana", "the button trigger uses the selection fallback");
+
+      await click(".d-combobox__trigger");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 3 }, "the block-free button renders every option")
+        .hasText("Apple", "option rows use the item fallback");
+    });
   }
 );
 
@@ -389,6 +651,22 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
     await click("[role='option']");
     assert.dom("[role='listbox']").doesNotExist("selecting closes (single)");
     assert.dom(".d-combobox__value").hasText("Apple");
+  });
+
+  test("uses default labels when presentation blocks are omitted", async function (assert) {
+    await render(
+      <template><DefaultHost @variant="static" @value={{2}} /></template>
+    );
+
+    assert
+      .dom(".d-combobox__value")
+      .hasText("Banana", "the static trigger uses the selection fallback");
+
+    await click(".d-combobox__trigger");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 3 }, "the block-free static select renders every option")
+      .hasText("Apple", "option rows use the item fallback");
   });
 });
 
@@ -447,15 +725,78 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
     await click(".d-combobox__chip");
     assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
   });
+
+  test("uses default labels when presentation blocks are omitted", async function (assert) {
+    await render(
+      <template>
+        <DefaultHost @multiple={{true}} @value={{array 1 2}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__chip")
+      .exists({ count: 2 }, "one fallback chip renders for each selection");
+    assert
+      .dom(".d-combobox__chip:first-child")
+      .includesText("Apple", "chips use the selection fallback");
+
+    await click(".d-combobox__expand");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 1 }, "selected fallback items stay excluded")
+      .hasText("Cherry pie", "remaining rows use the item fallback");
+  });
 });
 
 module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("resolving a fallback label keeps the focused input mounted", async function (assert) {
+    let resolveSelection;
+    const selectionPromise = new Promise((resolve) => {
+      resolveSelection = resolve;
+    });
+    const resolveValue = () => selectionPromise;
+
+    const renderPromise = render(
+      <template>
+        <DSelect @items={{array}} @value={{2}} @resolveValue={{resolveValue}} />
+      </template>
+    );
+    await waitFor("[role='combobox']");
+
+    const input = find("[role='combobox']");
+    input.focus();
+    resolveSelection({ id: 2, name: "Banana" });
+    await renderPromise;
+
+    assert.strictEqual(
+      find("[role='combobox']"),
+      input,
+      "the resolution updates the existing input"
+    );
+    assert.strictEqual(
+      document.activeElement,
+      input,
+      "the input keeps focus while its label resolves"
+    );
+    assert
+      .dom(input)
+      .hasValue("Banana", "the resolved fallback becomes the input value");
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, 6],
+      "the late label is selected for replacement"
+    );
+  });
+
   test("an error can be retried without changing the query", async function (assert) {
     let requestCount = 0;
     let retryFilter;
     let resolveRetry;
+    const retryPromise = new Promise((resolve) => {
+      resolveRetry = resolve;
+    });
     const load = (filter) => {
       requestCount++;
 
@@ -464,9 +805,7 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       }
 
       retryFilter = filter;
-      return new Promise((resolve) => {
-        resolveRetry = resolve;
-      });
+      return retryPromise;
     };
 
     await render(
@@ -553,8 +892,8 @@ module(
         "onSelect received the selectKit facade (reading its value works)"
       );
       assert
-        .dom(".d-combobox__placeholder")
-        .exists("the action row did not become the selection");
+        .dom("[role='combobox']")
+        .hasValue("", "the action row did not become the selection");
       assert
         .dom("[role='listbox']")
         .exists("an action row keeps the menu open");

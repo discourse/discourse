@@ -50,7 +50,8 @@ where they conflict.
 **Already at modern baseline:** controlled `@value`, async-first with `AbortSignal`,
 create-on-the-fly (`@allowCreate`/`@createItem`), disabled options (`item.disabled`),
 action rows (`item.onSelect`), selected-value resolution, WAI-ARIA combobox/listbox,
-`:item`/`:selection` slots (the render-prop equivalent).
+optional `:item`/`:selection` slots (the render-prop equivalent), with a
+`@labelField` fallback when either is omitted.
 
 ### Decision 1 — Typeahead is the default trigger (button becomes a variant)
 
@@ -62,11 +63,12 @@ present by default, not only after opening. Three variants via `@variant` (defau
 `typeahead`):
 
 - **`typeahead`** (default, searchable): the trigger IS a `role="combobox"` input.
-  Unfocused it shows the resolved selected label (content-only skeleton while it
-  resolves); on focus it becomes editable and filters; selecting fills it and closes.
-  Selection stays controlled via `@value`/`@onChange`; the typed query is engine-
-  internal `filter` state — so React-Aria's input-text-vs-value split falls out for
-  free and we need not expose `@query` in v1.
+  With the default field presentation, it shows the resolved selected label, selects
+  that label on focus, and replaces it with the query on the first edit. A custom rich
+  `:selection` renders beside the input instead and is hidden while editing. Selecting
+  fills the presentation and closes. Selection stays controlled via
+  `@value`/`@onChange`; the typed query is engine-internal `filter` state — so we need
+  not expose `@query` in v1.
 - **`button`** (variant, searchable): the current button trigger + in-panel
   `DFilterInput`. For rich value display the input can't render — a category badge
   (with color), a user avatar, a menu-style value picker; `:selection` renders it.
@@ -89,13 +91,12 @@ so tabbing through a form doesn't pop every select open (wired manually via
 `componentArgs.show`, since FloatKit has no built-in "input" trigger; an `@openOn`
 knob can offer `focus`/`manual`). On **mobile**, an
 external input cannot hold focus behind FloatKit's `aria-modal` `DModal`, so typeahead
-opens a modal/sheet with the input **inside** it (real focus there) — which is also
-the mobile a11y fallback (Decision 3) and the better small-screen UX. Build the
-typeahead variant on the lower-level `DInlineFloat`/`DFloatBody` + `menu` service
-(avoids `DMenu`'s DButton-trigger + Tab-forwarding assumptions; `DMenu` stays fine for
-the `button` variant). Files: `float-kit/components/d-inline-float.gjs`,
-`d-float-body.gjs`, `float-kit/services/menu.js`; current pattern at
-`app/ui-kit/select/d-select.gjs`.
+opens `DMenu`'s modal with the input **inside** it (real focus there) — which is also
+the mobile a11y fallback (Decision 3) and the better small-screen UX. Use `DMenu` for
+all variants: it accepts the typeahead's non-button trigger component, yields the
+expanded state needed by the input's ARIA wiring, matches the trigger width, and owns
+the mobile modal. The typeahead input intercepts Tab so `DMenu` does not forward focus
+into the portaled content.
 
 **Multi × typeahead — the shadcn Base-UI `multiple` pattern (user-endorsed).**
 (https://ui.shadcn.com/docs/components/base/combobox#multiple; select-kit's
@@ -153,20 +154,21 @@ The hardest part of the design: how the shared primitives (`:selection`, `:item`
 `DSkeleton`, `DAsyncContent`'s loading/empty/error) compose in a typeahead where the
 trigger is an `<input>`. Planned exhaustively.
 
-**Foundational architecture — the input holds only the query.** An `<input>`'s value
-is a plain string; you cannot render a skeleton, a chip, or rich `:selection` markup
-*inside* it. So the trigger is a **composite box** (the shadcn `ComboboxChips` shape),
-laid out inline-start → inline-end:
+**Foundational architecture — separate default and rich-presentation paths.** An
+`<input>`'s value is a plain string, so the default single-select path can use it for
+both a resolved `@labelField` display value and the active query, with explicit editing
+state separating the two. Skeletons, chips, and rich `:selection` markup cannot render
+inside an input, so those stay in the **composite box** as siblings, laid out
+inline-start → inline-end:
 
 `[leading @icon] · [selection presentation] · [query <input role=combobox>] · [clear] · [caret]`
 
-The **`<input>` carries only the query** (`engine.filter`, always a string, reset to
-`""` on blur/close/select). The **selection presentation** (single label / multi chips /
-resolving skeleton) is always a **sibling** in the box, never the input's value. This
-is why we deliberately diverge from React-Aria/shadcn *single* (which put the label in
-the input): we support async id→display resolution and rich `:selection` (badge/avatar/
-chips), neither of which fits inside an input value — and it dissolves the display-vs-
-edit binding conflict (a typeahead C-review hole), since the input is purely the query.
+For a block-free single select, the input displays the synchronously available resolved
+label until editing begins; while editing it displays `engine.filter`, which resets to
+`""` on close/select so the cached label returns. If resolution finishes while the
+input is focused, the reactive cache updates the same mounted input and selects the new
+label. When `:selection` is supplied, that rich presentation is a sibling and the input
+carries only the query. Multi selection chips and resolving skeletons are also siblings.
 
 **Two independent async surfaces, both on the improved `DAsyncContent`:**
 - **Selection surface** (trigger): `resolveSelection(@value)` → bound id(s) → display.
@@ -180,7 +182,7 @@ vice-versa.
 |---|---|---|
 | none | input placeholder | input placeholder ("Add …") |
 | resolving (pending) | text/rich skeleton sibling; **hidden while the user is actively typing** (shown again on blur) | **cached chips render immediately; uncached ids resolve in ONE batch** (`@resolveValues`), skeleton chips until it returns |
-| resolved | `:selection` content (sibling) | `:selection` chip per id (removable) |
+| resolved | input value from `@labelField`, or custom `:selection` content (sibling) | label-field or custom `:selection` chip per id (removable) |
 | unresolvable (404 / restricted / omitted) | a **fallback presentation** (see below) — never hidden, never blank | a **fallback chip** per unresolved id (see below) — never dropped |
 
 **List surface (panel) — independent:**
@@ -203,11 +205,14 @@ vice-versa.
    value; overridable via `:selectionLoading`.
 
 **Focus / query lifecycle (typeahead):**
-- Unfocused with a selection → selection presentation shown, input empty.
+- Unfocused with a selection → the input shows the label-field fallback, or a custom
+  selection presentation is shown with an empty input.
 - Open (per `@openOn`: type / ArrowDown / click, not bare focus) → list loads (`query=""`
   → initial results).
-- Typing → query drives the list; **single hides its selection presentation** (query
-  owns the box); **multi keeps chips**, input flows after them.
+- Typing → the first edit switches the input from its fallback label to the query;
+  **single hides any custom selection presentation** (query owns the box);
+  **multi keeps chips**, input flows after them. Clearing the query does not leave edit
+  mode; close/select restores the selection presentation.
 - Select — single → commit `@value`, close, reset query; the picked item was cached on
   select, so the new label resolves **synchronously** (no skeleton flash).
 - Select — multi → append id, **popover stays open**, new chip appears (cached → sync),
@@ -918,9 +923,11 @@ full rationale and the per-breakpoint FloatKit details:
 
 The payoff of the hybrid is that adding a select is *composition*, not subclassing. A
 new specialized select is a thin `.gjs` wrapper over `DSelect` (arity via `@multiple`,
-not a second component) that supplies three things — a **source**, a **`:item`**
-template, and domain args — and inherits filtering, all async state, keyboard, ARIA,
-positioning, and transformer extensibility for free.
+not a second component) that supplies a **source** and domain args. Plain rows and
+selections need no blocks: both fall back to `@labelField` (`name` by default). Add
+`:item` and/or `:selection` only when that surface needs custom markup. The wrapper
+inherits filtering, all async state, keyboard, ARIA, positioning, and transformer
+extensibility for free.
 
 ### The source contract (how sync/async stays ergonomic)
 
@@ -973,8 +980,10 @@ keyboard nav · combobox/listbox ARIA · overlay positioning · mobile modal.
 
 - **Sources**: `@options` / `@filterBy`, or `@load`; `@minChars` (min query length
   before a server search fires) / `@debounceMs`.
-- **Presentation**: `:item` (each option), `:selection` / `:trigger`, `:empty`
-  (override); `:loadingItem` (one compound placeholder row, repeated `@skeletonCount`)
+- **Presentation**: optional `:item` (each option) and `:selection` / `:trigger`
+  overrides; when omitted, option rows, triggers, and chips render `@labelField`
+  (`name` by default). Also `:empty` (override); `:loadingItem` (one compound
+  placeholder row, repeated `@skeletonCount`)
   or `:loading` (whole-region override); `:selectionLoading` (trigger/chip skeleton
   while the selected value resolves); `:unresolved` (fallback for a 404/restricted/
   omitted id — defaults to `:selection` branching on `item.__unresolved`).
@@ -1187,11 +1196,12 @@ end state is core + bundled plugins migrated off select-kit and banned from usin
 
 **Phase 1 — Complete & consolidate the core family** (M→L)
 - **Typeahead-default rework** (API refinement › Decision 1): invert the trigger so
-  the `typeahead` variant (input-as-trigger) is the default, built on
-  `DInlineFloat`/`DFloatBody` + the `menu` service with focus kept in the input
-  (desktop) and the input inside the modal/sheet on mobile; keep the Phase-0
-  button+filter-in-panel as the `@variant="button"` case; `static` stays. Auto-
-  highlight the first match.
+  the `typeahead` variant (input-as-trigger) is the default, built on `DMenu` with a
+  non-button trigger component. Focus stays in the host input on desktop and moves to
+  the query input inside `DMenu`'s modal on mobile; keep the Phase-0
+  button+filter-in-panel as the `@variant="button"` case; `static` stays. Auto-highlight
+  the first match. Default rows/selections use `@labelField`; custom `:item` and
+  `:selection` blocks remain independent overrides.
 - Add `@multiple` to `DSelect` (array value + chips) and rewrite the on-`main`
   `DMultiSelect` as a thin `@multiple` alias on the engine (fix the `ul/li` validity
   bug; keep its 3 consumers + test suite green); chip UX (keyboard remove + focus
