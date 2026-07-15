@@ -13,7 +13,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class VoteBox extends Component {
+export default class VoteButton extends Component {
   @service currentUser;
 
   @tracked hasVoted = false;
@@ -88,12 +88,6 @@ export default class VoteBox extends Component {
         return;
       }
 
-      // If user has already voted and seen the success menu, don't do anything
-      // The menu will show with the "remove vote" option
-      if (this.topic.user_voted && this.hasSeenSuccessMenu) {
-        return;
-      }
-
       if (
         !this.topic.closed &&
         !this.topic.user_voted &&
@@ -101,15 +95,8 @@ export default class VoteBox extends Component {
       ) {
         this.args.addVote();
         this.hasVoted = true;
-        // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
       }
     });
-  }
-
-  @action
-  addVote() {
-    this.args.addVote();
-    this.hasVoted = true;
   }
 
   @action
