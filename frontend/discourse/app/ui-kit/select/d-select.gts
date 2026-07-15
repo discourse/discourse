@@ -158,6 +158,11 @@ export default class DSelect extends Component<DSelectSignature> {
   // the screen reader (and don't compete with the moving `aria-activedescendant`).
   #lastAnnouncedCount: number | null = null;
 
+  // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
+  // an open-driven programmatic focus (which must NOT select the label) from a genuine
+  // keyboard focus (Tab-in, which selects the label for replacement).
+  #focusingFromOpen = false;
+
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
   get listboxId(): string {
     return this.#listboxId;
@@ -291,7 +296,19 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @action
   focusTriggerInput(): void {
+    this.#focusingFromOpen = true;
     this.filterInput?.focus();
+    this.#focusingFromOpen = false;
+  }
+
+  /**
+   * Whether a focus landing on the query input should select the displayed label (for
+   * overtype). True for a genuine keyboard focus; false for the programmatic focus fired
+   * while opening, where the caret must stay where the pointer put it.
+   */
+  @action
+  shouldSelectOnFocus(): boolean {
+    return !this.#focusingFromOpen;
   }
 
   /**
@@ -528,6 +545,7 @@ export default class DSelect extends Component<DSelectSignature> {
               }}
               @editing={{this.queryActive}}
               @ariaOwns={{true}}
+              @shouldSelectOnFocus={{this.shouldSelectOnFocus}}
               @onOpen={{menuArgs.show}}
               @onRequestClose={{menuArgs.close}}
               @onBlur={{this.handleTriggerBlur}}

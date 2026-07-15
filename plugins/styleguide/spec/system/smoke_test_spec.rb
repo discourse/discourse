@@ -75,6 +75,44 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
+  it "places the caret in the typeahead on click instead of selecting the whole value" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    # The first example is the default typeahead: the chosen label renders inside the input.
+    typeahead = first(".select-examples__control")
+    typeahead.find(".d-combobox__input").click
+    find("[role='option']", text: "Orange").click
+    expect(typeahead).to have_field(with: "Orange")
+
+    label_fully_selected = lambda { page.evaluate_script(<<~JS) }
+          (() => {
+            const input = document.querySelector(
+              ".select-examples__control .d-combobox__input"
+            );
+            return (
+              document.activeElement === input &&
+              input.value.length > 0 &&
+              input.selectionStart === 0 &&
+              input.selectionEnd === input.value.length
+            );
+          })()
+        JS
+
+    # Clicking directly on the label text must place the caret there, not select the whole
+    # value (the reported bug: a click ends up highlighting the entire label).
+    find(".styleguide-contents h1.section-title").click # blur to a resting, filled field
+    typeahead.find(".d-combobox__input").click
+    expect(page).to have_css("[role='listbox']")
+    expect(label_fully_selected.call).to eq(false)
+
+    # Clicking the chevron opens via a programmatic focus; it must not select-all either.
+    find(".styleguide-contents h1.section-title").click
+    typeahead.find(".d-combobox__caret").click
+    expect(page).to have_css("[role='listbox']")
+    expect(label_fully_selected.call).to eq(false)
+  end
+
   # this test will check if the index page is rendering correctly and also ensures that all component pages are
   # declared in the sections hash above
   it "renders the index page correctly and collect information about the available page" do
