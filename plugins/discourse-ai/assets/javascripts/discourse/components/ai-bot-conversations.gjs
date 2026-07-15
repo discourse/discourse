@@ -469,6 +469,7 @@ export default class AiBotConversations extends Component {
             @setTargetRecipient={{this.setTargetRecipient}}
             @agentName={{@controller.agent}}
             @llmName={{@controller.llm}}
+            @onSelectionChanged={{this.onSelectionChanged}}
           />
         </div>
 

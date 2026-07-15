@@ -214,7 +214,9 @@ export default class AiAgentLlmSelector extends Component {
       }
     }
 
-    this.args.setAgentId(this._value);
+    // deferred: the parent tracks state already consumed by templates
+    // rendered before this component
+    next(() => this.args.setAgentId(this._value));
   }
 
   #loadStoredLlm() {
