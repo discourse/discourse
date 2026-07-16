@@ -7,7 +7,6 @@ module DiscourseAi
         METADATA_TOKEN_URL =
           "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
         ADC_TOKEN_EXPIRY_BUFFER_SECONDS = 60
-        ADC_TOKEN_MUTEX = Mutex.new
 
         class << self
           def can_contact?(llm_model)
@@ -22,31 +21,29 @@ module DiscourseAi
             false
           end
 
+          # Deliberately process-local: this is a machine-identity credential,
+          # so it must not be shared through Redis or across processes that
+          # could run under different service accounts.
           def adc_token
-            ADC_TOKEN_MUTEX.synchronize do
-              return @adc_token if @adc_token && @adc_token_expires_at.after?(Time.zone.now)
+            return @adc_token if @adc_token && @adc_token_expires_at.after?(Time.zone.now)
 
-              @adc_token = nil
-              @adc_token_expires_at = nil
+            reset_adc_token_cache!
 
-              payload = fetch_adc_token_payload
-              token = payload&.dig("access_token")
-              expires_in = payload&.dig("expires_in").to_i - ADC_TOKEN_EXPIRY_BUFFER_SECONDS
+            payload = fetch_adc_token_payload
+            token = payload&.dig("access_token")
+            expires_in = payload&.dig("expires_in").to_i - ADC_TOKEN_EXPIRY_BUFFER_SECONDS
 
-              if token.present? && expires_in > 0
-                @adc_token = token
-                @adc_token_expires_at = expires_in.seconds.from_now
-              end
-
-              @adc_token
+            if token.present? && expires_in > 0
+              @adc_token = token
+              @adc_token_expires_at = expires_in.seconds.from_now
             end
+
+            @adc_token
           end
 
           def reset_adc_token_cache!
-            ADC_TOKEN_MUTEX.synchronize do
-              @adc_token = nil
-              @adc_token_expires_at = nil
-            end
+            @adc_token = nil
+            @adc_token_expires_at = nil
           end
 
           private
