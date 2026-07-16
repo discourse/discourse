@@ -2623,6 +2623,8 @@ lt:
     actions:
       agree:
         title: "Taip"
+      agree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       agree_and_silence:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:

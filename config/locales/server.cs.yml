@@ -4400,6 +4400,8 @@ cs:
         title: "Ponechat příspěvek skrytý"
         description: "Souhlasit s nahlášením a nechat příspěvek skrytý."
         complete: "Příspěvek zůstal skryt."
+      agree_and_keep_deleted:
+        title: "Ponechat příspěvek smazaný"
       agree_and_suspend:
         title: "Pozastavit uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."

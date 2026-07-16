@@ -4155,8 +4155,9 @@ sk:
           many: "Zobraziť %{count} preložené lokality"
           other: "Zobraziť %{count} preložené lokality"
         modal:
-          title: "Preklady pre príspevok"
+          title: "Preklady"
           confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
+          discard_language_change: "Zahodiť zmenu"
         success: "Preklady boli úspešne aktualizované"
         post_language_selector:
           none: "Nie je nastavené"

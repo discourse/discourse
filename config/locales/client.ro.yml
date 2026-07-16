@@ -3013,8 +3013,9 @@ ro:
           few: "Vezi %{count} locale traduse"
           other: "Vezi %{count} de locale traduse"
         modal:
-          title: "Traduceri pentru postare"
+          title: "Traduceri"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
+          discard_language_change: "Renunță la modificare"
         success: "Traducerile au fost actualizate cu succes"
         edit_warning:
           action_original: "Editează postarea originală"

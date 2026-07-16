@@ -34,8 +34,6 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
-      post_image_descriptions:
-        description: "Përshkrimi"
       ai_tool_approval:
         loading: "Duke ngarkuar..."
         tool: "Veprimi"
@@ -63,6 +61,9 @@ sq:
           reset: "Rivendosni"
         search:
           name: "Kërko"
+        image_caption:
+          setting_groups:
+            settings: "Rregullimet"
         spam:
           name: "Spam"
       modals:

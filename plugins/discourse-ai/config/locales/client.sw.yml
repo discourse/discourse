@@ -34,8 +34,6 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
-      post_image_descriptions:
-        description: "Maelezo"
       ai_tool_approval:
         loading: "Inaandaa...."
         tool: "Kitendo"
@@ -58,6 +56,9 @@ sw:
           reset: "Weka/Anzisha Upya"
         search:
           name: "Tafuta"
+        image_caption:
+          setting_groups:
+            settings: "Mipangilio"
         spam:
           name: "Barua Taka"
       modals:

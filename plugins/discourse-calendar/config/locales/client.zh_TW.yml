@@ -13,6 +13,9 @@ zh_TW:
             topic_id:
               label: 話題 ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "聊天"
       disable_holiday: "禁用"
       enable_holiday: "啟用"
       date: "日期"

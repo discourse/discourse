@@ -92,8 +92,6 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
-      post_image_descriptions:
-        description: "Περιγραφή"
       bot_chats:
         tab_label: "Συνομιλίες bot"
       ai_tool_approval:
@@ -135,6 +133,9 @@ el:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        image_caption:
+          setting_groups:
+            settings: "Ρυθμίσεις"
         translation:
           post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:

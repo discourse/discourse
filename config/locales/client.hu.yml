@@ -2862,6 +2862,9 @@ hu:
       default: Egyéni emodzsik
     filter_input:
       clear: "Szűrő kiürítése"
+    filter_controls:
+      reset: "Szűrő visszaállítása"
+      toggle: "Legördülő szűrők be- és kikapcsolása"
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
@@ -4132,8 +4135,9 @@ hu:
           one: "%{count} fordítás megtekintése"
           other: "%{count} fordítás megtekintése"
         modal:
-          title: "Fordítás a bejegyzéshez"
+          title: "Fordítások"
           confirm_delete: "Biztos, hogy törölni akarja a(z) „%{languageCode}” fordításokat?"
+          discard_language_change: "Változás elvetése"
         success: "A fordítások sikeresen frissültek"
         post_language_selector:
           none: "Nincs beállítva"
@@ -5536,8 +5540,6 @@ hu:
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
-    reset_filter: "Szűrő visszaállítása"
-    toggle_filters: "Legördülő szűrők be- és kikapcsolása"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
@@ -5940,6 +5942,7 @@ hu:
             stats_and_thresholds:
               title: "Statisztikák és küszöbértékek"
         category_management:
+          create_category: "Kategória létrehozása"
           tabs:
             settings: "Beállítások"
           types:

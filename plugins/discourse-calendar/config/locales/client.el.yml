@@ -33,6 +33,9 @@ el:
             topic_id:
               label: ID Θέματος
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Συνομιλία"
       invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
       preferences:
         all_events: "Ημερολόγιο Discourse - Όλες οι Εκδηλώσεις"

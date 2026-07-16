@@ -4322,8 +4322,9 @@ ur:
           one: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
           other: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
         modal:
-          title: "پوسٹ کے لیے ترجمہ"
+          title: "ترجمہ"
           confirm_delete: "کیا آپ واقعی '%{languageCode}' کے ترجمے حذف کرنا چاہتے ہیں؟"
+          post_language: "دھاگے کی زبان"
         success: "ترجمے کو کامیابی کے ساتھ اپ ڈیٹ کر دیا گیا"
         post_language_selector:
           title: "دھاگے کی زبان"
@@ -5992,6 +5993,7 @@ ur:
             stats_and_thresholds:
               title: "اعدادوشمار اور حد"
         category_management:
+          create_category: "زمرہ بنائیں"
           tabs:
             settings: "سیٹِنگ"
           types:

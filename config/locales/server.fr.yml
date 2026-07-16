@@ -4699,6 +4699,8 @@ fr:
         title: "Garder le message masqué"
         description: "Accepter le signalement et maintenir le message masqué."
         complete: "Publication maintenue cachée."
+      agree_and_keep_deleted:
+        title: "Laisser ce message à l'état supprimé"
       agree_and_suspend:
         title: "Suspendre l'utilisateur"
         description: "Accepter le signalement et suspendre l'utilisateur."

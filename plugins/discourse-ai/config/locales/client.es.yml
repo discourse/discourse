@@ -21,7 +21,6 @@ es:
       dashboard:
         emotion:
           title: "Emoción"
-          description: "La tabla muestra un recuento de los mensajes clasificados con una emoción determinada. Clasificados con el modelo 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -229,8 +228,6 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
-      post_image_descriptions:
-        description: "Descripción"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
@@ -351,6 +348,9 @@ es:
             enabled_features: "Características activadas"
             automation: "Automatización"
             agents: "Agentes"
+        image_caption:
+          setting_groups:
+            settings: "Ajustes"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -883,7 +883,7 @@ es:
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ayudante (%{agent})"
-          ai_helper_image_caption: "Pie de foto"
+          ai_image_caption: "Pie de foto"
           ai_agent: "Agente (%{agent})"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Búsqueda de IA"

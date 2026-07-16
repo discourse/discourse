@@ -4985,6 +4985,8 @@ es:
         title: "Mantener la publicación oculta"
         description: "Aceptar la denuncia y mantener la publicación oculta."
         complete: "La publicación se ha mantenido oculta."
+      agree_and_keep_deleted:
+        title: "Mantener publicación eliminada"
       agree_and_suspend:
         title: "Suspender al usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."

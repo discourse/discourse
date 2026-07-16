@@ -12,22 +12,14 @@ pt_BR:
     topic_voting:
       notification_label:
         vote_released: "Voto devolvido"
-      title: "Votação de tópicos"
-      reached_limit: "Você está sem votos, remova um voto existente!"
-      list_votes: "Mostrar seus votos"
       voted: "Você votou neste tópico"
-      allow_topic_voting: "Permitir que usuários(as) votem em tópicos desta categoria"
       vote_title: "Votar"
       vote_title_plural: "Votos"
       see_votes: "Você tem %{count}/%{max} votos restantes"
-      locked: "Bloqueado"
       locked_description: "Aumente seu nível de confiança para votar."
       votes:
         one: "%{count} voto"
         other: "%{count} votos"
-      anonymous_button:
-        one: "Votar"
-        other: "Votos"
       remove_vote: "Remover voto"
       and_more_voters: "e mais %{count}..."
       show_voters: "Exibir quem votou"
@@ -42,10 +34,6 @@ pt_BR:
         help: "tópicos em que você votou"
     search:
       most_votes: "Mais votados"
-      advanced:
-        vote:
-          count:
-            label: "Contagem mínima de votos"
     admin:
       web_hooks:
         voting_event:

@@ -3315,6 +3315,8 @@ da:
           edit: "Rediger"
           delete: "Slet"
         add: "Tilføj ny oversættelse"
+        modal:
+          title: "Oversættelser"
         post_language_selector:
           none: "Ikke indstillet"
       errors:

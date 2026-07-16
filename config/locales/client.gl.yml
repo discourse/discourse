@@ -2611,6 +2611,8 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
+        modal:
+          title: "Traducións"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."

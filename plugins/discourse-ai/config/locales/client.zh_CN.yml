@@ -21,7 +21,6 @@ zh_CN:
       dashboard:
         emotion:
           title: "情绪"
-          description: "该表列出了按确定的情绪分类的帖子数量。使用 'SamLowe/roberta-base-go_emotions' 模型进行分类。"
         reports:
           filters:
             group_by:
@@ -233,8 +232,6 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        description: "描述"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -358,6 +355,9 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        image_caption:
+          setting_groups:
+            settings: "设置"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -884,7 +884,7 @@ zh_CN:
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
-          ai_helper_image_caption: "图片标题"
+          ai_image_caption: "图片标题"
           ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"

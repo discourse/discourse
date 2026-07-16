@@ -84,8 +84,6 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        description: "Deskripsi"
       ai_tool_approval:
         loading: "Diproses..."
         tool: "Aksi"
@@ -111,6 +109,9 @@ id:
           reset: "Reset"
         search:
           name: "Cari"
+        image_caption:
+          setting_groups:
+            settings: "Pengaturan"
         spam:
           name: "Spam"
       modals:

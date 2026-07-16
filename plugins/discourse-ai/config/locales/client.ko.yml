@@ -38,8 +38,6 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
-      post_image_descriptions:
-        description: "내용"
       ai_tool_approval:
         loading: "로드 중..."
         tool: "처리"
@@ -81,6 +79,9 @@ ko:
         inference:
           setting_groups:
             settings: "기본 설정"
+        image_caption:
+          setting_groups:
+            settings: "설정"
         translation:
           setting_groups:
             settings: "기본 설정"

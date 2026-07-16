@@ -5041,6 +5041,8 @@ tr_TR:
         title: "Gönderiyi gizli tutun"
         description: "Bayrağı kabul edin ve gönderiyi gizli tutun."
         complete: "Gönderi gizli tutuldu."
+      agree_and_keep_deleted:
+        title: "Gönderiyi silinmiş olarak tut"
       agree_and_suspend:
         title: "Kullanıcıyı askıya al"
         description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."

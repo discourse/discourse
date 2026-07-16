@@ -148,7 +148,6 @@ nl:
       description: "Dit rapport biedt een sentimentanalyse voor berichten, gegroepeerd op categorie, met positieve, negatieve en neutrale scores voor elk bericht en elke categorie."
     overall_sentiment:
       title: "Algemeen sentiment"
-      description: 'De grafiek vergelijkt het aantal berichten dat als positief of negatief is geclassificeerd. Deze worden berekend wanneer positieve of negatieve scores groter zijn dan de ingestelde drempelscore. Dit betekent dat neutrale berichten niet worden weergegeven. Persoonlijke berichten (PB''s) zijn ook uitgesloten. Geclassificeerd met "cardiffnlp/twitter-roberta-base-sentiment-latest".'
       xaxis: "Positief (%)"
       yaxis: "Datum"
     emotion_admiration:
@@ -445,7 +444,6 @@ nl:
           description: "Standaardagent die de vertaalfunctie van de Helper ondersteunt"
         image_captioner:
           name: "Afbeeldingsbijschriften"
-          description: "Standaardagent die de Helper-functie voor afbeeldingsbijschriften ondersteunt"
         locale_detector:
           name: "Taaldetector"
           description: "Ondersteunt de vertaalfunctie door de taal van een bepaalde tekst (berichten, titels enz.) te detecteren."

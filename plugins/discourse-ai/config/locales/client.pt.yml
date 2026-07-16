@@ -67,8 +67,6 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
-      post_image_descriptions:
-        description: "Descrição"
       ai_tool_approval:
         loading: "A carregar..."
         tool: "Ação"
@@ -128,6 +126,9 @@ pt:
           markdown_tables: "Gerar tabela de Marcação"
           custom_prompt: "Janela personalizada"
           translator: "Tradutor"
+        image_caption:
+          setting_groups:
+            settings: "Configurações"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas suportados"

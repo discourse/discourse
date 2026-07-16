@@ -5078,6 +5078,8 @@ he:
         title: "להשאיר את הפוסט מוסתר"
         description: "הבעת הסכמה עם הדגל והשארת הפוסט מוסתר."
         complete: "הפוסט נשאר מוסתר."
+      agree_and_keep_deleted:
+        title: "להשאיר את הפוסט מחוק"
       agree_and_suspend:
         title: "השעיית משתמש"
         description: "הבעת הסכמה עם הדגל והשעיית המשתמש."

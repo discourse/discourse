@@ -4070,7 +4070,7 @@ hr:
           few: "Prikaži %{count} prevedene lokalizacije"
           other: "Prikaži %{count} prevedenih lokalizacija"
         modal:
-          title: "Prijevodi za objavu"
+          title: "Prijevodi"
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:

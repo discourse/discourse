@@ -3061,6 +3061,8 @@ cs:
       default: Vlastní emoji
     filter_input:
       clear: "Vymazat filtr"
+    filter_controls:
+      toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -4474,8 +4476,9 @@ cs:
           many: "Zobrazit %{count} překladů"
           other: "Zobrazit %{count} překladů"
         modal:
-          title: "Překlady pro příspěvek"
+          title: "Překlady"
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
+          discard_language_change: "Zahodit změnu"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
           none: "Nenastaveno"
@@ -5962,7 +5965,6 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
-    toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -6359,6 +6361,7 @@ cs:
             stats_and_thresholds:
               title: "Statistiky a prahové hodnoty"
         category_management:
+          create_category: "Vytvořit kategorii"
           tabs:
             settings: "Nastavení"
           types:

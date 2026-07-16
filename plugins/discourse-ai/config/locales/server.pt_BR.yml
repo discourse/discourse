@@ -138,7 +138,6 @@ pt_BR:
       description: "Este relatório fornece análise de sentimento para a postagem agrupados por categorias, com pontuações positivas, negativas e neutras para cada postagem e categoria."
     overall_sentiment:
       title: "Sentimento geral"
-      description: 'Este gráfico compara a quantidade de postagens classificadas como positiva ou negativa. São calculadas quando as pontuações negativas e positivas forem maiores que a pontuação de limite. Ou seja, postagens neutras não são exibidas. Mensagens pessoais (PM) também não. Classificado com "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Positivo (%)"
       yaxis: "Data"
     emotion_admiration:

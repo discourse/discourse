@@ -34,8 +34,6 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
-      post_image_descriptions:
-        description: "Նկարագրություն"
       ai_tool_approval:
         loading: "Բեռնվում է..."
         tool: "Գործողություն"
@@ -60,6 +58,9 @@ hy:
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        image_caption:
+          setting_groups:
+            settings: "Կարգավորումներ"
         spam:
           name: "Սպամ"
       modals:
