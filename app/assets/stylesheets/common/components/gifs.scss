@@ -12,8 +12,6 @@
     }
   }
 
-  // the spinner itself is rotated by an animation, so its transform can't be
-  // used to center it
   &__input-spinner {
     position: absolute;
     right: 1.2em;
@@ -22,9 +20,6 @@
     align-items: center;
   }
 
-  // the modal is sized by its content, so these floors are what widen it, and
-  // they keep the grid's measured width stable while results load. they must
-  // stay under the body's inner width or the grid overflows it.
   &__content {
     min-width: 320px;
     max-height: 65vh;
