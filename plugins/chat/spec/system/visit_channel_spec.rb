@@ -152,7 +152,7 @@ RSpec.describe "Visit channel" do
             it "allows to join it" do
               chat.visit_thread(thread)
 
-              expect(page).to have_content(I18n.t("js.chat.channel_settings.join"), count: 2)
+              expect(page).to have_css(".toggle-channel-membership-button.-join", count: 2)
             end
           end
         end
