@@ -11,6 +11,7 @@ import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import booleanString from "discourse/helpers/boolean-string";
+import { makeArray } from "discourse/lib/helpers";
 import type Site from "discourse/models/site";
 import type A11y from "discourse/services/a11y";
 import { or } from "discourse/truth-helpers";
@@ -25,6 +26,7 @@ import ComboboxQueryInput from "discourse/ui-kit/select/-internals/combobox-quer
 import SelectItem from "discourse/ui-kit/select/-internals/select-item";
 import SelectionLabel from "discourse/ui-kit/select/-internals/selection-label";
 import SelectEngine, {
+  type SelectDescriptor,
   type SelectEngineOptions,
   type SelectItem as SelectItemModel,
   selectItemLabel,
@@ -173,6 +175,20 @@ export default class DSelect extends Component<DSelectSignature> {
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
   get listboxId(): string {
     return this.#listboxId;
+  }
+
+  /** Stable prefix for the per-chip element ids (label + remove button). */
+  get chipIdPrefix() {
+    return `d-combobox-chip-${guidFor(this)}`;
+  }
+
+  /**
+   * Chip-shaped placeholder rows while the held values resolve — one per bound id, so
+   * the loading state matches the number of chips about to appear.
+   */
+  get chipSkeletons(): Array<{ key: number }> {
+    const count = makeArray(this.args.value).length;
+    return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
   /**
@@ -384,19 +400,30 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
-   * Resolves the bound ids to their display items for the multi trigger. Narrows to the
+   * Resolves the bound ids to chip descriptors for the multi trigger. Narrows to the
    * array form; an empty value returns `undefined` (→ `:empty`). Uncached ids resolve in a
    * single batch, and any id that can't resolve becomes an `__unresolved` fallback chip
-   * (never a hole).
+   * (never a hole). Normalizing to descriptors here (not in the template) means the chips
+   * are built once per value change and stay referentially stable across re-renders.
    */
   @action
   resolveMulti(
     value: unknown,
     opts?: SelectLoadOptions
-  ): SelectItemModel[] | Promise<SelectItemModel[]> {
-    return this.engine.resolveSelection(value as SelectValue, opts) as
-      | SelectItemModel[]
-      | Promise<SelectItemModel[]>;
+  ):
+    | readonly SelectDescriptor[]
+    | Promise<readonly SelectDescriptor[]>
+    | undefined {
+    const resolved = this.engine.resolveSelection(value as SelectValue, opts);
+    if (resolved == null) {
+      return undefined;
+    }
+    if (resolved instanceof Promise) {
+      return resolved.then((items) =>
+        this.engine.describeItems(items as SelectItemModel[])
+      );
+    }
+    return this.engine.describeItems(resolved as SelectItemModel[]);
   }
 
   @action
@@ -575,29 +602,50 @@ export default class DSelect extends Component<DSelectSignature> {
           {{/if}}
           {{dIcon "angle-down" class="d-combobox__caret"}}
         {{else if @multiple}}
-          <span class="d-combobox__chips">
+          <span
+            class="d-combobox__chips"
+            role="group"
+            aria-label={{i18n "d_select.selected_items"}}
+          >
             <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
-              <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
-              <:content as |items|>
-                {{#each items key="@identity" as |item|}}
-                  <button
-                    type="button"
-                    class="d-combobox__chip"
-                    title={{i18n "d_select.remove"}}
-                    {{on "click" (fn this.removeItem item)}}
-                  >
-                    <span class="d-combobox__chip-label">
+              <:loading>
+                {{#each this.chipSkeletons key="key" as |row|}}
+                  <span class="d-combobox__chip" data-key={{row.key}}>
+                    <DSkeleton @variant="text" @width="6ch" />
+                  </span>
+                {{/each}}
+              </:loading>
+              <:content as |chips|>
+                {{#each chips key="key" as |chip index|}}
+                  <span class="d-combobox__chip">
+                    <span
+                      class="d-combobox__chip-label"
+                      id="{{this.chipIdPrefix}}-{{index}}-label"
+                    >
                       {{#if (has-block "selection")}}
-                        {{yield item to="selection"}}
+                        {{yield chip.item to="selection"}}
                       {{else}}
                         <SelectionLabel
-                          @item={{item}}
+                          @item={{chip.item}}
                           @labelField={{this.labelField}}
                         />
                       {{/if}}
                     </span>
-                    {{dIcon "xmark" class="d-combobox__chip-remove"}}
-                  </button>
+                    <button
+                      type="button"
+                      class="d-combobox__chip-remove"
+                      aria-labelledby="{{this.chipIdPrefix}}-{{index}}-remove {{this.chipIdPrefix}}-{{index}}-label"
+                      {{on "click" (fn this.removeItem chip.item)}}
+                    >
+                      <span
+                        class="sr-only"
+                        id="{{this.chipIdPrefix}}-{{index}}-remove"
+                      >
+                        {{i18n "d_select.remove"}}
+                      </span>
+                      {{dIcon "xmark"}}
+                    </button>
+                  </span>
                 {{/each}}
               </:content>
               <:empty>
