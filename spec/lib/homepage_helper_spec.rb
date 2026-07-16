@@ -73,6 +73,16 @@ RSpec.describe HomepageHelper do
         SiteSetting.top_menu = "latest|new|categories"
         SiteSetting.default_homepage = "top"
         expect(HomepageHelper.resolve(nil, user)).to eq("top")
+        expect(HomepageHelper.resolve).to eq("top")
+      end
+    end
+
+    context "when default_homepage is not set" do
+      before { SiteSetting.top_menu = "new|top|latest" }
+
+      it "falls back to the first top_menu item, and the first anon-visible one for anons" do
+        expect(HomepageHelper.resolve(nil, user)).to eq("new")
+        expect(HomepageHelper.resolve).to eq("top")
       end
     end
 

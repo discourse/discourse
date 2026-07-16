@@ -279,12 +279,17 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
+export function siteDefaultHomepage(siteSettings) {
+  return (
+    siteSettings.default_homepage ||
+    siteSettings.top_menu.split("|")[0].split(",")[0]
+  );
+}
+
 export function initializeDefaultHomepage(siteSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
-    sel?.getAttribute("content") ||
-    siteSettings.default_homepage ||
-    siteSettings.top_menu.split("|")[0].split(",")[0];
+    sel?.getAttribute("content") || siteDefaultHomepage(siteSettings);
   setDefaultHomepage(homepage);
 }
 

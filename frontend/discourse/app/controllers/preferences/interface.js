@@ -17,7 +17,10 @@ import {
   setLocalTheme,
 } from "discourse/lib/theme-selector";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { setDefaultHomepage } from "discourse/lib/utilities";
+import {
+  setDefaultHomepage,
+  siteDefaultHomepage,
+} from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
 
@@ -261,9 +264,7 @@ export default class InterfaceController extends Controller {
   }
 
   homeChanged() {
-    const siteHome =
-      this.siteSettings.default_homepage ||
-      this.siteSettings.top_menu.split("|")[0].split(",")[0];
+    const siteHome = siteDefaultHomepage(this.siteSettings);
 
     if (this.model.canPickThemeWithCustomHomepage) {
       USER_HOMES[-1] = "custom";
@@ -282,16 +283,14 @@ export default class InterfaceController extends Controller {
       homeValues[newKey] = newValue;
     });
 
-    let result = [];
+    let result = [{ name: i18n("user.homepage.default"), value: -1 }];
 
-    if (this.model.canPickThemeWithCustomHomepage) {
-      result.push({
-        name: i18n("user.homepage.default"),
-        value: -1,
-      });
-    }
+    const siteHome = siteDefaultHomepage(this.siteSettings);
+    const availableIds = this.siteSettings.top_menu
+      .split("|")
+      .filter((m) => m !== siteHome);
+    availableIds.unshift(siteHome);
 
-    const availableIds = this.siteSettings.top_menu.split("|");
     const userHome = USER_HOMES[this.get("model.user_option.homepage_id")];
 
     if (userHome && !availableIds.includes(userHome)) {

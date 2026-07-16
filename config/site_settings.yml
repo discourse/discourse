@@ -319,8 +319,8 @@ basic:
     client: true
     refresh: true
     type: enum
-    default: "latest"
-    choices: "TopMenu.choices"
+    default: ""
+    enum: "HomepageSiteSetting"
     area: "interface"
   custom_homepage_crawler_route:
     type: enum

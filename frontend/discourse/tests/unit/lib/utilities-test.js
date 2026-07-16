@@ -111,6 +111,19 @@ module("Unit | Utilities", function (hooks) {
     );
   });
 
+  test("defaultHomepage prefers the default_homepage site setting", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "hot";
+    initializeDefaultHomepage(siteSettings);
+
+    assert.strictEqual(
+      defaultHomepage(),
+      "hot",
+      "default homepage is pulled from the default_homepage site setting"
+    );
+  });
+
   test("setDefaultHomepage", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     initializeDefaultHomepage(siteSettings);
