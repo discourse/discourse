@@ -201,10 +201,7 @@ RSpec.describe Middleware::RequestTracker do
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
-          env(
-            "HTTP_USER_AGENT" =>
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko; compatible; Yeti/1.1; +https://naver.me/spd) Chrome/144.0.0.0 Safari/537.36",
-          ),
+          env("HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"),
           ["200", { "Content-Type" => "text/html" }],
           0.1,
         )
