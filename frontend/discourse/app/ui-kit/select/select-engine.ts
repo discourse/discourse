@@ -492,20 +492,16 @@ export default class SelectEngine {
   }
 
   /**
-   * Builds the final rendered item list from the source's resolved items: hides
-   * already-selected items (multi), applies plugin `select-content` transformers,
-   * appends the create-on-the-fly item, and prepends any special items.
+   * Builds the final rendered item list from the source's resolved items: applies
+   * plugin `select-content` transformers, appends the create-on-the-fly item, and
+   * prepends any special items.
    *
    * @param rawItems - The items resolved by the source.
    * @returns The frozen list of normalized descriptors to render.
    */
   @bind
   buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
-    let items: SelectItem[] = this.#multiple
-      ? (makeArray(rawItems) as SelectItem[]).filter(
-          (item) => !this.isSelected(item)
-        )
-      : [...(makeArray(rawItems) as SelectItem[])];
+    let items: SelectItem[] = [...(makeArray(rawItems) as SelectItem[])];
 
     items = applyValueTransformer("select-content", items, {
       identifiers: this.#identifiers,
