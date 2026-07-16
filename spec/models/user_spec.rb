@@ -3065,6 +3065,16 @@ RSpec.describe User do
       expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
       expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
     end
+
+    it "does not set a random avatar when selectable avatar assignment on signup is disabled" do
+      SiteSetting.selectable_avatars = [Fabricate(:upload), Fabricate(:upload)]
+      SiteSetting.selectable_avatars_mode = "everyone"
+      SiteSetting.selectable_avatars_random_on_signup = false
+
+      user = Fabricate(:user)
+
+      expect(user.uploaded_avatar_id).to be_nil
+    end
   end
 
   describe "ensure_consistency!" do
