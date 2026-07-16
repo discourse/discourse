@@ -104,6 +104,27 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       engine.select({ id: 1 });
       assert.strictEqual(closed, 0, "a multi-select stays open on select");
     });
+
+    test("deselectLast drops the last value; a no-op when empty", function (assert) {
+      const { engine, changes } = controlled({
+        multiple: true,
+        value: [1, 2, 3],
+      });
+      engine.deselectLast();
+      assert.deepEqual(
+        changes.at(-1)[0],
+        [1, 2],
+        "the last selected value is removed"
+      );
+
+      const empty = controlled({ multiple: true, value: [] });
+      empty.engine.deselectLast();
+      assert.strictEqual(
+        empty.changes.length,
+        0,
+        "no change is emitted for an empty selection"
+      );
+    });
   });
 
   test("isSelected compares by valueField against the controlled value", function (assert) {
@@ -134,6 +155,31 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         items.map((d) => d.value),
         [2],
         "a selected item is filtered out of the list"
+      );
+    });
+
+    test("describeItems normalizes items and reflects __unresolved", function (assert) {
+      const engine = new SelectEngine();
+
+      const [normal] = engine.describeItems([{ id: 5, name: "Five" }]);
+      assert.strictEqual(normal.value, 5, "value comes from the id field");
+      assert.strictEqual(normal.key, "5", "key is the normalized value");
+      assert.strictEqual(
+        normal.item.name,
+        "Five",
+        "the raw item passes through"
+      );
+      assert.false(
+        normal.flags.__unresolved,
+        "a normal item is not unresolved"
+      );
+
+      const [unresolved] = engine.describeItems([
+        { id: 9, name: "Nine", __unresolved: true },
+      ]);
+      assert.true(
+        unresolved.flags.__unresolved,
+        "an unresolved item's flag is reflected, not hardcoded false"
       );
     });
 
@@ -496,6 +542,48 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
+    test("a custom unresolved fallback without an id is still removable", async function (assert) {
+      const { engine, changes } = controlled({
+        multiple: true,
+        value: [999],
+        // Names the fallback but returns NO id/value field of its own.
+        createUnresolvedItem: (value) => ({ name: `Topic #${value}` }),
+        resolveValues: () => Promise.reject(new Error("nope")),
+      });
+
+      const [chip] = await engine.resolveSelection([999]);
+      assert.true(
+        chip.__unresolved,
+        "the held id becomes an unresolved fallback"
+      );
+      assert.strictEqual(
+        chip.name,
+        "Topic #999",
+        "the builder's label is kept"
+      );
+
+      // The engine stamps the held value onto the fallback, so its descriptor keys on
+      // the value (not a positional __row key) and deselect can find it.
+      const [descriptor] = engine.describeItems([chip]);
+      assert.strictEqual(
+        descriptor.value,
+        999,
+        "the held value is stamped onto the fallback"
+      );
+      assert.strictEqual(
+        descriptor.key,
+        "999",
+        "the descriptor keys on the value, not the row index"
+      );
+
+      engine.deselect(chip);
+      assert.deepEqual(
+        changes.at(-1)[0],
+        [],
+        "deselecting the unresolved chip removes its value"
+      );
+    });
+
     test("an empty multi value still yields undefined (placeholder)", function (assert) {
       assert.strictEqual(
         new SelectEngine({ multiple: true }).resolveSelection([]),
@@ -547,6 +635,29 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         changes.at(-1)[0],
         [2],
         "deselecting id 1 removes the '1' entry regardless of its type"
+      );
+    });
+
+    test("dedupes repeated ids in the value and before resolving", function (assert) {
+      const engine = controlled({ multiple: true, value: [1, 2, 2, 1] }).engine;
+      assert.deepEqual(
+        [...engine.value],
+        [1, 2],
+        "value collapses duplicate ids, keeping first-occurrence order"
+      );
+
+      const client = new SelectEngine({
+        multiple: true,
+        items: [
+          { id: 1, name: "One" },
+          { id: 2, name: "Two" },
+        ],
+      });
+      const resolved = client.resolveSelection([1, 2, 2, 1]);
+      assert.deepEqual(
+        resolved.map((item) => item.id),
+        [1, 2],
+        "resolveSelection resolves one item per distinct id (no duplicate chips)"
       );
     });
 
