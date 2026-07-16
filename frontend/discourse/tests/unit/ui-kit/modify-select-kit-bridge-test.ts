@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/owner";
+import { type default as Owner, getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
@@ -8,15 +8,20 @@ import {
   resetLegacyBridge,
   suppressLegacyBridge,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
-import SelectEngine from "discourse/ui-kit/select/select-engine";
+import SelectEngine, {
+  type SelectDescriptor,
+  type SelectEngineOptions,
+} from "discourse/ui-kit/select/select-engine";
 
 // One deprecation handler for the whole module, recording every fired id, so tests can
 // assert the bridge's per-instance deprecation without leaking a handler per test.
-const firedDeprecations = [];
+const firedDeprecations: (string | undefined)[] = [];
 let handlerRegistered = false;
 
-function ids(items) {
-  return items.map((item) => item.id);
+// `buildItems` returns normalized descriptors, so the row id lives on `value`, not on the
+// raw model's `id`.
+function ids(descriptors: readonly SelectDescriptor[]) {
+  return descriptors.map((descriptor) => descriptor.value);
 }
 
 module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
@@ -38,7 +43,7 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
   });
 
   // Builds an engine wired for the bridge with a resolvable owner and a live element.
-  function engineFor(owner, opts = {}) {
+  function engineFor(owner: Owner | undefined, opts: SelectEngineOptions = {}) {
     const element = document.createElement("div");
     return new SelectEngine({
       identifiers: opts.identifiers ?? ["test-select"],
@@ -152,8 +157,11 @@ module("Unit | ui-kit | modify-select-kit bridge", function (hooks) {
     });
 
     const engine = engineFor(getOwner(this));
-    const actionRow = engine.buildItems([]).find((i) => i.id === "action");
-    engine.activate(actionRow);
+    const actionRow = engine
+      .buildItems([])
+      .find((descriptor) => descriptor.value === "action");
+    // `activate` takes the raw model: `onSelect` lives there, not on the descriptor.
+    engine.activate(actionRow.item);
 
     assert.notStrictEqual(
       receivedFirstArg,

@@ -102,6 +102,29 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   cache no longer misses on a string/number mismatch. Always-on, no `castInteger` opt-in.
 - ☐ Re-home `DIconGridPicker` on the engine (grid variant).
 
+## Test gate
+
+Run before calling any item done. `--filter` is a **literal substring** here (regex and
+`/slashes/` only work under `--standalone`), so the family is covered by one shared substring
+rather than a union:
+
+```bash
+bin/qunit --filter "ui-kit"   # 460 tests, ~35s — SelectEngine, the bridge, every DSelect
+                              # module, dRovingFocus, plus ui-kit collateral
+bin/qunit --filter "A11y"     # 17 — the shared live-region service
+bin/qunit --module "Integration | Component | DIconGridPicker"   # 32 — the other a11y consumer
+```
+
+The last two matter because the a11y service's own tests are named
+`Integration | Component | A11y | LiveRegions`, not `ui-kit` — a `ui-kit`-only run misses them.
+
+Known pre-existing failure, unrelated to this phase: `Integration | ui-kit | DDateTimeInput:
+allows mutations through actions` (verified red on a pristine HEAD).
+
+`pnpm lint:types` does **not** check `.js` tests — `tsconfig-base.json` sets `allowJs` with no
+`checkJs`. A test asserting a typed engine API should be `.ts` so the checker guards it; runtime
+`-test.ts` is supported (#41636).
+
 ## Exit criteria
 
 - Single + multi cover every data strategy × all three variants, each with a11y
