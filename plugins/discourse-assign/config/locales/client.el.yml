@@ -71,5 +71,14 @@ el:
       topic: "Θέμα"
       post: "Ανάρτηση"
     discourse_workflows:
+      nodes:
+        "action:assign_topic": "Ανάθεση θέματος"
+        "trigger:assigned": "Ανατέθηκες"
+      node_descriptions:
+        "action:assign_topic": "Ανάθεση ή ακύρωση ανάθεσης θέματος"
       assign_topic:
+        operation: "Λειτουργία"
+        operations:
+          assign: "Ανάθεση"
+          unassign: "Ακύρωση ανάθεσης"
         topic_id: "ID Θέματος"

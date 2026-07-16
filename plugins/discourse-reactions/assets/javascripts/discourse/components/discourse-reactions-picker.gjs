@@ -10,6 +10,7 @@ import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseReactionsPicker extends Component {
+  @service capabilities;
   @service currentUser;
   @service siteSettings;
 
@@ -100,7 +101,8 @@ export default class DiscourseReactionsPicker extends Component {
     }
 
     let x;
-    const colsByRow = [5, 6, 7, 8];
+    // below the small breakpoint, 8 cols is slightly too wide, so cap at 7
+    const colsByRow = this.capabilities.viewport.sm ? [5, 6, 7, 8] : [5, 6, 7];
 
     // if small count, just use it
     if (count < colsByRow[0]) {

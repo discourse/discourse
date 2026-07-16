@@ -270,8 +270,6 @@ cs:
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       chat_notifications_title: "Upozornění chatu"
-      only_chat_push_notifications:
-        title: "Odesílat pouze push notifikace chatu"
       personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
         title: "Ignorovat zmínky v rámci celého kanálu"
@@ -322,8 +320,6 @@ cs:
         title: "Zvuk upozornění na ploše"
       sounds:
         none: "Žádná"
-        bell: "Zvonek"
-        ding: "Cink"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Připojit soubor"
@@ -406,8 +402,6 @@ cs:
         input_placeholder: Přidat název
         slug_description: Zkratka kanálu se používá v URL adrese místo názvu kanálu
         name: Název kanálu
-        slug: URL kanálu (volitelná)
-        emoji: Emotikon kanálu (volitelné)
         reset_emoji: Obnovit emotikon
       channel_edit_description_modal:
         title: Úprava popisu
@@ -495,16 +489,14 @@ cs:
             many: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
             other: 'Uživatelé v %{group} a %{count} dalších skupinách budou mít přístup k tomuto kanálu podle <a href="%{settingLink}" target="_blank">nastavení zabezpečení</a>'
         create: "Vytvořit kanál"
-        description: "Popis (volitelný)"
+        description: "Popis"
         name: "Název kanálu"
-        slug: "URL kanálu (volitelná)"
         title: "Nový kanál"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Témata"
         emoji:
-          label: "Emotikon kanálu (volitelné)"
           reset: "Obnovit emotikon"
       reviewable:
         type: "Zpráva chatu"
@@ -855,6 +847,8 @@ cs:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Odeslat zprávu chatu"
+      chat_message_created:
+        channel_id: "Kanál"
       send_chat_message:
         channel_id: "Kanál"
         message: "Odeslat"

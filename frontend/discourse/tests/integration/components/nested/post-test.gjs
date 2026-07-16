@@ -94,6 +94,25 @@ module("Integration | Component | Nested | Post", function (hooks) {
     sinon.restore();
   });
 
+  test("uses nested replies affordance instead of flat post-menu replies button", async function (assert) {
+    this.post.setProperties({
+      reply_count: 2,
+      direct_reply_count: 2,
+      total_descendant_count: 2,
+    });
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-post__menu .post-action-menu__show-replies")
+      .doesNotExist(
+        "does not render the flat replies button in nested post menus"
+      );
+    assert
+      .dom(".nested-post__expand-replies")
+      .exists("keeps the nested replies expansion button");
+  });
+
   test("leaf posts can be collapsed from the depth line", async function (assert) {
     await renderComponent(this);
 
@@ -142,7 +161,7 @@ module("Integration | Component | Nested | Post", function (hooks) {
     );
   });
 
-  test("mobile collapsed posts keep an avatar in the collapsed bar", async function (assert) {
+  test("mobile collapsed posts keep an avatar in the gutter", async function (assert) {
     const site = getOwner(this).lookup("service:site");
     sinon.stub(site, "mobileView").value(true);
 
@@ -151,8 +170,11 @@ module("Integration | Component | Nested | Post", function (hooks) {
 
     assert.dom(".nested-post__article").doesNotExist("collapses the post body");
     assert
-      .dom(".nested-post__collapsed-avatar .avatar")
-      .exists("renders the post avatar in the mobile collapsed bar");
+      .dom(".nested-post__gutter .topic-avatar")
+      .exists("renders the post avatar area in the mobile gutter");
+    assert
+      .dom(".nested-post__collapsed-avatar")
+      .doesNotExist("does not duplicate the avatar in the collapsed bar");
   });
 
   test("post registration can update post topic", async function (assert) {

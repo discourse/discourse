@@ -6,10 +6,24 @@
 
 id:
   js:
+    user_api_key:
+      authorize: "Izinkan"
+      deny: "Batal"
+      copied: "Disalin!"
+      otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
+      no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+      generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
+      device:
+        code: "Kode"
+        continue: "Lanjutkan"
     blocks:
       ghost:
         status: "Status"
         failed: "gagal"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Hapus"
     number:
       format:
         separator: ","
@@ -219,6 +233,9 @@ id:
     age: "Umur"
     joined: "Bergabung"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode lanjutan"
+      simple_mode: "Mode sederhana"
     show_more: "tampilkan lebih banyak"
     show_help: "Opsi"
     links: "Tautan"
@@ -759,7 +776,6 @@ id:
             title: "Pengaturan"
         membership:
           title: Keanggotaan
-          access: Mengakses
         categories:
           title: Kategori
           long_title: "Notifikasi default kategori"
@@ -778,7 +794,6 @@ id:
           to: "Kepada"
       permissions:
         title: "Izin"
-      public_admission: "Izinkan pengguna untuk bergabung dengan grup secara bebas (Membutuhkan grup yang dapat dilihat oleh umum)"
       public_exit: "Izinkan pengguna untuk meninggalkan grup dengan bebas"
       empty:
         posts: "Tidak ada pos oleh anggota grup ini"
@@ -794,7 +809,6 @@ id:
       request: "Pinta"
       message: "Pesan"
       confirm_leave: "Anda yakin ingin keluar dari grup ini?"
-      allow_membership_requests: "Izinkan pengguna mengirim permintaan keanggotaan ke pemilik grup (Membutuhkan grup yang dapat dilihat oleh umum)"
       membership_request:
         submit: "Ajukan Permintaan"
         title: "Permintaan untuk bergabung dengan @ %{group_name}"
@@ -1033,6 +1047,9 @@ id:
       notifications: "Pemberitahuan"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Dinonaktifkan"
+          all: "Diaktifkan"
         not_supported: "Pemberitahuan tidak didukung pada browser ini. Maaf."
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
       dismiss: "Bubar"
@@ -1111,6 +1128,7 @@ id:
       undo_revoke_access: "Batalkan Cabut Akses"
       api_approved: "Disetujui:"
       api_last_used_at: "Terakhir digunakan pada:"
+      api_expires_never: "tidak pernah"
       theme: "Tema"
       home: "Halaman Utama"
       staff_counters:
@@ -1516,7 +1534,6 @@ id:
     created: "Dibuat"
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
-    search_hint: "username, email, atau alamat IP"
     create_account:
       title: "Mendaftar"
       already_have_account: "Sudah memiliki akun?"
@@ -1537,6 +1554,12 @@ id:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{email}
       confirm_button: Selesai Login
+    code_login:
+      email_label: "Email"
+      continue_button: "Lanjutkan"
+      verify_button: "Lanjutkan"
+      account_ready_continue: "Lanjutkan"
+      username_label: "Nama Pengguna"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -1812,6 +1835,8 @@ id:
       no_replies: "Belum ada balasan"
       deleted_post_placeholder: "[dihapus]"
       ignored_post_placeholder: "[diabaikan]"
+    share_target:
+      new_message: "Pesan baru"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -1836,6 +1861,7 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
+      sr_read: "baca"
       participant_groups: "Kelompok peserta"
       slow_mode_update:
         enable: "Aktifkan"
@@ -2406,6 +2432,8 @@ id:
         logo:
           form:
             email: "Surel"
+            og_image_preview:
+              topic_id_label: "ID Topik"
         fonts:
           backfill_modal:
             modal_yes: "Ya"
@@ -2440,6 +2468,20 @@ id:
           sub_pages:
             settings:
               title: "Pengaturan"
+        category_management:
+          tabs:
+            settings: "Pengaturan"
+          types:
+            all:
+              title: "Semua kategori"
+          filter_placeholder: "Kategori filter"
+          table:
+            category: "Kategori"
+            topics: "Topik"
+          visibility:
+            public: "Umum"
+          visibility_filter:
+            all: "Semua kategori"
         email_logs:
           sub_pages:
             sent:
@@ -2455,7 +2497,7 @@ id:
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
-        latest_version: "Terbaru"
+        github: "GitHub"
         dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
@@ -2481,7 +2523,12 @@ id:
                 "0": "Baru"
                 "2": "Anggota"
                 "3": "Umum"
+          search:
+            title: "Cari"
+            table:
+              status: "Status"
         reports_section:
+          header_action: "Mengelola"
           modal:
             enabled_heading: "Diaktifkan"
             apply: "menerapkan"
@@ -2857,6 +2904,9 @@ id:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tutup"
           delete:
             confirmation_modal:
               close: "Tutup"

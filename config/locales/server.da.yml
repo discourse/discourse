@@ -428,6 +428,13 @@ da:
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
       trust_level_4: "tillidsniveau_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Admins"
+      moderators: "Moderatorer"
+      staff: "Personale"
+      anonymous_users: "Anonyme brugere"
+      logged_in_users: "Brugere logget på"
     request_membership_pm:
       title: "Anmodning om medlemskab af @%{group_name}"
     request_accepted_pm:
@@ -879,6 +886,9 @@ da:
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
       bookmarks_calendar: "Læse bogmærkepåmindelser"
+    device:
+      code: "Kode"
+      continue: "Fortsæt"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."
@@ -964,6 +974,7 @@ da:
         level: "Tillidsniveau"
         count: "Brugere"
         share: "Del"
+        signups: "Tilmeldinger"
       levels:
         "0": "Nye"
         "1": "Basis"
@@ -1357,8 +1368,6 @@ da:
     hide_post_sensitivity: "Sandsynligheden for, at et anmeldt indlæg bliver skjult"
     auto_close_topic_sensitivity: "Sandsynligheden for at et anmeldt emne automatisk vil blive lukket"
     cooldown_minutes_after_hiding_posts: "Antal minutter en bruger må vente indtil de kan redigere et indlæg der er blevet skjult via fællesskabs-anmeldelse"
-    max_topics_in_first_day: "Det maksimale antal af emner en bruger må lave i en 24 timers periode efter at have skrevet det første indlæg"
-    max_replies_in_first_day: "Det maksimale antal af svar en bruger må foretage i 24 timers perioden efter at have skrevet deres første indlæg"
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
@@ -2313,6 +2322,7 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
@@ -3135,6 +3145,8 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:

@@ -1,16 +1,6 @@
-.uc-modernize-foundation-theme {
-  .select-kit .select-kit-header:not(.composer-actions-btn),
-  .d-date-input .date-picker {
-    height: var(--d-control-height);
-  }
-
+:where(.uc-modernize-foundation-theme) {
   .select-kit.is-expanded .select-kit-filter.is-expanded {
     border: none;
-  }
-
-  .select-kit.is-expanded .select-kit-filter.is-expanded {
-    height: var(--d-control-height);
-    padding-block: 0;
   }
 
   .select-kit .caret-icon {
@@ -18,8 +8,6 @@
   }
 
   .list-controls .combo-box .combo-box-header {
-    height: var(--d-control-height);
-
     &:hover {
       background-color: var(--primary-100);
     }
@@ -37,7 +25,8 @@
   .select-kit.combo-box.category-drop .caret-icon,
   .select-kit.combo-box.tag-drop .tag-drop-header,
   .select-kit.combo-box.tag-drop .selected-name,
-  .select-kit.combo-box.tag-drop .caret-icon {
+  .select-kit.combo-box.tag-drop .caret-icon,
+  .select-kit.combo-box.solved-status-filter .selected-name {
     color: var(--primary);
   }
 

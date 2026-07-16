@@ -24,24 +24,41 @@ jobs:
   gems:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Gems
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.4"
-
       - name: RSpec (isolated, no Rails)
+        # Each gem uses its own Gemfile (not the app's), so Rails is not on the
+        # load path. This proves the gems work standalone.
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem =="
             (cd "migrations/$gem" && bundle install --jobs $(($(nproc) - 1)) && bundle exec rspec --tag ~rails)
           done
+
+      - name: Converter coverage (no Rails)
+        run: |
+          # Reuse the image's prebuilt bundle so a Gemfile.lock change installs
+          # only the delta, not the whole root bundle.
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+          bundle config set --local path vendor/bundle
+          bundle config set --local deployment true
+          bundle config set --local without development
+          bundle config set --local with migrations
+          bundle install --jobs $(($(nproc) - 1))
+          # Fails if the reference (Discourse) converter leaves an IntermediateDB
+          # column unwritten, or writes columns or models that don't exist in the
+          # schema. Runs without Rails or a source database.
+          migrations/bin/disco check coverage
 
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
@@ -57,10 +74,17 @@ jobs:
       LOAD_PLUGINS: 1
 
     steps:
+      - name: Enable jemalloc
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
+        run: |
+          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
+
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -99,39 +123,13 @@ jobs:
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
 
-      - name: Validate IntermediateDB schema
+      - name: Run all schema and converter checks (disco check)
         run: |
-          # Show structured differences between DSL config and database
-          migrations/bin/disco schema diff --db intermediate_db || true
-
-          # Regenerate schema from DSL config
-          migrations/bin/disco schema generate --db intermediate_db
-
-          # Check if generated output matches what's committed
-          if [ ! -z "$(git status --porcelain migrations/core/db/intermediate_db_schema/ migrations/core/lib/migrations/database/intermediate_db/)" ]; then
-            echo ""
-            echo "=========================================="
-            echo "IntermediateDB schema is not up to date."
-            echo "=========================================="
-            echo ""
-            echo "The generated schema files differ from what is committed."
-            echo "This usually means the schema DSL config or the database"
-            echo "structure changed without regenerating."
-            echo ""
-            echo "To fix:"
-            echo "  1. Run: migrations/bin/disco schema diff"
-            echo "     to see what changed between config and database"
-            echo "  2. Update config files in migrations/tooling/config/schema/intermediate_db/"
-            echo "     - New tables: migrations/bin/disco schema add <table>"
-            echo "     - Ignore tables: migrations/bin/disco schema ignore <table> --reason '...'"
-            echo "     - New columns: add to the table's include list or ignore with reason"
-            echo "  3. Run: migrations/bin/disco schema generate"
-            echo "  4. Commit the updated config and generated files"
-            echo ""
-            echo "Generated file diff:"
-            git -c color.ui=always diff -- migrations/core/db/intermediate_db_schema/ migrations/core/lib/migrations/database/intermediate_db/
-            exit 1
-          fi
+          # Runs every check in dependency order: pending migrations, schema
+          # config validity, config ↔ database drift, committed generated files
+          # vs regeneration (in a temp directory), and converter coverage.
+          # Prints the actionable differences and fix commands on failure.
+          migrations/bin/disco check
 
       - name: RSpec (Rails integration)
         env:

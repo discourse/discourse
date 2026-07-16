@@ -4,12 +4,23 @@ module DiscourseWorkflows
   module Nodes
     module Post
       class V1 < NodeType
-        OPERATIONS = %w[create get list].freeze
-        STATUS_OPTIONS = %w[any open closed archived noreplies single_user].freeze
-        POST_TYPE_OPTIONS = %w[all first reply].freeze
+        OPERATIONS = %w[create edit get list].freeze
+        STATUS_OPTIONS = %w[
+          any
+          open
+          closed
+          archived
+          listed
+          unlisted
+          deleted
+          public
+          noreplies
+          single_user
+        ].freeze
+        POST_TYPE_OPTIONS = %w[regular all first reply moderator_action small_action whisper].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
-        MAX_LIMIT = 500
+        MAX_LIMIT = 800
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -41,12 +52,13 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ schema: Schema::POST_SCHEMA }],
           properties: {
             operation: {
               type: :options,
               required: true,
               options: OPERATIONS,
-              default: "list",
+              default: "create",
             },
             topic_id: {
               type: :string,
@@ -65,7 +77,7 @@ module DiscourseWorkflows
               },
               display_options: {
                 show: {
-                  operation: ["create"],
+                  operation: %w[create edit],
                 },
               },
             },
@@ -78,12 +90,26 @@ module DiscourseWorkflows
                 },
               },
             },
+            whisper: {
+              type: :boolean,
+              required: false,
+              default: false,
+              ui: {
+                control: :boolean,
+                expression: true,
+              },
+              display_options: {
+                show: {
+                  operation: ["create"],
+                },
+              },
+            },
             author_username: {
               type: :string,
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
               display_options: {
                 show: {
@@ -96,7 +122,20 @@ module DiscourseWorkflows
               required: true,
               display_options: {
                 show: {
-                  operation: ["get"],
+                  operation: %w[edit get],
+                },
+              },
+            },
+            editor_username: {
+              type: :string,
+              required: false,
+              default: "system",
+              ui: {
+                control: :actor,
+              },
+              display_options: {
+                show: {
+                  operation: ["edit"],
                 },
               },
             },
@@ -139,6 +178,16 @@ module DiscourseWorkflows
                 },
               },
             },
+            body_character_limit: {
+              type: :integer,
+              required: false,
+              default: 0,
+              display_options: {
+                show: {
+                  operation: %w[get list],
+                },
+              },
+            },
             created_after: list_string_property(hidden: true),
             created_before: list_string_property(hidden: true),
             topic_created_after: list_string_property(hidden: true),
@@ -168,7 +217,7 @@ module DiscourseWorkflows
               type: :options,
               required: false,
               options: POST_TYPE_OPTIONS,
-              default: "all",
+              default: "regular",
               ui: {
                 hidden: true,
               },
@@ -212,6 +261,8 @@ module DiscourseWorkflows
               type: :integer,
               required: false,
               default: DEFAULT_LIMIT,
+              min: 1,
+              max: MAX_LIMIT,
               display_options: {
                 show: {
                   operation: ["list"],
@@ -246,7 +297,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
               display_options: {
                 show: {
@@ -271,15 +322,19 @@ module DiscourseWorkflows
 
         def config_for(exec_ctx, item_index)
           {
-            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "list"),
+            "operation" => exec_ctx.get_node_parameter("operation", item_index, default: "create"),
             "topic_id" => exec_ctx.get_node_parameter("topic_id", item_index),
             "raw" => exec_ctx.get_node_parameter("raw", item_index),
             "reply_to_post_number" =>
               exec_ctx.get_node_parameter("reply_to_post_number", item_index),
+            "whisper" => exec_ctx.get_node_parameter("whisper", item_index, default: false),
             "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
+            "editor_username" => exec_ctx.get_node_parameter("editor_username", item_index),
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
             "include_cooked" =>
               exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
+            "body_character_limit" =>
+              exec_ctx.get_node_parameter("body_character_limit", item_index, default: 0),
             "query" => exec_ctx.get_node_parameter("query", item_index),
             "created_after" => exec_ctx.get_node_parameter("created_after", item_index),
             "created_before" => exec_ctx.get_node_parameter("created_before", item_index),
@@ -295,7 +350,7 @@ module DiscourseWorkflows
             "topics" => exec_ctx.get_node_parameter("topics", item_index),
             "usernames" => exec_ctx.get_node_parameter("usernames", item_index),
             "groups" => exec_ctx.get_node_parameter("groups", item_index),
-            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "all"),
+            "post_type" => exec_ctx.get_node_parameter("post_type", item_index, default: "regular"),
             "status" => exec_ctx.get_node_parameter("status", item_index, default: "any"),
             "keywords" => exec_ctx.get_node_parameter("keywords", item_index),
             "topic_keywords" => exec_ctx.get_node_parameter("topic_keywords", item_index),
@@ -310,6 +365,8 @@ module DiscourseWorkflows
           case config["operation"]
           when "create"
             wrap(create_post(exec_ctx, config, item_index))
+          when "edit"
+            wrap(edit_post(exec_ctx, config, item_index))
           when "get"
             wrap(get_post(exec_ctx, config, item_index))
           when "list"
@@ -332,6 +389,7 @@ module DiscourseWorkflows
               raw: config["raw"],
               topic_id: config["topic_id"],
               reply_to_post_number: config["reply_to_post_number"],
+              whisper: config["whisper"],
             )
 
           {
@@ -345,20 +403,27 @@ module DiscourseWorkflows
           }
         end
 
-        def get_post(exec_ctx, config, item_index)
-          post = ::Post.find(config["post_id"])
-          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
+        def edit_post(exec_ctx, config, item_index)
+          editor = exec_ctx.actor_from_parameter("editor_username", item_index)
+          post = exec_ctx.edit_post(user: editor, post_id: config["post_id"], raw: config["raw"])
 
           {
             post:
               exec_ctx.serialize_post(
                 post,
-                guardian: actor.guardian,
-                include_raw: config["include_raw"],
-                include_cooked: config["include_cooked"],
+                guardian: editor.guardian,
+                include_raw: true,
+                include_cooked: true,
               ),
           }
+        end
+
+        def get_post(exec_ctx, config, item_index)
+          post = ::Post.find(config["post_id"])
+          actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
+
+          { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
         end
 
         def list_posts(exec_ctx, config, item_index)
@@ -379,16 +444,45 @@ module DiscourseWorkflows
 
           posts = filter.search.includes(:user, topic: %i[category tags])
           posts.map do |post|
-            {
-              post:
-                exec_ctx.serialize_post(
-                  post,
-                  guardian: actor.guardian,
-                  include_raw: config["include_raw"],
-                  include_cooked: config["include_cooked"],
-                ),
-            }
+            { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
           end
+        end
+
+        def serialized_post(exec_ctx, post, guardian:, config:)
+          data =
+            exec_ctx.serialize_post(
+              post,
+              guardian: guardian,
+              include_raw: config["include_raw"],
+              include_cooked: config["include_cooked"],
+            )
+
+          truncate_body_fields(data, config["body_character_limit"])
+        end
+
+        def truncate_body_fields(data, limit)
+          limit = bounded_integer(limit, default: 0, min: 0)
+          return data if limit <= 0
+
+          %i[raw cooked].each do |field|
+            value = data[field]
+            next if !value.is_a?(String) || value.length <= limit
+
+            data[field] = truncate_middle(value, limit)
+            data[:"#{field}_truncated"] = true
+            data[:"#{field}_original_length"] = value.length
+          end
+
+          data
+        end
+
+        def truncate_middle(value, limit)
+          return "" if limit <= 0
+
+          head_length = (limit / 2.0).ceil
+          tail_length = limit - head_length
+          characters = value.each_char.to_a
+          characters.first(head_length).join + characters.last(tail_length).join
         end
 
         def query_from_config(config)
@@ -419,7 +513,7 @@ module DiscourseWorkflows
           add_query_part(parts, "groups", config["groups"])
           add_query_part(parts, "keywords", config["keywords"])
           add_query_part(parts, "topic_keywords", config["topic_keywords"])
-          if POST_TYPE_OPTIONS.include?(config["post_type"]) && config["post_type"] != "all"
+          if POST_TYPE_OPTIONS.include?(config["post_type"]) && config["post_type"] != "regular"
             add_query_part(parts, "post_type", config["post_type"])
           end
           if STATUS_OPTIONS.include?(config["status"]) && config["status"] != "any"

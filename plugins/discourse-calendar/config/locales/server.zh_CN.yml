@@ -9,6 +9,7 @@ zh_CN:
     events:
       name: "事件"
       title: "事件"
+      description: "会员可以在共享日历上查找和讨论即将举行的活动。"
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "阅读日历事件 feed"
@@ -44,6 +45,7 @@ zh_CN:
     map_events_to_color: "为每个标签或类别分配颜色。"
     map_events_title: "按类别覆盖“近期活动”边栏标题中的“活动”。"
     calendar_enabled: "启用 discourse-calendar 插件。这将在话题的第一个帖子中添加对 [calendar][/calendar] 标签的支持。"
+    discourse_post_event_enabled: "启用活动功能。注意：还需要启用 {{setting:calendar_enabled}}。"
     displayed_invitees_limit: "限制活动中显示的受邀者数量。"
     display_post_event_date_on_topic_title: "在话题标题之后显示活动日期。"
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
@@ -69,13 +71,31 @@ zh_CN:
     event_participation_buttons: "用户可以使用的活动参与按钮列表。"
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
+    enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
+    livestream_embeddable_chat_allowed_paths: "允许嵌入直播聊天的路径。"
+    livestream_enable_modal_chat_on_mobile: "在移动设备上以模态窗口形式显示直播聊天信息。"
   discourse_calendar:
     category_type:
       default_calendar_view:
+        label: "默认日历视图"
         day: "天"
         week: "周"
         month: "月"
         year: "年"
+      display_weekends:
+        label: "显示周末"
+      discourse_post_event_allowed_on_groups:
+        label: "能够创建活动的团体"
+      use_local_event_date:
+        label: "活动日期格式"
+        local: "当地日期（例如，4月20日）"
+        relative: "相对时间（例如，2 天后）"
+      sort_categories_by_event_start_date_enabled:
+        label: "话题排序"
+        event_date: "活动日期"
+        latest_post: "最新帖子动态"
+      sidebar_show_upcoming_events:
+        label: '在导航菜单中显示“即将举行的活动”链接'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - 所有活动"
       my_events_feed_name: "%{site_title} - 我的活动"
@@ -83,6 +103,7 @@ zh_CN:
     calendar_must_be_in_first_post: "日历标签仅可用于话题的第一个帖子。"
     more_than_one_calendar: "一个帖子中不能有多个日历。"
     more_than_two_dates: "日历话题的帖子不能包含两个以上的日期。"
+    whisper_not_allowed: "Whispers 不能用于创建日历活动。"
     event_expired: "活动已过期"
     holiday_status:
       description: "休假"

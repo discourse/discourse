@@ -3,77 +3,86 @@
 module Migrations
   module Converters
     module Discourse
-      class SiteSettings < Conversion::ProgressStep
-        attr_accessor :source_db
+      class SiteSettings < Conversion::Step
+        source do
+          def max_progress
+            @source_db.count <<~SQL
+              SELECT COUNT(*)
+              FROM site_settings
+              WHERE name <> 'permalink_normalizations'
+            SQL
+          end
 
-        def execute
-          super
+          def items
+            # The uploads referenced by upload-typed settings are embedded into
+            # the items because the processor has no access to the source DB.
+            # The CASE guards the casts: the planner is free to evaluate them
+            # while probing the uploads PK index for rows of other setting
+            # types, where the value is not numeric.
+            rows = @source_db.query <<~SQL
+              SELECT s.name, s.value, s.data_type, s.updated_at, u.uploads
+              FROM site_settings s
+                   LEFT JOIN LATERAL (
+                       SELECT JSONB_AGG(JSONB_BUILD_OBJECT('id', u.id,
+                                                           'url', u.url,
+                                                           'filename', u.original_filename,
+                                                           'origin', u.origin,
+                                                           'user_id', u.user_id)) AS uploads
+                       FROM uploads u
+                       WHERE u.id = ANY (CASE
+                                             WHEN s.value = '' THEN NULL
+                                             WHEN s.data_type = 17 THEN STRING_TO_ARRAY(s.value, '|')::int[]
+                                             WHEN s.data_type = 18 THEN ARRAY[s.value::int]
+                                         END)
+                       ) u ON TRUE
+              WHERE s.name <> 'permalink_normalizations'
+              ORDER BY s.name
+            SQL
 
-          @upload_creator = UploadCreator.new
-
-          @uploads_by_id = @source_db.query(<<~SQL).index_by { |row| row[:id] }
-            SELECT u.id,
-                   u.url,
-                   u.original_filename AS filename,
-                   u.origin,
-                   u.user_id
-            FROM site_settings s
-                 JOIN LATERAL (
-                          SELECT u.*
-                          FROM uploads u
-                          WHERE (s.data_type = 17 AND u.id = ANY (STRING_TO_ARRAY(s.value, '|')::int[]))
-                             OR (s.data_type = 18 AND u.id = s.value::int)
-                          ) u ON TRUE
-            WHERE s.value <> ''
-          SQL
-        end
-
-        def max_progress
-          @source_db.count <<~SQL
-            SELECT COUNT(*)
-            FROM site_settings
-            WHERE name <> 'permalink_normalizations'
-          SQL
-        end
-
-        def items
-          @source_db.query <<~SQL
-            SELECT name, value, data_type, updated_at
-            FROM site_settings
-            WHERE name <> 'permalink_normalizations'
-            ORDER BY name
-          SQL
-        end
-
-        def process_item(item)
-          value =
-            case item[:data_type]
-            when Enums::SiteSettingDatatype::UPLOAD
-              create_uploads([item[:value]])
-            when Enums::SiteSettingDatatype::UPLOADED_IMAGE_LIST
-              create_uploads(item[:value].split("|"))
-            else
-              item[:value]
+            rows.lazy.map do |row|
+              row[:uploads]&.each(&:symbolize_keys!)
+              row
             end
-
-          IntermediateDB::SiteSetting.create(
-            name: item[:name],
-            value:,
-            last_changed_at: item[:updated_at],
-            import_mode: Enums::SiteSettingImportMode::AUTO,
-          )
+          end
         end
 
-        private
+        processor do
+          def setup
+            @upload_creator = UploadCreator.new
+          end
 
-        def create_uploads(upload_ids)
-          upload_ids
-            .map do |upload_id|
-              upload = @uploads_by_id[upload_id.to_i]
-              upload ? @upload_creator.create_for(upload) : nil
-            end
-            .compact
-            .join("|")
+          def process(item)
+            value =
+              case item[:data_type]
+              when Enums::SiteSettingDatatype::UPLOAD
+                create_uploads([item[:value]], item[:uploads])
+              when Enums::SiteSettingDatatype::UPLOADED_IMAGE_LIST
+                create_uploads(item[:value].split("|"), item[:uploads])
+              else
+                item[:value]
+              end
+
+            IntermediateDB::SiteSetting.create(
+              name: item[:name],
+              value:,
+              last_changed_at: item[:updated_at],
+              import_mode: Enums::SiteSettingImportMode::AUTO,
+            )
+          end
+
+          private
+
+          def create_uploads(upload_ids, uploads)
+            uploads_by_id = (uploads || []).index_by { |upload| upload[:id] }
+
+            upload_ids
+              .map do |upload_id|
+                upload = uploads_by_id[upload_id.to_i]
+                upload ? @upload_creator.create_for(upload) : nil
+              end
+              .compact
+              .join("|")
+          end
         end
       end
     end

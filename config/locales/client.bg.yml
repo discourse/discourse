@@ -6,12 +6,22 @@
 
 bg:
   js:
+    user_api_key:
+      deny: "Отмени"
+      copied: "Копирано!"
+      device:
+        code: "Код"
+        continue: "Напред"
     blocks:
       ghost:
         status: "Статус"
         in_location: "в"
         hidden: "скрит"
         failed: "провалени"
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Премахване"
     number:
       format:
         separator: "."
@@ -785,7 +795,6 @@ bg:
             from_alias_hint: "Псевдоним, който да се използва като адрес от при изпращане на групови SMTP имейли. Имайте предвид, че това може да не се поддържа от всички доставчици на поща. Моля, консултирайте се с документацията на вашия доставчик на поща."
         membership:
           title: Членство
-          access: Достъп
         categories:
           title: Категории
           long_title: "Известия по подразбиране за категория"
@@ -818,7 +827,6 @@ bg:
         title: "Позволения "
         none: "Няма категории, свързани с тази група."
         description: "Членовете на тази група имат достъп до тези категории"
-      public_admission: "Разрешено е на потребителите да се присъединяват към групата свободно (Изисква се публично видима група)"
       public_exit: "Разрешено е на потребителите да напуската групата свободно"
       empty:
         posts: "Няма публикации от членове на тази група"
@@ -834,7 +842,6 @@ bg:
       request: "Заявка"
       message: "Съобщение"
       confirm_leave: "Наистина ли искате да напуснете тази група?"
-      allow_membership_requests: "Позволете на потребителите да изпращат заявки за членство до собствениците на групи (изисква публично видима група)"
       membership_request_template: "Персонализиран шаблон за показване на потребителите при изпращане на заявка за членство"
       membership_request:
         submit: "Изпрати заявка"
@@ -1097,6 +1104,9 @@ bg:
       notifications: "Известия"
       statistics: "Статистика"
       desktop_notifications:
+        push_level:
+          none: "Деактивирани"
+          all: "Да е включен"
         not_supported: "Известията не се поддържат от този браузър. Съжаляваме."
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         each_browser_note: "Забележка: Трябва да промените тази настройка във всеки браузър, който използвате. Всички известия ще бъдат деактивирани, ако поставите на пауза известията от потребителското меню, независимо от тази настройка."
@@ -1216,6 +1226,9 @@ bg:
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
       api_last_used_at: "Последно използван на:"
+      api_expires_at: "Изтича:"
+      api_expired_at: "Изтекъл срок:"
+      api_expires_never: "никога"
       theme: "Тема"
       save_to_change_theme: 'Темата ще бъде актуализирана, след като кликнете върху "%{save_text}“'
       home: "Начална страница по подразбиране"
@@ -1838,7 +1851,6 @@ bg:
     created: "Създадено"
     created_lowercase: "създадено"
     trust_level: "Ниво на доверие"
-    search_hint: "потребителско име, имейл или IP адрес"
     create_account:
       header_title: "Добре дошли!"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
@@ -1879,6 +1891,13 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{email}
       confirm_button: Завършете влизането
+    code_login:
+      email_label: "Имейл"
+      continue_button: "Напред"
+      verify_button: "Напред"
+      signup_title: "Създайте своя акаунт"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"
@@ -2419,6 +2438,8 @@ bg:
       deleted_post_placeholder: "[изтрита]"
       ignored_post_placeholder: "[игнориран]"
       pinned_reply: "Закована"
+    share_target:
+      new_message: "Ново съобщение"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"
@@ -2458,6 +2479,7 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
+      sr_read: "четене"
       jump_reply: "Отидете до първоначалното местоположение на публикацията"
       jump_reply_aria: "Отидете до публикацията на @%{username} в първоначалното й местоположение"
       deleted: "Темата беше изтрита"
@@ -2924,7 +2946,6 @@ bg:
         delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       create_long: "Създай нова категория"
-      slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
       validations:
@@ -3441,6 +3462,7 @@ bg:
           always: "винаги"
           never: "никога"
       reports:
+        all_groups: "Всички групи"
         group_traffic: "Трафик"
         group_members: "Членове"
         group_other: "Други"
@@ -3494,6 +3516,9 @@ bg:
           form:
             mobile: "Мобилен"
             email: "Имейл "
+            og_image_preview:
+              generate: "Генраирай"
+              topic_id_label: "Тема ID "
         fonts:
           backfill_modal:
             modal_yes: "Да"
@@ -3535,6 +3560,20 @@ bg:
               title: "Настройки"
         badges:
           title: "Значки"
+        category_management:
+          tabs:
+            settings: "Настройки"
+          types:
+            all:
+              title: "Всички категории"
+          table:
+            category: "Категория"
+            visibility: "Видимост"
+            topics: "Теми"
+          visibility:
+            public: "Публични"
+          visibility_filter:
+            all: "Всички категории"
         permalinks:
           title: "Постоянни адреси"
         emoji:
@@ -3579,7 +3618,7 @@ bg:
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
-        latest_version: "Последни"
+        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
@@ -3617,7 +3656,13 @@ bg:
                 "2": "Член"
                 "3": "Редовен"
                 "4": "лидер "
+          search:
+            title: "Търсене"
+            table:
+              searches: "Търсения"
+              status: "Статус"
         reports_section:
+          header_action: "Управление"
           modal:
             enabled_heading: "Да е включен"
             apply: "Приложи"
@@ -3662,7 +3707,6 @@ bg:
             email: Имейл
             incoming_email: "Персонален входящ мейл адрес"
             incoming_email_placeholder: "напиши мейл адрес"
-            visibility: Видимост
             visibility_levels:
               public: "Всички"
           membership:
@@ -4216,6 +4260,10 @@ bg:
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Затвори"
+              confirm: "Отстрани "
           delete:
             confirmation_modal:
               close: "Затвори"

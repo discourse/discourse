@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager
-  attr_reader :name, :theme, :default
+  attr_reader :name, :theme, :default, :opts
 
   def self.types
     ThemeSetting.types

@@ -6,12 +6,23 @@
 
 sq:
   js:
+    user_api_key:
+      authorize: "Autorizo"
+      deny: "Anulo"
+      copied: "Kopjuar!"
+      device:
+        code: "Kodi"
+        continue: "Vazhdoni"
     blocks:
       ghost:
         status: "Status"
         in_location: "në"
         hidden: "fshehur"
         failed: "dështoi"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktor"
+        access_permission_remove: "Hiq"
     number:
       format:
         separator: "."
@@ -897,7 +908,6 @@ sq:
             from_alias_hint: "Alias për t'u përdorur si adresë nga kur dërgoni email SMTP në grup. Vini re se kjo mund të mos mbështetet nga të gjithë ofruesit e postës, ju lutemi konsultohuni me dokumentacionin e ofruesit tuaj të postës."
         membership:
           title: Anëtarësimi
-          access: Lejimi
         categories:
           title: Kategoritë
           long_title: "Njoftimet e paracaktuara të kategorisë"
@@ -930,7 +940,6 @@ sq:
         title: "Të drejtat"
         none: "Nuk ka kategori të lidhura me këtë grup."
         description: "Anëtarët e këtij grupi mund t'i qasen këtyre kategorive"
-      public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
       empty:
         posts: "Nuk ka postime nga anëtarët e këtij grupi"
@@ -946,7 +955,6 @@ sq:
       request: "Kërkesë"
       message: "Mesazh"
       confirm_leave: "A jeni të sigurt që dëshironi të largoheni nga ky grup?"
-      allow_membership_requests: "Lejoni përdoruesit të dërgojnë kërkesa për anëtarësim tek pronarët e grupit (Kërkon grup të dukshëm"
       membership_request_template: "Modeli i personalizuar për t'u shfaqur përdoruesve kur dërgoni një kërkesë për anëtarësim"
       membership_request:
         submit: "Paraqisni Kërkesën"
@@ -1225,6 +1233,9 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
+        push_level:
+          none: "E çaktivizuar"
+          all: "Aktivizuar"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
@@ -1348,6 +1359,9 @@ sq:
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
       api_last_used_at: "Përdorur për herë të fundit në:"
+      api_expires_at: "Skadon:"
+      api_expired_at: "Skaduar:"
+      api_expires_never: "asnjëherë"
       theme: "Tema"
       save_to_change_theme: 'Tema do të përditësohet pasi të klikoni "%{save_text}"'
       home: "Faqja kryesore e parazgjedhur"
@@ -2186,7 +2200,6 @@ sq:
     created: "Krijuar"
     created_lowercase: "krijuar"
     trust_level: "Niveli i besimit"
-    search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
       disclaimer: "Duke u regjistruar, ju pranoni <a href='%{privacy_link}' target='blank'>politikën e privatësisë</a> dhe <a href='%{tos_link}' target='blank'>kushtet e shërbimit</a>."
@@ -2230,6 +2243,12 @@ sq:
       confirm_title: Vazhdo tek %{site_name}
       logging_in_as: Identifikohuni si %{email}
       confirm_button: Përfundoni hyrjen
+    code_login:
+      email_label: "Email"
+      continue_button: "Vazhdoni"
+      verify_button: "Vazhdoni"
+      account_ready_continue: "Vazhdoni"
+      username_label: "Emri i përdoruesit"
     login:
       header_title: "Mirë se vini përsëri"
       title: "Identifikohu"
@@ -3065,6 +3084,7 @@ sq:
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfletoni tema të tjera në %{categoryLink} ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       read_more: "Dëshironi të lexoni më shumë? <a href='%{categoryLink}'>Shfletoni të gjitha kategoritë</a> ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       unread_indicator: "Asnjë anëtar nuk e ka lexuar ende postimin e fundit të kësaj teme."
+      sr_read: "lexuar"
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"
@@ -3484,7 +3504,6 @@ sq:
       required_tag_group:
         delete: "Fshij"
       create_long: "Krijo një kategori të re"
-      slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       validations:
@@ -3962,6 +3981,7 @@ sq:
           always: "gjithmonë"
           never: "asnjëherë"
       reports:
+        all_groups: "Të gjitha grupet"
         group_traffic: "Trafik"
         group_members: "Anëtarë"
         group_other: "Të tjerë"
@@ -4015,6 +4035,9 @@ sq:
           form:
             mobile: "Mobile"
             email: "Email"
+            og_image_preview:
+              generate: "Gjenero"
+              topic_id_label: "ID e temës"
         fonts:
           backfill_modal:
             modal_yes: "Po"
@@ -4062,6 +4085,19 @@ sq:
               title: "Rregullimet"
         badges:
           title: "Stemat"
+        category_management:
+          tabs:
+            settings: "Rregullimet"
+          types:
+            all:
+              title: "Të gjitha kategoritë"
+          table:
+            category: "Kategori"
+            topics: "Topics"
+          visibility:
+            public: "Publike"
+          visibility_filter:
+            all: "Të gjitha kategoritë"
         permalinks:
           title: "Permalinks"
         emoji:
@@ -4108,7 +4144,7 @@ sq:
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
-        latest_version: "Të fundit"
+        github: "Github"
         dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
@@ -4145,7 +4181,12 @@ sq:
                 "2": "Anëtar"
                 "3": "I zakonshëm"
                 "4": "Udhëheqës"
+          search:
+            title: "Kërko"
+            table:
+              status: "Status"
         reports_section:
+          header_action: "Menaxhoni"
           modal:
             enabled_heading: "Aktivizuar"
             apply: "Apliko"
@@ -4671,6 +4712,10 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Mbyll"
+              confirm: "Pezullo"
           delete:
             confirmation_modal:
               close: "Mbyll"

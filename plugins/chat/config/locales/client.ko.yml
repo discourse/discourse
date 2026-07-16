@@ -108,8 +108,6 @@ ko:
       no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
       chat_notifications_title: "채팅 알림"
-      only_chat_push_notifications:
-        title: "채팅 푸시 알림만 보내기"
       open: "채팅 열기"
       placeholder_channel: "%{channelName}에서 채팅"
       placeholder_thread: "스레드에서 채팅"
@@ -200,7 +198,6 @@ ko:
         title: 채널 수정
         input_placeholder: 이름 추가
         name: 채널명
-        slug: 채널 슬러그(선택)
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가
@@ -218,9 +215,8 @@ ko:
           label: "카테고리 선택"
           none: "하나 선택..."
         create: "채널 만들기"
-        description: "설명 (선택 사항)"
+        description: "내용"
         name: "채널명"
-        slug: "채널 슬러그(선택)"
         title: "새 채널"
         type: "유형"
         types:
@@ -393,6 +389,8 @@ ko:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "채팅 메시지 보내기"
+      chat_message_created:
+        channel_id: "채널"
       send_chat_message:
         channel_id: "채널"
         message: "메시지 보내기"

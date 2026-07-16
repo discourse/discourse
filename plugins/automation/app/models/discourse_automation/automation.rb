@@ -148,22 +148,23 @@ module DiscourseAutomation
     end
 
     def trigger!(context = {})
-      if enabled
-        return if active_id = DiscourseAutomation.get_active_automation
+      return if !enabled
+      return if DiscourseAutomation.triggers_suppressed?
 
-        begin
-          DiscourseAutomation.set_active_automation(id)
-          if scriptable.background && !running_in_background
-            trigger_in_background!(context)
-          else
-            Stat.log(id) do
-              triggerable&.on_call&.call(self, serialized_fields)
-              scriptable.script.call(context, serialized_fields, self)
-            end
+      return if DiscourseAutomation.recursion_depth >= DiscourseAutomation.max_recursion_depth
+
+      begin
+        DiscourseAutomation.increment_recursion_depth
+        if scriptable.background && !running_in_background
+          trigger_in_background!(context)
+        else
+          Stat.log(id) do
+            triggerable&.on_call&.call(self, serialized_fields)
+            scriptable.script.call(context, serialized_fields, self)
           end
-        ensure
-          DiscourseAutomation.set_active_automation(nil)
         end
+      ensure
+        DiscourseAutomation.decrement_recursion_depth
       end
     end
 

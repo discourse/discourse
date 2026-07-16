@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -153,6 +154,20 @@ export default class SiteSetting extends EmberObject {
     };
   }
 
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name,
+      description: trustHTML(this.description),
+      type: this.type,
+      list_type: this.list_type,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.validValues,
+    };
+  }
+
   get requiresConfirmation() {
     switch (this.requires_confirmation) {
       case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
@@ -160,6 +175,10 @@ export default class SiteSetting extends EmberObject {
       case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_enable: {
         const val = this.buffered?.get("value");
         return isSettingValueTrue(val);
+      }
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_disable: {
+        const val = this.buffered?.get("value");
+        return !isSettingValueTrue(val);
       }
       default:
         return false;

@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
@@ -38,7 +38,7 @@ export default <template>
         </:actions>
       </DPageSubheader>
 
-      <AdminFilterControls
+      <DFilterControls
         @array={{@controller.model.content}}
         @inputPlaceholder={{i18n "explorer.search_placeholder"}}
         @noResultsMessage={{i18n "explorer.no_search_results"}}
@@ -141,7 +141,10 @@ export default <template>
                                   }}</span>
                               {{/if}}
                             </div>
-                            <div class="query-desc">{{query.description}}</div>
+                            <div
+                              class="query-desc"
+                              title={{query.description}}
+                            >{{query.description}}</div>
                           </LinkTo>
                         </td>
                         <td class="d-table__cell --detail query-created-by">
@@ -200,7 +203,7 @@ export default <template>
                               {{on "click" @controller.scrollTop}}
                               @route="adminPlugins.show.explorer.edit"
                               @model={{query.id}}
-                              class="btn btn-default btn-small"
+                              class="btn btn-text btn-default btn-small"
                             >
                               {{i18n "edit"}}
                             </LinkTo>
@@ -226,7 +229,7 @@ export default <template>
             <div class="explorer-pad-bottom"></div>
           {{/if}}
         </:content>
-      </AdminFilterControls>
+      </DFilterControls>
     {{/if}}
   </div>
 </template>

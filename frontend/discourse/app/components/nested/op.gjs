@@ -10,6 +10,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,12 +20,15 @@ import nestedPostUrl from "discourse/lib/nested-post-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { and, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class NestedOp extends Component {
   @service capabilities;
   @service currentUser;
   @service modal;
   @service site;
+  @service siteSettings;
 
   get nestedShareUrl() {
     return nestedPostUrl(this.args.topic, this.args.post.post_number);
@@ -117,8 +121,19 @@ export default class NestedOp extends Component {
         {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              class="nested-view__op-article boxed
-                {{if this.selected 'selected'}}"
+              class={{dConcatClass
+                "nested-view__op-article"
+                "boxed"
+                (if this.selected "selected")
+                (if @post.deleted "is-deleted deleted")
+                (if
+                  (or
+                    @post.isModeratorAction
+                    (and @post.isWarning @post.firstPost)
+                  )
+                  "post--moderator moderator"
+                )
+              }}
               data-post-id={{@post.id}}
               data-post-number={{@post.post_number}}
               {{@registerPost @post}}
@@ -127,6 +142,9 @@ export default class NestedOp extends Component {
                 @name="post-article-content"
                 @outletArgs={{postOutletArgs}}
               >
+                {{#if (PostNotice.shouldRender @post this.siteSettings)}}
+                  <PostNotice @post={{@post}} />
+                {{/if}}
                 <div class="nested-view__op-row">
                   <PostAvatar @post={{@post}} />
                   <div class="nested-view__op-body">
@@ -145,7 +163,7 @@ export default class NestedOp extends Component {
                         @togglePostSelection={{this.togglePostSelection}}
                       />
                     </PluginOutlet>
-                    <div class="nested-view__op-content">
+                    <div class="nested-view__op-content regular">
                       <PluginOutlet
                         @name="post-content-cooked-html"
                         @outletArgs={{postOutletArgs}}
@@ -159,10 +177,14 @@ export default class NestedOp extends Component {
                       >
                         <PostMenu
                           @post={{@post}}
+                          @nestedReplyView={{true}}
                           @canCreatePost={{this.canCreatePost}}
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}
+                          @deletePost={{fn @deletePost @post}}
                           @editPost={{fn @editPost @post}}
+                          @recoverPost={{fn @recoverPost @post}}
+                          @showFlags={{fn @showFlags @post}}
                           @changeNotice={{fn @changeNotice @post}}
                           @changePostOwner={{fn @changePostOwner @post}}
                           @grantBadge={{fn @grantBadge @post}}

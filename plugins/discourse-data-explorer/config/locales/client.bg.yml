@@ -24,6 +24,9 @@ bg:
           yes: "Да"
           no: "Не"
       delete: "Изтрий"
+      chart:
+        form:
+          bar: "Стълб"
       result_count:
         one: "%{count} резултат."
         other: "%{count} резултата."

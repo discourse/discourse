@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -73,13 +74,20 @@ export default class DNavItem extends Component {
   }
 
   get refreshHref() {
-    if (!this.session.requiresRefresh || !this.args.route) {
+    if (!this.args.route) {
       return null;
     }
     try {
-      return this.args.routeParam
+      const href = this.args.routeParam
         ? getURL(this.router.urlFor(this.args.route, this.args.routeParam))
         : getURL(this.router.urlFor(this.args.route));
+
+      const shouldRefresh = applyValueTransformer(
+        "full-page-refresh-on-navigation",
+        this.session.requiresRefresh,
+        { url: href }
+      );
+      return shouldRefresh ? href : null;
     } catch {
       return null;
     }

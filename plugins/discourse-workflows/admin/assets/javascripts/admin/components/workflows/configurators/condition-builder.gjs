@@ -7,16 +7,18 @@ import {
   isSingleValueOperator,
   operatorsForType,
 } from "../../../lib/workflows/condition-operators";
+import { schemaFieldsForNodeInput } from "../../../lib/workflows/data-preview";
 import {
-  inputConnectionsForNode,
   inputFieldPrefixForConnection,
   inputIndexForConnection,
-  inputSummaryForNode,
   outputIndexForConnection,
-  previousNodeForConnection,
-  schemaFieldsForNodeInput,
-} from "../../../lib/workflows/data-schema";
+} from "../../../lib/workflows/expression-paths";
 import { isExpression } from "../../../lib/workflows/property-engine";
+import {
+  inputConnectionsForNode,
+  previousNodeForConnection,
+  resolveDeclaredOutputSchemas,
+} from "../../../lib/workflows/schema-graph";
 import Collection from "./collection";
 import Field from "./field";
 
@@ -24,17 +26,38 @@ function flattenFields(fields, prefix = "", labelPrefix = "") {
   const result = [];
   for (const field of fields) {
     const path = prefix ? `${prefix}.${field.key}` : field.key;
-    if (field.children?.length) {
-      result.push(...flattenFields(field.children, path, labelPrefix));
-    } else {
+    if (field.type === "array") {
       result.push({
         id: field.id || path,
         label: labelPrefix ? `${labelPrefix}.${path}` : path,
-        type: field.type,
+        type: "array",
       });
+    }
+
+    if (field.children?.length) {
+      result.push(...flattenFields(field.children, path, labelPrefix));
+    } else if (field.type !== "array") {
+      const type = conditionType(field.type);
+      if (type) {
+        result.push({
+          id: field.id || path,
+          label: labelPrefix ? `${labelPrefix}.${path}` : path,
+          type,
+        });
+      }
     }
   }
   return result;
+}
+
+function conditionType(type) {
+  if (type === "integer") {
+    return "number";
+  }
+
+  return ["array", "boolean", "number", "string"].includes(type)
+    ? type
+    : undefined;
 }
 
 const CATEGORY_FIELDS = ["category_id", "category"];
@@ -46,6 +69,11 @@ function leafKey(fieldPath) {
   }
 
   let path = fieldPath;
+  if (typeof path === "object") {
+    path = path.value ?? path.id ?? path.label ?? "";
+  }
+  path = String(path);
+
   const exprMatch = path.match(/^=\{\{\s*(.*?)\s*\}\}$/);
   if (exprMatch) {
     path = exprMatch[1];
@@ -118,7 +146,7 @@ function leftValueSchema(fieldOptions) {
 const OPERATION_SCHEMAS = {};
 
 function operationSchema(item) {
-  const type = item?.operator?.type || "string";
+  const type = conditionType(item?.operator?.type) || "string";
   return (OPERATION_SCHEMAS[type] ??= {
     type: "options",
     required: true,
@@ -157,6 +185,7 @@ export default class ConditionBuilder extends Component {
       nodeTypes: this.args.nodeTypes || [],
     };
     const runData = this.args.session?.lastExecutionRunData || {};
+    const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
     const inputConnections = inputConnectionsForNode(this.args.node, graph);
     const primaryConnection = inputConnections[0] || null;
 
@@ -168,25 +197,23 @@ export default class ConditionBuilder extends Component {
 
       const inputIndex = inputIndexForConnection(connection);
       const outputIndex = outputIndexForConnection(connection);
-      const currentInputSummary = this.args.node
-        ? inputSummaryForNode(runData, this.args.node.name, inputIndex, {
-            node: this.args.node,
-            sourceNode: previousNode,
-            outputIndex,
-          })
-        : null;
+      const pinnedItems =
+        outputIndex === 0
+          ? this.args.session?.pinnedItemsForNode(previousNode.name)
+          : undefined;
       const prefix = inputFieldPrefixForConnection(connection, previousNode, {
         primaryConnection,
       });
-      const fields = currentInputSummary
-        ? schemaFieldsForNodeInput(runData, this.args.node.name, {
-            inputIndex,
-            node: this.args.node,
-            sourceNode: previousNode,
-            outputIndex,
-            prefix,
-          })
-        : [];
+      const fields = schemaFieldsForNodeInput(runData, this.args.node?.name, {
+        inputIndex,
+        node: this.args.node,
+        sourceNode: previousNode,
+        outputIndex,
+        prefix,
+        graph,
+        pinnedItems,
+        declaredOutputSchemas,
+      });
       const labelPrefix =
         inputConnections.length > 1 ? previousNode.name || null : null;
 
@@ -235,7 +262,7 @@ export default class ConditionBuilder extends Component {
     }
 
     const field = this.fieldOptions.find((option) => option.id === value);
-    const type = field?.type || "string";
+    const type = conditionType(field?.type) || "string";
 
     const storedValue = this.args.fieldOptions
       ? value

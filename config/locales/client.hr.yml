@@ -6,12 +6,26 @@
 
 hr:
   js:
+    user_api_key:
+      authorize: "Odobriti"
+      deny: "Odustani"
+      copied: "Kopirano!"
+      otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
+      no_trust_level: "Nažalost, nemate potrebnu razinu povjerenja za pristup korisničkom API-ju"
+      generic_error: "Žao nam je, ne možemo izdati korisničke API ključeve, ovu je značajku možda onemogućio administrator stranice"
+      device:
+        code: "Šifra"
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Statust"
         in_location: "u"
         hidden: "skriveno"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -405,6 +419,9 @@ hr:
     age: "Dob"
     joined: "Prijavljen"
     admin_title: "Administrator"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način rada"
+      simple_mode: "Jednostavni način rada"
     show_more: "Prikaži više"
     show_help: "Mogućnosti"
     links: "Linkovi"
@@ -1155,7 +1172,6 @@ hr:
             from_alias_hint: "Alias koji se koristi kao adresa pošiljatelja pri slanju grupnih SMTP e-poruka. Imajte na umu da to možda ne podržavaju svi davatelji e-pošte, molimo pogledajte dokumentaciju svog e-mail pružatelja usluga."
         membership:
           title: Članstvo
-          access: Pristup
         categories:
           title: Kategorije
           long_title: "Zadane obavijesti kategorije"
@@ -1188,7 +1204,6 @@ hr:
         title: "Dopuštenja"
         none: "Nema kategorija povezanih s ovom grupom."
         description: "Članovi ove grupe mogu pristupiti ovim kategorijama"
-      public_admission: "Dozvoli korisnicima da se slobodno pridruže grupi (Zahtijeva javno vidljivu grupu)"
       public_exit: "Dozvoli korisnicima da slobodno napuste grupu"
       empty:
         posts: "Nema objava članova ove grupe"
@@ -1204,7 +1219,6 @@ hr:
       request: "Zahtjev"
       message: "Poruka"
       confirm_leave: "Jeste li sigurni da želite napustiti ovu grupu?"
-      allow_membership_requests: "Dopusti korisnicima slanje zahtjeva za članstvo vlasnicima grupa (zahtijeva javno vidljivu grupu)"
       membership_request_template: "Prilagođeni predložak za prikaz korisnicima prilikom slanja zahtjeva za članstvo"
       membership_request:
         submit: "Pošalji zahtjev"
@@ -1494,6 +1508,9 @@ hr:
       notifications: "Obavijesti"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Onemogućeno"
+          all: "Omogućeno"
         not_supported: "Nažalost, obavijesti nisu podržane u ovom pregledniku."
         perm_denied_expl: "Odbili ste dopuštenje za obavijesti. Dopusti obavijesti putem postavki preglednika."
         each_browser_note: "Napomena: ovu postavku morate promijeniti na svakom pregledniku koji koristite. Sve će obavijesti biti onemogućene ako pauzirate obavijesti iz korisničkog izbornika, bez obzira na ovu postavku."
@@ -1627,6 +1644,9 @@ hr:
       undo_revoke_access: "Poništi opozivanje pristupa"
       api_approved: "Odobrio:"
       api_last_used_at: "Zadnji put uporabljeno u:"
+      api_expires_at: "Istječe:"
+      api_expired_at: "Isteklo:"
+      api_expires_never: "Nikad"
       theme: "Tema"
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Zadana početna stranica"
@@ -2527,7 +2547,6 @@ hr:
     created: "Stvoreno"
     created_lowercase: "stvoreno"
     trust_level: "Razina Povjerenja"
-    search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Dobrodošli!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
@@ -2571,6 +2590,13 @@ hr:
       confirm_title: Nastavite na %{site_name}
       logging_in_as: Prijava kao %{email}
       confirm_button: Završi prijavu
+    code_login:
+      email_label: "Email"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      signup_title: "Kreiraj svoj račun"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko ime"
     login:
       header_title: "Dobro došli natrag"
       title: "Prijava"
@@ -3462,7 +3488,7 @@ hr:
         education:
           topic_tracking_preferences: 'Nove postavke praćenja tema možete pregledati i promijeniti u <a href="%{basePath}/my/preferences/tracking">svojim postavkama</a>.'
           unread: "Ništa nije ostalo nepročitano... impresivno!"
-          new_new: "Trenutno ništa nova... provjerite uskoro!"
+          unified_new: "Trenutno ništa nova... provjerite uskoro!"
           new: "Trenutno ništa nova... provjerite uskoro!"
     topic_bulk_actions:
       dismiss:
@@ -3515,6 +3541,9 @@ hr:
       deleted_post_placeholder: "[izbrisao]"
       ignored_post_placeholder: "[ignorirano]"
       pinned_reply: "Zakvačeno"
+    share_target:
+      new_topic: "Nova tema"
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -3571,44 +3600,8 @@ hr:
       read_more_in_category: "Želite čitati više? Pregledajte ostale teme u %{categoryLink} ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       read_more: "Želite čitati više? <a href='%{categoryLink}'>Pregledajte sve kategorije</a> ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
+      sr_read: "pročitajte"
       participant_groups: "Grupe sudionika"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Postoji <a href="{basePath}/unread"># nepročitano</a>}
-                 few {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-              other {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { i <a href="{basePath}/new"># nova</a> preostala tema,}
-                 few { i <a href="{basePath}/new"># nove</a> preostale teme,}
-              other { i <a href="{basePath}/new"># nove</a> preostale teme,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-              other {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-              other {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ili pregledajte druge teme u {categoryLink}}
-          false { ili <a href="{basePath}/latest">pogledajte najnovije teme</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odgovor, idite na prvu objavu"
         few: "%{count} odgovora, idite na prvu objavu"
@@ -4077,7 +4070,7 @@ hr:
           few: "Prikaži %{count} prevedene lokalizacije"
           other: "Prikaži %{count} prevedenih lokalizacija"
         modal:
-          title: "Prijevodi za objavu"
+          title: "Prijevodi"
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
@@ -4334,7 +4327,6 @@ hr:
       type_settings_schema:
         site_settings: "Postavke web-mjesta"
       unsaved_changes: "Imate nespremljene promjene"
-      slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:
@@ -4686,7 +4678,7 @@ hr:
         new_replies_tooltip: "Novi odgovori"
         replies: "Odgovori"
         replies_with_count: "Odgovori (%{count})"
-      new_new:
+      unified_new:
         help: "teme kreirane ili na koje je odgovoreno u posljednjih nekoliko dana"
       posted:
         title: "Moje objave"
@@ -5047,8 +5039,6 @@ hr:
       no_read_topics_body: "Kada počnete čitati rasprave, ovdje ćete vidjeti popis. Da biste počeli čitati, potražite teme koje vas zanimaju u <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> ili pretražite po ključnoj riječi %{searchIcon}"
     no_group_messages_title: "Nisu pronađene grupne poruke"
     topic_entrance:
-      sr_jump_top_button: "Idite na prvu objavu - %{date}"
-      sr_jump_bottom_button: "Idite na zadnju objavu - %{date}"
       jump_top_button_title: "Skoči na prvi post"
       jump_bottom_button_title: "Skoči na zadnji post"
     fullscreen_table:
@@ -5415,10 +5405,6 @@ hr:
             bookmarks: "Teme u %{category} bez oznaka koje ste označili"
             default: "%{filter} teme u %{category} bez oznaka"
         categories: "Sve kategorije"
-    content_localization:
-      toggle_localized:
-        translated: "Stranica je strojno prevedena. Kliknite kako biste vidjeli izvornik."
-        not_translated: "Stranica nije prevedena. Kliknite za prijevod."
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
@@ -5436,6 +5422,7 @@ hr:
         title: "Popis dostupnih izvještaja"
         sidebar_title: "Izvještaji"
         back: "Povratak na sva izvješća"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Ostalo"
@@ -5580,7 +5567,6 @@ hr:
             apple_touch_icon:
               title: "Apple dodirna ikona"
               description: "Ikona koja se koristi za Apple uređaje osjetljive na dodir. Ako se ostavi prazno, koristit će se velika_ikona."
-              help_text: "Preporučena veličina je 180 x 180 piksela. Ne preporučuje se prozirna pozadina."
             digest_logo:
               title: "Digest logotip"
               description: "Alternativna slika logotipa koja se koristi na vrhu sažetka e-pošte vaše web stranice. Ako je ostavljena prazna, upotrijebit će se slika iz postavke `logo`."
@@ -5588,6 +5574,9 @@ hr:
             opengraph_image:
               title: "OpenGraph slika"
               description: "Zadana opengraph slika, koristi se kada stranica nema drugu prikladnu sliku. Ako je ostavljeno prazno, koristit će se large_icon."
+            og_image_preview:
+              generate: "Generiraj"
+              topic_id_label: "ID teme"
             x_summary_large_image:
               title: "X sažetak velike slike"
               description: "X kartica 'sažetak velike slike'. Ako se ostavi prazno, generiraju se uobičajeni metapodaci kartice pomoću OpenGraph_image, sve dok to nije ujedno i .svg."
@@ -5697,6 +5686,21 @@ hr:
               title: "Objave i teme"
             stats_and_thresholds:
               title: "Statistike i pragovi"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          filter_placeholder: "Filtrirajte kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tema"
+          visibility:
+            public: "Javnost"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Poveznice"
           header_description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna"
@@ -5791,7 +5795,7 @@ hr:
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Posljednje"
+        github: "GitHub"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         dismiss_notice: "Zanemari"
         new_features:
@@ -5856,7 +5860,13 @@ hr:
                 "2": "Član"
                 "3": "Stalni član"
                 "4": "Vođa"
+          search:
+            title: "Pretraživanje"
+            table:
+              searches: "Pretraživanja"
+              status: "Statust"
         reports_section:
+          header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućeno"
@@ -5928,7 +5938,6 @@ hr:
             incoming_email: "Prilagođena dolazna adresa e-pošte"
             incoming_email_placeholder: "unesite adresu e-pošte"
             incoming_email_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
-            visibility: Vidljivost
             visibility_levels:
               title: "Tko može vidjeti ovu grupu?"
               public: "Svi"
@@ -6257,6 +6266,8 @@ hr:
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
+          locale_selector:
+            title: "Jezik"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"
@@ -7037,6 +7048,11 @@ hr:
         active: "Aktivirano"
         status: "Statust"
         bulk_actions:
+          clear_all: "Obriši sve"
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspendirajte"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -7048,6 +7064,9 @@ hr:
           suspended: "Suspendirani"
           silenced: "Utišano"
           staged: "Priređen"
+        activation_filter:
+          all: "Svi korisnici"
+          activated: "Aktivirano"
         approved: "Potvrđeni?"
         titles:
           active: "Aktivni korisnici"

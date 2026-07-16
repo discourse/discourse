@@ -116,12 +116,6 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
             new(
-              "image_caption",
-              "ai_helper_image_caption_agent",
-              DiscourseAi::Configuration::Module::AI_HELPER_ID,
-              DiscourseAi::Configuration::Module::AI_HELPER,
-            ),
-            new(
               "post_illustrator",
               "ai_helper_post_illustrator_agent",
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
@@ -150,6 +144,17 @@ module DiscourseAi
           ]
         end
 
+        def image_caption_features
+          feature_cache[:image_caption] ||= [
+            new(
+              "post_image_captions",
+              "ai_image_caption_agent",
+              DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+              DiscourseAi::Configuration::Module::IMAGE_CAPTION,
+            ),
+          ]
+        end
+
         def spam_features
           feature_cache[:spam] ||= [
             new(
@@ -174,9 +179,23 @@ module DiscourseAi
           ]
         end
 
+        def admin_dashboard_features
+          feature_cache[:admin_dashboard] ||= [
+            new(
+              "highlights",
+              "ai_admin_dashboard_highlights_agent",
+              DiscourseAi::Configuration::Module::ADMIN_DASHBOARD_ID,
+              DiscourseAi::Configuration::Module::ADMIN_DASHBOARD,
+              enabled_by_setting: "ai_admin_dashboard_enabled",
+              require_enabled_agent: true,
+            ),
+          ]
+        end
+
         def lookup_bot_agent_ids
           AiAgent
             .where(enabled: true)
+            .where.not(id: SiteSetting.ai_image_caption_agent.to_i)
             .where(
               "allow_chat_channel_mentions OR allow_chat_direct_messages OR allow_topic_mentions OR allow_personal_messages",
             )
@@ -313,10 +332,12 @@ module DiscourseAi
             discord_features,
             inference_features,
             ai_helper_features,
+            image_caption_features,
             translation_features,
             bot_features,
             spam_features,
             embeddings_features,
+            admin_dashboard_features,
             ai_automation_report_scripts,
             ai_automation_triage_scripts,
           ].flatten
@@ -349,7 +370,8 @@ module DiscourseAi
         module_name,
         enabled_by_setting: "",
         agent_ids_lookup: nil,
-        llm_models_lookup: nil
+        llm_models_lookup: nil,
+        require_enabled_agent: false
       )
         @name = name
         @agent_setting = agent_setting
@@ -358,6 +380,7 @@ module DiscourseAi
         @enabled_by_setting = enabled_by_setting
         @agent_ids_lookup = agent_ids_lookup
         @llm_models_lookup = llm_models_lookup
+        @require_enabled_agent = require_enabled_agent
       end
 
       def llm_models
@@ -377,6 +400,8 @@ module DiscourseAi
               DiscourseAi::Summarization.find_summarization_model(agent_klass)
             when DiscourseAi::Configuration::Module::AI_HELPER
               DiscourseAi::AiHelper::Assistant.find_ai_helper_model(name, agent_klass)
+            when DiscourseAi::Configuration::Module::IMAGE_CAPTION
+              DiscourseAi::PostImageCaptions.image_caption_llm_model(agent)
             when DiscourseAi::Configuration::Module::TRANSLATION
               DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
             when DiscourseAi::Configuration::Module::EMBEDDINGS
@@ -397,9 +422,16 @@ module DiscourseAi
       attr_reader :name, :agent_setting, :module_id, :module_name
 
       def enabled?
-        return true if @enabled_by_setting.blank?
+        return agent_enabled? if @enabled_by_setting.blank?
         return false unless SiteSetting.respond_to?(@enabled_by_setting)
-        SiteSetting.get(@enabled_by_setting)
+        return false if !SiteSetting.get(@enabled_by_setting)
+
+        agent_enabled?
+      end
+
+      def agent_enabled?
+        return true if !@require_enabled_agent
+        agent_ids.any? { |agent_id| AiAgent.find_by_id_from_cache(agent_id)&.enabled? }
       end
 
       def agent_ids

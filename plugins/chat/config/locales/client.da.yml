@@ -127,8 +127,6 @@ da:
       select: "Vælg"
       sounds:
         none: "Ingen"
-        bell: "Klokke"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Vedhæft en fil"
@@ -185,7 +183,7 @@ da:
           label: "Vælg en kategori"
           none: "vælg en..."
         create: "Opret kanal"
-        description: "Beskrivelse (valgfrit)"
+        description: "Beskrivelse"
         name: "Kanal navn"
         title: "Ny kanal"
         type: "Type"
@@ -333,6 +331,8 @@ da:
         chat:
           label: "Chat"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Meddelelse"

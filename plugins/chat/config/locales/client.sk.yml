@@ -261,8 +261,6 @@ sk:
       no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
       chat_notifications_title: "Oznámenia chatu"
-      only_chat_push_notifications:
-        title: "Odosielajte iba upozornenia na chat"
       ignore_channel_wide_mention:
         title: "Ignorovať zmienky v rámci celého kanála"
       show_thread_title_prompts:
@@ -312,8 +310,6 @@ sk:
         title: "Zvuk oznámenia chatu na ploche"
       sounds:
         none: "Žiadny"
-        bell: "zvonček"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Priložiť súbor"
@@ -391,7 +387,6 @@ sk:
         input_placeholder: Pridať meno
         slug_description: V adrese URL namiesto názvu kanála sa používa kanálový slug
         name: Názov kanála
-        slug: URL adresa kanála (voliteľné)
       channel_edit_description_modal:
         title: Upraviť popis
         input_placeholder: Pridanie popisu
@@ -478,9 +473,8 @@ sk:
             many: 'Používatelia v inej skupine %{group} a %{count} budú mať prístup k tomuto kanálu podľa nastavení zabezpečenia <a href="%{settingLink}" target="_blank"></a>'
             other: 'Používatelia v inej skupine %{group} a %{count} budú mať prístup k tomuto kanálu podľa nastavení zabezpečenia <a href="%{settingLink}" target="_blank"></a>'
         create: "Vytvorte kanál"
-        description: "Popis (nepovinné)"
+        description: "Popis"
         name: "Názov kanála"
-        slug: "URL adresa kanála (voliteľné)"
         title: "Nový kanál"
         type: "Typ"
         types:
@@ -821,6 +815,8 @@ sk:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Odoslať chatovú správu"
+      chat_message_created:
+        channel_id: "Kanál"
       send_chat_message:
         channel_id: "Kanál"
         message: "Správa"

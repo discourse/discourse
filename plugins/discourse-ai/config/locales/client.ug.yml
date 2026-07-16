@@ -46,6 +46,13 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:
@@ -68,12 +75,16 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        category_scope: "سەھىپە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"
@@ -117,6 +128,11 @@ ug:
           select_all: "ھەممىنى تاللا"
           clear_all: "ھەممىنى تازىلا"
         delete: "ئۆچۈر"
+        thinking_effort_options:
+          none: "يوق"
+          low: "تۆۋەن"
+          medium: "ئوتتۇرا"
+          high: "يۇقىرى"
         response_format:
           open_modal: "تەھرىر"
           modal:
@@ -208,8 +224,6 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
         save: "ساقلا"
         delete: "ئۆچۈر"

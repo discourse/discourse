@@ -37,14 +37,9 @@ body.has-ai-bot-docked-composer {
 
 // AI-bot variant of the docked composer: align with the PM post body's
 // visible bordered box.
-// - max-width matches the full topic-post row width (avatar + body + padding)
-// - content offset is topic-avatar-width minus the --pm-padding negative
-//   margin that personal-message.scss applies to `.regular.contents`,
-//   which pulls the bordered body 1.25em to the left.
 .docked-composer.ai-bot-docked-composer {
   --docked-composer-max-width: calc(
-    var(--topic-avatar-width) + var(--topic-body-width) +
-      (var(--topic-body-width-padding) * 2)
+    var(--topic-avatar-width) + var(--topic-body-width)
   );
   --docked-composer-content-offset: calc(
     var(--topic-avatar-width) - var(--pm-padding, 1.25em)
@@ -64,6 +59,10 @@ body.has-ai-bot-docked-composer {
   @include viewport.until(sm) {
     --docked-composer-content-offset: 0px;
     --docked-composer-max-width: 100%;
+  }
+
+  @include viewport.from(sm) {
+    margin-left: calc(var(--topic-avatar-width) - var(--pm-padding));
   }
 
   &.docked-composer--keyboard-open {
@@ -113,12 +112,11 @@ body.has-ai-bot-docked-composer {
   // topic content doesn't show through the input while scrolling (the docked
   // composer's container is transparent, unlike chat's opaque pane).
   background-color: var(--secondary);
-  background-image: linear-gradient(
-    rgb(var(--primary-very-low-rgb), 0.5),
-    rgb(var(--primary-very-low-rgb), 0.5)
-  );
-  transition: border-color 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   position: relative;
+  box-shadow: var(--shadow-docked-composer);
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
@@ -134,6 +132,10 @@ body.has-ai-bot-docked-composer {
       pointer-events: none;
     }
   }
+}
+
+.docked-composer--at-bottom.ai-bot-docked-composer .d-editor-textarea-wrapper {
+  box-shadow: none;
 }
 
 .docked-composer.ai-bot-docked-composer .d-editor-input {

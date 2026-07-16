@@ -46,15 +46,14 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    order = %w[name user_count].delete(params[:order])
+    requested_order = %w[name user_count].delete(params[:order])
     dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
-    sort = order ? "#{order} #{dir}" : nil
-    groups = Group.visible_groups(current_user, sort)
+    groups = Group.visible_groups(current_user)
     type_filters = TYPE_FILTERS.keys
 
     if (username = params[:username]).present?
       raise Discourse::NotFound unless user = User.find_by_username(username)
-      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user, sort), user)
+      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user), user)
       type_filters = type_filters - %i[my owner]
     end
 
@@ -90,6 +89,9 @@ class GroupsController < ApplicationController
 
     type_filters.delete(:non_automatic)
 
+    order = group_directory_order(groups, requested_order)
+    groups = apply_group_directory_order(groups, order, dir)
+
     # count the total before doing pagination
     total = groups.count
 
@@ -110,7 +112,13 @@ class GroupsController < ApplicationController
       },
       total_rows_groups: total,
       load_more_groups:
-        groups_path(page: page + 1, type: type, order: order, asc: params[:asc], filter: filter),
+        groups_path(
+          page: page + 1,
+          type: type,
+          order: order,
+          asc: order ? params[:asc] : nil,
+          filter: filter,
+        ),
     )
   end
 
@@ -121,8 +129,7 @@ class GroupsController < ApplicationController
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
-        @description_meta =
-          group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        @description_meta = group.bio_summary || @title
         render :show
       end
 
@@ -472,7 +479,7 @@ class GroupsController < ApplicationController
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
 
-    group = Group.find(params[:id])
+    group = find_group_for_show
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 
@@ -531,7 +538,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -541,7 +548,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
@@ -685,13 +692,13 @@ class GroupsController < ApplicationController
 
   def search
     include_everyone =
-      params[:include_everyone] == "true" || params[:include_pseudogroups] == "true"
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true") &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     include_pseudogroups = params[:include_pseudogroups] == "true"
-    order = ["name"]
     groups =
       Group.visible_groups(
         current_user,
-        order,
+        ["name"],
         include_everyone: include_everyone,
         include_pseudogroups: include_pseudogroups,
       ).includes(:flair_upload)
@@ -787,6 +794,28 @@ class GroupsController < ApplicationController
   end
 
   private
+
+  def group_directory_order(groups, requested_order)
+    return requested_order if requested_order != "user_count"
+
+    member_visible_group_ids =
+      Group.members_visible_groups(current_user).unscope(:order).select(:id)
+
+    requested_order if !groups.unscope(:order).where.not(id: member_visible_group_ids).exists?
+  end
+
+  def apply_group_directory_order(groups, order, dir)
+    return groups if order.blank?
+
+    sort =
+      if order == "user_count"
+        "groups.user_count #{dir}, groups.name ASC"
+      else
+        "groups.name #{dir}"
+      end
+
+    groups.reorder(sort)
+  end
 
   def add_users_to_group(group, users, notify = false)
     user_ids = users.map(&:id)

@@ -41,6 +41,10 @@ sl:
           null_: "Null"
       run: "Zaženi"
       delete: "Izbriši"
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Stolpični"
       others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
       run_time: "Poizvedba končana v %{value} ms."
       result_count:

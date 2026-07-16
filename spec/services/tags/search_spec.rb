@@ -78,6 +78,49 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "with prioritizeRecentTags on the blank composer dropdown" do
+      fab!(:popular_tag) { Fabricate(:tag, name: "popular", public_topic_count: 100) }
+      fab!(:recent_tag_a) { Fabricate(:tag, name: "recenta") }
+      fab!(:recent_tag_b) { Fabricate(:tag, name: "recentb") }
+
+      let(:params) { { prioritizeRecentTags: true, filterForInput: true } }
+
+      before { SiteSetting.prioritize_recently_used_tags = true }
+
+      def tag_names(call_params, guardian: Guardian.new(user))
+        described_class.call(params: call_params, guardian:)[:tags].map { |tag| tag[:name] }
+      end
+
+      it "surfaces tags from the user's recent topics first, most recently used first" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+        Fabricate(:topic, user: user, tags: [recent_tag_b])
+
+        names = tag_names(params)
+        expect(names.first(2)).to eq(%w[recentb recenta])
+        expect(names.index("recentb")).to be < names.index("popular")
+      end
+
+      it "falls back to popularity ordering when the upcoming change is disabled" do
+        SiteSetting.prioritize_recently_used_tags = false
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+
+        expect(tag_names(params).first).to eq("popular")
+      end
+
+      it "falls back to popularity ordering for anonymous users" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+
+        expect(tag_names(params, guardian: Guardian.new).first).to eq("popular")
+      end
+
+      it "does not reorder once the user starts typing a term" do
+        Fabricate(:topic, user: user, tags: [recent_tag_a])
+        Fabricate(:topic, user: user, tags: [recent_tag_b])
+
+        expect(tag_names(params.merge(q: "recent"))).to eq(%w[recenta recentb])
+      end
+    end
+
     context "with a category" do
       fab!(:category)
 
@@ -111,6 +154,36 @@ RSpec.describe(Tags::Search) do
         disabled = result[:tags].find { |t| t[:name] == "gamma" && t[:disabled] }
         expect(disabled[:title]).to eq(
           I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "alpha"),
+        )
+      end
+    end
+
+    context "with a hidden selected tag in a one_per_topic group" do
+      fab!(:staff_group) { Group[:staff] }
+      fab!(:private_category) { Fabricate(:private_category, group: staff_group) }
+      fab!(:hidden_selected_tag) { Fabricate(:tag, name: "secret-selected") }
+      fab!(:public_sibling_tag) { Fabricate(:tag, name: "public-sibling") }
+      fab!(:tag_group) do
+        Fabricate(
+          :tag_group,
+          name: "Exclusive Group",
+          one_per_topic: true,
+          tags: [hidden_selected_tag, public_sibling_tag],
+        )
+      end
+
+      before { CategoryTag.create!(category: private_category, tag: hidden_selected_tag) }
+
+      let(:params) do
+        { q: "public", filterForInput: true, selected_tag_ids: [hidden_selected_tag.id] }
+      end
+
+      it "uses a generic one_per_topic reason instead of leaking the hidden selected tag name" do
+        disabled = result[:tags].find { |tag| tag[:name] == "public-sibling" && tag[:disabled] }
+        expect(disabled).to be_present
+        expect(disabled[:title]).not_to include(hidden_selected_tag.name)
+        expect(disabled[:title]).to eq(
+          I18n.t("tags.forbidden.one_tag_per_topic_group_without_names"),
         )
       end
     end

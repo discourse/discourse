@@ -25,6 +25,9 @@ sk:
             topic_id:
               label: ID témy
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} vás pozval na: %{description}"
       on_holiday: "Na dovolenke"
       disable_holiday: "Zakázať"
@@ -397,7 +400,6 @@ sk:
           no_users: "Nenašli sa žiadni používatelia"
           leave_event: "Opustiť udalosť"
           status:
-            unknown: "Nemám záujem"
             going: "Idem"
             interested: "Záujem"
             going_count:
@@ -504,11 +506,7 @@ sk:
         allow_chat:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
-        url:
-          label: "URL"
-          placeholder: "Voliteľné"
         location:
-          label: "Poloha"
           placeholder: "Pridajte miesto, odkaz alebo niečo podobné."
         description:
           label: "Popis"

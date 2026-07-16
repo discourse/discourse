@@ -6,11 +6,21 @@
 
 et:
   js:
+    user_api_key:
+      authorize: "Autoriseeri"
+      deny: "Loobu"
+      copied: "Kopeeritud!"
+      device:
+        code: "Kood"
+        continue: "Jätka"
     blocks:
       ghost:
         status: "Staatus"
         hidden: "peidetud"
         failed: "ebaõnnestunud"
+    access_control:
+      manage:
+        access_permission_remove: "Eemalda"
     number:
       format:
         separator: "."
@@ -598,7 +608,6 @@ et:
             title: "Seaded"
         membership:
           title: Liikmesus
-          access: Juurdepääs
         categories:
           title: Kategooriad
           watching_first_post_categories_instructions: "Kaustajaid teavitatakse esimesest postitusest igas uues teemas nendes kategooriates."
@@ -619,7 +628,6 @@ et:
         title: "Õigused"
         none: "Selle rühmaga pole seotud ühtegi kategooriat."
         description: "Selle rühma liikmed pääsevad ligi neile kategooriatele"
-      public_admission: "Luba kasutajatel rühmaga vabalt liituda (nõuab avalikult nähtavat rühma)"
       public_exit: "Luba kasutajatel vabalt rühmast lahkuda"
       empty:
         posts: "Selle rühma liikmed ei ole postitanud"
@@ -852,6 +860,9 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Välja lülitatud"
+          all: "Sisse lülitatud"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
         consent_prompt: "Kas soovid reaalajas teavitusi, kui inimesed su postitustele vastavad?"
@@ -935,6 +946,7 @@ et:
       undo_revoke_access: "Tühista ligipääsu tühistamine"
       api_approved: "Heakskiidetud:"
       api_last_used_at: "Viimati kasutatud:"
+      api_expires_never: "mitte kunagi"
       theme: "Teema"
       save_to_change_theme: 'Teema uuendatakse pärast seda, kui klõpsad nuppu "%{save_text}”'
       home: "Vaikimisi avaleht"
@@ -1341,7 +1353,6 @@ et:
     created: "Loodud"
     created_lowercase: "loodud"
     trust_level: "Usaldustase"
-    search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       header_title: "Tere tulemast!"
       title: "Liitu"
@@ -1368,6 +1379,12 @@ et:
       complete_username_not_found: "Kasutajanimele <b>%{username}</b> ei vasta ükski konto"
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       confirm_title: Edasi saidile %{site_name}
+    code_login:
+      email_label: "E-post"
+      continue_button: "Jätka"
+      verify_button: "Jätka"
+      account_ready_continue: "Jätka"
+      username_label: "Kasutajanimi"
     login:
       title: "Logi sisse"
       username: "Kasutaja"
@@ -1732,6 +1749,8 @@ et:
       no_replies: "Veel ei ole vastuseid."
       ignored_post_placeholder: "[ignoreeritud]"
       pinned_reply: "Esiletõstetud"
+    share_target:
+      new_message: "Uus sõnum"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -1775,6 +1794,7 @@ et:
       options: "Teema suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
+      sr_read: "lugemine"
       deleted: "See teema on kustutatud"
       slow_mode_update:
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
@@ -2207,7 +2227,6 @@ et:
         delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles kategoorias esiletõstetud linke "
       create_long: "Loo uus kategooria"
-      slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
       validations:
@@ -2729,6 +2748,7 @@ et:
           always: "alati"
           never: "mitte kunagi"
       reports:
+        all_groups: "Kõik rühmad"
         group_traffic: "Liiklus"
         group_members: "Liikmed"
         group_other: "Muu"
@@ -2784,6 +2804,9 @@ et:
           form:
             mobile: "Mobiil"
             email: "Meiliaadress"
+            og_image_preview:
+              generate: "Genereeri"
+              topic_id_label: "Teema ID"
         fonts:
           backfill_modal:
             modal_yes: "Jah"
@@ -2827,6 +2850,20 @@ et:
               title: "Seaded"
         badges:
           title: "Märgised"
+        category_management:
+          tabs:
+            settings: "Seaded"
+          types:
+            all:
+              title: "Kõik foorumid"
+          table:
+            category: "Kategooriad"
+            visibility: "Nähtavus"
+            topics: "Teemasid"
+          visibility:
+            public: "Avalik"
+          visibility_filter:
+            all: "Kõik foorumid"
         permalinks:
           title: "Püsiviited"
         emoji:
@@ -2880,7 +2917,7 @@ et:
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."
         installed_version: "Paigaldatud"
-        latest_version: "Viimased"
+        github: "GitHub"
         dismiss_notice: "Ignoreeri"
         new_features:
           learn_more: "Uuri veel..."
@@ -2925,7 +2962,13 @@ et:
                 "2": "Liige"
                 "3": "Püsiliige"
                 "4": "Vedaja"
+          search:
+            title: "Otsi"
+            table:
+              searches: "Otsingud"
+              status: "Staatus"
         reports_section:
+          header_action: "Halda"
           no_data: "Pole andmeid, mida näidata"
           modal:
             enabled_heading: "Sisse lülitatud"
@@ -2979,7 +3022,6 @@ et:
             email: E-post
             incoming_email: "Individuaalne sissetuleva meili aadress"
             incoming_email_placeholder: "sisesta meiliaadress"
-            visibility: Nähtavus
             visibility_levels:
               title: "Kes näevad seda rühma?"
               public: "Kõik"
@@ -3577,6 +3619,10 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Sulge"
+              confirm: "Peata"
           delete:
             confirmation_modal:
               close: "Sulge"
@@ -3588,6 +3634,8 @@ et:
           suspended: "Peatatud"
           silenced: "Vaigistatud"
           staged: "Ettevalmistamisel"
+        activation_filter:
+          activated: "Aktiveeritud"
         approved: "Heakskiidetud?"
         titles:
           active: "Aktiivsed kasutajad"

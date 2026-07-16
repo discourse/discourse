@@ -1,7 +1,7 @@
 import Post from "discourse/components/post";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-<template>
+export default <template>
   <StyleguideExample @title="Wikipedia onebox">
     <Post @post={{@dummy.oneboxPosts.wikipedia}} @canCreatePost={{true}} />
   </StyleguideExample>

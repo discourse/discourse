@@ -18,11 +18,33 @@ nl:
         providers: "Providers"
         providers_description: "Chatproviderintegraties configureren"
       add_provider: "Provider toevoegen"
+      view_provider_settings: "Providerinstellingen bekijken"
       more_providers: "Meer"
+      confirm_setup_provider: "Weet je zeker dat je de provider %{provider} wilt inschakelen? Deze kan later worden uitgeschakeld op het tabblad Instellingen."
+      setup_provider_modal:
+        title: "Provider %{provider} instellen"
+        setup_instructions: "Verstrek de volgende gegevens om de provider %{provider} in te stellen. %{additionalInstructions}"
+        confirm_setup: "Instellingen bevestigen"
+        success: "Provider %{provider} ingesteld"
+        slack:
+          instructions: "Toegangstoken of uitgaande webhook-URL is vereist."
+          at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het OAuth-toegangstoken van de Slack-bot"
+          outbound_webhook_url:
+            title: "Uitgaande webhook-URL"
+            description: "De uitgaande webhook-URL van Slack"
+        telegram:
+          instructions: "Het toegangstoken wordt gevalideerd bij het opslaan."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het Telegram-bottoegangstoken van BotFather"
       empty_state:
         title: "Je chatplatform koppelen"
         body: "Stuur meldingen van Discourse naar de chat van je team. Kies een provider om te beginnen."
       channels_title: "Kanalen"
+      channels_description: "Configureer kanalen voor de provider %{provider}."
       no_channels: "Er zijn nog geen kanalen geconfigureerd."
       channel_actions: "Kanaalacties"
       add_first_channel: "Voeg je eerste kanaal van %{provider} toe"
@@ -95,6 +117,8 @@ nl:
               title: Kanaal
               help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
+            at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+            invalid_webhook_url: "De uitgaande webhook-URL moet een geldige link met https://hooks.slack.com/services/... zijn."
             auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
             channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
@@ -108,6 +132,8 @@ nl:
               title: Chat-ID
               help: Een door de bot aan jou gegeven nummer, of een broadcastkanaal-ID in de vorm @kanaalnaam
           errors:
+            access_token_required: "Een bottoegangstoken is vereist."
+            webhook_setup_failed: "Kan de webhook niet registreren bij Telegram. Controleer het token en probeer het opnieuw."
             channel_not_found: "Het opgegeven kanaal bestaat niet op Telegram"
             forbidden: "De bot heeft geen toestemming om berichten in dit kanaal te plaatsen"
         discord:

@@ -157,8 +157,7 @@ export function slotContenders(
 
   Object.keys(adConfig).forEach((adNetwork) => {
     const config = adConfig[adNetwork];
-    let settingNames = null,
-      name;
+    let settingNames, name;
 
     if (
       _isNetworkAvailable(siteSettings, config.enabledSetting) &&

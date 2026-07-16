@@ -560,12 +560,19 @@ class PostDestroyer
   end
 
   def resolve_reviewables_for_author_deletion
-    # Don't auto-ignore if user was penalized for this post - staff should review the penalty.
-    return if user_penalized_for_post?
+    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
 
-    Reviewable
-      .where(target: @post, status: Reviewable.statuses[:pending])
-      .find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
+    if user_penalized_for_post?
+      reviewables.find_each do |reviewable|
+        note = I18n.t("reviewables.post_deleted_by_author_after_penalty")
+        next if reviewable.reviewable_notes.exists?(user: Discourse.system_user, content: note)
+
+        reviewable.reviewable_notes.create!(user: Discourse.system_user, content: note)
+      end
+      return
+    end
+
+    reviewables.find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
   end
 
   def user_penalized_for_post?

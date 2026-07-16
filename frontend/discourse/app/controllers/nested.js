@@ -34,6 +34,7 @@ export default class NestedController extends Controller {
   @service nestedViewCache;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked topic;
   @tracked opPost;
@@ -44,6 +45,7 @@ export default class NestedController extends Controller {
   @tracked sort;
   @tracked messageBusLastId;
   @tracked postNumber;
+  @tracked context = null;
   @tracked contextMode = false;
   @tracked contextChain = null;
   @tracked initialFocusedPath = [];
@@ -60,7 +62,6 @@ export default class NestedController extends Controller {
   // state. If we ever want to scope it to entry-only, clear after the
   // initial render in the route.
   @tracked collapseReplies = false;
-  queryParams = ["sort", "context", { collapseReplies: "collapse_replies" }];
 
   // Externalized expansion state: postNumber → { expanded, collapsed }
   // Components read on construction, write on toggle.
@@ -80,6 +81,7 @@ export default class NestedController extends Controller {
   // Populated by NestedPost components via appEvents so that readPosts
   // can find posts at any depth, not just those in the preloaded tree.
   postRegistry = new Map();
+  #latestScrollAnchor = null;
   #postEventsSubscribed = false;
   #messageBusChannel = null;
   #pendingPostIds = new Set();
@@ -254,8 +256,12 @@ export default class NestedController extends Controller {
     this.loadingMore = true;
     try {
       const nextPage = this.page + 1;
+      const query = new URLSearchParams({
+        page: nextPage,
+        sort: this.sort || "top",
+      });
       const data = await ajax(
-        `/n/${this.topic.slug}/${this.topic.id}.json?page=${nextPage}&sort=${this.sort}`
+        `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
       );
 
       const newNodes = (data.roots || []).map((root) =>
@@ -310,10 +316,16 @@ export default class NestedController extends Controller {
 
   @action
   viewFullThread() {
+    this.saveToCache();
     this.nestedViewCache.useNextTransition();
-    this.router.transitionTo("nested", this.topic.slug, this.topic.id, {
-      queryParams: { sort: this.sort, context: null },
-    });
+    this.router.transitionTo(
+      "topic.fromParams",
+      this.topic.slug,
+      this.topic.id,
+      {
+        queryParams: { sort: this.sort, context: null },
+      }
+    );
   }
 
   @action
@@ -325,7 +337,7 @@ export default class NestedController extends Controller {
 
   @action
   saveScrollPosition(scrollAnchor) {
-    this.saveToCache(scrollAnchor);
+    this.saveScrollAnchor(scrollAnchor);
   }
 
   @action
@@ -333,16 +345,19 @@ export default class NestedController extends Controller {
     this.scrollAnchor = null;
   }
 
-  saveToCache(scrollAnchor) {
-    if (!this.topic) {
+  saveScrollAnchor(scrollAnchor) {
+    if (!this.topic || !scrollAnchor) {
       return;
     }
 
-    const cacheKey = this.nestedViewCache.buildKey(this.topic.id, {
-      sort: this.sort,
-      post_number: this.postNumber,
-      context: this.contextNoAncestors ? 0 : undefined,
-    });
+    this.#latestScrollAnchor = scrollAnchor;
+    this.#saveScrollAnchorToSession(this.#cacheKey(), scrollAnchor);
+  }
+
+  saveToCache(scrollAnchor = this.#latestScrollAnchor) {
+    if (!this.topic) {
+      return;
+    }
 
     const modelData = {
       topic: this.topic,
@@ -354,6 +369,7 @@ export default class NestedController extends Controller {
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
       postNumber: this.postNumber,
+      context: this.context,
       contextMode: this.contextMode,
       contextChain: this.contextChain,
       initialFocusedPath: this.initialFocusedPath,
@@ -364,6 +380,8 @@ export default class NestedController extends Controller {
       newRootPostIds: this.newRootPostIds,
     };
 
+    const cacheKey = this.#cacheKey();
+
     this.nestedViewCache.save(cacheKey, {
       formatVersion: NESTED_VIEW_CACHE_FORMAT_VERSION,
       modelData: snapshotNestedModelData(modelData),
@@ -373,13 +391,38 @@ export default class NestedController extends Controller {
       ),
       scrollAnchor,
     });
+
+    if (scrollAnchor) {
+      this.#saveScrollAnchorToSession(cacheKey, scrollAnchor);
+    }
+  }
+
+  #cacheKey() {
+    return this.nestedViewCache.buildKey(this.topic.id, {
+      sort: this.sort,
+      post_number: this.postNumber,
+      context: this.context ?? undefined,
+    });
+  }
+
+  #saveScrollAnchorToSession(cacheKey, scrollAnchor) {
+    try {
+      sessionStorage.setItem(
+        `nested-view-scroll:${cacheKey}`,
+        JSON.stringify(scrollAnchor)
+      );
+    } catch {
+      // Ignore storage failures; in-memory scroll restoration still works.
+    }
   }
 
   @action
   viewParentContext() {
+    this.saveToCache();
+
     if (this.ancestorsTruncated && this.topAncestorPostNumber) {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.topAncestorPostNumber,
@@ -387,7 +430,7 @@ export default class NestedController extends Controller {
       );
     } else {
       this.router.transitionTo(
-        "nestedPost",
+        "topic.fromParamsNear",
         this.topic.slug,
         this.topic.id,
         this.targetPostNumber,
@@ -428,7 +471,11 @@ export default class NestedController extends Controller {
   }
 
   @action
-  deletePost(post) {
+  deletePost(post, opts) {
+    if (post.post_number === 1) {
+      return this.#topicController.deletePost(post, opts);
+    }
+
     if (!post.can_delete) {
       return;
     }
@@ -765,7 +812,7 @@ export default class NestedController extends Controller {
         this.appEvents.trigger("nested-replies:child-created", {
           topicId,
           post: node.post,
-          parentPostNumber: replyTo,
+          parentPostNumber: this.#visibleParentPostNumber(postData),
           isOwnPost: data.user_id === this.currentUser?.id,
         });
       }
@@ -788,6 +835,28 @@ export default class NestedController extends Controller {
       return false;
     }
     return true;
+  }
+
+  #visibleParentPostNumber(postData) {
+    const replyTo = postData.reply_to_post_number;
+    if (!this.siteSettings.nested_replies_cap_nesting_depth) {
+      return replyTo;
+    }
+
+    const ancestors = [];
+    let postNumber = replyTo;
+
+    while (postNumber && postNumber !== 1) {
+      ancestors.unshift(postNumber);
+      const post = this.postRegistry.get(postNumber);
+      if (!post) {
+        return replyTo;
+      }
+      postNumber = post.reply_to_post_number;
+    }
+
+    const maxDepth = this.siteSettings.nested_replies_max_depth;
+    return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
   }
 
   #isPostKnown(postId) {

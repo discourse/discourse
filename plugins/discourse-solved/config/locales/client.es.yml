@@ -15,6 +15,19 @@ es:
           kpi:
             accepted_solutions:
               label: "Soluciones aceptadas"
+        sections:
+          support:
+            title: "Soporte"
+            filter:
+              all_categories: "Todas las categorías"
+            answerers:
+              staff: "Personal"
+              member: "Miembros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
+                gt_24h: "> 24 horas"
   js:
     notifications:
       alt:
@@ -28,7 +41,6 @@ es:
       allow_accepted_answers: "Permitir al propietario del tema y al staff marcar una respuesta como la solución"
       solved_topics_auto_close_hours: "Cierre automático del tema (n) horas después de la última respuesta una vez que el tema se haya marcado como solucionado."
       notify_on_staff_accept_solved: "Notificar al creador del tema cuando el personal marque una solución"
-      empty_box_on_unsolved: "Mostrar una casilla de verificación vacía junto a los temas sin resolver en la lista de temas"
       accept_answer: "Seleccionar si esta respuesta resuelve el problema"
       accepted_description: "Esta es la solución aceptada para este tema"
       has_no_accepted_answer: "Este tema no tiene una solución"

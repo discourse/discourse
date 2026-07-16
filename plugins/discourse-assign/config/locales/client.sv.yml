@@ -144,6 +144,8 @@ sv:
       topic: "Ämne"
       post: "Inlägg"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tilldelat"
       assign_topic:
         operations:
           assign: "Tilldela"

@@ -27,6 +27,11 @@ module Chat
     SiteSetting.chat_allowed_groups_map
   end
 
+  def self.anonymous_public_channel_access_allowed?
+    SiteSetting.enable_public_channels &&
+      allowed_group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
+  end
+
   def self.message_onebox_template
     return File.read(MESSAGE_ONEBOX_TEMPLATE_PATH) if Rails.env.development?
 

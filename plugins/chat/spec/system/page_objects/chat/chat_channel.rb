@@ -48,6 +48,10 @@ module PageObjects
         find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
+      def join_channel
+        find(".toggle-channel-membership-button.-join").click
+      end
+
       def message_by_id_selector(id)
         ".chat-channel .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
@@ -229,6 +233,22 @@ module PageObjects
 
       def has_no_unread_thread_indicator?
         has_no_css?("#{thread_list_button_selector}.has-unreads")
+      end
+
+      def has_join_channel_button?
+        has_css?(".toggle-channel-membership-button.-join")
+      end
+
+      def has_no_composer?
+        has_no_css?(".chat-composer")
+      end
+
+      def has_no_search_button?
+        has_no_css?(".c-navbar__filter")
+      end
+
+      def has_no_star_button?
+        has_no_css?(".c-navbar__star-channel-button")
       end
 
       def thread_list_button_selector

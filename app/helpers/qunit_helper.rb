@@ -27,9 +27,14 @@ module QunitHelper
 
   def theme_settings_preload_data
     theme = Theme.find_by(id: request.env[:resolved_theme_id])
-    return {} if theme.blank?
 
-    activated_themes = { theme.id => { name: theme.name, settings: theme.cached_default_settings } }
+    activated_themes =
+      if theme
+        { theme.id => { name: theme.name, settings: theme.cached_default_settings } }
+      else
+        {}
+      end
+
     { "activatedThemes" => activated_themes.to_json }
   end
 

@@ -91,6 +91,11 @@ export default class MultiSelect extends SelectKitComponent {
   }
 
   select(value, item) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
       const newItem = item || this.defaultItem(value, value);
       this.selectKit.change(makeArray(value), makeArray(newItem));

@@ -1,15 +1,10 @@
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .discourse-reactions-counter .reactions-counter {
     align-items: center;
   }
 
-  .user-primary-navigation .group-dropdown {
-    max-width: 15ch;
-
-    .name {
-      display: inline-block;
-
-      @include ellipsis;
-    }
+  .d-combo-button.--has-menu .topic-dismiss-buttons__menu {
+    margin-left: -1px;
+    border-left-color: var(--primary-300);
   }
 }

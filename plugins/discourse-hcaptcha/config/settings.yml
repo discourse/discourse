@@ -1,11 +1,26 @@
 discourse_hcaptcha:
-  discourse_hcaptcha_enabled:
+  discourse_captcha_enabled:
     default: false
     client: true
+  discourse_captcha_provider:
+    default: "none"
+    client: true
+    type: enum
+    choices:
+      - hcaptcha
+      - recaptcha
+      - none
   hcaptcha_site_key:
     default: ''
     client: true
   hcaptcha_secret_key:
+    default: ''
+    client: false
+    secret: true
+  recaptcha_site_key:
+    default: ''
+    client: true
+  recaptcha_secret_key:
     default: ''
     client: false
     secret: true

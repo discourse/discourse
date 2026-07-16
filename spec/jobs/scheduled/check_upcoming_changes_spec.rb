@@ -229,6 +229,31 @@ RSpec.describe Jobs::CheckUpcomingChanges do
         end
       end
 
+      context "when the change should not be displayed on this site" do
+        before do
+          UpcomingChangeEvent.where(
+            upcoming_change_name: :enable_upload_debug_mode,
+            event_type: :admins_notified_automatic_promotion,
+          ).delete_all
+          UpcomingChanges::ConditionalDisplay.stubs(
+            :should_display_enable_upload_debug_mode?,
+          ).returns(false)
+        end
+
+        it "does not notify admins and logs the skip at debug level" do
+          track_log_messages do |logger|
+            described_class.new.execute({})
+            expect(logger.infos.join("\n")).not_to include(
+              "Notified site admins about promotion of 'enable_upload_debug_mode'",
+            )
+            expect(logger.errors.join("\n")).not_to include("enable_upload_debug_mode")
+            expect(logger.debugs.join("\n")).to include(
+              "Failed to notify about promotion of 'enable_upload_debug_mode': Setting enable_upload_debug_mode is not displayed on this site",
+            )
+          end
+        end
+      end
+
       context "when notifying about permanent changes" do
         before do
           UpcomingChangeEvent.create!(

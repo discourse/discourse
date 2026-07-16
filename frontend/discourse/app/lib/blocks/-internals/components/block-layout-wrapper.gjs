@@ -15,7 +15,7 @@ import cssIdentifier from "discourse/helpers/css-identifier";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
- * @typedef {import("ember-curry-component").CurriedComponent} CurriedComponent
+ * @typedef {import("@glint/template").ComponentLike} CurriedComponent
  */
 
 /**

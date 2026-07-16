@@ -1,0 +1,81 @@
+name: Upcoming change status bump
+
+on:
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print commands without creating pull requests"
+        required: false
+        default: true
+        type: boolean
+      stale_after_days:
+        description: "Minimum days since the status last changed"
+        required: false
+        default: "14"
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  create-prs:
+    name: Create status bump PRs
+    runs-on: ubuntu-latest
+    container: discourse/discourse_test:slim
+    timeout-minutes: 15
+
+    env:
+      GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN || github.token }}
+      SKIP_DB_AND_REDIS: "1"
+      RAILS_DB: nonexistent
+      # Plugins default to :none under RAILS_ENV=test, which leaves plugin settings
+      # validator/enum constants (e.g. Chat::*) unautoloadable when the report parses
+      # plugins/*/config/settings.yml. Load them so constantize succeeds.
+      LOAD_PLUGINS: "1"
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PUSH_TOKEN || github.token }}
+
+      - uses: ./.github/actions/setup-release-environment
+
+      - name: Configure run mode
+        id: config
+        env:
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_STALE_AFTER_DAYS: ${{ inputs.stale_after_days }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "schedule" ]; then
+            dry_run=false
+          else
+            dry_run="${INPUT_DRY_RUN:-true}"
+          fi
+
+          echo "dry_run=${dry_run}" >> "${GITHUB_OUTPUT}"
+          echo "stale_after_days=${INPUT_STALE_AFTER_DAYS:-14}" >> "${GITHUB_OUTPUT}"
+
+      - name: Generate status report
+        id: report
+        run: script/generate_upcoming_change_status_report
+        env:
+          DRY_RUN: ${{ steps.config.outputs.dry_run }}
+          STALE_AFTER_DAYS: ${{ steps.config.outputs.stale_after_days }}
+
+      - name: Create or print pull requests
+        if: steps.report.outputs.eligible_count != '0'
+        env:
+          REPORT_FILE: /tmp/upcoming_changes_status_report.json
+          BASE_BRANCH: ${{ github.event.repository.default_branch }}
+          DRY_RUN: ${{ steps.config.outputs.dry_run }}
+          STALE_AFTER_DAYS: ${{ steps.config.outputs.stale_after_days }}
+        run: script/create_upcoming_change_status_prs

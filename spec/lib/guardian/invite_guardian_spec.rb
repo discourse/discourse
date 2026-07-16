@@ -233,6 +233,7 @@ RSpec.describe InviteGuardian do
 
     it "returns true for all users when sso is enabled" do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
 
       expect(Guardian.new(trust_level_2).can_invite_via_email?(topic)).to be_truthy

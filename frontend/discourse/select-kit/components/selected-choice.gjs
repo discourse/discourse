@@ -49,7 +49,7 @@ export default class SelectedChoice extends Component {
   <template>
     {{#if this.readOnly}}
       <button
-        class="btn btn-default disabled"
+        class="btn btn-default disabled tag-choice"
         title={{i18n "admin.site_settings.mandatory_group"}}
       >{{this.itemName}}</button>
     {{else}}
@@ -60,7 +60,7 @@ export default class SelectedChoice extends Component {
         data-name={{this.itemName}}
         type="button"
         id="{{this.id}}-choice"
-        class="btn btn-default selected-choice {{this.extraClass}}"
+        class="btn btn-default selected-choice tag-choice {{this.extraClass}}"
       >
         {{dIcon "xmark"}}
         {{#if (has-block)}}

@@ -82,6 +82,7 @@ class FieldHelper {
       case "input":
       case "input-number":
       case "input-text":
+      case "input-email":
         return this.element.querySelector(".form-kit__control-input").value;
       case "icon":
         return (

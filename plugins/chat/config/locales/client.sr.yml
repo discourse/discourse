@@ -75,6 +75,7 @@ sr:
       direct_message_creator:
         title: Nova privatna poruka
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"

@@ -13,7 +13,5 @@ es:
       categories:
         discourse_hcaptcha: "Complemento hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Habilita el Plugin hCaptcha. Requiere una cuenta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
     hcaptcha_site_key: "Clave del sitio hCaptcha de tu cuenta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Clave secreta hCaptcha de tu cuenta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-  h_captcha_verification_failed: "La verificación de hCaptcha falló"

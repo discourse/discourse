@@ -5,11 +5,14 @@ module DiscourseAi
     class Bot
       BOT_NOT_FOUND = Class.new(StandardError)
 
-      # the future is agentic, allow for more turns
-      MAX_COMPLETIONS = 12
-
-      # limit is arbitrary, but 5 which was used in the past was too low
-      MAX_TOOLS = 30
+      DEFAULT_MAX_TURN_TOKENS = 32_000
+      CONTEXT_TOKEN_BUDGET_RATIO = 0.5
+      COMPRESSED_CONTEXT_PREFIX =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX
+      COMPRESSED_CONTEXT_SUFFIX =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_SUFFIX
+      COMPRESSED_CONTEXT_ACK =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
       BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
@@ -20,6 +23,21 @@ module DiscourseAi
 
       def self.inject_budget_exhausted_hint(prompt)
         prompt.push(type: :user, content: BUDGET_EXHAUSTED_HINT)
+      end
+
+      # When an agent has no explicit max_turn_tokens, default the turn budget
+      # to half of the LLM's context window. Use a conservative fallback when
+      # the LLM exposes no usable context window.
+      def self.default_max_turn_tokens(llm)
+        max_prompt_tokens = llm&.max_prompt_tokens.to_i
+        return DEFAULT_MAX_TURN_TOKENS if max_prompt_tokens <= 0
+
+        max_prompt_tokens / 2
+      end
+
+      def self.context_token_budget(llm, max_turn_tokens = nil)
+        turn_budget = max_turn_tokens.presence || default_max_turn_tokens(llm)
+        (turn_budget * CONTEXT_TOKEN_BUDGET_RATIO).to_i
       end
 
       def self.as(bot_user, agent: DiscourseAi::Agents::General.new, model: nil)
@@ -81,27 +99,28 @@ module DiscourseAi
         llm_kwargs[:user] = user
         llm_kwargs[:temperature] = agent.temperature if agent.temperature
         llm_kwargs[:top_p] = agent.top_p if agent.top_p
+        llm_kwargs[:thinking_effort] = agent.thinking_effort if agent.thinking_effort.present?
 
         if !context.bypass_response_format && agent.response_format.present?
           llm_kwargs[:response_format] = build_json_schema(agent.response_format)
         end
 
         needs_newlines = false
-        tools_ran = 0
 
-        use_token_budget = agent.class.execution_mode == "agentic"
-        token_budget = agent.class.max_turn_tokens
+        supports_context_compression = current_llm.max_prompt_tokens.to_i > 0
+        token_budget =
+          agent.class.max_turn_tokens.presence || self.class.default_max_turn_tokens(current_llm)
 
-        # In token budget mode, compression manages context size instead of
-        # the dialect's destructive trim_messages. Disabling trim prevents
-        # the two strategies from fighting each other.
-        prompt.skip_trim = true if use_token_budget
+        # Compression manages context size instead of the dialect's destructive
+        # trim_messages. Disabling trim prevents the two strategies from
+        # fighting each other. Keep dialect trimming enabled for models without
+        # a usable context window because compression cannot estimate when to run.
+        prompt.skip_trim = true if supports_context_compression
 
-        if use_token_budget
-          execution_context ||= DiscourseAi::Completions::ExecutionContext.new
-          execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
-        end
-        llm_kwargs[:execution_context] = execution_context if execution_context
+        execution_context ||= DiscourseAi::Completions::ExecutionContext.new
+        execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
+        llm_kwargs[:execution_context] = execution_context
+        enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
         token_usage_tracker = execution_context&.token_usage_tracker
 
         final_answer_requested = false
@@ -111,12 +130,7 @@ module DiscourseAi
             break # already ran the final text-only generate
           end
 
-          should_stop =
-            if use_token_budget
-              token_usage_tracker.total >= token_budget
-            else
-              total_completions >= MAX_COMPLETIONS
-            end
+          should_stop = token_usage_tracker.total >= token_budget
 
           if should_stop
             if prompt.messages.last&.dig(:type) == :tool
@@ -128,7 +142,15 @@ module DiscourseAi
             end
           end
 
-          maybe_compress_context(prompt, current_llm, execution_context:) if use_token_budget
+          compression_result =
+            maybe_compress_context(prompt, current_llm, execution_context:, raw_context:)
+          if supports_context_compression
+            prompt.skip_trim = compression_result != :skipped
+            if compression_result == :compressed &&
+                 prompt_exceeds_compression_threshold?(prompt, current_llm)
+              prompt.skip_trim = false
+            end
+          end
 
           tool_found = false
           force_tool_if_needed(prompt, context)
@@ -157,11 +179,6 @@ module DiscourseAi
                   context: context,
                   existing_tools: existing_tools,
                 )
-
-              if !use_token_budget
-                tool = nil if tools_ran >= MAX_TOOLS
-              end
-
               if tool.present?
                 existing_tools << tool
                 tool_call = partial
@@ -190,7 +207,6 @@ module DiscourseAi
                   current_thinking: current_thinking,
                 )
 
-                tools_ran += 1
                 ongoing_chain &&= tool.chain_next_response?
 
                 tool_halted = true if !tool.chain_next_response?
@@ -241,16 +257,11 @@ module DiscourseAi
           total_completions += 1
 
           if !final_answer_requested
-            if use_token_budget
-              total_used = token_usage_tracker.total
-              prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
-            else
-              prompt.tool_choice = :none if total_completions == MAX_COMPLETIONS - 1 ||
-                tools_ran >= MAX_TOOLS
-            end
+            total_used = token_usage_tracker.total
+            prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
 
-            # safety valve even in token budget mode
-            break if use_token_budget && total_completions >= 100
+            # Safety valve against pathological tool loops.
+            break if total_completions >= 100
           end
         end
 
@@ -263,6 +274,15 @@ module DiscourseAi
 
       private
 
+      def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
+        return if current_llm.llm_model.provider != "google"
+        return if context.skip_show_thinking != false
+
+        extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup
+        extra_model_params[:include_thought_summaries] = true
+        llm_kwargs[:extra_model_params] = extra_model_params
+      end
+
       def embed_thinking(raw_context)
         embedded_thinking = []
         thinking_bundle = nil
@@ -270,7 +290,10 @@ module DiscourseAi
         raw_context.each do |context|
           if context.is_a?(DiscourseAi::Completions::Thinking)
             thinking_bundle ||= { message: nil, provider_info: {} }
-            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[:message] = merge_thinking_message(
+              thinking_bundle[:message],
+              context.message,
+            )
             thinking_bundle[
               :provider_info
             ] = DiscourseAi::Completions::Thinking.merge_provider_info(
@@ -296,6 +319,13 @@ module DiscourseAi
         end
 
         embedded_thinking
+      end
+
+      def merge_thinking_message(existing, incoming)
+        return existing if incoming.blank?
+        return incoming if existing.blank?
+
+        "#{existing}\n\n#{incoming}"
       end
 
       def tool_requires_approval?(tool)
@@ -330,9 +360,31 @@ module DiscourseAi
           force_review: true,
         )
 
-        placeholder =
-          build_placeholder(tool.summary, I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
-        update_blk.call(placeholder, nil, :thinking)
+        if context.channel_id.present?
+          # In chat the reply is rendered as interactive "blocks"; the chat
+          # reply handler turns this into an Approve/Reject block message.
+          update_blk.call(
+            { reviewable_id: reviewable.id, summary: tool.summary, details: tool.details },
+            nil,
+            :chat_approval,
+          )
+        else
+          # :custom_raw lands in the persisted reply as visible content —
+          # a :thinking emission would be dropped (or collapsed into the
+          # thinking details block) depending on the agent's show_thinking.
+          # This is an empty mount point (keyed by the reviewable id); the client
+          # decorator renders the AiToolApproval card component into it, so the
+          # `.ai-tool-approval` element exists only once, on the component itself.
+          approval_card = "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
+
+          approval_content =
+            build_placeholder(
+              tool.summary,
+              I18n.t("discourse_ai.ai_bot.tool_pending_approval"),
+              custom_raw: approval_card,
+            )
+          update_blk.call(approval_content, nil, :custom_raw)
+        end
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
       end
@@ -362,7 +414,7 @@ module DiscourseAi
           provider_payload = {}
 
           current_thinking.each do |thinking|
-            thinking_message = thinking.message if thinking.message.present?
+            thinking_message = merge_thinking_message(thinking_message, thinking.message)
             provider_payload =
               DiscourseAi::Completions::Thinking.merge_provider_info(
                 provider_payload,
@@ -399,6 +451,9 @@ module DiscourseAi
 
       def invoke_tool(tool, context, &update_blk)
         if tool_requires_approval?(tool)
+          if (error = tool.validation_error)
+            return error
+          end
           return enqueue_tool_for_approval(tool, context, &update_blk)
         end
 
@@ -457,65 +512,60 @@ module DiscourseAi
         Do not discard information from the previous summary unless it has been superseded.
       TEXT
 
-      def maybe_compress_context(prompt, current_llm, execution_context: nil)
+      def maybe_compress_context(prompt, current_llm, execution_context: nil, raw_context: nil)
         max_tokens = current_llm.max_prompt_tokens
-        return if max_tokens.blank? || max_tokens <= 0
+        return :not_needed if max_tokens.blank? || max_tokens <= 0
 
         tokenizer = current_llm.tokenizer
-        threshold_pct = (agent.class.compression_threshold || 85) / 100.0
+        threshold_pct = (agent.class.compression_threshold || 80) / 100.0
         threshold = (max_tokens * threshold_pct).to_i
 
         estimated_tokens =
           prompt.messages.sum do |msg|
             tokenizer.size(DiscourseAi::Completions::Prompt.text_only(msg).to_s)
           end
-        return if estimated_tokens < threshold
+        return :not_needed if estimated_tokens < threshold
 
-        # keep system message (index 0) and a tail of recent messages
+        # keep system message (index 0) and a tail of recent messages. Always
+        # preserve the latest message, even if it exceeds the nominal tail budget.
         tail_budget = (max_tokens * (1.0 - threshold_pct)).to_i
         tail_tokens = 0
-        tail_start = prompt.messages.length
+        selected_tail_indexes = Set.new
+        i = prompt.messages.length - 1
 
-        (prompt.messages.length - 1).downto(1) do |i|
+        while i >= 1
           msg = prompt.messages[i]
-          msg_tokens = tokenizer.size(DiscourseAi::Completions::Prompt.text_only(msg).to_s)
-          if tail_tokens + msg_tokens > tail_budget
-            # ensure tool_call/tool pairs stay together
-            if msg[:type] == :tool_call && i + 1 < prompt.messages.length &&
-                 prompt.messages[i + 1][:type] == :tool
-              tail_start = i
-              tail_tokens += msg_tokens
-              tail_tokens +=
-                tokenizer.size(
-                  DiscourseAi::Completions::Prompt.text_only(prompt.messages[i + 1]).to_s,
-                )
-            end
-            break
-          end
-          tail_tokens += msg_tokens
-          tail_start = i
 
-          # ensure tool_call/tool pairs stay together
+          # scanning tail-first means a tool result is always visited before
+          # its tool_call, so keeping the pair together only needs to look back
+          pair_start = i
           if msg[:type] == :tool && i > 1 && prompt.messages[i - 1][:type] == :tool_call
-            i_prev = i - 1
-            prev_tokens =
-              tokenizer.size(
-                DiscourseAi::Completions::Prompt.text_only(prompt.messages[i_prev]).to_s,
-              )
-            tail_tokens += prev_tokens
-            tail_start = i_prev
+            pair_start = i - 1
           end
+
+          indexes = (pair_start..i).to_a
+          pair_tokens =
+            indexes.sum do |index|
+              tokenizer.size(
+                DiscourseAi::Completions::Prompt.text_only(prompt.messages[index]).to_s,
+              )
+            end
+
+          break if selected_tail_indexes.present? && tail_tokens + pair_tokens > tail_budget
+
+          selected_tail_indexes.merge(indexes)
+          tail_tokens += pair_tokens
+          i = pair_start - 1
         end
 
+        tail_start = selected_tail_indexes.min || prompt.messages.length
+
         middle_messages = prompt.messages[1...tail_start]
-        return if middle_messages.length < 6
+        return :skipped if middle_messages.length < 6
 
         # Build a compression prompt from the current messages plus an instruction.
         # This reuses the LLM's KV cache since it shares the same prefix.
-        has_prior_compression =
-          prompt.messages.any? do |msg|
-            msg[:type] == :user && msg[:content].to_s.include?("<compressed_context>")
-          end
+        has_prior_compression = has_compressed_context_checkpoint?(prompt.messages)
 
         instruction = COMPRESSION_INSTRUCTION
         instruction = "#{instruction}\n#{COMPRESSION_MERGE_INSTRUCTION}" if has_prior_compression
@@ -542,22 +592,22 @@ module DiscourseAi
             )
           rescue => e
             Rails.logger.warn("DiscourseAi: Context compression failed, skipping: #{e.message}")
-            return
+            return :skipped
           end
 
         summary = summary.is_a?(Array) ? summary.select { |s| s.is_a?(String) }.join : summary
-        return if summary.blank?
+        return :skipped if summary.blank?
 
         summary_tokens = tokenizer.size(summary)
         middle_tokens =
-          middle_messages.sum do |msg|
-            tokenizer.size(DiscourseAi::Completions::Prompt.text_only(msg).to_s)
+          middle_messages.sum do |message|
+            tokenizer.size(DiscourseAi::Completions::Prompt.text_only(message).to_s)
           end
         if summary_tokens >= middle_tokens
           Rails.logger.warn(
             "DiscourseAi: Compression produced larger output than input (#{summary_tokens} >= #{middle_tokens}), skipping",
           )
-          return
+          return :skipped
         end
 
         # replace middle messages with compressed summary
@@ -567,12 +617,68 @@ module DiscourseAi
         new_messages = [system_message]
         new_messages << {
           type: :user,
-          content: "<compressed_context>#{summary}</compressed_context>",
+          content: "#{COMPRESSED_CONTEXT_PREFIX}#{summary}#{COMPRESSED_CONTEXT_SUFFIX}",
         }
-        new_messages << { type: :model, content: "Understood, I have the context." }
+        new_messages << { type: :model, content: COMPRESSED_CONTEXT_ACK }
         new_messages.concat(tail_messages)
 
         prompt.messages.replace(new_messages)
+        raw_context&.replace(messages_to_raw_context(new_messages.drop(1)))
+        :compressed
+      end
+
+      def prompt_exceeds_compression_threshold?(prompt, current_llm)
+        max_tokens = current_llm.max_prompt_tokens.to_i
+        return false if max_tokens <= 0
+
+        threshold = (max_tokens * ((agent.class.compression_threshold || 80) / 100.0)).to_i
+        estimate_prompt_tokens(prompt, current_llm) >= threshold
+      end
+
+      def estimate_prompt_tokens(prompt, current_llm)
+        tokenizer = current_llm.tokenizer
+        prompt.messages.sum do |message|
+          tokenizer.size(DiscourseAi::Completions::Prompt.text_only(message).to_s)
+        end
+      end
+
+      def has_compressed_context_checkpoint?(messages)
+        DiscourseAi::Completions::PromptMessagesBuilder.compression_checkpoint_index(
+          messages,
+        ).present?
+      end
+
+      def messages_to_raw_context(messages)
+        messages
+          .map do |message|
+            case message[:type]
+            when :tool_call
+              [
+                message[:content],
+                message[:id],
+                "tool_call",
+                message[:name],
+                thinking_context(message),
+                message[:provider_data].presence,
+              ]
+            when :tool
+              [message[:content], message[:id], "tool", message[:name]]
+            when :user
+              [message[:content], message[:id], "user"]
+            when :model
+              [message[:content], nil, "model", nil, thinking_context(message)]
+            end
+          end
+          .compact
+      end
+
+      def thinking_context(message)
+        if message[:thinking] || message[:thinking_provider_info]
+          {
+            "message" => message[:thinking],
+            "provider_info" => message[:thinking_provider_info],
+          }.compact
+        end
       end
 
       def self.guess_model(bot_user)

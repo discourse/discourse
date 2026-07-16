@@ -4,14 +4,14 @@ module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
       def visit_nested(topic, query: nil)
-        url = "/n/#{topic.slug}/#{topic.id}"
+        url = "/t/#{topic.slug}/#{topic.id}"
         url += "?#{query}" if query
         page.visit(url)
         self
       end
 
       def visit_nested_context(topic, post_number:, context: nil)
-        url = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        url = "/t/#{topic.slug}/#{topic.id}/#{post_number}"
         url += "?context=#{context}" if context
         page.visit(url)
         self
@@ -29,7 +29,7 @@ module PageObjects
       end
 
       def route_to_nested_context(topic, post_number:, query: nil)
-        path = "/n/#{topic.slug}/#{topic.id}/#{post_number}"
+        path = "/t/#{topic.slug}/#{topic.id}/#{post_number}"
         path += "?#{query}" if query
         route_to(path)
       end
@@ -60,6 +60,30 @@ module PageObjects
 
       def has_context_view?
         has_css?(".nested-context-view")
+      end
+
+      def has_no_context_view?
+        has_no_css?(".nested-context-view")
+      end
+
+      def has_context_banner?
+        has_css?(".nested-context-view__banner", text: I18n.t("js.nested_replies.context.banner"))
+      end
+
+      def has_no_context_banner?
+        has_no_css?(".nested-context-view__banner")
+      end
+
+      def has_view_full_thread_link?
+        has_css?(".nested-context-view__full-thread")
+      end
+
+      def has_view_parent_context_link?
+        has_css?(".nested-context-view__parent-context")
+      end
+
+      def has_no_view_parent_context_link?
+        has_no_css?(".nested-context-view__parent-context")
       end
 
       # ── Post assertions ───────────────────────────────────────────
@@ -114,6 +138,15 @@ module PageObjects
 
       def has_no_replies_toggle_for?(post)
         has_no_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
+      end
+
+      def has_load_more_children_for?(post)
+        has_css?(
+          wrapper_selector(
+            post,
+            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+          ),
+        )
       end
 
       def has_no_show_replies_button_for?(post)
@@ -326,6 +359,16 @@ module PageObjects
         self
       end
 
+      def click_view_full_thread
+        find(".nested-context-view__full-thread").click
+        self
+      end
+
+      def click_view_parent_context
+        find(".nested-context-view__parent-context").click
+        self
+      end
+
       def click_reply_on_post(post)
         find("[data-post-number='#{post.post_number}'] .post-action-menu__reply").click
         self
@@ -333,6 +376,16 @@ module PageObjects
 
       def click_replies_toggle(post)
         find("[data-post-number='#{post.post_number}'] .nested-post__expand-replies").click
+        self
+      end
+
+      def click_load_more_children(post)
+        find(
+          wrapper_selector(
+            post,
+            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+          ),
+        ).click
         self
       end
 

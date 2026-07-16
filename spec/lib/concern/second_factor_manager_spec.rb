@@ -112,6 +112,7 @@ RSpec.describe SecondFactorManager do
     describe "when SSO is enabled" do
       it "should return false" do
         SiteSetting.discourse_connect_url = "http://someurl.com"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         expect(user.totp_enabled?).to eq(false)
@@ -163,24 +164,36 @@ RSpec.describe SecondFactorManager do
     end
   end
 
-  describe "#passkeys_for_2fa_enabled?" do
+  describe "#passkeys_available_as_second_factor?" do
     before do
       SiteSetting.allow_passkeys_for_2fa = true
       Fabricate(:passkey_with_random_credential, user: user)
     end
 
     it "is true when both setting flags are on" do
-      expect(user.passkeys_for_2fa_enabled?).to eq(true)
+      expect(user.passkeys_available_as_second_factor?).to eq(true)
     end
 
     it "is false when the global enable_passkeys kill switch is off" do
       SiteSetting.enable_passkeys = false
-      expect(user.passkeys_for_2fa_enabled?).to eq(false)
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
     end
 
     it "is false when allow_passkeys_for_2fa is off" do
       SiteSetting.allow_passkeys_for_2fa = false
-      expect(user.passkeys_for_2fa_enabled?).to eq(false)
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
+    end
+
+    it "is false when the user only has disabled passkeys" do
+      user
+        .security_keys
+        .where(factor_type: UserSecurityKey.factor_types[:first_factor])
+        .update_all(enabled: false)
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
+    end
+
+    it "is aliased as passkeys_for_2fa_enabled? for compatibility" do
+      expect(user.passkeys_for_2fa_enabled?).to eq(true)
     end
   end
 
@@ -213,7 +226,18 @@ RSpec.describe SecondFactorManager do
           expect(user.authenticate_second_factor(params, server_session).ok).to eq(true)
         end
 
-        it "validates the credential when a method is submitted" do
+        it "validates the credential when the passkey method is submitted" do
+          params_with_method = {
+            second_factor_method: UserSecondFactor.methods[:passkey],
+            second_factor_token: {
+              credentialId: "missing",
+            },
+          }
+          result = user.authenticate_second_factor(params_with_method, server_session)
+          expect(result.ok).to eq(false)
+        end
+
+        it "rejects the security key method because passkeys are not security keys" do
           params_with_method = {
             second_factor_method: UserSecondFactor.methods[:security_key],
             second_factor_token: {
@@ -222,6 +246,71 @@ RSpec.describe SecondFactorManager do
           }
           result = user.authenticate_second_factor(params_with_method, server_session)
           expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("login.not_enabled_second_factor_method"))
+        end
+      end
+    end
+
+    context "with the passkey ceremony" do
+      let!(:passkey) do
+        Fabricate(
+          :user_security_key,
+          user: user,
+          credential_id: valid_passkey_data[:credential_id],
+          public_key: valid_passkey_data[:public_key],
+          factor_type: UserSecurityKey.factor_types[:first_factor],
+        )
+      end
+
+      before do
+        SiteSetting.allow_passkeys_for_2fa = true
+        simulate_localhost_passkey_challenge
+        DiscourseWebauthn.stage_challenge(user, server_session)
+        DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+      end
+
+      context "when the passkey assertion is valid" do
+        let(:params) do
+          {
+            second_factor_token: valid_passkey_auth_data,
+            second_factor_method: UserSecondFactor.methods[:passkey],
+          }
+        end
+
+        it "returns OK and sets used_2fa_method to passkey" do
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(true)
+          expect(result.used_2fa_method).to eq(UserSecondFactor.methods[:passkey])
+        end
+      end
+
+      context "when a passkey assertion is posted as the security key method" do
+        let(:params) do
+          {
+            second_factor_token: valid_passkey_auth_data,
+            second_factor_method: UserSecondFactor.methods[:security_key],
+          }
+        end
+
+        it "is rejected with an ownership error" do
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("webauthn.validation.ownership_error"))
+        end
+      end
+
+      context "when a security key assertion is posted as the passkey method" do
+        let(:params) do
+          {
+            second_factor_token: valid_security_key_auth_post_data,
+            second_factor_method: UserSecondFactor.methods[:passkey],
+          }
+        end
+
+        it "is rejected with an ownership error" do
+          result = user.authenticate_second_factor(params, server_session)
+          expect(result.ok).to eq(false)
+          expect(result.error).to eq(I18n.t("webauthn.validation.ownership_error"))
         end
       end
     end
@@ -308,7 +397,7 @@ RSpec.describe SecondFactorManager do
     end
 
     context "when both security keys and totp are enabled" do
-      let(:invalid_method) { 4 }
+      let(:invalid_method) { 99 }
       let(:method) { invalid_method }
 
       before do
@@ -533,6 +622,7 @@ RSpec.describe SecondFactorManager do
       describe "when SSO is enabled" do
         it "should return false" do
           SiteSetting.discourse_connect_url = "http://someurl.com"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
 
           expect(user_backup.backup_codes_enabled?).to eq(false)

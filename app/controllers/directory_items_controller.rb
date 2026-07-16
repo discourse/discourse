@@ -7,6 +7,8 @@ class DirectoryItemsController < ApplicationController
   before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
 
   def index
+    discourse_expires_in 1.minute
+
     unless SiteSetting.enable_user_directory?
       raise Discourse::InvalidAccess.new(:enable_user_directory)
     end
@@ -19,8 +21,7 @@ class DirectoryItemsController < ApplicationController
     if params[:group]
       group = Group.find_by(name: params[:group])
       raise Discourse::InvalidParameters.new(:group) if group.blank?
-      guardian.ensure_can_see!(group)
-      guardian.ensure_can_see_group_members!(group)
+      guardian.ensure_can_see_group_and_members!(group)
 
       result = result.includes(user: :groups).where(users: { groups: { id: group.id } })
     else
@@ -36,16 +37,18 @@ class DirectoryItemsController < ApplicationController
           .where.not(users: { username: params[:exclude_usernames].split(",") })
     end
 
-    order = params[:order] || DirectoryColumn.automatic_column_names.first
+    default_order = DirectoryColumn.automatic_column_names.first
+    order = params[:order] || default_order
     dir = params[:asc] ? "ASC" : "DESC"
     active_directory_column_names = DirectoryColumn.active_column_names
     if active_directory_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
-    elsif params[:order] === "username"
+    elsif order == "username"
       result = result.order("users.#{order} #{dir}, directory_items.id")
     else
       # Ordering by user field value
-      user_field = UserField.find_by(name: params[:order])
+      user_field_scope = guardian.is_staff? ? UserField.all : UserField.public_fields
+      user_field = user_field_scope.find_by(name: order)
       if user_field
         result =
           result
@@ -56,6 +59,8 @@ class DirectoryItemsController < ApplicationController
             .order(
               "user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}",
             )
+      else
+        result = result.order("directory_items.#{default_order} #{dir}, directory_items.id")
       end
     end
 
@@ -64,8 +69,8 @@ class DirectoryItemsController < ApplicationController
 
     user_ids = nil
     if params[:name].present?
-      user_ids =
-        UserSearch.new(params[:name], { include_staged_users: true, limit: 200 }).search.pluck(:id)
+      opts = { include_staged_users: true, limit: 200, search_custom_fields: true }
+      user_ids = UserSearch.new(params[:name], opts).search.pluck(:id)
       if user_ids.present?
         # Add the current user if we have at least one other match
         user_ids << current_user.id if current_user && result.dup.where(user_id: user_ids).exists?
@@ -153,7 +158,7 @@ class DirectoryItemsController < ApplicationController
   def set_groups_exclusion
     @exclude_group_names = params[:exclude_groups].split("|")
     groups = Group.where(name: @exclude_group_names)
-    groups = groups.select { |g| guardian.can_see?(g) && guardian.can_see_group_members?(g) }
+    groups = groups.select { |g| guardian.can_see_group_and_members?(g) }
     @exclude_group_ids = groups.map(&:id)
     @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
   end

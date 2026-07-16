@@ -6,10 +6,11 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
+const { TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY } = SECOND_FACTOR_METHODS;
 
 const RESPONSES = {
   failed: {
@@ -46,7 +47,37 @@ const RESPONSES = {
     security_keys_enabled: true,
     allowed_methods: [BACKUP_CODE],
   },
+  okpasskeyonly: {
+    totp_enabled: false,
+    backup_enabled: false,
+    security_keys_enabled: false,
+    passkeys_enabled: true,
+    passkey_allowed_credential_ids: ["cGFzc2tleS1jcmVkZW50aWFs"],
+    challenge: "somechallenge",
+    allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY],
+  },
+  okmixedwebauthn: {
+    totp_enabled: false,
+    backup_enabled: false,
+    security_keys_enabled: true,
+    passkeys_enabled: true,
+    allowed_credential_ids: ["c2VjdXJpdHkta2V5LWNyZWRlbnRpYWw="],
+    passkey_allowed_credential_ids: ["cGFzc2tleS1jcmVkZW50aWFs"],
+    challenge: "somechallenge",
+    allowed_methods: [TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY],
+  },
 };
+
+function stubWebauthnCredentialGet() {
+  const calls = [];
+  sinon.stub(navigator.credentials, "get").callsFake((options) => {
+    calls.push(options);
+    const error = new Error("credential get cancelled in tests");
+    error.name = "NotAllowedError";
+    return Promise.reject(error);
+  });
+  return calls;
+}
 
 Object.keys(RESPONSES).forEach((k) => {
   if (k.startsWith("ok")) {
@@ -243,6 +274,76 @@ acceptance("Second Factor Auth Page", function (needs) {
     assert
       .dom(".toggle-second-factor-method.backup-code")
       .exists("backup code is now shown as an alternative method");
+  });
+
+  test("passkey-only account", async function (assert) {
+    stubWebauthnCredentialGet();
+
+    await visit("/session/2fa?nonce=okpasskeyonly");
+    assert
+      .dom("#passkey-authenticate-button")
+      .exists("passkey is the default method");
+    assert
+      .dom("#security-key-authenticate-button")
+      .doesNotExist("security key button is not shown without a security key");
+    assert
+      .dom(".toggle-second-factor-method")
+      .doesNotExist("no alternative methods are shown");
+  });
+
+  test("mixed passkey and security key account", async function (assert) {
+    stubWebauthnCredentialGet();
+
+    await visit("/session/2fa?nonce=okmixedwebauthn");
+    assert
+      .dom("#passkey-authenticate-button")
+      .exists("passkey is the default method");
+    assert
+      .dom("#security-key-authenticate-button")
+      .doesNotExist("security key form is not shown while passkey is selected");
+    assert
+      .dom(".toggle-second-factor-method.security-key")
+      .exists("security key is offered as an alternative method");
+
+    await click(".toggle-second-factor-method.security-key");
+    assert
+      .dom("#security-key-authenticate-button")
+      .exists("security key form is now shown");
+    assert
+      .dom("#passkey-authenticate-button")
+      .doesNotExist("passkey form is no longer shown");
+    assert
+      .dom(".toggle-second-factor-method.passkey")
+      .exists("passkey is offered as an alternative method");
+  });
+
+  test("passkey and security key ceremonies use separate options", async function (assert) {
+    const calls = stubWebauthnCredentialGet();
+
+    await visit("/session/2fa?nonce=okmixedwebauthn");
+    assert.strictEqual(
+      calls.length,
+      1,
+      "the passkey ceremony was auto-triggered on load"
+    );
+    assert.strictEqual(
+      calls[0].publicKey.userVerification,
+      "required",
+      "the passkey ceremony requires user verification"
+    );
+    assert.strictEqual(
+      calls[0].publicKey.allowCredentials.length,
+      1,
+      "the passkey ceremony only includes passkey credentials"
+    );
+
+    await click(".toggle-second-factor-method.security-key");
+    await click("#security-key-authenticate-button");
+    assert.strictEqual(
+      calls[1].publicKey.userVerification,
+      "discouraged",
+      "the security key ceremony discourages user verification"
+    );
   });
 
   test("2FA action description", async function (assert) {

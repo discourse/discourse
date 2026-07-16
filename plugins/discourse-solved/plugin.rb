@@ -14,6 +14,7 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
+register_asset "stylesheets/admin/dashboard-support.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
@@ -224,6 +225,17 @@ after_initialize do
     end,
   )
 
+  register_admin_dashboard_section(
+    id: "support",
+    enabled: -> { DiscourseSolved::AdminDashboardSupport.available? },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseSolved::AdminDashboardSupport.build(
+      start_date: start_date,
+      end_date: end_date,
+      current_user: current_user,
+    )
+  end
+
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
     if SiteSetting.prioritize_solved_topics_in_search
       condition = <<~SQL
@@ -272,6 +284,18 @@ after_initialize do
   end
   add_to_serializer(:topic_view, :shared_issue_visible) do
     scope.shared_issue_visible?(object.topic)
+  end
+
+  on(:upcoming_change_enabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: true)
+    end
+  end
+
+  on(:upcoming_change_disabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: false)
+    end
   end
 
   on(:post_destroyed) do |post|

@@ -261,14 +261,16 @@ es:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
         channels_list: "Lista de canales de chat"
+      screen_reader:
+        new_messages:
+          one: "%{count} mensaje nuevo"
+          other: "%{count} mensajes nuevos"
       no_direct_message_channels: "¡No te has unido a ningún mensaje directo todavía!"
       no_direct_message_channels_cta: "Inicia una conversación"
       no_public_channels: "¡No te has unido a ningún canal todavía!"
       no_public_channels_cta: "Examinar canales"
       kicked_from_channel: "Ya no puedes acceder a este canal."
       chat_notifications_title: "Notificaciones de chat"
-      only_chat_push_notifications:
-        title: "Enviar solo notificaciones de chat"
       personalization_title: "Personalización"
       ignore_channel_wide_mention:
         title: "Ignorar las menciones de todo el canal"
@@ -320,8 +322,6 @@ es:
         title: "Sonido de notificación de chat de escritorio"
       sounds:
         none: "Ninguno"
-        bell: "Campana"
-        ding: "Timbre"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Adjuntar un archivo"
@@ -402,8 +402,6 @@ es:
         input_placeholder: Añadir un nombre
         slug_description: Se utiliza un slug del canal en la URL en lugar del nombre del canal
         name: Nombre del canal
-        slug: Slug del canal (opcional)
-        emoji: Emoji del canal (opcional)
         reset_emoji: Quitar emoji
       channel_edit_description_modal:
         title: Editar descripción
@@ -461,16 +459,14 @@ es:
             one: 'Los usuarios de %{group} y otro grupo tendrán acceso a este canal según la <a href="%{settingLink}" target="_blank">configuración de seguridad</a>'
             other: 'Los usuarios de %{group} y otros %{count} grupos tendrán acceso a este canal según la <a href="%{settingLink}" target="_blank">configuración de seguridad</a>'
         create: "Crear canal"
-        description: "Descripción (opcional)"
+        description: "Descripción"
         name: "Nombre del canal"
-        slug: "Slug del canal (opcional)"
         title: "Nuevo canal"
         type: "Tipo"
         types:
           category: "Categoría"
           topic: "Tema"
         emoji:
-          label: "Emoji del canal (opcional)"
           reset: "Restablecer emoji"
       reviewable:
         type: "Mensaje de chat"
@@ -484,6 +480,10 @@ es:
           other: "<span>Tú, %{commaSeparatedUsernames} y %{count} otros reaccionasteis con </span>:%{emoji}:"
         single_user: "<span>%{username} reaccionó con </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} y %{username} reaccionaron con </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reacción"
+            other: "%{count} reacciones"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} y otro reaccionaron con </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} y %{count} otros reaccionaron con </span>:%{emoji}:"
@@ -797,6 +797,8 @@ es:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Enviar mensaje de chat"
+      chat_message_created:
+        channel_id: "Canal"
       send_chat_message:
         channel_id: "Canal"
         message: "Mensaje"

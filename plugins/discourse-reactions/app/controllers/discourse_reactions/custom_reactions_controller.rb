@@ -88,7 +88,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidAccess unless guardian.can_see_notifications?(user)
 
     posts = Post.joins(:topic).where(user_id: user.id)
-    posts = guardian.filter_allowed_categories(posts)
+    posts = visible_posts_for_reactions_received(posts)
     post_ids = posts.select(:id)
 
     reaction_users =
@@ -287,6 +287,15 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   private
 
+  def visible_posts_for_reactions_received(posts)
+    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: posts.distinct.pluck(:topic_id))
+
+    posts =
+      posts.where(topic_id: visible_topic_ids, post_type: Topic.visible_post_types(current_user))
+
+    guardian.filter_hidden_posts(posts)
+  end
+
   def get_users(reaction)
     DiscourseReactions::PostReactionsQuery
       .apply_ignored_users_filter(
@@ -360,13 +369,15 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
+    return unless (topic = post.topic)
+
     message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
 
     opts = {}
-    secure_audience = post.topic.secure_audience_publish_messages
+    secure_audience = topic.secure_audience_publish_messages
     opts = secure_audience if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
 
-    MessageBus.publish("/topic/#{post.topic.id}/reactions", message, opts)
+    MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
   end
 
   def secure_reaction_users!(reaction_users)

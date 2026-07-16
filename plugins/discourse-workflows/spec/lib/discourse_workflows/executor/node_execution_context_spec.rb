@@ -553,6 +553,12 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       expect(ctx.find_user(username: user.username)).to eq(user)
     end
 
+    it "finds a user by mixed-case username" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect(ctx.find_user(username: user.username.upcase)).to eq(user)
+    end
+
     it "finds a user by id" do
       ctx = described_class.new(input_items: [], resolver: nil)
 
@@ -607,7 +613,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
             "actor_username" => "={{ $json.actor }}",
           },
           resolver: resolver,
-          node_identifier: "action:create_post",
+          node_identifier: "action:post",
         )
 
       expect(ctx.actor_from_parameter("actor_username")).to eq(user)
@@ -616,7 +622,7 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         field: "actor_username",
         item_index: 0,
         source: :expression,
-        purpose: "action:create_post",
+        purpose: "action:post",
       )
     ensure
       resolver&.dispose
@@ -646,7 +652,19 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       end
     end
 
-    it "falls back to the default actor for blank actor fields" do
+    it "defaults to the system user when the actor field is not configured" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx = described_class.new(input_items: [], parameters: {}, resolver: resolver)
+
+      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when a configured actor field resolves to a blank value" do
       resolver_context = { "$json" => {} }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
@@ -659,7 +677,54 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
           resolver: resolver,
         )
 
-      expect(ctx.actor_from_parameter("actor_username")).to eq(Discourse.system_user)
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "raises when an actor expression resolves to a blank value" do
+      resolver_context = { "$json" => { "actor" => "" } }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [{ "json" => { "actor" => "" } }],
+          parameters: {
+            "actor_username" => "={{ $json.actor }}",
+          },
+          resolver: resolver,
+        )
+
+      expect { ctx.actor_from_parameter("actor_username") }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        I18n.t("discourse_workflows.errors.actor.blank", field: "actor_username"),
+      )
+    ensure
+      resolver&.dispose
+      sandbox&.dispose
+    end
+
+    it "resolves the anonymous sentinel to an anonymous guardian actor" do
+      resolver_context = { "$json" => {} }
+      sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
+      resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+      ctx =
+        described_class.new(
+          input_items: [],
+          parameters: {
+            "actor_username" => DiscourseWorkflows::AnonymousActor::USERNAME,
+          },
+          resolver: resolver,
+        )
+
+      actor = ctx.actor_from_parameter("actor_username")
+
+      expect(actor).to be_a(DiscourseWorkflows::AnonymousActor)
+      expect(actor.guardian.anonymous?).to eq(true)
     ensure
       resolver&.dispose
       sandbox&.dispose
@@ -690,6 +755,27 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
       end.to change { topic.posts.count }.by(1)
     end
 
+    it "creates a whisper reply as a whisperer" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        post =
+          ctx.create_post(user: admin, raw: "Workflow whisper", topic_id: topic.id, whisper: true)
+
+        expect(post.post_type).to eq(Post.types[:whisper])
+      end.to change { topic.posts.count }.by(1)
+    end
+
+    it "requires the user to create whispers" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.create_post(user: user, raw: "Unauthorized whisper", topic_id: topic.id, whisper: true)
+      end.to raise_error(Discourse::InvalidAccess).and not_change { topic.posts.count }
+    end
+
     it "requires the user to see the topic" do
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: group)
@@ -711,6 +797,34 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
         DiscourseWorkflows::NodeError,
         /Cannot create a post in a closed or archived topic/,
       )
+    end
+  end
+
+  describe "#edit_post" do
+    fab!(:admin)
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user, raw: "Original post") }
+
+    it "edits a post as the provided user" do
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      edited_post = ctx.edit_post(user: admin, post_id: post.id, raw: "Edited body")
+
+      expect(edited_post).to eq(post)
+      expect(post.reload.raw).to eq("Edited body")
+    end
+
+    it "requires the user to edit the post" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      hidden_post = create_post(user: admin, category: private_category)
+      ctx = described_class.new(input_items: [], resolver: nil)
+
+      expect do
+        ctx.edit_post(user: user, post_id: hidden_post.id, raw: "Hidden edit")
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(hidden_post.reload.raw).not_to eq("Hidden edit")
     end
   end
 

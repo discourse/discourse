@@ -18,7 +18,6 @@ it:
       dashboard:
         emotion:
           title: "Emozione"
-          description: "La tabella elenca un conteggio di messaggi classificati con un'emozione determinata. Classificati con il modello 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -154,6 +153,14 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "In caricamento..."
+        tool: "Azione"
+        user: "Utente"
+        approve: "Approva"
+        reject: "Rifiuta"
+        approved: "Approvato"
+        rejected: "Rifiutata"
       default_llm:
         title: "Modello LLM predefinito"
       llm_selector:
@@ -219,11 +226,13 @@ it:
           translate: "Traduci"
           markdown_tables: "Genera tabella di markdown"
           custom_prompt: "Comando personalizzato"
-          image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
           post_illustrator: "Assistente messaggi illustrati"
           setting_groups:
             automation: "Automazione"
+        image_caption:
+          setting_groups:
+            settings: "Impostazioni"
         translation:
           name: "Traduzione"
           description: "Traduce i contenuti nelle lingue supportate"
@@ -248,6 +257,7 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        category_scope: "Categorie"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -355,8 +365,6 @@ it:
         overwrite: "Sovrascrivi"
         description: "Descrizione"
         no_llm_selected: "Nessun modello linguistico selezionato"
-        max_context_posts: "Numero massimo di messaggi di contesto"
-        max_context_posts_help: "Il numero massimo di post da utilizzare come contesto per l'IA quando si risponde a un utente. (vuoto per impostazione predefinita)"
         vision_max_pixel_sizes:
           low: 'Bassa qualità: più veloce (256x256)'
           medium: Qualità media (512x512)
@@ -384,6 +392,12 @@ it:
         temperature_help: "Temperatura da utilizzare per LLM. Aumenta per aumentare la creatività (lascia vuoto per utilizzare il modello predefinito, generalmente un valore compreso tra 0,0 e 2,0)"
         top_p: "P superiore"
         top_p_help: "P superiore da utilizzare per LLM, aumenta per aumentare la casualità (lascia vuoto per utilizzare l'impostazione predefinita del modello, generalmente un valore compreso tra 0,0 e 1,0)"
+        thinking_effort_options:
+          none: "Nessuna"
+          low: "Bassa"
+          medium: "Media"
+          high: "Alta"
+          max: "Massimo"
         priority: "Priorità"
         tool_options: "Opzioni dello strumento"
         rag_conversation_chunks: "Cerca blocchi di conversazione"
@@ -537,13 +551,11 @@ it:
             custom: "Personalizza..."
           hours: "ore"
           max_tokens_help: "Numero massimo di token (parole e caratteri) che ogni utente di questo gruppo può utilizzare entro la durata specificata. I token sono le unità utilizzate dai modelli IA per elaborare il testo: circa 1 token = 4 caratteri o 3/4 di parola."
-          max_tokens_required: "Deve essere impostato se non è impostato un limite di utilizzo massimo"
           max_usages_help: "Numero massimo di volte in cui ogni utente in questo gruppo può usare il modello IA entro la durata specificata. Questa quota viene tracciata per singolo utente, non condivisa tra il gruppo."
-          max_usages_required: "Deve essere impostato se non è impostato un limite di token massimo"
         usage:
           ai_bot: "Bot IA"
           ai_helper: "Assistente (%{agent})"
-          ai_helper_image_caption: "Didascalia immagine"
+          ai_image_caption: "Didascalia immagine"
           ai_summarization: "Riassumi"
           ai_embeddings_semantic_search: "Ricerca IA"
           ai_spam: "Spam"
@@ -620,11 +632,7 @@ it:
         title: "Suggerisci modifiche utilizzando l'IA"
         description: "Scegli una delle opzioni seguenti e l'IA ti suggerirà una nuova versione del testo."
         selection_hint: "Suggerimento: puoi anche selezionare una parte del testo prima di aprire l'assistente per riscrivere solo quel pezzo."
-        suggest: "Suggerisci con l'IA"
         suggest_errors:
-          too_many_tags:
-            one: "Puoi avere solo fino a %{count} etichetta"
-            other: "Puoi avere solo fino a %{count} etichette"
           no_suggestions: "Nessun suggerimento disponibile"
         missing_content: "Inserisci alcuni contenuti per generare suggerimenti."
         context_menu:
@@ -658,11 +666,6 @@ it:
           select: "Seleziona"
           selected: "Selezionato"
           try_again: "Riprova"
-        image_caption:
-          button_label: "Didascalia con IA"
-          generating: "Generazione didascalia in corso..."
-          credits: "Didascalia da IA"
-          save_caption: "Salva"
         no_content_error: "Aggiungi prima il contenuto per eseguire azioni IA su di esso"
       reviewables:
         model_used: "Modello utilizzato:"
@@ -734,7 +737,7 @@ it:
         click_to_run_label: "Esegui artefatto"
       ai_bot:
         title: "Bot IA"
-        llm: "Modello"
+        llm: "Modello:"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
         try_again: "Riprova"

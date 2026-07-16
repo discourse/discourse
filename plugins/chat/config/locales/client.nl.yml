@@ -261,14 +261,16 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      screen_reader:
+        new_messages:
+          one: "%{count} nieuw bericht"
+          other: "%{count} nieuw berichten"
       no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
       no_public_channels: "Je neemt nog niet deel aan kanalen!"
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       chat_notifications_title: "Chatmeldingen"
-      only_chat_push_notifications:
-        title: "Alleen chatpushmeldingen sturen"
       personalization_title: "Personalisatie"
       ignore_channel_wide_mention:
         title: "Kanaalbrede vermeldingen negeren"
@@ -320,8 +322,6 @@ nl:
         title: "Geluid bureaubladmelding chat"
       sounds:
         none: "Geen"
-        bell: "Bel"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Voeg een bestand toe"
@@ -402,8 +402,6 @@ nl:
         input_placeholder: Voeg een naam toe
         slug_description: Er wordt een kanaalslug gebruikt in de URL in plaats van de kanaalnaam
         name: Kanaalnaam
-        slug: Kanaalslug (optioneel)
-        emoji: Kanaalemoji (optioneel)
         reset_emoji: Emoji resetten
       channel_edit_description_modal:
         title: Beschrijving bewerken
@@ -461,16 +459,14 @@ nl:
             one: 'Gebruikers in %{group} en %{count} andere groep hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
             other: 'Gebruikers in %{group} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
         create: "Kanaal maken"
-        description: "Beschrijving (optioneel)"
+        description: "Beschrijving"
         name: "Kanaalnaam"
-        slug: "Kanaalslug (optioneel)"
         title: "Nieuw kanaal"
         type: "Type"
         types:
           category: "Categorie"
           topic: "Topic"
         emoji:
-          label: "Kanaalemoji (optioneel)"
           reset: "Emoji resetten"
       reviewable:
         type: "Chatbericht"
@@ -484,6 +480,10 @@ nl:
           other: "<span>Jij, %{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"
         single_user: "<span>%{username} heeft gereageerd met </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} en %{username} hebben gereageerd met </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reactie"
+            other: "%{count} reacties"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} en %{count} ander hebben gereageerd met </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"
@@ -797,6 +797,9 @@ nl:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Chatbericht sturen"
+        "trigger:chat_message_created": "Chatbericht gemaakt"
+      chat_message_created:
+        channel_id: "Kanaal"
       send_chat_message:
         channel_id: "Kanaal"
         message: "Bericht"

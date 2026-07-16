@@ -23,22 +23,36 @@ module Chat
 
     def public_channels
       object[:public_channels].map do |channel|
+        message_bus_last_ids = {
+          channel_message_bus_last_id:
+            chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
+        }
+
+        if !scope.anonymous?
+          message_bus_last_ids.merge!(
+            new_messages_message_bus_last_id:
+              chat_message_bus_last_ids[
+                Chat::Publisher.new_messages_message_bus_channel(channel.id)
+              ],
+            new_mentions_message_bus_last_id:
+              chat_message_bus_last_ids[
+                Chat::Publisher.new_mentions_message_bus_channel(channel.id)
+              ],
+            kick_message_bus_last_id:
+              chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
+          )
+        end
+
         Chat::ChannelSerializer.new(
           channel,
           root: nil,
           scope: scope,
           membership: channel_membership(channel.id),
-          new_messages_message_bus_last_id:
-            chat_message_bus_last_ids[Chat::Publisher.new_messages_message_bus_channel(channel.id)],
-          new_mentions_message_bus_last_id:
-            chat_message_bus_last_ids[Chat::Publisher.new_mentions_message_bus_channel(channel.id)],
-          kick_message_bus_last_id:
-            chat_message_bus_last_ids[Chat::Publisher.kick_users_message_bus_channel(channel.id)],
-          channel_message_bus_last_id:
-            chat_message_bus_last_ids[Chat::Publisher.root_message_bus_channel(channel.id)],
-          # NOTE: This is always true because the public channels passed into this serializer
-          # have been fetched with [Chat::ChannelFetcher], which only returns channels that
-          # the user has access to based on category permissions.
+          **message_bus_last_ids,
+          # NOTE: The public channels passed into this serializer have been fetched with
+          # [Chat::ChannelFetcher], which only returns channels that the user has access to based
+          # on category permissions. Anonymous users get a join CTA, but the client sends them to
+          # the login/signup flow before attempting to join.
           can_join_chat_channel: true,
           post_allowed_category_ids: @options[:post_allowed_category_ids],
         )
@@ -68,6 +82,8 @@ module Chat
     end
 
     def meta
+      return { message_bus_last_ids: {} } if scope.anonymous?
+
       last_ids = {
         channel_metadata:
           chat_message_bus_last_ids[Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL],
@@ -80,21 +96,19 @@ module Chat
           chat_message_bus_last_ids[Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL],
       }
 
-      if !scope.anonymous?
-        user_tracking_state_last_id =
-          chat_message_bus_last_ids[
-            Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
-          ]
+      user_tracking_state_last_id =
+        chat_message_bus_last_ids[
+          Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id)
+        ]
 
-        last_ids[:user_tracking_state] = user_tracking_state_last_id if user_tracking_state_last_id
+      last_ids[:user_tracking_state] = user_tracking_state_last_id if user_tracking_state_last_id
 
-        user_has_threads_last_id =
-          chat_message_bus_last_ids[
-            Chat::Publisher.user_has_threads_message_bus_channel(scope.user.id)
-          ]
+      user_has_threads_last_id =
+        chat_message_bus_last_ids[
+          Chat::Publisher.user_has_threads_message_bus_channel(scope.user.id)
+        ]
 
-        last_ids[:user_has_threads] = user_has_threads_last_id if user_has_threads_last_id
-      end
+      last_ids[:user_has_threads] = user_has_threads_last_id if user_has_threads_last_id
 
       { message_bus_last_ids: last_ids }
     end
@@ -104,35 +118,48 @@ module Chat
     def chat_message_bus_last_ids
       @chat_message_bus_last_ids ||=
         begin
-          message_bus_channels = [
-            Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
-          ]
-
-          if !scope.anonymous?
-            message_bus_channels.push(
-              Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id),
-              Chat::Publisher.user_has_threads_message_bus_channel(scope.user.id),
-            )
-          end
+          message_bus_channels =
+            if scope.anonymous?
+              []
+            else
+              [
+                Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
+                Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
+                Chat::Publisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
+                Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
+                Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
+                Chat::Publisher.user_tracking_state_message_bus_channel(scope.user.id),
+                Chat::Publisher.user_has_threads_message_bus_channel(scope.user.id),
+              ]
+            end
 
           object[:public_channels].each do |channel|
-            message_bus_channels.push(Chat::Publisher.new_messages_message_bus_channel(channel.id))
-            message_bus_channels.push(Chat::Publisher.new_mentions_message_bus_channel(channel.id))
-            message_bus_channels.push(Chat::Publisher.kick_users_message_bus_channel(channel.id))
             message_bus_channels.push(Chat::Publisher.root_message_bus_channel(channel.id))
+
+            if !scope.anonymous?
+              message_bus_channels.push(
+                Chat::Publisher.new_messages_message_bus_channel(channel.id),
+              )
+              message_bus_channels.push(
+                Chat::Publisher.new_mentions_message_bus_channel(channel.id),
+              )
+              message_bus_channels.push(Chat::Publisher.kick_users_message_bus_channel(channel.id))
+            end
           end
 
-          object[:direct_message_channels].each do |channel|
-            message_bus_channels.push(Chat::Publisher.new_messages_message_bus_channel(channel.id))
-            message_bus_channels.push(Chat::Publisher.new_mentions_message_bus_channel(channel.id))
-            message_bus_channels.push(Chat::Publisher.root_message_bus_channel(channel.id))
+          if !scope.anonymous?
+            object[:direct_message_channels].each do |channel|
+              message_bus_channels.push(
+                Chat::Publisher.new_messages_message_bus_channel(channel.id),
+              )
+              message_bus_channels.push(
+                Chat::Publisher.new_mentions_message_bus_channel(channel.id),
+              )
+              message_bus_channels.push(Chat::Publisher.root_message_bus_channel(channel.id))
+            end
           end
 
-          MessageBus.last_ids(*message_bus_channels)
+          message_bus_channels.present? ? MessageBus.last_ids(*message_bus_channels) : {}
         end
     end
   end

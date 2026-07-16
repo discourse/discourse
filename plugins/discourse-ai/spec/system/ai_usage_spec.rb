@@ -86,4 +86,44 @@ RSpec.describe "AI Usage Admin Page" do
       expect(model_selector).to have_no_option_name(old_model.display_name)
     end
   end
+
+  context "when reloading filtered usage" do
+    fab!(:other_model) { Fabricate(:llm_model, display_name: "Other Model", name: "other-model") }
+
+    before do
+      create_usage(llm_model, feature: "summarize")
+      create_usage(other_model, feature: "translate")
+    end
+
+    it "lets admins reload the selected filters" do
+      ai_usage_page.visit
+      expect(ai_usage_page).to have_no_query_param("model", "[object Object]")
+
+      ai_usage_page.select_period(:week)
+      expect(ai_usage_page).to have_query_param("period", "week")
+
+      feature_selector = ai_usage_page.feature_selector
+      feature_selector.expand
+      feature_selector.select_row_by_name("summarize")
+      expect(ai_usage_page).to have_query_param("feature", "summarize")
+
+      model_selector = ai_usage_page.model_selector
+      model_selector.expand
+      model_selector.select_row_by_name(llm_model.display_name)
+      expect(ai_usage_page).to have_query_param("model", llm_model.id)
+
+      ai_usage_page.reload
+
+      expect(ai_usage_page).to have_selected_period(:week)
+      expect(ai_usage_page.feature_selector).to have_selected_name("summarize")
+      expect(ai_usage_page.model_selector).to have_selected_name(llm_model.display_name)
+
+      ai_usage_page.feature_selector.expand
+      expect(ai_usage_page.feature_selector).to have_option_name("translate")
+      ai_usage_page.feature_selector.collapse
+
+      ai_usage_page.model_selector.expand
+      expect(ai_usage_page.model_selector).to have_option_name(other_model.display_name)
+    end
+  end
 end

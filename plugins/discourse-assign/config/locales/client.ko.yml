@@ -78,6 +78,8 @@ ko:
       topic: "글"
       post: "글"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "할당됨"
       assign_topic:
         operations:
           assign: "할당"

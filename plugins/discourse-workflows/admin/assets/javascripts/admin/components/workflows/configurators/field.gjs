@@ -16,6 +16,7 @@ import {
   propertyDynamicValueHint,
   propertyLabel,
   propertyPlaceholder,
+  propertyTooltip,
 } from "../../../lib/workflows/property-engine";
 
 const CRON_FIELD_PATTERN =
@@ -100,6 +101,10 @@ export default class Field extends Component {
     return fieldShowLabel(this.args.schema);
   }
 
+  get showOptional() {
+    return this.args.showOptional ?? true;
+  }
+
   get format() {
     return fieldFormat(this.args.schema);
   }
@@ -130,11 +135,20 @@ export default class Field extends Component {
     if (!fieldShowDescription(this.args.schema)) {
       return undefined;
     }
+
     const description = propertyDescription(
       this.nodeDefinition,
       this.args.fieldName
     );
     return description ? trustHTML(description) : undefined;
+  }
+
+  get fieldTooltip() {
+    if (!this.showLabel) {
+      return undefined;
+    }
+
+    return propertyTooltip(this.nodeDefinition, this.args.fieldName);
   }
 
   get dynamicValueHint() {
@@ -171,6 +185,7 @@ export default class Field extends Component {
         @nodeTypes={{@nodeTypes}}
         @schema={{@schema}}
         @session={{@session}}
+        @showOptional={{this.showOptional}}
         @dynamicValueHint={{this.dynamicValueHint}}
         @onSet={{@onSet}}
         @onBeforeStartTestSession={{@onBeforeStartTestSession}}
@@ -180,7 +195,9 @@ export default class Field extends Component {
         @name={{@fieldName}}
         @title={{this.fieldTitle}}
         @showTitle={{this.showLabel}}
+        @showOptional={{this.showOptional}}
         @description={{this.fieldDescription}}
+        @tooltip={{this.fieldTooltip}}
         @type={{this.resolvedFieldType}}
         @format={{this.format}}
         @validation={{this.validation}}

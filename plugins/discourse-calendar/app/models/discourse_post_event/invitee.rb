@@ -2,8 +2,6 @@
 
 module DiscoursePostEvent
   class Invitee < ActiveRecord::Base
-    UNKNOWN_ATTENDANCE = "unknown"
-
     self.table_name = "discourse_post_event_invitees"
 
     belongs_to :event, foreign_key: :post_id
@@ -18,8 +16,16 @@ module DiscoursePostEvent
         .where.not(users: { id: nil })
     end
     scope :with_status, ->(status) { where(status: Invitee.statuses[status]) }
+    scope :matching_username,
+          ->(filter) do
+            where(
+              "LOWER(users.username) LIKE :filter",
+              filter: "%#{sanitize_sql_like(filter.downcase)}%",
+            )
+          end
 
     before_save :clear_recurring_unless_going
+    after_destroy :reset_topic_tracking!
     after_commit :sync_chat_channel_members
 
     def self.statuses
@@ -70,14 +76,31 @@ module DiscoursePostEvent
       )
     end
 
+    def self.reset_topic_tracking!(user_ids:, topic_id:)
+      user_ids = Array(user_ids)
+      return if user_ids.empty? || topic_id.nil?
+
+      TopicUser
+        .where(topic_id:, user_id: user_ids)
+        .where(
+          notification_level: [
+            TopicUser.notification_levels[:watching],
+            TopicUser.notification_levels[:tracking],
+          ],
+        )
+        .update_all(
+          notification_level: TopicUser.notification_levels[:regular],
+          notifications_reason_id: TopicUser.notification_reasons[:user_changed],
+          notifications_changed_at: Time.zone.now,
+        )
+    end
+
     def sync_chat_channel_members
       return if !event.chat_enabled?
       ChatChannelSync.sync(event)
     end
 
     def update_topic_tracking!
-      topic_id = event.post.topic.id
-      user_id = user.id
       tracking = :regular
 
       case status
@@ -87,14 +110,25 @@ module DiscoursePostEvent
         tracking = :tracking
       end
 
-      TopicUser.change(
-        user_id,
-        topic_id,
-        notification_level: TopicUser.notification_levels[tracking],
-      )
+      change_topic_tracking!(tracking)
+    end
+
+    def reset_topic_tracking!
+      self.class.reset_topic_tracking!(user_ids: user_id, topic_id: event&.post&.topic_id)
     end
 
     private
+
+    def change_topic_tracking!(tracking)
+      topic = event&.post&.topic
+      return if topic.nil?
+
+      TopicUser.change(
+        user_id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[tracking],
+      )
+    end
 
     def clear_recurring_unless_going
       self.recurring = false unless going?

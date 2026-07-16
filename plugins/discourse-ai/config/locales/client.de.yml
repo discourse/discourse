@@ -21,7 +21,6 @@ de:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "Die Tabelle listet die Anzahl der Beiträge auf, die mit einer bestimmten Emotion klassifiziert wurden. Klassifiziert mit dem Modell „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -232,6 +231,15 @@ de:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Wird geladen …"
+        agent: "Agent"
+        tool: "Aktion"
+        user: "Nutzer"
+        approve: "Genehmigen"
+        reject: "Ablehnen"
+        approved: "Genehmigt"
+        rejected: "Abgelehnt"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -299,6 +307,9 @@ de:
             model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
+        admin_dashboard:
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
@@ -329,7 +340,6 @@ de:
           translate: "Übersetzen"
           markdown_tables: "Markdown-Tabelle generieren"
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
-          image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
           chat_thread_titles: "Titel von Chat-Threads"
@@ -338,6 +348,9 @@ de:
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
             agents: "Agenten"
+        image_caption:
+          setting_groups:
+            settings: "Einstellungen"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -374,6 +387,7 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
+        category_scope: "Kategorien"
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
@@ -533,16 +547,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_context_posts: "Max. Kontext-Beiträge"
-        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Benutzer verwenden soll (leer für Standardwert)."
-        execution_mode: "Ausführungsmodus"
-        execution_mode_help: "Steuert, wie der Agent die Toolausführung und den Gesprächskontext verwaltet. Standardmäßig werden feste Runden-/Tool-Limits verwendet. Agentic verwendet ein Token-Budget mit automatischer Kontextkomprimierung für längere, leistungsfähigere Tool-Nutzungssitzungen."
-        execution_mode_options:
-          default: "Standard (feste Limits)"
-          agentic: "Agentic (Token-Budget)"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtzahl an Token (Input + Output), die während einer einzelnen Bot-Antwort über alle LLM-Aufrufe hinweg verbraucht werden. Wenn diese Option gesetzt ist, werden die festen Limits für den Abschluss und die Tools durch ein Token-Budget ersetzt, das ein agentenbasiertes Verhalten ermöglicht. Leer lassen für Standardgrenzen."
-        compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
@@ -568,7 +572,7 @@ de:
         allow_topic_mentions: "Themenerwähnungen zulassen"
         allow_topic_mentions_help: "Wenn aktiviert, können Benutzer in zulässigen Gruppen diesen Agenten in Themen erwähnen."
         require_approval: "Genehmigung für Moderationstools erforderlich"
-        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch den Moderator an die Überprüfungswarteschlange gesendet."
+        require_approval_help: "Wenn diese Option aktiviert ist, werden Moderationsaktionen (Schließen, Löschen, Bearbeiten usw.) vor der Ausführung zur Genehmigung durch einen Moderator an die Überprüfungswarteschlange gesendet."
         force_default_llm: "Immer das Standard-Sprachmodell verwenden"
         save: "Speichern"
         saved: "Agent gespeichert"
@@ -614,6 +618,12 @@ de:
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        thinking_effort_options:
+          none: "Keine Auswahl"
+          low: "Niedrig"
+          medium: "Mittel"
+          high: "Hoch"
+          max: "Höchstwert"
         priority: "Priorität"
         priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
@@ -685,7 +695,7 @@ de:
         name_help: "Der Name wird in der Discourse-Benutzeroberfläche angezeigt und ist die Kurzkennung, die du verwendest, um das Tool in verschiedenen Einstellungen zu finden. Er sollte eindeutig sein (er ist erforderlich)."
         new: "Neues Tool"
         tool_name: "Name des Tools"
-        tool_name_help: "Der Werkzeugname wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
+        tool_name_help: "Der Name des Tools wird dem großen Sprachmodell präsentiert. Er ist nicht eindeutig, aber er ist für jeden Agenten eindeutig. (Agent validiert beim Speichern)"
         description: "Beschreibung"
         description_help: "Eine klare Beschreibung des Zwecks des Tools für das Sprachmodell"
         subheader_description: "Tools und MCP-Server erweitern die Fähigkeiten von KI-Agenten."
@@ -867,9 +877,7 @@ de:
             custom: "Benutzerdefiniert …"
           hours: "Stunden"
           max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
-          max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
-          max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
           soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
@@ -878,7 +886,7 @@ de:
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{agent})"
-          ai_helper_image_caption: "Bildbeschriftungen"
+          ai_image_caption: "Bildbeschriftungen"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
@@ -977,11 +985,7 @@ de:
         title: "Änderungen mit KI vorschlagen"
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
-        suggest: "Mit KI vorschlagen"
         suggest_errors:
-          too_many_tags:
-            one: "Du kannst höchstens %{count} Schlagwort haben."
-            other: "Du kannst höchstens %{count} Schlagwörter haben."
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
         context_menu:
@@ -1015,11 +1019,6 @@ de:
           select: "Auswählen"
           selected: "Ausgewählt"
           try_again: "Erneut versuchen"
-        image_caption:
-          button_label: "Beschriftung mit KI"
-          generating: "Beschriftung wird generiert …"
-          credits: "Beschriftet durch KI"
-          save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
       errors:
         credit_limit_dialog:
@@ -1040,7 +1039,7 @@ de:
         short_title: "Einbettungen"
         description: "Einbettungen sind numerische Darstellungen von Daten, die Bedeutungen und Beziehungen erfassen und es Discourse-KI-Funktionen wie „Verwandte Themen“ und „KI-Suche“ ermöglichen, Inhalte zu verstehen und zu verknüpfen."
         new: "Neue Einbettung"
-        back: "Zurück zu den Einbettungen"
+        back: "Zurück zu Einbettungen"
         save: "Speichern"
         saved: "Einbettungskonfiguration gespeichert"
         delete: "Löschen"
@@ -1110,8 +1109,8 @@ de:
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
         title: "KI-Bot"
-        agent: "Agent"
-        llm: "Modell"
+        agent: "Agent:"
+        llm: "Modell:"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"
@@ -1131,9 +1130,9 @@ de:
           this_turn: "Diese Runde:"
           whole_conversation: "Unterhaltung"
           tokens_summary: "%{request_tokens} eingehend → %{response_tokens} ausgehend"
-          cache_both: "(Cache %{read} lesen, %{write} schreiben)"
-          cache_read_only: "(Cache %{read} lesen)"
-          cache_write_only: "(Cache %{write} schreiben)"
+          cache_both: "(Cache %{read} gelesen, %{write} geschrieben)"
+          cache_read_only: "(Cache %{read} gelesen)"
+          cache_write_only: "(Cache %{write} geschrieben)"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"

@@ -11,6 +11,12 @@ en:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
       ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
       ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_image_caption_agent: "AI image captions are enabled, but the selected image caption agent is not ready: %{reason}. <a href='%{url}'>Review the image caption agent</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "the selected agent does not exist"
+        agent_vision_disabled: "the agent cannot include image uploads"
+        llm_missing: "the agent does not resolve to an LLM"
+        llm_vision_disabled: "the resolved LLM does not support image input"
   discourse_automation:
     ai:
       flag_types:
@@ -31,8 +37,11 @@ en:
         title: Triage posts using AI
         description: "Triage posts using a large language model"
         flagged_post: |
-          <div>Response from the model:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Response from the model: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
@@ -100,6 +109,11 @@ en:
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
+    ai_image_caption_agent: "The agent to use for AI image captions. Custom agents must have image uploads enabled and use a vision-capable LLM."
+    ai_post_image_captions_enabled: "Enable AI captions for post images. Generating missing captions requires a configured {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Maximum number of post images to caption per post."
+    ai_post_image_captions_backfill_hourly_rate: "Maximum number of posts per hour to backfill with AI-generated image captions. Set to 0 to disable backfill."
+    ai_post_image_captions_backfill_max_age_days: "Maximum age in days of posts to backfill with AI-generated image captions."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_post_illustrator_agent: "The agent to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
     ai_helper_chat_thread_title_agent: "The agent to use for generating chat thread titles."
@@ -117,6 +131,10 @@ en:
     ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
+    ai_admin_dashboard_enabled: "Enable AI features on the admin dashboard."
+    ai_admin_dashboard_highlights_agent: "Agent that explains notable community shifts on the admin dashboard."
+    ai_admin_dashboard_highlights_category_scope: "Choose which categories AI highlights can use. Include and exclude options use {{setting:ai_admin_dashboard_highlights_categories}}. Personal messages are always excluded."
+    ai_admin_dashboard_highlights_categories: "Categories used when the AI highlights category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_summarization_enabled: "Enable the summarize feature"
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
@@ -148,7 +166,8 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_translation_excluded_categories: "Content in these categories will not be translated. Leave empty to translate content in all categories, including private categories."
+    ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
+    ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
@@ -169,7 +188,7 @@ en:
       description: "This report provides sentiment analysis for posts, grouped by category, with positive, negative, and neutral scores for each post and category."
     overall_sentiment:
       title: "Overall sentiment"
-      description: 'The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Classified with "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      description: "The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Depending on the selected sentiment classification method, posts are classified with either the configured sentiment classification model ('cardiffnlp/twitter-roberta-base-sentiment-latest') or the configured sentiment classification agent."
       xaxis: "Positive(%)"
       yaxis: "Date"
     emotion_admiration:
@@ -271,6 +290,13 @@ en:
       copied: "Copied to clipboard"
     unknown_model: "Unknown AI model"
 
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
+          llm_not_found: "LLM model with id %{llm_model_id} not found"
+          no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+
     tools:
       custom_name: "%{name} (custom)"
       presets:
@@ -363,7 +389,19 @@ en:
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
       image_caption:
-        attribution: "Captioned by AI"
+        aria_description: "%{description} (Captioned by AI)"
+    image_caption:
+      configuration:
+        agent_missing: "Select an existing agent for AI image captions."
+        agent_vision_disabled: "The AI image caption agent must have image uploads enabled."
+        llm_missing: "The AI image caption agent must use an LLM."
+        llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."
+    post_image_captions:
+      errors:
+        description_blank: "Caption can't be blank."
+        description_too_long:
+          one: "Caption must be %{count} character or fewer."
+          other: "Caption must be %{count} characters or fewer."
 
     share_ai:
       read_more: "Read full transcript"
@@ -390,11 +428,21 @@ en:
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
       tool_pending_approval: "This action requires moderator approval before it can be executed."
+      chat_tool_approval:
+        approved: "Approved by @%{username}."
+        rejected: "Rejected by @%{username}."
+        failed: "Could not complete the action: %{error}"
+        unexpected_error: "an unexpected error occurred"
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
         cannot_have_duplicate_tools: "Can not have duplicate tools"
+        native_tool_requires_forced_llm: "Provider-native tools require a default LLM with \"Force default LLM\" enabled"
+        native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
+        admin_dashboard_highlights:
+          name: "Admin Dashboard Highlights"
+          description: "Writes the brief readout shown at the top of the admin dashboard, explaining what changed and what deserves attention this period"
         github_helper:
           name: "GitHub Helper"
           description: "AI Bot specialized in assisting with GitHub-related tasks and questions"
@@ -472,7 +520,7 @@ en:
           description: "Default agent powering the Helper's translator feature"
         image_captioner:
           name: "Image captions"
-          description: "Default agent powering the Helper's image caption feature"
+          description: "Default agent powering the image caption feature"
         locale_detector:
           name: "Locale detector"
           description: "Powers the translation feature by detecting the locale of a given text (posts, titles, etc.)"
@@ -563,6 +611,13 @@ en:
           flag_type:
             name: "Flag Type"
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
+      native_tools:
+        web_search:
+          name: "Web Search (native)"
+          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM."
+        web_fetch:
+          name: "Web Fetch (native)"
+          help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
@@ -577,6 +632,8 @@ en:
         categories: "List categories"
         flag_post: "Flag post"
         close_topic: "Close topic"
+        suspend_user: "Suspend user"
+        silence_user: "Silence user"
         unlist_topic: "Unlist topic"
         lock_post: "Lock post"
         delete_topic: "Delete topic"
@@ -589,6 +646,7 @@ en:
         grant_badge: "Grant badge"
         list_reviewables: "List review queue"
         perform_reviewable_action: "Review queue action"
+        add_reviewable_note: "Add review queue note"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -601,6 +659,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        change_site_setting: "Change site setting"
         dall_e: "Generate image"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -622,6 +681,8 @@ en:
         categories: "List all publicly visible categories on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
+        suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
+        silence_user: "Silence a user, blocking them from posting while they can still read"
         unlist_topic: "List or unlist a topic"
         lock_post: "Lock or unlock a post"
         delete_topic: "Delete a topic"
@@ -634,6 +695,7 @@ en:
         grant_badge: "Grant a badge to a user"
         list_reviewables: "List pending review queue items with optional filtering"
         perform_reviewable_action: "Perform an action on a review queue item"
+        add_reviewable_note: "Add a note to a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -648,6 +710,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -667,6 +730,8 @@ en:
         random_picker: "Picking from %{options}, picked: %{result}"
         flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         close_topic: "Closing topic %{topic_id} (closed: %{closed})"
+        suspend_user: "Suspending %{username} for %{duration_days} day(s)"
+        silence_user: "Silencing %{username} for %{duration_days} day(s)"
         unlist_topic: "Unlisting topic %{topic_id} (unlisted: %{unlisted})"
         lock_post: "Locking post %{post_id} (locked: %{locked})"
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
@@ -679,6 +744,7 @@ en:
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
         list_reviewables: "Listing review queue items (type: %{type})"
         perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
+        add_reviewable_note: "Adding note to reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -714,6 +780,7 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
@@ -728,6 +795,7 @@ en:
         already_flagged: "Post is already flagged for review."
         flagged: "Post flagged for review."
         reason: "AI bot flagged this post.\n\nReason: %{reason}"
+        score_reason: "AI bot flagged this post."
 
       close_topic:
         errors:
@@ -735,6 +803,24 @@ en:
           not_allowed: "You are not allowed to close or open this topic."
           no_reason: "A reason is required to close or open a topic."
         success: "Topic updated successfully."
+
+      suspend_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to suspend this user."
+          no_reason: "A reason is required to suspend a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to suspend user."
+        success: "User %{username} has been suspended."
+
+      silence_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to silence this user."
+          no_reason: "A reason is required to silence a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to silence user."
+        success: "User %{username} has been silenced."
 
       unlist_topic:
         errors:
@@ -855,6 +941,28 @@ en:
           action_failed: "Failed to perform the action"
         success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
 
+      add_reviewable_note:
+        errors:
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_note: "A note is required to add a note to a review queue item"
+          failed: "Failed to add the note"
+        success: "Successfully added a note to review queue item %{reviewable_id}"
+
+      change_site_setting:
+        errors:
+          no_reason: "A reason is required to change a site setting."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          not_allowed: "You are not allowed to change site settings."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be changed here."
+          deprecated: "Site setting '%{setting_name}' is deprecated; use '%{new_name}' instead."
+          shadowed: "Site setting '%{setting_name}' is overridden globally and cannot be changed."
+          unconfigurable: "Site setting '%{setting_name}' belongs to a plugin that cannot be configured."
+          unsupported_type: "Site settings of type '%{type}' cannot be changed by the AI bot."
+          invalid_value: "Invalid value: %{error}"
+          failed: "Failed to change the site setting."
+        success: "Site setting %{setting_name} has been changed to '%{value}'."
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"
@@ -865,7 +973,10 @@ en:
         target_missing: "The tool action target no longer exists."
         tool_not_found: "Tool '%{tool_name}' is no longer available."
         bot_user_missing: "The bot user no longer exists."
+        performer_not_human: "This action must be approved or rejected by a real person, not a bot."
+        post_mismatch: "This approval card does not belong to this post."
         execution_error: "Tool execution failed: %{error}"
+        execution_error_unknown: "an unexpected error occurred"
 
     summarization:
       configuration_hint:
@@ -889,6 +1000,10 @@ en:
           positive: "Positive"
           negative: "Negative"
           neutral: "Neutral"
+
+    discord:
+      configuration:
+        agent_user_required: "The Discord search agent must have an associated user before Discord agent mode can be enabled."
 
     llm:
       configuration:
@@ -951,7 +1066,7 @@ en:
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
-      quota_required: "You must specify maximum tokens or usages for this model"
+      quota_required: "You must specify maximum tokens, uses, or cost for this model"
       no_query_specified: The query parameter is required, please specify it.
       no_user_for_agent: The agent specified does not have a user associated with it.
       agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."

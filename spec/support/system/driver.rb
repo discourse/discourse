@@ -21,20 +21,32 @@ module SystemDrivers
     @schemas_preloaded = true
   end
 
-  # Builds the registered driver name for the example (mobile vs desktop chrome).
+  MOBILE_USER_AGENT =
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1"
+
+  def self.allow_network_hosts(example)
+    Array(example.metadata[:allow_network]).map(&:to_s).map(&:strip).reject(&:empty?).uniq.sort
+  end
+
+  # Builds the registered driver name for the example. Mobile vs desktop, plus a
+  # suffix for the `allow_network:` host set so each set gets its own browser
+  # (host-resolver-rules are a launch arg and can't be changed per-test).
   def self.driver_for(example)
     driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
     driver << :chrome
+
+    hosts = allow_network_hosts(example)
+    driver << "net#{Digest::SHA1.hexdigest(hosts.join(","))[0, 10]}" if hosts.any?
+
     driver.join("_").to_sym
   end
 
-  def self.register!(color_scheme:)
-    driver_options = {
+  def self.register!(example)
+    base_options = {
       browser_type: :chromium,
       channel: :chromium,
       headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
-      args: apply_base_chrome_args,
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
@@ -43,40 +55,58 @@ module SystemDrivers
       # NOTE: timezoneId is NOT set here because the driver is cached and reused,
       # so only the first test's timezone would be applied. Instead, we use CDP
       # to override the timezone per-test in the system before(:each) hook.
-      colorScheme: color_scheme,
+      colorScheme: example.metadata[:color_scheme],
     }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
-      driver_options[:browser] = :remote
-      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+      base_options[:browser] = :remote
+      base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
     end
 
-    Capybara.register_driver(:playwright_mobile_chrome) do |app|
-      Capybara::Playwright::Driver.new(
-        app,
-        **driver_options,
-        deviceScaleFactor: 3,
-        isMobile: true,
-        hasTouch: true,
-        userAgent:
-          "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1",
-        defaultBrowserType: "webkit",
-        viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
-      )
-    end
+    register_chrome(
+      :playwright_mobile_chrome,
+      **base_options,
+      args: apply_base_chrome_args,
+      mobile: true,
+    )
+    register_chrome(:playwright_chrome, **base_options, args: apply_base_chrome_args, mobile: false)
 
-    Capybara.register_driver(:playwright_chrome) do |app|
-      Capybara::Playwright::Driver.new(
-        app,
-        **driver_options,
-        viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 },
+    # Specs that need a specific external host register their own browser, with
+    # those hosts excluded from the request block (see apply_base_chrome_args).
+    hosts = allow_network_hosts(example)
+    if hosts.any?
+      register_chrome(
+        driver_for(example),
+        **base_options,
+        args: apply_base_chrome_args(allow_network: hosts),
+        mobile: !!example.metadata[:mobile],
       )
     end
 
     Capybara.default_driver = :playwright_chrome
   end
 
-  def self.apply_base_chrome_args(args = [])
+  def self.register_chrome(name, mobile:, **options)
+    mobile_options =
+      if mobile
+        {
+          deviceScaleFactor: 3,
+          isMobile: true,
+          hasTouch: true,
+          userAgent: MOBILE_USER_AGENT,
+          defaultBrowserType: "webkit",
+          viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
+        }
+      else
+        { viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 } }
+      end
+
+    Capybara.register_driver(name) do |app|
+      Capybara::Playwright::Driver.new(app, **options, **mobile_options)
+    end
+  end
+
+  def self.apply_base_chrome_args(args = [], allow_network: [])
     base_args = %w[
       --disable-search-engine-choice-screen
       --no-sandbox
@@ -96,6 +126,26 @@ module SystemDrivers
       # Bypass the OS resolver for localhost lookups inside the browser.
       resolver_rules.push("MAP localhost [::1]", "MAP *.localhost [::1]")
     end
+
+    # Block external network access from the browser by resolving any host that
+    # isn't explicitly excluded to NXDOMAIN. System specs should never reach out
+    # to the real internet; this fails fast instead of hanging or leaking
+    # requests. Unlike Playwright request interception it leaves the HTTP cache
+    # enabled. Rules are first-match-wins, so the excludes and the MAPs above
+    # take precedence.
+    minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"].presence || "minio.local"
+    resolver_rules.push(
+      "EXCLUDE localhost",
+      "EXCLUDE *.localhost",
+      "EXCLUDE #{Capybara.server_host}",
+      "EXCLUDE #{minio_domain}",
+      "EXCLUDE *.#{minio_domain}",
+    )
+    # Hosts a spec opted into via `allow_network:` resolve normally; everything
+    # else falls through to NXDOMAIN.
+    allow_network.each { |host| resolver_rules.push("EXCLUDE #{host}") }
+    resolver_rules.push("MAP * ~NOTFOUND")
+
     base_args << "--host-resolver-rules=#{resolver_rules.join(",")}"
 
     # A file that contains just a list of paths like so:
@@ -116,7 +166,7 @@ module SystemDrivers
 
     base_args + args
   end
-  private_class_method :apply_base_chrome_args
+  private_class_method :apply_base_chrome_args, :register_chrome, :allow_network_hosts
 end
 
 RSpec.configure do |config|

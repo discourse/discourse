@@ -277,17 +277,47 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nowa wiadomość"
+          few: "%{count} nowe wiadomości"
+          many: "%{count} nowych wiadomości"
+          other: "%{count} nowych wiadomości"
+        new_image:
+          one: "%{username} wysłał obraz"
+          few: "%{username} wysłał %{count} obrazy"
+          many: "%{username} wysłał %{count} obrazów"
+          other: "%{username} wysłał %{count} obrazów"
+        new_attachment:
+          one: "%{username} wysłał załącznik"
+          few: "%{username} wysłał %{count} załączniki"
+          many: "%{username} wysłał %{count} załączników"
+          other: "%{username} wysłał %{count} załączników"
+        new_message_with_image:
+          one: "%{username}: %{message} (z obrazkiem)"
+          few: "%{username}: %{message} (z %{count} obrazkami)"
+          many: "%{username}: %{message} (z %{count} obrazkami)"
+          other: "%{username}: %{message} (z %{count} obrazkami)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (z załącznikiem)"
+          few: "%{username}: %{message} (z %{count} załącznikami)"
+          many: "%{username}: %{message} (z %{count} załącznikami)"
+          other: "%{username}: %{message} (z %{count} załącznikami)"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
       no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       chat_notifications_title: "Powiadomienia czatu"
-      only_chat_push_notifications:
-        title: "Wysyłaj tylko powiadomienia push czatu"
       personalization_title: "Personalizacja"
+      accessibility_title: "Dostępność"
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
+      announce_new_messages:
+        title: "Ogłaszaj nowe wiadomości czytnikom ekranu"
+      new_message_sound:
+        title: "Odtwarzaj dźwięki nowych wiadomości, gdy czat jest na pierwszym planie"
       show_thread_title_prompts:
         title: "Pokaż podpowiedzi tytułu wątku"
         description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."
@@ -340,8 +370,11 @@ pl_PL:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:
         none: "Brak"
-        bell: "Dzwonek"
-        ding: "Ding"
+        classic: "Klasyczny i czysty"
+        soft: "Miękka marimba"
+        retro: "Retro 8-bitowy"
+        bubble: "Zabawna bańka"
+        ethereal: "Eteryczne szkło"
       title: "czat"
       title_capitalized: "Czat"
       upload: "Dołącz plik"
@@ -424,8 +457,8 @@ pl_PL:
         input_placeholder: Dodaj nazwę
         slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
         name: Nazwa kanału
-        slug: Slug kanału (opcjonalnie)
-        emoji: Emoji kanału (opcjonalnie)
+        slug: Slug kanału
+        emoji: Emoji kanału
         reset_emoji: Zresetuj emoji
       channel_edit_description_modal:
         title: Edytuj opis
@@ -497,16 +530,16 @@ pl_PL:
             many: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
             other: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
         create: "Utwórz kanał"
-        description: "Opis (opcjonalnie)"
+        description: "Opis"
         name: "Nazwa kanału"
-        slug: "Slug kanału (opcjonalnie)"
+        slug: "Slug kanału"
         title: "Nowy kanał"
         type: "Typ"
         types:
           category: "Kategoria"
           topic: "Temat"
         emoji:
-          label: "Emoji kanału (opcjonalnie)"
+          label: "Emoji kanału"
           reset: "Zresetuj emoji"
       reviewable:
         type: "Wiadomość na czacie"
@@ -522,6 +555,12 @@ pl_PL:
           other: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
         single_user: "<span>%{username} zareagował za pomocą </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} i %{username} zareagowali za pomocą </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reakcja"
+            few: "%{count} reakcje"
+            many: "%{count} reakcji"
+            other: "%{count} reakcje"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
@@ -860,9 +899,14 @@ pl_PL:
       nodes:
         "action:send_chat_message": "Wyślij wiadomość czatu"
         "action:chat_approval": "Zatwierdzenie czatu"
+        "trigger:chat_message_created": "Utworzona wiadomość czatu"
       node_descriptions:
         "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
         "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
+        "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
+      chat_message_created:
+        channel_id: "Kanał"
+        channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
       send_chat_message:
         channel_id: "Kanał"
         message: "Wiadomość"

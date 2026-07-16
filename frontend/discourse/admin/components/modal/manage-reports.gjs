@@ -142,10 +142,9 @@ class ManageReportsRow extends Component {
         <div class="manage-reports__row-heading">
           <span class="manage-reports__title">{{@row.title}}</span>
           {{#if @row.label}}
-            <span
-              class="db-report__label"
-              data-source={{@row.source}}
-            >{{@row.label}}</span>
+            <span class="db-report__label">
+              {{@row.label}}
+            </span>
           {{/if}}
         </div>
         {{#if @row.description}}
@@ -489,13 +488,25 @@ export default class ManageReports extends Component {
       </:aboveFooter>
 
       <:footer>
-        <DButton
-          @label="admin.dashboard.reports_section.modal.apply"
-          @action={{this.apply}}
-          @disabled={{this.applying}}
-          @isLoading={{this.applying}}
-          class="btn-primary manage-reports__apply"
-        />
+        <p class="manage-reports__footer-note">
+          {{i18n "admin.dashboard.reports_section.modal.footer_note"}}
+        </p>
+        <div class="manage-reports__footer-actions">
+
+          <DButton
+            @label="js.cancel_value"
+            @action={{@closeModal}}
+            class="btn-transparent manage-reports__cancel"
+          />
+          <DButton
+            @label="admin.dashboard.reports_section.modal.apply"
+            @action={{this.apply}}
+            @disabled={{this.applying}}
+            @isLoading={{this.applying}}
+            class="btn-primary manage-reports__apply"
+          />
+        </div>
+
       </:footer>
     </DModal>
   </template>

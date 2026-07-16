@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include TagParamLimit
   include EmbedModeHandler
 
   requires_login only: %i[
@@ -39,6 +40,18 @@ class TopicsController < ApplicationController
   before_action :set_embed_class, only: :show
   after_action :allow_embed_mode, only: :show
 
+  around_action :hide_inaccessible_topic_when_detailed_404_disabled,
+                only: %i[
+                  archive_message
+                  move_to_inbox
+                  post_ids
+                  posts
+                  publish
+                  set_notifications
+                  set_slow_mode
+                  wordpress
+                ]
+
   skip_before_action :check_xhr, only: %i[show feed]
 
   def id_for_slug
@@ -59,8 +72,6 @@ class TopicsController < ApplicationController
     if params[:id].is_a?(Array) || params[:id].is_a?(ActionController::Parameters)
       raise Discourse::InvalidParameters.new("Show only accepts a single ID")
     end
-
-    flash["referer"] ||= request.referer[0..255] if request.referer
 
     # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards
     # compatibility with existing installs.
@@ -194,21 +205,9 @@ class TopicsController < ApplicationController
       return
     end
 
-    if !request.format.json? && !use_crawler_layout? && SiteSetting.nested_replies_enabled &&
-         !@topic_view.topic.private_message? &&
-         (@topic_view.topic.nested_topic.present? || SiteSetting.nested_replies_default) &&
-         params[:flat] != "1"
-      url = +"/n/#{@topic_view.topic.slug}/#{@topic_view.topic.id}"
-      post_number = opts[:post_number].to_i
-      url << "/#{post_number}" if post_number > 0
-      if params[:embed_mode] == "true"
-        embed_query = { embed_mode: true }
-        embed_query[:class_name] = params[:class_name] if params[:class_name].present?
-        url << "?#{embed_query.to_query}"
-      end
-      redirect_to url, status: :found
-      return
-    end
+    # Nested topics render through the normal topic route. The Ember topic
+    # route decides whether to mount the flat post stream or the nested tree;
+    # crawlers still receive the flat topic HTML from this controller.
 
     track_visit_to_topic
 
@@ -415,6 +414,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     guardian.ensure_can_edit!(topic)
+    return if reject_too_many_tags!(:tags, :original_tags)
 
     original_title = params[:original_title]
     if original_title.present? && original_title != topic.title
@@ -540,6 +540,7 @@ class TopicsController < ApplicationController
   def update_tags
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
+    return if reject_too_many_tags!(:tags)
 
     tags =
       if params[:tags].is_a?(ActionController::Parameters)
@@ -667,7 +668,7 @@ class TopicsController < ApplicationController
     params.require(:duration_minutes) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_set_topic_timer!(topic)
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
@@ -729,7 +730,8 @@ class TopicsController < ApplicationController
   end
 
   def remove_bookmarks
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
+
     BookmarkManager.new(current_user).destroy_for_topic(topic)
     render body: nil
   end
@@ -781,7 +783,7 @@ class TopicsController < ApplicationController
   end
 
   def bookmark
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
@@ -916,6 +918,14 @@ class TopicsController < ApplicationController
       Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names]).pluck(
         :id,
       )
+
+    if Email.is_valid?(username_or_email)
+      if !guardian.can_invite_via_email?(topic)
+        return render(json: failed_json, status: :unprocessable_entity)
+      end
+
+      return render(json: success_json) if User.find_by_email(username_or_email)
+    end
 
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
@@ -1189,6 +1199,9 @@ class TopicsController < ApplicationController
       changed_topic_ids = operator.perform!
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
+      if operator.tag_category_errors.present?
+        result[:tag_category_errors] = operator.tag_category_errors
+      end
       render_json_dump result
     rescue Discourse::InvalidParameters => ex
       render_json_error(ex, status: 400)
@@ -1223,7 +1236,7 @@ class TopicsController < ApplicationController
 
   def reset_new
     topic_scope =
-      if current_user.new_new_view_enabled?
+      if current_user.unified_new_enabled?
         if params[:dismiss_topics] && params[:dismiss_posts]
           TopicQuery.new(current_user).new_and_unread_results(limit: false)
         elsif params[:dismiss_topics]
@@ -1282,7 +1295,7 @@ class TopicsController < ApplicationController
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
 
-    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+    if !current_user.unified_new_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
     end
@@ -1362,6 +1375,29 @@ class TopicsController < ApplicationController
 
   private
 
+  def hide_inaccessible_topic_when_detailed_404_disabled
+    yield
+  rescue ActiveRecord::RecordNotFound
+    raise Discourse::NotFound
+  rescue Discourse::InvalidAccess => exception
+    raise exception if SiteSetting.detailed_404
+    raise exception if !requested_topic_hidden_from_user?(exception)
+
+    raise Discourse::NotFound
+  end
+
+  def requested_topic_hidden_from_user?(exception)
+    topic = exception.obj if exception.obj.is_a?(Topic)
+    topic ||= Topic.find_by(id: requested_topic_id)
+
+    topic.present? && !guardian.can_see?(topic)
+  end
+
+  def requested_topic_id
+    topic_id = params[:topic_id].presence || params[:id].presence
+    topic_id.to_s if topic_id.to_s.match?(/\A\d+\z/)
+  end
+
   def render_topic_with_tags(topic)
     payload = serialize_data(topic, BasicTopicSerializer)
     payload[:tags] = topic
@@ -1396,6 +1432,13 @@ class TopicsController < ApplicationController
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
+  end
+
+  def find_visible_topic_from_topic_id
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
+    topic
   end
 
   def fetch_topic_view(options)
@@ -1466,7 +1509,7 @@ class TopicsController < ApplicationController
 
     if !request.format.json?
       hash = {
-        referer: request.referer || flash[:referer],
+        referer: request.referer,
         host: request.host,
         current_user: current_user,
         topic_id: @topic_view.topic.id,
@@ -1542,7 +1585,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
+        @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

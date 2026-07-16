@@ -261,14 +261,16 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
+      screen_reader:
+        new_messages:
+          one: "%{count} neue Nachricht"
+          other: "%{count} neue Nachrichten"
       no_direct_message_channels: "Du bist noch keiner Unterhaltung per Direktnachricht beigetreten!"
       no_direct_message_channels_cta: "Eine Unterhaltung starten"
       no_public_channels: "Du bist noch keinem Kanal beigetreten!"
       no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       chat_notifications_title: "Chat-Benachrichtigungen"
-      only_chat_push_notifications:
-        title: "Nur Chat-Push-Benachrichtigungen senden"
       personalization_title: "Personalisierung"
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
@@ -320,8 +322,6 @@ de:
         title: "Desktop-Chat-Benachrichtigungston"
       sounds:
         none: "Keiner"
-        bell: "Glocke"
-        ding: "Ding"
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
@@ -402,8 +402,6 @@ de:
         input_placeholder: Einen Namen hinzufügen
         slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Kürzel verwendet
         name: Kanalname
-        slug: Kanal-Kürzel (optional)
-        emoji: Kanal-Emoji (optional)
         reset_emoji: Emoji zurücksetzen
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
@@ -461,16 +459,14 @@ de:
             one: 'Benutzer in %{group} und %{count} anderen Gruppe haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
             other: 'Benutzer in %{group} und %{count} anderen Gruppen haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
         create: "Kanal erstellen"
-        description: "Beschreibung (optional)"
+        description: "Beschreibung"
         name: "Kanalname"
-        slug: "Kanal-Kürzel (optional)"
         title: "Neuer Kanal"
         type: "Typ"
         types:
           category: "Kategorie"
           topic: "Thema"
         emoji:
-          label: "Kanal-Emoji (optional)"
           reset: "Emoji zurücksetzen"
       reviewable:
         type: "Chat-Nachricht"
@@ -484,6 +480,10 @@ de:
           other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen habt reagiert mit </span>:%{emoji}:"
         single_user: "<span>%{username} reagierte mit </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} und %{username} reagierten mit </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} Reaktion"
+            other: "%{count} Reaktionen"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} und %{count} andere Person reagierten mit </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} und %{count} andere Personen reagierten mit </span>:%{emoji}:"
@@ -797,6 +797,9 @@ de:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Chat-Nachricht senden"
+        "trigger:chat_message_created": "Chat-Nachricht erstellt"
+      chat_message_created:
+        channel_id: "Kanal"
       send_chat_message:
         channel_id: "Kanal"
         message: "Nachricht"

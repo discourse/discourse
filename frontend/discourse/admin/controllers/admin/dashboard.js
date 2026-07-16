@@ -53,23 +53,24 @@ export default class AdminDashboardController extends Controller {
   }
 
   get startDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.start_date) {
-      const parsed = moment(this.start_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.startOf("day").toDate();
-      }
-    }
-    return calculatePresetStartDate(this.safePeriod);
+    return (
+      this.#customDate(this.start_date, "startOf") ??
+      calculatePresetStartDate(this.safePeriod)
+    );
   }
 
   get endDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.end_date) {
-      const parsed = moment(this.end_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.endOf("day").toDate();
-      }
+    return (
+      this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
+    );
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
     }
-    return moment().endOf("day").toDate();
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
   @action
@@ -182,6 +183,7 @@ export default class AdminDashboardController extends Controller {
         sections: model.sections,
         configuration: model.configuration,
       };
+      this.problems = model.problems;
     } catch {
       if (id !== this._sectionsLoadId) {
         return;
@@ -267,7 +269,7 @@ export default class AdminDashboardController extends Controller {
           };
 
           if (versionChecks) {
-            properties.versionCheck = VersionCheck.create(model.version_check);
+            properties.versionCheck = new VersionCheck(model.version_check);
           }
 
           this.setProperties(properties);
@@ -304,5 +306,27 @@ export default class AdminDashboardController extends Controller {
   @action
   refreshProblems() {
     this._loadProblems();
+  }
+
+  @action
+  async refreshSiteAdvice() {
+    try {
+      const model = await AdminDashboard.fetchProblems();
+      this.problems = model.problems;
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async ignoreProblem(problem) {
+    try {
+      await ajax(`/admin/admin_notices/${problem.id}`, { type: "DELETE" });
+      this.problems = this.problems.filter(
+        (candidate) => candidate.id !== problem.id
+      );
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

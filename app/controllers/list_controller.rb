@@ -172,8 +172,7 @@ class ListController < ApplicationController
   def group_topics
     group = Group.find_by(name: params[:group_name])
     raise Discourse::NotFound unless group
-    guardian.ensure_can_see_group!(group)
-    guardian.ensure_can_see_group_members!(group)
+    guardian.ensure_can_see_group_and_members!(group)
 
     list_opts = build_topic_list_options
     list = generate_list_for("group_topics", group, list_opts)
@@ -449,10 +448,8 @@ class ListController < ApplicationController
     @description_meta =
       if @category.uncategorized?
         I18n.t("category.uncategorized_description", locale: SiteSetting.default_locale)
-      elsif @category.description_text.present?
-        @category.description_text
       else
-        SiteSetting.site_description
+        @category.plain_text_description || SiteSetting.site_description
       end
 
     if use_crawler_layout?
@@ -513,6 +510,10 @@ class ListController < ApplicationController
           SiteSetting.top_page_default_timeframe
       ).to_sym
 
+    default_period = SiteSetting.top_page_default_timeframe.to_sym if TopTopic.periods.exclude?(
+      default_period,
+    )
+
     best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
   end
 
@@ -522,7 +523,7 @@ class ListController < ApplicationController
     default_period = SiteSetting.top_page_default_timeframe
   )
     best_periods_for(previous_visit_at, default_period.to_sym).find do |period|
-      top_topics = TopTopic.where("#{period}_score > 0")
+      top_topics = TopTopic.where("#{TopTopic.score_column_for_period(period)} > 0")
       top_topics =
         top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)

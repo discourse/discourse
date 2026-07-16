@@ -6,7 +6,7 @@ module DiscourseAi
       INVALID_TURN = Class.new(StandardError)
 
       attr_reader :messages, :tools, :system_message_text
-      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim
+      attr_accessor :topic_id, :post_id, :max_pixels, :tool_choice, :skip_trim, :native_tools
 
       def self.text_only(message)
         if message[:content].is_a?(Array)
@@ -23,12 +23,14 @@ module DiscourseAi
         topic_id: nil,
         post_id: nil,
         max_pixels: nil,
-        tool_choice: nil
+        tool_choice: nil,
+        native_tools: []
       )
         raise ArgumentError, "messages must be an array" if !messages.is_a?(Array)
         raise ArgumentError, "tools must be an array" if !tools.is_a?(Array)
 
         @max_pixels = max_pixels || 1_048_576
+        @native_tools = native_tools || []
 
         @topic_id = topic_id
         @post_id = post_id
@@ -70,6 +72,7 @@ module DiscourseAi
       # this means anything we get back from the model via endpoint can be easily appended
       def push_model_response(response)
         pending_thinking = nil
+        last_response_message = nil
 
         thinking_attrs =
           lambda do
@@ -87,7 +90,7 @@ module DiscourseAi
           case message
           when Thinking
             next if message.partial?
-            pending_thinking = message
+            pending_thinking = merge_thinking(pending_thinking, message)
           when ToolCall
             next if message.partial?
             push(
@@ -98,12 +101,14 @@ module DiscourseAi
               provider_data: message.provider_data,
               **thinking_attrs.call,
             )
+            last_response_message = messages.last
           when String
             if messages.last&.dig(:type) == :model
               messages.last[:content] = messages.last[:content] + message
             else
               push(type: :model, content: message, **thinking_attrs.call)
             end
+            last_response_message = messages.last
           when ToolResult
             push(
               type: :tool,
@@ -114,6 +119,10 @@ module DiscourseAi
           else
             raise ArgumentError, "unexpected message type: #{message.class}"
           end
+        end
+
+        if pending_thinking && last_response_message
+          attach_thinking_to_message(last_response_message, pending_thinking)
         end
       end
 
@@ -149,6 +158,14 @@ module DiscourseAi
 
       def has_tools?
         tools.present?
+      end
+
+      def has_native_tools?
+        native_tools.present?
+      end
+
+      def native_tool?(id)
+        native_tools.include?(id)
       end
 
       def encoded_uploads(
@@ -227,7 +244,7 @@ module DiscourseAi
         return false unless other.is_a?(Prompt)
         messages == other.messages && tools == other.tools && topic_id == other.topic_id &&
           post_id == other.post_id && max_pixels == other.max_pixels &&
-          tool_choice == other.tool_choice
+          tool_choice == other.tool_choice && native_tools == other.native_tools
       end
 
       def eql?(other)
@@ -235,10 +252,42 @@ module DiscourseAi
       end
 
       def hash
-        [messages, tools, topic_id, post_id, max_pixels, tool_choice].hash
+        [messages, tools, topic_id, post_id, max_pixels, tool_choice, native_tools].hash
       end
 
       private
+
+      def merge_thinking(existing, incoming)
+        return incoming unless existing
+
+        merged = existing.dup
+        merged.message = merge_thinking_text(merged.message, incoming.message)
+        merged.merge_provider_info!(incoming.provider_info)
+        merged
+      end
+
+      def merge_thinking_text(existing, incoming)
+        return existing if incoming.blank?
+        return incoming if existing.blank?
+
+        "#{existing}\n\n#{incoming}"
+      end
+
+      def attach_thinking_to_message(message, thinking)
+        return if message.blank? || thinking.blank?
+
+        message[:thinking] = merge_thinking_text(
+          message[:thinking],
+          thinking.message,
+        ) if thinking.message.present?
+
+        if thinking.provider_info.present?
+          message[:thinking_provider_info] = Thinking.merge_provider_info(
+            message[:thinking_provider_info],
+            thinking.provider_info,
+          )
+        end
+      end
 
       def allowed_upload_kinds(allow_images:, allow_documents:)
         allowed_kinds = []

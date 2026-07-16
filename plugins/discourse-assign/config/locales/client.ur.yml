@@ -119,6 +119,8 @@ ur:
       topic: "موضوع"
       post: "پوسٹ"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "تفویض کردہ"
       assign_topic:
         operations:
           assign: "تفویض"

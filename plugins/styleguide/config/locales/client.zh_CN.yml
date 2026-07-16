@@ -101,6 +101,7 @@ zh_CN:
           title: "模式窗口"
           header: "模式窗口标题"
           footer: "模式窗口页脚"
+          open: "打开模态框"
         user_about:
           title: "用户信息框"
         header_icons:

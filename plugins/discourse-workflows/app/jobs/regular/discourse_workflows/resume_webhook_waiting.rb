@@ -4,7 +4,7 @@ module Jobs
   module DiscourseWorkflows
     class ResumeWebhookWaiting < ::Jobs::Base
       def execute(args)
-        return unless SiteSetting.discourse_workflows_enabled
+        return unless SiteSetting.enable_discourse_workflows
 
         execution =
           ::DiscourseWorkflows::Execution.find_by(id: args[:execution_id], status: :waiting)

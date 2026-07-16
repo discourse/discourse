@@ -215,6 +215,20 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq("large_and_unoptimized.png")
       end
 
+      it "should not convert to jpeg for admin asset upload types" do
+        upload =
+          UploadCreator.new(
+            large_file,
+            large_filename,
+            type: "branding",
+            force_optimize: true,
+          ).create_for(admin.id)
+
+        expect(upload.extension).to eq("png")
+        expect(File.extname(upload.url)).to eq(".png")
+        expect(upload.original_filename).to eq("large_and_unoptimized.png")
+      end
+
       context "with jpeg image quality settings" do
         before do
           SiteSetting.png_to_jpg_quality = 75
@@ -261,6 +275,20 @@ RSpec.describe UploadCreator do
               UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
                 user.id,
               )
+
+            expect(upload.extension).to eq("png")
+            expect(File.extname(upload.url)).to eq(".png")
+            expect(upload.original_filename).to eq("large_and_unoptimized.png")
+          end
+
+          it "should not convert pasted images to jpeg when png_to_jpg_quality is 100" do
+            upload =
+              UploadCreator.new(
+                large_file,
+                large_filename,
+                pasted: true,
+                force_optimize: true,
+              ).create_for(user.id)
 
             expect(upload.extension).to eq("png")
             expect(File.extname(upload.url)).to eq(".png")

@@ -183,6 +183,8 @@ ja:
       topic: "トピック"
       post: "投稿"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "割り当て完了"
       assign_topic:
         operations:
           assign: "割り当てる"

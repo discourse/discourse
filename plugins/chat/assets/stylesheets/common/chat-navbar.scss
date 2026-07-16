@@ -138,10 +138,6 @@
   align-items: center;
   height: var(--chat-header-offset);
 
-  .d-icon {
-    color: var(--primary-low-mid);
-  }
-
   .c-navbar__filter {
     &.active {
       .d-icon {

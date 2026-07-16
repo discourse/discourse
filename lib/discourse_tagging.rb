@@ -243,7 +243,20 @@ module DiscourseTagging
         return false unless validate_required_tags_from_group(guardian, topic, category, tags)
 
         if tags.size == 0
-          topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
+          not_allowed = tag_names_not_allowed_in_category(category, new_tag_names)
+          if not_allowed.present?
+            topic.errors.add(
+              :base,
+              I18n.t(
+                "tags.forbidden.tag_not_allowed_in_category",
+                count: not_allowed.size,
+                tags: not_allowed.sort.join(", "),
+                category: category.name,
+              ),
+            )
+          else
+            topic.errors.add(:base, I18n.t("tags.forbidden.invalid", count: new_tag_names.size))
+          end
           return false
         end
 
@@ -326,23 +339,36 @@ module DiscourseTagging
     success
   end
 
+  def self.restricted_category_ids_by_tag_name(tag_names)
+    restricted_to = Hash.new { |h, k| h[k] = Set.new }
+    return restricted_to if tag_names.blank?
+
+    query = Tag.where(name: tag_names)
+    query
+      .joins(tag_groups: :categories)
+      .pluck(:name, "categories.id")
+      .each { |(name, category_id)| restricted_to[name] << category_id }
+    query
+      .joins(:categories)
+      .pluck(:name, "categories.id")
+      .each { |(name, category_id)| restricted_to[name] << category_id }
+    restricted_to
+  end
+
+  def self.tag_names_not_allowed_in_category(category, tag_names, restricted_to: nil)
+    return [] if category.blank? || tag_names.blank?
+
+    restricted_to ||= restricted_category_ids_by_tag_name(tag_names)
+    tag_names.select do |name|
+      restricted_to.key?(name) && !restricted_to[name].include?(category.id)
+    end
+  end
+
   def self.validate_category_restricted_tags(guardian, model, category, tags = [])
     return true if tags.blank? || category.blank?
 
     tags = tags.map(&:name) if Tag === tags[0]
-    tags_restricted_to_categories = Hash.new { |h, k| h[k] = Set.new }
-
-    query = Tag.where(name: tags)
-
-    query
-      .joins(tag_groups: :categories)
-      .pluck(:name, "categories.id")
-      .each { |(tag, cat_id)| tags_restricted_to_categories[tag] << cat_id }
-
-    query
-      .joins(:categories)
-      .pluck(:name, "categories.id")
-      .each { |(tag, cat_id)| tags_restricted_to_categories[tag] << cat_id }
+    tags_restricted_to_categories = restricted_category_ids_by_tag_name(tags)
 
     unallowed_tags =
       tags_restricted_to_categories.keys.select do |tag|
@@ -482,6 +508,7 @@ module DiscourseTagging
   #   exclude_synonyms: exclude synonyms from results
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
+  #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
   #   excluded_tag_names: an array of tag names not to include in the results
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids =
@@ -504,6 +531,10 @@ module DiscourseTagging
 
     builder_params[:selected_tag_ids] = selected_tag_ids unless selected_tag_ids.empty?
 
+    if opts[:order_recent_tag_ids].present?
+      builder_params[:order_recent_tag_ids] = opts[:order_recent_tag_ids]
+    end
+
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
     if (opts[:for_input] || opts[:for_topic]) && filter_for_non_admin
       sql << ", #{PERMITTED_TAGS_SQL} "
@@ -516,7 +547,9 @@ module DiscourseTagging
     topic_count_column = Tag.topic_count_column(guardian)
 
     distinct_clause =
-      if opts[:order_popularity]
+      if opts[:order_recent_tag_ids].present?
+        "DISTINCT ON (array_position(ARRAY[:order_recent_tag_ids]::int[], t.id), #{topic_count_column}, name)"
+      elsif opts[:order_popularity]
         "DISTINCT ON (#{topic_count_column}, name)"
       elsif opts[:order_search_results] && opts[:term].present?
         "DISTINCT ON (lower(name) = lower(:cleaned_term), #{topic_count_column}, name)"
@@ -669,7 +702,10 @@ module DiscourseTagging
       end
     end
 
-    if opts[:order_popularity]
+    if opts[:order_recent_tag_ids].present?
+      builder.order_by("array_position(ARRAY[:order_recent_tag_ids]::int[], t.id) ASC NULLS LAST")
+      builder.order_by("#{topic_count_column} DESC, name")
+    elsif opts[:order_popularity]
       builder.order_by("#{topic_count_column} DESC, name")
     elsif opts[:order_search_results] && term.present?
       builder.order_by("lower(name) = lower(:cleaned_term) DESC, #{topic_count_column} DESC, name")

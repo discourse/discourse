@@ -5,55 +5,21 @@ module DiscoursePostEvent
     requires_login except: %i[index]
 
     def index
-      event = Event.find(params[:post_id])
-      guardian.ensure_can_see!(event.post)
-
-      filter = params[:filter].downcase if params[:filter]
-
-      event_invitees = event.invitees
-      if params[:type]
-        unless Invitee.statuses.valid?(params[:type].to_sym)
-          raise Discourse::InvalidParameters.new(:type)
+      DiscoursePostEvent::ListInvitees.call(
+        params: {
+          post_id: params[:post_id],
+          filter: params[:filter],
+          type: params[:type],
+        },
+        guardian:,
+      ) do
+        on_success do |invitees:, suggested_users:|
+          render json: InviteeListSerializer.new(invitees:, suggested_users:)
         end
-        event_invitees = event_invitees.with_status(params[:type].to_sym)
+        on_failed_policy(:can_see_event) { raise Discourse::InvalidAccess }
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_failed_contract { raise Discourse::InvalidParameters }
       end
-
-      suggested_users = []
-      if filter.present? && guardian.can_act_on_discourse_post_event?(event)
-        missing_users = event.missing_users(event_invitees.select(:user_id))
-
-        if filter
-          missing_users = missing_users.where("LOWER(username) LIKE :filter", filter: "%#{filter}%")
-
-          custom_order = <<~SQL
-            CASE
-              WHEN LOWER(username) = ? THEN 0
-              ELSE 1
-            END ASC,
-            LOWER(username) ASC
-          SQL
-
-          custom_order = ActiveRecord::Base.sanitize_sql_array([custom_order, filter])
-          missing_users = missing_users.order(custom_order).limit(10)
-        else
-          missing_users = missing_users.order(:username_lower).limit(10)
-        end
-
-        suggested_users = missing_users
-      end
-
-      if filter
-        event_invitees =
-          event_invitees.joins(:user).where(
-            "LOWER(users.username) LIKE :filter",
-            filter: "%#{filter}%",
-          )
-      end
-
-      event_invitees = event_invitees.order(%i[status username_lower]).limit(200)
-
-      render json:
-               InviteeListSerializer.new(invitees: event_invitees, suggested_users: suggested_users)
     end
 
     def update

@@ -435,6 +435,7 @@ export default class ComposerContainer extends Component {
                               categoryId=this.composer.model.categoryId
                               minimum=this.composer.model.minimumRequiredTags
                               icon=(if this.composerRedesign "tag")
+                              prioritizeRecentTags=true
                             }}
                           />
                           <PluginOutlet

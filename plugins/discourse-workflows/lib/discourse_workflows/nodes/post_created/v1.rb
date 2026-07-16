@@ -15,6 +15,16 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:post_created],
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
+          ],
           properties: {
             topic_type: {
               type: :options,
@@ -96,7 +106,7 @@ module DiscourseWorkflows
         end
 
         def output
-          { post: post_data(@post), topic: topic_data(@post.topic) }
+          { post: post_data(@post), topic: topic_data(@post.topic), user: user_data(@post.user) }
         end
 
         def matches?(trigger_ctx)
@@ -120,6 +130,10 @@ module DiscourseWorkflows
 
         def topic_data(topic)
           serialize_record(topic, TopicListItemSerializer)
+        end
+
+        def user_data(user)
+          serialize_user(user)
         end
 
         def matches_topic_type?(topic, topic_type)

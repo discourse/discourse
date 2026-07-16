@@ -6,12 +6,14 @@ module DiscourseWorkflows
     MAX_WAIT_DURATION_SECONDS = 30.days.to_i
     MAX_NODE_OUTPUT_BYTES = 50.megabytes
 
-    class WaitRequested < StandardError
-      attr_reader :waiting_until
+    class ExecutionPaused < StandardError
+      attr_reader :wait_request
 
-      def initialize(waiting_until)
-        @waiting_until = waiting_until
-        super("Wait requested")
+      delegate :waiting_until, to: :@wait_request
+
+      def initialize(wait_request)
+        @wait_request = wait_request
+        super("Execution paused")
       end
     end
 
@@ -45,6 +47,7 @@ module DiscourseWorkflows
           user: @options.user,
           workflow_nodes: workflow_nodes,
           workflow_name: workflow_version&.name,
+          workflow_call_caller: @options.workflow_call_caller,
         )
       @store =
         ExecutionStore.new(
@@ -55,6 +58,7 @@ module DiscourseWorkflows
         )
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -63,43 +67,61 @@ module DiscourseWorkflows
       @waiting_node = nil
       @waiting_step = nil
       @pin_data_by_node_name = resolved_pin_data
+      @workflow_call_stack = normalized_workflow_call_stack
     end
 
     def self.resume(execution, response_items, user: nil, webhook_context: nil)
+      build_resume_executor(execution, user: user, webhook_context: webhook_context).resume_from(
+        execution,
+        response_items,
+      )
+    end
+
+    def self.resume_with_error(execution, error, user: nil)
+      build_resume_executor(execution, user: user).resume_from_error(execution, error)
+    end
+
+    def self.build_resume_executor(execution, user:, webhook_context: nil)
+      workflow_call_caller = WorkflowCallContinuation.caller_metadata_for(execution)
+      options =
+        ExecutionOptions.new(
+          user: user,
+          execution_mode: execution.execution_mode.to_sym,
+          workflow_snapshot: build_resume_snapshot!(execution),
+          webhook_context: webhook_context,
+          workflow_call_stack: WorkflowCallContinuation.workflow_call_stack_for(execution),
+          workflow_call_child: workflow_call_caller.present?,
+          workflow_call_caller: workflow_call_caller,
+        )
+      new(execution.workflow, execution.trigger_node_id, execution.trigger_data, options)
+    end
+    private_class_method :build_resume_executor
+
+    def self.build_resume_snapshot!(execution)
       unless execution.running?
         raise ArgumentError,
               "Cannot resume execution #{execution.id} with status '#{execution.status}' " \
                 "(callers must claim via Execution.claim_for_resume first)"
       end
 
-      workflow = execution.workflow
-      trigger_node_id = execution.trigger_node_id
-
       snapshot =
         if execution.execution_data&.workflow_data.present?
           WorkflowSnapshot.new(execution.execution_data.workflow_data)
         else
-          WorkflowSnapshot.from_workflow(workflow, published: true)
+          WorkflowSnapshot.from_workflow(execution.workflow, published: true)
         end
 
-      unless snapshot.find_node(trigger_node_id)
-        raise "Trigger node #{trigger_node_id} not found in workflow #{workflow.id}"
+      unless snapshot.find_node(execution.trigger_node_id)
+        raise "Trigger node #{execution.trigger_node_id} not found in workflow #{execution.workflow.id}"
       end
 
-      options =
-        ExecutionOptions.new(
-          user: user,
-          execution_mode: execution.execution_mode.to_sym,
-          webhook_context: webhook_context,
-        )
-      new(workflow, trigger_node_id, execution.trigger_data, options).resume_from(
-        execution,
-        response_items,
-      )
+      snapshot
     end
+    private_class_method :build_resume_snapshot!
 
     def run
-      unless @workflow.published? || @options.draft_execution || @options.workflow_version
+      unless @workflow.published? || @options.draft_execution || @options.workflow_version ||
+               @options.workflow_snapshot
         return @store.create_execution_with_status(:skipped)
       end
       return @store.create_rate_limited_execution unless rate_limiter.within_limits?
@@ -146,15 +168,53 @@ module DiscourseWorkflows
       end
     end
 
+    def resume_from_error(execution, error)
+      execute_flow(:resume_execution!, execution) do
+        waiting_node_id = execution.waiting_node_id
+        waiting_node = @snapshot.find_node(waiting_node_id)
+        raise "Waiting node #{waiting_node_id} not found in workflow snapshot" if waiting_node.nil?
+
+        step = @steps.find { |entry| entry.node_id == waiting_node.id.to_s && entry.waiting? }
+        input_items = execution.waiting_step_input_items
+        input_groups = { 0 => input_items }
+
+        if (handled_outputs = continued_error_outputs(waiting_node, input_groups, error))
+          handled_outputs = enforce_node_output_budget(handled_outputs, nil)
+          all_items = handled_outputs.flatten(1)
+          step&.add_metadata("handled_error", error_metadata(error))
+          step&.succeed!(output: all_items)
+          step&.apply_updates!("error" => nil)
+          @context.store_node_output(waiting_node, all_items)
+          @context.store_node_run(
+            waiting_node,
+            inputs: [input_items],
+            outputs: handled_outputs,
+            input_sources: @context.consume_waiting_input_sources,
+          )
+          clear_waiting!
+          route_downstream(waiting_node, handled_outputs)
+        else
+          step&.fail!(error.message)
+          raise error
+        end
+      end
+    end
+
     private
+
+    def normalized_workflow_call_stack
+      stack = Array(@options.workflow_call_stack).map(&:to_s)
+      workflow_id = @workflow.id.to_s
+      stack.last == workflow_id ? stack : stack + [workflow_id]
+    end
 
     def execute_flow(setup_method, *setup_args, &block)
       send(setup_method, *setup_args)
       yield
       process_queue
       @store.finish!(steps: @steps)
-    rescue WaitRequested => e
-      begin_wait!(e.waiting_until)
+    rescue ExecutionPaused => e
+      begin_wait!(e.wait_request)
     rescue => e
       @store.fail!(error: e, steps: @steps)
     ensure
@@ -193,15 +253,15 @@ module DiscourseWorkflows
 
     def process_queue
       iterations = 0
-      queue_index = 0
+      @queue_index = 0
 
       loop do
-        while queue_index < @queue.length
+        while @queue_index < @queue.length
           iterations += 1
           raise "Max iterations (#{MAX_ITERATIONS}) exceeded" if iterations > MAX_ITERATIONS
 
-          node, input_groups, input_sources = @queue[queue_index]
-          queue_index += 1
+          node, input_groups, input_sources = @queue[@queue_index]
+          @queue_index += 1
           execute_node(node, input_groups, input_sources || {})
         end
 
@@ -263,7 +323,7 @@ module DiscourseWorkflows
           @context.store_waiting_input_sources(
             input_sources_for_storage(input_sources, input_groups),
           )
-          raise WaitRequested, wait_request.waiting_until
+          raise ExecutionPaused, wait_request
         end
 
         step_log = collect_step_log(exec_ctx, resolver)
@@ -295,7 +355,7 @@ module DiscourseWorkflows
           input_sources: input_sources_for_storage(input_sources, input_groups),
         )
         route_downstream(node, output_arrays)
-      rescue WaitRequested
+      rescue ExecutionPaused
         raise
       rescue => e
         if (handled_outputs = continued_error_outputs(node, input_groups, e))
@@ -423,7 +483,12 @@ module DiscourseWorkflows
     def resolved_pin_data
       return {} unless @options.execution_mode == :manual
 
-      data = @workflow.respond_to?(:pin_data) ? @workflow.pin_data : nil
+      data =
+        if @options.workflow_snapshot
+          @options.workflow_snapshot.pin_data
+        elsif @workflow.respond_to?(:pin_data)
+          @workflow.pin_data
+        end
       return {} if data.blank?
 
       data.transform_keys(&:to_s)
@@ -463,6 +528,7 @@ module DiscourseWorkflows
         workflow_dependencies: preloaded_workflow_dependencies,
         workflow_snapshot: @snapshot,
         webhook_context: @options.webhook_context,
+        workflow_call_stack: @workflow_call_stack,
         runtime_state: runtime_state,
         static_data_state: @context.static_data_state,
       )
@@ -808,7 +874,28 @@ module DiscourseWorkflows
       )
     end
 
-    def begin_wait!(waiting_until)
+    def begin_wait!(wait_request)
+      store_pending_wait_state!
+
+      if wait_request.workflow_call?
+        begin_workflow_call_wait!(wait_request)
+      else
+        begin_timed_wait!(wait_request.waiting_until)
+      end
+    rescue => e
+      @store.fail!(error: e, steps: @steps)
+    end
+
+    def store_pending_wait_state!
+      @context.store_pending_input_groups(
+        inputs: @waiting_inputs,
+        sources: @waiting_input_sources,
+        target_ids: @waiting_input_targets.keys,
+      )
+      @context.store_pending_queue(@queue.drop(@queue_index || 0))
+    end
+
+    def begin_timed_wait!(waiting_until)
       now = Time.current
       ceiling = now + MAX_WAIT_DURATION_SECONDS
       resolved = waiting_until.blank? ? ceiling : [waiting_until, ceiling].min
@@ -816,16 +903,23 @@ module DiscourseWorkflows
       execution =
         @store.pause_waiting_execution!(node: @waiting_node, waiting_until: resolved, steps: @steps)
 
-      duration = [resolved - now, 0].max
       Jobs.enqueue_in(
-        duration,
+        [resolved - now, 0].max,
         Jobs::DiscourseWorkflows::ResumeWaitingExecution,
         execution_id: @store.execution.id,
       )
-
       execution
-    rescue => e
-      @store.fail!(error: e, steps: @steps)
+    end
+
+    def begin_workflow_call_wait!(wait_request)
+      execution = @store.pause_waiting_execution!(node: @waiting_node, steps: @steps)
+
+      DiscourseWorkflows::WorkflowCallContinuation.begin_child_call!(
+        execution: execution,
+        node: @waiting_node,
+        request: wait_request,
+      )
+      execution
     end
 
     def start_execution!
@@ -833,6 +927,7 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = []
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
@@ -844,10 +939,13 @@ module DiscourseWorkflows
       @snapshot = @store.workflow_snapshot
       @steps = restore_steps_from(execution)
       @queue = []
+      @queue_index = 0
       @waiting_inputs = {}
       @waiting_input_sources = {}
       @waiting_input_targets = {}
       @input_wait_requirements = {}
+      restore_pending_queue!
+      restore_pending_input_groups!
     end
 
     def clear_waiting!
@@ -859,6 +957,40 @@ module DiscourseWorkflows
     def restore_steps_from(execution)
       entries = execution.execution_data&.entries || {}
       entries.values.flatten.map { |h| Step.from_h(h) }
+    end
+
+    def restore_pending_input_groups!
+      @context.consume_pending_input_groups.each do |target_id, payload|
+        target = @snapshot.find_node(target_id)
+        next if target.nil?
+
+        @waiting_input_targets[target.id] = target
+        @waiting_inputs[target.id] = indexed_values_from_payload(payload["inputs"], "items")
+        @waiting_input_sources[target.id] = indexed_values_from_payload(
+          payload["sources"],
+          "source",
+        )
+      end
+    end
+
+    def restore_pending_queue!
+      @queue =
+        @context.consume_pending_queue.filter_map do |payload|
+          node = @snapshot.find_node(payload["node_id"])
+          next if node.nil?
+
+          [
+            node,
+            indexed_values_from_payload(payload["inputs"], "items"),
+            indexed_values_from_payload(payload["sources"], "source"),
+          ]
+        end
+    end
+
+    def indexed_values_from_payload(payload, value_key)
+      Array(payload).each_with_object({}) do |entry, values|
+        values[entry["index"].to_i] = entry[value_key]
+      end
     end
 
     def build_resolver_context(node, input_groups, node_context, input_sources)
@@ -936,6 +1068,10 @@ module DiscourseWorkflows
       end
       if parameters["data_table_id"].present?
         dependencies << ["data_table_id", parameters["data_table_id"]]
+      end
+      if node.type == DiscourseWorkflows::Nodes::WorkflowCall::V1.identifier &&
+           parameters["workflow_id"].present?
+        dependencies << ["workflow_call", parameters["workflow_id"]]
       end
       dependencies
     end

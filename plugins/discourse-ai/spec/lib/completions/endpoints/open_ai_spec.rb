@@ -1024,7 +1024,7 @@ TEXT
             end
           end
 
-          expect(partials.compact.length).to eq(128)
+          expect(partials.compact.length).to eq(134)
 
           params =
             partials
@@ -1163,6 +1163,21 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("xhigh")
     end
 
+    it "collapses minimal to low since some models reject it outright" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "minimal" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
     it "strips temperature and top_p when reasoning_effort is set" do
       model.update!(provider_params: { reasoning_effort: "low" })
 
@@ -1180,6 +1195,44 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("low")
       expect(parsed_body).not_to have_key(:temperature)
       expect(parsed_body).not_to have_key(:top_p)
+    end
+
+    it "uses per-call thinking_effort before model reasoning_effort" do
+      model.update!(provider_params: { reasoning_effort: "low" })
+
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "max", temperature: 0.7 })
+
+      expect(parsed_body[:reasoning_effort]).to eq("xhigh")
+      expect(parsed_body).not_to have_key(:temperature)
+    end
+
+    it "reserves OpenAI recommended output room for reasoning when no token cap is configured" do
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(25_000)
+    end
+
+    it "uses the model output limit as the reasoning output reservation when configured" do
+      model.update!(max_output_tokens: 12_000)
+
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "high")
+
+      expect(prepared_params[:reserved_output_tokens]).to eq(12_000)
+    end
+
+    it "does not reserve output room when reasoning is explicitly disabled" do
+      prepared_params = endpoint.prepare_model_params(thinking_effort: "none")
+
+      expect(prepared_params).not_to have_key(:reserved_output_tokens)
     end
 
     it "omits reasoning parameters when not configured" do

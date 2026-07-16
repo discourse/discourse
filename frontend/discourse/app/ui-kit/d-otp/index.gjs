@@ -9,7 +9,6 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
-/** @type {import("./slot.gjs").default} */
 import Slot from "./slot";
 
 const DEFAULT_SLOTS = 6;
@@ -21,16 +20,20 @@ const DEFAULT_SLOTS = 6;
  * @property {object} Args
  *
  * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
- * @property {boolean} [Args.autoFocus] - Whether to autoFocus the input on mount (defaults to true)
- * @property {function(string): void} [Args.onChange] - Callback invoked whenever the OTP value changes
- * @property {function(string): void} [Args.onFill] - Callback invoked when all OTP slots are filled
+ * @property {string} [Args.inputMode] - The inputmode attribute for the hidden input (defaults to "numeric")
+ * @property {string} [Args.autocomplete] - The autocomplete attribute for the hidden input (defaults to "one-time-code")
+ * @property {boolean} [Args.autoFocus] - Focus the input automatically unless disabled or on iOS
+ * @property {function(string): string} [Args.normalizeInput] - Callback used to normalize typed or pasted input
+ * @property {function(string): void} [Args.onChange] - Callback fired when the input value changes
+ * @property {function(string): void} [Args.onFill] - Callback fired when all slots become filled
+ * @property {number} [Args.groupSize] - Adds a visual separator after every groupSize slots
  *
  */
 
 /** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
   /**
-   * @type {import("discourse/services/capabilities").Capabilities}
+   * @type {import("discourse/services/capabilities").CapabilitiesService}
    */
   // @ts-ignore (incorrect no-initialization error)
   @service capabilities;
@@ -46,6 +49,43 @@ export default class DOTP extends Component {
 
   get autoFocus() {
     return (this.args.autoFocus ?? true) && !this.capabilities.isIOS;
+  }
+
+  get inputMode() {
+    return this.args.inputMode ?? "numeric";
+  }
+
+  get autocomplete() {
+    return this.args.autocomplete ?? "one-time-code";
+  }
+
+  get groupSize() {
+    return this.args.groupSize;
+  }
+
+  get maxLength() {
+    if (!this.groupSize) {
+      return this.slots;
+    }
+
+    return this.slots + Math.floor((this.slots - 1) / this.groupSize);
+  }
+
+  normalizeInput(value) {
+    if (this.args.normalizeInput) {
+      return this.args.normalizeInput(value);
+    }
+
+    return value.replace(/[^0-9]/g, "");
+  }
+
+  @action
+  showSeparator(index) {
+    return (
+      this.groupSize &&
+      index < this.otp.length - 1 &&
+      (index + 1) % this.groupSize === 0
+    );
   }
 
   get isFilled() {
@@ -74,22 +114,24 @@ export default class DOTP extends Component {
   }
 
   /**
-   * @param {InputEvent!} event
+   * @param {Event} event
    */
   @action
   onInput(event) {
-    const chars = /** @type(HTMLInputElement) */ (event.target).value.split("");
+    const chars = this.normalizeInput(
+      /** @type(HTMLInputElement) */ (event.target).value
+    )
+      .split("")
+      .slice(0, this.otp.length);
     const wasFilled = this.isFilled;
-
-    if (wasFilled && chars.length >= this.otp.length) {
-      return;
-    }
 
     for (let i = 0; i < this.otp.length; i++) {
       this.otp[i] = chars[i] || "";
     }
 
     const joinedOtp = this.otp.join("");
+
+    /** @type(HTMLInputElement) */ (event.target).value = joinedOtp;
 
     this.args.onChange?.(joinedOtp);
 
@@ -153,7 +195,7 @@ export default class DOTP extends Component {
     }
 
     const pastedData = clipboardData.getData("text");
-    input.value = pastedData.replace(/[^0-9]/g, "");
+    input.value = this.normalizeInput(pastedData);
     // @ts-ignore
     this.onInput({ target: input });
   }
@@ -186,17 +228,23 @@ export default class DOTP extends Component {
             @char={{char}}
             @isFocused={{this.isFocusedSlot index}}
           />
+          {{#if (this.showSeparator index)}}
+            <span class="d-otp-separator" aria-hidden="true">-</span>
+          {{/if}}
         {{/each}}
       </div>
 
       <div class="d-otp-input-wrapper">
         <input
           {{preventScrollOnFocus}}
-          inputmode="numeric"
-          autocomplete="one-time-code"
+          inputmode={{this.inputMode}}
+          autocomplete={{this.autocomplete}}
+          spellcheck="false"
+          autocorrect="off"
+          autocapitalize="off"
           data-slot="input-otp"
           class="d-otp-input"
-          maxlength={{this.slots}}
+          maxlength={{this.maxLength}}
           {{on "input" this.onInput}}
           {{on "select" this.onSelect}}
           {{on "keydown" this.onKeyDown}}

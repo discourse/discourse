@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "extralite"
+require "fileutils"
 
 module Migrations
   module Database
@@ -40,8 +41,8 @@ module Migrations
         close_connection(keep_path: false)
 
         before_hook, after_hook = @fork_hooks
-        ForkManager.remove_before_fork_hook(before_hook)
-        ForkManager.remove_after_fork_parent_hook(after_hook)
+        ForkManager.remove_before_fork(before_hook)
+        ForkManager.remove_after_fork_parent(after_hook)
       end
 
       def closed?
@@ -77,8 +78,35 @@ module Migrations
         query_value(sql, *parameters)
       end
 
+      def tables
+        @db.tables
+      end
+
       def execute(sql, *parameters)
         @db.execute(sql, *parameters)
+      end
+
+      # `ATTACH` can't run inside a transaction, so commit any open batch first.
+      # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
+      # duplicate row (see `Consolidator`).
+      def merge_database(other_path, tables:, dedupe_tables: [])
+        commit_transaction
+        @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
+        begin
+          tables.each do |table|
+            quoted = quote_identifier(table)
+            conflict_clause = dedupe_tables.include?(table) ? "OR IGNORE " : ""
+            @db.execute(
+              "INSERT #{conflict_clause}INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}",
+            )
+          rescue Extralite::Error => e
+            raise "Failed to merge table #{table.inspect}: #{e.message}"
+          end
+        ensure
+          @db.execute("DETACH DATABASE merge_source")
+        end
+
+        nil
       end
 
       def begin_transaction
@@ -93,6 +121,10 @@ module Migrations
       end
 
       private
+
+      def quote_identifier(name)
+        %("#{name.gsub('"', '""')}")
+      end
 
       def close_connection(keep_path:)
         return if @db.nil?

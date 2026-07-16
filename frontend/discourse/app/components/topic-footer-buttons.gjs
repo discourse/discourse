@@ -138,10 +138,6 @@ export default class TopicFooterButtons extends Component {
     return this.showCreate !== false && this.topic?.details?.can_create_post;
   }
 
-  get renderPluginOutlets() {
-    return this.showPluginOutlets !== false;
-  }
-
   <template>
     <div
       role="region"
@@ -251,7 +247,6 @@ export default class TopicFooterButtons extends Component {
                           @disabled={{button.disabled}}
                           id={{concat "topic-footer-button-" button.id}}
                           class={{dConcatClass
-                            "btn-default"
                             "topic-footer-button"
                             button.classNames
                           }}
@@ -278,13 +273,11 @@ export default class TopicFooterButtons extends Component {
           {{/if}}
         </div>
 
-        {{#if this.renderPluginOutlets}}
-          <PluginOutlet
-            @name="topic-footer-main-buttons-before-create"
-            @outletArgs={{lazyHash topic=this.topic}}
-            @connectorTagName="span"
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="topic-footer-main-buttons-before-create"
+          @outletArgs={{lazyHash topic=this.topic}}
+          @connectorTagName="span"
+        />
 
         {{#if this.showCreateButton}}
           <DButton
@@ -296,13 +289,11 @@ export default class TopicFooterButtons extends Component {
           />
         {{/if}}
 
-        {{#if this.renderPluginOutlets}}
-          <PluginOutlet
-            @name="after-topic-footer-main-buttons"
-            @outletArgs={{lazyHash topic=this.topic}}
-            @connectorTagName="span"
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="after-topic-footer-main-buttons"
+          @outletArgs={{lazyHash topic=this.topic}}
+          @connectorTagName="span"
+        />
       </div>
 
       {{#if this.site.desktopView}}
@@ -333,13 +324,11 @@ export default class TopicFooterButtons extends Component {
         {{/if}}
       {{/if}}
 
-      {{#if this.renderPluginOutlets}}
-        <PluginOutlet
-          @name="after-topic-footer-buttons"
-          @outletArgs={{lazyHash topic=this.topic}}
-          @connectorTagName="span"
-        />
-      {{/if}}
+      <PluginOutlet
+        @name="after-topic-footer-buttons"
+        @outletArgs={{lazyHash topic=this.topic}}
+        @connectorTagName="span"
+      />
     </div>
   </template>
 }

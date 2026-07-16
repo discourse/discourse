@@ -3,32 +3,18 @@
 module Migrations
   module Converters
     module Discourse
-      class CategoryUsers < Conversion::ProgressStep
-        attr_accessor :source_db
+      class CategoryUsers < Conversion::Step
+        source { reads_table "category_users", where: "user_id > 0" }
 
-        def max_progress
-          @source_db.count <<~SQL
-            SELECT COUNT(*)
-            FROM category_users
-            WHERE user_id > 0
-          SQL
-        end
-
-        def items
-          @source_db.query <<~SQL
-            SELECT *
-            FROM category_users
-            WHERE user_id > 0
-          SQL
-        end
-
-        def process_item(item)
-          IntermediateDB::CategoryUser.create(
-            category_id: item[:category_id],
-            last_seen_at: item[:last_seen_at],
-            notification_level: item[:notification_level],
-            user_id: item[:user_id],
-          )
+        processor do
+          def process(item)
+            IntermediateDB::CategoryUser.create(
+              category_id: item[:category_id],
+              last_seen_at: item[:last_seen_at],
+              notification_level: item[:notification_level],
+              user_id: item[:user_id],
+            )
+          end
         end
       end
     end

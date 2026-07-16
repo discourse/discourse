@@ -62,11 +62,6 @@ sw:
           none: "Hakuna kurudia"
         attendance:
           none: "Hakuna"
-        url:
-          label: "Anwani ya mtandao"
-          placeholder: "Sio Muhimu"
-        location:
-          label: "Sehemu"
         description:
           label: "Maelezo"
         event_type:

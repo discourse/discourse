@@ -268,6 +268,19 @@ export default function () {
           this.route("postsAndTopics", { path: "/posts-and-topics" });
           this.route("statsAndThresholds", { path: "/stats-and-thresholds" });
         });
+        this.route(
+          "categoryManagement",
+          { path: "/category-management" },
+          function () {
+            this.route("index", {
+              path: "/",
+            });
+            this.route("settings");
+            this.route("type", {
+              path: "/:category_type_id",
+            });
+          }
+        );
         this.route("localization", function () {
           this.route("settings", {
             path: "/",
@@ -379,6 +392,9 @@ export default function () {
         });
         this.route("logo");
         this.route("fonts");
+        this.route("gifs", function () {
+          this.route("settings", { path: "/" });
+        });
         this.route("adminWelcomeBanner", { path: "/welcome-banner" });
         this.route("navigation", function () {
           this.route("settings", { path: "/" });

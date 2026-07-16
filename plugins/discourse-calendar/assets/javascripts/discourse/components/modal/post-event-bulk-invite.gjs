@@ -1,39 +1,33 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { isPresent } from "@ember/utils";
+import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import { removeValueFromArray } from "discourse/lib/array-tools";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import BulkInviteSampleCsvFile from "../bulk-invite-sample-csv-file";
 import CsvUploader from "../csv-uploader";
 
-export default class PostEventBulkInvite extends Component {
-  @service dialog;
+const DEFAULT_ATTENDANCE = "going";
 
-  @tracked bulkInviteDisabled = true;
+export default class PostEventBulkInvite extends Component {
+  @service toasts;
+
   @tracked flash = null;
-  @autoTrackedArray
-  bulkInvites = [
-    EmberObject.create({ identifier: null, attendance: "unknown" }),
-  ];
+
+  formApi;
+
+  data = { invitees: [{ identifier: null, attendance: DEFAULT_ATTENDANCE }] };
 
   get bulkInviteStatuses() {
     return [
-      {
-        label: i18n("discourse_post_event.models.invitee.status.unknown"),
-        name: "unknown",
-      },
       {
         label: i18n("discourse_post_event.models.invitee.status.going"),
         name: "going",
@@ -55,13 +49,42 @@ export default class PostEventBulkInvite extends Component {
   }
 
   @action
-  setBulkInviteDisabled() {
-    this.bulkInviteDisabled =
-      this.bulkInvites.filter((x) => isPresent(x.identifier)).length === 0;
+  registerApi(api) {
+    this.formApi = api;
   }
 
   @action
-  async sendBulkInvites() {
+  addInvite(addItemToCollection) {
+    const invitees = this.formApi?.get("invitees") ?? [];
+    const attendance = invitees.at(-1)?.attendance || DEFAULT_ATTENDANCE;
+    addItemToCollection("invitees", { identifier: null, attendance });
+  }
+
+  @action
+  async removeInvite(remove, index, addItemToCollection) {
+    await remove(index);
+
+    // always keep at least one row so the collection never collapses
+    if ((this.formApi?.get("invitees") ?? []).length === 0) {
+      await addItemToCollection("invitees", {
+        identifier: null,
+        attendance: DEFAULT_ATTENDANCE,
+      });
+    }
+  }
+
+  @action
+  setUserIdentifier(field, selected) {
+    field.set(selected[0]);
+  }
+
+  @action
+  setGroupIdentifier(field, _, groupNames) {
+    field.set(groupNames[0]);
+  }
+
+  @action
+  async sendBulkInvites(data) {
     try {
       const response = await ajax(
         `/discourse-post-event/events/${this.args.model.event.id}/bulk-invite.json`,
@@ -69,9 +92,7 @@ export default class PostEventBulkInvite extends Component {
           type: "POST",
           dataType: "json",
           contentType: "application/json",
-          data: JSON.stringify({
-            invitees: this.bulkInvites.filter((x) => isPresent(x.identifier)),
-          }),
+          data: JSON.stringify({ invitees: data.invitees }),
         }
       );
 
@@ -84,41 +105,12 @@ export default class PostEventBulkInvite extends Component {
   }
 
   @action
-  removeBulkInvite(bulkInvite) {
-    removeValueFromArray(this.bulkInvites, bulkInvite);
-
-    if (!this.bulkInvites.length) {
-      this.bulkInvites.push(
-        EmberObject.create({ identifier: null, attendance: "unknown" })
-      );
-    }
-  }
-
-  @action
-  addBulkInvite() {
-    const attendance =
-      this.bulkInvites[this.bulkInvites.length - 1]?.attendance || "unknown";
-    this.bulkInvites.push(EmberObject.create({ identifier: null, attendance }));
-  }
-
-  @action
-  async uploadDone() {
-    await this.dialog.alert(
-      i18n("discourse_post_event.bulk_invite_modal.success")
-    );
+  uploadDone() {
     this.args.closeModal();
-  }
-
-  @action
-  updateInviteIdentifier(bulkInvite, selected) {
-    bulkInvite.set("identifier", selected[0]);
-    this.setBulkInviteDisabled();
-  }
-
-  @action
-  updateBulkGroupInviteIdentifier(bulkInvite, _, groupNames) {
-    bulkInvite.set("identifier", groupNames[0]);
-    this.setBulkInviteDisabled();
+    this.toasts.success({
+      duration: "short",
+      data: { message: i18n("discourse_post_event.bulk_invite_modal.success") },
+    });
   }
 
   <template>
@@ -142,65 +134,100 @@ export default class PostEventBulkInvite extends Component {
               "discourse_post_event.bulk_invite_modal.inline_title"
             }}</h3>
 
-          <div class="bulk-invite-rows">
-            {{#each this.bulkInvites as |bulkInvite|}}
+          <Form
+            @data={{this.data}}
+            @onSubmit={{this.sendBulkInvites}}
+            @onRegisterApi={{this.registerApi}}
+            as |form|
+          >
+            <form.Collection @name="invitees" as |collection index|>
               <div class="bulk-invite-row">
-                {{#if @model.event.isPrivate}}
-                  <GroupSelector
-                    class="bulk-invite-identifier"
-                    @single={{true}}
-                    @groupFinder={{this.groupFinder}}
-                    @groupNames={{bulkInvite.identifier}}
-                    @placeholderKey="discourse_post_event.bulk_invite_modal.group_selector_placeholder"
-                    @onChangeCallback={{fn
-                      this.updateBulkGroupInviteIdentifier
-                      bulkInvite
-                    }}
-                  />
-                {{/if}}
-                {{#if @model.event.isPublic}}
-                  <EmailGroupUserChooser
-                    class="bulk-invite-identifier"
-                    @value={{bulkInvite.identifier}}
-                    @onChange={{fn this.updateInviteIdentifier bulkInvite}}
-                    @options={{hash
-                      maximum=1
-                      filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
-                    }}
-                  />
-                {{/if}}
+                <collection.Field
+                  class="bulk-invite-identifier-field"
+                  @name="identifier"
+                  @title={{i18n
+                    (if
+                      @model.event.isPrivate
+                      "discourse_post_event.bulk_invite_modal.group_selector_placeholder"
+                      "discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                    )
+                  }}
+                  @showTitle={{false}}
+                  @type="custom"
+                  @validation="required"
+                  as |field|
+                >
+                  <field.Control>
+                    {{#if @model.event.isPrivate}}
+                      <GroupSelector
+                        class="bulk-invite-identifier"
+                        @single={{true}}
+                        @groupFinder={{this.groupFinder}}
+                        @groupNames={{field.value}}
+                        @placeholderKey="discourse_post_event.bulk_invite_modal.group_selector_placeholder"
+                        @onChangeCallback={{fn this.setGroupIdentifier field}}
+                      />
+                    {{/if}}
+                    {{#if @model.event.isPublic}}
+                      <EmailGroupUserChooser
+                        class="bulk-invite-identifier"
+                        @value={{field.value}}
+                        @onChange={{fn this.setUserIdentifier field}}
+                        @options={{hash
+                          maximum=1
+                          filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                        }}
+                      />
+                    {{/if}}
+                  </field.Control>
+                </collection.Field>
 
-                <ComboBox
-                  class="bulk-invite-attendance"
-                  @value={{bulkInvite.attendance}}
-                  @content={{this.bulkInviteStatuses}}
-                  @nameProperty="name"
-                  @valueProperty="name"
-                  @onChange={{fn (mut bulkInvite.attendance)}}
-                />
+                <collection.Field
+                  @name="attendance"
+                  @title={{i18n
+                    "discourse_post_event.bulk_invite_modal.attendance_label"
+                  }}
+                  @showTitle={{false}}
+                  @type="custom"
+                  as |field|
+                >
+                  <field.Control>
+                    <ComboBox
+                      class="bulk-invite-attendance"
+                      @value={{field.value}}
+                      @content={{this.bulkInviteStatuses}}
+                      @nameProperty="name"
+                      @valueProperty="name"
+                      @onChange={{field.set}}
+                    />
+                  </field.Control>
+                </collection.Field>
 
-                <DButton
-                  @icon="trash-can"
-                  @action={{fn this.removeBulkInvite bulkInvite}}
+                <form.Button
                   class="remove-bulk-invite"
+                  @icon="trash-can"
+                  @action={{fn
+                    this.removeInvite
+                    collection.remove
+                    index
+                    form.addItemToCollection
+                  }}
                 />
               </div>
-            {{/each}}
-          </div>
+            </form.Collection>
 
-          <div class="bulk-invite-actions">
-            <DButton
-              class="send-bulk-invites btn-primary"
-              @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
-              @action={{this.sendBulkInvites}}
-              @disabled={{this.bulkInviteDisabled}}
-            />
-            <DButton
-              class="add-bulk-invite"
-              @icon="plus"
-              @action={{this.addBulkInvite}}
-            />
-          </div>
+            <form.Actions class="bulk-invite-actions">
+              <form.Submit
+                class="send-bulk-invites"
+                @label="discourse_post_event.bulk_invite_modal.send_bulk_invites"
+              />
+              <form.Button
+                class="add-bulk-invite"
+                @icon="plus"
+                @action={{fn this.addInvite form.addItemToCollection}}
+              />
+            </form.Actions>
+          </Form>
         </div>
 
         <div class="csv-bulk-invites">

@@ -68,7 +68,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
+    if (this._hasDraft && this.currentUser?.unified_new_enabled) {
       return i18n("sidebar.sections.community.links.my_posts.content_drafts");
     } else {
       return i18n(
@@ -85,7 +85,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
       return;
     }
 
-    if (this.currentUser.new_new_view_enabled) {
+    if (this.currentUser.unified_new_enabled) {
       return this.draftCount.toString();
     } else {
       return i18n("sidebar.sections.community.links.my_posts.draft_count", {
@@ -99,7 +99,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get defaultPrefixValue() {
-    if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
+    if (this._hasDraft && this.currentUser?.unified_new_enabled) {
       return "pencil";
     }
     return "user";

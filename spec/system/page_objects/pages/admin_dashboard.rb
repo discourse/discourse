@@ -15,6 +15,14 @@ module PageObjects
         self
       end
 
+      def visit_with_custom_range(from:, to:)
+        visit_with_query(custom_range_params(from: from, to: to))
+      end
+
+      def has_custom_range?(from:, to:)
+        page.has_current_path?("/admin?#{custom_range_params(from: from, to: to).to_query}")
+      end
+
       def has_admin_notice?(message)
         has_css?(".dashboard-problem", text: message)
       end
@@ -25,6 +33,60 @@ module PageObjects
 
       def dismiss_notice(message)
         find(".dashboard-problem", text: message).find(".btn").click
+      end
+
+      def has_site_advice?
+        has_css?(".db-site-advice")
+      end
+
+      def has_site_advice_at_top?
+        has_css?(".db-main > .db-site-advice:first-child")
+      end
+
+      def has_no_site_advice?
+        has_no_css?(".db-site-advice")
+      end
+
+      def has_site_advice_title?(text)
+        has_css?(".db-site-advice__header h3", exact_text: text)
+      end
+
+      def has_site_advice_problem?(message)
+        has_css?(".db-site-advice [data-test-site-advice-problem]", text: message)
+      end
+
+      def has_no_site_advice_problem?(message)
+        has_no_css?(".db-site-advice [data-test-site-advice-problem]", text: message)
+      end
+
+      def has_first_site_advice_problem?(message)
+        has_css?(".db-site-advice [data-test-site-advice-problem]:first-child", text: message)
+      end
+
+      def has_ignore_button_for?(message)
+        within(".db-site-advice [data-test-site-advice-problem]", text: message) do
+          has_css?("[data-test-site-advice-ignore]")
+        end
+      end
+
+      def has_no_ignore_buttons?
+        has_no_css?(".db-site-advice [data-test-site-advice-ignore]")
+      end
+
+      def has_site_advice_refresh_button?
+        has_css?(".db-site-advice [data-test-site-advice-refresh]")
+      end
+
+      def ignore_site_advice_problem(message)
+        within(".db-site-advice [data-test-site-advice-problem]", text: message) do
+          find("[data-test-site-advice-ignore]").click
+        end
+        self
+      end
+
+      def refresh_site_advice
+        find(".db-site-advice [data-test-site-advice-refresh]").click
+        self
       end
 
       def has_redesigned_toolbar?
@@ -66,6 +128,12 @@ module PageObjects
       end
 
       def open_configure_menu
+        ensure_redesigned_dashboard
+
+        if has_css?(".d-page-header-mobile-actions-trigger", wait: 0)
+          find(".d-page-header-mobile-actions-trigger").click
+        end
+
         find(".btn[data-identifier='db-configure']").click
         has_css?(".db-configure")
         self
@@ -95,6 +163,10 @@ module PageObjects
 
       def site_traffic
         PageObjects::Components::AdminDashboardSiteTraffic.new
+      end
+
+      def search
+        PageObjects::Components::AdminDashboardSearch.new
       end
 
       def section_ids_in_order
@@ -127,6 +199,16 @@ module PageObjects
       end
 
       private
+
+      def custom_range_params(from:, to:)
+        { range: "custom", start_date: from, end_date: to }
+      end
+
+      def ensure_redesigned_dashboard
+        page.refresh unless has_css?(".db-main", wait: 0)
+        has_css?(".db-main [data-section-id], .db-main__empty")
+        self
+      end
 
       def preset_label(period)
         case period

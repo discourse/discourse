@@ -1,40 +1,37 @@
 import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
-import { getAbsoluteURL } from "discourse/lib/get-url";
+import workerUrl from "virtual:dynamic-chunk-url:discourse/workers/media-optimization/entrypoint";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { fileToImageData } from "discourse/lib/media-optimization-utils";
-
-const WORKER_INSTALL_TIMEOUT_MS = 3000;
+import {
+  authorizedExtensions,
+  authorizesAllExtensions,
+} from "discourse/lib/uploads";
 
 const CONVERT_FORMAT_REGEX = /(\.|\/)(jxl|hei[cf])$/i;
 const ANIMATED_GIF_REGEX = /(\.|\/)(gif)$/i;
 const OPTIMIZABLE_REGEX = /(\.|\/)(jpe?g|png)$/i;
 
 /**
- * This worker follows a particular promise/callback flow to ensure
- * that the media-optimization-worker is installed and has its libraries
- * loaded before optimizations can happen. The flow:
+ * Optimizes composer image uploads in a worker. The flow:
  *
  * 1. optimizeImage called
- * 2. worker initialized and started
- * 3. message handlers for worker registered
- * 4. "install" message posted to worker
- * 5. "installed" message received from worker
- * 6. optimizeImage continues, posting "compress" message to worker
+ * 2. worker started if one isn't already running, message handlers registered
+ * 3. "convert"/"convertAnimated" message posted to the worker
+ * 4. worker posts back the optimized file (or a skip notice/error), resolving
+ *    the upload
  *
- * When the worker is being installed, all other calls to optimizeImage
- * will wait for the "installed" message to be handled before continuing
- * with any image optimization work.
+ * The worker is a module worker bundled with its codecs, so it is ready as soon
+ * as it is created (posted messages queue until its module evaluates). A worker
+ * that fails to boot surfaces via onerror, and in-flight uploads continue
+ * unoptimized.
  */
 @disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
   @service appEvents;
+  @service currentUser;
   @service siteSettings;
-  @service capabilities;
-  @service session;
 
   worker = null;
-  workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
   promiseResolvers = null;
   workerDoneCount = 0;
@@ -52,9 +49,6 @@ export default class MediaOptimizationWorkerService extends Service {
     const isConvertFormat = CONVERT_FORMAT_REGEX.test(typeOrName);
     const isAnimatedGif = ANIMATED_GIF_REGEX.test(typeOrName);
     const isOptimizable = OPTIMIZABLE_REGEX.test(typeOrName);
-    const wasmDecodeOptimizable =
-      isOptimizable &&
-      this.siteSettings.composer_media_optimization_image_wasm_decode_enabled;
 
     if (!isConvertFormat && !isAnimatedGif && !isOptimizable) {
       return Promise.resolve();
@@ -93,9 +87,11 @@ export default class MediaOptimizationWorkerService extends Service {
       }
     }
 
-    await this.ensureAvailableWorker();
+    this.ensureAvailableWorker();
+    if (!this.worker) {
+      return Promise.resolve();
+    }
 
-    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 
@@ -120,18 +116,17 @@ export default class MediaOptimizationWorkerService extends Service {
             ? this.siteSettings.composer_media_optimization_image_encode_quality
             : this.siteSettings.image_quality,
         debug_mode: this.siteSettings.composer_media_optimization_debug_mode,
-        mediaOptimizationBundle: this.session.mediaOptimizationBundle,
       };
 
-      if (isConvertFormat || wasmDecodeOptimizable) {
-        let arrayBuffer;
-        try {
-          arrayBuffer = await file.data.arrayBuffer();
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
+      let arrayBuffer;
+      try {
+        arrayBuffer = await file.data.arrayBuffer();
+      } catch (error) {
+        this.logIfDebug(error);
+        return resolve();
+      }
 
+      if (isConvertFormat || isOptimizable) {
         this.worker.postMessage(
           {
             type: "convert",
@@ -144,15 +139,7 @@ export default class MediaOptimizationWorkerService extends Service {
           },
           [arrayBuffer]
         );
-      } else if (isAnimatedGif) {
-        let arrayBuffer;
-        try {
-          arrayBuffer = await file.data.arrayBuffer();
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
-
+      } else {
         this.worker.postMessage(
           {
             type: "convertAnimated",
@@ -164,93 +151,54 @@ export default class MediaOptimizationWorkerService extends Service {
           },
           [arrayBuffer]
         );
-      } else {
-        let imageData;
-        try {
-          imageData = await fileToImageData(file.data, this.capabilities.isIOS);
-        } catch (error) {
-          this.logIfDebug(error);
-          return resolve();
-        }
-
-        this.worker.postMessage(
-          {
-            type: "compress",
-            fileId: file.id,
-            file: imageData.data.buffer,
-            fileName: file.name,
-            width: imageData.width,
-            height: imageData.height,
-            originalFileSize: file.size,
-            settings,
-          },
-          [imageData.data.buffer]
-        );
       }
 
       this.workerPendingCount++;
     });
   }
 
-  async ensureAvailableWorker() {
-    if (this.worker && this.workerInstalled) {
-      return Promise.resolve();
-    }
-    if (this.installPromise) {
-      return this.installPromise;
-    }
-    return this.install();
-  }
-
-  async install() {
-    this.installPromise = new Promise((resolve, reject) => {
-      this.afterInstalled = resolve;
-      this.failedInstall = reject;
-      this.logIfDebug("Installing worker");
+  ensureAvailableWorker() {
+    if (!this.worker) {
       this.startWorker();
-      this.registerMessageHandler();
-      this.worker.postMessage({
-        type: "install",
-        settings: {
-          mediaOptimizationBundle: this.session.mediaOptimizationBundle,
-        },
-      });
-
-      // new Worker(workerUrl) can hang indefinitely in some cases, so we wait
-      // and see if the worker manages to install in a reasonable time. If not,
-      // we reject the install promise and clean up.
-      setTimeout(() => {
-        if (!this.workerInstalled) {
-          this.failInstall("Worker install timed out!");
-        }
-      }, WORKER_INSTALL_TIMEOUT_MS);
-
-      this.appEvents.on("composer:closed", this, "stopWorker");
-    });
-
-    return this.installPromise;
+    }
   }
 
   startWorker() {
     this.logIfDebug("Starting media-optimization-worker");
+    // Module workers queue posted messages until their module has evaluated, so
+    // the worker is usable immediately; a failure to boot surfaces via onerror.
     try {
-      // TODO come up with a workaround for FF that lacks type: module support
-      this.worker = new Worker(this.workerUrl);
+      const blobUrl = URL.createObjectURL(
+        new Blob([`import ${JSON.stringify(workerUrl)};`], {
+          type: "text/javascript",
+        })
+      );
+      try {
+        this.worker = new Worker(blobUrl, { type: "module" });
+      } finally {
+        URL.revokeObjectURL(blobUrl);
+      }
     } catch (err) {
-      this.failInstall("Error starting worker:", err);
+      this.logIfDebug("Error starting media-optimization-worker", err);
+      return;
     }
+    this.registerMessageHandler();
+    this.worker.onerror = (err) => this.handleWorkerError(err);
+    this.appEvents.on("composer:closed", this, "stopWorker");
   }
 
-  failInstall(message, err = null) {
-    this.logIfDebug(message, err);
-    this.failedInstall(err);
-    this.cleanupInstallPromises();
+  handleWorkerError(err) {
+    this.logIfDebug("media-optimization-worker error", err);
+    this.stopWorker();
+    // Resolve any in-flight optimizations so their uploads continue unoptimized.
+    Object.values(this.promiseResolvers ?? {}).forEach((resolve) =>
+      resolve?.()
+    );
   }
 
   stopWorker() {
     if (this.worker) {
       this.logIfDebug("Stopping media-optimization-worker...");
-      this.workerInstalled = false;
       this.worker.terminate();
       this.worker = null;
       this.workerDoneCount = 0;
@@ -263,8 +211,6 @@ export default class MediaOptimizationWorkerService extends Service {
     switch (outputType) {
       case "image/jpeg":
         return baseName + ".jpg";
-      case "image/png":
-        return baseName + ".png";
       case "image/webp":
         return baseName + ".webp";
       default:
@@ -272,27 +218,45 @@ export default class MediaOptimizationWorkerService extends Service {
     }
   }
 
+  _extensionAuthorized(fileName) {
+    const extension = fileName.split(".").pop().toLowerCase();
+    const staff = this.currentUser?.staff;
+    return (
+      authorizesAllExtensions(staff, this.siteSettings) ||
+      authorizedExtensions(staff, this.siteSettings).includes(extension)
+    );
+  }
+
   registerMessageHandler() {
     this.worker.onmessage = (workerMessage) => {
       switch (workerMessage.data.type) {
         case "file":
-          const outputType = workerMessage.data.outputType || "image/jpeg";
+          const outputType = workerMessage.data.outputType;
           const outputFileName = this._renameForOutputType(
             workerMessage.data.fileName,
             outputType
           );
-          const optimizedFile = new File(
-            [workerMessage.data.file],
-            outputFileName,
-            {
-              type: outputType,
-            }
-          );
-          this.logIfDebug(
-            `Finished optimization of ${optimizedFile.name}, new size is ${optimizedFile.size} bytes`
-          );
 
-          this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
+          if (this._extensionAuthorized(outputFileName)) {
+            const optimizedFile = new File(
+              [workerMessage.data.file],
+              outputFileName,
+              {
+                type: outputType,
+              }
+            );
+            this.logIfDebug(
+              `Finished optimization of ${optimizedFile.name}, new size is ${optimizedFile.size} bytes`
+            );
+
+            this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
+          } else {
+            this.logIfDebug(
+              `Optimizing ${workerMessage.data.fileName} would produce ${outputFileName}, which is not an authorized extension here; keeping the original`
+            );
+
+            this.promiseResolvers[workerMessage.data.fileId]();
+          }
 
           this.workerDoneCount++;
           this.workerPendingCount--;
@@ -316,35 +280,17 @@ export default class MediaOptimizationWorkerService extends Service {
           break;
         case "skipped":
           this.logIfDebug(
-            `Conversion skipped for ${workerMessage.data.fileName} (output not smaller than original)`
+            `Conversion skipped for ${workerMessage.data.fileName}, keeping the original`
           );
 
           this.promiseResolvers[workerMessage.data.fileId]();
           this.workerDoneCount++;
           this.workerPendingCount--;
           break;
-        case "installed":
-          this.logIfDebug("Worker installed");
-          this.workerInstalled = true;
-          this.afterInstalled();
-          this.cleanupInstallPromises();
-          break;
-        case "installFailed":
-          this.failInstall(
-            "Worker failed to install.",
-            workerMessage.data.errorMessage
-          );
-          break;
         default:
           this.logIfDebug(`Sorry, we are out of ${workerMessage}`);
       }
     };
-  }
-
-  cleanupInstallPromises() {
-    this.afterInstalled = null;
-    this.failedInstall = null;
-    this.installPromise = null;
   }
 
   logIfDebug(...messages) {

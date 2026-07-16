@@ -36,10 +36,6 @@ tr_TR:
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
-        flagged_post: |
-          <div>Modelin yanıtı:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> kuralı tarafından tetiklendi.</b>
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
           body: |
@@ -152,7 +148,6 @@ tr_TR:
       description: "Bu rapor, her gönderi ve kategori için olumlu, olumsuz ve nötr puanlarla kategoriye göre gruplandırılmış gönderiler için duygu analizi sağlar."
     overall_sentiment:
       title: "Genel duyarlılık"
-      description: 'Grafik, olumlu veya olumsuz olarak sınıflandırılan gönderilerin sayısını karşılaştırır. Bunlar, pozitif veya negatif puanlar belirlenen eşik puanından fazla olduğunda hesaplanır. Bu, nötr gönderilerin gösterilmediği anlamına gelir. Kişisel mesajlar da hariç tutulmuştur. "cardiffnlp/twitter-roberta-base-sentiment-latest" ile sınıflandırılır'
       xaxis: "Pozitif(%)"
       yaxis: "Tarih"
     emotion_admiration:
@@ -341,8 +336,6 @@ tr_TR:
         explain: "Açıkla"
         illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
-      image_caption:
-        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"
@@ -367,6 +360,8 @@ tr_TR:
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
       tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
+      chat_tool_approval:
+        unexpected_error: "beklenmedik bir hata oluştu"
       agents:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_agent: "Sistem aracıları silinemez; bunun yerine lütfen devre dışı bırakın"
@@ -449,7 +444,6 @@ tr_TR:
           description: "Yardımcının çevirici özelliğini çalıştıran varsayılan aracı"
         image_captioner:
           name: "Görüntü yazıları"
-          description: "Yardımcının resim açıklaması özelliğini destekleyen varsayılan aracı"
         locale_detector:
           name: "Yerel ayar dedektörü"
           description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."
@@ -547,6 +541,8 @@ tr_TR:
         categories: "Kategorileri listele"
         flag_post: "Gönderiye bayrak ekle"
         close_topic: "Konuyu kapat"
+        suspend_user: "Kullanıcıyı askıya al"
+        silence_user: "Kullanıcıyı sustur"
         unlist_topic: "Konuyu listeden kaldır"
         lock_post: "Gönderiyi kilitle"
         delete_topic: "Konuyu sil"
@@ -703,6 +699,12 @@ tr_TR:
           not_allowed: "Bu konuyu kapatamaz veya açamazsınız."
           no_reason: "Bir konuyu kapatmak veya açmak için bir neden belirtilmesi gerekir."
         success: "Konu başarıyla güncellendi."
+      suspend_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
+      silence_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
       unlist_topic:
         errors:
           not_found: "Konu bulunamadı."
@@ -808,6 +810,10 @@ tr_TR:
           conflict: "Bu inceleme kuyruğundaki öğe başka biri tarafından güncellendi. Lütfen tekrar deneyin"
           action_failed: "İşlem gerçekleştirilemedi"
         success: "İnceleme kuyruğundaki %{reviewable_id} öğesi üzerinde '%{action}' işlemi başarıyla gerçekleştirildi"
+      add_reviewable_note:
+        errors:
+          not_allowed: "İnceleme kuyruğuna erişiminiz yok"
+          not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"
@@ -819,6 +825,7 @@ tr_TR:
         tool_not_found: "'%{tool_name}' aracı artık kullanılamıyor."
         bot_user_missing: "Bu bot kullanıcısı artık mevcut değil."
         execution_error: "Araç çalıştırılamadı: %{error}"
+        execution_error_unknown: "beklenmedik bir hata oluştu"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -891,7 +898,6 @@ tr_TR:
       limit_exceeded_admin: "AI kredi limitinize ulaştınız. Lütfen %{reset_time} sonra tekrar deneyin."
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
-      quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
       no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.

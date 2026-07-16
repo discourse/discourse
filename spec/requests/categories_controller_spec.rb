@@ -83,6 +83,39 @@ RSpec.describe CategoriesController do
       expect(subcategories_for_category).to eq(nil)
     end
 
+    it "excludes private subcategory counts for anonymous users", :aggregate_failures do
+      private_subcategory = Fabricate(:category, user: admin, parent_category: category)
+      private_subcategory.set_permissions(admins: :full)
+      private_subcategory.save!
+      Fabricate.times(7, :topic, category: private_subcategory)
+      Category.update_stats
+
+      get "/categories.json"
+
+      expect(response).to have_http_status(:ok)
+
+      category_list = response.parsed_body["category_list"]
+      category_response =
+        category_list["categories"].find { |category_json| category_json["id"] == category.id }
+
+      expect(category_response["subcategory_ids"]).not_to include(private_subcategory.id)
+      expect(
+        category_response.slice(
+          "topics_all_time",
+          "topics_year",
+          "topics_month",
+          "topics_week",
+          "topics_day",
+        ),
+      ).to eq(
+        "topics_all_time" => 0,
+        "topics_year" => 0,
+        "topics_month" => 0,
+        "topics_week" => 0,
+        "topics_day" => 0,
+      )
+    end
+
     it "returns the right subcategory response with permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
 
@@ -1323,6 +1356,73 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           expect(category.reload.locale).to be_nil
         end
+
+        context "when adding category_types that enable plugins" do
+          let(:test_type_class) do
+            Class.new(Categories::Types::Base) do
+              type_id :test_plugin_type
+
+              def self.enable_plugin
+              end
+
+              def self.plugin_enabled?
+                false
+              end
+
+              def self.category_matches?(category)
+                false
+              end
+
+              def self.find_matches
+                Category.none
+              end
+
+              def self.configure_category(category, guardian:, configuration_values: {})
+              end
+
+              def self.unconfigure_category(category, guardian:)
+              end
+            end
+          end
+
+          before do
+            SiteSetting.enable_simplified_category_creation = true
+            plugin = Plugin::Instance.new
+            plugin.stubs(:humanized_name).returns("Test")
+            Discourse.plugins_by_name["discourse-test-plugin"] = plugin
+            Categories::TypeRegistry.register(
+              test_type_class,
+              plugin_identifier: "discourse-test-plugin",
+            )
+          end
+
+          after do
+            Discourse.plugins_by_name.delete("discourse-test-plugin")
+            Categories::TypeRegistry.reset!
+          end
+
+          it "returns 422 when a moderator tries to add a plugin-enabling type" do
+            sign_in(Fabricate(:moderator))
+            SiteSetting.moderators_manage_categories = true
+
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(422)
+            expect(response.parsed_body["errors"]).to include(
+              I18n.t(
+                "category_types.requires_plugin",
+                type_name: "Test plugin type",
+                plugin_name: "Test",
+              ),
+            )
+          end
+
+          it "allows an admin to add a plugin-enabling type" do
+            put "/categories/#{category.id}.json", params: { category_types: %w[test_plugin_type] }
+
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
 
@@ -1588,6 +1688,51 @@ RSpec.describe CategoriesController do
         get "/categories_and_latest.json"
         expect(response.parsed_body["topic_list"]["topics"].size).to eq(7)
       end
+    end
+  end
+
+  describe "#convert_nested_replies" do
+    let!(:topic) { Fabricate(:topic, category: category) }
+
+    let(:url) { "/categories/#{category.id}/convert_nested_replies.json" }
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      category.category_setting.update!(nested_replies_default: true)
+    end
+
+    it "requires the user to be logged in" do
+      post url
+
+      expect(response.status).to eq(403)
+    end
+
+    it "converts topics in the category to nested replies" do
+      sign_in(admin)
+
+      expect { post url }.to change { NestedTopic.where(topic: topic).count }.from(0).to(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["converted_topic_count"]).to eq(1)
+      expect(response.parsed_body["nested_replies_conversion_completed"]).to eq(true)
+      expect(category.reload.nested_replies_conversion_completed?).to eq(true)
+    end
+
+    it "does not allow users who cannot edit the category" do
+      sign_in(user)
+
+      post url
+
+      expect(response.status).to eq(403)
+      expect(NestedTopic.where(topic: topic).exists?).to eq(false)
+    end
+
+    it "returns not found for a missing category" do
+      sign_in(admin)
+
+      post "/categories/0/convert_nested_replies.json"
+
+      expect(response.status).to eq(404)
     end
   end
 

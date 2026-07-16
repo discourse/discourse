@@ -142,6 +142,7 @@ id:
       create_channel:
         threading:
           label: "Aktifkan threading"
+        description: "Deskripsi"
         type: "Tipe"
         types:
           category: "Kategori"

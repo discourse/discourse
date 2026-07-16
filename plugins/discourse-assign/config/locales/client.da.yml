@@ -93,6 +93,8 @@ da:
       topic: "Emne"
       post: "Indlæg"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tildelt"
       assign_topic:
         operations:
           assign: "Tildel"

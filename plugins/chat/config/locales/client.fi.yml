@@ -192,8 +192,6 @@ fi:
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       chat_notifications_title: "Chat-ilmoitukset"
-      only_chat_push_notifications:
-        title: "Lähetä vain chatin push-ilmoituksia"
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
       show_thread_title_prompts:
@@ -241,8 +239,6 @@ fi:
         title: "Työpöytälaitteen chat-ilmoitusääni"
       sounds:
         none: "Ei mitään"
-        bell: "Kello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"
@@ -319,7 +315,6 @@ fi:
         input_placeholder: Lisää nimi
         slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
-        slug: Kanavan polkutunnus (valinnainen)
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
@@ -376,9 +371,8 @@ fi:
             one: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
             other: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
         create: "Luo kanava"
-        description: "Kuvaus (valinnainen)"
+        description: "Kuvaus"
         name: "Kanavan nimi"
-        slug: "Kanavan polkutunnus (valinnainen)"
         title: "Uusi kanava"
         type: "Tyyppi"
         types:
@@ -699,6 +693,8 @@ fi:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Lähetä chat-viesti"
+      chat_message_created:
+        channel_id: "Kanava"
       send_chat_message:
         channel_id: "Kanava"
         message: "Viesti"

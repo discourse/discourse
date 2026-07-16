@@ -32,5 +32,7 @@ id:
       topic: "Topik"
       post: "Postingan"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Ditugaskan"
       assign_topic:
         topic_id: "ID Topik"

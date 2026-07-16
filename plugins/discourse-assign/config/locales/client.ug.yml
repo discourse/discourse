@@ -46,5 +46,7 @@ ug:
       topic: "تېما"
       post: "يازما"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "تەقسىملەنگەن"
       assign_topic:
         topic_id: "تېما كىملىكى"

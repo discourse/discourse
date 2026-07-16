@@ -50,7 +50,7 @@ function attachPolls(elem, helper) {
         <template>
           <Poll
             @poll={{poll}}
-            @post={{post}}
+            @post={{pollPost}}
             @titleHTML={{titleHTML}}
             @isDynamic={{if isDynamic true poll.dynamic}}
           />

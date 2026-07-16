@@ -272,8 +272,6 @@ he:
       no_public_channels: "לא הצטרפת לערוצים כלשהם עדיין!"
       no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
-      only_chat_push_notifications:
-        title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
       personalization_title: "התאמה אישית"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
@@ -324,8 +322,6 @@ he:
         title: "צליל התראת צ׳אט שולחן עבודה"
       sounds:
         none: "ללא"
-        bell: "פעמון"
-        ding: "דינג"
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"
@@ -406,8 +402,6 @@ he:
         input_placeholder: הוספת שם
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
-        slug: מזהה ייצוגי של הערוץ (רשות)
-        emoji: אמוג׳י של הערוץ (רשות)
         reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
@@ -475,16 +469,14 @@ he:
             many: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
             other: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
         create: "יצירת ערוץ"
-        description: "תיאור (רשות)"
+        description: "תיאור"
         name: "שם הערוץ"
-        slug: "מזהה ייצוגי של הערוץ (רשות)"
         title: "ערוץ חדש"
         type: "סוג"
         types:
           category: "קטגוריה"
           topic: "נושא"
         emoji:
-          label: "אמוג׳י של הערוץ (רשות)"
           reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
@@ -824,6 +816,8 @@ he:
         chat:
           label: "צ׳אט"
     discourse_workflows:
+      chat_message_created:
+        channel_id: "ערוץ"
       send_chat_message:
         channel_id: "ערוץ"
         message: "הודעה"

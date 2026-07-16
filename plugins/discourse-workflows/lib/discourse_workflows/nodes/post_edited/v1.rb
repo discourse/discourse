@@ -5,13 +5,6 @@ module DiscourseWorkflows
     module PostEdited
       class V1 < NodeType
         POST_SCOPE_OPTIONS = %w[first_post replies all_posts].freeze
-        TRUST_LEVEL_OPTIONS = [
-          { value: "0", label_key: "trust_levels.names.newuser" },
-          { value: "1", label_key: "trust_levels.names.basic" },
-          { value: "2", label_key: "trust_levels.names.member" },
-          { value: "3", label_key: "trust_levels.names.regular" },
-          { value: "4", label_key: "trust_levels.names.leader" },
-        ].freeze
 
         description(
           name: "trigger:post_edited",
@@ -21,6 +14,17 @@ module DiscourseWorkflows
             color: "violet",
           },
           group: "discourse_triggers",
+          events: [:post_edited],
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
+          ],
           properties: {
             post_scope: {
               type: :options,
@@ -45,25 +49,28 @@ module DiscourseWorkflows
             trust_levels: {
               type: :multi_options,
               required: false,
-              options: TRUST_LEVEL_OPTIONS,
+              options: trust_level_options,
             },
           },
         )
 
-        def initialize(post, cooked, *)
+        def initialize(post, topic_changed_or_cooked = nil, revisor = nil, *)
           super(parameters: {})
           @post = post
-          @cooked = cooked
+          @cooked = topic_changed_or_cooked.is_a?(String) ? topic_changed_or_cooked : post&.cooked
+          @revisor = revisor
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular]
+          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
+            !@revisor&.opts&.dig(:skip_workflows)
         end
 
         def output
           {
             post: serialize_post(@post, include_cooked: true).merge(cooked: @cooked),
             topic: topic_data(@post.topic),
+            user: user_data(@post.user),
           }
         end
 
@@ -78,6 +85,10 @@ module DiscourseWorkflows
 
         def topic_data(topic)
           serialize_record(topic, TopicListItemSerializer)
+        end
+
+        def user_data(user)
+          serialize_user(user)
         end
 
         def matches_post_scope?(post_scope)

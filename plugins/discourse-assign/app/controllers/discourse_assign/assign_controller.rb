@@ -75,6 +75,7 @@ module DiscourseAssign
         )
 
       raise Discourse::NotFound unless assign_to
+      guardian.ensure_can_see_group!(assign_to) if assign_to.is_a?(Group)
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
@@ -148,7 +149,7 @@ module DiscourseAssign
 
       group = Group.find_by(name: params[:group_name])
 
-      guardian.ensure_can_see_group_members!(group)
+      guardian.ensure_can_see_group_and_members!(group)
       raise Discourse::InvalidAccess if !guardian.can_assign_globally?
 
       users_with_assignments_count =

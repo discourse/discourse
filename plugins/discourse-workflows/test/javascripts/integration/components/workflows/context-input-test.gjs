@@ -300,6 +300,212 @@ module(
       assert.dom(".workflows-context-panel__empty").doesNotExist();
     });
 
+    test("renders declared direct and ancestor schemas before the first run", async function (assert) {
+      const triggerNode = {
+        clientId: "trigger",
+        type: "trigger:sample",
+        typeVersion: "1.0",
+        name: "Trigger",
+      };
+      const stepNode = {
+        clientId: "step",
+        type: "action:step",
+        typeVersion: "1.0",
+        name: "Step",
+      };
+      const currentNode = {
+        clientId: "current",
+        type: "action:current",
+        typeVersion: "1.0",
+        name: "Current",
+      };
+      const nodes = makeNodes(triggerNode, stepNode, currentNode);
+      const connections = [
+        { sourceClientId: "trigger", targetClientId: "step" },
+        { sourceClientId: "step", targetClientId: "current" },
+      ];
+      const nodeTypes = [
+        {
+          name: "trigger:sample",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      trigger: {
+                        type: "object",
+                        description: "Trigger payload",
+                        properties: { id: { type: "integer" } },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          name: "action:step",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  mode: "merge",
+                  schema: {
+                    type: "object",
+                    properties: { result: { type: "string" } },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ];
+
+      await render(
+        <template>
+          <InputContext
+            @node={{currentNode}}
+            @nodes={{nodes}}
+            @connections={{connections}}
+            @nodeTypes={{nodeTypes}}
+            @session={{this.session}}
+          />
+        </template>
+      );
+
+      const sections = [
+        ...this.element.querySelectorAll(".workflows-context-panel__section"),
+      ];
+      const directSection = sections.find((section) =>
+        section
+          .querySelector(".workflows-context-panel__title")
+          ?.textContent.includes("Step")
+      );
+      const ancestorSection = sections.find((section) =>
+        section
+          .querySelector(".workflows-context-panel__title")
+          ?.textContent.includes("Trigger")
+      );
+      const directKeys = [
+        ...directSection.querySelectorAll(".workflows-schema-field__key-title"),
+      ].map((element) => element.textContent.trim());
+      const ancestorKeys = [
+        ...ancestorSection.querySelectorAll(
+          ".workflows-schema-field__key-title"
+        ),
+      ].map((element) => element.textContent.trim());
+
+      assert.deepEqual(
+        directKeys,
+        ["trigger", "result"],
+        "the direct input includes propagated and merged declarations"
+      );
+      assert.deepEqual(
+        ancestorKeys,
+        ["trigger"],
+        "the ancestor section uses its declaration"
+      );
+      assert
+        .dom(".workflows-context-panel__title-meta")
+        .doesNotExist("declarations do not fabricate input item counts");
+
+      const dragged = {};
+      await triggerEvent(
+        ancestorSection.querySelector(".workflows-schema-field__key"),
+        "dragstart",
+        {
+          dataTransfer: {
+            setData(type, value) {
+              dragged[type] = value;
+            },
+          },
+        }
+      );
+
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        '$("Trigger").item.json.trigger',
+        "uses a safe linked-item expression when no item count exists"
+      );
+    });
+
+    test("reuses one declared schema resolution across ancestor sections", async function (assert) {
+      let declarationReads = 0;
+      const triggerNode = {
+        clientId: "trigger",
+        type: "trigger:sample",
+        typeVersion: "1.0",
+        name: "Trigger",
+      };
+      const stepNodes = Array.from({ length: 8 }, (_, index) => ({
+        clientId: `step-${index}`,
+        type: "action:passthrough",
+        typeVersion: "1.0",
+        name: `Step ${index}`,
+      }));
+      const currentNode = {
+        clientId: "current",
+        type: "action:current",
+        name: "Current",
+      };
+      const nodes = [triggerNode, ...stepNodes, currentNode];
+      const connections = nodes.slice(1).map((node, index) => ({
+        sourceClientId: nodes[index].clientId,
+        targetClientId: node.clientId,
+      }));
+      const passthroughVersion = {
+        get output_contracts() {
+          declarationReads++;
+          return [{ mode: "passthrough" }];
+        },
+      };
+      const nodeTypes = [
+        {
+          name: "trigger:sample",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  schema: {
+                    type: "object",
+                    properties: { id: { type: "integer" } },
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          name: "action:passthrough",
+          versions: { "1.0": passthroughVersion },
+        },
+      ];
+
+      await render(
+        <template>
+          <InputContext
+            @node={{currentNode}}
+            @nodes={{nodes}}
+            @connections={{connections}}
+            @nodeTypes={{nodeTypes}}
+            @session={{this.session}}
+          />
+        </template>
+      );
+
+      assert.strictEqual(
+        declarationReads,
+        stepNodes.length,
+        "all direct and ancestor sections share one graph-level resolution"
+      );
+      assert
+        .dom(".workflows-schema-field__key-title")
+        .includesText("id", "the propagated declaration remains visible");
+    });
+
     test("shows an empty input state when the input has no JSON fields", async function (assert) {
       const previousNode = {
         clientId: "previous-1",
@@ -679,7 +885,7 @@ module(
       );
     });
 
-    test("renders ancestor nodes with $() expression format", async function (assert) {
+    test("uses pinned item counts for ancestor expressions", async function (assert) {
       const triggerNode = {
         clientId: "t1",
         type: "trigger:webhook",
@@ -734,6 +940,12 @@ module(
           },
         ],
       };
+      this.session.pinData = {
+        "First Step": [
+          { json: { result: "pinned one" } },
+          { json: { result: "pinned two" } },
+        ],
+      };
 
       await render(
         <template>
@@ -754,6 +966,24 @@ module(
       assert.true(
         sectionTitles.some((t) => t.includes("First Step")),
         "shows ancestor node as section"
+      );
+
+      const resultField = [
+        ...this.element.querySelectorAll(".workflows-schema-field__key"),
+      ].find((el) => el.textContent.trim() === "result");
+      const dragged = {};
+      const dataTransfer = {
+        setData(type, value) {
+          dragged[type] = value;
+        },
+      };
+
+      await triggerEvent(resultField, "dragstart", { dataTransfer });
+
+      assert.strictEqual(
+        JSON.parse(dragged[WORKFLOW_VARIABLE_MIME]).id,
+        '$("First Step").item.json.result',
+        "uses the two pinned items instead of the stale single-item run"
       );
     });
 

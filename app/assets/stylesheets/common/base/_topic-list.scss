@@ -683,7 +683,7 @@
   padding: 0 var(--nav-horizontal-padding);
 
   @include viewport.until(sm) {
-    border-bottom: 0.15em solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -709,8 +709,8 @@
 
       @include viewport.until(sm) {
         &::after {
-          height: 0.15em;
-          bottom: -0.15em;
+          height: 1px;
+          bottom: -1px;
         }
       }
     }
@@ -764,7 +764,7 @@
     &-body {
       border-width: 1px;
 
-      body:has(.topic-replies-toggle-wrapper) & {
+      .topic-replies-toggle-wrapper ~ .topic-list & {
         border-width: 0;
       }
     }

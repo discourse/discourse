@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 lt:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Visos kategorijos"
+            answerers:
+              staff: "Personalas"
+              member: "Nariai"
+              basic: "Pagrindinis"
+            response_time:
+              buckets:
+                lt_1h: "< 1 valanda"
+                gt_24h: "> 24 valandos"
   js:
     notifications:
       alt:

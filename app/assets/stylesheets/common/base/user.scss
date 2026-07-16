@@ -22,6 +22,13 @@
 
     .group-dropdown {
       margin-right: 0.5em;
+      max-width: 20ch;
+
+      .name {
+        display: inline-block;
+
+        @include ellipsis;
+      }
 
       .mobile-view & {
         .select-kit-header-wrapper {
@@ -37,6 +44,7 @@
     grid-row-start: 2;
     grid-row-end: 3;
     font-size: var(--font-down-1);
+    border-bottom: 1px solid var(--content-border-color);
   }
 
   .user-primary-navigation,
@@ -98,10 +106,6 @@
 
   .paginated-topics-list {
     position: relative;
-
-    tbody {
-      border-top: none;
-    }
   }
 
   .show-mores {

@@ -9,9 +9,12 @@
  */
 // eslint-discourse keep-array-sorted
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
+  "apply-local-dates",
+  "category-visibility-change",
   "composer-actions-on-select",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
+  "create-account",
   "custom-homepage-model",
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
@@ -45,6 +48,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-display-name",
   "category-sort-orders",
   "category-text-color",
+  "category-visibility-private-locked",
   "composer-actions-content",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
@@ -65,6 +69,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "flag-custom-placeholder",
   "flag-description",
   "flag-formatted-name",
+  "full-page-refresh-on-navigation",
   "hamburger-dropdown-click-outside-exceptions",
   "header-notifications-avatar-size",
   "home-logo-href",
@@ -121,6 +126,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-style",
   "topic-show-footer-buttons",
   "user-field-components",
+  "user-list-display-name",
+  "user-list-display-username",
   "user-menu-notification-item-acting-user-avatar",
   "user-notes-modal-subtitle",
   "welcome-banner-display-for-route",

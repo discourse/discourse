@@ -3,7 +3,7 @@
 module DiscourseGithubPlugin
   class GithubRepo < ActiveRecord::Base
     VALID_URL_BASED_REPO_REGEX = %r{https?://github.com/(.+)}
-    VALID_USER_BASED_REPO_REGEX = Octokit::Repository::NAME_WITH_OWNER_PATTERN
+    VALID_USER_BASED_REPO_REGEX = %r{\A[\w.-]+/[\w.-]+\z}i
 
     has_many :commits, foreign_key: :repo_id, class_name: :GithubCommit, dependent: :destroy
 

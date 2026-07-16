@@ -190,6 +190,11 @@ bs_BA:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Svatko"
+      admins: "Admins"
+      moderators: "Moderators"
+      staff: "Staff"
   education:
     until_posts:
       one: "%{count} objava"
@@ -395,6 +400,9 @@ bs_BA:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{username}
       confirm_button: Završi prijavu
+    device:
+      code: "Šifra"
+      continue: "Nastavi"
   reports:
     default:
       labels:
@@ -1059,6 +1067,8 @@ bs_BA:
               private:
                 label: "Privatno"
   onebox:
+    google_meet:
+      meeting_code: "Šifra:"
     github:
       closed: "zatvoreno"
       status_date:

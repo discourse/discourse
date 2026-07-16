@@ -36,6 +36,14 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Cargando..."
+        tool: "Acción"
+        user: "Usuario"
+        approve: "Aprobar"
+        reject: "Rexeitar"
+        approved: "Aprobado"
+        rejected: "Rexeitada"
       llm_selector:
         none: "Ningunha"
       features:
@@ -53,12 +61,16 @@ gl:
           reset: "Restabelecer"
         search:
           name: "Buscar"
+        image_caption:
+          setting_groups:
+            settings: "Configuración"
         spam:
           name: "Lixo"
       modals:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
+        category_scope: "Categorías"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -96,6 +108,12 @@ gl:
         enabled: "Activado?"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Ningunha"
+          low: "Baixa"
+          medium: "Media"
+          high: "Alta"
+          max: "Máx"
         response_format:
           open_modal: "Editar"
           modal:
@@ -175,8 +193,6 @@ gl:
           cancel: "Cancelar"
         thumbnail_suggestions:
           try_again: "Tentar de novo"
-        image_caption:
-          save_caption: "Gardar"
       embeddings:
         save: "Gardar"
         delete: "Eliminar"

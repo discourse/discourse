@@ -27,6 +27,8 @@ class ThemeSettingsValidator
     def validate_value(value, type, opts)
       errors = []
 
+      errors.concat(validate_resolve_group_membership(opts, type))
+
       case type
       when types[:enum]
         if opts[:choices].exclude?(value) && opts[:choices].map(&:to_s).exclude?(value)
@@ -57,6 +59,18 @@ class ThemeSettingsValidator
         )
       end
 
+      errors
+    end
+
+    def validate_resolve_group_membership(opts, type)
+      errors = []
+      if opts[:resolve_group_membership]
+        if type != types[:list]
+          errors << I18n.t("themes.settings_errors.resolve_group_membership_requires_list")
+        elsif opts[:list_type] != "group"
+          errors << I18n.t("themes.settings_errors.resolve_group_membership_requires_group_list")
+        end
+      end
       errors
     end
 

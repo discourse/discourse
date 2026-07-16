@@ -2,12 +2,12 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 402418
+# meta_topic_id: 406990
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
 
-enabled_site_setting :discourse_workflows_enabled
+enabled_site_setting :enable_discourse_workflows
 
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
@@ -40,11 +40,18 @@ register_svg_icon "palette"
 register_svg_icon "reply"
 register_svg_icon "triangle-exclamation"
 register_svg_icon "clock"
+register_svg_icon "dollar-sign"
 register_svg_icon "comments"
 register_svg_icon "pause"
+register_svg_icon "window-maximize"
 register_svg_icon "user-plus"
+register_svg_icon "user-minus"
 register_svg_icon "grip-vertical"
+register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "copy"
+register_svg_icon "paste"
+register_svg_icon "scissors"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -85,14 +92,28 @@ after_initialize do
     self,
   )
 
-  Plugin::Filter.register(:after_post_cook) do |post, cooked|
-    DiscourseWorkflows::EventListener.handle(
-      DiscourseWorkflows::Nodes::PostEdited::V1,
-      post,
-      cooked,
-    )
+  if defined?(DiscourseAi)
+    require_relative "lib/discourse_workflows/ai/tools/base"
+    require_relative "lib/discourse_workflows/ai/graph_digest"
+    require_relative "lib/discourse_workflows/ai/progress_publisher"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_node_catalog"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_ai_agent_catalog"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_graph_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_validate_patch"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_ask_questions"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_resolve_entity"
+    require_relative "lib/discourse_workflows/ai/tools/search_chat_channels"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_script_context"
+    require_relative "lib/discourse_workflows/ai/tools/workflow_validate_script"
+    require_relative "lib/discourse_workflows/ai_workflow_author"
 
-    cooked
+    DiscourseAi.register_feature(
+      module_name: :discourse_workflows,
+      feature: :workflow_authoring,
+      agent_klass: DiscourseWorkflows::AiWorkflowAuthor,
+      enabled_by_setting: "discourse_workflows_ai_authoring_enabled",
+      plugin: self,
+    )
   end
 
   add_to_serializer :site,
@@ -101,10 +122,36 @@ after_initialize do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
   end
 
+  add_to_serializer :current_user,
+                    :discourse_workflows_user_modal_last_id,
+                    include_condition: -> do
+                      DiscourseWorkflows::WorkflowDependency.cached_user_modals?
+                    end do
+    MessageBus.last_id(DiscourseWorkflows::Nodes::Modal::V1.user_channel(object.id))
+  end
+
   on(:site_setting_changed) do |name, old_value, new_value|
-    next if name != :discourse_workflows_enabled
+    next if name != :enable_discourse_workflows
     next unless new_value && !old_value
 
     DiscourseWorkflows::PluginEnableHandler.handle!
   end
+
+  # Automatic promotion of an upcoming change does not write the site setting,
+  # so :site_setting_changed never fires for it. See UpcomingChanges::NotifyPromotion.
+  on(:upcoming_change_enabled) do |name|
+    next if name != :enable_discourse_workflows
+
+    # A manual opt-in writes the setting before this event fires, so the
+    # :site_setting_changed hook above has already run.
+    next if SiteSetting.setting_modified_from_default?(:enable_discourse_workflows)
+
+    DiscourseWorkflows::PluginEnableHandler.handle!
+  end
+
+  register_stat("total", stat_type: :workflows) { DiscourseWorkflows::Statistics.total }
+  register_stat("created", stat_type: :workflows) { DiscourseWorkflows::Statistics.created }
+  register_stat("edited", stat_type: :workflows) { DiscourseWorkflows::Statistics.edited }
+  register_stat("executed", stat_type: :workflows) { DiscourseWorkflows::Statistics.executed }
+  register_stat("executions", stat_type: :workflows) { DiscourseWorkflows::Statistics.executions }
 end

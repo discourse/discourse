@@ -75,6 +75,11 @@ module PageObjects
         find(".post-language-content")
       end
 
+      def toggle_localized_content
+        post.find(".post-info.post-language .fk-d-tooltip__trigger").click
+        self
+      end
+
       def open_post_history
         post.find(".post-info.edits").click
       end

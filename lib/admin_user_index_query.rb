@@ -29,9 +29,13 @@ class AdminUserIndexQuery
     "posts" => "user_stats.post_count",
     "read_time" => "user_stats.time_read",
     "silence_reason" => "silence_reason",
+    "suspend_reason" => "suspend_reason",
   }
 
   SAME_IP_ADDRESS_COLUMNS = { "last" => :ip_address, "registration" => :registration_ip_address }
+
+  FILTER_SPLIT_REGEX = /[,\s]+/
+  MAX_FILTER_TERMS = 100
 
   def find_users(limit = 100)
     page = params[:page].to_i - 1
@@ -48,8 +52,7 @@ class AdminUserIndexQuery
 
     custom_order = params[:order]
     custom_direction = params[:asc].present? ? "ASC" : "DESC"
-    if custom_order.present? &&
-         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)\z/, "")]
+    if custom_order.present? && without_dir = SORTABLE_MAPPING[normalized_order]
       order << "#{without_dir} #{custom_direction} NULLS LAST"
     end
 
@@ -79,6 +82,15 @@ class AdminUserIndexQuery
     end
   end
 
+  def filter_by_activation
+    case params[:activation]
+    when "activated"
+      @query.activated
+    when "not_activated"
+      @query.not_activated
+    end
+  end
+
   def filter_by_query_classification
     case params[:query]
     when "staff"
@@ -104,17 +116,46 @@ class AdminUserIndexQuery
     end
 
     filter = params[:filter]
-    if filter.present?
-      filter = filter.strip
-      if ip = parse_ip(filter)
+    return if filter.blank?
+
+    terms = filter.split(FILTER_SPLIT_REGEX).reject(&:blank?)
+    return if terms.empty?
+    raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+
+    if terms.size == 1
+      term = terms.first
+      if ip = parse_ip(term)
         return if params[:same_ip_user_id].present?
         return @query.none unless can_see_ip?
 
         @query.where("ip_address <<= :ip OR registration_ip_address <<= :ip", ip: ip.to_cidr_s)
       else
-        @query.filter_by_username_or_email(filter)
+        @query.filter_by_username_or_email(term)
       end
+    else
+      filter_by_multiple_terms(terms.map(&:downcase))
     end
+  end
+
+  # per-term semantics match the single-term search: substring match on
+  # username and primary email, exact match on any email (secondary
+  # included) for terms that look like emails
+  def filter_by_multiple_terms(terms)
+    patterns = terms.map { |term| "%#{term}%" }
+
+    sql = +<<~SQL
+      username_lower ILIKE ANY (ARRAY[:patterns])
+      OR lower(user_emails.email) ILIKE ANY (ARRAY[:patterns])
+    SQL
+    binds = { patterns: patterns }
+
+    exact_emails = terms.select { |term| term =~ /.+@.+/ }
+    if exact_emails.present?
+      sql << "OR users.id IN (SELECT user_id FROM user_emails WHERE lower(user_emails.email) IN (:exact_emails))"
+      binds[:exact_emails] = exact_emails
+    end
+
+    @query.joins(:primary_email).where(sql, binds)
   end
 
   def filter_by_ip
@@ -167,28 +208,53 @@ class AdminUserIndexQuery
     guardian&.can_see_ip?
   end
 
-  def with_silence_reason
-    @query.joins(
-      "LEFT JOIN LATERAL (
-        SELECT user_histories.details silence_reason
+  def with_penalty_reason(action, till_column, name)
+    @query.joins(<<~SQL)
+      LEFT JOIN LATERAL (
+        SELECT user_histories.details #{name}
         FROM user_histories
         WHERE user_histories.target_user_id = users.id
-        AND user_histories.action = #{UserHistory.actions[:silence_user]}
-        AND users.silenced_till IS NOT NULL
-        ORDER BY user_histories.created_at DESC
+          AND user_histories.action = #{UserHistory.actions[action]}
+          AND users.#{till_column} IS NOT NULL
+        ORDER BY user_histories.id DESC
         LIMIT 1
-      ) user_histories ON true",
-    )
+      ) #{name}s ON true
+    SQL
+  end
+
+  def penalty_reasons(users, action)
+    return {} if users.empty?
+
+    UserHistory
+      .where(action: UserHistory.actions[action], target_user_id: users.map(&:id))
+      .order(:target_user_id, id: :desc)
+      .select(Arel.sql("DISTINCT ON (target_user_id) target_user_id, details"))
+      .each_with_object({}) { |record, hash| hash[record.target_user_id] = record.details }
+  end
+
+  def normalized_order
+    params[:order]&.downcase&.sub(/ (asc|desc)\z/, "")
+  end
+
+  def sorting_by?(column)
+    normalized_order == column
   end
 
   def find_users_query
     append filter_by_trust
     append filter_by_query_classification
+    append filter_by_activation
     append filter_by_ip
     append filter_by_same_ip_user
     append filter_exclude
     append filter_by_search
-    append with_silence_reason
+
+    if sorting_by?("silence_reason")
+      append with_penalty_reason(:silence_user, :silenced_till, "silence_reason")
+    elsif sorting_by?("suspend_reason")
+      append with_penalty_reason(:suspend_user, :suspended_till, "suspend_reason")
+    end
+
     @query
   end
 end

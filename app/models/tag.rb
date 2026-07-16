@@ -230,6 +230,24 @@ class Tag < ActiveRecord::Base
     SQL
   end
 
+  def self.recently_used_by(user, limit: 10)
+    return [] if user.blank?
+
+    recent_topic_ids =
+      Topic
+        .where(user:, archetype: Archetype.default)
+        .order(created_at: :desc, id: :desc)
+        .limit(limit)
+        .select(:id)
+
+    TopicTag
+      .joins(:topic)
+      .where(topic_id: recent_topic_ids)
+      .group(:tag_id)
+      .order(Arel.sql("MAX(topics.created_at) DESC, MAX(topics.id) DESC"))
+      .pluck(:tag_id)
+  end
+
   def self.include_tags?
     SiteSetting.tagging_enabled
   end
@@ -300,10 +318,16 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
+    if self.slug.present? && will_save_change_to_slug? && slug != slugified_custom_slug
+      errors.add(:slug, :invalid)
+    elsif self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
       self.slug = Slug.for(name, "")
       self.slug = "" if self.slug.blank? || duplicate_slug?
     end
+  end
+
+  def slugified_custom_slug
+    slug.parameterize
   end
 
   def duplicate_slug?

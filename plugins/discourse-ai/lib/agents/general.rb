@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class General < Agent
+      def thinking_effort
+        "low"
+      end
+
       def tools
         base_tools = [
           Tools::Search,

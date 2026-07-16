@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -20,6 +21,7 @@ import {
   nodeTypeRunScopeLabelKey,
   nodeTypeStyle,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { nodeDescription, nodeLabel } from "../../../lib/workflows/node-utils";
 import CanvasHoverToolbar from "./hover-toolbar";
@@ -30,8 +32,24 @@ function resolveType(workflowsNodeTypes, node) {
     return null;
   }
 
-  return resolveNodeTypeVersion(nodeType, node.typeVersion);
+  return resolveNodeTypeVersion(nodeType, typeVersionForNode(node));
 }
+
+const highlightOnInsert = modifier((element) => {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const removeHighlight = () => element.classList.remove("is-highlighted");
+
+  element.classList.add("is-highlighted");
+  element.addEventListener("animationend", removeHighlight, { once: true });
+
+  return () => {
+    element.removeEventListener("animationend", removeHighlight);
+    removeHighlight();
+  };
+});
 
 export function shouldShowManualTrigger(node) {
   return Boolean(node?.type?.startsWith("trigger:"));
@@ -210,6 +228,7 @@ export default class WorkflowNode extends Component {
       style={{this.dimensionsStyle}}
       data-client-id={{this.data.clientId}}
       data-unavailable={{if this.isUnavailable "true" "false"}}
+      {{highlightOnInsert}}
     >
       {{#if @node.selected}}
         {{#if this.runScopeLabel}}

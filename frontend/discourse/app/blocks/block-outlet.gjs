@@ -41,7 +41,6 @@ import { validateLayout } from "discourse/lib/blocks/-internals/validation/layou
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
-/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 
 /**

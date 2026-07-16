@@ -317,6 +317,12 @@ hy:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Բոլորը"
+      moderators: "Մոդերատորներ"
+      staff: "Անձնակազմ"
+      anonymous_users: "Անանուն օգտատերեր"
+      logged_in_users: "Մուտքագրված օգտատերեր"
     request_membership_pm:
       title: "@%{group_name}-ի անդամակցության հարցում"
   education:
@@ -691,6 +697,9 @@ hy:
       session_info: "Կարդալ օգտատիրոջ սեանսի ինֆոն"
       read: "Կարդալ ամբողջը"
       write: "Գրել ամբողջը"
+    device:
+      code: "Կոդ"
+      continue: "Շարունակել"
   flags:
     errors:
       already_handled: "Դրոշակը արդեն մշակված է"
@@ -776,6 +785,7 @@ hy:
       labels:
         count: "Անդամներ"
         share: "Կիսվել"
+        signups: "Գրանցումներ"
       levels:
         "0": "Նոր"
         "1": "Հիմնական"
@@ -1143,8 +1153,6 @@ hy:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Րոպեների քանակը, որ օգտատերը պետք է սպասի՝ մինչ համայնքի դրոշակավորման միջոցով թաքցված գրառման խմբագրել կարողանալը"
-    max_topics_in_first_day: "Թեմաների առավելագույն քանակը, որը օգտատերը կարող է ստեղծել իր առաջին գրառումի ստեղծումից հետո 24 ժամվա ընթացքում"
-    max_replies_in_first_day: "Պատասխանների առավելագույն քանակը, որ օգտատիրոջը թույլատրվում է ստեղծել իր առաջին գրառումը ստեղծելուց հետո 24 ժամվա ընթացքում:"
     tl2_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ2-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl3_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ3-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl4_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ4-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
@@ -2769,6 +2777,8 @@ hy:
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:
+    google_meet:
+      meeting_code: "Կոդ:"
     github:
       closed: "փակված"
       status_date:

@@ -984,6 +984,47 @@ describe DiscourseDataExplorer::QueryController do
     end
   end
 
+  describe "#group_reports_show SQL visibility" do
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
+    fab!(:group) { Fabricate(:group, users: [user]) }
+
+    it "omits SQL from group report details for group members" do
+      sign_in(user)
+      query = make_query("SELECT 1977 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "omits SQL from group report details for moderators" do
+      group.add(moderator)
+      sign_in(moderator)
+      query = make_query("SELECT 1984 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "includes SQL in group report details for admins" do
+      sign_in(admin)
+      query = make_query("SELECT 1978 as admin_visible_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]["sql"]).to eq(query.sql)
+      expect(response.body).to include(query.sql)
+    end
+  end
+
   describe "legacy /admin/plugins/explorer/ routes" do
     fab!(:admin)
 
@@ -1079,8 +1120,6 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#generate_with_ai" do
-      before { SiteSetting.data_explorer_ai_queries_enabled = true }
-
       it "returns 404 when AI queries are disabled" do
         SiteSetting.data_explorer_ai_queries_enabled = false
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
@@ -1103,7 +1142,7 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(400)
       end
 
-      it "enqueues a generation job and returns generation_id" do
+      it "enqueues a generation job by default and returns generation_id" do
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
              params: {
                ai_description: "show me users",

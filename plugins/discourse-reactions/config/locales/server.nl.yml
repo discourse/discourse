@@ -18,8 +18,6 @@ nl:
     first_reaction:
       name: Eerste reactie
       description: Gereageerd op het bericht
-      long_description: |
-        Deze badge wordt toegekend als je voor het eerst reageert op een bericht. Reageren op berichten is een geweldige manier om andere communityleden te laten weten dat wat ze hebben geplaatst interessant, nuttig, cool of leuk was. Deel je reactie!
   reports:
     reactions:
       title: "Reacties"

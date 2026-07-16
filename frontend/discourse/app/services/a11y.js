@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { trackedMap } from "@ember/reactive/collections";
-import { cancel } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
@@ -194,15 +194,26 @@ export default class A11y extends Service {
       throw new Error("The clearDelay must be a positive number");
     }
 
-    switch (type) {
-      case "assertive":
-      case "polite":
-        this.#state.setMessage(type, message.trim(), clearDelay);
-        break;
-      default:
-        throw new Error(
-          `Invalid announcement type: ${type}. Expected 'polite' or 'assertive'.`
-        );
+    if (type !== "assertive" && type !== "polite") {
+      throw new Error(
+        `Invalid announcement type: ${type}. Expected 'polite' or 'assertive'.`
+      );
     }
+
+    const trimmed = message.trim();
+
+    // Defer the tracked-state write out of the current render. `announce` is often
+    // called from a render-driven data load (e.g. an async content resolution), and
+    // writing tracked state synchronously during render trips Ember's
+    // backtracking-rerender assertion. `next` runs after the render completes and is
+    // awaited by `settled()`; a live region is polled asynchronously, so the one-tick
+    // delay is imperceptible.
+    next(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this.#state.setMessage(type, trimmed, clearDelay);
+    });
   }
 }

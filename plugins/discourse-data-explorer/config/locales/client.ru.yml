@@ -30,6 +30,7 @@ ru:
       queries: "Запросы"
       query_created: "Запрос создан!"
       mode:
+        manual: "Напишите SQL-запрос"
         ai: "Генерация с помощью ИИ"
       or: "или"
       admins_only: "Исследование данных доступно только для администраторов."
@@ -43,6 +44,7 @@ ru:
         description_hint: "Опишите свои потребности простым языком. Мы сгенерируем для вас SQL-запрос, название и описание."
         description_placeholder: "Например, показать мне количество регистраций за определенный период времени."
         generate: "Сгенерировать"
+        regenerate: "Обновить запрос"
         generating: "Генерация запросов с помощью ИИ..."
         generation_timeout: "Истекло время ожидания генерации запроса ИИ. Вы можете написать SQL-запрос вручную."
         generation_error: "При формировании запроса произошла ошибка."
@@ -77,8 +79,17 @@ ru:
       undo: "Отменить изменения"
       delete: "Удалить"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Тип диаграммы"
+          bar: "Гистограмма"
+      export_as:
+        label: "Экспортировать как…"
+        results_json: "Результаты (JSON)"
+        results_csv: "Результаты (CSV)"
       others_dirty: "Запрос имеет несохранённые изменения, которые будут потеряны, если вы уйдёте со страницы."
       run_time: "Запрос завершен за %{value} мс."
+      cached_result_notice: "Отображение кэшированных результатов из %{relative_time}."
       result_count:
         one: "%{count} результат."
         few: "%{count} результата."
@@ -117,10 +128,16 @@ ru:
             data_explorer:
               run_queries: "Выполнение запросов проводника данных. Ограничьте ключ API набором запросов, указав идентификаторы запросов."
     discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Для работы требуется включить плагин Data Explorer."
       nodes:
         "action:sql": "Проводник данных"
+      node_descriptions:
+        "action:sql": "Выполните SQL-запрос только для чтения к базе данных."
       sql:
+        operation_description: "Как выполнить запрос"
         queries: "Запросы"
+        raw: "Необработанный SQL"
         query_id: "Запрос"
         add_param: "Добавить параметр"
         param_value: "Значение"

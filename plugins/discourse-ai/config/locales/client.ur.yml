@@ -59,6 +59,14 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      ai_tool_approval:
+        loading: "لوڈ ہو رہا ہے..."
+        tool: "عمل"
+        user: "رکن"
+        approve: "منظور"
+        reject: "مسترد کریں"
+        approved: "منظورشدہ"
+        rejected: "مسترد کر دیا"
       llm_selector:
         none: "کوئی نہیں"
       features:
@@ -77,9 +85,14 @@ ur:
           reset: "رِی سَیٹ"
         search:
           name: "تلاش کریں"
+        admin_dashboard:
+          highlights: "نمایاں نکات"
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        image_caption:
+          setting_groups:
+            settings: "سیٹِنگ"
         spam:
           name: "سپَیم"
           description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
@@ -87,6 +100,7 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        category_scope: "زمرہ جات"
         stats:
           eta_minutes:
             one: "%{count} منٹ"
@@ -137,6 +151,12 @@ ur:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
         delete: "حذف کریں"
+        thinking_effort_options:
+          none: "کوئی نہیں"
+          low: "کم"
+          medium: "درمیانی"
+          high: "زیادہ"
+          max: "زیادہ سے زیادہ"
         response_format:
           open_modal: "ترمیم کریں"
           modal:
@@ -227,8 +247,6 @@ ur:
           cancel: "منسوخ"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
-        image_caption:
-          save_caption: "محفوظ کریں"
       embeddings:
         save: "محفوظ کریں"
         delete: "مٹائیں"

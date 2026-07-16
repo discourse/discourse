@@ -1763,6 +1763,34 @@ RSpec.describe PrettyText do
 
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
     end
+
+    it "rewrites a custom emoji's S3 url through the configured CDN" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      cooked = PrettyText.cook("hello :trout:")
+      expect(cooked).to include("https://cdn.example.com/original/1X/trout.png")
+      expect(cooked).not_to include(raw_url)
+    end
+
+    it "rewrites a custom emoji's S3 url through the CDN when unescaping titles" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      unescaped = PrettyText.unescape_emoji("hello :trout:")
+      expect(unescaped).to match(
+        %r{<img[^>]+\bsrc=['"]https://cdn\.example\.com/original/1X/trout\.png},
+      )
+      expect(unescaped).not_to include(SiteSetting.Upload.absolute_base_url)
+    end
   end
 
   describe "custom emoji translation" do
@@ -2496,6 +2524,17 @@ HTML
 
   it "should sanitize the html" do
     expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
+  end
+
+  it "sanitizes html without cooking markdown" do
+    sanitized =
+      PrettyText.sanitize(
+        '<a href="https://example.com" target="_blank" rel="noopener" onclick="alert(1)">learn more</a><a href="javascript:alert(1)">bad</a><script>alert(1)</script>',
+      )
+
+    expect(sanitized).to eq(
+      '<a href="https://example.com" target="_blank">learn more</a><a>bad</a>',
+    )
   end
 
   it "should not onebox magically linked urls" do

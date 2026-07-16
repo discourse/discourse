@@ -6,12 +6,31 @@
 
 ja:
   js:
+    user_api_key:
+      title: '「%{application_name}」の承認'
+      authorize: "承認"
+      deny: "キャンセル"
+      logged_in_as: "ログイン中:"
+      permissions_header: 'これにより、「%{application_name}」で次を行えます:'
+      redirect_warning: "承認すると次の場所にリダイレクトされます:"
+      copied: "コピーしました！"
+      otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
+      no_trust_level: "ユーザー API にアクセスするために必要な信頼レベルがありません。"
+      generic_error: "ユーザー API キーを発行できませんでした。この機能はサイト管理者によって無効化されている可能性があります。"
+      device:
+        code: "コード"
+        continue: "続行"
+        authorize_title: '「%{application_name}」の承認'
     blocks:
       ghost:
         status: "ステータス"
         in_location: "場所:"
         hidden: "非表示"
         failed: "失敗しました"
+    access_control:
+      manage:
+        access_permission_editor: "編集者"
+        access_permission_remove: "削除"
     carousel:
       go_to_slide: "スライド %{index} に移動"
       previous: "前のスライド"
@@ -356,6 +375,9 @@ ja:
     age: "年齢"
     joined: "参加"
     admin_title: "管理"
+    advanced_mode_toggle:
+      advanced_mode: "詳細モード"
+      simple_mode: "シンプルモード"
     show_more: "もっと表示"
     show_help: "オプション"
     links: "リンク"
@@ -1069,7 +1091,8 @@ ja:
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
         membership:
           title: メンバーシップ
-          access: アクセス
+          join_method:
+            invite: "招待のみ"
         categories:
           title: カテゴリ
           long_title: "カテゴリのデフォルト通知"
@@ -1102,7 +1125,6 @@ ja:
         title: "権限"
         none: "このグループに関連付けられているカテゴリはありません。"
         description: "このグループのメンバーはこれらのカテゴリにアクセスできます"
-      public_admission: "ユーザーがグループに自由に参加することを許可する (一般公開グループである必要があります)"
       public_exit: "ユーザーがグループから自由に退出することを許可する"
       empty:
         posts: "このグループのメンバーによる投稿はありません"
@@ -1118,7 +1140,6 @@ ja:
       request: "リクエスト"
       message: "メッセージ"
       confirm_leave: "このグループから退出してもよろしいですか？"
-      allow_membership_requests: "ユーザーがグループのオーナーにメンバーシップリクエストを送信することを許可する (一般公開グループである必要があります)"
       membership_request_template: "メンバーシップリクエスト送信時にユーザーに表示するカスタムテンプレート"
       membership_request:
         submit: "リクエストを送信"
@@ -1401,6 +1422,9 @@ ja:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
+        push_level:
+          none: "無効"
+          all: "有効"
         not_supported: "このブラウザでは通知がサポートされていません。"
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
@@ -1534,6 +1558,9 @@ ja:
       undo_revoke_access: "アクセスの取り消しを元に戻す"
       api_approved: "承認:"
       api_last_used_at: "最終使用時間:"
+      api_expires_at: "有効期限:"
+      api_expired_at: "期限切れ:"
+      api_expires_never: "送信しない"
       theme: "テーマ"
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
@@ -2353,7 +2380,6 @@ ja:
     created: "作成"
     created_lowercase: "作成"
     trust_level: "信頼レベル"
-    search_hint: "ユーザー名、メールアドレス、または IPアドレス"
     create_account:
       header_title: "ようこそ！"
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
@@ -2397,6 +2423,13 @@ ja:
       confirm_title: '%{site_name} に進む'
       logging_in_as: '%{email} としてログイン'
       confirm_button: ログイン完了
+    code_login:
+      email_label: "メールアドレス"
+      continue_button: "続行"
+      verify_button: "続行"
+      signup_title: "アカウントの作成"
+      account_ready_continue: "続行"
+      username_label: "ユーザー名"
     login:
       header_title: "おかえりなさい"
       title: "ログイン"
@@ -2612,6 +2645,8 @@ ja:
       default: カスタム絵文字
     filter_input:
       clear: "フィルタをクリア"
+    filter_controls:
+      toggle: "ドロップダウンのフィルタを切り替える"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -2619,6 +2654,10 @@ ja:
       publish: "共有の下書きを公開"
       confirm_publish: "この下書きを公開してもよろしいですか？"
       publishing: "トピックを公開中…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "メタデータ"
     composer:
       autocomplete:
         username_missing: "選択した自動補完候補にはユーザー名がありません。"
@@ -3233,7 +3272,7 @@ ja:
         education:
           topic_tracking_preferences: '新規トピックの追跡の設定は、<a href="%{basePath}/my/preferences/tracking">設定</a>で表示および変更できます。'
           unread: "未読はありません... お見事！"
-          new_new: "今のところ新着はありません... また後で確認してください！"
+          unified_new: "今のところ新着はありません... また後で確認してください！"
           new: "今のところ新着はありません... また後で確認してください！"
           generic: "ここには何もありません... また後で確認してください！"
     topic_bulk_actions:
@@ -3283,6 +3322,9 @@ ja:
       deleted_post_placeholder: "[削除済み]"
       ignored_post_placeholder: "[無視]"
       pinned_reply: "固定"
+    share_target:
+      new_topic: "新規トピック"
+      new_message: "新規メッセージ"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3329,36 +3371,8 @@ ja:
       read_more_in_category: "もっと読みますか？%{categoryLink} で他のトピックを閲覧するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       read_more: "もっと読みますか？<a href='%{categoryLink}'>すべてのカテゴリを閲覧</a>するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
+      sr_read: "読了"
       participant_groups: "参加グループ"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/unread"># 件の未読</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {と <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/unread"># 件の未読</a>トピックがあります。}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {または、{categoryLink} で他のトピックを閲覧してください}
-          false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
-          other {}
-        }
       reply_count_link:
         other: "%{count} 件の返信、最初の投稿にジャンプ"
       created_at: "作成日: %{date}"
@@ -3802,7 +3816,7 @@ ja:
         view:
           other: "%{count} 個の翻訳済みロケールを表示"
         modal:
-          title: "投稿の翻訳"
+          title: "翻訳"
           confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
         success: "翻訳は正しく更新されました"
         post_language_selector:
@@ -4048,7 +4062,6 @@ ja:
       unsaved_changes: "保存されていない変更があります"
       slug: "カテゴリのスラッグ"
       parent: "親カテゴリ"
-      slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
       errors:
@@ -4404,7 +4417,7 @@ ja:
         new_replies_tooltip: "新しい返信"
         replies: "返信"
         replies_with_count: "返信 (%{count})"
-      new_new:
+      unified_new:
         help: "数日以内に作成または返信されたトピック"
       posted:
         title: "自分の投稿"
@@ -4761,8 +4774,6 @@ ja:
       no_read_topics_body: "ディスカッションを読み始めると、ここにリストが表示されます。読み始めるには、<a href='%{topUrl}'>トップ</a>または<a href='%{categoriesUrl}'>カテゴリ</a>で興味のあるトピックを探すか、キーワードで検索 %{searchIcon} してください。"
     no_group_messages_title: "グループメッセージが見つかりません"
     topic_entrance:
-      sr_jump_top_button: "最初の投稿にジャンプ - %{date}"
-      sr_jump_bottom_button: "最後の投稿にジャンプ - %{date}"
       jump_top_button_title: "最初の投稿に移動"
       jump_bottom_button_title: "最後の投稿に移動"
     fullscreen_table:
@@ -5112,16 +5123,11 @@ ja:
             bookmarks: "ブックマークしたタグのない %{category} のトピック"
             default: "タグのない %{category} の%{filter}トピック"
         categories: "すべてのカテゴリ"
-    content_localization:
-      toggle_localized:
-        translated: "ページは機械翻訳されています。クリックすると元のページが表示されます。"
-        not_translated: "ページが翻訳されていません。クリックして翻訳してください。"
     language_switcher:
       title: "サイト言語の変更"
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
-    toggle_filters: "ドロップダウンのフィルタを切り替える"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -5136,6 +5142,7 @@ ja:
         title: "使用可能なレポートのリスト"
         sidebar_title: "レポート"
         back: "すべてのレポートに戻る"
+        all_groups: "すべてのグループ"
         group_traffic: "トラフィック"
         group_members: "メンバー"
         group_other: "その他"
@@ -5327,7 +5334,6 @@ ja:
             apple_touch_icon:
               title: "Apple タッチアイコン"
               description: "Apple タッチデバイスで使用されるアイコン。空白の場合、large_icon が使用されます。"
-              help_text: "推奨サイズは 180 x 180 ピクセルです。透明な背景は推奨されません。"
             digest_logo:
               title: "ダイジェストロゴ"
               description: "サイトのメール要約の上部で使用されるロゴの代替画像です。空白のままにすると、`logo` で設定した画像が使用されます。"
@@ -5335,6 +5341,9 @@ ja:
             opengraph_image:
               title: "OpenGraph 画像"
               description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空白の場合、large_icon が使用されます."
+            og_image_preview:
+              generate: "生成"
+              topic_id_label: "トピック ID"
             x_summary_large_image:
               title: "X 要約の大きい画像"
               description: "X カードの「要約の大きい画像」。空白の場合、.svg でない OpenGraph_image を使って通常のカードのメタデータが生成されます。"
@@ -5508,6 +5517,21 @@ ja:
               title: "投稿とトピック"
             stats_and_thresholds:
               title: "統計としきい値"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "すべてのカテゴリ"
+          filter_placeholder: "カテゴリをフィルタする"
+          table:
+            category: "カテゴリ"
+            visibility: "表示状態"
+            topics: "トピック"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "すべてのカテゴリ"
         permalinks:
           title: "パーマリンク"
           header_description: "フォーラムが認識していない URL に適用するリダイレクト"
@@ -5651,7 +5675,7 @@ ja:
         stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
         version_check_pending: "最近更新したようですね。素晴らしいです！"
         installed_version: "インストール済み"
-        latest_version: "最新"
+        github: "GitHub"
         problems_found: "現在のサイト設定に基づいたアドバイス"
         dismiss_notice: "無視"
         new_features:
@@ -5718,7 +5742,13 @@ ja:
                 "2": "メンバー"
                 "3": "レギュラー"
                 "4": "リーダー"
+          search:
+            title: "検索"
+            table:
+              searches: "検索数"
+              status: "ステータス"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "有効"
             all_heading: "すべてのレポート"
@@ -5810,7 +5840,6 @@ ja:
             incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
             incoming_email_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
-            visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
               public: "全員"
@@ -6252,6 +6281,8 @@ ja:
             initial_members: "拡大メンバー"
             initial_members_description: "「さらに表示」ボタンを追加する前に表示するグループメンバーの数。"
             show_description: "説明を含める"
+          locale_selector:
+            title: "言語"
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -7331,10 +7362,12 @@ ja:
         silence_reason: "投稿禁止の理由"
         bulk_actions:
           title: "一括操作"
-          admin_cant_be_deleted: "このユーザーは管理者であるため削除できません"
-          too_many_or_old_posts: "このユーザーは投稿数が多すぎるか投稿が非常に古いため削除できません"
-          too_many_selected_users:
-            other: "一括削除できるユーザー数の制限 (%{count} 人) に達しました"
+          select_all: "すべて選択"
+          clear_all: "すべてクリア"
+          suspend:
+            confirmation_modal:
+              close: "閉じる"
+              confirm: "凍結"
           delete:
             label: "ユーザーを削除…"
             confirmation_modal:
@@ -7359,6 +7392,9 @@ ja:
           suspended: "凍結"
           silenced: "投稿禁止"
           staged: "ステージング"
+        activation_filter:
+          all: "すべてのユーザー"
+          activated: "有効"
         approved: "承認済み？"
         titles:
           active: "アクティブユーザー"

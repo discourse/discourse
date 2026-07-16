@@ -67,6 +67,8 @@ nb_NO:
       topic: "Emne"
       post: "Innlegg"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tildelt"
       assign_topic:
         operations:
           assign: "Tildel"

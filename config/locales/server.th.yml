@@ -103,6 +103,11 @@ th:
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
       staff: "ทีมงาน"
+    default_full_names:
+      everyone: "ทุกคน"
+      admins: "แอดมิน"
+      moderators: "ผู้ดูแลระบบ"
+      staff: "ทีมงาน"
   education:
     until_posts:
       other: "%{count} โพส"
@@ -200,6 +205,8 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    device:
+      continue: "ดำเนินการต่อ"
   reports:
     post_edits:
       labels:

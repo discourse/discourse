@@ -23,6 +23,10 @@ module DiscourseAi
         prompt_cache.flush!
       end
 
+      def self.prompt_agent_ids
+        agents_prompt_map.keys.compact.uniq
+      end
+
       def initialize(helper_llm: nil, image_caption_llm: nil)
         @helper_llm = helper_llm
         @image_caption_llm = image_caption_llm
@@ -64,6 +68,10 @@ module DiscourseAi
       def custom_locale_instructions(user = nil, force_default_locale)
         locale = SiteSetting.default_locale
         locale = user.effective_locale if !force_default_locale && user
+        locale_instructions(locale)
+      end
+
+      def locale_instructions(locale)
         locale_hash = LocaleSiteSetting.language_names[locale]
 
         if locale != "en" && locale_hash
@@ -246,12 +254,19 @@ module DiscourseAi
         end
       end
 
-      def generate_image_caption(upload, user)
-        bot = build_bot(IMAGE_CAPTION, user)
+      def generate_image_caption(upload, user, locale: nil, post: nil, skip_access_check: false)
+        bot = build_bot(IMAGE_CAPTION, user, skip_access_check: skip_access_check)
         force_default_locale = false
+        custom_instructions =
+          if locale.present?
+            locale_instructions(locale)
+          else
+            custom_locale_instructions(user, force_default_locale)
+          end
 
         context =
           DiscourseAi::Agents::BotContext.new(
+            post: post,
             user: user,
             skip_show_thinking: true,
             feature_name: IMAGE_CAPTION,
@@ -261,7 +276,7 @@ module DiscourseAi
                 content: ["Describe this image in a single sentence.", { upload_id: upload.id }],
               },
             ],
-            custom_instructions: custom_locale_instructions(user, force_default_locale),
+            custom_instructions: custom_instructions,
           )
 
         structured_output = nil
@@ -314,8 +329,13 @@ module DiscourseAi
         AiAgent.find_by(id: agent_id)
       end
 
-      def build_bot(helper_mode, user)
-        ai_agent = ensure_mode_access!(helper_mode, user)
+      def build_bot(helper_mode, user, skip_access_check: false)
+        ai_agent =
+          if skip_access_check
+            ai_agent_for_mode(helper_mode)
+          else
+            ensure_mode_access!(helper_mode, user)
+          end
         return if ai_agent.nil?
 
         agent_klass = ai_agent.class_instance
@@ -348,7 +368,7 @@ module DiscourseAi
         end
       end
 
-      def agents_prompt_map(include_image_caption: false)
+      def self.agents_prompt_map(include_image_caption: false)
         map = {
           SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
           SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
@@ -361,11 +381,15 @@ module DiscourseAi
         }
 
         if include_image_caption
-          image_caption_agent = SiteSetting.ai_helper_image_caption_agent.to_i
+          image_caption_agent = SiteSetting.ai_image_caption_agent.to_i
           map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
         end
 
         map
+      end
+
+      def agents_prompt_map(include_image_caption: false)
+        self.class.agents_prompt_map(include_image_caption:)
       end
 
       def all_prompts

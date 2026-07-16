@@ -79,6 +79,7 @@ lv:
         title: Jauns ziņa
         prefix: "Kam:"
       create_channel:
+        description: "Apraksts"
         type: "Tips"
         types:
           category: "Sadaļa"

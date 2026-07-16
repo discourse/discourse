@@ -57,6 +57,10 @@ RSpec.describe SiteSetting do
         )
       end
 
+      it "does not allow an empty menu" do
+        expect do SiteSetting.top_menu = "" end.to raise_error(Discourse::InvalidParameters)
+      end
+
       it "does not allow random text" do
         expect do SiteSetting.top_menu = "latest|random" end.to raise_error(
           Discourse::InvalidParameters,
@@ -77,6 +81,20 @@ RSpec.describe SiteSetting do
         SiteSetting.top_menu = "bookmarks|latest"
         expect(SiteSetting.homepage).to eq("bookmarks")
       end
+    end
+  end
+
+  describe "custom_homepage_crawler_route" do
+    it "allows public top menu routes" do
+      SiteSetting.custom_homepage_crawler_route = "categories"
+
+      expect(SiteSetting.custom_homepage_crawler_route).to eq("categories")
+    end
+
+    it "does not allow authenticated-only routes" do
+      expect { SiteSetting.custom_homepage_crawler_route = "bookmarks" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
     end
   end
 

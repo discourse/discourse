@@ -113,6 +113,11 @@ lv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Ikviens"
+      admins: "Administratori"
+      moderators: "Moderātori"
+      staff: "Personāls"
   education:
     until_posts:
       zero: "%{count} raksti"
@@ -240,6 +245,9 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}
       confirm_button: Pabeigt pieteikšanos
+    device:
+      code: "Kods"
+      continue: "Turpināt"
   reports:
     default:
       labels:
@@ -546,6 +554,8 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    google_meet:
+      meeting_code: "Kods:"
     github:
       closed: "slēgts"
       status_date:

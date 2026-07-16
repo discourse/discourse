@@ -4,10 +4,12 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import ComboBoxField from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/combo-box";
 import WorkflowEditorSession from "discourse/plugins/discourse-workflows/admin/lib/workflows/editor-session";
 import {
+  nodeTypeHasConfigurationFields,
   nodeTypeI18nPrefix,
   nodeTypeI18nScope,
   nodeTypeInputLabel,
   nodeTypeInputs,
+  nodeTypeInputUsesConnectionIndexes,
   nodeTypeOperationLabel,
   nodeTypeOutputKeys,
   nodeTypePaletteGroup,
@@ -128,42 +130,79 @@ module("Unit | Utility | workflows node types", function () {
       "old",
     ]);
     assert.deepEqual(nodeTypeOutputKeys(nodeType), ["new"]);
+    assert.strictEqual(
+      resolveNodeTypeVersion(nodeType, "3.0"),
+      null,
+      "an unregistered version does not fall back to latest"
+    );
+    assert.deepEqual(
+      nodeTypeOutputKeys(nodeType, {}),
+      ["old"],
+      "a node without a typeVersion uses the default version, not latest"
+    );
   });
 
-  test("uses merge mode configuration for input sockets", function (assert) {
+  test("detects configurable node type fields from metadata", function (assert) {
+    assert.false(
+      nodeTypeHasConfigurationFields({
+        identifier: "flow:no_configuration",
+        properties: {},
+        credentials: [],
+      })
+    );
+    assert.true(
+      nodeTypeHasConfigurationFields({
+        identifier: "action:configured",
+        properties: {
+          operation: {
+            type: "options",
+          },
+        },
+      })
+    );
+    assert.true(nodeTypeHasConfigurationFields("action:unknown"));
+  });
+
+  test("uses the merge node type input socket", function (assert) {
     const mergeNodeType = {
       identifier: "flow:merge",
       inputs: [
-        { key: "main" },
-        { key: "input_1", required: true },
-        { key: "input_2", required: true },
+        {
+          key: "main",
+          display_name: "Input",
+          required: false,
+          multiple: true,
+        },
       ],
     };
 
+    const inputs = nodeTypeInputs(mergeNodeType, { configuration: {} });
     assert.deepEqual(
-      nodeTypeInputs(mergeNodeType, {
-        configuration: { mode: "append" },
-      }).map((input) => input.key),
-      ["input_1", "input_2"]
+      inputs.map((input) => input.key),
+      ["main"]
     );
-    assert.deepEqual(
-      nodeTypeInputs(mergeNodeType, {
-        configuration: { mode: "append", number_inputs: 3 },
-      }).map((input) => input.key),
-      ["input_1", "input_2", "input_3"]
-    );
-    assert.deepEqual(
-      nodeTypeInputs(mergeNodeType, {
-        configuration: { mode: "combine" },
-      }).map((input) => input.key),
-      ["input_1", "input_2"]
-    );
+    assert.true(inputs[0].multiple);
+    assert.true(nodeTypeInputUsesConnectionIndexes(mergeNodeType, "main"));
     assert.strictEqual(
-      nodeTypeInputLabel(mergeNodeType, "input_1", {
-        configuration: { mode: "combine" },
+      nodeTypeInputLabel(mergeNodeType, "main", {
+        configuration: {},
       }),
-      "Input 1"
+      "Input"
     );
+  });
+
+  test("does not index loop node connections", function (assert) {
+    const loopNodeType = {
+      identifier: "flow:loop_over_items",
+      inputs: [
+        {
+          key: "main",
+          multiple: true,
+        },
+      ],
+    };
+
+    assert.false(nodeTypeInputUsesConnectionIndexes(loopNodeType, "main"));
   });
 
   test("resolves run scope labels from capabilities", function (assert) {

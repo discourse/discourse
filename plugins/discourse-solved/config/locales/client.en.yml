@@ -10,6 +10,76 @@ en:
             accepted_solutions:
               label: "Accepted solutions"
               tooltip: "The number of topics that had a post marked as the solution."
+        sections:
+          support:
+            title: "Support"
+            fetch_error: "Support data couldn't be loaded."
+            filter:
+              all_categories: "All categories"
+            headline:
+              healthy:
+                title: "The community is solving its own problems."
+              struggling:
+                title: "Most questions aren't getting answered."
+              mixed:
+                title: "Support is a mixed bag."
+              no_data:
+                title: "Not enough support activity yet"
+                summary: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
+              resolution:
+                up: "Resolution rate climbed to %{rate}%."
+                down: "Resolution rate dropped to %{rate}%."
+                flat: "Resolution rate held at %{rate}%."
+              answerers:
+                members: "Members are handling %{share}% of replies."
+                staff: "Staff are answering %{share}% of replies."
+              reply:
+                faster: "First-reply time improved to %{time}, %{delta} faster than the previous period."
+                slower: "First-reply time slipped to %{time}, %{delta} slower than the previous period."
+                flat: "First-reply time held at %{time}."
+              unanswered:
+                one: "%{count} topic from this period still has zero replies."
+                other: "%{count} topics from this period still have zero replies."
+            kpi:
+              resolution_rate:
+                label: "Resolution rate"
+                tooltip: "The percentage of open support topics that were solved."
+              staff_involvement:
+                label: "Staff involvement"
+                tooltip: "The percentage of open support topics where a staff member made the first reply."
+              avg_first_reply:
+                label: "Avg. first reply"
+                tooltip: "The average time between when a support topic was posted and when it received its first reply."
+            outcomes:
+              title: "Topic outcomes"
+              resolved:
+                label: "Resolved"
+                tooltip: "The number of topics that were marked solved."
+              in_progress:
+                label: "In progress"
+                tooltip: "The number of topics with at least one reply."
+              unanswered:
+                label: "Unanswered"
+                tooltip: "The number of topics with no replies."
+            answerers:
+              title: "Who's answering?"
+              empty: "No replies in this period."
+              staff: "Staff"
+              leader: "Leaders"
+              regular: "Regulars"
+              member: "Members"
+              basic: "Basic"
+            response_time:
+              title: "Response time distribution"
+              buckets:
+                lt_1h: "< 1 hour"
+                "1_4h": "1–4 hours"
+                "4_24h": "4–24 hours"
+                gt_24h: "> 24 hours"
+              trend:
+                faster: "%{duration} faster"
+                slower: "%{duration} slower"
+                tooltip: "The average response time trend."
   js:
     notifications:
       alt:
@@ -24,7 +94,7 @@ en:
       allow_accepted_answers: "Allow topic owner and staff to mark a reply as the solution"
       solved_topics_auto_close_hours: "Auto close topic (n) hours after the last reply once the topic has been marked as solved."
       notify_on_staff_accept_solved: "Notify topic creator when staff marks a solution"
-      empty_box_on_unsolved: "Display an empty checkbox next to unsolved topics in the topic list"
+      empty_box_on_unsolved: "Display unsolved topic state in the topic list for supported themes"
       accept_answer: "Select if this reply solves the problem"
       accepted_description: "This is the accepted solution to this topic"
       has_no_accepted_answer: "This topic has no solution"
@@ -64,6 +134,8 @@ en:
         label_with_count: "%{label} (%{count})"
         title: "I am also experiencing this issue"
         author_title: "You started this topic"
+        closed_title: "This topic is closed"
+        archived_title: "This topic is archived"
 
       no_answer:
         title: Has your question been answered?

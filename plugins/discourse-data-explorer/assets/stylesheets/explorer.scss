@@ -145,6 +145,7 @@ table.group-reports {
     --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
+    position: relative;
     width: var(--width);
 
     @include viewport.until(sm) {
@@ -201,6 +202,10 @@ table.group-reports {
             box-shadow: none;
           }
         }
+      }
+
+      .schema__toggle {
+        flex: 0 0 auto;
       }
 
       .schema-table-name {
@@ -292,6 +297,23 @@ table.group-reports {
     }
   }
 
+  &.no-schema {
+    .editor-panel {
+      flex-basis: 100%;
+    }
+
+    .right-panel {
+      width: 0;
+    }
+
+    .schema__toggle.--expand {
+      position: absolute;
+      inset-block-start: var(--space-2);
+      inset-inline-start: -2.75em;
+      z-index: 1;
+    }
+  }
+
   .grippie {
     cursor: nwse-resize;
     padding-bottom: var(--space-2);
@@ -338,6 +360,7 @@ table.group-reports {
 
   &:not(.editing) .desc {
     margin: 10px 0;
+    white-space: pre-wrap;
   }
 
   .groups {
@@ -464,22 +487,10 @@ table.group-reports {
     background-color: var(--danger-low);
   }
 
-  .invalid .ac-wrap {
-    background-color: var(--danger-low);
-  }
-
   .param {
     display: flex;
     align-items: center;
     flex: 0;
-
-    .ac-wrap {
-      display: inline-block;
-
-      input {
-        width: 100px !important; // override an inline style
-      }
-    }
 
     input,
     .select-kit {
@@ -760,6 +771,11 @@ table.group-reports {
     margin-bottom: 1rem;
     animation: fadein 2s;
 
+    .query-results-chart__form {
+      max-width: 100%;
+      margin-bottom: 0.75rem;
+    }
+
     canvas {
       height: clamp(200px, 50vh, 350px) !important;
     }
@@ -914,6 +930,9 @@ table.group-reports {
     .query-desc {
       color: var(--primary-high);
       max-width: 20vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @include viewport.until(md) {
         max-width: 90vw;
@@ -947,12 +966,6 @@ table.group-reports {
 
   .query-row:hover {
     background-color: inherit;
-  }
-
-  tr a {
-    color: inherit;
-    cursor: pointer;
-    display: inline-block;
   }
 
   .no-search-results {

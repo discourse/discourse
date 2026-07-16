@@ -6,5 +6,8 @@
 
 sl:
   js:
+    discourse_reactions:
+      users_popup:
+        all: "Vsi"
     notifications:
       reaction_2_users: "%{username}, %{username2}"

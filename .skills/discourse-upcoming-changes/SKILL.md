@@ -83,6 +83,24 @@ upcoming_change:
 | `[specific_groups]` | No one, Specific group(s) |
 | `[staff, specific_groups]` | No one, Staff, Specific group(s) |
 
+**Optional:** Add `include_css: true` if you need to scope CSS to this change. When enabled for a user, a `uc-<dasherized-setting-name>` class is added to `<body>` so stylesheets can gate visuals on the change (e.g. `enable_your_feature_name` → `body.uc-enable-your-feature-name`). Omit it (the default) when the change has no CSS keyed on the body class — body classes are opt-in, not emitted for every change.
+
+```yaml
+upcoming_change:
+  status: "experimental"
+  impact: "feature,all_members"
+  include_css: true
+```
+
+**Optional:** Add `permanent_warning: false` to suppress the "This change will become permanent soon. You will no longer be able to opt-out." notice that is shown on the admin page once the change reaches `stable`. The notice is shown by default for every change; opt out only when it is misleading — typically changes that just flip the default value of another site setting (`impact: "site_setting_default,..."`), which admins can always set back afterwards.
+
+```yaml
+upcoming_change:
+  status: "stable"
+  impact: "site_setting_default,all_members"
+  permanent_warning: false
+```
+
 ### 2. Add Translation
 
 Add to `config/locales/server.en.yml` under `site_settings:`:

@@ -151,6 +151,13 @@ describe DiscourseReactions::CustomReactionsController do
       expect(user_1_messages).to eq(nil)
     end
 
+    it "does not publish MessageBus messages when the post topic is unavailable" do
+      post_1.stubs(:topic).returns(nil)
+      MessageBus.expects(:publish).never
+
+      described_class.new.send(:publish_change_to_clients!, post_1, reaction: "cry")
+    end
+
     it "errors when reaction is invalid" do
       sign_in(user_1)
       expect do
@@ -340,6 +347,39 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed[0]["post_id"]).to eq(post_2.id)
       expect(parsed[0]["post"]["user"]["id"]).to eq(user_1.id)
       expect(parsed[0]["reaction"]["id"]).to eq(open_mouth_reaction.id)
+    end
+
+    it "omits reactions for posts in topics the requester can no longer see" do
+      pm_op =
+        Fabricate(
+          :private_message_post,
+          user: user_1,
+          recipient: user_2,
+          raw: "private message OP reaction excerpt",
+        )
+      pm_reply =
+        Fabricate(:post, topic: pm_op.topic, user: user_1, raw: "private message reply excerpt")
+
+      [pm_op, pm_reply].each do |pm_post|
+        pm_reaction = Fabricate(:reaction, post: pm_post, reaction_value: "open_mouth")
+        Fabricate(:reaction_user, reaction: pm_reaction, user: user_2, post: pm_post)
+      end
+
+      pm_op.topic.remove_allowed_user(user_2, user_1)
+
+      sign_in(user_1)
+
+      get "/discourse-reactions/posts/reactions-received.json",
+          params: {
+            username: user_1.username,
+          }
+
+      expect(response.status).to eq(200)
+      post_ids = response.parsed_body.map { |reaction| reaction["post_id"] }
+      expect(post_ids).not_to include(pm_op.id)
+      expect(post_ids).not_to include(pm_reply.id)
+      expect(response.body).not_to include(pm_op.raw)
+      expect(response.body).not_to include(pm_reply.raw)
     end
 
     it "does not return reactions received by a user when current user is not an admin" do

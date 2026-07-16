@@ -178,7 +178,10 @@ html:not(.keyboard-visible).mobile-device {
 
     textarea {
       width: 100%;
-      height: 80px;
+
+      &:not(.--expandable) {
+        height: 80px;
+      }
     }
 
     .password-confirmation {

@@ -159,6 +159,8 @@ pt:
       topic: "Tópico"
       post: "Publicação"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Atribuído(a)"
       assign_topic:
         operations:
           assign: "Atribuir"

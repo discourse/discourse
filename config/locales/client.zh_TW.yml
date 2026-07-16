@@ -6,11 +6,25 @@
 
 zh_TW:
   js:
+    user_api_key:
+      authorize: "授權"
+      deny: "取消"
+      copied: "已複製!"
+      otp_description: '你要允許進入%{application_name}這個網站嗎？'
+      no_trust_level: "抱歉，你沒有使用使用者 API 所需要的信任等級"
+      generic_error: "抱歉，我們不能分發使用者 API 密鑰，該特性已經被站點管理員禁用"
+      device:
+        code: "代碼"
+        continue: "繼續"
     blocks:
       ghost:
         status: "狀態"
         in_location: "在"
         failed: "失敗"
+    access_control:
+      manage:
+        access_permission_editor: "編輯"
+        access_permission_remove: "移除"
     number:
       format:
         separator: "."
@@ -337,6 +351,9 @@ zh_TW:
     age: "已建立"
     joined: "加入時間"
     admin_title: "管理員"
+    advanced_mode_toggle:
+      advanced_mode: "進階模式"
+      simple_mode: "簡單模式"
     show_more: "顯示更多"
     show_help: "選項"
     links: "連結"
@@ -960,7 +977,8 @@ zh_TW:
             from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
         membership:
           title: 會員身份
-          access: 存取
+          join_method:
+            invite: "僅限邀請"
         categories:
           title: 分類
           long_title: "類別預設通知"
@@ -993,7 +1011,6 @@ zh_TW:
         title: "權限"
         none: "此組沒有相關類別。"
         description: "此群組的成員可以存取這些類別"
-      public_admission: "允許使用者自由加入群組（需要將群組設為公開瀏覽）"
       public_exit: "允許使用者自由離開群組"
       empty:
         posts: "沒有此群組成員的貼文"
@@ -1009,7 +1026,6 @@ zh_TW:
       request: "請求"
       message: "訊息"
       confirm_leave: "您確定要離開此群組？"
-      allow_membership_requests: "允許使用者向群組擁有者發送加入請求 (需要公開可見的群組)"
       membership_request_template: "自定當使用者傳送加入要求時顯示的樣板"
       membership_request:
         submit: "送出請求"
@@ -1278,6 +1294,9 @@ zh_TW:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
+        push_level:
+          none: "停用"
+          all: "啟用"
         not_supported: "抱歉，您的瀏覽器不支援桌面通知。"
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         each_browser_note: "注意：您必須在所使用的每個瀏覽器上變更此設定。如果您暫停使用者功能表中的通知，所有通知都將被停用，無論此設定為何。"
@@ -1405,6 +1424,9 @@ zh_TW:
       undo_revoke_access: "解除撤銷許可"
       api_approved: "已通過審核："
       api_last_used_at: "最近使用於："
+      api_expires_at: "過期時間:"
+      api_expired_at: "已過期:"
+      api_expires_never: "永不"
       theme: "佈景主題"
       save_to_change_theme: '主題會在您點擊「%{save_text}」後更新。'
       home: "預設首頁"
@@ -2180,7 +2202,6 @@ zh_TW:
     created: "已建立"
     created_lowercase: "已建立"
     trust_level: "信任等級"
-    search_hint: "使用者名稱、電子郵件、或是IP位址"
     create_account:
       header_title: "歡迎!"
       disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
@@ -2224,6 +2245,12 @@ zh_TW:
       confirm_title: 繼續連接至 %{site_name}
       logging_in_as: 以 %{email}登入
       confirm_button: 完成登入
+    code_login:
+      email_label: "電子信箱"
+      continue_button: "繼續"
+      verify_button: "繼續"
+      account_ready_continue: "繼續"
+      username_label: "使用者名稱"
     login:
       header_title: "歡迎回來"
       title: "登入"
@@ -3002,6 +3029,8 @@ zh_TW:
       deleted_post_placeholder: "[刪除]"
       ignored_post_placeholder: "[已忽略]"
       pinned_reply: "已釘選"
+    share_target:
+      new_message: "新增訊息"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -3048,36 +3077,8 @@ zh_TW:
       read_more_in_category: "想要閱讀更多？瀏覽 %{categoryLink} 中的其他主題或<a href='%{latestLink}'>檢視最新主題</a>。"
       read_more: "想要閱讀更多？<a href='%{categoryLink}'>瀏覽所有類別</a>或<a href='%{latestLink}'>檢視最新主題</a>。"
       unread_indicator: "尚無成員閱讀過該主題的最後一篇貼文。"
+      sr_read: "閲讀"
       participant_groups: "參與者群組"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {有 <a href="{basePath}/unread"># 個未讀</a>話題}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {和 <a href="{basePath}/new"># 個新</a>話題，}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {還有 <a href="{basePath}/unread"># 個未讀</a>話題，}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {還有 <a href="{basePath}/new"># 個新</a>話題，}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {或瀏覽 {categoryLink} 中的其他話題}
-          false {或<a href="{basePath}/latest">查看最新話題</a>}
-          other {}
-        }
       created_at: "創建日期： %{date}"
       bumped_at: "最新：%{date}"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
@@ -3485,6 +3486,8 @@ zh_TW:
           actions: "動作"
           edit: "編輯"
           delete: "刪除"
+        modal:
+          title: "翻譯"
         post_language_selector:
           none: "未設定"
       errors:
@@ -3702,7 +3705,6 @@ zh_TW:
       create_long: "建立新的分類"
       type_settings_schema:
         site_settings: "網站設定"
-      slug_placeholder: "(選填) 在 url 加上虛線"
       creation_error: 建立分類時發生錯誤。
       save_error: 儲存分類時發生錯誤。
       validations:
@@ -4345,8 +4347,6 @@ zh_TW:
       no_read_topics_body: "當您開始閱讀討論時，您會在這裡看到清單。若要開始閱讀，請在<a href='%{topUrl}'>熱門</a>或<a href='%{categoriesUrl}'>分類</a>中尋找您感興趣的主題，或依關鍵字搜尋 %{searchIcon}。"
     no_group_messages_title: "找不到群組訊息"
     topic_entrance:
-      sr_jump_top_button: "跳到第一篇貼文 - %{date}"
-      sr_jump_bottom_button: "跳到最後一篇貼文 - %{date}"
       jump_top_button_title: "跳到第一篇貼文"
       jump_bottom_button_title: "跳到最後一篇貼文"
     fullscreen_table:
@@ -4637,6 +4637,7 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         back: "返回到所有報告"
+        all_groups: "所有群組"
         group_traffic: "流量"
         group_members: "成員"
         group_other: "其他"
@@ -4764,7 +4765,6 @@ zh_TW:
             apple_touch_icon:
               title: "Apple 觸控圖示"
               description: "Apple 觸控裝置使用的圖示。如果留空，則會使用 large_icon。"
-              help_text: "建議尺寸為 180 x 180 像素。不建議使用透明背景。"
             digest_logo:
               title: "摘要標誌"
               description: "網站電子郵件摘要頂部使用的替代標誌圖像。如果保留空白，則將使用「logo」設置中的圖像。"
@@ -4772,6 +4772,9 @@ zh_TW:
             opengraph_image:
               title: "OpenGraph 影像"
               description: "預設的 opengraph 圖像，當頁面沒有其他合適的圖像時使用。如果保留空白，將使用大圖標。"
+            og_image_preview:
+              generate: "產生"
+              topic_id_label: "話題 ID"
             x_summary_large_image:
               title: "X 摘要大圖片"
               description: "X 卡片的「摘要大圖像」。如果留空，只要 OpenGraph_image 不是 .svg，就會使用 OpenGraph_image 產生一般的卡片元資料。"
@@ -4862,6 +4865,21 @@ zh_TW:
           sub_pages:
             posts_and_topics:
               title: "貼文和主題"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "所有分類"
+          filter_placeholder: "篩選分類"
+          table:
+            category: "分類"
+            visibility: "能見度"
+            topics: "話題"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "所有分類"
         permalinks:
           title: "固定連結"
           header_description: "為論壇無法識別的 URL 應用的重新導向。"
@@ -4967,7 +4985,7 @@ zh_TW:
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         version_check_pending: "看起來您最近更新了。極好的！"
         installed_version: "已安裝"
-        latest_version: "最新版本"
+        github: "GitHub"
         problems_found: "根據您現在網站設定的建議"
         dismiss_notice: "忽略"
         new_features:
@@ -5031,7 +5049,13 @@ zh_TW:
                 "2": "成員"
                 "3": "活躍使用者"
                 "4": "資深"
+          search:
+            title: "搜索"
+            table:
+              searches: "搜尋結果"
+              status: "狀態"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "啟用"
             all_heading: "所有報告"
@@ -5118,7 +5142,6 @@ zh_TW:
             incoming_email: "自訂電子郵件"
             incoming_email_placeholder: "輸入 email"
             incoming_email_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
-            visibility: 能見度
             visibility_levels:
               title: "誰能看到這個群組？"
               public: "所有使用者"
@@ -5544,6 +5567,8 @@ zh_TW:
             指定解決與該論壇相關的法律糾紛的城市。
           extra_groups:
             groups: "群組"
+          locale_selector:
+            title: "語言"
           optional: "(選擇性)"
           update: "更新"
           toasts:
@@ -6493,10 +6518,11 @@ zh_TW:
         silence_reason: "禁言原因"
         bulk_actions:
           title: "批次操作"
-          admin_cant_be_deleted: "無法刪除此使用者，因為他們是管理員"
-          too_many_or_old_posts: "無法刪除此使用者，因為他們有太多的貼文或很舊的貼文。"
-          too_many_selected_users:
-            other: "您已達到批量刪除使用者上限 %{count}"
+          clear_all: "清除全部"
+          suspend:
+            confirmation_modal:
+              close: "關閉"
+              confirm: "停權"
           delete:
             label: "刪除使用者…"
             confirmation_modal:
@@ -6521,6 +6547,9 @@ zh_TW:
           suspended: "已停權"
           silenced: "被靜音"
           staged: "暫存"
+        activation_filter:
+          all: "所有使用者"
+          activated: "已啟動"
         approved: "已批准？"
         titles:
           active: "活躍使用者"

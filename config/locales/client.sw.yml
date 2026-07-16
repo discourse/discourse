@@ -6,10 +6,21 @@
 
 sw:
   js:
+    user_api_key:
+      authorize: "Idhini"
+      deny: "Batili"
+      no_trust_level: "Samahani, hauna kiwango cha uaminifu kinachohitajika kufikia API ya mtumiaji"
+      device:
+        code: "Kodi"
+        continue: "Endelea"
     blocks:
       ghost:
         hidden: "imefichwa"
         failed: "kushindwa"
+    access_control:
+      manage:
+        access_permission_editor: "Mhariri"
+        access_permission_remove: "Ondoa"
     number:
       format:
         separator: "."
@@ -183,6 +194,9 @@ sw:
     age: "Umri"
     joined: "Alijiunga"
     admin_title: "Kiongozi"
+    advanced_mode_toggle:
+      advanced_mode: "Hali-tumizi ya juu"
+      simple_mode: "Hali-tumizi rahisi"
     show_more: "onyesha zaidi"
     show_help: "Machaguo"
     links: "Viungo"
@@ -464,7 +478,6 @@ sw:
             title: "Mpangilio"
         membership:
           title: Uanachama
-          access: Ufikivu
         categories:
           title: Vikundi
         tags:
@@ -481,7 +494,6 @@ sw:
           to: "Kwenda"
       permissions:
         title: "Vibali"
-      public_admission: "ruhusu watumiaji wajiunge kwenye kikundi bure (kikundi kinabidi kionwe na umma)"
       public_exit: "ruhusu watumiaji waache kikundi bure"
       empty:
         posts: "Hakuna machapisho ya wanachama wa kikundi hiki"
@@ -669,6 +681,9 @@ sw:
       notifications: "Taarifa"
       statistics: "Takwimu"
       desktop_notifications:
+        push_level:
+          none: "Imezuiwa"
+          all: "Imeruhusiwa"
         not_supported: "Taarifa hazionyeshwi kwenye kivinjari hiki. Samahani."
         perm_denied_expl: "Umekataza kibali cha taarifa. Ruhusu taarifa kupitia mipangilio ya kivinjari."
         consent_prompt: "Je, unataka taarifa mubashara watu wakijibu kwenye posti zako?"
@@ -744,6 +759,7 @@ sw:
       revoke_access: "Tengua ufikivu"
       undo_revoke_access: "Ondoa Utenguaji Fikivu"
       api_approved: "Imeidhinishwa"
+      api_expires_never: "kamwe"
       theme: "Mandhari"
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
@@ -1120,7 +1136,6 @@ sw:
     created: "Imeundwa"
     created_lowercase: "Imeundwa"
     trust_level: "Kipimo cha uaminifu"
-    search_hint: "jina la mtumiaji, barua pepe au Anwani ya Mtandao"
     create_account:
       header_title: "Karibu!"
       title: "Jiunge"
@@ -1151,6 +1166,12 @@ sw:
       complete_username_not_found: "Hakuna akaunti inayolingana na jina la mtumiaji <b>%{username}</b>"
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
+    code_login:
+      email_label: "Barua Pepe"
+      continue_button: "Endelea"
+      verify_button: "Endelea"
+      account_ready_continue: "Endelea"
+      username_label: "Jina la mtumiaji"
     login:
       title: "Ingia"
       username: "Mtumiaji"
@@ -1532,6 +1553,8 @@ sw:
       collapse: "Kunja"
       no_replies: "Bado hakuna majibu."
       pinned_reply: "Imebandikwa"
+    share_target:
+      new_message: "Ujumbe mpya"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -1574,6 +1597,7 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
+      sr_read: "soma"
       bumped_at: "Hivi karibuni: %{date}"
       deleted: "Mada imefutwa"
       slow_mode_update:
@@ -2395,6 +2419,7 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        all_groups: "Vikundi vyote"
         group_traffic: "Utembeleaji"
         group_members: "Wanachama"
         group_other: "Nyingine"
@@ -2448,6 +2473,9 @@ sw:
           form:
             mobile: "Kifaa cha kiganjani"
             email: "Barua pepe"
+            og_image_preview:
+              generate: "Tengeneza"
+              topic_id_label: "Utambulisho wa Mada"
         fonts:
           backfill_modal:
             modal_yes: "Ndio"
@@ -2490,6 +2518,20 @@ sw:
               title: "Mipangilio"
         badges:
           title: "Beji"
+        category_management:
+          tabs:
+            settings: "Mipangilio"
+          types:
+            all:
+              title: "Kategoria Zote"
+          table:
+            category: "Kikundi"
+            visibility: "Uonekanaji"
+            topics: "Mada"
+          visibility:
+            public: "Umma"
+          visibility_filter:
+            all: "Kategoria Zote"
         permalinks:
           title: "Anwani za mtandao"
         emoji:
@@ -2536,7 +2578,7 @@ sw:
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
         installed_version: "Imesanikishwa"
-        latest_version: "Hivi Karibuni"
+        github: "GitHub"
         dismiss_notice: "Puuzia"
         new_features:
           learn_more: "Jifunze zaidi..."
@@ -2581,7 +2623,12 @@ sw:
                 "2": "Mwanachama"
                 "3": "Kawaida"
                 "4": "Kiongozi"
+          search:
+            title: "Tafuta"
+            table:
+              searches: "Utafiti"
         reports_section:
+          header_action: "Simamia"
           modal:
             enabled_heading: "Imeruhusiwa"
             all_heading: "Ripoti zote"
@@ -2635,7 +2682,6 @@ sw:
             email: Barua Pepe
             incoming_email: "Barua Pepe inayoingia"
             incoming_email_placeholder: "andika anwani ya barua pepe"
-            visibility: Uonekanaji
             visibility_levels:
               title: "Nani anaweza kuona kikundi hiki?"
               public: "Kila Mtu"
@@ -3218,6 +3264,10 @@ sw:
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Funga"
+              confirm: "Sitisha"
           delete:
             confirmation_modal:
               close: "Funga"

@@ -156,26 +156,6 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with visits" do
-      let(:user) { Fabricate(:user) }
-
-      it "returns a report with data" do
-        freeze_time_safe
-        user.user_visits.create(visited_at: 1.hour.from_now)
-        user.user_visits.create(visited_at: 1.day.ago)
-        user.user_visits.create(visited_at: 2.days.ago, mobile: true)
-        user.user_visits.create(visited_at: 45.days.ago)
-        user.user_visits.create(visited_at: 46.days.ago, mobile: true)
-
-        expect(report.data).to be_present
-        expect(report.data.count).to eq(3)
-        expect(report.data.select { |v| v[:x].today? }).to be_present
-        expect(report.prev30Days).to eq(2)
-      end
-    end
-
-    context "when reporting_improvements is enabled" do
-      before { SiteSetting.reporting_improvements = true }
-
       fab!(:user)
       fab!(:user_2, :user)
 
@@ -590,6 +570,25 @@ RSpec.describe Report do
     end
   end
 
+  describe "signups report" do
+    it "returns the current data and previous period count" do
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 1, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 2, 12))
+      Fabricate(:user, created_at: Time.zone.local(2026, 3, 31, 12))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
+    end
+  end
+
   describe "new contributors report" do
     let(:report) { Report.find("new_contributors") }
 
@@ -613,6 +612,35 @@ RSpec.describe Report do
         expect(report.data[0][:y]).to eq 2
         expect(report.data[1][:y]).to eq 1
       end
+    end
+
+    it "returns the current data and previous period count" do
+      current_contributor = Fabricate(:user)
+      current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 1, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 1, 12),
+      )
+      another_current_contributor = Fabricate(:user)
+      another_current_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 4, 2, 12),
+        first_post_created_at: Time.zone.local(2026, 4, 2, 12),
+      )
+      previous_contributor = Fabricate(:user)
+      previous_contributor.user_stat.update!(
+        new_since: Time.zone.local(2026, 3, 31, 12),
+        first_post_created_at: Time.zone.local(2026, 3, 31, 12),
+      )
+
+      report =
+        Report.find(
+          "new_contributors",
+          start_date: Time.zone.local(2026, 4, 1).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 2).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.sum { |point| point[:y] }).to eq(2)
+      expect(report.prev_period).to eq(1)
     end
   end
 
@@ -706,6 +734,25 @@ RSpec.describe Report do
         expect(report.prev30Days).to eq(75)
       end
     end
+
+    it "returns the current data and previous period average" do
+      current_visitor = Fabricate(:user)
+      previous_visitor = Fabricate(:user)
+
+      current_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 11).to_date)
+      previous_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 9).to_date)
+
+      report =
+        Report.find(
+          "dau_by_mau",
+          start_date: Time.zone.local(2026, 4, 10).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 11).end_of_day,
+          facets: [:prev_period],
+        )
+
+      expect(report.data.map { |point| point[:x] }).to eq([Date.new(2026, 4, 11)])
+      expect(report.prev_period).to eq(100)
+    end
   end
 
   describe "Daily engaged users" do
@@ -734,25 +781,24 @@ RSpec.describe Report do
       end
     end
 
-    it "averages the previous period over the days that had engagement" do
-      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+    it "returns the current data and previous period average" do
+      current_user = Fabricate(:user)
+      previous_users = [Fabricate(:user), Fabricate(:user)]
 
-      two_on_first_day = [Fabricate(:user), Fabricate(:user)]
-      one_on_second_day = Fabricate(:user)
-      two_on_first_day.each do |engaged_user|
+      Fabricate(
+        :user_action,
+        user: current_user,
+        action_type: UserAction::LIKE,
+        created_at: Time.zone.local(2026, 4, 23, 12),
+      )
+      previous_users.each do |previous_user|
         Fabricate(
           :user_action,
-          user: engaged_user,
+          user: previous_user,
           action_type: UserAction::LIKE,
           created_at: Time.zone.local(2026, 4, 16, 12),
         )
       end
-      Fabricate(
-        :user_action,
-        user: one_on_second_day,
-        action_type: UserAction::LIKE,
-        created_at: Time.zone.local(2026, 4, 17, 12),
-      )
 
       report =
         Report.find(
@@ -762,7 +808,36 @@ RSpec.describe Report do
           facets: [:prev_period],
         )
 
-      expect(report.prev_period).to eq(1.5)
+      expect(report.data).to eq([{ x: Date.new(2026, 4, 23), y: 1 }])
+      expect(report.prev_period).to eq(2.0)
+    end
+  end
+
+  describe "signups" do
+    it "uses previous daily counts for the previous period" do
+      freeze_time(Time.zone.local(2026, 4, 28, 12, 0, 0))
+      Report.clear_cache
+
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 17, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 12, 0, 0))
+      Fabricate(:user, created_at: Time.zone.local(2026, 4, 23, 13, 0, 0))
+
+      report =
+        Report.find(
+          "signups",
+          start_date: Time.zone.local(2026, 4, 22).beginning_of_day,
+          end_date: Time.zone.local(2026, 4, 28).end_of_day,
+          facets: %i[prev_period total prev30Days],
+        )
+
+      data = report.data.map { |data_point| [data_point[:x].to_date, data_point[:y]] }
+
+      aggregate_failures do
+        expect(data).to contain_exactly([Date.new(2026, 4, 23), 2])
+        expect(report.prev_period).to eq(1)
+        expect(report.total).to eq(3)
+        expect(report.prev30Days).to eq(1)
+      end
     end
   end
 

@@ -9,6 +9,11 @@ module Migrations
     # such a command has been selected, keeping help and Rails-free commands
     # fast.
     class Command < Samovar::Command
+      # Raised by {#require_positional!} when a required positional is missing.
+      class MissingPositionalError < StandardError
+        include PresentableError
+      end
+
       # Coerces a comma-separated `--only`/`--skip` value into a list of
       # normalized step names. Shared as the `type:` for those options.
       STEP_LIST = ->(value) do
@@ -39,6 +44,18 @@ module Migrations
       end
 
       private
+
+      # Samovar can't enforce required positionals: `one :x, required: true`
+      # raises during parsing, before `call` runs, which would break the
+      # `-h/--help` handling. Commands validate required positionals at the
+      # top of `call` with this helper instead.
+      def require_positional!(value, name, hint: nil)
+        return value unless value.nil?
+
+        message = +"Missing required argument: <#{name}>"
+        message << "\n#{hint}" if hint
+        raise MissingPositionalError, message
+      end
 
       def hoist_options(input)
         options = self.class.table.merged[:options]

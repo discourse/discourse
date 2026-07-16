@@ -73,7 +73,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GithubSearchFiles do
 
       result = tool_with_invalid_branch.invoke
       expect(result[:matching_files]).to be_nil
-      expect(result[:error]).to eq("Failed to perform file search. Status code: 404")
+      expect(result[:error]).to include("Failed to perform file search")
     end
 
     it "fetches the default branch if none is specified" do

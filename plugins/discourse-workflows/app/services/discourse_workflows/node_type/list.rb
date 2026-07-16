@@ -18,7 +18,6 @@ module DiscourseWorkflows
         .uniq(&:identifier)
         .filter_map do |klass|
           identifier = klass.identifier
-          next unless klass.palette_visible?
 
           NodeTypeSerializer.new(
             identifier: identifier,

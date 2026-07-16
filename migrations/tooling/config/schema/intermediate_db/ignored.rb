@@ -150,10 +150,12 @@ Migrations::Tooling::Schema.ignored do
   tables :external_upload_stubs, :optimized_images, :optimized_videos, :upload_references, :uploads
 
   tables :admin_dashboard_reports,
+         :admin_dashboard_sections,
          :browser_pageview_country_daily_rollups,
          :browser_pageview_referrer_daily_rollups
 
-  tables :admin_notices,
+  tables :access_control_lists,
+         :admin_notices,
          :api_key_scopes,
          :api_keys,
          :application_requests,
@@ -166,12 +168,15 @@ Migrations::Tooling::Schema.ignored do
          :bookmarks,
          :browser_pageview_event_scores,
          :browser_pageview_events,
+         :browser_pageview_session_engagement_daily_rollups,
+         :browser_pageview_session_engagements,
          :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,
          :do_not_disturb_timings,
          :email_change_requests,
+         :email_login_codes,
          :email_logs,
          :email_tokens,
          :embeddable_host_tags,
@@ -206,6 +211,7 @@ Migrations::Tooling::Schema.ignored do
          :sidebar_sections,
          :sidebar_urls,
          :site_setting_groups,
+         :site_setting_localizations,
          :sitemaps,
          :skipped_email_logs,
          :stylesheet_cache,

@@ -188,6 +188,8 @@ he:
       topic: "נושא"
       post: "פוסט"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "מוקצה"
       assign_topic:
         operations:
           assign: "הקצאה"

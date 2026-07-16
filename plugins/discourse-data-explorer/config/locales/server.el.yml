@@ -8,3 +8,8 @@ el:
   discourse_data_explorer:
     errors:
       tool_not_allowed: "Δεν επιτρέπεται να χρησιμοποιήσετε αυτό το εργαλείο"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Δεν έχει επιλεγεί ερώτημα."
+  data_explorer:
+    admin_dashboard_label: "Data Explorer"

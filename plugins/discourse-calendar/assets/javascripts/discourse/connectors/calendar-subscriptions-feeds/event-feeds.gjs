@@ -1,7 +1,7 @@
 import CalendarSubscriptionUrl from "discourse/components/calendar-subscription-url";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   {{#if @outletArgs.urls.all_events}}
     <CalendarSubscriptionUrl
       @label={{i18n "discourse_calendar.preferences.all_events"}}

@@ -142,37 +142,39 @@
     }
   }
 
-  .container.posts {
-    @include viewport.until(sm) {
-      .main-avatar .avatar {
-        width: 40px;
-        height: 40px;
-      }
+  body:not(.archetype-private_message) {
+    .container.posts {
+      @include viewport.until(sm) {
+        .main-avatar .avatar {
+          width: 40px;
+          height: 40px;
+        }
 
-      .topic-body {
-        .topic-meta-data {
-          .username {
-            font-size: var(--font-0-rem);
+        .topic-body {
+          .topic-meta-data {
+            .username {
+              font-size: var(--font-0-rem);
+            }
+          }
+
+          .contents {
+            padding-top: var(--space-4);
           }
         }
 
-        .contents {
-          padding-top: var(--space-4);
-        }
-      }
+        .small-action {
+          &-desc {
+            padding: var(--space-1) 0;
+          }
 
-      .small-action {
-        &-desc {
-          padding: var(--space-1) 0;
-        }
+          // for core eventually, better way imo
+          .topic-avatar {
+            padding-top: 0;
+            align-items: center;
 
-        // for core eventually, better way imo
-        .topic-avatar {
-          padding-top: 0;
-          align-items: center;
-
-          .d-icon {
-            font-size: var(--font-up-1);
+            .d-icon {
+              font-size: var(--font-up-1);
+            }
           }
         }
       }

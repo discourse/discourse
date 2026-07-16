@@ -13,6 +13,9 @@ hr:
             topic_id:
               label: ID teme
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Čavrljanje"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogućiti"
       date: "Datum"
@@ -91,11 +94,6 @@ hr:
             last: "zadnji"
         attendance:
           none: "Ništa"
-        url:
-          label: "URL"
-          placeholder: "Opcionalno"
-        location:
-          label: "Lokacija"
         description:
           label: "Opis"
         event_type:

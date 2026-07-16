@@ -144,6 +144,74 @@ RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
       expect(tool_call_parts[:thoughtSignature]).to eq("sig-123")
     end
 
+    it "preserves text thought signatures on model messages" do
+      prompt = context.prompt
+      prompt.push(type: :user, id: "user1", content: "hello")
+      prompt.push(
+        type: :model,
+        content: "Hello world",
+        thinking_provider_info: {
+          gemini: {
+            thought_signature_parts: [{ text: "", thoughtSignature: "sig-empty" }],
+          },
+        },
+      )
+
+      translated = context.dialect(prompt).translate
+      model_message = translated[:messages].find { |message| message[:role] == "model" }
+
+      expect(model_message[:parts]).to eq(
+        [{ text: "Hello world" }, { text: "", thoughtSignature: "sig-empty" }],
+      )
+    end
+
+    it "preserves signed text suffixes without merging them into unsigned text" do
+      prompt = context.prompt
+      prompt.push(type: :user, id: "user1", content: "hello")
+      prompt.push(
+        type: :model,
+        content: "Hello world",
+        thinking_provider_info: {
+          gemini: {
+            thought_signature_parts: [{ text: "world", thoughtSignature: "sig-world" }],
+          },
+        },
+      )
+
+      translated = context.dialect(prompt).translate
+      model_message = translated[:messages].find { |message| message[:role] == "model" }
+
+      expect(model_message[:parts]).to eq(
+        [{ text: "Hello " }, { text: "world", thoughtSignature: "sig-world" }],
+      )
+    end
+
+    it "preserves signed thought summaries before model text" do
+      prompt = context.prompt
+      prompt.push(type: :user, id: "user1", content: "hello")
+      prompt.push(
+        type: :model,
+        content: "Hello world",
+        thinking_provider_info: {
+          gemini: {
+            thought_signature_parts: [
+              { text: "I should greet the user.", thought: true, thoughtSignature: "sig-thought" },
+            ],
+          },
+        },
+      )
+
+      translated = context.dialect(prompt).translate
+      model_message = translated[:messages].find { |message| message[:role] == "model" }
+
+      expect(model_message[:parts]).to eq(
+        [
+          { text: "I should greet the user.", thought: true, thoughtSignature: "sig-thought" },
+          { text: "Hello world" },
+        ],
+      )
+    end
+
     it "merges multiple tool calls from the same batch into a single model message" do
       prompt = context.prompt
       prompt.push(type: :user, id: "user1", content: "do two things")

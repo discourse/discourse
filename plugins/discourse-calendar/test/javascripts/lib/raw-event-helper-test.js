@@ -4,12 +4,15 @@ import {
   buildEventBlock,
   buildParams,
   defaultReminderFor,
+  isLivestreamUrl,
+  parseEventAttrs,
   parseEventBlock,
   parseReminders,
   reconcileDefaultReminder,
   reminderToBBCode,
   removeEvent,
   replaceRaw,
+  stateToEventInput,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 
 const SAME_DAY_CONFIG = {
@@ -443,6 +446,116 @@ module("Unit | Lib | raw-event-helper", function () {
       buildParams(startsAt, null, {}, siteSettings).image,
       undefined,
       "omits image when imageUpload is not set"
+    );
+  });
+
+  test("livestream round-trips through state, params and parsing", function (assert) {
+    const startsAt = "2024-06-15T10:00:00Z";
+    const siteSettings = { discourse_post_event_allowed_custom_fields: "" };
+
+    assert.strictEqual(
+      buildParams(startsAt, null, { livestream: true }, siteSettings)
+        .livestream,
+      "true",
+      "buildParams emits livestream when enabled"
+    );
+
+    assert.strictEqual(
+      buildParams(startsAt, null, { livestream: false }, siteSettings)
+        .livestream,
+      undefined,
+      "buildParams omits livestream when disabled"
+    );
+
+    assert.true(
+      stateToEventInput({ livestream: true }).livestream,
+      "stateToEventInput carries livestream through"
+    );
+
+    assert.true(
+      parseEventAttrs({ livestream: "true" }).livestream,
+      "parseEventAttrs reads livestream=true"
+    );
+
+    assert.false(
+      parseEventAttrs({}).livestream,
+      "parseEventAttrs defaults livestream to false"
+    );
+  });
+
+  test("isLivestreamUrl only accepts http(s) URLs for major livestreaming platforms", function (assert) {
+    assert.false(
+      isLivestreamUrl("https://example.com/live"),
+      "does not accept arbitrary URLs"
+    );
+    assert.false(
+      isLivestreamUrl("http://example.com/live"),
+      "does not accept arbitrary URLs"
+    );
+    assert.false(
+      isLivestreamUrl("HTTPS://EXAMPLE.COM"),
+      "does not accept arbitrary URLs"
+    );
+    assert.false(isLivestreamUrl("www.example.com"), "rejects schemeless www");
+    assert.false(isLivestreamUrl("mailto:host@example.com"), "rejects mailto");
+    assert.false(isLivestreamUrl("Room 5"), "rejects plain text");
+    assert.false(isLivestreamUrl(null), "handles null");
+    assert.false(isLivestreamUrl(undefined), "handles undefined");
+
+    assert.true(
+      isLivestreamUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+      "accepts YouTube"
+    );
+    assert.true(
+      isLivestreamUrl("https://youtu.be/dQw4w9WgXcQ"),
+      "accepts YouTube short link"
+    );
+    assert.true(
+      isLivestreamUrl("https://www.twitch.tv/username"),
+      "accepts Twitch"
+    );
+    assert.true(
+      isLivestreamUrl("https://www.facebook.com/username/videos/123456789"),
+      "accepts Facebook"
+    );
+    assert.true(
+      isLivestreamUrl("https://www.tiktok.com/@username/video/123456789"),
+      "accepts TikTok"
+    );
+    assert.true(
+      isLivestreamUrl("https://www.instagram.com/tv/123456789"),
+      "accepts Instagram"
+    );
+    assert.true(isLivestreamUrl("https://zoom.us/j/123456789"), "accepts Zoom");
+  });
+
+  test("isLivestreamUrl accepts subdomains of livestreaming platforms", function (assert) {
+    assert.true(
+      isLivestreamUrl("https://us06web.zoom.us/j/123456789?pwd=secret"),
+      "accepts the vanity subdomain Zoom actually hands out"
+    );
+    assert.true(
+      isLivestreamUrl("https://gaming.youtube.com/watch?v=dQw4w9WgXcQ"),
+      "accepts a YouTube subdomain"
+    );
+    assert.true(
+      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789"),
+      "is case-insensitive"
+    );
+  });
+
+  test("isLivestreamUrl rejects hosts that merely resemble a platform", function (assert) {
+    assert.false(
+      isLivestreamUrl("https://notzoom.us/j/123456789"),
+      "rejects a host ending in the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://zoom.us.evil.com/j/123456789"),
+      "rejects a host starting with the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://myyoutube.com/watch?v=1"),
+      "rejects a host prefixed with the platform name"
     );
   });
 });

@@ -230,6 +230,11 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+    default_full_names:
+      everyone: "Vsi"
+      admins: "Administratorji"
+      moderators: "Moderatorji"
+      staff: "Osebje"
   education:
     until_posts:
       one: "%{count} prispevek"
@@ -573,6 +578,9 @@ sl:
       confirm_title: Nadaljujte na %{site_name}
       logging_in_as: Prijava kot %{username}
       confirm_button: Zaključi prijavo
+    device:
+      code: "Koda"
+      continue: "Nadaljuj"
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"
@@ -622,6 +630,7 @@ sl:
       labels:
         count: "Člani"
         share: "Deli"
+        signups: "Registracije"
       levels:
         "0": "Novi"
         "1": "Osnovni uporabnik"
@@ -1959,6 +1968,8 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    google_meet:
+      meeting_code: "Koda:"
     github:
       closed: "zaprto"
       status_date:

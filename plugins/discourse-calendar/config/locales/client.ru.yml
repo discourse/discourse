@@ -33,6 +33,12 @@ ru:
             topic_id:
               label: ID темы
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Чат"
+        chat:
+          join_channel_header: "🌟 Присоединяйтесь к обсуждению! 🌟"
+          join_channel_message: "Подтвердите свое участие и откройте чат мероприятия. Присоединяйтесь к обсуждениям, делитесь своими впечатлениями и общайтесь с другими участниками!"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
       preferences:
         all_events: "Discourse Календарь - Все события"
@@ -333,6 +339,7 @@ ru:
       search: "Поиск…"
       group_availability: "доступность %{group}"
     discourse_post_event:
+      new_event: "Новое событие"
       notifications:
         before_event_reminder: "Мероприятие скоро начнется"
         after_event_reminder: "Мероприятие закончилось"
@@ -399,6 +406,7 @@ ru:
       upcoming_events_list:
         title: "Предстоящие мероприятия"
         empty: "Нет предстоящих мероприятий"
+        all_day: "Весь день"
         error: "Не удалось получить мероприятия"
         try_again: "Попробовать снова"
         view_all: "Просмотреть все"
@@ -412,10 +420,12 @@ ru:
       models:
         invitee:
           no_users: "Пользователи не найдены"
+          this_event: "Это событие"
+          this_and_following: "Это событие и все последующие события"
           leave_event: "Покинуть мероприятие"
           status:
-            unknown: "Не интересует"
             going: "Участвую"
+            not_going: "Не пойду"
             interested: "Интересно"
             going_count:
               one: "%{count} участвует"
@@ -453,10 +463,15 @@ ru:
               description: "К закрытому мероприятию могут присоединиться только приглашенные пользователи."
       composer:
         name_placeholder: "Название события"
+        end_date_placeholder: "Дата окончания"
         location_placeholder: "Добавить местоположение или URL"
+        max_attendees_placeholder: "Неограниченное количество участников"
+        no_rsvps_label: "Не ведется учет посещаемости"
         description_placeholder: "Добавить описание события"
         event_title_placeholder: "Название события"
         create_event_button: "Создать мероприятие"
+        action_title: "Создать новое событие"
+        all_day: "Весь день"
         reminder:
           units:
             minutes:
@@ -479,9 +494,17 @@ ru:
               few: "нед."
               many: "нед."
               other: "нед."
+          before: "%{unit} перед"
+          after: "%{unit} после"
+          notification_title: "Уведомить участников"
+          bump_topic_title: "Автоматическое поднятие темы"
+          remove: "Удалить напоминание"
       composer_actions:
         create_event:
           label: "Создать мероприятие"
+          desc: "Создать новое событие в этой категории"
+        create_topic:
+          label: "Создать тему"
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"
@@ -490,7 +513,6 @@ ru:
         create_event_title: "Создать мероприятие"
         update_event_title: "Изменить мероприятие"
         advanced_settings_title: "Расширенные настройки"
-        advanced_settings: "Расширенные настройки"
         confirm_delete: "Действительно удалить это мероприятие ?"
         confirm_close: "Действительно закрыть это мероприятие ?"
         confirm_open: "Действительно открыть это мероприятие ?"
@@ -506,10 +528,16 @@ ru:
           remove_timezone: Без часового пояса (UTC)
         starts_at:
           label: "Дата начала"
+        ends_at:
+          label: "Дата окончания"
         all_day:
           label: "Мероприятие на весь день"
+          description: "Мероприятие, рассчитанное на весь день, не будет иметь определенного расписания, только дату. Мероприятие будет проходить с начала дня до конца дня."
         reminders:
           label: "Напоминания"
+          types:
+            bump_topic: "Автоматическое поднятие темы"
+            notification: "Уведомить участников"
           units:
             minutes: "мин"
             hours: "ч."
@@ -518,26 +546,32 @@ ru:
           periods:
             before: "до"
             after: "после"
+        recurrence_until:
+          label: "До (включая эту дату)"
         recurrence:
           label: "Повторение"
           none: "Без повторения"
           every_day: "Каждый день"
           every_weekday: "Каждый будний день"
+          every_week: "Каждый %{weekday}"
           ordinals:
+            first: "первый"
+            second: "второй"
+            third: "третий"
+            fourth: "четвертый"
             last: "использовать ранее установленные дату и время"
         max_attendees:
           label: "Максимальное количество участников"
           placeholder: "Нет ограничений"
         attendance:
+          label: "Сколько участников могут принять участие в этом мероприятии?"
+          unlimited: "Без ограничений"
+          up_to: "До..."
           none: "Нет"
         allow_chat:
           label: "Интеграция чата"
           checkbox_label: "Создать и настроить чат-канал для конкретного события"
-        url:
-          label: "URL-адрес"
-          placeholder: "Необязательно"
         location:
-          label: "Расположение"
           placeholder: "Добавьте местоположение, ссылку или что-то еще."
         description:
           label: "Описание"
@@ -548,8 +582,13 @@ ru:
         invitees:
           label: "Приглашённые группы"
         event_type:
+          label: "Тип посещаемости"
           public:
             title: "Публичное"
+            description: "Принять участие может любой желающий."
+          private:
+            title: "Только по приглашению"
+            description: "Участвовать могут только члены определенных групп."
         delete_confirmation_message: "Удалить это событие?"
         image:
           label: "Изображение события"

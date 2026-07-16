@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import { i18n } from "discourse-i18n";
 import WorkflowsEditor, {
+  buildPastedGraph,
   isNodeUnavailable,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor";
 
@@ -24,8 +25,12 @@ function setFormApi(editor, data) {
       get(key) {
         return data[key];
       },
+      set(key, value) {
+        data[key] = value;
+      },
     },
   });
+  return data;
 }
 
 function setRouter(editor, assert) {
@@ -310,6 +315,129 @@ module("Unit | Component | workflows editor", function () {
     assert.deepEqual(
       editor.filteredNodePanelTypes.map((nodeType) => nodeType.identifier),
       ["trigger:manual", "action:topic"]
+    );
+  });
+
+  test("buildPastedGraph duplicates nodes with unique names and remaps internal connections", function (assert) {
+    const existingNodes = [
+      {
+        clientId: "existing-trigger",
+        type: "trigger:manual",
+        name: i18n("discourse_workflows.nodes.trigger:manual"),
+      },
+    ];
+
+    const { updatedNodes, updatedConnections } = buildPastedGraph({
+      existingNodes,
+      existingConnections: [],
+      copiedNodes: [
+        {
+          clientId: "copied-trigger",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          configuration: { foo: "bar" },
+          position: { x: 10, y: 20 },
+        },
+        {
+          clientId: "copied-action",
+          type: "trigger:manual",
+          typeVersion: "1.0",
+          configuration: { baz: "qux" },
+          position: { x: 100, y: 20 },
+        },
+      ],
+      copiedConnections: [
+        {
+          sourceClientId: "copied-trigger",
+          targetClientId: "copied-action",
+          sourceOutput: "main",
+          targetInput: "main",
+          sourceOutputIndex: 0,
+          targetInputIndex: 0,
+        },
+      ],
+    });
+
+    assert.deepEqual(
+      updatedNodes.map((node) => node.name),
+      [
+        i18n("discourse_workflows.nodes.trigger:manual"),
+        `${i18n("discourse_workflows.nodes.trigger:manual")} 1`,
+        `${i18n("discourse_workflows.nodes.trigger:manual")} 2`,
+      ],
+      "names are generated against already-pasted nodes"
+    );
+    assert.strictEqual(
+      updatedConnections.length,
+      1,
+      "internal connection pasted"
+    );
+    assert.strictEqual(
+      updatedConnections[0].sourceClientId,
+      updatedNodes[1].clientId,
+      "connection source is remapped"
+    );
+    assert.strictEqual(
+      updatedConnections[0].targetClientId,
+      updatedNodes[2].clientId,
+      "connection target is remapped"
+    );
+  });
+
+  test("buildPastedGraph normalizes pasted indexed input connections", function (assert) {
+    const { updatedNodes, updatedConnections } = buildPastedGraph({
+      existingNodes: [],
+      existingConnections: [],
+      copiedNodes: [
+        {
+          clientId: "source-1",
+          type: "trigger:manual",
+          position: { x: 10, y: 20 },
+        },
+        {
+          clientId: "source-2",
+          type: "trigger:manual",
+          position: { x: 10, y: 120 },
+        },
+        {
+          clientId: "target",
+          type: "action:multi_input",
+          position: { x: 200, y: 20 },
+        },
+      ],
+      copiedConnections: [
+        { sourceClientId: "source-1", targetClientId: "target" },
+        { sourceClientId: "source-2", targetClientId: "target" },
+      ],
+      nodeTypeFor(node) {
+        if (node.type === "action:multi_input") {
+          return {
+            identifier: "action:multi_input",
+            inputs: [{ key: "items", multiple: true }],
+          };
+        }
+
+        return node.type;
+      },
+    });
+
+    const targetNode = updatedNodes.find(
+      (node) => node.type === "action:multi_input"
+    );
+    const targetConnections = updatedConnections.filter(
+      (connection) => connection.targetClientId === targetNode.clientId
+    );
+
+    assert.deepEqual(
+      targetConnections.map((connection) => ({
+        targetInput: connection.targetInput,
+        targetInputIndex: connection.targetInputIndex,
+      })),
+      [
+        { targetInput: "items", targetInputIndex: 0 },
+        { targetInput: "items", targetInputIndex: 1 },
+      ],
+      "pasted connections into indexed inputs are assigned stable indexes"
     );
   });
 });

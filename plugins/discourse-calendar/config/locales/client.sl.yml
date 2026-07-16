@@ -18,6 +18,9 @@ sl:
             topic_id:
               label: ID teme
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Klepet"
       invite_user_notification: "%{username} vas vabi na: %{description}"
       on_holiday: "Na počitnicah"
       disable_holiday: "Onemogoči"
@@ -346,7 +349,6 @@ sl:
       models:
         invitee:
           status:
-            unknown: "Neodločen"
             going: "Pridem"
             interested: "Mogoče pridem"
         event:
@@ -419,11 +421,6 @@ sl:
             last: "zadnji"
         attendance:
           none: "Brez"
-        url:
-          label: "URL"
-          placeholder: "Neobvezno"
-        location:
-          label: "Lokacija"
         description:
           label: "Opis"
         name:

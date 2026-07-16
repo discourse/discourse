@@ -1,5 +1,6 @@
 import { trustHTML } from "@ember/template";
 import { i18n } from "discourse-i18n";
+import { LOOP_NODE_TYPE } from "./graph-constants";
 
 const DEFAULT_COLOR = "var(--primary-medium)";
 const DEFAULT_I18N_PREFIX = "discourse_workflows";
@@ -49,6 +50,12 @@ function resolveNodeType(nodeTypeOrIdentifier) {
   return { name: nodeTypeOrIdentifier, identifier: nodeTypeOrIdentifier };
 }
 
+export const DEFAULT_TYPE_VERSION = "1.0";
+
+export function typeVersionForNode(node) {
+  return node ? (node.typeVersion ?? DEFAULT_TYPE_VERSION) : null;
+}
+
 export function resolveNodeTypeVersion(
   nodeTypeOrIdentifier,
   typeVersion = null
@@ -59,15 +66,11 @@ export function resolveNodeTypeVersion(
     return nodeType;
   }
 
-  if (typeVersion && nodeType.versions?.[typeVersion]) {
-    return nodeType.versions[typeVersion];
+  if (!typeVersion || !nodeType.versions) {
+    return nodeType.latest || nodeType;
   }
 
-  if (nodeType.latest) {
-    return nodeType.latest;
-  }
-
-  return nodeType;
+  return nodeType.versions[typeVersion] || null;
 }
 
 export function nodeTypeVersion(nodeTypeOrIdentifier, typeVersion = null) {
@@ -194,40 +197,11 @@ function indexedPort(port, index) {
   };
 }
 
-function mergeInputs(node) {
-  const mode = node?.configuration?.mode || "append";
-
-  if (mode === "append") {
-    const count = Math.max(
-      parseInt(node?.configuration?.number_inputs, 10) || 2,
-      2
-    );
-    return Array.from({ length: count }, (_, index) =>
-      indexedPort(
-        {
-          key: `input_${index + 1}`,
-          display_name: `Input ${index + 1}`,
-          label: `Input ${index + 1}`,
-        },
-        index
-      )
-    );
-  }
-
-  return ["input_1", "input_2"].map((key, index) =>
-    indexedPort({ key, label: `Input ${index + 1}` }, index)
-  );
-}
-
 export function nodeTypeInputs(nodeTypeOrIdentifier, node = null) {
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
-    node?.typeVersion
+    typeVersionForNode(node)
   );
-
-  if (nodeTypeIdentifier(nodeType) === "flow:merge") {
-    return mergeInputs(node);
-  }
 
   const inputs = nodeType?.inputs;
 
@@ -238,14 +212,73 @@ export function nodeTypeInputs(nodeTypeOrIdentifier, node = null) {
   return [{ key: "main", index: 0, required: true }];
 }
 
+export function nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node = null) {
+  return nodeTypeInputs(nodeTypeOrIdentifier, node).find(
+    (input) => input.key === keyOrIndex || input.index === keyOrIndex
+  );
+}
+
+export function nodeTypeInputAcceptsMultipleConnections(
+  nodeTypeOrIdentifier,
+  keyOrIndex,
+  node = null
+) {
+  return Boolean(
+    nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node)?.multiple
+  );
+}
+
+export function nodeTypeInputUsesConnectionIndexes(
+  nodeTypeOrIdentifier,
+  keyOrIndex,
+  node = null
+) {
+  if (nodeTypeIdentifier(nodeTypeOrIdentifier) === LOOP_NODE_TYPE) {
+    return false;
+  }
+
+  const input = nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node);
+  return Boolean(input?.multiple);
+}
+
+export function nodeTypeConnectionIndexedInputKey(
+  nodeTypeOrIdentifier,
+  node = null
+) {
+  if (nodeTypeIdentifier(nodeTypeOrIdentifier) === LOOP_NODE_TYPE) {
+    return null;
+  }
+
+  return nodeTypeInputs(nodeTypeOrIdentifier, node).find(
+    (input) => input.multiple
+  )?.key;
+}
+
+export function nodeTypeHasConfigurationFields(
+  nodeTypeOrIdentifier,
+  node = null
+) {
+  if (!nodeTypeOrIdentifier || typeof nodeTypeOrIdentifier === "string") {
+    return true;
+  }
+
+  const nodeType = resolveNodeTypeVersion(
+    nodeTypeOrIdentifier,
+    typeVersionForNode(node)
+  );
+
+  return (
+    Object.keys(nodeType?.properties || {}).length > 0 ||
+    (nodeType?.credentials || []).length > 0
+  );
+}
+
 export function nodeTypeInputLabel(
   nodeTypeOrIdentifier,
   keyOrIndex,
   node = null
 ) {
-  const input = nodeTypeInputs(nodeTypeOrIdentifier, node).find(
-    (item) => item.key === keyOrIndex || item.index === keyOrIndex
-  );
+  const input = nodeTypeInput(nodeTypeOrIdentifier, keyOrIndex, node);
 
   if (input?.label_key) {
     return (
@@ -268,7 +301,11 @@ export function nodeTypePort(nodeTypeOrIdentifier, key, typeVersion = null) {
 }
 
 export function nodeTypePortLabel(nodeTypeOrIdentifier, key, node = null) {
-  const port = nodeTypePort(nodeTypeOrIdentifier, key, node?.typeVersion);
+  const port = nodeTypePort(
+    nodeTypeOrIdentifier,
+    key,
+    typeVersionForNode(node)
+  );
 
   if (port.label_key) {
     return translatedOrNull(port.label_key) || port.label || key;
@@ -278,7 +315,7 @@ export function nodeTypePortLabel(nodeTypeOrIdentifier, key, node = null) {
 }
 
 export function nodeTypeOutputKeys(nodeTypeOrIdentifier, node = null) {
-  return nodeTypePorts(nodeTypeOrIdentifier, node?.typeVersion).map(
+  return nodeTypePorts(nodeTypeOrIdentifier, typeVersionForNode(node)).map(
     (port) => port.key
   );
 }
@@ -311,7 +348,7 @@ function runScopeFromCapability(runScope, node, nodeType) {
 export function nodeTypeRunScopeLabelKey(nodeTypeOrIdentifier, node = null) {
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
-    node?.typeVersion
+    typeVersionForNode(node)
   );
   const runScope = runScopeFromCapability(
     nodeTypeCapabilities(nodeType).run_scope,

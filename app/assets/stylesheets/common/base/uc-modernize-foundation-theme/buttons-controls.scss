@@ -1,117 +1,28 @@
-.uc-modernize-foundation-theme {
+@use "lib/viewport";
+
+:where(.uc-modernize-foundation-theme) {
   --d-button-default-bg-color: var(--secondary);
-  --d-button-default-border: 1px solid var(--primary-200);
-  --d-button-default-border--hover: 1px solid var(--primary-300);
+  --d-button-default-border: 1px solid var(--primary-300);
+  --d-button-default-border--hover: 1px solid var(--primary-400);
   --d-button-default-bg-color--hover: var(--primary-200);
   --d-button-default-text-color--hover: var(--primary);
   --d-button-default-icon-color--hover: var(--primary);
   --d-button-default-text-color: var(--primary-900);
   --d-button-default-icon-color: var(--primary-900);
 
-  .container.posts .topic-navigation .btn-toggle-localized-content.--active {
-    --d-button-default-icon-color: var(--tertiary);
-    --d-button-default-icon-color--hover: var(--tertiary);
+  .sidebar-section-header-dropdown-btn {
+    --d-button-default-border: none;
   }
 
-  .btn-default,
-  .btn-icon-text,
-  .btn-icon,
-  .btn-danger,
-  .btn-primary,
-  .btn.no-text,
-  .view-all-drafts,
-  .discourse-reactions-counter .reactions-counter,
-  #topic-progress-wrapper {
-    &:not(
-      .topic-voting-menu-trigger,
-      .sidebar-footer-actions-button,
-      #search-button,
-      .btn-sidebar-toggle,
-      .topic-map__views-trigger,
-      .topic-map__likes-trigger,
-      .topic-map__users-trigger,
-      .topic-map__links-trigger,
-      .notifications-tracking-btn,
-      .user-menu-tab,
-      .--with-description,
-      .chat-message-react-btn,
-      .profile-tab-btn,
-      .back-button,
-      .composer-actions-btn,
-      .language-switcher-trigger,
-      .d-multi-select-trigger__expand-btn,
-      .emoji-picker-trigger,
-      .topic-list-header-tab
-    ) {
-      padding-block: 0;
-      height: var(--d-control-height);
-      padding-inline: var(--space-2);
+  // button on /my/badges
+  .favorite-btn {
+    border-color: var(--primary-low);
+    border-bottom: none;
+    border-right: none;
+
+    &:hover {
+      border-bottom: none;
+      border-right: none;
     }
-  }
-
-  .btn.no-text.btn-icon {
-    &:not(
-      .topic-voting-menu-trigger,
-      .voting-wrapper__button,
-      .user-menu-tab,
-      .user-menu-tab-active,
-      .composer-actions-btn,
-      .dropdown-select-box-header,
-      .d-multi-select-trigger__expand-btn,
-      .emoji-picker-trigger
-    ) {
-      width: var(--d-control-height);
-    }
-  }
-
-  .c-footer button {
-    padding-block: 0.75rem !important;
-    height: unset !important;
-  }
-
-  .topic-replies-toggle-wrapper .topics-replies-toggle {
-    border-radius: var(--d-border-radius);
-    height: var(--d-control-height);
-    padding: 0 0.65em;
-  }
-
-  .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
-    background-color: var(--d-nav-bg-color--active);
-    color: var(--d-nav-color--active);
-  }
-
-  .bookmark-menu-content .bookmark-menu__title,
-  .bookmark-menu-content .bookmark-menu__row-title {
-    padding-block: 0;
-    padding-inline: var(--d-sidebar-row-horizontal-padding);
-    height: var(--d-sidebar-row-height);
-  }
-
-  .bookmark-menu-content .bookmark-menu__row-title {
-    display: flex;
-    align-items: center;
-  }
-
-  .search-container .search-bar input.search-query {
-    height: var(--d-control-height);
-  }
-
-  .search-input,
-  input[type="text"],
-  input[type="password"],
-  input[type="datetime"],
-  input[type="datetime-local"],
-  input[type="date"],
-  input[type="month"],
-  input[type="time"],
-  input[type="week"],
-  input[type="number"],
-  input[type="email"],
-  input[type="url"],
-  input[type="search"],
-  input[type="tel"],
-  input[type="color"] {
-    height: var(--d-control-height);
-    padding-block: 0;
   }
 }

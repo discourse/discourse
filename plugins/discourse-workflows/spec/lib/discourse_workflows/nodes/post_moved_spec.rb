@@ -42,7 +42,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
   end
 
   describe "#output" do
-    it "returns moved post, destination topic, and original topic data" do
+    it "returns moved post, destination topic, and original topic data", :aggregate_failures do
       trigger = described_class.new(moved_post, source_topic.id)
       output = trigger.output
 
@@ -59,6 +59,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
         category_id: destination_category.id,
       )
       expect(output[:original_topic]).to include(id: source_topic.id, title: source_topic.title)
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 

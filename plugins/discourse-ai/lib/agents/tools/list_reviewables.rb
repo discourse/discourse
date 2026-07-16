@@ -37,6 +37,12 @@ module DiscourseAi
                   "Filter by status: pending (default), approved, rejected, ignored, deleted",
                 type: "string",
               },
+              {
+                name: "has_notes",
+                description:
+                  "Filter by whether the item already has notes. Set to false to only return items that have no notes yet, true to only return items that already have notes.",
+                type: "boolean",
+              },
             ],
           }
         end
@@ -85,7 +91,26 @@ module DiscourseAi
             filters[:from_date] = parameters[:max_hours_old].to_i.hours.ago
           end
 
-          reviewables = Reviewable.list_for(guardian.user, **filters).to_a
+          relation = Reviewable.list_for(guardian.user, **filters)
+
+          if parameters.key?(:has_notes) && !parameters[:has_notes].nil?
+            notes_exists = <<~SQL
+              EXISTS(
+                SELECT 1 FROM reviewable_notes
+                WHERE reviewable_notes.reviewable_id = reviewables.id
+              )
+            SQL
+            relation =
+              (
+                if ActiveModel::Type::Boolean.new.cast(parameters[:has_notes])
+                  relation.where(notes_exists)
+                else
+                  relation.where("NOT #{notes_exists}")
+                end
+              )
+          end
+
+          reviewables = relation.to_a
 
           if reviewables.empty?
             return(
@@ -149,6 +174,15 @@ module DiscourseAi
               score: score.score.to_f.round(1),
               status: score.status,
               user: score.user&.username,
+            }
+          end
+
+          result[:notes] = reviewable.reviewable_notes.map do |note|
+            {
+              id: note.id,
+              content: note.content,
+              user: note.user&.username,
+              created_at: note.created_at.iso8601,
             }
           end
 

@@ -620,6 +620,16 @@ RSpec.describe PostSerializer do
         expect(serialize_user_status).to be_nil
       end
 
+      it "doesn't include status for a public topic author with a hidden profile" do
+        SiteSetting.allow_users_to_hide_profile = true
+        user.user_option.update!(hide_profile: true)
+
+        json = described_class.new(post, scope: Guardian.new, root: false).as_json
+
+        expect(json).not_to have_key(:user_status)
+        expect(json.to_json).not_to include(user_status.description)
+      end
+
       it "respects guardian's can_see_user_status?" do
         user.update!(silenced_till: 1.year.from_now)
         scope = Guardian.new(Fabricate(:user))

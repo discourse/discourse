@@ -37,11 +37,13 @@ const postExcerpt = helper(([post]) => {
 
 // Depth is zero-based; depth 3 matches the server's root preload depth.
 const MOBILE_ROOT_VIEW_COLLAPSE_DEPTH = 3;
+const STORED_SCROLL_ANCHORS = Object.create(null);
 
 export default class Nested extends Component {
   @service appEvents;
   @service currentUser;
   @service header;
+  @service router;
   @service screenTrack;
   @service site;
   @service siteSettings;
@@ -60,12 +62,23 @@ export default class Nested extends Component {
   #retryTimer = null;
   #highlightTimer = null;
   #lastScrollKey = null;
-  #onPopstate = () => next(this, this.syncFocusFromURL);
+  #restoringStoredScroll = false;
+  #onPopstate = () => {
+    this.#restoringStoredScroll = true;
+    next(this, this.syncFocusFromURL);
+  };
+  #onScroll = () => this.persistScrollAnchor();
+  #onPageHide = () => this.persistScrollAnchor();
 
   constructor() {
     super(...arguments);
+    this.#restoringStoredScroll = Boolean(this.#loadStoredScrollAnchor());
     this.applyInitialFocusedPath();
     window.addEventListener("popstate", this.#onPopstate);
+    window.addEventListener("scroll", this.#onScroll, { passive: true });
+    document.addEventListener("scroll", this.#onScroll, { passive: true });
+    window.addEventListener("pagehide", this.#onPageHide);
+    this.router.on("routeWillChange", this.persistScrollAnchor);
     this.appEvents.on("keyboard:move-selection", this, this.maybeLoadMoreRoots);
     this.appEvents.on(
       "nested:scroll-to-target",
@@ -99,7 +112,12 @@ export default class Nested extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     clearTimeout(this.#highlightTimer);
+    this.persistScrollAnchor();
     window.removeEventListener("popstate", this.#onPopstate);
+    window.removeEventListener("scroll", this.#onScroll);
+    document.removeEventListener("scroll", this.#onScroll);
+    window.removeEventListener("pagehide", this.#onPageHide);
+    this.router.off("routeWillChange", this.persistScrollAnchor);
     this.viewportTracker.destroy();
   }
 
@@ -129,6 +147,14 @@ export default class Nested extends Component {
     ]
       .filter(Boolean)
       .join(" ");
+  }
+
+  get showContextBanner() {
+    return this.args.contextMode && !this.site.mobileView;
+  }
+
+  get showParentContextLink() {
+    return this.args.contextNoAncestors || this.args.ancestorsTruncated;
   }
 
   get mobileFocusClass() {
@@ -200,6 +226,7 @@ export default class Nested extends Component {
         this.findScrollAnchor() ||
         this.scrollAnchorForPath(path);
       this.args.saveScrollPosition?.(this.mobileReturnAnchor);
+      this.#saveStoredScrollAnchor(this.mobileReturnAnchor, null);
     }
 
     this.focusDirection =
@@ -236,6 +263,103 @@ export default class Nested extends Component {
   @action
   captureScrollAnchor() {
     return this.findScrollAnchor();
+  }
+
+  @action
+  persistScrollAnchor() {
+    if (this.isDestroying || this.isDestroyed || this.#restoringStoredScroll) {
+      return;
+    }
+
+    const anchor = this.findScrollAnchor();
+    if (anchor) {
+      this.args.saveScrollPosition?.(anchor);
+      this.#saveStoredScrollAnchor(
+        anchor,
+        this.isMobileFocused ? null : this.args.postNumber
+      );
+    }
+  }
+
+  @action
+  restoreStoredScrollAnchor() {
+    const anchor = this.args.scrollAnchor || this.#loadStoredScrollAnchor();
+    if (!anchor) {
+      return;
+    }
+
+    this.#restoreScrollAnchorAfterRender(anchor);
+  }
+
+  #restoreScrollAnchorAfterRender(anchor) {
+    this.#restoringStoredScroll = true;
+    schedule("afterRender", () => {
+      this.#restoreScrollAnchor(anchor);
+      for (const delay of [50, 150, 300, 600, 1000]) {
+        setTimeout(() => this.#restoreScrollAnchor(anchor), delay);
+      }
+      setTimeout(() => (this.#restoringStoredScroll = false), 1250);
+    });
+  }
+
+  #restoreScrollAnchor(anchor) {
+    if (Number.isFinite(anchor.scrollY)) {
+      window.scrollTo(0, anchor.scrollY);
+      return;
+    }
+
+    const article = document.querySelector(
+      `.nested-post [data-post-number="${anchor.postNumber}"]`
+    );
+    const element = article?.closest(".nested-post") || article;
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + rect.top - anchor.offsetFromTop);
+    }
+  }
+
+  #saveStoredScrollAnchor(anchor, postNumber = this.args.postNumber) {
+    const key = this.#scrollAnchorKey(postNumber);
+    this.#storedScrollAnchors[key] = anchor;
+
+    try {
+      sessionStorage.setItem(key, JSON.stringify(anchor));
+    } catch {
+      // Ignore storage failures; module-level in-memory cache still works.
+    }
+  }
+
+  #loadStoredScrollAnchor(postNumber = this.args.postNumber) {
+    const key = this.#scrollAnchorKey(postNumber);
+    const cached = this.#storedScrollAnchors[key];
+    if (cached) {
+      return cached;
+    }
+
+    try {
+      const value = sessionStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  get #storedScrollAnchors() {
+    return STORED_SCROLL_ANCHORS;
+  }
+
+  #scrollAnchorKey(postNumber = this.args.postNumber) {
+    const parts = [this.args.topic.id];
+    if (this.args.sort) {
+      parts.push(`s=${this.args.sort}`);
+    }
+    if (postNumber) {
+      parts.push(`p=${postNumber}`);
+    }
+    if (this.args.contextNoAncestors) {
+      parts.push("c=0");
+    }
+    return `nested-view-scroll:${parts.join(":")}`;
   }
 
   findScrollAnchor() {
@@ -357,17 +481,32 @@ export default class Nested extends Component {
     }
 
     if (!postNumber) {
+      const storedAnchor = this.#loadStoredScrollAnchor();
+      const anchor =
+        this.mobileReturnAnchor ||
+        storedAnchor ||
+        (this.focusedPath.length > 0
+          ? this.scrollAnchorForPath(this.focusedPath)
+          : null);
+
       this.args.setFocusedPostNumber?.(null, []);
       if (this.focusedPath.length > 0) {
         this.focusDirection = "back";
-        this.mobileReturnAnchor ??= this.scrollAnchorForPath(this.focusedPath);
-        this.focusedPath = [];
+      }
+      this.mobileReturnAnchor = anchor;
+      this.focusedPath = [];
+
+      if (anchor) {
+        this.#restoreScrollAnchorAfterRender(anchor);
+      } else {
+        this.#restoringStoredScroll = false;
       }
       return;
     }
 
     const path = this.#focusedPathsByPostNumber.get(postNumber);
     if (!path) {
+      this.#restoringStoredScroll = false;
       return;
     }
 
@@ -375,6 +514,7 @@ export default class Nested extends Component {
     this.focusDirection =
       path.length >= this.focusedPath.length ? "forward" : "back";
     this.focusedPath = path;
+    this.#restoringStoredScroll = false;
   }
 
   #pushURLForFocusedPath(path) {
@@ -415,7 +555,7 @@ export default class Nested extends Component {
 
   #postNumberFromCurrentURL() {
     const path = withoutPrefix(window.location.pathname);
-    const match = /^\/n\/[^/]+\/(\d+)(?:\/(\d+))?/.exec(path);
+    const match = /^\/t\/[^/]+\/(\d+)(?:\/(\d+))?/.exec(path);
     if (!match || String(match[1]) !== String(this.args.topic.id)) {
       return undefined;
     }
@@ -481,7 +621,10 @@ export default class Nested extends Component {
       }
 
       const controls = document.querySelector(
-        ".nested-view > .nested-view__controls"
+        ".nested-view:not(.nested-context-view) > .nested-view__controls"
+      );
+      const banner = document.querySelector(
+        ".nested-context-view > .nested-context-view__banner"
       );
       const rect = target.getBoundingClientRect();
       window.scrollTo({
@@ -489,7 +632,8 @@ export default class Nested extends Component {
           window.scrollY +
           rect.top -
           (this.header.headerOffset || 0) -
-          (controls?.offsetHeight || 0),
+          (controls?.offsetHeight || 0) -
+          (banner?.offsetHeight || 0),
         behavior: "smooth",
       });
     } else if (this.#scrollAttempts < this.#maxScrollAttempts) {
@@ -499,7 +643,7 @@ export default class Nested extends Component {
   }
 
   #nestedURL(postNumber = null) {
-    let path = `/n/${this.args.topic.slug}/${this.args.topic.id}`;
+    let path = `/t/${this.args.topic.slug}/${this.args.topic.id}`;
     if (postNumber) {
       path += `/${postNumber}`;
     }
@@ -521,7 +665,9 @@ export default class Nested extends Component {
     <div
       class={{this.viewClass}}
       {{didInsert this.scheduleTargetScroll}}
+      {{didInsert this.restoreStoredScrollAnchor}}
       {{didUpdate this.scheduleTargetScroll @targetPostNumber @rootNodes}}
+      {{didUpdate this.restoreStoredScrollAnchor @scrollAnchor}}
       {{didUpdate this.applyInitialFocusedPath @initialFocusedPath}}
       {{this.viewportTracker.setup
         eyeline=false
@@ -662,8 +808,11 @@ export default class Nested extends Component {
           @replyToPost={{@replyToPost}}
           @changeNotice={{@changeNotice}}
           @changePostOwner={{@changePostOwner}}
+          @deletePost={{@deletePost}}
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
+          @recoverPost={{@recoverPost}}
+          @showFlags={{@showFlags}}
           @unlockPost={{@unlockPost}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
           @rebakePost={{@rebakePost}}
@@ -699,6 +848,37 @@ export default class Nested extends Component {
             {{/if}}
           </div>
         </div>
+
+        {{#if this.showContextBanner}}
+          <div class="nested-context-view__banner">
+            <span class="nested-context-view__banner-icon">{{dIcon
+                "nested-thread"
+              }}</span>
+            <span class="nested-context-view__banner-text">{{i18n
+                "nested_replies.context.banner"
+              }}</span>
+            <div class="nested-context-view__nav">
+              <DButton
+                class="btn-default btn-small nested-context-view__full-thread"
+                @action={{@viewFullThread}}
+                @icon="arrow-left"
+                @translatedLabel={{i18n
+                  "nested_replies.context.view_full_topic"
+                }}
+              />
+              {{#if this.showParentContextLink}}
+                <DButton
+                  class="btn-default btn-small nested-context-view__parent-context"
+                  @action={{@viewParentContext}}
+                  @icon="arrow-up"
+                  @translatedLabel={{i18n
+                    "nested_replies.context.view_parent_context"
+                  }}
+                />
+              {{/if}}
+            </div>
+          </div>
+        {{/if}}
 
         {{#if (gt @newRootPostCount 0)}}
           <div class="nested-view__new-replies">
@@ -788,6 +968,13 @@ export default class Nested extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
+      {{#unless this.isMobileFocused}}
+        <NestedFloatingActions
+          @topic={{@topic}}
+          @replyAction={{fn @replyToPost @opPost 0}}
+        />
+      {{/unless}}
+
       {{#if (and (not this.isMobileFocused) (not @hasMoreRoots))}}
         <PluginOutlet
           @name="topic-above-suggested"
@@ -810,10 +997,6 @@ export default class Nested extends Component {
         @outletArgs={{lazyHash model=@topic}}
       />
 
-      <NestedFloatingActions
-        @topic={{@topic}}
-        @replyAction={{fn @replyToPost @opPost 0}}
-      />
     </div>
   </template>
 }

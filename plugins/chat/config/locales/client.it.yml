@@ -245,8 +245,6 @@ it:
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       chat_notifications_title: "Notifiche chat"
-      only_chat_push_notifications:
-        title: "Invia solo le notifiche push della chat"
       ignore_channel_wide_mention:
         title: "Ignora le menzioni a livello di canale"
       show_thread_title_prompts:
@@ -294,8 +292,6 @@ it:
         title: "Suono di notifica della chat desktop"
       sounds:
         none: "Nessuno"
-        bell: "Campanello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Allega un file"
@@ -372,7 +368,6 @@ it:
         input_placeholder: Aggiungi un nome
         slug_description: Lo slug del canale viene utilizzato nell'URL al posto del nome del canale
         name: Nome del canale
-        slug: Slug canale (opzionale)
       channel_edit_description_modal:
         title: Modifica descrizione
         input_placeholder: Aggiungi una descrizione
@@ -429,9 +424,8 @@ it:
             one: 'Gli utenti in %{group} e %{count} altro gruppo avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
             other: 'Gli utenti in %{group} e altri %{count} gruppi avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
         create: "Crea canale"
-        description: "Descrizione (facoltativa)"
+        description: "Descrizione"
         name: "Nome del canale"
-        slug: "Slug canale (opzionale)"
         title: "Nuovo canale"
         type: "Tipo"
         types:
@@ -752,6 +746,8 @@ it:
     discourse_workflows:
       nodes:
         "action:send_chat_message": "Invia messaggio di chat"
+      chat_message_created:
+        channel_id: "Canale"
       send_chat_message:
         channel_id: "Canale"
         message: "Messaggio"

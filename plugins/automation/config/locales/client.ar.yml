@@ -219,6 +219,9 @@ ar:
               description: "اختياري، يقتصر التفعيل على المنشورات التي تتضمن هذه الميزات فقط"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
+          topics: الموضوعات (جميع الفئات)
+          personal_messages: الرسائل الخاصة فقط
+          public_topics: الموضوعات (الفئات العامة فقط)
           with_images: الصور
           with_links: الروابط
           with_code: الرمز
@@ -321,6 +324,12 @@ ar:
             tags:
               label: الوسوم
               description: قائمة الوسوم لإضافتها إلى الموضوع.
+            closed_automatically:
+              label: الموضوعات المُغلقة تلقائيًا
+              description: إضافة وسوم إلى الموضوعات المُغلقة تلقائيًا.
+            closed_manually:
+              label: الموضوعات المُغلقة يدويًا
+              description: إضافة وسوم إلى الموضوعات المُغلقة يدويًا.
         post:
           fields:
             creator:

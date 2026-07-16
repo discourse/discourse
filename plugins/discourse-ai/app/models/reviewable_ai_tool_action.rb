@@ -19,6 +19,7 @@ class ReviewableAiToolAction < Reviewable
 
   def build_actions(actions, guardian, args)
     return actions if !pending?
+    return actions if !Reviewable.viewable_by(guardian.user).exists?(id: id)
 
     approve =
       actions.add_bundle(
@@ -40,6 +41,38 @@ class ReviewableAiToolAction < Reviewable
   end
 
   def perform_approve(performed_by, args)
+    ensure_inline_post_matches_target!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    tool, tool_class, context = build_tool!
+    context.user = performed_by if tool_class.attribute_to_approver?
+
+    # Suppress automation re-triggers caused by the tool's side effects
+    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
+    result =
+      if defined?(DiscourseAutomation)
+        DiscourseAutomation.suppress_triggers { tool.invoke }
+      else
+        tool.invoke
+      end
+
+    ensure_tool_succeeded!(result)
+
+    create_result(:success, :approved)
+  end
+
+  def perform_reject(performed_by, args)
+    ensure_inline_post_matches_target!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    create_result(:success, :rejected)
+  end
+
+  private
+
+  # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
+  # context]; the caller sets context.user for audit attribution as needed.
+  def build_tool!
     tool_action = target
     if tool_action.blank?
       raise Discourse::InvalidAccess.new(
@@ -66,32 +99,61 @@ class ReviewableAiToolAction < Reviewable
             )
     end
 
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.reviewable_id = id
+
     tool =
       tool_class.new(
         tool_action.tool_parameters.symbolize_keys,
         bot_user: bot_user,
         llm: nil,
-        context: DiscourseAi::Agents::BotContext.new(messages: []),
+        context: context,
       )
 
-    # Suppress automation re-triggers caused by the tool's side effects
-    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
-    # Setting an active automation makes trigger!() return early.
-    begin
-      DiscourseAutomation.set_active_automation(id) if defined?(DiscourseAutomation)
-      tool.invoke
-    ensure
-      DiscourseAutomation.set_active_automation(nil) if defined?(DiscourseAutomation)
+    [tool, tool_class, context]
+  end
+
+  def ensure_inline_post_matches_target!(args)
+    inline_post_id = args[:post_id] || args["post_id"]
+    return if inline_post_id.blank?
+
+    expected_post_id = target&.post_id
+    if expected_post_id.blank? || inline_post_id.to_i != expected_post_id
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
+            )
     end
-
-    create_result(:success, :approved)
   end
 
-  def perform_reject(performed_by, args)
-    create_result(:success, :rejected)
+  def ensure_performed_by_is_a_real_person!(performed_by)
+    if performed_by.blank? || performed_by.bot?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.performer_not_human"),
+            )
+    end
   end
 
-  private
+  # The replayed tool reports precondition/service failures as an error hash
+  # (e.g. the approver lost permission, or the target was already actioned
+  # between enqueue and approval). Surface the reason to the moderator and let
+  # the surrounding transaction roll back so the reviewable stays pending,
+  # instead of recording a phantom approval for an action that never ran.
+  def ensure_tool_succeeded!(result)
+    return unless result.is_a?(Hash) && result[:status].to_s == "error"
+
+    error =
+      result[:error].to_s.presence ||
+        I18n.t("discourse_ai.reviewables.ai_tool_action.execution_error_unknown")
+
+    raise Discourse::InvalidAccess.new(
+            "ai_tool_action_execution_error",
+            nil,
+            custom_message: "discourse_ai.reviewables.ai_tool_action.execution_error",
+            custom_message_params: {
+              error: error,
+            },
+          )
+  end
 
   def build_action(actions, id, icon:, bundle: nil)
     actions.add(id, bundle: bundle) do |action|

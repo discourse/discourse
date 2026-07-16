@@ -66,16 +66,20 @@ class CrawlerScorer
 
   SQL = <<~SQL
     WITH events AS (
-      SELECT id, session_id, ip_address, user_agent, referrer, asn, created_at
+      SELECT id, session_id, ip_address, user_agent, referrer, asn, created_at, source
       FROM browser_pageview_events
       WHERE created_at >= :window_start
         AND created_at <  :window_end
     ),
 
+    -- Per-heuristic stats are partitioned by source as well as ip/ua so that
+    -- pageviews recorded through different transports (e.g. piggyback vs
+    -- beacon) never inflate one another's velocity, churn or navigation gaps.
     ipua_stats AS (
       SELECT
         ip_address,
         user_agent,
+        source,
         COUNT(*) AS pageviews,
         COUNT(DISTINCT session_id) AS distinct_sessions,
         AVG(
@@ -86,15 +90,16 @@ class CrawlerScorer
           END
         ) AS bad_referrer_ratio
       FROM events
-      GROUP BY ip_address, user_agent
+      GROUP BY ip_address, user_agent, source
     ),
 
     gaps AS (
       SELECT
         ip_address,
         user_agent,
+        source,
         EXTRACT(EPOCH FROM created_at - LAG(created_at) OVER (
-          PARTITION BY ip_address, user_agent ORDER BY created_at
+          PARTITION BY ip_address, user_agent, source ORDER BY created_at
         )) AS gap_seconds
       FROM events
     ),
@@ -103,12 +108,13 @@ class CrawlerScorer
       SELECT
         ip_address,
         user_agent,
+        source,
         percentile_cont(0.5) WITHIN GROUP (ORDER BY gap_seconds)
           AS median_gap_seconds,
         COUNT(*) AS gap_count
       FROM gaps
       WHERE gap_seconds IS NOT NULL
-      GROUP BY ip_address, user_agent
+      GROUP BY ip_address, user_agent, source
     ),
 
     breakdown AS (
@@ -151,8 +157,8 @@ class CrawlerScorer
           ELSE 0
         END AS referrer_score
       FROM events e
-      LEFT JOIN ipua_stats iu USING (ip_address, user_agent)
-      LEFT JOIN median_gap mg USING (ip_address, user_agent)
+      LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
+      LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
     ),
 
     totals AS (

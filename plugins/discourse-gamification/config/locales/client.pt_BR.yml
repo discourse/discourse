@@ -32,6 +32,11 @@ pt_BR:
         cta: "Faça sua primeira tabela de classificação"
         none: "Nenhuma tabela de classificação foi criada ainda."
         confirm_destroy: "Tem certeza de que deseja excluir essa tabela de classificação?"
+        section:
+          time_period: "Período"
+          time_period_description: "Defina o intervalo de datas e o período padrão para essa tabela de classificação."
+          groups: "Grupos"
+          groups_description: "Controle quais usuários estão incluídos e podem visualizar essa tabela de classificação."
         date:
           range: "Intervalo de datas De / Até"
           from: "Data de início"
@@ -46,6 +51,21 @@ pt_BR:
         default_period: "Período padrão"
         default_period_help: "Defina o período de tempo padrão a ser exibido para este placar."
         period_filter_disabled: "Desativar filtro de período"
+        scoring_configuration: "Configuração de pontuação"
+        scoring_configuration_description: "Substitua as regras globais de pontuação para esta tabela de classificação. Deixe os campos em branco para usar os padrões globais."
+        scorable_categories: "Categorias pontuáveis"
+        scorable_categories_help: "Categorias a serem incluídas na pontuação. Deixe em branco para usar a configuração global."
+        score_overrides: "Pesos de pontuação"
+        score_overrides_help: "Substitua os valores em pontos para cada ação. Deixe em branco para usar o padrão global. Defina como 0 para desativar."
+        weight:
+          like_given: "Curtida enviada"
+          like_received: "Curtida recebida"
+          post_created: "Postagem criada"
+          topic_created: "Tópico criado"
+          solution: "Solução"
+          day_visited: "Dia visitado"
+          flag_created: "Sinalização criada"
+          post_read: "Postagem lida"
         period:
           all_time: "Desde o início"
           yearly: "Todo ano"

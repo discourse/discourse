@@ -115,9 +115,9 @@ module("Unit | Model | topic", function (hooks) {
       is_nested_view: true,
     });
 
-    assert.strictEqual(topic.lastUnreadUrl, "/n/hello/101");
-    assert.strictEqual(topic.lastReadUrl, "/n/hello/101");
-    assert.strictEqual(topic.lastPostUrl, "/n/hello/101");
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101");
+    assert.strictEqual(topic.lastReadUrl, "/t/hello/101");
+    assert.strictEqual(topic.lastPostUrl, "/t/hello/101");
   });
 
   test("has details", function (assert) {

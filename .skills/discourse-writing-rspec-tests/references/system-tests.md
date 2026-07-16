@@ -18,6 +18,32 @@ expect(Post.count).to eq(1)
 
 Only reach into the database when no UI signal exists for the behavior being tested, which should be rare. If you find yourself needing database assertions, consider whether the feature is missing user-visible feedback.
 
+## Test Transient States Deterministically
+
+**Do not race transient UI states in system tests.** Loading spinners, in-flight error banners, optimistic updates, and skeleton placeholders may resolve before Capybara observes them, producing timing-dependent tests.
+
+When the transient state is part of a browser-level user flow, hold it deterministically with the system-test infrastructure, such as `with_pending_requests` or `with_slow_upload`, and assert both the intermediate state and stable outcome. Use a QUnit component test instead when the behavior is local to a component and does not require browser-server integration.
+
+## URL Assertions
+
+**Use exact-string matches with `have_current_path`.** Do not pass a regular expression unless the URL genuinely contains a value you cannot predict, such as a UUID, generated token, or server-assigned ID.
+
+```rb
+# Good - catches extra parameters, wrong separators, and encoding bugs
+expect(page).to have_current_path(
+  "/admin/reports/site_traffic?end_date=2026-05-31&start_date=2026-05-01"
+)
+
+# Bad - tolerates extra parameters and wrong path prefixes
+expect(page).to have_current_path(
+  %r{\A/admin/reports/site_traffic\?.*start_date=2026-05-01}
+)
+```
+
+When the framework produces a surprising query-parameter order, update the expected string instead of weakening the matcher. Ember sorts query parameters alphabetically during navigation, so the expected URL must use the order the user sees.
+
+If an unpredictable value requires a regular expression, anchor it with `\A` and `\z` and match everything except that segment.
+
 **Verify persistence by refreshing the page.** After a save action, refresh (or revisit) the current page and assert the saved state is still visible. This is what a real user would do to confirm their changes persisted.
 
 ```rb
@@ -168,6 +194,8 @@ Because the addon strips these in production, never use `data-test-*` for stylin
 ## Page Objects
 
 **Always use page objects** - never write raw selectors or Capybara finders directly in test files. Encapsulate all selectors and interactions in page object classes. Only add methods that are actually used by your tests - don't add methods speculatively.
+
+**Design page object APIs from the call site.** Page object methods should make the spec read in product and user language. Prefer explicit methods and named arguments that describe the behavior being exercised over generic helpers that require the spec to know implementation details. Domain objects and product-facing values are valid arguments, but route or query-parameter names, selector fragments, and serialized keys belong inside the page object so the spec remains stable when implementation details change.
 
 **Prefer passing entire objects** to page object methods instead of just attributes. Let the page object extract what it needs:
 

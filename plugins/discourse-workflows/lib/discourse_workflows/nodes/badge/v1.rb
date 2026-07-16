@@ -5,6 +5,24 @@ module DiscourseWorkflows
     module Badge
       class V1 < NodeType
         OPERATIONS = %w[grant revoke].freeze
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "user_id" => {
+              "type" => "integer",
+            },
+            "username" => {
+              "type" => "string",
+            },
+            "badge_id" => {
+              "type" => "integer",
+            },
+            "badge_name" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
 
         description(
           name: "action:badge",
@@ -17,6 +35,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             operation: {
               type: :options,
@@ -56,7 +75,7 @@ module DiscourseWorkflows
               required: false,
               default: "system",
               ui: {
-                control: :user,
+                control: :actor,
               },
             },
           },
@@ -96,6 +115,7 @@ module DiscourseWorkflows
           user = exec_ctx.find_user(username: config["username"])
           badge = ::Badge.find(config["badge_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
+          raise Discourse::InvalidAccess if !actor.guardian.can_grant_badges?(user)
 
           case config["operation"]
           when "revoke"

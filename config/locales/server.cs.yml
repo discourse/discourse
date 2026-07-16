@@ -704,6 +704,13 @@ cs:
       trust_level_2: "uroven_duvery_2"
       trust_level_3: "uroven_duvery_3"
       trust_level_4: "uroven_duvery_4"
+    default_full_names:
+      everyone: "Všichni"
+      admins: "Administrátoři"
+      moderators: "Moderátoři"
+      staff: "Redakce"
+      anonymous_users: "Anonymní uživatelé"
+      logged_in_users: "Přihlášení uživatelé"
     default_descriptions:
       everyone: "Automatická skupina zahrnující všechny členy"
       staff: "Automatická skupina včetně administrátorů a moderátorů"
@@ -1318,6 +1325,10 @@ cs:
       one_time_password: "Vytvoření jednorázového přihlašovacího tokenu"
       bookmarks_calendar: "Čtení připomenutí záložek"
       user_status: "Čtení a aktualizace stavu uživatele"
+    device:
+      code: "Kód"
+      continue: "Pokračovat"
+      authorize_title: 'Autorizovat „%{application_name}“'
     invalid_public_key: "Omlouváme se, veřejný klíč je neplatný."
     invalid_auth_redirect: "Omlouváme se, ale tento hostitel auth_redirect není povolen."
     invalid_token: "Chybějící, neplatný nebo vypršený token."
@@ -1411,6 +1422,7 @@ cs:
         level: "Úroveň důvěry"
         count: "Členové"
         share: "Sdílet"
+        signups: "Registrace"
       levels:
         "0": "Nový"
         "1": "Základní"
@@ -1907,8 +1919,6 @@ cs:
     silence_new_user_sensitivity: "Pravděpodobnost, že nový uživatel bude ztišen na základě nahlášení spamu."
     auto_close_topic_sensitivity: "Pravděpodobnost, že nahlášené téma bude automaticky uzavřeno"
     cooldown_minutes_after_hiding_posts: "Počet minut, které musí uživatel čekat, než bude moci upravit příspěvek skrytý prostřednictvím nahlášení komunitou"
-    max_topics_in_first_day: "Maximální počet témat, která může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
-    max_replies_in_first_day: "Maximální počet odpovědí, které může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
     tl2_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 2 (člen) vynásobením tohoto čísla"
     tl3_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 3 (stálý) vynásobením tohoto čísla"
     tl4_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 4 (leader) vynásobením tohoto čísla"
@@ -1955,7 +1965,6 @@ cs:
     allowed_iframes: "Seznam předpon URL iframe src, které Discourse bezpečně povoluje v příspěvcích. Znak * lze použít pro libovolný počet znaků jiných než /."
     allowed_crawler_user_agents: "Uživatelské agenty webových prohledávačů (crawlerů), kterým by měl být umožněn přístup na web. VAROVÁNÍ! TOTO NASTAVENÍ ZAKÁŽE VŠECHNY PROHLEDÁVAČE, KTERÉ ZDE NEJSOU UVEDENY!"
     blocked_crawler_user_agents: "Unikátní slovo v řetězci uživatelského agenta, které nerozlišuje velká a malá písmena a identifikuje webové roboty, kterým by neměl být povolen přístup k webu. Nepoužije se, pokud je definován seznam povolených."
-    content_security_policy: "Povolte zásady zabezpečení obsahu (CSP). CSP je další vrstva zabezpečení, která pomáhá předcházet určitým typům útoků, včetně Cross Site Scripting (XSS) a data injection."
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Omezit, kdo může zabudovat tento web do iframů přes CSP. Nastavte povolené hostitele v <a href='%{base_path}/admin/customize/embedding'>Zabudování</a>"
     content_security_policy_script_src: "Další zdroje skriptů na seznamu povolených. Aktuální hostitel a CDN jsou zahrnuty ve výchozím nastavení. Viz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmírnění útoků XSS pomocí zásad zabezpečení obsahu.</a> (CSP). Ostatní zdroje hostitelů jsou ignorovány, protože je povoleno nastavení strict-dynamic."
@@ -3353,6 +3362,7 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:
@@ -3950,89 +3960,6 @@ cs:
     title: "Podmínky služby"
   privacy_topic:
     title: "Ochrana soukromí"
-    body: |
-      ## [Správče fóra, níže naleznete příklad výchozí šablony zásad ochrany osobních údajů, kterou byste měli přizpůsobit svým stránkám.]
-
-      <a name="collect"></a>
-
-      ## [Jaké informace shromažďujeme?](#collect)
-
-      Informace od vás shromažďujeme, když se na našich stránkách zaregistrujete, a údaje sbíráme, když se účastníte fóra tím, že čtete, píšete a hodnotíte zde sdílený obsah.
-
-      Při registraci na našich stránkách můžete být požádáni o zadání jména a e-mailové adresy. Naše stránky však můžete navštívit i bez registrace. Vaše e-mailová adresa bude ověřena e-mailem obsahujícím jedinečný odkaz. Pokud tento odkaz navštívíte, víme, že touto e-mailovou adresou disponujete.
-
-      Při registraci a odesílání příspěvků zaznamenáváme IP adresu, ze které příspěvek pochází. Můžeme také uchovávat protokoly serveru, které obsahují IP adresu každého požadavku na náš server.
-
-      <a name="use"></a>
-
-      ## [K čemu vaše údaje používáme?](#use)
-
-      Veškeré údaje, které od vás shromažďujeme, mohou být použity jedním z následujících způsobů:
-
-      * K personalizaci vašich zkušeností &mdash; vaše informace nám pomáhají lépe reagovat na vaše individuální potřeby.
-      * Ke zlepšení našich stránek &mdash; neustále se snažíme zlepšovat funkce našich stránek na základě informací a zpětné vazby, které od vás získáváme.
-      * Pro zlepšení služeb zákazníkům &mdash; vaše informace nám pomáhají efektivněji reagovat na vaše požadavky na služby zákazníkům a potřeby podpory.
-      * K zasílání pravidelných e-mailů &mdash; Vámi poskytnutá e-mailová adresa může být použita k zasílání informací, oznámení, která si vyžádáte, o změnách témat nebo v reakci na vaše uživatelské jméno, k odpovědím na dotazy a/nebo jiné žádosti či otázky.
-
-      <a name="protect"></a>
-
-      ## [Jak chráníme vaše údaje?](#protect)
-
-      Při zadávání, odesílání nebo přístupu k vašim osobním údajům uplatňujeme různá bezpečnostní opatření, abychom zachovali bezpečnost vašich osobních údajů.
-
-      <a name="data-retention"></a>
-
-      ## [Jaké jsou vaše zásady uchovávání údajů?](#data-retention)
-
-      V dobré víře se budeme snažit:
-
-      * Uchovávat protokoly serveru obsahující IP adresy všech požadavků na tento server nejdéle [POČET DNÍ] dnů.
-
-      <a name="cookies"></a>
-
-      ## [Používáme soubory cookie?](#cookies)
-
-      Ano. Soubory cookie jsou malé soubory, které web nebo jeho poskytovatel služeb přenáší na pevný disk vašeho počítače prostřednictvím webového prohlížeče (pokud to povolíte). Tyto soubory cookie umožňují webu rozpoznat váš prohlížeč a v případě, že máte registrovaný účet, jej spojit s vaším registrovaným účtem.
-
-      Soubory cookie používáme k pochopení a uložení vašich preferencí pro budoucí návštěvy a ke shromažďování souhrnných údajů o návštěvnosti webu a interakci s webem, abychom mohli v budoucnu nabízet lepší služby a nástroje. Můžeme uzavřít smlouvu s poskytovateli služeb třetích stran, aby nám pomohli lépe porozumět návštěvníkům našich stránek. Tito poskytovatelé služeb nesmějí používat informace shromážděné naším jménem jinak, než aby nám pomohli provádět a zlepšovat naši činnost.
-
-      <a name="disclose"></a>
-
-      ## [Poskytujeme nějaké informace externím stranám?](#disclose)
-
-      Vaše osobní údaje neprodáváme, neobchodujeme s nimi ani je jinak nepředáváme třetím stranám. To se netýká důvěryhodných třetích stran, které nám pomáhají s provozem našich stránek, vedením naší činnosti nebo poskytováním služeb, pokud tyto strany souhlasí s tím, že budou tyto informace uchovávat v tajnosti. Vaše údaje můžeme také zveřejnit, pokud se domníváme, že je to vhodné pro dodržení zákona, prosazení zásad našich stránek nebo ochranu našich nebo cizích práv, majetku nebo bezpečnosti. Neosobní informace o návštěvnících však mohou být poskytnuty jiným stranám pro marketingové, reklamní nebo jiné účely.
-
-      <a name="third-party"></a>
-
-      ## [Odkazy na třetí strany](#third-party)
-
-      Příležitostně můžeme na našich stránkách podle našeho uvážení zahrnout nebo nabízet produkty nebo služby třetích stran. Tyto stránky třetích stran mají samostatné a nezávislé zásady ochrany osobních údajů. Proto neneseme žádnou odpovědnost za obsah a činnost těchto odkazovaných stránek. Přesto se snažíme chránit integritu našich stránek a uvítáme jakoukoli zpětnou vazbu o těchto stránkách.
-
-      <a name="coppa"></a>
-
-      ## [Dodržování zákona o ochraně soukromí dětí na internetu](#coppa)
-
-      Naše stránky, produkty a služby jsou určeny osobám starším 13 let. Pokud se tento server nachází v USA a vy jste mladší 13 let, podle požadavků COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) tyto stránky nepoužívejte.
-
-      <a name="online"></a>
-
-      ## [Pouze online zásady ochrany osobních údajů](#online)
-
-      Tyto online zásady ochrany osobních údajů se vztahují pouze na informace shromážděné prostřednictvím našich stránek, nikoli na informace shromážděné offline.
-
-      <a name="consent"></a>
-
-      ## [Váš souhlas](#consent)
-
-      Používáním našich stránek souhlasíte s našimi zásadami ochrany osobních údajů na webu.
-
-      <a name="changes"></a>
-
-      ## [Změny našich zásad ochrany osobních údajů](#změny)
-
-      Pokud se rozhodneme změnit naše zásady ochrany osobních údajů, zveřejníme tyto změny na této stránce.
-
-      Tento dokument je chráněn licencí CC-BY-SA. Naposledy byl aktualizován [ZDE VLOŽTE DATUM POSLEDNÍ AKTUALIZACE].
   badges:
     mass_award:
       errors:
@@ -4388,6 +4315,8 @@ cs:
   onebox:
     discourse:
       user_joined_community: "Připojil/a se %{date}"
+    google_meet:
+      meeting_code: "Kód:"
     gitlab:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"
@@ -4471,6 +4400,8 @@ cs:
         title: "Ponechat příspěvek skrytý"
         description: "Souhlasit s nahlášením a nechat příspěvek skrytý."
         complete: "Příspěvek zůstal skryt."
+      agree_and_keep_deleted:
+        title: "Ponechat příspěvek smazaný"
       agree_and_suspend:
         title: "Pozastavit uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."

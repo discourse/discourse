@@ -83,9 +83,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+  @include unstyled-list;
 
   > li {
     // only target the top-level li, not dropdowns

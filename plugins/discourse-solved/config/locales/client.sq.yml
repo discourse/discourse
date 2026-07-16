@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 sq:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Të gjitha kategoritë"
+            answerers:
+              staff: "Stafi"
+              member: "Anëtarë"
+              basic: "Anëtar i Thjeshtë"
+            response_time:
+              buckets:
+                lt_1h: "< 1 orë"
+                gt_24h: "> 24 orë"
   js:
     notifications:
       alt:

@@ -31,7 +31,7 @@ module Chat
         return result
       end
 
-      payload = { message_cooked: chat_message.cooked }
+      payload = { "message_cooked" => chat_message.cooked }
 
       if opts[:message].present? && !is_dm && is_notify_type
         creator = companion_pm_creator(chat_message, guardian.user, flag_type_id, opts)
@@ -43,12 +43,15 @@ module Chat
         end
       elsif is_dm
         transcript = find_or_create_transcript(chat_message, guardian.user, existing_reviewable)
-        payload[:transcript_topic_id] = transcript.topic_id if transcript
+        payload["transcript_topic_id"] = transcript.topic_id if transcript
       end
 
       queued_for_review = !!ActiveRecord::Type::Boolean.new.deserialize(opts[:queue_for_review])
 
       if !is_notify_user_type
+        uploads = serialize_uploads(chat_message)
+        payload["message_uploads"] = uploads if uploads.present?
+
         reviewable =
           Chat::ReviewableMessage.needs_review!(
             created_by: guardian.user,
@@ -57,7 +60,10 @@ module Chat
             potential_spam: flag_type_id == ReviewableScore.types[:spam],
             payload: payload,
           )
-        reviewable.update(target_created_by: chat_message.user)
+        reviewable.update(
+          target_created_by: chat_message.user,
+          payload: (reviewable.payload || {}).merge(payload),
+        )
         score =
           reviewable.add_score(
             guardian.user,
@@ -84,6 +90,14 @@ module Chat
     end
 
     private
+
+    def serialize_uploads(chat_message)
+      ActiveModel::ArraySerializer.new(
+        chat_message.uploads.includes(:optimized_videos),
+        each_serializer: UploadSerializer,
+        root: false,
+      ).as_json
+    end
 
     def enforce_auto_silence_threshold(reviewable)
       auto_silence_duration = SiteSetting.chat_auto_silence_from_flags_duration

@@ -215,6 +215,9 @@ nl:
               description: "Optioneel, beperk de triggering tot alleen berichten met deze kenmerken"
           created: Gemaakt
           edited: Bewerkt
+          topics: Topics (alle categorieën)
+          personal_messages: Alleen persoonlijke berichten
+          public_topics: Topics (alleen openbare categorieën)
           with_images: Afbeeldingen
           with_links: Links
           with_code: Code
@@ -317,6 +320,12 @@ nl:
             tags:
               label: Tags
               description: Lijst van tags om toe te voegen aan het topic.
+            closed_automatically:
+              label: Automatisch gesloten topics
+              description: Voeg tags toe aan automatisch gesloten topics.
+            closed_manually:
+              label: Handmatig gesloten topics
+              description: Voeg tags toe aan automatisch gesloten topics.
         post:
           fields:
             creator:

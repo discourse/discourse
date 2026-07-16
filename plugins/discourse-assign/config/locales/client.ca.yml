@@ -76,6 +76,8 @@ ca:
       topic: "Tema"
       post: "Publicació"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Assignat"
       assign_topic:
         operations:
           assign: "Assigna"

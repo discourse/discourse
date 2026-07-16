@@ -38,7 +38,7 @@ class UserCardSerializer < BasicUserSerializer
     attrs.each do |attr|
       method_name = "include_#{attr}?"
       define_method(method_name) do
-        return false if scope.restrict_user_fields?(object)
+        return false unless include_profile_details?
         public_send(attr).present?
       end
     end
@@ -174,7 +174,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_user_fields?
-    user_fields.present?
+    include_profile_details? && user_fields.present?
   end
 
   def custom_fields
@@ -244,6 +244,10 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   private
+
+  def include_profile_details?
+    scope.public_can_see_profiles? && !scope.restrict_user_fields?(object)
+  end
 
   def custom_field_keys
     # Can be extended by other serializers

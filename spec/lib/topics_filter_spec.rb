@@ -29,6 +29,14 @@ RSpec.describe TopicsFilter do
       expect(tag_options).not_to be_nil
     end
 
+    it "should advertise the - prefix for the group: option" do
+      group_option = options.find { |o| o[:name] == "group:" }
+
+      expect(group_option[:prefixes]).to contain_exactly(
+        { name: "-", description: I18n.t("filter.description.exclude_group") },
+      )
+    end
+
     it "should not include user-specific options for anonymous users" do
       anon_options = TopicsFilter.option_info(Guardian.new)
       logged_in_options = TopicsFilter.option_info(user.guardian)
@@ -193,6 +201,65 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("group:group1+group2")
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1 returns topics without participants from the group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u2.id, topic_by_u3.id)
+      end
+
+      it "-groups:group1,group2 returns topics with participants from neither group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-groups:group1,group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u3.id)
+      end
+
+      it "-group:group1+group2 returns topics where both groups are not represented together" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id)
+      end
+
+      it "-group:missing is a no-op when the group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1+missing is a no-op when any group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1 returns topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to include(topic.id)
       end
 
       it "group:group1 should not return topics where the only post from a group member is deleted" do

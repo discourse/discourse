@@ -3,30 +3,18 @@
 module Migrations
   module Converters
     module Discourse
-      class TagGroupPermissions < Conversion::ProgressStep
-        attr_accessor :source_db
+      class TagGroupPermissions < Conversion::Step
+        source { reads_table "tag_group_permissions" }
 
-        def max_progress
-          @source_db.count <<~SQL
-            SELECT COUNT(*) FROM tag_group_permissions
-          SQL
-        end
-
-        def items
-          @source_db.query <<~SQL
-            SELECT *
-            FROM tag_group_permissions
-            ORDER BY id
-          SQL
-        end
-
-        def process_item(item)
-          IntermediateDB::TagGroupPermission.create(
-            group_id: item[:group_id],
-            permission_type: item[:permission_type],
-            tag_group_id: item[:tag_group_id],
-            created_at: item[:created_at],
-          )
+        processor do
+          def process(item)
+            IntermediateDB::TagGroupPermission.create(
+              group_id: item[:group_id],
+              permission_type: item[:permission_type],
+              tag_group_id: item[:tag_group_id],
+              created_at: item[:created_at],
+            )
+          end
         end
       end
     end

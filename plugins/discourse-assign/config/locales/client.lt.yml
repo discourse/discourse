@@ -45,5 +45,7 @@ lt:
       topic: "Tema"
       post: "Įrašai"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "Priskirta"
       assign_topic:
         topic_id: "Temos ID"

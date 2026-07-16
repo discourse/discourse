@@ -6,6 +6,8 @@ describe "Crawler hreflang tags" do
 
   describe "when viewing a topic as crawler" do
     before do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_param = true
       SiteSetting.content_localization_enabled = true
       SiteSetting.content_localization_crawler_param = true
       SiteSetting.content_localization_supported_locales = "en|ja|es"
@@ -127,6 +129,22 @@ describe "Crawler hreflang tags" do
       expect(response.body).to match(
         %r{<link rel="canonical" href="#{Regexp.escape(Discourse.base_url)}/t/#{post.topic.slug}/#{post.topic.id}"\s*/?>},
       )
+    end
+
+    it "does not emit translated crawler URLs when locale params are disabled" do
+      SiteSetting.set_locale_from_param = false
+
+      get "/t/#{post.topic.slug}/#{post.topic.id}?#{Discourse::LOCALE_PARAM}=ja",
+          headers: {
+            "User-Agent" => "Googlebot/2.1 (+http://www.google.com/bot.html)",
+          }
+
+      aggregate_failures do
+        expect(response.body).not_to include('<link rel="alternate" href=')
+        expect(response.body).to match(
+          %r{<link rel="canonical" href="#{Regexp.escape(Discourse.base_url)}/t/#{post.topic.slug}/#{post.topic.id}"\s*/?>},
+        )
+      end
     end
 
     it "does not append ?tl= to canonical for non-crawler requests" do

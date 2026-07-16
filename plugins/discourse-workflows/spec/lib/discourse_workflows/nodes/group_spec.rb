@@ -19,28 +19,65 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
       described_class.load_options_context(context)
     end
 
-    it "returns non-automatic groups for the chooser" do
-      expect(load_options).to include(
+    it "returns groups for the chooser", :aggregate_failures do
+      options = load_options
+
+      expect(options).to include(
         { id: group.id, name: group.name },
         { id: group_2.id, name: group_2.name },
       )
-    end
 
-    it "excludes automatic groups" do
-      auto_group_ids = load_options.map { |g| g[:id] }
-      expect(auto_group_ids).not_to include(*Group::AUTO_GROUPS.values)
-    end
-
-    it "can include automatic groups when the current operation only reads a group" do
-      group_ids = load_options(parameters: { operation: "get" }).map { |g| g[:id] }
-
-      expect(group_ids).to include(*Group::AUTO_GROUPS.values)
+      option_ids = options.map { |option| option[:id] }
+      expect(option_ids).to include(*Group::AUTO_GROUPS.values)
     end
 
     it "filters groups by the filter term" do
       expect(load_options(filter: "another")).to contain_exactly(
         { id: group_2.id, name: group_2.name },
       )
+    end
+  end
+
+  describe ".output_schemas" do
+    let(:input_schema) do
+      {
+        "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+        "type" => "object",
+        "properties" => {
+          "source" => {
+            "type" => "string",
+          },
+        },
+      }
+    end
+
+    it "advertises a concrete schema for each operation", :aggregate_failures do
+      group_with_user =
+        DiscourseWorkflows::Schema.merge(
+          DiscourseWorkflows::Schema::GROUP_SCHEMA,
+          DiscourseWorkflows::Schema::BASIC_USER_SCHEMA,
+        )
+
+      expect(
+        described_class.output_schemas({ "operation" => "add" }, input_schemas: [input_schema]),
+      ).to eq([group_with_user])
+      expect(
+        described_class.output_schemas({ "operation" => "remove" }, input_schemas: [input_schema]),
+      ).to eq([group_with_user])
+      expect(
+        described_class.output_schemas({ "operation" => "get" }, input_schemas: [input_schema]),
+      ).to eq([DiscourseWorkflows::Schema::GROUP_SCHEMA])
+    end
+
+    it "merges membership data over the input schema for check_membership", :aggregate_failures do
+      schema =
+        described_class.output_schemas(
+          { "operation" => "check_membership" },
+          input_schemas: [input_schema],
+        ).first
+
+      expect(schema.dig("properties", "source")).to eq("type" => "string")
+      expect(schema.dig("properties", "group_membership", "properties")).to include("in_group")
     end
   end
 
@@ -58,6 +95,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect(result["user"]["id"]).to eq(user.id)
         expect(result["user"]["username"]).to eq(user.username)
         expect(GroupUser.exists?(user: user, group: group)).to be(true)
+        expect(result).to match_node_output_schema(described_class, configuration: config)
       end
 
       it "is idempotent when user is already a member" do
@@ -113,6 +151,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect(result["user"]["id"]).to eq(user.id)
         expect(result["user"]["username"]).to eq(user.username)
         expect(GroupUser.exists?(user: user, group: group)).to be(false)
+        expect(result).to match_node_output_schema(described_class, configuration: config)
       end
 
       it "logs the removal in group history" do
@@ -197,6 +236,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         expect(result["group"]["name"]).to eq(group.name)
         expect(result["group"]["user_count"]).to eq(group.user_count)
         expect(result["group"]["automatic"]).to be(false)
+        expect(result).to match_node_output_schema(described_class, configuration: config)
       end
 
       it "raises when group does not exist" do
@@ -211,6 +251,157 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         group.update!(visibility_level: Group.visibility_levels[:staff])
         config = {
           "operation" => "get",
+          "group_id" => group.id.to_s,
+          "actor_username" => user.username,
+        }
+
+        expect { execute_node(configuration: config, item: item) }.to raise_error(
+          Discourse::InvalidAccess,
+        )
+      end
+    end
+
+    context "with check_membership operation" do
+      fab!(:member, :user)
+      fab!(:non_member, :user)
+
+      before { group.add(member) }
+
+      it "adds membership data to each item", :aggregate_failures do
+        configuration = {
+          "operation" => "check_membership",
+          "username" => "={{ $json.username }}",
+          "group_id" => group.id,
+          "actor_username" => "system",
+        }
+
+        output =
+          execute_node_output(
+            configuration: configuration,
+            input_items: [
+              { "json" => { "username" => member.username, "post_id" => 1 } },
+              { "json" => { "username" => non_member.username, "post_id" => 2 } },
+            ],
+          )
+
+        expect(output.first.map { |item| item["json"] }).to contain_exactly(
+          include(
+            "username" => member.username,
+            "post_id" => 1,
+            "group_membership" =>
+              include(
+                "group_id" => group.id,
+                "group_name" => group.name,
+                "user_id" => member.id,
+                "username" => member.username,
+                "in_group" => true,
+              ),
+          ),
+          include(
+            "username" => non_member.username,
+            "post_id" => 2,
+            "group_membership" =>
+              include(
+                "group_id" => group.id,
+                "group_name" => group.name,
+                "user_id" => non_member.id,
+                "username" => non_member.username,
+                "in_group" => false,
+              ),
+          ),
+        )
+
+        output.first.each do |output_item|
+          expect(output_item["json"]).to match_node_output_schema(
+            described_class,
+            configuration: configuration,
+          )
+        end
+      end
+
+      it "replaces an existing membership object in both runtime data and its schema contract",
+         :aggregate_failures do
+        configuration = {
+          "operation" => "check_membership",
+          "username" => member.username,
+          "group_id" => group.id,
+          "actor_username" => "system",
+        }
+        input_schema = {
+          "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "group_membership" => {
+              "type" => "object",
+              "properties" => {
+                "legacy" => {
+                  "type" => "string",
+                },
+              },
+            },
+          },
+        }
+
+        output =
+          execute_node_output(
+            configuration: configuration,
+            input_items: [{ "json" => { "group_membership" => { "legacy" => "old" } } }],
+          )
+        output_schema =
+          described_class.output_schemas(configuration, input_schemas: [input_schema]).first
+
+        expected_keys = %w[group_id group_name user_id username in_group]
+        expect(output.first.first.dig("json", "group_membership").keys).to contain_exactly(
+          *expected_keys,
+        )
+        expect(
+          output_schema.dig("properties", "group_membership", "properties").keys,
+        ).to contain_exactly(*expected_keys)
+      end
+
+      it "handles the logged_in_users pseudogroup without group_users rows", :aggregate_failures do
+        logged_in_users = Group.refresh_automatic_group!(:logged_in_users)
+        GroupUser.where(group: logged_in_users, user: member).delete_all
+
+        output =
+          execute_node_output(
+            configuration: {
+              "operation" => "check_membership",
+              "username" => member.username,
+              "group_id" => logged_in_users.id,
+              "actor_username" => "system",
+            },
+          )
+
+        membership_data = output.first.first.dig("json", "group_membership")
+
+        expect(membership_data).to include(
+          "group_id" => logged_in_users.id,
+          "group_name" => logged_in_users.name,
+          "user_id" => member.id,
+          "username" => member.username,
+          "in_group" => true,
+        )
+        expect(GroupUser.exists?(group: logged_in_users, user: member)).to be(false)
+      end
+
+      it "raises when the user cannot be found" do
+        expect do
+          execute_node(
+            configuration: {
+              "operation" => "check_membership",
+              "username" => "missing_user",
+              "group_id" => group.id,
+            },
+          )
+        end.to raise_error(DiscourseWorkflows::NodeError, "User 'missing_user' not found")
+      end
+
+      it "raises when actor_username cannot see the group" do
+        group.update!(visibility_level: Group.visibility_levels[:staff])
+        config = {
+          "operation" => "check_membership",
+          "username" => member.username,
           "group_id" => group.id.to_s,
           "actor_username" => user.username,
         }

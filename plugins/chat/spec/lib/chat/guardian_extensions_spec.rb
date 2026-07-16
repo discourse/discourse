@@ -440,6 +440,36 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_see_chat_message?" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
+
+      it "returns true for a visible message in a channel the user can preview" do
+        expect(guardian.can_see_chat_message?(message)).to eq(true)
+      end
+
+      it "returns false when the user cannot preview the channel" do
+        message.update!(chat_channel: private_channel)
+        expect(guardian.can_see_chat_message?(message)).to eq(false)
+      end
+
+      context "when the message is trashed" do
+        before { message.trash! }
+
+        it "returns false for another user" do
+          other_guardian = Guardian.new(Fabricate(:user, group_ids: [chatters.id]))
+          expect(other_guardian.can_see_chat_message?(message)).to eq(false)
+        end
+
+        it "returns true for the author" do
+          expect(guardian.can_see_chat_message?(message)).to eq(true)
+        end
+
+        it "returns true for staff" do
+          expect(staff_guardian.can_see_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_moderate_chat?" do
       context "for category channel" do
         fab!(:category) { Fabricate(:category, read_restricted: true) }
@@ -635,6 +665,62 @@ RSpec.describe Chat::GuardianExtensions do
 
           it "disallows owner to restore" do
             expect(guardian.can_restore_chat?(message, dm_channel.chatable)).to eq(false)
+          end
+        end
+      end
+    end
+
+    describe "#can_delete_chat?" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
+      fab!(:chatable, :category)
+
+      context "when user is owner of the message" do
+        it "allows the owner to delete while they can still see the channel" do
+          expect(guardian.can_delete_chat?(message, chatable)).to eq(true)
+        end
+
+        context "when the owner has lost access to a private category channel" do
+          fab!(:revoke_group, :group)
+          fab!(:revoked_category) { Fabricate(:private_category, group: revoke_group) }
+          fab!(:revoked_channel) { Fabricate(:chat_channel, chatable: revoked_category) }
+          fab!(:message) { Fabricate(:chat_message, chat_channel: revoked_channel, user: user) }
+
+          before do
+            revoke_group.add(user)
+            GroupUser.where(group: revoke_group, user: user).destroy_all
+          end
+
+          it "disallows the owner to delete" do
+            expect(guardian.can_delete_chat?(message, revoked_category)).to eq(false)
+          end
+        end
+
+        context "when the owner is no longer in a direct message channel" do
+          fab!(:other_user, :user)
+          fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+          fab!(:message) { Fabricate(:chat_message, chat_channel: dm_channel, user: user) }
+
+          before { dm_channel.chatable.direct_message_users.find_by!(user: user).destroy! }
+
+          it "disallows the owner to delete" do
+            expect(guardian.can_delete_chat?(message, dm_channel.chatable)).to eq(false)
+          end
+        end
+      end
+
+      context "when user is not owner of the message" do
+        fab!(:other_user, :user)
+        fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+
+        context "when chatable is a direct message the actor cannot preview" do
+          fab!(:chatable) { Chat::DirectMessage.create! }
+
+          it "still allows staff to delete (non-owner path is unchanged)" do
+            expect(staff_guardian.can_delete_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallows a regular user to delete" do
+            expect(guardian.can_delete_chat?(message, chatable)).to eq(false)
           end
         end
       end

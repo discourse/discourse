@@ -17,11 +17,6 @@ sk:
         few: "%{count} hlasy"
         many: "%{count} hlasy"
         other: "%{count} hlasy"
-      anonymous_button:
-        one: "Hlasovať"
-        few: "Hlasy"
-        many: "Hlasy"
-        other: "Hlasy"
       remove_vote: "Odstrániť hlas"
       and_more_voters: "a %{count} ďalšie..."
       show_voters: "Ukázať kto hlasoval"

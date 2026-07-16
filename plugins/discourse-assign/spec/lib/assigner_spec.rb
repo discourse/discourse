@@ -148,6 +148,44 @@ RSpec.describe Assigner do
       )
     end
 
+    it "triggers assigned event after assigning" do
+      event = DiscourseEvent.track(:assigned) { assigner.assign(moderator) }
+
+      assignment = event[:params].first
+      expect(assignment).to eq(topic.assignment)
+      expect(assignment.target).to eq(topic)
+    end
+
+    it "enqueues assigned workflows matching the assignment target" do
+      SiteSetting.enable_discourse_workflows = true
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+      DiscourseWorkflows::Registry.reset_indexes!
+
+      create_published_workflow("all-assignments")
+      create_published_workflow("topic-assignments", "topic_assignments_only" => true)
+
+      post_assignment_topic = Fabricate(:post).topic
+      post_assignment_post = Fabricate(:post, topic: post_assignment_topic)
+
+      described_class.new(post_assignment_post, moderator_2).assign(moderator)
+
+      expect(enqueued_workflow_trigger_node_ids).to contain_exactly("all-assignments")
+
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+      described_class.new(topic, moderator_2).assign(moderator)
+
+      expect(enqueued_workflow_trigger_node_ids).to contain_exactly(
+        "all-assignments",
+        "topic-assignments",
+      )
+
+      trigger_data =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+      expect(trigger_data["assignment"]["target_type"]).to eq("Topic")
+      expect(trigger_data["post"]["id"]).to eq(topic.first_post.id)
+    end
+
     it "does not update notification level if already watching" do
       TopicUser.change(
         moderator.id,
@@ -215,6 +253,37 @@ RSpec.describe Assigner do
 
     def assigned_to?(assignee)
       assigner.assign(assignee).fetch(:success)
+    end
+
+    def create_published_workflow(trigger_node_id, configuration = {})
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: moderator_2,
+        published: true,
+        nodes: [
+          {
+            "id" => trigger_node_id,
+            "type" => "trigger:assigned",
+            "typeVersion" => "1.0",
+            "name" => trigger_node_id.humanize,
+            "position" => {
+              "x" => 0,
+              "y" => 0,
+            },
+            "parameters" => configuration.deep_stringify_keys,
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    def enqueued_workflow_trigger_node_ids
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+        job["args"].first["trigger_node_id"]
+      end
     end
 
     describe "forbidden reasons" do

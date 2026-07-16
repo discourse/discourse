@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 4
+  SCHEMA_VERSION = 5
 
   FILTERS = %i[
     name
@@ -355,7 +355,7 @@ class Report
     report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
-    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
+    report.legacy = LEGACY_REPORTS.include?(type)
 
     report
   end
@@ -475,8 +475,19 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
-    add_counts report, subject_class
+    data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+    counts = subject_class.public_send(report_method, data_start, report.end_date)
+
+    prev_period_count = nil
+
+    if report.facets.include?(:prev_period)
+      counts, prev_counts = split_date_counts(counts, report.start_date)
+      prev_period_count = prev_counts.sum { |_date, count| count }
+    end
+
+    report.data = counts.map { |date, count| { x: date, y: count } }
+
+    add_counts report, subject_class, prev_period_count: prev_period_count
   end
 
   def self.basic_report_about(report, subject_class, report_method, *args)
@@ -487,6 +498,11 @@ class Report
       .each { |date, count| report.data << { x: date, y: count } }
   end
 
+  def self.split_date_counts(counts, current_start)
+    current_start_date = current_start.to_date
+    counts.partition { |date, _count| date.to_date >= current_start_date }
+  end
+
   def self.add_prev_data(report, subject_class, report_method, *args)
     if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
       prev_data = subject_class.public_send(report_method, *args)
@@ -494,16 +510,18 @@ class Report
     end
   end
 
-  def self.add_counts(report, subject_class, query_column = "created_at")
+  def self.add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
     if report.facets.include?(:prev_period)
-      prev_data =
-        subject_class.where(
-          "#{query_column} >= ? and #{query_column} < ?",
-          report.prev_start_date,
-          report.prev_end_date,
-        )
-
-      report.prev_period = prev_data.count
+      report.prev_period =
+        if prev_period_count
+          prev_period_count
+        else
+          subject_class.where(
+            "#{query_column} >= ? and #{query_column} < ?",
+            report.prev_start_date,
+            report.prev_end_date,
+          ).count
+        end
     end
 
     report.total = subject_class.count if report.facets.include?(:total)

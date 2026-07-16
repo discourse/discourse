@@ -464,7 +464,7 @@ describe "Post event" do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
-    find(".d-modal .d-modal__footer .advanced-settings").click
+    find(".d-modal .d-modal__footer .advanced-mode-btn").click
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
@@ -498,6 +498,36 @@ describe "Post event" do
         .send_invites
 
       expect(bulk_invite_modal_page).to be_closed
+    end
+
+    it "keeps a single row when removing the last invitee" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page
+        .set_invitee_at_row(invitable_user_1.username, "going", 1)
+        .add_invitee
+        .set_invitee_at_row(invitable_user_2.username, "not_going", 2)
+        .remove_invitee_row(2)
+        .remove_invitee_row(1)
+
+      # the collection never collapses, an empty row is always available
+      expect(bulk_invite_modal_page).to have_invitee_rows(1)
+    end
+
+    it "closes the modal and shows a toast after a CSV bulk invite" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page.upload_csv(
+        "#{Rails.root.join("plugins/discourse-calendar/spec/fixtures/csv/bulk_invite.csv")}",
+      )
+      PageObjects::Components::Dialog.new.click_yes
+
+      expect(bulk_invite_modal_page).to be_closed
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.bulk_invite_modal.success"),
+      )
     end
   end
 
@@ -561,6 +591,21 @@ describe "Post event" do
 
       expect(ics_content).to include("RRULE:")
       expect(ics_content).to include("FREQ=WEEKLY")
+    end
+  end
+
+  context "when editing an event without an explicit name" do
+    it "shows the topic title as the event name placeholder" do
+      title = "Nameless meetup"
+      raw = "[event start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+      post_event_page.edit
+
+      expect(page).to have_css(
+        ".post-event-builder-modal .composer-event__name-input[placeholder='#{title}']",
+      )
     end
   end
 end

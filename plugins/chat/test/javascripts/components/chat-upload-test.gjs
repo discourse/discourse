@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { setupS3CDN } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 
@@ -65,6 +66,11 @@ const TXT_FIXTURE = {
   retain_hours: null,
   human_filesize: "168 KB",
 };
+
+class MockCapabilitiesService extends Service {
+  @tracked isIOS = false;
+  @tracked isSafari = false;
+}
 
 module("Component | ChatUpload", function (hooks) {
   setupRenderingTest(hooks);
@@ -139,15 +145,101 @@ module("Component | ChatUpload", function (hooks) {
       .hasAttribute("href", TXT_FIXTURE.url, "has the correct URL");
   });
 
+  module("S3 CDN URLs", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.owner.unregister("service:capabilities");
+      this.owner.register("service:capabilities", MockCapabilitiesService);
+
+      setupS3CDN(
+        "//test.s3-us-west-1.amazonaws.com/site",
+        "https://awesome.cdn/site"
+      );
+    });
+
+    test("uses the CDN for image src and data-large-src", async function (assert) {
+      this.set("upload", {
+        ...IMAGE_FIXTURE,
+        url: "https://test.s3-us-west-1.amazonaws.com/site/original.jpg",
+        thumbnail: {
+          url: "https://test.s3-us-west-1.amazonaws.com/site/thumbnail.jpg",
+        },
+      });
+
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
+
+      assert
+        .dom("img.chat-img-upload")
+        .hasAttribute(
+          "src",
+          "https://awesome.cdn/site/thumbnail.jpg",
+          "uses the CDN for image thumbnails"
+        );
+      assert
+        .dom("img.chat-img-upload")
+        .hasAttribute(
+          "data-large-src",
+          "https://awesome.cdn/site/original.jpg",
+          "uses the CDN for the full-size image URL"
+        );
+    });
+
+    test("uses the CDN for video sources", async function (assert) {
+      this.set("upload", {
+        ...VIDEO_FIXTURE,
+        url: "https://test.s3-us-west-1.amazonaws.com/site/video.mp4",
+      });
+
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
+
+      assert
+        .dom("video.chat-video-upload source")
+        .hasAttribute(
+          "src",
+          "https://awesome.cdn/site/video.mp4",
+          "uses the CDN for video uploads"
+        );
+    });
+
+    test("uses the CDN for audio sources", async function (assert) {
+      this.set("upload", {
+        ...AUDIO_FIXTURE,
+        url: "https://test.s3-us-west-1.amazonaws.com/site/song.mp3",
+      });
+
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
+
+      assert
+        .dom("audio.chat-audio-upload source")
+        .hasAttribute(
+          "src",
+          "https://awesome.cdn/site/song.mp3",
+          "uses the CDN for audio uploads"
+        );
+    });
+
+    test("uses the CDN for attachment hrefs", async function (assert) {
+      this.set("upload", {
+        ...TXT_FIXTURE,
+        url: "https://test.s3-us-west-1.amazonaws.com/site/file.txt",
+      });
+
+      await render(<template><ChatUpload @upload={{this.upload}} /></template>);
+
+      assert
+        .dom("a.chat-other-upload")
+        .hasAttribute(
+          "href",
+          "https://awesome.cdn/site/file.txt",
+          "uses the CDN for attachment uploads"
+        );
+    });
+  });
+
   module("video source URL", function (nestedHooks) {
     let mockCapabilities;
 
-    class MockCapabilitiesService extends Service {
-      @tracked isSafari = false;
-    }
-
     nestedHooks.beforeEach(function () {
-      // Register and inject the mock service
+      this.owner.unregister("service:capabilities");
       this.owner.register("service:capabilities", MockCapabilitiesService);
       mockCapabilities = this.owner.lookup("service:capabilities");
     });

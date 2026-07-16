@@ -36,5 +36,7 @@ te:
       topic: "విషయం"
       post: "పోస్ట్"
     discourse_workflows:
+      nodes:
+        "trigger:assigned": "కేటాయించబడింది"
       assign_topic:
         topic_id: "విషయపు ఐడీ"

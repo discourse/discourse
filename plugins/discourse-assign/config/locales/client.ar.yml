@@ -219,6 +219,7 @@ ar:
     discourse_workflows:
       nodes:
         "action:assign_topic": "تعيين موضوع"
+        "trigger:assigned": "تم تعيينك"
       assign_topic:
         operations:
           assign: "تعيين"

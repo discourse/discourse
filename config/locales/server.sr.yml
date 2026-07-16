@@ -143,6 +143,11 @@ sr:
       moderators: "moderatori"
       staff: "osoblje"
       logged_in_users: "prijavljeni_korisnici"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
       anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
@@ -295,6 +300,8 @@ sr:
     read: "pročitano"
     write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
     copied: "Kopirano!"
+    device:
+      continue: "Nastavi"
   reports:
     default:
       labels:
@@ -337,14 +344,12 @@ sr:
         staff: "Osoblje"
     trust_level_pipeline:
       title: "Pipeline nivoa poverenja"
-      description: "Kretanje članova između nivoa poverenja za izabrani period. Broji trenutne članove na svakom nivou poverenja, njihov udeo u ukupnom članstvu i broj članova koji su tokom perioda prešli u ili iz svakog nivoa poverenja."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Nivo poverenja"
         count: "Članovi"
         share: "Podeli"
-        moves_in: "Ulazi"
-        moves_out: "Izlazi"
+        signups: "Registracija"
       levels:
         "0": "Novo"
         "1": "Osnovno"
@@ -469,7 +474,6 @@ sr:
     min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
     email_subject: "Prilagodljiv format teme za standardne e-mailove. Pogledajte <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Prilagođavanje specifičnih sistemskih e-mail šablona na Meta-i</a>."
-    max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     use_admin_ip_allowlist: "Administratori mogu da se prijave samo ako se nalaze na IP adresi definisanoj u <a href='%{base_path}/admin/logs/screened_ip_addresses'>listi proverenih IP adresa</a>."
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
@@ -512,7 +516,6 @@ sr:
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
-    dashboard_improvements: "Poboljšanja navigacije, dizajna i upotrebljivosti administratorske kontrolne table Discourse-a."
   search:
     within_post: "#%{post_number} od %{username}"
     types:

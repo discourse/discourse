@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
-require_relative "../mixins/github_auth_header"
+require_relative "../mixins/github_api"
 
 module Onebox
   module Engine
@@ -9,7 +9,7 @@ module Onebox
       include Engine
       include LayoutSupport
       include JSON
-      include Onebox::Mixins::GithubAuthHeader
+      include Onebox::Mixins::GithubApi
 
       matches_domain("github.com", "www.github.com")
       always_https
@@ -23,9 +23,9 @@ module Onebox
       end
 
       def inline_data
-        return if github_auth_header(match[:org]).blank?
+        return unless github_token?
 
-        result = raw(github_auth_header(match[:org]))
+        result = raw
         title = "GitHub - #{result["full_name"]}"
         title += " - #{Onebox::Helpers.truncate(result["description"])}" if result[
           "description"
@@ -43,7 +43,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header(match[:org])).clone
+        result = raw.clone
         result["link"] = link
         description = result["description"]
         title = "GitHub - #{result["full_name"]}"

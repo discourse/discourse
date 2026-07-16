@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Notification from "discourse/models/notification";
+import Site from "discourse/models/site";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { i18n } from "discourse-i18n";
 
@@ -24,6 +25,10 @@ module(
   "Unit | Notification Types | upcoming-change-automatically-promoted",
   function (hooks) {
     setupTest(hooks);
+
+    hooks.afterEach(function () {
+      Site.current().permanent_upcoming_change_names = [];
+    });
 
     test("description with single change", function (assert) {
       const notification = getNotification();
@@ -146,6 +151,57 @@ module(
       assert.strictEqual(
         director.linkHref,
         "/admin/config/upcoming-changes?changeNamesFilter=enable_feature_x,enable_feature_y,enable_feature_z"
+      );
+    });
+
+    test("linkHref redirects to What's New when the change is now permanent", function (assert) {
+      Site.current().permanent_upcoming_change_names = ["enable_feature_x"];
+      const notification = getNotification({
+        upcoming_change_names: ["enable_feature_x"],
+      });
+      const director = createRenderDirector(
+        notification,
+        "upcoming_change_automatically_promoted",
+        this.siteSettings
+      );
+      assert.strictEqual(
+        director.linkHref,
+        "/admin/whats-new?scrollTo=enable_feature_x"
+      );
+    });
+
+    test("linkHref redirects to What's New when every change is now permanent", function (assert) {
+      Site.current().permanent_upcoming_change_names = [
+        "enable_feature_x",
+        "enable_feature_y",
+      ];
+      const notification = getNotification({
+        upcoming_change_names: ["enable_feature_x", "enable_feature_y"],
+      });
+      const director = createRenderDirector(
+        notification,
+        "upcoming_change_automatically_promoted",
+        this.siteSettings
+      );
+      assert.strictEqual(
+        director.linkHref,
+        "/admin/whats-new?scrollTo=enable_feature_x"
+      );
+    });
+
+    test("linkHref stays on the upcoming changes page when only some changes are permanent", function (assert) {
+      Site.current().permanent_upcoming_change_names = ["enable_feature_x"];
+      const notification = getNotification({
+        upcoming_change_names: ["enable_feature_x", "enable_feature_y"],
+      });
+      const director = createRenderDirector(
+        notification,
+        "upcoming_change_automatically_promoted",
+        this.siteSettings
+      );
+      assert.strictEqual(
+        director.linkHref,
+        "/admin/config/upcoming-changes?changeNamesFilter=enable_feature_x,enable_feature_y"
       );
     });
 

@@ -366,7 +366,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateClaimedBy(data) {
-    if (data.topic_id !== this.reviewable.topic.id) {
+    if (data.topic_id !== this.topicId) {
       return;
     }
 
@@ -490,6 +490,10 @@ export default class ReviewableItem extends Component {
     if (this.remove && result.remove_reviewable_ids?.length > 0) {
       this.remove(result.remove_reviewable_ids);
     } else {
+      if (this.updateStatuses && result.reviewable_updates) {
+        this.updateStatuses(result.reviewable_updates);
+      }
+
       return this.store.find("reviewable", reviewable.id);
     }
   }
@@ -765,7 +769,7 @@ export default class ReviewableItem extends Component {
                 title={{i18n "review.copy_permalink_title"}}
                 class="btn btn-transparent reviewable-permalink-copy"
               >
-                {{dIcon "d-post-share"}}
+                {{dIcon "link"}}
               </button>
 
               {{newReviewableStatus

@@ -34,6 +34,14 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Зарежда се..."
+        tool: "Действия"
+        user: "Потребител"
+        approve: "Одобри"
+        reject: "Отхвърли"
+        approved: "Одобрена"
+        rejected: "Отхвърлени"
       llm_selector:
         none: "Без"
       features:
@@ -53,11 +61,15 @@ bg:
           reset: "Нулиране"
         search:
           name: "Търсене"
+        image_caption:
+          setting_groups:
+            settings: "Настройки"
         spam:
           name: "Спам"
       modals:
         select_option: "Изберете опция..."
       translations:
+        category_scope: "Категории"
         stats:
           eta_minutes:
             one: "%{count} минута"
@@ -96,6 +108,12 @@ bg:
         save: "Запази"
         enabled: "Да е включен?"
         delete: "Изтрий"
+        thinking_effort_options:
+          none: "Без"
+          low: "Ниска"
+          medium: "Среден"
+          high: "Висок"
+          max: "Максимално"
         response_format:
           open_modal: "Редактирай"
           modal:
@@ -170,8 +188,6 @@ bg:
           cancel: "Отмени"
         thumbnail_suggestions:
           try_again: "Опитайте отново"
-        image_caption:
-          save_caption: "Запази"
       embeddings:
         save: "Запази"
         delete: "Изтрий"

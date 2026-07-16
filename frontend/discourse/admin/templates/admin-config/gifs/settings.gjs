@@ -1,0 +1,30 @@
+import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import { i18n } from "discourse-i18n";
+
+export default <template>
+  <DPageHeader
+    @hideTabs={{true}}
+    @titleLabel={{i18n "admin.config.gifs.title"}}
+    @descriptionLabel={{i18n "admin.config.gifs.header_description"}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @path="/admin/config/gifs"
+        @label={{i18n "admin.config.gifs.title"}}
+      />
+    </:breadcrumbs>
+  </DPageHeader>
+
+  <div class="admin-config-page__main-area">
+    <AdminAreaSettings
+      @showBreadcrumb={{false}}
+      @area="gifs"
+      @path="/admin/config/gifs"
+      @filter={{@controller.filter}}
+      @adminSettingsFilterChangedCallback={{@controller.adminSettingsFilterChangedCallback}}
+    />
+  </div>
+</template>

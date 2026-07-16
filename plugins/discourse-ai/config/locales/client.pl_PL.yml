@@ -21,7 +21,7 @@ pl_PL:
       dashboard:
         emotion:
           title: "Emocje"
-          description: "Tabela zawiera liczbę postów sklasyfikowanych z określoną emocją. Sklasyfikowano je za pomocą modelu „SamLowe/roberta-base-go_emotions”."
+          description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
         reports:
           filters:
             group_by:
@@ -233,13 +233,39 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      post_image_captions:
+        edit: "Edytuj podpis obrazu AI"
+        title: "Edytuj podpis obrazu AI"
+        description: "Podpis"
+        save: "Zapisz podpis"
+        saved: "Zapisano podpis obrazu AI"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+          forced_llm_notice_description: "Ten agent jest zablokowany na skonfigurowanym domyślnym LLM. Przepływ pracy nie może go zastąpić."
+          llm_model_id: "Model LLM"
+          llm_model_default: "Użyj ustawień domyślnych agenta"
+          llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
           prompt: "Monit"
+          runner_username: "Uruchom jako"
+          runner_username_tooltip: "Użytkownik, którego uprawnienia służą do widoczności przesyłania i narzędzi agenta AI. Użyj systemu do automatyzacji przepływu pracy."
+          upload_ids: "Identyfikatory przesłania"
+          upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Przesyłanie obrazów jest uwzględniane, gdy agent ma włączoną widoczność; przesyłanie dokumentów jest uwzględniane, gdy wybrany program LLM obsługuje ich typ pliku."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"
+      ai_tool_approval:
+        loading: "Ładowanie..."
+        load_error: "Nie można załadować tego oczekującego działania."
+        agent: "Agent"
+        tool: "Działanie"
+        user: "Użytkownik"
+        approve: "Zatwierdź"
+        reject: "Odrzuć"
+        approved: "Zaakceptowany"
+        rejected: "Odrzucony"
+        awaiting_staff: "Oczekiwanie na zatwierdzenie przez personel"
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
@@ -314,6 +340,12 @@ pl_PL:
             model_settings: "Ustawienia modelu"
             related_topics: "Powiązane tematy"
             semantic_search: "Wyszukiwanie semantyczne"
+        admin_dashboard:
+          name: "Panel administracyjny"
+          description: "Pomaga menedżerom społeczności dostrzegać znaczące zmiany i decydować, gdzie szukać dalej"
+          highlights: "Najważniejsze wydarzenia"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
         discord:
           name: "Integracja z Discordem"
           description: "Dodaje możliwość wyszukiwania kanałów Discord"
@@ -344,7 +376,6 @@ pl_PL:
           translate: "Przetłumacz"
           markdown_tables: "Wygeneruj tabelę Markdown"
           custom_prompt: "Niestandardowy prompt"
-          image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
           chat_thread_titles: "Tytuły wątków czatu"
@@ -353,6 +384,12 @@ pl_PL:
             enabled_features: "Włączone funkcje"
             automation: "Automatyzacja"
             agents: "Agenty"
+        image_caption:
+          name: "Podpis obrazu"
+          description: "Generuje podpisy AI do obrazów w wpisach i udostępnia je czytelnikom oraz technologiom wspomagającym"
+          post_image_captions: "Dodaj podpisy do obrazów"
+          setting_groups:
+            settings: "Ustawienia"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -391,8 +428,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
-        excluded_categories: "Wykluczone kategorie"
-        excluded_categories_description: "Treści w tych kategoriach nie będą tłumaczone. Pozostaw puste, aby przetłumaczyć treści we wszystkich kategoriach, w tym w kategoriach prywatnych."
+        category_scope: "Kategorie"
+        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają wykorzystywać wszystkie kategorie, kategorie publiczne czy wybrane kategorie."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -453,6 +490,7 @@ pl_PL:
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
         enable: "Włącz"
+        enabled_locked_tip: "Wykrywanie spamu AI nie może być wyłączone na tej stronie."
         spam_tip: "Wykrywanie spamu przez sztuczną inteligencję będzie skanować pierwsze 3 posty wszystkich nowych użytkowników w tematach publicznych. Oznaczy je do sprawdzenia i zablokuje użytkowników, jeśli istnieje prawdopodobieństwo, że są spamem."
         settings_saved: "Ustawienia zapisane"
         spam_description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -531,6 +569,7 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
         mcp_server_tools_help: "Wybrane serwery MCP domyślnie udostępniają wszystkie swoje narzędzia. Zawęż je dla każdego agenta, aby zmniejszyć zużycie tokenów i zapewnić sobie wybór narzędzi."
         mcp_server_tool_count:
@@ -568,15 +607,8 @@ pl_PL:
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
         use_parent_llm: "Użyj modelu językowego agenta"
-        max_context_posts: "Maksymalny kontekst postów"
-        max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
-        execution_mode: "Tryb wykonania"
-        execution_mode_help: "Kontroluje sposób, w jaki agent zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
-        execution_mode_options:
-          default: "Domyślne (stałe limity)"
-          agentic: "Agent (budżet tokenów)"
-        max_turn_tokens: "Maksymalna liczba żetonów tury"
-        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
+        max_turn_tokens: "Maksymalna liczba tokenów tury"
+        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Pozostaw puste, aby domyślnie wykorzystać połowę okna kontekstowego modelu."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
         vision_enabled: Dołącz przesyłanie obrazów
@@ -658,6 +690,17 @@ pl_PL:
         temperature_help: "Temperatura używana w LLM. Zwiększ, aby zwiększyć kreatywność (pozostaw puste, aby użyć domyślnej wartości modelu, zazwyczaj od 0,0 do 2,0)."
         top_p: "Top P"
         top_p_help: "Top P do użycia w LLM, zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu, zazwyczaj wartość od 0,0 do 1,0)."
+        thinking_effort: "Wysiłek umysłowy"
+        thinking_effort_help: "Ile modele zdolne do rozumowania powinny myśleć przed udzieleniem odpowiedzi? Wyższe wartości mogą usprawnić trudne zadania, ale mogą zwiększyć opóźnienia i koszty. Dostawcy nieobsługiwani ignorują to ustawienie."
+        thinking_effort_options:
+          default: "Model domyślny"
+          none: "Brak"
+          minimal: "Minimalny"
+          low: "Niski"
+          medium: "Średni"
+          high: "Wysoki"
+          xhigh: "Bardzo wysoki"
+          max: "Maksymalny"
         priority: "Priorytet"
         priority_help: "Priorytetowe agenty są wyświetlane użytkownikom na górze listy agentów. Jeśli wiele agentów ma priorytet, zostaną one posortowane alfabetycznie."
         tool_options: "Opcje narzędzi"
@@ -911,6 +954,7 @@ pl_PL:
           group: "Grupa"
           max_tokens: "Maksymalna liczba tokenów"
           max_usages: "Maksymalna liczba użyć"
+          max_cost: "Maksymalny koszt"
           duration: "Czas trwania"
           confirm_delete: "Czy na pewno chcesz usunąć ten limit?"
           add: "Dodaj limit"
@@ -922,9 +966,11 @@ pl_PL:
             custom: "Niestandardowy..."
           hours: "godzin"
           max_tokens_help: "Maksymalna liczba tokenów (słów i znaków), które każdy użytkownik w tej grupie może wykorzystać w określonym czasie. Tokeny to jednostki używane przez modele AI do przetwarzania tekstu - w przybliżeniu 1 token = 4 znaki lub 3/4 słowa."
-          max_tokens_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnego użycia"
+          max_tokens_required: "Należy ustawić, jeśli nie ustawiono maksymalnego użycia i maksymalnego kosztu"
           max_usages_help: "Maksymalna liczba przypadków, w których każdy użytkownik w tej grupie może użyć modelu AI w określonym czasie. Ten limit jest śledzony dla poszczególnych użytkowników, a nie współdzielony przez grupę."
-          max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
+          max_usages_required: "Należy ustawić, jeśli nie ustawiono maksymalnej liczby tokenów i maksymalnego kosztu"
+          max_cost_help: "Maksymalny szacowany koszt, jaki każdy użytkownik z tej grupy może wydać na ten model sztucznej inteligencji w określonym czasie. Koszt jest oparty na skonfigurowanych cenach danych wejściowych, wyjściowych, danych wejściowych z pamięci podręcznej i zapisów w pamięci podręcznej modelu."
+          max_cost_required: "Należy ustawić, jeśli nie ustawiono maksymalnej liczby tokenów i maksymalnego wykorzystania"
         credit_allocation:
           credits_remaining: "Pozostało %{remaining} z %{total} kredytów (%{percentage}%)"
           soft_limit_warning: "Ten model ma dziś %{percentage}% pozostałych kredytów AI"
@@ -933,7 +979,7 @@ pl_PL:
         usage:
           ai_bot: "Bot AI"
           ai_helper: "Pomocnik (%{agent})"
-          ai_helper_image_caption: "Podpis pod obrazkiem"
+          ai_image_caption: "Podpis obrazu"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Podsumuj"
           ai_embeddings_semantic_search: "Wyszukiwanie AI"
@@ -1024,6 +1070,9 @@ pl_PL:
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
           service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
+          reasoning_parser: "Analizator wnioskowania vLLM"
+          thinking_override: "Zastąpienie myślenia"
+          thinking_token_budget: "Budżet tokena myślenia"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
           adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
           enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
@@ -1037,6 +1086,11 @@ pl_PL:
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
           effort: "Poziom wysiłku"
+        provider_field_hints:
+          reasoning_parser: "Musi być zgodny z ustawieniem serwera vLLM --reasoning-parser. Discourse nie może zmieniać parserów podczas żądania; wykorzystuje to do kształtowania opcji żądania."
+          thinking_override: "Opcjonalnie wymuś obsługiwane szablony czatu vLLM, aby włączyć lub wyłączyć myślenie dla każdego żądania. Nieobsługiwane parsery zachowują domyślne ustawienia serwera."
+          reasoning_effort: "Wysyła opcję żądania reasoning_effort vLLM dla parserów, które ją obsługują."
+          thinking_token_budget: "Opcjonalny limit dla tokenów wnioskowania. Wymaga parsera wnioskowania vLLM i jest ignorowany, gdy wysiłek wnioskowania wynosi Brak."
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -1044,13 +1098,10 @@ pl_PL:
         title: "Zaproponuj zmiany za pomocą AI"
         description: "Wybierz jedną z poniższych opcji, a sztuczna inteligencja zasugeruje Ci nową wersję tekstu."
         selection_hint: "Wskazówka: Możesz także zaznaczyć część tekstu przed otwarciem pomocnika, aby przepisać tylko ten fragment."
-        suggest: "Zasugeruj za pomocą AI"
+        suggest: "Pokaż sugestie AI"
+        choose: "Wybierz za mnie"
+        suggestions: "Sugestie"
         suggest_errors:
-          too_many_tags:
-            one: "Możesz mieć maksymalnie %{count} znacznik"
-            few: "Możesz mieć maksymalnie %{count} znaczniki"
-            many: "Możesz mieć maksymalnie %{count} znaczników"
-            other: "Możesz mieć maksymalnie %{count} znaczników"
           no_suggestions: "Brak dostępnych sugestii"
         missing_content: "Wprowadź treść, aby wygenerować sugestie."
         context_menu:
@@ -1084,11 +1135,6 @@ pl_PL:
           select: "Wybierz"
           selected: "Wybrany"
           try_again: "Spróbuj ponownie"
-        image_caption:
-          button_label: "Napisy z AI"
-          generating: "Generowanie napisów..."
-          credits: "Napisy z AI"
-          save_caption: "Zapisz"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
       errors:
         credit_limit_dialog:
@@ -1181,8 +1227,8 @@ pl_PL:
         click_to_run_label: "Uruchom Artifact"
       ai_bot:
         title: "Bot AI"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."
         cancel_streaming: "Zatrzymaj odpowiedź"
         try_again: "Spróbuj ponownie"

@@ -11,6 +11,7 @@ class SiteSetting < ActiveRecord::Base
     oidc
     saml
     badges
+    categories
     categories_and_tags
     email
     embedding
@@ -18,6 +19,7 @@ class SiteSetting < ActiveRecord::Base
     experimental
     flags
     fonts
+    gifs
     group_permissions
     interface
     legal

@@ -28,13 +28,21 @@ export default class WhosPosting extends Component {
     return (category?.subcategories?.length ?? 0) > 0;
   }
 
+  get #categoryFilters() {
+    if (!this.categoryId) {
+      return null;
+    }
+    const filters = { category: this.categoryId };
+    if (this.includeSubcategories) {
+      filters.include_subcategories = true;
+    }
+    return filters;
+  }
+
   get reportQuery() {
     const query = {};
-    if (this.categoryId) {
-      const filters = { category: this.categoryId };
-      if (this.includeSubcategories) {
-        filters.include_subcategories = true;
-      }
+    const filters = this.#categoryFilters;
+    if (filters) {
       query.filters = filters;
     }
     if (this.args.startDate) {
@@ -53,7 +61,7 @@ export default class WhosPosting extends Component {
   get rows() {
     const rows = this.posters?.rows ?? [];
     const byType = Object.fromEntries(rows.map((r) => [r.type, r]));
-    return ROW_ORDER.map((type, index) => {
+    return ROW_ORDER.map((type) => {
       const row = byType[type] ?? { type, count: 0, share: 0 };
       return {
         type,
@@ -62,7 +70,6 @@ export default class WhosPosting extends Component {
         shareFormatted: `${Math.round(row.share)}%`,
         segmentStyle: trustHTML(`width: ${row.share}%`),
         segmentClass: `--${type.replace("_", "-")}`,
-        legendIndex: index,
       };
     });
   }
@@ -111,11 +118,9 @@ export default class WhosPosting extends Component {
       start_date: this.args.startDate?.toISOString().slice(0, 10),
       end_date: this.args.endDate?.toISOString().slice(0, 10),
     };
-    if (this.categoryId) {
-      data.filters = { category: this.categoryId };
-      if (this.includeSubcategories) {
-        data.filters.include_subcategories = true;
-      }
+    const filters = this.#categoryFilters;
+    if (filters) {
+      data.filters = filters;
     }
 
     try {
@@ -170,34 +175,25 @@ export default class WhosPosting extends Component {
 
       {{#if this.hasData}}
         <div
-          class="db-whos-posting__bar"
+          class="db-whos-posting__bars"
           role="img"
           aria-label={{this.ariaLabel}}
         >
           {{#each this.rows as |row|}}
-            {{#if row.share}}
+            <div class="db-whos-posting__bar-row">
+              <span class="db-whos-posting__bar-label">{{row.label}}</span>
+              <span class="db-whos-posting__bar-track">
+                <span
+                  class="db-whos-posting__bar-fill {{row.segmentClass}}"
+                  style={{row.segmentStyle}}
+                ></span>
+              </span>
               <span
-                class="db-whos-posting__segment {{row.segmentClass}}"
-                style={{row.segmentStyle}}
-              ></span>
-            {{/if}}
+                class="db-whos-posting__bar-share"
+              >{{row.shareFormatted}}</span>
+            </div>
           {{/each}}
         </div>
-
-        <ul class="db-whos-posting__legend">
-          {{#each this.rows as |row|}}
-            <li class="db-whos-posting__legend-item">
-              <span
-                class="db-whos-posting__legend-dot {{row.segmentClass}}"
-                aria-hidden="true"
-              ></span>
-              <span class="db-whos-posting__legend-label">{{row.label}}</span>
-              <span
-                class="db-whos-posting__legend-share"
-              >{{row.shareFormatted}}</span>
-            </li>
-          {{/each}}
-        </ul>
       {{else}}
         <p class="db-whos-posting__empty">
           {{i18n "admin.dashboard.sections.engagement.whos_posting.empty"}}

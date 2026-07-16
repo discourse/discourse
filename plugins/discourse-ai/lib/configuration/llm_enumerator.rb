@@ -47,11 +47,14 @@ module DiscourseAi
           end
         end
 
-        if SiteSetting.ai_helper_enabled_features.split("|").include?("image_caption")
-          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent)
-          model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+        if SiteSetting.ai_post_image_captions_enabled
+          image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_image_caption_agent)
 
-          rval[model_id] << { type: :ai_helper_image_caption }
+          if image_caption_agent.present?
+            model_id = image_caption_agent.default_llm_id || SiteSetting.ai_default_llm_model.to_i
+
+            rval[model_id] << { type: :ai_image_caption }
+          end
         end
 
         if SiteSetting.ai_summarization_enabled
@@ -95,14 +98,25 @@ module DiscourseAi
         true
       end
 
-      # returns an array of hashes (id: , name:, vision_enabled:)
+      # returns an array of hashes (id: , name:, vision_enabled:, supported_native_tools:)
       def self.values_for_serialization
         return [] unless table_exists?
 
-        DB.query_hash(<<~SQL).map(&:symbolize_keys)
-          SELECT id, display_name AS name, vision_enabled
-          FROM llm_models
-        SQL
+        llm_models = LlmModel.all.index_by(&:id)
+
+        DB
+          .query_hash(<<~SQL)
+            SELECT id, display_name AS name, vision_enabled
+            FROM llm_models
+          SQL
+          .map do |row|
+            row = row.symbolize_keys
+            llm_model = llm_models[row[:id]]
+            row[:supported_native_tools] = DiscourseAi::Completions::NativeTools.supported_ids_for(
+              llm_model,
+            )
+            row
+          end
       end
 
       def self.values

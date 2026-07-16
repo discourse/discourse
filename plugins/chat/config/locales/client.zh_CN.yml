@@ -247,14 +247,15 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
+      screen_reader:
+        new_messages:
+          other: "%{count} 条新消息"
       no_direct_message_channels: "您还没有加入任何直接消息！"
       no_direct_message_channels_cta: "开始一个对话"
       no_public_channels: "您还没有加入任何频道！"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       chat_notifications_title: "聊天通知"
-      only_chat_push_notifications:
-        title: "只发送聊天推送通知"
       personalization_title: "个性化"
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
@@ -304,8 +305,6 @@ zh_CN:
         title: "桌面聊天通知声音"
       sounds:
         none: "无"
-        bell: "钟声"
-        ding: "叮叮"
       title: "聊天"
       title_capitalized: "聊天"
       upload: "附加文件"
@@ -385,8 +384,6 @@ zh_CN:
         input_placeholder: 添加名称
         slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
-        slug: 频道缩略名（可选）
-        emoji: 频道表情符号（可选）
         reset_emoji: 重置表情符号
       channel_edit_description_modal:
         title: 编辑描述
@@ -432,16 +429,14 @@ zh_CN:
           hint_multiple_groups:
             other: '%{group} 和其他 %{count} 个群组中的用户将根据<a href="%{settingLink}" target="_blank">安全</a>访问此频道'
         create: "创建频道"
-        description: "描述（可选）"
+        description: "描述"
         name: "频道名称"
-        slug: "频道缩略名（可选）"
         title: "新建频道"
         type: "类型"
         types:
           category: "类别"
           topic: "话题"
         emoji:
-          label: "频道表情符号（可选）"
           reset: "重置表情符号"
       reviewable:
         type: "聊天消息"
@@ -454,6 +449,9 @@ zh_CN:
           other: "<span>您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
         single_user: "<span>%{username} 回应了 </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
+        users_popup:
+          title:
+            other: "%{count} 个回应"
         multiple_users_and_more:
           other: "<span>%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
       composer:
@@ -754,11 +752,31 @@ zh_CN:
         chat:
           label: "聊天"
     discourse_workflows:
+      node_unavailable:
+        requires_chat: "需要启用聊天插件"
       nodes:
         "action:send_chat_message": "发送聊天消息"
+        "action:chat_approval": "聊天审批"
+        "trigger:chat_message_created": "已创建聊天消息"
+      node_descriptions:
+        "action:send_chat_message": "向聊天频道发送消息"
+        "action:chat_approval": "向聊天频道发送审批请求并等待回复"
+      chat_message_created:
+        channel_id: "频道"
       send_chat_message:
         channel_id: "频道"
         message: "发送私信"
       chat_approval:
         message: "发送私信"
+        approve_label: "批准按钮标签"
+        approve_label_description: "如果留空，则默认为“批准”。"
+        deny_label: "拒绝按钮标签"
+        deny_label_description: "如果留空，则默认为“拒绝”。"
         channel_id: "频道"
+        channel_id_description: "要发送批准消息的聊天频道。"
+        timeout_minutes: "超时时间（分钟）"
+        timeout_minutes_description: "留空表示不设置超时。"
+        timeout_action: "超时"
+        timeout_action_description: "审批超时会发生什么？"
+        timeout_action_deny: "恢复为被拒绝"
+        timeout_action_fail: "工作流程失败"

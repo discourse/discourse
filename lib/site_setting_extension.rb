@@ -130,6 +130,10 @@ module SiteSettingExtension
     @themeable ||= {}
   end
 
+  def localizable_settings
+    @localizable_settings ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -150,6 +154,14 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  def dependency_values
+    @dependency_values ||= {}
+  end
+
+  def dependent_setting_display
+    @dependent_setting_display ||= {}
+  end
+
   # Valid upcoming change metadata looks like this
   # in site_settings.yml:
   #
@@ -165,6 +177,23 @@ module SiteSettingExtension
   #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
   #       is always present. If `everyone` is included it must be the only value.
   #       Omit to allow all options (the default permissive behavior).
+  #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
+  #       useful for scoping style changes related to the change.
+  #     permanent_warning: (optional) boolean, defaults to true. When the change reaches
+  #       `stable` status, admins are warned in the UI that it will become permanent and
+  #       they will no longer be able to opt out. Set to false for changes where that
+  #       warning does not apply, e.g. changes that only alter a site setting default.
+  #     hide_settings: (optional) array of other site setting names to hide from
+  #       admins while this change is enabled (manual opt-in or auto-promotion).
+  #       Use for legacy settings that stop making sense once the change is in
+  #       effect. Hiding is computed per request so it is multisite-safe and
+  #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
+  #     requires_plugin_enabled: (optional) boolean, defaults to true for plugin-owned
+  #       changes. By default a plugin-owned change is hidden from admins and does not
+  #       take effect while the owning plugin is disabled, since it gates a feature
+  #       inside the plugin. Set it to false to opt out -- for changes that exist to get
+  #       the plugin adopted (e.g. a category type that enables the plugin when chosen),
+  #       which must stay usable while the plugin is disabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -508,6 +537,10 @@ module SiteSettingExtension
             opts_data[:depends_on] = depends_on
             opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
             opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+            opts_data[:depends_on_values] = dependency_values[s] if dependency_values[s]
+            if display = dependent_setting_display[s]
+              opts_data[:dependent_setting_display] = display
+            end
           end
 
           if upcoming_change_default_override_metadata
@@ -1184,7 +1217,7 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      if %w[simple compact].include?(list_type) || list_type.nil?
+      if %w[simple compact locale].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
           public_send(clean_name, scoped_to).to_s.split("|")
         end
@@ -1298,17 +1331,36 @@ module SiteSettingExtension
         end
       )
 
+      if opts[:depends_on_values]
+        dependency_values[name] = opts[:depends_on_values]
+          .transform_keys(&:to_sym)
+          .transform_values { |values| Array(values).map(&:to_s) }
+      else
+        dependency_values.delete(name)
+      end
+
+      if opts[:dependent_setting_display]
+        dependent_setting_display[name] = opts[:dependent_setting_display].to_s
+      else
+        dependent_setting_display.delete(name)
+      end
+
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
         allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
         allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
+        hide_settings = opts[:upcoming_change][:hide_settings]
+        hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact, :allow_enabled_for),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
           allow_enabled_for: allow_enabled_for,
+          body_class: opts[:upcoming_change][:body_class],
+          permanent_warning: opts[:upcoming_change][:permanent_warning] != false,
+          hide_settings: hide_settings,
         )
       end
 
@@ -1323,6 +1375,19 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       themeable[name] = opts[:themeable] ? true : false
+
+      localizable_setting_name = name.to_s
+      if opts[:localizable]
+        localizable_settings[localizable_setting_name] = (
+          if opts[:localizable].is_a?(Hash)
+            opts[:localizable].symbolize_keys
+          else
+            {}
+          end
+        )
+      else
+        localizable_settings.delete(localizable_setting_name)
+      end
 
       if opts[:area]
         split_areas = opts[:area].split("|")

@@ -76,6 +76,7 @@ th:
         title: สร้างข้อความใหม่
         prefix: "ถึง:"
       create_channel:
+        description: "รายละเอียด"
         type: "ชนิด"
         types:
           category: "หมวดหมู่"
@@ -166,6 +167,8 @@ th:
       node_descriptions:
         "action:send_chat_message": "ส่งข้อความไปยังช่องแชท"
         "action:chat_approval": "ส่งคำขอการอนุมัติไปยังช่องแชทและรอการตอบกลับ"
+      chat_message_created:
+        channel_id: "ช่องทาง"
       send_chat_message:
         channel_id: "ช่องทาง"
         message: "ข้อความ"

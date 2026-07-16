@@ -39,7 +39,7 @@ html.composer-open:not(.has-full-page-chat) {
 
 .composer-toggles-menu-content,
 .composer-actions-dropdown {
-  z-index: z("composer", "dropdown") + 1;
+  z-index: z("mobile-composer");
 }
 
 #reply-control {
@@ -228,8 +228,6 @@ html.composer-open:not(.has-full-page-chat) {
     }
 
     .composer-actions-trigger .d-button-label {
-      max-width: 10ch;
-
       @include ellipsis;
     }
 
@@ -266,11 +264,7 @@ html.composer-open:not(.has-full-page-chat) {
     .composer-actions-reply-target-link {
       --d-button-default-text-color: var(--primary-high);
       --d-button-flat-icon-color: var(--primary-high);
-      max-width: 30ch;
-
-      @include viewport.until(sm) {
-        max-width: 18ch;
-      }
+      overflow: hidden;
 
       &__label {
         @include ellipsis;
@@ -424,7 +418,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: auto;
 
       &.has-selection {
-        .name {
+        .selected-name .name {
           font-size: var(--font-up-1);
         }
       }

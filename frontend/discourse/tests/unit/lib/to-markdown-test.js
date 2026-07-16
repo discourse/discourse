@@ -415,6 +415,59 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("converts quote style from word", async function (assert) {
+    const html = `Intro<!--StartFragment-->
+    <p class=MsoQuote style='margin-left:.5in'>First quoted line</p>
+    <p class=MsoQuote style='margin-left:.5in'>Second quoted line</p>
+    <!--EndFragment-->Outro`;
+    const markdown = `Intro\n\n> First quoted line\n>\n> Second quoted line\n\nOutro`;
+    assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
+  test("strips word comments and tracked deletions", async function (assert) {
+    const html = `<!--StartFragment-->
+    <p class=MsoNormal>Identify significant accounts<a class=msocomanchor
+      href="#_msocom_1" style='mso-comment-reference:SK_1;mso-comment-date:1'><span
+      class=MsoCommentReference>[J1]</span></a> and relevant assertions.</p>
+    <p class=MsoNormal>This involves <del>old removed phrase </del>using risk procedures.</p>
+    <div style='mso-element:comment-list'><div style='mso-element:comment'>
+      <p class=MsoCommentText><a name="_msocom_1"></a>Consider removing.</p>
+    </div></div>
+    <!--EndFragment-->`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.true(markdown.includes("Identify significant accounts and"));
+    assert.true(markdown.includes("This involves using risk procedures."));
+    assert.false(markdown.includes("[J1]"));
+    assert.false(markdown.includes("Consider removing."));
+    assert.false(markdown.includes("old removed phrase"));
+  });
+
+  test("drops the document-language spans Word for the web stamps on runs", async function (assert) {
+    const html = `<div class="OutlineElement"><p class="Paragraph">
+      <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB">Note:</span></span>
+      <span class="TextRun" lang="EN-GB"><span class="NormalTextRun" lang="EN-GB"> materiality</span></span>
+    </p></div>`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.strictEqual(markdown, "Note: materiality");
+    assert.false(markdown.includes("<span"));
+    assert.false(markdown.includes("lang="));
+  });
+
+  test("cleans a real Word for the web run (lang on TextRun, EOP marker)", async function (assert) {
+    // Trimmed from a real Word for the web clipboard.
+    const html = `<span data-contrast="auto" xml:lang="PT-BR" lang="PT-BR" class="TextRun SCXW1 BCX0"><span class="NormalTextRun SCXW1 BCX0">This</span><span class="NormalTextRun SCXW1 BCX0"><span> </span></span><span class="NormalTextRun SCXW1 BCX0">is something</span></span><span class="EOP SCXW1 BCX0" data-ccp-props="{}"> </span>`;
+
+    const markdown = await toMarkdown(html);
+
+    assert.strictEqual(markdown, "This is something");
+    assert.false(markdown.includes("<span"));
+    assert.false(markdown.includes("lang="));
+  });
+
   test("keeps mention/hash class", async function (assert) {
     const html = `
       <p>User mention: <a class="mention" href="/u/discourse">@discourse</a></p>
@@ -487,6 +540,14 @@ helloWorld();</code>consectetur.`;
     const markdown = `:custom_emoji:`;
 
     assert.strictEqual(await toMarkdown(html), markdown);
+  });
+
+  test("restores clipboard non-breaking spaces around inline nodes", async function (assert) {
+    // The copied nbsp beside the emoji must become a regular space or it won't
+    // cook; an author-typed nbsp (in "to keep") is left alone.
+    const html = `<span style="color: rgb(0,0,0)">use the<span>&nbsp;</span></span><img class="emoji" title=":heart:" alt=":heart:" /><span style="color: rgb(0,0,0)"><span>&nbsp;</span>to&nbsp;keep</span>`;
+
+    assert.strictEqual(await toMarkdown(html), `use the :heart: to\u00a0keep`);
   });
 
   test("converts image lightboxes to markdown", async function (assert) {

@@ -243,6 +243,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
 
     it "returns the correct ancestor chain" do
+      SiteSetting.nested_replies_max_depth = 5
       chain = create_reply_chain(depth: 5)
       sign_in(admin)
 

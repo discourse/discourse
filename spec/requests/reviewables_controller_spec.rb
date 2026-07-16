@@ -604,6 +604,56 @@ RSpec.describe ReviewablesController do
           expect(reply["user_id"]).to eq(admin.id)
         end
       end
+
+      context "with an inaccessible conversation" do
+        it "does not serialize the conversation" do
+          SiteSetting.enable_category_group_moderation = true
+
+          category = Fabricate(:category)
+          group_user = Fabricate(:group_user)
+          Fabricate(:category_moderation_group, category: category, group: group_user.group)
+
+          flagger = Fabricate(:user, refresh_auto_groups: true)
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          meta_post =
+            PostCreator.create!(
+              flagger,
+              archetype: Archetype.private_message,
+              subtype: TopicSubtype.notify_moderators,
+              target_group_names: [Group[:moderators].name],
+              title: "A hidden flag conversation",
+              raw: "Sensitive flag reason for moderators only",
+            )
+          reviewable =
+            ReviewableFlaggedPost.needs_review!(
+              created_by: flagger,
+              target: post,
+              topic: topic,
+              reviewable_by_moderator: true,
+            )
+          reviewable_score =
+            reviewable.add_score(
+              flagger,
+              ReviewableScore.types[:notify_moderators],
+              meta_topic_id: meta_post.topic_id,
+            )
+
+          expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
+
+          sign_in(group_user.user)
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.code).to eq("200")
+          json = response.parsed_body
+          score = json["reviewable_scores"].find { |item| item["id"] == reviewable_score.id }
+
+          expect(score).not_to have_key("reviewable_conversation_id")
+          expect(json["reviewable_conversations"]).to be_blank
+          expect(json["conversation_posts"]).to be_blank
+          expect(response.body).not_to include(meta_post.raw)
+        end
+      end
     end
 
     describe "#explain" do
@@ -631,6 +681,28 @@ RSpec.describe ReviewablesController do
     describe "#perform" do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
+
+      it "includes the statuses of the other reviewables resolved by the action in the response" do
+        sign_in(Fabricate(:admin))
+        spammer = Fabricate(:user, refresh_auto_groups: true)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        acted_flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+        queued_post =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+
+        put "/review/#{acted_flag.id}/perform/delete_user_block.json?version=#{acted_flag.version}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("reviewable_perform_result", "reviewable_updates")).to eq(
+          queued_post.id.to_s => {
+            "status" => Reviewable.statuses[:rejected],
+          },
+        )
+      end
 
       it "returns 404 when the reviewable does not exist" do
         put "/review/12345/perform/approve_user.json?version=0"
@@ -1034,6 +1106,16 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_deleted
       end
 
+      it "returns 200 if the user can delete their queued topic" do
+        sign_in(user)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.code).to eq("200")
+        expect(queued_topic.reload).to be_deleted
+      end
+
       it "denies attempts to destroy unowned reviewables" do
         sign_in(admin)
         queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
@@ -1041,6 +1123,16 @@ RSpec.describe ReviewablesController do
         expect(response.status).to eq(404)
         # Reviewable is not deleted because request is not via API
         expect(queued_post.reload).to be_present
+      end
+
+      it "denies staff attempts to destroy another user's queued topic" do
+        sign_in(admin)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(queued_topic.reload).to be_present
       end
 
       describe "via API" do

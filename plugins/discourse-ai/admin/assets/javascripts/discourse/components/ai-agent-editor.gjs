@@ -69,6 +69,8 @@ export default class AgentEditor extends Component {
         data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
       }
 
+      data.compression_threshold ??= 80;
+
       return data;
     }
   }
@@ -95,17 +97,20 @@ export default class AgentEditor extends Component {
     ];
   }
 
-  get executionModes() {
+  get thinkingEffortValues() {
     return [
-      {
-        id: "default",
-        name: i18n("discourse_ai.ai_agent.execution_mode_options.default"),
-      },
-      {
-        id: "agentic",
-        name: i18n("discourse_ai.ai_agent.execution_mode_options.agentic"),
-      },
-    ];
+      "default",
+      "none",
+      "minimal",
+      "low",
+      "medium",
+      "high",
+      "xhigh",
+      "max",
+    ].map((id) => ({
+      id,
+      name: i18n(`discourse_ai.ai_agent.thinking_effort_options.${id}`),
+    }));
   }
 
   get forcedToolStrategies() {
@@ -266,19 +271,69 @@ export default class AgentEditor extends Component {
   }
 
   @action
-  onExecutionModeChange(mode, { set }) {
-    set("execution_mode", mode);
-    if (mode === "default") {
-      set("max_turn_tokens", null);
-      set("compression_threshold", null);
-    } else {
-      set("compression_threshold", 80);
+  availableForcedTools(tools) {
+    return this.allTools.filter((tool) => tools.includes(tool.id));
+  }
+
+  @cached
+  get llmsById() {
+    const map = {};
+    for (const llm of this.args.agents.resultSetMeta.llms || []) {
+      map[llm.id] = llm;
+    }
+    return map;
+  }
+
+  // Provider-native tools are only offered when the agent forces a default LLM
+  // whose provider supports the tool.
+  supportedNativeToolIds(forceDefaultLlm, defaultLlmId) {
+    if (!forceDefaultLlm || !defaultLlmId) {
+      return [];
+    }
+    return this.llmsById[defaultLlmId]?.supported_native_tools || [];
+  }
+
+  @action
+  availableTools(data) {
+    const supported = this.supportedNativeToolIds(
+      data?.force_default_llm,
+      data?.default_llm_id
+    );
+    return this.allTools.filter((tool) => {
+      if (!tool.native) {
+        return true;
+      }
+      return supported.includes(tool.id.replace("native-", ""));
+    });
+  }
+
+  pruneNativeTools(form, data, forceDefaultLlm, defaultLlmId) {
+    const supported = this.supportedNativeToolIds(
+      forceDefaultLlm,
+      defaultLlmId
+    );
+    const tools = data.tools || [];
+    const kept = tools.filter((toolId) => {
+      if (!toolId.startsWith("native-")) {
+        return true;
+      }
+      return supported.includes(toolId.replace("native-", ""));
+    });
+    if (kept.length !== tools.length) {
+      this.updateToolNames(form, data, kept);
     }
   }
 
   @action
-  availableForcedTools(tools) {
-    return this.allTools.filter((tool) => tools.includes(tool.id));
+  onDefaultLlmChange(form, data, value) {
+    form.set("default_llm_id", value);
+    this.pruneNativeTools(form, data, data.force_default_llm, value);
+  }
+
+  @action
+  onForceDefaultLlmChange(form, data, value, { set }) {
+    set("force_default_llm", value);
+    this.pruneNativeTools(form, data, value, data.default_llm_id);
   }
 
   mcpServerById(serverId) {
@@ -615,11 +670,25 @@ export default class AgentEditor extends Component {
             <AiLlmSelector
               @value={{field.value}}
               @llms={{@agents.resultSetMeta.llms}}
-              @onChange={{field.set}}
+              @onChange={{fn this.onDefaultLlmChange form data}}
               class="ai-agent-editor__llms"
             />
           </field.Control>
         </form.Field>
+
+        {{#if (and (not @model.isNew) data.default_llm_id)}}
+          <form.Field
+            @name="force_default_llm"
+            @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            @onSet={{fn this.onForceDefaultLlmChange form data}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
 
         <form.Field
           @name="allowed_group_ids"
@@ -698,6 +767,23 @@ export default class AgentEditor extends Component {
           </form.Field>
         {{/if}}
 
+        <form.Field
+          @name="thinking_effort"
+          @title={{i18n "discourse_ai.ai_agent.thinking_effort"}}
+          @tooltip={{i18n "discourse_ai.ai_agent.thinking_effort_help"}}
+          @format="large"
+          @type="select"
+          as |field|
+        >
+          <field.Control as |select|>
+            {{#each this.thinkingEffortValues as |effort|}}
+              <select.Option
+                @value={{effort.id}}
+              >{{effort.name}}</select.Option>
+            {{/each}}
+          </field.Control>
+        </form.Field>
+
         {{#if (this.showExamples data)}}
           <form.Section
             @title={{i18n "discourse_ai.ai_agent.examples.title"}}
@@ -733,6 +819,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="tools"
             @title={{i18n "discourse_ai.ai_agent.tools"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.native_tools_help"}}
             @format="large"
             @type="custom"
             as |field|
@@ -742,7 +829,7 @@ export default class AgentEditor extends Component {
                 @value={{field.value}}
                 @disabled={{data.system}}
                 @onChange={{fn this.updateToolNames form data}}
-                @content={{@agents.resultSetMeta.tools}}
+                @content={{this.availableTools data}}
               />
             </field.Control>
           </form.Field>
@@ -1009,59 +1096,27 @@ export default class AgentEditor extends Component {
           {{/if}}
 
           <form.Field
-            @name="execution_mode"
-            @title={{i18n "discourse_ai.ai_agent.execution_mode"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.execution_mode_help"}}
+            @name="max_turn_tokens"
+            @title={{i18n "discourse_ai.ai_agent.max_turn_tokens"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
             @format="large"
-            @onSet={{this.onExecutionModeChange}}
-            @type="select"
+            @type="input-number"
             as |field|
           >
-            <field.Control @includeNone={{false}} as |select|>
-              {{#each this.executionModes as |mode|}}
-                <select.Option @value={{mode.id}}>{{mode.name}}</select.Option>
-              {{/each}}
-            </field.Control>
+            <field.Control @min={{1}} lang="en" />
           </form.Field>
 
-          {{#if (eq data.execution_mode "agentic")}}
-            <form.Field
-              @name="max_turn_tokens"
-              @title={{i18n "discourse_ai.ai_agent.max_turn_tokens"}}
-              @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control @min={{1}} lang="en" />
-            </form.Field>
-
-            <form.Field
-              @name="compression_threshold"
-              @title={{i18n "discourse_ai.ai_agent.compression_threshold"}}
-              @tooltip={{i18n
-                "discourse_ai.ai_agent.compression_threshold_help"
-              }}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control @min={{20}} @max={{99}} lang="en" />
-            </form.Field>
-          {{/if}}
-
-          {{#unless (eq data.execution_mode "agentic")}}
-            <form.Field
-              @name="max_context_posts"
-              @title={{i18n "discourse_ai.ai_agent.max_context_posts"}}
-              @tooltip={{i18n "discourse_ai.ai_agent.max_context_posts_help"}}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control lang="en" />
-            </form.Field>
-          {{/unless}}
+          <form.Field
+            @name="compression_threshold"
+            @title={{i18n "discourse_ai.ai_agent.compression_threshold"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.compression_threshold_help"}}
+            @showOptional={{false}}
+            @format="large"
+            @type="input-number"
+            as |field|
+          >
+            <field.Control @min={{20}} @max={{99}} lang="en" />
+          </form.Field>
 
           {{#if (gt data.tools.length 0)}}
             <AiAgentToolOptions
@@ -1160,22 +1215,7 @@ export default class AgentEditor extends Component {
             <field.Control />
           </form.Field>
 
-          {{#if @model.isNew}}
-            <div>{{i18n "discourse_ai.ai_agent.ai_bot.save_first"}}</div>
-          {{else}}
-            {{#if data.default_llm_id}}
-              <form.Field
-                @name="force_default_llm"
-                @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
-            {{/if}}
-
+          {{#unless @model.isNew}}
             <form.Container
               @title={{i18n "discourse_ai.ai_agent.user"}}
               @tooltip={{unless
@@ -1203,70 +1243,64 @@ export default class AgentEditor extends Component {
                 />
               {{/if}}
             </form.Container>
+          {{/unless}}
 
-            {{#if data.user}}
-              <form.Field
-                @name="allow_personal_messages"
-                @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_personal_messages_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_personal_messages"
+            @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
+            @tooltip={{i18n
+              "discourse_ai.ai_agent.allow_personal_messages_help"
+            }}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              <form.Field
-                @name="allow_topic_mentions"
-                @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_topic_mentions_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_topic_mentions"
+            @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.allow_topic_mentions_help"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              {{#if this.chatPluginEnabled}}
-                <form.Field
-                  @name="allow_chat_direct_messages"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
+          {{#if this.chatPluginEnabled}}
+            <form.Field
+              @name="allow_chat_direct_messages"
+              @title={{i18n "discourse_ai.ai_agent.allow_chat_direct_messages"}}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_direct_messages_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
 
-                <form.Field
-                  @name="allow_chat_channel_mentions"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
-              {{/if}}
-            {{/if}}
+            <form.Field
+              @name="allow_chat_channel_mentions"
+              @title={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions"
+              }}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
           {{/if}}
         </form.Section>
 

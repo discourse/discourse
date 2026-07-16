@@ -15,6 +15,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import PostNotice from "discourse/components/post/notice";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -25,7 +26,6 @@ import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -318,7 +318,7 @@ export default class NestedPost extends Component {
 
   get contextUrl() {
     return getURL(
-      `/n/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
+      `/t/${this.args.topic.slug}/${this.args.topic.id}/${this.args.post.post_number}?context=0`
     );
   }
 
@@ -399,8 +399,12 @@ export default class NestedPost extends Component {
 
     this.loadingReplies = true;
     try {
+      const query = new URLSearchParams({
+        sort: this.args.sort || "top",
+        depth: this.childDepth,
+      });
       const data = await ajax(
-        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?sort=${this.args.sort || "top"}&depth=${this.childDepth}`
+        `/n/${this.args.topic.slug}/${this.args.topic.id}/children/${this.args.post.post_number}.json?${query}`
       );
       if (this.isDestroying || this.isDestroyed) {
         return null;
@@ -580,6 +584,11 @@ export default class NestedPost extends Component {
         (if this.effectiveCollapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
+        (if
+          (or @post.isModeratorAction (and @post.isWarning @post.firstPost))
+          "post--moderator moderator"
+        )
+        (if @post.hidden "nested-post--hidden post--hidden post-hidden")
         (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
         (if this.cloakingData.active "nested-post--cloaked")
         (if this.selected "selected")
@@ -602,30 +611,28 @@ export default class NestedPost extends Component {
           ></button>
         {{/if}}
         <div class="nested-post__gutter">
-          {{#unless this.isMobile}}
-            {{#if this.isDeletedPlaceholder}}
-              <div class="nested-post__placeholder-avatar">
-                {{dIcon "trash-can"}}
-              </div>
-            {{else if this.renderIgnoredPlaceholder}}
-              <button
-                type="button"
-                class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
-                data-post-number={{@post.post_number}}
-                aria-label={{i18n "nested_replies.toggle_ignored_content"}}
-                disabled={{this.loadingIgnoredContent}}
-                {{on "click" this.revealIgnoredContent}}
-              >
-                {{#if this.loadingIgnoredContent}}
-                  {{dIcon "spinner" class="fa-spin"}}
-                {{else}}
-                  {{dIcon "far-eye-slash"}}
-                {{/if}}
-              </button>
-            {{else}}
-              <PostAvatar @post={{@post}} @size="small" />
-            {{/if}}
-          {{/unless}}
+          {{#if this.isDeletedPlaceholder}}
+            <div class="nested-post__placeholder-avatar">
+              {{dIcon "trash-can"}}
+            </div>
+          {{else if this.renderIgnoredPlaceholder}}
+            <button
+              type="button"
+              class="nested-post__placeholder-avatar nested-post__placeholder-avatar--reveal"
+              data-post-number={{@post.post_number}}
+              aria-label={{i18n "nested_replies.toggle_ignored_content"}}
+              disabled={{this.loadingIgnoredContent}}
+              {{on "click" this.revealIgnoredContent}}
+            >
+              {{#if this.loadingIgnoredContent}}
+                {{dIcon "spinner" class="fa-spin"}}
+              {{else}}
+                {{dIcon "far-eye-slash"}}
+              {{/if}}
+            </button>
+          {{else}}
+            <PostAvatar @post={{@post}} @size="small" />
+          {{/if}}
           {{#if (and this.showDepthLine (not this.effectiveCollapsed))}}
             <button
               type="button"
@@ -658,18 +665,6 @@ export default class NestedPost extends Component {
               data-post-number={{@post.post_number}}
               {{on "click" this.toggleExpanded}}
             >
-              {{#if this.isMobile}}
-                <span class="nested-post__collapsed-avatar" aria-hidden="true">
-                  {{#if this.isDeletedPlaceholder}}
-                    {{dIcon "trash-can"}}
-                  {{else if this.renderIgnoredPlaceholder}}
-                    {{dIcon "far-eye-slash"}}
-                  {{else}}
-                    {{! PostAvatar renders a user link; keep this avatar non-interactive inside the collapsed button. }}
-                    {{dAvatar @post imageSize="small" hideTitle=true}}
-                  {{/if}}
-                </span>
-              {{/if}}
               {{dIcon "discourse-circle-plus"}}
               {{#if this.isDeletedPlaceholder}}
                 <span class="nested-post__collapsed-username">{{i18n
@@ -759,10 +754,10 @@ export default class NestedPost extends Component {
                     @name="post-article-content"
                     @outletArgs={{postOutletArgs}}
                   >
+                    {{#if (PostNotice.shouldRender @post this.siteSettings)}}
+                      <PostNotice @post={{@post}} />
+                    {{/if}}
                     <div class="nested-post__header">
-                      {{#if this.isMobile}}
-                        <PostAvatar @post={{@post}} @size="small" />
-                      {{/if}}
                       <PluginOutlet
                         @name="post-metadata"
                         @outletArgs={{postOutletArgs}}
@@ -789,7 +784,7 @@ export default class NestedPost extends Component {
                           }}</span>
                       {{/if}}
                     </div>
-                    <div class="nested-post__content">
+                    <div class="nested-post__content regular">
                       <PluginOutlet
                         @name="post-content-cooked-html"
                         @outletArgs={{postOutletArgs}}
@@ -800,6 +795,7 @@ export default class NestedPost extends Component {
                     <section class="nested-post__menu post-menu-area clearfix">
                       <PostMenu
                         @post={{@post}}
+                        @nestedReplyView={{true}}
                         @canCreatePost={{this.canCreatePost}}
                         @copyLink={{this.copyLink}}
                         @deletePost={{fn @deletePost @post}}

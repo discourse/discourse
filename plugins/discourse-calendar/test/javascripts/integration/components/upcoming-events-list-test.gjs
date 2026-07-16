@@ -1,9 +1,15 @@
 import { hash } from "@ember/helper";
-import { click, currentURL, render, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  findAll,
+  render,
+  waitFor,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import UpcomingEventsList, {
   DEFAULT_TIME_FORMAT,
@@ -88,7 +94,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     await waitFor(".loading-container .spinner", { count: 0 });
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-date .month")].map(
+      findAll(".upcoming-events-list__event-date .month").map(
         (el) => el.innerText
       ),
       [
@@ -99,7 +105,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     );
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-date .day")].map(
+      findAll(".upcoming-events-list__event-date .day").map(
         (el) => el.innerText
       ),
       [moment(tomorrowAllDay).format("D"), moment(laterThisMonth).format("D")],
@@ -107,9 +113,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     );
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-time")].map(
-        (el) => el.innerText
-      ),
+      findAll(".upcoming-events-list__event-time").map((el) => el.innerText),
       [
         i18n("discourse_post_event.upcoming_events_list.all_day"),
         moment(laterThisMonth).format(DEFAULT_TIME_FORMAT),
@@ -118,9 +122,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     );
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-name")].map(
-        (el) => el.innerText
-      ),
+      findAll(".upcoming-events-list__event-name").map((el) => el.innerText),
       ["Awesome Event", "Another Awesome Event"],
       "displays the event name in the correct order"
     );
@@ -144,9 +146,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
       .exists({ count: 1 }, "multi-day event appears only once");
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-name")].map(
-        (el) => el.innerText
-      ),
+      findAll(".upcoming-events-list__event-name").map((el) => el.innerText),
       ["Awesome Multiday Event"],
       "displays the multiday event name once"
     );
@@ -436,9 +436,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     await waitFor(".loading-container .spinner", { count: 0 });
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-time")].map(
-        (el) => el.innerText
-      ),
+      findAll(".upcoming-events-list__event-time").map((el) => el.innerText),
       [
         i18n("discourse_post_event.upcoming_events_list.all_day"),
         moment(laterThisMonth).format("LLL"),
@@ -447,9 +445,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     );
 
     assert.deepEqual(
-      [...queryAll(".upcoming-events-list__event-name")].map(
-        (el) => el.innerText
-      ),
+      findAll(".upcoming-events-list__event-name").map((el) => el.innerText),
       ["Awesome Event", "Another Awesome Event"],
       "displays the event name"
     );
@@ -584,7 +580,7 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     this.appEvents.trigger("page:changed", { url: "/" });
     await waitFor(".loading-container .spinner", { count: 0 });
 
-    const events = queryAll(".upcoming-events-list__event-name");
+    const events = findAll(".upcoming-events-list__event-name");
 
     assert
       .dom(events[0].querySelector(".d-icon-arrows-rotate"))
@@ -640,6 +636,46 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     assert.true(eventTime.includes("5"), "contains start day");
     assert.true(eventTime.includes("8"), "contains end day");
     assert.true(eventTime.includes("2100"), "contains year");
+  });
+
+  test("respects the category list's subcategory filter", async function (assert) {
+    let lastQuery;
+    pretender.get("/discourse-post-event/events", ({ queryParams }) => {
+      lastQuery = queryParams;
+      return response({ events: [] });
+    });
+
+    const router = this.owner.lookup("service:router");
+    const setNoSubcategories = (noSubcategories) => {
+      router.currentRoute = {
+        attributes: {
+          category: { id: 1, slug: "announcements" },
+          noSubcategories,
+        },
+      };
+    };
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    setNoSubcategories(false);
+    this.appEvents.trigger("page:changed", { url: "/c/announcements/1" });
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert.strictEqual(
+      lastQuery.include_subcategories,
+      "true",
+      "includes subcategory events when the category list shows subcategory topics"
+    );
+
+    setNoSubcategories(true);
+    this.appEvents.trigger("page:changed", { url: "/c/announcements/1/none" });
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert.strictEqual(
+      lastQuery.include_subcategories,
+      undefined,
+      "excludes subcategory events when the category list hides subcategory topics"
+    );
   });
 });
 

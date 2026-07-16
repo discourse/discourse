@@ -384,6 +384,8 @@ class ::Assigner
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
 
+    DiscourseEvent.trigger(:assigned, assignment)
+
     { success: true }
   end
 

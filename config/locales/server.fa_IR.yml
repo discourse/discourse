@@ -591,6 +591,13 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    default_full_names:
+      everyone: "همه"
+      admins: "مدیران ارشد"
+      moderators: "ناظران"
+      staff: "همکاران"
+      anonymous_users: "کاربران ناشناس"
+      logged_in_users: "کاربران وارد شده"
     default_descriptions:
       everyone: "گروه خودکار شامل همه اعضا"
       staff: "گروه خودکار شامل مدیران و ناظرها"
@@ -1056,6 +1063,9 @@ fa_IR:
       one_time_password: "یک رمز ورود یک بار مصرف ایجاد کنید"
       bookmarks_calendar: "یادآورهای نشانک را بخوانید"
       user_status: "خواندن و به‌روزرسانی وضعیت کاربر"
+    device:
+      code: "کد"
+      continue: "ادامه"
     invalid_public_key: "متأسفیم، کلید عمومی نامعتبر است."
     invalid_auth_redirect: "با عرض پوزش، این میزبان auth_redirect مجاز نیست."
     invalid_token: "توکن گم شده، نامعتبر یا منقضی شده است"
@@ -1143,6 +1153,7 @@ fa_IR:
         level: "سطح اعتماد"
         count: "اعضاء"
         share: "اشتراک‌گذاری"
+        signups: "ثبت‌نام‌ها"
       levels:
         "0": "جدید"
         "1": "پایه‌ای"
@@ -1553,8 +1564,6 @@ fa_IR:
     anon_polling_interval: "هر چند مدت باید مشتری‌های ناشناس نظرسنجی بشوند در هر میلی ثانیه"
     background_polling_interval: "هر چند وقت یکبار مشتری‌ها باید نظرسنجی بشوند در هر ثانیه (وقتی پنجره در پس زمینه است)"
     cooldown_minutes_after_hiding_posts: "تعداد دقایقی که کاربر باید قبل از ویرایش مخفی یک نوشته از طریق پرچم گزاری انجمن صبر کند"
-    max_topics_in_first_day: "حداکثر تعداد موضوعاتی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ایجاد کند."
-    max_replies_in_first_day: "حداکثر تعداد پاسخ‌هایی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ارسال کند."
     tl2_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند‌ها در روز برای tl2 (اعضا) از طریق حاصل ضرب این شماره"
     tl3_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای tl3 (معمولی) از طریق حاصل ضرب این شماره"
     tl4_additional_likes_per_day_multiplier: "با ضرب در این عدد، محدودیت لایک در روز برای tl4 (رهبر) را افزایش دهید"
@@ -2230,6 +2239,7 @@ fa_IR:
     برای لغو اشتراک از این ایمیل‌ها[کلیک کنید](%{unsubscribe_url}).
   subject_re: "پاسخ: "
   subject_pm: "[PM] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
@@ -2801,6 +2811,8 @@ fa_IR:
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
+    google_meet:
+      meeting_code: "کد:"
     github:
       closed: "بسته"
       status_date:

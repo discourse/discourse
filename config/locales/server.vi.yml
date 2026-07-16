@@ -394,6 +394,13 @@ vi:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Mọi người"
+      admins: "Quản trị"
+      moderators: "Điều hành viên"
+      staff: "Nhân viên"
+      anonymous_users: "Người dùng ẩn danh"
+      logged_in_users: "Người dùng đã đăng nhập"
   education:
     until_posts:
       other: "%{count} tút"
@@ -724,6 +731,9 @@ vi:
       message_bus: "Cập nhật trực tiếp"
       one_time_password: "Tạo mã token đăng nhập một lần"
       bookmarks_calendar: "Đọc lời nhắc đánh dấu"
+    device:
+      code: "Mã"
+      continue: "Tiếp tục"
   reports:
     default:
       labels:
@@ -798,6 +808,7 @@ vi:
       labels:
         count: "Thành viên kênh"
         share: "Chia sẻ"
+        signups: "Thành viên mới"
       levels:
         "0": "Chủ đề mới"
         "1": "Cơ Bản"
@@ -1850,6 +1861,7 @@ vi:
     Để hủy đăng ký nhận các email này, [bấm vào đây] (%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Các trả lời trước"
     reached_limit:
@@ -2415,6 +2427,8 @@ vi:
   onebox:
     discourse:
       user_joined_community: "Tham gia %{date}"
+    google_meet:
+      meeting_code: "Mã:"
     github:
       closed: "đã "
       status_date:
@@ -2456,6 +2470,8 @@ vi:
     actions:
       agree:
         title: "Đồng ý"
+      agree_and_keep_deleted:
+        title: "Giữ tút bị xóa"
       delete:
         title: "Xóa"
         complete: "Tút đã bị xóa."

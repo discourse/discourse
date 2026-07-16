@@ -53,6 +53,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_set_topic_timer,
              :can_create_category,
              :can_create_group,
              :link_posting_access,
@@ -73,7 +74,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
-             :new_new_view_enabled?,
+             :unified_new_enabled?,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
@@ -143,6 +144,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_create_topic
     scope.can_create_topic?(nil)
+  end
+
+  def can_set_topic_timer
+    scope.can_set_topic_timer?
   end
 
   def can_create_category
@@ -352,6 +357,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
+  end
+
+  def include_featured_topic?
+    scope.can_see_topic?(object.user_profile.featured_topic)
   end
 
   def featured_topic

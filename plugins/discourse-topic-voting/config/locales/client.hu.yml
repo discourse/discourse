@@ -12,22 +12,14 @@ hu:
     topic_voting:
       notification_label:
         vote_released: "Visszaadott szavazat"
-      title: "Témaszavazás"
-      reached_limit: "Kifogytál a szavazatokból, törölj egy korábbi szavazatot!"
-      list_votes: "Szavazataid listázása"
       voted: "Már szavaztál erre a témára"
-      allow_topic_voting: "Engedélyezi a felhasználóknak, hogy szavazannak a bejegyzésekre ebben a kategóriában. "
       vote_title: "Szavazás"
       vote_title_plural: "Szavazatok"
       see_votes: "%{count}/%{max} szavazatod maradt"
-      locked: "Zárva"
       locked_description: "Növeld a bizalmi szinted a szavazáshoz"
       votes:
         one: "%{count} szavazat"
         other: "%{count} szavazat"
-      anonymous_button:
-        one: "Szavazás"
-        other: "Szavazás"
       remove_vote: "Szavazat eltávolítása"
       and_more_voters: "és %{count} további…"
       show_voters: "Szavazók megjelenítése"
@@ -42,10 +34,6 @@ hu:
         help: "témák, amelyekre szavaztál"
     search:
       most_votes: "Legtöbb szavazat"
-      advanced:
-        vote:
-          count:
-            label: "Minimális szavazatszám"
     admin:
       web_hooks:
         voting_event:

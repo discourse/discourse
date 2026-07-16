@@ -7,6 +7,8 @@ class RemoteThemeSerializer < ApplicationSerializer
              :local_version,
              :commits_behind,
              :branch,
+             :local_compat_ref,
+             :remote_compat_ref,
              :remote_updated_at,
              :updated_at,
              :github_diff_link,
