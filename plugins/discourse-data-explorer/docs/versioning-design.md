@@ -1,7 +1,7 @@
 # JSON:API Kit — Versioning Design
 
 **Status:** design in progress (pairing sessions, 2026-07). Nothing here is built yet.
-**References:** [Stripe versioning](./stripe-api-versioning-reference.md) · [Cadwyn review](./cadwyn-review.md) · [gem evaluation](./versioning-gem-evaluation.md) · [exploration doc](./api-modernization-exploration.md) (Part 4).
+**References:** [Stripe versioning](./stripe-api-versioning-reference.md) · [Cadwyn review](./cadwyn-review.md) · [gem evaluation](./versioning-gem-evaluation.md) · [exploration doc](./api-modernization-exploration.md) (Part 4) · [plugins design](./plugins-design.md).
 
 ---
 
@@ -467,4 +467,4 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   tier"); `merged_attributes` / `renamed_type` sketched, built when a real case lands.
 - **Contract-guard integration** — the schema guard should learn "breaking change detected → demand a `VersionChange` + version date" instead of just failing.
 - **`fields[]` strictness** — unknown fieldset entries silently no-op today (pre-existing, versioning makes it visible). Separate decision.
-- **Plugins** — namespaced-key convention + who owns the timeline (shared vs per-plugin): scheduled for its own exploration (see topic 186394 discussion).
+- ~~**Plugins**~~ — RESOLVED (explored 2026-07-15/16): see the [plugins design doc](./plugins-design.md) — type ownership, relationship placement, the version timeline (core-clock + explicit overrides), and the query-surface extension (namespaced, additive-only).
