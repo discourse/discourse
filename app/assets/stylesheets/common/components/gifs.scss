@@ -6,7 +6,7 @@
   &__input {
     position: relative;
 
-    > input {
+    > input[type="text"] {
       width: 100%;
       margin-bottom: 0;
     }
