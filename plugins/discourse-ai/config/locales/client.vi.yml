@@ -34,8 +34,6 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
-      post_image_descriptions:
-        description: "Mô tả"
       ai_tool_approval:
         loading: "Đang tải..."
         tool: "Hoạt động"
@@ -70,6 +68,9 @@ vi:
           explain: "Giải thích"
           smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
+        image_caption:
+          setting_groups:
+            settings: "Cài đặt"
         spam:
           name: "Rác"
       modals:

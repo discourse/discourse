@@ -3618,6 +3618,8 @@ ko:
     actions:
       agree:
         title: "예"
+      agree_and_keep_deleted:
+        title: "게시물 삭제 유지"
       agree_and_suspend:
         description: "신고에 동의하고 사용자를 정지합니다."
       agree_and_silence:

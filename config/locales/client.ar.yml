@@ -3460,6 +3460,9 @@ ar:
       default: الرموز التعبيرية المخصَّصة
     filter_input:
       clear: "مسح الفلتر"
+    filter_controls:
+      reset: "إعادة تعيين عامل التصفية"
+      toggle: "تبديل عوامل تصفية القائمة المنسدلة"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
       search_placeholder: "بحث عن أيقونات..."
@@ -5296,8 +5299,10 @@ ar:
           many: "عرض %{count} لغة الترجمة"
           other: "عرض %{count} لغة الترجمة"
         modal:
-          title: "الترجمات الخاصة بهذا المنشور"
+          title: "الترجمات"
           confirm_delete: "هل أنت متأكد أنك تريد حذف الترجمات للغة '%{languageCode}'؟"
+          post_language: "لغة المنشور"
+          discard_language_change: "تجاهل التغيير"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
           title: "لغة المنشور"
@@ -6940,8 +6945,6 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
-    reset_filter: "إعادة تعيين عامل التصفية"
-    toggle_filters: "تبديل عوامل تصفية القائمة المنسدلة"
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
@@ -7371,6 +7374,7 @@ ar:
             stats_and_thresholds:
               title: "الإحصائيات والحدود"
         category_management:
+          create_category: "إنشاء فئة"
           tabs:
             settings: "الإعدادان"
           types:

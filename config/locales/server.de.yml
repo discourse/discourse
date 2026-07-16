@@ -5080,6 +5080,8 @@ de:
         title: "Beitrag ausgeblendet lassen"
         description: "Meldung zustimmen und den Beitrag ausgeblendet lassen."
         complete: "Beitrag versteckt gehalten."
+      agree_and_keep_deleted:
+        title: "Beitrag gelöscht lassen"
       agree_and_suspend:
         title: "Benutzer sperren"
         description: "Meldung zustimmen und Benutzer sperren."

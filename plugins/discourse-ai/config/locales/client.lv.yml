@@ -34,8 +34,6 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
-      post_image_descriptions:
-        description: "Apraksts"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"
@@ -62,6 +60,9 @@ lv:
           reset: "Atlikt"
         search:
           name: "Meklēt"
+        image_caption:
+          setting_groups:
+            settings: "Iestatījumi"
         spam:
           name: "Spams"
       modals:

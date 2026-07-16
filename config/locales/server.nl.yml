@@ -5081,6 +5081,8 @@ nl:
         title: "Bericht verborgen houden"
         description: "Ga akkoord met de markering en houd het bericht verborgen."
         complete: "Bericht verborgen gehouden."
+      agree_and_keep_deleted:
+        title: "Bericht verwijderd houden"
       agree_and_suspend:
         title: "Gebruiker schorsen"
         description: "Akkoord met markering en de gebruiker schorsen."

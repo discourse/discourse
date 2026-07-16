@@ -36,8 +36,6 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
-      post_image_descriptions:
-        description: "Beskrivning"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -65,6 +63,9 @@ sv:
           reset: "Återställ"
         search:
           name: "Sök"
+        image_caption:
+          setting_groups:
+            settings: "Inställningar"
         spam:
           name: "Skräppost"
       modals:

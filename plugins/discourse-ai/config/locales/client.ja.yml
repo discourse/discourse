@@ -18,7 +18,6 @@ ja:
       dashboard:
         emotion:
           title: "感情"
-          description: "この表には、特定の感情で分類された投稿の数がリストされます。'SamLowe/roberta-base-go_emotions' モデルで分類されます。"
         reports:
           filters:
             group_by:
@@ -200,8 +199,6 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        description: "説明"
       ai_tool_approval:
         loading: "読み込み中..."
         tool: "操作"
@@ -303,6 +300,9 @@ ja:
             access_permissions: "アクセスと権限"
             enabled_features: "有効な機能"
             automation: "自動化"
+        image_caption:
+          setting_groups:
+            settings: "設定"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -669,7 +669,7 @@ ja:
         usage:
           ai_bot: "AI ボット"
           ai_helper: "ヘルパー (%{agent})"
-          ai_helper_image_caption: "画像キャプション"
+          ai_image_caption: "画像キャプション"
           ai_summarization: "要約"
           ai_embeddings_semantic_search: "AI 検索"
           ai_spam: "迷惑"

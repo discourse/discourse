@@ -13,8 +13,6 @@ en_GB:
             categories:
               label: "Categories"
     discourse_ai:
-      post_image_descriptions:
-        description: "Description"
       translations:
         category_scope: "Categories"
       usage:

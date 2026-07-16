@@ -34,8 +34,6 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
-      post_image_descriptions:
-        description: "Beskrivelse"
       ai_tool_approval:
         loading: "Laster…"
         tool: "Handling"
@@ -63,6 +61,9 @@ nb_NO:
           reset: "Tilbakestill"
         search:
           name: "Søk"
+        image_caption:
+          setting_groups:
+            settings: "Innstillinger"
         spam:
           name: "Spam"
       modals:

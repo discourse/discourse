@@ -3851,8 +3851,9 @@ fi:
           one: "Näytä %{count} käännetty kielialue"
           other: "Näytä %{count} käännettyä kielialuetta"
         modal:
-          title: "Käännökset viestille"
+          title: "Käännökset"
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kielelle '%{languageCode}'?"
+          discard_language_change: "Hylkää muutos"
         success: "Käännökset on päivitetty onnistuneesti"
         post_language_selector:
           none: "Ei asetettu"

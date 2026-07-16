@@ -2896,6 +2896,9 @@ de:
       default: Benutzerdefinierte Emojis
     filter_input:
       clear: "Filter löschen"
+    filter_controls:
+      reset: "Filter zurücksetzen"
+      toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
       search_placeholder: "Symbole durchsuchen..."
@@ -4282,8 +4285,10 @@ de:
           one: "%{count} übersetzte Sprachvariante anzeigen"
           other: "%{count} übersetzte Sprachvarianten anzeigen"
         modal:
-          title: "Übersetzungen für Beitrag"
+          title: "Übersetzungen"
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
+          post_language: "Sprache des Beitrags"
+          discard_language_change: "Änderung verwerfen"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
           title: "Sprache des Beitrags"
@@ -5708,8 +5713,6 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
-    reset_filter: "Filter zurücksetzen"
-    toggle_filters: "Dropdowns zum Filtern anzeigen/ausblenden"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -6131,6 +6134,7 @@ de:
             stats_and_thresholds:
               title: "Statistiken & Schwellenwerte"
         category_management:
+          create_category: "Kategorie erstellen"
           tabs:
             settings: "Einstellungen"
           types:

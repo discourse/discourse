@@ -99,7 +99,6 @@ fi:
       description: "Tämä raportti tarjoaa sävyanalyysin viesteistä ryhmiteltynä luokittain, ja jokaiselle viestille ja luokalle annetaan positiiviset, negatiiviset ja neutraalit pisteet."
     overall_sentiment:
       title: "Yleinen sävy"
-      description: 'Kaaviossa verrataan positiivisiksi tai negatiivisiksi luokiteltujen viestien määrää. Nämä lasketaan, kun positiiviset tai negatiiviset pisteet ylittävät asetetun kynnysarvon. Tämä tarkoittaa, että neutraaleja viestejä ei näytetä. Myöskään yksityisviestejä ei lasketa. Luokiteltu "cardiffnlp/twitter-roberta-base-sentiment-latest"-mallilla.'
       xaxis: "Positiivinen (%)"
       yaxis: "Päivämäärä"
     emotion_admiration:

@@ -164,7 +164,6 @@ zh_CN:
       description: "此报告按类别对帖子进行情绪分析，每个帖子和类别都有积极、消极和中性分数。"
     overall_sentiment:
       title: "整体情绪"
-      description: '该图表会比较分类为积极或消极的帖子数。当积极分数或消极分数大于设定的阈值分数时，会计算这些值。这意味着不显示中性的帖子。私信 (PM) 也不包括在内。使用“cardiffnlp/twitter-roberta-base-sentiment-latest”进行分类'
       xaxis: "积极 (%)"
       yaxis: "日期"
     emotion_admiration:
@@ -460,7 +459,6 @@ zh_CN:
           description: "支持助手的翻译工具功能的默认智能体"
         image_captioner:
           name: "图片标题"
-          description: "支持助手的图片标题功能的默认智能体"
         locale_detector:
           name: "语言区域检测工具"
           description: "通过检测给定文本（帖子、标题等）的语言区域来支持翻译功能"

@@ -3428,6 +3428,8 @@ nb_NO:
           actions: "Handlinger"
           edit: "Endre"
           delete: "Slett"
+        modal:
+          title: "Oversettelser"
         post_language_selector:
           none: "Ikke angitt"
       errors:

@@ -13,6 +13,9 @@ et:
             topic_id:
               label: Teema ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Vestlus"
       disable_holiday: "Keela"
       enable_holiday: "Luba"
       date: "Kuupäev"

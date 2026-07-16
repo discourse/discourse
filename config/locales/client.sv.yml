@@ -3256,6 +3256,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        modal:
+          title: "Översättningar"
         post_language_selector:
           none: "Inte inställd"
       errors:

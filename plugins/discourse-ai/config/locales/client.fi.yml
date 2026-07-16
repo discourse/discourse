@@ -18,7 +18,6 @@ fi:
       dashboard:
         emotion:
           title: "Tunne"
-          description: "Taulukossa luetellaan määritetyllä tunteella luokiteltujen viestien lukumäärä. Luokiteltu mallilla \"SamLowe/roberta-base-go_emotions\"."
         reports:
           filters:
             group_by:
@@ -154,8 +153,6 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
-      post_image_descriptions:
-        description: "Kuvaus"
       ai_tool_approval:
         loading: "Ladataan..."
         tool: "Toiminto"
@@ -233,6 +230,9 @@ fi:
           post_illustrator: "Viestin havainnollistaja"
           setting_groups:
             automation: "Automaatio"
+        image_caption:
+          setting_groups:
+            settings: "Asetukset"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -555,7 +555,7 @@ fi:
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"
-          ai_helper_image_caption: "Kuvateksti"
+          ai_image_caption: "Kuvateksti"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"
           ai_spam: "Roskaposti"

@@ -38,8 +38,6 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
-      post_image_descriptions:
-        description: "Leírás"
       ai_tool_approval:
         loading: "Betöltés…"
         tool: "Művelet"
@@ -70,6 +68,9 @@ hu:
         embeddings:
           setting_groups:
             related_topics: "Kapcsolódó témák"
+        image_caption:
+          setting_groups:
+            settings: "Beállítások"
         spam:
           name: "Kéretlen tartalom"
       modals:

@@ -3215,6 +3215,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        modal:
+          title: "అనువాదాలు"
         post_language_selector:
           none: "సెట్ చేయబడలేదు"
       errors:

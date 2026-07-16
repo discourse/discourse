@@ -3621,6 +3621,8 @@ fa_IR:
           edit: "ویرایش"
           delete: "حذف"
         add: "افزودن ترجمه جدید"
+        modal:
+          title: "ترجمه‌ها"
         success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
         post_language_selector:
           none: "تنظیم نشده"

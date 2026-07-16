@@ -59,8 +59,6 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
-      post_image_descriptions:
-        description: "تفصیل"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -92,6 +90,9 @@ ur:
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        image_caption:
+          setting_groups:
+            settings: "سیٹِنگ"
         spam:
           name: "سپَیم"
           description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"

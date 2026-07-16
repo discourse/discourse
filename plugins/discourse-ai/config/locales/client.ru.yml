@@ -21,7 +21,6 @@ ru:
       dashboard:
         emotion:
           title: "Эмоция"
-          description: "В таблице указано количество публикаций, классифицированных по определенной эмоции. Классификация выполнена с помощью модели 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -224,8 +223,6 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        description: "Описание"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -349,6 +346,9 @@ ru:
             enabled_features: "Включенные функции"
             automation: "Автоматизация"
             agents: "Агенты"
+        image_caption:
+          setting_groups:
+            settings: "Настроек"
         translation:
           name: "Перевод"
           description: "Переводит контент на поддерживаемые языки"
@@ -751,7 +751,7 @@ ru:
         usage:
           ai_bot: "AI-бот"
           ai_helper: "Помощник (%{agent})"
-          ai_helper_image_caption: "Подпись к изображению"
+          ai_image_caption: "Подпись к изображению"
           ai_summarization: "Сводка"
           ai_embeddings_semantic_search: "AI-поиск"
           ai_spam: "Спам"

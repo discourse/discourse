@@ -21,7 +21,6 @@ de:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "Die Tabelle listet die Anzahl der Beiträge auf, die mit einer bestimmten Emotion klassifiziert wurden. Klassifiziert mit dem Modell „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -229,8 +228,6 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
-      post_image_descriptions:
-        description: "Beschreibung"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -351,6 +348,9 @@ de:
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
             agents: "Agenten"
+        image_caption:
+          setting_groups:
+            settings: "Einstellungen"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -886,7 +886,7 @@ de:
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{agent})"
-          ai_helper_image_caption: "Bildbeschriftungen"
+          ai_image_caption: "Bildbeschriftungen"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"

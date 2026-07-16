@@ -34,6 +34,8 @@ zh_CN:
               label: 话题 ID
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "聊天"
         chat:
           going: "点击“前往”"
           join_channel_header: "🌟 加入我们吧！🌟"

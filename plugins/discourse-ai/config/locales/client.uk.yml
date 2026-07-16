@@ -21,7 +21,6 @@ uk:
       dashboard:
         emotion:
           title: "Емоція"
-          description: "У таблиці наведено кількість публікацій, класифікованих за певною емоцією. Класифіковано за моделлю «SamLowe/roberta-base-go_emotions»."
         reports:
           filters:
             group_by:
@@ -233,8 +232,12 @@ uk:
               description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
-      post_image_descriptions:
-        description: "Опис"
+      post_image_captions:
+        edit: "Редагувати підпис до зображення, створеного ШІ"
+        title: "Редагувати підпис до зображення, створеного ШІ"
+        description: "Підпис"
+        save: "Зберегти підпис"
+        saved: "Підпис зображення ШІ збережено"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -380,6 +383,12 @@ uk:
             enabled_features: "Увімкнені функції"
             automation: "Автоматизація"
             agents: "Агенти"
+        image_caption:
+          name: "Підпис до зображення"
+          description: "Генерує субтитри ШІ на зображення текстів та робить їх доступними для читачів та допоміжних технологій"
+          post_image_captions: "Підписи до зображень публікацій"
+          setting_groups:
+            settings: "Налаштування"
         translation:
           name: "Переклад"
           description: "Переклад вмісту на підтримувані мови"
@@ -967,7 +976,7 @@ uk:
         usage:
           ai_bot: "ШІ-бот"
           ai_helper: "Помічник (%{agent})"
-          ai_helper_image_caption: "Підпис до зображення"
+          ai_image_caption: "Підпис до зображення"
           ai_agent: "Агент (%{agent})"
           ai_summarization: "Підсумок"
           ai_embeddings_semantic_search: "Пошук зі штучним інтелектом"
