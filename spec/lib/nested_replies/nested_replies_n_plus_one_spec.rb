@@ -292,7 +292,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       Fabricate(:post, topic: hot_topic, user: user, post_number: 1)
       Fabricate(:nested_topic, topic: hot_topic)
       root_count.times { Fabricate(:post, topic: hot_topic, user: user) }
-      hot_topic.update_columns(posts_count: root_count + 1)
+      hot_topic.update_columns(posts_count: root_count + 1, last_posted_at: Time.current)
       NestedReplies::HotScoreCalculator.recalculate_topic(hot_topic.id)
       hot_topic
     end
