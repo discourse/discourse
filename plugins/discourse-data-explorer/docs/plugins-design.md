@@ -36,15 +36,33 @@ plugin-owned type — never as extra attributes injected into the core type. Inj
 attributes would make a core type's contract depend on the installed plugin set; a
 relationship to a plugin-owned type keeps every contract owned by exactly one party, and is
 include-gated (absent unless requested), so core documents are byte-identical with or
-without the plugin. Registration sketch (final API TBD):
+without the plugin. Registration happens in a single `jsonapi` block in plugin.rb — the
+plugin's whole wire contract, reviewable as a unit and one grep away (final API TBD):
 
 ```ruby
-# core type → plugin-owned type; include-gated. The relationship is named by the
-# plugin's namespace (see D) — one word for include name and query-key prefix.
-register_jsonapi_relationship(:topics, serializer: WidgetStatusSerializer)
-# plugin-owned types only (A enforced here)
-register_jsonapi_version_change(RenameWidgetStatusStateToPhase)
+jsonapi namespace: "solved-status" do
+  # core type → plugin-owned type; include-gated. The relationship is named by the
+  # namespace (see D) — one word for include name and query-key prefix.
+  register_relationship :topics, serializer: SolvedStatusSerializer
+  # plugin-owned types only (A enforced here)
+  register_version_change RenameSolvedStatusStateToPhase
+end
 ```
+
+The block form is deliberate, for three mechanical reasons. It registers **atomically**:
+the whole contribution is validated as a unit when the block closes (namespace uniqueness,
+collisions against core member names, changes targeting only owned types) — no ordering
+bugs between loose calls. It is **lazily evaluable**: plugin.rb runs at boot before
+autoloading is ready (the spike hit exactly this), so the Kit stores the block and
+evaluates it once serializer and change classes are loadable, instead of every plugin
+author rediscovering the boot-ordering problem. And the **namespace closes over every
+helper inside**: nothing can be registered without one, and no helper ever takes a prefix
+argument (see D's auto-namespacing). The `register_` verb is kept on the helpers because it
+marks "attaching to someone else's surface" — distinguishing this DSL from the *resource*
+`jsonapi` block, where bare declarations (`filter`, `sort`, …) describe the plugin's own
+endpoints. Scope discipline: a plugin's own resources keep their declarations in the
+plugin's resource/controller classes, exactly like core's; the plugin.rb block holds only
+the extension surface (attachments to foreign types) and the plugin's version timeline.
 
 Contract guards run per owner: a plugin's schema baseline covers its own types plus the
 relationships it registers, so a breaking change on either fires that plugin's guard, not
@@ -127,16 +145,16 @@ plugin — the case that looked like it strained rule A. Decisions:
   changes a core type's `default_sort` — it only adds new keys. This is B's placement
   rule applied to the query surface: share by adding your own vocabulary, never by mutating
   someone else's.
-- **One namespace per plugin**, declared once at registration, globally unique — boot
-  error on collision, including against member names already present on the core types it
-  attaches to. The namespace **is** the B relationship name: one word serves as the
-  include name, the filter prefix, and the sort prefix.
-- **The framework namespaces automatically.** Plugins register *local* keys and never
-  write their own prefix:
+- **One namespace per plugin**, declared at its `jsonapi` block boundary (see B), globally
+  unique — boot error on collision, including against member names already present on the
+  core types it attaches to. The namespace **is** the B relationship name: one word serves
+  as the include name, the filter prefix, and the sort prefix.
+- **The framework namespaces automatically.** Inside its `jsonapi` block, a plugin
+  registers *local* keys and never writes its own prefix:
 
   ```ruby
-  register_jsonapi_filter(:topics, :state) { |scope, value| … }  # wire: filter[solved-status.state]
-  register_jsonapi_sort(:topics, :answered_at) { |scope, dir| … } # wire: sort=solved-status.answered_at
+  register_filter(:topics, :state) { |scope, value| … }  # wire: filter[solved-status.state]
+  register_sort(:topics, :answered_at) { |scope, dir| … } # wire: sort=solved-status.answered_at
   ```
 
   A foreign key is thereby *inexpressible*, not merely forbidden — ownership holds by
