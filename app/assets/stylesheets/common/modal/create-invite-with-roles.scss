@@ -148,9 +148,13 @@
       margin-left: auto;
 
       &.--active {
-        border: 1px solid var(--tertiary);
-        background: var(--tertiary-low);
-        color: var(--tertiary-high);
+        --d-button-default-bg-color: var(--tertiary-low);
+        --d-button-default-bg-color--hover: var(--tertiary-low);
+        --d-button-default-text-color: var(--tertiary-high);
+        --d-button-default-text-color--hover: var(--tertiary-hover);
+        --d-button-default-icon-color: var(--tertiary-high);
+        --d-button-default-icon-color--hover: var(--tertiary-hover);
+        border-color: var(--tertiary);
       }
     }
   }

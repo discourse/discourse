@@ -542,6 +542,9 @@ export default class CreateInviteWithRoles extends Component {
               >
                 <field.Control
                   autofocus="autofocus"
+                  autocomplete="off"
+                  data-1p-ignore
+                  data-lpignore="true"
                   placeholder={{i18n
                     "user.invited.invite_roles.email_placeholder"
                   }}
@@ -643,6 +646,9 @@ export default class CreateInviteWithRoles extends Component {
                   as |field|
                 >
                   <field.Control
+                    autocomplete="off"
+                    data-1p-ignore
+                    data-lpignore="true"
                     placeholder={{i18n
                       "user.invited.invite_roles.email_placeholder"
                     }}
