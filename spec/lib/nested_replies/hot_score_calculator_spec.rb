@@ -19,16 +19,22 @@ RSpec.describe NestedReplies::HotScoreCalculator do
 
   describe ".score_for" do
     it "combines engagement and freshness while excluding non-public posts" do
+      SiteSetting.nested_replies_hot_like_weight = 1.5
+      SiteSetting.nested_replies_hot_reply_weight = 2.5
+      SiteSetting.nested_replies_hot_freshness_max_bonus = 4.0
+      SiteSetting.nested_replies_hot_freshness_half_life_hours = 48
       now = Time.zone.local(2026, 7, 10, 12)
       public_post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
       hidden_post = Fabricate(:post, topic: topic, hidden: true)
       set_score_inputs(public_post, created_at: now - 2.days, like_score: 3)
       set_score_inputs(hidden_post, created_at: now, like_score: 100)
 
-      engagement = 3 * described_class::LIKE_WEIGHT + 2 * described_class::REPLY_WEIGHT
+      engagement =
+        3 * SiteSetting.nested_replies_hot_like_weight +
+          2 * SiteSetting.nested_replies_hot_reply_weight
       freshness =
-        described_class::FRESHNESS_MAX_BONUS *
-          0.5**(2.days.to_f / described_class::FRESHNESS_HALF_LIFE_SECONDS)
+        SiteSetting.nested_replies_hot_freshness_max_bonus *
+          0.5**(2.days.to_f / SiteSetting.nested_replies_hot_freshness_half_life_hours.hours.to_f)
 
       expect(described_class.score_for(public_post, direct_reply_count: 2, now: now)).to be_within(
         0.0001,
@@ -37,10 +43,23 @@ RSpec.describe NestedReplies::HotScoreCalculator do
         described_class::HOT_SCORE_FLOOR,
       )
     end
+
+    it "changes the formula version when score settings change" do
+      original_version = described_class.formula_version
+
+      SiteSetting.nested_replies_hot_like_weight = 1.5
+
+      expect(described_class.formula_version).not_to eq(original_version)
+    end
   end
 
   describe ".recalculate_topic" do
     it "publishes an isolated coherent snapshot using only public direct replies" do
+      SiteSetting.nested_replies_hot_like_weight = 1.5
+      SiteSetting.nested_replies_hot_reply_weight = 2.5
+      SiteSetting.nested_replies_hot_freshness_max_bonus = 4.0
+      SiteSetting.nested_replies_hot_freshness_half_life_hours = 48
+      SiteSetting.nested_replies_hot_child_penalty = 0.5
       parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
       public_child = Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
       Fabricate(
@@ -66,15 +85,16 @@ RSpec.describe NestedReplies::HotScoreCalculator do
         described_class.score_for(parent, direct_reply_count: 1),
       )
       expect(parent_score.thread_hot_score).to be_within(0.0001).of(
-        child_score.thread_hot_score - described_class::CHILD_PENALTY,
+        child_score.thread_hot_score - SiteSetting.nested_replies_hot_child_penalty,
       )
-      expect(snapshot.formula_version).to eq(described_class::FORMULA_VERSION)
+      expect(snapshot.formula_version).to eq(described_class.formula_version)
       expect(snapshot.calculated_at).to be_present
       expect(structural_stat.reload.total_descendant_count).to eq(42)
       expect(NestedViewPostStat.where(post: [op, public_child]).count).to eq(0)
     end
 
     it "propagates public descendant heat through a deleted placeholder" do
+      SiteSetting.nested_replies_hot_child_penalty = 0.5
       deleted_root = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
       child =
         Fabricate(:post, topic: topic, reply_to_post_number: deleted_root.post_number).tap do |post|
@@ -88,7 +108,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       child_score = cached_score(child)
       expect(deleted_root_score.hot_score).to eq(described_class::HOT_SCORE_FLOOR)
       expect(deleted_root_score.thread_hot_score).to be_within(0.0001).of(
-        child_score.thread_hot_score - described_class::CHILD_PENALTY,
+        child_score.thread_hot_score - SiteSetting.nested_replies_hot_child_penalty,
       )
     end
 

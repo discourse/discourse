@@ -10,13 +10,30 @@ module NestedReplies
 
     FORMULA_VERSION = 1
     HOT_SCORE_FLOOR = 0.0
-    LIKE_WEIGHT = 1.0
-    REPLY_WEIGHT = 2.0
-    FRESHNESS_MAX_BONUS = 3.0
-    FRESHNESS_HALF_LIFE_SECONDS = 7.days.to_f
-    CHILD_PENALTY = 0.25
-    MAX_STATEMENT_TIMEOUT_MS = 10_000
-    LOCK_TIMEOUT_MS = 1_000
+
+    def self.formula_settings
+      {
+        like_weight: SiteSetting.nested_replies_hot_like_weight.to_f,
+        reply_weight: SiteSetting.nested_replies_hot_reply_weight.to_f,
+        freshness_max_bonus: SiteSetting.nested_replies_hot_freshness_max_bonus.to_f,
+        freshness_half_life_seconds:
+          SiteSetting.nested_replies_hot_freshness_half_life_hours.to_f.hours.to_f,
+        child_penalty: SiteSetting.nested_replies_hot_child_penalty.to_f,
+      }
+    end
+
+    def self.formula_version(settings = formula_settings)
+      fingerprint = [
+        FORMULA_VERSION,
+        settings.fetch(:like_weight),
+        settings.fetch(:reply_weight),
+        settings.fetch(:freshness_max_bonus),
+        settings.fetch(:freshness_half_life_seconds),
+        settings.fetch(:child_penalty),
+      ].join(":")
+
+      Digest::SHA256.hexdigest(fingerprint).first(8).to_i(16) & 0x7fffffff
+    end
 
     def self.public_post_types
       [Post.types[:regular], Post.types[:moderator_action]]
@@ -35,14 +52,19 @@ module NestedReplies
       SQL
     end
 
-    def self.hot_score_sql(table_name, reply_count_sql: "0", now_sql: "CURRENT_TIMESTAMP")
+    def self.hot_score_sql(
+      table_name,
+      reply_count_sql: "0",
+      now_sql: "CURRENT_TIMESTAMP",
+      formula: formula_settings
+    )
       engagement_sql =
-        "COALESCE(#{table_name}.like_score, 0) * #{LIKE_WEIGHT} + " \
-          "COALESCE(#{reply_count_sql}, 0) * #{REPLY_WEIGHT}"
+        "COALESCE(#{table_name}.like_score, 0) * #{formula.fetch(:like_weight)} + " \
+          "COALESCE(#{reply_count_sql}, 0) * #{formula.fetch(:reply_weight)}"
       age_seconds_sql = "GREATEST(EXTRACT(EPOCH FROM #{now_sql} - #{table_name}.created_at), 0)"
       freshness_sql =
-        "#{FRESHNESS_MAX_BONUS} * " \
-          "POWER(0.5, #{age_seconds_sql} / #{FRESHNESS_HALF_LIFE_SECONDS})"
+        "#{formula.fetch(:freshness_max_bonus)} * " \
+          "POWER(0.5, #{age_seconds_sql} / #{formula.fetch(:freshness_half_life_seconds)})"
 
       <<~SQL.squish
         CASE
@@ -56,9 +78,14 @@ module NestedReplies
     def self.score_for(post, direct_reply_count: 0, now: Time.current)
       return HOT_SCORE_FLOOR unless public_post?(post)
 
-      engagement = post.like_score.to_f * LIKE_WEIGHT + direct_reply_count.to_f * REPLY_WEIGHT
+      formula = formula_settings
+      engagement =
+        post.like_score.to_f * formula.fetch(:like_weight) +
+          direct_reply_count.to_f * formula.fetch(:reply_weight)
       age_seconds = [now.to_f - post.created_at.to_f, 0.0].max
-      freshness = FRESHNESS_MAX_BONUS * 0.5**(age_seconds / FRESHNESS_HALF_LIFE_SECONDS)
+      freshness =
+        formula.fetch(:freshness_max_bonus) *
+          0.5**(age_seconds / formula.fetch(:freshness_half_life_seconds))
       Math.log(1 + [engagement, 0.0].max) + freshness
     end
 
@@ -67,16 +94,26 @@ module NestedReplies
         !post.user_deleted?
     end
 
-    def self.recalculate_topic(topic_id, timeout_ms: MAX_STATEMENT_TIMEOUT_MS)
+    def self.recalculate_topic(topic_id, timeout_ms: nil)
       return 0 if topic_id.blank?
 
       calculated_at = Time.current
-      timeout_ms = timeout_ms.to_i.clamp(1, MAX_STATEMENT_TIMEOUT_MS)
+      formula = formula_settings
+      max_timeout_ms = SiteSetting.nested_replies_hot_max_statement_timeout_ms
+      timeout_ms = (timeout_ms || max_timeout_ms).to_i.clamp(1, max_timeout_ms)
       result =
         ActiveRecord::Base.transaction do
           DB.exec "SET LOCAL statement_timeout = #{timeout_ms}"
-          DB.exec "SET LOCAL lock_timeout = #{[timeout_ms, LOCK_TIMEOUT_MS].min}"
-          DB.query(refresh_sql, topic_id: topic_id, calculated_at: calculated_at).first
+          DB.exec(
+            "SET LOCAL lock_timeout = #{[timeout_ms, SiteSetting.nested_replies_hot_lock_timeout_ms].min}",
+          )
+          DB.query(
+            refresh_sql,
+            topic_id: topic_id,
+            calculated_at: calculated_at,
+            formula_version: formula_version(formula),
+            **formula,
+          ).first
         end
 
       raise InvalidTree, "Cycle in nested replies for topic #{topic_id}" if result.invalid_tree
@@ -95,6 +132,12 @@ module NestedReplies
               "topic_posts",
               reply_count_sql: "direct_reply_counts.direct_reply_count",
               now_sql: ":calculated_at::timestamp",
+              formula: {
+                like_weight: ":like_weight",
+                reply_weight: ":reply_weight",
+                freshness_max_bonus: ":freshness_max_bonus",
+                freshness_half_life_seconds: ":freshness_half_life_seconds",
+              },
             )
           public_topic_post_sql = public_post_sql("posts")
           carrier_topic_post_sql = carrier_post_sql("posts")
@@ -209,7 +252,7 @@ module NestedReplies
 
               SELECT parent.id,
                      parent.reply_to_post_number,
-                     propagation.propagated_score - #{CHILD_PENALTY},
+                     propagation.propagated_score - :child_penalty,
                      propagation.path || parent.post_number
               FROM propagation
               JOIN posts parent
@@ -217,7 +260,7 @@ module NestedReplies
                AND parent.post_number = propagation.parent_post_number
               WHERE propagation.parent_post_number > 1
                 AND (#{carrier_parent_post_sql})
-                AND propagation.propagated_score > #{CHILD_PENALTY}
+                AND propagation.propagated_score > :child_penalty
                 AND NOT parent.post_number = ANY(propagation.path)
             ),
             thread_scores AS (
@@ -278,7 +321,7 @@ module NestedReplies
                 calculated_at
               )
               SELECT :topic_id,
-                     #{FORMULA_VERSION},
+                     :formula_version,
                      :calculated_at::timestamp
               FROM tree_validation
               WHERE tree_validation.valid

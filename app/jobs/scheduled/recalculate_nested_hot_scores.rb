@@ -6,10 +6,7 @@ module Jobs
 
     cluster_concurrency 1
 
-    MAX_TOPICS_PER_RUN = 10
-    MAX_DATABASE_TIME_MS = 10_000
     MIN_STATEMENT_TIME_MS = 100
-    FAILURE_COOLDOWN = 1.hour
 
     def execute(_args = {})
       return unless SiteSetting.nested_replies_enabled
@@ -21,7 +18,7 @@ module Jobs
       posts_rebuilt = 0
       failures = 0
 
-      while topics_inspected < MAX_TOPICS_PER_RUN
+      while topics_inspected < SiteSetting.nested_replies_hot_max_topics_per_run
         timeout_ms = remaining_database_time_ms(started_at)
         break if timeout_ms < MIN_STATEMENT_TIME_MS
 
@@ -82,11 +79,14 @@ module Jobs
 
     def eligible?(topic)
       topic.present? && topic.deleted_at.nil? && topic.regular? && topic.nested_view? &&
-        topic.posts_count.to_i > NestedReplies::HotScoreCache::SMALL_TOPIC_POST_LIMIT
+        topic.posts_count.to_i > NestedReplies::HotScoreCache.small_topic_post_limit
     end
 
     def cooldown(topic_id)
-      NestedReplies::HotScoreQueue.cooldown(topic_id, duration: FAILURE_COOLDOWN)
+      NestedReplies::HotScoreQueue.cooldown(
+        topic_id,
+        duration: SiteSetting.nested_replies_hot_failure_cooldown_minutes.minutes,
+      )
     end
 
     def purge_expired_cache(started_at)
@@ -108,7 +108,8 @@ module Jobs
 
     def remaining_database_time_ms(started_at)
       elapsed_ms = (monotonic_time - started_at) * 1_000
-      (MAX_DATABASE_TIME_MS - elapsed_ms).floor.clamp(0, MAX_DATABASE_TIME_MS)
+      max_job_runtime_ms = SiteSetting.nested_replies_hot_max_job_runtime_ms
+      (max_job_runtime_ms - elapsed_ms).floor.clamp(0, max_job_runtime_ms)
     end
 
     def monotonic_time

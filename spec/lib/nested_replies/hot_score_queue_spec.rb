@@ -13,20 +13,20 @@ RSpec.describe NestedReplies::HotScoreQueue do
   end
 
   it "caps pending work and honors a failure cooldown" do
-    stub_const(described_class, :MAX_PENDING_TOPICS, 1) do
-      expect(described_class.enqueue(10)).to eq(:queued)
-      expect(described_class.enqueue(20)).to eq(:full)
-      expect(described_class.pop).to eq(10)
+    SiteSetting.nested_replies_hot_max_pending_topics = 1
+    expect(described_class.enqueue(10)).to eq(:queued)
+    expect(described_class.enqueue(20)).to eq(:full)
+    expect(described_class.pop).to eq(10)
 
-      described_class.cooldown(10, duration: 1.hour)
+    described_class.cooldown(10, duration: 1.hour)
 
-      expect(described_class.enqueue(10)).to eq(:cooldown)
-      expect(described_class.enqueue(10, requested_at: 2.hours.from_now)).to eq(:queued)
-    end
+    expect(described_class.enqueue(10)).to eq(:cooldown)
+    expect(described_class.enqueue(10, requested_at: 2.hours.from_now)).to eq(:queued)
   end
 
   it "discards obsolete demand before it can run after a long pause" do
-    described_class.enqueue(10, requested_at: 2.hours.ago)
+    SiteSetting.nested_replies_hot_max_queue_age_minutes = 30
+    described_class.enqueue(10, requested_at: 31.minutes.ago)
 
     expect(described_class.pop).to be_nil
   end

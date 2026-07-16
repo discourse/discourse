@@ -5,8 +5,6 @@ module NestedReplies
     QUEUE_KEY = "nested_replies:hot_score_queue"
     COOLDOWN_KEY = "nested_replies:hot_score_cooldowns"
     CLEANUP_CLAIM_KEY = "nested_replies:hot_score_cleanup_claim"
-    MAX_PENDING_TOPICS = 1_000
-    MAX_QUEUE_AGE = 1.hour
     CLEANUP_INTERVAL = 1.hour
 
     ENQUEUE_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
@@ -54,7 +52,12 @@ module NestedReplies
         ENQUEUE_SCRIPT.eval(
           Discourse.redis,
           [redis_key(QUEUE_KEY), redis_key(COOLDOWN_KEY)],
-          [topic_id, requested_at.to_f, MAX_PENDING_TOPICS, requested_at.to_f - MAX_QUEUE_AGE.to_i],
+          [
+            topic_id,
+            requested_at.to_f,
+            SiteSetting.nested_replies_hot_max_pending_topics,
+            requested_at.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i,
+          ],
         )
       return :unavailable if result.nil?
 
@@ -70,7 +73,7 @@ module NestedReplies
       POP_SCRIPT.eval(
         Discourse.redis,
         [redis_key(QUEUE_KEY)],
-        [now.to_f - MAX_QUEUE_AGE.to_i],
+        [now.to_f - SiteSetting.nested_replies_hot_max_queue_age_minutes.minutes.to_i],
       )&.to_i
     rescue Redis::BaseError
       nil

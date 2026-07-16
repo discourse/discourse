@@ -8,7 +8,6 @@ module NestedReplies
     PRELOAD_CHILDREN_PER_PARENT = 3
     HOT_PRELOAD_POST_BUDGET = 60
     HOT_PRELOAD_PER_ROOT_BUDGET = 15
-    HOT_PRELOAD_DEPTH_PENALTY = HotScoreCalculator::CHILD_PENALTY
     SIBLINGS_PER_ANCESTOR = 5
 
     POST_INCLUDES = [
@@ -346,7 +345,7 @@ module NestedReplies
     end
 
     def hot_preload_priority(thread_hot_score, depth)
-      thread_hot_score.to_f - HOT_PRELOAD_DEPTH_PENALTY * depth
+      thread_hot_score.to_f - SiteSetting.nested_replies_hot_preload_depth_penalty * depth
     end
 
     def batch_load_siblings(ancestors, sort)

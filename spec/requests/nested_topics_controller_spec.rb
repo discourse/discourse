@@ -247,6 +247,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
     it "uses depth penalty to return to another hot sibling branch" do
       SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.nested_replies_hot_preload_depth_penalty = 1.0
       Fabricate(:nested_topic, topic: topic)
       root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       first_child =

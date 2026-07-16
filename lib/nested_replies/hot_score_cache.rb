@@ -4,13 +4,21 @@ module NestedReplies
   module HotScoreCache
     Decision = Struct.new(:effective_sort, :mode, :enqueue_result, keyword_init: true)
 
-    SMALL_TOPIC_POST_LIMIT = 5
-    SNAPSHOT_TTL = 30.minutes
-    MAX_STALE_AGE = 30.days
-    REFRESH_REQUESTS_PER_MINUTE = 20
     PURGE_SCORE_BATCH_SIZE = 10_000
     PURGE_SNAPSHOT_BATCH_SIZE = 100
     MAX_PURGE_STATEMENT_TIMEOUT_MS = 1_000
+
+    def self.small_topic_post_limit
+      SiteSetting.nested_replies_hot_small_topic_post_limit
+    end
+
+    def self.snapshot_ttl
+      SiteSetting.nested_replies_hot_snapshot_ttl_minutes.minutes
+    end
+
+    def self.max_stale_age
+      SiteSetting.nested_replies_hot_max_stale_age_days.days
+    end
 
     def self.resolve(topic, requested_sort, requester: nil)
       return Decision.new(effective_sort: requested_sort, mode: :not_hot) if requested_sort != "hot"
@@ -23,23 +31,23 @@ module NestedReplies
         return record(Decision.new(effective_sort: "top", mode: :ineligible))
       end
 
-      if topic.posts_count.to_i <= SMALL_TOPIC_POST_LIMIT
+      if topic.posts_count.to_i <= small_topic_post_limit
         return record(Decision.new(effective_sort: "top", mode: :small_topic))
       end
 
       snapshot = snapshot(topic.id)
       return fallback_with_refresh(topic.id, requester, mode: :missing) if snapshot.blank?
 
-      if snapshot.formula_version.to_i != HotScoreCalculator::FORMULA_VERSION
+      if snapshot.formula_version.to_i != HotScoreCalculator.formula_version
         return fallback_with_refresh(topic.id, requester, mode: :wrong_formula)
       end
 
       calculated_at = snapshot.calculated_at
-      if calculated_at.blank? || calculated_at < MAX_STALE_AGE.ago
+      if calculated_at.blank? || calculated_at < max_stale_age.ago
         return fallback_with_refresh(topic.id, requester, mode: :expired)
       end
 
-      if calculated_at < SNAPSHOT_TTL.ago
+      if calculated_at < snapshot_ttl.ago
         enqueue_result = request_refresh(topic.id, requester)
         return(
           record(Decision.new(effective_sort: "hot", mode: :stale, enqueue_result: enqueue_result))
@@ -55,8 +63,8 @@ module NestedReplies
 
     def self.fresh?(topic)
       snapshot = snapshot(topic.id)
-      snapshot.present? && snapshot.formula_version.to_i == HotScoreCalculator::FORMULA_VERSION &&
-        snapshot.calculated_at.present? && snapshot.calculated_at >= SNAPSHOT_TTL.ago
+      snapshot.present? && snapshot.formula_version.to_i == HotScoreCalculator.formula_version &&
+        snapshot.calculated_at.present? && snapshot.calculated_at >= snapshot_ttl.ago
     end
 
     def self.snapshot(topic_id)
@@ -68,11 +76,14 @@ module NestedReplies
       SQL
     end
 
-    def self.purge_expired(cutoff: MAX_STALE_AGE.ago, timeout_ms: MAX_PURGE_STATEMENT_TIMEOUT_MS)
+    def self.purge_expired(cutoff: nil, timeout_ms: MAX_PURGE_STATEMENT_TIMEOUT_MS)
+      cutoff ||= max_stale_age.ago
       timeout_ms = timeout_ms.to_i.clamp(1, MAX_PURGE_STATEMENT_TIMEOUT_MS)
       ActiveRecord::Base.transaction do
         DB.exec "SET LOCAL statement_timeout = #{timeout_ms}"
-        DB.exec "SET LOCAL lock_timeout = #{[timeout_ms, HotScoreCalculator::LOCK_TIMEOUT_MS].min}"
+        DB.exec(
+          "SET LOCAL lock_timeout = #{[timeout_ms, SiteSetting.nested_replies_hot_lock_timeout_ms].min}",
+        )
 
         scores_removed = DB.exec(<<~SQL, cutoff: cutoff, batch_size: PURGE_SCORE_BATCH_SIZE)
             WITH scores_to_remove AS MATERIALIZED (
@@ -123,7 +134,7 @@ module NestedReplies
         RateLimiter.new(
           requester,
           "nested-hot-score-refresh",
-          REFRESH_REQUESTS_PER_MINUTE,
+          SiteSetting.nested_replies_hot_refresh_requests_per_minute,
           1.minute,
           apply_limit_to_staff: true,
         ).performed!(raise_error: false)

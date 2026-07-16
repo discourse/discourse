@@ -1981,6 +1981,108 @@ nested_replies:
     depends_on:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
+  nested_replies_hot_like_weight:
+    default: 1.0
+    type: float
+    min: 0
+    max: 100
+    hidden: true
+  nested_replies_hot_reply_weight:
+    default: 2.0
+    type: float
+    min: 0
+    max: 100
+    hidden: true
+  nested_replies_hot_freshness_max_bonus:
+    default: 3.0
+    type: float
+    min: 0
+    max: 100
+    hidden: true
+  nested_replies_hot_freshness_half_life_hours:
+    default: 168
+    type: float
+    min: 1
+    max: 8760
+    hidden: true
+  nested_replies_hot_child_penalty:
+    default: 0.25
+    type: float
+    min: 0.01
+    max: 100
+    hidden: true
+  nested_replies_hot_small_topic_post_limit:
+    default: 5
+    type: integer
+    min: 0
+    max: 10000
+    hidden: true
+  nested_replies_hot_snapshot_ttl_minutes:
+    default: 30
+    type: integer
+    min: 1
+    max: 10080
+    hidden: true
+  nested_replies_hot_max_stale_age_days:
+    default: 30
+    type: integer
+    min: 1
+    max: 3650
+    hidden: true
+  nested_replies_hot_refresh_requests_per_minute:
+    default: 20
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
+  nested_replies_hot_max_topics_per_run:
+    default: 10
+    type: integer
+    min: 1
+    max: 1000
+    hidden: true
+  nested_replies_hot_max_job_runtime_ms:
+    default: 10000
+    type: integer
+    min: 100
+    max: 60000
+    hidden: true
+  nested_replies_hot_max_statement_timeout_ms:
+    default: 10000
+    type: integer
+    min: 100
+    max: 60000
+    hidden: true
+  nested_replies_hot_lock_timeout_ms:
+    default: 1000
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
+  nested_replies_hot_failure_cooldown_minutes:
+    default: 60
+    type: integer
+    min: 1
+    max: 10080
+    hidden: true
+  nested_replies_hot_max_pending_topics:
+    default: 1000
+    type: integer
+    min: 1
+    max: 100000
+    hidden: true
+  nested_replies_hot_max_queue_age_minutes:
+    default: 60
+    type: integer
+    min: 1
+    max: 10080
+    hidden: true
+  nested_replies_hot_preload_depth_penalty:
+    default: 0.25
+    type: float
+    min: 0
+    max: 100
+    hidden: true
   nested_replies_default_sort:
     default: "top"
     client: true

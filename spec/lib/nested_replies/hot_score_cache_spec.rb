@@ -16,7 +16,7 @@ RSpec.describe NestedReplies::HotScoreCache do
 
   def create_topic_with_snapshot(
     calculated_at:,
-    formula_version: NestedReplies::HotScoreCalculator::FORMULA_VERSION
+    formula_version: NestedReplies::HotScoreCalculator.formula_version
   )
     cached_topic = Fabricate(:topic)
     cached_post = Fabricate(:post, topic: cached_topic, post_number: 1)
@@ -35,12 +35,13 @@ RSpec.describe NestedReplies::HotScoreCache do
   end
 
   it "does no cache work for disabled, non-hot, ineligible, or small-topic requests" do
+    SiteSetting.nested_replies_hot_small_topic_post_limit = 6
     non_hot = described_class.resolve(topic, "new")
     SiteSetting.nested_replies_hot_sort_enabled = false
     disabled = described_class.resolve(topic, "hot")
     SiteSetting.nested_replies_hot_sort_enabled = true
     ineligible = described_class.resolve(Fabricate(:topic, posts_count: 6), "hot")
-    topic.update_columns(posts_count: described_class::SMALL_TOPIC_POST_LIMIT)
+    topic.update_columns(posts_count: SiteSetting.nested_replies_hot_small_topic_post_limit)
     small_topic = described_class.resolve(topic, "hot")
 
     expect([non_hot.effective_sort, non_hot.mode]).to eq(["new", :not_hot])
@@ -78,29 +79,30 @@ RSpec.describe NestedReplies::HotScoreCache do
         apply_limit_to_staff: true,
       )
     RateLimiter.enable
+    SiteSetting.nested_replies_hot_refresh_requests_per_minute = 1
 
-    stub_const(described_class, :REFRESH_REQUESTS_PER_MINUTE, 1) do
-      first_decision = described_class.resolve(topic, "hot", requester: requester)
-      second_decision = described_class.resolve(second_topic, "hot", requester: requester)
+    first_decision = described_class.resolve(topic, "hot", requester: requester)
+    second_decision = described_class.resolve(second_topic, "hot", requester: requester)
 
-      expect(first_decision.enqueue_result).to eq(:queued)
-      expect(second_decision.enqueue_result).to eq(:requester_limited)
-      expect(NestedReplies::HotScoreQueue.size).to eq(1)
-    end
+    expect(first_decision.enqueue_result).to eq(:queued)
+    expect(second_decision.enqueue_result).to eq(:requester_limited)
+    expect(NestedReplies::HotScoreQueue.size).to eq(1)
   ensure
     limiter&.clear!
     RateLimiter.disable
   end
 
   it "uses fresh and stale snapshots while rejecting unusable snapshots" do
+    SiteSetting.nested_replies_hot_snapshot_ttl_minutes = 120
+    SiteSetting.nested_replies_hot_max_stale_age_days = 40
     fresh_topic, = create_topic_with_snapshot(calculated_at: Time.current)
-    stale_topic, = create_topic_with_snapshot(calculated_at: 1.hour.ago)
+    stale_topic, = create_topic_with_snapshot(calculated_at: 3.hours.ago)
     wrong_formula_topic, =
       create_topic_with_snapshot(
         calculated_at: Time.current,
-        formula_version: NestedReplies::HotScoreCalculator::FORMULA_VERSION + 1,
+        formula_version: NestedReplies::HotScoreCalculator.formula_version + 1,
       )
-    expired_topic, = create_topic_with_snapshot(calculated_at: 31.days.ago)
+    expired_topic, = create_topic_with_snapshot(calculated_at: 41.days.ago)
 
     decisions =
       [fresh_topic, stale_topic, wrong_formula_topic, expired_topic].map do |cached_topic|
@@ -113,8 +115,20 @@ RSpec.describe NestedReplies::HotScoreCache do
     expect(NestedReplies::HotScoreQueue.size).to eq(3)
   end
 
+  it "rejects an existing snapshot after a formula setting changes" do
+    cached_topic, = create_topic_with_snapshot(calculated_at: Time.current)
+
+    SiteSetting.nested_replies_hot_like_weight = 1.5
+    decision = described_class.resolve(cached_topic, "hot")
+
+    expect([decision.effective_sort, decision.mode, decision.enqueue_result]).to eq(
+      ["top", :wrong_formula, :queued],
+    )
+  end
+
   it "purges only expired cache data" do
-    expired_topic, expired_post = create_topic_with_snapshot(calculated_at: 31.days.ago)
+    SiteSetting.nested_replies_hot_max_stale_age_days = 10
+    expired_topic, expired_post = create_topic_with_snapshot(calculated_at: 11.days.ago)
     fresh_topic, fresh_post = create_topic_with_snapshot(calculated_at: Time.current)
     orphan_topic = Fabricate(:topic)
     orphan_post = Fabricate(:post, topic: orphan_topic, post_number: 1)
