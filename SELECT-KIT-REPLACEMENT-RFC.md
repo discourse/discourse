@@ -235,11 +235,13 @@ vice-versa.
 - *IME / composition input* (CJK, dead keys): do **not** fire the filter mid-composition
   — gate query updates on `compositionstart`/`compositionend` so a half-composed string
   doesn't search or open. (`DFilterInput` does not handle this today — a real gap.)
-- *Mobile placement split*: on mobile the **closed trigger** (host DOM) shows the
-  selection presentation (single label / multi chips) so the user sees the value without
-  opening; tapping opens the modal that holds the **query input + list**. So on mobile
-  the selection presentation and the query input live in different nodes (the two-DOM
-  topology), unlike the single desktop box.
+- *Mobile placement split*: on mobile the **closed trigger** (host DOM) shows an **inert**
+  selection preview (single label / multi chips with no interactive controls) so the user
+  sees the value without opening; tapping opens the modal that holds the **live composite —
+  chips + query input + list** (chips move into the modal per line ~118; the closed trigger's
+  copy is a non-interactive preview, not the editable chips). So the interactive presentation
+  and the query input live together in the modal, while the closed trigger carries only a
+  read-only echo. (Finalized in Phase-1 mobile M5.)
 - *Create row × multi* → selecting the synthetic create row appends a chip like any
   pick; *toggling an already-selected row* removes it (checkmark model).
 - *Chip add/remove + result count* announced politely via the `a11y` service.

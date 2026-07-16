@@ -107,7 +107,7 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
       [".layout-typeahead.d-combobox__trigger", ".d-combobox__input"],
       [".layout-button.d-combobox__trigger", ".d-combobox__placeholder"],
       [".layout-static.d-combobox__trigger", ".d-combobox__placeholder"],
-      [".layout-multi.d-combobox__trigger", ".d-combobox__placeholder"],
+      [".layout-multi.d-combobox__trigger", ".d-combobox__input"],
     ].map(([triggerSelector, contentSelector]) => {
       const trigger = find(triggerSelector);
       const content = trigger.querySelector(contentSelector);
@@ -135,7 +135,8 @@ module("Integration | ui-kit | select | DSelect (layout)", function (hooks) {
         find(".layout-static.d-combobox__trigger .d-combobox__placeholder")
       ).color,
       getComputedStyle(
-        find(".layout-multi.d-combobox__trigger .d-combobox__placeholder")
+        find(".layout-multi.d-combobox__trigger .d-combobox__input"),
+        "::placeholder"
       ).color,
     ];
 
@@ -729,166 +730,169 @@ class MultiHost extends Component {
   </template>
 }
 
-module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
-  setupRenderingTest(hooks);
+module(
+  "Integration | ui-kit | select | DSelect (multi typeahead)",
+  function (hooks) {
+    setupRenderingTest(hooks);
 
-  test("shows the placeholder when empty", async function (assert) {
-    await render(<template><MultiHost /></template>);
-    assert.dom(".d-combobox__placeholder").hasText("Pick some");
-    assert.dom(".d-combobox__chip").doesNotExist();
-  });
-
-  test("selecting adds a chip, keeps the menu open, and keeps the picked row flagged", async function (assert) {
-    await render(<template><MultiHost /></template>);
-    await click(".d-combobox__expand");
-    assert.dom("[role='option']").exists({ count: 3 });
-
-    await click("[role='option']");
-    assert.dom("[role='listbox']").exists("multi stays open after a pick");
-    assert
-      .dom("[role='listbox']")
-      .hasAttribute(
-        "aria-multiselectable",
-        "true",
-        "a multi listbox declares multi-select semantics"
-      );
-    assert.dom(".d-combobox__chip").exists({ count: 1 }, "a chip is added");
-    assert
-      .dom("[role='option']")
-      .exists({ count: 3 }, "the picked item stays in the list");
-    assert
-      .dom("[role='option'][aria-selected='true']")
-      .exists({ count: 1 }, "the picked row is flagged selected");
-    assert
-      .dom(
-        "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon"
-      )
-      .exists("the selected row carries a check");
-
-    // Clicking the first option again would toggle the now-selected item back
-    // off, so pick a still-unselected row to add a second chip.
-    await click("[role='option'][aria-selected='false']");
-    assert.dom(".d-combobox__chip").exists({ count: 2 });
-  });
-
-  test("removing a chip deselects it", async function (assert) {
-    await render(<template><MultiHost @value={{array 1 2}} /></template>);
-    assert.dom(".d-combobox__chip").exists({ count: 2 });
-
-    // The chip is a span; removal is its inner button, not the chip itself.
-    await click(".d-combobox__chip .d-combobox__chip-remove");
-    assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
-  });
-
-  test("each chip is a span with an inner remove button named for its label", async function (assert) {
-    await render(<template><MultiHost @value={{array 1}} /></template>);
-
-    assert
-      .dom("span.d-combobox__chip")
-      .exists({ count: 1 }, "the chip is a span, not a button");
-    assert
-      .dom(".d-combobox__chips")
-      .hasAttribute("role", "group", "the chips form a labelled group")
-      .hasAttribute("aria-label");
-
-    const removeButton = find(".d-combobox__chip .d-combobox__chip-remove");
-    assert
-      .dom(removeButton)
-      .hasTagName("button", "removal is a dedicated inner button");
-
-    const ids = removeButton.getAttribute("aria-labelledby").split(" ");
-    assert.strictEqual(
-      ids.length,
-      2,
-      "the button is named by two referenced nodes"
-    );
-    assert
-      .dom(`#${ids[0]}`)
-      .hasText(
-        "Remove",
-        "the first referenced node is the sr-only action word"
-      );
-    assert
-      .dom(`#${ids[1]}`)
-      .hasText(
-        "Apple",
-        "the second is the chip label, so the name reads 'Remove Apple'"
-      );
-  });
-
-  test("a chip whose value contains a space still names its remove button", async function (assert) {
-    const spacedItems = [{ id: "bug fix", name: "Bug fix" }];
-    await render(
-      <template>
-        <DefaultHost
-          @multiple={{true}}
-          @items={{spacedItems}}
-          @value={{array "bug fix"}}
-        />
-      </template>
-    );
-
-    const labelledby = find(".d-combobox__chip-remove").getAttribute(
-      "aria-labelledby"
-    );
-    assert.strictEqual(
-      labelledby.split(" ").length,
-      2,
-      "ids are minted from the index, so a spaced value does not tokenize the IDREF list"
-    );
-    labelledby.split(" ").forEach((id) => {
-      assert
-        .dom(`#${CSS.escape(id)}`)
-        .exists(`the referenced node #${id} resolves`);
+    test("shows the placeholder when empty", async function (assert) {
+      await render(<template><MultiHost /></template>);
+      assert.dom(".d-combobox__input").hasAttribute("placeholder", "Pick some");
+      assert.dom(".d-combobox__chip").doesNotExist();
     });
-  });
 
-  test("uses default labels when presentation blocks are omitted", async function (assert) {
-    await render(
-      <template>
-        <DefaultHost @multiple={{true}} @value={{array 1 2}} />
-      </template>
-    );
+    test("selecting adds a chip, keeps the menu open, and keeps the picked row flagged", async function (assert) {
+      await render(<template><MultiHost /></template>);
+      await click(".d-combobox__input");
+      assert.dom("[role='option']").exists({ count: 3 });
 
-    assert
-      .dom(".d-combobox__chip")
-      .exists({ count: 2 }, "one fallback chip renders for each selection");
-    assert
-      .dom(".d-combobox__chip:first-child")
-      .includesText("Apple", "chips use the selection fallback");
+      await click("[role='option']");
+      assert.dom("[role='listbox']").exists("multi stays open after a pick");
+      assert
+        .dom("[role='listbox']")
+        .hasAttribute(
+          "aria-multiselectable",
+          "true",
+          "a multi listbox declares multi-select semantics"
+        );
+      assert.dom(".d-combobox__chip").exists({ count: 1 }, "a chip is added");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 3 }, "the picked item stays in the list");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .exists({ count: 1 }, "the picked row is flagged selected");
+      assert
+        .dom(
+          "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon"
+        )
+        .exists("the selected row carries a check");
 
-    await click(".d-combobox__expand");
-    assert
-      .dom("[role='option']")
-      .exists({ count: 3 }, "selected items stay in the list");
-    assert
-      .dom("[role='option'][aria-selected='true']")
-      .exists({ count: 2 }, "the two selected rows are flagged");
-    assert
-      .dom("[role='option'][aria-selected='false']")
-      .hasText("Cherry pie", "the unselected row uses the item fallback");
-  });
+      // Clicking the first option again would toggle the now-selected item back
+      // off, so pick a still-unselected row to add a second chip.
+      await click("[role='option'][aria-selected='false']");
+      assert.dom(".d-combobox__chip").exists({ count: 2 });
+    });
 
-  test("the selected-option icon is customizable via @selectedIcon", async function (assert) {
-    await render(
-      <template>
-        <DSelect
-          @items={{ITEMS}}
-          @multiple={{true}}
-          @value={{array 1}}
-          @selectedIcon="star"
-        />
-      </template>
-    );
-    await click(".d-combobox__expand");
+    test("removing a chip deselects it", async function (assert) {
+      await render(<template><MultiHost @value={{array 1 2}} /></template>);
+      assert.dom(".d-combobox__chip").exists({ count: 2 });
 
-    assert
-      .dom(
-        "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
-      )
-      .exists("the selected row uses the custom icon, not the default check");
-  });
-});
+      // The chip is a span; removal is its inner button, not the chip itself.
+      await click(".d-combobox__chip .d-combobox__chip-remove");
+      assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+    });
+
+    test("each chip is a span with an inner remove button named for its label", async function (assert) {
+      await render(<template><MultiHost @value={{array 1}} /></template>);
+
+      assert
+        .dom("span.d-combobox__chip")
+        .exists({ count: 1 }, "the chip is a span, not a button");
+      assert
+        .dom(".d-combobox__chips")
+        .hasAttribute("role", "group", "the chips form a labelled group")
+        .hasAttribute("aria-label");
+
+      const removeButton = find(".d-combobox__chip .d-combobox__chip-remove");
+      assert
+        .dom(removeButton)
+        .hasTagName("button", "removal is a dedicated inner button");
+
+      const ids = removeButton.getAttribute("aria-labelledby").split(" ");
+      assert.strictEqual(
+        ids.length,
+        2,
+        "the button is named by two referenced nodes"
+      );
+      assert
+        .dom(`#${ids[0]}`)
+        .hasText(
+          "Remove",
+          "the first referenced node is the sr-only action word"
+        );
+      assert
+        .dom(`#${ids[1]}`)
+        .hasText(
+          "Apple",
+          "the second is the chip label, so the name reads 'Remove Apple'"
+        );
+    });
+
+    test("a chip whose value contains a space still names its remove button", async function (assert) {
+      const spacedItems = [{ id: "bug fix", name: "Bug fix" }];
+      await render(
+        <template>
+          <DefaultHost
+            @multiple={{true}}
+            @items={{spacedItems}}
+            @value={{array "bug fix"}}
+          />
+        </template>
+      );
+
+      const labelledby = find(".d-combobox__chip-remove").getAttribute(
+        "aria-labelledby"
+      );
+      assert.strictEqual(
+        labelledby.split(" ").length,
+        2,
+        "ids are minted from the index, so a spaced value does not tokenize the IDREF list"
+      );
+      labelledby.split(" ").forEach((id) => {
+        assert
+          .dom(`#${CSS.escape(id)}`)
+          .exists(`the referenced node #${id} resolves`);
+      });
+    });
+
+    test("uses default labels when presentation blocks are omitted", async function (assert) {
+      await render(
+        <template>
+          <DefaultHost @multiple={{true}} @value={{array 1 2}} />
+        </template>
+      );
+
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 2 }, "one fallback chip renders for each selection");
+      assert
+        .dom(".d-combobox__chip:first-child")
+        .includesText("Apple", "chips use the selection fallback");
+
+      await click(".d-combobox__input");
+      assert
+        .dom("[role='option']")
+        .exists({ count: 3 }, "selected items stay in the list");
+      assert
+        .dom("[role='option'][aria-selected='true']")
+        .exists({ count: 2 }, "the two selected rows are flagged");
+      assert
+        .dom("[role='option'][aria-selected='false']")
+        .hasText("Cherry pie", "the unselected row uses the item fallback");
+    });
+
+    test("the selected-option icon is customizable via @selectedIcon", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @multiple={{true}}
+            @value={{array 1}}
+            @selectedIcon="star"
+          />
+        </template>
+      );
+      await click(".d-combobox__input");
+
+      assert
+        .dom(
+          "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
+        )
+        .exists("the selected row uses the custom icon, not the default check");
+    });
+  }
+);
 
 module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   setupRenderingTest(hooks);

@@ -43,6 +43,10 @@
   }
 }
 
+.d-combobox__trigger.--multiple {
+  justify-content: flex-start;
+}
+
 .d-combobox__presentation {
   min-width: 0;
   overflow: hidden;
@@ -147,13 +151,16 @@
 
 // Multi-select chips (rendered in the trigger)
 .d-combobox__chips {
+  // No inline-start padding: the chips box sits inside a `form-item-sizing` typeahead
+  // trigger that already provides the field inset, so the box aligns the first chip (or the
+  // inline input) with where a single-select value would sit. Adding $hpad here would
+  // double the inset.
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25em;
   box-sizing: border-box;
   width: 100%;
-  padding-inline-start: $hpad;
 }
 
 .d-combobox__chip {
@@ -174,8 +181,4 @@
   background: none;
   color: var(--primary-medium);
   cursor: pointer;
-}
-
-.d-combobox__expand {
-  margin-inline-start: auto;
 }
