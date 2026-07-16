@@ -73,7 +73,7 @@ export interface SelectDescriptor {
     group: boolean;
     /** Marks the synthetic create-on-the-fly row. */
     __create: boolean;
-    /** Reserved for the unresolved-selection fallback; always false on list rows today. */
+    /** True for an unresolved held value; false on list rows. */
     __unresolved: boolean;
   };
 }
@@ -392,7 +392,7 @@ export default class SelectEngine {
   get value(): SelectValue {
     const raw = this.#readValue();
     return this.#multiple
-      ? Object.freeze(makeArray(raw) as SelectItemId[])
+      ? Object.freeze(this.#dedupeValues(makeArray(raw) as SelectItemId[]))
       : (raw ?? null);
   }
 
@@ -528,8 +528,18 @@ export default class SelectEngine {
 
     // Normalize as the final step: everything above operates on raw items (so the
     // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
+    return this.describeItems(finalItems);
+  }
+
+  /**
+   * Normalizes arbitrary items into the frozen descriptor shape used for rendering.
+   *
+   * @param items - The items to normalize.
+   */
+  @bind
+  describeItems(items: SelectItem[]): readonly SelectDescriptor[] {
     return Object.freeze(
-      finalItems.map((item, index) => this.#normalize(item, index))
+      items.map((item, index) => this.#normalize(item, index))
     );
   }
 
@@ -566,7 +576,7 @@ export default class SelectEngine {
         ? this.#firstOf(resolved)
         : resolved[0]!;
     }
-    const values = makeArray(value) as SelectItemId[];
+    const values = this.#dedupeValues(makeArray(value) as SelectItemId[]);
     // Empty multi → undefined so the trigger shows its placeholder (not an empty list).
     if (values.length === 0) {
       return undefined;
@@ -722,6 +732,19 @@ export default class SelectEngine {
     }
     const key = this.#valueKey(this.#itemValue(item));
     this.#emitChange(this.#valueArray.filter((v) => this.#valueKey(v) !== key));
+  }
+
+  /** Removes the last held value from a multi-select selection. */
+  @bind
+  deselectLast(): void {
+    if (!this.#multiple) {
+      return;
+    }
+    const values = this.#valueArray;
+    if (values.length === 0) {
+      return;
+    }
+    this.#emitChange(values.slice(0, -1));
   }
 
   /**
@@ -1005,7 +1028,11 @@ export default class SelectEngine {
       ? this.#attempt(() => this.#createUnresolvedItem!(value))
       : undefined;
     if (built) {
-      const item = { ...built, __unresolved: true };
+      const item = {
+        ...built,
+        [this.#valueField]: value,
+        __unresolved: true,
+      };
       this.#customUnresolvedItems.add(item);
       return item;
     }
@@ -1047,7 +1074,7 @@ export default class SelectEngine {
         disabled: !!item.disabled,
         group: false,
         __create: !!item.__create,
-        __unresolved: false,
+        __unresolved: !!item.__unresolved,
       },
     };
   }
@@ -1060,6 +1087,19 @@ export default class SelectEngine {
   // item id 5 (and vice-versa). Nullish never matches an id.
   #valueKey(value: SelectItemId): string | null {
     return value == null ? null : String(value);
+  }
+
+  /** Removes duplicate normalized ids while preserving first-occurrence order. */
+  #dedupeValues(values: SelectItemId[]): SelectItemId[] {
+    const seen = new Set<string | null>();
+    return values.filter((value) => {
+      const key = this.#valueKey(value);
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
   }
 
   #itemLabel(item: SelectItem | null | undefined): unknown {
