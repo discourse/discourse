@@ -1,7 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { click, focus, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
@@ -683,5 +689,208 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert
       .dom(".c")
       .hasClass("--active", "ArrowUp from no highlight seeds the last option");
+  });
+
+  test("focus mode with tabStop=false: every item is -1, never a tab stop", async function (assert) {
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=option]"
+            tabStop=false
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".a")
+      .hasAttribute("tabindex", "-1", "the first item is not made a tab stop");
+    assert.dom(".b").hasAttribute("tabindex", "-1");
+    assert.dom(".c").hasAttribute("tabindex", "-1");
+
+    // The -1 is what keeps items programmatically focusable, so arrow navigation
+    // still works — but the newly-focused item never becomes tabindex 0.
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    assert
+      .dom(".b")
+      .isFocused("ArrowRight still moves focus with tabStop=false");
+    assert
+      .dom(".b")
+      .hasAttribute("tabindex", "-1", "the focused item stays -1, never 0");
+    assert.dom(".a").hasAttribute("tabindex", "-1");
+  });
+
+  test("focus mode: onExit fires at a horizontal edge with the travel direction", async function (assert) {
+    const exits = [];
+    const onExit = (direction) => exits.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=option]"
+            onExit=onExit
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    await focus(".b");
+    await triggerKeyEvent(".b", "keydown", "ArrowRight");
+    assert.deepEqual(
+      exits,
+      ["forward"],
+      "ArrowRight past the last item exits forward"
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+    assert.deepEqual(
+      exits,
+      ["forward", "backward"],
+      "ArrowLeft past the first item exits backward"
+    );
+  });
+
+  test("focus mode: onExit does not fire on a vertical key or with no cursor", async function (assert) {
+    const exits = [];
+    const onExit = (direction) => exits.push(direction);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=option]"
+            onExit=onExit
+            tabStop=false
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+        </div>
+      </template>
+    );
+
+    // tabStop=false leaves no tab stop, so with nothing focused the cursor is -1.
+    // Arrowing with no cursor must not report an edge exit.
+    await triggerKeyEvent(".a", "keydown", "ArrowLeft");
+    assert.deepEqual(exits, [], "ArrowLeft with no cursor does not exit");
+
+    // Under horizontal orientation a vertical key is not ours, so it never exits.
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowDown");
+    assert.deepEqual(
+      exits,
+      [],
+      "ArrowDown under horizontal orientation does not exit"
+    );
+  });
+
+  test("focus mode: onRegisterApi yields focus controls that move focus", async function (assert) {
+    let api = null;
+    const register = (value) => (api = value);
+
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=option]"
+            tabStop=false
+            onRegisterApi=register
+          }}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    assert.strictEqual(
+      typeof api?.focusFirst,
+      "function",
+      "the api is registered on insert"
+    );
+
+    api.focusFirst();
+    await settled();
+    assert.dom(".a").isFocused("focusFirst moves DOM focus to the first item");
+
+    api.focusLast();
+    await settled();
+    assert.dom(".c").isFocused("focusLast moves DOM focus to the last item");
+
+    api.focusIndex(1);
+    await settled();
+    assert.dom(".b").isFocused("focusIndex moves DOM focus to the given index");
+  });
+
+  test("focus mode: the api is revoked and inert after teardown", async function (assert) {
+    let api = null;
+    let revoked = false;
+    const register = (value) => {
+      if (value === null) {
+        revoked = true;
+      } else {
+        api = value;
+      }
+    };
+
+    const state = new (class {
+      @tracked show = true;
+    })();
+
+    await render(
+      <template>
+        {{#if state.show}}
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="horizontal"
+              itemSelector="[role=option]"
+              tabStop=false
+              onRegisterApi=register
+            }}
+          >
+            <button class="a" role="option">A</button>
+          </div>
+        {{/if}}
+      </template>
+    );
+
+    assert.strictEqual(
+      typeof api?.focusFirst,
+      "function",
+      "the api is registered while mounted"
+    );
+
+    state.show = false;
+    await settled();
+
+    assert.true(revoked, "onRegisterApi(null) is called on teardown");
+
+    // The container is destroyed on every modal close on mobile; a stale api call
+    // must find no items and no-op rather than throw on items[last].
+    api.focusFirst();
+    api.focusLast();
+    api.focusIndex(0);
+    assert.true(true, "stale api calls after teardown do not throw");
   });
 });

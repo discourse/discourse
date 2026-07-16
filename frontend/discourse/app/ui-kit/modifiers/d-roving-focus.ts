@@ -7,6 +7,13 @@ import { bind } from "discourse/lib/decorators";
 type SelectionMode = "focus" | "active";
 type Orientation = "grid" | "horizontal" | "vertical";
 
+/** Controls for moving the cursor to a live item in the roving-focus group. */
+export interface DRovingFocusApi {
+  focusFirst(): void;
+  focusLast(): void;
+  focusIndex(index: number): void;
+}
+
 interface DRovingFocusArgs {
   /** `"focus"` (roving tabindex, default) or `"active"` (`aria-activedescendant`). */
   selectionMode?: SelectionMode;
@@ -20,8 +27,14 @@ interface DRovingFocusArgs {
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
   /** Called whenever the cursor moves to a new item. */
   onActiveChange?: (item: HTMLElement) => void;
+  /** Called at a horizontal edge when `wrap` is false; wrapping suppresses it. */
+  onExit?: (direction: "forward" | "backward") => void;
+  /** Registers stable controls for moving the cursor, and receives `null` on teardown. */
+  onRegisterApi?: (api: DRovingFocusApi | null) => void;
   /** Whether navigation wraps at the ends (default `false` = clamp). */
   wrap?: boolean;
+  /** Focus mode: whether one item is reachable with Tab (default `true`). */
+  tabStop?: boolean;
   /** Class toggled on the active item in `"active"` mode. */
   activeClass?: string | null;
   /** A reactive key (e.g. the filter string) that re-reconciles the cursor when it changes. */
@@ -50,10 +63,11 @@ interface DRovingFocusSignature {
  * items, in DOM order. It implements the two WAI-ARIA "single tab stop" patterns
  * from one engine, chosen with `selectionMode`:
  *
- * - `"focus"` (the default) — a roving tabindex. Exactly one item is reachable
- *   with Tab (`tabindex="0"`); the rest are `tabindex="-1"`. Arrow keys move real
- *   DOM focus between items and flip the single tab stop along with it. Use this
- *   when the active item should itself hold focus (a tile grid, a toolbar).
+ * - `"focus"` (the default) — a roving tabindex. By default, exactly one item is
+ *   reachable with Tab (`tabindex="0"`); the rest are `tabindex="-1"`. With
+ *   `tabStop=false`, every item remains at `tabindex="-1"`. Arrow keys move real DOM
+ *   focus between items and update tabindex along with it. Use this when the active
+ *   item should itself hold focus (a tile grid, a toolbar).
  * - `"active"` — `aria-activedescendant`. DOM focus stays on a separate controller
  *   element (typically a text input); arrow keys move a *virtual* highlight through
  *   the items by pointing the controller's `aria-activedescendant` at the active
@@ -80,7 +94,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   columnsOverride: number | (() => number) | null = null;
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
   onActiveChange?: (item: HTMLElement) => void;
+  onExit?: (direction: "forward" | "backward") => void;
   wrap = false;
+  tabStop = true;
   activeClass: string | null = null;
   itemsKey: unknown;
   autoActivateFirst = false;
@@ -89,6 +105,32 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   #listenElement: HTMLElement | null = null;
 
   #mode: SelectionMode = "focus";
+
+  /** Stable controls registered with the consumer for moving focus into the group. */
+  #api: DRovingFocusApi = {
+    focusFirst: () => {
+      const items = this.#items();
+      if (!items.length) {
+        return;
+      }
+      this.#setActive(items[0], items);
+    },
+    focusLast: () => {
+      const items = this.#items();
+      if (!items.length) {
+        return;
+      }
+      this.#setActive(items[items.length - 1], items);
+    },
+    focusIndex: (index) => {
+      const items = this.#items();
+      if (!items.length) {
+        return;
+      }
+      const last = items.length - 1;
+      this.#setActive(items[Math.max(0, Math.min(index, last))], items);
+    },
+  };
 
   /**
    * Active mode only — the `id` of the currently-highlighted item. Tracked here
@@ -102,6 +144,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * removes only its own and never strips an author-supplied id.
    */
   #mintedIds = new Set<string>();
+
+  /** The callback already given the stable API, retained to avoid render-time churn. */
+  #registeredApiCallback?: (api: DRovingFocusApi | null) => void;
 
   constructor(owner: Owner, args: ArgsFor<DRovingFocusSignature>) {
     super(owner, args);
@@ -122,12 +167,19 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.columnsOverride = named.columns ?? null;
     this.onActivate = named.onActivate;
     this.onActiveChange = named.onActiveChange;
+    this.onExit = named.onExit;
     this.wrap = named.wrap ?? false;
+    this.tabStop = named.tabStop ?? true;
     this.activeClass = named.activeClass ?? null;
     this.autoActivateFirst = named.autoActivateFirst ?? false;
     // Reading `itemsKey` here keeps `modify()` reactive to it; the value itself
     // isn't used beyond triggering a re-run + reconcile.
     this.itemsKey = named.itemsKey;
+
+    if (this.#registeredApiCallback !== named.onRegisterApi) {
+      this.#registeredApiCallback = named.onRegisterApi;
+      named.onRegisterApi?.(this.#api);
+    }
 
     const listenElement =
       this.#mode === "active"
@@ -191,11 +243,21 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       case "ArrowRight":
         if (horizontal) {
           next = this.#step(current, 1, last);
+          if (next == null && current >= 0 && this.onExit) {
+            event.preventDefault();
+            this.onExit("forward");
+            return;
+          }
         }
         break;
       case "ArrowLeft":
         if (horizontal) {
           next = this.#step(current, -1, last);
+          if (next == null && current >= 0 && this.onExit) {
+            event.preventDefault();
+            this.onExit("backward");
+            return;
+          }
         }
         break;
       case "ArrowDown":
@@ -403,9 +465,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Moves the cursor to `target`: in focus mode, flips the single tab stop and moves
-   * DOM focus; in active mode, repoints `aria-activedescendant`, moves `activeClass`,
-   * and scrolls the item into view without moving focus.
+   * Moves the cursor to `target`: in focus mode, updates the items' tabindex values
+   * and moves DOM focus; in active mode, repoints `aria-activedescendant`, moves
+   * `activeClass`, and scrolls the item into view without moving focus.
    */
   #setActive(target: HTMLElement, items: HTMLElement[]): void {
     if (this.#mode === "active") {
@@ -422,7 +484,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       target.scrollIntoView({ block: "nearest" });
     } else {
       for (const el of items) {
-        el.tabIndex = el === target ? 0 : -1;
+        el.tabIndex = this.tabStop && el === target ? 0 : -1;
       }
       target.focus();
     }
@@ -430,14 +492,21 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   /**
-   * Focus mode — ensures exactly one item is the tab stop. Prefers an existing
-   * `tabindex="0"`, else an `[aria-selected="true"]`/`[aria-current]` item, else the
-   * first item. Does NOT move focus, so re-seeding after a re-render (or while the
-   * user is typing in a separate search field) never yanks focus.
+   * Focus mode — stamps every item with an explicit tabindex. When `tabStop` is
+   * enabled, prefers an existing `tabindex="0"`, else an
+   * `[aria-selected="true"]`/`[aria-current]` item, else the first item. Does NOT move
+   * focus, so re-seeding after a re-render (or while the user is typing in a separate
+   * search field) never yanks focus.
    */
   #seedTabStop(): void {
     const items = this.#items();
     if (!items.length) {
+      return;
+    }
+    if (!this.tabStop) {
+      for (const el of items) {
+        el.tabIndex = -1;
+      }
       return;
     }
     const existing =
@@ -516,5 +585,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
     this.#mintedIds.clear();
     this.#listenElement = null;
+    this.element = null;
+    this.#registeredApiCallback?.(null);
+    this.#registeredApiCallback = undefined;
   }
 }
