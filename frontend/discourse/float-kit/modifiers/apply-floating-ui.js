@@ -31,15 +31,13 @@ export default class FloatKitApplyFloatingUi extends Modifier {
 
   @bind
   async update() {
-    if (this.instance.trigger?.isConnected === false) {
+    const { trigger, content } = this.instance;
+
+    if (!trigger?.isConnected || !content?.isConnected) {
       return;
     }
 
-    await updatePosition(
-      this.instance.trigger,
-      this.instance.content,
-      this.options
-    );
+    await updatePosition(trigger, content, this.options);
   }
 
   teardown() {
