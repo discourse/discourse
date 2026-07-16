@@ -50,7 +50,10 @@ module DiscourseDataExplorer
 
         def up_filter_keys(keys, type:, changes:, virtual: [])
           up_keys(keys, changes, virtual:) do |change|
-            [change.field_renames_for(type), change.filter_renames_for(type)]
+            [
+              change.field_renames_for(type),
+              change.filter_renames_for(type).merge(extension_filter_renames(change, type)),
+            ]
           end
         end
 
@@ -77,6 +80,17 @@ module DiscourseDataExplorer
         end
 
         private
+
+        # Extensions' filter renames, projected (namespace-prefixed) onto the
+        # surface type by their owner — see Extension#filter_renames_on.
+        def extension_filter_renames(change, surface_type)
+          JsonApiKit
+            .extensions
+            .values
+            .reduce({}) do |merged, extension|
+              merged.merge(extension.filter_renames_on(surface_type, change:))
+            end
+        end
 
         def up_keys(names, changes, virtual:)
           symbols = names.map(&:to_sym)

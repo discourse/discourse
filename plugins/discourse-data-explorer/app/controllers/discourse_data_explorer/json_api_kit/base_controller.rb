@@ -138,12 +138,23 @@ module DiscourseDataExplorer
 
       def cfg = self.class._jsonapi_config
 
-      # Mandatory version header (Stripe-style snap-down). Success: @api_version holds
-      # the resolved version, echoed back in the response. Failure: 400 whose body
-      # teaches the current version.
+      # Mandatory version header (Stripe-style snap-down): a base date, plus
+      # optional per-extension overrides (`2026-01-31; some-plugin=2026-07-15`).
+      # The base snaps against the host timeline only; each override snaps
+      # against that extension's own timeline. Success: the fully-resolved string
+      # is echoed back — clients store it verbatim. Failure: 400 whose body
+      # teaches the current version. See docs/plugins-design.md (C).
       def resolve_api_version
-        @api_version = JsonApiKit.api_versions.resolve(request.headers[API_VERSION_HEADER])
-        response.headers[API_VERSION_HEADER] = @api_version.to_s
+        base, overrides = parse_version_header(request.headers[API_VERSION_HEADER])
+        @api_version = JsonApiKit.api_versions.resolve(base)
+        @api_version_overrides =
+          overrides.to_h do |namespace, date|
+            if !JsonApiKit.extensions.key?(namespace)
+              raise VersionRegistry::UnknownComponent, "unknown component `#{namespace}`"
+            end
+            [namespace, JsonApiKit.api_versions.resolve_for(namespace, date)]
+          end
+        response.headers[API_VERSION_HEADER] = resolved_version_string
       rescue VersionRegistry::MissingVersion
         render_errors(
           [
@@ -159,10 +170,26 @@ module DiscourseDataExplorer
         )
       end
 
+      # `"2026-06-01; run-stats=2026-06-25"` → ["2026-06-01", [["run-stats", "2026-06-25"]]].
+      # A blank header yields a blank base (MissingVersion downstream); a malformed
+      # override part yields an invalid date for its half (Invalid downstream).
+      def parse_version_header(raw)
+        base, *override_parts = raw.to_s.split(";").map(&:strip)
+        [base, override_parts.map { |part| part.split("=", 2) }]
+      end
+
+      def resolved_version_string
+        (
+          [@api_version.to_s] + @api_version_overrides.map { |name, version| "#{name}=#{version}" }
+        ).join("; ")
+      end
+
       # The chain of changes separating the caller's version from latest — empty for
-      # current clients, so the pipeline is a no-op on the hot path.
+      # current clients, so the pipeline is a no-op on the hot path. Overridden
+      # extensions are governed by their own resolved dates.
       def api_version_gap
-        @api_version_gap ||= JsonApiKit.api_versions.gap_for(@api_version)
+        @api_version_gap ||=
+          JsonApiKit.api_versions.gap_for(@api_version, overrides: @api_version_overrides)
       end
 
       # Request-up: migrate an old client's input to the latest shape before anything

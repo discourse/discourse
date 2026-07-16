@@ -52,4 +52,36 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::Extension do
       expect(extension.version_changes).to eq([stats_change])
     end
   end
+
+  describe "#filter_renames_on" do
+    let(:renaming_change) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-06-20"
+        description "Renames a run-stats filter."
+
+        resource :"run-stats" do
+          renamed_filter from: :outdated, to: :stale
+        end
+      end
+    end
+
+    before do
+      extension.register_relationship(:queries, serializer: stats_serializer) { nil }
+      extension.register_version_change(renaming_change)
+    end
+
+    it "projects the rename onto the attached surface with both sides prefixed" do
+      expect(extension.filter_renames_on("queries", change: renaming_change)).to eq(
+        "run-stats.outdated": :"run-stats.stale",
+      )
+    end
+
+    it "projects nothing onto types it is not attached to" do
+      expect(extension.filter_renames_on("users", change: renaming_change)).to be_empty
+    end
+
+    it "projects nothing for a change it does not ship" do
+      expect(extension.filter_renames_on("queries", change: stats_change)).to be_empty
+    end
+  end
 end

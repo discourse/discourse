@@ -41,6 +41,23 @@ module DiscourseDataExplorer
       def owned_types = relationships.values.map { it[:serializer].record_type.to_s }
 
       def attached_types = relationships.keys
+
+      # The D ownership amendment (docs/plugins-design.md): query-surface vocabulary
+      # is owned by namespace. A change declares `renamed_filter` in its OWN type's
+      # vocabulary; this projects it onto an attached surface with both sides
+      # prefixed — a foreign (unprefixed) rename is inexpressible.
+      def filter_renames_on(surface_type, change:)
+        return {} if !attached_types.include?(surface_type.to_s)
+        return {} if !version_changes.include?(change)
+
+        owned_types.reduce({}) do |merged, type|
+          merged.merge(
+            change
+              .filter_renames_for(type)
+              .to_h { |from, to| [:"#{namespace}.#{from}", :"#{namespace}.#{to}"] },
+          )
+        end
+      end
     end
   end
 end
