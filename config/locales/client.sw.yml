@@ -681,6 +681,9 @@ sw:
       notifications: "Taarifa"
       statistics: "Takwimu"
       desktop_notifications:
+        push_level:
+          none: "Imezuiwa"
+          all: "Imeruhusiwa"
         not_supported: "Taarifa hazionyeshwi kwenye kivinjari hiki. Samahani."
         perm_denied_expl: "Umekataza kibali cha taarifa. Ruhusu taarifa kupitia mipangilio ya kivinjari."
         consent_prompt: "Je, unataka taarifa mubashara watu wakijibu kwenye posti zako?"
@@ -1594,6 +1597,7 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
+      sr_read: "soma"
       bumped_at: "Hivi karibuni: %{date}"
       deleted: "Mada imefutwa"
       slow_mode_update:
@@ -2514,6 +2518,20 @@ sw:
               title: "Mipangilio"
         badges:
           title: "Beji"
+        category_management:
+          tabs:
+            settings: "Mipangilio"
+          types:
+            all:
+              title: "Kategoria Zote"
+          table:
+            category: "Kikundi"
+            visibility: "Uonekanaji"
+            topics: "Mada"
+          visibility:
+            public: "Umma"
+          visibility_filter:
+            all: "Kategoria Zote"
         permalinks:
           title: "Anwani za mtandao"
         emoji:
@@ -2610,6 +2628,7 @@ sw:
             table:
               searches: "Utafiti"
         reports_section:
+          header_action: "Simamia"
           modal:
             enabled_heading: "Imeruhusiwa"
             all_heading: "Ripoti zote"

@@ -9,6 +9,7 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/406990"
       allow_enabled_for:
         - everyone
+      requires_plugin_enabled: false
   discourse_workflows_ai_authoring_enabled:
     default: false
     client: true

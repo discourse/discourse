@@ -245,8 +245,6 @@ fr:
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       chat_notifications_title: "Notifications de discussion"
-      only_chat_push_notifications:
-        title: "Envoyer uniquement des notifications push de discussion"
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
       show_thread_title_prompts:

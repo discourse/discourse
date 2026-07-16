@@ -1422,6 +1422,9 @@ ja:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
+        push_level:
+          none: "無効"
+          all: "有効"
         not_supported: "このブラウザでは通知がサポートされていません。"
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
@@ -2642,6 +2645,8 @@ ja:
       default: カスタム絵文字
     filter_input:
       clear: "フィルタをクリア"
+    filter_controls:
+      toggle: "ドロップダウンのフィルタを切り替える"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -3366,6 +3371,7 @@ ja:
       read_more_in_category: "もっと読みますか？%{categoryLink} で他のトピックを閲覧するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       read_more: "もっと読みますか？<a href='%{categoryLink}'>すべてのカテゴリを閲覧</a>するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
+      sr_read: "読了"
       participant_groups: "参加グループ"
       reply_count_link:
         other: "%{count} 件の返信、最初の投稿にジャンプ"
@@ -3810,7 +3816,7 @@ ja:
         view:
           other: "%{count} 個の翻訳済みロケールを表示"
         modal:
-          title: "投稿の翻訳"
+          title: "翻訳"
           confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
         success: "翻訳は正しく更新されました"
         post_language_selector:
@@ -5122,7 +5128,6 @@ ja:
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
-    toggle_filters: "ドロップダウンのフィルタを切り替える"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -5329,7 +5334,6 @@ ja:
             apple_touch_icon:
               title: "Apple タッチアイコン"
               description: "Apple タッチデバイスで使用されるアイコン。空白の場合、large_icon が使用されます。"
-              help_text: "推奨サイズは 180 x 180 ピクセルです。透明な背景は推奨されません。"
             digest_logo:
               title: "ダイジェストロゴ"
               description: "サイトのメール要約の上部で使用されるロゴの代替画像です。空白のままにすると、`logo` で設定した画像が使用されます。"
@@ -5513,6 +5517,21 @@ ja:
               title: "投稿とトピック"
             stats_and_thresholds:
               title: "統計としきい値"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "すべてのカテゴリ"
+          filter_placeholder: "カテゴリをフィルタする"
+          table:
+            category: "カテゴリ"
+            visibility: "表示状態"
+            topics: "トピック"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "すべてのカテゴリ"
         permalinks:
           title: "パーマリンク"
           header_description: "フォーラムが認識していない URL に適用するリダイレクト"
@@ -5729,6 +5748,7 @@ ja:
               searches: "検索数"
               status: "ステータス"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "有効"
             all_heading: "すべてのレポート"

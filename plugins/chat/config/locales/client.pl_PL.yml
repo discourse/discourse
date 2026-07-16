@@ -310,8 +310,6 @@ pl_PL:
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       chat_notifications_title: "Powiadomienia czatu"
-      only_chat_push_notifications:
-        title: "Wysyłaj tylko powiadomienia push czatu"
       personalization_title: "Personalizacja"
       accessibility_title: "Dostępność"
       ignore_channel_wide_mention:

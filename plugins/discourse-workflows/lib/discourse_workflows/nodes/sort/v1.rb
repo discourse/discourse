@@ -17,6 +17,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "all_items",
           },
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             type: {
               type: :options,

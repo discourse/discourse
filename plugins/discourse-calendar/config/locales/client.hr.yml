@@ -13,6 +13,9 @@ hr:
             topic_id:
               label: ID teme
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Čavrljanje"
       disable_holiday: "Onemogući"
       enable_holiday: "Omogućiti"
       date: "Datum"

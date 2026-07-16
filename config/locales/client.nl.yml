@@ -1588,6 +1588,9 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken"
       desktop_notifications:
+        push_level:
+          none: "Uitgeschakeld"
+          all: "Ingeschakeld"
         not_supported: "Meldingen worden niet ondersteund in deze browser. Sorry."
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
         each_browser_note: "Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld als je meldingen onderbreekt vanuit het gebruikersmenu, ongeacht deze instelling."
@@ -2892,6 +2895,9 @@ nl:
       default: Eigen emoji's
     filter_input:
       clear: "Filter wissen"
+    filter_controls:
+      reset: "Filter resetten"
+      toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
       search_placeholder: "Pictogrammen zoeken..."
@@ -3793,6 +3799,7 @@ nl:
       read_more_in_category: "Meer lezen? Blader door andere topics in %{categoryLink} of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       read_more: "Meer lezen? <a href='%{categoryLink}'>Blader door alle categorieën</a> of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
+      sr_read: "lezen"
       participant_groups: "Deelnemersgroepen"
       reply_count_link:
         one: "%{count} antwoord, ga naar eerste bericht"
@@ -4276,8 +4283,10 @@ nl:
           one: "%{count} vertaalde taal weergeven"
           other: "%{count} vertaalde talen weergeven"
         modal:
-          title: "Vertalingen voor bericht"
+          title: "Vertalingen"
           confirm_delete: "Weet je zeker dat je vertalingen voor '%{languageCode}' wilt verwijderen?"
+          post_language: "Berichttaal"
+          discard_language_change: "Wijziging negeren"
         success: "Vertalingen zijn bijgewerkt"
         post_language_selector:
           title: "Berichttaal"
@@ -5702,8 +5711,6 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
-    reset_filter: "Filter resetten"
-    toggle_filters: "Vervolgkeuzemenufilters in-/uitschakelen"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -5933,7 +5940,6 @@ nl:
             apple_touch_icon:
               title: "Apple-touchpictogram"
               description: "Pictogram dat wordt gebruikt voor Apple-touchapparaten. Als dit leeg wordt gelaten, wordt large_icon gebruikt."
-              help_text: "De aanbevolen grootte is 180 x 180 pixels. Een transparante achtergrond wordt niet aanbevolen."
             digest_logo:
               title: "Digestlogo"
               description: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van je website. Als dit leeg wordt laten, wordt de afbeelding van de 'logo'-instelling gebruikt."
@@ -6125,6 +6131,22 @@ nl:
               title: "Berichten en topics"
             stats_and_thresholds:
               title: "Statistieken en drempels"
+        category_management:
+          create_category: "Categorie maken"
+          tabs:
+            settings: "Instellingen"
+          types:
+            all:
+              title: "Alle categorieën"
+          filter_placeholder: "Filter categorieën"
+          table:
+            category: "Categorie"
+            visibility: "Zichtbaarheid"
+            topics: "Topics"
+          visibility:
+            public: "Openbaar"
+          visibility_filter:
+            all: "Alle categorieën"
         permalinks:
           title: "Permalinks"
           header_description: "Toe te passen omleidingen voor URL's die onbekend zijn voor het forum"
@@ -6349,6 +6371,7 @@ nl:
               searches: "Zoekopdrachten"
               status: "Status"
         reports_section:
+          header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
           modal:
             enabled_heading: "Ingeschakeld"

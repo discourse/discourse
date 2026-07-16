@@ -18,7 +18,6 @@ ja:
       dashboard:
         emotion:
           title: "感情"
-          description: "この表には、特定の感情で分類された投稿の数がリストされます。'SamLowe/roberta-base-go_emotions' モデルで分類されます。"
         reports:
           filters:
             group_by:
@@ -295,13 +294,15 @@ ja:
           translate: "翻訳"
           markdown_tables: "Markdown テーブルの生成"
           custom_prompt: "カスタムプロンプト"
-          image_caption: "画像のキャプション設定"
           translator: "翻訳ツール"
           post_illustrator: "イラスト投稿ツール"
           setting_groups:
             access_permissions: "アクセスと権限"
             enabled_features: "有効な機能"
             automation: "自動化"
+        image_caption:
+          setting_groups:
+            settings: "設定"
         translation:
           name: "翻訳"
           description: "コンテンツをサポートされている言語で翻訳します"
@@ -470,8 +471,6 @@ ja:
         overwrite: "上書き"
         description: "説明"
         no_llm_selected: "言語モデルは選択されていません"
-        max_context_posts: "最大コンテキスト投稿数"
-        max_context_posts_help: "AI がユーザーに返答するときにコンテキストとして使用する投稿の最大数。(デフォルトの場合は空白)"
         vision_max_pixel_sizes:
           low: 低品質 - 最も安い (256x256)
           medium: 中品質 (512x512)
@@ -670,7 +669,7 @@ ja:
         usage:
           ai_bot: "AI ボット"
           ai_helper: "ヘルパー (%{agent})"
-          ai_helper_image_caption: "画像キャプション"
+          ai_image_caption: "画像キャプション"
           ai_summarization: "要約"
           ai_embeddings_semantic_search: "AI 検索"
           ai_spam: "迷惑"
@@ -789,11 +788,6 @@ ja:
           select: "選択"
           selected: "選択済み"
           try_again: "やり直す"
-        image_caption:
-          button_label: "AI によるキャプション"
-          generating: "キャプションを生成中..."
-          credits: "AI によるキャプション"
-          save_caption: "保存"
         no_content_error: "先に AI アクションを実行するコンテンツを追加してください"
       errors:
         credit_limit_dialog:
@@ -873,7 +867,7 @@ ja:
         click_to_run_label: "アーティファクトを実行"
       ai_bot:
         title: "AI ボット"
-        llm: "モデル"
+        llm: "モデル:"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
         try_again: "やり直す"

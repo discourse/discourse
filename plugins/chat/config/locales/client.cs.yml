@@ -270,8 +270,6 @@ cs:
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       chat_notifications_title: "Upozornění chatu"
-      only_chat_push_notifications:
-        title: "Odesílat pouze push notifikace chatu"
       personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
         title: "Ignorovat zmínky v rámci celého kanálu"

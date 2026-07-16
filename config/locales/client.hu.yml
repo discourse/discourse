@@ -1571,6 +1571,9 @@ hu:
       notifications: "Értesítések"
       statistics: "Statisztikák"
       desktop_notifications:
+        push_level:
+          none: "Kikapcsolva"
+          all: "Bekapcsolva"
         not_supported: "Az értesítések nem támogatottak ebben a böngészőben. Sajnáljuk."
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
         each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
@@ -2859,6 +2862,9 @@ hu:
       default: Egyéni emodzsik
     filter_input:
       clear: "Szűrő kiürítése"
+    filter_controls:
+      reset: "Szűrő visszaállítása"
+      toggle: "Legördülő szűrők be- és kikapcsolása"
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
@@ -3655,6 +3661,7 @@ hu:
       read_more_in_category: "Szeretne többet olvasni? Böngésszen más témák között a %{categoryLink} oldalon, vagy <a href='%{latestLink}'>tekintse meg a legújabb témákat</a>."
       read_more: "Szeretne többet olvasni? <a href='%{categoryLink}'>Összes kategória böngészése</a> vagy <a href='%{latestLink}'> legújabb témák megtekintése</a>."
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
+      sr_read: "olvasható"
       participant_groups: "Résztvevő csoportok"
       reply_count_link:
         one: "%{count} válasz, ugrás az első bejegyzésre"
@@ -4128,8 +4135,9 @@ hu:
           one: "%{count} fordítás megtekintése"
           other: "%{count} fordítás megtekintése"
         modal:
-          title: "Fordítás a bejegyzéshez"
+          title: "Fordítások"
           confirm_delete: "Biztos, hogy törölni akarja a(z) „%{languageCode}” fordításokat?"
+          discard_language_change: "Változás elvetése"
         success: "A fordítások sikeresen frissültek"
         post_language_selector:
           none: "Nincs beállítva"
@@ -5532,8 +5540,6 @@ hu:
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
-    reset_filter: "Szűrő visszaállítása"
-    toggle_filters: "Legördülő szűrők be- és kikapcsolása"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
@@ -5752,7 +5758,6 @@ hu:
             apple_touch_icon:
               title: "Apple touch ikon"
               description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
-              help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
             digest_logo:
               title: "Összefoglaló logó"
               description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
@@ -5936,6 +5941,22 @@ hu:
               title: "Bejegyzések és témák"
             stats_and_thresholds:
               title: "Statisztikák és küszöbértékek"
+        category_management:
+          create_category: "Kategória létrehozása"
+          tabs:
+            settings: "Beállítások"
+          types:
+            all:
+              title: "Minden kategória"
+          filter_placeholder: "Kategóriák szűrése"
+          table:
+            category: "Kategória"
+            visibility: "Láthatóság"
+            topics: "Témák"
+          visibility:
+            public: "Nyilvános"
+          visibility_filter:
+            all: "Minden kategória"
         permalinks:
           title: "Közvetlen hivatkozások"
           header_description: "A fórum által nem ismert webcímekre történő átirányítás"
@@ -6158,6 +6179,7 @@ hu:
               searches: "Keresések"
               status: "Állapot"
         reports_section:
+          header_action: "Kezelés"
           no_data: "Nincs megjeleníthető adat"
           modal:
             enabled_heading: "Bekapcsolva"

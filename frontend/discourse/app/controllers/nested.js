@@ -34,6 +34,7 @@ export default class NestedController extends Controller {
   @service nestedViewCache;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked topic;
   @tracked opPost;
@@ -811,7 +812,7 @@ export default class NestedController extends Controller {
         this.appEvents.trigger("nested-replies:child-created", {
           topicId,
           post: node.post,
-          parentPostNumber: replyTo,
+          parentPostNumber: this.#visibleParentPostNumber(postData),
           isOwnPost: data.user_id === this.currentUser?.id,
         });
       }
@@ -834,6 +835,28 @@ export default class NestedController extends Controller {
       return false;
     }
     return true;
+  }
+
+  #visibleParentPostNumber(postData) {
+    const replyTo = postData.reply_to_post_number;
+    if (!this.siteSettings.nested_replies_cap_nesting_depth) {
+      return replyTo;
+    }
+
+    const ancestors = [];
+    let postNumber = replyTo;
+
+    while (postNumber && postNumber !== 1) {
+      ancestors.unshift(postNumber);
+      const post = this.postRegistry.get(postNumber);
+      if (!post) {
+        return replyTo;
+      }
+      postNumber = post.reply_to_post_number;
+    }
+
+    const maxDepth = this.siteSettings.nested_replies_max_depth;
+    return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
   }
 
   #isPostKnown(postId) {

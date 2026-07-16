@@ -75,6 +75,9 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    livestream_zoom_enabled: "Włącz osadzanie wideo Zoom w przypadku tematów transmitowanych na żywo."
+    livestream_zoom_sdk_key: "Identyfikator klienta Zoom Meeting SDK."
+    livestream_zoom_sdk_secret: "Tajny klucz klienta Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:

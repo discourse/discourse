@@ -3,6 +3,15 @@
 module PageObjects
   module Pages
     class TopicLivestream < PageObjects::Pages::Base
+      LIVESTREAM_URL = "https://example.com/live"
+
+      def cache_livestream_onebox
+        Discourse.cache.write(
+          Oneboxer.onebox_cache_key(LIVESTREAM_URL),
+          { onebox: "<aside>cached livestream</aside>" },
+        )
+      end
+
       def create_livestream_topic(composer, topic_page, tag)
         visit("/latest")
         topic_page.open_new_topic
@@ -15,7 +24,7 @@ module PageObjects
 
         tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
         composer.fill_content <<~MD
-          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
+          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="#{LIVESTREAM_URL}"]
           [/event]
         MD
         composer.create
@@ -42,7 +51,7 @@ module PageObjects
 
         tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
         composer.fill_content <<~MD
-          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
+          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="#{LIVESTREAM_URL}"]
           [/event]
         MD
         composer.create

@@ -1679,6 +1679,9 @@ cs:
       notifications: "Upozornění"
       statistics: "Statistiky"
       desktop_notifications:
+        push_level:
+          none: "Vypnuto"
+          all: "Zapnuto"
         not_supported: "Tento prohlížeč nepodporuje upozornění. Omlouváme se."
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         each_browser_note: "Poznámka: Toto nastavení musíte změnit v každém prohlížeči, který používáte. Všechna upozornění budou deaktivována, pokud vypnete upozornění z uživatelské nabídky."
@@ -3058,6 +3061,8 @@ cs:
       default: Vlastní emoji
     filter_input:
       clear: "Vymazat filtr"
+    filter_controls:
+      toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -3939,6 +3944,7 @@ cs:
       read_more_in_category: "Chcete si přečíst více? Projděte další témata v %{categoryLink} nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Projděte všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       unread_indicator: "Žádný člen zatím nečetl poslední příspěvek tohoto tématu."
+      sr_read: "čtení"
       participant_groups: "Skupiny účastníků"
       reply_count_link:
         one: "%{count} odpověď, přejít na první příspěvek"
@@ -4470,8 +4476,9 @@ cs:
           many: "Zobrazit %{count} překladů"
           other: "Zobrazit %{count} překladů"
         modal:
-          title: "Překlady pro příspěvek"
+          title: "Překlady"
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
+          discard_language_change: "Zahodit změnu"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
           none: "Nenastaveno"
@@ -5958,7 +5965,6 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
-    toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -6170,7 +6176,6 @@ cs:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona používaná pro dotyková zařízení Apple. Pokud zůstane prázdná, použije se large_icon."
-              help_text: "Doporučená velikost je 180 x 180 pixelů. Průhledné pozadí se nedoporučuje."
             digest_logo:
               title: "Logo e-mailového souhrnu"
               description: "Alternativní obrázek loga použitý v horní části e-mailového souhrnu vašeho webu. Pokud zůstane prázdný, použije se obrázek z nastavení `logo`."
@@ -6355,6 +6360,22 @@ cs:
               title: "Příspěvky a témata"
             stats_and_thresholds:
               title: "Statistiky a prahové hodnoty"
+        category_management:
+          create_category: "Vytvořit kategorii"
+          tabs:
+            settings: "Nastavení"
+          types:
+            all:
+              title: "Všechny kategorie"
+          filter_placeholder: "Filtrovat kategorie"
+          table:
+            category: "Kategorie"
+            visibility: "Viditelnost"
+            topics: "Témata"
+          visibility:
+            public: "Veřejná"
+          visibility_filter:
+            all: "Všechny kategorie"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Přesměrování se použije pro adresy URL, které fórum nezná"
@@ -6577,6 +6598,7 @@ cs:
               searches: "Hledání"
               status: "Stav"
         reports_section:
+          header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
           modal:
             enabled_heading: "Zapnuto"

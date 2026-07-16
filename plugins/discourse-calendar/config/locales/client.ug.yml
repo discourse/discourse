@@ -13,6 +13,9 @@ ug:
             topic_id:
               label: تېما كىملىكى
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "سۆھبەت"
       disable_holiday: "چەكلە"
       enable_holiday: "قوزغات"
       date: "چېسلا"

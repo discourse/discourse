@@ -79,6 +79,9 @@ ko:
         inference:
           setting_groups:
             settings: "기본 설정"
+        image_caption:
+          setting_groups:
+            settings: "설정"
         translation:
           setting_groups:
             settings: "기본 설정"
@@ -216,8 +219,6 @@ ko:
         thumbnail_suggestions:
           select: "선택"
           try_again: "다시 시도"
-        image_caption:
-          save_caption: "저장"
       embeddings:
         save: "저장"
         delete: "삭제"

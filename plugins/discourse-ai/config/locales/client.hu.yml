@@ -68,6 +68,9 @@ hu:
         embeddings:
           setting_groups:
             related_topics: "Kapcsolódó témák"
+        image_caption:
+          setting_groups:
+            settings: "Beállítások"
         spam:
           name: "Kéretlen tartalom"
       modals:
@@ -226,8 +229,6 @@ hu:
           select: "Kiválasztás"
           selected: "Kiválasztott"
           try_again: "Újrapróbálkozás"
-        image_caption:
-          save_caption: "Mentés"
       embeddings:
         save: "Mentés"
         delete: "Törlés"

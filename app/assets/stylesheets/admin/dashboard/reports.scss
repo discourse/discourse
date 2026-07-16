@@ -44,8 +44,8 @@
   }
 
   &__label {
-    color: var(--primary-high);
-    background: var(--primary-low);
+    background: var(--tertiary-low);
+    color: var(--tertiary);
     border-radius: 4px;
     font-size: var(--font-down-3);
     padding: var(--space-half) var(--space-2);
@@ -57,11 +57,6 @@
       top: 0;
       right: var(--space-3);
       transform: translateY(-40%);
-    }
-
-    &.--data_explorer_query {
-      background: var(--tertiary-low);
-      color: var(--tertiary);
     }
   }
 

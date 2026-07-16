@@ -61,7 +61,7 @@ acceptance("List Queries", function (needs) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .hasAttribute(
         "placeholder",
         i18n("explorer.search_placeholder"),

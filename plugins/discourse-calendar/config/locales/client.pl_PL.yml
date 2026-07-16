@@ -34,6 +34,19 @@ pl_PL:
               label: ID tematu
     discourse_calendar:
       livestream:
+        zoom:
+          join: "Dołącz do spotkania na Zoomie"
+          chat: "Czat"
+          open_in_zoom: "Otwórz w Zoomie"
+          load_error: "Opuściłeś webinarium lub nie możemy załadować Zoom na tej stronie."
+          too_early: "Możesz dołączyć do webinarium bliżej czasu rozpoczęcia wydarzenia"
+          view_topic: "Zobacz temat wydarzenia"
+          not_started_retrying:
+            one: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekundę..."
+            few: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekundy..."
+            many: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
+            other: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
+          not_started_trying_again: "Próbuję ponownie dołączyć do webinarium..."
         chat:
           going: "Kliknij „Idę”"
           join_channel_header: "🌟 Dołącz do nas! 🌟"

@@ -17,10 +17,7 @@ RSpec.describe DiscourseWorkflows::Registry do
 
       expect(described_class.find_node_type("action:plugin_hook_direct_test")).to eq(node_class)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "defers a node registration block until workflow node registration is ready" do
@@ -46,10 +43,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       expect(plugin.discourse_workflows_node_registrations).to be_empty
     ensure
       DiscourseWorkflows.node_registration_ready = true
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "resets registry indexes when the registering plugin is enabled or disabled" do
@@ -78,10 +72,7 @@ RSpec.describe DiscourseWorkflows::Registry do
         DiscourseEvent.off(:site_setting_changed, &handler) if handler
       end
       SiteSetting.discourse_sample_plugin_enabled = true
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
 
     it "reflects the current filtered registry without requiring an index reset" do
@@ -112,10 +103,7 @@ RSpec.describe DiscourseWorkflows::Registry do
         ),
       ).to eq(node_class)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == node_class
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(node_class)
     end
   end
 
@@ -154,10 +142,7 @@ RSpec.describe DiscourseWorkflows::Registry do
       )
       expect(described_class.latest_version("action:registry_versioned_test")).to eq("2.0")
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [v1, v2].include?(entry[:value])
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(v1, v2)
     end
 
     it "rejects duplicate node identifier and version registrations" do
@@ -179,10 +164,7 @@ RSpec.describe DiscourseWorkflows::Registry do
         "Duplicate workflow node type action:registry_duplicate_test v1.0",
       )
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [first, duplicate].include?(entry[:value])
-      end
-      described_class.reset_indexes!
+      unregister_workflow_nodes(first, duplicate)
     end
   end
 end

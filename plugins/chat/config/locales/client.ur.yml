@@ -173,8 +173,6 @@ ur:
             all: "کسی کو مطلع نہیں کیا جائے گا"
           unreachable_1: "@%{group} ذکر کی اجازت نہیں دیتا۔"
           unreachable_2: "@%{group1} اور @%{group2} تذکروں کی اجازت نہیں دیتے۔"
-      only_chat_push_notifications:
-        title: "صرف گفتگو کی اطلاعات بھیجیں"
       personalization_title: "تخصيص"
       ignore_channel_wide_mention:
         title: "چینل بھر کے تذکروں کو نظر انداز کریں"

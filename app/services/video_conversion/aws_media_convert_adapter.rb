@@ -428,6 +428,7 @@ module VideoConversion
               },
             },
             video_selector: {
+              rotate: "AUTO",
             },
           },
         ],

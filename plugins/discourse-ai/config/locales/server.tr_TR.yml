@@ -148,7 +148,6 @@ tr_TR:
       description: "Bu rapor, her gönderi ve kategori için olumlu, olumsuz ve nötr puanlarla kategoriye göre gruplandırılmış gönderiler için duygu analizi sağlar."
     overall_sentiment:
       title: "Genel duyarlılık"
-      description: 'Grafik, olumlu veya olumsuz olarak sınıflandırılan gönderilerin sayısını karşılaştırır. Bunlar, pozitif veya negatif puanlar belirlenen eşik puanından fazla olduğunda hesaplanır. Bu, nötr gönderilerin gösterilmediği anlamına gelir. Kişisel mesajlar da hariç tutulmuştur. "cardiffnlp/twitter-roberta-base-sentiment-latest" ile sınıflandırılır'
       xaxis: "Pozitif(%)"
       yaxis: "Tarih"
     emotion_admiration:
@@ -337,8 +336,6 @@ tr_TR:
         explain: "Açıkla"
         illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
-      image_caption:
-        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"
@@ -363,6 +360,8 @@ tr_TR:
       default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
       thinking: "Düşünme"
       tool_pending_approval: "Bu işlemin gerçekleştirilebilmesi için moderatör onayı gereklidir."
+      chat_tool_approval:
+        unexpected_error: "beklenmedik bir hata oluştu"
       agents:
         default_llm_required: "Sohbeti etkinleştirmeden önce varsayılan LLM modeli gereklidir"
         cannot_delete_system_agent: "Sistem aracıları silinemez; bunun yerine lütfen devre dışı bırakın"
@@ -445,7 +444,6 @@ tr_TR:
           description: "Yardımcının çevirici özelliğini çalıştıran varsayılan aracı"
         image_captioner:
           name: "Görüntü yazıları"
-          description: "Yardımcının resim açıklaması özelliğini destekleyen varsayılan aracı"
         locale_detector:
           name: "Yerel ayar dedektörü"
           description: "Belirli bir metnin (yazılar, başlıklar vb.) yerel ayarlarını algılayarak çeviri özelliğini güçlendirir."

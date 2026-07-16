@@ -90,6 +90,9 @@ ur:
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
+        image_caption:
+          setting_groups:
+            settings: "سیٹِنگ"
         spam:
           name: "سپَیم"
           description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
@@ -244,8 +247,6 @@ ur:
           cancel: "منسوخ"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
-        image_caption:
-          save_caption: "محفوظ کریں"
       embeddings:
         save: "محفوظ کریں"
         delete: "مٹائیں"

@@ -404,7 +404,7 @@ RSpec.describe UploadsController do
       expect(response.status).to eq(200)
 
       expect(response.headers["Content-Disposition"]).to eq(
-        %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
+        %Q|inline; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
       )
     end
 
@@ -422,7 +422,7 @@ RSpec.describe UploadsController do
       get "/uploads/#{site}/#{upload.sha1}.json"
       expect(response.status).to eq(200)
       expect(response.headers["Content-Disposition"]).to eq(
-        %Q|attachment; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
+        %Q|inline; filename="#{upload.original_filename}"; filename*=UTF-8''#{upload.original_filename}|,
       )
     end
 
@@ -452,12 +452,12 @@ RSpec.describe UploadsController do
   describe "#show_short" do
     it "inlines only supported image files" do
       upload = upload_file("smallest.png")
-      get upload.short_path, params: { inline: true }
+      get upload.short_path
       expect(response.header["Content-Type"]).to eq("image/png")
       expect(response.header["Content-Disposition"]).to include("inline;")
 
       upload.update!(original_filename: "test.xml")
-      get upload.short_path, params: { inline: true }
+      get upload.short_path
       expect(response.header["Content-Type"]).to eq("application/xml")
       expect(response.header["Content-Disposition"]).to include("attachment;")
     end
@@ -467,16 +467,6 @@ RSpec.describe UploadsController do
 
       it "returns the right response" do
         get image_upload.short_path
-
-        expect(response.status).to eq(200)
-
-        expect(response.headers["Content-Disposition"]).to include(
-          "attachment; filename=\"#{image_upload.original_filename}\"",
-        )
-      end
-
-      it "returns the right response when `inline` param is given" do
-        get "#{image_upload.short_path}?inline=1"
 
         expect(response.status).to eq(200)
 
@@ -505,60 +495,38 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "includes CSP sandbox header for all uploads" do
+      it "serves inline-safe images inline with the sandbox CSP and nosniff" do
         get image_upload.short_path
 
         expect(response.status).to eq(200)
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
-      end
-
-      it "serves PNG images inline with CSP header when inline param is given" do
-        png_upload = upload_file("smallest.png")
-        get "#{png_upload.short_path}?inline=1"
-
-        expect(response.status).to eq(200)
         expect(response.headers["Content-Disposition"]).to include("inline")
         expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+        expect(response.headers["X-Content-Type-Options"]).to eq("nosniff")
       end
 
-      it "serves PDFs inline with CSP header when inline param is given" do
-        SiteSetting.authorized_extensions = "pdf|png"
-        pdf_upload = upload_file("smallest.png")
-        pdf_upload.update!(original_filename: "document.pdf", extension: "pdf")
-        get "#{pdf_upload.short_path}?inline=1"
+      {
+        "document.pdf" => "inline",
+        "clip.mp4" => "inline",
+        "page.html" => "attachment",
+        "data.xml" => "attachment",
+        "image.svg" => "attachment",
+      }.each do |filename, disposition|
+        it "serves #{filename} with #{disposition} disposition and the sandbox CSP" do
+          extension = File.extname(filename).delete_prefix(".")
+          SiteSetting.authorized_extensions = "#{extension}|png"
+          upload = upload_file("smallest.png")
+          upload.update!(original_filename: filename, extension: extension)
 
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("inline")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+          get upload.short_path
+
+          expect(response.status).to eq(200)
+          expect(response.headers["Content-Disposition"]).to include(disposition)
+          expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+        end
       end
 
-      it "forces attachment disposition for HTML files with CSP header" do
-        SiteSetting.authorized_extensions = "html|png"
-        html_upload = upload_file("smallest.png")
-        html_upload.update!(original_filename: "page.html", extension: "html")
-        get "#{html_upload.short_path}?inline=1"
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("attachment")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
-      end
-
-      it "forces attachment disposition for XML files with CSP header" do
-        SiteSetting.authorized_extensions = "xml|png"
-        xml_upload = upload_file("smallest.png")
-        xml_upload.update!(original_filename: "data.xml", extension: "xml")
-        get "#{xml_upload.short_path}?inline=1"
-
-        expect(response.status).to eq(200)
-        expect(response.headers["Content-Disposition"]).to include("attachment")
-        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
-      end
-
-      it "forces attachment disposition for SVG files with CSP header" do
-        SiteSetting.authorized_extensions = "svg|png"
-        svg_upload = upload_file("smallest.png")
-        svg_upload.update!(original_filename: "image.svg", extension: "svg")
-        get "#{svg_upload.short_path}?inline=1"
+      it "forces an attachment download with a sandbox CSP when the dl param is given" do
+        get "#{image_upload.short_path}?dl=1"
 
         expect(response.status).to eq(200)
         expect(response.headers["Content-Disposition"]).to include("attachment")

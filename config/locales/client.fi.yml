@@ -1422,6 +1422,9 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
+        push_level:
+          none: "Pois käytöstä"
+          all: "Käytössä"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         each_browser_note: "Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta."
@@ -3404,6 +3407,7 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueelta %{categoryLink} tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       read_more: "Haluatko lukea lisää? <a href='%{categoryLink}'>Selaa kaikkia alueita</a> tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
+      sr_read: "luku"
       participant_groups: "Osallistujaryhmät"
       reply_count_link:
         one: "%{count} vastaus, siirry ensimmäiseen viestiin"
@@ -3847,8 +3851,9 @@ fi:
           one: "Näytä %{count} käännetty kielialue"
           other: "Näytä %{count} käännettyä kielialuetta"
         modal:
-          title: "Käännökset viestille"
+          title: "Käännökset"
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kielelle '%{languageCode}'?"
+          discard_language_change: "Hylkää muutos"
         success: "Käännökset on päivitetty onnistuneesti"
         post_language_selector:
           none: "Ei asetettu"
@@ -5293,7 +5298,6 @@ fi:
             apple_touch_icon:
               title: "Apple-kosketuskuvake"
               description: "Applen kosketuslaitteissa käytetty kuvake. Jos jätetään tyhjäksi, käytetään large_icon-kuvaa."
-              help_text: "Suositeltu koko on 180 x 180 pikseliä. Läpinäkyvää taustaa ei suositella."
             digest_logo:
               title: "Yhteenvetologo"
               description: "Vaihtoehtoinen logokuva, jota käytetään sivustosi sähköpostiyhteenvedon yläosassa. Jos tämä jätetään tyhjäksi, käytetään logo-asetuksen kuvaa."
@@ -5441,6 +5445,21 @@ fi:
               title: "Viestit ja ketjut"
             stats_and_thresholds:
               title: "Tilastot ja kynnysarvot"
+        category_management:
+          tabs:
+            settings: "Asetukset"
+          types:
+            all:
+              title: "Kaikki alueet"
+          filter_placeholder: "Suodata alueita"
+          table:
+            category: "Luokka"
+            visibility: "Näkyvyys"
+            topics: "Aiheet"
+          visibility:
+            public: "Julkinen"
+          visibility_filter:
+            all: "Kaikki alueet"
         permalinks:
           title: "Pysyvät linkit"
           header_description: "Aseta uudelleenohjauksia URL-osoitteille, joita foorumi ei tunne"
@@ -5655,6 +5674,7 @@ fi:
               searches: "Hakuja"
               status: "Tila"
         reports_section:
+          header_action: "Hallitse"
           modal:
             enabled_heading: "Käytössä"
             all_heading: "Kaikki raportit"

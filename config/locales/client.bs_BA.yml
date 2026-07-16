@@ -960,6 +960,9 @@ bs_BA:
       notifications: "Obavijest"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Neomogućen"
+          all: "Omogućen"
         not_supported: "Obavjesti nisu podržane na ovom web pregledniku."
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
@@ -2079,6 +2082,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      sr_read: "čitao"
       bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
@@ -2397,6 +2401,8 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
+        modal:
+          title: "Prevodi"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -3255,6 +3261,20 @@ bs_BA:
               title: "Postavke"
         badges:
           title: "Bedž"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Topics"
+          visibility:
+            public: "Javno"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Permalink-ovi"
         emoji:
@@ -3380,6 +3400,7 @@ bs_BA:
               searches: "Pretraživanja"
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućen"

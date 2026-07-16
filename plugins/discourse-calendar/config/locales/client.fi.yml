@@ -25,6 +25,9 @@ fi:
             topic_id:
               label: Ketjun tunnus
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} kutsui sinut: %{description}"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"

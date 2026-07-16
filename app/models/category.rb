@@ -135,6 +135,8 @@ class Category < ActiveRecord::Base
   validates :color, format: { with: /\A(\h{6}|\h{3})\z/ }
   validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
+  before_validation :normalize_default_top_period
+
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
@@ -250,6 +252,44 @@ class Category < ActiveRecord::Base
     OR
     id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
   SQL
+
+  scope :for_category_type,
+        ->(type_id, type = nil) do
+          if type_id == "all"
+            all
+          elsif type&.type_id == :discussion
+            where.not(id: Categories::TypeRegistry.non_discussion_category_ids)
+          else
+            where(id: type.find_matches.select(:id))
+          end
+        end
+
+  scope :matching_name_or_slug_ref,
+        ->(filter) do
+          filter = filter.to_s.strip.delete_prefix("#")
+          next all if filter.blank?
+
+          normalized_search =
+            filter.tr("/", SLUG_REF_SEPARATOR).gsub(
+              /#{Regexp.escape(SLUG_REF_SEPARATOR)}+/,
+              SLUG_REF_SEPARATOR,
+            )
+          normalized_filter = "%#{ActiveRecord::Base.sanitize_sql_like(normalized_search)}%"
+
+          where(
+            "#{normalize_sql("categories.name")} ILIKE #{normalize_sql("?")} OR " \
+              "#{normalize_sql("categories.slug")} ILIKE #{normalize_sql("?")} OR " \
+              "EXISTS (
+                SELECT 1
+                FROM categories parent_categories
+                WHERE parent_categories.id = categories.parent_category_id
+                  AND #{normalize_sql("parent_categories.slug || '#{SLUG_REF_SEPARATOR}' || categories.slug")} ILIKE #{normalize_sql("?")}
+              )",
+            normalized_filter,
+            normalized_filter,
+            normalized_filter,
+          )
+        end
 
   delegate :post_template, to: "self.class"
 
@@ -1341,6 +1381,10 @@ class Category < ActiveRecord::Base
 
   def ensure_category_setting
     build_category_setting if category_setting.blank?
+  end
+
+  def normalize_default_top_period
+    self.default_top_period = nil if TopTopic.periods.exclude?(default_top_period&.to_sym)
   end
 
   def group_based_posting_review_mode?(post_type)

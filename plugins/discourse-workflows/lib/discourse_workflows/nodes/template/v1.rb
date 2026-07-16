@@ -15,6 +15,15 @@ module DiscourseWorkflows
 
         RUN_ONCE_FOR_ALL_ITEMS = "runOnceForAllItems"
         RUN_ONCE_FOR_EACH_ITEM = "runOnceForEachItem"
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "template" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
 
         description(
           name: "action:template",
@@ -33,6 +42,7 @@ module DiscourseWorkflows
               },
             },
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             mode: {
               type: :options,

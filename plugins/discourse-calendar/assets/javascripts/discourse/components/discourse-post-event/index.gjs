@@ -402,10 +402,12 @@ export default class DiscoursePostEvent extends Component {
                 <StatusPlaceholder />
               {{/if}}
 
-              {{#if event.livestream}}
-                {{bodyClass "livestream-topic"}}
-              {{/if}}
-              <Livestream @event={{event}} />
+              {{#unless @hideLivestreamVideo}}
+                {{#if event.livestream}}
+                  {{bodyClass "livestream-topic"}}
+                {{/if}}
+                <Livestream @event={{event}} />
+              {{/unless}}
             </PluginOutlet>
           {{/if}}
         </div>

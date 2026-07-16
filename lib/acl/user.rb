@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Acl
+  # This class is used to provide easy lookup methods for a single user's
+  # flattened ACL list, which can consist of multiple different targets, as an
+  # alternative to iterating through the flattened array.
   class User
     attr_reader :target_lookup, :permission_lookup
 

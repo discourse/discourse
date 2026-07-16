@@ -13,7 +13,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ).invoke
   end
 
-  it "returns inferred schemas for a dry-run graph", :aggregate_failures do
+  it "returns inferred fields for a dry-run graph", :aggregate_failures do
     operations = [
       {
         op: "add_node",
@@ -62,31 +62,33 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations.map(&:to_json))
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
-    expect(schemas_by_name.dig("When post is created", :output_schema)).to include(
+    expect(fields_by_name.dig("When post is created", :output_fields, 0)).to include(
       "$json.user.trust_level" => "integer",
       "$json.user.trust_level_name" => "string",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
-    expect(schemas_by_name.dig("When post is created", :output_schema)).not_to include(
+    expect(fields_by_name.dig("When post is created", :output_fields, 0)).not_to include(
       "$json.post.trust_level",
     )
-    expect(schemas_by_name.dig("Filter TL1 cake posts", :input_schema)).to include(
+    expect(fields_by_name.dig("Filter TL1 cake posts", :input_fields, 0)).to include(
       "$json.user.trust_level" => "integer",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
-    expect(schemas_by_name.dig("Filter TL1 cake posts", :output_schema)).to include(
+    expect(fields_by_name.dig("Filter TL1 cake posts", :output_fields, 0)).to include(
       "$json.user.trust_level" => "integer",
       "$json.post.raw" => "string",
       "$json.post.post_url" => "string",
     )
   end
 
-  it "validates proposed AI agents and agent output schemas", :aggregate_failures do
+  it "validates proposed AI agents and agent output fields", :aggregate_failures do
+    SiteSetting.discourse_ai_enabled = true
+
     operations = [
       {
         op: "create_ai_agent",
@@ -174,7 +176,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations)
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
     expect(result[:created_resources]).to contain_exactly(
@@ -184,15 +186,15 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
         "name" => "Workflow sentiment agent",
       ),
     )
-    expect(schemas_by_name.dig("Classify post", :output_schema)).to include(
+    expect(fields_by_name.dig("Classify post", :output_fields, 0)).to include(
       "$json.result" => "string",
     )
-    expect(schemas_by_name.dig("Log classification", :input_schema)).to include(
+    expect(fields_by_name.dig("Log classification", :input_fields, 0)).to include(
       "$json.result" => "string",
     )
   end
 
-  it "passes schemas through group checks into private messages", :aggregate_failures do
+  it "passes fields through group checks into private messages", :aggregate_failures do
     operations = [
       {
         op: "add_node",
@@ -310,26 +312,25 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations)
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
-    expect(schemas_by_name.dig("Keep friend group posts", :input_schema)).to include(
+    expect(fields_by_name.dig("Keep friend group posts", :input_fields, 0)).to include(
       "$json.post.username" => "string",
       "$json.post.post_url" => "string",
       "$json.group_membership.in_group" => "boolean",
     )
-    expect(schemas_by_name.dig("DM admin", :input_schema)).to include(
+    expect(fields_by_name.dig("DM admin", :input_fields, 0)).to include(
       "$json.post.username" => "string",
       "$json.post.post_url" => "string",
     )
-    expect(schemas_by_name.dig("DM admin", :output_schema)).to include(
+    expect(fields_by_name.dig("DM admin", :output_fields, 0)).to include(
       "$json.topic.id" => "integer",
       "$json.post.post_url" => "string",
     )
   end
 
-  it "returns action output schemas and rejects unavailable downstream paths",
-     :aggregate_failures do
+  it "returns action output fields and rejects unavailable downstream paths", :aggregate_failures do
     operations = [
       {
         op: "add_node",
@@ -409,17 +410,17 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations)
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result[:valid]).to eq(false)
     expect(result[:expression_errors]).to contain_exactly(
       a_string_including("Reply parameter topic_id references $json.topic.id"),
     )
-    expect(schemas_by_name.dig("Add tag", :output_schema)).to include(
+    expect(fields_by_name.dig("Add tag", :output_fields, 0)).to include(
       "$json.topic_id" => "integer",
       "$json.tag_names" => "array<string>",
     )
-    expect(schemas_by_name.dig("Reply", :input_schema)).to include(
+    expect(fields_by_name.dig("Reply", :input_fields, 0)).to include(
       "$json.topic_id" => "integer",
       "$json.tag_names" => "array<string>",
     )
@@ -463,9 +464,20 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
                 operator: {
                   operation: "lte",
                   type: "number",
+                  singleValue: true,
                 },
                 right: 1,
               },
+              {
+                leftValue: true,
+                operator: {
+                  operation: "true",
+                  type: "boolean",
+                  singleValue: false,
+                },
+              },
+              { leftValue: 1, operator: { operation: "contains", type: "number" }, rightValue: 1 },
+              { leftValue: 1, operator: { operation: "equals", type: "integer" }, rightValue: 1 },
             ],
           },
           credentials: {
@@ -488,6 +500,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     expect(result[:expression_errors]).to contain_exactly(
       "Bad condition condition 1 must set leftValue. Use leftValue instead of left.",
       "Bad condition condition 1 must set rightValue for lte comparisons. Use rightValue instead of right.",
+      'Bad condition condition 3 operator.operation "contains" is invalid for number.',
+      'Bad condition condition 4 operator.type "integer" is unsupported.',
     )
   end
 
@@ -737,26 +751,26 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations)
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result).to include(status: "success", valid: true, errors: [])
-    expect(schemas_by_name.dig("Topic closed", :output_schema)).not_to include(
+    expect(fields_by_name.dig("Topic closed", :output_fields, 0)).not_to include(
       "$json.post.trust_level",
     )
-    expect(schemas_by_name.dig("Get closed topic", :output_schema)).to include(
+    expect(fields_by_name.dig("Get closed topic", :output_fields, 0)).to include(
       "$json.post.post_url" => "string",
       "$json.post.user_id" => "integer",
     )
-    expect(schemas_by_name.dig("Get closed topic", :output_schema)).not_to include(
+    expect(fields_by_name.dig("Get closed topic", :output_fields, 0)).not_to include(
       "$json.post.trust_level",
     )
-    expect(schemas_by_name.dig("Keep known topic authors", :input_schema)).to include(
+    expect(fields_by_name.dig("Keep known topic authors", :input_fields, 0)).to include(
       "$json.post.post_url" => "string",
       "$json.post.user_id" => "integer",
     )
   end
 
-  it "validates topic-closed schemas and dynamic template prefixes", :aggregate_failures do
+  it "validates topic-closed fields and dynamic template prefixes", :aggregate_failures do
     operations = [
       {
         op: "add_node",
@@ -861,19 +875,126 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowValidatePatch do
     ]
 
     result = invoke_tool(operations)
-    schemas_by_name = result[:node_schemas].index_by { |schema| schema[:node_name] }
+    fields_by_name = result[:node_fields].index_by { |fields| fields[:node_name] }
 
     expect(result[:valid]).to eq(false)
     expect(result[:expression_errors]).to contain_exactly(
       a_string_including("Notify chat parameter message contains {{ }} expressions"),
     )
-    expect(schemas_by_name.dig("Topic closed", :output_schema)).to include(
+    expect(fields_by_name.dig("Topic closed", :output_fields, 0)).to include(
       "$json.topic.id" => "integer",
       "$json.topic.slug" => "string",
     )
-    expect(schemas_by_name.dig("Notify chat", :input_schema)).to include(
+    expect(fields_by_name.dig("Notify chat", :input_fields, 0)).to include(
       "$json.topic.id" => "integer",
       "$json.topic.slug" => "string",
     )
+  end
+
+  it "supports converted bracket and indexed array paths", :aggregate_failures do
+    schema_node =
+      Class.new(DiscourseWorkflows::NodeType) do
+        description(
+          name: "trigger:converted_schema_test",
+          output_contracts: [
+            {
+              schema: {
+                "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                "type" => "object",
+                "properties" => {
+                  "full-name" => {
+                    "type" => "string",
+                  },
+                  "a.b" => {
+                    "type" => "boolean",
+                  },
+                  "records" => {
+                    "type" => "array",
+                    "items" => {
+                      "type" => "object",
+                      "properties" => {
+                        "x y" => {
+                          "type" => "integer",
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          ],
+        )
+      end
+    DiscoursePluginRegistry.register_discourse_workflows_node(schema_node, Plugin::Instance.new)
+    DiscourseWorkflows::Registry.reset_indexes!
+    operations = [
+      {
+        op: "add_node",
+        client_id: "converted-output",
+        node: {
+          type: "trigger:converted_schema_test",
+          typeVersion: "1.0",
+          name: "Converted output",
+          position: {
+            x: 0,
+            y: 0,
+          },
+          parameters: {
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_node",
+        client_id: "consume-output",
+        node: {
+          type: "action:log",
+          typeVersion: "1.0",
+          name: "Consume output",
+          position: {
+            x: 280,
+            y: 0,
+          },
+          parameters: {
+            entries: {
+              values: [
+                { key: "name", value: "={{ $json['full-name'] }}" },
+                { key: "literal_dot", value: '={{ $json["a.b"] }}' },
+                { key: "array", value: '={{ $json.records[0]["x y"] }}' },
+                { key: "missing", value: '={{ $json["missing-key"] }}' },
+              ],
+            },
+          },
+          credentials: {
+          },
+        },
+      },
+      {
+        op: "add_connection",
+        from: "converted-output",
+        to: "consume-output",
+        output_index: 0,
+        input_index: 0,
+        connection_type: "main",
+      },
+    ]
+
+    result = invoke_tool(operations)
+    output_fields =
+      result[:node_fields].find { |fields| fields[:node_name] == "Converted output" }[
+        :output_fields
+      ].first
+
+    expect(result[:expression_errors]).to contain_exactly(
+      a_string_including('references $json["missing-key"]'),
+    )
+    expect(output_fields).to include(
+      '$json["full-name"]' => "string",
+      '$json["a.b"]' => "boolean",
+      '$json.records[0]["x y"]' => "integer",
+    )
+  ensure
+    unregister_workflow_nodes(schema_node)
   end
 end

@@ -246,8 +246,6 @@ ug:
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
       chat_notifications_title: "سۆھبەت ئۇقتۇرۇشى"
-      only_chat_push_notifications:
-        title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
       ignore_channel_wide_mention:
         title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
       show_thread_title_prompts:

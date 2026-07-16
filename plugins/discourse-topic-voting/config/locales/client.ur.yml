@@ -10,18 +10,12 @@ ur:
       sort_options:
         votes: "ووٹ"
     topic_voting:
-      reached_limit: "آپ کے ووٹ ختم ہو چکے ہیں، کسی موجودہ ووٹ کو ہٹا ئیں!"
-      list_votes: "اپنے ووٹوں کی فہرست"
       voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
-      allow_topic_voting: "صارفین کو اس زمرہ کے ٹاپکس پر ووٹ کرنے کی اجازت دیں"
       vote_title: "ووٹ"
       vote_title_plural: "ووٹ"
       votes:
         one: "%{count} ووٹ"
         other: "%{count} ووٹ"
-      anonymous_button:
-        one: "ووٹ"
-        other: "ووٹ"
       remove_vote: "ووٹ ہٹا دیں"
       and_more_voters: "اور %{count} مزید۔۔۔"
       show_voters: "دکھایں جنہوں نے ووٹ دیا"
@@ -36,10 +30,6 @@ ur:
         help: "جن موضوعات پر آپ نے ووٹ دیا"
     search:
       most_votes: "سب سے زیادہ ووٹ"
-      advanced:
-        vote:
-          count:
-            label: "کم از کم ووٹوں کی گنتی"
     admin:
       web_hooks:
         voting_event:

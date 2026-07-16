@@ -4,6 +4,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :email
   option :ip_address, optional: true
   option :user_fields, optional: true
+  option :name, optional: true
 
   def call
     username = UserNameSuggester.suggest(email)
@@ -15,7 +16,7 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
     user.attributes = {
       email: email,
       username: username,
-      name: username,
+      name: name.presence || username,
       active: false,
       locale: I18n.locale,
       ip_address: ip_address,

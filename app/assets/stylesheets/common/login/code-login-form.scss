@@ -55,6 +55,18 @@
     }
   }
 
+  &__name-field {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: 0.25em;
+  }
+
+  &__name {
+    width: 100%;
+    margin: 0;
+  }
+
   &__new-account {
     display: flex;
     flex-direction: column;

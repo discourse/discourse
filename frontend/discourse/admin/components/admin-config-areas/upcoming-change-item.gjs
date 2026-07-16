@@ -98,7 +98,7 @@ export default class UpcomingChangeItem extends Component {
   get showPermanentSoonNotice() {
     return (
       this.args.change.upcoming_change.status === "stable" &&
-      this.args.change.upcoming_change.impact_type !== "site_setting_default"
+      this.args.change.upcoming_change.permanent_warning !== false
     );
   }
 

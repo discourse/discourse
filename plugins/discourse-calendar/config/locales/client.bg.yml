@@ -13,6 +13,9 @@ bg:
             topic_id:
               label: Тема ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Чат"
       disable_holiday: "Деактивиране"
       enable_holiday: "Позволи"
       date: "Дата"

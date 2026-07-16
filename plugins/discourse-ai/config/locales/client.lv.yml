@@ -60,6 +60,9 @@ lv:
           reset: "Atlikt"
         search:
           name: "Meklēt"
+        image_caption:
+          setting_groups:
+            settings: "Iestatījumi"
         spam:
           name: "Spams"
       modals:
@@ -173,8 +176,6 @@ lv:
           cancel: "Atcelt"
         thumbnail_suggestions:
           try_again: "Mēģināt vēlreiz"
-        image_caption:
-          save_caption: "Saglabāt"
       embeddings:
         save: "Saglabāt"
         delete: "Dzēst"

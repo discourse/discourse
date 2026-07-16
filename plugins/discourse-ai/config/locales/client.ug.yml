@@ -75,6 +75,9 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:
@@ -221,8 +224,6 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
         save: "ساقلا"
         delete: "ئۆچۈر"

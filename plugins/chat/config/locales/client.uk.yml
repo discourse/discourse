@@ -322,8 +322,6 @@ uk:
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       chat_notifications_title: "Сповіщення чату"
-      only_chat_push_notifications:
-        title: "Надсилати лише push-сповіщення в чаті"
       personalization_title: "Персоналізація"
       accessibility_title: "Доступність"
       ignore_channel_wide_mention:

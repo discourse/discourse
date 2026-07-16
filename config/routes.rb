@@ -462,6 +462,9 @@ Discourse::Application.routes.draw do
         get "upcoming-changes" => "upcoming_changes#index"
         put "upcoming-changes/groups" => "upcoming_changes#update_groups"
         put "upcoming-changes/toggle" => "upcoming_changes#toggle_change"
+        get "category-management/categories" => "category_management#categories"
+        get "category-management" => "site_settings#index"
+        get "category-management/*path" => "site_settings#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -620,6 +623,7 @@ Discourse::Application.routes.draw do
     get "directory-columns" => "directory_columns#index", :format => :json
     get "edit-directory-columns" => "edit_directory_columns#index", :format => :json
     put "edit-directory-columns" => "edit_directory_columns#update", :format => :json
+    get "access-control/grantees/search" => "access_control_lists#search_grantees"
 
     %w[users u].each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", :constraints => { format: "html" }
@@ -1293,10 +1297,12 @@ Discourse::Application.routes.draw do
     end
 
     get "/post_localizations/:id" => "post_localizations#show"
+    put "/post_localizations/:post_id/locale" => "post_localizations#update_locale"
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
     get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
+    put "topic_localizations/:topic_id/locale" => "topic_localizations#update_locale"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 

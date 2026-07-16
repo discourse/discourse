@@ -148,7 +148,6 @@ nl:
       description: "Dit rapport biedt een sentimentanalyse voor berichten, gegroepeerd op categorie, met positieve, negatieve en neutrale scores voor elk bericht en elke categorie."
     overall_sentiment:
       title: "Algemeen sentiment"
-      description: 'De grafiek vergelijkt het aantal berichten dat als positief of negatief is geclassificeerd. Deze worden berekend wanneer positieve of negatieve scores groter zijn dan de ingestelde drempelscore. Dit betekent dat neutrale berichten niet worden weergegeven. Persoonlijke berichten (PB''s) zijn ook uitgesloten. Geclassificeerd met "cardiffnlp/twitter-roberta-base-sentiment-latest".'
       xaxis: "Positief (%)"
       yaxis: "Datum"
     emotion_admiration:
@@ -337,8 +336,6 @@ nl:
         explain: "Uitleggen"
         illustrate_post: "Bericht illustreren"
         replace_dates: "Slimme datums"
-      image_caption:
-        attribution: "Bijschrift door AI"
     share_ai:
       read_more: "Volledig transcript lezen"
       onebox_title: "AI-conversatie met %{llm_name}"
@@ -363,6 +360,8 @@ nl:
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
       thinking: "Denken"
       tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
+      chat_tool_approval:
+        unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
         cannot_delete_system_agent: "Systeemagenten kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit."
@@ -445,7 +444,6 @@ nl:
           description: "Standaardagent die de vertaalfunctie van de Helper ondersteunt"
         image_captioner:
           name: "Afbeeldingsbijschriften"
-          description: "Standaardagent die de Helper-functie voor afbeeldingsbijschriften ondersteunt"
         locale_detector:
           name: "Taaldetector"
           description: "Ondersteunt de vertaalfunctie door de taal van een bepaalde tekst (berichten, titels enz.) te detecteren."

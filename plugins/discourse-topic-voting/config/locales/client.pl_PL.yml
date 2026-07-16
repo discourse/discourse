@@ -15,33 +15,20 @@ pl_PL:
       sort_options:
         votes: "Głosy"
     topic_voting:
-      category_type_ideas:
-        title: "Pomysły"
       notification_label:
         vote_released: "Głos zwrócony"
-      title: "Głosowanie na temat"
-      reached_limit: "Oddałeś już maksymalną liczbę głosów!"
-      list_votes: "Lista twoich głosów"
-      votes_nav_help: "tematy z największą liczbą głosów w historii"
       hot_nav_help: "najpopularniejsze ostatnio tematy, w tym te, na które ostatnio głosowano"
       voted: "Oddałeś już głos"
-      allow_topic_voting: "Pozwól użytkownikom głosować na tematy w tej kategorii"
       vote_title: "Głosuj"
       vote_title_plural: "Głosy"
       voting_closed_description: "Głosowanie w tym temacie jest zamknięte"
       see_votes: "Masz jeszcze głosów: %{count}/%{max}"
-      locked: "Zablokowano"
       locked_description: "Zwiększ poziom zaufania do głosowania"
       votes:
         one: "%{count} głos"
         few: "%{count} głosy"
         many: "%{count} głosy"
         other: "%{count} głosy"
-      anonymous_button:
-        one: "Głosuj"
-        few: "Głosy"
-        many: "Głosy"
-        other: "Głosy"
       remove_vote: "Usuń głos"
       watch_topic: "Powiadom mnie o nowych wpisach"
       no_votes_yet: "Nikt jeszcze na to nie głosował"
@@ -59,10 +46,6 @@ pl_PL:
         help: "tematy, na które głosowałeś"
     search:
       most_votes: "Najwięcej głosów"
-      advanced:
-        vote:
-          count:
-            label: "Minimalna liczba głosów"
     admin:
       web_hooks:
         voting_event:

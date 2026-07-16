@@ -48,6 +48,117 @@ describe DiscoursePostEvent::Event do
         Fabricate(:event, post: post, livestream: true, location: livestream_url)
       end
     end
+
+    it "skips onebox warming for events that are not livestreams" do
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: false, location: "Room 5")
+      end
+    end
+
+    it "skips onebox warming when the livestream has no URL" do
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true)
+      end
+    end
+
+    it "warms the onebox when the URL changes" do
+      event = Fabricate(:event, post: post, livestream: true, location: livestream_url)
+
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: event.id,
+          url: "https://example.com/other-live",
+        },
+      ) { event.update!(location: "https://example.com/other-live") }
+    end
+
+    it "does not warm the onebox when an unrelated attribute changes" do
+      event = Fabricate(:event, post: post, livestream: true, location: livestream_url)
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) { event.update!(name: "Renamed") }
+    end
+  end
+
+  describe "#livestream_url" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "prefers the location over the url" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          location: "https://zoom.us/j/123456789",
+          url: "https://example.com/fallback",
+        )
+
+      expect(event.livestream_url).to eq("https://zoom.us/j/123456789")
+    end
+
+    it "falls back to the url when there is no location" do
+      event = Fabricate(:event, post: post, url: "https://example.com/fallback")
+
+      expect(event.livestream_url).to eq("https://example.com/fallback")
+    end
+
+    it "is nil when neither is set" do
+      event = Fabricate(:event, post: post)
+
+      expect(event.livestream_url).to be_nil
+    end
+  end
+
+  describe "#is_zoom_livestream?" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.livestream_zoom_enabled = true
+      # Creating a livestream event enqueues onebox warming, which would
+      # otherwise run inline and try to fetch the URL.
+      Jobs.run_later!
+    end
+
+    def event_for(location)
+      Fabricate(:event, post: post, livestream: true, location: location)
+    end
+
+    it "recognises a Zoom URL on a vanity subdomain" do
+      expect(event_for("https://us06web.zoom.us/j/123456789?pwd=secret")).to be_is_zoom_livestream
+    end
+
+    it "recognises a Zoom URL on the bare host" do
+      expect(event_for("https://zoom.us/j/123456789")).to be_is_zoom_livestream
+    end
+
+    it "recognises a Zoom webinar URL" do
+      expect(event_for("https://zoom.us/w/123456789")).to be_is_zoom_livestream
+    end
+
+    it "rejects a host that only ends in the Zoom domain" do
+      expect(event_for("https://notzoom.us/j/123456789")).not_to be_is_zoom_livestream
+    end
+
+    it "rejects a Zoom URL with no joinable meeting number" do
+      expect(event_for("https://zoom.us/about")).not_to be_is_zoom_livestream
+    end
+
+    it "rejects a non-Zoom livestream URL" do
+      expect(event_for("https://example.com/live")).not_to be_is_zoom_livestream
+    end
+
+    it "is false when the event is not a livestream" do
+      event = Fabricate(:event, post: post, livestream: false, url: "https://zoom.us/j/123456789")
+
+      expect(event).not_to be_is_zoom_livestream
+    end
+
+    it "is false when Zoom is disabled" do
+      SiteSetting.livestream_zoom_enabled = false
+
+      expect(event_for("https://zoom.us/j/123456789")).not_to be_is_zoom_livestream
+    end
   end
 
   describe "#create_livestream_chat_channel" do
@@ -510,6 +621,84 @@ describe DiscoursePostEvent::Event do
 
           expect(post_event.ongoing?).to be(false)
         end
+      end
+    end
+  end
+
+  describe "#currently_within_event_timeframe?" do
+    let(:user) { Fabricate(:user, admin: true) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let!(:first_post) { Fabricate(:post, topic: topic) }
+
+    def event_with(starts_at:, ends_at: nil, all_day: false)
+      DiscoursePostEvent::Event.create!(
+        original_starts_at: starts_at,
+        original_ends_at: ends_at,
+        all_day:,
+        post: first_post,
+      )
+    end
+
+    it "is false before the early access window opens" do
+      expect(event_with(starts_at: 45.minutes.from_now).currently_within_event_timeframe?).to be(
+        false,
+      )
+    end
+
+    it "is true within the early access window" do
+      expect(event_with(starts_at: 15.minutes.from_now).currently_within_event_timeframe?).to be(
+        true,
+      )
+    end
+
+    it "is true while the event is in progress" do
+      expect(
+        event_with(
+          starts_at: 1.hour.ago,
+          ends_at: 1.hour.from_now,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is true within the grace period after the end" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 5.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is false once the grace period has passed" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 15.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(false)
+    end
+
+    it "is true for a started event without an end time" do
+      expect(event_with(starts_at: 1.day.ago).currently_within_event_timeframe?).to be(true)
+    end
+
+    context "for an all day event" do
+      it "is true when now is between the start + end of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(true)
+      end
+
+      it "is false when now is before the start of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.tomorrow.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(false)
       end
     end
   end

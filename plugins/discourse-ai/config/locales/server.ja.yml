@@ -136,7 +136,6 @@ ja:
       description: "このレポートでは、カテゴリ別にグループ化された投稿のセンチメント分析が得られます、投稿とカテゴリごとに、肯定的、否定的、中立的のスコアが表示されます。"
     overall_sentiment:
       title: "全体的なセンチメント"
-      description: 'チャートは肯定的または否定的のいずれかに分類された投稿の数を比較しています。これらは、肯定的または否定的なスコアが既定のしきい値スコアを超えた場合に計算されます。つまり、中立的な投稿は表示されません。個人メッセージ (PM) も除外されます。"cardiffnlp/twitter-roberta-base-sentiment-latest" で分類されています。'
       xaxis: "ポジティブ(%)"
       yaxis: "日付"
     emotion_admiration:
@@ -275,8 +274,6 @@ ja:
         explain: "説明"
         illustrate_post: "イラスト投稿"
         replace_dates: "スマート日付"
-      image_caption:
-        attribution: "AI によるキャプション"
     share_ai:
       read_more: "トランスクリプト全文を読む"
       onebox_title: "%{llm_name} で AI 会話"

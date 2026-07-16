@@ -384,6 +384,7 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      bot_challenge: "Sorry, we were unable to generate a preview for this web page, because the web server requires visitors to pass a verification step in a web browser. Instead of a preview, only a link will appear in your post. :cry:"
       missing_data:
         one: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
         other: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
@@ -3183,6 +3184,7 @@ en:
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
+      exclude_group: "Exclude topics with participants from specific groups"
       locale: "Filter topics by original language"
       locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
       exclude_locale: "Exclude topics originally written in a specific language"
@@ -3343,6 +3345,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."
@@ -5343,7 +5346,7 @@ en:
 
       Your permission to use the forum is subject to the following conditions:
 
-      1. You must be at least thirteen years old.
+      1. You must be at least eighteen years old.
 
       2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
@@ -6048,6 +6051,8 @@ en:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
     post_restored_by_author: "Post was restored by the author"
+    post_deleted_by_author_after_penalty: >-
+      Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6097,6 +6102,10 @@ en:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
         complete: "Post kept hidden."
+      agree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Agree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
@@ -6162,6 +6171,10 @@ en:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
+      unsilence_user_and_ignore:
+        title: "Unsilence user and ignore"
+        description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
+        complete: "User unsilenced and flag ignored."
       approve:
         title: "Yes"
         complete: "Post approved."

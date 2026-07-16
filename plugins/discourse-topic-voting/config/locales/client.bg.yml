@@ -10,18 +10,12 @@ bg:
       sort_options:
         votes: "Гласове"
     topic_voting:
-      reached_limit: "Нямате достатъчно гласове, премахнете съществуващ глас!"
-      list_votes: "Показване на вашите гласове"
       voted: "Вие гласувахте по тази тема"
-      allow_topic_voting: "Позволете на потребителите да гласуват по теми в тази категория"
       vote_title: "Глас"
       vote_title_plural: "Гласове"
       votes:
         one: "%{count} глас"
         other: "%{count} гласа"
-      anonymous_button:
-        one: "Глас"
-        other: "Гласове"
       remove_vote: "Премахване на гласа"
       show_voters: "Покажи кой е гласувал"
       vote_count_thousands: "%{count}k "
@@ -35,7 +29,3 @@ bg:
         help: "теми, за които сте гласували"
     search:
       most_votes: "Най-много гласове"
-      advanced:
-        vote:
-          count:
-            label: "Минимален брой гласове"

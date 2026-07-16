@@ -1601,6 +1601,9 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "İstatistikler"
       desktop_notifications:
+        push_level:
+          none: "Devre Dışı"
+          all: "Etkin mi"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
         each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
@@ -2905,6 +2908,9 @@ tr_TR:
       default: Özel emoji'ler
     filter_input:
       clear: "Filtreyi temizle"
+    filter_controls:
+      reset: "Filtreyi sıfırla"
+      toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
       search_placeholder: "Arama simgeleri..."
@@ -3818,6 +3824,7 @@ tr_TR:
       read_more_in_category: "Daha fazla okumak ister misiniz? %{categoryLink} kategorisindeki diğer konulara göz atın veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
+      sr_read: "oku"
       participant_groups: "Katılımcı grupları"
       reply_count_link:
         one: "%{count} yanıt, ilk gönderiye atla"
@@ -4301,8 +4308,10 @@ tr_TR:
           one: "%{count} çevrilmiş yerel ayarı görüntüle"
           other: "%{count} çevrilmiş yerel ayarı görüntüle"
         modal:
-          title: "Gönderi için çeviriler"
+          title: "Çeviriler"
           confirm_delete: "\"%{languageCode}\" için çevirileri silmek istediğinizden emin misiniz?"
+          post_language: "Gönderinin dili"
+          discard_language_change: "Değişikliği sil"
         success: "Çeviriler başarıyla güncellendi"
         post_language_selector:
           title: "Gönderinin dili"
@@ -5727,8 +5736,6 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Filtreyi sıfırla"
-    toggle_filters: "Açılır filtreleri değiştir"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5958,7 +5965,6 @@ tr_TR:
             apple_touch_icon:
               title: "Apple dokunmatik simgesi"
               description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa large_icon kullanılır."
-              help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
             digest_logo:
               title: "Digest logosu"
               description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa `logo` ayarındaki görüntü kullanılır."
@@ -6150,6 +6156,22 @@ tr_TR:
               title: "Gönderiler ve konular"
             stats_and_thresholds:
               title: "İstatistikler ve eşikler"
+        category_management:
+          create_category: "Kategori oluştur"
+          tabs:
+            settings: "Ayarlar"
+          types:
+            all:
+              title: "Tüm kategoriler"
+          filter_placeholder: "Kategorileri filtrele"
+          table:
+            category: "Kategori"
+            visibility: "Görünürlük"
+            topics: "Konular"
+          visibility:
+            public: "Genel"
+          visibility_filter:
+            all: "Tüm kategoriler"
         permalinks:
           title: "Kalıcı Bağlantılar"
           header_description: "Forum tarafından bilinmeyen URL'lere başvuruda bulunmak için yönlendirmeler"
@@ -6374,6 +6396,7 @@ tr_TR:
               searches: "Aramalar"
               status: "Durum"
         reports_section:
+          header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
           modal:
             enabled_heading: "Etkin mi"

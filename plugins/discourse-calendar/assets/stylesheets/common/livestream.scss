@@ -28,3 +28,145 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     width: 100%;
   }
 }
+
+.discourse-calendar-livestream-zoom-entry-container {
+  margin-top: 1rem;
+}
+
+.discourse-calendar-livestream-zoom-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+
+    p.discourse-calendar-livestream-zoom-entry__error {
+      margin: 0;
+      color: var(--danger);
+      margin-right: auto;
+    }
+  }
+
+  &__waiting {
+    margin: 0;
+    color: var(--primary-medium);
+    text-align: center;
+    width: 100%;
+  }
+
+  &__frame {
+    // Zoom sets `display` inline on this element when it mounts, which beats
+    // anything declared here. Only `justify-content` and `padding-top` apply.
+    //
+    // Until the meeting is joined the widget is a small dialog (spinner,
+    // "meeting has not started"), so it is centred. Once joined it fills the
+    // frame and must sit flush.
+    &.--visible {
+      display: block;
+      justify-content: center;
+      padding-top: var(--space-4);
+    }
+
+    &.--joined {
+      justify-content: initial;
+      padding-top: 0;
+    }
+
+    // Get rid of the view mode buttons in zoom, they break the video stream
+    // when used
+    .zoom-MuiTabs-flexContainer[aria-label="view mode tabs"] {
+      display: none;
+    }
+
+    // Get rid of chat button in zoom, Discourse chat should be used,
+    // there is no way to hide this natively even if the webinar
+    // host has disabled chat
+    button.zoom-MuiButton-root[title="Chat"] {
+      display: none;
+    }
+  }
+}
+
+.discourse-calendar-livestream-zoom-page {
+  position: relative;
+  min-height: calc(100vh - var(--header-offset, 0px));
+  background: var(--secondary);
+
+  &__frame {
+    min-height: calc(100vh - var(--header-offset, 0px));
+  }
+
+  &__waiting-wrapper {
+    border: 1px solid var(--primary-300);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__waiting {
+    margin: 0;
+    padding: 1rem;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__fallback {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 2;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+
+    p {
+      margin-top: 0;
+    }
+  }
+
+  &__chat-button {
+    position: fixed;
+    right: 1rem;
+    bottom: 4rem;
+    z-index: 3;
+  }
+}
+
+body.chat-enabled.livestream-topic,
+body.chat-enabled.websdk-body {
+  .chat-channel-preview-card {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .chat-channel__placeholder {
+      display: none;
+    }
+  }
+}
+
+.livestream-join-channel-message {
+  text-align: center;
+  margin-top: 1rem;
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Overrides zoom toasts, we do not want these showing as they are
+// un-dismissable and not helpful messages
+.notistack-SnackbarContainer {
+  display: none !important;
+}
+
+// Full page client view Zoom overrides
+#zmmtg-root {
+  #sdk-footer-sortable-list #chat {
+    display: none;
+  }
+}
