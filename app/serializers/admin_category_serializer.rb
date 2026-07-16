@@ -2,6 +2,7 @@
 
 class AdminCategorySerializer < ApplicationSerializer
   attributes :id,
+             :slug,
              :badge_chain,
              :category_types,
              :description_text,

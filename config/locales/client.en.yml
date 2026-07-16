@@ -6944,6 +6944,7 @@ en:
           title: "Category management"
           header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
           keywords: "categories|category types|discussion|category management"
+          create_category: "Create category"
           tabs:
             settings: "Settings"
           types:
