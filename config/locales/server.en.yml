@@ -149,6 +149,7 @@ en:
         other: "Value must be at most %{count} characters long."
       resolve_group_membership_requires_list: "resolve_group_membership can only be used with type: list"
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
+      resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
