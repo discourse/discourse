@@ -220,9 +220,7 @@ class ProblemCheck
       ).symbolize_keys
 
     Problem.new(
-      SiteSettings::LabelFormatter.expand_setting_links(
-        I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
-      ),
+      I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
       priority: config.priority,
       identifier:,
       target: target_identifier,
