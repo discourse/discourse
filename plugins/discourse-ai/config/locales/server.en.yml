@@ -634,6 +634,7 @@ en:
         google: "Search Google"
         read: "Read topic"
         setting_context: "Look up site setting context"
+        update_setting: "Update site setting"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
         dall_e: "Generate image"
@@ -684,6 +685,7 @@ en:
         google: "Search Google for a query"
         read: "Read public topic on the forum"
         setting_context: "Look up site setting context"
+        update_setting: "Update a site setting"
         schema: "Look up database schema"
         search_settings: "Search site settings"
         dall_e: "Generate image using DALL-E 3"
@@ -713,6 +715,7 @@ en:
         edit_post: "Editing post %{post_id}"
         edit_tags: "Editing tags on topic %{topic_id}: %{tags}"
         edit_category: "Moving topic %{topic_id} to category %{category_id}"
+        update_setting: "Updating site setting %{setting_name}"
         set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
         move_posts: "Moving posts %{post_ids} from topic %{topic_id}"
@@ -842,6 +845,13 @@ en:
           no_reason: "A reason is required to move a topic."
           revision_failed: "Failed to move the topic."
         success: "Topic moved successfully."
+
+      update_setting:
+        errors:
+          not_allowed: "You are not allowed to update site settings."
+          not_found: "Site setting not found."
+          invalid_value: "The site setting could not be updated with that value."
+        success: "Site setting updated successfully."
 
       set_topic_timer:
         errors:

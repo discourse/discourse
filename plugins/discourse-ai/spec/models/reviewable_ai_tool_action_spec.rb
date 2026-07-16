@@ -132,6 +132,24 @@ RSpec.describe ReviewableAiToolAction do
       expect(topic.reload.closed).to eq(true)
     end
 
+    it "executes a site setting update and transitions to approved" do
+      tool_action =
+        create_tool_action(
+          tool_name: "update_setting",
+          params: {
+            setting_name: "title",
+            value: "An approved forum",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(result.transition_to).to eq(:approved)
+      expect(SiteSetting.title).to eq("An approved forum")
+    end
+
     it "rejects inline approval from a different post", :aggregate_failures do
       post = Fabricate(:post, topic: topic)
       other_post = Fabricate(:post)

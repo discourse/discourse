@@ -92,7 +92,7 @@ export default class AiToolApproval extends Component {
 
   @action
   async performAction(actionId) {
-    if (this.performing || !this.reviewable || !this.args.postId) {
+    if (this.performing || !this.reviewable) {
       return;
     }
 
@@ -102,7 +102,6 @@ export default class AiToolApproval extends Component {
       await ajax(`/review/${this.args.reviewableId}/perform/${actionId}`, {
         type: "PUT",
         data: {
-          post_id: this.args.postId,
           version: this.reviewable.version,
         },
       });

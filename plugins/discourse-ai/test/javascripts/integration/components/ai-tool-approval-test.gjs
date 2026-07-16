@@ -33,8 +33,8 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     pretender.put("/review/42/perform/approve", (request) => {
       assert.strictEqual(
         request.requestBody,
-        "post_id=123&version=0",
-        "sends the rendered post id with the inline action"
+        "version=0",
+        "sends the reviewable version with the approval action"
       );
 
       return response({ reviewable_perform_result: { success: true } });

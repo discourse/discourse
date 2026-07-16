@@ -778,6 +778,37 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(ReviewableAiToolAction.count).to eq(0)
     end
 
+    it "requires approval for site setting updates when require_approval is false" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+
+      AiAgent.create!(
+        name: "SettingsApprovalAgent",
+        system_prompt: "test",
+        description: "test",
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        require_approval: false,
+      )
+
+      agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "SettingsApprovalAgent")
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      tool =
+        DiscourseAi::Agents::Tools::UpdateSetting.new(
+          { setting_name: "title", value: "A different forum" },
+          bot_user: test_bot_user,
+          llm: bot.llm,
+        )
+
+      result =
+        bot.send(:invoke_tool, tool, DiscourseAi::Agents::BotContext.new(messages: [])) { |*args| }
+
+      expect(result[:status]).to eq("pending_approval")
+      expect(SiteSetting.title).not_to eq("A different forum")
+      expect(AiToolAction.last.tool_name).to eq("update_setting")
+      expect(ReviewableAiToolAction.count).to eq(1)
+    end
+
     it "does not create a reviewable when the tool's args are invalid" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
