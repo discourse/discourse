@@ -20,7 +20,7 @@
     "lint-to-the-future-eslint": "^4.0.0",
     "playwright": "1.59.1",
     "prettier": "3.8.1",
-    "stylelint": "17.5.0",
+    "stylelint": "17.14.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
