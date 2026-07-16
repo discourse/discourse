@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -19,7 +20,7 @@ export default class AdminNotice extends Component {
 
   <template>
     <div class="notice">
-      <div class="message">
+      <div class="message" {{linkifySettingLinks @problem.message}}>
         {{if @icon (dIcon @icon)}}
         {{trustHTML @problem.message}}
       </div>
