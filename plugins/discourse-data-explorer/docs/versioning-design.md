@@ -436,11 +436,42 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
 - **Non-representational breaking changes — per-kind direction sketched** (raised by David in the topic
   review, 2026-07-13; all contract-visible — the guard fires on each — but not reproducible by a document
   transform). Per kind:
-  - *Endpoint removal:* following Stripe, sunset shouldn't happen — pinned versions are supported
-    effectively forever (Stripe reference §10: no documented force-retirement since 2011), so a removed
-    endpoint keeps existing for clients pinned before the removal. Cadwyn's `endpoint … existed`
-    instructions are the mechanism; honestly unbuilt because mapping per-version route resurrection onto
-    Rails routing (Cadwyn generates per-version FastAPI routes) hasn't been dug into.
+  - *Endpoint removal — designed via pin-gating (2026-07-16, from a discussion with David); no Rails
+    routing involvement.* Following Stripe, sunset shouldn't happen — pinned versions are supported
+    effectively forever (Stripe reference §10: no documented force-retirement since 2011). Under
+    no-sunset, the endpoint code must live forever anyway, so "removal" was never about the routing
+    table — it's a fact about the *timeline*: which pins can see the endpoint. Routes never leave
+    Rails; the gate is one comparison in the Kit right after version resolution. Two keywords of
+    different natures:
+    - `deprecate :destroy, link: "…"` — **resource config**: advisory and reversible, not a timeline
+      event; warns every caller regardless of pin via the RFC 9745 `Deprecation` header +
+      `Link rel="deprecation"`.
+    - `removed_endpoint :destroy` — **a dated `VersionChange` keyword**: an immutable timeline event,
+      like any breaking change. Pins resolved before its date are served normally plus
+      `Deprecation: @<removal-date>` (a past date — exactly what RFC 9745 anticipates) and the doc
+      link; pins at/after it get a **404 with a teaching body** ("removed as of 2026-09-01; versions
+      pinned earlier still serve it; replacement: X"). 404 rather than 410 because in the new pin's
+      contract the endpoint simply doesn't exist — 410 would claim "gone for everyone", which is
+      false. Never the `Sunset` header (RFC 8594): Sunset means "will stop responding", which for
+      old-pinned clients is precisely what is promised never to happen.
+    One honest asymmetry vs `removed_filter` (which carries its block into the change): the endpoint's
+    implementation *stays in place* — an action is a subsystem (action + service + serializer wiring)
+    that old pins need working forever; the change carries only the date and metadata. The grep-able
+    invariant survives (the gate is machinery driven by a dated declaration, not a version conditional
+    in app code), and the mechanism composes with plugin ownership for free (a removal change is owned
+    like any change, resolved per owner — see the plugins design doc).
+    The gate doubles as a **metering point**, which turns "the code lives forever" into an
+    evidence-based lifecycle rather than an absolute: every request to a deprecated or removed endpoint
+    passes through Kit machinery that can record usage (endpoint × resolved pin × API key). Three
+    stages: `deprecate` measures *all* callers while the endpoint is fully alive (data for deciding
+    whether to ship the removal at all); `removed_endpoint` measures the residual old-pinned
+    population; when that residual reaches zero or a negligible, contactable handful, the
+    implementation can be *actually deleted* — a business decision grounded in telemetry, not a
+    scheduled sunset. The client-facing promise stays intact: nobody is cut off by a timeline, and
+    deletion only happens when the data says (nearly) nobody is left to cut off. Honest caveat:
+    "negligible" isn't zero — a yearly-cadence integration can look dead; deletion also downgrades the
+    teaching 404 to a bare 404 for everyone. Both are inputs to that final decision, not reasons to
+    avoid it.
   - *Default-sort change:* a `changed_default_sort from: {…}` keyword — pinned-older clients' unsorted
     requests get the old default applied. Both orderings stay computable from current code; near-
     representational.
