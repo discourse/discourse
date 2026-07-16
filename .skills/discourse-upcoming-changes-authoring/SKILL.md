@@ -17,8 +17,8 @@ The upcoming changes system has three layers: a **Ruby core** that manages state
 
 Key methods to understand:
 
-- `resolved_value(setting_name)` — Determines the *effective* value of a setting. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, the resolved value is `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them).
-- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: resolved value, group restrictions, anonymous users (only get access if no group restrictions).
+- `enabled?(setting_name)` — Determines the *effective* value of a change. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, it resolves to `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them). It returns `false` outright when the owning plugin is not configurable, or — for plugin-owned changes, unless they opt out with `requires_plugin_enabled: false` — when the owning plugin is disabled. Both take precedence over the above. See [Requiring the Owning Plugin](#requiring-the-owning-plugin).
+- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: the resolved value from `enabled?`, group restrictions, anonymous users (only get access if no group restrictions).
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
 - `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackStatusChanges` detects changes.
 - `settings_hidden_while_enabled` — Returns the set of *other* site setting names that should be hidden from admins because an enabled change declares them in its `hide_settings:` metadata. Computed live (not toggled at opt-in time) so it tracks both opt-in paths and is multisite-safe. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
@@ -142,14 +142,61 @@ Some upcoming changes only make sense to show admins under certain conditions �
 #### How It Works
 
 1. **Filtering** — `UpcomingChanges::List#fetch_upcoming_changes` calls `UpcomingChanges::ConditionalDisplay.should_display?(setting_name)` on every change after the status filter, before group/image enrichment. Changes that return `false` are dropped from the result entirely.
-2. **Resolution** — `should_display?` first checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used. Otherwise it evaluates enabled plugin callbacks registered for that setting. If no method or callback is defined, the change is always displayed (returns `true`).
+2. **Resolution** — `should_display?` first hides the change outright if its owning plugin is not configurable (`owning_plugin_configurable?`), or if it is plugin-owned and the owning plugin is disabled (`owning_plugin_enabled?`) — unless the change opts out with `requires_plugin_enabled: false`. Then it checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used. Otherwise it evaluates enabled plugin callbacks registered for that setting. If no method or callback is defined, the change is always displayed (returns `true`).
 3. **Definition site** — Core gates can live directly on `ConditionalDisplay`, typically next to the relevant subsystem's code. Plugin gates should be registered from the plugin initializer via `register_upcoming_change_conditional_display(:setting_name) { ... }` so disabled plugins are filtered by `DiscoursePluginRegistry`.
 
 #### Key Behaviors
 
-- **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
+- **Display-only, with one exception**: A gate normally affects whether the change appears in the admin UI, not whether it's enabled — `enabled?` / `enabled_for_user?` still resolve normally, so code paths gated on the change continue to work. The exception is the owning-plugin checks, which `enabled?` consults too (see below).
+- **Don't express the owning-plugin gate with a conditional display callback**: it's already the default for plugin-owned changes, and a callback couldn't express it anyway — `DiscoursePluginRegistry` filters callbacks from disabled plugins, so it would never run in the only case that matters. See [Requiring the Owning Plugin](#requiring-the-owning-plugin).
 - **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
-- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackAddedChanges`, `NotifyAdminsOfAvailableUpcomingChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+- **Notifications are gated too**: Beyond the `List` service, `NotifyAdminsOfAvailableUpcomingChanges` and `NotifyPromotion` also consult `should_display?`, so a hidden change is not notified about. `TrackAddedChanges` / `TrackRemovedChanges` do not — the audit trail records every change regardless. A gate should still reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+
+### Requiring the Owning Plugin
+
+A plugin-owned change that gates a feature *inside* its plugin is useless while that plugin is disabled — the plugin's code isn't running, so the admin is being pitched (and notified about) a toggle that does nothing. This is the **default** for every plugin-owned change: no metadata is needed to get it.
+
+```yaml
+enable_your_plugin_feature:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    # requires_plugin_enabled defaults to true for plugin-owned changes -- nothing to add.
+```
+
+While the plugin is off, `UpcomingChanges.owning_plugin_enabled?` returns false, which both hides the change (`should_display?`) and stops it resolving (`enabled?`), so its `hide_settings` and default overrides don't apply either. The admin's opt-in stays in the database and resumes when they re-enable the plugin.
+
+#### Opting out
+
+Plenty of plugin-owned changes are the *opposite*: they exist to get the plugin adopted, and only make sense while it is disabled. Leaving one gated makes it unreachable — it would be hidden from exactly the sites it targets. These must opt out with `requires_plugin_enabled: false`:
+
+```yaml
+enable_your_plugin_feature:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    requires_plugin_enabled: false
+```
+
+Current examples, all of which set `requires_plugin_enabled: false`:
+
+| Change | Why it must work with the plugin off |
+|---|---|
+| `enable_events_category_type_setup` (calendar), `enable_support_category_type_setup` (solved), `enable_ideas_category_type_setup` (topic-voting) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
+| `enable_discourse_reactions_by_default` (reactions) | An `upcoming_change_default_override` that flips `discourse_reactions_enabled` from `false` to `true`. Gating it on the plugin being enabled means it can never fire. |
+| `enable_discourse_workflows` (workflows) | *Is* the plugin's `enabled_site_setting`. That row is how an admin opts into the plugin at all, so it *must* opt out — otherwise the default gate would gate the change on itself. |
+
+Rule of thumb: if the change's purpose is *"try this feature we added to the plugin you already run"*, leave it gated (the default). If its purpose is *"start using this plugin"*, opt out with `false`.
+
+#### Guardrails
+
+The integrity spec (`spec/integrity/upcoming_change_metadata_spec.rb`) enforces that `requires_plugin_enabled`, when present, is a boolean and is only set on plugin-owned changes. It also **requires** a change that is its plugin's own `enabled_site_setting` to set `requires_plugin_enabled: false` — leaving the default gate on it would be self-gating and would recurse (`Plugin::Instance#enabled?` reads the setting, which resolves back through `enabled?`). `owning_plugin_enabled?` also guards against the recursion at runtime, so a mistake surfaces as a hidden change rather than a stack overflow. The spec derives ownership and the plugin's `enabled_site_setting` from the file path and `plugin.rb`, so it holds regardless of which plugins are loaded in the run.
 
 ### CSS Opt-In
 
@@ -331,6 +378,7 @@ To hide an upcoming change from the admin UI under certain conditions:
      SiteSetting.some_dependency_enabled
    end
    ```
+   The condition must be something *other* than the plugin's own `enabled_site_setting` — core already hides changes owned by a disabled plugin, and the registry would filter the callback out anyway.
 2. For core changes, reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
    ```ruby
    module UpcomingChanges

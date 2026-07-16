@@ -188,6 +188,12 @@ module SiteSettingExtension
   #       Use for legacy settings that stop making sense once the change is in
   #       effect. Hiding is computed per request so it is multisite-safe and
   #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
+  #     requires_plugin_enabled: (optional) boolean, defaults to true for plugin-owned
+  #       changes. By default a plugin-owned change is hidden from admins and does not
+  #       take effect while the owning plugin is disabled, since it gates a feature
+  #       inside the plugin. Set it to false to opt out -- for changes that exist to get
+  #       the plugin adopted (e.g. a category type that enables the plugin when chosen),
+  #       which must stay usable while the plugin is disabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end

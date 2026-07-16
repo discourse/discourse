@@ -55,3 +55,4 @@ discourse_topic_voting:
       status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
+      requires_plugin_enabled: false
