@@ -1,12 +1,25 @@
+import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
+import type { ToastComponentArgs } from "discourse/float-kit/lib/constants";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-const DDefaultToast = <template>
+interface DDefaultToastSignature {
+  Element: HTMLDivElement;
+  Args: ToastComponentArgs;
+}
+
+/**
+ * The default component rendered inside a toast when the caller does not supply
+ * one. It lays out the toast's icon, title, message, and action buttons from
+ * `@data`, an optional auto-close progress bar, and a close button, applying the
+ * theme in `@data.theme` (e.g. `"success"` or `"error"`).
+ */
+const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
   <div
     class={{dConcatClass
       "fk-d-default-toast"

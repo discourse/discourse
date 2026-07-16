@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
+import type DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 
 /*
   This service holds the current tooltip displayed when using <DTooltip> component.
@@ -8,5 +9,5 @@ import Service from "@ember/service";
   we end up with a detached element in the DOM and unexpected behavior.
 */
 export default class InternalTooltip extends Service {
-  @tracked activeTooltip;
+  @tracked activeTooltip?: DTooltipInstance;
 }
