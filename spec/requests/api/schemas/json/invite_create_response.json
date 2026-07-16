@@ -59,7 +59,7 @@
       "type": "boolean",
       "example": false
     },
-    "is_admin": {
+    "grants_admin": {
       "type": "boolean",
       "example": false
     },
@@ -92,7 +92,7 @@
     "updated_at",
     "expires_at",
     "expired",
-    "is_admin",
+    "grants_admin",
     "topics",
     "groups"
   ]

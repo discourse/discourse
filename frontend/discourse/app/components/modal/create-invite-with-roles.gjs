@@ -62,7 +62,7 @@ export default class CreateInviteWithRoles extends Component {
     super(...arguments);
 
     if (this.inviteCreated) {
-      this.role = this.invite.is_admin ? "admin" : "member";
+      this.role = this.invite.grants_admin ? "admin" : "member";
       this.delivery = this.invite.email ? "email" : "link";
     } else {
       this.role =
@@ -228,7 +228,7 @@ export default class CreateInviteWithRoles extends Component {
     const rows = [
       {
         label: i18n("user.invited.invite_roles.summary.role"),
-        value: this.invite.is_admin
+        value: this.invite.grants_admin
           ? i18n("user.invited.invite_roles.summary.role_admin")
           : i18n("user.invited.invite_roles.summary.role_member"),
       },

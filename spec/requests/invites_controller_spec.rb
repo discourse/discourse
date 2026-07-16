@@ -640,7 +640,7 @@ RSpec.describe InvitesController do
         post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["is_admin"]).to eq(true)
+        expect(response.parsed_body["grants_admin"]).to eq(true)
 
         invite = Invite.last
         expect(invite.admin).to eq(true)

@@ -16,7 +16,7 @@ class InviteSerializer < ApplicationSerializer
              :updated_at,
              :expires_at,
              :expired,
-             :is_admin
+             :grants_admin
 
   has_many :topics, embed: :object, serializer: BasicTopicSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -81,11 +81,11 @@ class InviteSerializer < ApplicationSerializer
     object.expired?
   end
 
-  def is_admin
+  def grants_admin
     object.admin?
   end
 
-  def include_is_admin?
+  def include_grants_admin?
     can_see_invite_details?
   end
 

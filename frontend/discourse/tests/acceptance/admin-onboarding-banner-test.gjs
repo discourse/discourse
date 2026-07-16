@@ -265,7 +265,7 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
         invite_key: "abc123",
         link: "http://example.com/invites/abc123",
         email: "new-admin@example.com",
-        is_admin: true,
+        grants_admin: true,
         expires_at: "2100-01-01 00:00",
       });
     });

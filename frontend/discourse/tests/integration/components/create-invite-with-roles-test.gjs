@@ -88,7 +88,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
         invite_key: "abc123",
         link: "http://example.com/invites/abc123",
         email: "new-admin@example.com",
-        is_admin: true,
+        grants_admin: true,
         expires_at: "2100-01-01 00:00",
       });
     });
@@ -244,7 +244,7 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       invite_key: "jkl012",
       link: "http://example.com/invites/jkl012",
       email: "admin@example.com",
-      is_admin: true,
+      grants_admin: true,
       expires_at: "2100-01-01 00:00",
     });
     const model = { editing: true, invite };
