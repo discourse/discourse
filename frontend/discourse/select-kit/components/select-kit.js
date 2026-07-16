@@ -560,8 +560,14 @@ export default class SelectKit extends Component {
       }
 
       if (this.singleSelect) {
-        value = isPresent(value.firstObject) ? value.firstObject : null;
-        items = isPresent(items.firstObject) ? items.firstObject : null;
+        const firstValue = value.firstObject;
+        const firstItem = items.firstObject;
+
+        value =
+          isPresent(firstValue) || (firstValue === "" && firstItem)
+            ? firstValue
+            : null;
+        items = isPresent(firstItem) ? firstItem : null;
       }
 
       this._boundaryActionHandler("onChange", value, items);
@@ -921,7 +927,9 @@ export default class SelectKit extends Component {
       return;
     }
 
-    if (!isPresent(value)) {
+    // A row may explicitly carry a blank value (e.g. "use the default");
+    // selecting it is a real selection, not a clear.
+    if (!isPresent(value) && !(value === "" && item)) {
       this._onClearSelection();
     } else {
       const existingItem = this.findValue(this.mainCollection, item);

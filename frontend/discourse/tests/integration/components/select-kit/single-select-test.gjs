@@ -240,6 +240,19 @@ module("Integration | Component | SelectKit | SingleSelect", function (hooks) {
     );
 
     assert.strictEqual(this.subject.header().name(), "default");
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue(1);
+    assert.strictEqual(this.subject.header().name(), "foo");
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue("");
+    assert.strictEqual(
+      this.subject.header().name(),
+      "default",
+      "selecting the blank-value row selects it rather than clearing"
+    );
+    assert.strictEqual(this.value, "");
   });
 
   test("none:string", async function (assert) {
