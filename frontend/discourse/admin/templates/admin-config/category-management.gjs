@@ -41,6 +41,13 @@ export default class AdminConfigCategoryManagement extends Component {
           />
         {{/each}}
       </:tabs>
+
+      <:actions as |actions|>
+        <actions.Primary
+          @label="admin.config.category_management.create_category"
+          @route="newCategory.setup"
+        />
+      </:actions>
     </DPageHeader>
 
     <div class="admin-config-page__main-area">

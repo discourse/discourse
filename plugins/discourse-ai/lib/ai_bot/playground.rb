@@ -513,6 +513,16 @@ module DiscourseAi
           reply_user = User.find_by(id: bot.agent.class.user_id) || reply_user
         end
 
+        if existing_reply_post
+          if existing_reply_post.topic_id != post.topic_id
+            raise Discourse::InvalidParameters.new(:reply_post_id)
+          end
+
+          if existing_reply_post.user_id != reply_user.id
+            raise Discourse::InvalidParameters.new(:reply_post_id)
+          end
+        end
+
         stream_reply = post.topic.private_message? if stream_reply.nil?
 
         # we need to ensure agent user is allowed to reply to the pm
@@ -536,14 +546,6 @@ module DiscourseAi
           reply_post = existing_reply_post
 
           if reply_post
-            if reply_post.topic_id != post.topic_id
-              raise Discourse::InvalidParameters.new(:reply_post_id)
-            end
-
-            if reply_post.user_id != reply_user.id
-              raise Discourse::InvalidParameters.new(:reply_post_id)
-            end
-
             reply_post.update_columns(raw: "", cooked: "")
             reply_post.post_custom_prompt = nil
           else
@@ -564,16 +566,7 @@ module DiscourseAi
               )
           end
 
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
-            .llm
-            .llm_model
-            .display_name
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
-            .llm
-            .llm_model
-            .id
-          reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
-          reply_post.save_custom_fields
+          save_ai_custom_fields(reply_post)
 
           publish_update(reply_post, { raw: "" })
 
@@ -655,6 +648,16 @@ module DiscourseAi
             skip_validations: true,
             skip_revision: true,
           )
+        elsif existing_reply_post
+          reply_post = existing_reply_post
+          reply_post.post_custom_prompt = nil
+          reply_post.revise(
+            bot.bot_user,
+            { raw: reply },
+            skip_validations: true,
+            force_new_version: true,
+          )
+          save_ai_custom_fields(reply_post)
         else
           reply_post =
             PostCreator.create!(
@@ -761,6 +764,19 @@ module DiscourseAi
       end
 
       private
+
+      def save_ai_custom_fields(reply_post)
+        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_NAME_FIELD] = bot
+          .llm
+          .llm_model
+          .display_name
+        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD] = bot
+          .llm
+          .llm_model
+          .id
+        reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD] = bot.agent.id
+        reply_post.save_custom_fields
+      end
 
       def should_stop_thinking?(partial:, context:, type:, started_thinking:, placeholder:)
         return false if context.skip_show_thinking

@@ -60,8 +60,6 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
-      post_image_descriptions:
-        description: "توضیح"
       ai_tool_approval:
         loading: "بارگذاری..."
         tool: "عمل"
@@ -92,6 +90,9 @@ fa_IR:
         embeddings:
           setting_groups:
             related_topics: "موضوعات مرتبط"
+        image_caption:
+          setting_groups:
+            settings: "تنظیم"
         spam:
           name: "هرز‌نامه"
       modals:

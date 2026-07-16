@@ -47,6 +47,9 @@ export default class CodeLoginForm extends Component {
   @tracked otpGeneration = 0;
   @tracked newAccount;
   @tracked accountUser;
+  @tracked name = "";
+  @tracked nameRequired = false;
+  @tracked nameError;
   @tracked username = "";
   @tracked usernameAvailable = false;
   @tracked usernameChecking = false;
@@ -263,6 +266,9 @@ export default class CodeLoginForm extends Component {
     if (this.isUserFieldsStep) {
       data.user_fields = {};
       this.userFields.forEach((f) => (data.user_fields[f.field.id] = f.value));
+      if (this.nameRequired) {
+        data.name = this.name.trim();
+      }
     }
 
     try {
@@ -271,7 +277,11 @@ export default class CodeLoginForm extends Component {
         data,
       });
 
-      if (result?.user_fields_required && !this.isUserFieldsStep) {
+      if (
+        (result?.user_fields_required || result?.name_required) &&
+        !this.isUserFieldsStep
+      ) {
+        this.nameRequired = !!result.name_required;
         this.step = "user-fields";
         return;
       }
@@ -318,9 +328,21 @@ export default class CodeLoginForm extends Component {
   }
 
   @action
+  nameChanged(event) {
+    this.name = event.target.value;
+    this.nameError = null;
+  }
+
+  @action
   async submitUserFields() {
     this.userFieldsValidationHelper.validationVisible = true;
-    if (this.userFieldsValidationHelper.userFieldsValidation.failed) {
+    if (this.nameRequired && !this.name.trim()) {
+      this.nameError = i18n("user.name.required");
+    }
+    if (
+      this.nameError ||
+      this.userFieldsValidationHelper.userFieldsValidation.failed
+    ) {
       return;
     }
     return this.verifyCode();
@@ -571,6 +593,22 @@ export default class CodeLoginForm extends Component {
         </PluginOutlet>
       {{/if}}
 
+      {{#unless this.isEmailStep}}
+        {{! Steps replace each other in the DOM, so without this hidden field
+        password managers lose track of which account is authenticating once
+        the email input unmounts. }}
+        <input
+          type="email"
+          value={{this.email}}
+          name="email"
+          autocomplete="username"
+          readonly={{true}}
+          tabindex="-1"
+          aria-hidden="true"
+          class="code-login-form__hidden-email sr-only"
+        />
+      {{/unless}}
+
       {{#if this.isEmailStep}}
         {{#if this.isSignup}}
           <p class="code-login-form__instructions">
@@ -593,10 +631,7 @@ export default class CodeLoginForm extends Component {
             @format="full"
             as |field|
           >
-            <field.Control
-              autofocus="autofocus"
-              autocomplete="username email"
-            />
+            <field.Control autofocus="autofocus" autocomplete="username" />
           </form.Field>
 
           <div class="code-login-form__email-actions">
@@ -706,8 +741,10 @@ export default class CodeLoginForm extends Component {
                   placeholder={{i18n "code_login.username_placeholder"}}
                   class="code-login-form__new-account-username"
                   aria-invalid={{if this.usernameError "true"}}
+                  aria-describedby="code-login-username-error"
                 />
                 <div
+                  id="code-login-username-error"
                   class="code-login-form__error"
                   aria-live="polite"
                   role="alert"
@@ -740,6 +777,34 @@ export default class CodeLoginForm extends Component {
               {{i18n "code_login.user_fields_instructions"}}
             </p>
           {{/unless}}
+
+          {{#if this.nameRequired}}
+            <div class="code-login-form__name-field">
+              <label for="code-login-name">
+                {{i18n "user.name.title"}}
+              </label>
+              <input
+                {{on "input" this.nameChanged}}
+                type="text"
+                value={{this.name}}
+                id="code-login-name"
+                name="name"
+                autocomplete="name"
+                maxlength="255"
+                class="code-login-form__name"
+                aria-invalid={{if this.nameError "true"}}
+                aria-describedby="code-login-name-error"
+              />
+              <div
+                id="code-login-name-error"
+                class="code-login-form__error"
+                aria-live="polite"
+                role="alert"
+              >
+                {{this.nameError}}
+              </div>
+            </div>
+          {{/if}}
 
           <div class="user-fields">
             {{#each this.userFields as |f|}}

@@ -21,7 +21,7 @@ pl_PL:
       dashboard:
         emotion:
           title: "Emocje"
-          description: "Tabela zawiera liczbę postów sklasyfikowanych z określoną emocją. Sklasyfikowano je za pomocą modelu „SamLowe/roberta-base-go_emotions”."
+          description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
         reports:
           filters:
             group_by:
@@ -233,8 +233,12 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        description: "Opis"
+      post_image_captions:
+        edit: "Edytuj podpis obrazu AI"
+        title: "Edytuj podpis obrazu AI"
+        description: "Podpis"
+        save: "Zapisz podpis"
+        saved: "Zapisano podpis obrazu AI"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -380,6 +384,12 @@ pl_PL:
             enabled_features: "Włączone funkcje"
             automation: "Automatyzacja"
             agents: "Agenty"
+        image_caption:
+          name: "Podpis obrazu"
+          description: "Generuje podpisy AI do obrazów w wpisach i udostępnia je czytelnikom oraz technologiom wspomagającym"
+          post_image_captions: "Dodaj podpisy do obrazów"
+          setting_groups:
+            settings: "Ustawienia"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -969,7 +979,7 @@ pl_PL:
         usage:
           ai_bot: "Bot AI"
           ai_helper: "Pomocnik (%{agent})"
-          ai_helper_image_caption: "Podpis pod obrazkiem"
+          ai_image_caption: "Podpis obrazu"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Podsumuj"
           ai_embeddings_semantic_search: "Wyszukiwanie AI"

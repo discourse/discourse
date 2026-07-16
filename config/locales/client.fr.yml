@@ -3877,8 +3877,9 @@ fr:
           one: "Afficher %{count} paramètre régional traduit"
           other: "Afficher %{count} paramètres régionaux traduits"
         modal:
-          title: "Traductions de la publication"
+          title: "Traductions"
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
+          discard_language_change: "Annuler la modification"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
           none: "Non défini"

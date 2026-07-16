@@ -19,6 +19,12 @@ pl_PL:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
       ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
       ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_image_caption_agent: "Podpisy AI do obrazów są włączone, ale wybrany agent podpisów do obrazów nie jest gotowy: %{reason}. <a href='%{url}'>Przejrzyj agenta podpisów do obrazów</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "wybrany agent nie istnieje"
+        agent_vision_disabled: "agent nie może uwzględniać przesyłania obrazów"
+        llm_missing: "agent nie rozwiązuje umowy LLM"
+        llm_vision_disabled: "rozwiązany problem LLM nie obsługuje wprowadzania obrazu"
   discourse_automation:
     ai:
       flag_types:
@@ -106,6 +112,11 @@ pl_PL:
     ai_helper_automatic_chat_thread_title_delay: "Opóźnienie w minutach, zanim pomocnik AI automatycznie ustawi tytuł wątku czatu."
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
+    ai_image_caption_agent: "Agent do użycia w podpisach obrazów AI. Agenty niestandardowe muszą mieć włączoną funkcję przesyłania obrazów i korzystać z LLM z obsługą technologii wizyjnej."
+    ai_post_image_captions_enabled: "Włącz podpisy AI dla obrazów we wpisach. Generowanie brakujących podpisów wymaga skonfigurowania {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Maksymalna liczba obrazów do podpisu na wpis."
+    ai_post_image_captions_backfill_hourly_rate: "Maksymalna liczba wpisów na godzinę do uzupełnienia podpisami do obrazów generowanymi przez sztuczną inteligencję. Ustaw na 0, aby wyłączyć uzupełnianie."
+    ai_post_image_captions_backfill_max_age_days: "Maksymalny wiek wpisów (w dniach), w których można uzupełnić podpisy do obrazów generowane przez sztuczną inteligencję."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
@@ -171,7 +182,7 @@ pl_PL:
       description: "Raport ten umożliwia analizę nastrojów dotyczących postów pogrupowanych według kategorii, przypisując każdemu postowi i kategorii pozytywne, negatywne i neutralne oceny."
     overall_sentiment:
       title: "Ogólny sentyment"
-      description: 'Wykres porównuje liczbę postów sklasyfikowanych jako pozytywne lub negatywne. Są one obliczane, gdy wynik pozytywny lub negatywny przekracza ustalony próg. Oznacza to, że posty neutralne nie są wyświetlane. Wiadomości prywatne (PW) również są wykluczone. Sklasyfikowane z tagiem „cardiffnlp/twitter-roberta-base-sentiment-latest”.'
+      description: "Wykres porównuje liczbę wpisów sklasyfikowanych jako pozytywne lub negatywne. Są one obliczane, gdy wynik pozytywny lub negatywny przekracza ustalony próg. Oznacza to, że posty neutralne nie są wyświetlane. Wiadomości prywatne (PW) również są wykluczane. W zależności od wybranej metody klasyfikacji sentymentu wpisy są klasyfikowane za pomocą skonfigurowanego modelu klasyfikacji sentymentu („cardiffnlp/twitter-roberta-base-sentiment-latest”) lub skonfigurowanego agenta klasyfikacji sentymentu."
       xaxis: "Pozytywny(%)"
       yaxis: "Data"
     emotion_admiration:
@@ -368,6 +379,22 @@ pl_PL:
         explain: "Wyjaśnij"
         illustrate_post: "Zilustruj post"
         replace_dates: "Inteligentne daty"
+      image_caption:
+        aria_description: "%{description} (Napisy wygenerowane przez AI)"
+    image_caption:
+      configuration:
+        agent_missing: "Wybierz istniejącego agenta dla podpisów obrazów AI."
+        agent_vision_disabled: "Agent podpisów do obrazów AI musi mieć włączoną funkcję przesyłania obrazów."
+        llm_missing: "Agent podpisów obrazów AI musi używać LLM."
+        llm_vision_disabled: "Agent podpisujący obrazy za pomocą sztucznej inteligencji musi używać LLM z obsługą obrazu."
+    post_image_captions:
+      errors:
+        description_blank: "Podpis nie może być pusty."
+        description_too_long:
+          one: "Podpis musi mieć %{count} znak lub mniej."
+          few: "Podpis musi mieć %{count} znaki lub mniej."
+          many: "Podpis musi mieć %{count} znaków lub mniej."
+          other: "Podpis musi mieć %{count} znaków lub mniej."
     share_ai:
       read_more: "Przeczytaj pełną transkrypcję"
       onebox_title: "Rozmowa AI z %{llm_name}"
@@ -484,7 +511,7 @@ pl_PL:
           description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
           name: "Podpisy pod obrazami"
-          description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
+          description: "Domyślny agent obsługujący funkcję podpisów obrazów"
         locale_detector:
           name: "Detektor ustawień regionalnych"
           description: "Umożliwia działanie funkcji tłumaczenia poprzez wykrywanie ustawień regionalnych danego tekstu (postów, tytułów itp.)"

@@ -42,8 +42,6 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
-      post_image_descriptions:
-        description: "Beskrivelse"
       ai_tool_approval:
         loading: "Indlæser…"
         tool: "Handling"
@@ -71,6 +69,9 @@ da:
           reset: "Nulstil"
         search:
           name: "Søg"
+        image_caption:
+          setting_groups:
+            settings: "Indstillinger"
         spam:
           name: "Spam"
       modals:

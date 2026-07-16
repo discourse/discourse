@@ -2645,6 +2645,8 @@ ja:
       default: カスタム絵文字
     filter_input:
       clear: "フィルタをクリア"
+    filter_controls:
+      toggle: "ドロップダウンのフィルタを切り替える"
     shared_drafts:
       title: "共有の下書き"
       notice: "このトピックは、共有の下書きを公開できるユーザーのみに表示されます。"
@@ -3814,7 +3816,7 @@ ja:
         view:
           other: "%{count} 個の翻訳済みロケールを表示"
         modal:
-          title: "投稿の翻訳"
+          title: "翻訳"
           confirm_delete: "'%{languageCode}' の翻訳を削除してもよろしいですか？"
         success: "翻訳は正しく更新されました"
         post_language_selector:
@@ -5126,7 +5128,6 @@ ja:
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
-    toggle_filters: "ドロップダウンのフィルタを切り替える"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"

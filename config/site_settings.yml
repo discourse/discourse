@@ -1587,7 +1587,7 @@ posting:
     area: "posts_and_topics"
   newuser_max_embedded_media:
     client: true
-    default: 1
+    default: 5
     area: "posts_and_topics"
   newuser_max_attachments:
     client: true

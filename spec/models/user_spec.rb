@@ -1478,6 +1478,17 @@ RSpec.describe User do
       user.update_last_seen!(second_visit_date)
       expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
+
+    it "triggers user_seen with the previous seen timestamp" do
+      user.update_last_seen!(first_visit_date)
+
+      events =
+        DiscourseEvent.track_events(:user_seen) do
+          user.update_last_seen!(second_visit_date, force: true)
+        end
+
+      expect(events.first[:params]).to eq([user, first_visit_date])
+    end
   end
 
   describe "update_timezone_if_missing" do

@@ -3848,8 +3848,9 @@ it:
           one: "Visualizza %{count} lingua tradotta"
           other: "Visualizza %{count} lingue tradotte"
         modal:
-          title: "Traduzioni per messaggio"
+          title: "Traduzioni"
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
+          discard_language_change: "Annulla modifica"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
           none: "Non impostato"

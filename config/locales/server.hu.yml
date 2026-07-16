@@ -4834,6 +4834,8 @@ hu:
         title: "Bejegyzés rejtve tartása"
         description: "Egyetértek a jelöléssel és a bejegyzés maradjon rejtve."
         complete: "A bejegyzés rejtve marad."
+      agree_and_keep_deleted:
+        title: "A bejegyzés maradjon törölve"
       agree_and_suspend:
         title: "Felhasználó felfüggesztése"
         description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"

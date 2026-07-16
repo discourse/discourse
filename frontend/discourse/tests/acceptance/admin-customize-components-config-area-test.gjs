@@ -127,10 +127,10 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
       "the first request includes the status filter from the URL"
     );
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .hasValue("air", "prefills the search input from the URL");
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .hasValue("unused", "preselects the status dropdown from the URL");
     assert.dom(".admin-config-components__component-row").exists({ count: 1 });
   });
@@ -144,7 +144,7 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
       "does not send the invalid status to the server"
     );
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .hasValue("all", "the status dropdown falls back to the default value");
     assert.dom(".admin-config-components__component-row").exists({ count: 2 });
   });
@@ -152,7 +152,7 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
   test("reflects the search in the URL as the user types", async function (assert) {
     await visit("/admin/config/customize/components");
 
-    await fillIn(".admin-filter-controls__input", "air");
+    await fillIn(".d-filter-controls__input", "air");
 
     assert.strictEqual(
       requests.at(-1).name,
@@ -166,10 +166,10 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
     );
     assert.dom(".admin-config-components__component-row").exists({ count: 1 });
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
 
-    await fillIn(".admin-filter-controls__input", "");
+    await fillIn(".d-filter-controls__input", "");
 
     assert.strictEqual(
       currentURL(),
@@ -182,7 +182,7 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
   test("reflects the status dropdown in the URL", async function (assert) {
     await visit("/admin/config/customize/components");
 
-    await select(".admin-filter-controls__dropdown", "used");
+    await select(".d-filter-controls__dropdown", "used");
 
     assert.strictEqual(
       requests.at(-1).status,
@@ -196,7 +196,7 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
     );
     assert.dom(".admin-config-components__component-row").exists({ count: 1 });
 
-    await select(".admin-filter-controls__dropdown", "all");
+    await select(".d-filter-controls__dropdown", "all");
 
     assert.strictEqual(
       currentURL(),
@@ -209,15 +209,15 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
   test("resetting the filters clears the params from the URL", async function (assert) {
     await visit("/admin/config/customize/components?filter=air&status=unused");
 
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.strictEqual(
       currentURL(),
       "/admin/config/customize/components",
       "removes both params in a single URL update"
     );
-    assert.dom(".admin-filter-controls__input").hasValue("");
-    assert.dom(".admin-filter-controls__dropdown").hasValue("all");
+    assert.dom(".d-filter-controls__input").hasValue("");
+    assert.dom(".d-filter-controls__dropdown").hasValue("all");
     assert.strictEqual(
       requests.at(-1).name,
       "",
@@ -235,14 +235,14 @@ acceptance("Admin - Config areas - Components - filters", function (needs) {
     await visit("/admin/config/customize/components?filter=nomatch");
 
     assert
-      .dom(".admin-filter-controls")
+      .dom(".d-filter-controls")
       .exists("the filter controls render despite the empty filtered result");
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .hasValue("nomatch", "prefills the search input from the URL");
     assert.dom(".admin-config-components__component-row").doesNotExist();
     assert
-      .dom(".admin-filter-controls__no-results .admin-filter-controls__reset")
+      .dom(".d-filter-controls__no-results .d-filter-controls__reset")
       .exists("a reset button renders alongside the no-results message");
     assert
       .dom(".admin-config-area-empty-list")

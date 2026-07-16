@@ -4546,6 +4546,8 @@ it:
         title: "Tieni il messaggio nascosto"
         description: "Accetta la segnalazione e lascia il messaggio nascosto."
         complete: "Messaggio mantenuto nascosto."
+      agree_and_keep_deleted:
+        title: "Mantieni il messaggio cancellato"
       agree_and_suspend:
         title: "Sospendi utente"
         description: "Accetta la segnalazione e sospendi l'utente."

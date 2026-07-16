@@ -36,8 +36,6 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
-      post_image_descriptions:
-        description: "వివరణ"
       ai_tool_approval:
         loading: "లోడవుతోంది..."
         tool: "చర్య"
@@ -62,6 +60,9 @@ te:
           reset: "రీసెట్ చేయండి"
         search:
           name: "శోధించండి"
+        image_caption:
+          setting_groups:
+            settings: "అమరికలు"
         spam:
           name: "స్పామ్"
       translations:

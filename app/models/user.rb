@@ -1205,12 +1205,13 @@ class User < ActiveRecord::Base
       return if !User.should_update_last_seen?(id, now)
     end
 
+    previous_seen_at = last_seen_at
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless first_seen_at
 
-    DiscourseEvent.trigger(:user_seen, self)
+    DiscourseEvent.trigger(:user_seen, self, previous_seen_at)
   end
 
   def self.gravatar_template(email)

@@ -25,6 +25,9 @@ fr:
             topic_id:
               label: ID du sujet
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Discussion"
       invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
       preferences:
         all_events: "Tous les événements"

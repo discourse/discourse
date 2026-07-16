@@ -2401,6 +2401,8 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
+        modal:
+          title: "Prevodi"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."

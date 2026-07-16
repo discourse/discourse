@@ -3215,6 +3215,10 @@ en:
     filter_input:
       clear: "Clear filter"
 
+    filter_controls:
+      reset: "Reset filter"
+      toggle: "Toggle dropdown filters"
+
     d_icon_grid_picker:
       select_icon: "Select icon"
       search_placeholder: "Search icons..."
@@ -4877,8 +4881,16 @@ en:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
         modal:
-          title: "Translations for post"
+          title: "Translations"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
+          language_notice: "Set the original post language so translations can be shown to readers."
+          post_language: "Post language"
+          topic_language: "Topic title language"
+          save_post_language: "Save post language"
+          save_topic_language: "Save topic title language"
+          discard_language_change: "Discard change"
+          post_language_updated: "Post language updated"
+          topic_language_updated: "Topic title language updated"
         success: "Translations have been updated successfully"
         post_language_selector:
           title: "Post language"
@@ -6479,8 +6491,6 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset filter"
-    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -6934,6 +6944,7 @@ en:
           title: "Category management"
           header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
           keywords: "categories|category types|discussion|category management"
+          create_category: "Create category"
           tabs:
             settings: "Settings"
           types:

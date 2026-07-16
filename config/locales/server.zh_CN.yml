@@ -2726,6 +2726,7 @@ zh_CN:
       group: "按群组筛选话题"
       groups_any: "显示包含任意指定群组的话题（以逗号分隔）"
       groups_all: "显示包含所有指定群组的话题（以加号分隔）"
+      exclude_group: "排除特定群组成员参与的话题"
       locale: "按原始语言筛选话题"
       locale_any: "显示以任意指定语言撰写的原始话题（以逗号分隔）"
       exclude_locale: "排除最初以特定语言撰写的话题"
@@ -5110,6 +5111,8 @@ zh_CN:
         title: "保持帖子隐藏"
         description: "同意举报并保持帖子隐藏。"
         complete: "帖子保持隐藏。"
+      agree_and_keep_deleted:
+        title: "保持帖子删除"
       agree_and_suspend:
         title: "封禁用户"
         description: "同意举报并封禁用户。"

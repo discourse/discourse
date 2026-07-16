@@ -8,12 +8,9 @@ module Jobs
       url = args[:url]
       return if url.blank?
 
-      Oneboxer.onebox(url)
-
       event = DiscoursePostEvent::Event.find_by(id: args[:event_id])
-      return if event.blank? || !event.livestream? || event.location != url
-
-      event.post&.publish_change_to_clients!(:revised)
+      return if event.blank? || event.livestream_url != url
+      event.warm_livestream_onebox!
     end
   end
 end

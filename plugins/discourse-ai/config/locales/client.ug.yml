@@ -46,8 +46,6 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
-      post_image_descriptions:
-        description: "چۈشەندۈرۈش"
       ai_tool_approval:
         tool: "مەشغۇلات"
         user: "ئىشلەتكۈچى"
@@ -77,6 +75,9 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:

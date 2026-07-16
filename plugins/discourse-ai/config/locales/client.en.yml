@@ -232,12 +232,12 @@ en:
 
     discourse_ai:
       title: "AI"
-      post_image_descriptions:
-        edit: "Edit AI image description"
-        title: "Edit AI image description"
-        description: "Description"
-        save: "Save description"
-        saved: "AI image description saved"
+      post_image_captions:
+        edit: "Edit AI image caption"
+        title: "Edit AI image caption"
+        description: "Caption"
+        save: "Save caption"
+        saved: "AI image caption saved"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -385,6 +385,13 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        image_caption:
+          name: "Image Caption"
+          description: "Generates AI captions for post images and makes them available to readers and assistive technology"
+          post_image_captions: "Post image captions"
+          setting_groups:
+            settings: "Settings"
 
         translation:
           name: "Translation"
@@ -964,7 +971,7 @@ en:
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Image caption"
+          ai_image_caption: "Image caption"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"

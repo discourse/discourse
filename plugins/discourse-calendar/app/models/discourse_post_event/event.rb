@@ -3,6 +3,10 @@
 module DiscoursePostEvent
   class Event < ActiveRecord::Base
     PUBLIC_GROUP = "trust_level_0"
+    # Keep in sync with the constants of the same name in the
+    # DiscoursePostEventEvent JS model.
+    EARLY_ACCESS_MINUTES = 30
+    GRACE_PERIOD_MINUTES = 10
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 255
     MAX_DESCRIPTION_LENGTH = 1000
@@ -27,7 +31,7 @@ module DiscoursePostEvent
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
     after_commit :create_livestream_chat_channel, on: %i[create update]
-    after_commit :warm_livestream_onebox, on: %i[create update]
+    after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -72,12 +76,24 @@ module DiscoursePostEvent
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
-    def warm_livestream_onebox
-      return if !livestream? || location.blank?
-      return if !saved_change_to_livestream? && !saved_change_to_location?
-      return if Oneboxer.cached_onebox(location).present?
+    def has_cached_livestream_onebox?
+      livestream? && livestream_url.present? && Oneboxer.cached_onebox(livestream_url).present?
+    end
 
-      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: location)
+    # Happens after the event record is saved to prepare the onebox
+    def enqueue_warm_livestream_onebox
+      return if !livestream? || livestream_url.blank?
+      return if !saved_change_to_livestream? && !saved_change_to_location? && !saved_change_to_url?
+      return if has_cached_livestream_onebox?
+      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
+    end
+
+    # Fetches the onebox and tells clients to re-render the post with it. Only
+    # ever called from the background job, never during a request.
+    def warm_livestream_onebox!
+      return if has_cached_livestream_onebox?
+      Oneboxer.onebox(livestream_url)
+      post&.publish_change_to_clients!(:revised)
     end
 
     def destroy_topic_custom_field
@@ -145,6 +161,24 @@ module DiscoursePostEvent
 
       return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
+    end
+
+    # Mirrors `currentlyWithinEventTimeframe` in the DiscoursePostEventEvent JS
+    # model: joining opens EARLY_ACCESS_MINUTES before the start and, when the
+    # event has an end time, closes GRACE_PERIOD_MINUTES after it.
+    def currently_within_event_timeframe?
+      return false if starts_at.nil?
+
+      now = Time.zone.now
+
+      if all_day
+        opens_at = starts_at.beginning_of_day
+        closes_at = starts_at.end_of_day
+        return opens_at <= now && now <= closes_at
+      end
+
+      return false if now < starts_at - EARLY_ACCESS_MINUTES.minutes
+      ends_at.nil? || now < ends_at + GRACE_PERIOD_MINUTES.minutes
     end
 
     def starts_at
@@ -532,6 +566,16 @@ module DiscoursePostEvent
 
     def rrule_timezone
       timezone || DEFAULT_TIMEZONE
+    end
+
+    def livestream_url
+      location || url
+    end
+
+    def is_zoom_livestream?
+      return false unless SiteSetting.livestream_zoom_enabled
+      return false unless livestream?
+      DiscourseCalendar::Livestream::ZoomUrlParser.zoom_url?(livestream_url)
     end
 
     private

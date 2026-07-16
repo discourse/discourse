@@ -4918,6 +4918,8 @@ sk:
         title: "Udržujte príspevok skrytý"
         description: "Súhlasím s vlajkou a nechajte príspevok skrytý."
         complete: "Príspevok zostal skrytý."
+      agree_and_keep_deleted:
+        title: "Ponechať príspevok odstránený"
       agree_and_suspend:
         title: "Pozastavenie používateľa"
         description: "Súhlas s príznakom a pozastavenie používateľa."

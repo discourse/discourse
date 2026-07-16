@@ -50,6 +50,7 @@ pl_PL:
     prioritize_solved_topics_in_search: "Priorytetyzuj rozwiązane tematy w wynikach wyszukiwania."
     enable_support_category_type_setup: "Włącza opcję typu kategorii Wsparcie podczas konfiguracji tworzenia kategorii."
     enable_solved_shared_issues: "Dodaje przycisk „Ja również” do nierozwiązanych tematów w kategoriach pomocy technicznej, umożliwiając członkom sygnalizowanie, że mają ten sam problem i wyrażanie zgody na otrzymywanie powiadomień o rozwiązaniu tematu."
+    enable_solved_badges: "Włącza odznaki Rozwiązane przyznawane członkom, gdy udzielają oni rozwiązań pytań innych osób."
     show_who_marked_solved: "Pokaż, kto oznaczył temat jako rozwiązany. Informacja o tym znajduje się w pierwszym poście tematu, a w dymku z odpowiedzią."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

@@ -2,7 +2,8 @@
 
 class AdminNotice < ActiveRecord::Base
   MESSAGE_ALLOWED_TAGS = %w[a pre ul li].freeze
-  MESSAGE_ALLOWED_ATTRIBUTES = %w[href target rel].freeze
+  MESSAGE_ALLOWED_ATTRIBUTES =
+    (%w[href target rel] + SiteSettings::LabelFormatter::LINK_ATTRIBUTES).freeze
   MESSAGE_SANITIZER = Rails::Html::SafeListSanitizer.new
 
   validates :identifier, presence: true
@@ -11,11 +12,14 @@ class AdminNotice < ActiveRecord::Base
   enum :subject, %i[problem].freeze
 
   def message
-    MESSAGE_SANITIZER.sanitize(
+    translated =
       I18n.t(
         "dashboard.#{subject}.#{identifier}",
         **details.symbolize_keys.merge(base_path: Discourse.base_path),
-      ),
+      )
+
+    MESSAGE_SANITIZER.sanitize(
+      SiteSettings::LabelFormatter.expand_setting_links(translated),
       tags: MESSAGE_ALLOWED_TAGS,
       attributes: MESSAGE_ALLOWED_ATTRIBUTES,
     )

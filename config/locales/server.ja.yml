@@ -4724,6 +4724,8 @@ ja:
         title: "投稿を非表示のままにする"
         description: "通報に同意し、投稿を非表示のままにします。"
         complete: "投稿は非表示のままです。"
+      agree_and_keep_deleted:
+        title: "投稿を削除されたままにする"
       agree_and_suspend:
         title: "ユーザーを凍結する"
         description: "通報に合意し、ユーザーを凍結します。"

@@ -3072,6 +3072,7 @@ pl_PL:
       group: "Filtruj tematy według grup"
       groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
       groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
+      exclude_group: "Wyklucz tematy z uczestnikami z określonych grup"
       locale: "Filtruj tematy według języka oryginału"
       locale_any: "Pokaż tematy pierwotnie napisane w dowolnym z podanych języków (rozdzielone przecinkami)"
       exclude_locale: "Wyklucz tematy pierwotnie napisane w określonym języku"
@@ -3257,6 +3258,7 @@ pl_PL:
     wrong_invite_code: "Wprowadzony kod zaproszenia był nieprawidłowy."
     reserved_username: "Niedozwolona nazwa użytkownika."
     missing_user_field: "Nie wypełniłeś wszystkich wymaganych pól użytkownika"
+    missing_full_name: "Wpisz swoje imię i nazwisko"
     auth_complete: "Uwierzytelnianie zostało zakończone."
     click_to_continue: "Kliknij tutaj aby kontynuować."
     already_logged_in: "Przepraszamy! To zaproszenie jest przeznaczone dla nowych użytkowników, którzy nie mają jeszcze istniejącego konta."
@@ -5820,6 +5822,8 @@ pl_PL:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
     post_restored_by_author: "Wpis został przywrócony przez autora"
+    post_deleted_by_author_after_penalty: >-
+      Wpis został usunięty przez autora po tym, jak użytkownik został za to ukarany. Zapoznaj się z karą bez przywracania wpisu.
     priorities:
       low: "Niski"
       medium: "Średni"
@@ -5870,6 +5874,10 @@ pl_PL:
         title: "Zachowaj post ukryty"
         description: "Zgódź się z flagą i zachowaj post ukryty."
         complete: "Post pozostał ukryty."
+      agree_and_keep_deleted:
+        title: "Zachowaj usunięcie wpisu"
+        description: "Zgadzam się z flagą i pozostawiam wpis usunięty."
+        complete: "Wpis został usunięty."
       agree_and_suspend:
         title: "Zawieś użytkownika"
         description: "Zgódź się z flagą i zawieś konto użytkownika."
@@ -5935,6 +5943,10 @@ pl_PL:
         title: "Nic nie rób"
         description: "Zignoruj flagę, usuwając ją z kolejki bez podejmowania żadnych działań. Ukryte posty pozostaną ukryte i będą obsługiwane przez automatyczne narzędzia."
         complete: "Flaga zignorowana."
+      unsilence_user_and_ignore:
+        title: "Wyłącz wyciszenie użytkownika i zignoruj"
+        description: "Wyłącz wyciszenie użytkownika i usuń flagę z kolejki bez przywracania usuniętego wpisu."
+        complete: "Użytkownik został wyłączony, a flaga zignorowana."
       approve:
         title: "Tak"
         complete: "Post zatwierdzony."

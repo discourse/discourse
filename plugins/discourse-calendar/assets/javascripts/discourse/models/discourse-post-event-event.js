@@ -15,6 +15,26 @@ const DEFAULT_REMINDER = {
   unit: "minutes",
   period: "before",
 };
+// Keep in sync with the constants of the same name on
+// DiscoursePostEvent::Event, which enforces the same window server-side.
+const EARLY_ACCESS_MINUTES = 30;
+const GRACE_PERIOD_MINUTES = 10;
+
+export function isWithinEventTimeframe(allDay, startsAt, endsAt) {
+  const now = moment();
+
+  if (allDay) {
+    const opensAt = moment(startsAt).startOf("day");
+    const closesAt = moment(startsAt).endOf("day");
+
+    return now.isBetween(opensAt, closesAt);
+  }
+
+  const opensAt = moment(startsAt).subtract(EARLY_ACCESS_MINUTES, "minutes");
+  const closesAt = moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
+
+  return now.isBetween(opensAt, closesAt);
+}
 
 export default class DiscoursePostEventEvent {
   static create(args = {}) {
@@ -42,6 +62,9 @@ export default class DiscoursePostEventEvent {
   @tracked chatEnabled;
   @tracked livestream;
   @tracked livestreamOnebox;
+  @tracked livestreamUrl;
+  @tracked livestreamChatChannelId;
+  @tracked isZoomLivestream;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -89,6 +112,9 @@ export default class DiscoursePostEventEvent {
     this.chatEnabled = args.chat_enabled;
     this.livestream = args.livestream;
     this.livestreamOnebox = args.livestream_onebox;
+    this.livestreamUrl = args.livestream_url;
+    this.livestreamChatChannelId = args.livestream_chat_channel_id;
+    this.isZoomLivestream = args.is_zoom_livestream;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
@@ -162,6 +188,22 @@ export default class DiscoursePostEventEvent {
     return this.imageUpload?.url;
   }
 
+  get currentlyWithinEventTimeframe() {
+    return isWithinEventTimeframe(this.allDay, this.startsAt, this.endsAt);
+  }
+
+  // An event without an end time never falls past its timeframe, since
+  // `moment(undefined)` is "now" rather than an invalid date.
+  get pastEventTimeframe() {
+    if (!this.endsAt) {
+      return false;
+    }
+
+    return moment().isAfter(
+      moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes")
+    );
+  }
+
   updateFromEvent(event) {
     this.name = event.name;
     this.startsAt = event.startsAt;
@@ -183,6 +225,9 @@ export default class DiscoursePostEventEvent {
     this.chatEnabled = event.chatEnabled;
     this.livestream = event.livestream;
     this.livestreamOnebox = event.livestreamOnebox;
+    this.livestreamUrl = this.location || this.url;
+    this.livestreamChatChannelId = event.livestreamChatChannelId;
+    this.isZoomLivestream = event.isZoomLivestream;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;

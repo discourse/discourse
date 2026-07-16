@@ -3486,6 +3486,8 @@ zh_TW:
           actions: "動作"
           edit: "編輯"
           delete: "刪除"
+        modal:
+          title: "翻譯"
         post_language_selector:
           none: "未設定"
       errors:

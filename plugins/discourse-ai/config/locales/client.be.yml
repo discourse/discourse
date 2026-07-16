@@ -34,8 +34,6 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
-      post_image_descriptions:
-        description: "Апісанне"
       ai_tool_approval:
         loading: "Загрузка ..."
         tool: "Дзеянне"
@@ -55,6 +53,9 @@ be:
           reset: "скінуць"
         search:
           name: "Пошук"
+        image_caption:
+          setting_groups:
+            settings: "Налады"
         spam:
           name: "Спам"
       translations:

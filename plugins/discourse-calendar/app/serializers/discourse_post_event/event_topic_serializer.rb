@@ -6,5 +6,6 @@ module DiscoursePostEvent
 
     attributes :id
     attributes :title
+    attributes :slug
   end
 end

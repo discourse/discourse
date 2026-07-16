@@ -10,20 +10,13 @@ ja:
       sort_options:
         votes: "投票"
     topic_voting:
-      title: "トピック投票"
-      reached_limit: "票数が不足しています。既存の投票を削除してください！"
-      list_votes: "投票をリスト"
       voted: "あなたはこのトピックに投票しました"
-      allow_topic_voting: "ユーザーがこのカテゴリのトピックに投票することを許可する"
       vote_title: "投票"
       vote_title_plural: "投票"
       see_votes: "残り %{count} 票 (全 %{max} 票) です"
-      locked: "ロック済み"
       locked_description: "信頼レベルを上げて投票します"
       votes:
         other: "%{count} 票"
-      anonymous_button:
-        other: "投票"
       remove_vote: "投票を削除"
       and_more_voters: "および他 %{count} 人..."
       show_voters: "投票者を表示する"
@@ -38,10 +31,6 @@ ja:
         help: "投票したトピック"
     search:
       most_votes: "票数の最も多い項目"
-      advanced:
-        vote:
-          count:
-            label: "最低票数"
     admin:
       web_hooks:
         voting_event:

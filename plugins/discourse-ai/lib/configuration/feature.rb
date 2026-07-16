@@ -144,6 +144,17 @@ module DiscourseAi
           ]
         end
 
+        def image_caption_features
+          feature_cache[:image_caption] ||= [
+            new(
+              "post_image_captions",
+              "ai_image_caption_agent",
+              DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+              DiscourseAi::Configuration::Module::IMAGE_CAPTION,
+            ),
+          ]
+        end
+
         def spam_features
           feature_cache[:spam] ||= [
             new(
@@ -184,6 +195,7 @@ module DiscourseAi
         def lookup_bot_agent_ids
           AiAgent
             .where(enabled: true)
+            .where.not(id: SiteSetting.ai_image_caption_agent.to_i)
             .where(
               "allow_chat_channel_mentions OR allow_chat_direct_messages OR allow_topic_mentions OR allow_personal_messages",
             )
@@ -320,6 +332,7 @@ module DiscourseAi
             discord_features,
             inference_features,
             ai_helper_features,
+            image_caption_features,
             translation_features,
             bot_features,
             spam_features,
@@ -387,6 +400,8 @@ module DiscourseAi
               DiscourseAi::Summarization.find_summarization_model(agent_klass)
             when DiscourseAi::Configuration::Module::AI_HELPER
               DiscourseAi::AiHelper::Assistant.find_ai_helper_model(name, agent_klass)
+            when DiscourseAi::Configuration::Module::IMAGE_CAPTION
+              DiscourseAi::PostImageCaptions.image_caption_llm_model(agent)
             when DiscourseAi::Configuration::Module::TRANSLATION
               DiscourseAi::Translation::BaseTranslator.preferred_llm_model(agent_klass)
             when DiscourseAi::Configuration::Module::EMBEDDINGS

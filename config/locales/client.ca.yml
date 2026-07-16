@@ -2386,6 +2386,8 @@ ca:
           actions: "Accions"
           edit: "Edita"
           delete: "Suprimeix"
+        modal:
+          title: "Traduccions"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."

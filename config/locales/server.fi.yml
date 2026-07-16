@@ -4593,6 +4593,8 @@ fi:
         title: "Jätä viesti piiloon"
         description: "Hyväksy liputus ja jätä viesti piiloon."
         complete: "Viesti pidetty piilossa."
+      agree_and_keep_deleted:
+        title: "Pidä viesti poistettuna"
       agree_and_suspend:
         title: "Jäädytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."

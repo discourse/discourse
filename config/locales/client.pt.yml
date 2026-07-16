@@ -3717,7 +3717,7 @@ pt:
           one: "Ver %{count} idioma traduzido"
           other: "Ver %{count} idiomas traduzidos"
         modal:
-          title: "Traduções para publicação"
+          title: "Traduções"
           confirm_delete: "Tem a certeza que pretende eliminar as traduções para '%{languageCode}'?"
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:

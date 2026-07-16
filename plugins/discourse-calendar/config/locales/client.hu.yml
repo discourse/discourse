@@ -27,6 +27,9 @@ hu:
             topic_id:
               label: Témaazonosító
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Csevegés"
       invite_user_notification: "%{username} meghívta erre: %{description}"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"

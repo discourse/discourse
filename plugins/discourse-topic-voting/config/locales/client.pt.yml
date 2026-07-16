@@ -10,18 +10,12 @@ pt:
       sort_options:
         votes: "Votos"
     topic_voting:
-      reached_limit: "Já não tem votos, remover um voto existente!"
-      list_votes: "Listar os seus votos"
       voted: "Votou neste tópico"
-      allow_topic_voting: "Permitir que os utilizadores votem nos tópicos desta categoria"
       vote_title: "Voto"
       vote_title_plural: "Votos"
       votes:
         one: "%{count} voto"
         other: "%{count} votos"
-      anonymous_button:
-        one: "Voto"
-        other: "Votos"
       remove_vote: "Remover voto"
       and_more_voters: "e mais %{count}..."
       show_voters: "Mostrar quem votou"

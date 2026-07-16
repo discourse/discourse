@@ -34,8 +34,6 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
-      post_image_descriptions:
-        description: "Opis"
       ai_tool_approval:
         loading: "Učitavanje..."
         tool: "Akcije"
@@ -65,6 +63,9 @@ sr:
           name: "Pretraži"
         admin_dashboard:
           highlights: "Istaknuto"
+        image_caption:
+          setting_groups:
+            settings: "Podešavanje"
         spam:
           name: "Nepoželjno"
       modals:

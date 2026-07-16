@@ -38,8 +38,6 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
-      post_image_descriptions:
-        description: "Popis"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -75,6 +73,9 @@ cs:
           smart_dates: "Chytré datumy"
           markdown_tables: "Generovat Markdown tabulku"
           custom_prompt: "Vlastní pokyn"
+        image_caption:
+          setting_groups:
+            settings: "Nastavení"
         spam:
           name: "Spam"
       modals:

@@ -19,7 +19,6 @@ pt_BR:
       dashboard:
         emotion:
           title: "Gesto"
-          description: "Esta tabela exibe uma contagem de postagens classificadas com um determinado gesto, com o modelo \"SamLowe/roberta-base-go_emotions\""
         reports:
           filters:
             group_by:
@@ -204,8 +203,6 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
-      post_image_descriptions:
-        description: "Descrição"
       ai_tool_approval:
         loading: "Carregando..."
         tool: "Ação"
@@ -311,6 +308,9 @@ pt_BR:
             access_permissions: "Acessos e permissões"
             enabled_features: "Recursos habilitados"
             automation: "Automação"
+        image_caption:
+          setting_groups:
+            settings: "Definições"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -703,7 +703,7 @@ pt_BR:
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ajudante (%{agent})"
-          ai_helper_image_caption: "Legenda em imagem"
+          ai_image_caption: "Legenda em imagem"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Pesquisa com IA"
           ai_spam: "Spam"

@@ -21,7 +21,6 @@ ar:
       dashboard:
         emotion:
           title: "العاطفة"
-          description: "يسرد الجدول عدد المنشورات المصنَّفة بعاطفة محدَّدة. مصنَّفة باستخدام النموذج 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -229,8 +228,6 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
-      post_image_descriptions:
-        description: "الوصف"
       discourse_workflows:
         ai_agent:
           agent_id: "الوكيل"
@@ -364,6 +361,9 @@ ar:
             enabled_features: "الميزات المُفعّلة"
             automation: "الأتمتة"
             agents: "الوكلاء"
+        image_caption:
+          setting_groups:
+            settings: "الإعدادان"
         translation:
           name: "ترجمة"
           description: "يترجم المحتوى إلى اللغات المدعومة"
@@ -969,7 +969,7 @@ ar:
         usage:
           ai_bot: "روبوت الذكاء الاصطناعي"
           ai_helper: "مساعد (%{agent})"
-          ai_helper_image_caption: "وصف الصورة"
+          ai_image_caption: "وصف الصورة"
           ai_agent: "الوكيل (%{agent})"
           ai_summarization: "تلخيص"
           ai_embeddings_semantic_search: "البحث باستخدام الذكاء الاصطناعي"

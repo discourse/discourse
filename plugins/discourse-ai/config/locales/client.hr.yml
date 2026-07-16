@@ -36,8 +36,6 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
-      post_image_descriptions:
-        description: "Opis"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -66,6 +64,9 @@ hr:
           reset: "Resetirati"
         search:
           name: "Pretraživanje"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Nepoželjno"
       modals:

@@ -139,7 +139,7 @@ RSpec.describe TopicViewSerializer do
 
     before do
       SiteSetting.chat_enabled = true
-      # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+      # Don't do onebox-warming job so it doesn't make a real request
       Jobs.run_later!
       first_post
     end

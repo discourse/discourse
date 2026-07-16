@@ -2828,6 +2828,9 @@ zh_CN:
       default: 自定义表情符号
     filter_input:
       clear: "清除筛选器"
+    filter_controls:
+      reset: "重置筛选器"
+      toggle: "切换下拉筛选器"
     d_icon_grid_picker:
       select_icon: "选择图标"
       search_placeholder: "搜索图标…"
@@ -2851,6 +2854,8 @@ zh_CN:
       no_results: "在上方输入关键词搜索 GIF 动图。"
       browse_categories: "按类别浏览"
       bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
+      error_rate_limit: "我们已经达到了 GIF API 的速率限制。请稍等片刻，然后重试。"
+      error_search_too_long: "请将搜索词缩短至 50 个字符以内，然后重试。"
     codemirror:
       expression:
         sections:
@@ -2877,6 +2882,16 @@ zh_CN:
             substring: "返回字符串中两个索引之间的部分。"
             indexOf: "返回首次出现的位置索引；若未找到，则返回 -1。"
             match: "将字符串与正则表达式进行匹配。"
+            concat: "连接一个或多个字符串。"
+          number:
+            toFixed: "使用固定的小数位数格式化数字。"
+            toString: "返回该数字的字符串表示形式。"
+            toPrecision: "将数字格式化为指定的精度。"
+            toLocaleString: "返回与区域设置相关的字符串表示形式。"
+          boolean:
+            toString: "将 true 转换为 'true'，将 false 转换为 'false'。"
+          array:
+            length: "数组中元素的数量。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -4210,8 +4225,9 @@ zh_CN:
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
-          title: "帖子的翻译"
+          title: "翻译"
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
+          post_language: "帖子语言"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -5665,8 +5681,6 @@ zh_CN:
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
-    reset_filter: "重置筛选器"
-    toggle_filters: "切换下拉筛选器"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -6088,6 +6102,7 @@ zh_CN:
             stats_and_thresholds:
               title: "统计数据和阈值"
         category_management:
+          create_category: "创建类别"
           tabs:
             settings: "设置"
           types:

@@ -143,6 +143,26 @@ describe Chat::ReviewQueue do
         expect(second_flag_result).to include success: true
       end
 
+      it "refreshes the reviewable payload when re-flagging an edited message" do
+        upload = Fabricate(:upload, user: message_poster)
+        update_message!(
+          message,
+          user: message_poster,
+          text: "Now with an image ![#{upload.original_filename}](#{upload.short_url})",
+          upload_ids: [upload.id],
+        )
+        message.reload
+
+        expect(second_flag_result).to include success: true
+
+        payload = Chat::ReviewableMessage.find_by(target: message).payload
+        expect(payload["message_cooked"]).to eq(message.cooked)
+        expect(payload["message_cooked"]).to include(upload.url)
+        expect(payload["message_uploads"].map { |upload_json| upload_json["id"] }).to eq(
+          [upload.id],
+        )
+      end
+
       it "ignores the cooldown window when using the notify_moderators flag type" do
         notify_moderators_result =
           queue.flag_message(

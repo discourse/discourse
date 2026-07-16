@@ -36,8 +36,6 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
-      post_image_descriptions:
-        description: "描述"
       ai_tool_approval:
         loading: "載入中..."
         tool: "動作"
@@ -64,6 +62,9 @@ zh_TW:
           reset: "重置"
         search:
           name: "搜尋"
+        image_caption:
+          setting_groups:
+            settings: "設定"
         spam:
           name: "垃圾內容"
       translations:

@@ -4901,6 +4901,8 @@ pt_BR:
         title: "Manter postagem oculta"
         description: "Concordar com o sinalizador e manter a postagem oculta."
         complete: "Postagem mantida oculta."
+      agree_and_keep_deleted:
+        title: "Manter a postagem excluída"
       agree_and_suspend:
         title: "Suspender usuário(a)"
         description: "Concorde com o sinalizador e suspenda o(a) usuário(a)."
