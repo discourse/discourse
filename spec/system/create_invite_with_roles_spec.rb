@@ -12,7 +12,7 @@ describe "Creating invites with roles" do
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:cdp) { PageObjects::CDP.new }
 
-  before { SiteSetting.enable_admin_invites = true }
+  before { SiteSetting.enable_invite_modal_with_roles = true }
 
   def open_invite_modal_for(current_user)
     user_invited_pending_page.visit(current_user)
@@ -170,13 +170,13 @@ describe "Creating invites with roles" do
     end
   end
 
-  context "when enable_admin_invites is disabled" do
+  context "when enable_invite_modal_with_roles is disabled" do
     fab!(:placeholder_invite) do
       Fabricate(:invite, invited_by: admin, email: "placeholder@example.com")
     end
 
     before do
-      SiteSetting.enable_admin_invites = false
+      SiteSetting.enable_invite_modal_with_roles = false
       sign_in(admin)
     end
 

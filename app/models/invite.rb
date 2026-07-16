@@ -202,12 +202,19 @@ class Invite < ActiveRecord::Base
 
     DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
 
-    topic_id = opts[:topic]&.id || opts[:topic_id]
-    invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+    if invite.admin?
+      # admin invites never carry topic or group associations; clear any left
+      # over from a reused member invite
+      invite.topic_invites.destroy_all
+      invite.invited_groups.destroy_all
+    else
+      topic_id = opts[:topic]&.id || opts[:topic_id]
+      invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
 
-    group_ids = opts[:group_ids]
-    if group_ids.present?
-      group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+      group_ids = opts[:group_ids]
+      if group_ids.present?
+        group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+      end
     end
 
     if emailed_status == emailed_status_types[:pending]

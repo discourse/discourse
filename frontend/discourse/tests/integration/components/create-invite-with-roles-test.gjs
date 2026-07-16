@@ -173,6 +173,37 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
       .hasValue("http://example.com/invites/def456");
   });
 
+  test("sends the topic supplied by the model, like when sharing a topic", async function (assert) {
+    const model = {
+      inviteToTopic: true,
+      topics: [{ id: 123, title: "A very interesting discussion" }],
+      topicId: 123,
+      topicTitle: "A very interesting discussion",
+    };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 46,
+        invite_key: "mno345",
+        link: "http://example.com/invites/mno345",
+        max_redemptions_allowed: 10,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("topic_id"), "123");
+  });
+
   test("creating a member email invite shows the invitation sent screen", async function (assert) {
     const model = { invites: [] };
 

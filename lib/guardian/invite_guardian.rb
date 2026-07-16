@@ -10,7 +10,7 @@ module InviteGuardian
   end
 
   def can_create_admin_invite?
-    is_admin? && @user.upcoming_change_enabled?(:enable_admin_invites)
+    is_admin? && @user.upcoming_change_enabled?(:enable_invite_modal_with_roles)
   end
 
   def can_invite_to_forum?(groups = nil)

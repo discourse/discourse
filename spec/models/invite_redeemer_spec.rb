@@ -670,7 +670,7 @@ RSpec.describe InviteRedeemer do
         Fabricate(:invite, email: "future-admin@example.com", admin: true, invited_by: admin)
       end
 
-      before { SiteSetting.enable_admin_invites = true }
+      before { SiteSetting.enable_invite_modal_with_roles = true }
 
       def redeem
         InviteRedeemer.new(
@@ -720,8 +720,8 @@ RSpec.describe InviteRedeemer do
         expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
       end
 
-      it "redeems as a regular invite when enable_admin_invites is disabled" do
-        SiteSetting.enable_admin_invites = false
+      it "redeems as a regular invite when enable_invite_modal_with_roles is disabled" do
+        SiteSetting.enable_invite_modal_with_roles = false
 
         user = redeem
 

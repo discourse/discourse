@@ -307,6 +307,26 @@ RSpec.describe Invite do
         expect(reused.id).to eq(invite.id)
         expect(reused.admin).to eq(true)
       end
+
+      it "clears topic and group associations when a member invite is reused as an admin invite" do
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+        invite =
+          Invite.generate(
+            admin,
+            email: "test@example.com",
+            topic_id: topic.id,
+            group_ids: [group.id],
+          )
+        expect(invite.topics).to contain_exactly(topic)
+        expect(invite.groups).to contain_exactly(group)
+
+        reused = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.topics).to be_empty
+        expect(reused.groups).to be_empty
+      end
     end
   end
 

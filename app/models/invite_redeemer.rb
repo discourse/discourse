@@ -169,7 +169,7 @@ class InviteRedeemer
 
   def self.admin_invite_grantable?(invite)
     invite.admin? && invite.invited_by&.admin? &&
-      UpcomingChanges.enabled_for_user?(:enable_admin_invites, invite.invited_by)
+      UpcomingChanges.enabled_for_user?(:enable_invite_modal_with_roles, invite.invited_by)
   end
 
   private

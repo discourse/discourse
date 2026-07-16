@@ -251,7 +251,7 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
 
   needs.settings({
     enable_site_owner_onboarding: true,
-    enable_admin_invites: true,
+    enable_invite_modal_with_roles: true,
   });
 
   needs.pretender((server, helper) => {

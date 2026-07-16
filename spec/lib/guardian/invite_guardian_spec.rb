@@ -46,8 +46,8 @@ RSpec.describe InviteGuardian do
   ###### INVITING ######
 
   describe "#can_create_admin_invite?" do
-    it "is true only for admins when enable_admin_invites is enabled" do
-      SiteSetting.enable_admin_invites = true
+    it "is true only for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
 
       expect(Guardian.new(admin).can_create_admin_invite?).to eq(true)
       expect(Guardian.new(moderator).can_create_admin_invite?).to eq(false)
@@ -55,8 +55,8 @@ RSpec.describe InviteGuardian do
       expect(Guardian.new(nil).can_create_admin_invite?).to eq(false)
     end
 
-    it "is false for admins when enable_admin_invites is disabled" do
-      SiteSetting.enable_admin_invites = false
+    it "is false for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
 
       expect(Guardian.new(admin).can_create_admin_invite?).to eq(false)
     end

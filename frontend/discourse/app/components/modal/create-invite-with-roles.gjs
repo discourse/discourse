@@ -210,7 +210,7 @@ export default class CreateInviteWithRoles extends Component {
       description: this.invite.description ?? "",
       maxRedemptions:
         this.invite.max_redemptions_allowed ?? this.defaultRedemptionsAllowed,
-      inviteToTopic: this.invite.topicId,
+      inviteToTopic: this.model.topicId ?? this.invite.topicId,
       inviteToGroups: this.model.groupIds ?? this.invite.groupIds ?? [],
       customMessage: this.invite.custom_message ?? "",
     };

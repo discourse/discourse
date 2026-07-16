@@ -219,6 +219,12 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invited_by: current_user, id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
 
+    if invite.admin?
+      %i[topic_id group_ids group_names].each do |param|
+        raise Discourse::InvalidParameters.new(param) if params[param].present?
+      end
+    end
+
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?

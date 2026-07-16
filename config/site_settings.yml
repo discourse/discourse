@@ -4678,7 +4678,7 @@ experimental:
   admin_dashboard_reports_seeded:
     default: false
     hidden: true
-  enable_admin_invites:
+  enable_invite_modal_with_roles:
     default: false
     hidden: true
     client: true

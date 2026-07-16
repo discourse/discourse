@@ -632,7 +632,7 @@ RSpec.describe InvitesController do
     end
 
     context "with admin invite" do
-      before { SiteSetting.enable_admin_invites = true }
+      before { SiteSetting.enable_invite_modal_with_roles = true }
 
       it "creates a single-use admin invite" do
         sign_in(admin)
@@ -662,8 +662,8 @@ RSpec.describe InvitesController do
         expect(Invite.last.max_redemptions_allowed).to eq(1)
       end
 
-      it "fails when enable_admin_invites is disabled" do
-        SiteSetting.enable_admin_invites = false
+      it "fails when enable_invite_modal_with_roles is disabled" do
+        SiteSetting.enable_invite_modal_with_roles = false
         sign_in(admin)
 
         post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
@@ -728,6 +728,25 @@ RSpec.describe InvitesController do
         expect(Invite.where(email: %w[bulk1@example.com bulk2@example.com]).pluck(:admin)).to eq(
           [false, false],
         )
+      end
+
+      it "cannot add a topic or groups to an admin invite via #update" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { topic_id: topic.id }
+        expect(response.status).to eq(400)
+
+        put "/invites/#{invite.id}", params: { group_ids: [group.id] }
+        expect(response.status).to eq(400)
+
+        expect(invite.reload.topics).to be_empty
+        expect(invite.groups).to be_empty
       end
 
       it "cannot strip the email from an admin invite via #update" do

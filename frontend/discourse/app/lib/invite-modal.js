@@ -4,7 +4,7 @@ import CreateInviteWithRoles from "discourse/components/modal/create-invite-with
 
 /**
  * Opens the invite creation modal, selecting the redesigned role-based
- * variant when the `enable_admin_invites` upcoming change is enabled.
+ * variant when the `enable_invite_modal_with_roles` upcoming change is enabled.
  *
  * @param {Object} context - any owned object (component, route, controller)
  * @param {Object} opts - options forwarded to `modal.show`, e.g. `{ model }`
@@ -15,7 +15,7 @@ export function showCreateInviteModal(context, opts = {}) {
   const modal = owner.lookup("service:modal");
   const siteSettings = owner.lookup("service:site-settings");
 
-  const component = siteSettings.enable_admin_invites
+  const component = siteSettings.enable_invite_modal_with_roles
     ? CreateInviteWithRoles
     : CreateInvite;
 

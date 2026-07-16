@@ -150,22 +150,22 @@ RSpec.describe CurrentUserSerializer do
   describe "#can_create_admin_invite" do
     let(:payload) { serializer.as_json }
 
-    it "is true for admins when enable_admin_invites is enabled" do
-      SiteSetting.enable_admin_invites = true
+    it "is true for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
       user.update!(admin: true)
 
       expect(payload[:can_create_admin_invite]).to eq(true)
     end
 
-    it "is absent for admins when enable_admin_invites is disabled" do
-      SiteSetting.enable_admin_invites = false
+    it "is absent for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
       user.update!(admin: true)
 
       expect(payload).not_to have_key(:can_create_admin_invite)
     end
 
-    it "is absent for regular users when enable_admin_invites is enabled" do
-      SiteSetting.enable_admin_invites = true
+    it "is absent for regular users when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
 
       expect(payload).not_to have_key(:can_create_admin_invite)
     end
