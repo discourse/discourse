@@ -5,9 +5,9 @@ RSpec.describe DiscourseAi::Agents::SettingsExplorer do
 
   before { enable_current_plugin }
 
-  it "instructs the agent to update settings for administrators" do
+  it "requires human approval before updating settings for administrators" do
     expect(settings_explorer.system_prompt).to include(
-      "You are able to update site settings when an administrator asks you to do so.",
+      "You are able to update site settings when an administrator asks you to do so, but you must get approval from a human before making any change.",
     )
   end
 
