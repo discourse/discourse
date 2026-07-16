@@ -14,6 +14,7 @@ import { i18n } from "discourse-i18n";
 
 export default class GifPanel extends Component {
   @service dialog;
+  @service interfaceColor;
   @service siteSettings;
 
   search = new GifSearch({
@@ -35,6 +36,16 @@ export default class GifPanel extends Component {
     return 150;
   }
 
+  get darkMediaQuery() {
+    if (this.interfaceColor.darkModeForced) {
+      return "all";
+    } else if (this.interfaceColor.lightModeForced) {
+      return "none";
+    } else {
+      return "(prefers-color-scheme: dark)";
+    }
+  }
+
   @action
   pick(content) {
     const markup = `\n![${content.title}|${content.width}x${content.height}](${content.original})\n`;
@@ -53,7 +64,7 @@ export default class GifPanel extends Component {
           @onClearInput={{this.search.clearQuery}}
           @icons={{hash left="magnifying-glass"}}
           @containerClass="gif-panel__filter"
-          placeholder={{i18n "gifs.search_placeholder"}}
+          placeholder={{i18n "gifs.placeholder"}}
         >
           {{#if this.search.loading}}
             {{dLoadingSpinner size="small"}}
@@ -98,11 +109,17 @@ export default class GifPanel extends Component {
       {{/if}}
 
       <div class="gif-panel__branding">
-        <img
-          class="gif-panel__branding-logo"
-          src={{getURL "/images/klipy-logo.png"}}
-          alt={{i18n "gifs.powered_by"}}
-        />
+        <picture>
+          <source
+            srcset={{getURL "/images/klipy-logo-dark.png"}}
+            media={{this.darkMediaQuery}}
+          />
+          <img
+            class="gif-panel__branding-logo"
+            src={{getURL "/images/klipy-logo.png"}}
+            alt={{i18n "gifs.powered_by"}}
+          />
+        </picture>
       </div>
     </div>
   </template>

@@ -3243,7 +3243,6 @@ en:
       composer_title: "Insert GIF"
       placeholder: "Search KLIPY"
       powered_by: "Powered by Klipy"
-      search_placeholder: "Search GIFs"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
       bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
