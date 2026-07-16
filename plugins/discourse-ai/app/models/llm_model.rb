@@ -8,6 +8,11 @@ class LlmModel < ActiveRecord::Base
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
+  GOOGLE_VERTEX_AI_PROVIDER_NAME = "google_vertex_ai"
+  # Interpolated into the Vertex AI hostname/path — must stay strict to avoid
+  # sending environment credentials to an attacker-controlled host.
+  GOOGLE_VERTEX_AI_REGION_FORMAT = /\A[a-z](?:[a-z0-9-]*[a-z0-9])?\z/
+  GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT = /\A[a-z][a-z0-9-]{4,28}[a-z0-9]\z/
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
     "markdown" => "md",
@@ -99,9 +104,7 @@ class LlmModel < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
-  validates :url,
-            presence: true,
-            if: -> { llm_endpoint&.requires_configured_url? != false }
+  validates :url, presence: true, if: -> { llm_endpoint&.requires_configured_url? != false }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -625,12 +628,26 @@ class LlmModel < ActiveRecord::Base
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
       # access_key_id and role_arn are optional — SDK can auto-resolve credentials
-    elsif provider == "google_vertex_ai"
-      if lookup_custom_param("region").blank?
+    elsif provider == GOOGLE_VERTEX_AI_PROVIDER_NAME
+      region = lookup_custom_param("region")
+      project_id = lookup_custom_param("project_id")
+
+      if region.blank?
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      elsif !region.to_s.match?(GOOGLE_VERTEX_AI_REGION_FORMAT)
+        errors.add(:base, I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"))
       end
-      if lookup_custom_param("project_id").blank?
-        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"))
+
+      if project_id.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+        )
+      elsif !project_id.to_s.match?(GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT)
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+        )
       end
     end
   end

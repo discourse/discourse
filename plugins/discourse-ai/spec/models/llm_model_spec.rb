@@ -58,22 +58,50 @@ RSpec.describe LlmModel do
   end
 
   describe "Google Vertex AI provider validation" do
+    def build_vertex_model(provider_params)
+      Fabricate.build(
+        :llm_model,
+        provider: "google_vertex_ai",
+        tokenizer: "DiscourseAi::Tokenizer::GeminiTokenizer",
+        name: "google/gemini-3.5-flash",
+        url: nil,
+        api_key: nil,
+        provider_params: provider_params,
+      )
+    end
+
     it "does not require a URL or API key" do
-      model =
-        Fabricate.build(
-          :llm_model,
-          provider: "google_vertex_ai",
-          tokenizer: "DiscourseAi::Tokenizer::GeminiTokenizer",
-          name: "google/gemini-3.5-flash",
-          url: nil,
-          api_key: nil,
-          provider_params: {
-            project_id: "discourse-project",
-            region: "global",
-          },
-        )
+      model = build_vertex_model(project_id: "discourse-project", region: "global")
 
       expect(model).to be_valid
+    end
+
+    it "requires region and project_id" do
+      model = build_vertex_model({})
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"),
+        I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+      )
+    end
+
+    it "rejects regions that could redirect requests to another host" do
+      model = build_vertex_model(project_id: "discourse-project", region: "evil.example/")
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"),
+      )
+    end
+
+    it "rejects project ids that don't match the GCP format" do
+      model = build_vertex_model(project_id: "Bad Project!", region: "us-central1")
+
+      expect(model).not_to be_valid
+      expect(model.errors[:base]).to include(
+        I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+      )
     end
   end
 

@@ -192,7 +192,9 @@ export default class AiLlmEditorForm extends Component {
 
   @action
   canEditURL(provider) {
-    return provider !== "aws_bedrock";
+    const capabilities =
+      this.args.llms.resultSetMeta.provider_capabilities?.[provider];
+    return capabilities?.requires_configured_url ?? true;
   }
 
   @action

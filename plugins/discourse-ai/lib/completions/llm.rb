@@ -51,6 +51,26 @@ module DiscourseAi
           DiscourseAi::Tokenizer::BasicTokenizer.available_llm_tokenizers.map(&:name)
         end
 
+        # Endpoint capabilities the admin UI needs to render provider forms.
+        # Endpoints match on provider (and sometimes url), so a lightweight
+        # probe is enough to resolve them.
+        def provider_capabilities
+          probe = Struct.new(:provider, :url)
+
+          provider_names.each_with_object({}) do |provider, capabilities|
+            endpoint =
+              begin
+                DiscourseAi::Completions::Endpoints::Base.endpoint_for(probe.new(provider, ""))
+              rescue UNKNOWN_MODEL
+                nil
+              end
+
+            capabilities[provider] = {
+              requires_configured_url: endpoint ? endpoint.requires_configured_url? : true,
+            }
+          end
+        end
+
         def valid_provider_models
           return @valid_provider_models if defined?(@valid_provider_models)
 
