@@ -261,7 +261,9 @@ export default class InterfaceController extends Controller {
   }
 
   homeChanged() {
-    const siteHome = this.siteSettings.top_menu.split("|")[0].split(",")[0];
+    const siteHome =
+      this.siteSettings.default_homepage ||
+      this.siteSettings.top_menu.split("|")[0].split(",")[0];
 
     if (this.model.canPickThemeWithCustomHomepage) {
       USER_HOMES[-1] = "custom";

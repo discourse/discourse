@@ -315,6 +315,13 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: "latest"
+    choices: "TopMenu.choices"
+    area: "interface"
   custom_homepage_crawler_route:
     type: enum
     default: "latest"

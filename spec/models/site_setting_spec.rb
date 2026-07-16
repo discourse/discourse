@@ -78,7 +78,7 @@ RSpec.describe SiteSetting do
 
     describe "homepage" do
       it "has homepage" do
-        SiteSetting.top_menu = "bookmarks|latest"
+        SiteSetting.default_homepage = "bookmarks"
         expect(SiteSetting.homepage).to eq("bookmarks")
       end
     end

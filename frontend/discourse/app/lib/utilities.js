@@ -283,6 +283,7 @@ export function initializeDefaultHomepage(siteSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
     sel?.getAttribute("content") ||
+    siteSettings.default_homepage ||
     siteSettings.top_menu.split("|")[0].split(",")[0];
   setDefaultHomepage(homepage);
 }

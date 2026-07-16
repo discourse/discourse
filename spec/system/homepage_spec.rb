@@ -39,8 +39,8 @@ describe "Homepage" do
     expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
   end
 
-  it "defaults to first top_menu item as anonymous homepage" do
-    SiteSetting.top_menu = "categories|latest|new"
+  it "uses default_homepage for both anonymous and logged-in users" do
+    SiteSetting.default_homepage = "categories"
     visit "/"
 
     expect(page).to have_css(".navigation-container .categories.active", text: "Categories")
