@@ -6,6 +6,9 @@ module NestedReplies
     ROOTS_PER_PAGE = 20
     CHILDREN_PER_PAGE = 50
     PRELOAD_CHILDREN_PER_PARENT = 3
+    HOT_PRELOAD_POST_BUDGET = 60
+    HOT_PRELOAD_PER_ROOT_BUDGET = 15
+    HOT_PRELOAD_DEPTH_PENALTY = HotScoreCalculator::CHILD_PENALTY
     SIBLINGS_PER_ANCESTOR = 5
 
     POST_INCLUDES = [
@@ -106,6 +109,8 @@ module NestedReplies
 
     def batch_preload_tree(starting_posts, sort, max_depth:)
       sort = effective_sort(sort)
+      return batch_preload_hot_tree(starting_posts, max_depth: max_depth) if sort == "hot"
+
       all_posts = starting_posts.dup
       children_map = {}
 
@@ -117,7 +122,6 @@ module NestedReplies
         last_level = (depth + 1 >= max_depth) || (depth + 1 >= configured_max_depth)
 
         order_expr = NestedReplies::Sort.sql_order_expression(sort)
-        hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql : ""
         child_ids =
           DB.query_single(
             <<~SQL,
@@ -129,7 +133,6 @@ module NestedReplies
                          ORDER BY #{order_expr}
                        ) AS rn
                 FROM posts
-                #{hot_join}
                 WHERE posts.topic_id = :topic_id
                   AND posts.reply_to_post_number IN (:parent_numbers)
                   AND posts.post_type IN (:post_types)
@@ -163,6 +166,187 @@ module NestedReplies
       end
 
       { children_map: children_map, all_posts: all_posts }
+    end
+
+    def batch_preload_hot_tree(starting_posts, max_depth:)
+      all_posts = starting_posts.dup
+      children_map = {}
+      max_preload_depth = [max_depth, configured_max_depth, PRELOAD_DEPTH].min
+      hot_starting_posts =
+        starting_posts.select do |post|
+          HotScoreCalculator.public_post_types.include?(post.post_type)
+        end
+
+      if hot_starting_posts.empty? || max_preload_depth <= 0 || HOT_PRELOAD_POST_BUDGET <= 0 ||
+           HOT_PRELOAD_PER_ROOT_BUDGET <= 0 || PRELOAD_CHILDREN_PER_PARENT <= 0
+        return { children_map: children_map, all_posts: all_posts }
+      end
+
+      # Discover only the three-wide, three-deep score frontier; hydrate posts after the global
+      # and per-root budgets choose which branches should arrive expanded.
+      candidate_rows = hot_preload_candidate_rows(hot_starting_posts, max_preload_depth)
+      root_rows = candidate_rows.select { |row| row.depth.zero? }.index_by(&:post_number)
+      rows_by_parent =
+        candidate_rows.select { |row| row.depth.positive? }.group_by(&:reply_to_post_number)
+      candidates =
+        hot_starting_posts.filter_map do |post|
+          row = root_rows[post.post_number]
+          next if row.blank?
+
+          {
+            post_number: post.post_number,
+            branch_post_number: post.post_number,
+            depth: 0,
+            priority: hot_preload_priority(row.thread_hot_score, 0),
+            thread_hot_score: row.thread_hot_score.to_f,
+            hot_score: row.hot_score.to_f,
+          }
+        end
+
+      preloaded_count = 0
+      branch_preloaded_counts = Hash.new(0)
+      selected_rows_by_parent = {}
+
+      while candidates.present? && preloaded_count < HOT_PRELOAD_POST_BUDGET
+        candidates.sort_by! do |candidate|
+          [
+            -candidate[:priority],
+            -candidate[:thread_hot_score],
+            -candidate[:hot_score],
+            candidate[:post_number],
+          ]
+        end
+
+        candidate = candidates.shift
+        parent_post_number = candidate[:post_number]
+        branch_post_number = candidate[:branch_post_number]
+
+        next if candidate[:depth] >= max_preload_depth
+        next if selected_rows_by_parent.key?(parent_post_number)
+        next if branch_preloaded_counts[branch_post_number] >= HOT_PRELOAD_PER_ROOT_BUDGET
+
+        remaining_total_budget = HOT_PRELOAD_POST_BUDGET - preloaded_count
+        remaining_branch_budget =
+          HOT_PRELOAD_PER_ROOT_BUDGET - branch_preloaded_counts[branch_post_number]
+        limit = [PRELOAD_CHILDREN_PER_PARENT, remaining_total_budget, remaining_branch_budget].min
+        next if limit <= 0
+
+        child_rows = rows_by_parent.fetch(parent_post_number, []).first(limit)
+        next if child_rows.empty?
+
+        selected_rows_by_parent[parent_post_number] = child_rows
+        preloaded_count += child_rows.size
+        branch_preloaded_counts[branch_post_number] += child_rows.size
+
+        child_depth = candidate[:depth] + 1
+        next if child_depth >= max_preload_depth
+
+        child_rows.each do |child|
+          candidates << {
+            post_number: child.post_number,
+            branch_post_number: branch_post_number,
+            depth: child_depth,
+            priority: hot_preload_priority(child.thread_hot_score, child_depth),
+            thread_hot_score: child.thread_hot_score.to_f,
+            hot_score: child.hot_score.to_f,
+          }
+        end
+      end
+
+      selected_ids = selected_rows_by_parent.values.flatten.map(&:id).uniq
+      posts_by_id =
+        if selected_ids.empty?
+          {}
+        else
+          load_posts_for_tree(topic.posts.with_deleted.where(id: selected_ids)).to_a.index_by(&:id)
+        end
+
+      selected_rows_by_parent.each do |selected_parent_post_number, rows|
+        children_map[selected_parent_post_number] = rows.filter_map { |row| posts_by_id[row.id] }
+      end
+      all_posts.concat(selected_ids.filter_map { |post_id| posts_by_id[post_id] })
+
+      { children_map: children_map, all_posts: all_posts }
+    end
+
+    def hot_preload_candidate_rows(starting_posts, max_depth)
+      thread_hot_score = NestedReplies::Sort.hot_score_expression("posts", :thread_hot_score)
+      hot_score = NestedReplies::Sort.hot_score_expression("posts", :hot_score)
+
+      DB.query(
+        <<~SQL,
+          WITH RECURSIVE preload_tree (
+            id,
+            post_number,
+            reply_to_post_number,
+            depth,
+            path,
+            thread_hot_score,
+            hot_score
+          ) AS (
+            SELECT posts.id,
+                   posts.post_number,
+                   posts.reply_to_post_number,
+                   0,
+                   ARRAY[posts.post_number]::integer[],
+                   #{thread_hot_score},
+                   #{hot_score}
+            FROM posts
+            #{NestedReplies::Sort.hot_score_join_sql}
+            WHERE posts.topic_id = :topic_id
+              AND posts.id IN (:starting_post_ids)
+              AND posts.post_type IN (:post_types)
+
+            UNION ALL
+
+            SELECT children.id,
+                   children.post_number,
+                   children.reply_to_post_number,
+                   preload_tree.depth + 1,
+                   preload_tree.path || children.post_number,
+                   children.thread_hot_score,
+                   children.hot_score
+            FROM preload_tree
+            CROSS JOIN LATERAL (
+              SELECT posts.id,
+                     posts.post_number,
+                     posts.reply_to_post_number,
+                     #{thread_hot_score} AS thread_hot_score,
+                     #{hot_score} AS hot_score
+              FROM posts
+              #{NestedReplies::Sort.hot_score_join_sql}
+              WHERE posts.topic_id = :topic_id
+                AND posts.reply_to_post_number = preload_tree.post_number
+                AND posts.post_number > 1
+                AND posts.post_type IN (:post_types)
+                AND NOT posts.post_number = ANY(preload_tree.path)
+              ORDER BY #{NestedReplies::Sort.sql_order_expression("hot")}
+              LIMIT :children_per_parent
+            ) children
+            WHERE preload_tree.depth < :max_depth
+          )
+          SELECT id,
+                 post_number,
+                 reply_to_post_number,
+                 depth,
+                 thread_hot_score,
+                 hot_score
+          FROM preload_tree
+          ORDER BY reply_to_post_number,
+                   thread_hot_score DESC,
+                   hot_score DESC,
+                   post_number ASC
+        SQL
+        topic_id: topic.id,
+        starting_post_ids: starting_posts.map(&:id),
+        post_types: HotScoreCalculator.public_post_types,
+        children_per_parent: PRELOAD_CHILDREN_PER_PARENT,
+        max_depth: max_depth,
+      )
+    end
+
+    def hot_preload_priority(thread_hot_score, depth)
+      thread_hot_score.to_f - HOT_PRELOAD_DEPTH_PENALTY * depth
     end
 
     def batch_load_siblings(ancestors, sort)
