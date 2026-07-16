@@ -110,6 +110,24 @@ RSpec.describe PostTiming do
       expect(user_visit.reload.posts_read).to eq(5)
     end
 
+    it "advances last_read_post_number onto a trailing small action" do
+      Fabricate(:post, topic: post.topic, post_number: 2)
+      small_action =
+        Fabricate(:post, topic: post.topic, post_type: Post.types[:small_action], post_number: 3)
+      Topic.reset_highest(post.topic_id)
+
+      expect(post.topic.reload.highest_post_number).to eq(2)
+
+      PostTiming.process_timings(
+        post.user,
+        post.topic_id,
+        1,
+        [[1, 100], [2, 100], [small_action.post_number, 100]],
+      )
+
+      expect(TopicUser.get(post.topic, post.user).last_read_post_number).to eq(3)
+    end
+
     it "does not count private message posts read" do
       pm = Fabricate(:private_message_topic, user: Fabricate(:admin))
       user1, user2 = pm.topic_allowed_users.map(&:user)

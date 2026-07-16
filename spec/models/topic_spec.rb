@@ -3681,6 +3681,15 @@ RSpec.describe Topic do
       expect(Topic.reset_highest(topic.id)).to eq(2)
       expect(topic.reload.highest_staff_post_number).to eq(2)
     end
+
+    it "does not pull a user's last_read_post_number back below a trailing small action" do
+      third_post.update!(post_type: Post.types[:small_action])
+      topic_user = Fabricate(:topic_user, topic:, user:, last_read_post_number: 3)
+
+      Topic.reset_highest(topic.id)
+
+      expect(topic_user.reload.last_read_post_number).to eq(3)
+    end
   end
 
   describe "#update_statistics!" do

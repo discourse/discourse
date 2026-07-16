@@ -24,7 +24,27 @@ RSpec.describe TopicStatusUpdater do
     expect(post.topic.posts.count).to eq(2)
 
     tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(1)
+    expect(tu.last_read_post_number).to eq(2)
+  end
+
+  it "advances a caught-up reader past a trailing autoclose small action" do
+    post =
+      PostCreator.create(user, raw: "this is the original post here", title: "hello world title")
+    topic = post.topic
+    reader = Fabricate(:user, refresh_auto_groups: true)
+
+    PostTiming.process_timings(reader, topic.id, 1, [[1, 1000]])
+    expect(TopicUser.get(topic, reader).last_read_post_number).to eq(1)
+
+    topic.set_or_create_timer(TopicTimer.types[:close], "10")
+    topic.reload
+    TopicStatusUpdater.new(topic, admin).update!("autoclosed", true)
+
+    small_action = topic.posts.order(:post_number).last
+    expect(small_action.post_type).to eq(Post.types[:small_action])
+    expect(small_action.post_number).to eq(2)
+
+    expect(TopicUser.get(topic, reader).last_read_post_number).to eq(2)
   end
 
   it "respects topics_unread_when_closed preference for private messages" do
@@ -54,13 +74,13 @@ RSpec.describe TopicStatusUpdater do
     # Should have 2 posts (original + close action)
     expect(post.topic.posts.count).to eq(2)
 
-    # In PMs, close small_action posts only bump highest_staff_post_number,
-    # so neither user's last_read_post_number advances past the original post.
+    # user_wants_read opts out of "unread when closed", so they are advanced past
+    # the close small action; user_wants_unread keeps their prior read position.
     tu_wants_unread = TopicUser.find_by(user: user_wants_unread, topic: post.topic)
     expect(tu_wants_unread.last_read_post_number).to eq(1)
 
     tu_wants_read = TopicUser.find_by(user: user_wants_read, topic: post.topic)
-    expect(tu_wants_read.last_read_post_number).to eq(1)
+    expect(tu_wants_read.last_read_post_number).to eq(2)
   end
 
   it "adds an autoclosed message" do

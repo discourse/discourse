@@ -110,7 +110,11 @@ TopicStatusUpdater =
       if (status.autoclosed? && status.enabled?) || (status.closed? && silent_tracking)
         # let's pretend all the people that read up to the autoclose message
         # actually read the topic
-        PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
+        PostTiming.pretend_read(
+          topic.id,
+          old_highest_read,
+          Topic.highest_post_number_in_stream(topic.id, whisperer: false),
+        )
       end
 
       if status.closed? && status.enabled?
@@ -124,7 +128,12 @@ TopicStatusUpdater =
         user_ids = DB.query_single(sql_query, topic_id: topic.id)
 
         if user_ids.present?
-          PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number, user_ids)
+          PostTiming.pretend_read(
+            topic.id,
+            old_highest_read,
+            Topic.highest_post_number_in_stream(topic.id, whisperer: false),
+            user_ids,
+          )
         end
       end
     end

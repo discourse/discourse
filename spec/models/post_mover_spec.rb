@@ -1108,6 +1108,51 @@ RSpec.describe PostMover do
               )
             end
 
+            it "advances a reader caught up to a trailing small action in the destination" do
+              Fabricate(:post, topic: destination_topic)
+              Fabricate(
+                :post,
+                topic: destination_topic,
+                post_type: Post.types[:small_action],
+                post_number: 3,
+              )
+
+              destination_topic.reload
+              expect(destination_topic.highest_post_number).to eq(2)
+              expect(
+                Topic.highest_post_number_in_stream(destination_topic.id, whisperer: false),
+              ).to eq(3)
+
+              create_topic_user(user2, topic, last_read_post_number: 3, last_emailed_post_number: 3)
+              create_topic_user(
+                user2,
+                destination_topic,
+                last_read_post_number: 3,
+                last_emailed_post_number: 3,
+              )
+
+              create_topic_user(user3, topic, last_read_post_number: 3, last_emailed_post_number: 3)
+              create_topic_user(
+                user3,
+                destination_topic,
+                last_read_post_number: 2,
+                last_emailed_post_number: 2,
+              )
+
+              moved_to_topic =
+                topic.move_posts(user, [p1.id, p2.id], destination_topic_id: destination_topic.id)
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: user2)).to have_attributes(
+                last_read_post_number: 5,
+                last_emailed_post_number: 5,
+              )
+
+              expect(TopicUser.find_by(topic: moved_to_topic, user: user3)).to have_attributes(
+                last_read_post_number: 5,
+                last_emailed_post_number: 5,
+              )
+            end
+
             it "correctly updates existing topic_user records" do
               destination_topic.update!(created_at: 1.day.ago)
 
