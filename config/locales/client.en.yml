@@ -4881,8 +4881,16 @@ en:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
         modal:
-          title: "Translations for post"
+          title: "Translations"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
+          language_notice: "Set the original post language so translations can be shown to readers."
+          post_language: "Post language"
+          topic_language: "Topic title language"
+          save_post_language: "Save post language"
+          save_topic_language: "Save topic title language"
+          discard_language_change: "Discard change"
+          post_language_updated: "Post language updated"
+          topic_language_updated: "Topic title language updated"
         success: "Translations have been updated successfully"
         post_language_selector:
           title: "Post language"
