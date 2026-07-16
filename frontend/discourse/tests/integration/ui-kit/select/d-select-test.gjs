@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import {
   click,
@@ -785,6 +786,185 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
 
 module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("synchronous resolvers supply the desktop typeahead label", async function (assert) {
+    const resolveValue = (value) => ({ id: value, name: `Topic #${value}` });
+    const resolveValues = (values) =>
+      values.map((value) => ({ id: value, name: `Category #${value}` }));
+
+    await render(
+      <template>
+        <DSelect
+          class="sync-resolve-value"
+          @items={{array}}
+          @value={{123}}
+          @resolveValue={{resolveValue}}
+        />
+        <DSelect
+          class="sync-resolve-values"
+          @items={{array}}
+          @value={{456}}
+          @resolveValues={{resolveValues}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".sync-resolve-value [role='combobox']")
+      .hasValue(
+        "Topic #123",
+        "the synchronously resolveValue label reaches the plain input"
+      );
+    assert
+      .dom(".sync-resolve-values [role='combobox']")
+      .hasValue(
+        "Category #456",
+        "the synchronously resolveValues label reaches the plain input"
+      );
+  });
+
+  test("a synchronous resolver's label follows a later @value change", async function (assert) {
+    const resolveValue = (value) => ({ id: value, name: `Topic #${value}` });
+
+    class SyncHost extends Component {
+      @tracked value = 1;
+
+      @action
+      bump() {
+        this.value = 2;
+      }
+
+      <template>
+        <DSelect
+          @items={{array}}
+          @value={{this.value}}
+          @resolveValue={{resolveValue}}
+        />
+        <button
+          type="button"
+          class="bump"
+          {{on "click" this.bump}}
+        >bump</button>
+      </template>
+    }
+
+    await render(<template><SyncHost /></template>);
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Topic #1", "the initial synchronous label renders");
+
+    await click(".bump");
+    assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "Topic #2",
+        "a value change re-resolves rather than showing the stale label"
+      );
+  });
+
+  test("an unresolvable single value shows the held value as unavailable, not a flash", async function (assert) {
+    const resolveValue = () => Promise.reject(new Error("403"));
+
+    await render(
+      <template>
+        <DSelect @items={{array}} @value={{7}} @resolveValue={{resolveValue}} />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "7 (unavailable)",
+        "the held value is shown as unavailable rather than blanking"
+      );
+    assert
+      .dom(".d-combobox__trigger [role='alert']")
+      .doesNotExist(
+        "a rejected resolve does not flash an error inside the trigger"
+      );
+  });
+
+  test("multi renders resolved chips plus an unavailable chip for an id that cannot resolve", async function (assert) {
+    const resolveValues = (values) =>
+      Promise.resolve(
+        values.filter((v) => v === 1).map((v) => ({ id: v, name: "One" }))
+      );
+
+    await render(
+      <template>
+        <DSelect
+          @items={{array}}
+          @multiple={{true}}
+          @value={{array 1 2}}
+          @resolveValues={{resolveValues}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__chip")
+      .exists({ count: 2 }, "one chip per held id");
+    assert
+      .dom(".d-combobox__unresolved")
+      .exists(
+        { count: 1 },
+        "the id that cannot resolve renders as unavailable"
+      );
+    assert
+      .dom(".d-combobox__unresolved")
+      .hasText(
+        "2 Unavailable",
+        "the unavailable chip shows the failed id, keeping ids distinct, and carries the state in text for screen readers"
+      );
+  });
+
+  test("a custom createUnresolvedItem names the fallback on every surface", async function (assert) {
+    const resolveValue = () => Promise.reject(new Error("404"));
+    const createUnresolvedItem = (id) => ({ id, name: `Topic #${id}` });
+
+    await render(
+      <template>
+        <DSelect
+          @items={{array}}
+          @value={{123}}
+          @resolveValue={{resolveValue}}
+          @createUnresolvedItem={{createUnresolvedItem}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "Topic #123",
+        "the named fallback reaches the plain input, with no generic suffix"
+      );
+  });
+
+  test("a throwing createUnresolvedItem uses the default unavailable label", async function (assert) {
+    const resolveValue = () => Promise.reject(new Error("404"));
+    const createUnresolvedItem = () => {
+      throw new Error("builder failed");
+    };
+
+    await render(
+      <template>
+        <DSelect
+          @items={{array}}
+          @value={{123}}
+          @resolveValue={{resolveValue}}
+          @createUnresolvedItem={{createUnresolvedItem}}
+        />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "123 (unavailable)",
+        "the default fallback keeps the unavailable suffix when the builder throws"
+      );
+  });
 
   test("resolving a fallback label keeps the focused input mounted", async function (assert) {
     let resolveSelection;

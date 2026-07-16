@@ -58,9 +58,33 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     (final render step; raw items unchanged upstream). The listbox keys on `descriptor.key`
     (no `id` assumption; `key="id"` removed) and the option reads state from `flags`
     (`selected`/`disabled`/`__create`); `group`/`__unresolved` flags reserved.
-  - ☐ Batch `@resolveValues` (drop the multi `Promise.all` fan-out); `__unresolved` synthetic
-    fallback + `:unresolved` render; skeleton taxonomy (`:loadingItem`/`:selectionLoading`);
-    the two async surfaces; input-holds-only-query composite trigger.
+  - ☑ Batch `@resolveValues`, one chokepoint for both arities — single is a batch of one,
+    narrowed back to a bare item. Precedence: `@resolveValues` (either arity) → per-id
+    `@resolveValue` (single: one call; multi: documented fan-out) → `__unresolved` fallback.
+    `@resolveValue` stays as single-select sugar.
+  - ☑ `__unresolved` fallback — resolution never rejects/blanks a held value, whether the
+    resolver rejects **or throws synchronously**; each unresolvable id becomes
+    `{ [valueField]: id, __unresolved: true }`, rendered as the value plus a warning icon +
+    "unavailable" tooltip (muted) + `.sr-only` state text (the icon is `aria-hidden` and the
+    tooltip sits on an unfocusable child, so the state has to be carried in text), or
+    "%{value} (unavailable)" in the plain typeahead input. `:selection`-block consumers
+    branch on `item.__unresolved`.
+  - ☑ `@createUnresolvedItem` — `(value) => item` names the fallback (e.g. `Topic #123`)
+    on every surface, the plain input included, where a block can't reach. The engine owns
+    the `__unresolved` marker regardless of what the builder returns.
+  - ☑ Resolve caching policy — successes are cached; a failure caches its fallback so the
+    trigger can tell "failed" from "still resolving", and `reload()` evicts fallbacks so
+    they retry. The fallback ranks LAST in the sync ladder (escape hatch → resolved cache →
+    client list → fallback), so an item landing later supersedes it. **A cached fallback
+    must stay a cache hit**: the resolve writes this tracked cache, so a read that missed
+    would re-resolve, re-write, invalidate the render that read it and never settle. The
+    original "no tracked-cache write during resolve" note was preventing exactly that loop.
+  - ☐ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks; skeleton taxonomy;
+    input-holds-only-query composite trigger; group flag UI (Decision 2).
+  - ☐ Runtime `@multiple` toggling is **not supported**: the engine reads `multiple` once in
+    its constructor, and `isTypeahead` hard-couples arity to variant. Decide whether a
+    select may flip arity at runtime (and what happens to a held array when it flips to
+    single) before any consumer relies on it.
 - ☐ **`@multiple` + chips** (shadcn `ComboboxChips` model): chips-with-inline-input,
   keep-selected-with-checkmark (supersede Phase-0 remove-on-select + its test), backspace
   removal, clear-all; `@maximum`/`@minimum`; pipe-paste bulk-add; rewrite on-`main`
