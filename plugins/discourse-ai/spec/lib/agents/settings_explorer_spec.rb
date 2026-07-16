@@ -5,6 +5,12 @@ RSpec.describe DiscourseAi::Agents::SettingsExplorer do
 
   before { enable_current_plugin }
 
+  it "requires human approval before updating settings for administrators" do
+    expect(settings_explorer.system_prompt).to include(
+      "You are able to update site settings when an administrator asks you to do so, but you must get approval from a human before making any change.",
+    )
+  end
+
   it "renders schema" do
     prompt = settings_explorer.system_prompt
 
@@ -14,7 +20,11 @@ RSpec.describe DiscourseAi::Agents::SettingsExplorer do
     expect(prompt).to include("site_description")
 
     expect(settings_explorer.tools).to eq(
-      [DiscourseAi::Agents::Tools::SettingContext, DiscourseAi::Agents::Tools::SearchSettings],
+      [
+        DiscourseAi::Agents::Tools::SettingContext,
+        DiscourseAi::Agents::Tools::SearchSettings,
+        DiscourseAi::Agents::Tools::ChangeSiteSetting,
+      ],
     )
   end
 end
