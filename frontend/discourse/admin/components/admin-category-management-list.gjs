@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -284,10 +285,15 @@ export default class AdminCategoryManagementList extends Component {
                             class="admin-category-management-list__category-badges"
                           >
                             {{#each category.badge_chain as |badge|}}
-                              {{dCategoryBadge
-                                badge
-                                (hash link=false hideParent=true)
-                              }}
+                              <LinkTo
+                                @route="discovery.category"
+                                @model={{concat category.slug "/" category.id}}
+                              >
+                                {{dCategoryBadge
+                                  badge
+                                  (hash link=false hideParent=true)
+                                }}
+                              </LinkTo>
                             {{/each}}
                           </div>
 
