@@ -7,12 +7,12 @@ import { modifier } from "ember-modifier";
 import bodyClass from "discourse/helpers/body-class";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { loadZoomMeetingSdk } from "discourse/lib/load-zoom-meeting-sdk";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
+import { loadZoomMeetingSdk } from "../../lib/load-zoom-meeting-sdk";
 import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
 import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
 
