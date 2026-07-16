@@ -72,14 +72,7 @@ class StylesheetsController < ApplicationController
       return head :not_modified
     end
 
-    unless File.exist?(location)
-      if current = query.pick(source_map ? :source_map : :content)
-        FileUtils.mkdir_p(cache_path)
-        Discourse::Utils.atomic_write_file(location, current)
-      else
-        raise Discourse::NotFound
-      end
-    end
+    raise Discourse::NotFound if !StylesheetCache.write_to_disk(query, location, source_map:)
 
     response.headers["Last-Modified"] = stylesheet_time.httpdate if stylesheet_time
     immutable_for(1.year)
