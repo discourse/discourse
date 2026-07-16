@@ -74,6 +74,12 @@ export default class A11y extends Service {
    */
   @tracked autoUpdatingRelativeDateRef = new Date();
 
+  /**
+   * Untracked map of announcements waiting to be composed by type
+   * @type {Map<'polite'|'assertive', { messages: string[], clearDelay: number }>}
+   */
+  #pendingAnnouncements = new Map();
+
   #state = new (class {
     /**
      * Map of screen reader announcements by type
@@ -157,6 +163,7 @@ export default class A11y extends Service {
    */
   willDestroy() {
     super.willDestroy(...arguments);
+    this.#pendingAnnouncements.clear();
     this.#state.clearTimers();
   }
 
@@ -177,7 +184,7 @@ export default class A11y extends Service {
   }
 
   /**
-   * Announce a message to screen readers
+   * Announce a message to screen readers, composing same-type messages in one flush
    * @param {string} message - The message to announce
    * @param {'polite'|'assertive'} type - The announcement type
    * @param {number} clearDelay - Delay in ms before clearing the message
@@ -202,6 +209,32 @@ export default class A11y extends Service {
 
     const trimmed = message.trim();
 
+    if (trimmed === "") {
+      this.#pendingAnnouncements.delete(type);
+
+      next(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
+        this.#state.setMessage(type, "", clearDelay);
+      });
+      return;
+    }
+
+    const pendingAnnouncement = this.#pendingAnnouncements.get(type);
+    if (pendingAnnouncement) {
+      pendingAnnouncement.messages.push(trimmed);
+      pendingAnnouncement.clearDelay = Math.max(
+        pendingAnnouncement.clearDelay,
+        clearDelay
+      );
+      return;
+    }
+
+    const announcement = { messages: [trimmed], clearDelay };
+    this.#pendingAnnouncements.set(type, announcement);
+
     // Defer the tracked-state write out of the current render. `announce` is often
     // called from a render-driven data load (e.g. an async content resolution), and
     // writing tracked state synchronously during render trips Ember's
@@ -209,11 +242,23 @@ export default class A11y extends Service {
     // awaited by `settled()`; a live region is polled asynchronously, so the one-tick
     // delay is imperceptible.
     next(() => {
+      if (this.#pendingAnnouncements.get(type) !== announcement) {
+        return;
+      }
+
+      this.#pendingAnnouncements.delete(type);
+
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
-      this.#state.setMessage(type, trimmed, clearDelay);
+      // Dedupe identical texts: repeating the same phrase in one atomic announcement
+      // conveys nothing to a screen reader. A `Set` preserves first-occurrence order.
+      this.#state.setMessage(
+        type,
+        [...new Set(announcement.messages)].join(". "),
+        announcement.clearDelay
+      );
     });
   }
 }
