@@ -63,6 +63,71 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       .hasText("Test polite message", "displays polite message");
   });
 
+  test("composes same-type announcements made in one flush instead of clobbering", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two polite announcements in the same synchronous flush — e.g. an "item added"
+    // message immediately followed by a re-filtered result count. The one-message-per-type
+    // live region can only show one, so without composition the second deterministically
+    // clobbers the first and "Added Foo" is never announced.
+    a11y.announce("Added Foo", "polite", 500);
+    a11y.announce("12 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Added Foo. 12 results",
+        "both same-flush messages are composed into one atomic announcement"
+      );
+  });
+
+  test("dedupes identical same-type announcements made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    // Two independent callers announcing the same phrase in one flush (e.g. two
+    // subscribers both reporting the same result count). Repeating the identical
+    // text in one atomic announcement is pure redundancy for a screen reader.
+    a11y.announce("3 results", "polite", 500);
+    a11y.announce("3 results", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "3 results",
+        "the repeated message is announced once, not composed with itself"
+      );
+  });
+
+  test("keeps polite and assertive announcements separate when made in one flush", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    const a11y = getOwner(this).lookup("service:a11y");
+    a11y.announce("Polite one", "polite", 500);
+    a11y.announce("Assertive one", "assertive", 500);
+    a11y.announce("Polite two", "polite", 500);
+
+    await render(<template><A11yLiveRegions /></template>);
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Polite one. Polite two",
+        "polite messages compose among themselves"
+      );
+    assert
+      .dom("#a11y-announcements-assertive")
+      .hasText(
+        "Assertive one",
+        "the assertive message is not folded in with the polite ones"
+      );
+  });
+
   test("announce called during render does not trigger a backtracking assertion", async function (assert) {
     disableClearA11yAnnouncementsInTests();
 
