@@ -4556,6 +4556,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "other,all_members"
+      body_class: true
   enable_new_composer_actions:
     default: false
     client: true
