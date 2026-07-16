@@ -9,6 +9,7 @@ export default class AdminPluginsExplorerNew extends DiscourseRoute {
   }
 
   setupController(controller, model) {
+    controller.resetState();
     controller.setProperties({ schema: model.schema });
   }
 
