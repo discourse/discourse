@@ -11,15 +11,19 @@ module DiscourseDataExplorer
       MissingVersion = Class.new(Error)
       FutureVersion = Class.new(Error)
       UnknownVersion = Class.new(Error)
+      UnknownComponent = Class.new(Error)
 
       attr_reader :initial_version
 
       def initialize(initial_version:)
         @initial_version = ApiVersion.parse(initial_version)
-        @changes = []
+        @changes = {}
       end
 
-      def register(change_class)
+      # Host-owned changes register with no owner; an extension's changes carry
+      # its namespace. Owners have disjoint timelines: only host changes form the
+      # base snap set, and each owner's changes can be governed by an override.
+      def register(change_class, owner: nil)
         if change_class.version.nil? || change_class.description.blank?
           raise ArgumentError, "#{change_class} must declare `version` and `description`"
         end
@@ -27,21 +31,51 @@ module DiscourseDataExplorer
           raise ArgumentError,
                 "#{change_class} (#{change_class.version}) predates the initial version (#{initial_version})"
         end
-        @changes << change_class
+        @changes[change_class] = owner
         change_class
       end
 
-      # Oldest→newest; same-date changes keep registration order.
-      def changes = @changes.sort_by.with_index { |change, index| [change.version, index] }
+      # Extensions come and go with their owner (plugin enabled/disabled); their
+      # changes leave the timeline with them. Host changes are never unregistered.
+      def unregister(change_class) = @changes.delete(change_class)
 
-      def versions = ([initial_version] + @changes.map(&:version)).uniq.sort
+      # Oldest→newest; same-date changes keep registration order.
+      def changes = @changes.keys.sort_by.with_index { |change, index| [change.version, index] }
+
+      # The base snap set is the HOST's timeline only: a resolved base date always
+      # reads against one public changelog, and one owner's movement can never
+      # push a pin past another owner's future changes.
+      def versions
+        host_versions = @changes.filter_map { |change, owner| change.version if owner.nil? }
+        ([initial_version] + host_versions).uniq.sort
+      end
 
       def current_version = versions.last
 
       def resolve(value, today: Date.current)
         raise MissingVersion if value.blank?
+        snap(versions, ApiVersion.parse(value), today:)
+      end
 
-        requested = ApiVersion.parse(value)
+      # Override resolution: snap against one owner's own timeline (anchored on
+      # the initial version, mirroring the base).
+      def resolve_for(owner, value, today: Date.current)
+        owned =
+          @changes.filter_map { |change, change_owner| change.version if change_owner == owner }
+        snap(([initial_version] + owned).uniq.sort, ApiVersion.parse(value), today:)
+      end
+
+      # The changes separating each owner's effective date from latest,
+      # newest→oldest — the response-down application order (reverse it for
+      # request-up). An owner named in `overrides` is governed by its own date;
+      # everything else by `version`.
+      def gap_for(version, overrides: {})
+        changes.select { it.version > (overrides[@changes[it]] || version) }.reverse
+      end
+
+      private
+
+      def snap(snap_set, requested, today:)
         if requested.future?(today:)
           raise FutureVersion, "#{requested} is in the future — pin a current date"
         end
@@ -49,12 +83,8 @@ module DiscourseDataExplorer
           raise UnknownVersion, "#{requested} predates the first API version (#{initial_version})"
         end
 
-        versions.reverse_each.find { it <= requested }
+        snap_set.reverse_each.find { it <= requested }
       end
-
-      # The changes separating `version` from latest, newest→oldest — the
-      # response-down application order (reverse it for request-up).
-      def gap_for(version) = changes.select { it.version > version }.reverse
     end
   end
 end

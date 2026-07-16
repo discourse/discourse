@@ -42,6 +42,7 @@ module DiscourseDataExplorer
         extension.attached_types.each do |type|
           serializer_for(type).relationships_to_serialize&.delete(extension.namespace.to_sym)
         end
+        extension.version_changes.each { api_versions.unregister(it) }
       end
 
       def extensions = @extensions ||= {}
@@ -101,6 +102,11 @@ module DiscourseDataExplorer
             lazy_load_data: true,
           ) { |record, _params| related.call(record) }
         end
+        # One union registry per site: the extension's changes join the timeline
+        # under its own owner (they only ever transform its own types — enforced
+        # above) and leave it with the extension. Only host changes form the base
+        # snap set; extension timelines are reached through overrides.
+        extension.version_changes.each { api_versions.register(it, owner: extension.namespace) }
       end
 
       def member_names(serializer)

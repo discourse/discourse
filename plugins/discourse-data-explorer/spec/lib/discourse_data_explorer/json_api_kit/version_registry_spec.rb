@@ -43,6 +43,69 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
     end
   end
 
+  describe "owner-scoped timelines" do
+    let(:core_change) { change_class("2026-06-15") }
+    let(:extension_change) { change_class("2026-07-05") }
+
+    before do
+      registry.register(core_change)
+      registry.register(extension_change, owner: "solved")
+    end
+
+    it "excludes extension changes from the snap set" do
+      expect(registry.resolve("2026-07-06", today:).to_s).to eq("2026-06-15")
+    end
+
+    it "excludes extension changes from the current version" do
+      expect(registry.current_version.to_s).to eq("2026-06-15")
+    end
+
+    it "keeps extension changes in the gap" do
+      expect(registry.gap_for(registry.resolve("2026-06-15", today:))).to eq([extension_change])
+    end
+
+    describe "#resolve_for" do
+      it "snaps against the owner's own changes" do
+        expect(registry.resolve_for("solved", "2026-07-06", today:).to_s).to eq("2026-07-05")
+      end
+
+      it "falls back to the initial version below the owner's oldest change" do
+        expect(registry.resolve_for("solved", "2026-06-01", today:).to_s).to eq("2026-05-01")
+      end
+    end
+
+    describe "#gap_for with overrides" do
+      it "governs an overridden owner's changes by its own date" do
+        expect(
+          registry.gap_for(
+            registry.resolve("2026-06-15", today:),
+            overrides: {
+              "solved" => registry.resolve_for("solved", "2026-07-06", today:),
+            },
+          ),
+        ).to be_empty
+      end
+    end
+  end
+
+  describe "#unregister" do
+    let(:registered_change) { change_class("2026-06-15") }
+
+    before { registry.register(registered_change) }
+
+    it "removes the change's version" do
+      expect { registry.unregister(registered_change) }.to change {
+        registry.versions.map(&:to_s)
+      }.to(%w[2026-05-01])
+    end
+
+    it "removes the change from gaps" do
+      expect { registry.unregister(registered_change) }.to change {
+        registry.gap_for(registry.initial_version)
+      }.to be_empty
+    end
+  end
+
   describe "#versions" do
     before do
       registry.register(change_class("2026-07-01"))

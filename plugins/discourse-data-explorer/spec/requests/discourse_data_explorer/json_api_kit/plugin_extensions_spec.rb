@@ -30,16 +30,16 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     sign_in(admin)
   end
 
-  def get_queries(params: {})
+  def get_queries(params: {}, version: current_version)
     get "/data-explorer/api/queries",
         params: params,
         headers: {
           "Accept" => "application/vnd.api+json",
-          "Api-Version" => current_version,
+          "Api-Version" => version,
         }
   end
 
-  def register_run_stats_extension
+  def register_run_stats_extension(version_change: nil)
     stats = run_stats_class
     serializer = run_stats_serializer
     DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "run-stats") do
@@ -49,6 +49,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
       register_filter(:queries, :stale) do |scope, value|
         value == "true" ? scope.where(last_run_at: nil) : scope.where.not(last_run_at: nil)
       end
+      register_version_change(version_change) if version_change
     end
   end
 
@@ -120,6 +121,135 @@ RSpec.describe "JSON:API Kit plugin extensions" do
 
       it "returns only the matching queries" do
         expect(returned_ids).to eq([never_run_query.id.to_s])
+      end
+    end
+  end
+
+  context "with the extension shipping a version change" do
+    let(:rename_change) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-06-20"
+        description "Renames the run-stats `outdated` attribute to `stale`."
+
+        resource :"run-stats" do
+          renamed_attribute from: :outdated, to: :stale
+          renamed_filter from: :outdated, to: :stale
+        end
+      end
+    end
+    let(:included_attributes) { parsed_document["included"].map { it["attributes"] } }
+
+    before { register_run_stats_extension(version_change: rename_change) }
+
+    after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
+
+    context "when an old-pinned client includes the namespace" do
+      before { get_queries(params: { include: "run-stats" }, version: "2026-06-01") }
+
+      it "serves the old attribute name" do
+        expect(included_attributes).to contain_exactly(
+          { "outdated" => false },
+          { "outdated" => true },
+        )
+      end
+    end
+
+    context "when an old-pinned client filters through the old namespaced key" do
+      let(:returned_ids) { parsed_document["data"].map { it["id"] } }
+
+      before do
+        get_queries(params: { filter: { "run-stats.outdated" => "true" } }, version: "2026-06-01")
+      end
+
+      it "returns only the matching queries" do
+        expect(returned_ids).to eq([never_run_query.id.to_s])
+      end
+    end
+
+    context "when an old-pinned client requests a sparse fieldset with the old name" do
+      before do
+        get_queries(
+          params: {
+            include: "run-stats",
+            fields: {
+              "run-stats" => "outdated",
+            },
+          },
+          version: "2026-06-01",
+        )
+      end
+
+      it "honors the old field name" do
+        expect(included_attributes).to contain_exactly(
+          { "outdated" => false },
+          { "outdated" => true },
+        )
+      end
+    end
+
+    context "when a current-pinned client includes the namespace" do
+      before { get_queries(params: { include: "run-stats" }) }
+
+      it "serves the latest attribute name" do
+        expect(included_attributes).to contain_exactly({ "stale" => false }, { "stale" => true })
+      end
+    end
+
+    context "when the pinned date falls between the change and the next core version" do
+      before { get_queries(params: { include: "run-stats" }, version: "2026-06-25") }
+
+      it "snaps past the extension's change to the core timeline" do
+        expect(response.headers["Api-Version"]).to eq("2026-06-15")
+      end
+
+      it "keeps the extension frozen at the pin" do
+        expect(included_attributes).to contain_exactly(
+          { "outdated" => false },
+          { "outdated" => true },
+        )
+      end
+    end
+
+    context "with an override unfreezing the extension on an old base pin" do
+      before do
+        get_queries(params: { include: "run-stats" }, version: "2026-06-01; run-stats=2026-06-25")
+      end
+
+      it "serves the extension's latest shape" do
+        expect(included_attributes).to contain_exactly({ "stale" => false }, { "stale" => true })
+      end
+
+      it "keeps the core resources at the base pin" do
+        expect(parsed_document["data"].first["attributes"]).to have_key("sql")
+      end
+
+      it "echoes each pin snapped against its own timeline" do
+        expect(response.headers["Api-Version"]).to eq("2026-05-01; run-stats=2026-06-20")
+      end
+    end
+
+    context "with an override pinning the extension older than the base" do
+      before do
+        get_queries(params: { include: "run-stats" }, version: "2026-07-08; run-stats=2026-06-01")
+      end
+
+      it "serves the extension's old shape" do
+        expect(included_attributes).to contain_exactly(
+          { "outdated" => false },
+          { "outdated" => true },
+        )
+      end
+
+      it "echoes the override snapped to the initial version" do
+        expect(response.headers["Api-Version"]).to eq("2026-07-08; run-stats=2026-05-01")
+      end
+    end
+
+    context "with an override naming an unknown component" do
+      before { get_queries(version: "2026-07-08; nonexistent=2026-07-01") }
+
+      it "rejects the request" do
+        expect(response.status).to eq(400)
       end
     end
   end
