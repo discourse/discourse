@@ -169,7 +169,9 @@ export default class RssPollingFeedForm extends Component {
       });
     }
 
-    const feedTags = data.discourse_tags ?? [];
+    const feedTags = (data.discourse_tags ?? []).map((tag) =>
+      typeof tag === "string" ? tag : tag.name
+    );
 
     this.categoryRequirements.forEach((group) => {
       const matched = group.tags.filter((tag) => feedTags.includes(tag)).length;

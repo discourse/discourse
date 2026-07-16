@@ -36,6 +36,14 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laddar..."
+        tool: "Åtgärd"
+        user: "Användare"
+        approve: "Godkänn"
+        reject: "Avvisa"
+        approved: "Godkända"
+        rejected: "Avvisade"
       llm_selector:
         none: "Ingen"
       features:
@@ -55,6 +63,9 @@ sv:
           reset: "Återställ"
         search:
           name: "Sök"
+        image_caption:
+          setting_groups:
+            settings: "Inställningar"
         spam:
           name: "Skräppost"
       modals:
@@ -197,8 +208,6 @@ sv:
           select: "Välj"
           selected: "Markerat"
           try_again: "Försök igen"
-        image_caption:
-          save_caption: "Spara"
       embeddings:
         save: "Spara"
         delete: "Ta bort"

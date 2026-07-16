@@ -10,7 +10,7 @@ const PostVisitedLine = <template>
         (concat "post-" @post.post_number)
       }}
     >
-      <span class="topic-post-visited-message">
+      <span class="topic-post-visited-message" role="heading" aria-level="2">
         {{i18n "topics.new_messages_marker"}}
       </span>
     </div>

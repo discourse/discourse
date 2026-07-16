@@ -79,6 +79,11 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
+      flag_post:
+        unknown_flag_type: "Unknown flag type: %{flag_type}."
+        actor_not_staff: "The acting user must be a staff member to flag posts."
+        cannot_flag: "This post cannot be flagged as spam. It may already be hidden or authored by a staff member."
+        flag_failed: "Failed to flag post: %{errors}"
       user:
         unknown_operation: "Unknown operation: %{operation}."
         invalid_updates: "User updates must be an object."
@@ -136,6 +141,8 @@ en:
         execution_failed: "Called workflow finished with status '%{status}'."
         execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
         payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    flag_post:
+      flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."
@@ -146,7 +153,7 @@ en:
       split_out:
         field_not_found: "The field '%{field}' wasn't found in any input item."
   site_settings:
-    discourse_workflows_enabled: "Enable the discourse-workflows plugin."
+    enable_discourse_workflows: "Enable the discourse-workflows plugin."
     discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
     discourse_workflows_ai_authoring_max_prompt_length: "Maximum length for AI workflow authoring prompts."
     discourse_workflows_ai_authoring_rate_limit_per_minute: "Maximum AI workflow authoring requests per minute per user."

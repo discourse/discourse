@@ -22,7 +22,8 @@ export default class DashboardSection extends Component {
             <DButton
               @icon={{@headerActionIcon}}
               @action={{@headerAction}}
-              class="btn-transparent no-text"
+              @label={{@headerActionLabel}}
+              class="btn-default btn-small"
             />
           </div>
         {{/if}}

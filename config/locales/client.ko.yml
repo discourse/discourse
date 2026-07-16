@@ -1128,6 +1128,9 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
+        push_level:
+          none: "비활성"
+          all: "활성화"
         not_supported: "이 브라우저에서는 알림이 지원되지 않습니다."
         perm_denied_expl: "알림 권한을 거부한 상태입니다. 브라우저 설정에서 알림을 허용해 주세요."
         consent_prompt: "내 게시물에 댓글이 달리면 실시간으로 알림을 받을까요?"
@@ -2547,6 +2550,7 @@ ko:
       expand_details: "글의 세부 정보 펼치기"
       read_more_in_category: "더 읽을거리가 필요하신가요? %{categoryLink}에서 다른 글을 찾아 보거나 <a href='%{latestLink}'>최근 글</a>을 살펴보세요."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
+      sr_read: "읽기"
       bumped_at: "최근: %{date}"
       browse_latest_topics: "최근 글 보기"
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
@@ -2916,6 +2920,8 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
+        modal:
+          title: "번역"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3922,6 +3928,20 @@ ko:
               title: "설정"
         badges:
           title: "배지"
+        category_management:
+          tabs:
+            settings: "설정"
+          types:
+            all:
+              title: "모든 카테고리"
+          table:
+            category: "카테고리"
+            visibility: "시계"
+            topics: "글"
+          visibility:
+            public: "공개"
+          visibility_filter:
+            all: "모든 카테고리"
         permalinks:
           title: "고유링크"
         emoji:
@@ -4047,6 +4067,7 @@ ko:
               searches: "검색"
               status: "상태"
         reports_section:
+          header_action: "관리"
           no_data: "표시할 정보가 없습니다"
           modal:
             enabled_heading: "활성화"

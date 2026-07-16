@@ -103,7 +103,10 @@ describe DiscoursePostEvent::EventSerializer do
 
     context "when event is a livestream" do
       let(:livestream_url) { "https://example.com/live" }
-      let(:livestream_post) { Fabricate(:post, topic: topic) }
+      # The event must live on the topic's first post: `Event#before_save` clears
+      # the `livestream` flag on any other post.
+      let(:livestream_topic) { Fabricate(:topic, category: category) }
+      let(:livestream_post) { Fabricate(:post, topic: livestream_topic) }
       let(:livestream_event) do
         Fabricate(:event, post: livestream_post, livestream: true, location: livestream_url)
       end
@@ -119,6 +122,97 @@ describe DiscoursePostEvent::EventSerializer do
 
           expect(json[:event][:livestream_onebox]).to be_nil
         end
+      end
+
+      it "does not fetch the onebox while serializing" do
+        livestream_event
+        Oneboxer.expects(:onebox).never
+
+        DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+      end
+
+      it "serves the onebox from the cache when it has been warmed" do
+        livestream_event
+        Discourse.cache.write(
+          Oneboxer.onebox_cache_key(livestream_url),
+          { onebox: "<aside>cached</aside>" },
+        )
+
+        json =
+          DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_onebox]).to eq("<aside>cached</aside>")
+      end
+
+      it "includes the livestream URL and chat channel id" do
+        livestream_event
+
+        json =
+          DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:livestream_url]).to eq(livestream_url)
+        expect(json[:event].key?(:livestream_chat_channel_id)).to eq(true)
+      end
+
+      it "is not a Zoom livestream" do
+        livestream_event
+
+        json =
+          DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:is_zoom_livestream]).to eq(false)
+      end
+    end
+
+    context "when the event is not a livestream" do
+      fab!(:plain_post) { Fabricate(:post, topic: topic) }
+      fab!(:plain_event) { Fabricate(:event, post: plain_post, location: "Room 5") }
+
+      it "omits the livestream attributes" do
+        json = DiscoursePostEvent::EventSerializer.new(plain_event, scope: Guardian.new).as_json
+
+        expect(json[:event].key?(:livestream_url)).to eq(false)
+        expect(json[:event].key?(:livestream_onebox)).to eq(false)
+        expect(json[:event].key?(:livestream_chat_channel_id)).to eq(false)
+      end
+    end
+
+    context "when the event is a Zoom livestream" do
+      let(:zoom_url) { "https://us06web.zoom.us/j/123456789?pwd=secret" }
+      let(:zoom_topic) { Fabricate(:topic, category: category) }
+      let(:zoom_post) { Fabricate(:post, topic: zoom_topic) }
+      let(:zoom_event) { Fabricate(:event, post: zoom_post, livestream: true, location: zoom_url) }
+
+      before do
+        SiteSetting.livestream_zoom_enabled = true
+        Jobs.run_later!
+      end
+
+      it "flags the event as a Zoom livestream" do
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:is_zoom_livestream]).to eq(true)
+        expect(json[:event][:livestream_url]).to eq(zoom_url)
+      end
+
+      it "omits the onebox, since the Zoom entry component renders instead" do
+        Discourse.cache.write(
+          Oneboxer.onebox_cache_key(zoom_url),
+          { onebox: "<aside>cached</aside>" },
+        )
+
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event].key?(:livestream_onebox)).to eq(false)
+      end
+
+      it "falls back to the onebox when Zoom is disabled" do
+        SiteSetting.livestream_zoom_enabled = false
+
+        json = DiscoursePostEvent::EventSerializer.new(zoom_event, scope: Guardian.new).as_json
+
+        expect(json[:event][:is_zoom_livestream]).to eq(false)
+        expect(json[:event].key?(:livestream_onebox)).to eq(true)
       end
     end
 

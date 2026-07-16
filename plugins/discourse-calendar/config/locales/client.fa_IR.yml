@@ -25,6 +25,9 @@ fa_IR:
             topic_id:
               label: شناسه موضوع
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "گفتگو"
       invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
       on_holiday: "در تعطیلات"
       disable_holiday: "غیرفعال کردن"

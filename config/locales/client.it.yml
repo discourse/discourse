@@ -1422,6 +1422,9 @@ it:
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
+        push_level:
+          none: "Disabilitati"
+          all: "Abilitato"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         each_browser_note: "Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando le notifiche sono messe in pausa nel menu utente, indipendentemente da questa impostazione."
@@ -3401,6 +3404,7 @@ it:
       read_more_in_category: "Vuoi saperne di più? Sfoglia altri argomenti in %{categoryLink} o <a href='%{latestLink}'>visualizza gli argomenti più recenti</a>."
       read_more: "Vuoi saperne di più? <a href='%{categoryLink}'>Sfoglia tutte le categorie</a> o <a href='%{latestLink}'>visualizza gli argomenti più recenti</a>."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
+      sr_read: "lettura"
       participant_groups: "Gruppi partecipanti"
       reply_count_link:
         one: "%{count} risposta, vai al primo messaggio"
@@ -3844,8 +3848,9 @@ it:
           one: "Visualizza %{count} lingua tradotta"
           other: "Visualizza %{count} lingue tradotte"
         modal:
-          title: "Traduzioni per messaggio"
+          title: "Traduzioni"
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
+          discard_language_change: "Annulla modifica"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
           none: "Non impostato"
@@ -5290,7 +5295,6 @@ it:
             apple_touch_icon:
               title: "Icona touch di Apple"
               description: "Icona utilizzata per i dispositivi touch Apple. Se lasciata vuota, verrà utilizzato large_icon."
-              help_text: "La dimensione consigliata è 180 x 180 pixel. Si sconsiglia l'uso di uno sfondo trasparente."
             digest_logo:
               title: "Logo digest"
               description: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'e-mail del tuo sito. Se lasciata vuota, verrà utilizzata l'immagine dall'impostazione `logo`."
@@ -5438,6 +5442,21 @@ it:
               title: "Messaggi e argomenti"
             stats_and_thresholds:
               title: "Statistiche e soglie"
+        category_management:
+          tabs:
+            settings: "Impostazioni"
+          types:
+            all:
+              title: "Tutte le categorie"
+          filter_placeholder: "Filtra le categorie"
+          table:
+            category: "Categoria"
+            visibility: "Visibilità"
+            topics: "Argomenti"
+          visibility:
+            public: "Pubblico"
+          visibility_filter:
+            all: "Tutte le categorie"
         permalinks:
           title: "Permalink"
           header_description: "Reindirizzamenti da applicare per URL non conosciuti dal forum"
@@ -5652,6 +5671,7 @@ it:
               searches: "Ricerche"
               status: "Stato"
         reports_section:
+          header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
           modal:
             enabled_heading: "Abilitato"

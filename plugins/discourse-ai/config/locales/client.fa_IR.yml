@@ -60,6 +60,14 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      ai_tool_approval:
+        loading: "بارگذاری..."
+        tool: "عمل"
+        user: "کاربر"
+        approve: "تایید"
+        reject: "رد کردن"
+        approved: "پذیرفته شده"
+        rejected: "رد شده"
       llm_selector:
         none: "هیچ‌کدام"
       features:
@@ -82,6 +90,9 @@ fa_IR:
         embeddings:
           setting_groups:
             related_topics: "موضوعات مرتبط"
+        image_caption:
+          setting_groups:
+            settings: "تنظیم"
         spam:
           name: "هرز‌نامه"
       modals:
@@ -235,8 +246,6 @@ fa_IR:
           select: "انتخاب"
           selected: "انتخاب شده"
           try_again: "تلاش دوباره"
-        image_caption:
-          save_caption: "ذخیره"
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"
@@ -259,7 +268,7 @@ fa_IR:
           model_name: "نام مدل"
         semantic_search: "موضوعات (معنایی)"
       ai_bot:
-        llm: "مدل"
+        llm: "مدل:"
         cancel_streaming: "توقف پاسخ"
         try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"

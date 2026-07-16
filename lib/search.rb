@@ -388,7 +388,8 @@ class Search
   end
 
   def self.advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
-    advanced_filters[trigger] = { block:, name:, enabled: }
+    case_insensitive_matcher = Regexp.new(trigger.source, trigger.options | Regexp::IGNORECASE)
+    advanced_filters[trigger] = { block:, name:, enabled:, case_insensitive_matcher: }
   end
 
   def self.advanced_filters
@@ -990,16 +991,14 @@ class Search
 
         found = false
 
-        Search.advanced_filters.each do |matcher, options|
+        cleaned = word.gsub(/["']/, "")
+
+        Search.advanced_filters.each_value do |options|
           block = options[:block]
           name = options[:name]
           next unless options[:enabled].call
 
-          case_insensitive_matcher =
-            Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
-
-          cleaned = word.gsub(/["']/, "")
-          if cleaned =~ case_insensitive_matcher
+          if cleaned =~ options[:case_insensitive_matcher]
             (@filters ||= []) << [block, $1]
             @matched_advanced_filter_names << name if name
             found = true
@@ -1201,16 +1200,14 @@ class Search
   def tags_search
     return unless SiteSetting.tagging_enabled
     tags =
-      Tag
+      DiscourseTagging
+        .visible_tags(@guardian)
         .includes(:tag_search_data)
         .where("tag_search_data.search_data @@ #{ts_query}")
         .references(:tag_search_data)
         .order("name asc")
         .limit(limit)
-
-    hidden_tag_names = DiscourseTagging.hidden_tag_names(@guardian)
-
-    tags.each { |tag| @results.add(tag) if !hidden_tag_names.include?(tag.name) }
+        .each { |tag| @results.add(tag) }
   end
 
   def exclude_topics_search

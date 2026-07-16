@@ -157,7 +157,7 @@ RSpec.describe Assigner do
     end
 
     it "enqueues assigned workflows matching the assignment target" do
-      SiteSetting.discourse_workflows_enabled = true
+      SiteSetting.enable_discourse_workflows = true
       Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
       DiscourseWorkflows::Registry.reset_indexes!
 

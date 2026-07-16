@@ -52,6 +52,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ schema: Schema::POST_SCHEMA }],
           properties: {
             operation: {
               type: :options,

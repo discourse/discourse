@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { not } from "discourse/truth-helpers";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
@@ -38,7 +38,7 @@ export default <template>
         </:actions>
       </DPageSubheader>
 
-      <AdminFilterControls
+      <DFilterControls
         @array={{@controller.model.content}}
         @inputPlaceholder={{i18n "explorer.search_placeholder"}}
         @noResultsMessage={{i18n "explorer.no_search_results"}}
@@ -229,7 +229,7 @@ export default <template>
             <div class="explorer-pad-bottom"></div>
           {{/if}}
         </:content>
-      </AdminFilterControls>
+      </DFilterControls>
     {{/if}}
   </div>
 </template>

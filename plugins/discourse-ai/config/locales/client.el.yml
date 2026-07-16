@@ -94,6 +94,14 @@ el:
     discourse_ai:
       bot_chats:
         tab_label: "Συνομιλίες bot"
+      ai_tool_approval:
+        loading: "Φόρτωση... "
+        tool: "Ενέργεια"
+        user: "Χρήστης"
+        approve: "Έγκριση"
+        reject: "Απόρριψη"
+        approved: "Εγκρίθηκε "
+        rejected: "Απορρίφθηκε"
       llm_selector:
         none: "Κανένα"
       features:
@@ -125,6 +133,9 @@ el:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        image_caption:
+          setting_groups:
+            settings: "Ρυθμίσεις"
         translation:
           post_raw_translator: "Μεταφραστής ακατέργαστης ανάρτησης"
         spam:
@@ -318,8 +329,6 @@ el:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
           try_again: "Δοκίμασε ξανά"
-        image_caption:
-          save_caption: "Αποθήκευση"
       errors:
         credit_limit_dialog:
           message_user: "Αυτή η κοινότητα έχει φτάσει το όριο πίστωσης AI για σήμερα. Δοκιμάστε ξανά μετά από %{reset_time} ή επικοινωνήστε με τον διαχειριστή του ιστότοπού σας για περισσότερες πληροφορίες."
@@ -336,7 +345,7 @@ el:
           fake: "Προσαρμοσμένο"
       ai_bot:
         title: "AI bot"
-        llm: "Μοντέλο"
+        llm: "Μοντέλο:"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"

@@ -46,6 +46,13 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:
@@ -68,6 +75,9 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        image_caption:
+          setting_groups:
+            settings: "تەڭشەك"
         spam:
           name: "ئەخلەت خەت"
       modals:
@@ -214,8 +224,6 @@ ug:
           select: "تاللا"
           selected: "تاللاندى"
           try_again: "قايتا سىنا"
-        image_caption:
-          save_caption: "ساقلا"
       embeddings:
         save: "ساقلا"
         delete: "ئۆچۈر"

@@ -10,18 +10,12 @@ da:
       sort_options:
         votes: "Stemmer"
     topic_voting:
-      reached_limit: "Du kan ikke afgive flere stemmer, fjern venligst en og prøv igen!"
-      list_votes: "Vis dine stemmer"
       voted: "Du stemte i dette emne"
-      allow_topic_voting: "Tillad brugere at stemme på emner i denne kategori"
       vote_title: "Stemmeafgivelse"
       vote_title_plural: "Stemmer"
       votes:
         one: "%{count} stemme"
         other: "%{count} stemmer"
-      anonymous_button:
-        one: "Stemmeafgivelse"
-        other: "Stemmer"
       remove_vote: "Fjern stemme"
       and_more_voters: "og %{count} mere..."
       show_voters: "Vis hvem der stemte"
@@ -35,10 +29,6 @@ da:
         help: "emner, du stemte på"
     search:
       most_votes: "Flest Stemmer"
-      advanced:
-        vote:
-          count:
-            label: "Minimum antal af stemmer"
     admin:
       web_hooks:
         voting_event:

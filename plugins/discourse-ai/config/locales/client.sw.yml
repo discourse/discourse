@@ -34,6 +34,14 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Inaandaa...."
+        tool: "Kitendo"
+        user: "Mtumiaji"
+        approve: "Imethibitishwa"
+        reject: "Kataa"
+        approved: "Wamekubaliwa"
+        rejected: "Imekataliwa"
       llm_selector:
         none: "Hakuna"
       features:
@@ -48,6 +56,9 @@ sw:
           reset: "Weka/Anzisha Upya"
         search:
           name: "Tafuta"
+        image_caption:
+          setting_groups:
+            settings: "Mipangilio"
         spam:
           name: "Barua Taka"
       modals:
@@ -152,8 +163,6 @@ sw:
           cancel: "Batili"
         thumbnail_suggestions:
           try_again: "Jaribu Tena"
-        image_caption:
-          save_caption: "Hifadhi"
       embeddings:
         save: "Hifadhi"
         delete: "Futa"

@@ -28,6 +28,17 @@ en:
               label: Topic ID
     discourse_calendar:
       livestream:
+        zoom:
+          join: "Join Zoom"
+          chat: "Chat"
+          open_in_zoom: "Open in Zoom"
+          load_error: "You left the webinar or we are unable to load Zoom in this page."
+          too_early: "You can join the webinar closer to the event start time"
+          view_topic: "View topic for the event"
+          not_started_retrying:
+            one: "The webinar hasn't started yet. Retrying join in %{count} second..."
+            other: "The webinar hasn't started yet. Retrying join in %{count} seconds..."
+          not_started_trying_again: "Trying to join the webinar again now..."
         chat:
           going: "Click Going"
           join_channel_header: "🌟 Join the Buzz! 🌟"

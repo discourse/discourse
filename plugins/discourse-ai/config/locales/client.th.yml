@@ -34,6 +34,13 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      ai_tool_approval:
+        loading: "กำลังโหลด..."
+        user: "ผู้ใช้"
+        approve: "อนุมัติ"
+        reject: "ละทิ้ง"
+        approved: "อนุมัติ"
+        rejected: "ถูกปฏิเสธ"
       llm_selector:
         none: "ไม่มี"
       features:
@@ -47,6 +54,9 @@ th:
           all: "ทั้งหมด"
         search:
           name: "ค้นหา"
+        image_caption:
+          setting_groups:
+            settings: "การตั้งค่า"
         spam:
           name: "ขยะ"
       modals:
@@ -146,8 +156,6 @@ th:
           cancel: "ยกเลิก"
         thumbnail_suggestions:
           try_again: "ลองอีกครั้ง"
-        image_caption:
-          save_caption: "บันทึก"
       embeddings:
         save: "บันทึก"
         delete: "ลบ"

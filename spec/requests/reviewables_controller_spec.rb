@@ -1106,6 +1106,16 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_deleted
       end
 
+      it "returns 200 if the user can delete their queued topic" do
+        sign_in(user)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.code).to eq("200")
+        expect(queued_topic.reload).to be_deleted
+      end
+
       it "denies attempts to destroy unowned reviewables" do
         sign_in(admin)
         queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
@@ -1113,6 +1123,16 @@ RSpec.describe ReviewablesController do
         expect(response.status).to eq(404)
         # Reviewable is not deleted because request is not via API
         expect(queued_post.reload).to be_present
+      end
+
+      it "denies staff attempts to destroy another user's queued topic" do
+        sign_in(admin)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(queued_topic.reload).to be_present
       end
 
       describe "via API" do

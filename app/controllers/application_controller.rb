@@ -312,26 +312,27 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    message = title = nil
+    message = nil
     with_resolved_locale(check_current_user: false) do
-      if opts[:custom_message]
-        title = message = I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
-      else
-        message = I18n.t(type)
-        if status_code == 403
-          title = I18n.t("page_forbidden.title")
+      message =
+        if opts[:custom_message]
+          I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
         else
-          title = I18n.t("page_not_found.title")
+          I18n.t(type)
         end
-      end
     end
 
-    error_page_opts = { title: title, status: status_code, group: opts[:group] }
+    error_page_opts = {
+      status: status_code,
+      group: opts[:group],
+      custom_message: opts[:custom_message],
+      custom_message_params: opts[:custom_message_params],
+    }
 
     if show_json_errors
       opts = { type: type, status: status_code }
 
-      with_resolved_locale(check_current_user: false) do
+      with_resolved_locale do
         # Include error in HTML format for topics#show.
         if (request.params[:controller] == "topics" && request.params[:action] == "show") ||
              (
@@ -921,7 +922,14 @@ class ApplicationController < ActionController::Base
 
     @container_class = "wrap not-found-container"
     @page_title = I18n.t("page_not_found.page_title")
-    @title = opts[:title] || I18n.t("page_not_found.title")
+    @title =
+      if opts[:custom_message]
+        I18n.t(opts[:custom_message], opts[:custom_message_params] || {})
+      elsif opts[:status] == 403
+        I18n.t("page_forbidden.title")
+      else
+        I18n.t("page_not_found.title")
+      end
     @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
@@ -1055,6 +1063,10 @@ class ApplicationController < ActionController::Base
 
   def fetch_limit_from_params(params: self.params, default:, max:)
     fetch_int_from_params(:limit, params: params, default: default, max: max)
+  end
+
+  def fetch_page_from_params(params: self.params, default: 0, max: nil)
+    fetch_int_from_params(:page, params: params, default: default, min: 0, max: max)
   end
 
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)

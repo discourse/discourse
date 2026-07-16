@@ -415,6 +415,10 @@ $show-interested: inherit;
     }
   }
 
+  .event-location a {
+    overflow-wrap: anywhere;
+  }
+
   .event-description {
     align-items: start;
     padding-right: 2em;
@@ -457,6 +461,14 @@ $show-interested: inherit;
       max-width: 80%;
 
       @include ellipsis;
+    }
+  }
+
+  .event-livestream {
+    padding-top: 0;
+
+    button {
+      width: 100%;
     }
   }
 

@@ -4,6 +4,46 @@ module DiscourseWorkflows
   module Nodes
     module ReviewableApproved
       class V1 < NodeType
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "reviewable" => {
+              "type" => "object",
+              "properties" => {
+                "id" => {
+                  "type" => "integer",
+                },
+                "type" => {
+                  "type" => "string",
+                },
+                "status" => {
+                  "type" => "string",
+                },
+                "target_type" => {
+                  "type" => %w[string null],
+                },
+                "target_id" => {
+                  "type" => %w[integer null],
+                },
+                "topic_id" => {
+                  "type" => %w[integer null],
+                },
+                "category_id" => {
+                  "type" => %w[integer null],
+                },
+                "score" => {
+                  "type" => "number",
+                },
+                "created_at" => {
+                  "type" => %w[string null],
+                  "format" => "date-time",
+                },
+              },
+            },
+          },
+        }.freeze
+
         description(
           name: "trigger:reviewable_approved",
           version: "1.0",
@@ -13,6 +53,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:reviewable_transitioned_to],
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: -> do
             {
               reviewable_types: {

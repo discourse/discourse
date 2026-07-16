@@ -2,14 +2,23 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { modifier } from "ember-modifier";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import applyLightbox from "discourse/lib/lightbox";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
+import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ReviewableRefreshChatMessage extends Component {
+  lightbox = modifier((element) => {
+    if (element.querySelector(".lightbox")) {
+      applyLightbox(element);
+    }
+  });
+
   @cached
   get channel() {
     if (!this.args.reviewable.chat_channel) {
@@ -23,6 +32,10 @@ export default class ReviewableRefreshChatMessage extends Component {
       this.args.reviewable.payload?.message_cooked ||
       this.args.reviewable.cooked
     );
+  }
+
+  get uploads() {
+    return this.args.reviewable.payload?.message_uploads;
   }
 
   <template>
@@ -59,6 +72,14 @@ export default class ReviewableRefreshChatMessage extends Component {
       <div class="review-item__post-content-wrapper">
         <div class="review-item__post-content">
           {{highlightWatchedWords this.messageCooked @reviewable}}
+
+          {{#if this.uploads.length}}
+            <div class="chat-uploads" {{this.lightbox}}>
+              {{#each this.uploads key="id" as |upload|}}
+                <ChatUpload @upload={{upload}} />
+              {{/each}}
+            </div>
+          {{/if}}
 
           {{#if @reviewable.payload.transcript_topic_id}}
             <div class="transcript">

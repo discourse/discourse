@@ -860,6 +860,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
+        push_level:
+          none: "ปิดใช้งานแล้ว"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
@@ -1800,6 +1802,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      sr_read: "อ่าน"
       bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
@@ -2723,6 +2726,19 @@ th:
               title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
+        category_management:
+          tabs:
+            settings: "การตั้งค่า"
+          types:
+            all:
+              title: "หมวดหมู่ทั้งหมด"
+          table:
+            category: "หมวดหมู่"
+            topics: "หัวข้อ"
+          visibility:
+            public: "สาธารณะ"
+          visibility_filter:
+            all: "หมวดหมู่ทั้งหมด"
         permalinks:
           title: "ลิงค์ถาวร"
         emoji:
@@ -2800,6 +2816,7 @@ th:
               searches: "ค้นหา"
               status: "สถานะ"
         reports_section:
+          header_action: "จัดการ"
           modal:
             apply: "นำไปใช้"
         site_traffic:

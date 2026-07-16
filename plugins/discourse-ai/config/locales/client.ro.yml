@@ -51,6 +51,14 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      ai_tool_approval:
+        loading: "Se încarcă..."
+        tool: "Acțiune"
+        user: "Utilizator"
+        approve: "Aprobare"
+        reject: "Respingere"
+        approved: "Aprobat"
+        rejected: "Respins"
       default_llm:
         title: "Model LLM implicit"
       llm_selector:
@@ -72,6 +80,9 @@ ro:
           reset: "Resetare"
         search:
           name: "Caută"
+        image_caption:
+          setting_groups:
+            settings: "Setări"
         translation:
           schedule_untranslated: "Programează traduceri"
           schedule_topic_success:
@@ -240,8 +251,6 @@ ro:
           cancel: "Anulează"
         thumbnail_suggestions:
           try_again: "Încearcă din nou"
-        image_caption:
-          save_caption: "Salvează"
       embeddings:
         save: "Salvează"
         delete: "Șterge"

@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
   end
 
   describe "#output" do
-    it "returns tag change data with computed diffs" do
+    it "returns tag change data with computed diffs", :aggregate_failures do
       trigger =
         described_class.new(
           topic,
@@ -44,6 +44,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       expect(output[:added_tags]).to eq(%w[urgent])
       expect(output[:removed_tags]).to eq(%w[help])
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output).to match_node_output_schema(described_class)
     end
 
     it "handles tags added from empty" do

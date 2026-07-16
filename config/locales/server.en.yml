@@ -384,6 +384,7 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      bot_challenge: "Sorry, we were unable to generate a preview for this web page, because the web server requires visitors to pass a verification step in a web browser. Instead of a preview, only a link will appear in your post. :cry:"
       missing_data:
         one: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
         other: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
@@ -1968,7 +1969,7 @@ en:
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, {{setting:large_icon}} will be used."
     generate_topic_og_image: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, {{setting:large_icon}} will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. Don't use an SVG image. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, {{setting:large_icon}} will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, {{setting:large_icon}} will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the {{setting:opengraph_image}}, as long as that is not also a .svg"
 
@@ -2163,7 +2164,7 @@ en:
 
     enable_local_logins: "Enable local username and password login based accounts. WARNING: if disabled, you may be unable to log in if you have not previously configured at least one alternate login method."
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
-    enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs). Requires 'enable local logins via email'."
+    enable_local_logins_via_code: "Allow members to sign up and log in faster using one-time email codes (OTPs)."
     allow_passkeys_for_2fa: "Allow users to use a passkey to satisfy two-factor authentication when confirming a sensitive action."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
@@ -2902,6 +2903,7 @@ en:
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
     enable_unified_composer_picker: "Combine the emoji and GIF pickers into a single tabbed popover on the post and chat composers, replacing the separate emoji picker and GIF modal."
+    prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -3182,6 +3184,7 @@ en:
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
+      exclude_group: "Exclude topics with participants from specific groups"
       locale: "Filter topics by original language"
       locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
       exclude_locale: "Exclude topics originally written in a specific language"
@@ -3342,6 +3345,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."
@@ -5342,7 +5346,7 @@ en:
 
       Your permission to use the forum is subject to the following conditions:
 
-      1. You must be at least thirteen years old.
+      1. You must be at least eighteen years old.
 
       2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
@@ -5542,7 +5546,7 @@ en:
 
       ## [Children's Online Privacy Protection Act Compliance](#coppa)
 
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
+      Our site, products and services are all directed to people who are at least 18 years old or older. If this server is in the USA, and you are under the age of 18, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
 
       <a name="online"></a>
 
@@ -6047,6 +6051,8 @@ en:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
     post_restored_by_author: "Post was restored by the author"
+    post_deleted_by_author_after_penalty: >-
+      Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6096,6 +6102,10 @@ en:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
         complete: "Post kept hidden."
+      agree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Agree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
@@ -6161,6 +6171,10 @@ en:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
+      unsilence_user_and_ignore:
+        title: "Unsilence user and ignore"
+        description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
+        complete: "User unsilenced and flag ignored."
       approve:
         title: "Yes"
         complete: "Post approved."

@@ -97,7 +97,6 @@ sk:
       description: "Táto správa poskytuje analýzu nálad pre príspevky zoskupené podľa kategórií s pozitívnym, negatívnym a neutrálnym hodnotením pre každý príspevok a kategóriu."
     overall_sentiment:
       title: "Celkový sentiment"
-      description: 'V grafe je porovnaný počet príspevkov klasifikovaných ako pozitívne alebo negatívne. Tie sa vypočítajú, keď pozitívne alebo negatívne skóre > nastavené prahové skóre. To znamená, že neutrálne príspevky sa nezobrazujú. Osobné správy (PM) sú tiež vylúčené. Klasifikované pomocou "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Pozitívne (%)"
       yaxis: "Dátum"
     emotion_admiration:
@@ -228,8 +227,6 @@ sk:
         explain: "Vysvetlite"
         illustrate_post: "Ilustrovať príspevok"
         replace_dates: "Inteligentné dátumy"
-      image_caption:
-        attribution: "S titulkami od AI"
     share_ai:
       read_more: "Prečítať celý prepis"
       onebox_title: "Konverzácia AI s %{llm_name}"
@@ -401,6 +398,8 @@ sk:
         random_picker: "Náhodný výber"
         categories: "Zoznam kategórií"
         flag_post: "Príspevok s vlajkou"
+        suspend_user: "Pozastavenie používateľa"
+        silence_user: "Umlčať používateľa"
         search: "Hľadať"
         tags: "Zoznam značiek"
         time: "Čas"

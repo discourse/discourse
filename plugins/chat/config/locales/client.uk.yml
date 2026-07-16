@@ -306,17 +306,30 @@ uk:
           few: "%{username} надіслав %{count} вкладення"
           many: "%{username} надіслав %{count} вкладень"
           other: "%{username} надіслав %{count} вкладень"
+        new_message_with_image:
+          one: "%{username}: %{message} (із зображенням)"
+          few: "%{username}: %{message} (із %{count} зображеннями)"
+          many: "%{username}: %{message} (із %{count} зображеннями)"
+          other: "%{username}: %{message} (із %{count} зображеннями)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (з вкладеним файлом)"
+          few: "%{username}: %{message} (з %{count} вкладеними файлами)"
+          many: "%{username}: %{message} (з %{count} вкладеними файлами)"
+          other: "%{username}: %{message} (з %{count} вкладеними файлами)"
       no_direct_message_channels: "Ви ще не приєдналися до жодної особистої переписки!"
       no_direct_message_channels_cta: "Розпочати розмову"
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       chat_notifications_title: "Сповіщення чату"
-      only_chat_push_notifications:
-        title: "Надсилати лише push-сповіщення в чаті"
       personalization_title: "Персоналізація"
+      accessibility_title: "Доступність"
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
+      announce_new_messages:
+        title: "Оголошувати нові повідомлення для програм зчитування з екрана"
+      new_message_sound:
+        title: "Відтворювати звуки для нових повідомлень, поки чат працює на передньому плані"
       show_thread_title_prompts:
         title: "Показувати заголовок списку тем"
         description: "Показати підказки для встановлення заголовка для нових тем"

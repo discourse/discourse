@@ -153,7 +153,6 @@ ar:
       description: "يوفر هذا التقرير تحليلًا لمشاعر المنشورات، مجمعة حسب الفئة، مع درجات إيجابية وسلبية ومحايدة لكل منشور ولكل فئة."
     overall_sentiment:
       title: "المشاعر العامة"
-      description: 'يقارن الرسم البياني عدد المنشورات المصنَّفة على أنها إما إيجابية أو سلبية. يتم حساب هذه النتائج عندما تكون الدرجات الإيجابية أو السلبية > درجة الحد المحدَّدة. وهذا يعني عدم عرض المنشورات المحايدة. يتم أيضًا استبعاد الرسائل الخاصة (PM). يتم تصنيفها باستخدام "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "إيجابية (%)"
       yaxis: "التاريخ"
     emotion_admiration:
@@ -346,8 +345,6 @@ ar:
         explain: "الشرح"
         illustrate_post: "توضيح المنشور"
         replace_dates: "التواريخ الذكية"
-      image_caption:
-        attribution: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
     share_ai:
       read_more: "قراءة النص الكامل"
       onebox_title: "محادثة الذكاء الاصطناعي مع %{llm_name}"
@@ -372,6 +369,8 @@ ar:
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
       thinking: "التفكير"
       tool_pending_approval: "يتطلب هذا الإجراء موافقة أحد المشرفين قبل تنفيذه."
+      chat_tool_approval:
+        unexpected_error: "حدث خطأ غير متوقع"
       agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى تعطيلها بدلًا من ذلك"
@@ -454,7 +453,6 @@ ar:
           description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة الترجمة في المساعد"
         image_captioner:
           name: "تسميات الصور"
-          description: "الوكيل الافتراضي المسؤول عن تشغيل ميزة التسميات التوضيحية للصور في المساعد"
         locale_detector:
           name: "كاشف اللغة"
           description: "يشغّل ميزة الترجمة من خلال اكتشاف لغة النص المعطى (المنشورات، والعناوين، وغيرها)"
@@ -552,6 +550,8 @@ ar:
         categories: "إدراج الفئات"
         flag_post: "الإبلاغ عن المنشور"
         close_topic: "إغلاق الموضوع"
+        suspend_user: "تعليق المستخدم"
+        silence_user: "كتم المستخدم"
         unlist_topic: "إزالة الموضوع من القائمة"
         lock_post: "قفل المنشور"
         delete_topic: "حذف الموضوع"
@@ -744,6 +744,12 @@ ar:
           not_allowed: "غير مسموح لك بإغلاق هذا الموضوع أو فتحه."
           no_reason: "يجب تحديد سبب لإغلاق الموضوع أو فتحه."
         success: "تم تحديث الموضوع بنجاح."
+      suspend_user:
+        errors:
+          not_found: "المستخدم غير موجود."
+      silence_user:
+        errors:
+          not_found: "المستخدم غير موجود."
       unlist_topic:
         errors:
           not_found: "الموضوع غير موجود."
@@ -868,6 +874,7 @@ ar:
         tool_not_found: "لم تعد الأداة '%{tool_name}' متاحة."
         bot_user_missing: "لم يعد مستخدم الروبوت موجودًا."
         execution_error: "فشل تنفيذ الأداة: %{error}"
+        execution_error_unknown: "حدث خطأ غير متوقع"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"

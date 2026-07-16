@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
 const REPORT_GROUPS = {
@@ -85,10 +85,6 @@ export default class AdminReports extends Component {
       .split("|")
       .filter(Boolean);
     return reports.filter((report) => !hiddenReports.includes(report.type));
-  }
-
-  get requestedGroupKey() {
-    return this.args.group || "all";
   }
 
   @bind
@@ -174,31 +170,17 @@ export default class AdminReports extends Component {
     ];
   }
 
-  @bind
-  selectedGroupKey(reports) {
-    const options = this.groupDropdownOptions(reports);
-
-    return options.some((option) => option.value === this.requestedGroupKey)
-      ? this.requestedGroupKey
-      : "all";
-  }
-
-  @bind
-  updateGroupFilter(groupKey) {
-    this.args.onGroupChange?.(groupKey);
-  }
-
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.filterReports reports}}
           @searchableProps={{array "title" "description"}}
           @dropdownOptions={{this.groupDropdownOptions reports}}
-          @dropdownValue={{this.selectedGroupKey reports}}
+          @textFilterQueryParam="filter"
+          @dropdownFilterQueryParam="group"
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
-          @onDropdownChange={{this.updateGroupFilter}}
         >
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}
@@ -217,7 +199,7 @@ export default class AdminReports extends Component {
               </section>
             {{/each}}
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       </:content>
     </DAsyncContent>
   </template>

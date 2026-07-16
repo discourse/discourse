@@ -34,6 +34,14 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Obrađuje..."
+        tool: "Action"
+        user: "User"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Dozvojeno"
+        rejected: "Odbijeni"
       llm_selector:
         none: "Ništa"
       features:
@@ -52,6 +60,9 @@ bs_BA:
           reset: "Resetovati"
         search:
           name: "Pretraži"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Spam"
       modals:
@@ -165,8 +176,6 @@ bs_BA:
           cancel: "Odustani"
         thumbnail_suggestions:
           try_again: "Pokušaj ponovo"
-        image_caption:
-          save_caption: "Sačuvaj"
       embeddings:
         save: "Sačuvaj"
         delete: "Delete"

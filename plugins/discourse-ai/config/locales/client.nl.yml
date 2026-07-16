@@ -21,7 +21,6 @@ nl:
       dashboard:
         emotion:
           title: "Emotie"
-          description: "De tabel bevat een telling van berichten die zijn geclassificeerd met een bepaalde emotie. Geclassificeerd met het model 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -232,6 +231,15 @@ nl:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Laden..."
+        agent: "Agent"
+        tool: "Actie"
+        user: "Gebruiker"
+        approve: "Goedkeuren"
+        reject: "Weigeren"
+        approved: "Goedgekeurd"
+        rejected: "Geweigerd"
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
@@ -332,7 +340,6 @@ nl:
           translate: "Vertalen"
           markdown_tables: "Markdowntabel genereren"
           custom_prompt: "Aangepaste prompt"
-          image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
           post_illustrator: "Berichtillustrator"
           chat_thread_titles: "Chatthreadtitels"
@@ -341,6 +348,9 @@ nl:
             enabled_features: "Ingeschakelde functies"
             automation: "Automatisering"
             agents: "Agenten"
+        image_caption:
+          setting_groups:
+            settings: "Instellingen"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -537,16 +547,6 @@ nl:
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
         use_parent_llm: "Taalmodel van agent gebruiken"
-        max_context_posts: "Maximaal aantal contextberichten"
-        max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
-        execution_mode: "Uitvoeringsmodus"
-        execution_mode_help: "Bepaalt hoe de agent de tooluitvoering en conversatiecontext beheert. Standaard wordt gebruik gemaakt van vaste beurt/toollimieten. Agentic gebruikt een tokenbudget met automatische contextcompressie voor langere, capabelere sessies voor toolgebruik."
-        execution_mode_options:
-          default: "Standaard (vaste limieten)"
-          agentic: "Agentic (tokenbudget)"
-        max_turn_tokens: "Maximaal aantal beurttokens"
-        max_turn_tokens_help: "Maximaal totaal aantal tokens (invoer + uitvoer) verbruikt over alle LLM-aanroepen tijdens een enkele botantwoord. Als dit is ingesteld, worden de vaste voltooiing-/toollimieten vervangen door een tokenbudget, waardoor meer agentgedrag mogelijk is. Laat leeg voor standaard limieten."
-        compression_threshold: "Compressiedrempel"
         compression_threshold_help: "Percentage van contextgebruik (20-99) waarbij automatische compressie begint. Lagere waarden activeren compressie eerder, waardoor meer ruimte behouden blijft."
         vision_max_pixel_sizes:
           low: Lage kwaliteit - goedkoopst (256x256)
@@ -886,7 +886,7 @@ nl:
         usage:
           ai_bot: "AI-bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Afbeeldingsbijschrift"
+          ai_image_caption: "Afbeeldingsbijschrift"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Samenvatten"
           ai_embeddings_semantic_search: "AI zoeken"
@@ -1019,11 +1019,6 @@ nl:
           select: "Selecteren"
           selected: "Geselecteerd"
           try_again: "Opnieuw proberen"
-        image_caption:
-          button_label: "Bijschrift met AI"
-          generating: "Bijschrift genereren..."
-          credits: "Bijschrift door AI"
-          save_caption: "Opslaan"
         no_content_error: "Voeg eerst inhoud toe om er AI-acties op uit te voeren"
       errors:
         credit_limit_dialog:
@@ -1114,8 +1109,8 @@ nl:
         click_to_run_label: "Artefact uitvoeren"
       ai_bot:
         title: "AI-bot"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
         try_again: "Opnieuw proberen"

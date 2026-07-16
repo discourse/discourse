@@ -69,9 +69,14 @@ class Stylesheet::Manager
       )
 
     targets.each do |target|
-      $stderr.puts "precompile target: #{target}"
+      builder = Stylesheet::Manager::Builder.new(target: target, manager: nil)
 
-      Stylesheet::Manager::Builder.new(target: target, manager: nil).compile(force: true)
+      if builder.hydrate_from_cache!
+        $stderr.puts "precompile target: #{target} (cached)"
+      else
+        $stderr.puts "precompile target: #{target}"
+        builder.compile
+      end
     end
   end
 
@@ -108,8 +113,13 @@ class Stylesheet::Manager
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
             next if !scss_checker.has_scss(theme.id)
-            $stderr.puts "precompile target: #{target} #{theme.name}"
-            builder.compile(force: true)
+
+            if builder.hydrate_from_cache!
+              $stderr.puts "precompile target: #{target} #{theme.name} (cached)"
+            else
+              $stderr.puts "precompile target: #{target} #{theme.name}"
+              builder.compile
+            end
             compiled << "#{target}_#{theme.id}"
           end
       end
@@ -118,13 +128,20 @@ class Stylesheet::Manager
       theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
       [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
-        Stylesheet::Manager::Builder.new(
-          target: COLOR_SCHEME_STYLESHEET,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile(force: true)
+        builder =
+          Stylesheet::Manager::Builder.new(
+            target: COLOR_SCHEME_STYLESHEET,
+            theme: theme,
+            color_scheme: scheme,
+            manager: manager,
+          )
+
+        if builder.hydrate_from_cache!
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (cached)"
+        else
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+          builder.compile
+        end
       end
 
       clear_color_scheme_cache!

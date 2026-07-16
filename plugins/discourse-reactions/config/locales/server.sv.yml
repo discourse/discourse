@@ -13,8 +13,6 @@ sv:
     first_reaction:
       name: Första reaktionen
       description: Reagerade på inlägget
-      long_description: |
-        Denna utmärkelse beviljas första gången du reagerar på ett inlägg. Att reagera på inlägg är ett bra sätt att låta dina forummedlemmar veta att det de har publicerat var intressant, användbart, coolt eller roligt. Dela med dig av din reaktion!
   reports:
     reactions:
       title: "Reaktioner"

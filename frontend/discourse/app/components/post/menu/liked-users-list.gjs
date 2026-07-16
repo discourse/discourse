@@ -174,6 +174,7 @@ export default class LikedUsersList extends Component {
                     >
                       <DUserAvatar
                         class="trigger-user-card"
+                        @ariaHidden={{false}}
                         @user={{user}}
                         @size="small"
                       />
@@ -200,6 +201,7 @@ export default class LikedUsersList extends Component {
                       >
                         <DUserAvatar
                           class="trigger-user-card"
+                          @ariaHidden={{false}}
                           @user={{user}}
                           @size="small"
                         />

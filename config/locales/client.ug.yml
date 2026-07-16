@@ -1540,6 +1540,9 @@ ug:
       notifications: "ئۇقتۇرۇش"
       statistics: "ئىستاتىستىكا"
       desktop_notifications:
+        push_level:
+          none: "چەكلەندى"
+          all: "قوزغىتىلدى"
         not_supported: "كەچۈرۈڭ. بۇ توركۆرگۈ ئۇقتۇرۇشنى قوللىمايدۇ."
         perm_denied_expl: "ئۇقتۇرۇش ئىجازىتىنى رەت قىلدىڭىز. توركۆرگۈ تەڭشىكىڭىز ئارقىلىق ئۇقتۇرۇشقا يول قويالايسىز."
         each_browser_note: "ئەسكەرتىش: سىز ئىشلىتىدىغان ھەر بىر توركۆرگۈدە بۇ تەڭشەكنى ئۆزگەرتىشىڭىز كېرەك. بۇ تەڭشەكنىڭ قانداق بولۇشىدىن قەتئىينەزەر، ئەگەر ئىشلەتكۈچى تىزىملىكىدىن ئۇقتۇرۇشنى توختاتسىڭىز بارلىق ئۇقتۇرۇشلار چەكلىنىدۇ."
@@ -2821,6 +2824,8 @@ ug:
       default: ئىختىيارى چىراي ئىپادە
     filter_input:
       clear: "سۈزگۈچنى تازىلا"
+    filter_controls:
+      toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
       notice: "بۇ تېما پەتقەت ھەمبەھىر دەسلەپكى نۇسخا يوللىيالايدىغانلارغىلا كۆرۈنىدۇ."
@@ -3591,6 +3596,7 @@ ug:
       read_more_in_category: "كۆپرەك ئوقۇماقچىمۇ؟ %{categoryLink} دىكى باشقا تېمىغا كۆز يۈگۈرتۈڭ ياكى <a href='%{latestLink}'>ئاخىرقى تېمىنى كۆرۈڭ</a>."
       read_more: "كۆپرەك ئوقۇماقچىمۇ؟ <a href='%{categoryLink}'>بارلىق سەھىپىگە كۆز يۈگۈرتۈڭ</a> ياكى <a href='%{latestLink}'>ئاخىرقى تېمىنى كۆرۈڭ</a>."
       unread_indicator: "بۇ تېمىدىكى ئاخىرقى يازمىنى تېخى ھېچقانداق ئەزا ئوقۇمىدى."
+      sr_read: "ئوقۇ"
       participant_groups: "قاتناشقۇچىلار گۇرۇپپىسى"
       reply_count_link:
         one: "%{count} جاۋاب، تۇنجى يازمىغا ئاتلايدۇ"
@@ -4056,8 +4062,9 @@ ug:
           one: "%{count} تەرجىمە قىلىنغان يەرلىك تىلنى كۆرسىتىدۇ"
           other: "%{count} تەرجىمە قىلىنغان يەرلىك تىلنى كۆرسىتىدۇ"
         modal:
-          title: "يازمىنىڭ تەرجىمىسى"
+          title: "تەرجىمە"
           confirm_delete: "«%{languageCode}» نىڭ تەرجىمىسىنى راستتىنلا ئۆچۈرەمسىز؟"
+          discard_language_change: "ئۆزگەرتىشنى تاشلىۋەت"
         success: "تەرجىمە مۇۋەپپەقىيەتلىك يېڭىلاندى"
         post_language_selector:
           none: "تەڭشەلمىدى"
@@ -5400,7 +5407,6 @@ ug:
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
-    toggle_filters: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     admin:
       title: "Discourse باشقۇرغۇچى"
       moderator: "رىياسەتچى"
@@ -5595,7 +5601,6 @@ ug:
             apple_touch_icon:
               title: "Apple سېزىش سىنبەلگىسى"
               description: "Apple سېزىش ئۈسكۈنىسىگە ئىشلىتىلگەن سىنبەلگە. ئەگەر بوش قالدۇرۇلسا، large_icon ئىشلىتىلىدۇ."
-              help_text: "تەۋسىيە قىلىنغان چوڭلۇقى 180x180 پىكسېل. سۈزۈك تەگلىك تەۋسىيە قىلىنمايدۇ."
             digest_logo:
               title: "قىسقىچە تۇغ"
               description: "تور بېكىتىڭىزنىڭ ئېلخەت خۇلاسىسىنىڭ ئۈستى تەرىپىگە ئىشلىتىلىدىغان زاپاس تۇغ سۈرىتى. ئەگەر بوش قالسا، «logo» تەڭشىكىدىكى سۈرەت ئىشلىتىلىدۇ."
@@ -5755,6 +5760,21 @@ ug:
               title: "يازما ۋە تېما"
             stats_and_thresholds:
               title: "ئىستاتىستىكا ۋە بوسۇغا قىممىتى"
+        category_management:
+          tabs:
+            settings: "تەڭشەك"
+          types:
+            all:
+              title: "ھەممە سەھىپە"
+          filter_placeholder: "سەھىپە سۈزگۈچ"
+          table:
+            category: "سەھىپە"
+            visibility: "كۆرۈنۈشچانلىقى"
+            topics: "تېما"
+          visibility:
+            public: "ئاممىۋى"
+          visibility_filter:
+            all: "ھەممە سەھىپە"
         permalinks:
           title: "ئۆزگەرمەس ئۇلانما"
           header_description: "مۇنبەر تونۇيالمىغان تور ئادرېسى قوللىنىشىنىڭ قايتا نىشانلىنىشى"
@@ -5966,6 +5986,7 @@ ug:
               searches: "ئىزدەش نەتىجىسى"
               status: "ھالەت"
         reports_section:
+          header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:
             enabled_heading: "قوزغىتىلدى"

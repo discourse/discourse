@@ -16,7 +16,7 @@ en:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "The table lists a count of posts classified with a determined emotion. Classified with the model 'SamLowe/roberta-base-go_emotions'."
+          description: "The table lists a count of posts classified with a determined emotion. Depending on the selected emotion classification method, posts are classified with either the configured emotion classification model ('SamLowe/roberta-base-go_emotions') or the configured emotion classification agent."
         reports:
           filters:
             group_by:
@@ -232,6 +232,12 @@ en:
 
     discourse_ai:
       title: "AI"
+      post_image_captions:
+        edit: "Edit AI image caption"
+        title: "Edit AI image caption"
+        description: "Caption"
+        save: "Save caption"
+        saved: "AI image caption saved"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -371,7 +377,6 @@ en:
           translate: "Translate"
           markdown_tables: "Generate Markdown table"
           custom_prompt: "Custom prompt"
-          image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
           chat_thread_titles: "Chat thread titles"
@@ -380,6 +385,13 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        image_caption:
+          name: "Image Caption"
+          description: "Generates AI captions for post images and makes them available to readers and assistive technology"
+          post_image_captions: "Post image captions"
+          setting_groups:
+            settings: "Settings"
 
         translation:
           name: "Translation"
@@ -589,16 +601,9 @@ en:
         description: "Description"
         no_llm_selected: "No language model selected"
         use_parent_llm: "Use agent's language model"
-        max_context_posts: "Max context posts"
-        max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
-        execution_mode: "Execution Mode"
-        execution_mode_help: "Controls how the agent manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
-        execution_mode_options:
-          default: "Default (Fixed Limits)"
-          agentic: "Agentic (Token Budget)"
-        max_turn_tokens: "Max Turn Tokens"
-        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty to default to half of the model's context window."
-        compression_threshold: "Compression Threshold"
+        max_turn_tokens: "Max turn tokens"
+        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. Leave empty to default to half of the model's context window."
+        compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads
         vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
@@ -966,7 +971,7 @@ en:
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Image caption"
+          ai_image_caption: "Image caption"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"
@@ -1128,11 +1133,6 @@ en:
           select: "Select"
           selected: "Selected"
           try_again: "Try Again"
-        image_caption:
-          button_label: "Caption with AI"
-          generating: "Generating caption..."
-          credits: "Captioned by AI"
-          save_caption: "Save"
         no_content_error: "Add content first to perform AI actions on it"
 
       errors:
@@ -1230,8 +1230,8 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"

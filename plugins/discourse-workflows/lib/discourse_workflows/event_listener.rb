@@ -3,13 +3,14 @@
 module DiscourseWorkflows
   class EventListener
     def self.handle(trigger_class, *args)
-      return unless SiteSetting.discourse_workflows_enabled
+      return unless SiteSetting.enable_discourse_workflows
       return if WorkflowDependency.active_node_types.exclude?(trigger_class.identifier)
 
       trigger = trigger_class.new(*args)
       return unless trigger.valid?
 
       trigger_data = nil
+      user_id = trigger.user_id if trigger.respond_to?(:user_id)
 
       WorkflowDependency
         .cached_published_triggers(trigger_class.identifier)
@@ -22,6 +23,7 @@ module DiscourseWorkflows
           DiscourseWorkflows::TriggerDispatcher.enqueue(
             published_trigger,
             trigger_data: (trigger_data ||= trigger.output),
+            user_id: user_id,
           )
         rescue => e
           Rails.logger.error(

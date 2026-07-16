@@ -29,7 +29,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCategoryChanged::V1 do
   end
 
   describe "#output" do
-    it "returns topic data with both category ids" do
+    it "returns topic data with both category ids", :aggregate_failures do
       trigger = described_class.new(topic, category)
       output = trigger.output
 
@@ -39,6 +39,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCategoryChanged::V1 do
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:old_category_id]).to eq(category.id)
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 end

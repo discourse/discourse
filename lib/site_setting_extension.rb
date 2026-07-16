@@ -179,11 +179,21 @@ module SiteSettingExtension
   #       Omit to allow all options (the default permissive behavior).
   #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
   #       useful for scoping style changes related to the change.
+  #     permanent_warning: (optional) boolean, defaults to true. When the change reaches
+  #       `stable` status, admins are warned in the UI that it will become permanent and
+  #       they will no longer be able to opt out. Set to false for changes where that
+  #       warning does not apply, e.g. changes that only alter a site setting default.
   #     hide_settings: (optional) array of other site setting names to hide from
   #       admins while this change is enabled (manual opt-in or auto-promotion).
   #       Use for legacy settings that stop making sense once the change is in
   #       effect. Hiding is computed per request so it is multisite-safe and
   #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
+  #     requires_plugin_enabled: (optional) boolean, defaults to true for plugin-owned
+  #       changes. By default a plugin-owned change is hidden from admins and does not
+  #       take effect while the owning plugin is disabled, since it gates a feature
+  #       inside the plugin. Set it to false to opt out -- for changes that exist to get
+  #       the plugin adopted (e.g. a category type that enables the plugin when chosen),
+  #       which must stay usable while the plugin is disabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -1349,6 +1359,7 @@ module SiteSettingExtension
           status: opts[:upcoming_change][:status].to_sym,
           allow_enabled_for: allow_enabled_for,
           body_class: opts[:upcoming_change][:body_class],
+          permanent_warning: opts[:upcoming_change][:permanent_warning] != false,
           hide_settings: hide_settings,
         )
       end

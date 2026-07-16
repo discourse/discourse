@@ -19,6 +19,12 @@ pl_PL:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> wymaga uwagi. W ciągu ostatnich %{count} godzin nie odpowiedział w %{failed_calls} na %{total_calls}."
       ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
       ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_image_caption_agent: "Podpisy AI do obrazów są włączone, ale wybrany agent podpisów do obrazów nie jest gotowy: %{reason}. <a href='%{url}'>Przejrzyj agenta podpisów do obrazów</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "wybrany agent nie istnieje"
+        agent_vision_disabled: "agent nie może uwzględniać przesyłania obrazów"
+        llm_missing: "agent nie rozwiązuje umowy LLM"
+        llm_vision_disabled: "rozwiązany problem LLM nie obsługuje wprowadzania obrazu"
   discourse_automation:
     ai:
       flag_types:
@@ -106,6 +112,11 @@ pl_PL:
     ai_helper_automatic_chat_thread_title_delay: "Opóźnienie w minutach, zanim pomocnik AI automatycznie ustawi tytuł wątku czatu."
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
+    ai_image_caption_agent: "Agent do użycia w podpisach obrazów AI. Agenty niestandardowe muszą mieć włączoną funkcję przesyłania obrazów i korzystać z LLM z obsługą technologii wizyjnej."
+    ai_post_image_captions_enabled: "Włącz podpisy AI dla obrazów we wpisach. Generowanie brakujących podpisów wymaga skonfigurowania {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Maksymalna liczba obrazów do podpisu na wpis."
+    ai_post_image_captions_backfill_hourly_rate: "Maksymalna liczba wpisów na godzinę do uzupełnienia podpisami do obrazów generowanymi przez sztuczną inteligencję. Ustaw na 0, aby wyłączyć uzupełnianie."
+    ai_post_image_captions_backfill_max_age_days: "Maksymalny wiek wpisów (w dniach), w których można uzupełnić podpisy do obrazów generowane przez sztuczną inteligencję."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
@@ -171,7 +182,7 @@ pl_PL:
       description: "Raport ten umożliwia analizę nastrojów dotyczących postów pogrupowanych według kategorii, przypisując każdemu postowi i kategorii pozytywne, negatywne i neutralne oceny."
     overall_sentiment:
       title: "Ogólny sentyment"
-      description: 'Wykres porównuje liczbę postów sklasyfikowanych jako pozytywne lub negatywne. Są one obliczane, gdy wynik pozytywny lub negatywny przekracza ustalony próg. Oznacza to, że posty neutralne nie są wyświetlane. Wiadomości prywatne (PW) również są wykluczone. Sklasyfikowane z tagiem „cardiffnlp/twitter-roberta-base-sentiment-latest”.'
+      description: "Wykres porównuje liczbę wpisów sklasyfikowanych jako pozytywne lub negatywne. Są one obliczane, gdy wynik pozytywny lub negatywny przekracza ustalony próg. Oznacza to, że posty neutralne nie są wyświetlane. Wiadomości prywatne (PW) również są wykluczane. W zależności od wybranej metody klasyfikacji sentymentu wpisy są klasyfikowane za pomocą skonfigurowanego modelu klasyfikacji sentymentu („cardiffnlp/twitter-roberta-base-sentiment-latest”) lub skonfigurowanego agenta klasyfikacji sentymentu."
       xaxis: "Pozytywny(%)"
       yaxis: "Data"
     emotion_admiration:
@@ -369,7 +380,21 @@ pl_PL:
         illustrate_post: "Zilustruj post"
         replace_dates: "Inteligentne daty"
       image_caption:
-        attribution: "Napisy z AI"
+        aria_description: "%{description} (Napisy wygenerowane przez AI)"
+    image_caption:
+      configuration:
+        agent_missing: "Wybierz istniejącego agenta dla podpisów obrazów AI."
+        agent_vision_disabled: "Agent podpisów do obrazów AI musi mieć włączoną funkcję przesyłania obrazów."
+        llm_missing: "Agent podpisów obrazów AI musi używać LLM."
+        llm_vision_disabled: "Agent podpisujący obrazy za pomocą sztucznej inteligencji musi używać LLM z obsługą obrazu."
+    post_image_captions:
+      errors:
+        description_blank: "Podpis nie może być pusty."
+        description_too_long:
+          one: "Podpis musi mieć %{count} znak lub mniej."
+          few: "Podpis musi mieć %{count} znaki lub mniej."
+          many: "Podpis musi mieć %{count} znaków lub mniej."
+          other: "Podpis musi mieć %{count} znaków lub mniej."
     share_ai:
       read_more: "Przeczytaj pełną transkrypcję"
       onebox_title: "Rozmowa AI z %{llm_name}"
@@ -394,6 +419,11 @@ pl_PL:
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
       tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      chat_tool_approval:
+        approved: "Zatwierdzone przez @%{username}."
+        rejected: "Odrzucone przez @%{username}."
+        failed: "Nie udało się wykonać tej czynności: %{error}"
+        unexpected_error: "wystąpił nieoczekiwany błąd"
       agents:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
@@ -481,7 +511,7 @@ pl_PL:
           description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
           name: "Podpisy pod obrazami"
-          description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
+          description: "Domyślny agent obsługujący funkcję podpisów obrazów"
         locale_detector:
           name: "Detektor ustawień regionalnych"
           description: "Umożliwia działanie funkcji tłumaczenia poprzez wykrywanie ustawień regionalnych danego tekstu (postów, tytułów itp.)"
@@ -592,6 +622,8 @@ pl_PL:
         categories: "Wymień kategorie"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
+        suspend_user: "Zawieś użytkownika"
+        silence_user: "Wycisz użytkownika"
         unlist_topic: "Usuń temat z listy"
         lock_post: "Zablokuj wpis"
         delete_topic: "Usuń temat"
@@ -617,6 +649,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
+        change_site_setting: "Zmień ustawienia witryny"
         dall_e: "Wygeneruj obraz"
         search_meta_discourse: "Wyszukaj Discourse Meta"
         javascript_evaluator: "Oceń JavaScript"
@@ -638,6 +671,8 @@ pl_PL:
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
+        suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
+        silence_user: "Ucisz użytkownika, blokując mu możliwość publikowania, dopóki może czytać"
         unlist_topic: "Wyświetlanie lub usuwanie tematu z listy"
         lock_post: "Zablokuj lub odblokuj wpis"
         delete_topic: "Usuń temat"
@@ -665,6 +700,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
+        change_site_setting: "Zmień wartość ustawienia witryny"
         dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
         search_meta_discourse: "Wyszukaj Discourse Meta"
         javascript_evaluator: "Oceń JavaScript"
@@ -686,6 +722,8 @@ pl_PL:
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
         flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         close_topic: "Zamykanie tematu %{topic_id} (zamknięto: %{closed})"
+        suspend_user: "Zawieszenie %{username} na %{duration_days} dni"
+        silence_user: "Wyciszanie %{username} na %{duration_days} dni"
         unlist_topic: "Usuwanie tematu z listy %{topic_id} (usunięto z listy: %{unlisted})"
         lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
         delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
@@ -750,6 +788,7 @@ pl_PL:
           few: "Znaleziono %{count} wyniki dla '%{query}'"
           many: "Znaleziono %{count} wyników dla '%{query}'"
           other: "Znaleziono %{count} wyników dla '%{query}'"
+        change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:
         continue_conversation:
           title: "Rozmowa odkrywcza: Wyszukaj %{query}"
@@ -770,6 +809,22 @@ pl_PL:
           not_allowed: "Nie masz uprawnień do zamykania ani otwierania tego tematu."
           no_reason: "Aby zamknąć lub otworzyć temat, trzeba podać powód."
         success: "Temat zaktualizowano pomyślnie."
+      suspend_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do zawieszenia tego użytkownika."
+          no_reason: "Aby zawiesić użytkownika, konieczne jest podanie przyczyny."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się zawiesić użytkownika."
+        success: "Użytkownik %{username} został zawieszony."
+      silence_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do uciszania tego użytkownika."
+          no_reason: "Aby uciszyć użytkownika, trzeba podać powód."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się uciszyć użytkownika."
+        success: "Użytkownik %{username} został uciszony."
       unlist_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -884,6 +939,19 @@ pl_PL:
           no_note: "Aby dodać notatkę do elementu kolejki przeglądu, wymagana jest notatka"
           failed: "Nie udało się dodać notatki"
         success: "Pomyślnie dodano notatkę do elementu kolejki przeglądu %{reviewable_id}"
+      change_site_setting:
+        errors:
+          no_reason: "Aby zmienić ustawienia witryny, trzeba podać powód."
+          not_found: "Ustawienie witryny '%{setting_name}' nie istnieje."
+          not_allowed: "Nie masz uprawnień do zmiany ustawień witryny."
+          hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj zmienić."
+          deprecated: "Ustawienie witryny „%{setting_name}” jest przestarzałe; zamiast niego należy używać „%{new_name}”."
+          shadowed: "Ustawienie witryny '%{setting_name}' jest globalnie zastępowane i nie można go zmienić."
+          unconfigurable: "Ustawienie witryny „%{setting_name}” należy do wtyczki, której nie można skonfigurować."
+          unsupported_type: "Ustawień witryny typu „%{type}” nie można zmienić za pomocą bota AI."
+          invalid_value: "Nieprawidłowa wartość: %{error}"
+          failed: "Nie udało się zmienić ustawień witryny."
+        success: "Ustawienie witryny %{setting_name} zostało zmienione na „%{value}”."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"
@@ -894,7 +962,10 @@ pl_PL:
         target_missing: "Cel działania narzędzia już nie istnieje."
         tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
         bot_user_missing: "Użytkownik bota już nie istnieje."
+        performer_not_human: "To działanie musi zatwierdzić lub odrzucić prawdziwa osoba, a nie bot."
+        post_mismatch: "Ta karta zatwierdzenia nie dotyczy tego wpisu."
         execution_error: "Nie udało się wykonać narzędzia: %{error}"
+        execution_error_unknown: "wystąpił nieoczekiwany błąd"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."

@@ -127,7 +127,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
       )
     end
 
-    it "emits only the template field" do
+    it "emits only the template field", :aggregate_failures do
       result =
         execute_template(
           "{% for item in items %}{{ item.name }}{% endfor %}",
@@ -135,6 +135,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Template::V1 do
         )
 
       expect(result.first["json"]).to eq("template" => "Alice")
+      expect(result.first["json"]).to match_node_output_schema(described_class)
     end
 
     it "links the output item to every source item" do

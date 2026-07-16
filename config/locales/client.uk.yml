@@ -58,9 +58,10 @@ uk:
         access_permission_viewer: "Переглядач"
         access_permission_viewer_description: "Може переглядати вміст для цього об'єкта"
         access_permission_remove: "Вилучити"
-        access_permission_remove_description: "Видалити дозвіл для цієї групи"
-        add_group: "Додати групу"
-        mandatory_acl_tooltip: "Цей дозвіл є обов’язковим для цього об’єкта і не може бути скасований"
+        access_permission_remove_description: "Видалити дозвіл для цього отримувача"
+        add_group: "Додати користувача або групу"
+        mandatory_acl_tooltip: "Цей дозвіл обов'язковий для %{name} і його не можна видалити"
+        mandatory: "Обов’язкове"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -992,6 +993,7 @@ uk:
         help: "Вилучити цю заявку"
       awaiting_approval: "Очікує схвалення"
       delete: "Вилучити"
+      delete_confirm: "Ви впевнені, що хочете видалити цей елемент із черги на перевірку?"
       settings:
         saved: "Збережено"
         save_changes: "Зберегти зміни"
@@ -1826,12 +1828,18 @@ uk:
       statistics: "Статистика"
       desktop_notifications:
         label: "Живі сповіщення"
+        push_level:
+          title: "Push-сповіщення…"
+          none: "Вимкнено"
+          all: "Включено"
+          chat_only: "Увімкнено лише для чату"
         not_supported: "Сповіщення не підтримуються у цьому оглядачі. Вибачте."
         perm_default: "Увімкнути сповіщення"
         perm_denied_btn: "Відмовлено у доступі"
         perm_denied_expl: "Ви заборонили сповіщення. Дозвольте сповіщення у налаштуваннях свого оглядача."
         disable: "Вимкнути сповіщення"
         enable: "Увімкнути сповіщення"
+        enable_failed: "Не вдалося увімкнути сповіщення. Ваш браузер заблокував запит або його служба push недоступна."
         each_browser_note: "Примітка. Вам потрібно змінити це налаштування в кожному браузері, який ви використовуєте. Усі сповіщення буде вимкнено, якщо призупинити сповіщення в меню користувача, незалежно від цього налаштування."
         consent_prompt: "Хочете отримувати сповіщення в реальному часі, коли люди відповідають на ваші дописи?"
       dismiss: "Відкинути"
@@ -2960,6 +2968,7 @@ uk:
     created: "Створено"
     created_lowercase: "створено"
     trust_level: "Рівень довіри"
+    search_hint: "імена користувачів або електронні адреси (розділені комами або пробілами), або IP-адреса"
     create_account:
       header_title: "Ласкаво просимо!"
       disclaimer: "Реєструючись, ви погоджуєтеся з <a href='%{privacy_link}' target='blank'>політикою конфіденційності</a> та <a href='%{tos_link}' target='blank'>умовами надання послуг</a>."
@@ -3167,6 +3176,13 @@ uk:
       disabled: "Не відображати"
       sidebar_footer: "Відображати внизу бічної панелі"
       header: "Відображати в заголовку"
+    category_scope:
+      all: "Усі публічні та приватні категорії"
+      public: "Загальнодоступні категорії"
+      include: "Включити вибрані категорії (з підкатегоріями)"
+      include_strict: "Включити вибрані категорії (без підкатегорій)"
+      exclude: "Виключити вибрані категорії (з підкатегоріями)"
+      exclude_strict: "Виключити вибрані категорії (без підкатегорій)"
     welcome_banner_location:
       above_topic_content: "Над вмістом теми"
       below_site_header: "Нижче заголовка сайту"
@@ -3267,6 +3283,9 @@ uk:
       default: Власні емодзі
     filter_input:
       clear: "Очистити фільтр"
+    filter_controls:
+      reset: "Скинути фільтр"
+      toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
       search_placeholder: "Пошук значків..."
@@ -3289,6 +3308,8 @@ uk:
     gifs:
       modal_title: "Пошук GIF-файлів"
       composer_title: "Вставити GIF-файл"
+      placeholder: "Пошук KLIPY"
+      powered_by: "Працює на Klipy"
       no_results: "Введіть ключове слово для пошуку GIF."
       browse_categories: "Переглянути за категоріями"
       bad_api_key: "Ключ API Klipy відсутній або недійсний. Будь ласка, перевірте налаштування ключа API GIF."
@@ -4465,6 +4486,7 @@ uk:
       read_more_in_category: "Хочете прочитати більше? Перегляньте інші теми на %{categoryLink} або <a href='%{latestLink}'>перегляньте останні теми</a>."
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
+      sr_read: "читання"
       participant_groups: "Групи учасників"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -5050,8 +5072,16 @@ uk:
           many: "Переглянути %{count} перекладів"
           other: "Переглянути %{count} перекладів"
         modal:
-          title: "Переклади для повідомлення"
+          title: "Переклади"
           confirm_delete: "Ви впевнені, що хочете видалити переклади для '%{languageCode}'?"
+          language_notice: "Встановіть оригінальну мову публікації, щоб читачам можна було бачити переклади."
+          post_language: "Мова публікації"
+          topic_language: "Мова назви теми"
+          save_post_language: "Зберегти мову публікації"
+          save_topic_language: "Зберегти мову назви теми"
+          discard_language_change: "Відхилити зміну"
+          post_language_updated: "Мову публікації оновлено"
+          topic_language_updated: "Мову назви теми оновлено"
         success: "Переклади були успішно оновлені"
         post_language_selector:
           title: "Мова публікації"
@@ -5368,6 +5398,7 @@ uk:
       unsaved_changes: "Є незбережені зміни"
       slug: "Посилання на розділ"
       parent: "Батьківська категорія"
+      slug_placeholder: "Генерується автоматично, якщо поле залишити порожнім"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
       errors:
@@ -6682,8 +6713,6 @@ uk:
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
-    reset_filter: "Скинути фільтр"
-    toggle_filters: "Перемкнути випадаючі фільтри"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
@@ -6745,6 +6774,7 @@ uk:
         enabled_for_throttle: "Ви занадто швидко змінили, для кого ввімкнено цю зміну. Зачекайте кілька секунд, перш ніж повторити спробу."
         change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
         change_disabled: "Ви відмовилися від цієї зміни"
+        depends_on_notice: "Для цієї зміни потрібно ввімкнути %{dependencyLinks}."
         permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
         permanent_soon_notice: "Ця зміна незабаром стане остаточною. Ви більше не зможете відмовитися від неї."
         permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
@@ -6918,7 +6948,7 @@ uk:
             apple_touch_icon:
               title: "Піктограма Apple touch"
               description: "Іконка, що використовується для сенсорних пристроїв Apple. Якщо залишити пустим, буде використано large_icon."
-              help_text: "Рекомендований розмір 180 x 180 пікселів. Прозорий фон не рекомендується."
+              help_text: "Рекомендований розмір – 180 x 180 пікселів. Не використовуйте зображення у форматі SVG. Прозорий фон не рекомендується."
             digest_logo:
               title: "Логотип дайджесту"
               description: "Альтернативне зображення логотипу, яке використовується у верхній частині резюме вашого сайту електронною поштою. Якщо залишити порожнім, буде використано зображення з налаштування «логотип»."
@@ -7128,6 +7158,31 @@ uk:
               title: "Повідомлення та теми"
             stats_and_thresholds:
               title: "Статистика та порогові значення"
+        category_management:
+          title: "Управління категоріями"
+          header_description: "Перегляньте типи категорій, ієрархію та категорії, призначені для кожного типу."
+          keywords: "categories|category types|discussion|category management"
+          create_category: "Створити категорію"
+          tabs:
+            settings: "Налаштування"
+          types:
+            unavailable: "Тип категорії %{categoryType} недоступний."
+            all:
+              title: "Всі розділи"
+              description: "Усі категорії в усіх налаштованих типах."
+          filter_placeholder: "Фільтр категорій"
+          no_results: "Не знайдено категорій %{type}."
+          open_settings: "Відкрити налаштування"
+          table:
+            category: "Категорія"
+            visibility: "Видимість"
+            topics: "Теми"
+          visibility:
+            public: "Публічні"
+            restricted: "Обмежено"
+          visibility_filter:
+            all: "Всі розділи"
+            public: "Загальнодоступні категорії"
         permalinks:
           title: "Постійні посилання"
           header_description: "Перенаправлення на URL-адреси, не відомі форуму"
@@ -7493,6 +7548,7 @@ uk:
                 poor_match: "Невідповідність"
                 poor_match_tooltip: "Пошукові терміни з коефіцієнтом кліків (CTR) від 1 до 20%."
         reports_section:
+          header_action: "Керувати"
           description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
           add: "Додати звіт"
           remove: "Видалити звіт"
@@ -9124,7 +9180,7 @@ uk:
             header: "Шапка"
             full_page: "Повна сторінка"
             click_through_only: "Всі (тільки список)"
-            logged_in_only: "Тільки авторизовані"
+            non_staff_only: "Користувачі, які не є співробітниками"
           header_search_results: "Результати пошуку заголовка"
         logster:
           title: "Журнал помилок"
@@ -9795,6 +9851,11 @@ uk:
           few: "Ці параметри застосовуються лише тоді, коли увімкнено %{dependencyLinks}."
           many: "Ці параметри застосовуються лише тоді, коли увімкнено %{dependencyLinks}."
           other: "Ці параметри застосовуються лише тоді, коли увімкнено %{dependencyLinks}."
+        depends_on_values_notice:
+          one: "Цей параметр застосовується лише тоді, коли для %{dependencyLinks} встановлено сумісне значення."
+          few: "Цей параметр застосовується лише тоді, коли для %{dependencyLinks} встановлено сумісні значення."
+          many: "Цей параметр застосовується лише тоді, коли для %{dependencyLinks} встановлено сумісні значення."
+          other: "Цей параметр застосовується лише тоді, коли для %{dependencyLinks} встановлено сумісні значення."
         discard:
           one: "Відхилити зміну"
           few: "Скасувати зміни"

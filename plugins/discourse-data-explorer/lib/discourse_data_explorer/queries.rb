@@ -411,21 +411,18 @@ module DiscourseDataExplorer
               user_id
       ),
       pc AS (
-          SELECT user_id, COUNT(1) AS posts_created
-          FROM posts, t
-          WHERE
-              created_at > t.START
-              AND created_at < t.
-              END
+          SELECT p.user_id, COUNT(1) AS posts_created
+          FROM posts p
+          JOIN t ON p.created_at > t.START AND p.created_at < t.END
+          JOIN pr ON p.user_id = pr.user_id
           GROUP BY
-              user_id
+              p.user_id
       ),
       ttopics AS (
-          SELECT user_id, posts_count
-          FROM topics, t
-          WHERE created_at > t.START
-              AND created_at < t.
-              END
+          SELECT topics.user_id, topics.posts_count
+          FROM topics
+          JOIN t ON topics.created_at > t.START AND topics.created_at < t.END
+          JOIN pr ON topics.user_id = pr.user_id
       ),
       tc AS (
           SELECT user_id, COUNT(1) AS topics_created
@@ -439,27 +436,26 @@ module DiscourseDataExplorer
           GROUP BY user_id
       ),
       tv AS (
-          SELECT user_id,
-              COUNT(DISTINCT(topic_id)) AS topics_viewed
-          FROM topic_views, t
-          WHERE viewed_at > t.START
-              AND viewed_at < t.
-              END
-          GROUP BY user_id
+          SELECT topic_views.user_id,
+              COUNT(DISTINCT(topic_views.topic_id)) AS topics_viewed
+          FROM topic_views
+          JOIN t ON topic_views.viewed_at > t.START AND topic_views.viewed_at < t.END
+          JOIN pr ON topic_views.user_id = pr.user_id
+          WHERE topic_views.user_id IS NOT NULL
+          GROUP BY topic_views.user_id
       ),
       likes AS (
           SELECT post_actions.user_id AS given_by_user_id,
               posts.user_id AS received_by_user_id
-          FROM t,
-              post_actions
-              LEFT JOIN
-              posts
-              ON post_actions.post_id = posts.id
+          FROM post_actions
+          JOIN t ON post_actions.created_at > t.START AND post_actions.created_at < t.END
+          LEFT JOIN posts ON post_actions.post_id = posts.id
           WHERE
-              post_actions.created_at > t.START
-              AND post_actions.created_at < t.
-              END
-              AND post_action_type_id = 2
+              post_action_type_id = 2
+              AND (
+                  post_actions.user_id IN (SELECT user_id FROM pr)
+                  OR posts.user_id IN (SELECT user_id FROM pr)
+              )
       ),
       lg AS (
           SELECT given_by_user_id AS user_id,
@@ -472,11 +468,6 @@ module DiscourseDataExplorer
               COUNT(1) AS likes_received
           FROM likes
           GROUP BY user_id
-      ),
-      e AS (
-          SELECT email, user_id
-          FROM user_emails u
-          WHERE u.PRIMARY = TRUE
       )
       SELECT
           pr.user_id,
@@ -498,7 +489,7 @@ module DiscourseDataExplorer
       LEFT JOIN twr USING (user_id)
       LEFT JOIN lg USING (user_id)
       LEFT JOIN lr USING (user_id)
-      LEFT JOIN e USING (user_id)
+      LEFT JOIN user_emails e ON e.user_id = pr.user_id AND e.PRIMARY = TRUE
       LEFT JOIN users ON pr.user_id = users.id
       ORDER BY
           visits DESC,

@@ -218,6 +218,7 @@ uk:
         "trigger:assigned": "Призначено"
       node_descriptions:
         "action:assign_topic": "Призначити або скасувати призначення теми"
+        "trigger:assigned": "Спрацьовує, коли призначено тему або публікацію"
       assign_topic:
         operation: "Операція"
         operations:
@@ -226,3 +227,6 @@ uk:
         topic_id: "ID теми"
         assignee: "Правонаступник"
         replace_existing: "Замінити існуюче завдання"
+      assigned:
+        topic_assignments_only: "Активується лише тоді, коли метою завдання є тема, а не окремий допис"
+        topic_assignments_only_description: "Тільки завдання за темами"

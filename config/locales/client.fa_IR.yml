@@ -1303,6 +1303,9 @@ fa_IR:
       notifications: "آگاه‌سازی‌ها"
       statistics: "وضعیت"
       desktop_notifications:
+        push_level:
+          none: "غیرفعال"
+          all: "فعال شده"
         not_supported: "با عرض پوزش، آگاه‌سازی بر روی این مرورگر پشتیبانی نمی‌شود."
         perm_denied_expl: "شما دسترسی دریافت اعلان را بسته‌اید. در تنظیمات مرورگر خود آن‌را فعال کنید."
         each_browser_note: "توجه: شما باید این تنظیمات را در هر مرورگری که استفاده می‌کنید، تغییر دهید. اگر آگاه‌سازی‌ها را از منوی کاربر متوقف کنید، صرف‌نظر از این تنظیم، همه آگاه‌سازی‌ها غیرفعال می‌شوند."
@@ -3185,6 +3188,7 @@ fa_IR:
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟ موضوعات دیگر را در %{categoryLink} مرور کنید یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
+      sr_read: "خواندن"
       participant_groups: "گروه‌های شرکت کننده"
       created_at: "تاریخ ایجاد: %{date}"
       bumped_at: "جدیدترین: %{date}"
@@ -3617,6 +3621,8 @@ fa_IR:
           edit: "ویرایش"
           delete: "حذف"
         add: "افزودن ترجمه جدید"
+        modal:
+          title: "ترجمه‌ها"
         success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
         post_language_selector:
           none: "تنظیم نشده"
@@ -4992,6 +4998,21 @@ fa_IR:
           sub_pages:
             posts_and_topics:
               title: "فرسته‌ها و موضوعات"
+        category_management:
+          tabs:
+            settings: "تنظیم"
+          types:
+            all:
+              title: "همه‌ی دسته‌بندی‌ها"
+          filter_placeholder: "فیلتر دسته‌بندی‌ها"
+          table:
+            category: "دسته‌بندی"
+            visibility: "قابل مشاهده"
+            topics: "موضوعات"
+          visibility:
+            public: "عمومی"
+          visibility_filter:
+            all: "همه‌ی دسته‌بندی‌ها"
         permalinks:
           title: " پیوند دائمی"
         user_fields:
@@ -5159,6 +5180,7 @@ fa_IR:
               searches: "جستجوها"
               status: "وضعیت"
         reports_section:
+          header_action: "مدیریت"
           modal:
             enabled_heading: "فعال شده"
             all_heading: "تمامی گزارشات"

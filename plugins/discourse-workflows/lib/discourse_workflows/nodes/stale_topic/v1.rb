@@ -12,6 +12,7 @@ module DiscourseWorkflows
             color: "deep-orange",
           },
           group: "discourse_triggers",
+          output_contracts: [{ schema: Schema::TOPIC_LIST_ITEM_SCHEMA }],
           properties: {
             hours: {
               type: :integer,

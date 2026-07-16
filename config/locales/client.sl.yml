@@ -1126,6 +1126,9 @@ sl:
       notifications: "Obvestila"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Onemogočeno"
+          all: "Vključeno"
         not_supported: "Oprostite, obvestila niso podprta v tem brskalniku."
         perm_denied_expl: "Zavrnili ste dovoljenje za obvestila. Omogočite obvestila v nastavitvah vašega brskalnika."
         consent_prompt: "Ali hočete obvestila v brskalniku, ko prejmete odgovore na vaše prispevke?"
@@ -2464,6 +2467,7 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
+      sr_read: "prebrano"
       bumped_at: "Zadnja: %{date}"
       deleted: "Tema je bila izbrisana"
       slow_mode_update:
@@ -3843,6 +3847,20 @@ sl:
               title: "Nastavitve"
         badges:
           title: "Značke"
+        category_management:
+          tabs:
+            settings: "Nastavitve"
+          types:
+            all:
+              title: "Vse kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tem"
+          visibility:
+            public: "Javni"
+          visibility_filter:
+            all: "Vse kategorije"
         permalinks:
           title: "Trajne povezave"
         emoji:
@@ -3959,6 +3977,7 @@ sl:
               searches: "Iskanj"
               status: "Status"
         reports_section:
+          header_action: "Upravljaj"
           no_data: "Ni podatkov za prikaz"
           modal:
             enabled_heading: "Vključeno"

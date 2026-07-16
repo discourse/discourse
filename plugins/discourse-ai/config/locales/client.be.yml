@@ -34,6 +34,14 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Загрузка ..."
+        tool: "Дзеянне"
+        user: "Карыстальнік"
+        approve: "Ухваліць"
+        reject: "адхіляць"
+        approved: "Ухвалены"
+        rejected: "Адхіленыя"
       llm_selector:
         none: "Няма"
       features:
@@ -45,6 +53,9 @@ be:
           reset: "скінуць"
         search:
           name: "Пошук"
+        image_caption:
+          setting_groups:
+            settings: "Налады"
         spam:
           name: "Спам"
       translations:
@@ -149,8 +160,6 @@ be:
           cancel: "Адмяніць"
         thumbnail_suggestions:
           try_again: "Паспрабаваць яшчэ раз"
-        image_caption:
-          save_caption: "Захаваць"
       embeddings:
         save: "Захаваць"
         delete: "Выдаліць"

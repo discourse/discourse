@@ -17,6 +17,8 @@ hu:
           name: "Egyéni"
     ai_bot:
       tool_summary:
+        suspend_user: "Felhasználó felfüggesztése"
+        silence_user: "Felhasználó némítása"
         edit_post: "Bejegyzés szerkesztése"
         move_posts: "Bejegyzések áthelyezése"
         search: "Keresés"

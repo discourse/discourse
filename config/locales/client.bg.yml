@@ -1104,6 +1104,9 @@ bg:
       notifications: "Известия"
       statistics: "Статистика"
       desktop_notifications:
+        push_level:
+          none: "Деактивирани"
+          all: "Да е включен"
         not_supported: "Известията не се поддържат от този браузър. Съжаляваме."
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         each_browser_note: "Забележка: Трябва да промените тази настройка във всеки браузър, който използвате. Всички известия ще бъдат деактивирани, ако поставите на пауза известията от потребителското меню, независимо от тази настройка."
@@ -2476,6 +2479,7 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
+      sr_read: "четене"
       jump_reply: "Отидете до първоначалното местоположение на публикацията"
       jump_reply_aria: "Отидете до публикацията на @%{username} в първоначалното й местоположение"
       deleted: "Темата беше изтрита"
@@ -3556,6 +3560,20 @@ bg:
               title: "Настройки"
         badges:
           title: "Значки"
+        category_management:
+          tabs:
+            settings: "Настройки"
+          types:
+            all:
+              title: "Всички категории"
+          table:
+            category: "Категория"
+            visibility: "Видимост"
+            topics: "Теми"
+          visibility:
+            public: "Публични"
+          visibility_filter:
+            all: "Всички категории"
         permalinks:
           title: "Постоянни адреси"
         emoji:
@@ -3644,6 +3662,7 @@ bg:
               searches: "Търсения"
               status: "Статус"
         reports_section:
+          header_action: "Управление"
           modal:
             enabled_heading: "Да е включен"
             apply: "Приложи"

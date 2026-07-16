@@ -449,7 +449,6 @@ CREATE TABLE public.ai_agents (
     temperature double precision,
     top_p double precision,
     user_id integer,
-    max_context_posts integer,
     vision_enabled boolean DEFAULT false NOT NULL,
     vision_max_pixels integer DEFAULT 1048576 NOT NULL,
     rag_chunk_tokens integer DEFAULT 374 NOT NULL,
@@ -469,8 +468,7 @@ CREATE TABLE public.ai_agents (
     examples jsonb,
     show_thinking boolean DEFAULT true NOT NULL,
     max_turn_tokens integer,
-    compression_threshold integer,
-    execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
+    compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
     thinking_effort character varying
 );
@@ -844,6 +842,44 @@ CREATE SEQUENCE public.ai_moderation_settings_id_seq
 --
 
 ALTER SEQUENCE public.ai_moderation_settings_id_seq OWNED BY public.ai_moderation_settings.id;
+
+
+--
+-- Name: ai_post_image_captions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_post_image_captions (
+    id bigint NOT NULL,
+    post_id integer NOT NULL,
+    upload_id integer NOT NULL,
+    base62_sha1 character varying(27) NOT NULL,
+    locale character varying(20) NOT NULL,
+    description text,
+    attempts integer DEFAULT 0 NOT NULL,
+    last_attempted_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_post_image_captions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_post_image_captions_id_seq OWNED BY public.ai_post_image_captions.id;
 
 
 --
@@ -3526,6 +3562,37 @@ ALTER SEQUENCE public.data_explorer_query_groups_id_seq OWNED BY public.data_exp
 
 
 --
+-- Name: data_explorer_query_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_stats (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    date date NOT NULL,
+    total_runs integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_explorer_query_stats.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4583,6 +4650,37 @@ CREATE TABLE public.discourse_workflows_execution_data (
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     workflow_data jsonb DEFAULT '{}'::jsonb NOT NULL
 );
+
+
+--
+-- Name: discourse_workflows_execution_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_execution_stats (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    date date NOT NULL,
+    total_runs integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_execution_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_execution_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_execution_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_execution_stats_id_seq OWNED BY public.discourse_workflows_execution_stats.id;
 
 
 --
@@ -11472,7 +11570,8 @@ CREATE TABLE public.user_options (
     show_original_content boolean DEFAULT false NOT NULL,
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
-    chat_new_message_sound boolean DEFAULT false NOT NULL
+    chat_new_message_sound boolean DEFAULT false NOT NULL,
+    push_notification_level integer DEFAULT 1 NOT NULL
 );
 
 
@@ -12276,6 +12375,13 @@ ALTER TABLE ONLY public.ai_moderation_settings ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_post_image_captions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_captions ALTER COLUMN id SET DEFAULT nextval('public.ai_post_image_captions_id_seq'::regclass);
+
+
+--
 -- Name: ai_secrets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12738,6 +12844,13 @@ ALTER TABLE ONLY public.data_explorer_query_groups ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: data_explorer_query_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_stats_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12945,6 +13058,13 @@ ALTER TABLE ONLY public.discourse_workflows_credentials ALTER COLUMN id SET DEFA
 --
 
 ALTER TABLE ONLY public.discourse_workflows_data_tables ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_data_tables_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_execution_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_execution_stats ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_execution_stats_id_seq'::regclass);
 
 
 --
@@ -14476,6 +14596,14 @@ ALTER TABLE ONLY public.ai_moderation_settings
 
 
 --
+-- Name: ai_post_image_captions ai_post_image_captions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_captions
+    ADD CONSTRAINT ai_post_image_captions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ai_secrets ai_secrets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15020,6 +15148,14 @@ ALTER TABLE ONLY public.data_explorer_query_groups
 
 
 --
+-- Name: data_explorer_query_stats data_explorer_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_stats
+    ADD CONSTRAINT data_explorer_query_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15265,6 +15401,14 @@ ALTER TABLE ONLY public.discourse_workflows_credentials
 
 ALTER TABLE ONLY public.discourse_workflows_data_tables
     ADD CONSTRAINT discourse_workflows_data_tables_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_execution_stats discourse_workflows_execution_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_execution_stats
+    ADD CONSTRAINT discourse_workflows_execution_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -17029,6 +17173,20 @@ CREATE UNIQUE INDEX idx_ai_bot_conversation_stars_user_topic ON public.discourse
 
 
 --
+-- Name: idx_ai_post_image_captions_lookup; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ai_post_image_captions_lookup ON public.ai_post_image_captions USING btree (post_id, locale, base62_sha1);
+
+
+--
+-- Name: idx_ai_post_image_captions_reuse; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions USING btree (base62_sha1, locale);
+
+
+--
 -- Name: idx_bookmarks_user_polymorphic_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17292,6 +17450,13 @@ CREATE INDEX idx_dwf_deps_on_workflow_version_id ON public.discourse_workflows_w
 --
 
 CREATE UNIQUE INDEX idx_dwf_execution_data_on_execution_id ON public.discourse_workflows_execution_data USING btree (execution_id);
+
+
+--
+-- Name: idx_dwf_execution_stats_on_workflow_id_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_execution_stats_on_workflow_id_and_date ON public.discourse_workflows_execution_stats USING btree (workflow_id, date);
 
 
 --
@@ -18776,6 +18941,13 @@ CREATE INDEX index_data_explorer_query_groups_on_query_id ON public.data_explore
 --
 
 CREATE UNIQUE INDEX index_data_explorer_query_groups_on_query_id_and_group_id ON public.data_explorer_query_groups USING btree (query_id, group_id);
+
+
+--
+-- Name: index_data_explorer_query_stats_on_query_id_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON public.data_explorer_query_stats USING btree (query_id, date);
 
 
 --
@@ -21201,6 +21373,13 @@ CREATE INDEX index_topic_view_stats_on_viewed_at_and_topic_id ON public.topic_vi
 
 
 --
+-- Name: index_topic_views_for_user_participation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_views_for_user_participation ON public.topic_views USING btree (viewed_at, user_id, topic_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_topic_views_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22469,10 +22648,23 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715090434'),
+('20260715090355'),
+('20260715064155'),
+('20260713180615'),
+('20260708095336'),
 ('20260708080308'),
+('20260708051450'),
+('20260707184150'),
+('20260707184146'),
 ('20260707013407'),
+('20260706151932'),
+('20260703164430'),
+('20260703163425'),
 ('20260702102111'),
 ('20260701073045'),
+('20260701013609'),
+('20260701013606'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),

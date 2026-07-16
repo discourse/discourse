@@ -142,7 +142,9 @@ class ManageReportsRow extends Component {
         <div class="manage-reports__row-heading">
           <span class="manage-reports__title">{{@row.title}}</span>
           {{#if @row.label}}
-            {{@row.label}}
+            <span class="db-report__label">
+              {{@row.label}}
+            </span>
           {{/if}}
         </div>
         {{#if @row.description}}

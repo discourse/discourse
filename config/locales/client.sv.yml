@@ -1168,6 +1168,9 @@ sv:
       notifications: "Aviseringar"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Inaktiverad"
+          all: "Aktiverad"
         not_supported: "Aviseringar stöds tyvärr inte i den här webbläsaren."
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
@@ -2835,6 +2838,7 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      sr_read: "läs"
       participant_groups: "Deltagargrupper"
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
@@ -3252,6 +3256,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        modal:
+          title: "Översättningar"
         post_language_selector:
           none: "Inte inställd"
       errors:
@@ -4480,6 +4486,21 @@ sv:
               title: "Inställningar"
         badges:
           title: "Utmärkelser"
+        category_management:
+          tabs:
+            settings: "Inställningar"
+          types:
+            all:
+              title: "Alla kategorier"
+          filter_placeholder: "Filterkategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Ämnen"
+          visibility:
+            public: "Offentligt"
+          visibility_filter:
+            all: "Alla kategorier"
         permalinks:
           title: "Permalänkar"
           header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
@@ -4607,6 +4628,7 @@ sv:
               searches: "Sökningar"
               status: "Status"
         reports_section:
+          header_action: "Hantera"
           no_data: "Ingen data att visa"
           modal:
             enabled_heading: "Aktiverad"

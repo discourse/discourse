@@ -29,6 +29,7 @@ describe "integration tests" do
       add_to_assign_allowed_group(user2)
       group.add(user)
       group.add(user2)
+      pm.topic_allowed_groups.create!(group: group)
     end
 
     def assert_publish_topic_state(topic, user: nil, group: nil)

@@ -4,6 +4,20 @@ module DiscourseWorkflows
   module Nodes
     module TopicCategoryChanged
       class V1 < NodeType
+        OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema::TOPIC_LIST_ITEM_SCHEMA,
+            {
+              "$schema" => Schema::DRAFT_URI,
+              "type" => "object",
+              "properties" => {
+                "old_category_id" => {
+                  "type" => "integer",
+                },
+              },
+            },
+          ).freeze
+
         description(
           name: "trigger:topic_category_changed",
           version: "1.0",
@@ -13,6 +27,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:topic_category_changed],
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
         )
 
         def initialize(topic, old_category)

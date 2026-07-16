@@ -36,6 +36,7 @@ export default <template>
             minimum=@minimumRequiredTags
             filterPlaceholder="tagging.choose_for_topic"
             useHeaderFilter=true
+            prioritizeRecentTags=true
           }}
         />
       </PluginOutlet>

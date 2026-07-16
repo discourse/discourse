@@ -46,4 +46,19 @@ describe GithubBadgesRepoSettingValidator do
       end
     end
   end
+
+  describe "#error_message" do
+    it "returns the generic message when no specific repo failed" do
+      expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_badge_repo"))
+    end
+
+    it "names the first invalid repo in a list" do
+      value = "discourse/discourse-github|https://github.com/discourse/discourse/|bad-dog|nope"
+
+      expect(validator.valid_value?(value)).to eq(false)
+      expect(validator.error_message).to eq(
+        I18n.t("site_settings.errors.invalid_badge_repo_value", repo: "bad-dog"),
+      )
+    end
+  end
 end

@@ -1346,6 +1346,9 @@ da:
       notifications: "Notifikationer"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Deaktiveret"
+          all: "Aktiveret"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         each_browser_note: "Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle notifikationer vil blive deaktiveret, hvis du pauserer notifikationer fra brugermenuen, uanset denne indstilling."
@@ -2907,6 +2910,7 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
+      sr_read: "læst"
       participant_groups: "Deltagergrupper"
       created_at: "Oprettet: %{date}"
       bumped_at: "Senest: %{date}"
@@ -3311,6 +3315,8 @@ da:
           edit: "Rediger"
           delete: "Slet"
         add: "Tilføj ny oversættelse"
+        modal:
+          title: "Oversættelser"
         post_language_selector:
           none: "Ikke indstillet"
       errors:
@@ -4514,6 +4520,21 @@ da:
               title: "Deling"
             posts_and_topics:
               title: "Indlæg & emner"
+        category_management:
+          tabs:
+            settings: "Indstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          filter_placeholder: "Filtrer kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighed"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalinks"
           header_description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet"
@@ -4657,6 +4678,7 @@ da:
               searches: "søgninger"
               status: "Status"
         reports_section:
+          header_action: "Administrér"
           no_data: "Ingen data at vise"
           modal:
             enabled_heading: "Aktiveret"

@@ -1743,6 +1743,9 @@ ru:
       notifications: "Уведомления"
       statistics: "Статистика"
       desktop_notifications:
+        push_level:
+          none: "Отключен"
+          all: "Включено"
         not_supported: "Уведомления этим браузером не поддерживаются."
         perm_denied_expl: "Вы запретили уведомления в браузере. Разрешите уведомления в настройках браузера."
         enable: "Включить уведомления"
@@ -3153,6 +3156,8 @@ ru:
       default: Пользовательские эмодзи
     filter_input:
       clear: "Очистить фильтр"
+    filter_controls:
+      reset: "Сбросить фильтры"
     d_icon_grid_picker:
       select_icon: "Выбрать иконки"
       search_placeholder: "Искать иконки..."
@@ -4075,6 +4080,7 @@ ru:
       read_more_in_category: "Хотите почитать что-нибудь ещё? Можно просмотреть темы в категории %{categoryLink} или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       read_more: "Хотите почитать что-нибудь ещё? Можно <a href='%{categoryLink}'>просмотреть все категории</a> или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
+      sr_read: "чтение"
       participant_groups: "Группы участников"
       reply_count_link:
         one: "%{count} ответ, перейти к первой публикации"
@@ -4601,8 +4607,10 @@ ru:
           many: "Посмотреть %{count} переведенных локалей"
           other: "Посмотреть переведенные локали: %{count}"
         modal:
-          title: "Переводы для публикации"
+          title: "Переводы"
           confirm_delete: "Действительно удалить переводы для «%{languageCode}»?"
+          post_language: "Язык поста"
+          discard_language_change: "Отменить изменение"
         success: "Переводы успешно обновлены"
         post_language_selector:
           title: "Язык поста"
@@ -6105,7 +6113,6 @@ ru:
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"
-    reset_filter: "Сбросить фильтры"
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
@@ -6312,7 +6319,6 @@ ru:
               description: "Скриншоты, демонстрирующие особенности и функциональные возможности приложения, отображаемые на странице с запросом на установку. Все изображения должны быть загружены локально и иметь одинаковые размеры."
             apple_touch_icon:
               description: "Значок, используемый для сенсорных устройств Apple. Если оставить поле пустым, будет использоваться значок large_icon."
-              help_text: "Рекомендуемый размер — 180 x 180 пикселей. Прозрачный фон не рекомендуется."
             digest_logo:
               title: "Логотип дайджеста"
               description: "Альтернативный логотип, используемый в верхней части страницы, отображающей письма со сводками. Если оставить поле пустым, будет использоваться логотип из настройки `logo`."
@@ -6496,6 +6502,22 @@ ru:
               title: "Публикации и темы"
             stats_and_thresholds:
               title: "Статистика и пороговые значения"
+        category_management:
+          create_category: "Создать категорию"
+          tabs:
+            settings: "Настроек"
+          types:
+            all:
+              title: "Все разделы"
+          filter_placeholder: "Фильтрация категорий"
+          table:
+            category: "Категория"
+            visibility: "Видимость"
+            topics: "Новые темы"
+          visibility:
+            public: "Публичное"
+          visibility_filter:
+            all: "Все разделы"
         permalinks:
           title: "Постоянные ссылки"
           header_description: "Перенаправления для URL-адресов, неизвестных форуму"
@@ -6724,6 +6746,7 @@ ru:
               searches: "Поисковые запросы"
               status: "Статус"
         reports_section:
+          header_action: "Управление"
           no_data: "Нет данных для отображения"
           modal:
             enabled_heading: "Включено"

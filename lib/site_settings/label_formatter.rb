@@ -132,6 +132,14 @@ module SiteSettings
 
     SETTING_LINK_PATTERN = /\{\{setting:([a-z][a-z0-9_]*)\}\}/
 
+    LINK_ATTRIBUTES = %w[
+      class
+      data-setting-name
+      data-setting-area
+      data-setting-category
+      data-setting-plugin
+    ].freeze
+
     class << self
       def description(setting)
         desc = I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")

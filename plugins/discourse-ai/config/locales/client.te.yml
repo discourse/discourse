@@ -36,6 +36,14 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_tool_approval:
+        loading: "లోడవుతోంది..."
+        tool: "చర్య"
+        user: "సభ్యుడు"
+        approve: "ఆమోదించండి"
+        reject: "తిరస్కరించు"
+        approved: "ఆమోదించబడింది"
+        rejected: "తిరస్కరించబడినవి"
       llm_selector:
         none: "ఏదీ లేదు"
       features:
@@ -52,6 +60,9 @@ te:
           reset: "రీసెట్ చేయండి"
         search:
           name: "శోధించండి"
+        image_caption:
+          setting_groups:
+            settings: "అమరికలు"
         spam:
           name: "స్పామ్"
       translations:
@@ -171,8 +182,6 @@ te:
           select: "ఎంచుకోండి"
           selected: "ఎంపిక చేయబడినవి"
           try_again: "మళ్ళీ ప్రయత్నించండి"
-        image_caption:
-          save_caption: "సేవ్ చేయండి"
       embeddings:
         save: "సేవ్ చేయండి"
         delete: "తొలగించండి"

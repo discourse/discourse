@@ -9,6 +9,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   fab!(:tag) { Fabricate(:tag, name: "matched") }
   fab!(:membership_group) { Fabricate(:group, name: "workflow_helpers", full_name: "Helpers") }
   fab!(:other_group) { Fabricate(:group, name: "workflow_others", full_name: "Others") }
+  fab!(:badge) { Fabricate(:badge, name: "Workflow badge") }
+  fab!(:other_badge) { Fabricate(:badge, name: "Other workflow badge") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -29,7 +31,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
   end
 
   it "does not enqueue when plugin is disabled" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
 
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -212,6 +214,134 @@ RSpec.describe DiscourseWorkflows::EventListener do
 
     expect(enqueued_trigger_node_ids).to include("matching-trigger")
     expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
+  end
+
+  it "only enqueues badge granted workflows matching the badge" do
+    create_published_workflow(
+      "matching-badge-trigger",
+      "trigger:badge_granted",
+      configuration: {
+        "badge_id" => badge.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "badge-mismatch-trigger",
+      "trigger:badge_granted",
+      configuration: {
+        "badge_id" => other_badge.id.to_s,
+      },
+    )
+    create_published_workflow("any-badge-trigger", "trigger:badge_granted")
+
+    BadgeGranter.grant(badge, user, granted_by: admin)
+
+    expect(enqueued_trigger_node_ids).to include("matching-badge-trigger", "any-badge-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("badge-mismatch-trigger")
+
+    trigger_data = trigger_data_for("matching-badge-trigger")
+    expect(trigger_data).to include(
+      "user" => include("id" => user.id, "username" => user.username),
+      "badge" => include("id" => badge.id, "name" => badge.name),
+    )
+  end
+
+  it "only enqueues user seen workflows matching the trigger setting" do
+    seen_at = Time.zone.now
+    user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
+
+    create_published_workflow("matching-trigger", "trigger:user_seen")
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on_first_seen" => false,
+        "trigger_on_not_seen_for_more_than" => true,
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+    create_published_workflow(
+      "combined-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on_first_seen" => true,
+        "trigger_on_not_seen_for_more_than" => true,
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserSeen::V1, user, nil)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly("matching-trigger", "combined-trigger")
+    expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["user_id"]).to eq(
+      user.id,
+    )
+  end
+
+  it "enqueues user seen workflows for returning users" do
+    previous_seen_at = 2.days.ago
+    user.update_columns(first_seen_at: 1.month.ago, last_seen_at: Time.zone.now)
+
+    create_published_workflow("new-user-trigger", "trigger:user_seen")
+    create_published_workflow(
+      "returning-user-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on_first_seen" => false,
+        "trigger_on_not_seen_for_more_than" => true,
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+    create_published_workflow(
+      "combined-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "trigger_on_first_seen" => true,
+        "trigger_on_not_seen_for_more_than" => true,
+        "not_seen_for_amount" => 1,
+        "not_seen_for_unit" => "days",
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserSeen::V1, user, previous_seen_at)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "returning-user-trigger",
+      "combined-trigger",
+    )
+  end
+
+  it "only enqueues user seen workflows matching the selected groups" do
+    group = Fabricate(:group)
+    other_group = Fabricate(:group)
+    seen_at = Time.zone.now
+    user.update_columns(first_seen_at: seen_at, last_seen_at: seen_at)
+    group.add(user)
+
+    create_published_workflow("all-groups-trigger", "trigger:user_seen")
+    create_published_workflow(
+      "matching-group-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "group_ids" => [group.id.to_s],
+      },
+    )
+    create_published_workflow(
+      "group-mismatch-trigger",
+      "trigger:user_seen",
+      configuration: {
+        "group_ids" => [other_group.id.to_s],
+      },
+    )
+
+    described_class.handle(DiscourseWorkflows::Nodes::UserSeen::V1, user, nil)
+
+    expect(enqueued_trigger_node_ids).to contain_exactly(
+      "all-groups-trigger",
+      "matching-group-trigger",
+    )
   end
 
   it "does not enqueue post edited workflows for replies by default" do

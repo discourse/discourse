@@ -34,6 +34,14 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laadimine..."
+        tool: "Tegevus"
+        user: "Kasutaja"
+        approve: "Kinnita"
+        reject: "Lükka tagasi"
+        approved: "Heakskiidetud"
+        rejected: "Tagasi lükatud"
       llm_selector:
         none: "Pole"
       features:
@@ -51,6 +59,9 @@ et:
           reset: "Nulli"
         search:
           name: "Otsi"
+        image_caption:
+          setting_groups:
+            settings: "Seaded"
         spam:
           name: "Spämm"
       modals:
@@ -167,8 +178,6 @@ et:
           cancel: "Loobu"
         thumbnail_suggestions:
           try_again: "Proovi uuesti"
-        image_caption:
-          save_caption: "Salvesta"
       embeddings:
         save: "Salvesta"
         delete: "Kustuta"

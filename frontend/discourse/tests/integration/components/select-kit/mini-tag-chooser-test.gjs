@@ -3,6 +3,7 @@ import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -26,6 +27,81 @@ module(
       );
 
       assert.strictEqual(this.subject.header().value(), "foo,bar");
+    });
+
+    test("forwards prioritizeRecentTags to the server when the option is enabled", async function (assert) {
+      this.siteSettings.prioritize_recently_used_tags = true;
+      let capturedParams;
+      pretender.get("/tags/filter/search", (request) => {
+        capturedParams = request.queryParams;
+        return response({ results: [] });
+      });
+
+      await render(
+        <template>
+          <MiniTagChooser @options={{hash prioritizeRecentTags=true}} />
+        </template>
+      );
+      await this.subject.expand();
+
+      assert.strictEqual(
+        capturedParams.prioritizeRecentTags,
+        "true",
+        "the option is registered and forwarded as a request param"
+      );
+    });
+
+    test("keeps the server's recent-first order when tags_sort_alphabetically is enabled", async function (assert) {
+      this.siteSettings.tags_sort_alphabetically = true;
+      this.siteSettings.prioritize_recently_used_tags = true;
+      pretender.get("/tags/filter/search", () =>
+        response({
+          results: [
+            { id: "z-recent", name: "z-recent", count: 1 },
+            { id: "a-popular", name: "a-popular", count: 100 },
+          ],
+        })
+      );
+
+      await render(
+        <template>
+          <MiniTagChooser @options={{hash prioritizeRecentTags=true}} />
+        </template>
+      );
+      await this.subject.expand();
+
+      assert.deepEqual(
+        findAll(".select-kit-row").map((el) => el.dataset.value),
+        ["z-recent", "a-popular"],
+        "the recently used tag stays first instead of being sorted alphabetically"
+      );
+    });
+
+    test("still sorts alphabetically once a filter term is typed", async function (assert) {
+      this.siteSettings.tags_sort_alphabetically = true;
+      this.siteSettings.prioritize_recently_used_tags = true;
+      pretender.get("/tags/filter/search", () =>
+        response({
+          results: [
+            { id: "z-recent", name: "z-recent", count: 1 },
+            { id: "a-popular", name: "a-popular", count: 100 },
+          ],
+        })
+      );
+
+      await render(
+        <template>
+          <MiniTagChooser @options={{hash prioritizeRecentTags=true}} />
+        </template>
+      );
+      await this.subject.expand();
+      await this.subject.fillInFilter("recent");
+
+      assert.deepEqual(
+        findAll(".select-kit-row").map((el) => el.dataset.value),
+        ["a-popular", "z-recent"],
+        "recent-first ordering does not leak into the filtered view"
+      );
     });
 
     test("create a tag", async function (assert) {

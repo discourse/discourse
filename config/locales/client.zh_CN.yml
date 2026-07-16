@@ -58,9 +58,6 @@ zh_CN:
         access_permission_viewer: "查看器"
         access_permission_viewer_description: "可以查看此对象中的内容"
         access_permission_remove: "移除"
-        access_permission_remove_description: "移除该群组的权限"
-        add_group: "添加群组"
-        mandatory_acl_tooltip: "此权限对该对象而言是强制性的，无法移除。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -1562,6 +1559,9 @@ zh_CN:
       statistics: "统计信息"
       desktop_notifications:
         label: "实时通知"
+        push_level:
+          none: "已禁用"
+          all: "已启用"
         not_supported: "抱歉，此浏览器不支持通知。"
         perm_default: "启用通知"
         perm_denied_btn: "权限被拒绝"
@@ -2828,6 +2828,9 @@ zh_CN:
       default: 自定义表情符号
     filter_input:
       clear: "清除筛选器"
+    filter_controls:
+      reset: "重置筛选器"
+      toggle: "切换下拉筛选器"
     d_icon_grid_picker:
       select_icon: "选择图标"
       search_placeholder: "搜索图标…"
@@ -2850,6 +2853,9 @@ zh_CN:
       powered_by: "由 Klipy 提供支持"
       no_results: "在上方输入关键词搜索 GIF 动图。"
       browse_categories: "按类别浏览"
+      bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
+      error_rate_limit: "我们已经达到了 GIF API 的速率限制。请稍等片刻，然后重试。"
+      error_search_too_long: "请将搜索词缩短至 50 个字符以内，然后重试。"
     codemirror:
       expression:
         sections:
@@ -2876,6 +2882,16 @@ zh_CN:
             substring: "返回字符串中两个索引之间的部分。"
             indexOf: "返回首次出现的位置索引；若未找到，则返回 -1。"
             match: "将字符串与正则表达式进行匹配。"
+            concat: "连接一个或多个字符串。"
+          number:
+            toFixed: "使用固定的小数位数格式化数字。"
+            toString: "返回该数字的字符串表示形式。"
+            toPrecision: "将数字格式化为指定的精度。"
+            toLocaleString: "返回与区域设置相关的字符串表示形式。"
+          boolean:
+            toString: "将 true 转换为 'true'，将 false 转换为 'false'。"
+          array:
+            length: "数组中元素的数量。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -3754,6 +3770,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？请浏览%{categoryLink}中的其他话题或<a href='%{latestLink}'>查看最新话题</a>。"
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
+      sr_read: "阅读时间"
       participant_groups: "参与者群组"
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
@@ -4208,8 +4225,9 @@ zh_CN:
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
-          title: "帖子的翻译"
+          title: "翻译"
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
+          post_language: "帖子语言"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -4420,6 +4438,7 @@ zh_CN:
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
       originally_written_in: "原始语言：%{language}"
+      tap_to_show_original: "点击此处查看原文"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
@@ -5662,8 +5681,6 @@ zh_CN:
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
-    reset_filter: "重置筛选器"
-    toggle_filters: "切换下拉筛选器"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -5894,7 +5911,6 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
@@ -6085,6 +6101,22 @@ zh_CN:
               title: "帖子和话题"
             stats_and_thresholds:
               title: "统计数据和阈值"
+        category_management:
+          create_category: "创建类别"
+          tabs:
+            settings: "设置"
+          types:
+            all:
+              title: "所有类别"
+          filter_placeholder: "筛选类别"
+          table:
+            category: "类别"
+            visibility: "公开范围"
+            topics: "话题"
+          visibility:
+            public: "公开"
+          visibility_filter:
+            all: "所有类别"
         permalinks:
           title: "永久链接"
           header_description: "为论坛无法识别的 URL 应用的重定向"
@@ -6341,6 +6373,7 @@ zh_CN:
               searches: "搜索"
               status: "状态"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "已启用"
             all_heading: "所有报告"
@@ -7831,6 +7864,7 @@ zh_CN:
             header: "标头"
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
+            non_staff_only: "非工作人员用户"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"
