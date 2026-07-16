@@ -48,6 +48,17 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       )
     end
 
+    it "includes provider capabilities metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      capabilities = response.parsed_body["meta"]["provider_capabilities"]
+      expect(capabilities.dig("google_vertex_ai", "requires_configured_url")).to eq(false)
+      expect(capabilities.dig("aws_bedrock", "requires_configured_url")).to eq(false)
+      expect(capabilities.dig("aws_bedrock_converse", "requires_configured_url")).to eq(false)
+      expect(capabilities.dig("anthropic", "requires_configured_url")).to eq(true)
+    end
+
     it "includes vLLM reasoning controls metadata" do
       get "/admin/plugins/discourse-ai/ai-llms.json"
       expect(response).to be_successful

@@ -1055,6 +1055,7 @@ en:
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
+      invalid_provider_param: "%{param} has an invalid format"
       secret_required: "A credential must be selected"
       secret_not_found: "The selected credential does not exist"
       bedrock_invalid_url: "Please complete all the fields to use this model."
