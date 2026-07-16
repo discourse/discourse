@@ -13,7 +13,9 @@ RSpec.describe "JSON:API Kit plugin extensions" do
 
   let(:current_version) { "2026-07-08" }
   let(:parsed_document) { JSON.parse(response.body) }
-  let(:run_stats_class) { Struct.new(:id, :stale) }
+  # Data, not Struct: the serializer wraps related objects in `Array()`, which
+  # would splat a Struct (it responds to `to_a`) into its members.
+  let(:run_stats_class) { Data.define(:id, :stale) }
   let(:run_stats_serializer) do
     Class.new do
       include JSONAPI::Serializer
