@@ -775,8 +775,72 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
     await render(<template><MultiHost @value={{array 1 2}} /></template>);
     assert.dom(".d-combobox__chip").exists({ count: 2 });
 
-    await click(".d-combobox__chip");
+    // The chip is a span; removal is its inner button, not the chip itself.
+    await click(".d-combobox__chip .d-combobox__chip-remove");
     assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+  });
+
+  test("each chip is a span with an inner remove button named for its label", async function (assert) {
+    await render(<template><MultiHost @value={{array 1}} /></template>);
+
+    assert
+      .dom("span.d-combobox__chip")
+      .exists({ count: 1 }, "the chip is a span, not a button");
+    assert
+      .dom(".d-combobox__chips")
+      .hasAttribute("role", "group", "the chips form a labelled group")
+      .hasAttribute("aria-label");
+
+    const removeButton = find(".d-combobox__chip .d-combobox__chip-remove");
+    assert
+      .dom(removeButton)
+      .hasTagName("button", "removal is a dedicated inner button");
+
+    const ids = removeButton.getAttribute("aria-labelledby").split(" ");
+    assert.strictEqual(
+      ids.length,
+      2,
+      "the button is named by two referenced nodes"
+    );
+    assert
+      .dom(`#${ids[0]}`)
+      .hasText(
+        "Remove",
+        "the first referenced node is the sr-only action word"
+      );
+    assert
+      .dom(`#${ids[1]}`)
+      .hasText(
+        "Apple",
+        "the second is the chip label, so the name reads 'Remove Apple'"
+      );
+  });
+
+  test("a chip whose value contains a space still names its remove button", async function (assert) {
+    const spacedItems = [{ id: "bug fix", name: "Bug fix" }];
+    await render(
+      <template>
+        <DefaultHost
+          @multiple={{true}}
+          @items={{spacedItems}}
+          @value={{array "bug fix"}}
+        />
+      </template>
+    );
+
+    const labelledby = find(".d-combobox__chip-remove").getAttribute(
+      "aria-labelledby"
+    );
+    assert.strictEqual(
+      labelledby.split(" ").length,
+      2,
+      "ids are minted from the index, so a spaced value does not tokenize the IDREF list"
+    );
+    labelledby.split(" ").forEach((id) => {
+      assert
+        .dom(`#${CSS.escape(id)}`)
+        .exists(`the referenced node #${id} resolves`);
+    });
   });
 
   test("uses default labels when presentation blocks are omitted", async function (assert) {

@@ -3307,6 +3307,7 @@ en:
       no_results: "No results found"
       label: "Options"
       remove: "Remove"
+      selected_items: "Selected items"
       expand: "Show options"
       retry: "Retry"
       unresolved: "Unavailable"
