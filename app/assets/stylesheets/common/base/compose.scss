@@ -1454,6 +1454,27 @@ body.has-sidebar-page {
       }
     }
 
+    .submit-panel {
+      margin: 0 !important;
+
+      @include viewport.until(sm) {
+        width: 100%;
+        padding-inline: var(--space-2);
+        box-sizing: border-box;
+
+        .save-or-cancel {
+          display: inline-flex !important;
+          margin-left: auto;
+          flex: unset !important;
+          margin-right: 0 !important;
+        }
+
+        #draft-status {
+          margin-left: 0 !important;
+        }
+      }
+    }
+
     .d-editor-button-bar__wrap {
       @include viewport.until(sm) {
         margin: 0;
@@ -1474,14 +1495,6 @@ body.has-sidebar-page {
       .composer-toggle-switch__left-icon,
       .composer-toggle-switch__right-icon {
         font-size: var(--font-down-1-rem);
-      }
-    }
-
-    .submit-panel {
-      margin: 0 !important;
-
-      @include viewport.until(sm) {
-        align-self: flex-end;
       }
     }
 
