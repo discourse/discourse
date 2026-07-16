@@ -59,6 +59,18 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
     expect(result[:error]).to include("hidden")
   end
 
+  it "returns an error for a themeable setting" do
+    result = tool(setting_name: "enable_welcome_banner", value: "false", reason: "Test").invoke
+
+    expect(result[:status]).to eq("error")
+    expect(result[:error]).to eq(
+      I18n.t(
+        "discourse_ai.ai_bot.change_site_setting.errors.themeable",
+        setting_name: "enable_welcome_banner",
+      ),
+    )
+  end
+
   it "points at the replacement for a hard-deprecated setting" do
     old_name, new_name, _override, _version =
       SiteSettings::DeprecatedSettings::SETTINGS.find { |_, _, override, _| !override }

@@ -958,6 +958,8 @@ en:
           not_found: "Site setting '%{setting_name}' does not exist."
           not_allowed: "You are not allowed to change site settings."
           hidden: "Site setting '%{setting_name}' is hidden and cannot be changed here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be changed here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be changed here."
           deprecated: "Site setting '%{setting_name}' is deprecated; use '%{new_name}' instead."
           shadowed: "Site setting '%{setting_name}' is overridden globally and cannot be changed."
           unconfigurable: "Site setting '%{setting_name}' belongs to a plugin that cannot be configured."

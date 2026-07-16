@@ -114,6 +114,28 @@ module DiscourseAi
             )
           end
 
+          if SiteSetting.secret_settings.include?(setting_sym)
+            return(
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.change_site_setting.errors.secret",
+                  setting_name: setting_name,
+                ),
+              )
+            )
+          end
+
+          if SiteSetting.themeable[setting_sym]
+            return(
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.change_site_setting.errors.themeable",
+                  setting_name: setting_name,
+                ),
+              )
+            )
+          end
+
           if SiteSetting.shadowed_settings.include?(setting_sym)
             return(
               error_response(
