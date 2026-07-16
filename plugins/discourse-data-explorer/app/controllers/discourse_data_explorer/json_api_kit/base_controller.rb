@@ -240,11 +240,16 @@ module DiscourseDataExplorer
 
       def apply_filters(scope)
         (params[:filter] || {}).each do |name, value|
-          block = cfg.filters[name.to_s] or next
+          block = cfg.filters[name.to_s] || extension_filters[name.to_s] or next
           scope = instance_exec(scope, value, &block)
         end
         scope
       end
+
+      # Foreign owners' contributions to this resource's surface (namespaced filter
+      # keys, include-gated relationships) — see docs/plugins-design.md (B/D).
+      def extension_filters = JsonApiKit.extension_filters_for(primary_resource_type)
+      def extension_namespaces = JsonApiKit.extension_namespaces_for(primary_resource_type)
 
       # The keyset for the request: the requested derived sorts (or the default
       # sort), plus an `id` tiebreak to make the order total. Virtual (block)
@@ -292,10 +297,10 @@ module DiscourseDataExplorer
       # JSON:API: an unsupported filter/sort/include MUST 400. The page family is
       # keyset-only — `page[number]` (or any other member) is unsupported.
       def reject_unknown_query_params!
-        bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys
+        bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys - extension_filters.keys
         bad +=
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
-        bad += requested_include_paths - cfg.allowed_includes
+        bad += requested_include_paths - cfg.allowed_includes - extension_namespaces
         if params[:page].respond_to?(:keys)
           bad += (params[:page].keys.map(&:to_s) - %w[size after before]).map { "page[#{it}]" }
         end
