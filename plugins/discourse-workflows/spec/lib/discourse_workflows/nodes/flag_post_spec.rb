@@ -214,7 +214,8 @@ RSpec.describe DiscourseWorkflows::Nodes::FlagPost::V1 do
     end
 
     it "skips silencing when the post author no longer exists", :aggregate_failures do
-      post.update_columns(user_id: nil)
+      author.destroy!
+      post.reload
 
       result =
         execute_node(
