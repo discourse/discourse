@@ -738,19 +738,36 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
     assert.dom(".d-combobox__chip").doesNotExist();
   });
 
-  test("selecting adds a chip, keeps the menu open, and hides the picked item", async function (assert) {
+  test("selecting adds a chip, keeps the menu open, and keeps the picked row flagged", async function (assert) {
     await render(<template><MultiHost /></template>);
     await click(".d-combobox__expand");
     assert.dom("[role='option']").exists({ count: 3 });
 
     await click("[role='option']");
     assert.dom("[role='listbox']").exists("multi stays open after a pick");
+    assert
+      .dom("[role='listbox']")
+      .hasAttribute(
+        "aria-multiselectable",
+        "true",
+        "a multi listbox declares multi-select semantics"
+      );
     assert.dom(".d-combobox__chip").exists({ count: 1 }, "a chip is added");
     assert
       .dom("[role='option']")
-      .exists({ count: 2 }, "the picked item leaves the list");
+      .exists({ count: 3 }, "the picked item stays in the list");
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .exists({ count: 1 }, "the picked row is flagged selected");
+    assert
+      .dom(
+        "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon"
+      )
+      .exists("the selected row carries a check");
 
-    await click("[role='option']");
+    // Clicking the first option again would toggle the now-selected item back
+    // off, so pick a still-unselected row to add a second chip.
+    await click("[role='option'][aria-selected='false']");
     assert.dom(".d-combobox__chip").exists({ count: 2 });
   });
 
@@ -779,8 +796,33 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
     await click(".d-combobox__expand");
     assert
       .dom("[role='option']")
-      .exists({ count: 1 }, "selected fallback items stay excluded")
-      .hasText("Cherry pie", "remaining rows use the item fallback");
+      .exists({ count: 3 }, "selected items stay in the list");
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .exists({ count: 2 }, "the two selected rows are flagged");
+    assert
+      .dom("[role='option'][aria-selected='false']")
+      .hasText("Cherry pie", "the unselected row uses the item fallback");
+  });
+
+  test("the selected-option icon is customizable via @selectedIcon", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @value={{array 1}}
+          @selectedIcon="star"
+        />
+      </template>
+    );
+    await click(".d-combobox__expand");
+
+    assert
+      .dom(
+        "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
+      )
+      .exists("the selected row uses the custom icon, not the default check");
   });
 });
 

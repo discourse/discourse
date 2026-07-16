@@ -147,14 +147,19 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
   });
 
   module("buildItems", function () {
-    test("hides already-selected items in multi-select", function (assert) {
+    test("keeps already-selected items in multi-select, flagged selected", function (assert) {
       const { engine } = controlled({ multiple: true, value: [1] });
 
       const items = engine.buildItems([{ id: 1 }, { id: 2 }]);
       assert.deepEqual(
         items.map((d) => d.value),
-        [2],
-        "a selected item is filtered out of the list"
+        [1, 2],
+        "selected items stay in the list (kept, not filtered)"
+      );
+      assert.true(items[0].flags.selected, "the selected item is flagged");
+      assert.false(
+        items[1].flags.selected,
+        "an unselected item is not flagged"
       );
     });
 
