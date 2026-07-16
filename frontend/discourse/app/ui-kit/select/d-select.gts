@@ -10,6 +10,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import booleanString from "discourse/helpers/boolean-string";
 import type Site from "discourse/models/site";
 import type A11y from "discourse/services/a11y";
 import { or } from "discourse/truth-helpers";
@@ -64,6 +65,7 @@ interface DSelectSignature {
     noResultsLabel?: string;
     label?: string;
     skeletonCount?: number;
+    selectedIcon?: string;
     /**
      * The trigger style. `"typeahead"` (default) makes the trigger itself a
      * `role="combobox"` input; `"button"` keeps a button trigger with the filter in the
@@ -694,6 +696,7 @@ export default class DSelect extends Component<DSelectSignature> {
                   role="listbox"
                   id={{this.listboxId}}
                   aria-label={{or @label (i18n "d_select.label")}}
+                  aria-multiselectable={{booleanString @multiple}}
                   {{didInsert this.announceCount items.length}}
                   {{didUpdate this.announceCount items.length}}
                   {{didInsert this.focusListboxIfSimple}}
@@ -716,6 +719,8 @@ export default class DSelect extends Component<DSelectSignature> {
                     <SelectItem
                       @descriptor={{descriptor}}
                       @engine={{this.engine}}
+                      @multiple={{@multiple}}
+                      @selectedIcon={{@selectedIcon}}
                       {{! Keep focus in the trigger input on pointer-select so the input
                         doesn't blur-close the menu before the click resolves (needed for
                         action rows, which keep the menu open). mousedown is required —

@@ -2,7 +2,9 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import booleanString from "discourse/helpers/boolean-string";
+import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SelectEngine, {
   SelectDescriptor,
   SelectItem as SelectItemModel,
@@ -12,6 +14,8 @@ interface SelectItemSignature {
   Args: {
     engine: SelectEngine;
     descriptor: SelectDescriptor;
+    multiple?: boolean;
+    selectedIcon?: string;
   };
   Element: HTMLLIElement;
   Blocks: {
@@ -54,6 +58,12 @@ export default class SelectItem extends Component<SelectItemSignature> {
       {{on "click" this.handleClick}}
       ...attributes
     >
+      {{#if @multiple}}
+        {{dIcon
+          (or @selectedIcon "check")
+          class="d-combobox__option-selected-icon"
+        }}
+      {{/if}}
       {{yield @descriptor.item}}
     </li>
   </template>

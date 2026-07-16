@@ -118,6 +118,16 @@
   }
 }
 
+.d-combobox__option-selected-icon {
+  flex: none;
+  visibility: hidden;
+  color: var(--tertiary);
+}
+
+.d-combobox__option.--selected .d-combobox__option-selected-icon {
+  visibility: visible;
+}
+
 .d-combobox__skeleton {
   padding: 0.5em 0.75em;
 }
