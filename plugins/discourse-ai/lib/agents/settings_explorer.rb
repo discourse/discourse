@@ -4,7 +4,7 @@ module DiscourseAi
   module Agents
     class SettingsExplorer < Agent
       def tools
-        [Tools::SettingContext, Tools::SearchSettings]
+        [Tools::SettingContext, Tools::SearchSettings, Tools::ChangeSiteSetting]
       end
 
       def system_prompt

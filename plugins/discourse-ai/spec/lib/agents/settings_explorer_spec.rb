@@ -14,7 +14,11 @@ RSpec.describe DiscourseAi::Agents::SettingsExplorer do
     expect(prompt).to include("site_description")
 
     expect(settings_explorer.tools).to eq(
-      [DiscourseAi::Agents::Tools::SettingContext, DiscourseAi::Agents::Tools::SearchSettings],
+      [
+        DiscourseAi::Agents::Tools::SettingContext,
+        DiscourseAi::Agents::Tools::SearchSettings,
+        DiscourseAi::Agents::Tools::ChangeSiteSetting,
+      ],
     )
   end
 end
