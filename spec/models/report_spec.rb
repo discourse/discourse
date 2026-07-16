@@ -156,26 +156,6 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with visits" do
-      let(:user) { Fabricate(:user) }
-
-      it "returns a report with data" do
-        freeze_time_safe
-        user.user_visits.create(visited_at: 1.hour.from_now)
-        user.user_visits.create(visited_at: 1.day.ago)
-        user.user_visits.create(visited_at: 2.days.ago, mobile: true)
-        user.user_visits.create(visited_at: 45.days.ago)
-        user.user_visits.create(visited_at: 46.days.ago, mobile: true)
-
-        expect(report.data).to be_present
-        expect(report.data.count).to eq(3)
-        expect(report.data.select { |v| v[:x].today? }).to be_present
-        expect(report.prev30Days).to eq(2)
-      end
-    end
-
-    context "when reporting_improvements is enabled" do
-      before { SiteSetting.reporting_improvements = true }
-
       fab!(:user)
       fab!(:user_2, :user)
 

@@ -340,6 +340,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         break;
       case "manage-tags":
         this.showBulkTopicActionsModal(actionId, "manage_tags", {
+          allowSilent: true,
           confirmButtonTranslationKey: "topics.bulk.confirm_apply_to_topics",
         });
         break;

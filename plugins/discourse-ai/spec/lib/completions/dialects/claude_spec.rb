@@ -7,6 +7,16 @@ RSpec.describe DiscourseAi::Completions::Dialects::Claude do
 
   before { enable_current_plugin }
 
+  describe "#max_prompt_tokens" do
+    it "reserves configured output tokens" do
+      llm_model.update!(max_prompt_tokens: 100_000)
+      prompt = DiscourseAi::Completions::Prompt.new("You are a helpful bot", messages: [])
+      dialect = opus_dialect_klass.new(prompt, llm_model, opts: { reserved_output_tokens: 32_000 })
+
+      expect(dialect.max_prompt_tokens).to eq(68_000)
+    end
+  end
+
   describe "#translate" do
     it "can insert OKs to make stuff interleve properly" do
       messages = [

@@ -17,16 +17,20 @@ The upcoming changes system has three layers: a **Ruby core** that manages state
 
 Key methods to understand:
 
-- `resolved_value(setting_name)` — Determines the *effective* value of a setting. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, the resolved value is `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them).
-- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: resolved value, group restrictions, anonymous users (only get access if no group restrictions).
+- `enabled?(setting_name)` — Determines the *effective* value of a change. This is where auto-promotion logic lives: if a setting's status meets/exceeds `promote_upcoming_changes_on_status`, it resolves to `true` even if the DB default is `false`. Permanent settings always resolve to `true` (admins can't disable them). It returns `false` outright when the owning plugin is not configurable, or — for plugin-owned changes, unless they opt out with `requires_plugin_enabled: false` — when the owning plugin is disabled. Both take precedence over the above. See [Requiring the Owning Plugin](#requiring-the-owning-plugin).
+- `enabled_for_user?(setting_name, user)` — The primary access check. Considers: the resolved value from `enabled?`, group restrictions, anonymous users (only get access if no group restrictions).
 - `stats_for_user(user:, acting_guardian:)` — Returns per-change status for a user including *why* they have/don't have access (the `user_enabled_reasons` enum).
 - `current_statuses` / `permanent_upcoming_changes` — Cached lookups keyed by git version (one-time cost per deploy). Cleared by `clear_caches!` and automatically when `TrackStatusChanges` detects changes.
+- `settings_hidden_while_enabled` — Returns the set of *other* site setting names that should be hidden from admins because an enabled change declares them in its `hide_settings:` metadata. Computed live (not toggled at opt-in time) so it tracks both opt-in paths and is multisite-safe. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
 
-**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Define a `should_display_<upcoming_change_name>?` class method on it to gate a specific change; if no method is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
+
+**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Core gates can define a `should_display_<upcoming_change_name>?` class method on it; plugin-owned upcoming changes should use `Plugin::Instance#register_upcoming_change_conditional_display`. If no rule is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
 
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
-**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
+**`lib/site_setting_extension.rb`** — Where `upcoming_change:` metadata in `site_settings.yml` gets parsed. When a setting is registered with this metadata, it stores the parsed result in `@upcoming_change_metadata` and defines a `{name}_groups_map` method. The `impact` string is split into `impact_type` and `impact_role`. The `hide_settings:` array (if present) is normalized to an array of symbols. Also handles `upcoming_change_default_override:` metadata — see [Default Overrides](#default-overrides) below.
+
+**`lib/site_settings/hidden_provider.rb`** — `HiddenProvider#all` (the source of `SiteSetting.hidden_settings`) unions in `UpcomingChanges.settings_hidden_while_enabled` before applying the `:hidden_site_settings` plugin modifier, so plugins can still explicitly un-hide a setting. The union is skipped entirely when no change opts in, to avoid allocating a new Set on every read. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
 
 **`lib/site_settings/defaults_provider.rb`** — Manages the default values for all settings, including upcoming change default overrides. Tracks which overrides are active via `@active_upcoming_change_overrides` and applies them when resolving defaults. Provides `upcoming_change_override_metadata` for the frontend to display warnings about changed defaults.
 
@@ -61,7 +65,7 @@ All services use `Service::Base`. They're organized under `app/services/upcoming
 **Admin page** — `admin/templates/admin-config/upcoming-changes.gjs` renders the page header, `admin/components/admin-config-areas/upcoming-changes.gjs` is the container with filtering, and `admin/components/admin-config-areas/upcoming-change-item.gjs` renders each row.
 
 **Key frontend patterns:**
-- Filtering by status, impact type, impact role, and enabled/disabled state via `AdminFilterControls`
+- Filtering by status, impact type, impact role, and enabled/disabled state via `DFilterControls`
 - Group selection uses a multi-select dropdown with debounced API saves
 - Toast notifications for all toggle/group changes
 - Lightbox integration for preview images
@@ -138,14 +142,61 @@ Some upcoming changes only make sense to show admins under certain conditions �
 #### How It Works
 
 1. **Filtering** — `UpcomingChanges::List#fetch_upcoming_changes` calls `UpcomingChanges::ConditionalDisplay.should_display?(setting_name)` on every change after the status filter, before group/image enrichment. Changes that return `false` are dropped from the result entirely.
-2. **Resolution** — `should_display?` checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used; otherwise the change is always displayed (returns `true`).
-3. **Definition site** — Add the gating method directly to the `ConditionalDisplay` class, typically next to (or inside) the relevant subsystem's code — e.g. a Horizon-specific gate can live with the Horizon code as long as `UpcomingChanges::ConditionalDisplay` is reopened to define it. Group related gates together for discoverability.
+2. **Resolution** — `should_display?` first hides the change outright if its owning plugin is not configurable (`owning_plugin_configurable?`), or if it is plugin-owned and the owning plugin is disabled (`owning_plugin_enabled?`) — unless the change opts out with `requires_plugin_enabled: false`. Then it checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used. Otherwise it evaluates enabled plugin callbacks registered for that setting. If no method or callback is defined, the change is always displayed (returns `true`).
+3. **Definition site** — Core gates can live directly on `ConditionalDisplay`, typically next to the relevant subsystem's code. Plugin gates should be registered from the plugin initializer via `register_upcoming_change_conditional_display(:setting_name) { ... }` so disabled plugins are filtered by `DiscoursePluginRegistry`.
 
 #### Key Behaviors
 
-- **Display-only**: This affects whether the change appears in the admin UI list, not whether it's enabled. `enabled?` / `enabled_for_user?` still resolve normally — code paths gated on the change continue to work.
+- **Display-only, with one exception**: A gate normally affects whether the change appears in the admin UI, not whether it's enabled — `enabled?` / `enabled_for_user?` still resolve normally, so code paths gated on the change continue to work. The exception is the owning-plugin checks, which `enabled?` consults too (see below).
+- **Don't express the owning-plugin gate with a conditional display callback**: it's already the default for plugin-owned changes, and a callback couldn't express it anyway — `DiscoursePluginRegistry` filters callbacks from disabled plugins, so it would never run in the only case that matters. See [Requiring the Owning Plugin](#requiring-the-owning-plugin).
 - **N+1 by design**: `should_display?` is called once per change in the loop. If a gating method does expensive work (DB queries, plugin lookups), memoize inside the method to avoid repeated cost.
-- **Notifications still fire**: Conditional display only filters the `List` service result. `TrackAddedChanges`, `NotifyAdminsOfAvailableUpcomingChanges`, `NotifyPromotions`, etc. do not consult `ConditionalDisplay`, so admins may still receive notifications about a hidden change. Consider this when designing the gate — usually the gate should reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+- **Notifications are gated too**: Beyond the `List` service, `NotifyAdminsOfAvailableUpcomingChanges` and `NotifyPromotion` also consult `should_display?`, so a hidden change is not notified about. `TrackAddedChanges` / `TrackRemovedChanges` do not — the audit trail records every change regardless. A gate should still reflect a long-lived condition (plugin missing, theme not installed) rather than transient state.
+
+### Requiring the Owning Plugin
+
+A plugin-owned change that gates a feature *inside* its plugin is useless while that plugin is disabled — the plugin's code isn't running, so the admin is being pitched (and notified about) a toggle that does nothing. This is the **default** for every plugin-owned change: no metadata is needed to get it.
+
+```yaml
+enable_your_plugin_feature:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    # requires_plugin_enabled defaults to true for plugin-owned changes -- nothing to add.
+```
+
+While the plugin is off, `UpcomingChanges.owning_plugin_enabled?` returns false, which both hides the change (`should_display?`) and stops it resolving (`enabled?`), so its `hide_settings` and default overrides don't apply either. The admin's opt-in stays in the database and resumes when they re-enable the plugin.
+
+#### Opting out
+
+Plenty of plugin-owned changes are the *opposite*: they exist to get the plugin adopted, and only make sense while it is disabled. Leaving one gated makes it unreachable — it would be hidden from exactly the sites it targets. These must opt out with `requires_plugin_enabled: false`:
+
+```yaml
+enable_your_plugin_feature:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    requires_plugin_enabled: false
+```
+
+Current examples, all of which set `requires_plugin_enabled: false`:
+
+| Change | Why it must work with the plugin off |
+|---|---|
+| `enable_events_category_type_setup` (calendar), `enable_support_category_type_setup` (solved), `enable_ideas_category_type_setup` (topic-voting) | Offers a category type whose `enable_plugin` hook turns the plugin on when an admin picks it. Core registers category types *without* the plugin enabled — see `Categories::Types::Base#enable_plugin`. |
+| `enable_discourse_reactions_by_default` (reactions) | An `upcoming_change_default_override` that flips `discourse_reactions_enabled` from `false` to `true`. Gating it on the plugin being enabled means it can never fire. |
+| `enable_discourse_workflows` (workflows) | *Is* the plugin's `enabled_site_setting`. That row is how an admin opts into the plugin at all, so it *must* opt out — otherwise the default gate would gate the change on itself. |
+
+Rule of thumb: if the change's purpose is *"try this feature we added to the plugin you already run"*, leave it gated (the default). If its purpose is *"start using this plugin"*, opt out with `false`.
+
+#### Guardrails
+
+The integrity spec (`spec/integrity/upcoming_change_metadata_spec.rb`) enforces that `requires_plugin_enabled`, when present, is a boolean and is only set on plugin-owned changes. It also **requires** a change that is its plugin's own `enabled_site_setting` to set `requires_plugin_enabled: false` — leaving the default gate on it would be self-gating and would recurse (`Plugin::Instance#enabled?` reads the setting, which resolves back through `enabled?`). `owning_plugin_enabled?` also guards against the recursion at runtime, so a mistake surfaces as a hidden change rather than a stack overflow. The spec derives ownership and the plugin's `enabled_site_setting` from the file path and `plugin.rb`, so it holds regardless of which plugins are loaded in the run.
 
 ### CSS Opt-In
 
@@ -173,6 +224,63 @@ enable_your_feature_name:
 - **Opt-in only**: Omitting `body_class` (or setting it `false`) means no body class — the default. Add it only when you actually have CSS keyed on `uc-{name}`.
 - **Enabled-for-user gated**: The class only appears for users the change is enabled for (via `currentUserUpcomingChanges`), not globally. Anonymous/ineligible users won't get it.
 - **Integrity-checked**: `body_class` is in the integrity spec's `allowed_keys` and must be a boolean — see [Mocking Metadata](#mocking-metadata) for how to set it in tests.
+
+### Permanent Soon Warning
+
+Once a change reaches `stable` status, the admin page shows a warning on its row: "This change will become permanent soon. You will no longer be able to opt-out." This is **opt-out** via the `permanent_warning:` metadata key — every stable change shows the warning unless it explicitly sets `permanent_warning: false`.
+
+```yaml
+enable_your_feature_name:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: "stable"
+    impact: "site_setting_default,all_members"
+    permanent_warning: false
+```
+
+#### How It Works
+
+1. **Parsing** — `lib/site_setting_extension.rb` reads `permanent_warning` from the `upcoming_change:` metadata and normalizes it to a boolean (`!= false`, so an omitted key becomes `true`) in `upcoming_change_metadata`.
+2. **Rendering** — `UpcomingChangeItem#showPermanentSoonNotice` (`admin/components/admin-config-areas/upcoming-change-item.gjs`) renders the notice when `status === "stable"` and `permanent_warning !== false`. The `!== false` comparison (rather than a truthy check) means metadata that omits the key — including hashes built by `mock_upcoming_change_metadata` — still shows the notice.
+
+#### Key Behaviors
+
+- **Opt-out, not opt-in**: The default is to warn. Suppress it only when the warning would be misleading — the usual case is a `site_setting_default` change, where becoming permanent just changes another setting's default and the admin can still set that setting to whatever they want.
+- **Stable-only**: The key has no effect below `stable`, and `permanent` changes don't show the notice either (they already are permanent).
+- **Independent of `impact_type`**: Before this key existed, the notice was implicitly suppressed for every `site_setting_default` change. That coupling is gone — impact type no longer affects the notice.
+- **Integrity-checked**: `permanent_warning` is in the integrity spec's `allowed_keys` and must be a boolean.
+
+### Hiding Settings While Enabled
+
+A change can declare other site settings that should be hidden from admins while it is enabled, via the optional `hide_settings:` metadata key. This is for *legacy* settings that stop making sense once the change replaces them — they disappear from the admin UI rather than being deleted, and reappear if the change is disabled.
+
+```yaml
+enable_your_feature_name:
+  default: false
+  client: true
+  hidden: true
+  upcoming_change:
+    status: experimental
+    impact: feature,all_members
+    hide_settings:
+      - legacy_setting_one
+      - legacy_setting_two
+```
+
+#### How It Works
+
+1. **Parsing** — `lib/site_setting_extension.rb` reads `hide_settings` from the `upcoming_change:` metadata, normalizes it to an array of symbols, and stores it in `upcoming_change_metadata`.
+2. **Live computation** — `UpcomingChanges.settings_hidden_while_enabled` scans the metadata and, for each change that declares `hide_settings`, calls `enabled?(change_name)` and concatenates the declared settings when the change is on. `enabled?` is only called for the (usually zero) changes that declare `hide_settings`, so the common case is a cheap metadata scan with no DB hit; it returns `[]` immediately when no metadata exists.
+3. **Application** — `SiteSettings::HiddenProvider#all` unions the result into the hidden set (before the `:hidden_site_settings` modifier) on every `SiteSetting.hidden_settings` read.
+
+#### Key Behaviors
+
+- **Computed live, not toggled**: The hidden set is recomputed per request rather than flipped imperatively at opt-in time. This means it automatically tracks *both* opt-in paths — manual admin enable and auto-promotion — and stays correct if the change is later disabled.
+- **Multisite-safe**: The metadata (and thus the declared `hide_settings`) is process-global, but `enabled?` resolves per-site. A setting is only hidden for sites that have actually opted into the change.
+- **Plugins can still un-hide**: The union happens *before* the `:hidden_site_settings` modifier, so a plugin can explicitly remove a setting from the hidden set via that modifier.
+- **Integrity-checked**: `hide_settings` is in the integrity spec's `allowed_keys`. When present it must be an array, and every referenced name must be a real site setting (`SiteSetting.respond_to?`) — typos fail the spec. See [Mocking Metadata](#mocking-metadata) for how to set it in tests.
 
 ## Key Design Decisions
 
@@ -264,7 +372,14 @@ Valid value sets:
 
 To hide an upcoming change from the admin UI under certain conditions:
 
-1. Reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
+1. For plugin-owned changes, register a callback from `plugin.rb`:
+   ```ruby
+   register_upcoming_change_conditional_display(:enable_plugin_feature) do
+     SiteSetting.some_dependency_enabled
+   end
+   ```
+   The condition must be something *other* than the plugin's own `enabled_site_setting` — core already hides changes owned by a disabled plugin, and the registry would filter the callback out anyway.
+2. For core changes, reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
    ```ruby
    module UpcomingChanges
      class ConditionalDisplay
@@ -274,10 +389,10 @@ To hide an upcoming change from the admin UI under certain conditions:
      end
    end
    ```
-2. Place the reopen near the related subsystem (e.g. inside the Horizon plugin) so the gate lives with the code that owns the condition.
-3. If the check is expensive, memoize inside the method — `List` calls `should_display?` once per change.
-4. No registration step is needed; `should_display?` finds the method dynamically via `respond_to?`.
-5. Test by stubbing the predicate — see [Testing Conditional Display](#testing-conditional-display).
+3. Place core gates near the related subsystem so the gate lives with the code that owns the condition.
+4. If the check is expensive, memoize inside the method or callback — `List` calls `should_display?` once per change.
+5. Multiple plugin callbacks for the same setting are combined with `all?`, so any enabled plugin can hide the change.
+6. Test by stubbing the predicate or registering a callback — see [Testing Conditional Display](#testing-conditional-display).
 
 ### Adding a Default Override
 
@@ -294,6 +409,25 @@ To make an upcoming change control the default of another setting:
 2. Ensure the **trigger** setting has `impact: "site_setting_default,..."` in its `upcoming_change:` metadata
 3. The override activates automatically when the trigger is enabled — no additional code needed
 4. Test with `mock_upcoming_change_default_overrides` — see [Mocking Default Overrides](#mocking-default-overrides)
+
+### Hiding Legacy Settings While a Change Is Enabled
+
+To hide other settings from admins while an upcoming change is enabled (e.g. legacy settings the change replaces):
+
+1. Add a `hide_settings:` array to the change's `upcoming_change:` metadata in `config/site_settings.yml`, listing the setting names to hide:
+   ```yaml
+   enable_your_feature_name:
+     default: false
+     client: true
+     hidden: true
+     upcoming_change:
+       status: experimental
+       impact: feature,all_members
+       hide_settings:
+         - legacy_setting_one
+   ```
+2. The settings are hidden automatically whenever the change is enabled (manual opt-in or auto-promotion) and reappear when it is disabled — no additional code needed.
+3. Every name must be a real site setting or the integrity spec fails. See [Hiding Settings While Enabled](#hiding-settings-while-enabled).
 
 ### Changing Resolution Logic
 
@@ -314,10 +448,14 @@ mock_upcoming_change_metadata(
       impact_type: "feature",
       impact_role: "all_members",
       body_class: true, # optional — opts into the uc-{name} body class
+      permanent_warning: false, # optional — suppresses the "becomes permanent soon" notice at stable
+      hide_settings: %i[legacy_setting_one], # optional — settings hidden while enabled
     },
   },
 )
 ```
+
+To test `hide_settings`, mock a change with a `hide_settings:` array, then assert the named settings are absent from `SiteSetting.hidden_settings` (or `HiddenProvider#all`) until the change is enabled and present once it is — remember to enable the change (`SiteSetting.<name> = true`) and clean up with `remove_override!` + `UpcomingChanges.clear_caches!`. See `spec/lib/upcoming_changes_spec.rb` (`.settings_hidden_while_enabled`) and `spec/lib/site_settings/hidden_provider_spec.rb`.
 
 To test the CSS opt-in serializer (`SiteSerializer#upcoming_changes_with_css`), mock two changes — one with `body_class: true` and one with `body_class: false` — and assert the serialized array includes the former and excludes the latter. See `spec/serializers/site_serializer_spec.rb`. System coverage for the resulting `uc-{name}` body class lives in `spec/system/member_upcoming_changes_spec.rb`.
 
@@ -356,7 +494,15 @@ expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
 
 ### Testing Conditional Display
 
-Stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
+For plugin-owned changes, test the registry path:
+
+```ruby
+Plugin::Instance
+  .new
+  .register_upcoming_change_conditional_display(:enable_plugin_feature) { false }
+```
+
+For core changes, stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
 
 ```ruby
 UpcomingChanges::ConditionalDisplay
@@ -437,6 +583,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Settings integration | `lib/site_setting_extension.rb` (search for `upcoming_change`) |
 | CSS opt-in serializer | `app/serializers/site_serializer.rb` (`upcoming_changes_with_css`) |
 | Defaults provider | `lib/site_settings/defaults_provider.rb` (default override activation/resolution) |
+| Hidden provider | `lib/site_settings/hidden_provider.rb` (unions in `settings_hidden_while_enabled`) |
 | Services | `app/services/upcoming_changes/*.rb` |
 | Group upsert | `app/services/site_setting/upsert_groups.rb` |
 | Controller | `admin/config/upcoming_changes_controller.rb` |
@@ -456,6 +603,7 @@ Notification type tests create notifications with `Notification.create()` and ve
 | Core spec | `spec/lib/upcoming_changes_spec.rb` |
 | Integrity spec | `spec/integrity/upcoming_change_metadata_spec.rb` (validates allowed metadata keys) |
 | Serializer spec | `spec/serializers/site_serializer_spec.rb` (`#upcoming_changes_with_css`) |
+| Hidden provider spec | `spec/lib/site_settings/hidden_provider_spec.rb` |
 | Request spec | `spec/requests/admin/config/upcoming_changes_controller_spec.rb` |
 | Admin system spec | `spec/system/admin_upcoming_changes_spec.rb` |
 | Member system spec | `spec/system/member_upcoming_changes_spec.rb` |

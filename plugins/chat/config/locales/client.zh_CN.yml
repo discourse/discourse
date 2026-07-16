@@ -247,14 +247,15 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
+      screen_reader:
+        new_messages:
+          other: "%{count} 条新消息"
       no_direct_message_channels: "您还没有加入任何直接消息！"
       no_direct_message_channels_cta: "开始一个对话"
       no_public_channels: "您还没有加入任何频道！"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       chat_notifications_title: "聊天通知"
-      only_chat_push_notifications:
-        title: "只发送聊天推送通知"
       personalization_title: "个性化"
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
@@ -304,8 +305,6 @@ zh_CN:
         title: "桌面聊天通知声音"
       sounds:
         none: "无"
-        bell: "钟声"
-        ding: "叮叮"
       title: "聊天"
       title_capitalized: "聊天"
       upload: "附加文件"
@@ -450,6 +449,9 @@ zh_CN:
           other: "<span>您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
         single_user: "<span>%{username} 回应了 </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
+        users_popup:
+          title:
+            other: "%{count} 个回应"
         multiple_users_and_more:
           other: "<span>%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
       composer:

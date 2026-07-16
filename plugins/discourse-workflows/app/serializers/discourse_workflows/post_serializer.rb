@@ -21,6 +21,7 @@ module DiscourseWorkflows
                :category_id,
                :category_name,
                :tags,
+               :upload_ids,
                :raw,
                :cooked
 
@@ -70,6 +71,10 @@ module DiscourseWorkflows
       return [] if topic.blank? || !SiteSetting.tagging_enabled
 
       topic.tags.visible(scope).pluck(:name)
+    end
+
+    def upload_ids
+      object.upload_ids
     end
 
     def include_raw?

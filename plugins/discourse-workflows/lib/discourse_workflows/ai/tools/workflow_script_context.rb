@@ -104,7 +104,7 @@ module DiscourseWorkflows
             return error_response("Workflow not found")
           end
 
-          @workflow_for_schema = workflow
+          @workflow_for_shape = workflow
           nodes = workflow&.nodes || []
           target_node = find_node(nodes, parameters[:target_node_id])
           upstream_node = find_node(nodes, parameters[:upstream_node_id])
@@ -116,7 +116,7 @@ module DiscourseWorkflows
             available_variables: AVAILABLE_VARIABLES,
             return_contract: RETURN_CONTRACT,
             mode_restrictions: MODE_RESTRICTIONS,
-            upstream_schema: node_schema(upstream_node),
+            upstream_fields: node_fields(upstream_node),
             downstream_requirements: downstream_requirements(downstream_node),
             sample_input_items: sample_input_items(workflow, upstream_node),
             existing_code: existing_code(target_node),
@@ -149,24 +149,36 @@ module DiscourseWorkflows
           }
         end
 
-        def node_schema(node)
+        def node_fields(node)
           return nil if node.blank?
+
+          schemas = infer_schema_from_pin_data(node)
+          schemas =
+            workflow_schema_resolution[:output_schemas][node["id"].to_s] || [] if schemas.nil?
+          output_fields = schemas.map { |schema| DiscourseAi::WorkflowSchemaFields.convert(schema) }
 
           {
             node_id: node["id"],
             node_name: node["name"],
             node_type: node["type"],
-            fields:
-              DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog::OUTPUT_SCHEMAS.fetch(
-                node["type"],
-                infer_schema_from_pin_data(node),
-              ),
+            output_fields: output_fields,
           }
         end
 
+        def workflow_schema_resolution
+          @workflow_schema_resolution ||=
+            DiscourseWorkflows::Schema.resolve_graph(
+              @workflow_for_shape&.nodes,
+              @workflow_for_shape&.connections,
+            )
+        end
+
         def infer_schema_from_pin_data(node)
-          sample = @workflow_for_schema&.node_pin_data(node["name"])&.first
-          flatten_schema(sample&.dig("json") || {})
+          pin_data = @workflow_for_shape&.node_pin_data(node["name"])
+          return nil if pin_data.blank?
+
+          sample = pin_data.first
+          [DiscourseWorkflows::Schema.infer(sample&.dig("json") || {})]
         end
 
         def downstream_requirements(node)
@@ -201,29 +213,6 @@ module DiscourseWorkflows
           return nil if node.blank? || node["type"] != "action:code"
 
           DiscourseWorkflows::NodeData.parameters(node)["code"]
-        end
-
-        def flatten_schema(value, prefix = nil, result = {})
-          case value
-          when Hash
-            value.each do |key, child|
-              child_prefix = [prefix, key].compact.join(".")
-              flatten_schema(child, child_prefix, result)
-            end
-          when Array
-            result[prefix] = "array"
-          when Integer
-            result[prefix] = "integer"
-          when Float
-            result[prefix] = "number"
-          when TrueClass, FalseClass
-            result[prefix] = "boolean"
-          when NilClass
-            result[prefix] = "null"
-          else
-            result[prefix] = value.class.name.downcase
-          end
-          result
         end
       end
     end

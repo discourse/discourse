@@ -84,6 +84,14 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Diproses..."
+        tool: "Aksi"
+        user: "Pengguna"
+        approve: "Terima"
+        reject: "Tolak"
+        approved: "Disetujui"
+        rejected: "Ditolak"
       llm_selector:
         none: "Tidak ada"
       features:
@@ -101,11 +109,15 @@ id:
           reset: "Reset"
         search:
           name: "Cari"
+        image_caption:
+          setting_groups:
+            settings: "Pengaturan"
         spam:
           name: "Spam"
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        category_scope: "Kategori"
         stats:
           eta_minutes:
             other: "%{count} menit"
@@ -142,6 +154,11 @@ id:
         delete: "Hapus"
         temperature: "Temperatur"
         top_p: "Top P"
+        thinking_effort_options:
+          none: "Tidak ada"
+          low: "Rendah"
+          medium: "Sedang"
+          high: "Tinggi"
         response_format:
           open_modal: "Ubah"
         filters:
@@ -219,11 +236,6 @@ id:
           select: "Pilih"
           selected: "Dipilih"
           try_again: "Coba Lagi"
-        image_caption:
-          button_label: "Keterangan dengan AI"
-          generating: "Menghasilkan keterangan..."
-          credits: "Keterangan oleh AI"
-          save_caption: "Simpan"
       reviewables:
         model_used: "Model yang digunakan:"
         accuracy: "Akurasi:"
@@ -242,7 +254,7 @@ id:
         quick_search:
           suffix: "di semua topik dan posting dengan AI"
       ai_bot:
-        llm: "Model"
+        llm: "Model:"
         pm_warning: "Pesan chatbot AI dipantau secara berkala oleh moderator."
         cancel_streaming: "Berhenti membalas"
         default_pm_prefix: "[PM bot AI tanpa judul]"

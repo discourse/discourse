@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Topic Discovery Tracked", function (needs) {
   needs.user({
+    unified_new_enabled: true,
     tracked_tags: [1],
     watched_tags: [2],
     watching_first_post_tags: [3],
@@ -95,12 +96,8 @@ acceptance("Topic Discovery Tracked", function (needs) {
       );
 
     assert
-      .dom("#navigation-bar li.unread a")
-      .hasAttribute(
-        "href",
-        "/unread?f=tracked",
-        "unread link has tracked filter"
-      );
+      .dom("#navigation-bar li.unread")
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new a")
@@ -194,15 +191,12 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title_with_count", { count: 4 }),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
       .hasText(
-        i18n("filters.new.title_with_count", { count: 2 }),
+        i18n("filters.new.title_with_count", { count: 6 }),
         "displays the right content on new link"
       );
 
@@ -210,15 +204,12 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title_with_count", { count: 3 }),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
       .hasText(
-        i18n("filters.new.title_with_count", { count: 1 }),
+        i18n("filters.new.title_with_count", { count: 4 }),
         "displays the right content on new link"
       );
 
@@ -244,15 +235,12 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title_with_count", { count: 2 }),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
       .hasText(
-        i18n("filters.new.title"),
+        i18n("filters.new.title_with_count", { count: 2 }),
         "displays the right content on new link"
       );
   });
@@ -276,10 +264,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title"),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
@@ -292,10 +277,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title"),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
@@ -358,15 +340,12 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title_with_count", { count: 1 }),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")
       .hasText(
-        i18n("filters.new.title"),
+        i18n("filters.new.title_with_count", { count: 1 }),
         "displays the right content on new link"
       );
 
@@ -374,10 +353,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     assert
       .dom("#navigation-bar li.unread")
-      .hasText(
-        i18n("filters.unread.title"),
-        "displays the right content on unread link"
-      );
+      .doesNotExist("unread link is not displayed");
 
     assert
       .dom("#navigation-bar li.new")

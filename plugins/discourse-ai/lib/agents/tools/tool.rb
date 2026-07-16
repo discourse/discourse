@@ -47,6 +47,14 @@ module DiscourseAi
             false
           end
 
+          # When true, the replayed tool (after approval) is given the
+          # approving moderator as context.user, so guardian checks and
+          # downstream audit logs (StaffActionLogger, UserHistory) credit
+          # the real approver instead of the bot account.
+          def attribute_to_approver?
+            false
+          end
+
           def inject_prompt(prompt:, context:, agent:)
           end
 
@@ -126,6 +134,15 @@ module DiscourseAi
 
         def chain_next_response?
           true
+        end
+
+        # Validation run before a tool that requires approval is queued (and
+        # again at approval-replay time). Return an error response (see
+        # #error_response) when the request is invalid, so a malformed or
+        # infeasible action (e.g. an unknown username) never creates a review
+        # item that could only fail on approval. Return nil when it is valid.
+        def validation_error
+          nil
         end
 
         protected

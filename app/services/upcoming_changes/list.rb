@@ -60,8 +60,11 @@ class UpcomingChanges::List
           :value,
           :upcoming_change,
           :plugin,
+          :depends_on,
+          :depends_on_humanized_names,
         ).merge(
           dependents: UpcomingChanges.find_dependents_for_change(setting[:setting]),
+          depends_on_met: UpcomingChanges.change_dependencies_met?(setting[:setting]),
           overriding_defaults:
             SiteSetting.upcoming_change_default_overrides.values.any? do |override|
               override[:upcoming_change] == setting[:setting]

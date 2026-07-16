@@ -21,7 +21,6 @@ tr_TR:
       dashboard:
         emotion:
           title: "Duygu"
-          description: "Tablo, belirli bir duyguyla sınıflandırılan gönderilerin sayısını listeler. \"SamLowe/roberta-base-go_emotions\" modeliyle sınıflandırılmıştır."
         reports:
           filters:
             group_by:
@@ -232,6 +231,15 @@ tr_TR:
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
+      ai_tool_approval:
+        loading: "Yükleniyor..."
+        agent: "Ajan"
+        tool: "Eylem"
+        user: "Kullanıcı"
+        approve: "Onayla"
+        reject: "Reddet"
+        approved: "Onaylandı"
+        rejected: "Reddedilen"
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."
@@ -332,7 +340,6 @@ tr_TR:
           translate: "Çevir"
           markdown_tables: "Markdown tablosu oluştur"
           custom_prompt: "Özel istem"
-          image_caption: "Görüntülere alt yazı ekle"
           translator: "Çevirmen"
           post_illustrator: "Gönderi illüstratörü"
           chat_thread_titles: "Sohbet başlıkları"
@@ -341,6 +348,9 @@ tr_TR:
             enabled_features: "Etkinleştirilmiş Özellikler"
             automation: "Otomasyon"
             agents: "Ajanlar"
+        image_caption:
+          setting_groups:
+            settings: "Ayarlar"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -377,6 +387,7 @@ tr_TR:
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
         supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
+        category_scope: "Kategoriler"
         admin_actions:
           translation_settings: "Çeviri ayarları"
           localization_settings: "Yerelleştirme ayarları"
@@ -536,16 +547,6 @@ tr_TR:
         description: "Açıklama"
         no_llm_selected: "Dil modeli seçilmedi"
         use_parent_llm: "Ajanın dil modelini kullan"
-        max_context_posts: "Maksimum bağlam gönderisi sayısı"
-        max_context_posts_help: "Bir kullanıcıya yanıt verirken YZ için bağlam olarak kullanılacak maksimum gönderi sayısı. (varsayılan için boş)"
-        execution_mode: "Yürütme Modu"
-        execution_mode_help: "Ajanın araç çalıştırma ve konuşma bağlamını nasıl yönettiğini belirler. Varsayılan ayar, sabit sıra/araç sınırları kullanır. Agentic, daha uzun ve daha kapsamlı araç kullanım oturumları için otomatik bağlam sıkıştırma özelliğine sahip bir jeton bütçesi kullanır."
-        execution_mode_options:
-          default: "Varsayılan (Sabit Limitler)"
-          agentic: "Agentic (Token Bütçesi)"
-        max_turn_tokens: "Maksimum Dönüş Jetonları"
-        max_turn_tokens_help: "Tek bir bot yanıtı sırasında tüm LLM çağrıları boyunca tüketilen maksimum toplam jeton (giriş + çıkış). Ayarlandığında, sabit tamamlama/araç sınırlarını bir jeton bütçesi ile değiştirerek daha fazla ajan davranışı sağlar. Varsayılan sınırlar için boş bırakın."
-        compression_threshold: "Sıkıştırma Eşiği"
         compression_threshold_help: "Otomatik sıkıştırmanın devreye girdiği bağlam kullanım yüzdesi (20–99). Daha düşük değerler sıkıştırmayı daha erken tetikler ve daha fazla boşluk bırakır."
         vision_max_pixel_sizes:
           low: Düşük kalite - en ucuz (256x256)
@@ -617,6 +618,12 @@ tr_TR:
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
+        thinking_effort_options:
+          none: "Hiçbiri"
+          low: "Düşük"
+          medium: "Orta"
+          high: "Yüksek"
+          max: "En fazla"
         priority: "Öncelik"
         priority_help: "Öncelikli ajanlar, ajan listesinin en üstünde kullanıcılara gösterilir. Birden fazla ajanın önceliği varsa, bunlar alfabetik sıraya göre sıralanır."
         tool_options: "Araç seçenekleri"
@@ -870,9 +877,7 @@ tr_TR:
             custom: "Özel..."
           hours: "saat"
           max_tokens_help: "Bu gruptaki her kullanıcının belirtilen süre içinde kullanabileceği maksimum token (kelime ve karakter) sayısı. Token'lar, YZ modelleri tarafından metni işlemek için kullanılan birimlerdir; kabaca 1 token = 4 karakter veya bir kelimenin 3/4'ü."
-          max_tokens_required: "Maks. kullanımlar ayarlanmamışsa ayarlanmalıdır"
           max_usages_help: "Bu gruptaki her kullanıcının belirtilen süre içinde yapay zekâ modelini kullanabileceği maksimum sayı. Bu kota, grup genelinde paylaşılmaz, bireysel kullanıcı başına izlenir."
-          max_usages_required: "Maks. token'lar ayarlanmamışsa ayarlanmalıdır"
         credit_allocation:
           credits_remaining: "%{total} kredinin %{remaining}'ı kaldı (%%{percentage}%)"
           soft_limit_warning: "Bu modelde bugün %{percentage}% oranında AI kredisi kalmıştır."
@@ -881,7 +886,7 @@ tr_TR:
         usage:
           ai_bot: "YZ botu"
           ai_helper: "Yardımcı (%{agent})"
-          ai_helper_image_caption: "Görüntü yazısı"
+          ai_image_caption: "Görüntü yazısı"
           ai_agent: "Ajan (%{agent})"
           ai_summarization: "Özetle"
           ai_embeddings_semantic_search: "YZ araması"
@@ -981,9 +986,6 @@ tr_TR:
         description: "Aşağıdaki seçeneklerden birini belirleyin ve YZ size metnin yeni bir versiyonunu önersin."
         selection_hint: "İpucu: Ayrıca, yalnızca onu yeniden yazmak için yardımcıyı açmadan önce metnin bir bölümünü de seçebilirsiniz."
         suggest_errors:
-          too_many_tags:
-            one: "En fazla sadece %{count} etikete sahip olabilirsiniz"
-            other: "En fazla sadece %{count} etikete sahip olabilirsiniz"
           no_suggestions: "Mevcut öneri yok"
         missing_content: "Lütfen öneri oluşturmak için birkaç içerik girin."
         context_menu:
@@ -1017,11 +1019,6 @@ tr_TR:
           select: "Seç"
           selected: "Seçili"
           try_again: "Tekrar Dene"
-        image_caption:
-          button_label: "YZ ile alt yazı"
-          generating: "Alt yazı oluşturuluyor..."
-          credits: "Alt yazı YZ tarafından hazırlandı"
-          save_caption: "Kaydet"
         no_content_error: "Üzerinde YZ eylemleri gerçekleştirmek için önce içerik ekleyin"
       errors:
         credit_limit_dialog:
@@ -1112,8 +1109,8 @@ tr_TR:
         click_to_run_label: "Artifact'i çalıştır"
       ai_bot:
         title: "YZ botu"
-        agent: "Ajan"
-        llm: "Model"
+        agent: "Ajan:"
+        llm: "Model:"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
         try_again: "Tekrar deneyin"

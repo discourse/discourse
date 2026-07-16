@@ -22,6 +22,10 @@ sv:
         in_location: "i"
         hidden: "dold"
         failed: "misslyckad"
+    access_control:
+      manage:
+        access_permission_editor: "Redigerare"
+        access_permission_remove: "Ta bort"
     number:
       format:
         separator: "."
@@ -273,6 +277,9 @@ sv:
     age: "Ålder"
     joined: "Gick med"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avancerat läge"
+      simple_mode: "Enkelt läge"
     show_more: "visa mer"
     show_help: "Alternativ"
     links: "Länkar"
@@ -1161,6 +1168,9 @@ sv:
       notifications: "Aviseringar"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Inaktiverad"
+          all: "Aktiverad"
         not_supported: "Aviseringar stöds tyvärr inte i den här webbläsaren."
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
@@ -1972,7 +1982,6 @@ sv:
     created: "Skapad"
     created_lowercase: "skapad"
     trust_level: "Förtroendenivå"
-    search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
       header_title: "Välkommen!"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
@@ -2018,6 +2027,9 @@ sv:
       email_label: "E-postadress"
       continue_button: "Fortsätt"
       verify_button: "Fortsätt"
+      signup_title: "Skapa ditt konto"
+      account_ready_continue: "Fortsätt"
+      username_label: "Användarnamn"
     login:
       header_title: "Välkommen tillbaka"
       title: "Logga in"
@@ -2776,6 +2788,8 @@ sv:
       deleted_post_placeholder: "[raderade]"
       ignored_post_placeholder: "[ignorerade]"
       pinned_reply: "Fäst"
+    share_target:
+      new_message: "Nytt meddelande"
     topic:
       filter_to:
         one: "%{count} inlägg i ämnet"
@@ -2824,40 +2838,8 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      sr_read: "läs"
       participant_groups: "Deltagargrupper"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># oläst</a>}
-              other {Det finns <a href="{basePath}/unread"># olästa</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { och <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other { och <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-              other {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Det finns <a href="{basePath}/new"># nytt</a> ämne kvar,}
-              other {Det finns <a href="{basePath}/new"># nya</a> ämnen kvar,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { eller bläddra i andra ämnen i {categoryLink}}
-          false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
-          other {}
-        }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
@@ -3274,6 +3256,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        modal:
+          title: "Översättningar"
         post_language_selector:
           none: "Inte inställd"
       errors:
@@ -3490,7 +3474,6 @@ sv:
         tag_group: "Tagg-grupp"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       create_long: "Skapa en ny kategori"
-      slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
       validations:
@@ -4380,6 +4363,7 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
+        all_groups: "Alla grupper"
         group_traffic: "Trafik"
         group_members: "Medlemmar"
         group_other: "Övrigt"
@@ -4448,6 +4432,9 @@ sv:
             email: "E-postadress"
             manifest_screenshots:
               description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+            og_image_preview:
+              generate: "Generera"
+              topic_id_label: "Ämnes-ID"
         fonts:
           title: "Typsnitt"
           form:
@@ -4499,6 +4486,21 @@ sv:
               title: "Inställningar"
         badges:
           title: "Utmärkelser"
+        category_management:
+          tabs:
+            settings: "Inställningar"
+          types:
+            all:
+              title: "Alla kategorier"
+          filter_placeholder: "Filterkategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Ämnen"
+          visibility:
+            public: "Offentligt"
+          visibility_filter:
+            all: "Alla kategorier"
         permalinks:
           title: "Permalänkar"
           header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
@@ -4557,7 +4559,7 @@ sv:
         no_check_performed: "En sökning efter uppdateringar har ej genomförts. Kontrollera att sidekiq körs."
         stale_data: "En sökning efter uppdateringar har inte genomförts på sistone. Kontrollera att sidekiq körs."
         installed_version: "Installerad"
-        latest_version: "Senaste"
+        github: "GitHub"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Ignorera"
         new_features:
@@ -4626,6 +4628,7 @@ sv:
               searches: "Sökningar"
               status: "Status"
         reports_section:
+          header_action: "Hantera"
           no_data: "Ingen data att visa"
           modal:
             enabled_heading: "Aktiverad"
@@ -5038,6 +5041,8 @@ sv:
           city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
+          locale_selector:
+            title: "Språk"
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"
@@ -5827,6 +5832,10 @@ sv:
         active: "Aktiverad"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Stäng"
+              confirm: "Stäng av användare"
           delete:
             confirmation_modal:
               close: "Stäng"
@@ -5838,6 +5847,9 @@ sv:
           suspended: "Avstängd"
           silenced: "Tystad"
           staged: "Arrangerad"
+        activation_filter:
+          all: "Alla användare"
+          activated: "Aktiverad"
         approved: "Godkänd?"
         titles:
           active: "Aktiva användare"

@@ -123,6 +123,200 @@ module("Unit | Canvas Bridge", function (hooks) {
     bridge.destroy();
   });
 
+  test("canvas drag selects nodes inside the selection rectangle", async function (assert) {
+    let selectionRect;
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks({
+        onSelectionDragFinished: (rect) => {
+          selectionRect = rect;
+        },
+      }),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [
+        { clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } },
+        {
+          clientId: "n2",
+          type: "action:http_request",
+          position: { x: 200, y: 0 },
+        },
+        {
+          clientId: "n3",
+          type: "action:http_request",
+          position: { x: 500, y: 0 },
+        },
+      ],
+      []
+    );
+
+    const canvasTarget = { closest: () => null };
+    const rect = container.getBoundingClientRect();
+    await bridge.area.emit({
+      type: "pointerdown",
+      data: {
+        position: { x: -10, y: -10 },
+        event: {
+          button: 0,
+          target: canvasTarget,
+          clientX: rect.left - 10,
+          clientY: rect.top - 10,
+        },
+      },
+    });
+    await bridge.area.emit({
+      type: "pointermove",
+      data: {
+        position: { x: 360, y: 120 },
+        event: {
+          button: 0,
+          target: canvasTarget,
+          clientX: rect.left + 360,
+          clientY: rect.top + 120,
+        },
+      },
+    });
+    await bridge.area.emit({
+      type: "pointerup",
+      data: {
+        position: { x: 360, y: 120 },
+        event: {
+          button: 0,
+          target: canvasTarget,
+          clientX: rect.left + 360,
+          clientY: rect.top + 120,
+        },
+      },
+    });
+
+    assert.deepEqual(
+      [...bridge.getSelectedIds().nodeIds].sort(),
+      ["n1", "n2"],
+      "only nodes intersecting the canvas selection rectangle are selected"
+    );
+    assert.deepEqual(
+      selectionRect,
+      { left: -10, right: 360, top: -10, bottom: 120 },
+      "selection rectangle is available for sticky note selection"
+    );
+
+    bridge.destroy();
+  });
+
+  test("secondary pointerdown is ignored by canvas selection", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+    await bridge.selectableNodes.select("n1", false);
+
+    const result = await bridge.area.emit({
+      type: "pointerdown",
+      data: {
+        position: { x: 10, y: 10 },
+        event: {
+          button: 2,
+          target: { closest: () => null },
+          clientX: 10,
+          clientY: 10,
+        },
+      },
+    });
+
+    assert.strictEqual(
+      result,
+      undefined,
+      "right-click pointerdown is consumed"
+    );
+    assert.deepEqual(
+      [...bridge.getSelectedIds().nodeIds],
+      ["n1"],
+      "right-click pointerdown does not clear the current selection"
+    );
+
+    bridge.destroy();
+  });
+
+  test("dragging a selected node moves the rest of the selection", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [
+        { clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } },
+        {
+          clientId: "n2",
+          type: "action:http_request",
+          position: { x: 200, y: 0 },
+        },
+      ],
+      []
+    );
+
+    await bridge.selectableNodes.select("n1", true);
+    await bridge.selectableNodes.select("n2", true);
+    await bridge.area.emit({ type: "nodepicked", data: { id: "n1" } });
+
+    assert.deepEqual(
+      [...bridge.getSelectedIds().nodeIds].sort(),
+      ["n1", "n2"],
+      "picking a selected node preserves the multi-selection"
+    );
+
+    await bridge.area.emit({
+      type: "nodetranslated",
+      data: {
+        id: "n1",
+        previous: { x: 0, y: 0 },
+        position: { x: 50, y: 20 },
+      },
+    });
+
+    assert.deepEqual(
+      bridge.area.nodeViews.get("n2").position,
+      { x: 250, y: 20 },
+      "the non-picked selected node follows the dragged node delta"
+    );
+
+    bridge.destroy();
+  });
+
+  test("node translation remains available without a modifier key", async function (assert) {
+    const bridge = await createReteEditor(container, {
+      callbacks: noopCallbacks(),
+      nodeTypes: NODE_TYPES,
+    });
+
+    await bridge.syncState(
+      [{ clientId: "n1", type: "trigger:manual", position: { x: 0, y: 0 } }],
+      []
+    );
+
+    const translation = {
+      type: "nodetranslate",
+      data: {
+        id: "n1",
+        previous: { x: 0, y: 0 },
+        position: { x: 100, y: 100 },
+      },
+    };
+
+    assert.true(
+      Boolean(await bridge.area.emit(translation)),
+      "node dragging is still handled by Rete normally"
+    );
+
+    bridge.destroy();
+  });
+
   test("syncState manages connections and creates connection entries", async function (assert) {
     const bridge = await createReteEditor(container, {
       callbacks: noopCallbacks(),

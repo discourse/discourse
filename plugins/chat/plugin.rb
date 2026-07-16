@@ -86,14 +86,26 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reaction_type)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reactions_custom)
-  UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
+  UserUpdater::OPTION_ATTR.push(:chat_announce_new_messages)
+  UserUpdater::OPTION_ATTR.push(:chat_new_message_sound)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
   UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
+
+  # When a user opts into chat-only push notifications, suppress every push that
+  # isn't a chat message/mention. Registered here (rather than in core) so it's
+  # only active while chat is enabled, and runs alongside core's other filters.
+  register_push_notification_filter do |user, payload|
+    if user.user_option.push_notification_level_chat_only? && user.user_option.chat_enabled
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
+    else
+      true
+    end
+  end
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -122,7 +134,7 @@ after_initialize do
     end
 
     on(:chat_message_interaction) do |interaction|
-      next unless SiteSetting.discourse_workflows_enabled
+      next unless SiteSetting.enable_discourse_workflows
 
       action_id = interaction.action&.dig("action_id").to_s
       next if action_id.blank?
@@ -290,10 +302,6 @@ after_initialize do
     include_condition: -> { object.chat_sound.present? },
   ) { object.chat_sound }
 
-  add_to_serializer(:user_option, :only_chat_push_notifications) do
-    object.only_chat_push_notifications
-  end
-
   add_to_serializer(:user_option, :ignore_channel_wide_mention) do
     object.ignore_channel_wide_mention
   end
@@ -303,6 +311,16 @@ after_initialize do
   add_to_serializer(:current_user_option, :show_thread_title_prompts) do
     object.show_thread_title_prompts
   end
+
+  add_to_serializer(:user_option, :chat_announce_new_messages) { object.chat_announce_new_messages }
+
+  add_to_serializer(:current_user_option, :chat_announce_new_messages) do
+    object.chat_announce_new_messages
+  end
+
+  add_to_serializer(:user_option, :chat_new_message_sound) { object.chat_new_message_sound }
+
+  add_to_serializer(:current_user_option, :chat_new_message_sound) { object.chat_new_message_sound }
 
   add_to_serializer(:user_option, :chat_email_frequency) { object.chat_email_frequency }
 
@@ -395,14 +413,6 @@ after_initialize do
       config.allowed_group_ids = chat_channel.allowed_group_ids
       config.allowed_user_ids = chat_channel.allowed_user_ids
       config.public = !chat_channel.read_restricted?
-    end
-  end
-
-  register_push_notification_filter do |user, payload|
-    if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
-    else
-      true
     end
   end
 

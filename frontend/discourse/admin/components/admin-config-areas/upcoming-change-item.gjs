@@ -20,10 +20,12 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
+import { sanitize } from "discourse/lib/text";
 import Group from "discourse/models/group";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DSelect from "discourse/ui-kit/d-select";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
@@ -96,7 +98,33 @@ export default class UpcomingChangeItem extends Component {
   get showPermanentSoonNotice() {
     return (
       this.args.change.upcoming_change.status === "stable" &&
-      this.args.change.upcoming_change.impact_type !== "site_setting_default"
+      this.args.change.upcoming_change.permanent_warning !== false
+    );
+  }
+
+  get showDependsOnNotice() {
+    return (
+      this.args.change.depends_on?.length > 0 &&
+      !this.args.change.depends_on_met
+    );
+  }
+
+  get dependsOnNoticeText() {
+    const path = dBasePath();
+    const links = this.args.change.depends_on
+      .map((name, index) => {
+        const label = sanitize(
+          this.args.change.depends_on_humanized_names?.[index] ||
+            name.replaceAll("_", " ")
+        );
+        return `<a href="${path}/admin/site_settings/category/all_results?filter=${encodeURIComponent(name)}">${label}</a>`;
+      })
+      .join(", ");
+
+    return trustHTML(
+      i18n("admin.upcoming_changes.depends_on_notice", {
+        dependencyLinks: links,
+      })
     );
   }
 
@@ -261,15 +289,15 @@ export default class UpcomingChangeItem extends Component {
     const isEnabled = newValue !== "no_one";
 
     try {
-      await this.toggleChange(isEnabled, newValue);
-
       if (newValue === this.staffGroupName) {
         this.groupsChanged(this.staffGroupName);
-      } else if (newValue === "everyone" || newValue === "no_one") {
+        await this.saveGroups({ silenceToast: true });
+        await this.toggleChange(isEnabled, newValue);
+      } else {
+        await this.toggleChange(isEnabled, newValue);
         this.groupsChanged("");
+        await this.saveGroups({ silenceToast: true });
       }
-
-      await this.saveGroups({ silenceToast: true });
 
       this.args.enabledForChanged?.(this.args.change.setting, newValue);
     } catch (error) {
@@ -337,6 +365,13 @@ export default class UpcomingChangeItem extends Component {
                 </span>
               {{/if}}
             </div>
+          </div>
+        {{/if}}
+
+        {{#if this.showDependsOnNotice}}
+          <div class="upcoming-change__depends-on-notice">
+            {{dIcon "triangle-exclamation"}}
+            {{this.dependsOnNoticeText}}
           </div>
         {{/if}}
 

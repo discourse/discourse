@@ -4,99 +4,6 @@ module DiscourseWorkflows
   module Ai
     module Tools
       class WorkflowNodeCatalog < Base
-        TOPIC_LIST_ITEM_SCHEMA = {
-          "topic" => "TopicListItemSerializer payload",
-          "topic.id" => "integer",
-          "topic.title" => "string",
-          "topic.fancy_title" => "string",
-          "topic.slug" => "string",
-          "topic.posts_count" => "integer",
-          "topic.category_id" => "integer",
-          "topic.tags" => "array<string>",
-          "topic.first_post_id" => "integer",
-          "topic.closed" => "boolean",
-          "topic.archived" => "boolean",
-          "topic.created_at" => "datetime",
-          "topic.last_posted_at" => "datetime",
-          "topic.bumped_at" => "datetime",
-        }.freeze
-
-        POST_SCHEMA = {
-          "post" => "DiscourseWorkflows::PostSerializer payload",
-          "post.id" => "integer",
-          "post.raw" => "string",
-          "post.post_number" => "integer",
-          "post.reply_to_post_number" => "integer|null",
-          "post.topic_id" => "integer",
-          "post.topic_slug" => "string",
-          "post.topic_title" => "string",
-          "post.post_url" => "string",
-          "post.category_id" => "integer",
-          "post.category_name" => "string|null",
-          "post.user_id" => "integer",
-          "post.username" => "string",
-          "post.created_at" => "datetime",
-          "post.updated_at" => "datetime",
-          "post.excerpt" => "string",
-          "post.like_count" => "integer",
-          "post.reply_count" => "integer",
-          "post.score" => "number|null",
-          "post.tags" => "array<string>",
-        }.freeze
-
-        WEBHOOK_POST_SCHEMA =
-          POST_SCHEMA.except(
-            "post.category_name",
-            "post.excerpt",
-            "post.like_count",
-            "post.tags",
-          ).merge("post" => "WebHookPostSerializer payload", "post.category_slug" => "string")
-
-        USER_SCHEMA = {
-          "user" => "Basic safe user attributes for the post author",
-          "user.id" => "integer",
-          "user.username" => "string",
-          "user.name" => "string|null",
-          "user.trust_level" => "integer",
-          "user.trust_level_name" => "string",
-          "user.admin" => "boolean",
-          "user.moderator" => "boolean",
-          "user.staff" => "boolean",
-        }.freeze
-
-        GROUP_MEMBERSHIP_SCHEMA = {
-          "group_membership" => "Group membership check result",
-          "group_membership.group_id" => "integer",
-          "group_membership.group_name" => "string",
-          "group_membership.user_id" => "integer",
-          "group_membership.username" => "string",
-          "group_membership.in_group" => "boolean",
-        }.freeze
-
-        OUTPUT_SCHEMAS = {
-          "trigger:manual" => {
-          },
-          "trigger:topic_admin_button" => TOPIC_LIST_ITEM_SCHEMA,
-          "trigger:topic_created" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
-          "trigger:post_created" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
-          "trigger:post_edited" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
-          "trigger:topic_closed" => TOPIC_LIST_ITEM_SCHEMA,
-          "action:topic" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
-          "action:topic_tags" => {
-            "topic_id" => "integer",
-            "tag_names" => "array<string>",
-          },
-          "action:post" => POST_SCHEMA,
-          "action:send_personal_message" => TOPIC_LIST_ITEM_SCHEMA.merge(POST_SCHEMA),
-          "action:send_chat_message" => {
-            "channel_id" => "integer",
-            "message" => "string",
-          },
-          "action:ai_agent" => {
-            "result" => "string",
-          },
-        }.freeze
-
         EXAMPLES = {
           "action:code" => [
             {
@@ -189,6 +96,29 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:user" => [
+            {
+              name: "Look up a post author",
+              parameters: {
+                operation: "get",
+                username: "={{ $json.user.username }}",
+                actor_username: "system",
+              },
+            },
+            {
+              name: "Set a user title and trust level",
+              parameters: {
+                operation: "edit",
+                username: "={{ $json.user.username }}",
+                updates: {
+                  title: "Member",
+                  trust_level: "2",
+                  trust_level_locked: true,
+                },
+                actor_username: "system",
+              },
+            },
+          ],
           "action:topic" => [
             {
               name: "Get trigger topic details",
@@ -227,6 +157,7 @@ module DiscourseWorkflows
               parameters: {
                 agent_id: 123,
                 agent_name: "Post classifier",
+                runner_username: "system",
                 prompt:
                   "=Classify this Discourse post and return a short label: {{ $json.post.raw }}",
               },
@@ -259,15 +190,23 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_personal_message" => "dm direct message pm personal private message",
-          "action:ai_agent" => "ai agent bot llm classify summarize generate sentiment triage",
+          "action:ai_agent" =>
+            "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "trigger:user_added_to_group" => "joined added to group membership member",
+          "trigger:user_removed_from_group" => "left removed from group membership member",
+          "trigger:badge_granted" => "badge award achievement medal granted earned",
+          "action:user" =>
+            "user profile bio title trust level lock groups fields lookup edit update",
+          "action:flag_post" =>
+            "flag spam moderation review queue reviewable hide delete silence triage report",
         }.freeze
 
         def self.signature
           {
             name: name,
             description:
-              "Lists available Discourse workflow node types with versions, parameters, capabilities, output schemas, and examples.",
+              "Lists available Discourse workflow node types with versions, parameters, capabilities, output contracts, and examples.",
             parameters: [
               {
                 name: "query",
@@ -287,16 +226,6 @@ module DiscourseWorkflows
 
         def self.name
           "workflow_node_catalog"
-        end
-
-        def self.output_schema_for(identifier, parameters: {}, input_schema: {})
-          parameters = parameters.respond_to?(:to_h) ? parameters.to_h.with_indifferent_access : {}
-
-          if identifier.to_s == "action:group" && parameters[:operation].to_s == "check_membership"
-            return input_schema.merge(GROUP_MEMBERSHIP_SCHEMA)
-          end
-
-          OUTPUT_SCHEMAS.fetch(identifier.to_s, {})
         end
 
         def invoke
@@ -351,10 +280,27 @@ module DiscourseWorkflows
             properties: properties,
             credentials: json_safe(node_class.credentials),
             capabilities: json_safe(description[:capabilities] || {}),
-            output_schema: self.class.output_schema_for(identifier),
+            output_contracts: serialized_output_contracts(node_class),
           }
           payload[:examples] = EXAMPLES[identifier] if include_examples && EXAMPLES.key?(identifier)
           payload
+        end
+
+        def serialized_output_contracts(node_class)
+          node_class.output_contracts.map do |contract|
+            serialized_output_contract(contract).merge(
+              variants:
+                contract.fetch(:variants).map { |variant| serialized_output_contract(variant) },
+            )
+          end
+        end
+
+        def serialized_output_contract(contract)
+          {
+            fields: DiscourseAi::WorkflowSchemaFields.convert(contract.fetch(:schema)),
+            mode: contract.fetch(:mode).to_s,
+            display_options: json_safe(contract.fetch(:display_options)),
+          }
         end
       end
     end

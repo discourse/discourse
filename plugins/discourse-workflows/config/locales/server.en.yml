@@ -79,6 +79,16 @@ en:
         edit_failed: "Failed to edit post."
         unknown_operation: "Unknown operation: %{operation}."
         invalid_filter: "Invalid post filter fragment: %{fragments}."
+      flag_post:
+        unknown_flag_type: "Unknown flag type: %{flag_type}."
+        actor_not_staff: "The acting user must be a staff member to flag posts."
+        cannot_flag: "This post cannot be flagged as spam. It may already be hidden or authored by a staff member."
+        flag_failed: "Failed to flag post: %{errors}"
+      user:
+        unknown_operation: "Unknown operation: %{operation}."
+        invalid_updates: "User updates must be an object."
+        invalid_trust_level: "Invalid trust level: %{level}."
+        update_failed: "Failed to update user: %{errors}"
       send_personal_message:
         no_recipients: "At least one personal message recipient is required."
       credential:
@@ -120,6 +130,19 @@ en:
         filter_required: "Filter must not be empty"
       workflow_version:
         referenced_by_workflow: "Cannot delete a workflow version that is still referenced as the current or active version."
+      workflow_call:
+        workflow_required: "Select a workflow to call."
+        self_reference: "%{node} cannot call its own workflow."
+        target_not_found: "The selected workflow could not be found."
+        target_not_callable: "The selected workflow must be published and contain a Workflow call trigger."
+        cycle: "%{node} creates a workflow call loop."
+        recursive_call: "Workflow call loop detected."
+        max_depth_exceeded: "Workflow call depth cannot exceed %{max}."
+        execution_failed: "Called workflow finished with status '%{status}'."
+        execution_failed_with_error: "Called workflow finished with status '%{status}': %{error}"
+        payload_too_large: "Workflow call payload exceeds the maximum size of %{max} bytes."
+    flag_post:
+      flagged_by_workflow: "Flagged by the '%{workflow_name}' workflow."
     pin_data:
       errors:
         unsupported_node: "Only nodes with a single output can have pinned data."
@@ -130,7 +153,7 @@ en:
       split_out:
         field_not_found: "The field '%{field}' wasn't found in any input item."
   site_settings:
-    discourse_workflows_enabled: "Enable the discourse-workflows plugin."
+    enable_discourse_workflows: "Enable the discourse-workflows plugin."
     discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
     discourse_workflows_ai_authoring_max_prompt_length: "Maximum length for AI workflow authoring prompts."
     discourse_workflows_ai_authoring_rate_limit_per_minute: "Maximum AI workflow authoring requests per minute per user."

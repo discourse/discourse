@@ -17,7 +17,7 @@ en:
       notify_on_staff_accept_solved:
         label: "Notify topic creator when staff marks a solution"
       empty_box_on_unsolved:
-        label: "Display an empty checkbox next to unsolved topics in the topic list"
+        label: "Display unsolved topic state in the topic list for supported themes"
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
         description: "Automatically close solved topics after this duration from the last reply. Set to 0 to disable."
@@ -47,6 +47,7 @@ en:
     prioritize_solved_topics_in_search: "Prioritize solved topics in search results."
     enable_support_category_type_setup: "Enables the Support category type option during category creation setup."
     enable_solved_shared_issues: "Adds a “Me too” button to unsolved topics in support categories, letting members signal they’re experiencing the same issue and opt-in to notifications about the topic's solution."
+    enable_solved_badges: "Enables the Solved badges awarded to members when they provide solutions to others’ questions."
     show_who_marked_solved: "Show who marked the topic as solved. This is indicated in the topic's first post, and the answer post in a tooltip."
 
     keywords:

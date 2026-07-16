@@ -220,6 +220,22 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
     end
+
+    context "when message is too long" do
+      let(:message) { "a" * 25_000 }
+
+      it "does not create the message" do
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          Chat::Message.count
+        }
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to eq(
+          [
+            "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+          ],
+        )
+      end
+    end
   end
 
   describe "#update" do
@@ -240,6 +256,25 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
 
           expect(response.status).to eq(400)
+        end
+      end
+
+      context "when message is too long" do
+        it "does not change the message" do
+          original_message = message_1.message
+
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "a" * 25_000,
+              }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to eq(
+            [
+              "Message is too long (maximum is #{SiteSetting.chat_maximum_message_length} characters)",
+            ],
+          )
+          expect(message_1.reload.message).to eq(original_message)
         end
       end
 
@@ -276,6 +311,37 @@ RSpec.describe Chat::Api::ChannelMessagesController do
               }
 
           expect(response.status).to eq(422)
+        end
+      end
+
+      context "when the user no longer has access to a private category channel" do
+        fab!(:group)
+        fab!(:private_category) { Fabricate(:private_category, group:) }
+        fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+        fab!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: private_channel,
+            user: current_user,
+            message: "original message",
+          )
+        end
+
+        before do
+          group.add(current_user)
+          private_channel.add(current_user)
+          GroupUser.where(group:, user: current_user).destroy_all
+        end
+
+        it "does not update their own message" do
+          put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}",
+              params: {
+                message: "edited message",
+              }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.parsed_body["failed"]).to eq("FAILED")
+          expect(message.reload.message).to eq("original message")
         end
       end
 

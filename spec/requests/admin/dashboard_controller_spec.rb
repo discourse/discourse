@@ -269,6 +269,7 @@ RSpec.describe Admin::DashboardController do
               country_code: country_code,
               normalized_referrer: normalized_referrer,
               created_at: event_date,
+              source: "beacon",
             )
           end
 
@@ -411,6 +412,39 @@ RSpec.describe Admin::DashboardController do
         expect(ids).to eq(%w[reports highlights])
       end
 
+      it "returns successful sections when another section fails to build" do
+        error = StandardError.new("boom")
+        configure_dashboard_sections(%w[highlights search])
+        AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
+        AdminDashboardSearch.stubs(:build).raises(error)
+        Discourse.expects(:warn_exception).with(
+          error,
+          message: "Failed to build admin dashboard section",
+          env: {
+            section_id: "search",
+          },
+        )
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(section_payloads).to eq(
+          "highlights" => {
+            "id" => "highlights",
+            "data" => {
+              "value" => "highlights",
+            },
+          },
+          "search" => {
+            "id" => "search",
+            "data" => nil,
+            "error" => true,
+          },
+        )
+        expect(response.parsed_body["configuration"]).to be_present
+        expect(response.parsed_body).to have_key("problems")
+      end
+
       it "omits hidden sections from the data payload" do
         configure_dashboard_sections(%w[highlights reports])
 
@@ -494,6 +528,69 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to have_key("version_check")
+      end
+    end
+
+    describe "problems payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      fab!(:starttls_problem) do
+        Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
+      end
+
+      fab!(:host_names_problem) do
+        Fabricate(:admin_notice, identifier: "host_names", priority: "low")
+      end
+
+      it "returns every active problem check in a top-level problems key for an admin" do
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
+      end
+
+      it "returns every active problem check in a top-level problems key for a moderator" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
       end
     end
 

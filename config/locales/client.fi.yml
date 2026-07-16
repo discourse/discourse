@@ -22,6 +22,10 @@ fi:
         in_location: "kohteessa"
         hidden: "piilotettu"
         failed: "epäonnistui"
+    access_control:
+      manage:
+        access_permission_editor: "Muokkaaja"
+        access_permission_remove: "Poista"
     number:
       format:
         separator: ","
@@ -380,6 +384,9 @@ fi:
     age: "Ikä"
     joined: "Liittynyt"
     admin_title: "Ylläpitäjä"
+    advanced_mode_toggle:
+      advanced_mode: "Lisäasetukset"
+      simple_mode: "Piilota lisäasetukset"
     show_more: "näytä lisää"
     show_help: "Asetukset"
     links: "Linkit"
@@ -1415,6 +1422,9 @@ fi:
       notifications: "Ilmoitukset"
       statistics: "Tilastot"
       desktop_notifications:
+        push_level:
+          none: "Pois käytöstä"
+          all: "Käytössä"
         not_supported: "Tämä selain ei tue ilmoituksia, pahoittelut."
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         each_browser_note: "Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta."
@@ -2407,7 +2417,6 @@ fi:
     created: "Luotu"
     created_lowercase: "luotu"
     trust_level: "Luottamustaso"
-    search_hint: "käyttäjätunnus, sähköposti tai IP-osoite"
     create_account:
       header_title: "Tervetuloa!"
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
@@ -2455,6 +2464,9 @@ fi:
       email_label: "Sähköpostiosoite"
       continue_button: "Jatka"
       verify_button: "Jatka"
+      signup_title: "Luo tili"
+      account_ready_continue: "Jatka"
+      username_label: "Käyttäjätunnus"
     login:
       header_title: "Tervetuloa takaisin"
       title: "Kirjaudu"
@@ -3341,6 +3353,9 @@ fi:
       deleted_post_placeholder: "[poistettu]"
       ignored_post_placeholder: "[sivuutettu]"
       pinned_reply: "Kiinnitetty"
+    share_target:
+      new_topic: "Uusi ketju"
+      new_message: "Uusi viesti"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"
@@ -3392,40 +3407,8 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueelta %{categoryLink} tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       read_more: "Haluatko lukea lisää? <a href='%{categoryLink}'>Selaa kaikkia alueita</a> tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
+      sr_read: "luku"
       participant_groups: "Osallistujaryhmät"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/unread"># lukematon</a>}
-              other {Jäljellä on <a href="{basePath}/unread"># lukematonta</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ja <a href="{basePath}/new"># uusi</a> ketju,}
-              other { ja <a href="{basePath}/new"># uutta</a> ketjua,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/unread"># lukematon</a> ketju,}
-              other {Jäljellä on <a href="{basePath}/unread"># lukematonta</a> ketjua,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Jäljellä on <a href="{basePath}/new"># uusi</a> ketju,}
-              other {Jäljellä on <a href="{basePath}/new"># uutta</a> ketjua,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { tai selaa muita ketjuja alueella {categoryLink}}
-          false { tai <a href="{basePath}/latest">katso viimeisimmät ketjut</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} vastaus, siirry ensimmäiseen viestiin"
         other: "%{count} vastausta, siirry ensimmäiseen viestiin"
@@ -3868,8 +3851,9 @@ fi:
           one: "Näytä %{count} käännetty kielialue"
           other: "Näytä %{count} käännettyä kielialuetta"
         modal:
-          title: "Käännökset viestille"
+          title: "Käännökset"
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kielelle '%{languageCode}'?"
+          discard_language_change: "Hylkää muutos"
         success: "Käännökset on päivitetty onnistuneesti"
         post_language_selector:
           none: "Ei asetettu"
@@ -4115,7 +4099,6 @@ fi:
       type_settings_schema:
         site_settings: "Sivustoasetukset"
       unsaved_changes: "Sinulla on tallentamattomia muutoksia"
-      slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
       validations:
@@ -4804,8 +4787,6 @@ fi:
       no_read_topics_body: "Kun alat lukemaana keskusteluita, näet luettelon täällä. Aloita lukeminen etsimällä sinua kiinnostavia ketjuja <a href='%{topUrl}'>Suosituista</a> tai <a href='%{categoriesUrl}'>alueilta</a> tai hakemalla avainsanalla %{searchIcon}"
     no_group_messages_title: "Ryhmäviestejä ei löytynyt"
     topic_entrance:
-      sr_jump_top_button: "Siirry ensimmäiseen viestiin – %{date}"
-      sr_jump_bottom_button: "Siirry viimeiseen viestiin – %{date}"
       jump_top_button_title: "Siirry ensimmäiseen viestiin"
       jump_bottom_button_title: "Siirry viimeiseen viestiin"
     fullscreen_table:
@@ -5178,6 +5159,7 @@ fi:
         title: "Saatavilla olevat raportit"
         sidebar_title: "Raportit"
         back: "Takaisin kaikkiin raportteihin"
+        all_groups: "Kaikki ryhmät"
         group_traffic: "Liikenne"
         group_members: "Jäsenet"
         group_other: "Muut"
@@ -5316,7 +5298,6 @@ fi:
             apple_touch_icon:
               title: "Apple-kosketuskuvake"
               description: "Applen kosketuslaitteissa käytetty kuvake. Jos jätetään tyhjäksi, käytetään large_icon-kuvaa."
-              help_text: "Suositeltu koko on 180 x 180 pikseliä. Läpinäkyvää taustaa ei suositella."
             digest_logo:
               title: "Yhteenvetologo"
               description: "Vaihtoehtoinen logokuva, jota käytetään sivustosi sähköpostiyhteenvedon yläosassa. Jos tämä jätetään tyhjäksi, käytetään logo-asetuksen kuvaa."
@@ -5324,6 +5305,9 @@ fi:
             opengraph_image:
               title: "OpenGraph-kuva"
               description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
+            og_image_preview:
+              generate: "Luo"
+              topic_id_label: "Ketjun tunnus"
             x_summary_large_image:
               title: "X-yhteenveto suuri kuva"
               description: "X-kortin suuri yhteenvetokuva. Jos tämä jätetään tyhjäksi, tavalliset kortin metatiedot luodaan OpenGraph_image-kuvan avulla, kunhan se ei ole myös .svg-tiedosto."
@@ -5461,6 +5445,21 @@ fi:
               title: "Viestit ja ketjut"
             stats_and_thresholds:
               title: "Tilastot ja kynnysarvot"
+        category_management:
+          tabs:
+            settings: "Asetukset"
+          types:
+            all:
+              title: "Kaikki alueet"
+          filter_placeholder: "Suodata alueita"
+          table:
+            category: "Luokka"
+            visibility: "Näkyvyys"
+            topics: "Aiheet"
+          visibility:
+            public: "Julkinen"
+          visibility_filter:
+            all: "Kaikki alueet"
         permalinks:
           title: "Pysyvät linkit"
           header_description: "Aseta uudelleenohjauksia URL-osoitteille, joita foorumi ei tunne"
@@ -5602,7 +5601,7 @@ fi:
         stale_data: "Pävityksiä ei ole tarkistettu viime aikoina. Varmista, että sidekiq on käynnissä."
         version_check_pending: "Näyttää siltä, että olet päivittänyt lähiaikoina. Hienoa!"
         installed_version: "Asennettu"
-        latest_version: "Uusin"
+        github: "GitHub"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
         dismiss_notice: "Ohita"
         new_features:
@@ -5675,6 +5674,7 @@ fi:
               searches: "Hakuja"
               status: "Tila"
         reports_section:
+          header_action: "Hallitse"
           modal:
             enabled_heading: "Käytössä"
             all_heading: "Kaikki raportit"
@@ -6209,6 +6209,8 @@ fi:
             initial_members: "Laajennetut jäsenet"
             initial_members_description: "Näytettävien ryhmän jäsenten lukumäärä ennen Näytä lisää -painikkeen lisäämistä."
             show_description: "Sisällytä kuvaus"
+          locale_selector:
+            title: "Kieli"
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:
@@ -7269,11 +7271,11 @@ fi:
         silence_reason: "Hiljennyksen syy"
         bulk_actions:
           title: "Joukkotoiminnot"
-          admin_cant_be_deleted: "Tätä käyttäjää ei voi poistaa, koska hän on ylläpitäjä"
-          too_many_or_old_posts: "Tätä käyttäjää ei voi poistaa, koska hänellä on liian monta viestiä tai erittäin vanha viesti"
-          too_many_selected_users:
-            one: "Olet saavuttanut joukkopoiston %{count} käyttäjän rajan"
-            other: "Olet saavuttanut joukkopoiston %{count} käyttäjän rajan"
+          clear_all: "Tyhjennä kaikki"
+          suspend:
+            confirmation_modal:
+              close: "Sulje"
+              confirm: "Hyllytä"
           delete:
             label: "Poista käyttäjät…"
             confirmation_modal:
@@ -7301,6 +7303,9 @@ fi:
           suspended: "Hyllytetyt"
           silenced: "Hiljennetty"
           staged: "Esikäyttäjät"
+        activation_filter:
+          all: "Kaikki käyttäjät"
+          activated: "Aktivoitu"
         approved: "Hyväksytty?"
         titles:
           active: "Aktiivisia käyttäjiä"

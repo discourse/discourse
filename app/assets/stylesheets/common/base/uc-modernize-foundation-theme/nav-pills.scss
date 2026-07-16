@@ -1,4 +1,4 @@
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .nav-pills > li > a:hover::after,
   .nav-pills > li button:hover::after {
     content: "";

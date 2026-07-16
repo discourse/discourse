@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def execution_mode
-          "default"
-        end
-
         def max_turn_tokens
           nil
         end
@@ -98,6 +94,8 @@ module DiscourseAi
             Tools::Read,
             Tools::FlagPost,
             Tools::CloseTopic,
+            Tools::SuspendUser,
+            Tools::SilenceUser,
             Tools::UnlistTopic,
             Tools::LockPost,
             Tools::DeleteTopic,
@@ -113,6 +111,8 @@ module DiscourseAi
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
+            Tools::ReadSiteSetting,
+            Tools::ChangeSiteSetting,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
@@ -272,6 +272,10 @@ module DiscourseAi
       end
 
       def top_p
+        nil
+      end
+
+      def thinking_effort
         nil
       end
 

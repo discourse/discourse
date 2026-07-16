@@ -11,7 +11,9 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.chat_enabled = true
-    SiteSetting.livestream_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+    SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:everyone].to_s
+    topic_livestream.cache_livestream_onebox
     sign_in(current_user)
   end
 

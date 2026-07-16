@@ -664,5 +664,70 @@ RSpec.describe InviteRedeemer do
         end
       end
     end
+
+    context "with an admin invite" do
+      fab!(:invite) do
+        Fabricate(:invite, email: "future-admin@example.com", admin: true, invited_by: admin)
+      end
+
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      def redeem
+        InviteRedeemer.new(
+          invite: invite,
+          email: invite.email,
+          username: "futureadmin",
+          name: "Future Admin",
+        ).redeem
+      end
+
+      it "grants moderator and asks the inviter to confirm the admin grant" do
+        user = redeem
+
+        expect(user.moderator).to eq(true)
+        expect(user.admin).to eq(false)
+        expect(AdminConfirmation.exists_for?(user.id)).to eq(true)
+        expect(
+          job_enqueued?(job: :admin_confirmation_email, args: { to_address: admin.email }),
+        ).to eq(true)
+      end
+
+      it "grants admin once the inviter confirms via email" do
+        user = redeem
+
+        token = Discourse.redis.get("admin-confirmation:#{user.id}")
+        AdminConfirmation.find_by_code(token).email_confirmed!
+
+        expect(user.reload.admin).to eq(true)
+      end
+
+      it "grants moderator and sends the confirmation when an existing user redeems" do
+        existing_user = Fabricate(:user, email: invite.email)
+
+        InviteRedeemer.new(invite: invite, redeeming_user: existing_user).redeem
+
+        expect(existing_user.reload.moderator).to eq(true)
+        expect(AdminConfirmation.exists_for?(existing_user.id)).to eq(true)
+      end
+
+      it "redeems as a regular invite when the inviter is no longer an admin" do
+        invite.invited_by.update!(admin: false)
+
+        user = redeem
+
+        expect(user.moderator).to eq(false)
+        expect(user.admin).to eq(false)
+        expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
+      end
+
+      it "redeems as a regular invite when enable_invite_modal_with_roles is disabled" do
+        SiteSetting.enable_invite_modal_with_roles = false
+
+        user = redeem
+
+        expect(user.moderator).to eq(false)
+        expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
+      end
+    end
   end
 end

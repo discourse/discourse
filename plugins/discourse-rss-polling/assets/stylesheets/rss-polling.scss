@@ -1,35 +1,400 @@
-.rss-polling-feed-settings {
-  table {
-    tr {
-      td {
-        position: relative;
+@use "lib/viewport";
 
-        &:first-child input {
-          max-width: 200px;
-        }
+@mixin feed-url {
+  font-family: var(--d-font-family--monospace);
+  font-weight: normal;
+  overflow-wrap: anywhere;
+}
 
-        &:nth-child(2) input {
-          max-width: 100px;
-        }
+.rss-polling-feed-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
-        .user-chooser,
-        .category-chooser {
-          max-width: 150px;
-        }
+.rss-polling-feed-form {
+  .form-kit__fieldset {
+    width: 100%;
+  }
 
-        input {
-          margin-bottom: 0;
-        }
+  &__discourse-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
 
-        .select-kit.multi-select {
-          width: 120px;
-        }
+    > .form-kit__field {
+      flex: 1 1 14em;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  &__enabled-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__enabled {
+    font-weight: 600;
+  }
+
+  &__tag-requirement {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}
+
+.rss-polling-feed-test {
+  margin-top: var(--space-4);
+
+  &__error {
+    margin-top: var(--space-4);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-0);
+    font-weight: 600;
+  }
+
+  &__count {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__dismiss {
+    margin-inline-start: auto;
+  }
+
+  &__panel {
+    max-height: 22em;
+    overflow-y: auto;
+    margin-top: var(--space-2);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-inline-start: 3px solid transparent;
+
+    & + & {
+      border-top: 1px solid var(--primary-low);
+    }
+
+    &.--import {
+      border-inline-start-color: var(--success);
+    }
+
+    &.--update {
+      border-inline-start-color: var(--tertiary);
+    }
+
+    &.--skip {
+      border-inline-start-color: var(--primary-low-mid);
+
+      .rss-polling-feed-test__item-title {
+        color: var(--primary-high);
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-half);
+    min-width: 0;
+  }
+
+  &__item-title {
+    overflow-wrap: anywhere;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__item-date,
+  &__item-reason {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__item-reason a {
+    color: var(--tertiary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__more,
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
+
+.rss-polling-feed {
+  .d-table__overview-name.rss-polling-feed__url {
+    @include feed-url;
+    max-width: 100%;
+  }
+
+  .d-table__cell.--overview {
+    width: 100%;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: var(--space-1);
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-medium);
+    color: var(--primary-medium);
+
+    > * {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    > * + *::before {
+      content: "·";
+      margin-inline: var(--space-2);
+      color: var(--primary-low-mid);
+    }
+
+    a,
+    .badge-category__name,
+    .discourse-tag {
+      font-size: inherit;
+    }
+
+    .avatar {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+
+  &__author {
+    gap: var(--space-2);
+
+    a {
+      color: var(--primary-high);
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+  }
+
+  &__tags {
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__filter {
+    gap: var(--space-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  // Set on the .d-toggle-switch root, which defines these vars and passes them
+  // to the slider; the __toggle class lands on the inner button, a sibling that
+  // can't reach the slider via inheritance.
+  .d-toggle-switch {
+    --toggle-switch-width: 36px;
+    --toggle-switch-height: 20px;
+  }
+
+  &.is-disabled {
+    .d-table__overview-link,
+    .rss-polling-feed__meta {
+      opacity: 0.5;
+    }
+  }
+
+  .d-table__cell-actions {
+    align-items: center;
+  }
+
+  @include viewport.until(md) {
+    display: flex;
+    flex-wrap: wrap;
+
+    .d-table__cell {
+      font-size: var(--font-down-1);
+      border-top: 0;
+    }
+
+    .d-table__cell.--overview {
+      flex: 0 0 100%;
+      padding-inline: 0;
+      border-bottom: 1px solid var(--content-border-color);
+
+      .d-table__overview-link {
+        padding-inline: var(--space-2);
+      }
+
+      .d-table__overview-name {
+        font-size: var(--font-0);
       }
     }
 
-    .wide-button {
-      width: 100%;
-      text-align: center;
+    &__meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-1);
+      margin-top: var(--space-2);
+      padding: var(--space-2) var(--space-2) 0;
+      border-top: 1px solid var(--content-border-color);
+
+      .d-table__mobile-label {
+        min-width: 8.5em;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      > * {
+        gap: var(--space-2);
+      }
+
+      > * + *::before {
+        content: none;
+      }
     }
+
+    &__filter .d-icon {
+      display: none;
+    }
+
+    &__status {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      .d-table__mobile-label {
+        color: var(--primary-medium);
+      }
+    }
+
+    .d-table__cell.--controls {
+      flex: 0 0 auto;
+      position: static;
+    }
+
+    .d-table__cell-actions {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.rss-polling-feed-history {
+  &__table {
+    margin: 0;
+  }
+
+  .d-button-label {
+    display: none;
+  }
+
+  &__attempt {
+    &.--danger .rss-polling-feed-history__counts {
+      color: var(--danger);
+    }
+
+    .d-table__cell.--overview {
+      width: 100%;
+    }
+
+    @include viewport.from(md) {
+      border-top: 1px solid var(--primary-low);
+
+      &:first-child {
+        border-top: 0;
+      }
+
+      > .d-table__cell.--detail {
+        text-align: end;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &__summary {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    text-align: start;
+    padding-inline-start: 0;
+    padding-inline-end: calc(var(--space-8) * 6);
+
+    svg.d-icon {
+      margin-inline-end: 0;
+    }
+  }
+
+  &__date {
+    font-weight: 600;
+  }
+
+  &__counts {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__detail > .d-table__cell {
+    padding-top: 0;
+
+    @include viewport.from(md) {
+      padding-inline: var(--space-2);
+    }
+  }
+
+  &__more {
+    margin-top: var(--space-2);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .rss-polling-feed-test__list {
+    margin-top: var(--space-1);
   }
 }

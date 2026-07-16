@@ -167,10 +167,11 @@ module("Unit | Lib | selection | preserve-list-structure", function () {
       const original = createContainer("<ul><li>Hello world</li></ul>");
       document.body.appendChild(original);
 
-      // Simulate selecting just the text node inside the LI
+      // A partial selection within a single text node has that text node as its
+      // common ancestor, so the <li>/<ul> wrapper is not part of the clone.
       const textNode = original.querySelector("li").firstChild;
       const container = createContainer("world");
-      const range = mockRange(original, textNode, 6);
+      const range = mockRange(textNode, textNode, 6);
 
       preserveListStructureInClonedContent(container, range);
 
@@ -182,6 +183,43 @@ module("Unit | Lib | selection | preserve-list-structure", function () {
       assert.strictEqual(
         container.querySelector("ul").querySelectorAll("li").length,
         1
+      );
+
+      document.body.removeChild(original);
+    });
+
+    test("does not re-wrap when the start list is nested in a fully-selected quote", function (assert) {
+      // Selection starts inside the nested <li>, but the whole quote (and its
+      // list) is selected, so the cloned fragment already has the list wrapper.
+      const original = createContainer(
+        '<aside class="quote"><blockquote><ul><li>Mark wish</li></ul></blockquote></aside>' +
+          "<p>And signup abuse</p>"
+      );
+      document.body.appendChild(original);
+
+      const startTextNode = original.querySelector("li").firstChild;
+      const container = createContainer(
+        '<aside class="quote"><blockquote><ul><li>Mark wish</li></ul></blockquote></aside>' +
+          "<p>And signup abuse</p>"
+      );
+      const range = mockRange(original, startTextNode, 0);
+
+      preserveListStructureInClonedContent(container, range);
+
+      assert.strictEqual(
+        container.querySelectorAll(":scope > ul, :scope > ol").length,
+        0,
+        "no stray top-level list is introduced around the quote"
+      );
+      assert.strictEqual(
+        container.firstElementChild?.tagName,
+        "ASIDE",
+        "the quote remains the first top-level node"
+      );
+      assert.strictEqual(
+        container.querySelector("aside ul li")?.textContent.trim(),
+        "Mark wish",
+        "the list stays nested inside the quote"
       );
 
       document.body.removeChild(original);

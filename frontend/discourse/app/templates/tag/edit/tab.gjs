@@ -1,6 +1,6 @@
 import TagSettings from "discourse/components/tag-settings";
 
-<template>
+export default <template>
   <TagSettings
     @tag={{@model}}
     @selectedTab={{@controller.selectedTab}}

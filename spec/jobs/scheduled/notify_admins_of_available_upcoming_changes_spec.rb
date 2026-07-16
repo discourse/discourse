@@ -328,6 +328,27 @@ RSpec.describe Jobs::NotifyAdminsOfAvailableUpcomingChanges do
     end
   end
 
+  context "when an upcoming change is owned by a plugin that is not configurable" do
+    before do
+      UpcomingChanges.stubs(:owning_plugin_configurable?).with(anything).returns(true)
+      UpcomingChanges.stubs(:owning_plugin_configurable?).with(:test_upcoming_change).returns(false)
+    end
+
+    it "does not create a notification for the unavailable change but still notifies for others" do
+      result
+      data =
+        JSON.parse(
+          Notification
+            .where(notification_type: Notification.types[:upcoming_change_available])
+            .last
+            .data,
+          symbolize_names: true,
+        )
+      expect(data[:upcoming_change_names]).to eq(%w[test_upcoming_change_b])
+      expect(data[:count]).to eq(1)
+    end
+  end
+
   context "when an upcoming change should not be displayed on this site" do
     before do
       UpcomingChanges::ConditionalDisplay.stubs(:should_display_test_upcoming_change?).returns(

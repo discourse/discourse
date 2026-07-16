@@ -92,7 +92,7 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           target_user = resolve_target_user(exec_ctx)
-          buttons = build_buttons(exec_ctx)
+          buttons = build_buttons(exec_ctx, target_user)
 
           MessageBus.publish(
             self.class.user_channel(target_user.id),
@@ -118,7 +118,7 @@ module DiscourseWorkflows
           username = exec_ctx.get_node_parameter("target_user", 0).presence
 
           if username
-            user = User.find_by(username: username)
+            user = ::User.find_by(username: username)
             if user.nil?
               raise_node_error!(
                 I18n.t("discourse_workflows.errors.modal.user_not_found", username: username),
@@ -132,7 +132,7 @@ module DiscourseWorkflows
           user
         end
 
-        def build_buttons(exec_ctx)
+        def build_buttons(exec_ctx, target_user)
           rows =
             DiscourseWorkflows::CollectionParameters.rows_from_value(
               exec_ctx.get_node_parameter("buttons", 0, default: []),
@@ -146,7 +146,7 @@ module DiscourseWorkflows
               "label" => row["label"].to_s.presence || value,
               "value" => value,
               "style" => normalize_style(row["style"]),
-              "action_id" => exec_ctx.resume_action_id(value),
+              "action_id" => exec_ctx.resume_action_id(value, target_user_id: target_user.id),
             }
           end
         end

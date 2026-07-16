@@ -36,10 +36,6 @@ es:
       llm_triage:
         title: Triaje de publicaciones mediante IA
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
-        flagged_post: |
-          <div>Respuesta del modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Activada por la regla <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Tu publicación se ha eliminado temporalmente para revisarse"
           body: |
@@ -152,7 +148,6 @@ es:
       description: "Este informe proporciona un análisis de sentimiento para las publicaciones, agrupadas por categoría, con puntuaciones positivas, negativas y neutrales para cada publicación y categoría."
     overall_sentiment:
       title: "Sentimiento general"
-      description: 'El gráfico compara el número de publicaciones clasificadas como positivas o negativas. Se calculan cuando las puntuaciones positivas o negativas superan la puntuación umbral establecida. Esto significa que no se muestran las publicaciones neutrales. También se excluyen los mensajes personales (MP). Clasificados con «cardiffnlp/twitter-roberta-base-sentiment-latest»'
       xaxis: "Positivas(%)"
       yaxis: "Fecha"
     emotion_admiration:
@@ -341,8 +336,6 @@ es:
         explain: "Explicar"
         illustrate_post: "Ilustrar publicación"
         replace_dates: "Fechas inteligentes"
-      image_caption:
-        attribution: "Subtitulado por IA"
     share_ai:
       read_more: "Leer la transcripción completa"
       onebox_title: "Conversación de IA con %{llm_name}"
@@ -367,6 +360,8 @@ es:
       default_pm_prefix: "[MP de bot de IA sin título]"
       thinking: "Pensando"
       tool_pending_approval: "Esta acción requiere la aprobación del moderador antes de poder ejecutarse."
+      chat_tool_approval:
+        unexpected_error: "se ha producido un error inesperado"
       agents:
         default_llm_required: "Se requiere el modelo LLM predeterminado antes de activar el Chat"
         cannot_delete_system_agent: "Los agentes del sistema no se pueden eliminar, desactívalos en su lugar"
@@ -449,7 +444,6 @@ es:
           description: "Agente por defecto que impulsa la característica de traductor del ayudante"
         image_captioner:
           name: "Pies de foto"
-          description: "Agente por defecto que impulsa la característica pie de foto del ayudante"
         locale_detector:
           name: "Detector de idioma local"
           description: "Impulsa la característica de traducción al detectar el idioma local de un texto determinado (publicaciones, títulos, etc.)"
@@ -547,6 +541,8 @@ es:
         categories: "Lista de categorías"
         flag_post: "Denunciar publicación"
         close_topic: "Cerrar tema"
+        suspend_user: "Suspender al usuario"
+        silence_user: "Silenciar al usuario"
         unlist_topic: "Eliminar tema de la lista"
         lock_post: "Bloquear publicación"
         delete_topic: "Eliminar tema"
@@ -703,6 +699,12 @@ es:
           not_allowed: "No tienes permiso para abrir o cerrar este tema."
           no_reason: "Se requiere un motivo para abrir o cerrar un tema."
         success: "Tema actualizado correctamente."
+      suspend_user:
+        errors:
+          not_found: "Usuario no encontrado."
+      silence_user:
+        errors:
+          not_found: "Usuario no encontrado."
       unlist_topic:
         errors:
           not_found: "Tema no encontrado."
@@ -823,6 +825,7 @@ es:
         tool_not_found: "La herramienta «%{tool_name}» ya no está disponible."
         bot_user_missing: "El usuario bot ya no existe."
         execution_error: "Error al ejecutar la herramienta: %{error}"
+        execution_error_unknown: "se ha producido un error inesperado"
     summarization:
       configuration_hint:
         one: "Configura primero el ajuste «%{setting}»."
@@ -895,7 +898,6 @@ es:
       limit_exceeded_admin: "Has alcanzado tu límite de créditos de IA. Vuelve a intentarlo en %{reset_time}."
     errors:
       quota_exceeded: "Has superado la cuota para este modelo. Inténtalo de nuevo en %{relative_time}."
-      quota_required: "Debes especificar los tokens o usos máximos para este modelo"
       no_query_specified: El parámetro de consulta es obligatorio, especifícalo.
       no_user_for_agent: El agente especificado no tiene ningún usuario asociado.
       no_user_specified: El nombre de usuario o user_unique_id es obligatorio, por favor, especifícalo.

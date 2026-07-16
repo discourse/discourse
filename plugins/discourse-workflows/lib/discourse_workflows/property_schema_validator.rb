@@ -104,6 +104,7 @@ module DiscourseWorkflows
       group_select
       icon
       multi_combo_box
+      multi_input
       notice
       password
       query_params
@@ -112,6 +113,7 @@ module DiscourseWorkflows
       textarea
       url_preview
       user
+      user_seen_trigger_options
       user_or_group
     ].freeze
 

@@ -25,6 +25,10 @@
 #                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# localizable           - Set to true if content localization can translate this setting. Use a hash for translation-specific
+#                         options:
+#                          - max_length: maximum localized value length
+#                          - cooked: true when the localized value should be cooked markdown
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
 #                          - upcoming_change: The site setting of the upcoming change to control this
 #                          - new_default: The new default value when the upcoming change is enabled
@@ -33,6 +37,10 @@
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
 #                          - body_class: (optional boolean) to include a uc-NAME CSS class on the <body> element when the change is enabled
+#                          - permanent_warning: (optional boolean, defaults to true) when the change reaches
+#                            `stable` status admins are warned that it will become permanent and they will no
+#                            longer be able to opt out. Set to false when that warning does not apply, for
+#                            example a change that only alters the default value of another site setting.
 #                          - allow_enabled_for: (optional array) restricts which "Enabled for"
 #                            dropdown options the admin can pick for this upcoming change.
 #                            Valid values: everyone, staff, specific_groups.
@@ -42,9 +50,13 @@
 #                            Omit the key to allow all four options (the default permissive
 #                            behavior).
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
+#                         Use this when the parent setting is not boolean, for example an enum setting.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
-#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
-#                         is applied and the setting is shown as normal.
+#                         to hide the setting if the dependent setting is false or does not match depends_on_values.
+#                         If left blank, no special behavior is applied and the setting is shown as normal.
+# dependent_setting_display - Optional display mode for hidden dependent settings. "inline" renders the setting
+#                         under its parent instead of as a separate row.
 #
 #
 #
@@ -88,9 +100,13 @@ required:
     client: true
     default: "Discourse"
     area: "about"
+    localizable:
+      max_length: 255
   site_description:
     default: ""
     area: "about"
+    localizable:
+      max_length: 1000
   short_site_description:
     default: ""
     client: true
@@ -184,6 +200,10 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
+    hidden: true
   opengraph_image:
     default: ""
     client: true
@@ -295,6 +315,11 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  custom_homepage_crawler_route:
+    type: enum
+    default: "latest"
+    choices: "TopMenu.crawler_homepage_choices"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -370,24 +395,25 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "interface"
+    area: "categories|interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "interface"
+    area: "categories|interface"
   category_colors:
     client: true
     type: list
     list_type: compact
     default: "BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|E45735"
-    area: "interface"
+    area: "categories|interface"
   max_category_nesting:
     client: true
     default: 2
     min: 2
     max: 3
     hidden: true
+    area: "categories"
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -425,11 +451,11 @@ basic:
   fixed_category_positions:
     client: true
     default: false
-    area: "interface"
+    area: "categories|interface"
   fixed_category_positions_on_create:
     client: true
     default: false
-    area: "interface"
+    area: "categories|interface"
   enable_badges:
     client: true
     default: true
@@ -463,6 +489,7 @@ basic:
     allow_any: false
     refresh: true
     disallowed_groups: "4"
+    mandatory_values: "1|2" # auto groups admins & moderators
     area: "group_permissions"
   push_notifications_prompt:
     default: true
@@ -576,6 +603,9 @@ basic:
     max: 10_000
     hidden: true
     area: "about"
+    localizable:
+      max_length: 10_000
+      cooked: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -597,10 +627,6 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
-  use_beacon_for_browser_page_views:
-    default: false
-    hidden: true
-    client: true
   persist_browser_pageview_events:
     default: true
     hidden: true
@@ -613,6 +639,13 @@ basic:
     min: 1
     max: 20000
     hidden: true
+  browser_pageview_max_engaged_seconds:
+    default: 1800
+    type: integer
+    min: 1
+    max: 86400
+    hidden: true
+    client: true
   experimental_detect_crawler_pageviews:
     default: false
     hidden: true
@@ -625,7 +658,7 @@ basic:
     default: "disabled"
     area: "interface"
   promote_upcoming_changes_on_status:
-    default: "stable"
+    default: "beta"
     type: enum
     choices:
       - experimental
@@ -671,6 +704,15 @@ login:
     hidden: true
     validator: "EnableLocalLoginsViaCodeValidator"
     area: "login"
+    depends_on:
+      - enable_local_logins
+      - enable_local_logins_via_email
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/407068"
+      allow_enabled_for:
+        - everyone
   enable_passkeys:
     client: true
     default: true
@@ -1233,6 +1275,7 @@ groups:
   enable_category_group_moderation:
     client: true
     default: false
+    area: "group_permissions|categories"
   max_automatic_membership_email_domains:
     default: 50
     hidden: true
@@ -1357,6 +1400,19 @@ posting:
     default: false
     refresh: true
     area: "posts_and_topics"
+  remove_and_replace_uncategorized:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
+      hide_settings:
+        - allow_uncategorized_topics
+        - suppress_uncategorized_badge
+      learn_more_url: "https://meta.discourse.org/t/-/406373"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"
@@ -1531,7 +1587,7 @@ posting:
     area: "posts_and_topics"
   newuser_max_embedded_media:
     client: true
-    default: 1
+    default: 5
     area: "posts_and_topics"
   newuser_max_attachments:
     client: true
@@ -1556,7 +1612,7 @@ posting:
   default_subcategory_on_read_only_category:
     client: true
     default: false
-    area: "posts_and_topics"
+    area: "posts_and_topics|categories"
   hide_disabled_create_topic_button:
     client: true
     default: false
@@ -1645,12 +1701,13 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "experimental"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
+      permanent_warning: false
   klipy_api_key:
     default: ""
-    client: true
+    secret: true
     area: "gifs"
   klipy_file_detail:
     default: "webp"
@@ -1900,6 +1957,7 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+    validator: "ContentLocalizationCrawlerParamValidator"
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
@@ -1929,7 +1987,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_max_depth:
-    default: 10
+    default: 3
     client: true
     type: integer
     min: 1
@@ -1939,7 +1997,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_cap_nesting_depth:
-    default: false
+    default: true
     client: true
     area: "posts_and_topics"
     depends_on:
@@ -1992,7 +2050,7 @@ email:
   digest_suppress_categories:
     type: category_list
     default: ""
-    area: "email"
+    area: "email|categories"
   digest_suppress_tags:
     type: tag_list
     default: ""
@@ -2033,11 +2091,12 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       allow_enabled_for:
         - everyone
       learn_more_url: "https://meta.discourse.org/t/-/395927"
+      permanent_warning: false
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
@@ -2174,6 +2233,10 @@ email:
   sendgrid_verification_key:
     default: ""
     secret: true
+  aws_sns_topic_arn_allowlist:
+    default: ""
+    type: list
+    list_type: simple
   mailjet_webhook_token:
     default: ""
     secret: true
@@ -2597,10 +2660,6 @@ files:
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
-  composer_media_optimization_image_wasm_decode_enabled:
-    default: false
-    hidden: true
-    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -2645,6 +2704,14 @@ trust:
     area: "trust_levels"
   create_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
+    area: "group_permissions"
+  topic_timers_allowed_groups:
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -2989,6 +3056,10 @@ security:
     requires_confirmation: "simple_on_disable"
   content_security_policy_report_only:
     default: false
+  content_security_policy_report_uri:
+    default: ""
+    regex: '\Ahttps?://[^\s;,]+\z'
+    regex_error: "site_settings.errors.invalid_csp_report_uri"
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -3216,6 +3287,8 @@ rate_limits:
   max_topic_invitations_per_minute: 5
   max_topics_in_first_day: 3
   max_replies_in_first_day: 10
+  tl1_max_topics_in_first_day: 6
+  tl1_max_replies_in_first_day: 30
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
@@ -3394,7 +3467,7 @@ navigation:
     type: category_list
     default: ""
     client: true
-    area: "navigation"
+    area: "navigation|categories"
   default_navigation_menu_tags:
     type: tag_list
     default: ""
@@ -3588,10 +3661,12 @@ search:
     default: 0.8
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+    area: "categories"
   category_search_priority_high_weight:
     default: 1.2
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+    area: "categories"
   search_page_size:
     default: 50
     hidden: true
@@ -3628,7 +3703,7 @@ uncategorized:
   header_dropdown_category_count:
     client: true
     default: 8
-    area: "navigation"
+    area: "navigation|categories"
 
   slug_generation_method:
     default: "ascii"
@@ -3781,21 +3856,25 @@ uncategorized:
     default: -1
     hidden: true
     client: true
+    area: "categories"
   meta_category_id:
     default: -1
     hidden: true
+    area: "categories"
   staff_category_id:
     default: -1
     hidden: true
+    area: "categories"
   uncategorized_category_id:
     default: -1
     hidden: true
+    area: "categories"
   default_composer_category:
     client: true
     type: category
     default: ""
     validator: "DefaultComposerCategoryValidator"
-    area: "posts_and_topics"
+    area: "posts_and_topics|categories"
 
   moderator_guide_topic:
     type: "topic"
@@ -3984,15 +4063,12 @@ uncategorized:
     default: false
     hidden: true
     client: true
+    area: "categories"
 
   max_topic_query_page_param:
     default: 2000
     min: 100
     hidden: true
-
-  create_revision_on_bulk_topic_moves:
-    default: true
-    area: "posts_and_topics"
 
   allow_changing_staged_user_tracking:
     default: false
@@ -4137,27 +4213,27 @@ user_preferences:
   default_categories_watching:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_tracking:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_muted:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_watching_first_post:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   default_categories_normal:
     type: category_list
     default: ""
-    area: "user_defaults"
+    area: "categories|user_defaults"
   mute_all_categories_by_default:
     default: false
     client: true
-    area: "user_defaults"
+    area: "categories|user_defaults"
 
   default_tags_watching:
     type: tag_list
@@ -4385,10 +4461,10 @@ tags:
     area: "categories_and_tags"
   create_post_for_category_and_tag_changes:
     default: false
-    area: "categories_and_tags"
+    area: "categories_and_tags|categories"
   automatically_clean_unused_tags:
     default: false
-    area: "categories_and_tags"
+    area: "categories_and_tags|categories"
 
 dashboard:
   dashboard_hidden_reports:
@@ -4446,13 +4522,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
-      allow_enabled_for:
-        - staff
-        - specific_groups
-      body_class: true
   enable_auto_grid_images:
     default: true
     client: true
@@ -4485,6 +4557,14 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
+  prioritize_recently_used_tags:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4506,7 +4586,7 @@ experimental:
     client: true
     refresh: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
@@ -4548,6 +4628,7 @@ experimental:
       status: "permanent"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/397098"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   experimental_topic_category_change_notification:
@@ -4572,6 +4653,7 @@ experimental:
       status: "stable"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402843"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   granular_anonymous_and_logged_in_groups_permissions:
@@ -4590,9 +4672,17 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:
     default: false
     hidden: true
+  enable_invite_modal_with_roles:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,admins"
+      learn_more_url: "https://meta.discourse.org/t/-/407727"

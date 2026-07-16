@@ -39,7 +39,6 @@ module("Unit | Model | ai-agent", function () {
       force_default_llm: false,
       user: null,
       user_id: null,
-      max_context_posts: 5,
       vision_enabled: true,
       vision_max_pixels: 100,
       rag_uploads: [],

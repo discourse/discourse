@@ -392,6 +392,7 @@ export default class ComposerContainer extends Component {
                               disabled=this.composer.disableTagsChooser
                               categoryId=this.composer.model.categoryId
                               minimum=this.composer.model.minimumRequiredTags
+                              prioritizeRecentTags=true
                             }}
                           />
                           <PluginOutlet

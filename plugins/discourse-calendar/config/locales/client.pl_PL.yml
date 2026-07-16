@@ -34,6 +34,19 @@ pl_PL:
               label: ID tematu
     discourse_calendar:
       livestream:
+        zoom:
+          join: "Dołącz do spotkania na Zoomie"
+          chat: "Czat"
+          open_in_zoom: "Otwórz w Zoomie"
+          load_error: "Opuściłeś webinarium lub nie możemy załadować Zoom na tej stronie."
+          too_early: "Możesz dołączyć do webinarium bliżej czasu rozpoczęcia wydarzenia"
+          view_topic: "Zobacz temat wydarzenia"
+          not_started_retrying:
+            one: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekundę..."
+            few: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekundy..."
+            many: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
+            other: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
+          not_started_trying_again: "Próbuję ponownie dołączyć do webinarium..."
         chat:
           going: "Kliknij „Idę”"
           join_channel_header: "🌟 Dołącz do nas! 🌟"
@@ -393,6 +406,7 @@ pl_PL:
         send_bulk_invites: "Wyślij zaproszenia"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
+        attendance_label: "Obecność"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
@@ -423,7 +437,6 @@ pl_PL:
           this_and_following: "To wydarzenie i wszystkie kolejne wydarzenia"
           leave_event: "Opuść wydarzenie"
           status:
-            unknown: "Nie zainteresowany"
             going: "Wezmę udział"
             not_going: "Nie idę"
             interested: "Zainteresowany"
@@ -477,6 +490,8 @@ pl_PL:
         create_event_button: "Utwórz wydarzenie"
         action_title: "Utwórz nowe wydarzenie"
         all_day: "Cały dzień"
+        livestream: "Transmisja na żywo"
+        livestream_chat_disabled: "Włącz czat, aby tworzyć kanały transmisji na żywo."
         reminder:
           units:
             minutes:
@@ -519,7 +534,6 @@ pl_PL:
         create_event_title: "Utwórz wydarzenie"
         update_event_title: "Edytuj wydarzenie"
         advanced_settings_title: "Ustawienia zaawansowane"
-        advanced_settings: "Ustawienia zaawansowane"
         confirm_delete: "Czy na pewno chcesz usunąć to wydarzenie?"
         confirm_close: "Czy na pewno chcesz zamknąć to wydarzenie?"
         confirm_open: "Czy na pewno chcesz otworzyć to wydarzenie?"
@@ -581,11 +595,11 @@ pl_PL:
         allow_chat:
           label: "Integracja czatu"
           checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"
-        url:
-          label: "URL"
-          placeholder: "Opcjonalnie"
+        livestream:
+          label: "Transmisja na żywo"
+          checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
         location:
-          label: "Lokalizacja"
+          label: "Lokalizacja lub adres URL"
           placeholder: "Dodaj lokalizację, link lub coś takiego."
         description:
           label: "Opis"

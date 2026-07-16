@@ -34,6 +34,14 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laster…"
+        tool: "Handling"
+        user: "Bruker"
+        approve: "Godkjenn"
+        reject: "Avvis"
+        approved: "Godkjent"
+        rejected: "Avvist"
       llm_selector:
         none: "Ingen"
       features:
@@ -53,12 +61,16 @@ nb_NO:
           reset: "Tilbakestill"
         search:
           name: "Søk"
+        image_caption:
+          setting_groups:
+            settings: "Innstillinger"
         spam:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minutt"
@@ -96,6 +108,12 @@ nb_NO:
         save: "Lagre"
         enabled: "Aktivert?"
         delete: "Slett"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Middels"
+          high: "Høy"
+          max: "Maksimum"
         response_format:
           open_modal: "Rediger"
         filters:
@@ -175,8 +193,6 @@ nb_NO:
         thumbnail_suggestions:
           select: "Velg"
           try_again: "Prøv igjen"
-        image_caption:
-          save_caption: "Lagre"
       embeddings:
         save: "Lagre"
         delete: "Slett"

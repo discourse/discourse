@@ -99,7 +99,6 @@ fr:
       description: "Ce rapport fournit une analyse du sentiment pour les publications, regroupées par catégorie, avec des scores positifs, négatifs et neutres pour chaque publication et catégorie."
     overall_sentiment:
       title: "Sentiment général"
-      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages privés (MP) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
@@ -228,8 +227,6 @@ fr:
         explain: "Expliquer"
         illustrate_post: "Illustrer la publication"
         replace_dates: "Dates intelligentes"
-      image_caption:
-        attribution: "Légende par l'IA"
     share_ai:
       read_more: "Lire la transcription complète"
       onebox_title: "Conversation IA avec %{llm_name}"
@@ -401,6 +398,8 @@ fr:
         random_picker: "Sélecteur aléatoire"
         categories: "Répertorier les catégories"
         flag_post: "Signaler cette publication"
+        suspend_user: "Suspendre l'utilisateur"
+        silence_user: "Désactiver l'utilisateur"
         search: "Rechercher"
         tags: "Répertorier les étiquettes"
         time: "Heure"
@@ -581,7 +580,6 @@ fr:
       removed: "supprimé"
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
-      quota_required: "Vous devez spécifier un nombre maximal de jetons ou d'utilisations pour ce modèle"
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.

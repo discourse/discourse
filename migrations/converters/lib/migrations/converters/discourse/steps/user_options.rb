@@ -3,27 +3,8 @@
 module Migrations
   module Converters
     module Discourse
-      class UserOptions < Conversion::ProgressStep
-        source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*)
-              FROM user_options
-              WHERE user_id > 0
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM user_options
-              WHERE user_id > 0
-              ORDER BY user_id
-            SQL
-          end
-        end
+      class UserOptions < Conversion::Step
+        source { reads_table "user_options", where: "user_id > 0" }
 
         processor do
           def process(item)

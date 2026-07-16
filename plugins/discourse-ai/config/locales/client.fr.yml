@@ -18,7 +18,6 @@ fr:
       dashboard:
         emotion:
           title: "Émotion"
-          description: "Le tableau répertorie le nombre de publications classées selon une émotion déterminée. Cette classification est réalisée avec le modèle « Samlowe/Roberta-Base-Go_Emotions »."
         reports:
           filters:
             group_by:
@@ -154,6 +153,14 @@ fr:
               description: "Lorsqu'il est spécifié, il fixe une limite supérieure au nombre maximum de jetons que le modèle peut générer. Cette valeur respecte la limite maximale de jetons de sortie du LLM"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "Chargement…"
+        tool: "Action"
+        user: "Utilisateur"
+        approve: "Approuver"
+        reject: "Rejeter"
+        approved: "Acceptés"
+        rejected: "Rejetés"
       default_llm:
         title: "Modèle LLM par défaut"
       llm_selector:
@@ -219,11 +226,13 @@ fr:
           translate: "Traduire"
           markdown_tables: "Générer un tableau Markdown"
           custom_prompt: "Invite personnalisée"
-          image_caption: "Images de légende"
           translator: "Traducteur"
           post_illustrator: "Illustrateur de publications"
           setting_groups:
             automation: "Automatisation"
+        image_caption:
+          setting_groups:
+            settings: "Paramètres"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -248,6 +257,7 @@ fr:
         card: "Carte"
       translations:
         title: "Traductions"
+        category_scope: "Catégories"
         stats:
           eta_minutes:
             one: "%{count} minute"
@@ -355,8 +365,6 @@ fr:
         overwrite: "Remplacer"
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
-        max_context_posts: "Nombre maximal de publications contextuelles"
-        max_context_posts_help: "Le nombre maximal de publications à utiliser comme contexte pour l'IA lorsqu'elle répond à un utilisateur. (vide par défaut)"
         vision_max_pixel_sizes:
           low: Qualité faible - moins cher (256x256)
           medium: Qualité moyenne (512x512)
@@ -385,6 +393,12 @@ fr:
         temperature_help: "Température à utiliser pour le LLM. Augmentez la valeur pour augmenter la créativité (laissez le champ vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 2,0)"
         top_p: "Top P"
         top_p_help: "Top P à utiliser pour le LLM, augmentez pour augmenter le caractère aléatoire (laissez vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 1,0)"
+        thinking_effort_options:
+          none: "Jamais"
+          low: "Faible"
+          medium: "Moyenne"
+          high: "Élevée"
+          max: "Max"
         priority: "Priorité"
         tool_options: "Options de l'outil"
         rag_conversation_chunks: "Rechercher des morceaux de conversation"
@@ -538,13 +552,11 @@ fr:
             custom: "Personnalisé…"
           hours: "heures"
           max_tokens_help: "Nombre maximal de jetons (mots et caractères) que chaque utilisateur de ce groupe peut utiliser dans la durée spécifiée. Les jetons sont les unités utilisées par les modèles d'IA pour traiter le texte : environ 1 jeton = 4 caractères ou 3/4 d'un mot."
-          max_tokens_required: "Doit être défini si le nombre maximum d'utilisations n'est pas défini"
           max_usages_help: "Nombre maximal de fois que chaque utilisateur de ce groupe peut utiliser le modèle d'IA dans la durée spécifiée. Ce quota est suivi par utilisateur individuel et n'est pas partagé au sein du groupe."
-          max_usages_required: "Doit être défini si le nombre maximum de jetons n'est pas défini"
         usage:
           ai_bot: "Robot IA"
           ai_helper: "Assistant (%{agent})"
-          ai_helper_image_caption: "Légende de l'image"
+          ai_image_caption: "Légende de l'image"
           ai_summarization: "Résumer"
           ai_embeddings_semantic_search: "Recherche IA"
           ai_spam: "Contenu indésirable"
@@ -622,9 +634,6 @@ fr:
         description: "Choisissez l'une des options ci-dessous et l'IA vous proposera une nouvelle version du texte."
         selection_hint: "Conseil : vous pouvez également sélectionner une partie du texte avant d'ouvrir l'assistant pour ne réécrire que cette partie."
         suggest_errors:
-          too_many_tags:
-            one: "Vous ne pouvez avoir qu'un maximum de %{count} étiquette"
-            other: "Vous ne pouvez avoir qu'un maximum de %{count} étiquettes"
           no_suggestions: "Aucune suggestion disponible"
         missing_content: "Veuillez saisir du contenu pour générer des suggestions."
         context_menu:
@@ -658,11 +667,6 @@ fr:
           select: "Sélectionner"
           selected: "Sélectionné"
           try_again: "Réessayer"
-        image_caption:
-          button_label: "Légende avec IA"
-          generating: "Génération de la légende..."
-          credits: "Légende par l'IA"
-          save_caption: "Enregistrer"
         no_content_error: "Ajoutez d'abord du contenu pour y effectuer des actions d'IA"
       reviewables:
         model_used: "Modèle utilisé :"
@@ -734,7 +738,7 @@ fr:
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
         title: "Robot IA"
-        llm: "Modèle"
+        llm: "Modèle:"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
         try_again: "Réessayer"

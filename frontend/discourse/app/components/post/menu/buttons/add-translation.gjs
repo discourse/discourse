@@ -37,7 +37,8 @@ export default class PostMenuAddTranslationButton extends Component {
   }
 
   @action
-  viewTranslations() {
+  async viewTranslations() {
+    await this.dMenu.close();
     this.modal.show(PostTranslationsModal, { model: { post: this.args.post } });
   }
 

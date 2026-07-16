@@ -151,5 +151,3 @@ vi:
           add: Thêm lựa chọn
         automatic_close:
           label: Tự động đóng bình chọn
-        show_advanced: "Hiển thị các tùy chọn nâng cao"
-        hide_advanced: "Ẩn các tùy chọn nâng cao"

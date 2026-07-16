@@ -19,6 +19,19 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               run_scope: "per_item",
             },
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "result" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               agent_id: {
                 type: :integer,
@@ -38,7 +51,6 @@ if defined?(DiscourseWorkflows)
                   filterable: true,
                   value_property: :id,
                   name_property: :name,
-                  resets: %w[llm_model_id],
                   set_from_option: {
                     agent_name: "name",
                     agent_force_default_llm: "force_default_llm",
@@ -98,10 +110,27 @@ if defined?(DiscourseWorkflows)
                   },
                 },
               },
+              runner_username: {
+                type: :string,
+                required: false,
+                default: "system",
+                ui: {
+                  control: :actor,
+                },
+              },
               prompt: {
                 type: :string,
                 ui: {
                   control: :textarea,
+                },
+              },
+              upload_ids: {
+                type: :array,
+                required: false,
+                default: [],
+                ui: {
+                  control: :multi_input,
+                  expression: true,
                 },
               },
             },
@@ -167,8 +196,11 @@ if defined?(DiscourseWorkflows)
                   "agent_id" => exec_ctx.get_node_parameter("agent_id", item_index),
                   "llm_model_id" => exec_ctx.get_node_parameter("llm_model_id", item_index),
                   "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
+                  "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
                 }
-                result = run_agent(config, exec_ctx.log)
+                runner =
+                  exec_ctx.actor_from_parameter("runner_username", item_index, default: "system")
+                result = run_agent(config, exec_ctx.log, runner)
 
                 wrap({ "result" => result }, paired_item: exec_ctx.paired_item_for(item))
               end
@@ -217,7 +249,51 @@ if defined?(DiscourseWorkflows)
             )
           end
 
-          def run_agent(config, log)
+          def prompt_content(prompt, upload_ids, agent_record, llm_model, guardian, log)
+            upload_ids = filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
+            return prompt if upload_ids.blank?
+
+            log.info("Attachments: #{upload_ids.size} upload(s)")
+            [prompt, *upload_ids.map { |upload_id| { upload_id: upload_id } }]
+          end
+
+          def filtered_upload_ids(upload_ids, agent_record, llm_model, guardian)
+            upload_ids = normalize_upload_ids(upload_ids)
+            return [] if upload_ids.blank?
+
+            ::DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
+              upload_ids,
+              include_image_uploads: agent_record.vision_enabled,
+              include_document_uploads: llm_model.allowed_attachment_types.present?,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              guardian: guardian,
+            ) || []
+          end
+
+          def normalize_upload_ids(upload_ids)
+            case upload_ids
+            when String
+              parsed = parse_upload_ids_json(upload_ids)
+              return normalize_upload_ids(parsed) if parsed
+
+              upload_ids.split(",")
+            when Array
+              upload_ids.flatten
+            else
+              Array.wrap(upload_ids)
+            end.filter_map do |upload_id|
+              id = Integer(upload_id, exception: false)
+              id if id&.positive?
+            end
+          end
+
+          def parse_upload_ids_json(upload_ids)
+            JSON.parse(upload_ids)
+          rescue JSON::ParserError, TypeError
+            nil
+          end
+
+          def run_agent(config, log, runner)
             agent_id = config["agent_id"]
             prompt = config["prompt"].to_s
 
@@ -232,6 +308,7 @@ if defined?(DiscourseWorkflows)
             llm_model = resolve_llm_model(agent_record, config["llm_model_id"])
 
             log.info("Agent: #{agent_record.name}")
+            log.info("Runner: #{runner.username}")
             log.info("LLM: #{llm_model.display_name} (#{llm_model.id})")
             log.info("Prompt: #{prompt.to_s[0..200]}")
 
@@ -242,10 +319,21 @@ if defined?(DiscourseWorkflows)
                 model: llm_model,
               )
 
+            content =
+              prompt_content(
+                prompt,
+                config["upload_ids"],
+                agent_record,
+                llm_model,
+                runner.guardian,
+                log,
+              )
+
             bot_context =
               DiscourseAi::Agents::BotContext.new(
-                user: Discourse.system_user,
-                messages: [{ type: :user, content: prompt }],
+                user: runner,
+                guardian: runner.guardian,
+                messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
               )
 

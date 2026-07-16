@@ -78,6 +78,10 @@ nl:
       delete: "Verwijderen"
       recover: "Query verwijderen ongedaan maken"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Staaf"
       others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
       run_time: "Query voltooid in %{value} ms."
       cached_result_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."

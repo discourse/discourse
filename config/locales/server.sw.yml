@@ -229,6 +229,11 @@ sw:
       trust_level_2: "kiwango_cha_uaminifu_2"
       trust_level_3: "kiwango_cha_uaminifu_3"
       trust_level_4: "kiwango_cha_uaminifu_4"
+    default_full_names:
+      everyone: "Kila Mtu"
+      admins: "Viongozi"
+      moderators: "Wasimamizi"
+      staff: "Wasaidizi"
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
@@ -1994,6 +1999,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

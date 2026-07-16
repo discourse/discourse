@@ -12,7 +12,8 @@ module Jobs
         "For generic requests like 'when someone posts' or 'when anyone posts', trigger:post_created covers all regular posts, including first posts and replies. Do not ask to distinguish replies from topic starters unless the request explicitly says replies only or new topics only.",
         "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs a first-post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. Use the exact fields returned by workflow_validate_patch for any first-post author data; do not assume post.trust_level is available.",
         "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
-        "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_schema.",
+        "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_contracts.",
+        "trigger:user_added_to_group and trigger:user_removed_from_group expose the affected user under user.*, the selected group under group.*, and event metadata under membership.*. Use user.username for the affected username and membership.action to distinguish added vs removed if needed.",
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
@@ -109,13 +110,13 @@ module Jobs
       def authoring_context_instructions
         context_tools = {
           workflow_node_catalog:
-            "Call this with targeted queries for node parameters, output schemas, capabilities, and examples.",
+            "Call this with targeted queries for node parameters, output contracts, capabilities, and examples.",
           workflow_ai_agent_catalog:
             "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
           workflow_graph_context:
             "Call this with workflow_id when you need the current graph nodes and connections.",
           workflow_validate_patch:
-            "Call this to dry-run candidate operations and inspect inferred node_schemas.",
+            "Call this to dry-run candidate operations and inspect inferred node_fields.",
           workflow_script_context:
             "Call this before writing Code node JavaScript to inspect the runtime API and mode rules.",
           workflow_validate_script:
@@ -183,8 +184,13 @@ module Jobs
       end
 
       def parse_tool_call_response(raw_context)
-        parse_authoring_result_tool_response(raw_context) ||
-          parse_ask_questions_tool_response(raw_context) ||
+        authoring_response = parse_authoring_result_tool_response(raw_context)
+        if invalid_empty_proposed_patch_response?(authoring_response)
+          patch_response = parse_validate_patch_tool_response(raw_context)
+          return patch_response if patch_response.present?
+        end
+
+        authoring_response || parse_ask_questions_tool_response(raw_context) ||
           parse_validate_patch_tool_response(raw_context)
       end
 
@@ -280,8 +286,7 @@ module Jobs
       def tool_call_proposal_response(arguments, operations)
         operations = normalized_patch_operations(operations)
         title =
-          arguments[:workflow_name].presence ||
-            @session.latest_request.to_s.truncate(80).presence ||
+          arguments[:workflow_name].presence || human_request_title ||
             I18n.t("discourse_workflows.ai.tool_call_proposal_title")
 
         {
@@ -329,6 +334,41 @@ module Jobs
           "status" => "error",
           "message" => text.presence || I18n.t("discourse_workflows.ai.error_invalid_response"),
         }
+      end
+
+      def invalid_empty_proposed_patch_response?(parsed)
+        parsed = normalized_hash(parsed)
+        tool_class = ::DiscourseWorkflows::Ai::Tools::WorkflowAuthoringResult
+        missing_operations_message = tool_class::MISSING_PROPOSAL_OPERATIONS_MESSAGE
+
+        parsed[:status].to_s == "error" && parsed[:proposal].blank? &&
+          parsed[:message].to_s == missing_operations_message
+      end
+
+      def human_request_title
+        human_request = latest_human_request
+        human_request.presence&.truncate(80)
+      end
+
+      def latest_human_request
+        requests = [@session.latest_request]
+        @session.messages.reverse_each do |message|
+          next if message["type"].to_s != "user"
+
+          requests << user_message_text(message["content"])
+        end
+
+        requests.find { |request| request.present? && !clarification_result_message?(request) }
+      end
+
+      def user_message_text(content)
+        parsed = parse_json_hash(content.to_s)
+        normalized_hash(parsed)[:message].presence || content.to_s
+      end
+
+      def clarification_result_message?(message)
+        parsed = parse_json_hash(message.to_s)
+        normalized_hash(parsed)[:type].to_s == "workflow_ask_questions_result"
       end
 
       def proposed_patch_response?(parsed)

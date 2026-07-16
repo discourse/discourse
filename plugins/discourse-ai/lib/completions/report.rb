@@ -50,10 +50,7 @@ module DiscourseAi
       end
 
       def total_spending
-        total =
-          total_input_spending + total_output_spending + total_cache_read_spending +
-            total_cache_write_spending
-        total.round(2)
+        (stats.total_spending || 0).to_f.round(2)
       end
 
       def total_input_spending
@@ -83,7 +80,14 @@ module DiscourseAi
       end
 
       def stats
-        @stats ||= base_query.select("SUM(usage_count) as total_requests", *token_total_columns)[0]
+        @stats ||=
+          base_query.joins(LLM_MODEL_JOIN).select(
+            "SUM(usage_count) as total_requests",
+            *token_total_columns,
+            spending_total_column,
+          )[
+            0
+          ]
       end
 
       def model_costs
@@ -256,7 +260,11 @@ module DiscourseAi
             expr = LlmModel.spending_component_sql(component, :ai_api_request_stats)
             "SUM(#{expr}) / 1000000.0 as #{component}_spending"
           end
-        [*token_total_columns, *spending_columns]
+        [*token_total_columns, spending_total_column, *spending_columns]
+      end
+
+      def spending_total_column
+        "SUM(#{LlmModel.estimated_or_calculated_spending_sql(:ai_api_request_stats)}) as total_spending"
       end
     end
   end

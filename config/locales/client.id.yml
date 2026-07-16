@@ -20,6 +20,10 @@ id:
       ghost:
         status: "Status"
         failed: "gagal"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Hapus"
     number:
       format:
         separator: ","
@@ -229,6 +233,9 @@ id:
     age: "Umur"
     joined: "Bergabung"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode lanjutan"
+      simple_mode: "Mode sederhana"
     show_more: "tampilkan lebih banyak"
     show_help: "Opsi"
     links: "Tautan"
@@ -1040,6 +1047,9 @@ id:
       notifications: "Pemberitahuan"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Dinonaktifkan"
+          all: "Diaktifkan"
         not_supported: "Pemberitahuan tidak didukung pada browser ini. Maaf."
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
       dismiss: "Bubar"
@@ -1524,7 +1534,6 @@ id:
     created: "Dibuat"
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
-    search_hint: "username, email, atau alamat IP"
     create_account:
       title: "Mendaftar"
       already_have_account: "Sudah memiliki akun?"
@@ -1549,6 +1558,8 @@ id:
       email_label: "Email"
       continue_button: "Lanjutkan"
       verify_button: "Lanjutkan"
+      account_ready_continue: "Lanjutkan"
+      username_label: "Nama Pengguna"
     login:
       title: "Log In"
       username: "Pengguna"
@@ -1824,6 +1835,8 @@ id:
       no_replies: "Belum ada balasan"
       deleted_post_placeholder: "[dihapus]"
       ignored_post_placeholder: "[diabaikan]"
+    share_target:
+      new_message: "Pesan baru"
     topic:
       create: "Topik Baru"
       archive_message:
@@ -1848,6 +1861,7 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
+      sr_read: "baca"
       participant_groups: "Kelompok peserta"
       slow_mode_update:
         enable: "Aktifkan"
@@ -2418,6 +2432,8 @@ id:
         logo:
           form:
             email: "Surel"
+            og_image_preview:
+              topic_id_label: "ID Topik"
         fonts:
           backfill_modal:
             modal_yes: "Ya"
@@ -2452,6 +2468,20 @@ id:
           sub_pages:
             settings:
               title: "Pengaturan"
+        category_management:
+          tabs:
+            settings: "Pengaturan"
+          types:
+            all:
+              title: "Semua kategori"
+          filter_placeholder: "Kategori filter"
+          table:
+            category: "Kategori"
+            topics: "Topik"
+          visibility:
+            public: "Umum"
+          visibility_filter:
+            all: "Semua kategori"
         email_logs:
           sub_pages:
             sent:
@@ -2467,7 +2497,7 @@ id:
       dashboard:
         please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
-        latest_version: "Terbaru"
+        github: "GitHub"
         dismiss_notice: "Abaikan"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
@@ -2498,6 +2528,7 @@ id:
             table:
               status: "Status"
         reports_section:
+          header_action: "Mengelola"
           modal:
             enabled_heading: "Diaktifkan"
             apply: "menerapkan"
@@ -2873,6 +2904,9 @@ id:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tutup"
           delete:
             confirmation_modal:
               close: "Tutup"

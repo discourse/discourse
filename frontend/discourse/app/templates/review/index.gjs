@@ -8,7 +8,7 @@ import DNavItem from "discourse/ui-kit/d-nav-item";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <DHorizontalOverflowNav @ariaLabel="Review" class="reviewable-title">
     <DNavItem @route="review.index" @label="review.view_all" />
     <DNavItem @route="review.topics" @label="review.grouped_by_topic" />

@@ -4,6 +4,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
+import { formatDeltaPercent } from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -17,19 +18,6 @@ const COUNT_HEADLINE_KEYS = {
 
 function formatCount(value) {
   return I18n.toNumber(value, { precision: 0 });
-}
-
-function formatDelta(value) {
-  const abs = Math.abs(value);
-
-  if (abs > 0 && abs < 1) {
-    const sign = value > 0 ? "+" : "-";
-    return `${sign}${I18n.toNumber(abs, { precision: 1 })}%`;
-  }
-
-  const rounded = Math.round(value);
-  const sign = rounded > 0 ? "+" : "";
-  return `${sign}${I18n.toNumber(rounded, { precision: 0 })}%`;
 }
 
 function badgeLabel(status) {
@@ -84,7 +72,7 @@ export default class DashboardSearch extends Component {
     }
 
     return {
-      text: formatDelta(change),
+      text: formatDeltaPercent(change),
       className: change > 0 ? "--pos" : "--neg",
     };
   }
@@ -102,7 +90,7 @@ export default class DashboardSearch extends Component {
     }
 
     return {
-      text: formatDelta(change),
+      text: formatDeltaPercent(change),
       className: change > 0 ? "--neg" : "--pos",
     };
   }
@@ -255,7 +243,7 @@ export default class DashboardSearch extends Component {
                           @query={{hash
                             term=row.term
                             period=this.trendingTermPeriod
-                            searchType="logged_in_only"
+                            searchType="non_staff_only"
                           }}
                           title={{row.term}}
                         >

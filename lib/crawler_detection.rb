@@ -69,6 +69,17 @@ module CrawlerDetection
     user_agent.match?(matcher)
   end
 
+  def self.crawler_layout_request?(request)
+    return false if request.blank?
+    return false if request.user_agent.blank?
+    return false if request.media_type.present? && !request.media_type.include?("html")
+    return false if %w[json rss].include?(request.params[:format].to_s)
+
+    (SiteSetting.enable_escaped_fragments? && request.params.key?("_escaped_fragment_")) ||
+      request.params.key?("print") || show_browser_update?(request.user_agent) ||
+      crawler?(request.user_agent, request.headers["HTTP_VIA"])
+  end
+
   # Given a user_agent that returns true from crawler?, should its request be allowed?
   def self.allow_crawler?(user_agent)
     if SiteSetting.allowed_crawler_user_agents.blank? &&

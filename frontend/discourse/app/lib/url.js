@@ -1,9 +1,9 @@
-/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
+/* eslint-disable ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
+import domUtils from "discourse/lib/dom-utils";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
@@ -102,13 +102,14 @@ class DiscourseURL extends EmberObject {
 
     schedule("afterRender", () => {
       if (opts.jumpEnd) {
-        let $holder = $(holderId);
-        let holderHeight = $holder.height();
-        let windowHeight = $(window).height() - offsetCalculator();
+        const holder = document.querySelector(holderId);
+        const holderHeight = holder ? holder.offsetHeight : 0;
+        const windowHeight = window.innerHeight - offsetCalculator();
 
         if (holderHeight > windowHeight) {
-          $(window).scrollTop(
-            $holder.offset().top + (holderHeight - JUMP_END_BUFFER)
+          window.scrollTo(
+            window.pageXOffset,
+            domUtils.offset(holder).top + (holderHeight - JUMP_END_BUFFER)
           );
           _transitioning = false;
           return;
@@ -116,7 +117,7 @@ class DiscourseURL extends EmberObject {
       }
 
       if (postNumber === 1 && !opts.anchor) {
-        $(window).scrollTop(0);
+        window.scrollTo(window.pageXOffset, 0);
         _transitioning = false;
         return;
       }
@@ -158,9 +159,9 @@ class DiscourseURL extends EmberObject {
 
       if (holder && opts.skipIfOnScreen) {
         const elementTop = lockOn.elementTop();
-        const scrollTop = $(window).scrollTop();
-        const windowHeight = $(window).height() - offsetCalculator();
-        const height = $(holder).height();
+        const scrollTop = window.scrollY;
+        const windowHeight = window.innerHeight - offsetCalculator();
+        const height = holder.offsetHeight;
 
         if (
           elementTop > scrollTop &&
@@ -248,7 +249,15 @@ class DiscourseURL extends EmberObject {
       }
     }
 
-    if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
+    let shouldRefresh =
+      Session.currentProp("requiresRefresh") && !this.isComposerOpen;
+    shouldRefresh = applyValueTransformer(
+      "full-page-refresh-on-navigation",
+      shouldRefresh,
+      { url: path }
+    );
+
+    if (shouldRefresh) {
       return this.redirectTo(path);
     }
 
@@ -577,6 +586,20 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
+export function isHttpUrl(value) {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  try {
+    const { protocol } = new URL(trimmed);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
@@ -611,6 +634,44 @@ export function getEditCategoryUrl(category, subcategories, tab) {
     url += `/${tab}`;
   }
   return getURL(url);
+}
+
+// These helpers operate on app-relative paths like `RouterService#currentURL`
+// ("/admin/badges?filter=x"), which the URL API cannot parse on its own.
+
+function splitPath(path) {
+  const hashIndex = path.indexOf("#");
+  const withoutHash = hashIndex === -1 ? path : path.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? "" : path.slice(hashIndex);
+  const queryIndex = withoutHash.indexOf("?");
+
+  return {
+    pathname:
+      queryIndex === -1 ? withoutHash : withoutHash.slice(0, queryIndex),
+    query: queryIndex === -1 ? "" : withoutHash.slice(queryIndex + 1),
+    hash,
+  };
+}
+
+export function searchParamsFromPath(path) {
+  const { query } = splitPath(path || "");
+  return new URLSearchParams(query);
+}
+
+export function applyQueryParams(path, params) {
+  const { pathname, query, hash } = splitPath(path || "/");
+
+  const searchParams = new URLSearchParams(query);
+  for (const [name, value] of Object.entries(params)) {
+    if (value) {
+      searchParams.set(name, value);
+    } else {
+      searchParams.delete(name);
+    }
+  }
+
+  const queryString = searchParams.toString();
+  return pathname + (queryString ? `?${queryString}` : "") + hash;
 }
 
 export function getCanonicalUrl(absoluteUrl) {

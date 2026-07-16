@@ -140,6 +140,7 @@ let userOptionFields = [
   "new_topic_duration_minutes",
   "notification_level_when_replying",
   "notify_on_linked_posts",
+  "push_notification_level",
   "seen_popups",
   "show_original_content",
   "sidebar_link_to_filtered_list",
@@ -296,6 +297,11 @@ export default class User extends RestModel.extend(Evented) {
   @computed("staff", "isLeader")
   get canManageTopic() {
     return this.staff || this.isLeader;
+  }
+
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
   }
 
   @computed("sidebar_category_ids")

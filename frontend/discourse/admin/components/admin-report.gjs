@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
-import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
-import AdminReportNew from "discourse/admin/components/admin-report-new";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import AdminReportStackedLineChart from "discourse/admin/components/admin-report-stacked-line-chart";
@@ -31,6 +31,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const TABLE_OPTIONS = {
@@ -191,7 +192,7 @@ export default class AdminReport extends Component {
   changeGrouping(grouping) {
     const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+    if (!this.userHasCustomDates) {
       const endDate = moment().endOf("day");
       let startDate;
 
@@ -589,10 +590,30 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.reporting_improvements}}
-      <AdminReportNew @report={{this}} @filters={{@filters}} />
+    {{#if @bare}}
+      {{! Renders only the report's visualization (chart/table/etc.) without
+      the surrounding report chrome — used by the dashboard report cards. }}
+      <div
+        class={{dConcatClass "admin-report" "--bare" this.reportClasses}}
+        {{didUpdate
+          this.fetchOrRender
+          @filters.startDate
+          @filters.endDate
+          this.preloadedData
+        }}
+      >
+        {{#if this.hasData}}
+          {{#if this.currentMode}}
+            {{component
+              this.modeComponent
+              model=this.model
+              options=this.options
+            }}
+          {{/if}}
+        {{/if}}
+      </div>
     {{else}}
-      <AdminReportLegacy @report={{this}} @filters={{@filters}} />
+      <AdminReportBody @report={{this}} @filters={{@filters}} />
     {{/if}}
   </template>
 }

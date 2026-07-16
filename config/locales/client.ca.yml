@@ -21,6 +21,10 @@ ca:
         status: "Estat"
         hidden: "amagat"
         failed: "fallits"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimina"
     number:
       format:
         separator: "."
@@ -271,6 +275,9 @@ ca:
     age: "Edat"
     joined: "Registrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avançat"
+      simple_mode: "Mode simple"
     show_more: "mostra'n més"
     show_help: "Opcions"
     links: "Enllaços"
@@ -987,6 +994,9 @@ ca:
       notifications: "Notificacions"
       statistics: "Estats"
       desktop_notifications:
+        push_level:
+          none: "Desactivat"
+          all: "Activat"
         not_supported: "Aquest navegador no permet les notificacions. Ho sentim."
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
@@ -1525,7 +1535,6 @@ ca:
     created: "Creat"
     created_lowercase: "creat"
     trust_level: "Nivell de confiança"
-    search_hint: "nom d'usuari, adreça electrònica o adreça IP"
     create_account:
       header_title: "Benvingut!"
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
@@ -1565,6 +1574,8 @@ ca:
       email_label: "Correu electrònic"
       continue_button: "Continua"
       verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nom d'usuari "
     login:
       title: "Inicia la sessió"
       username: "Usuari"
@@ -2020,6 +2031,8 @@ ca:
       deleted_post_placeholder: "[suprimit]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Afixat"
+    share_target:
+      new_message: "Missatge nou"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2063,6 +2076,7 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
+      sr_read: "llegeix"
       bumped_at: "Més recent: %{date}"
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
@@ -2372,6 +2386,8 @@ ca:
           actions: "Accions"
           edit: "Edita"
           delete: "Suprimeix"
+        modal:
+          title: "Traduccions"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2514,7 +2530,6 @@ ca:
         tag_group: "Grup d'etiquetes"
       topic_featured_link_allowed: "Permet enllaços destacats dins aquesta categoria"
       create_long: "Crea una categoria nova"
-      slug_placeholder: "(opcional) paraules amb guionets per a url"
       creation_error: Hi ha hagut un error en crear aquesta categoria.
       save_error: Hi ha hagut un error en desar la categoria.
       description: "Descripció"
@@ -3082,6 +3097,7 @@ ca:
       reports:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
+        all_groups: "Tots els grups"
         group_traffic: "Tràfic"
         group_members: "Membres"
         group_other: "Altres"
@@ -3141,6 +3157,9 @@ ca:
           form:
             mobile: "Mòbil"
             email: "Correu electrònic"
+            og_image_preview:
+              generate: "Genera"
+              topic_id_label: "ID de tema"
         fonts:
           backfill_modal:
             modal_yes: "Sí"
@@ -3188,6 +3207,20 @@ ca:
               title: "Configuració"
         badges:
           title: "Insígnies"
+        category_management:
+          tabs:
+            settings: "Configuració"
+          types:
+            all:
+              title: "Totes les categories"
+          table:
+            category: "Categoria"
+            visibility: "Visibilitat"
+            topics: "Temes"
+          visibility:
+            public: "Públic"
+          visibility_filter:
+            all: "Totes les categories"
         permalinks:
           title: "Enllaços permanents"
         emoji:
@@ -3245,7 +3278,7 @@ ca:
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         installed_version: "Instal·lat"
-        latest_version: "Més recents"
+        github: "GitHub"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         dismiss_notice: "Ignora"
         new_features:
@@ -3313,6 +3346,7 @@ ca:
               searches: "Cerques"
               status: "Estat"
         reports_section:
+          header_action: "Gestiona"
           modal:
             enabled_heading: "Activat"
             all_heading: "Tots els reports"
@@ -4133,6 +4167,10 @@ ca:
         active: "Activat"
         status: "Estat"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tanca"
+              confirm: "Suspèn"
           delete:
             confirmation_modal:
               close: "Tanca"
@@ -4144,6 +4182,8 @@ ca:
           suspended: "Suspesos"
           silenced: "Silenciat"
           staged: "Fictici"
+        activation_filter:
+          activated: "Activat"
         approved: "Aprovat?"
         titles:
           pending: "Usuaris pendents de revisar"

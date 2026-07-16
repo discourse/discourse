@@ -30,9 +30,17 @@ class Admin::UsersController < Admin::StaffController
                 ]
 
   def index
-    users = ::AdminUserIndexQuery.new(params, guardian: guardian).find_users
+    query = ::AdminUserIndexQuery.new(params, guardian:)
+    users = query.find_users
 
-    opts = { include_can_be_deleted: true, include_silence_reason: true }
+    opts = {
+      include_can_be_deleted: true,
+      include_can_be_suspended: true,
+      include_silence_reason: true,
+      include_suspend_reason: true,
+      silence_reasons: query.penalty_reasons(users.select(&:silenced?), :silence_user),
+      suspend_reasons: query.penalty_reasons(users.select(&:suspended?), :suspend_user),
+    }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -429,8 +437,6 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def destroy_bulk
-    # capture service_params outside the hijack block to avoid thread safety
-    # issues
     service_arg = service_params
 
     hijack do
@@ -444,6 +450,28 @@ class Admin::UsersController < Admin::StaffController
 
         on_failed_policy(:can_delete_users) do
           render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]),
+                 status: :forbidden
+        end
+
+        on_model_not_found(:users) { render json: failed_json, status: :not_found }
+      end
+    end
+  end
+
+  def suspend_bulk
+    service_arg = service_params
+
+    hijack do
+      User::BulkSuspend.call(service_arg) do
+        on_success { render json: { suspended: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
+        end
+
+        on_failed_policy(:can_suspend_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_suspend")]),
                  status: :forbidden
         end
 

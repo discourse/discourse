@@ -20,7 +20,7 @@ module DiscourseWorkflows
         POST_TYPE_OPTIONS = %w[regular all first reply moderator_action small_action whisper].freeze
         ORDER_OPTIONS = %w[latest oldest latest_topic oldest_topic likes].freeze
         DEFAULT_LIMIT = 30
-        MAX_LIMIT = 500
+        MAX_LIMIT = 800
 
         def self.list_string_property(control: nil, hidden: false)
           property = {
@@ -52,6 +52,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ schema: Schema::POST_SCHEMA }],
           properties: {
             operation: {
               type: :options,
@@ -177,6 +178,16 @@ module DiscourseWorkflows
                 },
               },
             },
+            body_character_limit: {
+              type: :integer,
+              required: false,
+              default: 0,
+              display_options: {
+                show: {
+                  operation: %w[get list],
+                },
+              },
+            },
             created_after: list_string_property(hidden: true),
             created_before: list_string_property(hidden: true),
             topic_created_after: list_string_property(hidden: true),
@@ -250,6 +261,8 @@ module DiscourseWorkflows
               type: :integer,
               required: false,
               default: DEFAULT_LIMIT,
+              min: 1,
+              max: MAX_LIMIT,
               display_options: {
                 show: {
                   operation: ["list"],
@@ -320,6 +333,8 @@ module DiscourseWorkflows
             "include_raw" => exec_ctx.get_node_parameter("include_raw", item_index, default: true),
             "include_cooked" =>
               exec_ctx.get_node_parameter("include_cooked", item_index, default: false),
+            "body_character_limit" =>
+              exec_ctx.get_node_parameter("body_character_limit", item_index, default: 0),
             "query" => exec_ctx.get_node_parameter("query", item_index),
             "created_after" => exec_ctx.get_node_parameter("created_after", item_index),
             "created_before" => exec_ctx.get_node_parameter("created_before", item_index),
@@ -408,15 +423,7 @@ module DiscourseWorkflows
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
           raise Discourse::InvalidAccess if !actor.guardian.can_see?(post)
 
-          {
-            post:
-              exec_ctx.serialize_post(
-                post,
-                guardian: actor.guardian,
-                include_raw: config["include_raw"],
-                include_cooked: config["include_cooked"],
-              ),
-          }
+          { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
         end
 
         def list_posts(exec_ctx, config, item_index)
@@ -437,16 +444,45 @@ module DiscourseWorkflows
 
           posts = filter.search.includes(:user, topic: %i[category tags])
           posts.map do |post|
-            {
-              post:
-                exec_ctx.serialize_post(
-                  post,
-                  guardian: actor.guardian,
-                  include_raw: config["include_raw"],
-                  include_cooked: config["include_cooked"],
-                ),
-            }
+            { post: serialized_post(exec_ctx, post, guardian: actor.guardian, config: config) }
           end
+        end
+
+        def serialized_post(exec_ctx, post, guardian:, config:)
+          data =
+            exec_ctx.serialize_post(
+              post,
+              guardian: guardian,
+              include_raw: config["include_raw"],
+              include_cooked: config["include_cooked"],
+            )
+
+          truncate_body_fields(data, config["body_character_limit"])
+        end
+
+        def truncate_body_fields(data, limit)
+          limit = bounded_integer(limit, default: 0, min: 0)
+          return data if limit <= 0
+
+          %i[raw cooked].each do |field|
+            value = data[field]
+            next if !value.is_a?(String) || value.length <= limit
+
+            data[field] = truncate_middle(value, limit)
+            data[:"#{field}_truncated"] = true
+            data[:"#{field}_original_length"] = value.length
+          end
+
+          data
+        end
+
+        def truncate_middle(value, limit)
+          return "" if limit <= 0
+
+          head_length = (limit / 2.0).ceil
+          tail_length = limit - head_length
+          characters = value.each_char.to_a
+          characters.first(head_length).join + characters.last(tail_length).join
         end
 
         def query_from_config(config)

@@ -20,6 +20,10 @@ ro:
         status: "Stare"
         hidden: "ascuns"
         failed: "eșuată"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimină"
     number:
       format:
         separator: "."
@@ -407,6 +411,9 @@ ro:
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mod avansat"
+      simple_mode: "Mod simplu"
     show_more: "arată mai mult"
     show_help: "Opțiuni"
     links: "Legături"
@@ -1356,6 +1363,9 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
+        push_level:
+          none: "Dezactivate"
+          all: "Activate"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
@@ -2016,7 +2026,6 @@ ro:
     created: "Creat"
     created_lowercase: "creat"
     trust_level: "Nivel de încredere"
-    search_hint: "nume de utilizator, e-mail sau adresă IP"
     create_account:
       header_title: "Bun venit!"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
@@ -2059,6 +2068,9 @@ ro:
       email_label: "E-mail"
       continue_button: "Continuă"
       verify_button: "Continuă"
+      signup_title: "Creează-ți contul"
+      account_ready_continue: "Continuă"
+      username_label: "Nume utilizator"
     login:
       header_title: "Bine ai revenit"
       title: "Autentificare"
@@ -2613,6 +2625,9 @@ ro:
       deleted_post_placeholder: "[șters]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Fixat"
+    share_target:
+      new_topic: "Subiect nou"
+      new_message: "Mesaj nou"
     topic:
       filter_to:
         one: "O postare în subiect"
@@ -2664,6 +2679,7 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
+      sr_read: "citire"
       reply_count_link:
         one: "%{count} răspuns, sari la prima postare"
         few: "%{count} răspunsuri, sari la prima postare"
@@ -2997,8 +3013,9 @@ ro:
           few: "Vezi %{count} locale traduse"
           other: "Vezi %{count} de locale traduse"
         modal:
-          title: "Traduceri pentru postare"
+          title: "Traduceri"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
+          discard_language_change: "Renunță la modificare"
         success: "Traducerile au fost actualizate cu succes"
         edit_warning:
           action_original: "Editează postarea originală"
@@ -3175,7 +3192,6 @@ ro:
       type_settings_schema:
         site_settings: "Setări site"
       unsaved_changes: "Ai modificări nesalvate"
-      slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       validations:
@@ -3882,6 +3898,7 @@ ro:
           never: "niciodată"
       reports:
         sidebar_title: "Rapoarte"
+        all_groups: "Toate grupurile"
         group_traffic: "Trafic"
         group_members: "Membri"
         group_other: "Altele"
@@ -3996,6 +4013,9 @@ ro:
             email: "E-mail"
             manifest_icon:
               help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+            og_image_preview:
+              generate: "Generare"
+              topic_id_label: "ID subiect"
         fonts:
           title: "Fonturi"
           header_description: "Configurează fonturile utilizate pe întregul tău site, inclusiv fontul de bază, fontul pentru titlu și dimensiunea implicită a textului"
@@ -4113,6 +4133,20 @@ ro:
               title: "Postări și subiecte"
             stats_and_thresholds:
               title: "Statistici și praguri"
+        category_management:
+          tabs:
+            settings: "Setări"
+          types:
+            all:
+              title: "Toate categoriile"
+          table:
+            category: "Categorie"
+            visibility: "Vizibilitate"
+            topics: "Discuții"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toate categoriile"
         permalinks:
           title: "Legături permanente"
         user_defaults:
@@ -4223,7 +4257,7 @@ ro:
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
         installed_version: "Instalată"
-        latest_version: "Ultima"
+        github: "GitHub"
         dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
@@ -4277,6 +4311,7 @@ ro:
               searches: "Căutări"
               status: "Stare"
         reports_section:
+          header_action: "Gestionează"
           add: "Adaugă raport"
           remove: "Elimină raportul"
           no_data: "Nu există date de afișat"
@@ -5240,6 +5275,12 @@ ro:
         show_emails: "Arată emailuri"
         hide_emails: "Ascunde emailuri"
         bulk_actions:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
+          suspend:
+            confirmation_modal:
+              close: "Închide"
+              confirm: "Suspendă"
           delete:
             confirmation_modal:
               close: "Închide sondajul"
@@ -5251,6 +5292,8 @@ ro:
           staff: "Membrii echipei"
           suspended: "Suspendați"
           staged: "Pus în scenă"
+        activation_filter:
+          all: "Toți utilizatorii"
         approved: "Aprobați?"
         titles:
           active: "Utilizatori activi"

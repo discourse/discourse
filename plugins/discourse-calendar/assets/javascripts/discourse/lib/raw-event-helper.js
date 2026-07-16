@@ -1,3 +1,14 @@
+// `([\w-]+\.)*` allows any subdomain, since livestream hosts routinely use them
+// (us06web.zoom.us, www.youtube.com). It cannot match a host that merely ends in
+// one of these names, because each captured label must be followed by a dot:
+// "notzoom.us" and "zoom.us.evil.com" are both rejected.
+const LIVESTREAM_URL =
+  /^(https?:\/\/)?([\w-]+\.)*(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i;
+
+export function isLivestreamUrl(url) {
+  return LIVESTREAM_URL.test(url ?? "");
+}
+
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
   const start = startsAt ? moment(startsAt) : null;
   const end = endsAt ? moment(endsAt) : null;
@@ -161,6 +172,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.livestream) {
+    params.livestream = "true";
+  }
+
   if (event.maxAttendees) {
     params.maxAttendees = `${event.maxAttendees}`;
   }
@@ -257,6 +272,10 @@ export function getCustomFieldNames(siteSettings) {
     .filter(Boolean);
 }
 
+export function customFieldFormName(name) {
+  return name.replace(/[.-]/g, "_");
+}
+
 // anywhere that builds an event state should use this as the single source of truth for defaults
 export function defaultEventState() {
   return {
@@ -274,6 +293,7 @@ export function defaultEventState() {
     recurrenceUntil: null,
     showLocalTime: false,
     chatEnabled: false,
+    livestream: false,
     minimal: false,
     url: null,
     image: null,
@@ -311,6 +331,7 @@ export function parseEventAttrs(
     recurrenceUntil: attrs.recurrenceUntil || null,
     showLocalTime: attrs.showLocalTime === "true",
     chatEnabled: attrs.chatEnabled === "true",
+    livestream: attrs.livestream === "true",
     minimal: attrs.minimal === "true",
     url: attrs.url || null,
     image: attrs.image || null,
@@ -334,6 +355,7 @@ export function stateToEventInput(state) {
     showLocalTime: state.showLocalTime,
     minimal: state.minimal,
     chatEnabled: state.chatEnabled,
+    livestream: state.livestream,
     maxAttendees: state.maxAttendees,
     rawInvitees: state.allowedGroups ? state.allowedGroups.split(",") : [],
     reminders: state.reminders,
@@ -372,7 +394,7 @@ export function replaceRaw(params, raw) {
 export function camelCase(input) {
   return input
     .toLowerCase()
-    .replace(/-/g, "_")
+    .replace(/[-.]/g, "_")
     .replace(/_(.)/g, function (match, group1) {
       return group1.toUpperCase();
     });

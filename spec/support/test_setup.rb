@@ -47,7 +47,10 @@ module TestSetup
     # Database is rolled back between specs, but I18n override cache doesn't.
     # Flush it if there were any TranslationOverrides created.
     overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
-    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
+    if overrides_by_site.values.flat_map(&:values).any?(&:any?)
+      I18n.reload!
+      ExtraLocalesController.clear_cache!
+    end
 
     RspecErrorTracker.clear_exceptions
 

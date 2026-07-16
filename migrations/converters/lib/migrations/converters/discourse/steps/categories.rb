@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class Categories < Conversion::ProgressStep
+      class Categories < Conversion::Step
         SEEDED_CATEGORY_SETTINGS = %w[
           uncategorized_category_id
           meta_category_id
@@ -12,8 +12,6 @@ module Migrations
         ].freeze
 
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*) FROM categories

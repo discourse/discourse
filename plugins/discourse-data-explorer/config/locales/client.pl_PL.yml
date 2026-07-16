@@ -73,6 +73,8 @@ pl_PL:
         title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
         search_tables: "Przeszukaj tabele"
+        hide: "Ukryj schemat"
+        show: "Pokaż schemat"
         sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
       types:
         bool:
@@ -91,6 +93,15 @@ pl_PL:
       run_options: "Więcej opcji uruchamiania"
       view:
         label: "Widok wyników"
+      chart:
+        form:
+          label: "Typ wykresu"
+          line: "Liniowy"
+          bar: "Słupkowy"
+          stacked: "Skumulowany"
+          dual_axis: "Dwuosiowy"
+        tooltip:
+          total: "Razem: %{count}"
       chart_empty:
         no_rows: "Brak wierszy do wykresu."
         no_numeric: "To zapytanie nie zawiera żadnych kolumn liczbowych do wykresu."

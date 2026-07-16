@@ -17,6 +17,9 @@ vi:
             topic_id:
               label: ID Chủ đề
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       disable_holiday: "Tắt"
       enable_holiday: "Bật"
       date: "Ngày"
@@ -74,7 +77,6 @@ vi:
         custom_fields:
           placeholder: "Tùy chọn"
         advanced_settings_title: "Cài đặt nâng cao"
-        advanced_settings: "Cài đặt nâng cao"
         create: "Tạo"
         update: "Lưu lại"
         timezone:
@@ -95,11 +97,6 @@ vi:
             last: "cuối cùng"
         attendance:
           none: "Không"
-        url:
-          label: "URL"
-          placeholder: "Tùy chọn"
-        location:
-          label: "Vị trí"
         description:
           label: "Mô tả"
         event_type:

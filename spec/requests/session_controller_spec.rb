@@ -553,6 +553,16 @@ RSpec.describe SessionController do
       expect(response.status).to eq(404)
     end
 
+    it "allows requesting a code when the upcoming change is auto-promoted without the setting being toggled" do
+      SiteSetting.remove_override!(:enable_local_logins_via_code)
+      SiteSetting.promote_upcoming_changes_on_status = "alpha"
+
+      post "/session/login-code.json", params: honeypot_magic(email: user.email)
+
+      expect(response.status).to eq(200)
+      expect(EmailLoginCode.for_email(user.email).count).to eq(1)
+    end
+
     context "when local logins are disabled" do
       before { SiteSetting.enable_local_logins = false }
 
@@ -807,13 +817,141 @@ RSpec.describe SessionController do
     context "when the email does not belong to a user" do
       let(:login_code) { EmailLoginCode.generate!(email: "newuser@example.com") }
 
-      it "renders a generic error and does not create an account" do
+      it "creates and logs in a new user" do
         post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["error"]).to eq(I18n.t("email_login_code.invalid_code"))
+
+        new_user = User.find_by_email("newuser@example.com")
+        expect(new_user).to be_active
+        expect(session[:current_user_id]).to eq(new_user.id)
+      end
+
+      it "returns the flags the account-ready step needs" do
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        body = response.parsed_body
+        expect(body["account_created"]).to eq(true)
+        expect(body["can_edit_username"]).to eq(true)
+        # The avatar picker needs the upload permission, which isn't on
+        # UserSerializer. (Its value depends on automatic group membership,
+        # added on commit, so only assert the flag is present here.)
+        expect(body).to have_key("can_upload_avatar")
+        # Off by default, so the client makes the user pick rather than
+        # prefilling a generic username.
+        expect(body["prefill_username"]).to eq(false)
+      end
+
+      it "flags the username for prefill when email-based suggestions are on" do
+        SiteSetting.use_email_for_username_and_name_suggestions = true
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.parsed_body["prefill_username"]).to eq(true)
+      end
+
+      it "renders an error when registrations are disabled" do
+        SiteSetting.allow_new_registrations = false
+
+        post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).to eq(I18n.t("login.new_registrations_disabled"))
         expect(session[:current_user_id]).to be_nil
-        expect(User.find_by_email("newuser@example.com")).to be_nil
+      end
+
+      context "when required signup fields exist" do
+        fab!(:user_field)
+
+        it "asks for the fields without consuming the code, then creates the user with them" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_fields_required"]).to eq(true)
+          expect(session[:current_user_id]).to be_nil
+          expect(EmailLoginCode.active.for_email("newuser@example.com")).to be_present
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   user_field.id.to_s => "Dev",
+                 },
+               }
+
+          new_user = User.find_by_email("newuser@example.com")
+          expect(new_user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
+          expect(session[:current_user_id]).to eq(new_user.id)
+        end
+
+        it "renders an error when the required fields are missing" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   "0" => "",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_user_field"))
+          expect(session[:current_user_id]).to be_nil
+        end
+      end
+
+      context "when a full name is required at signup" do
+        before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+        it "asks for the name without consuming the code, then creates the user with it" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["name_required"]).to eq(true)
+          expect(response.parsed_body["user_fields_required"]).to eq(false)
+          expect(session[:current_user_id]).to be_nil
+          expect(EmailLoginCode.active.for_email("newuser@example.com")).to be_present
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "Jane Doe",
+               }
+
+          new_user = User.find_by_email("newuser@example.com")
+          expect(new_user.name).to eq("Jane Doe")
+          expect(session[:current_user_id]).to eq(new_user.id)
+        end
+
+        it "renders the contract errors when the name is too long" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "a" * 256,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"].join).to include("Name")
+          expect(session[:current_user_id]).to be_nil
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+        end
+
+        it "asks for the name again when a blank name is submitted" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "   ",
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["name_required"]).to eq(true)
+          expect(session[:current_user_id]).to be_nil
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+        end
       end
     end
 

@@ -8,35 +8,36 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
+    const row = (
+      trust_level,
+      count,
+      share,
+      promoted_in,
+      signups = 0,
+      demoted_in = 0
+    ) => ({
+      trust_level,
+      count,
+      share,
+      promoted_in,
+      signups,
+      demoted_in,
+    });
+
     const data = {
       total_members: 105_580,
       trend: { direction: "climbing", net: 72 },
       rows: [
-        { trust_level: 4, count: 25, share: 0.55, moves_in: 4, moves_out: 0 },
-        { trust_level: 3, count: 48, share: 0.85, moves_in: 14, moves_out: 2 },
-        {
-          trust_level: 2,
-          count: 4_800,
-          share: 4.6,
-          moves_in: 42,
-          moves_out: 12,
-        },
-        {
-          trust_level: 1,
-          count: 30_000,
-          share: 28.5,
-          moves_in: 50,
-          moves_out: 18,
-        },
-        {
-          trust_level: 0,
-          count: 69_000,
-          share: 65.5,
-          moves_in: 0,
-          moves_out: 0,
-        },
+        row(4, 25, 0.55, 0),
+        row(3, 48, 0.85, 6, 0, 1),
+        row(2, 4_800, 4.6, 12),
+        row(1, 30_000, 28.5, 0, 0, 1),
+        row(0, 69_000, 65.5, 0, 240, 5),
       ],
     };
+
+    const rowAt = (index) =>
+      [...document.querySelectorAll(".db-tl-pipeline__row")][index];
 
     test("renders one row per trust level in descending order", async function (assert) {
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
@@ -55,6 +56,16 @@ module(
       assert.dom(".db-pill.--pos").hasText("+72 climbing");
     });
 
+    test("renders a dropping trend pill in negative styling", async function (assert) {
+      const negative = { ...data, trend: { direction: "dropping", net: 24 } };
+
+      await render(
+        <template><TrustLevelPipeline @data={{negative}} /></template>
+      );
+
+      assert.dom(".db-pill.--neg").hasText("-24 dropping");
+    });
+
     test("links the section title to the trust_level_pipeline report", async function (assert) {
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
@@ -63,53 +74,81 @@ module(
         .hasAttribute("href", /\/admin\/reports\/trust_level_pipeline/);
     });
 
-    test("hides the bars section entirely when a row has no movement on either side", async function (assert) {
+    test("shows a stable pill in the label, not a flow, when a level had no movement", async function (assert) {
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
-      const newRow = [...document.querySelectorAll(".db-tl-pipeline__row")].at(
-        -1
-      );
-      assert.dom(".db-tl-pipeline__bars", newRow).doesNotExist();
-      assert.dom(".db-pill", newRow).doesNotExist();
+      assert.dom(".db-tl-pipeline__flow", rowAt(0)).doesNotExist();
+      assert.dom(".db-tl-pipeline__label .db-pill", rowAt(0)).hasText("stable");
     });
 
-    test("shows a stable pill on the side that has no movement when the other side does", async function (assert) {
-      const oneSided = {
-        ...data,
-        rows: data.rows.map((r) =>
-          r.trust_level === 4 ? { ...r, moves_in: 4, moves_out: 0 } : r
-        ),
-      };
+    test("splits arrivals into a positive and a negative marker", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
-      await render(
-        <template><TrustLevelPipeline @data={{oneSided}} /></template>
-      );
+      assert.dom(".db-delta.--pos", rowAt(1)).hasText("6");
+      assert.dom(".db-delta.--neg", rowAt(1)).hasText("1");
+    });
 
-      const leaderRow = document.querySelector(".db-tl-pipeline__row");
+    test("shows a demotion into a level as a negative marker, never as a positive one", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
+
+      assert.dom(".db-delta.--pos", rowAt(3)).doesNotExist();
+      assert.dom(".db-delta.--neg", rowAt(3)).hasText("1");
+    });
+
+    test("draws a red bar when more members dropped in than climbed in", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
+
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(3)).exists();
+    });
+
+    test("keeps the bar green when more members climbed in than dropped in", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
+
+      assert.dom(".db-tl-pipeline__bar", rowAt(1)).exists();
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(1)).doesNotExist();
+    });
+
+    test("shows the entry level's sign-ups inline as a plain count, never as a promotion", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
+
       assert
-        .dom(".db-tl-pipeline__bar-out .db-pill", leaderRow)
-        .hasText("stable");
-      assert.dom(".db-tl-pipeline__delta--in", leaderRow).includesText("4");
+        .dom(".db-tl-pipeline__label .db-tl-pipeline__signups", rowAt(4))
+        .hasText("+ 240 signups");
+      assert.dom(".db-delta.--pos", rowAt(4)).doesNotExist();
     });
 
-    test("renders moves_in and moves_out deltas with the count", async function (assert) {
+    test("still draws a directional bar on the entry level for real trust-level moves", async function (assert) {
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
-      assert.dom(".db-tl-pipeline__delta--in").includesText("4");
-      assert.dom(".db-tl-pipeline__delta--out").exists();
+      assert.dom(".db-tl-pipeline__flow", rowAt(4)).exists();
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(4)).exists();
+      assert
+        .dom(".db-tl-pipeline__flow .db-delta.--neg", rowAt(4))
+        .hasText("5");
     });
 
-    test("renders a dropping trend pill in negative styling", async function (assert) {
-      const negative = {
+    test("an entry level above TL0 shows both its sign-ups and a promotion bar", async function (assert) {
+      const raisedEntry = {
         ...data,
-        trend: { direction: "dropping", net: 24 },
+        rows: [
+          row(4, 25, 0.55, 0),
+          row(3, 48, 0.85, 6),
+          row(2, 4_800, 4.6, 12, 300),
+          row(1, 30_000, 28.5, 3),
+          row(0, 69_000, 65.5, 0, 0, 5),
+        ],
       };
 
       await render(
-        <template><TrustLevelPipeline @data={{negative}} /></template>
+        <template><TrustLevelPipeline @data={{raisedEntry}} /></template>
       );
 
-      assert.dom(".db-pill.--neg").hasText("-24 dropping");
+      assert.dom(".db-tl-pipeline__signups", rowAt(2)).hasText("+ 300 signups");
+      assert.dom(".db-tl-pipeline__bar", rowAt(2)).exists();
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(2)).doesNotExist();
+      assert.dom(".db-delta.--pos", rowAt(2)).hasText("12");
+
+      assert.dom(".db-delta.--pos", rowAt(3)).hasText("3");
     });
   }
 );

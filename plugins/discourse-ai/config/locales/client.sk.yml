@@ -18,7 +18,6 @@ sk:
       dashboard:
         emotion:
           title: "Emócia"
-          description: "Tabuľka uvádza počet príspevkov klasifikovaných s určenou emóciou. Klasifikácia bola vykonaná pomocou modelu „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -154,6 +153,14 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Prebieha načítavanie..."
+        tool: "Akcia"
+        user: "Používateľ"
+        approve: "Schváliť"
+        reject: "Zamietnuť"
+        approved: "Schválený"
+        rejected: "Zamietnuté"
       llm_selector:
         none: "Žiadny"
       features:
@@ -218,11 +225,13 @@ sk:
           translate: "Preložiť"
           markdown_tables: "Generovanie tabuľky Markdown"
           custom_prompt: "Vlastný prompt"
-          image_caption: "Obrázky s popismi"
           translator: "Prekladač"
           post_illustrator: "Ilustrátor príspevkov"
           setting_groups:
             automation: "Automatizácia"
+        image_caption:
+          setting_groups:
+            settings: "Nastavení"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -241,6 +250,7 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        category_scope: "Kategórie"
         stats:
           eta_minutes:
             one: "%{count} minútu"
@@ -358,8 +368,6 @@ sk:
         overwrite: "Prepísať"
         description: "Popis"
         no_llm_selected: "Nie je vybraný žiadny jazykový model"
-        max_context_posts: "Maximálny počet kontextových príspevkov"
-        max_context_posts_help: "Maximálny počet príspevkov, ktoré sa majú použiť ako kontext pre AI pri odpovedi používateľovi. (predvolene prázdne)"
         vision_max_pixel_sizes:
           low: Nízka kvalita - najlacnejšie (256x256)
           medium: Stredná kvalita (512x512)
@@ -387,6 +395,12 @@ sk:
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
         top_p: "Top P"
         top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
+        thinking_effort_options:
+          none: "Žiadny"
+          low: "Nízka"
+          medium: "Stredná"
+          high: "Vysoká"
+          max: "Max"
         priority: "Priorita"
         tool_options: "Možnosti nástroja"
         rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"
@@ -541,12 +555,10 @@ sk:
             custom: "Vlastné..."
           hours: "hodiny"
           max_tokens_help: "Maximálny počet tokenov (slov a znakov), ktoré môže každý používateľ v tejto skupine použiť v rámci zadaného trvania. Tokeny sú jednotky, ktoré modely umelej inteligencie používajú na spracovanie textu – približne 1 token = 4 znaky alebo 3/4 slova."
-          max_tokens_required: "Musí byť nastavené, ak nie je nastavený maximálny počet použití"
           max_usages_help: "Maximálny počet použití modelu AI pre každého používateľa v tejto skupine v rámci zadaného trvania. Táto kvóta sa sleduje pre jednotlivých používateľov a nezdieľa sa v rámci skupiny."
-          max_usages_required: "Musí byť nastavené, ak nie je nastavený maximálny počet tokenov"
         usage:
           ai_bot: "AI bot"
-          ai_helper_image_caption: "Popis obrázka"
+          ai_image_caption: "Popis obrázka"
           ai_summarization: "Zhrnúť"
           ai_embeddings_semantic_search: "Vyhľadávanie pomocou AI"
           ai_spam: "Spam"
@@ -626,11 +638,6 @@ sk:
         description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
         selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
         suggest_errors:
-          too_many_tags:
-            one: "Môžete mať iba %{count} štítok"
-            few: "Môžete mať maximálne %{count} štítkov"
-            many: "Môžete mať maximálne %{count} štítkov"
-            other: "Môžete mať maximálne %{count} štítky"
           no_suggestions: "Nie sú k dispozícii žiadne návrhy"
         missing_content: "Zadajte nejaký obsah na generovanie návrhov."
         context_menu:
@@ -664,11 +671,6 @@ sk:
           select: "Vyberte"
           selected: "Vybrané"
           try_again: "Skúsiť znova"
-        image_caption:
-          button_label: "Titulky s AI"
-          generating: "Generovanie titulkov..."
-          credits: "S titulkami od AI"
-          save_caption: "Uložiť"
         no_content_error: "Najprv pridajte obsah, aby ste na ňom mohli vykonávať akcie AI"
       reviewables:
         model_used: "Použitý model:"
@@ -740,7 +742,7 @@ sk:
         click_to_run_label: "Spustiť artefakt"
       ai_bot:
         title: "AI bot"
-        llm: "Model"
+        llm: "Model:"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
         try_again: "Skúste to znova"

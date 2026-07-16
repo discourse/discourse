@@ -103,7 +103,7 @@ module DiscourseAi
         @reply_user = @bot.bot_user
         @llm_model_id = @bot.model.id
 
-        max_context_posts = @bot.agent.class.max_context_posts || 40
+        context_llm = @bot.llm
         context =
           DiscourseAi::Agents::BotContext.new(
             post: @source_post,
@@ -112,7 +112,13 @@ module DiscourseAi
             messages:
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
-                max_posts: max_context_posts,
+                max_posts: DiscourseAi::Completions::PromptMessagesBuilder::MAX_CONTEXT_MESSAGES,
+                context_token_budget:
+                  DiscourseAi::Agents::Bot.context_token_budget(
+                    context_llm,
+                    @bot.agent.class.max_turn_tokens,
+                  ),
+                tokenizer: context_llm.tokenizer,
                 include_image_uploads: @bot.agent.class.vision_enabled,
                 include_document_uploads: @bot.model.allowed_attachment_types.present?,
                 allowed_attachment_types: @bot.model.allowed_attachment_types,
@@ -120,7 +126,7 @@ module DiscourseAi
               ),
           )
 
-        @prompt = @bot.agent.craft_prompt(context, llm: @bot.llm)
+        @prompt = @bot.agent.craft_prompt(context, llm: context_llm)
         # This endpoint supports caller-owned tool execution. We replace agent tools so every
         # emitted tool call can be completed through the resume protocol.
         @prompt.tools =
@@ -175,35 +181,26 @@ module DiscourseAi
         turn_reply = +""
         streamed_tool_calls = []
 
-        token_budget = resolve_token_budget
-        use_token_budget = resolve_execution_mode == "agentic"
-
-        if use_token_budget && token_budget.blank?
-          # max_turn_tokens is optional; default the turn budget to half of the
-          # LLM context window. If the LLM exposes no context window, fall back
-          # to the fixed completion/tool limits rather than crashing on a nil
-          # budget comparison.
-          token_budget = DiscourseAi::Agents::Bot.default_max_turn_tokens(llm)
-          use_token_budget = token_budget.present?
-        end
-
-        execution_context = nil
-        token_usage_tracker = nil
-        if use_token_budget
-          token_usage_tracker =
-            DiscourseAi::Completions::TokenUsageTracker.new(
-              base_request: @accumulated_request_tokens,
-              base_response: @accumulated_response_tokens,
-            )
-          execution_context =
-            DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: token_usage_tracker)
-        end
-        generate_options = { user: @user, temperature: @temperature, top_p: @top_p }
-        generate_options[:execution_context] = execution_context if execution_context
+        token_budget =
+          resolve_token_budget.presence || DiscourseAi::Agents::Bot.default_max_turn_tokens(llm)
+        token_usage_tracker =
+          DiscourseAi::Completions::TokenUsageTracker.new(
+            base_request: @accumulated_request_tokens,
+            base_response: @accumulated_response_tokens,
+          )
+        execution_context =
+          DiscourseAi::Completions::ExecutionContext.new(token_usage_tracker: token_usage_tracker)
+        generate_options = {
+          user: @user,
+          temperature: @temperature,
+          top_p: @top_p,
+          execution_context: execution_context,
+          feature_name: "bot",
+        }
 
         # Pre-check: if budget already exhausted on resume, force a final
         # text-only call or finalize immediately — don't overshoot.
-        if use_token_budget && @accumulated_tokens >= token_budget
+        if @accumulated_tokens >= token_budget
           if @prompt.messages.last&.dig(:type) == :tool
             DiscourseAi::Agents::Bot.inject_budget_exhausted_hint(@prompt)
             @prompt.tool_choice = :none
@@ -239,11 +236,9 @@ module DiscourseAi
         normalized_result = normalize_result(result)
         tool_calls = unique_tool_calls(streamed_tool_calls + extract_tool_calls(normalized_result))
 
-        if use_token_budget
-          @accumulated_request_tokens = token_usage_tracker.request
-          @accumulated_response_tokens = token_usage_tracker.response
-          @accumulated_tokens = token_usage_tracker.total
-        end
+        @accumulated_request_tokens = token_usage_tracker.request
+        @accumulated_response_tokens = token_usage_tracker.response
+        @accumulated_tokens = token_usage_tracker.total
 
         if tool_calls.present?
           non_tool_result =
@@ -263,7 +258,7 @@ module DiscourseAi
         end
 
         if tool_calls.present?
-          if use_token_budget && @accumulated_tokens >= token_budget
+          if @accumulated_tokens >= token_budget
             # Budget exhausted — can't hand tools to client. Push synthetic
             # "not executed" results and give the model one final text-only call.
             tool_calls.each do |call|
@@ -519,10 +514,6 @@ module DiscourseAi
 
       def resolve_token_budget
         resolve_agent_record&.max_turn_tokens
-      end
-
-      def resolve_execution_mode
-        resolve_agent_record&.execution_mode || "default"
       end
 
       def persist_reply_post!

@@ -1,4 +1,5 @@
-body.tag-livestream.chat-enabled {
+body.livestream-topic.chat-enabled,
+body.websdk-body {
   .d-header-icons {
     .livestream-header-icon {
       position: relative;
@@ -125,6 +126,10 @@ body.tag-livestream.chat-enabled {
     }
   }
 
+  .chat-message-text {
+    color: var(--primary);
+  }
+
   .livestream-chat-modal {
     // don't blur the background when the livestream chat modal is open
     & ~ .d-modal__backdrop {
@@ -161,8 +166,64 @@ body.tag-livestream.chat-enabled {
       }
     }
   }
+
+  .chat-composer__outer-container {
+    gap: var(--space-2);
+  }
+
+  .chat-composer-dropdown__menu-trigger {
+    padding: 0;
+    margin: 0;
+    width: 3em;
+
+    .d-icon {
+      padding: var(--space-2);
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .chat-composer-button__wrapper {
+    margin: 0;
+    align-self: stretch;
+  }
+
+  .chat-composer-button {
+    margin: 0;
+    padding: 0.5em 0.65em;
+    height: 100%;
+  }
 }
 
-body:not(.tag-livestream) .d-header-icons .livestream-header-icon {
+body:not(.livestream-topic) .d-header-icons .livestream-header-icon {
   display: none;
+}
+
+.discourse-calendar-livestream-zoom-page {
+  margin-left: calc(var(--topic-body-width-padding, 1rem) * -1);
+  margin-right: calc(var(--topic-body-width-padding, 1rem) * -1);
+}
+
+// zoom specific overrides, undoes core conflicts
+#wc-footer {
+  .btn-group {
+    margin: 0;
+  }
+
+  .audio-option-menu {
+    position: relative;
+  }
+
+  .footer-button__wrapper {
+    display: flex;
+
+    > div {
+      display: flex;
+    }
+
+    .audio-option-menu {
+      display: flex;
+      margin-block: auto;
+    }
+  }
 }

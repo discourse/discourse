@@ -22,8 +22,6 @@ hu:
       create:
         form:
           insert: Beszúrás
-          advanced_mode: Speciális mód
-          simple_mode: Egyszerű mód
           format_description: "A dátum megjelenítésére használt formátum a felhasználó számára. Használja a Z-t az időeltolódás, a zz-t pedig az időzóna nevének megjelenítéséhez."
           timezones_title: Megjelenítendő időzónák
           timezones_description: Az időzónák a dátumok megjelenítésére szolgálnak az előnézetben és a tartalékban.

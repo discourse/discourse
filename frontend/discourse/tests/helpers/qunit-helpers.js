@@ -2,6 +2,7 @@
 import { run } from "@ember/runloop";
 import {
   find,
+  findAll,
   getApplication,
   settled,
   triggerKeyEvent,
@@ -14,6 +15,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -45,6 +47,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
@@ -210,6 +213,7 @@ export function testCleanup(container, app) {
   resetMobile();
   resetAdditionalReportModes();
   resetAdminDashboardReportRenderers();
+  resetAdminDashboardSections();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -497,6 +501,14 @@ export async function selectDate(selector, date) {
 }
 
 export function queryAll(selector, context) {
+  deprecated(
+    "`queryAll` is deprecated. Use `findAll` from `@ember/test-helpers` for elements, or `assert.dom` from qunit-dom for assertions.",
+    {
+      id: "discourse.qunit-helpers.query-all",
+      since: "2026.7.0-latest",
+    }
+  );
+
   context = context || "#ember-testing";
   return $(selector, context);
 }
@@ -505,21 +517,53 @@ export function query() {
   return document.querySelector("#ember-testing").querySelector(...arguments);
 }
 
+const JQUERY_SELECTOR_PATTERN =
+  /:(contains|visible|hidden|eq|lt|gt|even|odd|first|last|header|input|checkbox|radio|selected|parent)\b(?!-)/i;
+
+function elementsFor(target) {
+  if (isEmpty(target)) {
+    return [];
+  }
+
+  if (typeof target === "string") {
+    if (JQUERY_SELECTOR_PATTERN.test(target)) {
+      deprecated(
+        `"${target}" uses a jQuery-only selector. Use a native CSS selector instead; jQuery selector support will be removed.`,
+        {
+          id: "discourse.qunit-helpers.jquery-selector",
+          since: "2026.7.0-latest",
+        }
+      );
+
+      return $(target, "#ember-testing").toArray();
+    }
+
+    return findAll(target);
+  }
+
+  if (target instanceof Element) {
+    return [target];
+  }
+
+  return Array.from(target);
+}
+
 export function invisible(selector) {
-  const $items = queryAll(selector + ":visible");
-  return (
-    $items.length === 0 ||
-    $items.css("opacity") !== "1" ||
-    $items.css("visibility") === "hidden"
-  );
+  const visibleItems = elementsFor(selector).filter(isVisible);
+  if (visibleItems.length === 0) {
+    return true;
+  }
+
+  const style = window.getComputedStyle(visibleItems[0]);
+  return style.opacity !== "1" || style.visibility === "hidden";
 }
 
 export function visible(selector) {
-  return queryAll(selector + ":visible").length > 0;
+  return elementsFor(selector).some(isVisible);
 }
 
 export function count(selector) {
-  return queryAll(selector).length;
+  return elementsFor(selector).length;
 }
 
 export function exists(selector) {

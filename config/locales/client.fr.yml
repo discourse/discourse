@@ -22,6 +22,10 @@ fr:
         in_location: "dans"
         hidden: "masqué"
         failed: "échec"
+    access_control:
+      manage:
+        access_permission_editor: "Éditeur"
+        access_permission_remove: "Supprimer"
     number:
       format:
         separator: ","
@@ -385,6 +389,9 @@ fr:
     age: "Âge"
     joined: "Inscrit(e)"
     admin_title: "Administration"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avancé"
+      simple_mode: "Mode simple"
     show_more: "afficher plus"
     show_help: "Options"
     links: "Liens"
@@ -1426,6 +1433,9 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
+        push_level:
+          none: "Désactivée"
+          all: "Activé"
         not_supported: "Nous sommes désolés, les notifications ne sont pas supportées sur ce navigateur."
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
         each_browser_note: "Remarque : vous devez modifier ce paramètre sur chaque navigateur utilisé. Toutes les notifications seront désactivées si vous suspendez les notifications à partir du menu utilisateur, quel que soit ce paramètre."
@@ -2422,7 +2432,6 @@ fr:
     created: "Créé"
     created_lowercase: "créé"
     trust_level: "Niveau de confiance"
-    search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
@@ -2470,6 +2479,9 @@ fr:
       email_label: "E-mail"
       continue_button: "Continuer"
       verify_button: "Continuer"
+      signup_title: "Créer votre compte"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"
@@ -3356,6 +3368,9 @@ fr:
       deleted_post_placeholder: "[supprimés]"
       ignored_post_placeholder: "[ignoré]"
       pinned_reply: "Épinglé"
+    share_target:
+      new_topic: "Nouveau sujet"
+      new_message: "Nouveau message direct"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3407,40 +3422,8 @@ fr:
       read_more_in_category: "Vous voulez en savoir plus ? Parcourez les autres sujets de %{categoryLink} ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       read_more: "Vous voulez en savoir plus ? <a href='%{categoryLink}'>Parcourez toutes les catégories</a> ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
+      sr_read: "lecture"
       participant_groups: "Groupes de participants"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il y a <a href="{basePath}/unread"># message non lu</a>}
-              other {Il y a <a href="{basePath}/unread"># messages non lus</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { et il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other { et il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/unread"># sujet</a> non lu,}
-              other {Il reste <a href="{basePath}/unread"># sujets</a> non lus,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other {Il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ou parcourez d'autres sujets dans {categoryLink}}
-          false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} réponse. Passer à la première publication"
         other: "%{count} réponses. Passer à la première publication"
@@ -3894,8 +3877,9 @@ fr:
           one: "Afficher %{count} paramètre régional traduit"
           other: "Afficher %{count} paramètres régionaux traduits"
         modal:
-          title: "Traductions de la publication"
+          title: "Traductions"
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
+          discard_language_change: "Annuler la modification"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
           none: "Non défini"
@@ -4141,7 +4125,6 @@ fr:
       type_settings_schema:
         site_settings: "Paramètres du site"
       unsaved_changes: "Vous avez des modifications non enregistrées"
-      slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       validations:
@@ -4830,8 +4813,6 @@ fr:
       no_read_topics_body: "Une fois que vous aurez commencé à lire les discussions, vous verrez une liste ici. Pour commencer à lire, recherchez les sujets qui vous intéressent dans <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> ou recherchez par mot-clé %{searchIcon}"
     no_group_messages_title: "Aucun message de groupe trouvé"
     topic_entrance:
-      sr_jump_top_button: "Accéder à la première publication - %{date}"
-      sr_jump_bottom_button: "Accéder à la dernière publication - %{date}"
       jump_top_button_title: "Accéder à la première publication"
       jump_bottom_button_title: "Accéder à la dernière publication"
     fullscreen_table:
@@ -5204,6 +5185,7 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        all_groups: "Tous les groupes"
         group_traffic: "Trafic"
         group_members: "Membres"
         group_other: "Autre"
@@ -5342,7 +5324,6 @@ fr:
             apple_touch_icon:
               title: "Icône Apple Touch"
               description: "Icône utilisée pour les appareils Apple Touch. Si ce champ est laissé vide, large_icon sera utilisé."
-              help_text: "La taille recommandée est de 180 x 180 pixels. Un arrière-plan transparent est déconseillé."
             digest_logo:
               title: "Logo Digest"
               description: "L'image de logo alternative utilisée en haut du résumé des e-mails de votre site. Si ce champ est laissé vide, l'image du paramètre « logo » sera utilisée."
@@ -5350,6 +5331,9 @@ fr:
             opengraph_image:
               title: "Image OpenGraph"
               description: "Image OpenGraph par défaut, utilisée lorsque la page ne contient aucune autre image appropriée. Si ce champ est laissé vide, l'icône large_icon sera utilisée."
+            og_image_preview:
+              generate: "Générer"
+              topic_id_label: "ID du sujet"
             x_summary_large_image:
               title: "Résumé X « summary large image »"
               description: "Carte X « summary large image ». Si ce champ est laissé vide, les métadonnées de carte normales sont générées à partir d'OpenGraph_image, à condition qu'il ne s'agisse pas non plus d'un fichier .svg."
@@ -5487,6 +5471,21 @@ fr:
               title: "Publications et sujets"
             stats_and_thresholds:
               title: "Statistiques et seuils"
+        category_management:
+          tabs:
+            settings: "Paramètres"
+          types:
+            all:
+              title: "Toutes les catégories"
+          filter_placeholder: "Filtrer les catégories"
+          table:
+            category: "Catégorie"
+            visibility: "Visibilité"
+            topics: "Sujets"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toutes les catégories"
         permalinks:
           title: "Permaliens"
           header_description: "Redirections à appliquer pour les URL non connues par le forum"
@@ -5628,7 +5627,7 @@ fr:
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
-        latest_version: "Dernière"
+        github: "GitHub"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Ignorer"
         new_features:
@@ -5701,6 +5700,7 @@ fr:
               searches: "Recherches"
               status: "Statut"
         reports_section:
+          header_action: "Gérer"
           no_data: "Aucune donnée à afficher"
           modal:
             enabled_heading: "Activé"
@@ -6237,6 +6237,8 @@ fr:
             initial_members: "Liste étendue des membres"
             initial_members_description: "Nombre de membres du groupe à afficher avant d'ajouter un bouton Afficher plus."
             show_description: "Inclure une description"
+          locale_selector:
+            title: "Langue "
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -7289,11 +7291,12 @@ fr:
         silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           title: "Actions groupées"
-          admin_cant_be_deleted: "Cet utilisateur ne peut pas être supprimé, car il est administrateur"
-          too_many_or_old_posts: "Cet utilisateur ne peut pas être supprimé, car il a trop de publications ou une publication très ancienne"
-          too_many_selected_users:
-            one: "Vous avez atteint la limite de %{count} utilisateur pour la suppression groupée"
-            other: "Vous avez atteint la limite de %{count} utilisateurs pour la suppression groupée"
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
+          suspend:
+            confirmation_modal:
+              close: "Fermer"
+              confirm: "Suspendre"
           delete:
             label: "Supprimer les utilisateurs…"
             confirmation_modal:
@@ -7321,6 +7324,9 @@ fr:
           suspended: "Suspendus"
           silenced: "En sourdine"
           staged: "Distants"
+        activation_filter:
+          all: "Tous les utilisateurs"
+          activated: "Activé"
         approved: "Approuvé ?"
         titles:
           active: "Utilisateurs actifs"

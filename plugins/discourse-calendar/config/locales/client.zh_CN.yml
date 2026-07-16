@@ -34,6 +34,8 @@ zh_CN:
               label: 话题 ID
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "聊天"
         chat:
           going: "点击“前往”"
           join_channel_header: "🌟 加入我们吧！🌟"
@@ -420,7 +422,6 @@ zh_CN:
           this_and_following: "本次活动及所有后续活动"
           leave_event: "离开活动"
           status:
-            unknown: "不感兴趣"
             going: "参加"
             not_going: "不参加"
             interested: "感兴趣"
@@ -489,7 +490,6 @@ zh_CN:
         create_event_title: "创建活动"
         update_event_title: "编辑活动"
         advanced_settings_title: "高级设置"
-        advanced_settings: "高级设置"
         confirm_delete: "确定要删除此活动吗？"
         confirm_close: "确定要关闭此活动吗？"
         confirm_open: "确定要开放此活动吗？"
@@ -550,11 +550,7 @@ zh_CN:
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"
-        url:
-          label: "URL"
-          placeholder: "可选"
         location:
-          label: "地点"
           placeholder: "添加地点、链接或其他内容。"
         description:
           label: "描述"

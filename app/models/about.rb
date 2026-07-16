@@ -26,8 +26,10 @@ class About
     Stat.api_stats
   end
 
-  def initialize(user = nil)
+  def initialize(user = nil, locale: I18n.locale, show_original: false)
     @user = user
+    @locale = locale
+    @show_original = show_original
   end
 
   def version
@@ -39,7 +41,7 @@ class About
   end
 
   def title
-    SiteSetting.title
+    localized_site_setting(:title)
   end
 
   def locale
@@ -47,11 +49,15 @@ class About
   end
 
   def description
-    SiteSetting.site_description
+    localized_site_setting(:site_description)
   end
 
   def extended_site_description
-    SiteSetting.extended_site_description_cooked
+    localized_site_setting(
+      :extended_site_description,
+      cooked: true,
+      fallback: SiteSetting.extended_site_description_cooked,
+    )
   end
 
   def banner_image
@@ -163,6 +169,16 @@ class About
 
   def guardian
     @guardian ||= Guardian.new(@user)
+  end
+
+  def localized_site_setting(setting_name, cooked: false, fallback: nil)
+    SiteSettingLocalization.value_for(
+      setting_name,
+      locale: @locale,
+      cooked:,
+      fallback: fallback || SiteSetting.public_send(setting_name),
+      show_original: @show_original,
+    )
   end
 
   def apply_hidden_profile(query)

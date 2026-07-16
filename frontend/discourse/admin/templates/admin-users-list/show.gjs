@@ -8,13 +8,14 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
 import lazyHash from "discourse/helpers/lazy-hash";
 import rawDate from "discourse/helpers/raw-date";
-import { eq, not, or } from "discourse/truth-helpers";
+import { not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DSelect from "discourse/ui-kit/d-select";
 import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -52,16 +53,35 @@ export default <template>
         class="admin-filter__input"
         type="text"
         dir="auto"
+        value={{@controller.listFilter}}
         placeholder={{@controller.searchHint}}
         title={{@controller.searchHint}}
         {{on "input" @controller.onListFilterChange}}
       />
     </div>
+    {{#if @controller.showActivationFilter}}
+      <DSelect
+        @value={{@controller.activation}}
+        @onChange={{@controller.updateActivation}}
+        @nonePlaceholder={{i18n "admin.users.activation_filter.all"}}
+        class="admin-users-list__activation-filter"
+        aria-label={{i18n "admin.users.activation_filter.label"}}
+        as |select|
+      >
+        <select.Option @value="activated">
+          {{i18n "admin.users.activation_filter.activated"}}
+        </select.Option>
+        <select.Option @value="not_activated">
+          {{i18n "admin.users.activation_filter.not_activated"}}
+        </select.Option>
+      </DSelect>
+    {{/if}}
     {{#if @controller.displayBulkActions}}
       <div class="bulk-actions-dropdown">
         <DMenu
           @autofocus={{true}}
           @identifier="bulk-select-admin-users-dropdown"
+          @triggerClass="btn-default"
         >
           <:trigger>
             <span class="d-button-label">
@@ -72,6 +92,16 @@ export default <template>
 
           <:content>
             <DDropdownMenu as |dropdown|>
+              <dropdown.item>
+                <DButton
+                  @translatedLabel={{i18n
+                    "admin.users.bulk_actions.suspend.label"
+                  }}
+                  @icon="ban"
+                  @action={{@controller.openBulkSuspendConfirmation}}
+                  class="bulk-suspend btn-danger"
+                />
+              </dropdown.item>
               <dropdown.item>
                 <DButton
                   @translatedLabel={{i18n
@@ -108,6 +138,18 @@ export default <template>
               @icon="list-check"
               @action={{@controller.toggleBulkSelect}}
             />
+            {{#if @controller.bulkSelect}}
+              <DButton
+                class="btn-flat bulk-select-all"
+                @label="admin.users.bulk_actions.select_all"
+                @action={{@controller.bulkSelectAll}}
+              />
+              <DButton
+                class="btn-flat bulk-clear-all"
+                @label="admin.users.bulk_actions.clear_all"
+                @action={{@controller.bulkClearAll}}
+              />
+            {{/if}}
             <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @field="username"
@@ -147,7 +189,9 @@ export default <template>
             @asc={{@controller.asc}}
             @automatic={{true}}
           />
-          {{#unless @controller.showSilenceReason}}
+          {{#unless
+            (or @controller.showSilenceReason @controller.showSuspendReason)
+          }}
             <DTableHeaderToggle
               @onToggle={{@controller.updateOrder}}
               @field="topics_viewed"
@@ -192,6 +236,17 @@ export default <template>
               class="directory-table__column-header--silence-reason"
             />
           {{/if}}
+          {{#if @controller.showSuspendReason}}
+            <DTableHeaderToggle
+              @onToggle={{@controller.updateOrder}}
+              @field="suspend_reason"
+              @labelKey="admin.users.suspend_reason"
+              @order={{@controller.order}}
+              @asc={{@controller.asc}}
+              @automatic={{true}}
+              class="directory-table__column-header--suspend-reason"
+            />
+          {{/if}}
           <PluginOutlet
             @name="admin-users-list-thead-after"
             @outletArgs={{lazyHash order=@controller.order asc=@controller.asc}}
@@ -217,14 +272,11 @@ export default <template>
             >
               <div class="directory-table__cell username">
                 {{#if @controller.bulkSelect}}
-                  {{#if user.can_be_deleted}}
+                  {{#if (or user.can_be_deleted user.can_be_suspended)}}
                     <input
                       type="checkbox"
                       class="directory-table__cell-bulk-select"
-                      checked={{eq
-                        (get @controller.bulkSelectedUsersMap user.id)
-                        1
-                      }}
+                      checked={{get @controller.bulkSelectedUsersMap user.id}}
                       data-user-id={{user.id}}
                       {{on
                         "click"
@@ -233,7 +285,7 @@ export default <template>
                     />
                   {{else}}
                     <DTooltip
-                      @identifier="bulk-delete-unavailable-reason"
+                      @identifier="bulk-action-unavailable-reason"
                       @placement="bottom-start"
                     >
                       <:trigger>
@@ -244,15 +296,9 @@ export default <template>
                         />
                       </:trigger>
                       <:content>
-                        {{#if user.admin}}
-                          {{i18n
-                            "admin.users.bulk_actions.admin_cant_be_deleted"
-                          }}
-                        {{else}}
-                          {{i18n
-                            "admin.users.bulk_actions.too_many_or_old_posts"
-                          }}
-                        {{/if}}
+                        {{i18n
+                          "admin.users.bulk_actions.staff_cant_be_actioned"
+                        }}
                       </:content>
                     </DTooltip>
                   {{/if}}
@@ -315,7 +361,9 @@ export default <template>
                 </span>
               </div>
 
-              {{#unless @controller.showSilenceReason}}
+              {{#unless
+                (or @controller.showSilenceReason @controller.showSuspendReason)
+              }}
                 <div class="directory-table__cell topics-entered">
                   <span class="directory-table__label">
                     <span>{{i18n "admin.user.topics_entered"}}</span>
@@ -363,6 +411,20 @@ export default <template>
                   </span>
                   <span class="directory-table__value">
                     {{trustHTML user.silence_reason}}
+                  </span>
+                </div>
+              {{/if}}
+
+              {{#if @controller.showSuspendReason}}
+                <div
+                  class="directory-table__cell suspend_reason"
+                  title={{@controller.stripHtml user.suspend_reason}}
+                >
+                  <span class="directory-table__label">
+                    <span>{{i18n "admin.users.suspend_reason"}}</span>
+                  </span>
+                  <span class="directory-table__value">
+                    {{trustHTML user.suspend_reason}}
                   </span>
                 </div>
               {{/if}}

@@ -1,13 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
-import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel" with {
+  discourseImport: "optional",
+};
 
 export default class EmbedableChatChannel extends Component {
   @service chatChannelsManager;
@@ -16,13 +19,6 @@ export default class EmbedableChatChannel extends Component {
   @service messageBus;
 
   @tracked activeChannel;
-
-  // Resolved at runtime rather than statically imported: cross-plugin static
-  // imports aren't resolvable in the compiled plugin bundle and break the whole
-  // bundle load.
-  chatChannelComponent = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-channel"
-  );
 
   updateChannel = modifier(async () => {
     if (this.args.chatChannelId === this.activeChannel?.id) {
@@ -59,6 +55,20 @@ export default class EmbedableChatChannel extends Component {
     this.activeChannel.currentUserMembership = membership;
   }
 
+  get showCloseButton() {
+    return this.args.onClose || !this.embeddableChat.isMobileModal;
+  }
+
+  @action
+  close() {
+    if (this.args.onClose) {
+      this.args.onClose();
+      return;
+    }
+
+    this.embeddableChat.toggleChatVisibility();
+  }
+
   <template>
     <div
       id="custom-chat-container"
@@ -68,21 +78,21 @@ export default class EmbedableChatChannel extends Component {
       }}
       {{this.updateChannel}}
     >
-      {{#unless this.embeddableChat.isMobileModal}}
+      {{#if this.showCloseButton}}
         <div class="c-navbar-container livestream-chat-close">
 
           <DButton
             @icon="xmark"
-            @action={{this.embeddableChat.toggleChatVisibility}}
+            @action={{this.close}}
             @title="chat.close"
             class="btn-transparent no-text c-navbar__close-drawer-button"
           />
         </div>
-      {{/unless}}
+      {{/if}}
       <div class="chat-drawer">
-        {{#if (and this.activeChannel this.chatChannelComponent)}}
+        {{#if (and this.activeChannel ChatChannel)}}
           {{#each (array this.activeChannel) as |channel|}}
-            <this.chatChannelComponent @channel={{channel}} />
+            <ChatChannel @channel={{channel}} />
           {{/each}}
         {{/if}}
       </div>

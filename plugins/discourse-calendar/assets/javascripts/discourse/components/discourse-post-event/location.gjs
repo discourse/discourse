@@ -7,7 +7,9 @@ const URL_TEST_REGEX = /^https?:\/\/\S+$/;
 // The location is a plain-text field, so it is deliberately not cooked as
 // markdown: cooking tags a bare URL as a onebox, and the composer's onebox
 // pass then embeds a full preview (e.g. a youtube player) inside the event
-// card. Bare URLs are rendered as plain links showing the raw URL instead.
+// card. Bare URLs — including livestream URLs, whose playable video renders
+// separately at the bottom of the card — are rendered as plain links showing
+// the raw URL instead.
 export default class DiscoursePostEventLocation extends Component {
   get segments() {
     return (this.args.location || "")

@@ -21,6 +21,10 @@ nb_NO:
         in_location: "i"
         hidden: "skjult"
         failed: "feilet"
+    access_control:
+      manage:
+        access_permission_editor: "Tekstbehandler"
+        access_permission_remove: "Fjern"
     number:
       format:
         separator: "."
@@ -269,6 +273,9 @@ nb_NO:
     age: "Alder"
     joined: "Ble medlem"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avansert modus"
+      simple_mode: "Enkel modus"
     show_more: "vis mer"
     show_help: "Alternativer"
     links: "Lenker"
@@ -1200,6 +1207,9 @@ nb_NO:
       notifications: "Varsler"
       statistics: "Statistikk"
       desktop_notifications:
+        push_level:
+          none: "Deaktivert"
+          all: "Aktivert"
         not_supported: "Varsler er ikke støttet på denne nettleseren. Beklager."
         perm_denied_expl: "Du tillot ikke varsler. Tillat varsler via innstillingene i din nettleser."
         each_browser_note: "Merk: Du må endre denne innstillingen i hver nettleser du bruker. Alle varsler deaktiveres hvis du setter varsler på pause fra brukermenyen, uavhengig av denne innstillingen."
@@ -2121,7 +2131,6 @@ nb_NO:
     created: "Opprettet"
     created_lowercase: "opprettet"
     trust_level: "Tillitsnivå"
-    search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
       header_title: "Velkommen!"
       disclaimer: "Ved å registrere deg, godtar du <a href='%{privacy_link}' target='blank'>retningslinjer for personvern</a> og <a href='%{tos_link}' target='blank'>vilkår for bruk</a>."
@@ -2167,6 +2176,9 @@ nb_NO:
       email_label: "E-post"
       continue_button: "Fortsett"
       verify_button: "Fortsett"
+      signup_title: "Opprett konto"
+      account_ready_continue: "Fortsett"
+      username_label: "Brukernavn"
     login:
       header_title: "Velkommen tilbake"
       title: "Logg inn"
@@ -2953,6 +2965,8 @@ nb_NO:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorert]"
       pinned_reply: "Fastsatt"
+    share_target:
+      new_message: "Ny melding"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3004,40 +3018,8 @@ nb_NO:
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i %{categoryLink} eller <a href='%{latestLink}'>se de nyeste emnene</a>."
       read_more: "Vil du lese mer? <a href='%{categoryLink}'>Se alle kategorier</a> eller <a href='%{latestLink}'>se de nyeste emnene</a>."
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
+      sr_read: "les"
       participant_groups: "Deltakergrupper"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/unread"># ulest</a>}
-              other {Det er <a href="{basePath}/unread"># ulest</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { og <a href="{basePath}/new"># nytt</a> emne igjen,}
-              other { og <a href="{basePath}/new"># nye</a> emner igjen,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/unread"># ulest</a> emne igjen,}
-              other {Det er <a href="{basePath}/unread"># uleste</a> emner igjen,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Det er <a href="{basePath}/new"># nytt</a> emne igjen,}
-              other {Det er <a href="{basePath}/new"># nye</a> emner igjen,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { eller bla gjennom andre emner i {categoryLink}}
-          false { eller <a href="{basePath}/latest">se de nyeste emnene</a>}
-          other {}
-        }
       created_at: "Opprettet: %{date}"
       bumped_at: "Siste: %{date}"
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
@@ -3446,6 +3428,8 @@ nb_NO:
           actions: "Handlinger"
           edit: "Endre"
           delete: "Slett"
+        modal:
+          title: "Oversettelser"
         post_language_selector:
           none: "Ikke angitt"
       errors:
@@ -3661,7 +3645,6 @@ nb_NO:
         tag_group: "Stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       create_long: "Opprett en ny kategori"
-      slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       validations:
@@ -4333,6 +4316,7 @@ nb_NO:
       reports:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
+        all_groups: "Alle grupper"
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
         group_other: "Annet"
@@ -4392,6 +4376,9 @@ nb_NO:
           form:
             mobile: "Mobil"
             email: "E-post"
+            og_image_preview:
+              generate: "Generer API-nøkkel"
+              topic_id_label: "Emne-ID"
         fonts:
           backfill_modal:
             modal_yes: "Ja"
@@ -4438,6 +4425,20 @@ nb_NO:
               title: "Innstillinger"
         badges:
           title: "Merker"
+        category_management:
+          tabs:
+            settings: "Innstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalenker"
         emoji:
@@ -4495,7 +4496,7 @@ nb_NO:
         no_check_performed: "En sjekk for oppdateringer har ikke blitt utført. Verifiser at sidekiq kjører."
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
         installed_version: "Installert"
-        latest_version: "Siste"
+        github: "GitHub"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
         dismiss_notice: "Ignorer"
         new_features:
@@ -4563,6 +4564,7 @@ nb_NO:
               searches: "Søk"
               status: "Status"
         reports_section:
+          header_action: "Behandle"
           no_data: "Ingen data å vise"
           modal:
             enabled_heading: "Aktivert"
@@ -5384,6 +5386,10 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Lukk"
+              confirm: "Utestengt"
           delete:
             confirmation_modal:
               close: "Lukk"

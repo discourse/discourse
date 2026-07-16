@@ -14,9 +14,7 @@ module DiscourseWorkflows
         raise "Workflow examples are only supported in development environment"
       end
 
-      if !SiteSetting.discourse_workflows_enabled
-        SiteSetting.set(:discourse_workflows_enabled, true)
-      end
+      SiteSetting.set(:enable_discourse_workflows, true) if !SiteSetting.enable_discourse_workflows
 
       ensure_manual_log_workflow!
       ensure_topic_admin_button_workflow!

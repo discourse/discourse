@@ -3,7 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import PostUsersMenu from "discourse/components/post/menu/post-users-menu";
+import { service } from "@ember/service";
+import UsersPopup from "discourse/components/user/users-popup";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
@@ -12,6 +13,8 @@ import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
+  @service router;
+
   @tracked activeFilter = null;
 
   fetchUsers = async (page, pageSize) => {
@@ -58,8 +61,20 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
     return { users, canLoadMore };
   };
+
   #resetCallback = null;
+
   #tabCache = new Map();
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.args.close);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeWillChange", this.args.close);
+  }
 
   get post() {
     return this.args.data.post;
@@ -104,7 +119,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
   }
 
   <template>
-    <PostUsersMenu
+    <UsersPopup
       @fetchUsers={{this.fetchUsers}}
       @titleText={{this.titleText}}
       @totalUsers={{this.activeFilterTotalUsers}}
@@ -112,11 +127,11 @@ export default class DiscourseReactionsUsersMenu extends Component {
       <:header as |resetAndReload|>
         {{this.registerReset resetAndReload}}
         {{#if this.showFilters}}
-          <div class="post-users-popup__header">
+          <div class="users-popup__header">
             <button
               type="button"
               class={{dConcatClass
-                "post-users-popup__filter"
+                "users-popup__filter"
                 (unless this.activeFilter "is-active")
               }}
               data-reaction-filter="all"
@@ -128,13 +143,13 @@ export default class DiscourseReactionsUsersMenu extends Component {
               <button
                 type="button"
                 class={{dConcatClass
-                  "post-users-popup__filter"
+                  "users-popup__filter"
                   (if (eq reaction.id this.activeFilter) "is-active")
                 }}
                 data-reaction-filter={{reaction.id}}
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
-                {{dEmoji reaction.id skipTitle=true}}
+                {{dEmoji reaction.id}}
                 <span>{{reaction.count}}</span>
               </button>
             {{/each}}
@@ -144,15 +159,11 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
       <:reaction as |user|>
         {{#if user.reaction}}
-          {{dEmoji
-            user.reaction
-            skipTitle=true
-            class="post-users-popup__reaction"
-          }}
+          {{dEmoji user.reaction class="users-popup__reaction"}}
         {{else}}
-          {{dIcon "d-liked" class="post-users-popup__reaction"}}
+          {{dIcon "d-liked" class="users-popup__reaction"}}
         {{/if}}
       </:reaction>
-    </PostUsersMenu>
+    </UsersPopup>
   </template>
 }

@@ -9,32 +9,57 @@ module Jobs
     def execute(_args)
       return if !SiteSetting.persist_browser_pageview_events
 
-      aggregate
-      backfill
+      aggregate_pageviews
+      aggregate_engagement
+      backfill_referrers
     end
 
     private
 
-    def aggregate
-      start_date, end_date = aggregation_window
+    def aggregate_pageviews
+      start_date, end_date = pageview_aggregation_window
       return if start_date.nil?
 
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
     end
 
-    def aggregation_window
+    def aggregate_engagement
+      start_date, end_date = engagement_aggregation_window
+      return if start_date.nil?
+
+      BrowserPageviewSessionEngagementDailyRollup.aggregate(
+        start_date: start_date,
+        end_date: end_date,
+      )
+    end
+
+    def engagement_aggregation_window
+      end_date = Time.zone.today
+      start_date =
+        BrowserPageviewSessionEngagementDailyRollup.where("date < ?", end_date).maximum(:date) ||
+          BrowserPageviewSessionEngagement.minimum(:created_at)&.to_date
+      return nil, nil if start_date.nil?
+
+      [start_date, end_date]
+    end
+
+    def pageview_aggregation_window
       end_date = Time.zone.today
 
       if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
-        earliest_event_date = BrowserPageviewEvent.minimum(:created_at)&.to_date
+        earliest_event_date =
+          BrowserPageviewEvent
+            .where(source: BrowserPageviewEvent.rollup_source)
+            .minimum(:created_at)
+            &.to_date
         [earliest_event_date, end_date]
       else
         [1.day.ago.to_date, end_date]
       end
     end
 
-    def backfill
+    def backfill_referrers
       rows = next_batch
       return if rows.empty?
 
@@ -46,7 +71,11 @@ module Jobs
     end
 
     def next_batch
-      params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
+      params = {
+        source: BrowserPageviewEvent.rollup_source,
+        version: BrowserPageviewReferrerInspector::VERSION,
+        limit: batch_size,
+      }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -61,6 +90,7 @@ module Jobs
         SELECT id, referrer
         FROM browser_pageview_events
         WHERE referrer IS NOT NULL
+          AND source = :source
           AND (
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
@@ -87,7 +117,11 @@ module Jobs
     end
 
     def recomputable_dates(ids)
-      params = { ids: ids, version: BrowserPageviewReferrerInspector::VERSION }
+      params = {
+        ids: ids,
+        source: BrowserPageviewEvent.rollup_source,
+        version: BrowserPageviewReferrerInspector::VERSION,
+      }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -111,6 +145,7 @@ module Jobs
           FROM browser_pageview_events e
           WHERE e.created_at >= touched_dates.date
             AND e.created_at < touched_dates.date + 1
+            AND e.source = :source
             AND e.referrer IS NOT NULL
             AND NOT EXISTS (
               SELECT 1

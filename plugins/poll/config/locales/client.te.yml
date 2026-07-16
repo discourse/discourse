@@ -24,5 +24,3 @@ te:
           label: రకం
         poll_config:
           step: దశ
-        show_advanced: "అధునాతన ఎంపికలను చూపించండి"
-        hide_advanced: "అధునాతన ఎంపికలను దాచండి"

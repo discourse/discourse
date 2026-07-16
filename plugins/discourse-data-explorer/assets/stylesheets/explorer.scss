@@ -145,6 +145,7 @@ table.group-reports {
     --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
+    position: relative;
     width: var(--width);
 
     @include viewport.until(sm) {
@@ -201,6 +202,10 @@ table.group-reports {
             box-shadow: none;
           }
         }
+      }
+
+      .schema__toggle {
+        flex: 0 0 auto;
       }
 
       .schema-table-name {
@@ -289,6 +294,23 @@ table.group-reports {
           }
         }
       }
+    }
+  }
+
+  &.no-schema {
+    .editor-panel {
+      flex-basis: 100%;
+    }
+
+    .right-panel {
+      width: 0;
+    }
+
+    .schema__toggle.--expand {
+      position: absolute;
+      inset-block-start: var(--space-2);
+      inset-inline-start: -2.75em;
+      z-index: 1;
     }
   }
 
@@ -748,6 +770,11 @@ table.group-reports {
     min-width: 0;
     margin-bottom: 1rem;
     animation: fadein 2s;
+
+    .query-results-chart__form {
+      max-width: 100%;
+      margin-bottom: 0.75rem;
+    }
 
     canvas {
       height: clamp(200px, 50vh, 350px) !important;

@@ -125,18 +125,88 @@ module DiscourseAi
         { key: key, category: category, headline: headline, score: score }
       end
 
+      def topic_category_join(topic_alias: "t", category_alias: "c")
+        "LEFT JOIN categories #{category_alias} ON #{category_alias}.id = #{topic_alias}.category_id"
+      end
+
+      def topic_conditions(topic_alias: "t", category_alias: "c")
+        <<~SQL
+          #{topic_alias}.deleted_at IS NULL
+          AND #{topic_alias}.visible = true
+          AND #{topic_alias}.archetype = 'regular'
+          #{category_scope_condition(topic_alias: topic_alias, category_alias: category_alias)}
+        SQL
+      end
+
+      def category_scope_condition(topic_alias:, category_alias:)
+        case SiteSetting.ai_admin_dashboard_highlights_category_scope
+        when "all"
+          ""
+        when "include"
+          return "AND 1 = 0" if category_ids_with_subcategories.blank?
+
+          "AND #{topic_alias}.category_id IN (:category_ids)"
+        when "include_strict"
+          return "AND 1 = 0" if category_ids.blank?
+
+          "AND #{topic_alias}.category_id IN (:category_ids)"
+        when "exclude"
+          return "" if category_ids_with_subcategories.blank?
+
+          "AND (#{topic_alias}.category_id IS NULL OR #{topic_alias}.category_id NOT IN (:category_ids))"
+        when "exclude_strict"
+          return "" if category_ids.blank?
+
+          "AND (#{topic_alias}.category_id IS NULL OR #{topic_alias}.category_id NOT IN (:category_ids))"
+        else
+          "AND (#{topic_alias}.category_id IS NULL OR #{category_alias}.read_restricted = false)"
+        end
+      end
+
+      def scoped_category_ids
+        case SiteSetting.ai_admin_dashboard_highlights_category_scope
+        when "include", "exclude"
+          category_ids_with_subcategories
+        else
+          category_ids
+        end
+      end
+
+      def category_ids
+        @category_ids ||=
+          SiteSetting
+            .ai_admin_dashboard_highlights_categories
+            .to_s
+            .split("|")
+            .filter_map { |category_id| category_id.presence&.to_i }
+      end
+
+      def category_ids_with_subcategories
+        @category_ids_with_subcategories ||=
+          category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }.uniq
+      end
+
       # ---- internal signals --------------------------------------------------
 
       def new_topics_count(start_date, end_date)
-        DB.query_single(<<~SQL, start_date: start_date, end_date: end_date).first.to_i
+        DB
+          .query_single(
+            <<~SQL,
             SELECT COUNT(*)
             FROM topics t
+            #{topic_category_join}
+            JOIN users u ON u.id = t.user_id
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
-              AND t.deleted_at IS NULL
-              AND t.visible = true
-              AND t.archetype = 'regular'
+              AND #{topic_conditions}
+              AND NOT (u.admin OR u.moderator)
           SQL
+            start_date: start_date,
+            end_date: end_date,
+            category_ids: scoped_category_ids,
+          )
+          .first
+          .to_i
       end
 
       def topic_volume
@@ -157,31 +227,46 @@ module DiscourseAi
       end
 
       def hot_topic
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        row =
+          DB.query(
+            <<~SQL,
             SELECT t.id, t.title, COUNT(p.id) FILTER (WHERE p.post_number > 1) AS replies
             FROM topics t
+            #{topic_category_join}
             JOIN posts p ON p.topic_id = t.id AND p.deleted_at IS NULL AND p.post_type = 1
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
-              AND t.deleted_at IS NULL
-              AND t.visible = true
-              AND t.archetype = 'regular'
+              AND #{topic_conditions}
             GROUP BY t.id, t.title
             ORDER BY replies DESC
             LIMIT 1
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            category_ids: scoped_category_ids,
+          ).first
         return if row.nil? || row.replies.to_i < 10
 
-        avg = DB.query_single(<<~SQL, start_date: @start_date, end_date: @end_date).first.to_f
+        avg =
+          DB
+            .query_single(
+              <<~SQL,
             SELECT AVG(reply_count) FROM (
               SELECT COUNT(p.id) FILTER (WHERE p.post_number > 1) AS reply_count
               FROM topics t
+              #{topic_category_join}
               JOIN posts p ON p.topic_id = t.id AND p.deleted_at IS NULL AND p.post_type = 1
               WHERE t.created_at >= :start_date AND t.created_at < (:end_date::date + 1)
-                AND t.deleted_at IS NULL AND t.visible = true AND t.archetype = 'regular'
+                AND #{topic_conditions}
               GROUP BY t.id
             ) per_topic
           SQL
+              start_date: @start_date,
+              end_date: @end_date,
+              category_ids: scoped_category_ids,
+            )
+            .first
+            .to_f
         return if avg.positive? && row.replies < (avg * 3)
 
         signal(
@@ -193,22 +278,32 @@ module DiscourseAi
       end
 
       def unanswered_gap
-        count = DB.query_single(<<~SQL, start_date: @start_date, end_date: @end_date).first.to_i
+        count =
+          DB
+            .query_single(
+              <<~SQL,
             SELECT COUNT(*)
             FROM topics t
+            #{topic_category_join}
+            JOIN users u ON u.id = t.user_id
             WHERE t.created_at >= :start_date
               AND t.created_at < (:end_date::date + 1)
               AND t.posts_count = 1
-              AND t.deleted_at IS NULL
-              AND t.visible = true
-              AND t.archetype = 'regular'
+              AND #{topic_conditions}
+              AND NOT (u.admin OR u.moderator)
           SQL
+              start_date: @start_date,
+              end_date: @end_date,
+              category_ids: scoped_category_ids,
+            )
+            .first
+            .to_i
         return if count < 5
 
         total = new_topics_count(@start_date, @end_date)
         share = total.positive? ? ((count.to_f / total) * 100).round : 0
-        headline = "#{count} new topics received no reply"
-        headline = "#{headline} (#{share}% of new topics)" if share >= 10
+        headline = "#{count} new member-created topics received no reply"
+        headline = "#{headline} (#{share}% of member-created topics)" if share >= 10
 
         signal(
           :unanswered_gap,
@@ -221,18 +316,27 @@ module DiscourseAi
       def staff_ratio
         return if @period_days > MAX_STAFF_RATIO_DAYS
 
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        row =
+          DB.query(
+            <<~SQL,
             SELECT
               COUNT(*) FILTER (WHERE u.admin OR u.moderator) AS staff,
               COUNT(*) AS total
             FROM posts p
+            JOIN topics t ON t.id = p.topic_id
+            #{topic_category_join}
             JOIN users u ON u.id = p.user_id
             WHERE p.created_at >= :start_date
               AND p.created_at < (:end_date::date + 1)
               AND p.deleted_at IS NULL
               AND p.post_type = 1
               AND u.id > 0
+              AND #{topic_conditions}
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            category_ids: scoped_category_ids,
+          ).first
         return if row.nil? || row.total.to_i < 20
 
         pct = ((row.staff.to_f / row.total) * 100).round
@@ -348,18 +452,28 @@ module DiscourseAi
       def landing_topic
         return if @period_days > MAX_LANDING_TOPIC_DAYS
 
-        row = DB.query(<<~SQL, start_date: @start_date, end_date: @end_date).first
+        row =
+          DB.query(
+            <<~SQL,
             SELECT e.topic_id, t.title, COUNT(*) AS visits
             FROM browser_pageview_events e
             JOIN topics t ON t.id = e.topic_id
+            #{topic_category_join}
             WHERE e.created_at >= :start_date
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
+              AND e.source = :source
+              AND #{topic_conditions}
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
             LIMIT 1
           SQL
+            start_date: @start_date,
+            end_date: @end_date,
+            source: BrowserPageviewEvent.rollup_source,
+            category_ids: scoped_category_ids,
+          ).first
         return if row.nil? || row.visits.to_i < 50
 
         signal(

@@ -359,6 +359,13 @@ lt:
       trust_level_2: "pasitikėjimo_lygis_2"
       trust_level_3: "pasitikėjimo_lygis_3"
       trust_level_4: "pasitikėjimo_lygis_4"
+    default_full_names:
+      everyone: "Visi"
+      admins: "Administratoriai"
+      moderators: "Moderatoriai"
+      staff: "Personalas"
+      anonymous_users: "Anoniminiai vartotojai"
+      logged_in_users: "Prisijungę vartotojai"
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
@@ -924,6 +931,7 @@ lt:
         level: "Patikimumo lygis"
         count: "Nariai"
         share: "Dalintis"
+        signups: "Registracijos"
       levels:
         "0": "Naujas"
         "1": "Pagrindinis"
@@ -1259,8 +1267,6 @@ lt:
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
     silence_new_user_sensitivity: "Tikimybė, kad naujas vartotojas bus nutildytas remiantis šlamšto vėliavomis"
     cooldown_minutes_after_hiding_posts: "Minučių skaičius, kiek vartotojas turi laukti, kol galės redaguoti įrašą, paslėptą per bendruomenės žymėjimą"
-    max_topics_in_first_day: "Maksimalus temų skaičius, kurį vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
-    max_replies_in_first_day: "Maksimalus atsakymų, kuriuos vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
     tl2_additional_likes_per_day_multiplier: "Padidinkite tl2 (nario) paspaudimų \"patinka\" limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_likes_per_day_multiplier: "Padidinkite patinkančių paspaudimų limitą per dieną tl3 (įprastai) padaugindami iš šio skaičiaus"
     tl4_additional_likes_per_day_multiplier: "Padidinkite tl4 (lyderio) paspaudimų „patinka“ limitą per dieną, padaugindami iš šio skaičiaus"
@@ -2566,6 +2572,8 @@ lt:
   search_logs:
     graph_title: "Ieškoti kontakto"
   onebox:
+    google_meet:
+      meeting_code: "Kodas:"
     github:
       closed: "uždaryta"
       status_date:
@@ -2615,6 +2623,8 @@ lt:
     actions:
       agree:
         title: "Taip"
+      agree_and_keep_deleted:
+        title: "Palikti įrašą ištrintą"
       agree_and_silence:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:

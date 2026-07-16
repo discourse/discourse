@@ -24,6 +24,9 @@ sv:
             topic_id:
               label: Ämnes-ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chatt"
       invite_user_notification: "%{username} har bjudit in dig till: %{description}"
       on_holiday: "På semester"
       disable_holiday: "Inaktivera"
@@ -360,7 +363,6 @@ sv:
       models:
         invitee:
           status:
-            unknown: "Inte intresserad"
             going: "Kommer"
             interested: "Intresserad"
         event:
@@ -428,11 +430,6 @@ sv:
             last: "senaste"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valfritt"
-        location:
-          label: "Plats"
         description:
           label: "Beskrivning"
         name:

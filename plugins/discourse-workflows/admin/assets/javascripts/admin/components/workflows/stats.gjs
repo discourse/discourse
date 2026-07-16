@@ -1,7 +1,7 @@
 import DStatTiles from "discourse/ui-kit/d-stat-tiles";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   {{#if @stats.total}}
     <DStatTiles
       title={{i18n "discourse_workflows.stats.period"}}

@@ -22,6 +22,8 @@ DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
     SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: true })
   elsif setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: true)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: true)
   end
 end
 
@@ -31,5 +33,7 @@ DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
     SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: false })
   elsif setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: false)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: false)
   end
 end

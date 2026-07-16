@@ -37,6 +37,10 @@ tr_TR:
         no_visible_children_hint: "Bu konteyner bloğu, hiçbir alt öğesi görünür olmadığı için görüntülenmez."
         condition_failed_hint: "Bu blok, koşulları karşılanmadığı için görüntülenmez."
         head_hidden_tail_hint: "Bu blok, `head` konteynerinde başka bir blok önce işlendiği için işlenmez."
+    access_control:
+      manage:
+        access_permission_editor: "Düzenleyici"
+        access_permission_remove: "Kaldır"
     carousel:
       go_to_slide: "%{index} numaralı slayta git"
       previous: "Önceki slayt"
@@ -440,6 +444,9 @@ tr_TR:
     age: "Yaş"
     joined: "Katılma Tarihi"
     admin_title: "Yönetici"
+    advanced_mode_toggle:
+      advanced_mode: "Gelişmiş mod"
+      simple_mode: "Basit mod"
     show_more: "daha fazla göster"
     show_help: "Seçenekler"
     links: "Bağlantılar"
@@ -1594,6 +1601,9 @@ tr_TR:
       notifications: "Bildirimler"
       statistics: "İstatistikler"
       desktop_notifications:
+        push_level:
+          none: "Devre Dışı"
+          all: "Etkin mi"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
         perm_denied_expl: "Bildirim izinlerini reddettiniz. Bildirimlere tarayıcı ayarlarınızdan izin verebilirsiniz."
         each_browser_note: "Not: Kullandığınız her tarayıcıda bu ayarı değiştirmeniz gerekir. Bu ayardan bağımsız olarak, kullanıcı menüsünden bildirimleri duraklattığınızda tüm bildirimler devre dışı bırakılır."
@@ -2622,7 +2632,6 @@ tr_TR:
     created: "Oluşturuldu"
     created_lowercase: "oluşturuldu"
     trust_level: "Güven Seviyesi"
-    search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
       header_title: "Hoş geldiniz!"
       disclaimer: "Kaydolarak, <a href='%{privacy_link}' target='blank'>gizlilik politikası</a> ve <a href='%{tos_link}' target='blank'>hizmet şartlarını</a>kabul etmiş olursunuz."
@@ -2670,6 +2679,9 @@ tr_TR:
       email_label: "E-posta"
       continue_button: "Devam et"
       verify_button: "Devam et"
+      signup_title: "Hesabınızı oluşturun"
+      account_ready_continue: "Devam et"
+      username_label: "Kullanıcı Adı"
     login:
       header_title: "Tekrar hoş geldiniz"
       title: "Giriş Yap"
@@ -2896,6 +2908,9 @@ tr_TR:
       default: Özel emoji'ler
     filter_input:
       clear: "Filtreyi temizle"
+    filter_controls:
+      reset: "Filtreyi sıfırla"
+      toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
       search_placeholder: "Arama simgeleri..."
@@ -3754,6 +3769,9 @@ tr_TR:
         banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
         view_full_topic: "Konunun tamamını görüntüle"
         view_parent_context: "Üst bağlamı görüntüle"
+    share_target:
+      new_topic: "Yeni konu"
+      new_message: "Yeni İleti"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3806,40 +3824,8 @@ tr_TR:
       read_more_in_category: "Daha fazla okumak ister misiniz? %{categoryLink} kategorisindeki diğer konulara göz atın veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
+      sr_read: "oku"
       participant_groups: "Katılımcı grupları"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a>}
-              other { <a href="{basePath}/unread"># okunmamış</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-              other { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { veya diğer konulara göz atın {categoryLink}}
-          false { veya <a href="{basePath}/latest">en son konuları görüntüleyin</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} yanıt, ilk gönderiye atla"
         other: "%{count} yanıt, ilk gönderiye atla"
@@ -4322,8 +4308,10 @@ tr_TR:
           one: "%{count} çevrilmiş yerel ayarı görüntüle"
           other: "%{count} çevrilmiş yerel ayarı görüntüle"
         modal:
-          title: "Gönderi için çeviriler"
+          title: "Çeviriler"
           confirm_delete: "\"%{languageCode}\" için çevirileri silmek istediğinizden emin misiniz?"
+          post_language: "Gönderinin dili"
+          discard_language_change: "Değişikliği sil"
         success: "Çeviriler başarıyla güncellendi"
         post_language_selector:
           title: "Gönderinin dili"
@@ -4466,7 +4454,6 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
-        diff_too_complex: "Fark görüntülenemeyecek kadar karmaşık. Lütfen daha küçük düzenlemeleri tek tek görüntülemeyi deneyin."
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"
@@ -4603,7 +4590,6 @@ tr_TR:
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug: "Kategori Kısa Adı"
       parent: "Ana kategori"
-      slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
       errors:
@@ -5193,7 +5179,6 @@ tr_TR:
       synonyms: "Eş Anlamlılar"
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
       add_synonyms_label: "Eş anlamlı ekleyin:"
@@ -5385,8 +5370,6 @@ tr_TR:
       no_read_topics_body: "Tartışmaları okumaya başladığınızda, burada bir liste görürsünüz. Okumaya başlamak için <a href='%{topUrl}'>En İyi</a> veya <a href='%{categoriesUrl}'>Kategoriler</a>'de ilginizi çeken konuları arayın veya anahtar kelime %{searchIcon} ile arama yapın"
     no_group_messages_title: "Grup mesajı bulunamadı"
     topic_entrance:
-      sr_jump_top_button: "İlk gönderiye atla - %{date}"
-      sr_jump_bottom_button: "Son gönderiye atla - %{date}"
       jump_top_button_title: "İlk gönderiye atla"
       jump_bottom_button_title: "Son gönderiye atla"
     fullscreen_table:
@@ -5753,8 +5736,6 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Filtreyi sıfırla"
-    toggle_filters: "Açılır filtreleri değiştir"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5769,6 +5750,7 @@ tr_TR:
         title: "Mevcut raporlar listesi"
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
+        all_groups: "Tüm gruplar"
         group_engagement: "Taahhüt"
         group_traffic: "Trafik"
         group_members: "Üyeler"
@@ -5983,7 +5965,6 @@ tr_TR:
             apple_touch_icon:
               title: "Apple dokunmatik simgesi"
               description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa large_icon kullanılır."
-              help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
             digest_logo:
               title: "Digest logosu"
               description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa `logo` ayarındaki görüntü kullanılır."
@@ -5991,6 +5972,9 @@ tr_TR:
             opengraph_image:
               title: "OpenGraph görüntüsü"
               description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+            og_image_preview:
+              generate: "Oluştur"
+              topic_id_label: "Konu kimliği"
             x_summary_large_image:
               title: "X özeti büyük görüntü"
               description: "X kartı \"özet büyük görüntü\". Boş bırakılırsa aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
@@ -6172,6 +6156,22 @@ tr_TR:
               title: "Gönderiler ve konular"
             stats_and_thresholds:
               title: "İstatistikler ve eşikler"
+        category_management:
+          create_category: "Kategori oluştur"
+          tabs:
+            settings: "Ayarlar"
+          types:
+            all:
+              title: "Tüm kategoriler"
+          filter_placeholder: "Kategorileri filtrele"
+          table:
+            category: "Kategori"
+            visibility: "Görünürlük"
+            topics: "Konular"
+          visibility:
+            public: "Genel"
+          visibility_filter:
+            all: "Tüm kategoriler"
         permalinks:
           title: "Kalıcı Bağlantılar"
           header_description: "Forum tarafından bilinmeyen URL'lere başvuruda bulunmak için yönlendirmeler"
@@ -6319,7 +6319,7 @@ tr_TR:
         stale_data: "Son zamanlarda güncelleme kontrolü yapılmadı. Sidekiq'in çalıştığından emin olun."
         version_check_pending: "Yakın zamanda güncellemişsiniz gibi görünüyor. Harika!"
         installed_version: "Yüklendi"
-        latest_version: "En son"
+        github: "Github"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         dismiss_notice: "Yok say"
         new_features:
@@ -6396,6 +6396,7 @@ tr_TR:
               searches: "Aramalar"
               status: "Durum"
         reports_section:
+          header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
           modal:
             enabled_heading: "Etkin mi"
@@ -6940,6 +6941,8 @@ tr_TR:
             initial_members: "Genişletilmiş üyeler"
             initial_members_description: "Daha fazlasını görüntüle düğmesi eklenmeden önce gösterilecek grup üyesi sayısı."
             show_description: "Açıklamayı dâhil et"
+          locale_selector:
+            title: "Dil"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -8043,11 +8046,12 @@ tr_TR:
         silence_reason: "Susturulma sebebi"
         bulk_actions:
           title: "Toplu eylemler"
-          admin_cant_be_deleted: "Bu kullanıcı, yönetici olduğu için silinemez"
-          too_many_or_old_posts: "Bu kullanıcı silinemez, çok fazla sayıda gönderisi veya çok eski bir gönderisi var"
-          too_many_selected_users:
-            one: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
-            other: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
+          select_all: "Tümünü seç"
+          clear_all: "Tümünü temizle"
+          suspend:
+            confirmation_modal:
+              close: "Bitir"
+              confirm: "Askıya al"
           delete:
             label: "Kullanıcı sil…"
             confirmation_modal:
@@ -8075,6 +8079,9 @@ tr_TR:
           suspended: "Askıya Alındı"
           silenced: "Susturuldu"
           staged: "Aşamalı"
+        activation_filter:
+          all: "Tüm kullanıcılar"
+          activated: "Etkinleştirildi"
         approved: "Onaylanmış mı?"
         titles:
           active: "Aktif kullanıcılar"

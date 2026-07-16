@@ -686,5 +686,314 @@ RSpec.describe AdminDashboardSiteTraffic do
         expect(second[:top_countries][:rows].first[:country_code]).to eq("US")
       end
     end
+
+    context "for direct traffic share" do
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      def aggregate_referrer_rollups
+        BrowserPageviewReferrerDailyRollup.aggregate(
+          start_date: "2026-05-01".to_date,
+          end_date: "2026-05-01".to_date,
+        )
+      end
+
+      it "returns the rounded share of pageviews that arrived with no referrer" do
+        3.times do
+          Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-01")
+        end
+        9.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 25,
+          },
+          bounce_rate: {
+            value: nil,
+          },
+          average_session_duration_seconds: {
+            value: nil,
+          },
+        )
+      end
+
+      it "reports zero direct traffic when every tracked pageview had a referrer" do
+        4.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 0,
+          },
+          bounce_rate: {
+            value: nil,
+          },
+          average_session_duration_seconds: {
+            value: nil,
+          },
+        )
+      end
+
+      it "computes the share from logged-in pageviews only when login is required" do
+        SiteSetting.login_required = true
+        member = Fabricate(:user)
+
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: nil,
+          user_id: member.id,
+          created_at: "2026-05-01",
+        )
+        Fabricate(
+          :browser_pageview_event,
+          normalized_referrer: nil,
+          user_id: nil,
+          created_at: "2026-05-01",
+        )
+        2.times do
+          Fabricate(
+            :browser_pageview_event,
+            normalized_referrer: "google.com",
+            user_id: member.id,
+            created_at: "2026-05-01",
+          )
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          direct_traffic: {
+            value: 33,
+          },
+          bounce_rate: {
+            value: nil,
+          },
+          average_session_duration_seconds: {
+            value: nil,
+          },
+        )
+      end
+
+      it "omits direct traffic when persist_browser_pageview_events is disabled" do
+        SiteSetting.persist_browser_pageview_events = false
+
+        3.times do
+          Fabricate(:browser_pageview_event, normalized_referrer: nil, created_at: "2026-05-01")
+        end
+        aggregate_referrer_rollups
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+        )
+      end
+
+      it "omits direct traffic when no pageviews were tracked in the period" do
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          bounce_rate: {
+            value: nil,
+          },
+          average_session_duration_seconds: {
+            value: nil,
+          },
+        )
+      end
+    end
+
+    context "for bounce rate and average session duration" do
+      before { SiteSetting.persist_browser_pageview_events = true }
+
+      it "returns bounce rate and average session duration summed across the audience" do
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 8,
+          bounced: 3,
+          engaged_seconds_total: 400,
+        )
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: true,
+          sessions: 12,
+          bounced: 2,
+          engaged_seconds_total: 200,
+        )
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 4, 20),
+          logged_in: false,
+          sessions: 100,
+          bounced: 100,
+          engaged_seconds_total: 100_000,
+        )
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 20),
+          logged_in: false,
+          sessions: 100,
+          bounced: 100,
+          engaged_seconds_total: 100_000,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          bounce_rate: {
+            value: 25,
+          },
+          average_session_duration_seconds: {
+            value: 30,
+          },
+        )
+      end
+
+      it "reports zero average duration, not a placeholder, for visits with no engaged time" do
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 8,
+          bounced: 8,
+          engaged_seconds_total: 0,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 100,
+          },
+          average_session_duration_seconds: {
+            value: 0,
+          },
+        )
+      end
+
+      it "rounds bounce rate and average session duration to whole numbers" do
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 7,
+          bounced: 3,
+          engaged_seconds_total: 102,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 43,
+          },
+          average_session_duration_seconds: {
+            value: 15,
+          },
+        )
+      end
+
+      it "includes rollup rows on the exact first and last day of the period" do
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 1),
+          logged_in: false,
+          sessions: 4,
+          bounced: 1,
+          engaged_seconds_total: 40,
+        )
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 14),
+          logged_in: false,
+          sessions: 6,
+          bounced: 4,
+          engaged_seconds_total: 120,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to include(
+          bounce_rate: {
+            value: 50,
+          },
+          average_session_duration_seconds: {
+            value: 16,
+          },
+        )
+      end
+
+      it "returns nil values when no sessions fall in the period" do
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+          bounce_rate: {
+            value: nil,
+          },
+          average_session_duration_seconds: {
+            value: nil,
+          },
+        )
+      end
+
+      it "omits the KPIs entirely when persist_browser_pageview_events is off" do
+        SiteSetting.persist_browser_pageview_events = false
+        Fabricate(
+          :browser_pageview_session_engagement_daily_rollup,
+          date: Date.new(2026, 5, 10),
+          logged_in: false,
+          sessions: 8,
+          bounced: 3,
+          engaged_seconds_total: 240,
+        )
+
+        expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-14")[:kpis]).to eq(
+          browser_pageviews: {
+            value: 0,
+          },
+          logged_in_share: {
+            value: 0,
+          },
+        )
+      end
+    end
   end
 end

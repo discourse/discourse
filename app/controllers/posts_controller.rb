@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include TagParamLimit
+
   # Bug with Rails 7+
   # see https://github.com/rails/rails/issues/44867
   self._flash_types -= [:notice]
@@ -41,6 +43,8 @@ class PostsController < ApplicationController
   end
 
   def latest
+    discourse_expires_in 1.minute
+
     params.permit(:before)
     last_post_id = params[:before].to_i
     last_post_id = nil if last_post_id <= 0
@@ -190,6 +194,8 @@ class PostsController < ApplicationController
   end
 
   def create
+    return if reject_too_many_tags!(:tags)
+
     manager_params = create_params
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?

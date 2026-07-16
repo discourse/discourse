@@ -14,7 +14,12 @@ module Migrations
           :primary_key_column_names,
           :constraints,
           :model_mode,
+          :conflict_strategy,
         ) do
+          def initialize(conflict_strategy: :raise, **args)
+            super(conflict_strategy:, **args)
+          end
+
           def sorted_columns
             pk_position = primary_key_column_names.each_with_index.to_h
             columns.sort_by { |c| [c.is_primary_key ? 0 : 1, pk_position.fetch(c.name, 0), c.name] }

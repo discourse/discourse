@@ -21,6 +21,9 @@ export default <template>
       @refreshSections={{@controller.fetchSections}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
+      @problems={{@controller.problems}}
+      @onRefreshProblems={{@controller.refreshSiteAdvice}}
+      @onIgnoreProblem={{@controller.ignoreProblem}}
     />
   {{else}}
     <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
@@ -93,7 +96,7 @@ export default <template>
 
         {{#if @controller.isReportsTabVisible}}
           <li class="navigation-item reports">
-            <LinkTo @route="admin.dashboardReports" class="navigation-link">
+            <LinkTo @route="adminReports" class="navigation-link">
               {{i18n "admin.dashboard.reports_tab"}}
             </LinkTo>
           </li>

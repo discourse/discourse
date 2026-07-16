@@ -21,7 +21,6 @@ zh_CN:
       dashboard:
         emotion:
           title: "情绪"
-          description: "该表列出了按确定的情绪分类的帖子数量。使用 'SamLowe/roberta-base-go_emotions' 模型进行分类。"
         reports:
           filters:
             group_by:
@@ -240,6 +239,15 @@ zh_CN:
           select_agent: "选择智能体..."
       bot_chats:
         tab_label: "机器人聊天"
+      ai_tool_approval:
+        loading: "正在加载…"
+        agent: "智能体"
+        tool: "操作"
+        user: "用户"
+        approve: "批准"
+        reject: "拒绝"
+        approved: "已批准"
+        rejected: "遭拒"
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
@@ -306,6 +314,7 @@ zh_CN:
             related_topics: "相关话题"
             semantic_search: "语义搜索"
         admin_dashboard:
+          highlights: "高亮显示"
           setting_groups:
             settings: "基本设置"
         discord:
@@ -338,7 +347,6 @@ zh_CN:
           translate: "翻译"
           markdown_tables: "生成 Markdown 表"
           custom_prompt: "自定义提示"
-          image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建工具"
           chat_thread_titles: "聊天消息串标题"
@@ -347,6 +355,9 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        image_caption:
+          setting_groups:
+            settings: "设置"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -382,8 +393,7 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
-        excluded_categories: "排除类别"
-        excluded_categories_description: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
+        category_scope: "类别"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
@@ -535,16 +545,6 @@ zh_CN:
         description: "描述"
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
-        max_context_posts: "最大上下文帖子数"
-        max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
-        execution_mode: "执行模式"
-        execution_mode_help: "控制智能体如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用 token 预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
-        execution_mode_options:
-          default: "默认值（固定限值）"
-          agentic: "Agentic（Token 预算）"
-        max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
-        compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传功能
         vision_enabled_help: 如果启用，当所选模型支持图像输入时，此代理可以包含帖子和聊天中的图像。
@@ -617,6 +617,12 @@ zh_CN:
         temperature_help: "用于 LLM 的 Temperature。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
+        thinking_effort_options:
+          none: "无"
+          low: "低"
+          medium: "中"
+          high: "高"
+          max: "最大"
         priority: "优先级"
         priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
@@ -869,9 +875,7 @@ zh_CN:
             custom: "自定义…"
           hours: "小时"
           max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大词元（单词和字符）数。词元是 AI 模型处理文本时使用的单位，1 个词元约等于 4 个字符或 3/4 个单词。"
-          max_tokens_required: "如果未设置最大使用量，则必须设置"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
-          max_usages_required: "如果未设置最大词元数，则必须设置"
         credit_allocation:
           credits_remaining: "剩余 %{remaining}/%{total} 点数 (%{percentage}%)"
           soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 点数"
@@ -880,7 +884,7 @@ zh_CN:
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
-          ai_helper_image_caption: "图片标题"
+          ai_image_caption: "图片标题"
           ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
@@ -992,8 +996,6 @@ zh_CN:
         choose: "帮我选一个"
         suggestions: "建议"
         suggest_errors:
-          too_many_tags:
-            other: "您最多只能有 %{count} 个标签"
           no_suggestions: "没有可用建议"
         missing_content: "请输入一些内容以生成建议。"
         context_menu:
@@ -1027,11 +1029,6 @@ zh_CN:
           select: "选择"
           selected: "已选择"
           try_again: "重试"
-        image_caption:
-          button_label: "使用 AI 生成标题"
-          generating: "正在生成标题…"
-          credits: "由 AI 生成标题"
-          save_caption: "保存"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
       errors:
         credit_limit_dialog:
@@ -1121,8 +1118,8 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体"
-        llm: "模型"
+        agent: "智能体:"
+        llm: "模型:"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"

@@ -22,6 +22,10 @@ da:
         in_location: "i"
         hidden: "skjult"
         failed: "fejlet"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktør"
+        access_permission_remove: "Fjern"
     number:
       format:
         separator: "."
@@ -375,6 +379,9 @@ da:
     age: "Alder"
     joined: "Tilmeldt"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Avanceret tilstand"
+      simple_mode: "Enkel tilstand"
     show_more: "vis mere"
     show_help: "Indstillinger"
     links: "Links"
@@ -1339,6 +1346,9 @@ da:
       notifications: "Notifikationer"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Deaktiveret"
+          all: "Aktiveret"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         each_browser_note: "Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle notifikationer vil blive deaktiveret, hvis du pauserer notifikationer fra brugermenuen, uanset denne indstilling."
@@ -2104,7 +2114,6 @@ da:
     created: "Oprettet"
     created_lowercase: "oprettet"
     trust_level: "Tillidsniveau"
-    search_hint: "brugernavn, email eller IP adresse"
     create_account:
       header_title: "Velkommen!"
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
@@ -2151,6 +2160,9 @@ da:
       email_label: "E-mail"
       continue_button: "Fortsæt"
       verify_button: "Fortsæt"
+      signup_title: "Opret din konto"
+      account_ready_continue: "Fortsæt"
+      username_label: "Brugernavn"
     login:
       header_title: "Velkommen tilbage"
       title: "Log ind"
@@ -2848,6 +2860,9 @@ da:
       deleted_post_placeholder: "[slettet]"
       ignored_post_placeholder: "[ignorerede]"
       pinned_reply: "Fastgjort"
+    share_target:
+      new_topic: "Nyt emne"
+      new_message: "Ny meddelelse"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -2895,6 +2910,7 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
+      sr_read: "læst"
       participant_groups: "Deltagergrupper"
       created_at: "Oprettet: %{date}"
       bumped_at: "Senest: %{date}"
@@ -3299,6 +3315,8 @@ da:
           edit: "Rediger"
           delete: "Slet"
         add: "Tilføj ny oversættelse"
+        modal:
+          title: "Oversættelser"
         post_language_selector:
           none: "Ikke indstillet"
       errors:
@@ -3504,7 +3522,6 @@ da:
         tag_group: "Mærkegruppe"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       create_long: "Opret en ny kategori"
-      slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
       validations:
@@ -4101,8 +4118,6 @@ da:
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
     no_group_messages_title: "Ingen gruppemeddelelser fundet"
     topic_entrance:
-      sr_jump_top_button: "Gå til første indlæg - %{date}"
-      sr_jump_bottom_button: "Gå til sidste indlæg - %{date}"
       jump_top_button_title: "Hop til det første indlæg"
       jump_bottom_button_title: "Hop til det sidste indlæg"
     fullscreen_table:
@@ -4331,6 +4346,7 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         back: "Tilbage til alle rapporter"
+        all_groups: "Alle grupper"
         group_traffic: "Trafik"
         group_members: "Brugere"
         group_other: "Andre"
@@ -4426,6 +4442,9 @@ da:
               title: "Apple touch-ikon"
             opengraph_image:
               title: "OpenGraph billede"
+            og_image_preview:
+              generate: "Generér"
+              topic_id_label: "Emne ID"
         fonts:
           title: "Skrifttyper"
           form:
@@ -4501,6 +4520,21 @@ da:
               title: "Deling"
             posts_and_topics:
               title: "Indlæg & emner"
+        category_management:
+          tabs:
+            settings: "Indstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          filter_placeholder: "Filtrer kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighed"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalinks"
           header_description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet"
@@ -4573,7 +4607,7 @@ da:
         stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
         version_check_pending: "Det ser ud til, at du har opdateret for nylig. Fantastisk!"
         installed_version: "Installeret"
-        latest_version: "Seneste version"
+        github: "GitHub"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
         dismiss_notice: "Ignorér"
         new_features:
@@ -4644,6 +4678,7 @@ da:
               searches: "søgninger"
               status: "Status"
         reports_section:
+          header_action: "Administrér"
           no_data: "Ingen data at vise"
           modal:
             enabled_heading: "Aktiveret"
@@ -5029,6 +5064,8 @@ da:
           city_for_disputes_placeholder: "By"
           extra_groups:
             groups: "Grupper"
+          locale_selector:
+            title: "Sprog"
           optional: "(valgfri)"
           update: "Opdater"
           toasts:
@@ -5819,6 +5856,11 @@ da:
         active: "Aktiveret"
         status: "Status"
         bulk_actions:
+          clear_all: "Ryd alle"
+          suspend:
+            confirmation_modal:
+              close: "Luk"
+              confirm: "Suspendér"
           delete:
             confirmation_modal:
               close: "Luk"
@@ -5830,6 +5872,9 @@ da:
           suspended: "Suspenderet"
           silenced: "Mådeholdt (silenced)"
           staged: "Forhåndsoprettet"
+        activation_filter:
+          all: "Alle brugere"
+          activated: "Aktiveret"
         approved: "Godkendt?"
         titles:
           active: "Aktive brugere"

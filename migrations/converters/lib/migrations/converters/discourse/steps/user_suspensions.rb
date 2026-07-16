@@ -3,10 +3,8 @@
 module Migrations
   module Converters
     module Discourse
-      class UserSuspensions < Conversion::ProgressStep
+      class UserSuspensions < Conversion::Step
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*)

@@ -58,7 +58,7 @@ module DiscourseSolved
           end
 
           def configuration_schema
-            {
+            schema = {
               general_category_settings: {
                 name: {
                   default: I18n.t("category_types.support.name"),
@@ -106,32 +106,54 @@ module DiscourseSolved
                   label:
                     I18n.t("discourse_solved.category_type.notify_on_staff_accept_solved.label"),
                 },
-                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => {
-                  default: true,
-                  type: :bool,
-                  label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
-                },
-                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => {
-                  default: true,
-                  type: :bool,
-                  label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
-                  description:
-                    I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
-                },
               },
               site_texts: {
-                "js.solved.shared_issue.label" => {
-                  label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
-                  description:
-                    I18n.t("discourse_solved.category_type.shared_issue_label.description"),
-                  depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
-                },
               },
             }
+
+            # The empty-box-on-unsolved styling isn't used by the Horizon theme,
+            # so hide the toggle (and the field) when Horizon is the site's
+            # default theme.
+            unless default_theme_horizon?
+              schema[:category_custom_fields][
+                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
+              }
+            end
+
+            if SiteSetting.enable_solved_shared_issues
+              schema[:category_custom_fields][
+                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
+              }
+
+              schema[:site_texts]["js.solved.shared_issue.label"] = {
+                label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.shared_issue_label.description"),
+                depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
+              }
+            end
+
+            schema
           end
 
           def icon
             "person_raising_hand"
+          end
+
+          private
+
+          def default_theme_horizon?
+            SiteSetting.default_theme_id == Theme.horizon_theme.id
           end
         end
       end

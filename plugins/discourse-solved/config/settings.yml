@@ -70,14 +70,25 @@ discourse_solved:
       status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/398338"
+      # Offers a category type that enables the plugin when chosen, so it must stay
+      # usable while the plugin is disabled.
+      requires_plugin_enabled: false
   enable_solved_shared_issues:
     default: false
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402498"
+  enable_solved_badges:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/406386"
   discourse_solved_admin_dashboard_seeded:
     default: false
     hidden: true

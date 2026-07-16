@@ -33,6 +33,9 @@ tr_TR:
             topic_id:
               label: Konu kimliği
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Sohbet"
       invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
       preferences:
         all_events: "Etkinlik Takvimi - Tüm Etkinlikler"
@@ -412,7 +415,6 @@ tr_TR:
           no_users: "Kullanıcı bulunamadı"
           leave_event: "Etkinlikten ayrıl"
           status:
-            unknown: "İlgilenmiyorum"
             going: "Gidiyorum"
             interested: "İlgileniyorum"
             going_count:
@@ -472,7 +474,6 @@ tr_TR:
         create_event_title: "Etkinlik oluşturun"
         update_event_title: "Etkinliği düzenleyin"
         advanced_settings_title: "Gelişmiş ayarlar"
-        advanced_settings: "Gelişmiş ayarlar"
         confirm_delete: "Bu etkinliği silmek istediğinizden emin misiniz?"
         confirm_close: "Bu etkinliği kapatmak istediğinizden emin misiniz?"
         confirm_open: "Bu etkinliği açmak istediğinizden emin misiniz?"
@@ -515,11 +516,7 @@ tr_TR:
         allow_chat:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
-        url:
-          label: "URL"
-          placeholder: "İsteğe bağlı"
         location:
-          label: "Konum"
           placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
         description:
           label: "Açıklama"

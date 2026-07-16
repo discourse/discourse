@@ -152,23 +152,33 @@ async function initLightbox(elem, additionalData = {}) {
       html: "",
       onInit: (caption, pswp) => {
         pswp.on("change", () => {
-          const { element, title, inlineSVG } = pswp.currSlide.data;
+          const { aiDescription, element, title, inlineSVG } =
+            pswp.currSlide.data;
 
-          if (!element || !title || inlineSVG) {
+          if (!element || inlineSVG) {
+            caption.innerHTML = "";
             return;
           }
 
-          const captionTitle = escapeExpression(title);
+          const captionTitle = title ? escapeExpression(title) : null;
+          const captionAiDescription = aiDescription
+            ? escapeExpression(aiDescription)
+            : null;
           const captionDetails =
             element.querySelector(".informations")?.textContent;
           const titleEl = captionTitle
             ? `<div class='pswp__caption-title'>${captionTitle}</div>`
             : null;
+          const aiDescriptionEl = captionAiDescription
+            ? `<div class='pswp__caption-ai-description'>${captionAiDescription}</div>`
+            : null;
           const detailsEl = captionDetails
             ? `<div class='pswp__caption-details'>${captionDetails}</div>`
             : null;
 
-          caption.innerHTML = [titleEl, detailsEl].filter(Boolean).join("");
+          caption.innerHTML = [titleEl, aiDescriptionEl, detailsEl]
+            .filter(Boolean)
+            .join("");
         });
       },
     });
@@ -337,6 +347,7 @@ async function initLightbox(elem, additionalData = {}) {
       el.getAttribute("data-orig-src") ||
       null;
     data.title = el.title || imgEl?.alt || imgEl?.title || null;
+    data.aiDescription = imgEl?.getAttribute("aria-description") || null;
     data.base62SHA1 =
       imgEl?.getAttribute("data-base62-sha1") ||
       el.getAttribute("data-base62-sha1") ||

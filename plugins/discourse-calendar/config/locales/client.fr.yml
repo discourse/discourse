@@ -25,6 +25,9 @@ fr:
             topic_id:
               label: ID du sujet
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Discussion"
       invite_user_notification: "%{username} vous a invité(e) à rejoindre : %{description}"
       preferences:
         all_events: "Tous les événements"
@@ -400,7 +403,6 @@ fr:
           no_users: "Aucun utilisateur trouvé"
           leave_event: "Quitter l'événement"
           status:
-            unknown: "Pas intéressé(e)"
             going: "Participera"
             interested: "Intéressé(e)"
             going_count:
@@ -493,11 +495,7 @@ fr:
         allow_chat:
           label: "Intégrations de la messagerie instantanée"
           checkbox_label: "Créez et gérez un canal de discussion spécifique à un événement"
-        url:
-          label: "URL"
-          placeholder: "Facultatif"
         location:
-          label: "Emplacement"
           placeholder: "Ajoutez un lieu, un lien ou autre."
         description:
           label: "Description"

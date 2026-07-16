@@ -7,6 +7,8 @@ module NodeExecutionHelpers
     input_items: nil,
     input_groups: nil,
     node_context: nil,
+    user: nil,
+    workflow: nil,
     &block
   )
     item = { "json" => {} } if item.nil? && input_items.nil?
@@ -15,8 +17,9 @@ module NodeExecutionHelpers
     node_parameters = configuration.except("credentials")
     action = described_class.new(parameters: node_parameters, credentials: node_credentials)
     resolver_context = { "$json" => input_items.first&.dig("json") || {} }
-    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
-    resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
+    sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context, user: user)
+    resolver =
+      DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox, user: user)
     kwargs = {
       input_items: input_items,
       input_groups: input_groups,
@@ -27,8 +30,10 @@ module NodeExecutionHelpers
       credential_schema: described_class.credentials,
       node_identifier: described_class.identifier,
       resolver_context: resolver_context,
+      user: user,
     }
     kwargs[:node_context] = node_context if node_context
+    kwargs[:workflow] = workflow if workflow
 
     ctx = DiscourseWorkflows::Executor::NodeExecutionContext.new(**kwargs)
     output_arrays = action.execute(ctx)
@@ -44,8 +49,8 @@ module NodeExecutionHelpers
     sandbox&.dispose
   end
 
-  def execute_node(configuration:, item: { "json" => {} })
-    result = execute_node_output(configuration: configuration, item: item)
+  def execute_node(configuration:, item: { "json" => {} }, workflow: nil)
+    result = execute_node_output(configuration: configuration, item: item, workflow: workflow)
     result.first.first["json"]
   end
 end

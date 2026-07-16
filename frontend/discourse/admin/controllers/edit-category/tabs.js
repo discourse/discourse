@@ -67,6 +67,7 @@ const SIMPLIFIED_FIELD_LIST = [
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
+const DISCUSSION_TYPE_ID = "discussion";
 
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
@@ -137,6 +138,10 @@ export default class EditCategoryTabsController extends Controller {
     };
     data.site_texts = {};
     data.category_types = Object.keys(this.model.categoryTypes ?? {});
+
+    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
+      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    }
 
     Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
       categoryType.configuration_schema.category_custom_fields?.forEach(

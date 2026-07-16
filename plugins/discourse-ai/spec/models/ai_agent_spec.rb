@@ -16,18 +16,67 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
-  it "validates context settings" do
-    expect(basic_agent.valid?).to eq(true)
+  it "exposes system agent thinking effort on class instances" do
+    agent_record =
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative])
+    agent_record.update!(thinking_effort: "max")
 
-    basic_agent.max_context_posts = 0
-    expect(basic_agent.valid?).to eq(false)
-    expect(basic_agent.errors[:max_context_posts]).to eq(["must be greater than 0"])
+    agent = agent_record.class_instance.new
 
-    basic_agent.max_context_posts = 1
-    expect(basic_agent.valid?).to eq(true)
+    expect(agent.thinking_effort).to eq("max")
+  end
 
-    basic_agent.max_context_posts = nil
-    expect(basic_agent.valid?).to eq(true)
+  it "declares a default thinking effort for reasoning-enabled system agents" do
+    {
+      DiscourseAi::Agents::Creative => "low",
+      DiscourseAi::Agents::General => "low",
+      DiscourseAi::Agents::DiscourseHelper => "low",
+      DiscourseAi::Agents::SqlHelper => "medium",
+      DiscourseAi::Agents::ForumResearcher => "high",
+    }.each do |klass, effort|
+      expect(klass.new.thinking_effort).to eq(effort),
+      "expected #{klass} to default to #{effort.inspect} thinking effort, got #{klass.new.thinking_effort.inspect}"
+    end
+  end
+
+  it "seeds the default thinking effort on deploy without clobbering admin choices" do
+    creative_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative]
+    general_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General]
+
+    # an agent that was never configured, and one an admin has customized
+    AiAgent.where(id: creative_id).update_all(thinking_effort: nil)
+    AiAgent.where(id: general_id).update_all(thinking_effort: "high")
+
+    # load (not require_relative) so the seeding script actually re-executes here
+    load Rails.root.join("plugins/discourse-ai/db/fixtures/agents/603_ai_agents.rb") # rubocop:disable Discourse/Plugins/UseRequireRelative
+
+    expect(AiAgent.find(creative_id).thinking_effort).to eq("low") # seeded default
+    expect(AiAgent.find(general_id).thinking_effort).to eq("high") # admin choice preserved
+  end
+
+  it "clears AI helper prompt permissions after changes" do
+    agent = AiAgent.find(SiteSetting.ai_helper_proofreader_agent)
+    DiscourseAi::AiHelper::Assistant.prompt_cache[:value] = "cached prompts"
+
+    agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+    expect(DiscourseAi::AiHelper::Assistant.prompt_cache[:value]).to be_nil
+  end
+
+  it "keeps AI helper prompt permissions after unrelated changes" do
+    agent =
+      AiAgent.create!(
+        name: "unrelated agent",
+        description: "test",
+        system_prompt: "test",
+        tools: [],
+        allowed_group_ids: [],
+      )
+    DiscourseAi::AiHelper::Assistant.prompt_cache[:value] = "cached prompts"
+
+    agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+    expect(DiscourseAi::AiHelper::Assistant.prompt_cache[:value]).to eq("cached prompts")
   end
 
   it "validates tools" do
@@ -142,7 +191,6 @@ RSpec.describe AiAgent do
     forum_helper.update!(
       user_id: 1,
       default_llm_id: llm_model.id,
-      max_context_posts: 3,
       allow_topic_mentions: true,
       allow_personal_messages: true,
       allow_chat_channel_mentions: true,
@@ -157,7 +205,6 @@ RSpec.describe AiAgent do
     expect(klass.allowed_group_ids).to eq([10])
     expect(klass.user_id).to eq(1)
     expect(klass.default_llm_id).to eq(llm_model.id)
-    expect(klass.max_context_posts).to eq(3)
     expect(klass.allow_topic_mentions).to eq(true)
     expect(klass.allow_personal_messages).to eq(true)
     expect(klass.allow_chat_channel_mentions).to eq(true)
@@ -173,7 +220,6 @@ RSpec.describe AiAgent do
         tools: [],
         allowed_group_ids: [],
         default_llm_id: llm_model.id,
-        max_context_posts: 3,
         allow_topic_mentions: true,
         allow_personal_messages: true,
         allow_chat_channel_mentions: true,
@@ -188,7 +234,6 @@ RSpec.describe AiAgent do
     expect(klass.allowed_group_ids).to eq([])
     expect(klass.user_id).to eq(1)
     expect(klass.default_llm_id).to eq(llm_model.id)
-    expect(klass.max_context_posts).to eq(3)
     expect(klass.allow_topic_mentions).to eq(true)
     expect(klass.allow_personal_messages).to eq(true)
     expect(klass.allow_chat_channel_mentions).to eq(true)
@@ -436,48 +481,24 @@ RSpec.describe AiAgent do
     end
   end
 
-  describe "agentic execution mode defaults and propagation" do
-    it "assigns safe defaults to a agent created without agentic fields" do
+  describe "token budget settings" do
+    it "allows an agent to use the default token budget" do
       agent =
         AiAgent.create!(
-          name: "legacy_agent",
-          description: "no agentic fields set",
-          system_prompt: "test",
-          tools: [],
-          allowed_group_ids: [],
-        )
-
-      expect(agent.execution_mode).to eq("default")
-      expect(agent.max_turn_tokens).to be_nil
-      expect(agent.compression_threshold).to be_nil
-
-      klass = agent.class_instance
-
-      expect(klass.execution_mode).to eq("default")
-      expect(klass.max_turn_tokens).to be_nil
-      expect(klass.compression_threshold).to be_nil
-    end
-
-    it "requires compression_threshold for agentic mode but not for default mode" do
-      agent =
-        AiAgent.new(
-          name: "agentic_agent",
+          name: "token_budget_agent",
           description: "test",
           system_prompt: "test",
           tools: [],
           allowed_group_ids: [],
-          execution_mode: "agentic",
         )
 
-      expect(agent.valid?).to eq(false)
-      expect(agent.errors[:compression_threshold]).to be_present
+      expect(agent.max_turn_tokens).to be_nil
+      expect(agent.compression_threshold).to eq(80)
 
-      agent.compression_threshold = 75
-      expect(agent.valid?).to eq(true)
+      klass = agent.class_instance
 
-      agent.execution_mode = "default"
-      agent.compression_threshold = nil
-      expect(agent.valid?).to eq(true)
+      expect(klass.max_turn_tokens).to be_nil
+      expect(klass.compression_threshold).to eq(80)
     end
   end
 

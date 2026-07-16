@@ -16,7 +16,7 @@ class CategoriesController < ApplicationController
                    search
                  ]
 
-  before_action :fetch_category, only: %i[show update destroy visible_groups]
+  before_action :fetch_category, only: %i[show update destroy visible_groups convert_nested_replies]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
 
   skip_before_action :check_xhr,
@@ -209,6 +209,27 @@ class CategoriesController < ApplicationController
             end
           end
         end
+
+        additional_category_types =
+          Array(params[:category_types]).compact_blank.map(&:to_sym) -
+            [category_type&.to_sym, :discussion].compact
+
+        additional_category_types.each do |additional_category_type|
+          Categories::Configure.call(
+            guardian:,
+            params: {
+              category_id: @category.id,
+              category_type: additional_category_type,
+            },
+          ) do
+            on_failed_policy(:type_is_available) do
+              configure_error = category_type_unavailable_error(additional_category_type)
+              raise ActiveRecord::Rollback
+            end
+          end
+        end
+
+        @category.reload if category_type.present? || additional_category_types.any?
       end
     end
 
@@ -292,6 +313,27 @@ class CategoriesController < ApplicationController
       DiscourseEvent.trigger(:category_updated, cat) if result
 
       result
+    end
+  end
+
+  def convert_nested_replies
+    NestedTopic::ConvertCategory.call(
+      service_params.deep_merge(params: { category_id: @category.id }),
+    ) do
+      on_success do |category:, converted_topic_count:|
+        render json:
+                 success_json.merge(
+                   converted_topic_count: converted_topic_count,
+                   nested_replies_conversion_completed:
+                     category.nested_replies_conversion_completed?,
+                 )
+      end
+      on_failed_contract { raise Discourse::InvalidParameters }
+      on_model_not_found(:category) { raise Discourse::NotFound }
+      on_failed_policy(:nested_replies_enabled) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_edit_category) { raise Discourse::InvalidAccess }
+      on_failed_policy(:category_nested_replies_enabled) { raise Discourse::InvalidAccess }
+      on_failure { render json: failed_json, status: :unprocessable_entity }
     end
   end
 

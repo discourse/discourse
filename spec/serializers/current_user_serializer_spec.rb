@@ -147,6 +147,30 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_create_admin_invite" do
+    let(:payload) { serializer.as_json }
+
+    it "is true for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+      user.update!(admin: true)
+
+      expect(payload[:can_create_admin_invite]).to eq(true)
+    end
+
+    it "is absent for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
+      user.update!(admin: true)
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+
+    it "is absent for regular users when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
@@ -165,6 +189,19 @@ RSpec.describe CurrentUserSerializer do
       it "returns true" do
         expect(payload[:can_review]).to eq(true)
       end
+    end
+  end
+
+  describe "#can_set_topic_timer" do
+    let(:payload) { serializer.as_json }
+
+    it "reflects the topic_timers_allowed_groups setting" do
+      group = Fabricate(:group)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+
+      expect(payload[:can_set_topic_timer]).to eq(true)
     end
   end
 

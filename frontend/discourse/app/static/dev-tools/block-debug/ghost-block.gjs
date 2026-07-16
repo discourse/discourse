@@ -1,14 +1,11 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
-/** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-/** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
-/** @type {import("./conditions-tree.gjs").default} */
 import ConditionsTree from "./conditions-tree";
 
 /**
@@ -24,7 +21,7 @@ import ConditionsTree from "./conditions-tree";
  * @property {Object} [Args.conditions] - Conditions that failed evaluation.
  * @property {string} [Args.failureType] - The failure type constant (FAILURE_TYPE value).
  * @property {string} [Args.failureReason] - Optional custom display message (overrides type-based default).
- * @property {Array<{Component: import("ember-curry-component").CurriedComponent}>} [Args.children] - Nested ghost children for containers.
+ * @property {Array<{Component: import("@glint/template").ComponentLike}>} [Args.children] - Nested ghost children for containers.
  */
 
 /**

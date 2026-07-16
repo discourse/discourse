@@ -27,6 +27,9 @@ cs:
             topic_id:
               label: ID tématu
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Konverzace"
       invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
       on_holiday: "Na dovolené"
       disable_holiday: "Vypnout"
@@ -403,7 +406,6 @@ cs:
           no_users: "Nebyli nalezeni žádní uživatelé"
           leave_event: "Opustit událost"
           status:
-            unknown: "Nemám zájem"
             going: "Zúčastním se"
             interested: "Mám zájem"
             going_count:
@@ -479,7 +481,6 @@ cs:
         create_event_title: "Vytvořit událost"
         update_event_title: "Upravit událost"
         advanced_settings_title: "Pokročilá nastavení"
-        advanced_settings: "Pokročilá nastavení"
         confirm_delete: "Určitě chcete tuto událost smazat?"
         confirm_close: "Opravdu chcete uzavřít tuto událost?"
         confirm_open: "Opravdu chcete otevřít tuto událost?"
@@ -518,11 +519,7 @@ cs:
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"
-        url:
-          label: "URL"
-          placeholder: "Volitelné"
         location:
-          label: "Poloha"
           placeholder: "Přidejte místo, odkaz, atp."
         description:
           label: "Popis"

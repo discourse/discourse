@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -150,6 +151,20 @@ export default class SiteSetting extends EmberObject {
     return {
       subject: this.setting,
       action_name: "change_site_setting",
+    };
+  }
+
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name,
+      description: trustHTML(this.description),
+      type: this.type,
+      list_type: this.list_type,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.validValues,
     };
   }
 

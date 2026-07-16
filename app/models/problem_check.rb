@@ -80,6 +80,7 @@ class ProblemCheck
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
@@ -197,10 +198,7 @@ class ProblemCheck
     if problem.blank?
       tracker.no_problem!(next_run_at:)
     else
-      tracker.problem!(
-        next_run_at:,
-        details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
-      )
+      tracker.problem!(next_run_at:, details: problem.details.merge(base_path: Discourse.base_path))
     end
   end
 
@@ -216,21 +214,17 @@ class ProblemCheck
 
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
+    problem_details =
+      override_data.merge(
+        target.present? ? translation_data(target) : translation_data,
+      ).symbolize_keys
 
     Problem.new(
-      SiteSettings::LabelFormatter.expand_setting_links(
-        I18n.t(
-          override_key || translation_key,
-          base_path: Discourse.base_path,
-          **override_data.merge(
-            target.present? ? translation_data(target) : translation_data,
-          ).symbolize_keys,
-        ),
-      ),
+      I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
       priority: config.priority,
       identifier:,
       target: target_identifier,
-      details:,
+      details: problem_details.merge(details),
     )
   end
 

@@ -427,6 +427,15 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
+  def register_upcoming_change_conditional_display(setting_name, &block)
+    raise ArgumentError, "block is required" if block.blank?
+
+    DiscoursePluginRegistry.register_upcoming_change_conditional_display_callback(
+      { setting_name: setting_name.to_sym, callback: block },
+      self,
+    )
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
@@ -794,10 +803,12 @@ class Plugin::Instance
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
       ERROR
 
-    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+    if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6", ".ts", ".gts")
+      raise <<~ERROR
         [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
         Manual register_asset calls should be removed. (attempted to add #{file})
       ERROR
+    end
 
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
@@ -1227,7 +1238,11 @@ class Plugin::Instance
   # }
   def register_stat(name, expose_via_api: false, stat_type: nil, &block)
     # We do not want to register and display the same group multiple times.
-    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
+    if DiscoursePluginRegistry.stats.any? { |stat|
+         stat.name == name && stat.stat_type == stat_type
+       }
+      return
+    end
 
     stat = Stat.new(name, expose_via_api: expose_via_api, stat_type: stat_type, &block)
     DiscoursePluginRegistry.register_stat(stat, self)
@@ -1246,6 +1261,25 @@ class Plugin::Instance
   def register_admin_dashboard_highlight_kpi(type:, report:, enabled: nil)
     DiscoursePluginRegistry.register_admin_dashboard_highlight_kpi(
       { type: type, report: report, enabled: enabled },
+      self,
+    )
+  end
+
+  # Registers a whole section in the redesigned admin dashboard (gated by the
+  # dashboard_improvements upcoming change). The matching client-side section
+  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  #
+  # @param id [String] unique section id. Matched against the persisted
+  #   configuration and the client-side component registry.
+  # @param enabled [Proc] optional gate evaluated when assembling the dashboard.
+  #   Return false to omit the section (and hide it from the configure menu)
+  #   without disabling the plugin entirely — e.g. only when relevant data
+  #   exists.
+  # @yield [start_date:, end_date:, current_user:] block returning the section's
+  #   data hash, run inside the dashboard's parallel section loader.
+  def register_admin_dashboard_section(id:, enabled: nil, &loader)
+    DiscoursePluginRegistry.register_admin_dashboard_section(
+      { id: id.to_s, enabled: enabled, loader: loader },
       self,
     )
   end
@@ -1459,8 +1493,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
-  # This is an experimental API and may be changed or removed in the future without deprecation.
-  #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
   # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
   # rate limiters:

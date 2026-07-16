@@ -189,8 +189,6 @@ fa_IR:
         title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
       sounds:
         none: "هیچ کدام"
-        bell: "زنگ"
-        ding: "دینگ"
       title: "گفتگو"
       title_capitalized: "گفتگو"
       upload: "پیوست کردن یک پرونده"

@@ -95,5 +95,3 @@ fa_IR:
           add: افزودن گزینه
         automatic_close:
           label: بسته شدن خودکار نظرسنجی
-        show_advanced: "نمایش گزینه‌های پیشرفته"
-        hide_advanced: "پنهان کردن گزینه‌های پیشرفته"

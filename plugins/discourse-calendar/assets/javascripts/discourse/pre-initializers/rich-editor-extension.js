@@ -1,4 +1,3 @@
-import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import DiscoursePostEventOneboxNodeView, {
@@ -8,6 +7,7 @@ import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../lib/event-preview";
 import {
   buildEventSkeleton,
+  camelCase,
   getCustomFieldNames,
 } from "../lib/raw-event-helper";
 
@@ -27,6 +27,7 @@ export const EVENT_ATTRIBUTES = {
   recurrence: { default: null },
   recurrenceUntil: { default: null },
   chatEnabled: { default: null },
+  livestream: { default: null },
   allDay: { default: null },
   image: { default: null },
 };
@@ -52,7 +53,7 @@ const buildExtension = (siteSettings) => ({
       get attrs() {
         const attrs = { ...EVENT_ATTRIBUTES };
         getCustomFieldNames(siteSettings).forEach((field) => {
-          attrs[camelize(field)] = { default: null };
+          attrs[camelCase(field)] = { default: null };
         });
         return attrs;
       },
@@ -99,7 +100,7 @@ const buildExtension = (siteSettings) => ({
           const attrs = Object.fromEntries(
             token.attrs
               .filter(([key]) => key.startsWith("data-"))
-              .map(([key, value]) => [camelize(key.slice(5)), value])
+              .map(([key, value]) => [camelCase(key.slice(5)), value])
           );
 
           state.openNode(state.schema.nodes.event, attrs);

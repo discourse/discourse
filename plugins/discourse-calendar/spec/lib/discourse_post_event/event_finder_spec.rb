@@ -118,6 +118,41 @@ describe DiscoursePostEvent::EventFinder do
     end
   end
 
+  context "when the event is associated to an unlisted topic" do
+    fab!(:admin)
+    fab!(:trust_level_4)
+    let(:post1) do
+      PostCreator.create!(
+        user,
+        title: "We should buy a boat",
+        raw: "The boat market is quite active lately.",
+      )
+    end
+    let!(:event) { Fabricate(:event, post: post1) }
+
+    before { post1.topic.update_column(:visible, false) }
+
+    it "doesn’t return the event for regular users" do
+      expect(finder.search(current_user)).to match_array([])
+    end
+
+    it "doesn’t return the event for anonymous users" do
+      expect(finder.search(nil)).to match_array([])
+    end
+
+    it "doesn’t return the event for the topic author" do
+      expect(finder.search(user)).to match_array([])
+    end
+
+    it "returns the event for staff" do
+      expect(finder.search(admin)).to match_array([event])
+    end
+
+    it "returns the event for trust level 4 users" do
+      expect(finder.search(trust_level_4)).to match_array([event])
+    end
+  end
+
   context "when events are filtered" do
     describe "by post_id" do
       let(:post1) do

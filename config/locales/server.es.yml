@@ -260,7 +260,6 @@ es:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "La diferencia es demasiado compleja para calcularla de forma segura. Intenta hacer ediciones más pequeñas."
     messages:
       invalid_locale: "%{invalid_locale} no es un idioma local válido"
       too_long_validation:
@@ -618,6 +617,13 @@ es:
       trust_level_2: "nivel_de_confianza_2"
       trust_level_3: "nivel_de_confianza_3"
       trust_level_4: "nivel_de_confianza_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Personal"
+      anonymous_users: "Usuarios anónimos"
+      logged_in_users: "Usuarios conectados"
     default_descriptions:
       everyone: "Grupo automático que incluye a todos los miembros"
       staff: "Grupo automático que incluye administradores y moderadores"
@@ -1284,6 +1290,7 @@ es:
         level: "Nivel de confianza"
         count: "Miembros"
         share: "Compartir"
+        signups: "Inscripciones"
       levels:
         "0": "Nuevo"
         "1": "Básico"
@@ -1786,8 +1793,6 @@ es:
     silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado basándose en denuncias de spam"
     auto_close_topic_sensitivity: "La probabilidad de que un tema denunciado se cierre automáticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a denuncias de la comunidad"
-    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
-    max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (habitual) multiplicándolo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
@@ -2422,7 +2427,6 @@ es:
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     share_quote_buttons: "Determinar los elementos que aparecen en el widget de compartir cita y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos solo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usa la primera parte de las direcciones de correo electrónico para sugerencias de nombre de usuario y nombre. Advertencia: Esto puede facilitar que los delincuentes descubran la dirección de correo electrónico completa de tus miembros (porque muchas personas usan servicios de correo electrónico comunes como «gmail.com»)."
     use_name_for_username_suggestions: "Utiliza el nombre completo del usuario al sugerir nombres de usuario durante los flujos de registro SSO y OAuth."
@@ -2459,11 +2463,10 @@ es:
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_use_default_locale_when_unsupported: "Ofrece contenido traducido en la configuración regional por defecto del sitio a los usuarios cuyo idioma preferido no figure en «content localization supported locales»."
     content_localization_allow_author_localization: "Permitir que los autores actualicen la traducción de sus propios temas y publicaciones a través del menú de publicaciones."
-    fake_upcoming_change: "Este es un próximo cambio ficticio que se realizará con fines de prueba. No es necesario traducir esta cadena."
     floating_dismiss_topics_on_mobile: "Muestra un botón flotante «Descartar...» en el móvil para la lista de temas para facilitar el acceso y liberar espacio en la parte superior de la lista de temas"
     enable_simplified_category_creation: "Permite un flujo de creación de categorías simplificado, con menos opciones y una interfaz más limpia."
-    modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     reporting_improvements: "Mejoras en la navegación, el diseño y la usabilidad de los informes de administración de Discourse."
+    modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_datetime: "Formato de fecha y hora no válido. Asegúrate de que has introducido una fecha y hora válidas."
@@ -4482,267 +4485,8 @@ es:
       Este sitio está gestionado por tu [amable equipo de moderadores](%{base_path}/about) y *tú*, la comunidad. Si tienes más preguntas sobre cómo deberían funcionar las cosas aquí, abre un nuevo tema en %{feedback_category} y lo debatiremos. Si hay una cuestión crítica o urgente que no pueda tratarse mediante un metatema o una bandera, [ponte en contacto con los moderadores](%{base_path}/about).
   tos_topic:
     title: "Términos del servicio"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Cámbiame</a></h2>
-
-      Administrador del foro, a continuación encontrarás una plantilla de inicio de ejemplo para una política de privacidad que deberás personalizar para satisfacer las necesidades de tu sitio.
-
-      Estas condiciones no regulan el uso del foro de Internet en <%{base_url}>, pero podrían hacerlo algún día. En ese caso, para utilizar el foro, deberás aceptar estas condiciones con %{company_name}, la empresa que gestiona el foro.
-
-      La empresa puede ofrecer otros productos y servicios, con condiciones diferentes. Estas condiciones solo se aplican al uso del foro.
-
-      Ir directamente a:
-
-      - [Condiciones importantes](#encabezado--condiciones-importantes)
-      - [Tu permiso para utilizar el foro](#encabezado--permiso)
-      - [Condiciones de uso del foro](#encabezado--condiciones)
-      - [Uso aceptable](#encabezado--uso-aceptable)
-      - [Normas de contenido](#encabezado--normas-de-contenido)
-      - [Aplicación](#encabezado--aplicación)
-      - [Tu cuenta](#encabezado--tu-cuenta)
-      - [Tu contenido](#encabezado--tu-contenido)
-      - [Tu responsabilidad](#encabezado--responsabilidad)
-      - [Exenciones de responsabilidad](#encabezado--exenciones)
-      - [Límites de responsabilidad](#encabezado--responsabilidades)
-      - [Comentarios](#encabezado--comentarios)
-      - [Terminación](#encabezado--terminación)
-      - [Disputas](#encabezado--disputas)
-      - [Condiciones generales](#encabezado--general)
-      - [Contacto](#encabezado--contacto)
-      - [Cambios](#encabezado--cambios)
-
-      <h2 id="heading--important-terms"><a href="#encabezado--condiciones-importantes">Condiciones importantes</a></h2>
-
-      ***Estas condiciones incluyen una serie de disposiciones importantes que afectan a tus derechos y responsabilidades, como las cláusulas de exención de responsabilidad en [Cláusulas de exención de responsabilidad](#encabezado--cláusulas-de-exención-de-responsabilidad), los límites de la responsabilidad de la empresa hacia ti en [Límites de responsabilidad](#encabezado--responsabilidades), tu acuerdo de cubrir a la empresa por los daños causados por tu mal uso del foro en [Responsabilidad por tu uso](#encabezado--responsabilidad), y un acuerdo para arbitrar disputas en [Disputas](#encabezado--disputas).
-
-      <h2 id="heading--permission"><a href="#encabezado--permiso">Tu permiso para utilizar el foro</a></h2>
-
-      Sujeto a estos términos, la empresa te da permiso para utilizar el foro. Todo el mundo debe aceptar estas condiciones para utilizar el foro.
-
-      <h2 id="heading--conditions"><a href="#encabezado--condiciones">Condiciones de uso del foro</a></h2>
-
-      Tu permiso para utilizar el foro está sujeto a las siguientes condiciones:
-
-      1. Debes tener al menos trece años.
-
-      2. No podrás seguir utilizando el foro si la empresa se pone en contacto contigo directamente para decirte que no puedes hacerlo.
-
-      3. Debes utilizar el foro de acuerdo con [Uso aceptable](#encabezado--uso-aceptable) y [Normas de contenido](#encabezado--normas-de-contenido).
-
-      <h2 id="heading--acceptable-use"><a href="#encabezado--uso-aceptable">Uso aceptable</a></h2>
-
-      1. No puedes infringir la ley utilizando el foro.
-
-      2. No puedes utilizar o intentar utilizar la cuenta de otra persona en el foro sin su permiso específico.
-
-      3. No puedes comprar, vender o comerciar con nombres de usuario u otros identificadores únicos en el foro.
-
-      4. No puedes enviar publicidad, cartas en cadena u otras solicitudes a través del foro, ni utilizar el foro para recopilar direcciones u otros datos personales para listas de correo o bases de datos comerciales.
-
-      5. No puedes automatizar el acceso al foro ni monitorizarlo, por ejemplo, con un rastreador web, un plug-in o complemento del navegador u otro programa informático que no sea un navegador web. Puedes rastrear el foro para indexarlo para un motor de búsqueda disponible públicamente, si gestionas uno.
-
-      6. No puedes utilizar el foro para enviar correo electrónico a listas de distribución, grupos de noticias o alias de correo de grupo.
-
-      7. No puedes dar a entender falsamente que estás afiliado o respaldado por la empresa.
-
-      8. No puedes establecer hipervínculos a imágenes u otros contenidos no hipertextuales del foro en otras páginas web.
-
-      9. No puedes eliminar ninguna marca que muestre la propiedad de los materiales que descargues del foro.
-
-      10. No puedes mostrar ninguna parte del foro en otras páginas web con `<iframe>`.
-
-      11. No puedes desactivar, evitar o eludir ninguna restricción de seguridad o acceso del foro.
-
-      12. No puedes sobrecargar la infraestructura del foro con un volumen irrazonable de peticiones, o peticiones diseñadas para imponer una carga no razonable en los sistemas de información subyacentes al foro.
-
-      13. No puedes hacerte pasar por otros a través del foro.
-
-      14. No puedes animar o ayudar a nadie que infrinja estas condiciones.
-
-      <h2 id="heading--content-standards"><a href="#encabezado--normas-de-contenido">Normas de contenido</a></h2>
-
-      1. No puedes enviar contenidos al foro que sean ilegales, ofensivos o perjudiciales para los demás. Esto incluye contenido que sea acosador, inapropiado, abusivo o que incite al odio.
-
-      2. No puedes enviar contenido al foro que viole la ley, infrinja los derechos de propiedad intelectual de nadie, viole la privacidad de nadie o incumpla los acuerdos que tengas con otros.
-
-      3. No puedes enviar contenidos al foro que contengan código informático malicioso, como virus informáticos o programas espía.
-
-      4. No puedes enviar contenido al foro como mero marcador de posición, para mantener una dirección, nombre de usuario u otro identificador único en particular.
-
-      5. No puedes utilizar el foro para revelar información que no tengas derecho a revelar, como información confidencial o personal de otros.
-
-      <h2 id="heading--enforcement"><a href="#encabezado--aplicación">Aplicación</a></h2>
-
-      La empresa puede investigar y perseguir las violaciones de estos términos con todo el rigor legal. La empresa puede notificar y cooperar con las autoridades policiales en la persecución de las violaciones de la ley y de estos términos.
-
-      La empresa se reserva el derecho a modificar, redactar y eliminar contenidos del foro por cualquier motivo. Si crees que alguien ha enviado contenido al foro infringiendo estas condiciones, [ponte en contacto con nosotros inmediatamente](#encabezado--contacto).
-
-      <h2 id="heading--your-account"><a href="#encabezado--tu-cuenta">Tu cuenta</a></h2>
-
-      Debes crear una cuenta e iniciar sesión en ella para utilizar algunas funciones del foro.
-
-      Para crear una cuenta, debes proporcionar alguna información sobre ti. Si creas una cuenta, te comprometes a proporcionar, como mínimo, una dirección de correo electrónico válida y a mantenerla actualizada. Puedes cerrar tu cuenta en cualquier momento enviando un correo electrónico a <%{contact_email}>.
-
-      Aceptas ser responsable de todas las acciones que se realicen utilizando tu cuenta, tanto si han sido autorizadas por ti como si no, hasta que cierres tu cuenta o notifiques a la empresa que tu cuenta ha sido comprometida. Aceptas notificar a la empresa inmediatamente si sospechas que tu cuenta ha sido comprometida. Aceptas seleccionar una contraseña segura para tu cuenta y mantenerla en secreto.
-
-      La empresa puede restringir, suspender o cerrar tu cuenta en el foro de acuerdo con su política de gestión de solicitudes de retirada relacionadas con los derechos de autor, o si la empresa cree razonablemente que has infringido alguna norma de estas condiciones.
-
-      <h2 id="heading--your-content"><a href="#encabezado--tu-contenido">Tu contenido</a></h2>
-
-      Nada de lo dispuesto en estas condiciones otorga a la empresa ningún derecho de propiedad sobre la propiedad intelectual que compartas con el foro, como la información de tu cuenta, tus mensajes u otros contenidos que envíes al foro. Tampoco hay nada en estas condiciones que te otorgue ningún derecho de propiedad sobre la propiedad intelectual de la empresa.
-
-      Entre tú y la empresa, tú sigues siendo el único responsable del contenido que envíes al foro. Aceptas no dar a entender erróneamente que el contenido que envías al foro está patrocinado o aprobado por la empresa. Estos términos no obligan a la empresa a almacenar, mantener o proporcionar copias del contenido que envíes, ni a modificarlo, de acuerdo con estos términos.
-
-      El contenido que envías al foro te pertenece, y tú decides qué permiso dar a otros para ello. Pero, como mínimo, autorizas a la empresa a proporcionar el contenido que envíes al foro a otros usuarios del mismo. Esa licencia especial permite a la empresa copiar, publicar y analizar el contenido que envíes al foro.
-
-      Cuando el contenido que envías es eliminado del foro, ya sea por ti o por la empresa, la licencia especial de la empresa finaliza cuando la última copia desaparece de las copias de seguridad, cachés y otros sistemas de la empresa. Otras licencias que apliques al contenido que envíes, como las licencias [Creative Commons](https://creativecommons.org), pueden continuar después de que se elimine tu contenido. Esas licencias pueden dar a otros, o a la propia empresa, el derecho a compartir de nuevo tu contenido a través del foro.
-
-      Otras personas que reciban contenido que envíes al foro pueden violar los términos bajo los cuales concedes la licencia de tu contenido. Aceptas que la empresa no será responsable ante ti de dichas infracciones ni de sus consecuencias.
-
-      <h2 id="heading--responsibility"><a href="#encabezado--responsabilidad">Tu responsabilidad</a></h2>
-
-      Aceptas indemnizar a la empresa por las reclamaciones legales de terceros relacionadas con tu incumplimiento de estas condiciones, o con el incumplimiento de estas condiciones por parte de otras personas que utilicen tu cuenta en el foro. Tanto tú como la empresa aceptáis notificar a la otra parte cualquier reclamación legal por la que pudierais tener que indemnizar a la empresa lo antes posible. Si la empresa no te notifica una reclamación legal con prontitud, no tendrás que indemnizar a la empresa por daños de los que podrías haberte defendido o mitigado con una pronta notificación. Aceptas permitir que la empresa controle la investigación, defensa y resolución de las reclamaciones legales por las que tendrías que indemnizar a la empresa, y cooperar con esos esfuerzos. La empresa se compromete a no aceptar ningún acuerdo que admita tu culpa o te imponga obligaciones sin tu consentimiento previo.
-
-      <h2 id="heading--disclaimers"><a href="#encabezdo--exenciones">Exenciones de responsabilidad</a></h2>
-
-      ***Aceptas todos los riesgos derivados del uso del foro y de su contenido. En la medida en que la ley lo permita, la empresa y sus proveedores proporcionan el foro tal cual, sin garantía de ningún tipo.***
-
-      El foro puede hipervincular e integrar foros y servicios gestionados por terceros. La empresa no ofrece ninguna garantía sobre los servicios gestionados por terceros, ni sobre el contenido que puedan proporcionar. El uso de servicios gestionados por otros puede regirse por otras condiciones entre tú y el que gestiona el servicio.
-
-      <h2 id="heading--liability"><a href="#encabezado--responsabilidad">Límites de la responsabilidad</a></h2>
-
-      ***Ni la empresa ni sus proveedores serán responsables ante ti por los daños derivados del incumplimiento del contrato que su personal no pudiera haber previsto razonablemente cuando aceptaste estas condiciones.
-
-      ***En la medida en que la ley lo permita, la responsabilidad total ante ti por reclamaciones de cualquier tipo relacionadas con el foro o el contenido del foro se limitará a 50 $.****.
-
-      <h2 id="heading--feedback"><a href="#encabezado--comentarios">Comentarios</a></h2>
-
-      La empresa agradece tus comentarios y sugerencias para el foro. Consulta la sección [Contacto](#encabezado--contacto) más abajo para saber cómo ponerte en contacto con nosotros.
-
-      Aceptas que la empresa sea libre de actuar en función de las opiniones y sugerencias que proporciones, y que la empresa no tendrá que notificarte que se han utilizado tus opiniones, ni obtener tu permiso para utilizarlas, ni pagarte. Aceptas no enviar opiniones o sugerencias que creas que puedan ser confidenciales o de propiedad, tuya o de otros.
-
-      <h2 id="heading--termination"><a href="#encabezado--terminación">Terminación</a></h2>
-
-      Tanto tú como la empresa podéis poner fin al acuerdo establecido en estas condiciones en cualquier momento. Cuando finalice nuestro acuerdo, también finalizará tu permiso para utilizar el foro.
-
-      Las siguientes disposiciones sobreviven a la finalización de nuestro acuerdo: [Tu contenido](#encabezado--tu-contenido), [Comentarios](#encabezado--recomendaciones), [Tu responsabilidad](#encabezado--responsabilidad), [Renuncias](#encabedo--renuncias), [Límites de responsabilidad](#encabezado--responsabilidad) y [Condiciones generales](#encabezado--general).
-
-      <h2 id="heading--disputes"><a href="#encabezado--disputas">Disputas</a></h2>
-
-      %{governing_law} regirá cualquier disputa relacionada con estos términos o con tu uso del foro.
-
-      Tú y la empresa acordáis solicitar medidas cautelares relacionadas con estos términos sólo en los tribunales estatales o federales de %{city_for_disputes}. Ni tú ni la empresa se opondrán a la jurisdicción, el foro o la sede de dichos tribunales.
-
-      ***Salvo para solicitar una medida cautelar o para reclamaciones en virtud de la Ley de Fraude y Abuso Informático, tú y la empresa resolveréis cualquier disputa mediante arbitraje vinculante de la Asociación Americana de Arbitraje (AAA). El arbitraje seguirá las Normas de Arbitraje Comercial de la AAA y los Procedimientos Suplementarios para Disputas Relacionadas con el Consumidor. El arbitraje tendrá lugar en %{city_for_disputes}. Resolverás cualquier disputa como individuo, y no como parte de una demanda colectiva u otro procedimiento representativo, ya sea como demandante o como miembro de una demanda colectiva. Ningún árbitro consolidará ninguna disputa con otro arbitraje sin el permiso de la empresa.***
-
-      Cualquier laudo arbitral incluirá los costes del arbitraje, los honorarios razonables de los abogados y los costes razonables de los testigos. Tú y la empresa podréis presentar los laudos arbitrales ante cualquier tribunal competente.
-
-      <h2 id="heading--general"><a href="#encabezado--general">Condiciones generales</a></h2>
-
-      Si una disposición de estas condiciones no es ejecutable tal y como está redactada, pero podría modificarse para hacerla ejecutable, dicha disposición deberá modificarse en la medida mínima necesaria para hacerla ejecutable. De lo contrario, dicha disposición deberá eliminarse.
-
-      No puedes ceder tu acuerdo con la empresa. La empresa puede ceder tu acuerdo a cualquier filial de la empresa, a cualquier otra empresa que obtenga el control de la empresa o a cualquier otra empresa que compre activos de la empresa relacionados con el foro. Cualquier intento de cesión en contra de estas condiciones no tendrá ningún efecto legal.
-
-      Ni el ejercicio de cualquier derecho en virtud de este Acuerdo, ni la renuncia a cualquier incumplimiento de este Acuerdo, exime de cualquier otro incumplimiento de este Acuerdo.
-
-      Estos términos incorporan todos los términos del acuerdo entre tú y la empresa sobre el uso del foro. Estos términos sustituyen por completo a cualquier otro acuerdo sobre tu uso del foro, escrito o no.
-
-      <h2 id="heading--contact"><a href="#encabezado--contacto">Contacto</a></h2>
-
-      Puedes notificar a la empresa conforme a estos términos, y enviar preguntas a la empresa, a <%{contact_email}>.
-
-      La empresa puede notificarte conforme a estos términos utilizando la dirección de correo electrónico que proporciones para tu cuenta en el foro, o publicando un mensaje en la página principal del foro o en la página de tu cuenta.
-
-      <h2 id="heading--changes"><a href="#encabezado--cambios">Cambios</a></h2>
-
-      La empresa actualizó por última vez estas condiciones el [INSERTAR AQUÍ LA ÚLTIMA FECHA DE ACTUALIZACIÓN], y puede volver a actualizarlas. La empresa publicará todas las actualizaciones en el foro. Para las actualizaciones que contengan cambios sustanciales, la empresa se compromete a enviarte un correo electrónico, si has creado una cuenta y proporcionado una dirección de correo electrónico válida. La empresa también puede anunciar actualizaciones con mensajes especiales o alertas en el foro.
-
-      Una vez que recibas el aviso de una actualización de estas condiciones, deberás aceptar las nuevas condiciones para poder seguir utilizando el foro.
   privacy_topic:
     title: "Política de privacidad"
-    body: |
-      ## [Administrador del Foro, a continuación encontrarás una plantilla de inicio de ejemplo para una política de privacidad que deberás adaptar a tu sitio].
-
-      <a name="collect"></a>
-
-      ## [¿Qué información recopilamos?](#recopilar)
-
-      Recopilamos información sobre ti cuando te registras en nuestro sitio y recopilamos datos cuando participas en el foro leyendo, escribiendo y evaluando el contenido compartido aquí.
-
-      Al registrarte en nuestro sitio, es posible que se te pida que introduzcas tu nombre y dirección de correo electrónico. Sin embargo, puedes visitar nuestro sitio sin registrarte. Tu dirección de correo electrónico se verificará mediante un mensaje que contendrá un enlace único. Si se visita ese enlace, sabremos que controlas la dirección de correo electrónico.
-
-      Cuando te registras y publicas, registramos la dirección IP desde la que se originó la publicación. También podemos conservar registros del servidor que incluyan la dirección IP de cada solicitud a nuestro servidor.
-
-      <a name="use"></a>
-
-      ## [¿Para qué utilizamos tu información?](#uso)
-
-      Toda la información que recopilamos sobre ti puede utilizarse de una de las siguientes maneras:
-
-      * Para personalizar tu experiencia &mdash; tu información nos ayuda a responder mejor a tus necesidades individuales.
-      * Para mejorar nuestro sitio web &mdash; nos esforzamos continuamente por mejorar las ofertas de nuestro sitio web basándonos en la información y los comentarios que recibimos de ti.
-      * Para mejorar el servicio de atención al cliente: tu información nos ayuda a responder más eficazmente a tus solicitudes de servicio de atención al cliente y a tus necesidades de asistencia.
-      * Para enviar correos electrónicos periódicos &mdash; La dirección de correo electrónico que nos facilitas puede utilizarse para enviarte información, notificaciones que solicites sobre cambios en temas o en respuesta a tu nombre de usuario, responder a consultas y/u otras peticiones o preguntas.
-
-      <a name="protect"></a>
-
-      ## [¿Cómo protegemos tu información?](#proteger)
-
-      Aplicamos diversas medidas de seguridad para mantener la seguridad de tu información personal cuando la introduces, envías o accedes a ella.
-
-      <a name="data-retention"></a>
-
-      ## [¿Cuál es su política de retención de datos?](#retención-de-datos)
-
-      Haremos un esfuerzo de buena fe para:
-
-      * Conservar los registros del servidor que contengan la dirección IP de todas las solicitudes a este servidor no más de [NÚMERO DE DÍAS] días.
-
-      <a name="cookies"></a>
-
-      ## [¿Utilizamos cookies?](#cookies)
-
-      Sí. Las cookies son pequeños archivos que un sitio o su proveedor de servicios transfiere al disco duro de tu ordenador a través de tu navegador web (si lo permites). Estas cookies permiten al sitio reconocer tu navegador y, si tienes una cuenta registrada, asociarlo a tu cuenta registrada.
-
-      Utilizamos cookies para comprender y guardar tus preferencias para futuras visitas y recopilar datos agregados sobre el tráfico y la interacción del sitio, de modo que podamos ofrecer mejores experiencias y herramientas del sitio en el futuro. Podemos contratar a terceros proveedores de servicios para que nos ayuden a comprender mejor a los visitantes de nuestro sitio. Estos proveedores de servicios no están autorizados a utilizar la información recopilada en nuestro nombre, excepto para ayudarnos a dirigir y mejorar nuestro negocio.
-
-      <a name="disclose"></a>
-
-      ## [¿Revelamos información a terceros?](#revelar)
-
-      No vendemos, comerciamos ni transferimos a terceros tu información personal identificable. Esto no incluye a terceras partes de confianza que nos ayudan en el funcionamiento de nuestro sitio, en la gestión de nuestro negocio o en la prestación de servicios, siempre que dichas partes se comprometan a mantener la confidencialidad de esta información. También podemos divulgar tu información cuando creamos que es apropiado para cumplir la ley, hacer cumplir las políticas de nuestro sitio o proteger nuestros derechos, propiedad o seguridad o los de otros. Sin embargo, la información no identificable personalmente de los visitantes puede facilitarse a terceros para fines de marketing, publicidad u otros usos.
-
-      <a name="third-party"></a>
-
-      ## [Enlaces de terceros](#terceros)
-
-      Ocasionalmente, a nuestra discreción, podemos incluir u ofrecer productos o servicios de terceros en nuestro sitio. Estos sitios de terceros tienen políticas de privacidad separadas e independientes. Por lo tanto, no tenemos responsabilidad alguna por el contenido y las actividades de estos sitios enlazados. No obstante, tratamos de proteger la integridad de nuestro sitio y agradecemos cualquier comentario sobre estos sitios.
-
-      <a name="coppa"></a>
-
-      ## [Cumplimiento de la Ley de Protección de la Privacidad Infantil en Internet](#coppa)
-
-      Nuestro sitio, productos y servicios están dirigidos a personas mayores de 13 años. Si este servidor está en EE. UU. y eres menor de 13 años, según los requisitos de la COPPA ([Ley de Protección de la Privacidad Infantil en Internet](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), no utilices este sitio.
-
-      <a name="online"></a>
-
-      ## [Política de privacidad solo en línea](#online)
-
-      Esta política de privacidad en línea solo se aplica a la información recogida a través de nuestro sitio y no a la información recogida fuera de línea.
-
-      <a name="consent"></a>
-
-      ## [Tu consentimiento](#consentimiento)
-
-      Al utilizar nuestro sitio, das tu consentimiento a la política de privacidad de nuestro sitio web.
-
-      <a name="changes"></a>
-
-      ## [Cambios en nuestra política de privacidad](#cambios)
-
-      Si decidimos cambiar nuestra política de privacidad, publicaremos dichos cambios en esta página.
-
-      Este documento es CC-BY-SA. Se actualizó por última vez [INSERTAR AQUÍ LA ÚLTIMA FECHA DE ACTUALIZACIÓN].
   badges:
     mass_award:
       errors:
@@ -5111,6 +4855,8 @@ es:
   onebox:
     discourse:
       user_joined_community: "Se unió el %{date}"
+    google_meet:
+      meeting_code: "Código:"
     gitlab:
       truncated_file: "Este archivo se ha truncado."
       show_original: "mostrar original"
@@ -5239,6 +4985,8 @@ es:
         title: "Mantener la publicación oculta"
         description: "Aceptar la denuncia y mantener la publicación oculta."
         complete: "La publicación se ha mantenido oculta."
+      agree_and_keep_deleted:
+        title: "Mantener publicación eliminada"
       agree_and_suspend:
         title: "Suspender al usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."

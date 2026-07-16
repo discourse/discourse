@@ -19,6 +19,9 @@ th:
         hidden: "ถูกซ่อน"
         not_registered: "ไม่ได้ลงทะเบียน"
         failed: "ล้มเหลว"
+    access_control:
+      manage:
+        access_permission_remove: "ลบ"
     number:
       format:
         separator: "."
@@ -273,6 +276,9 @@ th:
     age: "อายุ"
     joined: "เข้าร่วมแล้ว"
     admin_title: "ผู้ดูแลระบบ"
+    advanced_mode_toggle:
+      advanced_mode: "โหมดขั้นสูง"
+      simple_mode: "โหมดอย่างง่าย"
     show_more: "แสดงเพิ่มเติม"
     show_help: "ตัวเลือก"
     links: "ลิงก์"
@@ -854,6 +860,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
+        push_level:
+          none: "ปิดใช้งานแล้ว"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
@@ -1318,7 +1326,6 @@ th:
     created: "สร้างเมื่อ"
     created_lowercase: "ตั้งเมื่อ"
     trust_level: "ระดับความน่าไว้ใจ"
-    search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
       title: "สมัคร"
@@ -1349,6 +1356,8 @@ th:
       email_label: "อีเมล"
       continue_button: "ดำเนินการต่อ"
       verify_button: "ดำเนินการต่อ"
+      account_ready_continue: "ดำเนินการต่อ"
+      username_label: "ชื่อผู้ใช้"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
@@ -1753,6 +1762,8 @@ th:
       deleted_post_placeholder: "[ลบ]"
       ignored_post_placeholder: "[ละเว้นแล้ว]"
       pinned_reply: "ปักหมุดแล้ว"
+    share_target:
+      new_message: "ข้อความใหม่"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -1791,6 +1802,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      sr_read: "อ่าน"
       bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
@@ -2624,6 +2636,7 @@ th:
           always: "เสมอ"
           never: "ไม่เลย"
       reports:
+        all_groups: "กลุ่มทั้งหมด"
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
         group_other: "อื่นๆ"
@@ -2675,6 +2688,8 @@ th:
           form:
             mobile: "โทรศัพท์"
             email: "อีเมล"
+            og_image_preview:
+              topic_id_label: "หมายเลขกระทู้"
         fonts:
           backfill_modal:
             modal_yes: "ใช่"
@@ -2711,6 +2726,19 @@ th:
               title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
+        category_management:
+          tabs:
+            settings: "การตั้งค่า"
+          types:
+            all:
+              title: "หมวดหมู่ทั้งหมด"
+          table:
+            category: "หมวดหมู่"
+            topics: "หัวข้อ"
+          visibility:
+            public: "สาธารณะ"
+          visibility_filter:
+            all: "หมวดหมู่ทั้งหมด"
         permalinks:
           title: "ลิงค์ถาวร"
         emoji:
@@ -2744,7 +2772,7 @@ th:
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
-        latest_version: "ล่าสุด"
+        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
@@ -2788,6 +2816,7 @@ th:
               searches: "ค้นหา"
               status: "สถานะ"
         reports_section:
+          header_action: "จัดการ"
           modal:
             apply: "นำไปใช้"
         site_traffic:
@@ -3283,6 +3312,10 @@ th:
         active: "เปิดใช้งานแล้ว"
         status: "สถานะ"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ระงับการใช้งาน"
           delete:
             confirmation_modal:
               close: "ปิด"
@@ -3292,6 +3325,8 @@ th:
           active: "ใช้งานอยู่"
           staff: "ทีมงาน"
           suspended: "ระงับการใช้งาน"
+        activation_filter:
+          activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"

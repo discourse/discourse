@@ -16,7 +16,7 @@ module DiscourseAi
         end
 
         def max_prompt_tokens
-          buffer = (opts[:max_tokens] || 2500) + 50
+          buffer = (opts[:reserved_output_tokens] || opts[:max_tokens] || 2500) + 50
 
           if tools.present?
             @function_size ||= llm_model.tokenizer_class.size(tools.to_json.to_s)

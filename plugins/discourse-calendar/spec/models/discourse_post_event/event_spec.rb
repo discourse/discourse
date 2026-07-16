@@ -20,6 +20,261 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#warm_livestream_onebox" do
+    let(:livestream_url) { "https://example.com/live" }
+
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming for a livestream URL" do
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: post.id,
+          url: livestream_url,
+        },
+      ) { Fabricate(:event, post: post, livestream: true, location: livestream_url) }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key(livestream_url),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true, location: livestream_url)
+      end
+    end
+
+    it "skips onebox warming for events that are not livestreams" do
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: false, location: "Room 5")
+      end
+    end
+
+    it "skips onebox warming when the livestream has no URL" do
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true)
+      end
+    end
+
+    it "warms the onebox when the URL changes" do
+      event = Fabricate(:event, post: post, livestream: true, location: livestream_url)
+
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: event.id,
+          url: "https://example.com/other-live",
+        },
+      ) { event.update!(location: "https://example.com/other-live") }
+    end
+
+    it "does not warm the onebox when an unrelated attribute changes" do
+      event = Fabricate(:event, post: post, livestream: true, location: livestream_url)
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) { event.update!(name: "Renamed") }
+    end
+  end
+
+  describe "#livestream_url" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "prefers the location over the url" do
+      event =
+        Fabricate(
+          :event,
+          post: post,
+          location: "https://zoom.us/j/123456789",
+          url: "https://example.com/fallback",
+        )
+
+      expect(event.livestream_url).to eq("https://zoom.us/j/123456789")
+    end
+
+    it "falls back to the url when there is no location" do
+      event = Fabricate(:event, post: post, url: "https://example.com/fallback")
+
+      expect(event.livestream_url).to eq("https://example.com/fallback")
+    end
+
+    it "is nil when neither is set" do
+      event = Fabricate(:event, post: post)
+
+      expect(event.livestream_url).to be_nil
+    end
+  end
+
+  describe "#is_zoom_livestream?" do
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.livestream_zoom_enabled = true
+      # Creating a livestream event enqueues onebox warming, which would
+      # otherwise run inline and try to fetch the URL.
+      Jobs.run_later!
+    end
+
+    def event_for(location)
+      Fabricate(:event, post: post, livestream: true, location: location)
+    end
+
+    it "recognises a Zoom URL on a vanity subdomain" do
+      expect(event_for("https://us06web.zoom.us/j/123456789?pwd=secret")).to be_is_zoom_livestream
+    end
+
+    it "recognises a Zoom URL on the bare host" do
+      expect(event_for("https://zoom.us/j/123456789")).to be_is_zoom_livestream
+    end
+
+    it "recognises a Zoom webinar URL" do
+      expect(event_for("https://zoom.us/w/123456789")).to be_is_zoom_livestream
+    end
+
+    it "rejects a host that only ends in the Zoom domain" do
+      expect(event_for("https://notzoom.us/j/123456789")).not_to be_is_zoom_livestream
+    end
+
+    it "rejects a Zoom URL with no joinable meeting number" do
+      expect(event_for("https://zoom.us/about")).not_to be_is_zoom_livestream
+    end
+
+    it "rejects a non-Zoom livestream URL" do
+      expect(event_for("https://example.com/live")).not_to be_is_zoom_livestream
+    end
+
+    it "is false when the event is not a livestream" do
+      event = Fabricate(:event, post: post, livestream: false, url: "https://zoom.us/j/123456789")
+
+      expect(event).not_to be_is_zoom_livestream
+    end
+
+    it "is false when Zoom is disabled" do
+      SiteSetting.livestream_zoom_enabled = false
+
+      expect(event_for("https://zoom.us/j/123456789")).not_to be_is_zoom_livestream
+    end
+  end
+
+  describe "#create_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
+
+    it "creates the chat channel after the livestream event is committed" do
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.to change(DiscourseCalendar::Livestream::TopicChatChannel, :count).by(1)
+
+      expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
+    end
+
+    it "does not create a chat channel when chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+
+    it "does not create a chat channel for a livestream event on a reply" do
+      reply = Fabricate(:post, topic: topic)
+
+      expect {
+        Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+  end
+
+  describe "#reset_invalid_livestream" do
+    fab!(:post)
+
+    # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+    before { Jobs.run_later! }
+
+    it "keeps livestream enabled for an http(s) location" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(true)
+    end
+
+    it "resets livestream when the location is not an http(s) URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when there is no location" do
+      event = Fabricate(:event, post: post, livestream: true)
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location is edited away from a URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      event.update!(location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the event is not on the first post" do
+      reply = Fabricate(:post, topic: post.topic)
+      expect(reply.is_first_post?).to be(false)
+
+      event = Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+  end
+
+  describe "#raw_invitees_are_groups" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "is invalid when an invitee matches a username that is not a group" do
+      Fabricate(:user, username: "not_a_group")
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: ["not_a_group"],
+        )
+
+      expect(event).not_to be_valid
+      expect(event.errors[:base]).to include(
+        I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
+      )
+    end
+
+    it "is valid when an invitee is a group whose name collides with a username" do
+      Fabricate(:user).update_columns(
+        username: DiscoursePostEvent::Event::PUBLIC_GROUP,
+        username_lower: DiscoursePostEvent::Event::PUBLIC_GROUP,
+      )
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: [DiscoursePostEvent::Event::PUBLIC_GROUP],
+        )
+
+      expect(event).to be_valid
+    end
+  end
+
   describe "topic custom fields callback" do
     let(:user) { Fabricate(:user, admin: true) }
     let!(:notified_user) { Fabricate(:user) }
@@ -370,6 +625,84 @@ describe DiscoursePostEvent::Event do
     end
   end
 
+  describe "#currently_within_event_timeframe?" do
+    let(:user) { Fabricate(:user, admin: true) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let!(:first_post) { Fabricate(:post, topic: topic) }
+
+    def event_with(starts_at:, ends_at: nil, all_day: false)
+      DiscoursePostEvent::Event.create!(
+        original_starts_at: starts_at,
+        original_ends_at: ends_at,
+        all_day:,
+        post: first_post,
+      )
+    end
+
+    it "is false before the early access window opens" do
+      expect(event_with(starts_at: 45.minutes.from_now).currently_within_event_timeframe?).to be(
+        false,
+      )
+    end
+
+    it "is true within the early access window" do
+      expect(event_with(starts_at: 15.minutes.from_now).currently_within_event_timeframe?).to be(
+        true,
+      )
+    end
+
+    it "is true while the event is in progress" do
+      expect(
+        event_with(
+          starts_at: 1.hour.ago,
+          ends_at: 1.hour.from_now,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is true within the grace period after the end" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 5.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is false once the grace period has passed" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 15.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(false)
+    end
+
+    it "is true for a started event without an end time" do
+      expect(event_with(starts_at: 1.day.ago).currently_within_event_timeframe?).to be(true)
+    end
+
+    context "for an all day event" do
+      it "is true when now is between the start + end of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(true)
+      end
+
+      it "is false when now is before the start of the day of the event" do
+        expect(
+          event_with(
+            starts_at: Time.zone.now.tomorrow.beginning_of_day,
+            all_day: true,
+          ).currently_within_event_timeframe?,
+        ).to be(false)
+      end
+    end
+  end
+
   describe "#expired?" do
     let(:user) { Fabricate(:user, admin: true) }
     let(:topic) { Fabricate(:topic, user: user) }
@@ -618,6 +951,23 @@ describe DiscoursePostEvent::Event do
             TopicUser.notification_levels[:regular],
           )
         end
+
+        it "unfollows the pruned invitee from the livestream chat channel" do
+          channel = Fabricate(:category_channel)
+          Fabricate(:topic_chat_channel, topic: post_1.topic, chat_channel: channel)
+          membership =
+            Fabricate(
+              :user_chat_channel_membership,
+              user: user_1,
+              chat_channel: channel,
+              following: true,
+            )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(membership.reload.following).to eq(false)
+        end
       end
     end
   end
@@ -814,11 +1164,45 @@ describe DiscoursePostEvent::Event do
     end
   end
 
-  describe ".update_from_raw" do
+  describe "syncing from raw" do
     fab!(:user) { Fabricate(:user, admin: true) }
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: user) }
     fab!(:upload)
+
+    it "sets livestream from the bbcode attribute" do
+      Jobs.run_later!
+
+      post.update!(
+        raw:
+          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(true)
+    end
+
+    it "defaults livestream to false when the attribute is absent" do
+      post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
+    it "ignores livestream=true when the location is not an http(s) URL" do
+      post.update!(
+        raw: "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"Room 5\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
 
     context "with image" do
       before do
@@ -826,7 +1210,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
       end
 
@@ -838,7 +1222,7 @@ describe DiscoursePostEvent::Event do
       it "clears image_upload_id when image is removed" do
         post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil
@@ -858,7 +1242,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -872,7 +1256,7 @@ describe DiscoursePostEvent::Event do
           raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
         )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -891,7 +1275,7 @@ describe DiscoursePostEvent::Event do
             raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.url})",
           )
         post.rebake!
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
         CookedPostProcessor.new(post).post_process
 
@@ -930,7 +1314,7 @@ describe DiscoursePostEvent::Event do
       end
 
       it "does not associate the upload" do
-        DiscoursePostEvent::Event.update_from_raw(post)
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
         post.reload
 
         expect(post.event.image_upload_id).to be_nil

@@ -15,8 +15,7 @@ module Middleware
       if status == 200 && headers["X-Discourse-Crawler-View"] &&
            headers["Content-Type"]&.include?("text/html") &&
            !non_localizable_path?(request_path_without_base_path(request)) &&
-           SiteSetting.content_localization_enabled &&
-           SiteSetting.content_localization_crawler_param
+           ContentLocalization.crawler_locale_param_enabled?
         response = transform_response(request:, response:)
       end
 
@@ -28,8 +27,7 @@ module Middleware
     def transform_response(request:, response:)
       locale = request.params[Discourse::LOCALE_PARAM]
 
-      if SiteSetting.content_localization_enabled &&
-           SiteSetting.content_localization_crawler_param && locale.present?
+      if ContentLocalization.crawler_locale_param_enabled? && locale.present?
         html_fragment = Nokogiri::HTML5.parse(response.body)
 
         html_fragment

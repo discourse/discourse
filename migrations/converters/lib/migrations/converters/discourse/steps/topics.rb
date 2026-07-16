@@ -3,10 +3,8 @@
 module Migrations
   module Converters
     module Discourse
-      class Topics < Conversion::ProgressStep
+      class Topics < Conversion::Step
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*) FROM topics
@@ -15,12 +13,23 @@ module Migrations
 
           def items
             @source_db.query <<~SQL
-              SELECT * FROM topics
+              SELECT t.*,
+                     up.url               AS og_image_url,
+                     up.original_filename AS og_image_filename,
+                     up.origin            AS og_image_origin,
+                     up.user_id           AS og_image_user_id
+              FROM topics t
+                   LEFT JOIN uploads up ON t.og_image_upload_id = up.id
+              ORDER BY t.id
             SQL
           end
         end
 
         processor do
+          def setup
+            @og_image_upload_creator = UploadCreator.new(column_prefix: "og_image")
+          end
+
           def process(item)
             IntermediateDB::Topic.create(
               original_id: item[:id],
@@ -35,6 +44,7 @@ module Migrations
               external_id: item[:external_id],
               featured_link: item[:featured_link],
               locale: item[:locale],
+              og_image_upload_id: @og_image_upload_creator.create_for(item),
               pinned_at: item[:pinned_at],
               pinned_globally: item[:pinned_globally],
               pinned_until: item[:pinned_until],

@@ -58,6 +58,28 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       it { is_expected.to fail_a_policy(:meets_or_exceeds_status) }
     end
 
+    context "when the change is owned by a plugin that is not configurable" do
+      let(:setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+        mock_upcoming_change_metadata(
+          enable_experimental_sample_plugin_feature: {
+            impact: "feature,admins",
+            status: :stable,
+          },
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:change_should_be_displayed) }
+
+      it "does not fire the upcoming_change_enabled event" do
+        events = DiscourseEvent.track_events(:upcoming_change_enabled) { result }
+
+        expect(events).to be_empty
+      end
+    end
+
     context "when the change should not be displayed on this site" do
       before do
         UpcomingChanges::ConditionalDisplay.stubs(
@@ -160,6 +182,29 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
             upcoming_change_name: :enable_upload_debug_mode,
           ).count
         }.by(1)
+      end
+
+      it "creates an automatically_promoted event recording the promotion" do
+        expect { result }.to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }.by(1)
+      end
+
+      it "does not create a duplicate automatically_promoted event when one already exists" do
+        UpcomingChangeEvent.create!(
+          event_type: :automatically_promoted,
+          upcoming_change_name: :enable_upload_debug_mode,
+        )
+
+        expect { result }.not_to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }
       end
 
       it "triggers DiscourseEvent for the promoted setting" do

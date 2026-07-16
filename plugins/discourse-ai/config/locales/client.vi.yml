@@ -34,6 +34,14 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Đang tải..."
+        tool: "Hoạt động"
+        user: "Người dùng"
+        approve: "Duyệt"
+        reject: "Từ chối"
+        approved: "Đã phê duyệt"
+        rejected: "Từ chối"
       llm_selector:
         none: "Không"
       features:
@@ -60,12 +68,16 @@ vi:
           explain: "Giải thích"
           smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
+        image_caption:
+          setting_groups:
+            settings: "Cài đặt"
         spam:
           name: "Rác"
       modals:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        category_scope: "Danh mục"
         stats:
           eta_minutes:
             other: "%{count} phút"
@@ -103,6 +115,12 @@ vi:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
         delete: "Xóa"
+        thinking_effort_options:
+          none: "Không"
+          low: "Thấp"
+          medium: "Trung bình"
+          high: "Cao"
+          max: "Tối đa"
         response_format:
           open_modal: "Sửa"
           modal:
@@ -205,8 +223,6 @@ vi:
         thumbnail_suggestions:
           select: "Chọn"
           try_again: "Thử lại"
-        image_caption:
-          save_caption: "Lưu lại"
         no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
         save: "Lưu lại"

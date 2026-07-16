@@ -1287,13 +1287,11 @@ a.inline-editable-field {
 @import "admin/admin_dashboard";
 @import "admin/admin-dashboard-skeleton";
 @import "admin/admin_filter";
-@import "admin/admin_filter_controls";
 @import "admin/admin_reports";
 @import "admin/admin_report";
 @import "admin/admin_report_counters";
 @import "admin/admin_report_chart";
 @import "admin/admin_report_radar";
-@import "admin/admin_report_stacked_chart";
 @import "admin/admin_report_stacked_line_chart";
 @import "admin/admin_report_table";
 @import "admin/admin_report_inline_table";
@@ -1304,9 +1302,11 @@ a.inline-editable-field {
 @import "admin/schema_setting_editor";
 @import "admin/customize_show_schema";
 @import "admin/admin_bulk_users_delete_modal";
+@import "admin/admin_bulk_users_suspend_modal";
 @import "admin/color-palette-editor";
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
+@import "admin/admin_category_management";
 @import "admin/upcoming-changes";
 @import "admin/discourse_id";
 @import "admin/admin_new_category_setup";

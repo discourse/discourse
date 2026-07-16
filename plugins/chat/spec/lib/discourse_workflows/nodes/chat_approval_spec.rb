@@ -12,6 +12,28 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatApproval::V1 do
     end
   end
 
+  describe ".output_schemas" do
+    it "unions interaction responses with timeout forwarding", :aggregate_failures do
+      input_schema = DiscourseWorkflows::Schema::POST_SCHEMA
+
+      expect(described_class.output_schemas({})).to eq([described_class::APPROVAL_OUTPUT_SCHEMA])
+      expect(
+        described_class.output_schemas(
+          { "timeout_minutes" => "30" },
+          input_schemas: [input_schema],
+        ),
+      ).to eq(
+        [DiscourseWorkflows::Schema.union(input_schema, described_class::APPROVAL_OUTPUT_SCHEMA)],
+      )
+      expect(
+        described_class.output_schemas(
+          { "timeout_minutes" => "30", "timeout_action" => "fail" },
+          input_schemas: [input_schema],
+        ),
+      ).to eq([described_class::APPROVAL_OUTPUT_SCHEMA])
+    end
+  end
+
   describe ".load_options_context" do
     fab!(:other_channel) { Fabricate(:chat_channel, name: "Approvals") }
     fab!(:closed_channel) { Fabricate(:chat_channel, name: "Archived", status: :closed) }

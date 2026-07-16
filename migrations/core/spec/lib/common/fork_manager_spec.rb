@@ -16,11 +16,11 @@ RSpec.describe Migrations::ForkManager do
       read_io.close
     end
 
-    it "runs hooks in every fork created by `batch_forks`" do
+    it "runs hooks in every fork created by `with_batched_forks`" do
       read_io, write_io = IO.pipe
       described_class.after_fork_child { write_io.write("x") }
 
-      described_class.batch_forks { 2.times { Process.waitpid(described_class.fork {}) } }
+      described_class.with_batched_forks { 2.times { Process.waitpid(described_class.fork {}) } }
       write_io.close
 
       expect(read_io.read).to eq("xx")
@@ -29,30 +29,42 @@ RSpec.describe Migrations::ForkManager do
 
     it "returns the hook so it can be removed again" do
       hook = described_class.after_fork_child { raise "this hook should not run" }
-      expect(described_class.size).to eq(1)
+      expect(described_class.hook_count).to eq(1)
 
-      described_class.remove_after_fork_child_hook(hook)
-      expect(described_class.size).to eq(0)
+      described_class.remove_after_fork_child(hook)
+      expect(described_class.hook_count).to eq(0)
 
       _, status = Process.waitpid2(described_class.fork {})
       expect(status).to be_success
     end
   end
 
-  describe ".remove_after_fork_child_hook" do
+  describe ".remove_after_fork_child" do
     it "stops the removed hook from running while other hooks keep running" do
       read_io, write_io = IO.pipe
       hook = described_class.after_fork_child { write_io.write("removed") }
       described_class.after_fork_child { write_io.write("kept") }
 
-      described_class.remove_after_fork_child_hook(hook)
-      expect(described_class.size).to eq(1)
+      described_class.remove_after_fork_child(hook)
+      expect(described_class.hook_count).to eq(1)
 
       Process.waitpid(described_class.fork {})
       write_io.close
 
       expect(read_io.read).to eq("kept")
       read_io.close
+    end
+  end
+
+  describe ".with_batched_forks" do
+    it "runs the after-fork parent hooks even when the block raises" do
+      ran = false
+      described_class.after_fork_parent { ran = true }
+
+      expect { described_class.with_batched_forks { raise "fork exploded" } }.to raise_error(
+        "fork exploded",
+      )
+      expect(ran).to be(true)
     end
   end
 end

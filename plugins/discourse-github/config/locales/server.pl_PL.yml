@@ -21,7 +21,9 @@ pl_PL:
     github_gold_badge_min_commits: "Minimalna liczba commitów dla złotej odznaki"
     errors:
       invalid_badge_repo: "Należy podać adres URL serwisu GitHub lub nazwę repozytorium w formacie użytkownik_github/nazwa_repozytorium"
+      invalid_badge_repo_value: "„%{repo}” nie jest prawidłowym adresem URL ani nazwą repozytorium GitHub. Użyj formatu github_user/repository_name."
       invalid_github_linkback_access_token: "Musisz podać prawidłowy token dostępu GitHub Linkback, który umożliwia dostęp do dostarczonych przez Ciebie repozytoriów odznak."
+      invalid_github_linkback_access_token_for_repo: "Token dostępu GitHub Linkback nie mógł uzyskać dostępu do repozytorium „%{repo}”. Upewnij się, że token jest prawidłowy, a nazwa repozytorium jest poprawna i dostępna."
   github_linkback:
     commit_template: |
       Ten commit został wspomniany w **%{title}**. Mogą tam być istotne szczegóły:

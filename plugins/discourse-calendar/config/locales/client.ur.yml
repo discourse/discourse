@@ -13,6 +13,9 @@ ur:
             topic_id:
               label: ٹاپک ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "گفتگو"
       disable_holiday: "غیر فعال کریں"
       enable_holiday: "فعال کریں"
       date: "تاریخ"
@@ -49,6 +52,8 @@ ur:
         group_selector_placeholder: "ایک گروپ منتخب کریں..."
       upcoming_events:
         status: "سٹیٹس"
+      upcoming_events_list:
+        all_day: "سارا دن"
       models:
         event:
           expired: "میعاد ختم ہوگئی"
@@ -100,15 +105,12 @@ ur:
           none: "تَقْلِید نہیں"
           every_day: "ہر دن"
           every_weekday: "ہر ہفتے کے دن"
+          ordinals:
+            last: "گزشتہ"
         attendance:
           none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
-        url:
-          label: "URL"
-          placeholder: "اختیاری"
-        location:
-          label: "محل وقوع"
         description:
           label: "تفصیل"
         event_type:

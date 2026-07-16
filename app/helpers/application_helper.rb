@@ -82,8 +82,11 @@ module ApplicationHelper
       sk = "shared_session_key"
       return request.env[sk] if request.env[sk]
 
+      token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
+      return if !token || token.user != current_user
+
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
       key
     end
   end
@@ -102,6 +105,24 @@ module ApplicationHelper
         .filter { it[:importmap_name] }
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
+
+    available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
+    external_plugin_imports =
+      (
+        plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+          theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+      ).uniq
+
+    external_plugin_imports.each do |plugin_name|
+      if available_plugins.include?(plugin_name)
+        imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
+      else
+        imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager.optional_plugin_stub
+        imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager.required_plugin_stub(
+          plugin_name,
+        )
+      end
+    end
 
     JSON.pretty_generate({ imports: }).html_safe
   end
@@ -422,9 +443,7 @@ module ApplicationHelper
   end
 
   def discourse_pageview_tracking_meta_tags
-    if !SiteSetting.trigger_browser_pageview_events &&
-         !SiteSetting.use_beacon_for_browser_page_views &&
-         !SiteSetting.persist_browser_pageview_events
+    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
       return ""
     end
 
@@ -433,8 +452,12 @@ module ApplicationHelper
       name: "discourse-track-view-session-id",
       content: track_view_session_id_placeholder,
     )
-    if SiteSetting.use_beacon_for_browser_page_views
+    if UpcomingChanges.enabled?(:dashboard_improvements)
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+
+    if SiteSetting.persist_browser_pageview_events
+      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
     end
     tags.html_safe
   end
@@ -806,13 +829,10 @@ module ApplicationHelper
     )
   end
 
-  def theme_js_lookup
-    Theme.lookup_field(
+  def theme_js_assets
+    Theme.js_asset_info(
       theme_id,
-      :extra_js,
-      nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
-      csp_nonce: csp_nonce_placeholder,
     )
   end
 

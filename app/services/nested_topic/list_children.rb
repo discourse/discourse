@@ -93,8 +93,9 @@ class NestedTopic::ListChildren
 
   def prepare_posts(loader:, preloader:, all_posts:)
     preloader.prepare(all_posts)
-    context[:reply_counts] = loader.direct_reply_counts(all_posts.map(&:post_number))
-    context[:descendant_counts] = loader.total_descendant_counts(all_posts.map(&:id))
+    counts = loader.tree_counts(all_posts)
+    context[:reply_counts] = counts[:reply_counts]
+    context[:descendant_counts] = counts[:descendant_counts]
   end
 
   def serialize_children(

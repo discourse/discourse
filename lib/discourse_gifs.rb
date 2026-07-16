@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 module DiscourseGifs
-  REPO_URL = "https://github.com/discourse/discourse-gifs"
   COMPONENT_NAME = "discourse-gifs"
-  REMOTE_URLS = [REPO_URL, "#{REPO_URL}.git"].freeze
+
+  REPO_URLS = %w[
+    https://github.com/discourse/discourse-gifs
+    https://github.com/xfalcox/discourse-gifs
+  ].freeze
+
+  REMOTE_URLS = REPO_URLS.flat_map { |url| [url, "#{url}.git"] }.freeze
 
   def self.component_installed?
     component_scope.exists?

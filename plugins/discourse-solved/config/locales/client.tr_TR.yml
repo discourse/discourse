@@ -15,6 +15,19 @@ tr_TR:
           kpi:
             accepted_solutions:
               label: "Kabul edilen çözümler"
+        sections:
+          support:
+            title: "Destek"
+            filter:
+              all_categories: "Tüm kategoriler"
+            answerers:
+              staff: "Personel"
+              member: "Üyeler"
+              basic: "Temel"
+            response_time:
+              buckets:
+                lt_1h: "< 1 saat"
+                gt_24h: "> 24 saat"
   js:
     notifications:
       alt:
@@ -28,7 +41,6 @@ tr_TR:
       allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
       notify_on_staff_accept_solved: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
-      empty_box_on_unsolved: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       accept_answer: "Bu yanıtın sorunu çözüp çözmediğini seçin"
       accepted_description: "Bu, bu konu için kabul edilen çözümdür"
       has_no_accepted_answer: "Bu konunun çözümü yok"

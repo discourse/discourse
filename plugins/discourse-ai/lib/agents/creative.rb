@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class Creative < Agent
+      def thinking_effort
+        "low"
+      end
+
       def tools
         []
       end

@@ -7,16 +7,20 @@
 be:
   js:
     user_api_key:
-      authorize: "санкцыянаваць"
+      authorize: "Аўтарызаваць"
       deny: "Скасаваць"
-      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да API карыстацкага"
-      generic_error: "На жаль, мы не можам выдаць ключы карыстальніка API, гэтая функцыя можа быць адключаная адміністратарам сайта"
+      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да карыстальніцкага API"
+      generic_error: "На жаль, мы не можам выдаваць ключы карыстальніцкага API, гэтая функцыя можа быць адключана адміністратарам сайта."
       device:
         continue: "Працягнуць"
     blocks:
       ghost:
         status: "Статус"
         failed: "памылка"
+    access_control:
+      manage:
+        access_permission_editor: "Рэдактар"
+        access_permission_remove: "Выдаліць"
     number:
       format:
         separator: ","
@@ -948,6 +952,9 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
+      desktop_notifications:
+        push_level:
+          none: "Адключаныя"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -1251,7 +1258,6 @@ be:
     created: "Створана"
     created_lowercase: "створана"
     trust_level: "Узровень даверу"
-    search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "Вітаем!"
       title: "Рэгістрацыя"
@@ -1272,6 +1278,8 @@ be:
       email_label: "Электронная пошта"
       continue_button: "Працягнуць"
       verify_button: "Працягнуць"
+      account_ready_continue: "Працягнуць"
+      username_label: "Імя карыстальніка"
     login:
       title: "Уваход"
       username: "Карыстальнік"
@@ -1488,6 +1496,8 @@ be:
         top: "Топ тэм"
         new: "Новы"
       pinned_reply: "Замацаваныя"
+    share_target:
+      new_message: "Новае паведамленне"
     topic:
       create: "Новая тэма"
       archive_message:
@@ -1511,6 +1521,7 @@ be:
       back_to_list: "Вярнуцца да спісу тэм"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
+      sr_read: "счытванне"
       deleted: "Тэма была выдалена"
       slow_mode_update:
         enable: "Уключыць"
@@ -2026,6 +2037,7 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+        all_groups: "Усе групы"
         group_traffic: "Трафік"
         group_members: "Члены"
         group_other: "Іншае"
@@ -2081,6 +2093,9 @@ be:
             email: "Электронная пошта"
             opengraph_image:
               description: "Прадвызначаны відарыс OpenGraph, які выкарыстоўваецца, калі на старонцы няма іншага адпаведнага відарыса. Калі пакінуць пустым, будзе выкарыстоўвацца large_icon."
+            og_image_preview:
+              generate: "Згенерыраваць"
+              topic_id_label: "Ідэнтыфікатар тэмы"
         fonts:
           backfill_modal:
             modal_yes: "Так"
@@ -2123,6 +2138,19 @@ be:
               title: "Налады"
         badges:
           title: "Значкі"
+        category_management:
+          tabs:
+            settings: "Налады"
+          types:
+            all:
+              title: "Усе катэгорыі"
+          table:
+            category: "Катэгорыя"
+            topics: "тэмы"
+          visibility:
+            public: "Публічная"
+          visibility_filter:
+            all: "Усе катэгорыі"
         permalinks:
           title: "Пастаянныя спасылкі"
         emoji:
@@ -2166,7 +2194,6 @@ be:
         no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
         installed_version: "Усталяваная"
-        latest_version: "Апошняя"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
@@ -2696,6 +2723,10 @@ be:
         id_not_found: "Карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Закрыць"
+              confirm: "Прыпыніць"
           delete:
             confirmation_modal:
               close: "Закрыць"
@@ -2797,7 +2828,7 @@ be:
           topics_viewed_all_time: "Тэм прагледжана (за ўвесь час)"
           posts_read: "Допісаў прачытана"
           posts_read_all_time: "Допісаў прачытана (за ўвесь час)"
-          flagged_posts: "абскарджаны паведамлення"
+          flagged_posts: "Допісаў са скаргамі"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
         discourse_connect:

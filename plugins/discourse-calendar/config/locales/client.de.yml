@@ -34,6 +34,8 @@ de:
               label: Themen-ID
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "Chat"
         chat:
           going: "Klicke auf \"Dabei\""
           join_channel_header: "🌟Mach mit! 🌟"
@@ -421,7 +423,6 @@ de:
           this_and_following: "Dieser Termin und alle folgenden Termine"
           leave_event: "Ereignis verlassen"
           status:
-            unknown: "Nicht interessiert"
             going: "Dabei"
             not_going: "Nicht teilnehmen"
             interested: "Interessiert"
@@ -499,7 +500,6 @@ de:
         create_event_title: "Ereignis erstellen"
         update_event_title: "Ereignis bearbeiten"
         advanced_settings_title: "Erweiterte Einstellungen"
-        advanced_settings: "Erweiterte Einstellungen"
         confirm_delete: "Bist du sicher, dass du dieses Ereignis löschen möchtest?"
         confirm_close: "Bist du sicher, dass du dieses Ereignis beenden möchtest?"
         confirm_open: "Bist du sicher, dass du dieses Ereignis öffnen möchtest?"
@@ -561,11 +561,7 @@ de:
         allow_chat:
           label: "Chat-Integration"
           checkbox_label: "Erstelle und verwalte ereignisspezifische Chat-Kanäle"
-        url:
-          label: "URL"
-          placeholder: "Optional"
         location:
-          label: "Ort"
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
         description:
           label: "Beschreibung"

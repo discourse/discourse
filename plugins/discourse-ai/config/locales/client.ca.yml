@@ -34,6 +34,14 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Carregant..."
+        tool: "Acció"
+        user: "Usuari"
+        approve: "Aprova"
+        reject: "Rebutja"
+        approved: "Aprovat"
+        rejected: "Rebutjat"
       llm_selector:
         none: "Cap"
       features:
@@ -51,12 +59,16 @@ ca:
           reset: "Restableix"
         search:
           name: "Cerca"
+        image_caption:
+          setting_groups:
+            settings: "Configuració"
         spam:
           name: "Brossa"
       modals:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -94,6 +106,12 @@ ca:
         save: "Desa"
         enabled: "Activat?"
         delete: "Suprimeix"
+        thinking_effort_options:
+          none: "Cap"
+          low: "Baixa"
+          medium: "Mitjana"
+          high: "Alta"
+          max: "Màxim"
         response_format:
           open_modal: "Edita"
           modal:
@@ -168,8 +186,6 @@ ca:
           cancel: "Cancel·la"
         thumbnail_suggestions:
           try_again: "Torna-ho a intentar"
-        image_caption:
-          save_caption: "Desa"
       embeddings:
         save: "Desa"
         delete: "Suprimeix"

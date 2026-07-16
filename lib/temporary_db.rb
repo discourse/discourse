@@ -10,12 +10,13 @@ class TemporaryDb
   STARTUP_TIMEOUT_SECONDS = 60
   DEFAULT_PG_SYSTEM_USER = "postgres"
 
-  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS)
+  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS, port: nil)
     @pg_temp_path = File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{SecureRandom.hex(6)}")
     @pg_conf = "#{@pg_temp_path}/postgresql.conf"
     @pg_sock_path = "#{@pg_temp_path}/sockets"
     @pg_system_user = pg_system_user
     @versions = versions
+    @pg_port = port
   end
 
   def port_available?(port)
@@ -96,7 +97,7 @@ class TemporaryDb
 
   def start
     init_data_directory
-    configure_ports
+    configure_database
 
     puts "Starting postgres on port: #{pg_port}"
     @previous_discourse_pg_port = ENV["DISCOURSE_PG_PORT"]
@@ -192,11 +193,21 @@ class TemporaryDb
     )
   end
 
-  def configure_ports
+  def configure_database
     FileUtils.mkdir(@pg_sock_path)
     FileUtils.chown(@pg_system_user, nil, @pg_sock_path) if running_as_root?
     conf = File.read(@pg_conf)
-    File.write(@pg_conf, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{@pg_sock_path}'")
+    conf << <<~CONF
+
+      port = #{pg_port}
+      unix_socket_directories = '#{@pg_sock_path}'
+      fsync = off
+      synchronous_commit = off
+      full_page_writes = off
+      wal_level = minimal
+      max_wal_senders = 0
+    CONF
+    File.write(@pg_conf, conf)
   end
 
   def start_server

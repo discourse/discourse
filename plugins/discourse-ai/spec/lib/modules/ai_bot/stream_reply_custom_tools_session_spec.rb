@@ -10,7 +10,6 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
         default_llm_id: llm.id,
         allow_personal_messages: true,
-        execution_mode: "agentic",
         max_turn_tokens: 5000,
         compression_threshold: 80,
       )
@@ -141,10 +140,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it "defaults the budget to half the context window when agentic without max_turn_tokens" do
-      # "Leave empty for default limits": an agentic agent with no
-      # max_turn_tokens must not crash, and the budget defaults to half the LLM
-      # context window (fake_llm has max_prompt_tokens 131_072 → 65_536).
+    it "defaults the budget to half the context window without max_turn_tokens" do
+      # An agent with no max_turn_tokens uses half the LLM context window
+      # (fake_llm has max_prompt_tokens 131_072 → 65_536).
       ai_agent.update!(max_turn_tokens: nil)
 
       tool_call =

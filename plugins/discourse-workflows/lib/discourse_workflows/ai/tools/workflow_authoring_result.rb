@@ -7,6 +7,8 @@ module DiscourseWorkflows
         STATUSES = %w[needs_clarification proposed_patch explanation error].freeze
         RISK_LEVELS = %w[low medium high].freeze
         MAX_TEXT_LENGTH = 2000
+        MISSING_PROPOSAL_OPERATIONS_MESSAGE =
+          "Proposed patch results must include proposal.operations"
 
         def self.signature
           {
@@ -155,7 +157,7 @@ module DiscourseWorkflows
           end
 
           if response[:status] == "proposed_patch" && response.dig(:proposal, "operations").blank?
-            return error_result("Proposed patch results must include proposal.operations")
+            return error_result(MISSING_PROPOSAL_OPERATIONS_MESSAGE)
           end
 
           response

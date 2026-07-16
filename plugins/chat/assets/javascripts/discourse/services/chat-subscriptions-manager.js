@@ -449,28 +449,28 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onNewChannelSubscription(data) {
-    this.chatChannelsManager.find(data.channel.id).then((channel) => {
-      // we need to refresh here to have correct last message ids
-      channel.meta = data.channel.meta;
-      channel.currentUserMembership = data.channel.current_user_membership;
+    const channel = this.chatChannelsManager.store(data.channel);
 
-      if (!this.currentUser) {
-        if (channel.isCategoryChannel) {
-          this.startChannelSubscription(channel, { readOnly: true });
-        }
+    // we need to refresh here to have correct last message ids
+    channel.meta = data.channel.meta;
+    channel.currentUserMembership = data.channel.current_user_membership;
 
-        return;
+    if (!this.currentUser) {
+      if (channel.isCategoryChannel) {
+        this.startChannelSubscription(channel, { readOnly: true });
       }
 
-      if (
-        channel.isDirectMessageChannel &&
-        !channel.currentUserMembership.following
-      ) {
-        channel.tracking.unreadCount = 1;
-      }
+      return;
+    }
 
-      this.chatChannelsManager.follow(channel);
-    });
+    if (
+      channel.isDirectMessageChannel &&
+      !channel.currentUserMembership.following
+    ) {
+      channel.tracking.unreadCount = 1;
+    }
+
+    this.chatChannelsManager.follow(channel);
   }
 
   _startChannelsMetadataChangesSubscription(lastId) {

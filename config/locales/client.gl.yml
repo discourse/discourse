@@ -21,6 +21,10 @@ gl:
         status: "Estado"
         hidden: "agochado"
         failed: "fallou"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Retirar"
     number:
       format:
         separator: ","
@@ -221,6 +225,9 @@ gl:
     age: "Idade"
     joined: "Inscrito"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avanzado"
+      simple_mode: "Modo simple"
     show_more: "amosar máis"
     show_help: "Opcións"
     links: "Ligazóns"
@@ -984,6 +991,9 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
+        push_level:
+          none: "Desactivado"
+          all: "Activado"
         not_supported: "Este navegador non admite notificacións. Desculpe."
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
@@ -1617,7 +1627,6 @@ gl:
     created: "Creado"
     created_lowercase: "creado"
     trust_level: "Nivel de confianza"
-    search_hint: "nome de usuario, enderezo de  correo ou enderezo IP"
     create_account:
       header_title: "Dámoslle a benvida!"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
@@ -1658,6 +1667,9 @@ gl:
       email_label: "Enderezo de correo"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Crear unha conta nova"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuario"
     login:
       title: "Acceder"
       username: "Usuario"
@@ -2181,6 +2193,8 @@ gl:
       deleted_post_placeholder: "[eliminado]"
       ignored_post_placeholder: "[ignorado]"
       pinned_reply: "Fixado"
+    share_target:
+      new_message: "Nova mensaxe"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -2224,6 +2238,7 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
+      sr_read: "lectura"
       bumped_at: "Últimas: %{date}"
       deleted: "Eliminouse o tema"
       slow_mode_update:
@@ -2596,6 +2611,8 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
+        modal:
+          title: "Traducións"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2776,7 +2793,6 @@ gl:
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir ligazóns de actualidade nesta categoría"
       create_long: "Crear unha nova categoría"
-      slug_placeholder: "Inserir guións entre palabras para o url (opcional)"
       creation_error: Produciuse un erro durante a creación desta categoría.
       save_error: Produciuse un erro gardando a categoría.
       validations:
@@ -3397,6 +3413,7 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
+        all_groups: "Todos os grupos"
         group_traffic: "Tráfico"
         group_members: "Membros"
         group_other: "Outro"
@@ -3460,6 +3477,9 @@ gl:
               description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
             opengraph_image:
               description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+            og_image_preview:
+              generate: "Xerar"
+              topic_id_label: "ID do tema"
         fonts:
           title: "Tipos de letra"
           form:
@@ -3510,6 +3530,20 @@ gl:
               title: "Configuración"
         badges:
           title: "Insignias"
+        category_management:
+          tabs:
+            settings: "Configuración"
+          types:
+            all:
+              title: "Todas as categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidade"
+            topics: "Temas"
+          visibility:
+            public: "Pública"
+          visibility_filter:
+            all: "Todas as categorías"
         permalinks:
           title: "Ligazóns permanentes"
           header_description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro"
@@ -3568,7 +3602,7 @@ gl:
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
         installed_version: "Instalado"
-        latest_version: "Últimos"
+        github: "Github"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         dismiss_notice: "Ignorar"
         new_features:
@@ -3636,6 +3670,7 @@ gl:
               searches: "Buscas"
               status: "Estado"
         reports_section:
+          header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
           modal:
             enabled_heading: "Activado"
@@ -3903,6 +3938,8 @@ gl:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -4562,6 +4599,10 @@ gl:
         active: "Activado"
         status: "Estado"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Pechar"
@@ -4573,6 +4614,8 @@ gl:
           suspended: "Suspendido"
           silenced: "Silenciado"
           staged: "Transitorio"
+        activation_filter:
+          activated: "Activado"
         approved: "Aprobado?"
         titles:
           pending: "Usuarios pendentes de revisión"

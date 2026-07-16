@@ -74,7 +74,8 @@ RSpec.describe "Admin AI translations" do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
-      SiteSetting.ai_translation_excluded_categories = category.id.to_s
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = category.id.to_s
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
       translations_page.visit
@@ -111,10 +112,10 @@ RSpec.describe "Admin AI translations" do
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.supported_locales"))
     end
 
-    it "displays the category selector alongside the locale selector" do
+    it "displays the category scope selector alongside the locale selector" do
       expect(page).to have_css(".alert.alert-info")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.excluded_categories"))
-      expect(page).to have_css(".category-selector")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
+      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
     end
 
     it "allows adding and saving languages" do
@@ -130,14 +131,15 @@ RSpec.describe "Admin AI translations" do
     end
   end
 
-  describe "when categories are not excluded" do
+  describe "when selected categories are configured" do
     fab!(:category)
 
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr"
-      SiteSetting.ai_translation_excluded_categories = ""
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
       visit "/admin/plugins/discourse-ai/ai-translations"
@@ -145,18 +147,19 @@ RSpec.describe "Admin AI translations" do
 
     it "displays the setup alert with the category selector" do
       expect(page).to have_css(".alert.alert-info")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.excluded_categories"))
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
       expect(page).to have_css(".category-selector")
     end
 
-    it "allows adding and saving excluded categories" do
+    it "allows adding and saving selected categories" do
       find(".category-selector").click
       find(".category-row[data-value='#{category.id}']").click
 
       within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
 
       expect(page).to have_no_css(".ai-translations__category-input-row .setting-controls__ok")
-      expect(SiteSetting.ai_translation_excluded_categories).to eq(category.id.to_s)
+      expect(SiteSetting.ai_translation_category_scope).to eq("include")
+      expect(SiteSetting.ai_translation_categories).to eq(category.id.to_s)
     end
   end
 

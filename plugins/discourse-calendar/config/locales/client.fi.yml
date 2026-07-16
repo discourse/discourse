@@ -25,6 +25,9 @@ fi:
             topic_id:
               label: Ketjun tunnus
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} kutsui sinut: %{description}"
       on_holiday: "Lomalla"
       disable_holiday: "Poista käytöstä"
@@ -396,7 +399,6 @@ fi:
           no_users: "Käyttäjiä ei löydy"
           leave_event: "Poistu tapahtumasta"
           status:
-            unknown: "Ei kiinnostunut"
             going: "Menossa"
             interested: "Kiinnostunut"
             going_count:
@@ -489,11 +491,7 @@ fi:
         allow_chat:
           label: "Chat-integraatio"
           checkbox_label: "Luo ja hallitse tapahtumakohtaista chat-kanavaa"
-        url:
-          label: "URL"
-          placeholder: "Valinnainen"
         location:
-          label: "Paikka"
           placeholder: "Lisää sijainti, linkki tai jotain."
         description:
           label: "Kuvaus"

@@ -22,6 +22,10 @@ it:
         in_location: "in"
         hidden: "nascosto"
         failed: "non riuscito"
+    access_control:
+      manage:
+        access_permission_editor: "Redattore"
+        access_permission_remove: "Rimuovi"
     number:
       format:
         separator: ","
@@ -380,6 +384,9 @@ it:
     age: "Età"
     joined: "Iscritto"
     admin_title: "Amministrazione"
+    advanced_mode_toggle:
+      advanced_mode: "Modalità avanzata"
+      simple_mode: "Modalità semplice"
     show_more: "mostra altro"
     show_help: "Opzioni"
     links: "Collegamenti"
@@ -1415,6 +1422,9 @@ it:
       notifications: "Notifiche"
       statistics: "Statistiche"
       desktop_notifications:
+        push_level:
+          none: "Disabilitati"
+          all: "Abilitato"
         not_supported: "Spiacenti, le notifiche non sono supportate su questo browser."
         perm_denied_expl: "Hai negato il permesso per le notifiche. Autorizza le notifiche tramite le impostazioni del tuo browser."
         each_browser_note: "Nota: devi modificare questa impostazione su ogni browser che utilizzi. Tutte le notifiche verranno disabilitate quando le notifiche sono messe in pausa nel menu utente, indipendentemente da questa impostazione."
@@ -2407,7 +2417,6 @@ it:
     created: "Creato"
     created_lowercase: "creato"
     trust_level: "Livello di attendibilità"
-    search_hint: "nome utente, email o indirizzo IP"
     create_account:
       header_title: "Benvenuti!"
       disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
@@ -2455,6 +2464,9 @@ it:
       email_label: "E-mail"
       continue_button: "Continua"
       verify_button: "Continua"
+      signup_title: "Crea il tuo account"
+      account_ready_continue: "Continua"
+      username_label: "Nome utente"
     login:
       header_title: "Bentornato"
       title: "Accedi"
@@ -3338,6 +3350,9 @@ it:
       deleted_post_placeholder: "[eliminato]"
       ignored_post_placeholder: "[ignorato]"
       pinned_reply: "Appuntato"
+    share_target:
+      new_topic: "Nuovo argomento"
+      new_message: "Nuovo messaggio"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"
@@ -3389,40 +3404,8 @@ it:
       read_more_in_category: "Vuoi saperne di più? Sfoglia altri argomenti in %{categoryLink} o <a href='%{latestLink}'>visualizza gli argomenti più recenti</a>."
       read_more: "Vuoi saperne di più? <a href='%{categoryLink}'>Sfoglia tutte le categorie</a> o <a href='%{latestLink}'>visualizza gli argomenti più recenti</a>."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
+      sr_read: "lettura"
       participant_groups: "Gruppi partecipanti"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/unread"># argomento non letto</a>}
-              other {Ci sono <a href="{basePath}/unread"># argomenti non letti</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { e <a href="{basePath}/new"># nuovo</a> argomento rimanente,}
-              other { e <a href="{basePath}/new"># nuovi</a> argomenti rimanenti,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/unread"># argomento non letto</a> rimanente,}
-              other {Ci sono <a href="{basePath}/unread"># argomenti non letti</a> rimanenti,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {C'è <a href="{basePath}/new"># nuovo</a> argomento rimanente,}
-              other {Ci sono <a href="{basePath}/new"># nuovi</a> argomenti rimanenti,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { oppure puoi sfogliare altri argomenti in {categoryLink}}
-          false { oppure puoi <a href="{basePath}/latest">visualizzare gli argomenti più recenti</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} risposta, vai al primo messaggio"
         other: "%{count} risposte, vai al primo messaggio"
@@ -3865,8 +3848,9 @@ it:
           one: "Visualizza %{count} lingua tradotta"
           other: "Visualizza %{count} lingue tradotte"
         modal:
-          title: "Traduzioni per messaggio"
+          title: "Traduzioni"
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
+          discard_language_change: "Annulla modifica"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
           none: "Non impostato"
@@ -4112,7 +4096,6 @@ it:
       type_settings_schema:
         site_settings: "Impostazioni del sito"
       unsaved_changes: "Hai modifiche non salvate"
-      slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       validations:
@@ -4801,8 +4784,6 @@ it:
       no_read_topics_body: "Una volta che avrai iniziato a leggere discussioni, ne vedrai un elenco qui. Per cominciare a leggere, cerca argomenti di tuo interesse alle pagine <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a>; oppure effettua una ricerca per parola chiave %{searchIcon}"
     no_group_messages_title: "Nessun messaggio di gruppo trovato"
     topic_entrance:
-      sr_jump_top_button: "Vai al primo messaggio - %{date}"
-      sr_jump_bottom_button: "Vai all'ultimo messaggio - %{date}"
       jump_top_button_title: "Vai al primo messaggio"
       jump_bottom_button_title: "Vai all'ultimo messaggio"
     fullscreen_table:
@@ -5175,6 +5156,7 @@ it:
         title: "Elenco dei rapporti disponibili"
         sidebar_title: "Report"
         back: "Torna a tutti i report"
+        all_groups: "Tutti i gruppi"
         group_traffic: "Traffico"
         group_members: "Membri"
         group_other: "Altri"
@@ -5313,7 +5295,6 @@ it:
             apple_touch_icon:
               title: "Icona touch di Apple"
               description: "Icona utilizzata per i dispositivi touch Apple. Se lasciata vuota, verrà utilizzato large_icon."
-              help_text: "La dimensione consigliata è 180 x 180 pixel. Si sconsiglia l'uso di uno sfondo trasparente."
             digest_logo:
               title: "Logo digest"
               description: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'e-mail del tuo sito. Se lasciata vuota, verrà utilizzata l'immagine dall'impostazione `logo`."
@@ -5321,6 +5302,9 @@ it:
             opengraph_image:
               title: "Immagine OpenGraph"
               description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+            og_image_preview:
+              generate: "Genera"
+              topic_id_label: "ID dell'argomento"
             x_summary_large_image:
               title: "Immagine grande riepilogo X"
               description: "Scheda X 'summary large image'. Se vuota, verranno generati i metadati della scheda normale usando OpenGraph_image, purché non sia un file .svg."
@@ -5458,6 +5442,21 @@ it:
               title: "Messaggi e argomenti"
             stats_and_thresholds:
               title: "Statistiche e soglie"
+        category_management:
+          tabs:
+            settings: "Impostazioni"
+          types:
+            all:
+              title: "Tutte le categorie"
+          filter_placeholder: "Filtra le categorie"
+          table:
+            category: "Categoria"
+            visibility: "Visibilità"
+            topics: "Argomenti"
+          visibility:
+            public: "Pubblico"
+          visibility_filter:
+            all: "Tutte le categorie"
         permalinks:
           title: "Permalink"
           header_description: "Reindirizzamenti da applicare per URL non conosciuti dal forum"
@@ -5599,7 +5598,7 @@ it:
         stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Hai effettuato l'aggiornamento di recente. Ottimo!"
         installed_version: "Versione Installata"
-        latest_version: "Ultima"
+        github: "GitHub"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
         dismiss_notice: "Ignora"
         new_features:
@@ -5672,6 +5671,7 @@ it:
               searches: "Ricerche"
               status: "Stato"
         reports_section:
+          header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
           modal:
             enabled_heading: "Abilitato"
@@ -6208,6 +6208,8 @@ it:
             initial_members: "Membri ampliati"
             initial_members_description: "Numero di membri del gruppo da visualizzare prima del pulsante Mostra altro."
             show_description: "Includi descrizione"
+          locale_selector:
+            title: "Lingua"
           optional: "(opzionale)"
           update: "Aggiorna"
           toasts:
@@ -7260,11 +7262,11 @@ it:
         silence_reason: "Motivo del silenzio"
         bulk_actions:
           title: "Azioni collettive"
-          admin_cant_be_deleted: "Questo utente non può essere eliminato perché è un amministratore"
-          too_many_or_old_posts: "Questo utente non può essere eliminato perché ha troppi messaggi o un messaggio molto vecchio"
-          too_many_selected_users:
-            one: "Hai raggiunto il limite di %{count} utente per l'eliminazione collettiva"
-            other: "Hai raggiunto il limite di %{count} utenti per l'eliminazione collettiva"
+          clear_all: "Deseleziona tutto"
+          suspend:
+            confirmation_modal:
+              close: "Chiudi"
+              confirm: "Sospendi"
           delete:
             label: "Elimina utenti…"
             confirmation_modal:
@@ -7292,6 +7294,9 @@ it:
           suspended: "Sospesi"
           silenced: "Silenziato"
           staged: "Temporaneo"
+        activation_filter:
+          all: "Tutti gli utenti"
+          activated: "Attivati"
         approved: "Approvato?"
         titles:
           active: "Utenti attivi"

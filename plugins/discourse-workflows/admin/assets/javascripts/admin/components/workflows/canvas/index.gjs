@@ -10,11 +10,20 @@ import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { clipboardCopy } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BuildWithAiModal from "../build-with-ai-modal";
+import {
+  buildCanvasClipboardPayload,
+  isSerializedCanvasClipboardPayload,
+  parseCanvasClipboardText,
+  payloadForCanvasClipboardPaste,
+  positionCanvasClipboardPayload,
+  serializeCanvasClipboardPayload,
+} from "./canvas-clipboard";
 import CanvasContextMenu from "./canvas-context-menu";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
 import { setupCanvasKeyboard } from "./canvas-keyboard";
@@ -46,7 +55,9 @@ export default class WorkflowCanvas extends Component {
   @tracked hasUnpublishedChangesOverride = null;
   @tracked selectionVersion = 0;
   @tracked aiPanelOpen = false;
-  copiedEntities = { nodes: [], stickyNotes: [] };
+  clipboardPayload = null;
+  serializedClipboardPayload = null;
+  clipboardWritePending = false;
   pasteOffset = 0;
   isFirstSync = true;
   lastAutoArrangeRequest = 0;
@@ -54,6 +65,7 @@ export default class WorkflowCanvas extends Component {
   #hasSetupStarted = false;
   #pendingSync = false;
   #syncTask = null;
+  #outsideClickAbort = null;
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -62,6 +74,7 @@ export default class WorkflowCanvas extends Component {
     super.willDestroy();
     this.rete?.destroy();
     this.keyboard?.teardown();
+    this.#outsideClickAbort?.abort();
   }
 
   get workflowPublished() {
@@ -230,8 +243,9 @@ export default class WorkflowCanvas extends Component {
     return {
       onUndo: () => this.args.onUndo?.(),
       onRedo: () => this.args.onRedo?.(),
-      onCopy: () => this.#copy(),
-      onPaste: () => this.#paste(),
+      onCut: () => this.cutSelected(),
+      onCopy: () => this.copySelected(),
+      onPaste: (event) => this.handlePasteEvent(event),
       onDelete: () => this.deleteSelected(),
       onEscape: () => {
         this.contextMenuApi?.close();
@@ -270,6 +284,8 @@ export default class WorkflowCanvas extends Component {
         this.menu.close("workflows-canvas-menu");
         this.args.onCloseNodePanel?.();
       },
+      onSelectionDragFinished: (selectionRect) =>
+        this.#selectStickyNotesInRect(selectionRect),
       onNodeDragEnd: () => this.args.onNodeDragEnd?.(),
       onConnectionCreated: (...a) => this.args.onCreateConnection?.(...a),
       onNodeDelete: (clientId) => this.args.onRemoveNodes?.([clientId]),
@@ -289,6 +305,37 @@ export default class WorkflowCanvas extends Component {
 
   #stickyNoteRects() {
     return computeStickyNoteRects(this.args.stickyNotes);
+  }
+
+  async #selectStickyNotesInRect(selectionRect) {
+    for (const noteRect of this.#stickyNoteRects()) {
+      if (this.#rectsIntersect(noteRect, selectionRect)) {
+        await this.rete.selectStickyNote(
+          noteRect.clientId,
+          {
+            onStickyNoteTranslate: buildStickyNoteTranslateHandler(
+              () => this.args.stickyNotes,
+              this.args.onStickyNoteMove
+            ),
+            onStickyNoteUnselect: () => {
+              this.selectionVersion++;
+            },
+          },
+          { accumulate: true }
+        );
+      }
+    }
+
+    this.selectionVersion++;
+  }
+
+  #rectsIntersect(rect, selectionRect) {
+    return !(
+      rect.x + rect.width < selectionRect.left ||
+      rect.x > selectionRect.right ||
+      rect.y + rect.height < selectionRect.top ||
+      rect.y > selectionRect.bottom
+    );
   }
 
   #shouldHydrateInitialAutoLayout(nodes) {
@@ -396,10 +443,29 @@ export default class WorkflowCanvas extends Component {
     );
 
     this.args.onAreaReady?.(this.rete.area);
+    this.#forwardTrappedPointerdowns();
 
     await this.#queueSync();
     this.isLoading = false;
     element.focus();
+  }
+
+  // Left clicks are trapped on the canvas and never reach the document
+  // so we re-emit one to clean up any open menus outside of the canvas
+  #forwardTrappedPointerdowns() {
+    this.#outsideClickAbort = new AbortController();
+
+    this.containerElement.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (event.button === 0) {
+          document.body.dispatchEvent(
+            new PointerEvent("pointerdown", { bubbles: true })
+          );
+        }
+      },
+      { capture: true, signal: this.#outsideClickAbort.signal }
+    );
   }
 
   @action
@@ -503,7 +569,7 @@ export default class WorkflowCanvas extends Component {
   async selectStickyNote(clientId) {
     await this.rete.selectStickyNote(clientId, {
       onStickyNoteTranslate: buildStickyNoteTranslateHandler(
-        this.args.stickyNotes,
+        () => this.args.stickyNotes,
         this.args.onStickyNoteMove
       ),
       onStickyNoteUnselect: () => {
@@ -513,35 +579,176 @@ export default class WorkflowCanvas extends Component {
     this.selectionVersion++;
   }
 
-  #copy() {
-    const { nodeIds, stickyNoteIds } = this.rete.getSelectedIds();
-    const cloneMatching = (items, ids) =>
-      (items || []).filter((n) => ids.has(n.clientId)).map(structuredClone);
-    const nodes = cloneMatching(this.args.nodes, nodeIds);
-    const stickyNotes = cloneMatching(this.args.stickyNotes, stickyNoteIds);
-    if (nodes.length > 0 || stickyNotes.length > 0) {
-      this.copiedEntities = { nodes, stickyNotes };
-      this.pasteOffset = 0;
+  #selectedIds(selection = null) {
+    if (!selection) {
+      return this.rete.getSelectedIds();
+    }
+
+    return {
+      nodeIds: new Set(selection.nodeIds || []),
+      stickyNoteIds: new Set(selection.stickyNoteIds || []),
+    };
+  }
+
+  #selectedClipboardPayload(selection = null) {
+    return buildCanvasClipboardPayload(
+      {
+        nodes: this.args.nodes || [],
+        connections: this.args.connections || [],
+        stickyNotes: this.args.stickyNotes || [],
+      },
+      this.#selectedIds(selection)
+    );
+  }
+
+  #storeClipboardPayload(payload) {
+    this.clipboardPayload = payload;
+    this.serializedClipboardPayload = serializeCanvasClipboardPayload(payload);
+    this.pasteOffset = 0;
+  }
+
+  async #writeClipboardPayload() {
+    this.clipboardWritePending = true;
+
+    try {
+      await clipboardCopy(this.serializedClipboardPayload);
+    } catch {
+      this.toasts.warning({
+        data: {
+          message: i18n("discourse_workflows.canvas.clipboard_unavailable"),
+        },
+      });
+    } finally {
+      this.clipboardWritePending = false;
     }
   }
 
-  #paste() {
-    const { nodes, stickyNotes } = this.copiedEntities;
-    if (nodes.length === 0 && stickyNotes.length === 0) {
+  #showNothingToPaste() {
+    this.toasts.info({
+      data: { message: i18n("discourse_workflows.canvas.nothing_to_paste") },
+    });
+  }
+
+  #copySelectedPayload(selection = null) {
+    const payload = this.#selectedClipboardPayload(selection);
+
+    if (!payload) {
+      return null;
+    }
+
+    this.#storeClipboardPayload(payload);
+    void this.#writeClipboardPayload();
+
+    return payload;
+  }
+
+  @action
+  copySelected(selection = null) {
+    this.contextMenuApi?.close();
+    this.#copySelectedPayload(selection);
+  }
+
+  @action
+  cutSelected(selection = null) {
+    this.contextMenuApi?.close();
+    const selectedIds = this.#selectedIds(selection);
+
+    if (!this.#copySelectedPayload(selectedIds)) {
       return;
     }
-    this.pasteOffset += 20;
-    const offset = this.pasteOffset;
-    const shift = (items) =>
-      items.map((item) => ({
-        ...item,
-        position: item.position
-          ? { x: item.position.x + offset, y: item.position.y + offset }
-          : null,
-      }));
-    this.args.onPasteEntities?.({
-      nodes: shift(nodes),
-      stickyNotes: shift(stickyNotes),
+
+    this.args.onCutSelected?.({
+      nodeIds: [...selectedIds.nodeIds],
+      stickyNoteIds: [...selectedIds.stickyNoteIds],
+    });
+    this.rete.selector.unselectAll();
+    this.selectionVersion++;
+  }
+
+  #positionedPayload(payload, { target = null, useSourceOffset = false } = {}) {
+    const sourceOffset = useSourceOffset ? (this.pasteOffset += 20) : 0;
+
+    return positionCanvasClipboardPayload(payload, { target, sourceOffset });
+  }
+
+  #pastePayload(payload, options = {}) {
+    if (!this.rete) {
+      return;
+    }
+
+    this.args.onPasteEntities?.(this.#positionedPayload(payload, options));
+  }
+
+  async #readClipboardPayload() {
+    if (!navigator.clipboard?.readText) {
+      return { payload: null, didRead: false };
+    }
+
+    try {
+      const text = await navigator.clipboard.readText();
+      return {
+        payload: parseCanvasClipboardText(text),
+        didRead: true,
+        isLocal: isSerializedCanvasClipboardPayload(
+          text,
+          this.serializedClipboardPayload
+        ),
+      };
+    } catch {
+      return { payload: null, didRead: false };
+    }
+  }
+
+  @action
+  handlePasteEvent(event) {
+    if (!this.rete) {
+      return;
+    }
+
+    const text = event.clipboardData?.getData("text/plain");
+    const payload = this.clipboardWritePending
+      ? null
+      : parseCanvasClipboardText(text);
+    const useLocalPayload = !payload && this.clipboardPayload;
+    const pastePayload = payloadForCanvasClipboardPaste(
+      payload,
+      useLocalPayload ? this.clipboardPayload : null
+    );
+
+    if (!pastePayload) {
+      return;
+    }
+
+    event.preventDefault();
+    const isLocal =
+      useLocalPayload ||
+      isSerializedCanvasClipboardPayload(text, this.serializedClipboardPayload);
+
+    this.#pastePayload(pastePayload, {
+      target: isLocal ? null : this.rete.viewportCenter(),
+      useSourceOffset: isLocal,
+    });
+  }
+
+  @action
+  async pasteFromClipboard(target = null) {
+    this.contextMenuApi?.close();
+    const result = await this.#readClipboardPayload();
+    const systemPayload = this.clipboardWritePending ? null : result.payload;
+    const useLocalPayload = !systemPayload && this.clipboardPayload;
+    const payload = payloadForCanvasClipboardPaste(
+      systemPayload,
+      useLocalPayload ? this.clipboardPayload : null
+    );
+
+    if (!payload) {
+      this.#showNothingToPaste();
+      return;
+    }
+
+    this.#pastePayload(payload, {
+      target,
+      useSourceOffset: !target && (result.isLocal || useLocalPayload),
     });
   }
 
@@ -562,17 +769,36 @@ export default class WorkflowCanvas extends Component {
 
   @action
   async translateSelected(draggedClientId, dx, dy) {
+    const { stickyNoteIds } = this.rete.getSelectedIds();
+
+    for (const stickyNoteId of stickyNoteIds) {
+      if (stickyNoteId === draggedClientId) {
+        continue;
+      }
+
+      const note = (this.args.stickyNotes || []).find(
+        (stickyNote) => stickyNote.clientId === stickyNoteId
+      );
+      if (note) {
+        this.args.onStickyNoteMove?.(stickyNoteId, {
+          x: note.position.x + dx,
+          y: note.position.y + dy,
+        });
+      }
+    }
+
     await this.rete.translateSelectedEntities(
       draggedClientId,
       "sticky-note",
       dx,
-      dy
+      dy,
+      { labels: ["node"] }
     );
   }
 
   @action
-  deleteSelected() {
-    const { nodeIds, stickyNoteIds } = this.rete.getSelectedIds();
+  deleteSelected(selection = null) {
+    const { nodeIds, stickyNoteIds } = this.#selectedIds(selection);
     if (nodeIds.size > 0 || stickyNoteIds.size > 0) {
       this.args.onRemoveSelected?.({
         nodeIds: [...nodeIds],
@@ -966,6 +1192,9 @@ export default class WorkflowCanvas extends Component {
           @rete={{this.rete}}
           @onEditNode={{@onEditNode}}
           @onDeleteSelected={{this.deleteSelected}}
+          @onCut={{this.cutSelected}}
+          @onCopy={{this.copySelected}}
+          @onPaste={{this.pasteFromClipboard}}
           @onOpenNodePanel={{@onOpenNodePanel}}
           @onAddStickyNote={{@onAddStickyNote}}
           @onRegister={{this.registerContextMenu}}

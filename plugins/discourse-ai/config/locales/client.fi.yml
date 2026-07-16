@@ -18,7 +18,6 @@ fi:
       dashboard:
         emotion:
           title: "Tunne"
-          description: "Taulukossa luetellaan määritetyllä tunteella luokiteltujen viestien lukumäärä. Luokiteltu mallilla \"SamLowe/roberta-base-go_emotions\"."
         reports:
           filters:
             group_by:
@@ -154,6 +153,14 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      ai_tool_approval:
+        loading: "Ladataan..."
+        tool: "Toiminto"
+        user: "Käyttäjä"
+        approve: "Hyväksy"
+        reject: "Hylkää"
+        approved: "Hyväksytty"
+        rejected: "Hylätty"
       default_llm:
         title: "Oletusarvoinen LLM-malli"
       llm_selector:
@@ -219,11 +226,13 @@ fi:
           translate: "Käännä"
           markdown_tables: "Luo markdown-taulukko"
           custom_prompt: "Mukautettu kehote"
-          image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
           post_illustrator: "Viestin havainnollistaja"
           setting_groups:
             automation: "Automaatio"
+        image_caption:
+          setting_groups:
+            settings: "Asetukset"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -248,6 +257,7 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        category_scope: "Kategoriat"
         stats:
           eta_minutes:
             one: "%{count} minuutti"
@@ -355,8 +365,6 @@ fi:
         overwrite: "Korvaa"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
-        max_context_posts: "Kontekstiviestien enimmäismäärä"
-        max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
         vision_max_pixel_sizes:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
@@ -384,6 +392,12 @@ fi:
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
         top_p: "Top-p"
         top_p_help: "LLM:lle käytettävä top-p, lisää satunnaisuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–1,0)"
+        thinking_effort_options:
+          none: "Ei valittu"
+          low: "Matala"
+          medium: "Keskitaso"
+          high: "Korkea"
+          max: "Enint."
         priority: "Prioriteetti"
         tool_options: "Työkaluasetukset"
         rag_conversation_chunks: "Hakukeskustelulohkot"
@@ -537,13 +551,11 @@ fi:
             custom: "Mukautettu..."
           hours: "tuntia"
           max_tokens_help: "Saneiden (sanojen ja merkkien) enimmäismäärä, jonka kukin tämän ryhmän käyttäjä voi käyttää määritetyn keston aikana. Saneet ovat yksiköitä, joita tekoälymallit käyttävät tekstin käsittelyyn – noin 1 merkki = 4 merkkiä tai 3/4 sanasta."
-          max_tokens_required: "Täytyy asettaa, jos enimmäiskäyttöä ei ole asetettu"
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
-          max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"
-          ai_helper_image_caption: "Kuvateksti"
+          ai_image_caption: "Kuvateksti"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"
           ai_spam: "Roskaposti"
@@ -621,9 +633,6 @@ fi:
         description: "Valitse yksi seuraavista vaihtoehdoista, niin tekoäly ehdottaa sinulle uutta versiota tekstistä."
         selection_hint: "Vihje: voit myös valita osan tekstistä ennen apuohjelman avaamista kirjoittaaksesi vain sen uudelleen."
         suggest_errors:
-          too_many_tags:
-            one: "Sinulla voi olla enintään %{count} tunniste"
-            other: "Sinulla voi olla enintään %{count} tunnistetta"
           no_suggestions: "Ei ehdotuksia saatavilla"
         missing_content: "Anna sisältöä ehdotusten luomiseksi."
         context_menu:
@@ -657,11 +666,6 @@ fi:
           select: "Valitse"
           selected: "Valittu"
           try_again: "Yritä uudelleen"
-        image_caption:
-          button_label: "Kuvateksti tekoälyllä"
-          generating: "Luodaan kuvatekstiä..."
-          credits: "Tekoälyn laatima kuvateksti"
-          save_caption: "Tallenna"
         no_content_error: "Lisää ensin sisältöä tehdäksesi tekoälytoimia sille"
       reviewables:
         model_used: "Käytetty malli:"
@@ -733,7 +737,7 @@ fi:
         click_to_run_label: "Suorita artefakti"
       ai_bot:
         title: "Tekoälybotti"
-        llm: "Malli"
+        llm: "Malli:"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
         try_again: "Yritä uudelleen"

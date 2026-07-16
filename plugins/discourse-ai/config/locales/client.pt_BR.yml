@@ -19,7 +19,6 @@ pt_BR:
       dashboard:
         emotion:
           title: "Gesto"
-          description: "Esta tabela exibe uma contagem de postagens classificadas com um determinado gesto, com o modelo \"SamLowe/roberta-base-go_emotions\""
         reports:
           filters:
             group_by:
@@ -204,6 +203,14 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "Carregando..."
+        tool: "Ação"
+        user: "Usuário(a)"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado (approved)"
+        rejected: "Recusados(as)"
       default_llm:
         title: "Modelo de LLM padrão"
       llm_selector:
@@ -294,7 +301,6 @@ pt_BR:
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Markdown"
           custom_prompt: "Prompt personalizado"
-          image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
           chat_thread_titles: "Títulos de threads de chat"
@@ -302,6 +308,9 @@ pt_BR:
             access_permissions: "Acessos e permissões"
             enabled_features: "Recursos habilitados"
             automation: "Automação"
+        image_caption:
+          setting_groups:
+            settings: "Definições"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -337,6 +346,7 @@ pt_BR:
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         supported_locales: "Idiomas suportados"
         supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
+        category_scope: "Categorias"
         admin_actions:
           translation_settings: "Configurações de tradução"
           localization_settings: "Configurações de localização"
@@ -475,8 +485,6 @@ pt_BR:
         overwrite: "Sobrescrever"
         description: "Descrição"
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
-        max_context_posts: "Máximo de postagens de contexto"
-        max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
@@ -507,6 +515,12 @@ pt_BR:
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
+        thinking_effort_options:
+          none: "Nenhum"
+          low: "Baixo(a)"
+          medium: "Médio(a)"
+          high: "Alto(a)"
+          max: "Máx"
         priority: "Prioridade"
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
@@ -680,9 +694,7 @@ pt_BR:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Quantidade máxima de tokens (palavras e caracteres) que podem ser usados por cada usuário(a) neste grupo durante o período especificado. Tokens são unidades usadas para modelos de IA processarem texto: 1 token equivale a aproximadamente 4 caracteres ou 3/4 de uma palavra."
-          max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
-          max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "Este modelo tem %{percentage}% de créditos de IA restantes hoje"
@@ -691,7 +703,7 @@ pt_BR:
         usage:
           ai_bot: "Bot de IA"
           ai_helper: "Ajudante (%{agent})"
-          ai_helper_image_caption: "Legenda em imagem"
+          ai_image_caption: "Legenda em imagem"
           ai_summarization: "Resumir"
           ai_embeddings_semantic_search: "Pesquisa com IA"
           ai_spam: "Spam"
@@ -784,9 +796,6 @@ pt_BR:
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
         suggest_errors:
-          too_many_tags:
-            one: "Você pode ter até %{count} etiqueta"
-            other: "Você pode ter até %{count} etiquetas"
           no_suggestions: "Sem sugestões disponíveis"
         missing_content: "Insira conteúdo para gerar sugestões."
         context_menu:
@@ -820,11 +829,6 @@ pt_BR:
           select: "Selecionar"
           selected: "Selecionado(a)"
           try_again: "Tentar novamente"
-        image_caption:
-          button_label: "Legenda com IA"
-          generating: "Gerando legenda..."
-          credits: "Legendado por IA"
-          save_caption: "Salvar"
         no_content_error: "Primeiro adicione conteúdo para realizar ações de IA nele"
       errors:
         credit_limit_dialog:
@@ -907,7 +911,7 @@ pt_BR:
         click_to_run_label: "Rodar artefato"
       ai_bot:
         title: "Bot de IA"
-        llm: "Modelo"
+        llm: "Modelo:"
         pm_warning: "Todas as mensagens do chatbot de IA são monitoradas regularmente por moderadores(as)."
         cancel_streaming: "Parar resposta"
         try_again: "Tentar novamente"

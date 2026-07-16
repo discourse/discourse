@@ -34,6 +34,8 @@ uk:
               label: ID теми
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "Чат"
         chat:
           going: "Натисніть «Продовжити»"
           join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"
@@ -393,6 +395,7 @@ uk:
         send_bulk_invites: "Надіслати запрошення"
         group_selector_placeholder: "Виберіть групу..."
         user_selector_placeholder: "Виберіть користувача..."
+        attendance_label: "Відвідуваність"
         inline_title: "Вбудоване масове запрошення"
         csv_title: "CSV-масове запрошення"
       upcoming_events:
@@ -423,7 +426,6 @@ uk:
           this_and_following: "Ця подія і всі наступні події"
           leave_event: "Залишити подію"
           status:
-            unknown: "Не цікавить"
             going: "Йду"
             not_going: "Не йде"
             interested: "Цікавить"
@@ -477,6 +479,8 @@ uk:
         create_event_button: "Створити подію"
         action_title: "Створити нову подію"
         all_day: "Цілий день"
+        livestream: "Пряма трансляція"
+        livestream_chat_disabled: "Увімкніть чат для створення каналів прямих трансляцій."
         reminder:
           units:
             minutes:
@@ -519,7 +523,6 @@ uk:
         create_event_title: "Створити подію"
         update_event_title: "Редагувати подію"
         advanced_settings_title: "Розширені налаштування"
-        advanced_settings: "Розширені налаштування"
         confirm_delete: "Ви впевнені, що хочете видалити цю подію?"
         confirm_close: "Ви впевнені, що хочете закрити цю подію?"
         confirm_open: "Ви впевнені, що хочете відкрити цю подію?"
@@ -581,11 +584,11 @@ uk:
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"
-        url:
-          label: "Посилання"
-          placeholder: "Опціонально"
+        livestream:
+          label: "Пряма трансляція"
+          checkbox_label: "Вставте URL-адресу як відео та відкрийте чат прямої трансляції для учасників"
         location:
-          label: "Місцезнаходження"
+          label: "Місцезнаходження або URL-адреса"
           placeholder: "Додайте місце розташування, посилання або щось інше."
         description:
           label: "Опис"

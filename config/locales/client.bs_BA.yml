@@ -17,6 +17,10 @@ bs_BA:
         status: "Status"
         hidden: "hidden"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -234,6 +238,9 @@ bs_BA:
     age: "Godište"
     joined: "Pridružio se"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način"
+      simple_mode: "Jednostavan način"
     show_more: "prikaži još"
     show_help: "Opcije"
     links: "Linkovi"
@@ -953,6 +960,9 @@ bs_BA:
       notifications: "Obavijest"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Neomogućen"
+          all: "Omogućen"
         not_supported: "Obavjesti nisu podržane na ovom web pregledniku."
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
@@ -1520,7 +1530,6 @@ bs_BA:
     created: "Stvoreno"
     created_lowercase: "objavljeno"
     trust_level: "Nivo povjerenja"
-    search_hint: "ime"
     create_account:
       header_title: "Dobrodošao!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
@@ -1560,6 +1569,8 @@ bs_BA:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Nadimak"
     login:
       title: "Prijava"
       username: "Korisnik"
@@ -2022,6 +2033,8 @@ bs_BA:
       deleted_post_placeholder: "[isbrisano]"
       ignored_post_placeholder: "[ignorisano]"
       pinned_reply: "Zakačena"
+    share_target:
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2069,6 +2082,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      sr_read: "čitao"
       bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
@@ -2387,6 +2401,8 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
+        modal:
+          title: "Prevodi"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2539,7 +2555,6 @@ bs_BA:
         delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       create_long: "Napravite novu kategoriju"
-      slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       validations:
@@ -3139,6 +3154,7 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"
@@ -3198,6 +3214,9 @@ bs_BA:
           form:
             mobile: "Mobilno"
             email: "Email"
+            og_image_preview:
+              generate: "Generate"
+              topic_id_label: "ID teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -3242,6 +3261,20 @@ bs_BA:
               title: "Postavke"
         badges:
           title: "Bedž"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Topics"
+          visibility:
+            public: "Javno"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Permalink-ovi"
         emoji:
@@ -3298,7 +3331,7 @@ bs_BA:
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
         installed_version: "Installed"
-        latest_version: "Zadnje"
+        github: "GitHub"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         dismiss_notice: "Zanemari"
         new_features:
@@ -3367,6 +3400,7 @@ bs_BA:
               searches: "Pretraživanja"
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućen"
@@ -4176,6 +4210,10 @@ bs_BA:
         active: "Aktivirano"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspend"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -4187,6 +4225,8 @@ bs_BA:
           suspended: "Suspended"
           silenced: "Stišano"
           staged: "Priređen"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Approved?"
         titles:
           pending: "Users Pending Review"
