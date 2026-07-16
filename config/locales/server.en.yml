@@ -434,6 +434,8 @@ en:
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
+    admin_invite_requires_email: "Admin invites must be sent to an email address"
+    admin_invite_requires_admin_inviter: "Only admins can create admin invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
 
@@ -2938,6 +2940,7 @@ en:
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
+    enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
