@@ -493,7 +493,8 @@ export default class SiteSettingComponent extends Component {
         let errorString = json.errors[0];
 
         if (json.html_message) {
-          errorString = trustHTML(errorString);
+          errorString = trustHTML(sanitize(errorString));
+          settings.forEach((setting) => setting.buffered.discardChanges());
         }
 
         settings.forEach(
