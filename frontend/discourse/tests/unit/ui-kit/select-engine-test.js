@@ -292,11 +292,16 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       assert.strictEqual(calls, 1, "resolveValue is not called again");
     });
 
-    test("yields undefined for an unresolvable value", function (assert) {
+    test("yields an __unresolved fallback for a held value that cannot resolve", function (assert) {
+      const item = new SelectEngine().resolveSelection(9);
+      assert.true(
+        item.__unresolved,
+        "a held id with no resolver becomes a fallback, never undefined"
+      );
       assert.strictEqual(
-        new SelectEngine().resolveSelection(9),
-        undefined,
-        "no resolver + no cache → undefined (trigger shows its placeholder)"
+        item.id,
+        9,
+        "the fallback carries the value on the valueField"
       );
     });
 
@@ -323,6 +328,179 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
         engine.resolveSelection(42),
         topic,
         "the just-picked item resolves from cache (no fetch)"
+      );
+    });
+  });
+
+  module("unresolved fallback & batch resolution", function () {
+    test("a rejecting resolveValue yields a fallback, never rejects", async function (assert) {
+      const engine = new SelectEngine({
+        resolveValue: () => Promise.reject(new Error("403")),
+      });
+
+      const item = await engine.resolveSelection(7);
+      assert.true(
+        item.__unresolved,
+        "a rejected resolve degrades to a fallback"
+      );
+      assert.strictEqual(item.id, 7, "the fallback carries the value");
+    });
+
+    test("multi resolves the uncached ids in a single batch call", async function (assert) {
+      const calls = [];
+      const engine = new SelectEngine({
+        multiple: true,
+        selected: [{ id: 1, name: "One" }], // resolves synchronously via the escape hatch
+        resolveValues: (values) => {
+          calls.push(values);
+          return Promise.resolve([{ id: 2, name: "Two" }]); // id 3 omitted
+        },
+      });
+
+      const items = await engine.resolveSelection([1, 2, 3]);
+      assert.deepEqual(
+        calls,
+        [[2, 3]],
+        "only the uncached ids are batched, in a single call"
+      );
+      assert.deepEqual(
+        items.map((i) => i.id),
+        [1, 2, 3],
+        "items come back in the original value order"
+      );
+      assert.deepEqual(
+        items.map((i) => !!i.__unresolved),
+        [false, false, true],
+        "the omitted id becomes a fallback; the rest resolve"
+      );
+    });
+
+    test("a rejecting batch makes every uncached id a fallback", async function (assert) {
+      const engine = new SelectEngine({
+        multiple: true,
+        resolveValues: () => Promise.reject(new Error("boom")),
+      });
+
+      const items = await engine.resolveSelection([4, 5]);
+      assert.true(
+        items.every((i) => i.__unresolved),
+        "a batch rejection degrades to fallbacks, never rejects"
+      );
+    });
+
+    test("a transient failure does not strand the value as unavailable", async function (assert) {
+      let attempt = 0;
+      const engine = new SelectEngine({
+        resolveValue: (value) => {
+          attempt++;
+          return attempt === 1
+            ? Promise.reject(new Error("offline"))
+            : Promise.resolve({ id: value, name: "Recovered" });
+        },
+      });
+
+      assert.true(
+        (await engine.resolveSelection(7)).__unresolved,
+        "the first, failing resolve degrades to a fallback"
+      );
+
+      engine.reload();
+
+      assert.strictEqual(
+        (await engine.resolveSelection(7)).name,
+        "Recovered",
+        "reload drops the failed attempt, so it retries instead of stranding"
+      );
+    });
+
+    test("an item that lands later supersedes an earlier fallback", function (assert) {
+      let items = [];
+      const engine = new SelectEngine({ items: () => items });
+
+      assert.true(
+        engine.resolveSelection(3).__unresolved,
+        "an id absent from the list starts as a fallback"
+      );
+
+      items = [{ id: 3, name: "Landed" }];
+      assert.strictEqual(
+        engine.resolveSelection(3)?.name,
+        "Landed",
+        "the client list is consulted again once it supplies the id"
+      );
+    });
+
+    test("a synchronously throwing resolveValues yields fallbacks", function (assert) {
+      const engine = new SelectEngine({
+        multiple: true,
+        resolveValues: () => {
+          throw new Error("sync boom");
+        },
+      });
+
+      assert.true(
+        engine.resolveSelection([4, 5]).every((i) => i.__unresolved),
+        "a synchronous throw degrades to fallbacks instead of escaping"
+      );
+    });
+
+    test("a synchronously throwing resolveValue yields a fallback", function (assert) {
+      const engine = new SelectEngine({
+        resolveValue: () => {
+          throw new Error("sync boom");
+        },
+      });
+
+      assert.true(
+        engine.resolveSelection(7).__unresolved,
+        "a synchronous throw degrades to a fallback instead of escaping"
+      );
+    });
+
+    test("a single select resolves through resolveValues alone", async function (assert) {
+      const calls = [];
+      const engine = new SelectEngine({
+        resolveValues: (values) => {
+          calls.push(values);
+          return Promise.resolve([{ id: 7, name: "Seven" }]);
+        },
+      });
+
+      const item = await engine.resolveSelection(7);
+      assert.deepEqual(calls, [[7]], "single resolves as a batch of one");
+      assert.strictEqual(
+        item.name,
+        "Seven",
+        "the batch result narrows to the single item"
+      );
+      assert.false(Array.isArray(item), "single never yields an array");
+    });
+
+    test("createUnresolvedItem names the fallback", function (assert) {
+      const engine = new SelectEngine({
+        createUnresolvedItem: (value) => ({
+          id: value,
+          name: `Topic #${value}`,
+        }),
+      });
+
+      const item = engine.resolveSelection(123);
+      assert.strictEqual(
+        item.name,
+        "Topic #123",
+        "the hook names the fallback"
+      );
+      assert.true(
+        item.__unresolved,
+        "the engine still marks it unresolved, whatever the hook returns"
+      );
+    });
+
+    test("an empty multi value still yields undefined (placeholder)", function (assert) {
+      assert.strictEqual(
+        new SelectEngine({ multiple: true }).resolveSelection([]),
+        undefined,
+        "empty multi → undefined so the trigger shows its placeholder"
       );
     });
   });

@@ -3285,6 +3285,8 @@ en:
       remove: "Remove"
       expand: "Show options"
       retry: "Retry"
+      unresolved: "Unavailable"
+      unresolved_value: "%{value} (unavailable)"
       results_count:
         one: "%{count} result"
         other: "%{count} results"

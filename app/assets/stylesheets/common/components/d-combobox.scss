@@ -54,6 +54,14 @@
   color: var(--primary-medium);
 }
 
+.d-combobox__unresolved {
+  color: var(--primary-medium);
+
+  .d-icon {
+    margin-inline-end: 0.25em;
+  }
+}
+
 .d-combobox__caret {
   color: var(--primary-medium);
   flex-shrink: 0;

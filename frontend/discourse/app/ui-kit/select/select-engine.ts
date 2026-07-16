@@ -43,6 +43,9 @@ export interface SelectItem {
   /** Marks the synthetic create-on-the-fly item. */
   __create?: boolean;
 
+  /** Marks a synthetic fallback for a held value that could not be resolved. */
+  __unresolved?: boolean;
+
   /** Arbitrary domain fields, addressed dynamically by `valueField` / `labelField`. */
   [key: string]: unknown;
 }
@@ -161,6 +164,16 @@ export interface SelectEngineOptions {
   ) => SelectItem | Promise<SelectItem | undefined> | undefined;
 
   /**
+   * Batch counterpart to `resolveValue` for multi-select: `(values, { signal }) => items |
+   * Promise<items>`. The engine calls it once for the uncached ids (cached / seeded ids are
+   * skipped) so N chips never mean N requests. Omitted or errored ids become fallbacks.
+   */
+  resolveValues?: (
+    values: SelectItemId[],
+    opts: SelectLoadOptions
+  ) => SelectItem[] | Promise<SelectItem[]>;
+
+  /**
    * Enables the create-on-the-fly item; a function `(filter, items) => boolean` gates it
    * dynamically.
    */
@@ -171,6 +184,14 @@ export interface SelectEngineOptions {
    * `__create: true`).
    */
   createItem?: (filter: string) => SelectItem;
+
+  /**
+   * `(value) => item` producing the fallback for a held id that could not be resolved,
+   * so a preset can name it (e.g. `Topic #123`) instead of showing the bare id. The
+   * engine marks the result `__unresolved` regardless of what the builder returns.
+   * Defaults to the id itself on `labelField`.
+   */
+  createUnresolvedItem?: (value: SelectItemId) => SelectItem;
 
   /**
    * `(snapshot) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
@@ -245,6 +266,17 @@ export default class SelectEngine {
    */
   #resolvedCache = trackedMap<string, SelectItem>();
 
+  /**
+   * The same, for outcomes a synchronous resolver produced, which the trigger still has to
+   * read later in the same render. Deliberately untracked: `#resolveMany` runs during a
+   * render that already consumed `#resolvedCache`, so writing that tracked map here would
+   * invalidate the very computation performing the write.
+   */
+  #synchronousOutcomes = new Map<string, SelectItem>();
+
+  // Fallback items that were actually produced by `createUnresolvedItem`.
+  #customUnresolvedItems = new WeakSet<SelectItem>();
+
   #multiple: boolean;
   #identifiers: string[];
   #valueField: string;
@@ -260,8 +292,13 @@ export default class SelectEngine {
     value: SelectItemId,
     opts: SelectLoadOptions
   ) => SelectItem | Promise<SelectItem | undefined> | undefined;
+  #resolveValues?: (
+    values: SelectItemId[],
+    opts: SelectLoadOptions
+  ) => SelectItem[] | Promise<SelectItem[]>;
   #allowCreate?: boolean | ((filter: string, items: SelectItem[]) => boolean);
   #createItem?: (filter: string) => SelectItem;
+  #createUnresolvedItem?: (value: SelectItemId) => SelectItem;
   #specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
   #closeOnSelect: boolean;
   #onChange?: (
@@ -318,8 +355,10 @@ export default class SelectEngine {
     this.#load = opts.load;
     this.#selected = opts.selected;
     this.#resolveValue = opts.resolveValue;
+    this.#resolveValues = opts.resolveValues;
     this.#allowCreate = opts.allowCreate;
     this.#createItem = opts.createItem;
+    this.#createUnresolvedItem = opts.createUnresolvedItem;
     this.#specialItems = opts.specialItems;
     this.#closeOnSelect = opts.closeOnSelect ?? !this.#multiple;
     this.#onChange = opts.onChange;
@@ -377,6 +416,19 @@ export default class SelectEngine {
     }
 
     return this.getItemLabel(this.#resolveOneSync(value));
+  }
+
+  /**
+   * Whether this fallback came from `createUnresolvedItem` rather than the built-in bare-id
+   * default. Lets a trigger that can only render a string decide whether to append its own
+   * "unavailable" wording: a named fallback ("Topic #123") already reads as one, a bare id
+   * does not. Identity-based, so a builder that throws — caught, yielding the default — is
+   * correctly reported as NOT custom.
+   *
+   * @param item - The item to test; only meaningful for an `__unresolved` fallback.
+   */
+  isCustomUnresolvedItem(item: SelectItem): boolean {
+    return this.#customUnresolvedItems.has(item);
   }
 
   /** Whether this is a multi-select. */
@@ -483,10 +535,15 @@ export default class SelectEngine {
 
   /**
    * Resolves a value to its display item(s) for the trigger `DAsyncContent`. Returns
-   * synchronously (no skeleton) when every id is covered by the `selected` escape
-   * hatch, the resolve cache, or the client list; otherwise returns a promise. An
-   * unresolvable id yields `undefined`, so the trigger shows its placeholder rather
-   * than a raw id.
+   * synchronously (no skeleton) when every id is covered by the `selected` escape hatch,
+   * the resolve cache, or the client list; otherwise returns a promise. A held id that
+   * cannot resolve maps to a synthetic `__unresolved` fallback (never `undefined`, never a
+   * rejection, whether the resolver throws or rejects); only an empty value (null single /
+   * empty multi) yields `undefined`, so the trigger shows its placeholder.
+   *
+   * Both arities share one path: single is a batch of one, narrowed back to a bare item so
+   * the trigger never sees a one-element array. Whatever the sync ladder doesn't already
+   * know resolves in a single call.
    *
    * @param value - The value (an id, or an array of ids).
    */
@@ -496,24 +553,108 @@ export default class SelectEngine {
     opts: SelectLoadOptions = {}
   ):
     | SelectItem
-    | Array<SelectItem | undefined>
-    | Promise<SelectItem | undefined>
-    | Promise<Array<SelectItem | undefined>>
+    | SelectItem[]
+    | Promise<SelectItem>
+    | Promise<SelectItem[]>
     | undefined {
-    // Single: resolve the one value — `#resolveOne` returns the item or a promise of
-    // it, so the trigger gets a single value (never a one-element array).
     if (!this.#multiple) {
-      return value == null ? undefined : this.#resolveOne(value, opts);
+      if (value == null) {
+        return undefined;
+      }
+      const resolved = this.#resolveMany([value], opts);
+      return this.#isPromise<SelectItem[]>(resolved)
+        ? this.#firstOf(resolved)
+        : resolved[0]!;
     }
     const values = makeArray(value) as SelectItemId[];
     // Empty multi → undefined so the trigger shows its placeholder (not an empty list).
     if (values.length === 0) {
       return undefined;
     }
-    const resolved = values.map((v) => this.#resolveOne(v, opts));
-    return resolved.some((r) => this.#isPromise(r))
-      ? Promise.all(resolved)
-      : (resolved as Array<SelectItem | undefined>);
+    return this.#resolveMany(values, opts);
+  }
+
+  /**
+   * The item to display for a single value without awaiting — including the `__unresolved`
+   * fallback once an attempt has failed, so a trigger can tell "failed" (render the
+   * fallback) from "still resolving" (`undefined`, render nothing).
+   *
+   * @param value - The single value; an array or `null` yields `undefined`.
+   */
+  resolveSingleSync(value: SelectValue): SelectItem | undefined {
+    if (value == null || Array.isArray(value)) {
+      return undefined;
+    }
+    return this.#resolveOneSync(value);
+  }
+
+  // Narrows a resolved batch back to the single arity. `#resolveMany` always yields at least
+  // one item per requested id, so index 0 is present.
+  async #firstOf(items: Promise<SelectItem[]>): Promise<SelectItem> {
+    return (await items)[0]!;
+  }
+
+  /**
+   * Ordered items for `values`: the sync ladder for what is already known, one batch call
+   * for the rest, and an `__unresolved` fallback for whatever still doesn't resolve. Order
+   * follows the bound ids, not the response. Never rejects.
+   */
+  #resolveMany(
+    values: SelectItemId[],
+    opts: SelectLoadOptions
+  ): SelectItem[] | Promise<SelectItem[]> {
+    const synced = values.map((v) => this.#resolveOneSync(v));
+    if (synced.every((item) => item != null)) {
+      return synced as SelectItem[];
+    }
+    const uncached = values.filter((_v, index) => synced[index] == null);
+    const batch = this.#resolveBatch(uncached, opts);
+    if (this.#isPromise(batch)) {
+      return batch.then((resolved) => {
+        const items = this.#assemble(values, synced, resolved);
+        this.#cacheOutcome(values, items);
+        return items;
+      });
+    }
+    const items = this.#assemble(values, synced, batch);
+    // A synchronous resolve runs *during* render, and this render already read the tracked
+    // cache via `#resolveOneSync`. Preserve the result in an untracked map so the desktop
+    // input can read its label later in this render without dirtying the consumed tag.
+    this.#rememberSynchronousOutcomes(values, synced, items);
+    return items;
+  }
+
+  #rememberSynchronousOutcomes(
+    values: SelectItemId[],
+    synced: Array<SelectItem | undefined>,
+    items: SelectItem[]
+  ): void {
+    values.forEach((value, index) => {
+      const key = this.#valueKey(value);
+      const item = items[index];
+      if (synced[index] == null && key != null && item) {
+        this.#synchronousOutcomes.set(key, item);
+      }
+    });
+  }
+
+  /**
+   * Records the outcome of an async resolve: real items, so later reads hit the cache
+   * instead of refetching, and `__unresolved` fallbacks, so a trigger can tell "resolved and
+   * failed" (show the fallback) from "still resolving" (show nothing). A cached fallback
+   * remains a sync hit, but ranks after real selected/cache/list items; `reload()` evicts it
+   * when the caller explicitly retries.
+   *
+   * Only ever called from a promise continuation, i.e. a microtask after render, where
+   * writing tracked state cannot dirty what the render already read.
+   */
+  #cacheOutcome(values: SelectItemId[], items: SelectItem[]): void {
+    values.forEach((value, index) => {
+      const item = items[index];
+      if (item) {
+        this.#cacheResolvedValue(value, item);
+      }
+    });
   }
 
   /**
@@ -592,10 +733,22 @@ export default class SelectEngine {
   }
 
   /**
-   * Forces the list to re-fetch even when the filter is unchanged.
+   * Forces the list to re-fetch even when the filter is unchanged, and drops the fallbacks
+   * left by failed value resolutions so they are attempted again. Successfully resolved
+   * items stay cached — only the failures are worth retrying.
    */
   @bind
   reload(): void {
+    for (const [key, item] of [...this.#resolvedCache.entries()]) {
+      if (item.__unresolved) {
+        this.#resolvedCache.delete(key);
+      }
+    }
+    for (const [key, item] of this.#synchronousOutcomes) {
+      if (item.__unresolved) {
+        this.#synchronousOutcomes.delete(key);
+      }
+    }
     this.#state.nonce++;
   }
 
@@ -715,40 +868,154 @@ export default class SelectEngine {
     );
   }
 
-  // Synchronous half of the resolution ladder: escape hatch → cache → client list.
+  /**
+   * The item to show for a value: escape hatch → a real recorded outcome → client list →
+   * the fallback left by an earlier failed attempt.
+   *
+   * An `__unresolved` fallback ranks LAST, so any real source that turns up later — an item
+   * landing in the client list, a re-resolve — supersedes it instead of being masked by it.
+   * But it is still a hit, deliberately: a resolve records its outcome, and a read that
+   * missed would re-resolve, record again, invalidate the render that read it, and never
+   * settle. "Failed" has to be a terminal answer; `reload` is what retries it.
+   */
   #resolveOneSync(value: SelectItemId): SelectItem | undefined {
     const key = this.#valueKey(value);
     if (key == null) {
       return undefined;
     }
+    const recorded = this.#recordedOutcomes(key);
     return (
-      (makeArray(this.#selected) as SelectItem[]).find(
-        (i) => this.#valueKey(this.#itemValue(i)) === key
-      ) ??
-      (this.#resolvedCache.has(key)
-        ? this.#resolvedCache.get(key)
-        : undefined) ??
-      this.#localItems().find((i) => this.#valueKey(this.#itemValue(i)) === key)
+      this.#matching(makeArray(this.#selected) as SelectItem[], key) ??
+      recorded.find((item) => !item.__unresolved) ??
+      this.#matching(this.#localItems(), key) ??
+      recorded[0]
     );
   }
 
-  #resolveOne(
-    value: SelectItemId,
+  /**
+   * What past resolves recorded for a value, across both stores. Async resolves record into
+   * the tracked cache — their landing has to re-render the trigger — while synchronous ones
+   * record into the untracked map, because writing tracked state during render would
+   * invalidate the very render doing the write. A value normally lands in one or the other;
+   * both are read the same way, so neither store's ordering is load-bearing.
+   */
+  #recordedOutcomes(key: string): SelectItem[] {
+    return [
+      this.#resolvedCache.get(key),
+      this.#synchronousOutcomes.get(key),
+    ].filter((item) => item != null);
+  }
+
+  #matching(items: SelectItem[], key: string): SelectItem | undefined {
+    return items.find((i) => this.#valueKey(this.#itemValue(i)) === key);
+  }
+
+  // Resolves ids to a key→item map, containing only what genuinely resolved. Never throws
+  // and never rejects. One batch call via `resolveValues` when given; otherwise per-id via
+  // `resolveValue` (fans out — only when no batch resolver is supplied).
+  #resolveBatch(
+    values: SelectItemId[],
     opts: SelectLoadOptions
-  ): SelectItem | Promise<SelectItem | undefined> | undefined {
-    const known = this.#resolveOneSync(value);
-    if (known) {
-      return known;
+  ): Map<string, SelectItem> | Promise<Map<string, SelectItem>> {
+    if (this.#resolveValues) {
+      const result = this.#attempt(() => this.#resolveValues!(values, opts));
+      return this.#isPromise(result)
+        ? result.then(
+            (items) => this.#toResolvedMap(items),
+            () => new Map<string, SelectItem>()
+          )
+        : this.#toResolvedMap(result);
     }
-    const result = this.#resolveValue?.(value, opts);
-    if (this.#isPromise(result)) {
-      return result.then((item) => {
-        this.#cacheResolvedValue(value, item);
-        return item;
-      });
+    const per = values.map((v) => {
+      const result = this.#attempt(() => this.#resolveValue?.(v, opts));
+      return this.#isPromise(result)
+        ? result.then(
+            (item) => [v, item] as const,
+            () => [v, undefined] as const
+          )
+        : ([v, result] as const);
+    });
+    return per.some((r) => this.#isPromise(r))
+      ? Promise.all(per).then((pairs) => this.#pairsToMap(pairs))
+      : this.#pairsToMap(
+          per as ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
+        );
+  }
+
+  // Runs a resolver, turning a synchronous throw into "nothing resolved" — the same shape a
+  // rejection produces. Without this a sync resolver's exception escapes mid-render, which
+  // the "never rejects, never blanks" contract promises it cannot.
+  #attempt<T>(fn: () => T): T | undefined {
+    try {
+      return fn();
+    } catch {
+      return undefined;
     }
-    this.#cacheResolvedValue(value, result);
-    return result;
+  }
+
+  // Keys the batch response by each item's OWN id, so a resolver that answers with an item
+  // whose id differs from the one requested leaves the requested id unresolved rather than
+  // silently mis-pairing the two.
+  #toResolvedMap(
+    items: SelectItem[] | null | undefined
+  ): Map<string, SelectItem> {
+    return this.#pairsToMap(
+      (makeArray(items) as SelectItem[]).map(
+        (item) => [this.#itemValue(item), item] as const
+      )
+    );
+  }
+
+  #pairsToMap(
+    pairs: ReadonlyArray<readonly [SelectItemId, SelectItem | undefined]>
+  ): Map<string, SelectItem> {
+    const map = new Map<string, SelectItem>();
+    for (const [value, item] of pairs) {
+      const key = this.#valueKey(value);
+      if (key != null && item) {
+        map.set(key, item);
+      }
+    }
+    return map;
+  }
+
+  // Builds the ordered array from the sync hits and the batch results, filling any id that
+  // still did not resolve with an `__unresolved` fallback. Order follows `values`, not the
+  // response. Pure — caching the outcome is `#cacheOutcome`'s job, and only off-render.
+  #assemble(
+    values: SelectItemId[],
+    synced: Array<SelectItem | undefined>,
+    resolved: Map<string, SelectItem>
+  ): SelectItem[] {
+    return values.map((v, index) => {
+      const key = this.#valueKey(v);
+      return (
+        synced[index] ??
+        (key == null ? undefined : resolved.get(key)) ??
+        this.#unresolvedItem(v)
+      );
+    });
+  }
+
+  // The fallback for a held id that could not be resolved. `createUnresolvedItem` names it
+  // ("Topic #123"); the default shows the bare id. Either way the engine owns the
+  // `__unresolved` marker, so a builder cannot hand back something that reads as resolved.
+  #unresolvedItem(value: SelectItemId): SelectItem {
+    const built = this.#createUnresolvedItem
+      ? this.#attempt(() => this.#createUnresolvedItem!(value))
+      : undefined;
+    if (built) {
+      const item = { ...built, __unresolved: true };
+      this.#customUnresolvedItems.add(item);
+      return item;
+    }
+    const item: SelectItem = { [this.#valueField]: value, __unresolved: true };
+    // Show the value as the label so an unresolved row renders the id, not a blank — unless
+    // the label field IS the value field, where it is already present (keeping the raw type).
+    if (this.#labelField !== this.#valueField) {
+      item[this.#labelField] = String(value ?? "");
+    }
+    return item;
   }
 
   #cacheResolved(item: SelectItem | null | undefined): void {
@@ -807,7 +1074,7 @@ export default class SelectEngine {
     });
   }
 
-  #isPromise(value: unknown): value is Promise<SelectItem | undefined> {
+  #isPromise<T>(value: T | Promise<T>): value is Promise<T> {
     return (
       value != null && typeof (value as { then?: unknown }).then === "function"
     );

@@ -22,6 +22,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/combobox-query-input";
 import SelectItem from "discourse/ui-kit/select/-internals/select-item";
+import SelectionLabel from "discourse/ui-kit/select/-internals/selection-label";
 import SelectEngine, {
   type SelectEngineOptions,
   type SelectItem as SelectItemModel,
@@ -52,8 +53,10 @@ interface DSelectSignature {
     labelField?: string;
     selected?: SelectItemModel | SelectItemModel[];
     resolveValue?: SelectEngineOptions["resolveValue"];
+    resolveValues?: SelectEngineOptions["resolveValues"];
     allowCreate?: SelectEngineOptions["allowCreate"];
     createItem?: SelectEngineOptions["createItem"];
+    createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
     specialItems?: SelectEngineOptions["specialItems"];
     onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;
@@ -130,8 +133,10 @@ export default class DSelect extends Component<DSelectSignature> {
     labelField: this.args.labelField,
     selected: this.args.selected,
     resolveValue: this.args.resolveValue,
+    resolveValues: this.args.resolveValues,
     allowCreate: this.args.allowCreate,
     createItem: this.args.createItem,
+    createUnresolvedItem: this.args.createUnresolvedItem,
     specialItems: this.args.specialItems,
     onChange: this.args.onChange,
     requestClose: () => this.#menu?.close(),
@@ -225,6 +230,15 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   get fallbackSelectionLabel(): string {
+    const resolved = this.engine.resolveSingleSync(this.args.value);
+    if (resolved?.__unresolved) {
+      // The plain input can't render the icon/muted treatment chips get, so the label has to
+      // carry the state itself. A consumer-named fallback ("Topic #123") already reads as
+      // one; only the bare-id default needs the suffix to not look like a real label.
+      return this.engine.isCustomUnresolvedItem(resolved)
+        ? this.engine.getItemLabel(resolved)
+        : i18n("d_select.unresolved_value", { value: this.args.value });
+    }
     return this.engine.getSingleSelectionLabel(this.args.value);
   }
 
@@ -353,9 +367,9 @@ export default class DSelect extends Component<DSelectSignature> {
 
   /**
    * Resolves the single bound value to its one display item for the trigger
-   * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a
-   * null/unresolvable value returns `undefined`, which `DAsyncContent` routes to its
-   * `:empty` block (so it is never yielded to `:selection`).
+   * `DAsyncContent`. Narrows the engine's arity-union return to the single form; a `null`
+   * value returns `undefined` (routed to `:empty`), while a held value that can't resolve
+   * comes back as an `__unresolved` fallback item rather than `undefined`.
    */
   @action
   resolveSingle(
@@ -368,9 +382,10 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
-   * Resolves the bound ids to their display items for the multi trigger. Narrows to
-   * the array form; an empty value returns `undefined` (→ `:empty`), and an
-   * unresolvable id is a hole rendered as an empty chip (Phase-0 behavior).
+   * Resolves the bound ids to their display items for the multi trigger. Narrows to the
+   * array form; an empty value returns `undefined` (→ `:empty`). Uncached ids resolve in a
+   * single batch, and any id that can't resolve becomes an `__unresolved` fallback chip
+   * (never a hole).
    */
   @action
   resolveMulti(
@@ -489,7 +504,10 @@ export default class DSelect extends Component<DSelectSignature> {
                       {{#if (has-block "selection")}}
                         {{yield selected to="selection"}}
                       {{else}}
-                        {{selectItemLabel selected this.labelField}}
+                        <SelectionLabel
+                          @item={{selected}}
+                          @labelField={{this.labelField}}
+                        />
                       {{/if}}
                     </:content>
                   </DAsyncContent>
@@ -570,7 +588,10 @@ export default class DSelect extends Component<DSelectSignature> {
                       {{#if (has-block "selection")}}
                         {{yield item to="selection"}}
                       {{else}}
-                        {{selectItemLabel item this.labelField}}
+                        <SelectionLabel
+                          @item={{item}}
+                          @labelField={{this.labelField}}
+                        />
                       {{/if}}
                     </span>
                     {{dIcon "xmark" class="d-combobox__chip-remove"}}
@@ -598,7 +619,10 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{#if (has-block "selection")}}
                   {{yield selected to="selection"}}
                 {{else}}
-                  {{selectItemLabel selected this.labelField}}
+                  <SelectionLabel
+                    @item={{selected}}
+                    @labelField={{this.labelField}}
+                  />
                 {{/if}}
               </span>
             </:content>
