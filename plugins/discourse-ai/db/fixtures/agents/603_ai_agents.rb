@@ -33,7 +33,10 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     if agent_class == DiscourseAi::Agents::WebArtifactCreator
       # this is somewhat sensitive, so we default it to staff
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
-    elsif agent_class == DiscourseAi::Agents::AdminDashboardHighlights
+    elsif [
+          DiscourseAi::Agents::AdminDashboardHighlights,
+          DiscourseAi::Agents::DiscourseAdminAssistant,
+        ].include?(agent_class)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif external_agent_ids.include?(id)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
@@ -95,6 +98,11 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     end
   end
 
+  if agent_class == DiscourseAi::Agents::DiscourseAdminAssistant
+    tools["Search"] ||= { "search_private" => true }
+    tools["Read"] ||= { "read_private" => true }
+  end
+
   forced_tool_names = instance.force_tool_use.map { |tool| tool.to_s.split("::").last }
   agent.tools = tools.map { |name, value| [name, value, forced_tool_names.include?(name)] }
   agent.forced_tool_count = instance.forced_tool_count
@@ -103,6 +111,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
 
   agent.response_format = instance.response_format
   agent.examples = instance.examples
+  agent.require_approval = true if agent_class == DiscourseAi::Agents::DiscourseAdminAssistant
 
   agent.system_prompt = instance.system_prompt
   agent.top_p = instance.top_p
