@@ -659,6 +659,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
         search_meta_discourse: "Search Meta Discourse"
@@ -710,6 +711,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
         search_meta_discourse: "Search Meta Discourse"
@@ -780,6 +782,7 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
         continue_conversation:
@@ -962,6 +965,13 @@ en:
           invalid_value: "Invalid value: %{error}"
           failed: "Failed to change the site setting."
         success: "Site setting %{setting_name} has been changed to '%{value}'."
+      read_site_setting:
+        errors:
+          not_allowed: "You are not allowed to read site settings."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
 
     reviewables:
       ai_tool_action:
