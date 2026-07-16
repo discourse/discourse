@@ -3285,11 +3285,14 @@ en:
 
     d_select:
       placeholder: "Select…"
+      add_placeholder: "Add…"
       search_placeholder: "Search…"
       no_results: "No results found"
       label: "Options"
       remove: "Remove"
       selected_items: "Selected items"
+      item_added: "Added %{item}"
+      item_removed: "Removed %{item}"
       expand: "Show options"
       retry: "Retry"
       unresolved: "Unavailable"

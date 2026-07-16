@@ -7,6 +7,7 @@ import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { next as nextRunloop } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
@@ -83,17 +84,16 @@ interface DSelectSignature {
 }
 
 /**
- * A single-select combobox built on the headless {@link SelectEngine}. It composes the
+ * A single- or multi-select combobox built on the headless {@link SelectEngine}. It composes the
  * sanctioned foundations — `DMenu` (overlay + mobile modal), `DAsyncContent` (loading /
  * empty / error, on either a client or a server source), `dRovingFocus` (WAI-ARIA combobox
  * keyboard), and `DSkeleton` (loading) — and wires screen-reader announcements through the
  * `a11y` service.
  *
  * The trigger style is chosen with `@variant` (default `typeahead`):
- * - `typeahead` — the trigger IS a `role="combobox"` input. The default selection label
- *   renders in that input until editing begins; a custom `:selection` renders as a sibling
- *   presentation hidden while the user types. A bare id resolves through `DAsyncContent`
- *   without flashing the id; on mobile the input moves into the modal.
+ * - `typeahead` — single-select renders the trigger as a `role="combobox"` input; multi-select
+ *   renders chips alongside that input. A bare id resolves through `DAsyncContent` without
+ *   flashing the id; on mobile the input moves into the modal.
  * - `button` — a button trigger with the filter input inside the panel.
  * - `static` — a short, unsearchable list whose listbox takes focus (the native-`<select>`
  *   replacement).
@@ -142,7 +142,7 @@ export default class DSelect extends Component<DSelectSignature> {
     createItem: this.args.createItem,
     createUnresolvedItem: this.args.createUnresolvedItem,
     specialItems: this.args.specialItems,
-    onChange: this.args.onChange,
+    onChange: this.handleChange,
     requestClose: () => this.#menu?.close(),
     // Handles for the `modifySelectKit` compat bridge. The element must be the trigger
     // (which stays in the host DOM) — not the panel, which the overlay portals out — so
@@ -166,6 +166,8 @@ export default class DSelect extends Component<DSelectSignature> {
   // The last count announced, so rapid re-filters that don't change the count don't spam
   // the screen reader (and don't compete with the moving `aria-activedescendant`).
   #lastAnnouncedCount: number | null = null;
+
+  #suppressNextCount = false;
 
   // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
   // an open-driven programmatic focus (which must NOT select the label) from a genuine
@@ -205,13 +207,20 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.args.variant ?? SELECT_VARIANTS.typeahead;
   }
 
-  /**
-   * Single-select typeahead: the trigger itself is the `role="combobox"` input. Multi
-   * keeps the Phase-0 chips-and-panel structure this cycle (multi typeahead is a later
-   * item), so `typeahead` only takes effect for single-select.
-   */
+  /** Whether the selected variant uses the typeahead query-input machinery. */
   get isTypeahead(): boolean {
-    return this.variant === SELECT_VARIANTS.typeahead && !this.args.multiple;
+    return this.variant === SELECT_VARIANTS.typeahead;
+  }
+
+  get triggerClass(): string {
+    const classes = ["d-combobox__trigger"];
+    if (this.isTypeahead) {
+      classes.push("--typeahead");
+    }
+    if (this.args.multiple) {
+      classes.push("--multiple");
+    }
+    return classes.join(" ");
   }
 
   /** Static/simple mode: a short unsearchable list; the listbox takes focus. */
@@ -219,11 +228,7 @@ export default class DSelect extends Component<DSelectSignature> {
     return this.variant === SELECT_VARIANTS.static;
   }
 
-  /**
-   * Whether the search input lives IN the panel (the `button` variant, and multi until it
-   * gains its own typeahead trigger) rather than in the trigger (`typeahead`) or nowhere
-   * (`static`).
-   */
+  /** Whether the search input lives in the panel rather than the trigger or nowhere. */
   get isPanelSearchable(): boolean {
     return !this.isTypeahead && !this.isStatic;
   }
@@ -262,6 +267,13 @@ export default class DSelect extends Component<DSelectSignature> {
 
   get labelField(): string {
     return this.args.labelField ?? "name";
+  }
+
+  get queryPlaceholder(): string {
+    if (this.engine.hasValue) {
+      return "";
+    }
+    return this.args.placeholder || i18n("d_select.add_placeholder");
   }
 
   /** The filter input's placeholder (the consumer's `@searchPlaceholder` or a default). */
@@ -305,9 +317,8 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
-   * Runs on every menu close (typeahead): resets the query so the next open starts clean and
-   * the selection presentation resolves synchronously from cache (no re-fetch flash). Multi
-   * (a later item) keeps the popover open on select, so it will reset on select instead.
+   * Runs on every typeahead menu close, resetting the query so the next open starts clean.
+   * Multi-select also resets on an add because its menu remains open after selection.
    */
   @action
   handleMenuClose(): void {
@@ -346,8 +357,8 @@ export default class DSelect extends Component<DSelectSignature> {
   /**
    * Keeps focus in the trigger input when an option is pointer-selected: preventing the
    * `mousedown` default stops the input blurring, which would otherwise close the menu
-   * before the option's `click` resolves. This matters for action rows (which keep the
-   * menu open) and for multi (later). Typeahead only — `static` options must take real
+   * before the option's `click` resolves. This matters for action rows and multi-select,
+   * which keep the menu open. Typeahead only — `static` options must take real
    * focus, so the guard is a no-op there (the handler is attached to every option).
    */
   @action
@@ -431,6 +442,19 @@ export default class DSelect extends Component<DSelectSignature> {
     this.engine.setFilter((event.target as HTMLInputElement).value);
   }
 
+  @action
+  handleInputKeydown(event: KeyboardEvent): void {
+    if (
+      event.key === "Backspace" &&
+      !event.isComposing &&
+      (event.target as HTMLInputElement).value === "" &&
+      this.engine.hasValue
+    ) {
+      event.preventDefault();
+      this.engine.deselectLast();
+    }
+  }
+
   /**
    * `dRovingFocus` hands `onActivate` the active option element; clicking it runs the
    * same handler as a pointer click, so keyboard and pointer share one selection path.
@@ -447,6 +471,13 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @action
   announceCount(_element: HTMLElement, [count]: [number]): void {
+    if (this.#suppressNextCount) {
+      this.#suppressNextCount = false;
+      // Record the suppressed count as last-known, or a later genuine search that lands on
+      // the pre-suppression count would be treated as a repeat and never announced.
+      this.#lastAnnouncedCount = count;
+      return;
+    }
     if (count === this.#lastAnnouncedCount) {
       return;
     }
@@ -454,14 +485,56 @@ export default class DSelect extends Component<DSelectSignature> {
     this.a11y.announce(i18n("d_select.results_count", { count }), "polite");
   }
 
+  @action
+  handleChange(
+    nextValue: SelectValue,
+    payload: SelectItemModel | SelectItemModel[] | null
+  ): void {
+    if (this.args.multiple) {
+      // This must be read before forwarding because the parent applies nextValue synchronously.
+      const oldValues = makeArray(this.args.value);
+      const nextValues = makeArray(nextValue);
+      const oldKeys = new Set(oldValues.map(String));
+      const nextKeys = new Set(nextValues.map(String));
+      const added = nextValues.find((value) => !oldKeys.has(String(value)));
+      const removed = oldValues.find((value) => !nextKeys.has(String(value)));
+
+      if (added !== undefined) {
+        const item = this.engine.resolveSingleSync(added);
+        this.a11y.announce(
+          i18n("d_select.item_added", {
+            item: item ? this.engine.getItemLabel(item) : String(added),
+          }),
+          "polite"
+        );
+        if (this.engine.filter !== "") {
+          this.#suppressNextCount = true;
+          this.engine.setFilter("");
+          this.queryActive = false;
+          nextRunloop(() => (this.#suppressNextCount = false));
+        }
+      } else if (removed !== undefined) {
+        const item = this.engine.resolveSingleSync(removed);
+        this.a11y.announce(
+          i18n("d_select.item_removed", {
+            item: item ? this.engine.getItemLabel(item) : String(removed),
+          }),
+          "polite"
+        );
+      }
+    }
+    this.args.onChange?.(nextValue, payload);
+  }
+
   /**
-   * Removes a chip's item from the (multi) selection. Stops propagation so the click
-   * doesn't also open the menu — the chip lives inside the trigger.
+   * Removes a chip's item, stops the click from opening the menu, and restores input focus
+   * after the focused remove button unmounts.
    */
   @action
   removeItem(item: SelectItemModel, event?: MouseEvent): void {
     event?.stopPropagation();
     this.engine.deselect(item);
+    this.filterInput?.focus();
   }
 
   /**
@@ -495,13 +568,9 @@ export default class DSelect extends Component<DSelectSignature> {
       @onClose={{if this.isTypeahead this.handleMenuClose}}
       @onShow={{if this.isTypeahead this.focusTriggerInput}}
       @onRegisterApi={{this.registerMenu}}
-      @triggerClass={{if
-        this.isTypeahead
-        "d-combobox__trigger --typeahead"
-        "d-combobox__trigger"
-      }}
-      {{! Typeahead (an input) and multi (chip buttons) need a non-button host — a button
-        can't nest interactive descendants; single button/static use the DButton trigger. }}
+      @triggerClass={{this.triggerClass}}
+      {{! Typeahead needs a non-button host because its interactive descendants cannot be
+        nested in a button; button and static variants use the DButton trigger. }}
       @triggerComponent={{if (or @multiple this.isTypeahead) (dElement "div")}}
       class="d-combobox"
       ...attributes
@@ -510,7 +579,76 @@ export default class DSelect extends Component<DSelectSignature> {
         {{! Resolve the raw @value (stable identity) rather than engine.value, so this
           async context does not churn each render; a content-only skeleton shows while
           it resolves, so a bare id never flashes. }}
-        {{#if this.isTypeahead}}
+        {{#if @multiple}}
+          <div
+            class="d-combobox__chips"
+            role="group"
+            aria-label={{i18n "d_select.selected_items"}}
+          >
+            <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
+              <:loading>
+                {{#each this.chipSkeletons key="key" as |row|}}
+                  <span class="d-combobox__chip" data-key={{row.key}}>
+                    <DSkeleton @variant="text" @width="6ch" />
+                  </span>
+                {{/each}}
+              </:loading>
+              <:content as |chips|>
+                {{#each chips key="key" as |chip index|}}
+                  <span class="d-combobox__chip">
+                    <span
+                      class="d-combobox__chip-label"
+                      id="{{this.chipIdPrefix}}-{{index}}-label"
+                    >
+                      {{#if (has-block "selection")}}
+                        {{yield chip.item to="selection"}}
+                      {{else}}
+                        <SelectionLabel
+                          @item={{chip.item}}
+                          @labelField={{this.labelField}}
+                        />
+                      {{/if}}
+                    </span>
+                    <button
+                      type="button"
+                      class="d-combobox__chip-remove"
+                      aria-labelledby="{{this.chipIdPrefix}}-{{index}}-remove {{this.chipIdPrefix}}-{{index}}-label"
+                      {{on "click" (fn this.removeItem chip.item)}}
+                    >
+                      <span
+                        class="sr-only"
+                        id="{{this.chipIdPrefix}}-{{index}}-remove"
+                      >
+                        {{i18n "d_select.remove"}}
+                      </span>
+                      {{dIcon "xmark"}}
+                    </button>
+                  </span>
+                {{/each}}
+              </:content>
+            </DAsyncContent>
+            {{#if this.isDesktopTypeahead}}
+              <ComboboxQueryInput
+                @engine={{this.engine}}
+                @listboxId={{this.listboxId}}
+                @expanded={{menuArgs.expanded}}
+                @label={{this.ariaLabelText}}
+                @displayValue=""
+                @placeholder={{this.queryPlaceholder}}
+                @editing={{this.queryActive}}
+                @ariaOwns={{true}}
+                @shouldSelectOnFocus={{this.shouldSelectOnFocus}}
+                @onOpen={{menuArgs.show}}
+                @onRequestClose={{menuArgs.close}}
+                @onBlur={{this.handleTriggerBlur}}
+                @onEdit={{this.beginQuery}}
+                @registerInput={{this.registerTriggerInput}}
+                {{on "keydown" this.handleInputKeydown}}
+              />
+            {{/if}}
+          </div>
+          {{dIcon "angle-down" class="d-combobox__caret"}}
+        {{else if this.isTypeahead}}
           {{! Composite box: [selection presentation] · [query input] · [caret]. The input
             displays either the selected-label fallback or the query; custom selection markup
             is a sibling, hidden from the first edit until close. A click anywhere on the
@@ -601,66 +739,6 @@ export default class DSelect extends Component<DSelectSignature> {
             />
           {{/if}}
           {{dIcon "angle-down" class="d-combobox__caret"}}
-        {{else if @multiple}}
-          <span
-            class="d-combobox__chips"
-            role="group"
-            aria-label={{i18n "d_select.selected_items"}}
-          >
-            <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
-              <:loading>
-                {{#each this.chipSkeletons key="key" as |row|}}
-                  <span class="d-combobox__chip" data-key={{row.key}}>
-                    <DSkeleton @variant="text" @width="6ch" />
-                  </span>
-                {{/each}}
-              </:loading>
-              <:content as |chips|>
-                {{#each chips key="key" as |chip index|}}
-                  <span class="d-combobox__chip">
-                    <span
-                      class="d-combobox__chip-label"
-                      id="{{this.chipIdPrefix}}-{{index}}-label"
-                    >
-                      {{#if (has-block "selection")}}
-                        {{yield chip.item to="selection"}}
-                      {{else}}
-                        <SelectionLabel
-                          @item={{chip.item}}
-                          @labelField={{this.labelField}}
-                        />
-                      {{/if}}
-                    </span>
-                    <button
-                      type="button"
-                      class="d-combobox__chip-remove"
-                      aria-labelledby="{{this.chipIdPrefix}}-{{index}}-remove {{this.chipIdPrefix}}-{{index}}-label"
-                      {{on "click" (fn this.removeItem chip.item)}}
-                    >
-                      <span
-                        class="sr-only"
-                        id="{{this.chipIdPrefix}}-{{index}}-remove"
-                      >
-                        {{i18n "d_select.remove"}}
-                      </span>
-                      {{dIcon "xmark"}}
-                    </button>
-                  </span>
-                {{/each}}
-              </:content>
-              <:empty>
-                <span class="d-combobox__placeholder">
-                  {{or @placeholder (i18n "d_select.placeholder")}}
-                </span>
-              </:empty>
-            </DAsyncContent>
-            <DButton
-              class="d-combobox__expand btn-transparent"
-              @icon="angle-down"
-              @action={{menuArgs.show}}
-              @title="d_select.expand"
-            />
-          </span>
         {{else}}
           <DAsyncContent @asyncData={{this.resolveSingle}} @context={{@value}}>
             <:loading><DSkeleton @variant="text" @width="8ch" /></:loading>
@@ -718,6 +796,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @editing={{this.queryActive}}
               @onEdit={{this.beginQuery}}
               @registerInput={{this.captureFilter}}
+              {{on "keydown" this.handleInputKeydown}}
             />
           {{/if}}
 

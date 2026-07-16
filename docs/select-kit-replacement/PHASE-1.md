@@ -85,10 +85,30 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     its constructor, and `isTypeahead` hard-couples arity to variant. Decide whether a
     select may flip arity at runtime (and what happens to a held array when it flips to
     single) before any consumer relies on it.
-- ☐ **`@multiple` + chips** (shadcn `ComboboxChips` model): chips-with-inline-input,
-  keep-selected-with-checkmark (supersede Phase-0 remove-on-select + its test), backspace
-  removal, clear-all; `@maximum`/`@minimum`; pipe-paste bulk-add; rewrite on-`main`
-  `DMultiSelect` as a thin `@multiple` alias (keep its consumers + tests green).
+- ◐ **`@multiple` + chips** (shadcn `ComboboxChips` model):
+  - ☑ **The flip (desktop)** — `@multiple` now routes through the typeahead machinery:
+    `isTypeahead` drops its `!multiple` guard; the trigger renders chips inline with the query
+    input (chips hoisted above the variant branch, input a sibling of the chips `DAsyncContent`
+    so it doesn't remount on resolve); selecting adds a chip, keeps the menu open, resets the
+    query only on an add, and keeps the input focused; keep-selected-with-checkmark +
+    `aria-multiselectable`; Backspace on the empty input removes the last chip (both desktop and
+    modal inputs, composition-guarded); add/remove announced politely with the self-inflicted
+    refilter count suppressed (`#suppressNextCount`, leak-guarded); `removeItem` restores input
+    focus. `.--multiple` SCSS (left-align, no double inset). New broad oracle
+    `d-select-multi-flip-test.gjs` + updated `DSelect (multi typeahead)` module, all green.
+  - ☐ **6b — chips arrow-roving** (deferred): wire `dRovingFocus tabStop=false
+    orientation="horizontal"` on the chips group; ArrowLeft-at-caret-0 enters the chips, arrows
+    move between, `onExit` returns to the input, Backspace/Delete on a focused chip removes it,
+    input becomes the sole tab stop. (Known interim limitation: while the menu is open, Tab from
+    a chip is forwarded into the listbox by DMenu; chip-to-chip Tab works only while closed.)
+  - ☐ **RTL** (deferred): `dRovingFocus` has no direction handling — ArrowLeft/Right are
+    hard-wired backward/forward. Add RTL entry (+ its one other consumer + tests) as its own item.
+  - ☐ **Mobile M5** (deferred): closed trigger → real `<button aria-haspopup="dialog">` with
+    inert chips; composite moves into the modal; the B1a/B1b/B2/B4 fixes.
+  - ☐ Still to do (unchanged from before): `@maximum`/`@minimum`; pipe-paste bulk-add;
+    clear-all (`@clearable`); rewrite on-`main` `DMultiSelect` as a thin `@multiple` alias.
+  - ☐ Styleguide `@variant="button"`+`@multiple` and 6+-chip wrap examples; RFC line-123 vs
+    238-242 mobile contradiction.
 - ☐ **Large-list windowing** (Decision 5): internal render chunk (client) / server
   page-size auto-detected; hard `MAX_RENDERED` cap; `DLoadMore` reveal → "filter to
   narrow" at the cap; `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
