@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
 
@@ -16,8 +17,7 @@ export default class EmbeddableChat extends Service {
     return this.chat?.userCanChat ?? false;
   }
 
-  canRenderChatChannel(topicController, mobileViewAllowed = false) {
-    this.topicController = topicController;
+  canRenderChatChannel(mobileViewAllowed = false) {
     if (
       this.isMobileViewport === mobileViewAllowed &&
       this.siteSettings.chat_enabled &&
@@ -32,7 +32,7 @@ export default class EmbeddableChat extends Service {
           this.router.currentURL.startsWith(path)
       );
 
-      if (withinPathsAllowed && this.topicController?.model?.chat_channel_id) {
+      if (withinPathsAllowed && this.chatChannelId) {
         return true;
       }
     }
@@ -45,6 +45,11 @@ export default class EmbeddableChat extends Service {
     this.isMobileChatVisible = !this.isMobileChatVisible;
   }
 
+  @action
+  closeChatVisibility() {
+    this.isMobileChatVisible = false;
+  }
+
   get isMobileModal() {
     return (
       this.siteSettings.livestream_enable_modal_chat_on_mobile &&
@@ -54,6 +59,10 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
+  }
+
+  get topicController() {
+    return getOwner(this).lookup("controller:topic");
   }
 
   get topic() {

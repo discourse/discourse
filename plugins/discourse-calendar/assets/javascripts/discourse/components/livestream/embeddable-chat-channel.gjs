@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
@@ -54,6 +55,20 @@ export default class EmbedableChatChannel extends Component {
     this.activeChannel.currentUserMembership = membership;
   }
 
+  get showCloseButton() {
+    return this.args.onClose || !this.embeddableChat.isMobileModal;
+  }
+
+  @action
+  close() {
+    if (this.args.onClose) {
+      this.args.onClose();
+      return;
+    }
+
+    this.embeddableChat.toggleChatVisibility();
+  }
+
   <template>
     <div
       id="custom-chat-container"
@@ -63,17 +78,17 @@ export default class EmbedableChatChannel extends Component {
       }}
       {{this.updateChannel}}
     >
-      {{#unless this.embeddableChat.isMobileModal}}
+      {{#if this.showCloseButton}}
         <div class="c-navbar-container livestream-chat-close">
 
           <DButton
             @icon="xmark"
-            @action={{this.embeddableChat.toggleChatVisibility}}
+            @action={{this.close}}
             @title="chat.close"
             class="btn-transparent no-text c-navbar__close-drawer-button"
           />
         </div>
-      {{/unless}}
+      {{/if}}
       <div class="chat-drawer">
         {{#if (and this.activeChannel ChatChannel)}}
           {{#each (array this.activeChannel) as |channel|}}

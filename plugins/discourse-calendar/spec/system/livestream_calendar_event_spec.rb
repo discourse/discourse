@@ -14,6 +14,7 @@ describe "Discourse Livestream - Topic Livestream with events - Authenticated" d
     SiteSetting.chat_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = group.id.to_s
+    topic_livestream.cache_livestream_onebox
     sign_in(current_user)
   end
 

@@ -55,6 +55,15 @@ function initializeDiscoursePostEventDecorator(api) {
           return;
         }
 
+        let hideLivestreamVideo = false;
+        if (
+          postEventNode.parentElement.classList.contains(
+            "post__contents-cooked-quote"
+          )
+        ) {
+          hideLivestreamVideo = true;
+        }
+
         const wrapper = document.createElement("div");
         postEventNode.before(wrapper);
 
@@ -63,7 +72,11 @@ function initializeDiscoursePostEventDecorator(api) {
         helper.renderGlimmer(
           wrapper,
           <template>
-            <DiscoursePostEvent @event={{event}} @post={{post}} />
+            <DiscoursePostEvent
+              @event={{event}}
+              @post={{post}}
+              @hideLivestreamVideo={{hideLivestreamVideo}}
+            />
           </template>
         );
       }
