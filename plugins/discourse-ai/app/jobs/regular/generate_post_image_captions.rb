@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class GeneratePostImageDescriptions < ::Jobs::Base
+  class GeneratePostImageCaptions < ::Jobs::Base
     sidekiq_options queue: "low", retry: false
 
     def execute(args)
@@ -11,13 +11,13 @@ module Jobs
       post = Post.find_by(id: post_id)
       return if post.blank?
 
-      locale = args[:locale].presence || DiscourseAi::PostImageDescriptions.original_locale(post)
+      locale = args[:locale].presence || DiscourseAi::PostImageCaptions.original_locale(post)
 
       DistributedMutex.synchronize(
-        "generate_post_image_descriptions_#{post.id}_#{locale}",
+        "generate_post_image_captions_#{post.id}_#{locale}",
         validity: 10.minutes,
       ) do
-        DiscourseAi::PostImageDescriptions.generate_missing(
+        DiscourseAi::PostImageCaptions.generate_missing(
           post,
           locale: locale,
           base62_sha1s: args[:base62_sha1s],

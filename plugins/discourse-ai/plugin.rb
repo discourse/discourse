@@ -128,6 +128,7 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiImageCaptionAgent
   #register_problem_check ProblemCheck::AiCreditSoftLimit
   #register_problem_check ProblemCheck::AiCreditHardLimit
 
@@ -158,7 +159,7 @@ after_initialize do
   on(:post_destroyed) do |post|
     if !Post.with_deleted.exists?(post.id)
       DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
-      DiscourseAi::PostImageDescriptions.delete_for_post(post.id)
+      DiscourseAi::PostImageCaptions.delete_for_post(post.id)
     end
   end
 
@@ -195,23 +196,23 @@ after_initialize do
   end
 
   on(:post_process_cooked) do |doc, post|
-    DiscourseAi::PostImageDescriptions.process_cooked(
+    DiscourseAi::PostImageCaptions.process_cooked(
       doc,
       post,
-      locale: DiscourseAi::PostImageDescriptions.original_locale(post),
+      locale: DiscourseAi::PostImageCaptions.original_locale(post),
     )
   end
 
   on(:post_process_localized_cooked) do |doc, post, post_localization|
-    DiscourseAi::PostImageDescriptions.process_cooked(doc, post, locale: post_localization.locale)
+    DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
   end
 
   register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|
-    DiscourseAi::PostImageDescriptions.append_to_search_text(text, post_id, cooked, locale: locale)
+    DiscourseAi::PostImageCaptions.append_to_search_text(text, post_id, cooked, locale: locale)
   end
 
   on(:reduce_cooked) do |doc, _post|
-    DiscourseAi::PostImageDescriptions.remove_existing_description_metadata(doc)
+    DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
   add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })

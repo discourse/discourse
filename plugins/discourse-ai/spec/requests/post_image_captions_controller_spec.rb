@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::PostImageDescriptionsController do
+describe DiscourseAi::PostImageCaptionsController do
   fab!(:admin)
   fab!(:upload) do
     UploadCreator.new(
@@ -18,7 +18,8 @@ describe DiscourseAi::PostImageDescriptionsController do
 
   before do
     enable_current_plugin
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    configure_valid_caption_agent
+    SiteSetting.ai_post_image_captions_enabled = true
     SearchIndexer.enable
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
@@ -26,13 +27,13 @@ describe DiscourseAi::PostImageDescriptionsController do
 
   after { SearchIndexer.disable }
 
-  def store_description(
+  def store_caption(
     description,
     target_post: post,
     target_upload: upload,
     locale: SiteSetting.default_locale
   )
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: target_post.id,
@@ -43,14 +44,23 @@ describe DiscourseAi::PostImageDescriptionsController do
           attempts: 0,
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
+  end
+
+  def configure_valid_caption_agent
+    llm_model = assign_fake_provider_to(:ai_default_llm_model)
+    llm_model.update!(vision_enabled: true)
+    caption_agent =
+      AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i) ||
+        Fabricate(:ai_agent, id: SiteSetting.ai_image_caption_agent.to_i)
+    caption_agent.update!(enabled: true, vision_enabled: true, default_llm_id: llm_model.id)
   end
 
   describe "#index" do
     before { sign_in(admin) }
 
-    it "returns editable descriptions for current post images", :aggregate_failures do
+    it "returns editable captions for current post images", :aggregate_failures do
       description = "A generated 字 description"
       stale_upload =
         UploadCreator.new(
@@ -62,22 +72,22 @@ describe DiscourseAi::PostImageDescriptionsController do
           "stale-caption-image.jpg",
         ).create_for(admin.id)
 
-      store_description(description)
-      store_description("A stale description", target_upload: stale_upload)
+      store_caption(description)
+      store_caption("A stale description", target_upload: stale_upload)
 
-      get "/discourse-ai/post-image-descriptions/#{post.id}.json"
+      get "/discourse-ai/post-image-captions/#{post.id}.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["descriptions"]).to contain_exactly(
+      expect(response.parsed_body["captions"]).to contain_exactly(
         { "base62_sha1" => upload.base62_sha1, "description" => description },
       )
     end
 
     it "requires permission to edit the post" do
       sign_in(Fabricate(:user))
-      store_description("A generated description")
+      store_caption("A generated description")
 
-      get "/discourse-ai/post-image-descriptions/#{post.id}.json"
+      get "/discourse-ai/post-image-captions/#{post.id}.json"
 
       expect(response.status).to eq(403)
     end
@@ -86,11 +96,11 @@ describe DiscourseAi::PostImageDescriptionsController do
   describe "#update" do
     before { sign_in(admin) }
 
-    it "updates the description and refreshes derived content", :aggregate_failures do
-      store_description("The old description")
+    it "updates the caption and refreshes derived content", :aggregate_failures do
+      store_caption("The old description")
 
       expect_enqueued_with(job: :process_post, args: { post_id: post.id }) do
-        put "/discourse-ai/post-image-descriptions/#{post.id}/#{upload.base62_sha1}.json",
+        put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
             params: {
               description: "An edited 字 description",
             }
@@ -102,10 +112,7 @@ describe DiscourseAi::PostImageDescriptionsController do
         "description" => "An edited 字 description",
       )
       expect(
-        AiPostImageDescription.find_by(
-          post_id: post.id,
-          base62_sha1: upload.base62_sha1,
-        ).description,
+        AiPostImageCaption.find_by(post_id: post.id, base62_sha1: upload.base62_sha1).description,
       ).to eq("An edited 字 description")
       expect(post.post_search_data.raw_data).to include("An edited 字 description")
 
@@ -115,7 +122,7 @@ describe DiscourseAi::PostImageDescriptionsController do
     end
 
     it "returns not found for images without an editable row" do
-      put "/discourse-ai/post-image-descriptions/#{post.id}/#{upload.base62_sha1}.json",
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
           params: {
             description: "A new description",
           }
@@ -123,12 +130,12 @@ describe DiscourseAi::PostImageDescriptionsController do
       expect(response.status).to eq(404)
     end
 
-    it "validates description length" do
-      store_description("The old description")
+    it "validates caption length" do
+      store_caption("The old description")
 
-      put "/discourse-ai/post-image-descriptions/#{post.id}/#{upload.base62_sha1}.json",
+      put "/discourse-ai/post-image-captions/#{post.id}/#{upload.base62_sha1}.json",
           params: {
-            description: "x" * (DiscourseAi::PostImageDescriptions::MAX_DESCRIPTION_LENGTH + 1),
+            description: "x" * (DiscourseAi::PostImageCaptions::MAX_CAPTION_LENGTH + 1),
           }
 
       expect(response.status).to eq(422)

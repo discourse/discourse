@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "AI post image descriptions in RSS" do
+describe "AI post image captions in RSS" do
   fab!(:upload) do
     UploadCreator.new(
       file_from_fixtures(
@@ -16,14 +16,24 @@ describe "AI post image descriptions in RSS" do
 
   before do
     enable_current_plugin
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    configure_valid_caption_agent
+    SiteSetting.ai_post_image_captions_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
   end
 
+  def configure_valid_caption_agent
+    llm_model = assign_fake_provider_to(:ai_default_llm_model)
+    llm_model.update!(vision_enabled: true)
+    caption_agent =
+      AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i) ||
+        Fabricate(:ai_agent, id: SiteSetting.ai_image_caption_agent.to_i)
+    caption_agent.update!(enabled: true, vision_enabled: true, default_llm_id: llm_model.id)
+  end
+
   it "omits generated descriptions from topic feeds", :aggregate_failures do
     description = "A generated RSS-only 字 description"
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -34,7 +44,7 @@ describe "AI post image descriptions in RSS" do
           attempts: 0,
         },
       ],
-      unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
+      unique_by: DiscourseAi::PostImageCaptions::LOOKUP_INDEX,
     )
 
     processor = CookedPostProcessor.new(post)

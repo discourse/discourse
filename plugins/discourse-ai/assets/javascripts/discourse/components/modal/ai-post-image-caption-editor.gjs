@@ -7,8 +7,8 @@ import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
-export default class AiPostImageDescriptionEditorModal extends Component {
-  @service postImageDescriptionEditor;
+export default class AiPostImageCaptionEditorModal extends Component {
+  @service postImageCaptionEditor;
 
   @cached
   get formData() {
@@ -20,7 +20,7 @@ export default class AiPostImageDescriptionEditorModal extends Component {
   @action
   async save(data) {
     try {
-      await this.postImageDescriptionEditor.save(
+      await this.postImageCaptionEditor.save(
         this.args.model.base62Sha1,
         data.description
       );
@@ -33,27 +33,27 @@ export default class AiPostImageDescriptionEditorModal extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      @title={{i18n "discourse_ai.post_image_descriptions.title"}}
-      class="ai-post-image-description-editor-modal"
+      @title={{i18n "discourse_ai.post_image_captions.title"}}
+      class="ai-post-image-caption-editor-modal"
     >
       <Form @data={{this.formData}} @onSubmit={{this.save}} as |form|>
         <form.Field
           @format="full"
           @name="description"
-          @title={{i18n "discourse_ai.post_image_descriptions.description"}}
+          @title={{i18n "discourse_ai.post_image_captions.description"}}
           @type="textarea"
           @validation="required:trim|length:1,1000"
           as |field|
         >
           <field.Control
             @height={{120}}
-            class="ai-post-image-description-editor-modal__textarea"
+            class="ai-post-image-caption-editor-modal__textarea"
           />
         </form.Field>
 
         <form.Actions>
           <DModalCancel @close={{@closeModal}} />
-          <form.Submit @label="discourse_ai.post_image_descriptions.save" />
+          <form.Submit @label="discourse_ai.post_image_captions.save" />
         </form.Actions>
       </Form>
     </DModal>

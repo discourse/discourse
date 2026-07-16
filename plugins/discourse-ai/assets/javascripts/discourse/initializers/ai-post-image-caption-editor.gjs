@@ -1,12 +1,12 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import AiPostImageDescriptionEditorButton from "../components/ai-post-image-description-editor-button";
+import AiPostImageCaptionEditorButton from "../components/ai-post-image-caption-editor-button";
 import {
-  ensureImageDescriptionTarget,
+  ensureImageCaptionTarget,
   imageBase62Sha1,
-} from "../lib/post-image-description-editor";
+} from "../lib/post-image-caption-editor";
 
-function initializeAiPostImageDescriptionEditor(api) {
-  const editor = api.container.lookup("service:post-image-description-editor");
+function initializeAiPostImageCaptionEditor(api) {
+  const editor = api.container.lookup("service:post-image-caption-editor");
 
   api.decorateCookedElement(
     (element, helper) => {
@@ -31,7 +31,7 @@ function initializeAiPostImageDescriptionEditor(api) {
           return;
         }
 
-        const target = ensureImageDescriptionTarget(imageWrapper);
+        const target = ensureImageCaptionTarget(imageWrapper);
         if (!target) {
           return;
         }
@@ -39,20 +39,20 @@ function initializeAiPostImageDescriptionEditor(api) {
         helper.renderGlimmer(
           target,
           <template>
-            <AiPostImageDescriptionEditorButton @base62Sha1={{base62Sha1}} />
+            <AiPostImageCaptionEditorButton @base62Sha1={{base62Sha1}} />
           </template>
         );
       });
     },
     {
-      id: "ai-post-image-description-editor",
+      id: "ai-post-image-caption-editor",
     }
   );
 }
 
 export default {
-  name: "ai-post-image-description-editor",
+  name: "ai-post-image-caption-editor",
   initialize() {
-    withPluginApi(initializeAiPostImageDescriptionEditor);
+    withPluginApi(initializeAiPostImageCaptionEditor);
   },
 };

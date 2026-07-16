@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Configuration::Feature do
-  fab!(:llm_model)
-  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id) }
+  fab!(:llm_model) { Fabricate(:llm_model, vision_enabled: true) }
+  fab!(:ai_agent) { Fabricate(:ai_agent, default_llm_id: llm_model.id, vision_enabled: true) }
 
   before { assign_fake_provider_to(:ai_default_llm_model) }
 
@@ -194,6 +194,35 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
       expect(bot_feature.agent_ids).to include(multi_permission_agent.id)
     end
+
+    it "does not include the image caption agent" do
+      pm_agent.update!(default_llm_id: bot_llm.id, vision_enabled: true)
+      bot_llm.update!(vision_enabled: true)
+      SiteSetting.ai_image_caption_agent = pm_agent.id
+
+      expect(bot_feature.agent_ids).not_to include(pm_agent.id)
+    end
+  end
+
+  describe ".image_caption_features" do
+    let(:image_caption_feature) { described_class.image_caption_features.first }
+
+    it "returns the post image captions feature with the image caption module configuration" do
+      expect(image_caption_feature.name).to eq("post_image_captions")
+      expect(image_caption_feature.agent_setting).to eq("ai_image_caption_agent")
+      expect(image_caption_feature.module_id).to eq(
+        DiscourseAi::Configuration::Module::IMAGE_CAPTION_ID,
+      )
+      expect(image_caption_feature.module_name).to eq(
+        DiscourseAi::Configuration::Module::IMAGE_CAPTION,
+      )
+    end
+
+    it "uses the selected image caption agent" do
+      SiteSetting.ai_image_caption_agent = ai_agent.id
+
+      expect(image_caption_feature.agent_ids).to eq([ai_agent.id])
+    end
   end
 
   describe "#agent_ids" do
@@ -257,11 +286,12 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     it "returns all features using a specific agent" do
       SiteSetting.ai_summarization_agent = ai_agent.id
       SiteSetting.ai_helper_proofreader_agent = ai_agent.id
+      SiteSetting.ai_image_caption_agent = ai_agent.id
       SiteSetting.ai_translation_locale_detector_agent = 999
 
       features = described_class.find_features_using(agent_id: ai_agent.id)
 
-      expect(features.map(&:name)).to include("topic_summaries", "proofread")
+      expect(features.map(&:name)).to include("topic_summaries", "proofread", "post_image_captions")
       expect(features.map(&:name)).not_to include("locale_detector")
     end
   end

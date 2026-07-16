@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscourseAi::PostImageDescriptions do
+describe DiscourseAi::PostImageCaptions do
   fab!(:upload) { create_image_upload("100x100.jpg", "caption-image.jpg") }
   fab!(:post) { Fabricate(:post, raw: "![user supplied|200x200](#{upload.short_url})") }
 
@@ -8,11 +8,11 @@ describe DiscourseAi::PostImageDescriptions do
     enable_current_plugin
     llm_model = assign_fake_provider_to(:ai_default_llm_model)
     llm_model.update!(vision_enabled: true)
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(
-      enabled: true,
-      vision_enabled: true,
-    )
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    caption_agent =
+      AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i) ||
+        Fabricate(:ai_agent, id: SiteSetting.ai_image_caption_agent.to_i)
+    caption_agent.update!(enabled: true, vision_enabled: true, default_llm_id: llm_model.id)
+    SiteSetting.ai_post_image_captions_enabled = true
     SiteSetting.ai_helper_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
@@ -33,7 +33,7 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   def store_description(description, locale: SiteSetting.default_locale, target_upload: upload)
-    AiPostImageDescription.upsert_all(
+    AiPostImageCaption.upsert_all(
       [
         {
           post_id: post.id,
@@ -49,8 +49,8 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   it "supports ActiveRecord updates with a primary key" do
-    image_description =
-      AiPostImageDescription.create!(
+    image_caption =
+      AiPostImageCaption.create!(
         post_id: post.id,
         upload_id: upload.id,
         base62_sha1: upload.base62_sha1,
@@ -58,12 +58,12 @@ describe DiscourseAi::PostImageDescriptions do
         description: "An initial description",
       )
 
-    image_description.update!(description: "An updated description")
+    image_caption.update!(description: "An updated description")
 
-    expect(image_description.reload.description).to eq("An updated description")
+    expect(image_caption.reload.description).to eq("An updated description")
   end
 
-  it "adds image description metadata without visible text", :aggregate_failures do
+  it "adds image caption metadata without visible text", :aggregate_failures do
     description = "A lighthouse beside 字 on a sign"
     store_description(description)
 
@@ -85,7 +85,7 @@ describe DiscourseAi::PostImageDescriptions do
     ).not_to include(description)
   end
 
-  it "strips image description metadata from email HTML", :aggregate_failures do
+  it "strips image caption metadata from email HTML", :aggregate_failures do
     description = "A generated email-only 字 description"
     store_description(description)
 
@@ -110,7 +110,7 @@ describe DiscourseAi::PostImageDescriptions do
     post.link_post_uploads
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -122,19 +122,26 @@ describe DiscourseAi::PostImageDescriptions do
     end
   end
 
-  it "does not run when post image descriptions are disabled" do
-    SiteSetting.ai_post_image_descriptions_enabled = false
+  it "does not run when post image captions are disabled" do
+    SiteSetting.ai_post_image_captions_enabled = false
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
+    expect_not_enqueued_with(job: :generate_post_image_captions) do
       described_class.process_cooked(Nokogiri::HTML5.fragment(post.cooked), post, locale: "en")
     end
   end
 
-  it "does not enqueue generation when the caption agent is disabled" do
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(enabled: false)
+  it "enqueues generation when the caption agent is disabled for AI bot use" do
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(enabled: false)
 
-    expect(described_class.generation_enabled?).to eq(false)
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
+    expect(described_class.generation_enabled?).to eq(true)
+    expect_enqueued_with(
+      job: :generate_post_image_captions,
+      args: {
+        post_id: post.id,
+        locale: SiteSetting.default_locale,
+        base62_sha1s: [upload.base62_sha1],
+      },
+    ) do
       described_class.process_cooked(
         Nokogiri::HTML5.fragment(post.cooked),
         post,
@@ -146,7 +153,7 @@ describe DiscourseAi::PostImageDescriptions do
   it "does not enqueue generation while cooking old posts" do
     post.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
+    expect_not_enqueued_with(job: :generate_post_image_captions) do
       processor = CookedPostProcessor.new(post)
       processor.post_process
     end
@@ -156,7 +163,7 @@ describe DiscourseAi::PostImageDescriptions do
     post.update_columns(created_at: 2.days.ago, updated_at: Time.zone.now)
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: SiteSetting.default_locale,
@@ -169,7 +176,7 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   it "preserves non-AI image aria descriptions when disabled", :aggregate_failures do
-    SiteSetting.ai_post_image_descriptions_enabled = false
+    SiteSetting.ai_post_image_captions_enabled = false
     doc =
       Nokogiri::HTML5.fragment(
         "<a class='lightbox' aria-description='custom lightbox'>" \
@@ -193,7 +200,7 @@ describe DiscourseAi::PostImageDescriptions do
     whisper.update_column(:cooked, post.cooked)
     whisper.link_post_uploads
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
+    expect_not_enqueued_with(job: :generate_post_image_captions) do
       described_class.process_cooked(
         Nokogiri::HTML5.fragment(pm_post.cooked),
         pm_post,
@@ -210,7 +217,7 @@ describe DiscourseAi::PostImageDescriptions do
   it "ignores image nodes without post upload references" do
     unrelated_upload = create_image_upload("An image of discobot in action.png", "unrelated.png")
 
-    expect_not_enqueued_with(job: :generate_post_image_descriptions) do
+    expect_not_enqueued_with(job: :generate_post_image_captions) do
       described_class.process_cooked(
         Nokogiri::HTML5.fragment(
           "<img src='https://example.com/image.png' data-base62-sha1='#{unrelated_upload.base62_sha1}'>" \
@@ -222,7 +229,7 @@ describe DiscourseAi::PostImageDescriptions do
     end
   end
 
-  it "adds current image descriptions to search text" do
+  it "adds current image captions to search text" do
     default_description = "A searchable 字 description"
     japanese_description = "A Japanese 字 description"
     store_description(default_description)
@@ -247,18 +254,14 @@ describe DiscourseAi::PostImageDescriptions do
     described_class.process_cooked(Nokogiri::HTML5.fragment(post.cooked), post, locale: "ja")
 
     expect(
-      AiPostImageDescription.exists?(
+      AiPostImageCaption.exists?(
         post_id: post.id,
         locale: SiteSetting.default_locale,
         base62_sha1: upload.base62_sha1,
       ),
     ).to eq(true)
     expect(
-      AiPostImageDescription.exists?(
-        post_id: post.id,
-        locale: "ja",
-        base62_sha1: upload.base62_sha1,
-      ),
+      AiPostImageCaption.exists?(post_id: post.id, locale: "ja", base62_sha1: upload.base62_sha1),
     ).to eq(false)
   end
 
@@ -285,7 +288,7 @@ describe DiscourseAi::PostImageDescriptions do
       Fabricate(:post_localization, post: post, locale: "ja", raw: post.raw, cooked: post.cooked)
 
     expect_enqueued_with(
-      job: :generate_post_image_descriptions,
+      job: :generate_post_image_captions,
       args: {
         post_id: post.id,
         locale: "ja",
@@ -297,7 +300,7 @@ describe DiscourseAi::PostImageDescriptions do
     image = doc.at_css("img[data-base62-sha1='#{upload.base62_sha1}']")
 
     expect(image["aria-description"]).to include(description)
-    expect(AiPostImageDescription.exists?(post_id: post.id, locale: "ja")).to eq(false)
+    expect(AiPostImageCaption.exists?(post_id: post.id, locale: "ja")).to eq(false)
   end
 
   it "deletes descriptions after all post images are removed" do
@@ -305,18 +308,18 @@ describe DiscourseAi::PostImageDescriptions do
 
     described_class.process_cooked(Nokogiri::HTML5.fragment("<p>No image</p>"), post, locale: "en")
 
-    expect(AiPostImageDescription.exists?(post_id: post.id, base62_sha1: upload.base62_sha1)).to eq(
+    expect(AiPostImageCaption.exists?(post_id: post.id, base62_sha1: upload.base62_sha1)).to eq(
       false,
     )
   end
 
   it "keeps stored descriptions when the feature is disabled" do
     store_description("A stored description")
-    SiteSetting.ai_post_image_descriptions_enabled = false
+    SiteSetting.ai_post_image_captions_enabled = false
 
     described_class.process_cooked(Nokogiri::HTML5.fragment("<p>No image</p>"), post, locale: "en")
 
-    expect(AiPostImageDescription.exists?(post_id: post.id, base62_sha1: upload.base62_sha1)).to eq(
+    expect(AiPostImageCaption.exists?(post_id: post.id, base62_sha1: upload.base62_sha1)).to eq(
       true,
     )
   end
@@ -327,10 +330,10 @@ describe DiscourseAi::PostImageDescriptions do
 
     PostDestroyer.new(admin, post).destroy
 
-    expect(AiPostImageDescription.exists?(post_id: post.id)).to eq(true)
+    expect(AiPostImageCaption.exists?(post_id: post.id)).to eq(true)
 
     PostDestroyer.new(admin, post.reload, force_destroy: true).destroy
 
-    expect(AiPostImageDescription.exists?(post_id: post.id)).to eq(false)
+    expect(AiPostImageCaption.exists?(post_id: post.id)).to eq(false)
   end
 end

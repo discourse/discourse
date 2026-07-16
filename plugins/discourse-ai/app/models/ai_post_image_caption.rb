@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class AiPostImageDescription < ActiveRecord::Base
+class AiPostImageCaption < ActiveRecord::Base
   belongs_to :post
   belongs_to :upload
 end
 
 # == Schema Information
 #
-# Table name: ai_post_image_descriptions
+# Table name: ai_post_image_captions
 #
 #  id                :bigint           not null, primary key
 #  attempts          :integer          default(0), not null
@@ -23,6 +23,6 @@ end
 #
 # Indexes
 #
-#  idx_ai_post_image_descriptions_lookup  (post_id,locale,base62_sha1) UNIQUE
-#  idx_ai_post_image_descriptions_reuse   (base62_sha1,locale)
+#  idx_ai_post_image_captions_lookup  (post_id,locale,base62_sha1) UNIQUE
+#  idx_ai_post_image_captions_reuse   (base62_sha1,locale)
 #
