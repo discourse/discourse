@@ -65,6 +65,24 @@ const trackFieldsHeight = modifier((element) => {
   };
 });
 
+const PmUserSelector = <template>
+  <div class="user-selector">
+    <ComposerUserSelector
+      @topicId={{@topicId}}
+      @recipients={{@model.targetRecipients}}
+      @hasGroups={{@model.hasTargetGroups}}
+      @focusTarget={{@focusTarget}}
+      class={{dConcatClass "users-input" (if @showWarning "can-warn")}}
+    />
+    {{#if @showWarning}}
+      <label class="add-warning">
+        <Input @type="checkbox" @checked={{@model.isWarning}} />
+        <span>{{i18n "composer.add_warning"}}</span>
+      </label>
+    {{/if}}
+  </div>
+</template>;
+
 export default class ComposerContainer extends Component {
   @service composer;
   @service languageNameLookup;
@@ -365,33 +383,30 @@ export default class ComposerContainer extends Component {
                 />
                 {{#unless this.composer.model.viewFullscreen}}
                   {{#if this.composer.model.canEditTitle}}
+                    {{#unless this.composerRedesign}}
+                      {{#if this.composer.model.creatingPrivateMessage}}
+                        <PmUserSelector
+                          @topicId={{this.composer.topicModel.id}}
+                          @model={{this.composer.model}}
+                          @focusTarget={{this.composer.focusTarget}}
+                          @showWarning={{this.composer.showWarning}}
+                        />
+                      {{/if}}
+                    {{/unless}}
 
                     <div
                       class="title-and-category
                         {{if this.composer.isPreviewVisible 'with-preview'}}"
                     >
-                      {{#if this.composer.model.creatingPrivateMessage}}
-                        <div class="user-selector">
-                          <ComposerUserSelector
+                      {{#if this.composerRedesign}}
+                        {{#if this.composer.model.creatingPrivateMessage}}
+                          <PmUserSelector
                             @topicId={{this.composer.topicModel.id}}
-                            @recipients={{this.composer.model.targetRecipients}}
-                            @hasGroups={{this.composer.model.hasTargetGroups}}
+                            @model={{this.composer.model}}
                             @focusTarget={{this.composer.focusTarget}}
-                            class={{dConcatClass
-                              "users-input"
-                              (if this.composer.showWarning "can-warn")
-                            }}
+                            @showWarning={{this.composer.showWarning}}
                           />
-                          {{#if this.composer.showWarning}}
-                            <label class="add-warning">
-                              <Input
-                                @type="checkbox"
-                                @checked={{this.composer.model.isWarning}}
-                              />
-                              <span>{{i18n "composer.add_warning"}}</span>
-                            </label>
-                          {{/if}}
-                        </div>
+                        {{/if}}
                       {{/if}}
 
                       {{#unless this.composerRedesign}}
