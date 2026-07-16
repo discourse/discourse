@@ -199,9 +199,7 @@ module DiscourseWorkflows
 
           add_review_score(reviewable, actor, reason)
 
-          if flag_type == "review_hide"
-            post.hide!(PostActionType.types[:notify_moderators])
-          end
+          post.hide!(PostActionType.types[:notify_moderators]) if flag_type == "review_hide"
 
           reviewable
         end
