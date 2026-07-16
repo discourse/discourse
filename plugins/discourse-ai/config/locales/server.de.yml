@@ -148,7 +148,6 @@ de:
       description: "Dieser Bericht enthält eine Stimmungsanalyse für Beiträge, gruppiert nach Kategorie, mit positiven, negativen und neutralen Bewertungen für jeden Beitrag und jede Kategorie."
     overall_sentiment:
       title: "Allgemeine Stimmung"
-      description: 'Das Diagramm vergleicht die Anzahl der Beiträge, die entweder als positiv oder negativ eingestuft werden. Sie werden berechnet, wenn die positive oder negative Bewertung über dem festgelegten Schwellenwert liegt. Das bedeutet, dass neutrale Beiträge nicht angezeigt werden. Persönliche Nachrichten (PN) sind ebenfalls ausgeschlossen. Klassifiziert mit „cardiffnlp/twitter-roberta-base-sentiment-latest“'
       xaxis: "Positiv (%)"
       yaxis: "Datum"
     emotion_admiration:
@@ -337,8 +336,6 @@ de:
         explain: "Erklären"
         illustrate_post: "Beitrag illustrieren"
         replace_dates: "Intelligente Termine"
-      image_caption:
-        attribution: "Beschriftet durch KI"
     share_ai:
       read_more: "Vollständiges Transkript lesen"
       onebox_title: "KI-Unterhaltung mit %{llm_name}"
@@ -447,7 +444,6 @@ de:
           description: "Standard-Agent für die Übersetzerfunktion des Helfers"
         image_captioner:
           name: "Bildbeschriftungen"
-          description: "Standard-Agent für die Bildbeschriftungsfunktion des Helfers"
         locale_detector:
           name: "Sprachdetektor"
           description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."

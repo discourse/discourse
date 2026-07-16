@@ -765,7 +765,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           )
         end
 
-        agent.update!(max_context_posts: 4, enabled: true)
+        agent.update!(enabled: true)
 
         prompts = nil
         DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -790,11 +790,15 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             .join("\n")
             .strip
 
-        # why?
-        # 1. we set context to 4
-        # 2. however PromptMessagesBuilder will enforce rules of starting with :user and ending with it
-        # so one of the model messages is dropped
         expected = <<~TEXT.strip
+          user: Hello
+          model: World
+          user: request 0
+          model: response 0
+          user: request 1
+          model: response 1
+          user: request 2
+          model: response 2
           user: request 3
           model: response 3
           user: Hello
@@ -1573,5 +1577,44 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         playground.reply_to(third_post, existing_reply_post: reply_post)
       end
     }.not_to raise_error
+  end
+
+  describe "retrying a reply in a public topic" do
+    fab!(:public_topic, :topic)
+    fab!(:prompt_post) do
+      Fabricate(:post, topic: public_topic, user: user, raw: "Hello bot, can you help me?")
+    end
+    fab!(:bot_reply) do
+      Fabricate(:post, topic: public_topic, user: bot_user, raw: "This is the first answer")
+    end
+
+    it "revises the existing reply keeping a revision instead of creating a duplicate post" do
+      expect {
+        DiscourseAi::Completions::Llm.with_prepared_responses(["This is the second answer"]) do
+          playground.reply_to(prompt_post, existing_reply_post: bot_reply)
+        end
+      }.not_to change { public_topic.reload.posts.count }
+
+      bot_reply.reload
+      expect(bot_reply.raw).to eq("This is the second answer")
+      expect(bot_reply.revisions.count).to eq(1)
+      expect(bot_reply.custom_fields[DiscourseAi::AiBot::POST_AI_LLM_MODEL_ID_FIELD].to_i).to eq(
+        claude_2.id,
+      )
+    end
+
+    it "raises when the existing reply belongs to a different topic" do
+      other_topic_reply = Fabricate(:post, user: bot_user)
+
+      expect {
+        playground.reply_to(prompt_post, existing_reply_post: other_topic_reply)
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "raises when the existing reply belongs to a different user" do
+      expect { playground.reply_to(prompt_post, existing_reply_post: prompt_post) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
   end
 end

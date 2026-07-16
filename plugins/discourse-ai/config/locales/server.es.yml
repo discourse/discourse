@@ -148,7 +148,6 @@ es:
       description: "Este informe proporciona un análisis de sentimiento para las publicaciones, agrupadas por categoría, con puntuaciones positivas, negativas y neutrales para cada publicación y categoría."
     overall_sentiment:
       title: "Sentimiento general"
-      description: 'El gráfico compara el número de publicaciones clasificadas como positivas o negativas. Se calculan cuando las puntuaciones positivas o negativas superan la puntuación umbral establecida. Esto significa que no se muestran las publicaciones neutrales. También se excluyen los mensajes personales (MP). Clasificados con «cardiffnlp/twitter-roberta-base-sentiment-latest»'
       xaxis: "Positivas(%)"
       yaxis: "Fecha"
     emotion_admiration:
@@ -337,8 +336,6 @@ es:
         explain: "Explicar"
         illustrate_post: "Ilustrar publicación"
         replace_dates: "Fechas inteligentes"
-      image_caption:
-        attribution: "Subtitulado por IA"
     share_ai:
       read_more: "Leer la transcripción completa"
       onebox_title: "Conversación de IA con %{llm_name}"
@@ -447,7 +444,6 @@ es:
           description: "Agente por defecto que impulsa la característica de traductor del ayudante"
         image_captioner:
           name: "Pies de foto"
-          description: "Agente por defecto que impulsa la característica pie de foto del ayudante"
         locale_detector:
           name: "Detector de idioma local"
           description: "Impulsa la característica de traducción al detectar el idioma local de un texto determinado (publicaciones, títulos, etc.)"

@@ -47,10 +47,6 @@ module DiscourseAi
             false
           end
 
-          def always_requires_approval?
-            false
-          end
-
           # When true, the replayed tool (after approval) is given the
           # approving moderator as context.user, so guardian checks and
           # downstream audit logs (StaffActionLogger, UserHistory) credit

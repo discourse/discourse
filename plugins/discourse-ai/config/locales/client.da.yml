@@ -69,6 +69,9 @@ da:
           reset: "Nulstil"
         search:
           name: "Søg"
+        image_caption:
+          setting_groups:
+            settings: "Indstillinger"
         spam:
           name: "Spam"
       modals:
@@ -214,8 +217,6 @@ da:
         thumbnail_suggestions:
           select: "Vælg"
           try_again: "Prøv igen"
-        image_caption:
-          save_caption: "Gem"
       embeddings:
         save: "Gem"
         delete: "Slet"
@@ -228,6 +229,7 @@ da:
           google: "Google"
           fake: "Tilpasset"
       ai_bot:
+        llm: "Model:"
         debug_ai_modal:
           request: "Anmod om medlemskab"
           response: "Svar"

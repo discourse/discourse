@@ -37,8 +37,21 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_helper_translator_agent",
         "ai_helper_markdown_tables_agent",
         "ai_helper_custom_prompt_agent",
-        "ai_helper_image_caption_agent",
         "ai_helper_chat_thread_title_agent",
+      ],
+    },
+  ],
+
+  image_caption: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.image_caption.setting_groups.settings",
+      settings: [
+        "ai_post_image_captions_enabled",
+        "ai_image_caption_agent",
+        "ai_post_image_captions_per_post_limit",
+        "ai_post_image_captions_backfill_hourly_rate",
+        "ai_post_image_captions_backfill_max_age_days",
       ],
     },
   ],

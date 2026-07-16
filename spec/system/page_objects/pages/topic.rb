@@ -116,6 +116,13 @@ module PageObjects
         find_post_action_button(post, button).click
       end
 
+      def open_post_translations(post)
+        click_post_action_button(post, :show_more)
+        click_post_action_button(post, :add_translation)
+        find(".post-action-menu__view-translation").click
+        self
+      end
+
       def find_post_action_buttons(post)
         within_post(post) { find(".post-controls .actions") }
       end

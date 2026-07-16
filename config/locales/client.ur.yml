@@ -4322,8 +4322,9 @@ ur:
           one: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
           other: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
         modal:
-          title: "پوسٹ کے لیے ترجمہ"
+          title: "ترجمہ"
           confirm_delete: "کیا آپ واقعی '%{languageCode}' کے ترجمے حذف کرنا چاہتے ہیں؟"
+          post_language: "دھاگے کی زبان"
         success: "ترجمے کو کامیابی کے ساتھ اپ ڈیٹ کر دیا گیا"
         post_language_selector:
           title: "دھاگے کی زبان"
@@ -5991,6 +5992,22 @@ ur:
               title: "دھاگے اور موضوعات"
             stats_and_thresholds:
               title: "اعدادوشمار اور حد"
+        category_management:
+          create_category: "زمرہ بنائیں"
+          tabs:
+            settings: "سیٹِنگ"
+          types:
+            all:
+              title: "تمام زُمرَہ جات"
+          filter_placeholder: "زمرہ جات چھانیے"
+          table:
+            category: "زُمرَہ"
+            visibility: "نموداری"
+            topics: "موضوعات"
+          visibility:
+            public: "عوامی"
+          visibility_filter:
+            all: "تمام زُمرَہ جات"
         permalinks:
           title: "دائمی لِنکس"
           header_description: "یو آر ایل کے لیے درخواست دینے کے لیے ری ڈائریکشنز جو فورم کو معلوم نہیں"
@@ -6267,6 +6284,7 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
         reports_section:
+          header_action: "مَینَیج"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
           add: "رپورٹ شامل کریں"
           no_data: "دکھانے کے لیے کچھ نہیں"

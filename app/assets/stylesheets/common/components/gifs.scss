@@ -4,35 +4,34 @@
   }
 
   &__input {
-    background: var(--primary-very-low);
-    padding: 0.5em;
     position: relative;
 
-    > input {
+    > input[type="text"] {
       width: 100%;
-      margin-right: 1em;
       margin-bottom: 0;
-    }
-
-    .spinner {
-      position: absolute;
-      right: 1.2em;
-      top: 0.9em;
     }
   }
 
+  &__input-spinner {
+    position: absolute;
+    right: 1.2em;
+    inset-block: 0;
+    display: flex;
+    align-items: center;
+  }
+
   &__content {
-    overflow-y: auto;
     min-width: 320px;
     max-height: 65vh;
     margin-top: 0.5em;
+    flex-shrink: 0;
 
     @media screen and (width >= 768px) {
       min-width: 650px;
     }
 
     @media screen and (width >= 1200px) {
-      min-width: 860px;
+      min-width: 850px;
     }
   }
 
@@ -58,11 +57,11 @@
     font-weight: normal;
   }
 
-  &__loading-categories {
+  &__loading {
     display: flex;
+    flex: 1;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
   }
 
   &__no-results {
@@ -72,6 +71,13 @@
     background: var(--primary-very-low);
     font-weight: bold;
     text-align: center;
+  }
+
+  .d-modal__body {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    height: 65vh;
   }
 
   .d-modal__footer {

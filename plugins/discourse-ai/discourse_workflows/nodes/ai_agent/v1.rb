@@ -19,6 +19,19 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               run_scope: "per_item",
             },
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "result" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               agent_id: {
                 type: :integer,

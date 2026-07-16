@@ -16,6 +16,9 @@ if defined?(DiscourseWorkflows)
             },
             available: -> { SiteSetting.assign_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
+            output_contracts: [
+              { schema: DiscourseAssign::Workflows::Schema::ASSIGN_TOPIC_OUTPUT_SCHEMA },
+            ],
             capabilities: {
               run_scope: "per_item",
             },

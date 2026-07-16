@@ -2824,6 +2824,8 @@ ug:
       default: ئىختىيارى چىراي ئىپادە
     filter_input:
       clear: "سۈزگۈچنى تازىلا"
+    filter_controls:
+      toggle: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     shared_drafts:
       title: "دەسلەپكى نۇسخا ھەمبەھىر"
       notice: "بۇ تېما پەتقەت ھەمبەھىر دەسلەپكى نۇسخا يوللىيالايدىغانلارغىلا كۆرۈنىدۇ."
@@ -4060,8 +4062,9 @@ ug:
           one: "%{count} تەرجىمە قىلىنغان يەرلىك تىلنى كۆرسىتىدۇ"
           other: "%{count} تەرجىمە قىلىنغان يەرلىك تىلنى كۆرسىتىدۇ"
         modal:
-          title: "يازمىنىڭ تەرجىمىسى"
+          title: "تەرجىمە"
           confirm_delete: "«%{languageCode}» نىڭ تەرجىمىسىنى راستتىنلا ئۆچۈرەمسىز؟"
+          discard_language_change: "ئۆزگەرتىشنى تاشلىۋەت"
         success: "تەرجىمە مۇۋەپپەقىيەتلىك يېڭىلاندى"
         post_language_selector:
           none: "تەڭشەلمىدى"
@@ -5404,7 +5407,6 @@ ug:
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
-    toggle_filters: "تارتما سۈزگۈچنى ئالماشتۇرىدۇ"
     admin:
       title: "Discourse باشقۇرغۇچى"
       moderator: "رىياسەتچى"
@@ -5758,6 +5760,21 @@ ug:
               title: "يازما ۋە تېما"
             stats_and_thresholds:
               title: "ئىستاتىستىكا ۋە بوسۇغا قىممىتى"
+        category_management:
+          tabs:
+            settings: "تەڭشەك"
+          types:
+            all:
+              title: "ھەممە سەھىپە"
+          filter_placeholder: "سەھىپە سۈزگۈچ"
+          table:
+            category: "سەھىپە"
+            visibility: "كۆرۈنۈشچانلىقى"
+            topics: "تېما"
+          visibility:
+            public: "ئاممىۋى"
+          visibility_filter:
+            all: "ھەممە سەھىپە"
         permalinks:
           title: "ئۆزگەرمەس ئۇلانما"
           header_description: "مۇنبەر تونۇيالمىغان تور ئادرېسى قوللىنىشىنىڭ قايتا نىشانلىنىشى"
@@ -5969,6 +5986,7 @@ ug:
               searches: "ئىزدەش نەتىجىسى"
               status: "ھالەت"
         reports_section:
+          header_action: "باشقۇرۇش"
           no_data: "كۆرسىتىدىغان سانلىق مەلۇمات يوق"
           modal:
             enabled_heading: "قوزغىتىلدى"

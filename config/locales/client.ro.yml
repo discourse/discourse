@@ -3013,8 +3013,9 @@ ro:
           few: "Vezi %{count} locale traduse"
           other: "Vezi %{count} de locale traduse"
         modal:
-          title: "Traduceri pentru postare"
+          title: "Traduceri"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
+          discard_language_change: "Renunță la modificare"
         success: "Traducerile au fost actualizate cu succes"
         edit_warning:
           action_original: "Editează postarea originală"
@@ -4132,6 +4133,20 @@ ro:
               title: "Postări și subiecte"
             stats_and_thresholds:
               title: "Statistici și praguri"
+        category_management:
+          tabs:
+            settings: "Setări"
+          types:
+            all:
+              title: "Toate categoriile"
+          table:
+            category: "Categorie"
+            visibility: "Vizibilitate"
+            topics: "Discuții"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toate categoriile"
         permalinks:
           title: "Legături permanente"
         user_defaults:
@@ -4296,6 +4311,7 @@ ro:
               searches: "Căutări"
               status: "Stare"
         reports_section:
+          header_action: "Gestionează"
           add: "Adaugă raport"
           remove: "Elimină raportul"
           no_data: "Nu există date de afișat"

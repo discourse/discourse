@@ -44,6 +44,10 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
+extend_content_security_policy(
+  script_src: %w[https://source.zoom.us],
+  worker_src: %w[https://source.zoom.us blob:],
+)
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -119,6 +123,7 @@ end
 require_relative "lib/discourse_calendar/engine"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
+require_relative "lib/discourse_calendar/livestream/zoom_url_parser"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))

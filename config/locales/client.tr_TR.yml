@@ -2908,6 +2908,9 @@ tr_TR:
       default: Özel emoji'ler
     filter_input:
       clear: "Filtreyi temizle"
+    filter_controls:
+      reset: "Filtreyi sıfırla"
+      toggle: "Açılır filtreleri değiştir"
     d_icon_grid_picker:
       select_icon: "Simgeyi seç"
       search_placeholder: "Arama simgeleri..."
@@ -4305,8 +4308,10 @@ tr_TR:
           one: "%{count} çevrilmiş yerel ayarı görüntüle"
           other: "%{count} çevrilmiş yerel ayarı görüntüle"
         modal:
-          title: "Gönderi için çeviriler"
+          title: "Çeviriler"
           confirm_delete: "\"%{languageCode}\" için çevirileri silmek istediğinizden emin misiniz?"
+          post_language: "Gönderinin dili"
+          discard_language_change: "Değişikliği sil"
         success: "Çeviriler başarıyla güncellendi"
         post_language_selector:
           title: "Gönderinin dili"
@@ -5731,8 +5736,6 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
-    reset_filter: "Filtreyi sıfırla"
-    toggle_filters: "Açılır filtreleri değiştir"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -6153,6 +6156,22 @@ tr_TR:
               title: "Gönderiler ve konular"
             stats_and_thresholds:
               title: "İstatistikler ve eşikler"
+        category_management:
+          create_category: "Kategori oluştur"
+          tabs:
+            settings: "Ayarlar"
+          types:
+            all:
+              title: "Tüm kategoriler"
+          filter_placeholder: "Kategorileri filtrele"
+          table:
+            category: "Kategori"
+            visibility: "Görünürlük"
+            topics: "Konular"
+          visibility:
+            public: "Genel"
+          visibility_filter:
+            all: "Tüm kategoriler"
         permalinks:
           title: "Kalıcı Bağlantılar"
           header_description: "Forum tarafından bilinmeyen URL'lere başvuruda bulunmak için yönlendirmeler"
@@ -6377,6 +6396,7 @@ tr_TR:
               searches: "Aramalar"
               status: "Durum"
         reports_section:
+          header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
           modal:
             enabled_heading: "Etkin mi"

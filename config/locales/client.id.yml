@@ -2468,6 +2468,20 @@ id:
           sub_pages:
             settings:
               title: "Pengaturan"
+        category_management:
+          tabs:
+            settings: "Pengaturan"
+          types:
+            all:
+              title: "Semua kategori"
+          filter_placeholder: "Kategori filter"
+          table:
+            category: "Kategori"
+            topics: "Topik"
+          visibility:
+            public: "Umum"
+          visibility_filter:
+            all: "Semua kategori"
         email_logs:
           sub_pages:
             sent:
@@ -2514,6 +2528,7 @@ id:
             table:
               status: "Status"
         reports_section:
+          header_action: "Mengelola"
           modal:
             enabled_heading: "Diaktifkan"
             apply: "menerapkan"

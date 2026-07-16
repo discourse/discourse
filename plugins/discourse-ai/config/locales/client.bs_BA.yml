@@ -60,6 +60,9 @@ bs_BA:
           reset: "Resetovati"
         search:
           name: "Pretraži"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Spam"
       modals:
@@ -173,8 +176,6 @@ bs_BA:
           cancel: "Odustani"
         thumbnail_suggestions:
           try_again: "Pokušaj ponovo"
-        image_caption:
-          save_caption: "Sačuvaj"
       embeddings:
         save: "Sačuvaj"
         delete: "Delete"

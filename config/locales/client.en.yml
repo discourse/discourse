@@ -55,9 +55,10 @@ en:
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
-        access_permission_remove_description: "Remove permission for this group"
-        add_group: "Add group"
-        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
+        access_permission_remove_description: "Remove permission for this grantee"
+        add_group: "Add user or group"
+        mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
+        mandatory: "Mandatory"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -3214,6 +3215,10 @@ en:
     filter_input:
       clear: "Clear filter"
 
+    filter_controls:
+      reset: "Reset filter"
+      toggle: "Toggle dropdown filters"
+
     d_icon_grid_picker:
       select_icon: "Select icon"
       search_placeholder: "Search icons..."
@@ -4876,8 +4881,16 @@ en:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
         modal:
-          title: "Translations for post"
+          title: "Translations"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
+          language_notice: "Set the original post language so translations can be shown to readers."
+          post_language: "Post language"
+          topic_language: "Topic title language"
+          save_post_language: "Save post language"
+          save_topic_language: "Save topic title language"
+          discard_language_change: "Discard change"
+          post_language_updated: "Post language updated"
+          topic_language_updated: "Topic title language updated"
         success: "Translations have been updated successfully"
         post_language_selector:
           title: "Post language"
@@ -6478,8 +6491,6 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset filter"
-    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -6929,6 +6940,32 @@ en:
               title: "Posts & topics"
             stats_and_thresholds:
               title: "Stats & thresholds"
+        category_management:
+          title: "Category management"
+          header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
+          keywords: "categories|category types|discussion|category management"
+          create_category: "Create category"
+          tabs:
+            settings: "Settings"
+          types:
+            unavailable: "The category type %{categoryType} is not available."
+            all:
+              title: "All categories"
+              description: "All categories across every configured category type."
+          filter_placeholder: "Filter categories"
+          no_results: "No %{type} categories found."
+          open_settings: "Open settings"
+          table:
+            category: "Category"
+            visibility: "Visibility"
+            topics: "Topics"
+          visibility:
+            public: "Public"
+            restricted: "Restricted"
+          visibility_filter:
+            all: "All categories"
+            public: "Public categories"
+            restricted: "Restricted categories"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
@@ -7142,6 +7179,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        fetch_error: "Couldn't load the dashboard. Try refreshing the page."
         stable: "stable"
 
         sections:
@@ -7149,6 +7187,7 @@ en:
             title: "Highlights"
           reports:
             title: "Reports"
+            fetch_error: "Couldn't load reports. Try refreshing the page."
           traffic:
             title: "Site traffic"
           engagement:
@@ -7271,6 +7310,7 @@ en:
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
         reports_section:
+          header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"

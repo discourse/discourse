@@ -140,7 +140,6 @@ discourse_ai:
     choices:
       - "suggestions"
       - "context_menu"
-      - "image_caption"
     area: "ai-features/ai_helper"
   ai_helper_proofreader_agent:
     default: "-22"
@@ -182,11 +181,30 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_agent:
+  ai_image_caption_agent:
     default: "-26"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
-    area: "ai-features/ai_helper"
+    validator: "DiscourseAi::Configuration::ImageCaptionAgentValidator"
+    area: "ai-features/image_caption"
+  ai_post_image_captions_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::ImageCaptionEnabledValidator"
+    area: "ai-features/image_caption"
+  ai_post_image_captions_per_post_limit:
+    default: 10
+    min: 1
+    area: "ai-features/image_caption"
+  ai_post_image_captions_backfill_hourly_rate:
+    default: 0
+    min: 0
+    area: "ai-features/image_caption"
+  ai_post_image_captions_backfill_max_age_days:
+    default: 30
+    min: 1
+    max: 10000
+    area: "ai-features/image_caption"
   ai_helper_chat_thread_title_agent:
     default: "-35"
     type: enum

@@ -136,19 +136,22 @@ class AccessControlList < ActiveRecord::Base
     permissions_expanded =
       list.each_with_object({}) do |entry, permissions|
         permissions[entry[:permission]] ||= {}
-        # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
         permissions[entry[:permission]][:allowed_group_ids] ||= []
+        permissions[entry[:permission]][:allowed_user_ids] ||= []
 
         if entry[:type].to_sym == :group
           permissions[entry[:permission]][:allowed_group_ids] << entry[:id]
-          # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
+        end
+
+        if entry[:type].to_sym == :user
+          permissions[entry[:permission]][:allowed_user_ids] << entry[:id]
         end
       end
 
     permissions_expanded.map do |permission_name, permission|
       {
         permission: permission_name,
-        # TODO (martin) Handle allowed_user_ids here too in a followup PR when we allow adding them in the UI.
+        allowed_user_ids: permission[:allowed_user_ids],
         allowed_group_ids: permission[:allowed_group_ids],
         target_type: target.class.polymorphic_name,
         target_id: target.id,
@@ -188,17 +191,52 @@ class AccessControlList < ActiveRecord::Base
       acls = to_a
 
       groups_by_id = Group.where(id: acls.flat_map(&:allowed_group_ids).uniq).index_by(&:id)
-
-      # TODO (martin) Handle users here too in a followup PR
-      # users_by_id = User.where(id: acls.flat_map(&:allowed_user_ids).uniq).index_by(&:id)
+      users_by_id = User.where(id: acls.flat_map(&:allowed_user_ids).uniq).index_by(&:id)
 
       acls.each do |acl|
         acl.allowed_groups_preloaded ||= acl.allowed_group_ids.filter_map { |id| groups_by_id[id] }
-
-        # TODO (martin) Handle users here too in a followup PR
+        acl.allowed_users_preloaded ||= acl.allowed_user_ids.filter_map { |id| users_by_id[id] }
       end
 
       self
+    end
+
+    def build_acl_entry(access_control_list, target_klass, type, id, allowed_object, for_target)
+      mandatory =
+        target_klass.acl_is_mandatory?({ type:, id:, permission: access_control_list.permission })
+
+      list_entry = {
+        type:,
+        id:,
+        mandatory:,
+        permission: access_control_list.permission,
+        display_name: build_display_name(type, allowed_object),
+      }
+
+      if type == :user
+        list_entry[:avatar_template] = allowed_object.avatar_template
+        list_entry[:username] = allowed_object.username
+      end
+
+      list_entry[:metadata] = { auto_group: allowed_object.automatic? } if type == :group
+
+      if for_target.present?
+        list_entry[:target_id] = for_target.id
+        list_entry[:target_type] = target_klass.polymorphic_name
+      else
+        list_entry[:target_id] = access_control_list.target_id
+        list_entry[:target_type] = target_klass.polymorphic_name
+      end
+
+      list_entry
+    end
+
+    def build_display_name(type, allowed_object)
+      if type == :group
+        allowed_object.full_name.presence || allowed_object.name
+      else
+        allowed_object.display_name
+      end
     end
 
     # Used to display a list of user/group -> permission mappings
@@ -209,14 +247,10 @@ class AccessControlList < ActiveRecord::Base
     # an array of hashes in this format:
     #
     # {
-    #  type: :group,
+    #  type: :group/:user,
     #  id: 3,
     #  permission: "edit",
-    #  name: "Group Name", # only for groups
-    #  full_name: "Full Group Name", # only for groups
-    #  metadata: {
-    #    auto_group: true/false, # only for groups
-    #  },
+    #  display_name: "Group Name",
     #  target_id: 123, # only if for_target is not provided
     #  target_type: "Category" # only if for_target is not provided
     # }
@@ -257,35 +291,36 @@ class AccessControlList < ActiveRecord::Base
 
           next if allowed_group.nil?
 
-          mandatory =
-            target_klass.acl_is_mandatory?(
-              { type: :group, id: group_id, permission: access_control_list.permission },
+          list_entry =
+            build_acl_entry(
+              access_control_list,
+              target_klass,
+              :group,
+              group_id,
+              allowed_group,
+              for_target,
             )
-
-          list_entry = {
-            type: :group,
-            id: group_id,
-            mandatory:,
-            permission: access_control_list.permission,
-            display_name: allowed_group.full_name.presence || allowed_group.name,
-            metadata: {
-              auto_group: allowed_group.automatic?,
-            },
-          }
-
-          if for_target.present?
-            list_entry[:target_id] = for_target.id
-            list_entry[:target_type] = target_klass.polymorphic_name
-          else
-            list_entry[:target_id] = access_control_list.target_id
-            list_entry[:target_type] = target_klass.polymorphic_name
-          end
 
           flattened_list << list_entry
         end
 
-        # TODO (martin) Properly handle users in a followup PR when we allow adding
-        # them in the UI.
+        access_control_list.allowed_user_ids.each do |user_id|
+          allowed_user = access_control_list.allowed_users_preloaded.find { |au| au.id == user_id }
+
+          next if allowed_user.nil?
+
+          list_entry =
+            build_acl_entry(
+              access_control_list,
+              target_klass,
+              :user,
+              user_id,
+              allowed_user,
+              for_target,
+            )
+
+          flattened_list << list_entry
+        end
       end
 
       flattened_list

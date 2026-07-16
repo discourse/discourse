@@ -3848,8 +3848,9 @@ it:
           one: "Visualizza %{count} lingua tradotta"
           other: "Visualizza %{count} lingue tradotte"
         modal:
-          title: "Traduzioni per messaggio"
+          title: "Traduzioni"
           confirm_delete: "Vuoi davvero eliminare le traduzioni per '%{languageCode}'?"
+          discard_language_change: "Annulla modifica"
         success: "Le traduzioni sono state aggiornate con successo"
         post_language_selector:
           none: "Non impostato"
@@ -5441,6 +5442,21 @@ it:
               title: "Messaggi e argomenti"
             stats_and_thresholds:
               title: "Statistiche e soglie"
+        category_management:
+          tabs:
+            settings: "Impostazioni"
+          types:
+            all:
+              title: "Tutte le categorie"
+          filter_placeholder: "Filtra le categorie"
+          table:
+            category: "Categoria"
+            visibility: "Visibilità"
+            topics: "Argomenti"
+          visibility:
+            public: "Pubblico"
+          visibility_filter:
+            all: "Tutte le categorie"
         permalinks:
           title: "Permalink"
           header_description: "Reindirizzamenti da applicare per URL non conosciuti dal forum"
@@ -5655,6 +5671,7 @@ it:
               searches: "Ricerche"
               status: "Stato"
         reports_section:
+          header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
           modal:
             enabled_heading: "Abilitato"

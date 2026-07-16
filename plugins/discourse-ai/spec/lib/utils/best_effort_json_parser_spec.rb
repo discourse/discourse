@@ -161,6 +161,39 @@ RSpec.describe DiscourseAi::Utils::BestEffortJsonParser do
       end
     end
 
+    context "with responses where JSON streaming broke" do
+      # regression specs for https://meta.discourse.org/t/407251
+      it "extracts the complete value when string values contain real newlines" do
+        content = "First line.\n\nA \"quoted\" word 😊 and everything after it."
+        input = { output: content }.to_json.gsub("\\n", "\n")
+
+        result = described_class.extract_key(input, "string", :output)
+
+        expect(result).to eq(content)
+      end
+
+      it "completes truncated JSON instead of scraping garbage" do
+        input = "{\"output\": \"A translation that got cut off midway thro"
+
+        result = described_class.extract_key(input, "string", :output)
+
+        expect(result).to eq("A translation that got cut off midway thro")
+      end
+
+      it "casts values to numbers for integer schemas" do
+        expect(described_class.extract_key('{"output": 42}', "integer", :output)).to eq(42)
+      end
+
+      it "recovers when the model emits stray characters before the JSON object" do
+        content = "Olá a todos! 😊\nVeja \"aspas\" e `List<string>` aqui."
+        input = "{\"#{{ output: content }.to_json}"
+
+        result = described_class.extract_key(input, "string", :output)
+
+        expect(result).to eq(content)
+      end
+    end
+
     context "when very broken JSON is entered" do
       it "returns empty string when no valid JSON can be extracted for string type" do
         input = "This is just plain text with no JSON"

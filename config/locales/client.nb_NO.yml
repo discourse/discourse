@@ -3428,6 +3428,8 @@ nb_NO:
           actions: "Handlinger"
           edit: "Endre"
           delete: "Slett"
+        modal:
+          title: "Oversettelser"
         post_language_selector:
           none: "Ikke angitt"
       errors:
@@ -4423,6 +4425,20 @@ nb_NO:
               title: "Innstillinger"
         badges:
           title: "Merker"
+        category_management:
+          tabs:
+            settings: "Innstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalenker"
         emoji:
@@ -4548,6 +4564,7 @@ nb_NO:
               searches: "Søk"
               status: "Status"
         reports_section:
+          header_action: "Behandle"
           no_data: "Ingen data å vise"
           modal:
             enabled_heading: "Aktivert"

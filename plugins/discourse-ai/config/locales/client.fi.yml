@@ -18,7 +18,6 @@ fi:
       dashboard:
         emotion:
           title: "Tunne"
-          description: "Taulukossa luetellaan määritetyllä tunteella luokiteltujen viestien lukumäärä. Luokiteltu mallilla \"SamLowe/roberta-base-go_emotions\"."
         reports:
           filters:
             group_by:
@@ -227,11 +226,13 @@ fi:
           translate: "Käännä"
           markdown_tables: "Luo markdown-taulukko"
           custom_prompt: "Mukautettu kehote"
-          image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
           post_illustrator: "Viestin havainnollistaja"
           setting_groups:
             automation: "Automaatio"
+        image_caption:
+          setting_groups:
+            settings: "Asetukset"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -364,8 +365,6 @@ fi:
         overwrite: "Korvaa"
         description: "Kuvaus"
         no_llm_selected: "Kielimallia ei ole valittu"
-        max_context_posts: "Kontekstiviestien enimmäismäärä"
-        max_context_posts_help: "Kontekstina käytettävien viestien enimmäismäärä, kun tekoäly vastaa käyttäjälle (käytä oletusta jättämällä tyhjäksi)"
         vision_max_pixel_sizes:
           low: Heikko laatu – halvin (256x256)
           medium: Keskilaatuinen (512x512)
@@ -556,7 +555,7 @@ fi:
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"
-          ai_helper_image_caption: "Kuvateksti"
+          ai_image_caption: "Kuvateksti"
           ai_summarization: "Tee yhteenveto"
           ai_embeddings_semantic_search: "Tekoälyhaku"
           ai_spam: "Roskaposti"
@@ -667,11 +666,6 @@ fi:
           select: "Valitse"
           selected: "Valittu"
           try_again: "Yritä uudelleen"
-        image_caption:
-          button_label: "Kuvateksti tekoälyllä"
-          generating: "Luodaan kuvatekstiä..."
-          credits: "Tekoälyn laatima kuvateksti"
-          save_caption: "Tallenna"
         no_content_error: "Lisää ensin sisältöä tehdäksesi tekoälytoimia sille"
       reviewables:
         model_used: "Käytetty malli:"
@@ -743,7 +737,7 @@ fi:
         click_to_run_label: "Suorita artefakti"
       ai_bot:
         title: "Tekoälybotti"
-        llm: "Malli"
+        llm: "Malli:"
         pm_warning: "Valvojat tarkkailevat säännöllisesti tekoälychatbotin viestejä"
         cancel_streaming: "Lopeta vastaus"
         try_again: "Yritä uudelleen"

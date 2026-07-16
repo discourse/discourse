@@ -2895,6 +2895,9 @@ nl:
       default: Eigen emoji's
     filter_input:
       clear: "Filter wissen"
+    filter_controls:
+      reset: "Filter resetten"
+      toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
       search_placeholder: "Pictogrammen zoeken..."
@@ -4280,8 +4283,10 @@ nl:
           one: "%{count} vertaalde taal weergeven"
           other: "%{count} vertaalde talen weergeven"
         modal:
-          title: "Vertalingen voor bericht"
+          title: "Vertalingen"
           confirm_delete: "Weet je zeker dat je vertalingen voor '%{languageCode}' wilt verwijderen?"
+          post_language: "Berichttaal"
+          discard_language_change: "Wijziging negeren"
         success: "Vertalingen zijn bijgewerkt"
         post_language_selector:
           title: "Berichttaal"
@@ -5706,8 +5711,6 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
-    reset_filter: "Filter resetten"
-    toggle_filters: "Vervolgkeuzemenufilters in-/uitschakelen"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -6128,6 +6131,22 @@ nl:
               title: "Berichten en topics"
             stats_and_thresholds:
               title: "Statistieken en drempels"
+        category_management:
+          create_category: "Categorie maken"
+          tabs:
+            settings: "Instellingen"
+          types:
+            all:
+              title: "Alle categorieën"
+          filter_placeholder: "Filter categorieën"
+          table:
+            category: "Categorie"
+            visibility: "Zichtbaarheid"
+            topics: "Topics"
+          visibility:
+            public: "Openbaar"
+          visibility_filter:
+            all: "Alle categorieën"
         permalinks:
           title: "Permalinks"
           header_description: "Toe te passen omleidingen voor URL's die onbekend zijn voor het forum"
@@ -6352,6 +6371,7 @@ nl:
               searches: "Zoekopdrachten"
               status: "Status"
         reports_section:
+          header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
           modal:
             enabled_heading: "Ingeschakeld"

@@ -3877,8 +3877,9 @@ fr:
           one: "Afficher %{count} paramètre régional traduit"
           other: "Afficher %{count} paramètres régionaux traduits"
         modal:
-          title: "Traductions de la publication"
+          title: "Traductions"
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
+          discard_language_change: "Annuler la modification"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
           none: "Non défini"
@@ -5470,6 +5471,21 @@ fr:
               title: "Publications et sujets"
             stats_and_thresholds:
               title: "Statistiques et seuils"
+        category_management:
+          tabs:
+            settings: "Paramètres"
+          types:
+            all:
+              title: "Toutes les catégories"
+          filter_placeholder: "Filtrer les catégories"
+          table:
+            category: "Catégorie"
+            visibility: "Visibilité"
+            topics: "Sujets"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toutes les catégories"
         permalinks:
           title: "Permaliens"
           header_description: "Redirections à appliquer pour les URL non connues par le forum"
@@ -5684,6 +5700,7 @@ fr:
               searches: "Recherches"
               status: "Statut"
         reports_section:
+          header_action: "Gérer"
           no_data: "Aucune donnée à afficher"
           modal:
             enabled_heading: "Activé"

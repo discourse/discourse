@@ -13,6 +13,7 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
     SiteSetting.calendar_enabled = true
     SiteSetting.chat_enabled = true
     SiteSetting.discourse_post_event_enabled = true
+    topic_livestream.cache_livestream_onebox
     sign_in(admin)
   end
 

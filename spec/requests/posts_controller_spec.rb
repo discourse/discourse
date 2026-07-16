@@ -1564,6 +1564,7 @@ RSpec.describe PostsController do
         end
 
         it "does not silence when the post cannot be queued" do
+          SiteSetting.newuser_max_embedded_media = 1
           topic = Fabricate(:topic)
           user.change_trust_level!(TrustLevel[0])
 

@@ -3061,6 +3061,8 @@ cs:
       default: Vlastní emoji
     filter_input:
       clear: "Vymazat filtr"
+    filter_controls:
+      toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -4474,8 +4476,9 @@ cs:
           many: "Zobrazit %{count} překladů"
           other: "Zobrazit %{count} překladů"
         modal:
-          title: "Překlady pro příspěvek"
+          title: "Překlady"
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
+          discard_language_change: "Zahodit změnu"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
           none: "Nenastaveno"
@@ -5962,7 +5965,6 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
-    toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -6358,6 +6360,22 @@ cs:
               title: "Příspěvky a témata"
             stats_and_thresholds:
               title: "Statistiky a prahové hodnoty"
+        category_management:
+          create_category: "Vytvořit kategorii"
+          tabs:
+            settings: "Nastavení"
+          types:
+            all:
+              title: "Všechny kategorie"
+          filter_placeholder: "Filtrovat kategorie"
+          table:
+            category: "Kategorie"
+            visibility: "Viditelnost"
+            topics: "Témata"
+          visibility:
+            public: "Veřejná"
+          visibility_filter:
+            all: "Všechny kategorie"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Přesměrování se použije pro adresy URL, které fórum nezná"
@@ -6580,6 +6598,7 @@ cs:
               searches: "Hledání"
               status: "Stav"
         reports_section:
+          header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
           modal:
             enabled_heading: "Zapnuto"

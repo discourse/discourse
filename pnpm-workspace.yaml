@@ -3,6 +3,7 @@ strictDepBuilds: true
 onlyBuiltDependencies:
 - lefthook
 ignoredBuiltDependencies:
+- "@zoom/meetingsdk"
 - core-js
 - rete
 packages:

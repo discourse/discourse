@@ -214,7 +214,9 @@ export default class AiAgentLlmSelector extends Component {
       }
     }
 
-    this.args.setAgentId(this._value);
+    // deferred: the parent tracks state already consumed by templates
+    // rendered before this component
+    next(() => this.args.setAgentId(this._value));
   }
 
   #loadStoredLlm() {
@@ -260,6 +262,7 @@ export default class AiAgentLlmSelector extends Component {
             @options={{hash
               icon=(if @showLabels "angle-down" "robot")
               filterable=this.filterable
+              customStyle=true
             }}
           />
         </div>
@@ -273,7 +276,10 @@ export default class AiAgentLlmSelector extends Component {
             class="agent-llm-selector__llm-dropdown"
             @value={{this.currentLlm}}
             @content={{this.llmOptions}}
-            @options={{hash icon=(if @showLabels "angle-down" "globe")}}
+            @options={{hash
+              icon=(if @showLabels "angle-down" "globe")
+              customStyle=true
+            }}
           />
         </div>
       {{/if}}

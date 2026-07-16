@@ -24,6 +24,9 @@ ko:
             topic_id:
               label: 글 ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "채팅"
       invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
       on_holiday: "휴일"
       disable_holiday: "비활성화"

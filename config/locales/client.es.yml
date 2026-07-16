@@ -2893,6 +2893,9 @@ es:
       default: Emojis personalizados
     filter_input:
       clear: "Limpiar filtro"
+    filter_controls:
+      reset: "Quitar filtro"
+      toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
       search_placeholder: "Buscar iconos..."
@@ -4236,8 +4239,9 @@ es:
           one: "Ver %{count} traducción a idioma local"
           other: "Ver %{count} traducciones a idiomas locales"
         modal:
-          title: "Traducciones de la publicación"
+          title: "Traducciones"
           confirm_delete: "¿Seguro que quieres eliminar las traducciones de «%{languageCode}»?"
+          discard_language_change: "Descartar cambio"
         success: "Las traducciones se han actualizado correctamente"
         post_language_selector:
           none: "No establecido"
@@ -5647,8 +5651,6 @@ es:
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
-    reset_filter: "Quitar filtro"
-    toggle_filters: "Activar/desactivar filtros desplegables"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -6061,6 +6063,22 @@ es:
               title: "Publicaciones y temas"
             stats_and_thresholds:
               title: "Estadísticas y umbrales"
+        category_management:
+          create_category: "Crear categoría"
+          tabs:
+            settings: "Ajustes"
+          types:
+            all:
+              title: "Todas las categorías"
+          filter_placeholder: "Filtrar categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidad"
+            topics: "Temas"
+          visibility:
+            public: "Público"
+          visibility_filter:
+            all: "Todas las categorías"
         permalinks:
           title: "Enlaces permanentes"
           header_description: "Redirecciones para URL que no existan ya en el foro"
@@ -6283,6 +6301,7 @@ es:
               searches: "Búsquedas"
               status: "Estado"
         reports_section:
+          header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
           modal:
             enabled_heading: "Activado"

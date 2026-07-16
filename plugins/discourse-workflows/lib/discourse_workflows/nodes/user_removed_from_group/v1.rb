@@ -13,6 +13,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:user_removed_from_group],
+          output_contracts: [{ schema: Schema::USER_REMOVED_FROM_GROUP_SCHEMA }],
           properties: {
             group_id: {
               type: :integer,

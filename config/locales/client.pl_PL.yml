@@ -58,9 +58,10 @@ pl_PL:
         access_permission_viewer: "Przeglądający"
         access_permission_viewer_description: "Może przeglądać treści związane z tym podmiotem"
         access_permission_remove: "Usuń"
-        access_permission_remove_description: "Usuń uprawnienia dla tej grupy"
-        add_group: "Dodaj grupę"
-        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla tego podmiotu i nie można go usunąć"
+        access_permission_remove_description: "Cofnij uprawnienia temu uprawnionemu"
+        add_group: "Dodaj użytkownika lub grupę"
+        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
+        mandatory: "Obowiązkowe"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -3277,6 +3278,9 @@ pl_PL:
       default: Spersonalizowane emoji
     filter_input:
       clear: "Wyczyść filtr"
+    filter_controls:
+      reset: "Zresetuj filtr"
+      toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
       search_placeholder: "Szukaj ikon..."
@@ -5063,8 +5067,16 @@ pl_PL:
           many: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
           other: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
         modal:
-          title: "Tłumaczenia dla wpisu"
+          title: "Tłumaczenia"
           confirm_delete: "Czy na pewno chcesz usunąć tłumaczenia dla '%{languageCode}'?"
+          language_notice: "Ustaw język oryginalnego wpisu, aby czytelnicy mogli zobaczyć tłumaczenia."
+          post_language: "Język wpisu"
+          topic_language: "Język tytułu tematu"
+          save_post_language: "Zapisz język wpisu"
+          save_topic_language: "Zapisz język tytułu tematu"
+          discard_language_change: "Odrzuć zmianę"
+          post_language_updated: "Zaktualizowano język wpisu"
+          topic_language_updated: "Zaktualizowano język tytułu tematu"
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
           title: "Język wpisu"
@@ -6694,8 +6706,6 @@ pl_PL:
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
-    reset_filter: "Zresetuj filtr"
-    toggle_filters: "Przełącz filtry rozwijane"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
@@ -7141,6 +7151,32 @@ pl_PL:
               title: "Wpisy i tematy"
             stats_and_thresholds:
               title: "Statystyki i progi"
+        category_management:
+          title: "Zarządzanie kategoriami"
+          header_description: "Przejrzyj typy kategorii, hierarchię i kategorie aktualnie przypisane do każdego typu."
+          keywords: "kategorie|typy kategorii|dyskusja|zarządzanie kategoriami"
+          create_category: "Utwórz kategorię"
+          tabs:
+            settings: "Ustawienia"
+          types:
+            unavailable: "Typ kategorii %{categoryType} jest niedostępny."
+            all:
+              title: "Wszystkie kategorie"
+              description: "Wszystkie kategorie w każdym skonfigurowanym typie kategorii."
+          filter_placeholder: "Filtruj kategorie"
+          no_results: "Nie znaleziono kategorii %{type}."
+          open_settings: "Otwórz ustawienia"
+          table:
+            category: "Kategoria"
+            visibility: "Widoczność"
+            topics: "Tematy"
+          visibility:
+            public: "Publiczny"
+            restricted: "Ograniczone"
+          visibility_filter:
+            all: "Wszystkie kategorie"
+            public: "Kategorie publiczne"
+            restricted: "Ograniczone kategorie"
         permalinks:
           title: "Permalinki"
           header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
@@ -7360,12 +7396,14 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         loading: "Ładowanie pulpitu nawigacyjnego…"
+        fetch_error: "Nie udało się załadować pulpitu nawigacyjnego. Spróbuj odświeżyć stronę."
         stable: "stabilna"
         sections:
           highlights:
             title: "Najważniejsze wydarzenia"
           reports:
             title: "Zgłoszenia"
+            fetch_error: "Nie udało się załadować raportów. Spróbuj odświeżyć stronę."
           traffic:
             title: "Ruch w witrynie"
           engagement:
@@ -7506,6 +7544,7 @@ pl_PL:
                 poor_match: "Słabe dopasowanie"
                 poor_match_tooltip: "Hasła wyszukiwania ze współczynnikiem klikalności (CTR) wynoszącym od 1 do 20%."
         reports_section:
+          header_action: "Zarządzaj"
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
           remove: "Usuń raport"
@@ -9810,7 +9849,7 @@ pl_PL:
           other: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
         depends_on_values_notice:
           one: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawiony na zgodną wartość."
-          few: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
+          few: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawiony na zgodną wartość."
           many: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
           other: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawionych na zgodną wartość."
         discard:

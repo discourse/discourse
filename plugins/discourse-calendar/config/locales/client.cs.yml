@@ -27,6 +27,9 @@ cs:
             topic_id:
               label: ID tématu
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Konverzace"
       invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
       on_holiday: "Na dovolené"
       disable_holiday: "Vypnout"

@@ -3291,6 +3291,8 @@ lt:
           actions: "Veiksmai"
           edit: "Redaguoti"
           delete: "Pašalinti"
+        modal:
+          title: "Vertimai"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -4292,6 +4294,20 @@ lt:
               title: "Nustatymai"
         badges:
           title: "Trofėjai"
+        category_management:
+          tabs:
+            settings: "Nustatymai"
+          types:
+            all:
+              title: "Visos kategorijos"
+          table:
+            category: "Kategorija"
+            visibility: "Matomumas"
+            topics: "Temos"
+          visibility:
+            public: "Vieša"
+          visibility_filter:
+            all: "Visos kategorijos"
         permalinks:
           title: "Laikinos Nuorodos"
           header_description: "Peradresavimai taikyti URL, kurių forumas nežino"
@@ -4408,6 +4424,7 @@ lt:
               searches: "Paieškos"
               status: "Statusas"
         reports_section:
+          header_action: "Redaguoti"
           no_data: "Nėra rodomų duomenų"
           modal:
             enabled_heading: "Galimas"

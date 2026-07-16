@@ -2401,6 +2401,8 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
+        modal:
+          title: "Prevodi"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -3259,6 +3261,20 @@ bs_BA:
               title: "Postavke"
         badges:
           title: "Bedž"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Topics"
+          visibility:
+            public: "Javno"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Permalink-ovi"
         emoji:
@@ -3384,6 +3400,7 @@ bs_BA:
               searches: "Pretraživanja"
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućen"

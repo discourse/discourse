@@ -117,11 +117,9 @@ end
 
 Use `TargetClass.with_acl_permission(guardian, permission)` or `TargetClass.with_any_acl_permissions(guardian, permissions)` for index scopes where the user should see targets reachable through ACLs. Use `guardian.target_ids_with_any_acl_permissions(TargetClass, permissions)` only when the id array is the cleaner interface for a custom query.
 
-## Deleted Group Cleanup
+## Deleted Grantee Cleanup
 
-`Group#clear_acls` enqueues `Jobs::CleanupAclsForDeleted` after a group is destroyed. The job removes the deleted group id from `allowed_group_ids`, updates `updated_at`, and deletes ACL rows with no remaining `allowed_group_ids` or `allowed_user_ids`.
-
-User cleanup is not complete yet. Do not document deleted-user ACL cleanup as supported until the job handles `user_id`.
+`Group#clear_acls` and `User#clear_acls` enqueue `Jobs::CleanupAclsForDeleted` after a grantee is destroyed. The job removes the deleted group id from `allowed_group_ids` and/or the deleted user id from `allowed_user_ids`, updates `updated_at`, and deletes ACL rows only when both arrays are empty.
 
 ## Migrations
 
@@ -134,7 +132,7 @@ When migrating legacy permission columns into ACLs:
 
 ## Current Limitations
 
-- `AccessControlList.expand_list_for_bulk_insert` is group-first. It does not fully handle `{ type: "user" }` authoring yet.
-- `preload_allowed`, `expand_list`, cleanup, and `DAccessControl` are still group-first even though lower-level matching scopes understand `allowed_user_ids`.
-- `flattened_list` skips missing groups and unknown target classes defensively. Validate group IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
+- `AccessControlList.expand_list_for_bulk_insert`, `flattened_list`, `preload_allowed`, lookup objects, matching scopes, and cleanup jobs now handle both group and user ACL rows.
+- `DAccessControl` remains group-first: it does not yet provide user picking or complete user ACL editing, even though backend rows can contain `allowed_user_ids`.
+- `flattened_list` skips missing groups, missing users, and unknown target classes defensively. Validate group and user IDs at the service/contract boundary where user input enters; do not rely on read-path skipping as data hygiene.
 - The manager has caller-side authorization. Future core work may add a target policy hook; until then, do not expose it directly to untrusted callers.

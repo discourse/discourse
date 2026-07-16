@@ -2518,6 +2518,20 @@ sw:
               title: "Mipangilio"
         badges:
           title: "Beji"
+        category_management:
+          tabs:
+            settings: "Mipangilio"
+          types:
+            all:
+              title: "Kategoria Zote"
+          table:
+            category: "Kikundi"
+            visibility: "Uonekanaji"
+            topics: "Mada"
+          visibility:
+            public: "Umma"
+          visibility_filter:
+            all: "Kategoria Zote"
         permalinks:
           title: "Anwani za mtandao"
         emoji:
@@ -2614,6 +2628,7 @@ sw:
             table:
               searches: "Utafiti"
         reports_section:
+          header_action: "Simamia"
           modal:
             enabled_heading: "Imeruhusiwa"
             all_heading: "Ripoti zote"

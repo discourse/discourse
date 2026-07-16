@@ -3215,6 +3215,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        modal:
+          title: "అనువాదాలు"
         post_language_selector:
           none: "సెట్ చేయబడలేదు"
       errors:
@@ -4438,6 +4440,21 @@ te:
               title: "అమరికలు"
         badges:
           title: "బ్యాడ్జీలు"
+        category_management:
+          tabs:
+            settings: "అమరికలు"
+          types:
+            all:
+              title: "అన్ని వర్గాలు"
+          filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
+          table:
+            category: "వర్గం"
+            visibility: "దృశ్యమానత"
+            topics: "విషయాలు"
+          visibility:
+            public: "బహిరంగం"
+          visibility_filter:
+            all: "అన్ని వర్గాలు"
         permalinks:
           title: "శాశ్వత లింక్‌లు"
         emoji:
@@ -4558,6 +4575,7 @@ te:
               searches: "శోధనలు"
               status: "స్థితి"
         reports_section:
+          header_action: "నిర్వహించండి"
           modal:
             enabled_heading: "ప్రారంభించబడింది"
             all_heading: "అన్ని నివేదికలు"

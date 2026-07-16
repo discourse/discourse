@@ -4085,6 +4085,19 @@ sq:
               title: "Rregullimet"
         badges:
           title: "Stemat"
+        category_management:
+          tabs:
+            settings: "Rregullimet"
+          types:
+            all:
+              title: "Të gjitha kategoritë"
+          table:
+            category: "Kategori"
+            topics: "Topics"
+          visibility:
+            public: "Publike"
+          visibility_filter:
+            all: "Të gjitha kategoritë"
         permalinks:
           title: "Permalinks"
         emoji:
@@ -4173,6 +4186,7 @@ sq:
             table:
               status: "Status"
         reports_section:
+          header_action: "Menaxhoni"
           modal:
             enabled_heading: "Aktivizuar"
             apply: "Apliko"

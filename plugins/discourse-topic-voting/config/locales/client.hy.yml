@@ -10,15 +10,9 @@ hy:
       sort_options:
         votes: "Քվեներ"
     topic_voting:
-      reached_limit: "Դուք գերազանցել եք քվեների քանակը, հեռացրեք որևէ գոյույթուն ունեցող քվե!"
-      list_votes: "Ցուցակագրել Ձեր քվեները"
       voted: "Դուք քվեարկել եք այս թեմայում"
-      allow_topic_voting: "Թույլատրել օգտատերերին քվեարկել այս կատեգորիայի թեմաներում"
       vote_title: "Քվեարկել"
       vote_title_plural: "Քվեներ"
-      anonymous_button:
-        one: "Քվեներ"
-        other: "Քվեներ"
       show_voters: "Ցուցադրել քվեարկողներին"
       vote_count_thousands: "%{count}հզ"
     filters:

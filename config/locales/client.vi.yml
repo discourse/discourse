@@ -2637,6 +2637,8 @@ vi:
       default: Biểu tượng cảm xúc tùy chỉnh
     filter_input:
       clear: "Xóa bộ lọc"
+    filter_controls:
+      toggle: "Bật/tắt bộ lọc thả xuống"
     shared_drafts:
       title: "Thư nháp được Chia sẻ"
       notice: "Chủ đề này chỉ hiển thị với những người có thể xuất bản các bản nháp được chia sẻ."
@@ -3804,7 +3806,7 @@ vi:
         view:
           other: "Xem %{count} ngôn ngữ đã dịch"
         modal:
-          title: "Bản dịch cho tút"
+          title: "Bản dịch"
           confirm_delete: "Bạn có chắc muốn xóa các bản dịch cho '%{languageCode}'?"
         success: "Bản dịch đã được cập nhật thành công."
         post_language_selector:
@@ -5118,7 +5120,6 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
-    toggle_filters: "Bật/tắt bộ lọc thả xuống"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -5509,6 +5510,21 @@ vi:
               title: "Tút & chủ đề"
             stats_and_thresholds:
               title: "Thống kê & ngưỡng"
+        category_management:
+          tabs:
+            settings: "Cài đặt"
+          types:
+            all:
+              title: "Tất cả danh mục"
+          filter_placeholder: "Lọc theo chuyên mục"
+          table:
+            category: "Danh mục"
+            visibility: "Khả năng hiển thị"
+            topics: "Các chủ đề"
+          visibility:
+            public: "Công khai"
+          visibility_filter:
+            all: "Tất cả danh mục"
         permalinks:
           title: "Liên kết cố định"
           header_description: "Chuyển hướng để áp dụng cho các URL mà diễn đàn không biết"
@@ -5723,6 +5739,7 @@ vi:
               searches: "Số lần tìm kiếm"
               status: "Trạng thái"
         reports_section:
+          header_action: "Quản lý"
           no_data: "Không có dữ liệu để hiển thị"
           modal:
             enabled_heading: "Đã bật"

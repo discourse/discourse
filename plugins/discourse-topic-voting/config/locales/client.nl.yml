@@ -15,29 +15,18 @@ nl:
       sort_options:
         votes: "Stemmen"
     topic_voting:
-      category_type_ideas:
-        title: "Ideeën"
       notification_label:
         vote_released: "Stem geretourneerd"
-      title: "Stemmen over topics"
-      reached_limit: "Je hebt geen stemmen meer, verwijder een bestaande stem!"
-      list_votes: "Je stemmen weergeven"
-      votes_nav_help: "topics met de meeste stemmen ooit"
       hot_nav_help: "top recente topics, inclusief die met recente stemmen"
       voted: "Je hebt op dit topic gestemd"
-      allow_topic_voting: "Gebruikers mogen op topics in deze categorie stemmen"
       vote_title: "Stemmen"
       vote_title_plural: "Stemmen"
       voting_closed_description: "Stemmen is gesloten voor dit topic"
       see_votes: "Je hebt nog %{count}/%{max} stemmen"
-      locked: "Vergrendeld"
       locked_description: "Verhoog je vertrouwensniveau om te kunnen stemmen"
       votes:
         one: "%{count} stem"
         other: "%{count} stemmen"
-      anonymous_button:
-        one: "Stem"
-        other: "Stemmen"
       remove_vote: "Stem verwijderen"
       watch_topic: "Informeer mij over nieuwe berichten"
       no_votes_yet: "Er heeft hier nog niemand op gestemd"
@@ -55,10 +44,6 @@ nl:
         help: "topics waarop je hebt gestemd"
     search:
       most_votes: "Meeste stemmen"
-      advanced:
-        vote:
-          count:
-            label: "Minimaal aantal stemmen"
     admin:
       web_hooks:
         voting_event:

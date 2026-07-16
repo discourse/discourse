@@ -4070,7 +4070,7 @@ hr:
           few: "Prikaži %{count} prevedene lokalizacije"
           other: "Prikaži %{count} prevedenih lokalizacija"
         modal:
-          title: "Prijevodi za objavu"
+          title: "Prijevodi"
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
@@ -5686,6 +5686,21 @@ hr:
               title: "Objave i teme"
             stats_and_thresholds:
               title: "Statistike i pragovi"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          filter_placeholder: "Filtrirajte kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tema"
+          visibility:
+            public: "Javnost"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Poveznice"
           header_description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna"
@@ -5851,6 +5866,7 @@ hr:
               searches: "Pretraživanja"
               status: "Statust"
         reports_section:
+          header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućeno"

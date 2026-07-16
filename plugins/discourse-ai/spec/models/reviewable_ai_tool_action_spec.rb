@@ -132,24 +132,6 @@ RSpec.describe ReviewableAiToolAction do
       expect(topic.reload.closed).to eq(true)
     end
 
-    it "executes a site setting update and transitions to approved" do
-      tool_action =
-        create_tool_action(
-          tool_name: "update_setting",
-          params: {
-            setting_name: "title",
-            value: "An approved forum",
-          },
-        )
-      reviewable = create_reviewable(tool_action)
-
-      result = reviewable.perform(admin, :approve)
-
-      expect(result.success?).to eq(true)
-      expect(result.transition_to).to eq(:approved)
-      expect(SiteSetting.title).to eq("An approved forum")
-    end
-
     it "rejects inline approval from a different post", :aggregate_failures do
       post = Fabricate(:post, topic: topic)
       other_post = Fabricate(:post)
@@ -264,6 +246,49 @@ RSpec.describe ReviewableAiToolAction do
       expect(silence_history.acting_user_id).to eq(admin.id)
       expect(silence_history.target_user_id).to eq(target_user.id)
       expect(silence_history.reviewable_id).to eq(reviewable.id)
+    end
+
+    it "applies a change_site_setting approval credited to the approving admin" do
+      tool_action =
+        create_tool_action(
+          tool_name: "change_site_setting",
+          params: {
+            setting_name: "min_post_length",
+            value: "42",
+            reason: "Testing",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(SiteSetting.min_post_length).to eq(42)
+
+      change_history =
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "min_post_length",
+        ).last
+      expect(change_history.acting_user_id).to eq(admin.id)
+    end
+
+    it "raises and stays pending when a non-admin moderator approves a change_site_setting action" do
+      tool_action =
+        create_tool_action(
+          tool_name: "change_site_setting",
+          params: {
+            setting_name: "min_post_length",
+            value: "42",
+            reason: "Testing",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+      moderator = Fabricate(:moderator)
+
+      expect { reviewable.perform(moderator, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+      expect(SiteSetting.min_post_length).not_to eq(42)
     end
   end
 

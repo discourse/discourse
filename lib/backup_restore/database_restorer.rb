@@ -102,6 +102,7 @@ module BackupRestore
         "CREATE SCHEMA", # PostgreSQL 11+
         "COMMENT ON SCHEMA", # PostgreSQL 11+
         "SET default_table_access_method", # PostgreSQL 12
+        "SET transaction_timeout", # PostgreSQL 17
         "CREATE EXTENSION",
         "COMMENT ON EXTENSION",
         "\\\\restrict",

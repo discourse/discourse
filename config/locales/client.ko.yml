@@ -2920,6 +2920,8 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
+        modal:
+          title: "번역"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3926,6 +3928,20 @@ ko:
               title: "설정"
         badges:
           title: "배지"
+        category_management:
+          tabs:
+            settings: "설정"
+          types:
+            all:
+              title: "모든 카테고리"
+          table:
+            category: "카테고리"
+            visibility: "시계"
+            topics: "글"
+          visibility:
+            public: "공개"
+          visibility_filter:
+            all: "모든 카테고리"
         permalinks:
           title: "고유링크"
         emoji:
@@ -4051,6 +4067,7 @@ ko:
               searches: "검색"
               status: "상태"
         reports_section:
+          header_action: "관리"
           no_data: "표시할 정보가 없습니다"
           modal:
             enabled_heading: "활성화"

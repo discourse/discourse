@@ -34,6 +34,8 @@ uk:
               label: ID теми
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "Чат"
         chat:
           going: "Натисніть «Продовжити»"
           join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"

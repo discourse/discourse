@@ -9,10 +9,10 @@ import VoteCount from "./vote-count";
 export default class VoteBox extends Component {
   @service currentUser;
 
-  @action
-  addVote() {
-    let topic = this.args.topic;
-    return ajax("/voting/vote", {
+  #sendVote(url, userVoted) {
+    const topic = this.args.topic;
+
+    return ajax(url, {
       type: "POST",
       data: {
         topic_id: topic.id,
@@ -20,7 +20,7 @@ export default class VoteBox extends Component {
     })
       .then((result) => {
         topic.vote_count = result.vote_count;
-        topic.user_voted = true;
+        topic.user_voted = userVoted;
         this.currentUser.votes_exceeded = !result.can_vote;
         this.currentUser.vote_limit = result.vote_limit;
         this.currentUser.votes_left = result.votes_left;
@@ -29,23 +29,13 @@ export default class VoteBox extends Component {
   }
 
   @action
-  removeVote() {
-    const topic = this.args.topic;
+  addVote() {
+    return this.#sendVote("/voting/vote", true);
+  }
 
-    return ajax("/voting/unvote", {
-      type: "POST",
-      data: {
-        topic_id: topic.id,
-      },
-    })
-      .then((result) => {
-        topic.vote_count = result.vote_count;
-        topic.user_voted = false;
-        this.currentUser.votes_exceeded = !result.can_vote;
-        this.currentUser.vote_limit = result.vote_limit;
-        this.currentUser.votes_left = result.votes_left;
-      })
-      .catch(popupAjaxError);
+  @action
+  removeVote() {
+    return this.#sendVote("/voting/unvote", false);
   }
 
   <template>

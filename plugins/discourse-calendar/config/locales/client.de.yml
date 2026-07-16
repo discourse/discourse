@@ -34,6 +34,8 @@ de:
               label: Themen-ID
     discourse_calendar:
       livestream:
+        zoom:
+          chat: "Chat"
         chat:
           going: "Klicke auf \"Dabei\""
           join_channel_header: "🌟Mach mit! 🌟"

@@ -13,6 +13,8 @@ import EmailGroupUserChooserRow from "./email-group-user-chooser-row";
   filterComponent: EmailGroupUserChooserFilter,
   fullWidthWrap: false,
   autoWrap: false,
+  onlyShowGroupFullName: false,
+  prioritizeUserNameOrdering: false,
 })
 @pluginApiIdentifiers(["email-group-user-chooser"])
 export default class EmailGroupUserChooser extends UserChooserComponent {
@@ -45,7 +47,7 @@ export default class EmailGroupUserChooser extends UserChooserComponent {
           }
         } else if (item.name) {
           reconstructed.id = item.name;
-          reconstructed.name = item.full_name;
+          reconstructed.name = item.full_name || item.name;
           reconstructed.isGroup = true;
         }
         return { ...item, ...reconstructed };

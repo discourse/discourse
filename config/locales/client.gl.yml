@@ -2611,6 +2611,8 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
+        modal:
+          title: "Traducións"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -3528,6 +3530,20 @@ gl:
               title: "Configuración"
         badges:
           title: "Insignias"
+        category_management:
+          tabs:
+            settings: "Configuración"
+          types:
+            all:
+              title: "Todas as categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidade"
+            topics: "Temas"
+          visibility:
+            public: "Pública"
+          visibility_filter:
+            all: "Todas as categorías"
         permalinks:
           title: "Ligazóns permanentes"
           header_description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro"
@@ -3654,6 +3670,7 @@ gl:
               searches: "Buscas"
               status: "Estado"
         reports_section:
+          header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
           modal:
             enabled_heading: "Activado"
