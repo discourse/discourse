@@ -384,6 +384,7 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      bot_challenge: "Sorry, we were unable to generate a preview for this web page, because the web server requires visitors to pass a verification step in a web browser. Instead of a preview, only a link will appear in your post. :cry:"
       missing_data:
         one: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
         other: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
