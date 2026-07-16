@@ -183,3 +183,52 @@ virtual-column keyset pattern from core PR #36065 lands); a disabled plugin's ke
 - **Same-date ordering across owners:** registration order = plugin load order,
   deterministic per site — and irrelevant in practice, since disjoint owners (types and
   namespaces) never contend.
+
+## F. Frontend consumption (WarpDrive — target-state sketch, verified 2026-07-16)
+
+Context: the frontend is migrating its models from the home-grown `RestModel` layer to
+[WarpDrive](https://warp-drive.io) as a separate project — deliberately
+**decoupled** from the backend JSON:API work, consuming the *current* API through a custom
+adapter first. This section is the *target state* once both tracks land, verified against
+the WarpDrive docs (v5.8.2); the specifics below should be aligned with the migration
+project as its code lands, not decided unilaterally here.
+
+- **Two-phase convergence, cheap by architecture.** WarpDrive isolates API shape in two
+  places — request builders and the handler chain. Moving from "current API via custom
+  adapter" to the Kit's JSON:API swaps those for the stock `@warp-drive/json-api` cache and
+  `@warp-drive/utilities/json-api` builders; the store, schemas, reactivity, and component
+  call sites stay put.
+- **Includes — the D counterpart.** Builders are pure functions taking include arrays
+  (`query('topics', { include: [...] })`) and normalize param order into stable cache URLs.
+  Core exposes an include registry per type and merges it when building listing requests; a
+  plugin opts its namespace in (sketch: `api.registerJsonApiInclude("topics",
+  "solved-status")`). Opt-in per surface, not automatic — includes cost payload, so the
+  plugin must *say* it wants its relationship on a listing.
+- **Version header — one seam.** A single app-wide handler in the RequestManager chain
+  stamps `Api-Version` on the way out (`next({ ...context.request, headers })`) and reads
+  the echo on the way back (`result.response.headers`). The first-party frontend ships in
+  lockstep with the backend, so it is an *always-latest* client sending the deployment's
+  advertised version — the pin/snap/override machinery (C) exists for external
+  integrations, not for our own app.
+- **Schema — the B counterpart, and a verified constraint.** WarpDrive has **no
+  third-party schema amendment**: traits must be opted into by the schema's owner, and
+  extensions add behavior only (explicitly framed as migration escape hatches). A plugin
+  therefore cannot bolt its relationship onto core's `topic` schema after registration —
+  core must collect plugin field definitions *before* calling `registerResource`, the same
+  composition-point pattern as the backend registration API. Better: the backend already
+  knows the complete schema from the B registrations, and `SchemaService` explicitly
+  supports registering schema "delivered by API calls or other sources just-in-time" — so
+  the frontend schema can be **derived server-side and delivered to the client**, making
+  the Ruby registration the single source of truth (the plugin's frontend declares no
+  schema at all). Open sub-question: delivery via the bootstrap preload vs a dedicated
+  endpoint.
+- **Access and rendering.** Resources in `included` auto-normalize into the cache and
+  relationship fields surface as reactive properties: a topic-list connector reads
+  `topic.solvedStatus.state` where today it reads an attribute inlined into core's payload
+  by the plugin. The rendering machinery (plugin outlets, value transformers) is untouched;
+  only the data path changes.
+- **Caveat, stated plainly:** relationship support in Polaris mode (WarpDrive's modern API)
+  is *preview* — relationships must be `async: false` with `linksMode: true`, which requires
+  a `related` link in the payload, and stabilization is slated for WarpDrive V6. Two
+  consequences: the Kit should emit `links.related` on relationships (JSON:API-idiomatic
+  regardless), and the frontend timeline has a real dependency on WarpDrive's roadmap.
