@@ -4,7 +4,6 @@ class CreateNestedHotScoreCache < ActiveRecord::Migration[8.0]
   def up
     create_table :nested_hot_score_snapshots, id: false do |table|
       table.bigint :topic_id, null: false
-      table.integer :formula_version, null: false
       table.datetime :calculated_at, null: false
     end
 

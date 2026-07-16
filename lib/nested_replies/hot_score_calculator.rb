@@ -8,7 +8,6 @@ module NestedReplies
     class MissingOriginalPost < StandardError
     end
 
-    FORMULA_VERSION = 1
     HOT_SCORE_FLOOR = 0.0
 
     def self.formula_settings
@@ -20,19 +19,6 @@ module NestedReplies
           SiteSetting.nested_replies_hot_freshness_half_life_hours.to_f.hours.to_f,
         child_penalty: SiteSetting.nested_replies_hot_child_penalty.to_f,
       }
-    end
-
-    def self.formula_version(settings = formula_settings)
-      fingerprint = [
-        FORMULA_VERSION,
-        settings.fetch(:like_weight),
-        settings.fetch(:reply_weight),
-        settings.fetch(:freshness_max_bonus),
-        settings.fetch(:freshness_half_life_seconds),
-        settings.fetch(:child_penalty),
-      ].join(":")
-
-      Digest::SHA256.hexdigest(fingerprint).first(8).to_i(16) & 0x7fffffff
     end
 
     def self.public_post_types
@@ -107,13 +93,7 @@ module NestedReplies
           DB.exec(
             "SET LOCAL lock_timeout = #{[timeout_ms, SiteSetting.nested_replies_hot_lock_timeout_ms].min}",
           )
-          DB.query(
-            refresh_sql,
-            topic_id: topic_id,
-            calculated_at: calculated_at,
-            formula_version: formula_version(formula),
-            **formula,
-          ).first
+          DB.query(refresh_sql, topic_id: topic_id, calculated_at: calculated_at, **formula).first
         end
 
       raise InvalidTree, "Cycle in nested replies for topic #{topic_id}" if result.invalid_tree
@@ -317,17 +297,14 @@ module NestedReplies
             upserted_snapshot AS (
               INSERT INTO nested_hot_score_snapshots (
                 topic_id,
-                formula_version,
                 calculated_at
               )
               SELECT :topic_id,
-                     :formula_version,
                      :calculated_at::timestamp
               FROM tree_validation
               WHERE tree_validation.valid
                 AND EXISTS (SELECT 1 FROM original_post)
               ON CONFLICT (topic_id) DO UPDATE SET
-                formula_version = EXCLUDED.formula_version,
                 calculated_at = EXCLUDED.calculated_at
               RETURNING topic_id
             )

@@ -20,6 +20,11 @@ module NestedReplies
       SiteSetting.nested_replies_hot_max_stale_age_days.days
     end
 
+    def self.active_topic?(topic)
+      topic.last_posted_at.present? &&
+        topic.last_posted_at >= SiteSetting.nested_replies_hot_max_inactivity_days.days.ago
+    end
+
     def self.resolve(topic, requested_sort, requester: nil)
       return Decision.new(effective_sort: requested_sort, mode: :not_hot) if requested_sort != "hot"
 
@@ -35,12 +40,12 @@ module NestedReplies
         return record(Decision.new(effective_sort: "top", mode: :small_topic))
       end
 
+      unless active_topic?(topic)
+        return record(Decision.new(effective_sort: "top", mode: :inactive_topic))
+      end
+
       snapshot = snapshot(topic.id)
       return fallback_with_refresh(topic.id, requester, mode: :missing) if snapshot.blank?
-
-      if snapshot.formula_version.to_i != HotScoreCalculator.formula_version
-        return fallback_with_refresh(topic.id, requester, mode: :wrong_formula)
-      end
 
       calculated_at = snapshot.calculated_at
       if calculated_at.blank? || calculated_at < max_stale_age.ago
@@ -63,14 +68,13 @@ module NestedReplies
 
     def self.fresh?(topic)
       snapshot = snapshot(topic.id)
-      snapshot.present? && snapshot.formula_version.to_i == HotScoreCalculator.formula_version &&
-        snapshot.calculated_at.present? && snapshot.calculated_at >= snapshot_ttl.ago
+      snapshot.present? && snapshot.calculated_at.present? &&
+        snapshot.calculated_at >= snapshot_ttl.ago
     end
 
     def self.snapshot(topic_id)
       DB.query(<<~SQL, topic_id: topic_id).first
-        SELECT formula_version,
-               calculated_at
+        SELECT calculated_at
         FROM nested_hot_score_snapshots
         WHERE topic_id = :topic_id
       SQL

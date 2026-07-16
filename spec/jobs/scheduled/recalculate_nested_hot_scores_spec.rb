@@ -14,7 +14,7 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
     op = Fabricate(:post, topic: topic, post_number: 1)
     Fabricate(:nested_topic, topic: topic)
     replies = 5.times.map { Fabricate(:post, topic: topic, reply_to_post_number: op.post_number) }
-    topic.update_columns(posts_count: 6)
+    topic.update_columns(posts_count: 6, last_posted_at: Time.current)
     [topic, replies]
   end
 
@@ -54,6 +54,17 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
       cooldowns_started: 0,
       queue_depth: 0,
     )
+  end
+
+  it "discards queued requests for inactive topics" do
+    inactive_topic, = build_eligible_topic
+    inactive_topic.update_columns(last_posted_at: 31.days.ago)
+    NestedReplies::HotScoreQueue.enqueue(inactive_topic.id)
+
+    described_class.new.execute
+
+    expect(snapshot_topic_ids).to be_empty
+    expect(NestedReplies::HotScoreQueue.size).to eq(0)
   end
 
   it "limits the number of queued topics inspected per run" do

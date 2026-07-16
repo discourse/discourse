@@ -79,7 +79,8 @@ module Jobs
 
     def eligible?(topic)
       topic.present? && topic.deleted_at.nil? && topic.regular? && topic.nested_view? &&
-        topic.posts_count.to_i > NestedReplies::HotScoreCache.small_topic_post_limit
+        topic.posts_count.to_i > NestedReplies::HotScoreCache.small_topic_post_limit &&
+        NestedReplies::HotScoreCache.active_topic?(topic)
     end
 
     def cooldown(topic_id)

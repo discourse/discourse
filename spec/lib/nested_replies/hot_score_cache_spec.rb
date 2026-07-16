@@ -8,29 +8,21 @@ RSpec.describe NestedReplies::HotScoreCache do
     SiteSetting.nested_replies_enabled = true
     SiteSetting.nested_replies_hot_sort_enabled = true
     Fabricate(:nested_topic, topic: topic)
-    topic.update_columns(posts_count: 6)
+    topic.update_columns(posts_count: 6, last_posted_at: Time.current)
     NestedReplies::HotScoreQueue.clear
   end
 
   after { NestedReplies::HotScoreQueue.clear }
 
-  def create_topic_with_snapshot(
-    calculated_at:,
-    formula_version: NestedReplies::HotScoreCalculator.formula_version
-  )
+  def create_topic_with_snapshot(calculated_at:)
     cached_topic = Fabricate(:topic)
     cached_post = Fabricate(:post, topic: cached_topic, post_number: 1)
     Fabricate(:nested_topic, topic: cached_topic)
-    cached_topic.update_columns(posts_count: 6)
-    DB.exec(
-      <<~SQL,
-      INSERT INTO nested_hot_score_snapshots (topic_id, formula_version, calculated_at)
-      VALUES (:topic_id, :formula_version, :calculated_at)
+    cached_topic.update_columns(posts_count: 6, last_posted_at: Time.current)
+    DB.exec(<<~SQL, topic_id: cached_topic.id, calculated_at: calculated_at)
+      INSERT INTO nested_hot_score_snapshots (topic_id, calculated_at)
+      VALUES (:topic_id, :calculated_at)
     SQL
-      topic_id: cached_topic.id,
-      formula_version: formula_version,
-      calculated_at: calculated_at,
-    )
     [cached_topic, cached_post]
   end
 
@@ -64,12 +56,25 @@ RSpec.describe NestedReplies::HotScoreCache do
     expect(NestedReplies::HotScoreQueue.size).to eq(1)
   end
 
+  it "uses top without cache work after the topic activity window" do
+    cached_topic, = create_topic_with_snapshot(calculated_at: Time.current)
+    topic.update_columns(last_posted_at: 31.days.ago)
+    cached_topic.update_columns(last_posted_at: 31.days.ago)
+
+    decisions = [topic, cached_topic].map { |candidate| described_class.resolve(candidate, "hot") }
+
+    expect(decisions.map { |decision| [decision.effective_sort, decision.mode] }).to eq(
+      [["top", :inactive_topic], ["top", :inactive_topic]],
+    )
+    expect(NestedReplies::HotScoreQueue.size).to eq(0)
+  end
+
   it "limits how many new refresh requests one requester can admit" do
     requester = Fabricate(:user)
     second_topic = Fabricate(:topic)
     Fabricate(:post, topic: second_topic, post_number: 1)
     Fabricate(:nested_topic, topic: second_topic)
-    second_topic.update_columns(posts_count: 6)
+    second_topic.update_columns(posts_count: 6, last_posted_at: Time.current)
     limiter =
       RateLimiter.new(
         requester,
@@ -97,33 +102,17 @@ RSpec.describe NestedReplies::HotScoreCache do
     SiteSetting.nested_replies_hot_max_stale_age_days = 40
     fresh_topic, = create_topic_with_snapshot(calculated_at: Time.current)
     stale_topic, = create_topic_with_snapshot(calculated_at: 3.hours.ago)
-    wrong_formula_topic, =
-      create_topic_with_snapshot(
-        calculated_at: Time.current,
-        formula_version: NestedReplies::HotScoreCalculator.formula_version + 1,
-      )
     expired_topic, = create_topic_with_snapshot(calculated_at: 41.days.ago)
 
     decisions =
-      [fresh_topic, stale_topic, wrong_formula_topic, expired_topic].map do |cached_topic|
+      [fresh_topic, stale_topic, expired_topic].map do |cached_topic|
         described_class.resolve(cached_topic, "hot")
       end
 
     expect(decisions.map { |decision| [decision.effective_sort, decision.mode] }).to eq(
-      [["hot", :fresh], ["hot", :stale], ["top", :wrong_formula], ["top", :expired]],
+      [["hot", :fresh], ["hot", :stale], ["top", :expired]],
     )
-    expect(NestedReplies::HotScoreQueue.size).to eq(3)
-  end
-
-  it "rejects an existing snapshot after a formula setting changes" do
-    cached_topic, = create_topic_with_snapshot(calculated_at: Time.current)
-
-    SiteSetting.nested_replies_hot_like_weight = 1.5
-    decision = described_class.resolve(cached_topic, "hot")
-
-    expect([decision.effective_sort, decision.mode, decision.enqueue_result]).to eq(
-      ["top", :wrong_formula, :queued],
-    )
+    expect(NestedReplies::HotScoreQueue.size).to eq(2)
   end
 
   it "purges only expired cache data" do

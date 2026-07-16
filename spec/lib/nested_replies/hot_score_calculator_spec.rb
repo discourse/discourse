@@ -43,14 +43,6 @@ RSpec.describe NestedReplies::HotScoreCalculator do
         described_class::HOT_SCORE_FLOOR,
       )
     end
-
-    it "changes the formula version when score settings change" do
-      original_version = described_class.formula_version
-
-      SiteSetting.nested_replies_hot_like_weight = 1.5
-
-      expect(described_class.formula_version).not_to eq(original_version)
-    end
   end
 
   describe ".recalculate_topic" do
@@ -78,7 +70,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       child_score = cached_score(public_child)
       snapshot =
         DB.query(
-          "SELECT formula_version, calculated_at FROM nested_hot_score_snapshots WHERE topic_id = :topic_id",
+          "SELECT calculated_at FROM nested_hot_score_snapshots WHERE topic_id = :topic_id",
           topic_id: topic.id,
         ).first
       expect(parent_score.hot_score).to be_within(0.0001).of(
@@ -87,7 +79,6 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       expect(parent_score.thread_hot_score).to be_within(0.0001).of(
         child_score.thread_hot_score - SiteSetting.nested_replies_hot_child_penalty,
       )
-      expect(snapshot.formula_version).to eq(described_class.formula_version)
       expect(snapshot.calculated_at).to be_present
       expect(structural_stat.reload.total_descendant_count).to eq(42)
       expect(NestedViewPostStat.where(post: [op, public_child]).count).to eq(0)

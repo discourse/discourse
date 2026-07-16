@@ -3,7 +3,7 @@
 RSpec.describe NestedTopicsController, type: :request do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:topic) { Fabricate(:topic, user: user, last_posted_at: Time.current) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
   before { SiteSetting.nested_replies_enabled = true }
@@ -170,6 +170,7 @@ RSpec.describe NestedTopicsController, type: :request do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["sort"]).to eq("hot")
+      expect(response.parsed_body["effective_sort"]).to eq("top")
       expect(response.parsed_body["roots"].map { |root| root["id"] }.first(2)).to eq(
         [high_root.id, low_root.id],
       )
@@ -1376,6 +1377,7 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json).to have_key("ancestor_chain")
       expect(json).to have_key("siblings")
       expect(json).to have_key("target_post")
+      expect(json["effective_sort"]).to eq("top")
       expect(json).to have_key("message_bus_last_id")
     end
 

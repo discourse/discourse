@@ -6964,7 +6964,6 @@ CREATE TABLE public.nested_hot_post_scores (
 
 CREATE TABLE public.nested_hot_score_snapshots (
     topic_id bigint NOT NULL,
-    formula_version integer NOT NULL,
     calculated_at timestamp(6) without time zone NOT NULL
 );
 
@@ -25086,4 +25085,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20120311164326'),
 ('20120311163914'),
 ('20000225050318');
-

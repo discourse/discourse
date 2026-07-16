@@ -2932,6 +2932,7 @@ en:
     nested_replies_hot_freshness_half_life_hours: "Number of hours in which the nested reply freshness bonus is reduced by half."
     nested_replies_hot_child_penalty: "Hot score subtracted for each ancestor when descendant hotness propagates upward."
     nested_replies_hot_small_topic_post_limit: "Maximum topic post count that uses top sorting without calculating nested reply hot scores."
+    nested_replies_hot_max_inactivity_days: "Maximum number of days since a topic's latest public post during which hot sorting may be used. Older topics use top sorting without calculating or refreshing hot scores."
     nested_replies_hot_snapshot_ttl_minutes: "Number of minutes a nested reply hot score snapshot remains fresh before a request may queue a refresh."
     nested_replies_hot_max_stale_age_days: "Maximum age in days at which an existing nested reply hot score snapshot may still be served."
     nested_replies_hot_refresh_requests_per_minute: "Maximum nested reply hot score refresh requests accepted from one requester per minute."
