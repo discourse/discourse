@@ -13,6 +13,24 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-calendar/dis
 export default class DiscoursePostEventApi extends Service {
   eventsPromise = null;
 
+  #eventsByTopicId = new Map();
+
+  // cached per topic id so the live composer preview (which re-cooks on every
+  // keystroke) only hits the endpoint once per linked topic; failed requests
+  // are evicted so a transient error doesn't hide the card until a full reload
+  cachedEventByTopicId(topicId) {
+    if (!this.#eventsByTopicId.has(topicId)) {
+      this.#eventsByTopicId.set(
+        topicId,
+        this.eventByTopicId(topicId).catch(() => {
+          this.#eventsByTopicId.delete(topicId);
+          return null;
+        })
+      );
+    }
+    return this.#eventsByTopicId.get(topicId);
+  }
+
   async event(id, data = {}) {
     const result = await this.#getRequest(`/events/${id}`, data);
     return DiscoursePostEventEvent.create(result.event);

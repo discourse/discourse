@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { TOPIC_URL_REGEXP } from "discourse/lib/url";
 import DiscoursePostEventOneboxPreview from "./onebox-preview";
 
 // Returns the topic id for a topic-level / first-post onebox link, or null for
@@ -24,14 +25,14 @@ export function topicIdFromUrl(url) {
     return null;
   }
 
-  const match = path.match(/\/t\/[^/]+\/(\d+)(?:\/(\d+))?/);
+  const match = path.match(TOPIC_URL_REGEXP);
   if (!match) {
     return null;
   }
-  if (match[2] && parseInt(match[2], 10) !== 1) {
+  if (match[3] && parseInt(match[3], 10) !== 1) {
     return null;
   }
-  return parseInt(match[1], 10);
+  return parseInt(match[2], 10);
 }
 
 // NodeView for the rich text editor's `onebox` node. For internal-topic oneboxes

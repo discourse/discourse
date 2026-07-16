@@ -26,6 +26,11 @@ module("Unit | discourse-post-event | topicIdFromUrl", function () {
     );
   });
 
+  test("returns null for slugless urls instead of misreading the post number", function (assert) {
+    assert.strictEqual(topicIdFromUrl(`${ORIGIN}/t/123/2`), null);
+    assert.strictEqual(topicIdFromUrl(`${ORIGIN}/t/123`), null);
+  });
+
   test("returns null for non-topic urls", function (assert) {
     assert.strictEqual(topicIdFromUrl(`${ORIGIN}/c/cat/5`), null);
     assert.strictEqual(topicIdFromUrl(ORIGIN), null);

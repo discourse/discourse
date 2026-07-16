@@ -6,19 +6,6 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import Dates from "./dates";
 import Location from "./location";
 
-// fetches are cached by topic id so the live composer preview (which re-cooks on
-// every keystroke) only hits the endpoint once per linked topic
-const eventCache = new Map();
-function loadEvent(api, topicId) {
-  if (!eventCache.has(topicId)) {
-    eventCache.set(
-      topicId,
-      api.eventByTopicId(topicId).catch(() => null)
-    );
-  }
-  return eventCache.get(topicId);
-}
-
 export default class DiscoursePostEventOneboxPreview extends Component {
   @service discoursePostEventApi;
 
@@ -30,7 +17,9 @@ export default class DiscoursePostEventOneboxPreview extends Component {
   }
 
   async load() {
-    this.event = await loadEvent(this.discoursePostEventApi, this.args.topicId);
+    this.event = await this.discoursePostEventApi.cachedEventByTopicId(
+      this.args.topicId
+    );
   }
 
   get eventName() {

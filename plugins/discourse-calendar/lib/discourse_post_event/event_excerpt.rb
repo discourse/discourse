@@ -32,8 +32,8 @@ module DiscoursePostEvent
       parts << dates(event_node)
       parts << location
 
-      summary = parts.compact.join(" · ")
-      summary.present? ? "📅 #{summary}" : ""
+      summary = parts.compact.join(t("separator"))
+      summary.present? ? t("summary", summary: summary) : ""
     end
 
     def dates(event_node)
@@ -45,15 +45,19 @@ module DiscoursePostEvent
       timezone = event_node["data-timezone"] || "UTC"
 
       dates = format_date(starts_at, all_day)
-      dates = "#{dates} → #{format_date(ends_at, all_day)}" if ends_at.present?
-      dates = "#{dates} (#{timezone})" unless all_day
+      dates = t("date_range", from: dates, to: format_date(ends_at, all_day)) if ends_at.present?
+      dates = t("date_with_timezone", date: dates, timezone: timezone) unless all_day
       dates
     end
 
     def format_date(value, all_day)
-      DateTime.parse(value).strftime(all_day ? "%B %-d, %Y" : "%B %-d, %Y %-I:%M %p")
+      I18n.l(DateTime.parse(value), format: t(all_day ? "date_format" : "datetime_format"))
     rescue StandardError
       value
+    end
+
+    def t(key, **args)
+      I18n.t("discourse_post_event.event_excerpt.#{key}", **args)
     end
   end
 end

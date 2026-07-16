@@ -309,9 +309,11 @@ after_initialize do
         preloaded = topic_view&.preloaded_post_data(:event_oneboxes)
         if preloaded
           preloaded[object.id] || {}
-        else
+        elsif object.cooked&.include?("data-topic")
           DiscoursePostEvent::EventOneboxData.build(posts: [object], guardian: scope)[object.id] ||
             {}
+        else
+          {}
         end
       end
   end

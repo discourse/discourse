@@ -111,14 +111,32 @@ describe DiscoursePostEvent::EventOneboxData do
     end
 
     it "computes event_oneboxes on demand when serialized without a topic view" do
-      # mirrors a freshly created/edited post (post-create response / message bus)
+      # mirrors a freshly cooked-post-processed post (message bus update): the
+      # fallback only pays its queries once the cooked onebox markup is present
       event_post = create_post_with_event(author, 'name="Pancakes"')
       linking_post = link_to(Fabricate(:post), event_post.topic)
+      linking_post.update_columns(
+        cooked:
+          "<aside class=\"quote\" data-topic=\"#{event_post.topic_id}\" data-post=\"1\"><blockquote>x</blockquote></aside>",
+      )
 
       json = PostSerializer.new(linking_post, scope: Guardian.new(reader), root: false).as_json
 
       expect(json[:event_oneboxes]).to be_present
       expect(json[:event_oneboxes][event_post.topic_id]).to be_present
+    end
+
+    it "skips the on-demand computation when cooked has no onebox markup" do
+      event_post = create_post_with_event(author)
+      linking_post = link_to(Fabricate(:post), event_post.topic)
+
+      queries =
+        track_sql_queries do
+          json = PostSerializer.new(linking_post, scope: Guardian.new(reader), root: false).as_json
+          expect(json).not_to have_key(:event_oneboxes)
+        end
+
+      expect(queries).not_to include(match(/topic_links/))
     end
 
     it "omits event_oneboxes for a post that links nothing" do
