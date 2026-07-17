@@ -463,7 +463,10 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
-              AND e.source = :source
+              AND e.source = CASE
+                WHEN e.created_at >= :beacon_start_date THEN :source_beacon
+                ELSE :source_piggyback
+              END
               AND #{topic_conditions}
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
@@ -471,7 +474,9 @@ module DiscourseAi
           SQL
             start_date: @start_date,
             end_date: @end_date,
-            source: BrowserPageviewEvent.rollup_source,
+            beacon_start_date: BrowserPageviewEvent.beacon_rollup_start_date,
+            source_beacon: BrowserPageviewEvent::SOURCE_BEACON,
+            source_piggyback: BrowserPageviewEvent::SOURCE_PIGGYBACK,
             category_ids: scoped_category_ids,
           ).first
         return if row.nil? || row.visits.to_i < 50

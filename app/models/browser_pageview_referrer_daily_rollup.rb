@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:, source: BrowserPageviewEvent.rollup_source)
+  def self.aggregate(
+    start_date:,
+    end_date:,
+    source: BrowserPageviewEvent.rollup_source_for(start_date)
+  )
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
 
@@ -27,32 +31,34 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
     dates = Array(dates).map(&:to_date).uniq
     return if dates.empty?
 
-    source = BrowserPageviewEvent.rollup_source
+    sources = dates.map { |date| BrowserPageviewEvent.rollup_source_for(date) }
 
     # The rollups are the permanent record, but their source events are pruned
     # after a retention period (CleanUpBrowserPageviewEvents). Only rebuild
     # dates that still have events so we never delete a rollup we can no longer
     # reconstruct from events.
-    dates = DB.query_single(<<~SQL, dates:, source:)
-      SELECT d.date
-      FROM unnest(ARRAY[:dates]::date[]) AS d(date)
+    rebuildable = DB.query(<<~SQL, dates:, sources:)
+      SELECT d.date, d.source
+      FROM unnest(ARRAY[:dates]::date[], ARRAY[:sources]::int[]) AS d(date, source)
       WHERE EXISTS (
         SELECT 1
         FROM browser_pageview_events e
         WHERE e.created_at >= d.date
           AND e.created_at < d.date + 1
-          AND e.source = :source
+          AND e.source = d.source
       )
     SQL
-    return if dates.empty?
+    return if rebuildable.empty?
 
     transaction do
-      DB.exec(<<~SQL, dates: dates)
+      DB.exec(<<~SQL, dates: rebuildable.map(&:date))
         DELETE FROM browser_pageview_referrer_daily_rollups
         WHERE date IN (:dates)
       SQL
 
-      dates.each { |date| aggregate(start_date: date, end_date: date, source:) }
+      rebuildable.each do |row|
+        aggregate(start_date: row.date, end_date: row.date, source: row.source)
+      end
     end
   end
 end

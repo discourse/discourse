@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class BrowserPageviewCountryDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:, source: BrowserPageviewEvent.rollup_source)
+  def self.aggregate(
+    start_date:,
+    end_date:,
+    source: BrowserPageviewEvent.rollup_source_for(start_date)
+  )
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
 

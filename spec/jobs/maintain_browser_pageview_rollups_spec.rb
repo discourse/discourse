@@ -5,6 +5,15 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
   before { SiteSetting.persist_browser_pageview_events = true }
 
+  def enable_dashboard_improvements(enabled_at:)
+    SiteSetting.dashboard_improvements = true
+    UpcomingChangeEvent.create!(
+      upcoming_change_name: "dashboard_improvements",
+      event_type: :manual_opt_in,
+      created_at: enabled_at,
+    )
+  end
+
   describe "#execute" do
     it "does nothing when persist_browser_pageview_events is disabled" do
       SiteSetting.persist_browser_pageview_events = false
@@ -34,8 +43,9 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         ).to eq(1)
       end
 
-      it "uses beacon source for rollups when dashboard_improvements is enabled" do
-        SiteSetting.dashboard_improvements = false
+      it "keeps aggregating from piggyback on the day dashboard_improvements is enabled" do
+        freeze_time
+        enable_dashboard_improvements(enabled_at: Time.zone.now)
         Fabricate(
           :browser_pageview_event,
           country_code: "US",
@@ -55,8 +65,68 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(BrowserPageviewReferrerDailyRollup.pluck(:normalized_referrer, :count)).to eq(
           [["google.com", 1]],
         )
+      end
 
-        SiteSetting.dashboard_improvements = true
+      it "aggregates from beacon for days after the enablement day" do
+        freeze_time
+        enable_dashboard_improvements(enabled_at: 2.days.ago)
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "US",
+          normalized_referrer: "google.com",
+          source: BrowserPageviewEvent::SOURCE_PIGGYBACK,
+        )
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "GB",
+          normalized_referrer: "reddit.com",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+        )
+
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code, :count)).to eq([["GB", 1]])
+        expect(BrowserPageviewReferrerDailyRollup.pluck(:normalized_referrer, :count)).to eq(
+          [["reddit.com", 1]],
+        )
+      end
+
+      it "backfills each day from the source that was active on that day" do
+        freeze_time
+        enable_dashboard_improvements(enabled_at: 1.day.ago)
+        Fabricate(:browser_pageview_event, country_code: "US", created_at: 5.days.ago)
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "GB",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+        )
+        Fabricate(:browser_pageview_event, country_code: "DE")
+
+        job.execute({})
+
+        expect(BrowserPageviewCountryDailyRollup.pluck(:country_code)).to contain_exactly(
+          "US",
+          "GB",
+        )
+      end
+
+      it "keeps piggyback-built rollups for days before the cutover after the change is enabled" do
+        freeze_time
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "US",
+          normalized_referrer: "google.com",
+          created_at: 1.day.ago,
+        )
+        job.execute({})
+
+        enable_dashboard_improvements(enabled_at: 1.day.ago)
+        Fabricate(
+          :browser_pageview_event,
+          country_code: "GB",
+          normalized_referrer: "reddit.com",
+          source: BrowserPageviewEvent::SOURCE_BEACON,
+        )
         job.execute({})
 
         expect(BrowserPageviewCountryDailyRollup.pluck(:country_code, :count)).to contain_exactly(
@@ -183,8 +253,15 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
         expect(event.normalized_referrer_version).to eq(BrowserPageviewReferrerInspector::VERSION)
       end
 
-      it "only backfills referrers from the active source" do
-        SiteSetting.dashboard_improvements = true
+      it "backfills referrers from each day's rollup source" do
+        freeze_time
+        enable_dashboard_improvements(enabled_at: 2.days.ago)
+        pre_cutover_piggyback =
+          Fabricate(
+            :browser_pageview_event_with_unnormalized_referrer,
+            referrer: "https://www.bing.com/",
+            created_at: 3.days.ago,
+          )
         piggyback_event =
           Fabricate(
             :browser_pageview_event_with_unnormalized_referrer,
@@ -200,6 +277,7 @@ RSpec.describe Jobs::MaintainBrowserPageviewRollups do
 
         job.execute({})
 
+        expect(pre_cutover_piggyback.reload.normalized_referrer).to eq("bing.com")
         expect(piggyback_event.reload.normalized_referrer_version).to be_nil
         expect(beacon_event.reload.normalized_referrer).to eq("reddit.com")
         expect(beacon_event.normalized_referrer_version).to eq(

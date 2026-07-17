@@ -5,7 +5,11 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
   MIN_SESSION_AGE = 10.minutes
   private_constant :BOUNCE_ENGAGED_SECONDS_THRESHOLD, :MIN_SESSION_AGE
 
-  def self.aggregate(start_date:, end_date:, source: BrowserPageviewEvent.rollup_source)
+  def self.aggregate(
+    start_date:,
+    end_date:,
+    source: BrowserPageviewEvent.rollup_source_for(start_date)
+  )
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
 

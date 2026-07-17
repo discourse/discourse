@@ -20,18 +20,48 @@ module Jobs
       start_date, end_date = pageview_aggregation_window
       return if start_date.nil?
 
-      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      source_windows(start_date, end_date) do |window_start, window_end, source|
+        BrowserPageviewCountryDailyRollup.aggregate(
+          start_date: window_start,
+          end_date: window_end,
+          source:,
+        )
+        BrowserPageviewReferrerDailyRollup.aggregate(
+          start_date: window_start,
+          end_date: window_end,
+          source:,
+        )
+      end
     end
 
     def aggregate_engagement
       start_date, end_date = engagement_aggregation_window
       return if start_date.nil?
 
-      BrowserPageviewSessionEngagementDailyRollup.aggregate(
-        start_date: start_date,
-        end_date: end_date,
-      )
+      source_windows(start_date, end_date) do |window_start, window_end, source|
+        BrowserPageviewSessionEngagementDailyRollup.aggregate(
+          start_date: window_start,
+          end_date: window_end,
+          source:,
+        )
+      end
+    end
+
+    # A window spanning the piggyback-to-beacon cutover must be split so each
+    # day is aggregated from the source that fully covers it; a single-source
+    # pass would rebuild days on the other side of the boundary from a stream
+    # that wasn't recording (or only partially recording) on those days.
+    def source_windows(start_date, end_date)
+      beacon_start_date = BrowserPageviewEvent.beacon_rollup_start_date
+
+      if beacon_start_date.nil? || beacon_start_date > end_date
+        yield start_date, end_date, BrowserPageviewEvent::SOURCE_PIGGYBACK
+      elsif beacon_start_date <= start_date
+        yield start_date, end_date, BrowserPageviewEvent::SOURCE_BEACON
+      else
+        yield start_date, beacon_start_date - 1, BrowserPageviewEvent::SOURCE_PIGGYBACK
+        yield beacon_start_date, end_date, BrowserPageviewEvent::SOURCE_BEACON
+      end
     end
 
     def engagement_aggregation_window
@@ -48,11 +78,9 @@ module Jobs
       end_date = Time.zone.today
 
       if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
-        earliest_event_date =
-          BrowserPageviewEvent
-            .where(source: BrowserPageviewEvent.rollup_source)
-            .minimum(:created_at)
-            &.to_date
+        # Not filtered by source: the backfill can span the piggyback-to-beacon
+        # cutover, and each day aggregates from whichever source covers it.
+        earliest_event_date = BrowserPageviewEvent.minimum(:created_at)&.to_date
         [earliest_event_date, end_date]
       else
         [1.day.ago.to_date, end_date]
@@ -71,11 +99,11 @@ module Jobs
     end
 
     def next_batch
-      params = {
-        source: BrowserPageviewEvent.rollup_source,
-        version: BrowserPageviewReferrerInspector::VERSION,
-        limit: batch_size,
-      }
+      params =
+        rollup_source_params.merge(
+          version: BrowserPageviewReferrerInspector::VERSION,
+          limit: batch_size,
+        )
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -90,7 +118,7 @@ module Jobs
         SELECT id, referrer
         FROM browser_pageview_events
         WHERE referrer IS NOT NULL
-          AND source = :source
+          AND #{rollup_source_condition}
           AND (
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
@@ -117,11 +145,8 @@ module Jobs
     end
 
     def recomputable_dates(ids)
-      params = {
-        ids: ids,
-        source: BrowserPageviewEvent.rollup_source,
-        version: BrowserPageviewReferrerInspector::VERSION,
-      }
+      params =
+        rollup_source_params.merge(ids: ids, version: BrowserPageviewReferrerInspector::VERSION)
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -145,7 +170,7 @@ module Jobs
           FROM browser_pageview_events e
           WHERE e.created_at >= touched_dates.date
             AND e.created_at < touched_dates.date + 1
-            AND e.source = :source
+            AND #{rollup_source_condition("e.")}
             AND e.referrer IS NOT NULL
             AND NOT EXISTS (
               SELECT 1
@@ -159,6 +184,27 @@ module Jobs
             #{retention_clause}
         )
       SQL
+    end
+
+    # Matches each event against the rollup source for its own day, so a batch
+    # spanning the piggyback-to-beacon cutover backfills the right rows on both
+    # sides. When there is no cutover, :beacon_start_date is NULL and the
+    # comparison falls through to piggyback.
+    def rollup_source_condition(prefix = "")
+      <<~SQL
+        #{prefix}source = CASE
+          WHEN #{prefix}created_at >= :beacon_start_date THEN :source_beacon
+          ELSE :source_piggyback
+        END
+      SQL
+    end
+
+    def rollup_source_params
+      {
+        beacon_start_date: BrowserPageviewEvent.beacon_rollup_start_date,
+        source_beacon: BrowserPageviewEvent::SOURCE_BEACON,
+        source_piggyback: BrowserPageviewEvent::SOURCE_PIGGYBACK,
+      }
     end
 
     def stamp_version(ids)

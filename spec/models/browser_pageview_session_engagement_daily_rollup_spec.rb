@@ -157,6 +157,11 @@ RSpec.describe BrowserPageviewSessionEngagementDailyRollup do
 
     it "counts only rollup-source pageviews, even within a single session" do
       SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.utc(2026, 5, 20),
+      )
       beacon_event =
         Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 10, 9))
       Fabricate(

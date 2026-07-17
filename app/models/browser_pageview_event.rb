@@ -189,12 +189,26 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
-  def self.rollup_source
-    if UpcomingChanges.enabled?(:dashboard_improvements)
-      SOURCE_BEACON
-    else
-      SOURCE_PIGGYBACK
-    end
+  # Rollups switch from piggyback to beacon the day AFTER the upcoming change
+  # is enabled: beacon events only cover the part of the enablement day after
+  # the toggle, while piggyback keeps recording in parallel, so the enablement
+  # day itself (and everything before it) must keep aggregating from piggyback
+  # or those days would be rebuilt from a partial or empty beacon stream.
+  def self.beacon_rollup_start_date
+    return if !UpcomingChanges.enabled?(:dashboard_improvements)
+
+    enabled_at =
+      UpcomingChangeEvent.where(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: %i[manual_opt_in automatically_promoted],
+      ).maximum(:created_at)
+
+    enabled_at && enabled_at.to_date + 1
+  end
+
+  def self.rollup_source_for(date)
+    start_date = beacon_rollup_start_date
+    start_date && date.to_date >= start_date ? SOURCE_BEACON : SOURCE_PIGGYBACK
   end
 
   before_save :truncate_fields

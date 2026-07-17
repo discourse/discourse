@@ -144,4 +144,76 @@ RSpec.describe BrowserPageviewEvent do
       expect(Discourse.redis.ttl(described_class::REDIS_QUEUE_KEY)).to be > 0
     end
   end
+
+  describe ".beacon_rollup_start_date" do
+    def record_enablement(event_type, created_at)
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type:,
+        created_at:,
+      )
+    end
+
+    it "is nil when dashboard_improvements is disabled" do
+      SiteSetting.dashboard_improvements = false
+      record_enablement(:manual_opt_in, 2.days.ago)
+
+      expect(described_class.beacon_rollup_start_date).to be_nil
+    end
+
+    it "is nil when the change is enabled but no enablement event was recorded" do
+      SiteSetting.dashboard_improvements = true
+
+      expect(described_class.beacon_rollup_start_date).to be_nil
+    end
+
+    it "is the day after the change was manually enabled" do
+      SiteSetting.dashboard_improvements = true
+      record_enablement(:manual_opt_in, Time.zone.parse("2026-07-10 15:00"))
+
+      expect(described_class.beacon_rollup_start_date).to eq(Date.new(2026, 7, 11))
+    end
+
+    it "is the day after an automatic promotion" do
+      SiteSetting.dashboard_improvements = true
+      record_enablement(:automatically_promoted, Time.zone.parse("2026-07-10 15:00"))
+
+      expect(described_class.beacon_rollup_start_date).to eq(Date.new(2026, 7, 11))
+    end
+
+    it "uses the latest enablement when the change was toggled off and on again" do
+      SiteSetting.dashboard_improvements = true
+      record_enablement(:manual_opt_in, Time.zone.parse("2026-07-01 09:00"))
+      record_enablement(:manual_opt_out, Time.zone.parse("2026-07-05 09:00"))
+      record_enablement(:manual_opt_in, Time.zone.parse("2026-07-10 09:00"))
+
+      expect(described_class.beacon_rollup_start_date).to eq(Date.new(2026, 7, 11))
+    end
+  end
+
+  describe ".rollup_source_for" do
+    it "is piggyback for every date when there is no cutover" do
+      SiteSetting.dashboard_improvements = false
+
+      expect(described_class.rollup_source_for(Time.zone.today)).to eq(
+        described_class::SOURCE_PIGGYBACK,
+      )
+    end
+
+    it "flips from piggyback to beacon at the cutover date" do
+      SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.zone.parse("2026-07-10 15:00"),
+      )
+
+      expect(described_class.rollup_source_for(Date.new(2026, 7, 10))).to eq(
+        described_class::SOURCE_PIGGYBACK,
+      )
+      expect(described_class.rollup_source_for(Date.new(2026, 7, 11))).to eq(
+        described_class::SOURCE_BEACON,
+      )
+    end
+  end
 end
