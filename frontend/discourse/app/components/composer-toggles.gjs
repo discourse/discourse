@@ -7,7 +7,6 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ComposerToggles extends Component {
   @service site;
-  @service siteSettings;
 
   get additionalClasses() {
     return applyValueTransformer("composer-toggles-class", "");
@@ -49,9 +48,7 @@ export default class ComposerToggles extends Component {
   }
 
   get showToolbarToggle() {
-    // the redesigned composer keeps the toolbar fixed in the footer, so
-    // there is nothing to toggle
-    return this.site.mobileView && !this.siteSettings.enable_composer_redesign;
+    return this.site.mobileView;
   }
 
   <template>

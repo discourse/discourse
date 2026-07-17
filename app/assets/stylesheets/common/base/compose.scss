@@ -1436,6 +1436,12 @@ body.has-sidebar-page {
     }
   }
 
+  .wmd-controls:not(.toolbar-visible)
+    ~ .composer-footer
+    .d-editor-button-bar__wrap {
+    display: none;
+  }
+
   .composer-footer {
     display: flex;
     align-items: center;
