@@ -436,6 +436,30 @@ RSpec.describe ListController do
     end
   end
 
+  describe "rss feed discovery" do
+    it "advertises the feed for anonymous filters with a feed route" do
+      topic
+      get "/latest", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("latest.rss")
+    end
+
+    it "omits the feed for anonymous filters without a feed route" do
+      topic
+      sign_in(user)
+
+      SiteSetting.anonymous_menu_items
+      anonymous_filters = Discourse.anonymous_filters
+      Discourse.stubs(:anonymous_filters).returns(anonymous_filters + [:new])
+
+      get "/new", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("application/rss+xml")
+    end
+  end
+
   describe "filter private messages by tag" do
     fab!(:user)
     fab!(:moderator)

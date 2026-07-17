@@ -86,6 +86,18 @@ RSpec.describe SiteSetting do
         SiteSetting.top_menu = "bookmarks|latest"
         expect(SiteSetting.homepage).to eq("bookmarks")
       end
+
+      it "falls back to the first top_menu item when the persisted value's filter is no longer registered" do
+        SiteSetting.top_menu = "categories|latest"
+
+        filters = Discourse.filters
+        Discourse.stubs(:filters).returns(filters + [:votes])
+        SiteSetting.default_homepage = "votes"
+        expect(SiteSetting.homepage).to eq("votes")
+
+        Discourse.stubs(:filters).returns(filters)
+        expect(SiteSetting.homepage).to eq("categories")
+      end
     end
   end
 

@@ -190,7 +190,13 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.homepage
-    default_homepage.presence || top_menu_items[0].name
+    configured = default_homepage.presence
+
+    if configured && (configured == "categories" || Discourse.filters.include?(configured.to_sym))
+      configured
+    else
+      top_menu_items[0].name
+    end
   end
 
   def self.anonymous_menu_items
