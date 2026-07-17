@@ -97,4 +97,17 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     assert.dom(".toggle-channel-membership-button.-join").exists();
     assert.dom(".livestream-rsvp__going-button").doesNotExist();
   });
+
+  test("does not render the RSVP replacement when the livestream topic is absent", async function (assert) {
+    this.channel.livestreamTopic = undefined;
+
+    await render(
+      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
+    );
+
+    assert.dom(".livestream-rsvp").doesNotExist();
+    assert.dom(".livestream-rsvp__message").doesNotExist();
+    assert.dom(".livestream-rsvp__going-button").doesNotExist();
+    assert.dom(".toggle-channel-membership-button.-join").exists();
+  });
 });

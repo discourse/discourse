@@ -157,6 +157,36 @@ module ::DiscourseCalendar
         user_ids: [user.id],
       )
     end
+
+    module ChannelSerializerExtension
+      private
+
+      def livestream_invitees_by_post_id
+        user = scope.user
+        return {} if user.nil?
+
+        user.instance_variable_get(:@discourse_calendar_livestream_invitees) ||
+          user.instance_variable_set(
+            :@discourse_calendar_livestream_invitees,
+            DiscoursePostEvent::Invitee.where(user_id: user.id).index_by(&:post_id),
+          )
+      end
+
+      def livestream_invitee_event_ids
+        livestream_invitees_by_post_id.keys
+      end
+
+      def livestream_user_group_names
+        user = scope.user
+        return [] if user.nil?
+
+        user.instance_variable_get(:@discourse_calendar_livestream_group_names) ||
+          user.instance_variable_set(
+            :@discourse_calendar_livestream_group_names,
+            user.groups.pluck(:name),
+          )
+      end
+    end
   end
 
   def self.users_on_holiday
@@ -911,21 +941,32 @@ after_initialize do
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
 
+  Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
+
   register_modifier(:chat_channel_fetcher_public_includes) do |includes|
-    includes + [{ livestream_topic_chat_channel: { topic: :first_post } }]
+    includes + [{ livestream_topic_chat_channel: { topic: { first_post: :event } } }]
   end
 
   add_to_serializer(
     "Chat::Channel",
     :livestream_topic,
-    include_condition: -> { object.livestream_topic_chat_channel&.topic.present? },
+    include_condition: -> do
+      topic = object.livestream_topic_chat_channel&.topic
+      event = topic&.first_post&.event
+      event&.livestream? &&
+        (
+          scope.is_admin? ||
+            event.can_access_livestream_chat?(
+              scope.user,
+              invitee_event_ids: livestream_invitee_event_ids,
+              group_names: livestream_user_group_names,
+            )
+        )
+    end,
   ) do
     topic = object.livestream_topic_chat_channel.topic
     event = topic.first_post&.event
-    watching_invitee =
-      if scope.user && event
-        DiscoursePostEvent::Invitee.find_by(user_id: scope.user.id, post_id: event.id)
-      end
+    watching_invitee = livestream_invitees_by_post_id[event&.id]
 
     {
       id: topic.id,
@@ -934,7 +975,15 @@ after_initialize do
       url: topic.relative_url,
       event_id: topic.first_post&.id,
       reference_message_id: object.livestream_topic_chat_channel.reference_message_id,
-      can_update_attendance: !!(scope.user && event&.can_user_update_attendance?(scope.user)),
+      can_update_attendance:
+        !!(
+          scope.user &&
+            event&.can_user_update_attendance?(
+              scope.user,
+              invitee_event_ids: livestream_invitee_event_ids,
+              group_names: livestream_user_group_names,
+            )
+        ),
       watching_invitee_status:
         watching_invitee && DiscoursePostEvent::Invitee.statuses[watching_invitee.status],
     }

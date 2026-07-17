@@ -400,20 +400,22 @@ module DiscoursePostEvent
     end
 
     # unlike can_user_update_attendance?, this stays true after the event
-    # closes or expires so attendees keep access to the livestream chat
-    def can_access_livestream_chat?(user)
+    # closes or expires so attendees keep access to the livestream chat.
+    #
+    # Callers serializing many events at once (e.g. the chat channel list) can
+    # pass preloaded invitee_event_ids/group_names to avoid a per-event query.
+    def can_access_livestream_chat?(user, invitee_event_ids: nil, group_names: nil)
       return true if !private?
       return false if user.blank?
 
-      invitees.exists?(user_id: user.id) || user.groups.where(name: Array(raw_invitees)).exists?
+      invited?(user, invitee_event_ids:, group_names:)
     end
 
-    def can_user_update_attendance?(user)
+    def can_user_update_attendance?(user, invitee_event_ids: nil, group_names: nil)
       return false if closed || expired?
       return true if public?
 
-      private? &&
-        (invitees.exists?(user_id: user.id) || (user.groups.pluck(:name) & raw_invitees).any?)
+      private? && invited?(user, invitee_event_ids:, group_names:)
     end
 
     def sync_image_to_post_and_topic(generate_thumbnails: false)
@@ -579,6 +581,14 @@ module DiscoursePostEvent
     end
 
     private
+
+    def invited?(user, invitee_event_ids: nil, group_names: nil)
+      if invitee_event_ids && group_names
+        invitee_event_ids.include?(id) || (Array(raw_invitees) & Array(group_names)).any?
+      else
+        invitees.exists?(user_id: user.id) || user.groups.where(name: Array(raw_invitees)).exists?
+      end
+    end
 
     def reset_invitees_topic_tracking
       topic_id = post&.topic_id
