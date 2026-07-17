@@ -954,7 +954,7 @@ nl:
           access_key_id: "Toegangssleutel-ID AWS Bedrock"
           role_arn: "Rol ARN AWS Bedrock"
           inference_profile_arn: "ARN toepassingsinferentieprofiel AWS Bedrock"
-          region: "Regio AWS Bedrock"
+          region: "Regio"
           organization: "Optionele organisatie-ID OpenAI"
           disable_system_prompt: "Systeembericht uitschakelen in prompts"
           enable_native_tool: "Ondersteuning voor native tools inschakelen"

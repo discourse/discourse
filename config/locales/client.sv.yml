@@ -1742,6 +1742,23 @@ sv:
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
           update_invite: "Uppdatera"
           cancel: "Avbryt"
+        invite_roles:
+          sent_title: "Inbjudan skickad"
+          member_tab: "Medlemmar"
+          admin_tab: "Administratörer"
+          email_placeholder: "namn@exempel.com"
+          invite_by_email: "E-postadress"
+          restrict_domain: "Begränsa till domän"
+          domain_placeholder: "example.com"
+          update: "Uppdatera"
+          summary:
+            role_member: "Medlem"
+            role_admin: "Admin"
+            method_email: "E-postadress"
+            uses: "Max antal användningar"
+            expires: "Utgår"
+            topic: "Ämne"
+            groups: "Grupper"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"

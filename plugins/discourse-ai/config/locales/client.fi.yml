@@ -611,7 +611,7 @@ fi:
           fake: "Mukautettu"
         provider_fields:
           access_key_id: "AWS Bedrockin käyttöavaintunnus"
-          region: "AWS Bedrockin alue"
+          region: "Alue"
           organization: "Valinnainen OpenAI:n organisaatiotunnus"
           disable_system_prompt: "Poista järjestelmäviesti käytöstä kehotteissa"
           enable_native_tool: "Ota käyttöön natiivityökalujen tuki"

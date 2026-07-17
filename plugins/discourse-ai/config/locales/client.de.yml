@@ -954,7 +954,7 @@ de:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
           role_arn: "AWS Bedrock-Rollen-ARN"
           inference_profile_arn: "AWS Bedrock Anwendungs-Inferenzprofil ARN"
-          region: "AWS-Bedrock-Region"
+          region: "Region"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"

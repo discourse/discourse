@@ -961,7 +961,7 @@ zh_CN:
           access_key_id: "AWS Bedrock 访问密钥 ID"
           role_arn: "AWS Bedrock 角色 ARN"
           inference_profile_arn: "AWS Bedrock 应用程序推理配置文件 ARN"
-          region: "AWS Bedrock 区域"
+          region: "区域"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"

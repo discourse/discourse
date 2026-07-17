@@ -1049,7 +1049,7 @@ ar:
           access_key_id: "معرِّف مفتاح الوصول إلى AWS Bedrock"
           role_arn: "معرّف المورد الموحد (ARN) لدور AWS Bedrock"
           inference_profile_arn: "معرّف الموارد (ARN) لملف استدلال التطبيق في AWS Bedrock"
-          region: "منطقة AWS Bedrock"
+          region: "المنطقة"
           organization: "معرِّف مؤسسة OpenAI الاختياري"
           disable_system_prompt: "إيقاف رسالة النظام في رسائل المطالبة"
           enable_native_tool: "تفعيل دعم الأدوات الأصلية"

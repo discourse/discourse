@@ -649,6 +649,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukiwanie ustawień witryny"
+        read_site_setting: "Odczytaj ustawienia witryny"
         change_site_setting: "Zmień ustawienia witryny"
         dall_e: "Wygeneruj obraz"
         search_meta_discourse: "Wyszukaj Discourse Meta"
@@ -700,6 +701,7 @@ pl_PL:
         setting_context: "Wyszukaj kontekst ustawienia witryny"
         schema: "Wyszukaj schemat bazy danych"
         search_settings: "Wyszukaj ustawienia witryny"
+        read_site_setting: "Odczytaj aktualną wartość ustawienia witryny"
         change_site_setting: "Zmień wartość ustawienia witryny"
         dall_e: "Wygeneruj obraz za pomocą DALL-E 3"
         search_meta_discourse: "Wyszukaj Discourse Meta"
@@ -788,6 +790,7 @@ pl_PL:
           few: "Znaleziono %{count} wyniki dla '%{query}'"
           many: "Znaleziono %{count} wyników dla '%{query}'"
           other: "Znaleziono %{count} wyników dla '%{query}'"
+        read_site_setting: "Ustawienia witryny do odczytania %{setting_name}"
         change_site_setting: "Zmiana ustawień witryny %{setting_name} na '%{value}'"
       discoveries:
         continue_conversation:
@@ -945,6 +948,8 @@ pl_PL:
           not_found: "Ustawienie witryny '%{setting_name}' nie istnieje."
           not_allowed: "Nie masz uprawnień do zmiany ustawień witryny."
           hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj zmienić."
+          secret: "Ustawienie witryny '%{setting_name}' zawiera klucz tajny i nie można go tutaj zmienić."
+          themeable: "Ustawienie witryny '%{setting_name}' wymaga motywu i nie można go tutaj zmienić."
           deprecated: "Ustawienie witryny „%{setting_name}” jest przestarzałe; zamiast niego należy używać „%{new_name}”."
           shadowed: "Ustawienie witryny '%{setting_name}' jest globalnie zastępowane i nie można go zmienić."
           unconfigurable: "Ustawienie witryny „%{setting_name}” należy do wtyczki, której nie można skonfigurować."
@@ -952,6 +957,13 @@ pl_PL:
           invalid_value: "Nieprawidłowa wartość: %{error}"
           failed: "Nie udało się zmienić ustawień witryny."
         success: "Ustawienie witryny %{setting_name} zostało zmienione na „%{value}”."
+      read_site_setting:
+        errors:
+          not_allowed: "Nie masz uprawnień do odczytu ustawień witryny."
+          not_found: "Ustawienie witryny '%{setting_name}' nie istnieje."
+          hidden: "Ustawienie witryny '%{setting_name}' jest ukryte i nie można go tutaj odczytać."
+          secret: "Ustawienie witryny '%{setting_name}' zawiera klucz tajny i nie można go tutaj odczytać."
+          themeable: "Ustawienia witryny '%{setting_name}' wymagają motywu i nie można ich tutaj odczytać."
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"
@@ -1031,6 +1043,7 @@ pl_PL:
       delete_failed_in_use: "To poświadczenie jest obecnie używane przez jedno lub więcej LLM, osadzeń lub narzędzi i nie może zostać usunięte."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
+      invalid_provider_param: "%{param} ma nieprawidłowy format"
       secret_required: "Należy wybrać poświadczenie"
       secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."

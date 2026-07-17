@@ -204,6 +204,8 @@ da:
         providers:
           google: "Google"
           fake: "Tilpasset"
+        provider_fields:
+          region: "Område"
       ai_helper:
         context_menu:
           cancel: "Annuller"
