@@ -96,11 +96,34 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     refilter count suppressed (`#suppressNextCount`, leak-guarded); `removeItem` restores input
     focus. `.--multiple` SCSS (left-align, no double inset). New broad oracle
     `d-select-multi-flip-test.gjs` + updated `DSelect (multi typeahead)` module, all green.
-  - ☐ **6b — chips arrow-roving** (deferred): wire `dRovingFocus tabStop=false
-    orientation="horizontal"` on the chips group; ArrowLeft-at-caret-0 enters the chips, arrows
-    move between, `onExit` returns to the input, Backspace/Delete on a focused chip removes it,
-    input becomes the sole tab stop. (Known interim limitation: while the menu is open, Tab from
-    a chip is forwarded into the listbox by DMenu; chip-to-chip Tab works only while closed.)
+  - ☑ **6b — chips arrow-roving** — `dRovingFocus selectionMode=focus tabStop=false
+    orientation="horizontal" itemSelector=".d-combobox__chip-remove"` on the chips group, applied
+    via a desktop-gated conditional curried modifier `{{(if this.isDesktopTypeahead (modifier …))}}`
+    so mobile is byte-identical. The chips are a native `<ul>`/`<li>` list (`aria-label` +
+    `display: contents` so the `<li>`s flow inline with the input, which is a sibling — an
+    `<input>` can't live in a `<ul>`), giving real "Selected items, list, N items" semantics
+    without an ARIA-role guess (validated against Higley's user-tested pens + GitHub Primer). The
+    remove **button** is the roving item; its accessible name leads with the item then the removal
+    hint ("Orange, Press Backspace or Delete to remove" — Primer style) via a reordered
+    `aria-labelledby`. ArrowLeft-at-caret-0 (composition-guarded, `hasValue`) enters the chip
+    nearest the input via `focusLast()`; arrows move; `onExit(forward)` returns to the input; the
+    far edge stays. Backspace/Delete remove + move focus to the **previous** chip
+    (`focusIndex(max(0, index-1))`, `nextRunloop`, Primer) with an input fallback; Enter/Space use
+    the button's native activation (→ `removeItem` → input). **Escape** is owned by float-kit's
+    document-capture listener (closes the menu; focus stays on the chip); **ArrowDown/ArrowUp**
+    from a chip jump to the input and open the list (the reopen gesture, keeps the
+    `aria-activedescendant` model coherent). Static `tabindex=-1` on each remove button (desktop)
+    makes the input the sole tab stop with no re-seed dependency. `dRovingFocus`
+    `focusFirst/Last/Index` now return `boolean` (did-land, for the fallback). sr-only
+    `aria-describedby` hint on the input ("Press Left arrow to reach selected items."). Chip
+    hover states + a whole-chip `:focus-visible` ring (keyed off `:has(.d-combobox__chip-remove
+    :focus-visible)`, button outline suppressed). Oracle: `d-select-multi-flip-test.gjs` + a system spec (native Enter +
+    real Tab order) driving the styleguide's multi example, at
+    `plugins/styleguide/spec/system/d_select_multi_chip_roving_spec.rb` **temporarily** (system
+    tests need a real page and the styleguide is the only multi surface today — move to core
+    `spec/system` once a real core consumer renders `DSelect @multiple`), plus the reusable
+    core-owned page object `PageObjects::Components::UiKit::DSelect`. (Known accepted interim:
+    while the menu is open, Tab from a chip is forwarded into the listbox by DMenu.)
   - ☐ **RTL** (deferred): `dRovingFocus` has no direction handling — ArrowLeft/Right are
     hard-wired backward/forward. Add RTL entry (+ its one other consumer + tests) as its own item.
   - ☐ **Mobile M5** (deferred): closed trigger → real `<button aria-haspopup="dialog">` with
