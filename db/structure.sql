@@ -340,7 +340,8 @@ CREATE TABLE public.admin_dashboard_sections (
     "position" integer NOT NULL,
     visible boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -22653,6 +22654,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260715090434'),
 ('20260715090355'),
 ('20260715064155'),
+('20260714152340'),
 ('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),

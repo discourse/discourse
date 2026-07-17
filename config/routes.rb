@@ -327,6 +327,9 @@ Discourse::Application.routes.draw do
       get "dashboard" => "dashboard#index"
       put "dashboard/configuration" => "dashboard#update_configuration",
           :constraints => AdminConstraint.new
+      put "dashboard/sections/:section_id/settings/:setting_key" =>
+            "dashboard#update_section_settings",
+          :constraints => AdminConstraint.new
       get "dashboard/general" => "dashboard#general"
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
