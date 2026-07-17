@@ -4,6 +4,7 @@ import SiteSettingComponent from "./site-setting";
 
 export default class ThemeTranslation extends SiteSettingComponent {
   type = "string";
+  trackChanges = false;
 
   get setting() {
     return this.args.translation;

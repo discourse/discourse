@@ -1,7 +1,17 @@
-import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
+import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
+import ThemeTranslation from "discourse/admin/components/theme-translation";
 import SiteSetting from "discourse/admin/models/site-setting";
+import ThemeSettings from "discourse/admin/models/theme-settings";
+import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
@@ -319,6 +329,87 @@ module("Integration | Component | SiteSetting", function (hooks) {
       status: "completed",
     });
     assert.dom(".desc.site-setting").doesNotExist();
+  });
+
+  test("doesn't listen for job progress on unrelated settings", async function (assert) {
+    this.set(
+      "setting",
+      SiteSetting.create({
+        setting: "title",
+        value: "",
+        type: "string",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+    );
+
+    await publishToMessageBus("/site_setting/title/process", {
+      status: "enqueued",
+    });
+
+    assert.dom(".desc.site-setting").doesNotExist();
+  });
+
+  test("theme rows don't register in the site setting change tracker", async function (assert) {
+    const tracker = this.owner.lookup("service:site-setting-change-tracker");
+
+    const themeSetting = ThemeSiteSettings.create({
+      setting: "enable_welcome_banner",
+      value: "true",
+      default: "true",
+      type: "bool",
+    });
+    this.setProperties({
+      themeSetting,
+      theme: { id: 1, name: "Horizon" },
+    });
+
+    await render(
+      <template>
+        <ThemeSiteSettingEditor
+          @setting={{this.themeSetting}}
+          @model={{this.theme}}
+        />
+      </template>
+    );
+
+    themeSetting.buffered.set("value", "false");
+    await settled();
+
+    assert
+      .dom(".setting-controls .ok")
+      .exists("the row itself still shows its save button");
+    assert.strictEqual(
+      tracker.count,
+      0,
+      "the dirty theme setting is not picked up by the site settings banner"
+    );
+  });
+
+  test("renders theme translation rows without a setting name", async function (assert) {
+    const translation = ThemeSettings.create({
+      key: "theme_metadata.description",
+      value: "A theme",
+      default: "A theme",
+      textarea: true,
+    });
+    this.setProperties({
+      translation,
+      theme: { id: 1, locale: "en" },
+    });
+
+    await render(
+      <template>
+        <ThemeTranslation
+          @translation={{this.translation}}
+          @model={{this.theme}}
+        />
+      </template>
+    );
+
+    assert.dom(".setting textarea").hasValue("A theme");
   });
 
   test("doesn't display the save/cancel buttons when the selected value is returned to the current value", async function (assert) {

@@ -74,6 +74,7 @@ export default class SiteSettingComponent extends Component {
   @tracked status = null;
   @tracked progress = null;
   updateExistingUsers = null;
+  trackChanges = true;
 
   constructor() {
     super(...arguments);
@@ -98,11 +99,12 @@ export default class SiteSettingComponent extends Component {
     }
   }
 
-  canSubscribeToSettingsJobs() {
-    const settingName = this.setting.setting;
+  get canSubscribeToSettingsJobs() {
+    const settingName = this.setting?.setting;
+
     return (
-      settingName.includes("default_categories") ||
-      settingName.includes("default_tags")
+      settingName?.includes("default_categories") ||
+      settingName?.includes("default_tags")
     );
   }
 
@@ -284,10 +286,12 @@ export default class SiteSettingComponent extends Component {
 
     const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
 
-    if (dirty) {
-      this.siteSettingChangeTracker.add(setting);
-    } else {
-      this.siteSettingChangeTracker.remove(setting);
+    if (this.trackChanges) {
+      if (dirty) {
+        this.siteSettingChangeTracker.add(setting);
+      } else {
+        this.siteSettingChangeTracker.remove(setting);
+      }
     }
 
     return dirty;
@@ -476,8 +480,7 @@ export default class SiteSettingComponent extends Component {
 
       const refreshParams = {};
       settings.forEach((setting) => {
-        setting.validationMessage = null;
-        setting.buffered.applyChanges();
+        setting.commit();
 
         if (setting.requiresReload) {
           refreshParams[setting.setting] = setting.value;
@@ -528,7 +531,7 @@ export default class SiteSettingComponent extends Component {
   @action
   cancel() {
     this.dirtySettings.forEach((setting) => {
-      setting.buffered.discardChanges();
+      setting.rollback();
       setting.validationMessage = null;
     });
   }

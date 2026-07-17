@@ -173,6 +173,19 @@ export default class SiteSetting extends EmberObject {
     };
   }
 
+  get pendingValue() {
+    return this.buffered.get("value");
+  }
+
+  commit() {
+    this.validationMessage = null;
+    this.buffered.applyChanges();
+  }
+
+  rollback() {
+    this.buffered.discardChanges();
+  }
+
   get requiresConfirmation() {
     switch (this.requires_confirmation) {
       case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
