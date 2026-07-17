@@ -5,6 +5,16 @@ module DiscourseDataExplorer
     # The spike API's v-day zero (docs/versioning-design.md, §1).
     INITIAL_API_VERSION = "2026-05-01"
 
+    # Extensions that ship atomically with core (one repo, one deploy) ride
+    # the core timeline: their changes join the base snap set and cannot be
+    # overridden. Membership is GRANTED here — reviewed data in core's
+    # codebase, following the `config/official_plugins.json` precedent — and
+    # plugins have no syntax to claim it. Fails closed: a missing entry means an
+    # own timeline (override-gated), never a stranded pin. A repo ⟺ list CI
+    # consistency check is the real-phase companion (a stale entry after a
+    # plugin leaves the repo is the dangerous drift). Empty in the spike.
+    CORE_PLUGINS = [].freeze
+
     class << self
       # The API's version registry — every VersionChange is registered here.
       # Memoized for the process lifetime; in dev a code reload can leave stale
@@ -59,6 +69,8 @@ module DiscourseDataExplorer
         end
       end
 
+      def core_plugin?(namespace) = CORE_PLUGINS.include?(namespace.to_s)
+
       # Spike stand-in for a real resource registry — the resource-level home is a
       # design follow-up (docs/versioning-design.md §3).
       def serializer_for(type)
@@ -103,10 +115,12 @@ module DiscourseDataExplorer
           ) { |record, _params| related.call(record) }
         end
         # One union registry per site: the extension's changes join the timeline
-        # under its own owner (they only ever transform its own types — enforced
-        # above) and leave it with the extension. Only host changes form the base
-        # snap set; extension timelines are reached through overrides.
-        extension.version_changes.each { api_versions.register(it, owner: extension.namespace) }
+        # (they only ever transform its own types — enforced above) and leave it
+        # with the extension. A core plugin's changes are core-owned — they enter
+        # the base snap set; an independent extension's changes carry its
+        # namespace and are reached through overrides.
+        owner = core_plugin?(extension.namespace) ? nil : extension.namespace
+        extension.version_changes.each { api_versions.register(it, owner:) }
       end
 
       def member_names(serializer)

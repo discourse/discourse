@@ -23,6 +23,18 @@ RSpec.describe "JSON:API Kit plugin extensions" do
       attributes :stale
     end
   end
+  let(:rename_change) do
+    Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+      version "2026-06-20"
+      description "Renames the run-stats `outdated` attribute to `stale`."
+
+      resource :"run-stats" do
+        renamed_attribute from: :outdated, to: :stale
+        renamed_filter from: :outdated, to: :stale
+      end
+    end
+  end
+  let(:included_attributes) { parsed_document["included"].map { it["attributes"] } }
 
   before do
     SiteSetting.data_explorer_enabled = true
@@ -126,19 +138,6 @@ RSpec.describe "JSON:API Kit plugin extensions" do
   end
 
   context "with the extension shipping a version change" do
-    let(:rename_change) do
-      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
-        version "2026-06-20"
-        description "Renames the run-stats `outdated` attribute to `stale`."
-
-        resource :"run-stats" do
-          renamed_attribute from: :outdated, to: :stale
-          renamed_filter from: :outdated, to: :stale
-        end
-      end
-    end
-    let(:included_attributes) { parsed_document["included"].map { it["attributes"] } }
-
     before { register_run_stats_extension(version_change: rename_change) }
 
     after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
@@ -247,6 +246,47 @@ RSpec.describe "JSON:API Kit plugin extensions" do
 
     context "with an override naming an unknown component" do
       before { get_queries(version: "2026-07-08; nonexistent=2026-07-01") }
+
+      it "rejects the request" do
+        expect(response.status).to eq(400)
+      end
+    end
+  end
+
+  context "with a core-plugin extension shipping a version change" do
+    around do |example|
+      stub_const(DiscourseDataExplorer::JsonApiKit, :CORE_PLUGINS, ["run-stats"]) { example.run }
+    end
+
+    before { register_run_stats_extension(version_change: rename_change) }
+
+    after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
+
+    context "when the pinned date falls between the change and the next core version" do
+      before { get_queries(params: { include: "run-stats" }, version: "2026-06-25") }
+
+      it "snaps to the extension's change date" do
+        expect(response.headers["Api-Version"]).to eq("2026-06-20")
+      end
+
+      it "serves the extension's latest shape" do
+        expect(included_attributes).to contain_exactly({ "stale" => false }, { "stale" => true })
+      end
+    end
+
+    context "when the client is pinned before the change" do
+      before { get_queries(params: { include: "run-stats" }, version: "2026-06-15") }
+
+      it "serves the extension's old shape" do
+        expect(included_attributes).to contain_exactly(
+          { "outdated" => false },
+          { "outdated" => true },
+        )
+      end
+    end
+
+    context "with an override naming the core plugin" do
+      before { get_queries(version: "2026-07-08; run-stats=2026-06-01") }
 
       it "rejects the request" do
         expect(response.status).to eq(400)

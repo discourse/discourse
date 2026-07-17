@@ -12,6 +12,7 @@ module DiscourseDataExplorer
       FutureVersion = Class.new(Error)
       UnknownVersion = Class.new(Error)
       UnknownComponent = Class.new(Error)
+      NotOverridable = Class.new(Error)
 
       attr_reader :initial_version
 
@@ -20,8 +21,8 @@ module DiscourseDataExplorer
         @changes = {}
       end
 
-      # Host-owned changes register with no owner; an extension's changes carry
-      # its namespace. Owners have disjoint timelines: only host changes form the
+      # Core-owned changes register with no owner; an extension's changes carry
+      # its namespace. Owners have disjoint timelines: only core changes form the
       # base snap set, and each owner's changes can be governed by an override.
       def register(change_class, owner: nil)
         if change_class.version.nil? || change_class.description.blank?
@@ -36,18 +37,18 @@ module DiscourseDataExplorer
       end
 
       # Extensions come and go with their owner (plugin enabled/disabled); their
-      # changes leave the timeline with them. Host changes are never unregistered.
+      # changes leave the timeline with them. Core changes are never unregistered.
       def unregister(change_class) = @changes.delete(change_class)
 
       # Oldest→newest; same-date changes keep registration order.
       def changes = @changes.keys.sort_by.with_index { |change, index| [change.version, index] }
 
-      # The base snap set is the HOST's timeline only: a resolved base date always
+      # The base snap set is CORE's timeline only: a resolved base date always
       # reads against one public changelog, and one owner's movement can never
       # push a pin past another owner's future changes.
       def versions
-        host_versions = @changes.filter_map { |change, owner| change.version if owner.nil? }
-        ([initial_version] + host_versions).uniq.sort
+        core_versions = @changes.filter_map { |change, owner| change.version if owner.nil? }
+        ([initial_version] + core_versions).uniq.sort
       end
 
       def current_version = versions.last

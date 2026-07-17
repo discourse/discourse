@@ -5,9 +5,11 @@ via a fake extension registered at spec time
 (`spec/requests/discourse_data_explorer/json_api_kit/plugin_extensions_spec.rb`): ownership
 enforcement (A), include-gated relationships (B), per-owner version changes with
 auto-namespaced filter renames (D), disabled-plugin strictness (E), and the C resolution —
-host-timeline base snap, per-plugin overrides, per-owner gaps. Still unbuilt: the
-plugin-facing `jsonapi` block in plugin.rb (the spike registers at the Kit level),
-`register_sort` projection, date-monotonicity enforcement, F (frontend).
+core-timeline base snap, per-plugin overrides, per-owner gaps, and `CORE_PLUGINS`-granted
+core-timeline membership (bundled plugin's change advances the advertised version; its
+override → 400). Still unbuilt: the plugin-facing `jsonapi` block in plugin.rb (the spike
+registers at the Kit level), `register_sort` projection, date-monotonicity enforcement,
+the repo ⟺ `CORE_PLUGINS` CI consistency check, F (frontend).
 **References:** [versioning design](./versioning-design.md) (the machinery all of this composes with) · [Stripe versioning](./stripe-api-versioning-reference.md) · [JSON:API spec notes](./jsonapi-spec-reference.md).
 
 ---
@@ -100,30 +102,54 @@ because they are the argument for the final shape):
    at latest means a pinned client's contract silently shifts every time that plugin ships
    a breaking change, which is the precise surprise versioning exists to prevent. Every
    client would also pay the expanded-echo complexity to serve a small expert population.
+4. *Uniform plugins — every plugin on its own timeline, base snap = core-only.* (Briefly
+   built.) **Break:** on a frequently-deployed branch, a bundled plugin ships a breaking
+   change on its own types and updates every caller in the same commit — yet the change is
+   unreachable: the base date snaps to *core's* newest change, so every base-date client
+   (including the first-party frontend, which ships in lockstep and wants exactly this
+   change) gets the old shape down-applied. The escape is one override per bundled plugin —
+   dozens of machine-generated dates in the header for "just give me this deployment's
+   API". Treating plugins uniformly conflated two orthogonal properties; the fix is to
+   separate them (below).
 
-**Design (retained): one clock — the host's — plus explicit per-plugin overrides.**
+**Design (retained): one clock — core's — plus explicit per-plugin overrides.**
 *(Simplified 2026-07-16, then built in the spike. Two ideas from the first draft died on
 inspection: the "core cut" concept proved mathematically redundant, and the in-core vs
 out-of-tree plugin classification proved unnecessary — see below.)*
 
-- **The base snap set is the host's timeline only.** The newest host-owned change *is* the
+- **The base snap set is core's timeline only.** ("Core" throughout = the API's owner, who
+  registers changes directly into the registry — Discourse core in the real phase; in the
+  spike, data-explorer's Kit plays that role.) The newest core-owned change *is* the
   deployment's knowledge of its own edge — the deployed registry cannot contain what hasn't
   shipped — so no release-cut metadata exists anywhere. Equivalence note: the first draft
-  ceilinged the base at the release cut and then snapped; since every deployed host change
+  ceilinged the base at the release cut and then snapped; since every deployed core change
   is dated ≤ its cut, `snap(min(requested, cut))` = `snap(requested)` for every input. The
   snap-down mechanism already built *is* the ceiling, and failure narrative (1) stays
-  impossible by construction: a resolved base can never sit past the host's newest shipped
+  impossible by construction: a resolved base can never sit past core's newest shipped
   change.
-- **Plugins are uniform.** "Host" is simply whoever owns the registry and registers changes
-  directly (core, in real Discourse); *every* plugin — bundled or third-party — contributes
-  through `register_extension` and is overridable. No repo-layout detection, no two plugin
-  classes. What the classification would have bought is either free in practice (bundled
-  plugins' change dates ride the same release train as core's) or handled by an override.
+- **Vocabulary ownership and timeline membership are orthogonal.** Ownership (types,
+  namespaces, transforms, filter-rename projections) is per-plugin, always — A/B/D
+  unchanged. Timeline membership is a **shipping property**: the question is never "is
+  this plugin core?" but "does this code deploy atomically with core?". An extension
+  that ships with core (one repo, one deploy — the bundled plugins) **rides the core
+  timeline**: its change dates join the base snap set, so a bundled plugin's breaking
+  change advances the advertised version and "send today" reaches it — and it cannot be
+  overridden (the train is one contract). An independently-shipped extension keeps its own
+  timeline: frozen at pin by default, reached through overrides.
+- **Membership is granted by core, never claimed by the plugin.** A `CORE_PLUGINS`
+  allowlist in core's codebase (reviewed data — the `config/official_plugins.json`
+  precedent) decides; the plugin-facing DSL has *no syntax* for it, the same
+  inexpressibility trick as auto-namespacing. Fails closed: a forgotten entry puts a new
+  bundled plugin on its own timeline — override-gated and visible, never a stranded pin.
+  The dangerous drift is the *stale* entry (a plugin extracted from the repo but still
+  listed re-creates failure narrative 1), so the real-phase companion is a CI consistency
+  check: plugins in the core repo ⟺ names in the list, both directions. Runtime never
+  trusts repo layout; CI checks it where git reliably exists.
 - **Resolution** (as built):
   1. **Parse** `Api-Version: 2026-06-01; some-plugin=2026-06-25` — base date required (else
      the teaching 400), overrides optional. Any calendar-future date → 400; an override
      naming an unknown or uninstalled extension → 400.
-  2. **Snap each date against the timeline it governs:** the base against the host's
+  2. **Snap each date against the timeline it governs:** the base against core's
      changes; each override against that extension's own changes (both anchored on the
      same initial version). One rule, applied per date.
   3. **The gap is the union** of all owners' changes, each governed by its owner's
@@ -131,7 +157,7 @@ out-of-tree plugin classification proved unnecessary — see below.)*
   4. **Echo the fully-resolved string** (`2026-05-01; some-plugin=2026-06-20`); clients
      store it verbatim. Never-flip holds per owner.
 - **Default = frozen at pin.** A non-overridden extension's changes dated after the
-  resolved base are down-applied exactly like the host's: pinned clients keep the old
+  resolved base are down-applied exactly like core's: pinned clients keep the old
   shapes, stable by default. Additive plugin changes are not version-gated and flow through
   regardless — overrides only matter for *breaking* changes to plugin-owned types.
 - **Override = deliberate unfreeze,** one named plugin at a time. The consumer updates its
@@ -146,13 +172,14 @@ out-of-tree plugin classification proved unnecessary — see below.)*
 - Two consequences, stated honestly:
   - **Extension dates never appear in base echoes** — a base pin always reads against one
     public changelog; plugin timelines surface only in override echoes.
-  - **A quiet host delays plugin-latest for base-date clients.** If the host ships no
-    breaking change for months, an extension's new shapes stay override-gated for that
-    period (the base cannot snap past the host's last change). Consistent — the host is
-    the clock, and extension consumers are the override-capable population — but
-    documented, not silent. The client rule for the official docs, said loudly: *send
-    today's date, store the echo; add `plugin=today` for any plugin whose latest shapes
-    you need.*
+  - **A quiet core timeline delays plugin-latest for base-date clients — own-timeline
+    extensions only.** If the core timeline ships no breaking change for months, an
+    independently-shipped extension's new shapes stay override-gated for that period (the
+    base cannot snap past the core timeline's last change). Consistent — the train is the
+    clock, and own-timeline consumers are the override-capable population — but
+    documented, not silent. Bundled plugins are unaffected: they *are* the train. The
+    client rule for the official docs, said loudly: *send today's date, store the echo;
+    add `plugin=today` for any independently-shipped plugin whose latest shapes you need.*
 
 **Residual, documented not solved:** a stale third-party plugin that sits unupgraded for a
 long time and then jumps to its repository HEAD can introduce changes dated *before*
