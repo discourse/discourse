@@ -192,6 +192,7 @@ module Chat
         end
       else
         channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        channels = channels.order("LOWER(chat_channels.name) ASC")
       end
 
       if options.key?(:slugs)
