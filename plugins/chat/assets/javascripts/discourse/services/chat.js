@@ -72,6 +72,11 @@ export default class Chat extends Service {
     );
   }
 
+  @computed("currentUser.can_chat", "currentUser.has_chat_enabled")
+  get chatDisabledInPreferences() {
+    return this.currentUser?.can_chat && !this.currentUser?.has_chat_enabled;
+  }
+
   get anonymousUserCanViewPublicChat() {
     return (
       !this.currentUser &&

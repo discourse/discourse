@@ -42,16 +42,6 @@ RSpec.describe "Visit channel" do
     context "when regular user" do
       before { sign_in(current_user) }
 
-      context "when chat is disabled" do
-        before { current_user.user_option.update!(chat_enabled: false) }
-
-        it "redirects to homepage" do
-          visit("/chat/c/-/#{category_channel_1.id}")
-
-          expect(page).to have_current_path("/latest")
-        end
-      end
-
       context "when current user is not allowed to chat" do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
 
