@@ -211,8 +211,8 @@ describe OpenIDConnectAuthenticator do
       cert.issuer = cert.subject
       cert.not_before = Time.now
       cert.not_after = Time.now + 365 * 86_400
-      cert.public_key = key.public_key
-      cert.sign(key, OpenSSL::Digest.new("SHA256"))
+      cert.public_key = mtls_key.public_key
+      cert.sign(mtls_key, OpenSSL::Digest.new("SHA256"))
       cert
     end
 
@@ -223,8 +223,8 @@ describe OpenIDConnectAuthenticator do
     end
 
     it "parses valid PEM certificate and key" do
-      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
-      SiteSetting.openid_connect_mtls_client_key = key.to_pem
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
 
       result = authenticator.mtls_ssl_options
       expect(result[:client_cert]).to be_a(OpenSSL::X509::Certificate)
@@ -233,22 +233,22 @@ describe OpenIDConnectAuthenticator do
 
     it "raises OpenSSL error for invalid cert PEM" do
       SiteSetting.openid_connect_mtls_client_cert = "not-a-cert"
-      SiteSetting.openid_connect_mtls_client_key = key.to_pem
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
       Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
       expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
     end
 
     it "raises OpenSSL error for invalid key PEM" do
-      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
       SiteSetting.openid_connect_mtls_client_key = "not-a-key"
       Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
       expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
     end
 
     it "decrypts a key with a passcode when the setting is provided" do
-      encrypted_key = key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
 
-      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
       SiteSetting.openid_connect_mtls_client_key = encrypted_key
       SiteSetting.openid_connect_mtls_client_key_passcode = "some_passphrase"
 
@@ -257,11 +257,11 @@ describe OpenIDConnectAuthenticator do
     end
 
     it "raises OpenSSL error when the passphrase is wrong" do
-      encrypted_key = key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
 
       SiteSetting.openid_connect_mtls_client_key = encrypted_key
       SiteSetting.openid_connect_mtls_client_key_passcode = "wrong_passphrase"
-      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
       Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
       expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
     end
