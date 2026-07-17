@@ -29,6 +29,6 @@ class SidebarSectionSerializer < ApplicationSerializer
   end
 
   def include_localizations?
-    object.localizations.loaded? && scope.can_edit_sidebar_section?(object)
+    false
   end
 end

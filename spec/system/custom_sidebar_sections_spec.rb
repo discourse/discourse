@@ -397,6 +397,29 @@ describe "Custom sidebar sections" do
     expect(page).to have_css(".sidebar-section-link", text: "タグ")
   end
 
+  it "loads source labels when editing localized public custom sections" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+    admin.update!(locale: "ja")
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "公開セクション")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "en")
+    Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "タグ")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    expect(page).to have_css(".sidebar-section-header", text: "公開セクション")
+    expect(page).to have_css(".sidebar-section-link", text: "タグ")
+
+    sidebar.edit_custom_section("Public section")
+
+    expect(section_modal).to have_section_name("Public section")
+    expect(section_modal).to have_first_link_name("Sidebar Tags")
+  end
+
   it "shows translation controls only when a section is visible to everyone" do
     SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_supported_locales = "ja"

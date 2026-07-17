@@ -9,6 +9,7 @@ describe Jobs::SidebarSectionsLocaleDetectionBackfill do
     assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
+    SiteSetting.content_localization_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
     SidebarSection.update_all(locale: "en")
@@ -25,6 +26,17 @@ describe Jobs::SidebarSectionsLocaleDetectionBackfill do
     DiscourseAi::Translation::SidebarSectionLocaleDetector
       .expects(:detect_locale)
       .with(private_section)
+      .never
+
+    job.execute({})
+  end
+
+  it "does not detect locales when content localization is disabled" do
+    SiteSetting.content_localization_enabled = false
+
+    DiscourseAi::Translation::SidebarSectionLocaleDetector
+      .expects(:detect_locale)
+      .with(sidebar_section)
       .never
 
     job.execute({})

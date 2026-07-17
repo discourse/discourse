@@ -19,6 +19,6 @@ class SidebarUrlSerializer < ApplicationSerializer
   end
 
   def include_localizations?
-    object.localizations.loaded? && scope.user&.admin?
+    @options[:include_localizations]
   end
 end

@@ -39,6 +39,42 @@ RSpec.describe SidebarSectionsController do
     end
   end
 
+  describe "#show" do
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "Public section", public: true) }
+    fab!(:sidebar_url) { Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags") }
+
+    before do
+      Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+      Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "公開セクション")
+      Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "タグ")
+    end
+
+    it "returns source labels for admins editing a localized section" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+
+      I18n.with_locale("ja") { get "/sidebar_sections/#{sidebar_section.id}.json" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("sidebar_section", "title")).to eq("Public section")
+      expect(response.parsed_body.dig("sidebar_section", "links", 0, "name")).to eq("Sidebar Tags")
+      expect(response.parsed_body.dig("sidebar_section", "localizations", 0, "title")).to eq(
+        "公開セクション",
+      )
+      expect(
+        response.parsed_body.dig("sidebar_section", "links", 0, "localizations", 0, "name"),
+      ).to eq("タグ")
+    end
+
+    it "does not allow regular users to load a public section for editing" do
+      sign_in(user)
+
+      get "/sidebar_sections/#{sidebar_section.id}.json"
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "#create" do
     it "is not available for anonymous" do
       post "/sidebar_sections.json",
@@ -229,6 +265,34 @@ RSpec.describe SidebarSectionsController do
       )
       expect(sidebar_section.sidebar_urls.first.localizations.map(&:name)).to eq(["カテゴリー"])
     end
+
+    it "does not create localizations when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      sign_in(admin)
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "custom section",
+             public: true,
+             locale: "ja",
+             localizations: [{ locale: "ja", title: "カスタム" }],
+             links: [
+               {
+                 icon: "link",
+                 name: "categories",
+                 value: "/categories",
+                 localizations: [{ locale: "ja", name: "カテゴリー" }],
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+
+      sidebar_section = SidebarSection.last
+      expect(sidebar_section.locale).to eq(SiteSetting.default_locale)
+      expect(sidebar_section.localizations).to be_blank
+      expect(sidebar_section.sidebar_urls.first.localizations).to be_blank
+    end
   end
 
   describe "#update" do
@@ -401,6 +465,39 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_url_1.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
         [%w[fr Récent], %w[ja 最新]],
       )
+    end
+
+    it "allows admin to remove public section localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+      sidebar_section.update!(public: true)
+      section_localization =
+        Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "古い")
+      url_localization =
+        Fabricate(:sidebar_url_localization, sidebar_url: sidebar_url_1, locale: "ja", name: "古い")
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section edited",
+            localizations: [
+              { id: section_localization.id, locale: "ja", title: "古い", _destroy: "1" },
+            ],
+            links: [
+              {
+                icon: "link",
+                id: sidebar_url_1.id,
+                name: "latest",
+                value: "/latest",
+                localizations: [
+                  { id: url_localization.id, locale: "ja", name: "古い", _destroy: "1" },
+                ],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(SidebarSectionLocalization.exists?(section_localization.id)).to eq(false)
+      expect(SidebarUrlLocalization.exists?(url_localization.id)).to eq(false)
     end
 
     it "validates limit of links" do

@@ -23,6 +23,16 @@ class SidebarSectionsController < ApplicationController
     render json: sections
   end
 
+  def show
+    sidebar_section =
+      SidebarSection.includes(:localizations, sidebar_urls: :localizations).find(params[:id])
+    @guardian.ensure_can_edit!(sidebar_section)
+
+    render_serialized(sidebar_section, SidebarSectionEditSerializer, root: "sidebar_section")
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: :forbidden
+  end
+
   def create
     sidebar_section =
       SidebarSection.create!(section_params.merge(sidebar_urls_attributes: links_params))
@@ -110,12 +120,16 @@ class SidebarSectionsController < ApplicationController
     section_params = params.permit(:id, :title).to_h.with_indifferent_access
 
     if current_user.admin?
-      section_params.merge!(
-        params
-          .permit(:public, :locale, localizations: %i[id locale title _destroy])
-          .to_h
-          .with_indifferent_access,
-      )
+      section_params.merge!(params.permit(:public).to_h.with_indifferent_access)
+
+      if SiteSetting.content_localization_enabled
+        section_params.merge!(
+          params
+            .permit(:locale, localizations: %i[id locale title _destroy])
+            .to_h
+            .with_indifferent_access,
+        )
+      end
     end
 
     section_is_public = ActiveModel::Type::Boolean.new.cast(section_params[:public])
@@ -133,7 +147,9 @@ class SidebarSectionsController < ApplicationController
 
   def links_params
     permitted_link_params = %i[icon name value id _destroy segment]
-    permitted_link_params << { localizations: %i[id locale name _destroy] } if current_user.admin?
+    if current_user.admin? && SiteSetting.content_localization_enabled
+      permitted_link_params << { localizations: %i[id locale name _destroy] }
+    end
 
     links = params.permit(links: permitted_link_params)["links"]
 

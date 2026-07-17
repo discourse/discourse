@@ -854,9 +854,8 @@ export default class SidebarSectionForm extends Component {
                 class="btn-flat btn-text add-localization"
               />
             </div>
+            <hr />
           {{/if}}
-
-          <hr />
 
           <div
             id="section-links-label"

@@ -42,14 +42,31 @@ describe SidebarSectionSerializer do
     end
   end
 
-  it "only exposes localization rows to admins who can edit the sidebar section" do
+  it "does not expose localization rows in the regular presentation payload" do
     SiteSetting.content_localization_enabled = true
 
     expect(serialized_for(Guardian.new(user))[:localizations]).to eq(nil)
-    expect(serialized_for(Guardian.new(admin))[:localizations].first[:title]).to eq("参加")
-    expect(serialized_for(Guardian.new(admin))[:links].first[:localizations].first[:name]).to eq(
-      "ようこそ",
-    )
+    expect(serialized_for(Guardian.new(user))[:links].first[:localizations]).to eq(nil)
+    expect(serialized_for(Guardian.new(admin))[:localizations]).to eq(nil)
+    expect(serialized_for(Guardian.new(admin))[:links].first[:localizations]).to eq(nil)
+  end
+
+  it "returns source labels and localization rows from the edit serializer" do
+    SiteSetting.content_localization_enabled = true
+
+    I18n.with_locale("ja") do
+      reloaded =
+        SidebarSection.includes(:localizations, sidebar_urls: :localizations).find(
+          sidebar_section.id,
+        )
+      json =
+        SidebarSectionEditSerializer.new(reloaded, scope: Guardian.new(admin), root: false).as_json
+
+      expect(json[:title]).to eq("Participate")
+      expect(json[:links].first[:name]).to eq("Welcome")
+      expect(json[:localizations].first[:title]).to eq("参加")
+      expect(json[:links].first[:localizations].first[:name]).to eq("ようこそ")
+    end
   end
 
   it "returns original labels for private sections with localizations" do
@@ -74,6 +91,8 @@ describe SidebarSectionSerializer do
 
       expect(json[:title]).to eq("Private section")
       expect(json[:links].first[:name]).to eq("Private link")
+      expect(json[:localizations]).to eq(nil)
+      expect(json[:links].first[:localizations]).to eq(nil)
     end
   end
 end

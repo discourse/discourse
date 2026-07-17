@@ -6,6 +6,7 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
+      return if !SiteSetting.content_localization_enabled
       return if !DiscourseAi::Translation.enabled?
 
       unless DiscourseAi::Translation.credits_available_for_sidebar_localization?

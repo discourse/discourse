@@ -7,6 +7,7 @@ describe Jobs::LocalizeSidebarSections do
     assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
+    SiteSetting.content_localization_enabled = true
     SiteSetting.content_localization_supported_locales = "pt_BR|zh_CN"
 
     Jobs.run_immediately!
@@ -23,6 +24,18 @@ describe Jobs::LocalizeSidebarSections do
       .expects(:localize)
       .with(sidebar_section, "zh_CN", has_entries(short_text_llm_model: anything))
       .once
+
+    job.execute({ limit: 10 })
+  end
+
+  it "does not translate when content localization is disabled" do
+    SiteSetting.content_localization_enabled = false
+    sidebar_section = Fabricate(:sidebar_section, public: true, locale: "en")
+
+    DiscourseAi::Translation::SidebarSectionLocalizer
+      .expects(:localize)
+      .with(sidebar_section, any_parameters)
+      .never
 
     job.execute({ limit: 10 })
   end

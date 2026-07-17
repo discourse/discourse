@@ -7,6 +7,7 @@ module Jobs
     cluster_concurrency 1
 
     def execute(args)
+      return if !SiteSetting.content_localization_enabled
       return if !DiscourseAi::Translation.backfill_enabled?
 
       llm_model = find_llm_model

@@ -1964,7 +1964,7 @@ Discourse::Application.routes.draw do
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 
-    resources :sidebar_sections, only: %i[index create update destroy]
+    resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "/form-templates/:id" => "form_templates#show"

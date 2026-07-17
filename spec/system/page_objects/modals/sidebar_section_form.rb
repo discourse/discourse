@@ -108,6 +108,14 @@ module PageObjects
         page.has_css?(".sidebar-section-form__links-label", text: "Section links")
       end
 
+      def has_section_name?(name)
+        page.has_field?("section-name", with: name)
+      end
+
+      def has_first_link_name?(name)
+        page.has_field?("link-name", with: name, match: :first)
+      end
+
       def topics_link
         find(".draggable[data-link-name='Topics']")
       end
