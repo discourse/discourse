@@ -24,9 +24,7 @@ export default class ChatChannelEmptyState extends Component {
 
   @action
   loadMemberships() {
-    // Anonymous users can't list memberships, so skip the fetch and fall back
-    // to the count-only display for them.
-    if (!this.currentUser) {
+    if (!this.currentUser || !this.memberCount) {
       return;
     }
 
@@ -40,8 +38,9 @@ export default class ChatChannelEmptyState extends Component {
   }
 
   get memberCount() {
-    const count = this.args.channel.membershipsCount;
-    return this.args.channel.isFollowing ? count - 1 : count;
+    const total = this.args.channel.membershipsCount ?? 0;
+    const count = this.args.channel.isFollowing ? total - 1 : total;
+    return Math.max(0, count);
   }
 
   get channelIcon() {
