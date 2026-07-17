@@ -829,15 +829,15 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
       "the api is registered on insert"
     );
 
-    api.focusFirst();
+    assert.true(api.focusFirst(), "focusFirst reports it landed on an item");
     await settled();
     assert.dom(".a").isFocused("focusFirst moves DOM focus to the first item");
 
-    api.focusLast();
+    assert.true(api.focusLast(), "focusLast reports it landed on an item");
     await settled();
     assert.dom(".c").isFocused("focusLast moves DOM focus to the last item");
 
-    api.focusIndex(1);
+    assert.true(api.focusIndex(1), "focusIndex reports it landed on an item");
     await settled();
     assert.dom(".b").isFocused("focusIndex moves DOM focus to the given index");
   });
@@ -887,10 +887,12 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.true(revoked, "onRegisterApi(null) is called on teardown");
 
     // The container is destroyed on every modal close on mobile; a stale api call
-    // must find no items and no-op rather than throw on items[last].
-    api.focusFirst();
-    api.focusLast();
-    api.focusIndex(0);
-    assert.true(true, "stale api calls after teardown do not throw");
+    // must find no items and report it never landed rather than throw on items[last].
+    assert.false(api.focusFirst(), "a stale focusFirst reports no item landed");
+    assert.false(api.focusLast(), "a stale focusLast reports no item landed");
+    assert.false(
+      api.focusIndex(0),
+      "a stale focusIndex reports no item landed"
+    );
   });
 });
