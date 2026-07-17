@@ -32,6 +32,7 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatChannelEmptyState from "./chat/channel/empty-state";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
@@ -86,6 +87,13 @@ export default class ChatChannel extends Component {
 
   get messagesManager() {
     return this.args.channel.messagesManager;
+  }
+
+  get isEmpty() {
+    return (
+      this.messagesLoader.fetchedOnce &&
+      this.messagesManager.messages.length === 0
+    );
   }
 
   get currentUserMembership() {
@@ -751,6 +759,7 @@ export default class ChatChannel extends Component {
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (if this.messagesLoader.fetchedOnce "--loaded")
+        (if this.isEmpty "is-empty")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
@@ -782,14 +791,20 @@ export default class ChatChannel extends Component {
               @context="channel"
             />
           {{else}}
-            {{#unless this.messagesLoader.fetchedOnce}}
+            {{#if this.messagesLoader.fetchedOnce}}
+              <ChatChannelEmptyState @channel={{@channel}} />
+            {{else}}
               <ChatSkeleton />
-            {{/unless}}
+            {{/if}}
           {{/each}}
         </ChatMessagesContainer>
 
         {{! at bottom even if shown at top due to column-reverse  }}
-        {{#if this.messagesLoader.loadedPast}}
+        {{#if
+          (and
+            this.messagesLoader.loadedPast this.messagesManager.messages.length
+          )
+        }}
           <div class="all-loaded-message">
             {{i18n "chat.all_loaded"}}
           </div>
