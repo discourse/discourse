@@ -596,13 +596,6 @@ export default class ComposerContainer extends Component {
                       @title={{this.composer.cancelLabel}}
                       @label={{this.composer.cancelLabel}}
                     />
-                    {{#if this.site.mobileView}}
-                      {{#unless this.composerRedesign}}
-                        {{#if this.composer.model.noBump}}
-                          <span class="no-bump">{{dIcon "anchor"}}</span>
-                        {{/if}}
-                      {{/unless}}
-                    {{/if}}
 
                     <ComposerSaveButton
                       @action={{this.composer.saveAction}}
@@ -648,62 +641,6 @@ export default class ComposerContainer extends Component {
                       />
                     {{/if}}
                   {{/if}}
-
-                  {{#unless this.composerRedesign}}
-                    {{#if
-                      (or
-                        this.composer.isUploading
-                        this.composer.isProcessingUpload
-                      )
-                    }}
-                      <div id="file-uploading">
-                        {{#if this.composer.isProcessingUpload}}
-                          {{dLoadingSpinner size="small"}}<span>{{i18n
-                              "upload_selector.processing"
-                            }}</span>
-                        {{else}}
-                          {{dLoadingSpinner size="small"}}<span>{{i18n
-                              "upload_selector.uploading"
-                            }}
-                            {{this.composer.uploadProgress}}%</span>
-                        {{/if}}
-
-                        {{#if this.composer.isCancellable}}
-                          <a
-                            href
-                            id="cancel-file-upload"
-                            {{on "click" this.composer.cancelUpload}}
-                          >{{dIcon "xmark"}}</a>
-                        {{/if}}
-                      </div>
-                    {{/if}}
-
-                    {{#if this.composer.model.draftStatus}}
-                      <div
-                        class={{if this.composer.isUploading "hidden"}}
-                        id="draft-status"
-                      >
-                        <span
-                          class="draft-error"
-                          title={{this.composer.model.draftStatus}}
-                        >
-                          {{#if this.composer.model.draftConflictUser}}
-                            {{dAvatar
-                              this.composer.model.draftConflictUser
-                              imageSize="small"
-                            }}
-                            {{dIcon "user-pen"}}
-                          {{else}}
-                            {{dIcon "triangle-exclamation"}}
-                          {{/if}}
-                          {{#if this.site.desktopView}}
-                            {{this.composer.model.draftStatus}}
-                          {{/if}}
-                        </span>
-                      </div>
-                    {{/if}}
-
-                  {{/unless}}
 
                   {{#if (and this.composer.allowPreview this.site.desktopView)}}
                     <DButton
