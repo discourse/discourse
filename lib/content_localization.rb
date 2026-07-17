@@ -46,6 +46,16 @@ class ContentLocalization
     SiteSetting.content_localization_enabled && tag.locale.present? && !tag.in_user_locale?
   end
 
+  def self.show_translated_sidebar_section?(section, scope)
+    SiteSetting.content_localization_enabled && section.public? && section.locale.present? &&
+      !section.in_user_locale?
+  end
+
+  def self.show_translated_sidebar_url?(sidebar_url, scope)
+    SiteSetting.content_localization_enabled && sidebar_url.locale.present? &&
+      !sidebar_url.in_user_locale?
+  end
+
   def self.crawler_locale_param_enabled?
     SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
       SiteSetting.set_locale_from_param

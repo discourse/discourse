@@ -20,6 +20,7 @@ describe "Custom sidebar sections" do
 
       expect(section_modal).to be_visible
       expect(section_modal).to have_disabled_save
+      expect(section_modal).to have_section_links_label
       expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
       section_modal.fill_name("My section")
@@ -376,6 +377,46 @@ describe "Custom sidebar sections" do
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("Edited public section")
+  end
+
+  it "shows localized public custom sections" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+    user.update!(locale: "ja")
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "公開セクション")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "en")
+    Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "タグ")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in user
+    visit("/latest")
+
+    expect(page).to have_css(".sidebar-section-header", text: "公開セクション")
+    expect(page).to have_css(".sidebar-section-link", text: "タグ")
+  end
+
+  it "shows translation controls only when a section is visible to everyone" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
+    Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "公開セクション")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "en")
+    Fabricate(:sidebar_url_localization, sidebar_url:, locale: "ja", name: "タグ")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Public section")
+
+    expect(section_modal).to have_localization_controls
+
+    section_modal.mark_as_public
+
+    expect(section_modal).to have_no_localization_controls
   end
 
   it "displays warning when public section is marked as private" do

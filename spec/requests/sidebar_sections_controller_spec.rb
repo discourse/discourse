@@ -133,6 +133,33 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(403)
     end
 
+    it "does not allow regular user to create section localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(user)
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "custom section",
+             locale: "ja",
+             localizations: [{ locale: "ja", title: "カスタム" }],
+             links: [
+               {
+                 icon: "link",
+                 name: "categories",
+                 value: "/categories",
+                 localizations: [{ locale: "ja", name: "カテゴリー" }],
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+
+      sidebar_section = SidebarSection.last
+      expect(sidebar_section.locale).to eq(SiteSetting.default_locale)
+      expect(sidebar_section.localizations).to be_blank
+      expect(sidebar_section.sidebar_urls.first.localizations).to be_blank
+    end
+
     it "does not allow moderator to create public section" do
       sign_in(moderator)
 
@@ -174,6 +201,34 @@ RSpec.describe SidebarSectionsController do
       expect(user_history.subject).to eq("custom section")
       expect(user_history.details).to eq("links: categories - /categories, tags - /tags")
     end
+
+    it "allows admin to create public section localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+
+      post "/sidebar_sections.json",
+           params: {
+             title: "custom section",
+             public: true,
+             localizations: [{ locale: "ja", title: "カスタム" }],
+             links: [
+               {
+                 icon: "link",
+                 name: "categories",
+                 value: "/categories",
+                 localizations: [{ locale: "ja", name: "カテゴリー" }],
+               },
+             ],
+           }
+
+      expect(response.status).to eq(200)
+
+      sidebar_section = SidebarSection.last
+      expect(sidebar_section.localizations.map { |localization| localization.title }).to eq(
+        ["カスタム"],
+      )
+      expect(sidebar_section.sidebar_urls.first.localizations.map(&:name)).to eq(["カテゴリー"])
+    end
   end
 
   describe "#update" do
@@ -213,6 +268,45 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_url_1.value).to eq("/latest")
       expect { section_link_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { sidebar_url_2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "does not allow a user to update their own section locale" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section edited",
+            locale: "ja",
+            links: [{ icon: "link", id: sidebar_url_1.id, name: "latest", value: "/latest" }],
+          }
+
+      expect(response.status).to eq(200)
+      expect(sidebar_section.reload.locale).to eq(SiteSetting.default_locale)
+    end
+
+    it "does not allow a user to update their own section localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(user)
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section edited",
+            localizations: [{ locale: "ja", title: "カスタム" }],
+            links: [
+              {
+                icon: "link",
+                id: sidebar_url_1.id,
+                name: "latest",
+                value: "/latest",
+                localizations: [{ locale: "ja", name: "最新" }],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(403)
+      expect(sidebar_section.reload.localizations).to be_blank
+      expect(sidebar_url_1.reload.localizations).to be_blank
     end
 
     it "allows admin to update public section and links" do
@@ -263,6 +357,49 @@ RSpec.describe SidebarSectionsController do
       expect(user_history.subject).to eq("custom section edited")
       expect(user_history.details).to eq(
         "links: latest - /latest, meta - https://meta.discourse.org, homepage - https://discourse.org",
+      )
+    end
+
+    it "allows admin to update public section localizations" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.default_locale = "en"
+      sign_in(admin)
+      sidebar_section.update_columns(public: true, locale: nil)
+      sidebar_url_1.update_column(:locale, nil)
+      section_localization =
+        Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "古い")
+      url_localization =
+        Fabricate(:sidebar_url_localization, sidebar_url: sidebar_url_1, locale: "ja", name: "古い")
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section edited",
+            localizations: [
+              { id: section_localization.id, locale: "ja", title: "新しい" },
+              { locale: "fr", title: "Nouveau" },
+            ],
+            links: [
+              {
+                icon: "link",
+                id: sidebar_url_1.id,
+                name: "latest",
+                value: "/latest",
+                localizations: [
+                  { id: url_localization.id, locale: "ja", name: "最新" },
+                  { locale: "fr", name: "Récent" },
+                ],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(sidebar_section.reload.locale).to eq("en")
+      expect(sidebar_url_1.reload.locale).to eq("en")
+      expect(sidebar_section.reload.localizations.order(:locale).pluck(:locale, :title)).to eq(
+        [%w[fr Nouveau], %w[ja 新しい]],
+      )
+      expect(sidebar_url_1.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
+        [%w[fr Récent], %w[ja 最新]],
       )
     end
 

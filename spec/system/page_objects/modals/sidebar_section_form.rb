@@ -30,6 +30,28 @@ module PageObjects
         all(".delete-link").last.click
       end
 
+      def add_section_localization(title)
+        find(".add-localization").click
+        all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
+          .last
+          .find("option[value='ja']")
+          .select_option
+        all(
+          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.title_label")}']",
+        ).last.fill_in(with: title)
+      end
+
+      def add_first_link_localization(name)
+        find(".add-link-localization", match: :first).click
+        all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
+          .last
+          .find("option[value='ja']")
+          .select_option
+        all(
+          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.link_label")}']",
+        ).last.fill_in(with: name)
+      end
+
       def delete
         find("#delete-section").click
       end
@@ -70,6 +92,20 @@ module PageObjects
 
       def has_enabled_save?
         find_button("Save", disabled: false)
+      end
+
+      def has_localization_controls?
+        page.has_css?(".sidebar-section-form__localization-row") &&
+          page.has_css?(".add-localization") && page.has_css?(".add-link-localization")
+      end
+
+      def has_no_localization_controls?
+        page.has_no_css?(".sidebar-section-form__localization-row") &&
+          page.has_no_css?(".add-localization") && page.has_no_css?(".add-link-localization")
+      end
+
+      def has_section_links_label?
+        page.has_css?(".sidebar-section-form__links-label", text: "Section links")
       end
 
       def topics_link
