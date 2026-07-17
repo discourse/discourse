@@ -163,7 +163,8 @@ class Reviewable < ActiveRecord::Base
       update_args = {
         status: statuses[:pending],
         id: target.id,
-        type: target.class.polymorphic_name,
+        target_type: target.class.polymorphic_name,
+        reviewable_type: reviewable.type,
         potential_spam: potential_spam == true ? true : nil,
         potentially_illegal: potentially_illegal == true ? true : nil,
       }
@@ -175,7 +176,9 @@ class Reviewable < ActiveRecord::Base
           potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
-          AND reviewables.target_type = :type
+          AND reviewables.target_type = :target_type
+          AND reviewables.type = :reviewable_type
+          AND old_reviewables.id = reviewables.id
         RETURNING old_reviewables.status
       SQL
       old_status = row[0]
