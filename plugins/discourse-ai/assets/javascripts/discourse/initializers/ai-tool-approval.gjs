@@ -27,7 +27,12 @@ function initializeAiToolApproval(api) {
 
         helper.renderGlimmer(
           cardElement,
-          <template><AiToolApproval @reviewableId={{reviewableId}} /></template>
+          <template>
+            <AiToolApproval
+              @postId={{post.id}}
+              @reviewableId={{reviewableId}}
+            />
+          </template>
         );
       });
     },
