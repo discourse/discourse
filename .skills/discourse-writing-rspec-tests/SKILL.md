@@ -29,6 +29,32 @@ Discourse uses RSpec for testing. Follow these patterns for all test types.
 - **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
 - **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
 
+## Spec Structure
+
+Arrange class, model, service, job, and request specs from public entry point to scenario to expected behavior:
+
+```rb
+RSpec.describe ExpiryPolicy do
+  describe "#expired?" do
+    context "when the expiry time has passed" do
+      subject(:expiry_policy) { described_class.new(expires_at: 1.hour.ago) }
+
+      it "returns true" do
+        expect(expiry_policy.expired?).to eq(true)
+      end
+    end
+  end
+end
+```
+
+- The first group inside `RSpec.describe` identifies the public entry point under test: `describe "#instance_method"`, `describe ".class_method"`, or `describe "#controller_action"`.
+- Nest scenario `context` blocks below the entry-point group, never directly below the class. System and integration specs that do not exercise a single public method may instead group by user-facing flow or behavior.
+- Put an `it` block directly below the entry-point group when no scenario grouping is needed; otherwise, put it inside the relevant `context`.
+- Start context descriptions with `"when"`, `"with"`, or `"without"`. Write `it` descriptions in the third-person present tense without `"should"`.
+- Limit nesting below `RSpec.describe` to the entry-point group and one scenario group. Put additional scenario detail in the `it` description instead of adding another context.
+- Within a group, order declarations and hooks as `subject`, `fab!`/`let!`/`let`, `before`, then `after`, followed by examples and nested contexts.
+- Do not leave a blank line immediately after a `describe` or `context` declaration or before its closing `end`. Group single-line declarations together. Separate declaration groups, hook groups, each example, and each sibling group with one blank line; surround multi-line declarations with blank lines. Also separate arrange, act, and assert sections within an example.
+
 ## Test Data with Fabricators
 
 Use `fab!` for shared test data, or `Fabricate` inline within the test example:
