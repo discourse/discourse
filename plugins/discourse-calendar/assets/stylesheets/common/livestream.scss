@@ -29,14 +29,9 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
-.livestream-rsvp {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  p {
-    margin: 0;
+.livestream-rsvp__going-button {
+  @container (width < 40rem) {
+    width: 100%;
   }
 }
 
@@ -144,15 +139,6 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     right: 1rem;
     bottom: 4rem;
     z-index: 3;
-  }
-}
-
-body.chat-enabled.livestream-topic,
-body.chat-enabled.websdk-body {
-  .chat-channel-preview-card {
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: center;
   }
 }
 

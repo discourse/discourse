@@ -43,7 +43,9 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     assert
       .dom(".livestream-rsvp__message a[href='/t/watching-the-birds/1']")
       .exists("links to the livestream topic");
-    assert.dom(".livestream-rsvp__going-button").exists();
+    assert
+      .dom(".chat-channel-preview-card__actions .livestream-rsvp__going-button")
+      .exists("renders the RSVP button in the preview card actions");
     assert.dom(".toggle-channel-membership-button.-join").doesNotExist();
   });
 
@@ -73,7 +75,7 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     );
 
     assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp").doesNotExist();
+    assert.dom(".livestream-rsvp__going-button").doesNotExist();
   });
 
   test("keeps the default join button when the user is already going", async function (assert) {
@@ -84,7 +86,7 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     );
 
     assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp").doesNotExist();
+    assert.dom(".livestream-rsvp__going-button").doesNotExist();
   });
 
   test("keeps the default join button for regular channels", async function (assert) {
@@ -93,6 +95,6 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     );
 
     assert.dom(".toggle-channel-membership-button.-join").exists();
-    assert.dom(".livestream-rsvp").doesNotExist();
+    assert.dom(".livestream-rsvp__going-button").doesNotExist();
   });
 });

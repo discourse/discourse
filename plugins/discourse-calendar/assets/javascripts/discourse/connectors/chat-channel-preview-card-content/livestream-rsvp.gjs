@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { LIVESTREAM_CHAT_CONTEXT } from "../../components/livestream/embeddable-chat-channel";
 
@@ -122,8 +123,19 @@ export default class LivestreamRsvp extends Component {
 
   <template>
     {{#if this.shouldRenderRsvp}}
-      <div class="livestream-rsvp">
-        <p class="livestream-rsvp__message">{{this.rsvpMessage}}</p>
+      <div class="chat-channel-preview-card__icon">
+        {{dIcon "calendar-days"}}
+      </div>
+
+      <div class="chat-channel-preview-card__title livestream-rsvp__message">
+        {{this.rsvpMessage}}
+      </div>
+
+      <div class="chat-channel-preview-card__body">
+        {{i18n "discourse_calendar.livestream.chat.rsvp_body"}}
+      </div>
+
+      <div class="chat-channel-preview-card__actions">
         <DButton
           class="btn-primary livestream-rsvp__going-button"
           @icon="check"

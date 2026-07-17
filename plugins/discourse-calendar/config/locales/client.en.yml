@@ -40,8 +40,9 @@ en:
             other: "The webinar hasn't started yet. Retrying join in %{count} seconds..."
           not_started_trying_again: "Trying to join the webinar again now..."
         chat:
-          rsvp_to_event: "RSVP to the event to start chatting!"
-          rsvp_to_event_with_link: "RSVP to the <a href='%{url}'>event</a> to start chatting!"
+          rsvp_to_event: "RSVP to the event to start chatting"
+          rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
+          rsvp_body: "Connect with other attendees before, during, and after the event."
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Calendar - All Events"
