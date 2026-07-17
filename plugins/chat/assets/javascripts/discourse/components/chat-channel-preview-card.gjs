@@ -45,13 +45,12 @@ export default class ChatChannelPreviewCard extends Component {
             {{dIcon "lock"}}
           </div>
 
-          <div class="chat-channel-preview-card__content">
-            <div class="chat-channel-preview-card__title">
-              {{this.guestTitle}}
-            </div>
-            <div class="chat-channel-preview-card__body">
-              {{i18n "chat.channel.preview_card.join_body"}}
-            </div>
+          <div class="chat-channel-preview-card__title">
+            {{this.guestTitle}}
+          </div>
+
+          <div class="chat-channel-preview-card__body">
+            {{i18n "chat.channel.preview_card.join_body"}}
           </div>
 
           <div class="chat-channel-preview-card__actions">
@@ -67,13 +66,12 @@ export default class ChatChannelPreviewCard extends Component {
             {{dIcon "lock"}}
           </div>
 
-          <div class="chat-channel-preview-card__content">
-            <div class="chat-channel-preview-card__title">
-              {{this.noAccessTitle}}
-            </div>
-            <div class="chat-channel-preview-card__body">
-              {{i18n "chat.channel.preview_card.no_access_body"}}
-            </div>
+          <div class="chat-channel-preview-card__title">
+            {{this.noAccessTitle}}
+          </div>
+
+          <div class="chat-channel-preview-card__body">
+            {{i18n "chat.channel.preview_card.no_access_body"}}
           </div>
         </div>
       {{/if}}
@@ -83,13 +81,12 @@ export default class ChatChannelPreviewCard extends Component {
           {{dIcon "lock"}}
         </div>
 
-        <div class="chat-channel-preview-card__content">
-          <div class="chat-channel-preview-card__title">
-            {{this.guestTitle}}
-          </div>
-          <div class="chat-channel-preview-card__body">
-            {{i18n "chat.channel.preview_card.guest_body"}}
-          </div>
+        <div class="chat-channel-preview-card__title">
+          {{this.guestTitle}}
+        </div>
+
+        <div class="chat-channel-preview-card__body">
+          {{i18n "chat.channel.preview_card.guest_body"}}
         </div>
 
         <div class="chat-channel-preview-card__actions">
