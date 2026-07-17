@@ -24,6 +24,7 @@ import {
   toAsciiPrintable,
   unicodeSlugify,
 } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
 import {
   mdTable,
   mdTableNonUniqueHeadings,
@@ -122,6 +123,35 @@ module("Unit | Utilities", function (hooks) {
       "hot",
       "default homepage is pulled from the default_homepage site setting"
     );
+  });
+
+  test("defaultHomepage ignores a default_homepage value whose filter is no longer registered", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    siteSettings.default_homepage = "votes";
+
+    const site = Site.current();
+    const originalFilters = site.filters;
+
+    try {
+      site.set("filters", ["latest", "top", "hot"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "top",
+        "a stale value falls back to the first top_menu item"
+      );
+
+      site.set("filters", ["latest", "top", "hot", "votes"]);
+      initializeDefaultHomepage(siteSettings);
+      assert.strictEqual(
+        defaultHomepage(),
+        "votes",
+        "a registered value is used"
+      );
+    } finally {
+      site.set("filters", originalFilters);
+    }
   });
 
   test("setDefaultHomepage", function (assert) {

@@ -8,6 +8,7 @@ import discourseLater from "discourse/lib/later";
 import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
+import Site from "discourse/models/site";
 import { capabilities } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
 
@@ -280,10 +281,20 @@ export function setCaretPosition(ctrl, pos) {
 }
 
 export function siteDefaultHomepage(siteSettings) {
-  return (
-    siteSettings.default_homepage ||
-    siteSettings.top_menu.split("|")[0].split(",")[0]
-  );
+  const configured = siteSettings.default_homepage;
+
+  // A persisted value can outlive the plugin that registered its filter;
+  // site.filters is what discovery routes are generated from, so fall back
+  // rather than targeting a route that no longer exists.
+  const filters = Site.current()?.filters;
+  if (
+    configured &&
+    (configured === "categories" || !filters || filters.includes(configured))
+  ) {
+    return configured;
+  }
+
+  return siteSettings.top_menu.split("|")[0].split(",")[0];
 }
 
 export function initializeDefaultHomepage(siteSettings) {
