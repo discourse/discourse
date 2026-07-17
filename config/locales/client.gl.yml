@@ -1458,6 +1458,19 @@ gl:
           send_invite_email: "Gardar e enviar mensaxe de correo"
           update_invite: "Actualizar"
           cancel: "Cancelar"
+        invite_roles:
+          member_tab: "Membros"
+          admin_tab: "Administradores"
+          email_placeholder: "nome@exemplo.com"
+          invite_by_email: "Enderezo de correo"
+          update: "Actualizar"
+          summary:
+            role_member: "Membro"
+            role_admin: "Administrador"
+            method_email: "Enderezo de correo"
+            expires: "Caduca"
+            topic: "Tema"
+            groups: "Grupos"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"

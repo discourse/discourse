@@ -2522,7 +2522,6 @@ pt_BR:
       invalid_uncategorized_category_setting: 'A categoria "Não categorizado" não pode ser selecionada se "permitir tópicos não categorizados" não estiver ativado.'
       invalid_search_ranking_weights: "O valor é inválido para a configuração do site search_ranking_weights. Exemplo: '{0.1,0.2,0.3,1.0}'. Observe que o valor máximo para cada peso é 1,0."
       content_localization_locale_limit: "A quantidade de locais compatíveis não pode exceder %{max}."
-      content_localization_language_switcher_requirements: "O seletor de idiomas requer que as configurações do site 'set locale from cookie' e 'allow user locale' estejam ativadas e que 'content localization supported locales' inclua pelo menos um idioma."
       mediaconvert_role_arn_required: "A função ARN da AWS IAM é obrigatória ao usar o AWS MediaConvert para a conversão de vídeo."
       mediaconvert_output_subdirectory_required: "O MediaConvert output subdirectory é obrigatório."
       s3_credentials_required_for_video_conversion: "As credenciais S3 são obrigatórias para a conversão de vídeo. Configure as chaves de acesso S3 ou ative o perfil IAM."

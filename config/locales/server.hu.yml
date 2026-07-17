@@ -2522,7 +2522,6 @@ hu:
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
       content_localization_locale_limit: "A támogatott nyelvjárások száma nem haladhatja meg a %{max} értéket."
-      content_localization_language_switcher_requirements: "A nyelvváltóhoz engedélyezni kell a „Területi beállítás süti alapján” és a „Felhasználói területi beállítás engedélyezése” webhelybeállításokat, valamint a „Tartalomhonosítás által támogatott területi beállítások” beállításnál legalább egy nyelvet meg kell adni."
       mediaconvert_role_arn_required: "Az AWS IAM szerepkör (ARN) megadása kötelező, ha az AWS MediaConvertet videókonvertáláshoz használják."
       mediaconvert_output_subdirectory_required: "A MediaConvert kimeneti alkönyvtárának megadása kötelező."
       s3_credentials_required_for_video_conversion: "S3 hitelesítő adatok szükségesek a videókonvertáláshoz. Kérjük, konfigurálja az S3 hozzáférési kulcsokat, vagy engedélyezze az IAM profilt."

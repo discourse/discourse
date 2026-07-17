@@ -611,7 +611,7 @@ it:
           fake: "Personalizzato"
         provider_fields:
           access_key_id: "ID chiave di accesso AWS Bedrock"
-          region: "Regione AWS Bedrock"
+          region: "Regione"
           organization: "ID organizzazione OpenAI facoltativo"
           disable_system_prompt: "Disabilita il messaggio di sistema nei comandi"
           enable_native_tool: "Abilita il supporto degli strumenti nativi"

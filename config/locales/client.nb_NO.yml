@@ -1837,6 +1837,22 @@ nb_NO:
           send_invite_email_instructions: "Begrens invitasjon til e-post for å sende en invitasjon via e-post"
           update_invite: "Oppdater"
           cancel: "Avbryt"
+        invite_roles:
+          member_tab: "Medlemmer"
+          admin_tab: "Adminer"
+          email_placeholder: "navn@example.com"
+          invite_by_email: "E-post"
+          restrict_domain: "Begrens til domene"
+          more_options: "Flere valg"
+          update: "Oppdater"
+          summary:
+            role_member: "Medlem"
+            role_admin: "Admin"
+            method_email: "E-post"
+            uses: "Maks antall bruk"
+            expires: "Utløper"
+            topic: "Emne"
+            groups: "Grupper"
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"

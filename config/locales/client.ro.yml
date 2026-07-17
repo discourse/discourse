@@ -1825,6 +1825,23 @@ ro:
           create_link_and_send_email: "Creează legătură și trimite email"
           invite_saved_without_sending_email: "Invitația a fost salvată. Copiază legătura de mai jos și partajeaz-o pentru a acorda acces instantaneu la acest site."
           invite_saved_with_sending_email: "Emailul de invitație a fost trimis. De asemenea, poți copia legătura de mai jos și o poți partaja pentru a acorda instantaneu acces la acest site."
+        invite_roles:
+          member_title: "Invită membri"
+          member_tab: "Membri"
+          admin_tab: "Admini"
+          admin_email_label: "Adresă email"
+          email_placeholder: "nume@exemplu.comb"
+          invite_by_email: "E-mail"
+          more_options: "Mai multe opțiuni"
+          update: "Actualizează"
+          summary:
+            role_member: "Membru"
+            role_admin: "Administrator"
+            method: "Partajare"
+            method_email: "E-mail"
+            topic: "Subiect"
+            groups: "Grupuri"
+            edit: "Editează invitație"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"

@@ -212,6 +212,8 @@ id:
           failure: "Mencoba menghubungi model menghasilkan kesalahan ini: %{error}"
         providers:
           google: "Google"
+        provider_fields:
+          region: "Wilayah"
       ai_helper:
         missing_content: "Silakan masukkan beberapa konten untuk menghasilkan saran."
         context_menu:

@@ -1155,6 +1155,17 @@ be:
         invite:
           description: "Апісанне"
           cancel: "Скасаваць"
+        invite_roles:
+          member_tab: "Члены"
+          admin_tab: "Адміністратары"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Электронная пошта"
+          summary:
+            role_member: "Член"
+            role_admin: "адміністратар"
+            method_email: "Электронная пошта"
+            topic: "Тэма"
+            groups: "Груп"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."

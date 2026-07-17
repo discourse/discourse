@@ -314,6 +314,8 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+        provider_fields:
+          region: "Περιοχή"
       ai_helper:
         context_menu:
           cancel: "Άκυρο"

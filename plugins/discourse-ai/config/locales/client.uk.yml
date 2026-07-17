@@ -1056,7 +1056,7 @@ uk:
           access_key_id: "Ідентифікатор ключа доступу AWS Bedrock"
           role_arn: "AWS Bedrock Role ARN"
           inference_profile_arn: "Профіль виведення застосунку AWS Bedrock (ARN)"
-          region: "Регіон AWS Bedrock"
+          region: "Регіон"
           organization: "Додатковий ідентифікатор організації OpenAI"
           disable_system_prompt: "Вимкнути системні повідомлення у підказках"
           enable_native_tool: "Увімкнути підтримку рідних інструментів"
