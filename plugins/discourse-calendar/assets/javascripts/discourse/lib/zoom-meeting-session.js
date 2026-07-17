@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
-import { loadZoomMeetingSdkEmbedded } from "discourse/lib/load-zoom-meeting-sdk";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "./fetch-zoom-join-payload";
+import { loadZoomMeetingSdkEmbedded } from "./load-zoom-meeting-sdk";
 import { computeZoomViewSize, syncZoomLayout } from "./zoom-component-view-dom";
 import { serializeZoomError } from "./zoom-error";
 

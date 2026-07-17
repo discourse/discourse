@@ -612,7 +612,7 @@ fr:
           fake: "Personnalisé"
         provider_fields:
           access_key_id: "ID de clé d'accès AWS Bedrock"
-          region: "Région AWS Bedrock"
+          region: "Région"
           organization: "ID d'organisation OpenAI facultatif"
           disable_system_prompt: "Désactiver le message système dans les invites"
           enable_native_tool: "Activer la prise en charge des outils natifs"

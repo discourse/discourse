@@ -411,6 +411,7 @@ pl_PL:
     onebox:
       invalid_address: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ nie można znaleźć serwera „%{hostname}”. Zamiast podglądu w poście pojawi się tylko link. :cry:"
       error_response: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony internetowej, ponieważ serwer zwrócił kod błędu %{status_code}. Zamiast podglądu w poście pojawi się tylko link. :cry:"
+      bot_challenge: "Przepraszamy, nie udało nam się wygenerować podglądu tej strony internetowej, ponieważ serwer WWW wymaga od odwiedzających przejścia weryfikacji w przeglądarce. Zamiast podglądu w Twoim wpisie pojawi się tylko link. :cry:"
       missing_data:
         one: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
         few: "Przepraszamy, nie mogliśmy wygenerować podglądu tej strony, ponieważ nie można znaleźć następującego tagu oEmbed/OpenGraph: %{missing_attributes}"
@@ -2913,7 +2914,6 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
-      content_localization_language_switcher_requirements: "Przełącznik języka wymaga, aby ustawienia witryny „ustaw ustawienia regionalne na podstawie pliku cookie” i „zezwalaj na ustawienia regionalne użytkownika” były włączone, a opcja „ustawienia regionalne obsługiwane przez lokalizację treści” wymagała ustawienia co najmniej jednego języka."
       content_localization_crawler_param_requirements: "Przed włączeniem tego ustawienia należy najpierw włączyć opcję „ustaw ustawienia regionalne z parametrów”."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."

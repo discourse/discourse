@@ -1,0 +1,161 @@
+.create-invite-with-roles-modal {
+  .d-modal__container {
+    width: 32em;
+    max-width: 100%;
+  }
+
+  &__role {
+    margin-bottom: 1em;
+  }
+
+  &__role-toggle {
+    display: flex;
+    gap: 0.5em;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  &__role-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.5em 0.75em;
+    margin: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-button-border-radius, 4px);
+    background: var(--secondary);
+    color: var(--primary-high);
+    font-weight: 500;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .d-icon {
+      color: currentcolor;
+    }
+
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    &.--active {
+      border-color: var(--tertiary);
+      background: var(--tertiary);
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    &.--disabled {
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    &:focus-within {
+      outline: 2px solid var(--tertiary);
+      outline-offset: 1px;
+    }
+  }
+
+  &__role-description {
+    margin: 0.75em 0 0;
+    color: var(--primary-high);
+  }
+
+  &__role-locked {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__delivery {
+    margin: 0 0 1em;
+    padding: 0;
+    border: 0;
+  }
+
+  &__delivery-label {
+    padding: 0;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+  }
+
+  &__delivery-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-right: 1.5em;
+    font-weight: 500;
+    cursor: pointer;
+
+    input {
+      margin: 0;
+    }
+  }
+
+  &__sent-to {
+    margin-top: 0;
+  }
+
+  &__link-share {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+
+    input.invite-link {
+      flex: 1;
+      margin-bottom: 0;
+    }
+  }
+
+  &__summary-rows {
+    margin: 0;
+    border-top: 1px solid var(--content-border-color);
+  }
+
+  &__summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    padding: 0.5em 0;
+    border-bottom: 1px solid var(--content-border-color);
+
+    dt {
+      color: var(--primary-medium);
+      font-weight: normal;
+    }
+
+    dd {
+      margin: 0;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__email-sent {
+    h3 {
+      margin-top: 0;
+    }
+  }
+
+  .d-modal__footer {
+    .toggle-advanced {
+      margin-left: auto;
+
+      &.--active {
+        --d-button-default-bg-color: var(--tertiary-low);
+        --d-button-default-bg-color--hover: var(--tertiary-low);
+        --d-button-default-text-color: var(--tertiary-high);
+        --d-button-default-text-color--hover: var(--tertiary-hover);
+        --d-button-default-icon-color: var(--tertiary-high);
+        --d-button-default-icon-color--hover: var(--tertiary-hover);
+        border-color: var(--tertiary);
+      }
+    }
+  }
+}

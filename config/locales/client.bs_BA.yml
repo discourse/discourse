@@ -1367,6 +1367,18 @@ bs_BA:
         invite:
           description: "Opis"
           cancel: "Odustani"
+        invite_roles:
+          member_tab: "Članovi"
+          admin_tab: "Admins"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Email"
+          summary:
+            role_member: "Član"
+            role_admin: "Admin"
+            method_email: "Email"
+            expires: "Ističe"
+            topic: "Topic"
+            groups: "Grupa"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."

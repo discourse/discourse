@@ -131,6 +131,8 @@ module SiteSettings
       HUMANIZED_MIXED_CASE.map { |key, value| [/\b#{Regexp.escape(key)}\b/i, value] }.freeze
 
     SETTING_LINK_PATTERN = /\{\{setting:([a-z][a-z0-9_]*)\}\}/
+    SETTINGS_LINK_PATTERN =
+      /\{\{settings:([a-z][a-z0-9_]*(?:,[a-z][a-z0-9_]*)*)(?:\|([^{}|]+))?\}\}/
 
     LINK_ATTRIBUTES = %w[
       class
@@ -146,6 +148,10 @@ module SiteSettings
         expand_setting_links(desc)
       end
 
+      def settings_filter_href(filter)
+        "#{Discourse.base_path}/admin/site_settings/category/all_results?filter=#{CGI.escape(filter)}"
+      end
+
       def linkify(setting)
         setting = setting.to_sym
 
@@ -155,8 +161,7 @@ module SiteSettings
         # data attributes below so it doesn't have to look the metadata up.
         attributes = {
           "class" => "site-setting-link",
-          "href" =>
-            "#{Discourse.base_path}/admin/site_settings/category/all_results?filter=#{CGI.escape(setting.to_s)}",
+          "href" => settings_filter_href(setting.to_s),
           "data-setting-name" => setting,
         }
 
@@ -176,9 +181,51 @@ module SiteSettings
         %(<a #{attribute_string}>#{CGI.escapeHTML(humanized_name(setting))}</a>).html_safe
       end
 
-      def expand_setting_links(text)
-        return text if text.blank? || !text.include?("{{setting:")
-        text.gsub(SETTING_LINK_PATTERN) { linkify(Regexp.last_match(1)) }.html_safe
+      # Links a group of settings as a single anchor pointing at the
+      # all-settings page filtered to every name at once, via the explicit
+      # `any:one|two` OR filter syntax (unprefixed pipes stay literal so
+      # admins can search pipe-delimited list values exactly). Unlike #linkify
+      # there is no per-setting config page to rewrite the href to, so no data
+      # attributes are emitted for the linkify-setting-links modifier.
+      def linkify_settings(settings, label: nil)
+        filter = "any:#{settings.map(&:to_s).join("|")}"
+        label ||= settings.map { |setting| humanized_name(setting) }.join(", ")
+
+        %(<a class="site-setting-link" href="#{CGI.escapeHTML(settings_filter_href(filter))}">#{CGI.escapeHTML(label)}</a>).html_safe
+      end
+
+      def contains_setting_links?(text)
+        return false if text.blank?
+        text.match?(SETTING_LINK_PATTERN) || text.match?(SETTINGS_LINK_PATTERN)
+      end
+
+      def expand_setting_links(text, escape_text: false)
+        return text if text.blank? || !text.include?("{{setting")
+
+        text = CGI.escapeHTML(text) if escape_text
+
+        text
+          .gsub(SETTINGS_LINK_PATTERN) do
+            label = Regexp.last_match(2)&.strip
+            label = CGI.unescapeHTML(label) if escape_text && label
+            linkify_settings(Regexp.last_match(1).split(","), label:)
+          end
+          .gsub(SETTING_LINK_PATTERN) { linkify(Regexp.last_match(1)) }
+          .html_safe
+      end
+
+      # Renders markers as plain text — the humanized setting names (quoted)
+      # for {{setting:...}}, and the label or name list for {{settings:...}} —
+      # for surfaces that display error messages outside the admin UI.
+      def plain_setting_links(text)
+        return text if text.blank? || !text.include?("{{setting")
+
+        text
+          .gsub(SETTINGS_LINK_PATTERN) do
+            Regexp.last_match(2)&.strip ||
+              Regexp.last_match(1).split(",").map { |s| humanized_name(s) }.join(", ")
+          end
+          .gsub(SETTING_LINK_PATTERN) { "'#{humanized_name(Regexp.last_match(1))}'" }
       end
 
       def humanized_name(setting)

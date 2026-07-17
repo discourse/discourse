@@ -17,6 +17,19 @@ RSpec.describe DiscourseAi::Completions::LlmPresets do
       expect(model).not_to have_key(:provider_params)
     end
 
+    it "includes a Google Vertex AI preset" do
+      preset = described_class.find_provider("google_vertex_ai")
+      model = preset[:models].first
+
+      expect(preset[:provider]).to eq("google_vertex_ai")
+      expect(preset[:tokenizer]).to eq(DiscourseAi::Tokenizer::GeminiTokenizer)
+      expect(model).to include(
+        name: "google/gemini-3-flash",
+        display_name: "Gemini 3 Flash (Vertex)",
+      )
+      expect(model[:provider_params]).to include(region: "global")
+    end
+
     it "marks every Anthropic model known to require adaptive-only thinking" do
       %w[claude-opus-4-7 claude-opus-4-8 claude-sonnet-5].each do |name|
         model = described_class.find_model("anthropic", name)

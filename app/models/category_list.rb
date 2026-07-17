@@ -81,6 +81,7 @@ class CategoryList
           include_uncategorized: false,
         ) # perf optimization since category featured topics can't have `category_id` set to null
         .listable_topics
+        .visible
         .joins(
           "INNER JOIN category_featured_topics ON topics.id = category_featured_topics.topic_id",
         )

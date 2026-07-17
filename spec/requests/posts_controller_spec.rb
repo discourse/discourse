@@ -3928,6 +3928,19 @@ RSpec.describe PostsController do
     end
 
     context "with public posts" do
+      it "caches paginated results for anonymous users" do
+        public_post
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+        Middleware::AnonymousCache.clear_all_cache!
+
+        get "/posts.json", params: { before: public_post.id + 1 }
+        expect(response.headers["X-Discourse-Cached"]).to eq("store")
+
+        get "/posts.json", params: { before: public_post.id + 1 }
+        expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      end
+
       it "returns public posts with topic rss feed" do
         public_post
         private_post

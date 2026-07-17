@@ -2906,7 +2906,6 @@ ar:
       invalid_uncategorized_category_setting: 'لا يمكن تحديد الفئة "غير المصنَّفة" إذا لم يتم تفعيل ''allow uncategorized topics''.'
       invalid_search_ranking_weights: "القيمة غير صالحة لإعداد الموقع search_ranking_weights. مثال: '{0.1,0.2,0.3,1.0}'. لاحظ أن الحد الأقصى لقيمة كل وزن هو 1.0."
       content_localization_locale_limit: "لا يمكن أن يتجاوز عدد اللغات المحلية المدعومة %{max}."
-      content_localization_language_switcher_requirements: "يتطلب مفتاح تغيير اللغة تفعيل إعدادات الموقع \"تعيين اللغة من ملف تعريف الارتباط\" و\"السماح باختيار لغة المستخدم\"، كما يجب أن تحتوي قائمة \"اللغات المدعومة لتوطين المحتوى\" على لغة واحدة على الأقل."
       mediaconvert_role_arn_required: "مطلوب تحديد معرف الدور (ARN) في AWS IAM عند استخدام خدمة AWS MediaConvert لتحويل مقاطع الفيديو."
       mediaconvert_output_subdirectory_required: "يُشترط تحديد الدليل الفرعي لمخرجات MediaConvert."
       s3_credentials_required_for_video_conversion: "تتطلب عملية تحويل الفيديو بيانات اعتماد S3. يرجى إعداد مفاتيح الوصول إلى S3 أو تفعيل ملف تعريف IAM."

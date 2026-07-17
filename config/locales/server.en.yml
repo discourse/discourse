@@ -149,6 +149,7 @@ en:
         other: "Value must be at most %{count} characters long."
       resolve_group_membership_requires_list: "resolve_group_membership can only be used with type: list"
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
+      resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -434,6 +435,8 @@ en:
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
+    admin_invite_requires_email: "Admin invites must be sent to an email address"
+    admin_invite_requires_admin_inviter: "Only admins can create admin invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
 
@@ -2938,6 +2941,7 @@ en:
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
+    enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3019,7 +3023,7 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
+      content_localization_language_switcher_requirements: "The language switcher requires {{setting:set_locale_from_cookie}} and {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "You must first enable 'set locale from param' before enabling this setting."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."

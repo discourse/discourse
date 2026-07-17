@@ -1366,6 +1366,19 @@ lv:
           expires_after: "Derīguma termiņš beidzas"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
           cancel: "Atcelt"
+        invite_roles:
+          member_tab: "Dalībnieki"
+          admin_tab: "Administratori"
+          email_placeholder: "vards@piemers.com"
+          invite_by_email: "E-pasts"
+          summary:
+            role_member: "Biedrs"
+            role_admin: "Administrators"
+            method_email: "E-pasts"
+            uses: "Maksimāli izmantojams"
+            expires: "Derīguma termiņš beidzas"
+            topic: "Tēmas"
+            groups: "Grupas"
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."

@@ -44,10 +44,7 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
-extend_content_security_policy(
-  script_src: %w[https://source.zoom.us],
-  worker_src: %w[https://source.zoom.us blob:],
-)
+extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -242,7 +239,9 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "lib/discourse_post_event/email_renderer"
   require_relative "lib/discourse_post_event/engine"
+  require_relative "lib/discourse_post_event/event_excerpt"
   require_relative "lib/discourse_post_event/event_finder"
+  require_relative "lib/discourse_post_event/event_onebox_data"
   require_relative "lib/discourse_post_event/event_parser"
   require_relative "lib/discourse_post_event/event_validator"
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
@@ -351,6 +350,40 @@ after_initialize do
       SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
+
+  TopicView.on_preload do |topic_view|
+    if SiteSetting.discourse_post_event_enabled
+      # always set the store (even when empty) and avoid a per-post query for every post in the topic
+      topic_view.set_preloaded_post_data(
+        :event_oneboxes,
+        DiscoursePostEvent::EventOneboxData.build(
+          posts: topic_view.posts,
+          guardian: topic_view.guardian,
+        ),
+      )
+    end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_oneboxes,
+    include_condition: -> { SiteSetting.discourse_post_event_enabled && event_oneboxes.present? },
+  ) do
+    # use the batched topic-view preload on the common read path
+    # otherwise compute just this post so the event card shows without a page refresh
+    @event_oneboxes ||=
+      begin
+        preloaded = topic_view&.preloaded_post_data(:event_oneboxes)
+        if preloaded
+          preloaded[object.id] || {}
+        elsif object.cooked&.include?("data-topic")
+          DiscoursePostEvent::EventOneboxData.build(posts: [object], guardian: scope)[object.id] ||
+            {}
+        else
+          {}
+        end
+      end
+  end
 
   on(:post_created) do |post|
     DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
@@ -725,6 +758,12 @@ after_initialize do
             message: "Failed to render event in email for post #{post&.id}",
           )
         end
+    end
+  end
+
+  on(:reduce_excerpt) do |fragment, options|
+    if SiteSetting.discourse_post_event_enabled
+      DiscoursePostEvent::EventExcerpt.call(fragment, post: options[:post])
     end
   end
 

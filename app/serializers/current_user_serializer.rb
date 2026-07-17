@@ -24,6 +24,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
+             :can_create_admin_invite,
              :no_password,
              :can_delete_account,
              :can_post_anonymously,
@@ -234,6 +235,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_invite_to_forum?
     scope.can_invite_to_forum?
+  end
+
+  def can_create_admin_invite
+    true
+  end
+
+  def include_can_create_admin_invite?
+    scope.can_create_admin_invite?
   end
 
   def no_password

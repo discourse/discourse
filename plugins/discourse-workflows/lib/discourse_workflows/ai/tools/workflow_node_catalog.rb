@@ -198,6 +198,8 @@ module DiscourseWorkflows
           "trigger:badge_granted" => "badge award achievement medal granted earned",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
+          "action:flag_post" =>
+            "flag spam moderation review queue reviewable hide delete silence triage report",
         }.freeze
 
         def self.signature

@@ -189,6 +189,8 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+        provider_fields:
+          region: "Regija"
       ai_helper:
         context_menu:
           cancel: "Prekliči"

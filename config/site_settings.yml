@@ -2980,7 +2980,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother|yeti"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -4678,3 +4678,11 @@ experimental:
   admin_dashboard_reports_seeded:
     default: false
     hidden: true
+  enable_invite_modal_with_roles:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,admins"
+      learn_more_url: "https://meta.discourse.org/t/-/407727"

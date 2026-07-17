@@ -25,7 +25,13 @@ module DiscourseAi
         private
 
         def build_presets
-          [anthropic_preset, google_preset, open_ai_preset, open_router_preset].freeze
+          [
+            anthropic_preset,
+            google_preset,
+            google_vertex_ai_preset,
+            open_ai_preset,
+            open_router_preset,
+          ].freeze
         end
 
         def anthropic_preset
@@ -140,6 +146,29 @@ module DiscourseAi
             ],
             tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
             provider: "google",
+          }
+        end
+
+        def google_vertex_ai_preset
+          {
+            id: "google_vertex_ai",
+            models: [
+              model(
+                name: "google/gemini-3-flash",
+                tokens: 1_000_000,
+                display_name: "Gemini 3 Flash (Vertex)",
+                max_output_tokens: 65_000,
+                input_cost: 0.50,
+                cached_input_cost: 0.05,
+                output_cost: 3.0,
+                vision_enabled: true,
+                provider_params: {
+                  region: "global",
+                },
+              ),
+            ],
+            tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
+            provider: "google_vertex_ai",
           }
         end
 

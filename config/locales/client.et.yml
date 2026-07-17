@@ -1204,6 +1204,17 @@ et:
         invite:
           description: "Kirjeldus"
           cancel: "Tühista"
+        invite_roles:
+          member_tab: "Liikmed"
+          admin_tab: "Adminnid"
+          email_placeholder: "nimi@näide.ee"
+          invite_by_email: "E-post"
+          summary:
+            role_member: "Liige"
+            role_admin: "Adminn"
+            method_email: "E-post"
+            topic: "Teema"
+            groups: "Rühmad"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
       password:

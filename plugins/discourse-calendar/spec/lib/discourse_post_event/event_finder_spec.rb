@@ -423,4 +423,38 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
   end
+
+  describe "by topic id" do
+    fab!(:event_one) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+    fab!(:event_two) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+
+    it "returns only the event in the given topic" do
+      expect(finder.search(current_user, { topic_id: event_one.post.topic_id })).to match_array(
+        [event_one],
+      )
+    end
+
+    it "returns nothing for a topic without an event" do
+      expect(finder.search(current_user, { topic_id: Fabricate(:topic).id })).to be_empty
+    end
+
+    context "with a closed event" do
+      fab!(:closed_event) do
+        Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public], closed: true)
+      end
+
+      it "excludes the closed event by default" do
+        expect(finder.search(current_user, { topic_id: closed_event.post.topic_id })).to be_empty
+      end
+
+      it "includes the closed event when include_closed is set" do
+        expect(
+          finder.search(
+            current_user,
+            { topic_id: closed_event.post.topic_id, include_closed: true },
+          ),
+        ).to match_array([closed_event])
+      end
+    end
+  end
 end

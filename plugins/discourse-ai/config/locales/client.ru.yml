@@ -819,7 +819,7 @@ ru:
           fake: "Другое"
         provider_fields:
           access_key_id: "Идентификатор ключа доступа к AWS Bedrock"
-          region: "Регион AWS Bedrock"
+          region: "Регион"
           organization: "Необязательный идентификатор организации OpenAI"
           disable_system_prompt: "Отключить системное сообщение в запросах"
           enable_native_tool: "Включить поддержку встроенных инструментов"

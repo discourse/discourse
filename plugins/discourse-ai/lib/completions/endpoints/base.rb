@@ -59,6 +59,7 @@ module DiscourseAi
               DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
               DiscourseAi::Completions::Endpoints::Gemini,
+              DiscourseAi::Completions::Endpoints::GoogleVertexAi,
               DiscourseAi::Completions::Endpoints::Vllm,
               DiscourseAi::Completions::Endpoints::Anthropic,
               DiscourseAi::Completions::Endpoints::Cohere,
@@ -78,6 +79,14 @@ module DiscourseAi
 
           def can_contact?(_llm_model)
             raise NotImplementedError
+          end
+
+          def supports_environment_credentials?
+            false
+          end
+
+          def requires_configured_url?
+            true
           end
 
           # Register a block that returns a Hash of extra HTTP headers to send

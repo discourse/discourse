@@ -385,10 +385,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location
-                @location={{event.location}}
-                @livestream={{event.livestream}}
-              />
+              <Location @location={{event.location}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 

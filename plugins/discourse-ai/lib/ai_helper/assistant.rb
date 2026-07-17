@@ -216,7 +216,6 @@ module DiscourseAi
         client_id: nil,
         custom_prompt: nil
       )
-        streamed_diff = +""
         streamed_result = +""
         start = Time.now
         type = prompt_type(helper_mode)
@@ -229,13 +228,12 @@ module DiscourseAi
           custom_prompt: custom_prompt,
         ) do |partial_response|
           streamed_result << partial_response
-          streamed_diff = parse_diff(input, partial_response) if type == :diff
 
-          # Throttle updates and check for safe stream points
+          # Throttle updates
           if (streamed_result.length > 10 && (Time.now - start > 0.3)) || Rails.env.test?
             sanitized = sanitize_result(streamed_result)
 
-            payload = { result: sanitized, diff: streamed_diff, done: false }
+            payload = { result: sanitized, done: false }
             publish_update(channel, payload, user, client_id: client_id)
             start = Time.now
           end

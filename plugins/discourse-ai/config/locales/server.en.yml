@@ -659,6 +659,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        read_site_setting: "Read site setting"
         change_site_setting: "Change site setting"
         dall_e: "Generate image"
         search_meta_discourse: "Search Meta Discourse"
@@ -710,6 +711,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        read_site_setting: "Read the current value of a site setting"
         change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
         search_meta_discourse: "Search Meta Discourse"
@@ -780,6 +782,7 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        read_site_setting: "Reading site setting %{setting_name}"
         change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
         continue_conversation:
@@ -955,6 +958,8 @@ en:
           not_found: "Site setting '%{setting_name}' does not exist."
           not_allowed: "You are not allowed to change site settings."
           hidden: "Site setting '%{setting_name}' is hidden and cannot be changed here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be changed here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be changed here."
           deprecated: "Site setting '%{setting_name}' is deprecated; use '%{new_name}' instead."
           shadowed: "Site setting '%{setting_name}' is overridden globally and cannot be changed."
           unconfigurable: "Site setting '%{setting_name}' belongs to a plugin that cannot be configured."
@@ -962,6 +967,13 @@ en:
           invalid_value: "Invalid value: %{error}"
           failed: "Failed to change the site setting."
         success: "Site setting %{setting_name} has been changed to '%{value}'."
+      read_site_setting:
+        errors:
+          not_allowed: "You are not allowed to read site settings."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
 
     reviewables:
       ai_tool_action:
@@ -1045,6 +1057,7 @@ en:
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
+      invalid_provider_param: "%{param} has an invalid format"
       secret_required: "A credential must be selected"
       secret_not_found: "The selected credential does not exist"
       bedrock_invalid_url: "Please complete all the fields to use this model."

@@ -340,7 +340,8 @@ CREATE TABLE public.admin_dashboard_sections (
     "position" integer NOT NULL,
     visible boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -6454,7 +6455,8 @@ CREATE TABLE public.invites (
     expires_at timestamp without time zone NOT NULL,
     email_token character varying,
     domain character varying,
-    description character varying(100)
+    description character varying(100),
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -22650,9 +22652,11 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260715202231'),
+('20260715183411'),
 ('20260715090434'),
 ('20260715090355'),
 ('20260715064155'),
+('20260714152340'),
 ('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),

@@ -987,6 +987,17 @@ sw:
         invite:
           description: "Elezo"
           cancel: "Ghairi"
+        invite_roles:
+          member_tab: "Wanachama"
+          admin_tab: "Viongozi"
+          email_placeholder: "jina@mfano.com"
+          invite_by_email: "Barua Pepe"
+          summary:
+            role_member: "Mwanachama"
+            role_admin: "Kiongozi"
+            method_email: "Barua Pepe"
+            topic: "Mada"
+            groups: "Makundi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:

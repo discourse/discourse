@@ -74,7 +74,7 @@ RSpec.describe "Admin AI features configuration" do
     expect(page).to have_css(".ai-feature-editor")
 
     field = form.field("ai_bot_allowed_groups")
-    expect(field.component).to have_css(".group-chooser")
+    expect(field.component).to have_css(".list-setting")
     expect(field.component).to have_content(group_1.name)
     expect(field.component).to have_content(group_2.name)
   end
