@@ -1425,10 +1425,7 @@ body.has-sidebar-page {
 
   .d-editor-input {
     padding-inline: var(--space-4);
-
-    @include viewport.until(sm) {
-      padding-inline: var(--space-4);
-    }
+    padding-top: 0 !important;
   }
 
   .wmd-controls:not(.toolbar-visible)
