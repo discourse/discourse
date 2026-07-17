@@ -1256,13 +1256,6 @@ body.has-sidebar-page {
   }
 
   #reply-control {
-    &:not(.fullscreen) {
-      .grippie,
-      .reply-to {
-        background: var(--primary-very-low);
-      }
-    }
-
     // the redesigned grippie is taller than the height the default layout
     // reserves for it, so size the reply area with flex instead
     .grippie ~ .reply-area {
@@ -1273,14 +1266,16 @@ body.has-sidebar-page {
   }
 
   .grippie {
-    padding-block: var(--space-2);
+    padding-block: var(--space-1);
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
+    background: var(--primary-very-low);
   }
 
   .reply-to {
-    padding: 0 var(--space-4) var(--space-2);
+    padding: var(--space-2) var(--space-4);
     margin: 0 !important;
+    border-bottom: 1px solid var(--primary-low);
   }
 
   .reply-area {
@@ -1440,6 +1435,17 @@ body.has-sidebar-page {
     ~ .composer-footer
     .d-editor-button-bar__wrap {
     display: none;
+  }
+
+  // clean up selector once the uc- body class is no longer in the way
+  .show-preview .d-editor-container.--markdown-editor-enabled {
+    .d-editor-textarea-column {
+      border-right: 1px solid var(--primary-low);
+    }
+
+    .d-editor-preview-wrapper {
+      margin-top: var(--space-2);
+    }
   }
 
   .composer-footer {
