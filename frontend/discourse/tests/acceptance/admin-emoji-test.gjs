@@ -124,6 +124,26 @@ acceptance("Admin - Emoji", function (needs) {
       .doesNotExist("select-to-export button hidden in selecting mode");
   });
 
+  test("navigating away from the emoji list clears selecting mode", async function (assert) {
+    await visit("/admin/config/emoji");
+
+    await click(".admin-emoji-list__select-to-export");
+    assert
+      .dom(".admin-emoji-list__select")
+      .exists("checkboxes shown in selecting mode");
+
+    await click(".admin-emoji__import");
+
+    await visit("/admin/config/emoji");
+    assert
+      .dom(".admin-emoji-list__select")
+      .doesNotExist("selecting mode cleared after navigating away and back");
+
+    assert
+      .dom(".admin-emoji-list__select-to-export")
+      .exists("select-to-export button visible again");
+  });
+
   test("cancel exits selecting mode and hides checkboxes", async function (assert) {
     await visit("/admin/config/emoji");
 
