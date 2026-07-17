@@ -140,7 +140,7 @@ module DiscourseDataExplorer
 
       # Mandatory version header (Stripe-style snap-down): a base date, plus
       # optional per-extension overrides (`2026-01-31; some-plugin=2026-07-15`).
-      # The base snaps against the host timeline only; each override snaps
+      # The base snaps against the core timeline only; each override snaps
       # against that extension's own timeline. Success: the fully-resolved string
       # is echoed back — clients store it verbatim. Failure: 400 whose body
       # teaches the current version. See docs/plugins-design.md (C).
@@ -151,6 +151,10 @@ module DiscourseDataExplorer
           overrides.to_h do |namespace, date|
             if !JsonApiKit.extensions.key?(namespace)
               raise VersionRegistry::UnknownComponent, "unknown component `#{namespace}`"
+            end
+            if JsonApiKit.core_plugin?(namespace)
+              raise VersionRegistry::NotOverridable,
+                    "`#{namespace}` rides the core timeline and cannot be overridden"
             end
             [namespace, JsonApiKit.api_versions.resolve_for(namespace, date)]
           end
