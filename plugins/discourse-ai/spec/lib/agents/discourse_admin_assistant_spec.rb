@@ -8,15 +8,12 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
 
   before { enable_current_plugin }
 
-  it "combines Discourse knowledge, administration, and site-setting tools" do
+  it "combines Discourse knowledge, general administration, and site-setting tools" do
     expect(assistant.tools).to eq(
       [
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
-        DiscourseAi::Agents::Tools::Search,
-        DiscourseAi::Agents::Tools::Read,
         DiscourseAi::Agents::Tools::ListCategories,
         DiscourseAi::Agents::Tools::ListTags,
-        DiscourseAi::Agents::Tools::Summarize,
         DiscourseAi::Agents::Tools::SettingContext,
         DiscourseAi::Agents::Tools::SearchSettings,
         DiscourseAi::Agents::Tools::ReadSiteSetting,
@@ -30,12 +27,8 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
         DiscourseAi::Agents::Tools::EditCategory,
         DiscourseAi::Agents::Tools::EditTags,
         DiscourseAi::Agents::Tools::MovePosts,
-        DiscourseAi::Agents::Tools::SetTopicTimer,
-        DiscourseAi::Agents::Tools::SetSlowMode,
         DiscourseAi::Agents::Tools::SuspendUser,
         DiscourseAi::Agents::Tools::SilenceUser,
-        DiscourseAi::Agents::Tools::Assign,
-        DiscourseAi::Agents::Tools::GrantBadge,
         DiscourseAi::Agents::Tools::MarkAsSolved,
       ],
     )
@@ -43,7 +36,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
 
   it "requires an administrator request and approval before changing settings" do
     expect(assistant.system_prompt).to include(
-      "Only change site settings, content, topics, or users when an administrator explicitly asks you to do so.",
+      "Only change site settings, categories, tags, reviewable content, topics, posts, or users when an administrator explicitly asks you to do so.",
       "Every change requires human approval.",
     )
   end
@@ -64,9 +57,6 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     agent = AiAgent.find(-39)
 
     expect(agent.require_approval).to eq(true)
-    expect(agent.tools).to include(
-      ["Search", { "search_private" => true }, false],
-      ["Read", { "read_private" => true }, false],
-    )
+    expect(agent.tools.map(&:first)).to eq(assistant.tools.map { it.to_s.split("::").last })
   end
 end

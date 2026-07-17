@@ -98,11 +98,6 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     end
   end
 
-  if agent_class == DiscourseAi::Agents::DiscourseAdminAssistant
-    tools["Search"] ||= { "search_private" => true }
-    tools["Read"] ||= { "read_private" => true }
-  end
-
   forced_tool_names = instance.force_tool_use.map { |tool| tool.to_s.split("::").last }
   agent.tools = tools.map { |name, value| [name, value, forced_tool_names.include?(name)] }
   agent.forced_tool_count = instance.forced_tool_count
