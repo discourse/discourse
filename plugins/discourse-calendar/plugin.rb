@@ -44,10 +44,7 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
-extend_content_security_policy(
-  script_src: %w[https://source.zoom.us],
-  worker_src: %w[https://source.zoom.us blob:],
-)
+extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
