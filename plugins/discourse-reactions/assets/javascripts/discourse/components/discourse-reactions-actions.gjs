@@ -125,6 +125,13 @@ export default class DiscourseReactionsActions extends Component {
 
   containerElement = null;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    cancel(this._touchTimeout);
+    cancel(this._collapseHandler);
+  }
+
   get useNewMenu() {
     return this.siteSettings.enable_new_post_reactions_menu;
   }
@@ -223,11 +230,6 @@ export default class DiscourseReactionsActions extends Component {
     }
 
     if (this.capabilities.touch) {
-      document.documentElement?.classList?.toggle(
-        "discourse-reactions-no-select",
-        true
-      );
-
       this._touchStartAt = Date.now();
       this._touchTimeout = later(() => {
         this._touchStartAt = null;
@@ -242,6 +244,15 @@ export default class DiscourseReactionsActions extends Component {
     // if users move while touching we consider it as a scroll and don't want to
     // trigger the reaction or the picker
     this._validTouch = false;
+    cancel(this._touchTimeout);
+  }
+
+  // the browser takes the gesture over to scroll; without this the pending
+  // long-press would still expand the picker
+  @action
+  touchCancel() {
+    this._validTouch = false;
+    this._touchStartAt = null;
     cancel(this._touchTimeout);
   }
 
@@ -682,10 +693,6 @@ export default class DiscourseReactionsActions extends Component {
   @action
   collapseAllPanels() {
     cancel(this._collapseHandler);
-    document.documentElement?.classList?.toggle(
-      "discourse-reactions-no-select",
-      false
-    );
     this._collapseHandler = null;
     this.statePanelExpanded = false;
     this.reactionsPickerExpanded = false;
@@ -804,6 +811,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
+      {{on "touchcancel" this.touchCancel}}
       {{dCloseOnClickOutside this.clickOutside}}
       {{didInsert this.registerContainerElement}}
     >
