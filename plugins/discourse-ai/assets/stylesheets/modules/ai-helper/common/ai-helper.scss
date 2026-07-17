@@ -268,13 +268,7 @@
     border-radius: var(--d-input-border-radius); // to match surrounding input
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
-    z-index: z("composer", "dropdown") + 1;
-
-    // the redesigned composer raises the focused editor above composer
-    // dropdowns; keep this button below it
-    .uc-enable-composer-redesign & {
-      z-index: z("composer", "dropdown");
-    }
+    z-index: z("composer", "dropdown");
 
     .d-icon {
       color: var(--tertiary);
