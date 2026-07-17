@@ -821,7 +821,7 @@ export default class ComposerEditor extends Component {
     toolbar.addButton({
       id: "options",
       group: "extras",
-      icon: composerRedesign ? "nested-circle-plus" : "circle-plus",
+      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
       popupMenu: {

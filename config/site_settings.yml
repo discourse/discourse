@@ -4557,7 +4557,7 @@ experimental:
       status: "experimental"
       impact: "other,all_members"
       body_class: true
-    allow_enabled_for: true
+      learn_more_url: "https://meta.discourse.org/t/-/407849"
   enable_new_composer_actions:
     default: false
     client: true

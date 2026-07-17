@@ -794,7 +794,12 @@ export default class DEditor extends Component {
             @append={{true}}
           >
             {{#if this.replacedToolbarInstance}}
-              <ToolbarScrollContainer @class="--replaced-toolbar">
+              <ToolbarScrollContainer
+                @class={{dConcatClass
+                  "--replaced-toolbar"
+                  (if this.disabled "--disabled")
+                }}
+              >
                 <DButton
                   @action={{this.resetToolbar}}
                   @icon="angle-left"
@@ -809,7 +814,7 @@ export default class DEditor extends Component {
                 />
               </ToolbarScrollContainer>
             {{else}}
-              <ToolbarScrollContainer>
+              <ToolbarScrollContainer @class={{if this.disabled "--disabled"}}>
                 {{#if this.showEditorModeToggle}}
                   <ToggleSwitch
                     @preventFocus={{true}}
