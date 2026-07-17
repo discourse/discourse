@@ -334,14 +334,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
       )
     end
 
-    def register_fake_agent_tool(agent_klass: TestAgent)
-      DiscourseAi.register_agent_tool(
-        agent_klass: agent_klass,
-        tool_klass: FakeExternalPlugin::FakeExternalTool,
-        plugin: fake_plugin,
-      )
-    end
-
     def reset_external_registry!
       described_class.instance_variable_set(:@external_registry_signature, nil)
       described_class.instance_variable_set(:@system_agents, nil)
@@ -357,9 +349,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
     after do
       DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
         entry[:value][:module_name] == :test_module
-      end
-      DiscoursePluginRegistry._raw_external_ai_agent_tools.reject! do |entry|
-        entry[:value][:agent_klass] == TestAgent
       end
       # remove fake entries from the registry
       reset_external_registry!
@@ -407,12 +396,6 @@ RSpec.describe DiscourseAi::Agents::Agent do
       instance = FakeExternalAgent.new
       tool_names = instance.available_tools.map { |t| t.signature[:name] }
       expect(tool_names).to include("fake_external_tool")
-    end
-
-    it "adds a plugin tool to a registered system agent" do
-      register_fake_agent_tool
-
-      expect(TestAgent.new.available_tools).to include(FakeExternalPlugin::FakeExternalTool)
     end
 
     it "produces one agent entry when two features share the same agent_klass" do

@@ -82,9 +82,6 @@ require_relative "lib/mcp/oauth_flow"
 # Other plugins can register features through this register.
 DiscoursePluginRegistry.define_filtered_register(:external_ai_features)
 
-# Other plugins can add tools to existing system agents through this register.
-DiscoursePluginRegistry.define_filtered_register(:external_ai_agent_tools)
-
 DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end

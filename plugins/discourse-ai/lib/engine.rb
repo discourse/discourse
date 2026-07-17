@@ -91,13 +91,4 @@ module DiscourseAi
       plugin,
     )
   end
-
-  # Registers a tool from another plugin for an existing agent class. The tool
-  # is only available while the registering plugin is enabled.
-  def self.register_agent_tool(agent_klass:, tool_klass:, plugin:)
-    DiscoursePluginRegistry.register_external_ai_agent_tool(
-      { agent_klass: agent_klass, tool_klass: tool_klass },
-      plugin,
-    )
-  end
 end

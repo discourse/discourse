@@ -51,22 +51,12 @@ module DiscourseAi
 
         def external_tool_by_name(name)
           sync_external_registry!
-          @external_tools_by_name[name] ||
-            external_agent_tools.find { |tool| tool.to_s.split("::").last == name }
+          @external_tools_by_name[name]
         end
 
         def external_tools
           sync_external_registry!
-          (@external_tools_by_name.values + external_agent_tools).uniq
-        end
-
-        def external_agent_tools(agent_class = nil)
-          return [] if !DiscoursePluginRegistry.respond_to?(:external_ai_agent_tools)
-
-          DiscoursePluginRegistry.external_ai_agent_tools.filter_map do |registration|
-            next if agent_class && !(agent_class <= registration[:agent_klass])
-            registration[:tool_klass]
-          end
+          @external_tools_by_name.values
         end
 
         def all(user:)
@@ -307,14 +297,11 @@ module DiscourseAi
       end
 
       def available_tools
-        configured_tools = (tools + self.class.external_agent_tools(self.class)).uniq
-
         self
           .class
           .all_available_tools
-          .concat(self.class.external_tools)
-          .filter { |tool| configured_tools.include?(tool) }
-          .concat(configured_tools.filter(&:custom?))
+          .filter { |tool| tools.include?(tool) }
+          .concat(tools.filter(&:custom?))
           .tap do |available_tools|
             next if !rag_tool_available?
             if available_tools.any? { |tool|
