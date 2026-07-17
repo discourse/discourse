@@ -1255,10 +1255,20 @@ body.has-sidebar-page {
     background: var(--secondary);
   }
 
-  .grippie,
-  .reply-to {
-    :not(.fullscreen-composer) & {
-      background: var(--primary-very-low) !important;
+  #reply-control {
+    &:not(.fullscreen) {
+      .grippie,
+      .reply-to {
+        background: var(--primary-very-low);
+      }
+    }
+
+    // the redesigned grippie is taller than the height the default layout
+    // reserves for it, so size the reply area with flex instead
+    .grippie ~ .reply-area {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 0;
     }
   }
 
@@ -1266,10 +1276,6 @@ body.has-sidebar-page {
     padding-block: var(--space-2);
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);
-
-    ~ .reply-area {
-      height: calc(100% - 21px) !important;
-    }
   }
 
   .reply-to {
