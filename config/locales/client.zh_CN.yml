@@ -4566,6 +4566,7 @@ zh_CN:
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
         inherited: '此权限继承自“%{everyone_group}”'
+        remove_all: "全部删除"
       special_warning: "这是一个预先设置的类别，安全设置无法编辑。如果您不想使用此类别，请将其删除，而不是重新用于其他用途。"
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
@@ -5162,6 +5163,7 @@ zh_CN:
         slug: "缩略名"
         name_placeholder: "标签名称"
         slug_placeholder: "标签缩略名（可选，根据名称自动生成）"
+        invalid_slug: "在单词之间使用小写字母、数字和单个连字符."
         saved: "标签设置已保存"
         no_synonyms: "没有为此缩略名定义同义词。"
         add_synonym_placeholder: "搜索可添加为同义词的标签…"
@@ -5908,12 +5910,17 @@ zh_CN:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
               help_text: "使用宽矩形图片。不要使用 SVG 图片。"
+            og_image_source:
+              title: "OpenGraph 图像源"
+              description: "选择如何为没有自己图像的话题提供OpenGraph预览图像。"
+              uploaded: "使用上传的图片"
             opengraph_image:
               title: "OpenGraph 图片"
               description: "默认 opengraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
             og_image_preview:
               generate: "生成"
               topic_id_label: "话题 ID"
+              topic_id_placeholder: "例如 123"
             x_summary_large_image:
               title: "X 摘要大图"
               description: "X 卡摘要大图。如果留空，则使用 OpenGraph_image（只要它不是 .svg）生成常规卡片元数据。"
