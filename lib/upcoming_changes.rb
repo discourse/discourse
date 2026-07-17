@@ -43,12 +43,6 @@ module UpcomingChanges
       Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
     end
 
-    # Sites already running the discourse-gifs theme component will have their
-    # configuration migrated separately so they don't need to opt in via the upcoming change.
-    def self.should_display_enable_gifs?
-      !DiscourseGifs.component_installed?
-    end
-
     # Only relevant on sites that currently allow uncategorized topics, and must
     # stay visible after being enabled (which disables that setting).
     def self.should_display_remove_and_replace_uncategorized?
