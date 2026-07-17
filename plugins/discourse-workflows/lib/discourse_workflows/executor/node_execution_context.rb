@@ -327,13 +327,13 @@ module DiscourseWorkflows
         topic_id:,
         reply_to_post_number: nil,
         whisper: false,
-        authorization_mode: "author"
+        bypass_permission_checks: false
       )
         topic = ::Topic.find(topic_id)
-        system_authorization = system_authorization_mode?(authorization_mode)
-        guardian = system_authorization ? Discourse.system_user.guardian : user.guardian
+        bypass_permission_checks = ActiveModel::Type::Boolean.new.cast(bypass_permission_checks)
+        guardian = bypass_permission_checks ? Discourse.system_user.guardian : user.guardian
 
-        if !system_authorization
+        if !bypass_permission_checks
           guardian.ensure_can_see!(topic)
           raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
 
@@ -362,13 +362,13 @@ module DiscourseWorkflows
           post_args[:post_type] = ::Post.types[:whisper]
         end
 
-        if system_authorization
+        if bypass_permission_checks
           post_args[:guardian] = guardian
           post_args[:skip_staff_author_pm_membership_sync] = true
         end
 
         post = PostCreator.new(user, post_args).create!
-        record_system_authorized_post!(post) if system_authorization
+        record_system_authorized_post!(post) if bypass_permission_checks
         post
       end
 
@@ -471,10 +471,6 @@ module DiscourseWorkflows
       end
 
       private
-
-      def system_authorization_mode?(authorization_mode)
-        authorization_mode.to_s == SYSTEM_AUTHORIZATION_MODE
-      end
 
       def record_system_authorized_post!(post)
         post.custom_fields[SYSTEM_AUTHORIZED_POST_FIELD] = SYSTEM_AUTHORIZATION_MODE

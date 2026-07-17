@@ -194,7 +194,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       end.to raise_error(Discourse::InvalidAccess).and not_change { hidden_topic.posts.count }
     end
 
-    it "creates a PM reply as a TL0 user with system authorization", :aggregate_failures do
+    it "creates a PM reply as a TL0 user when bypassing permission checks", :aggregate_failures do
       tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       private_message = Fabricate(:private_message_topic, user: user, recipient: other_user)
       Fabricate(
@@ -215,7 +215,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
               "topic_id" => private_message.id.to_s,
               "raw" => "Automated reply from a TL0 user.",
               "author_username" => tl0_user.username,
-              "authorization_mode" => "system",
+              "bypass_permission_checks" => true,
             },
             item: item,
           )
@@ -232,7 +232,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
     end
 
-    it "creates a secure category reply as a TL0 user with system authorization",
+    it "creates a secure category reply as a TL0 user when bypassing permission checks",
        :aggregate_failures do
       tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       group = Fabricate(:group)
@@ -251,7 +251,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
               "topic_id" => topic.id.to_s,
               "raw" => "Secure category automated reply.",
               "author_username" => tl0_user.username,
-              "authorization_mode" => "system",
+              "bypass_permission_checks" => true,
             },
             item: item,
           )
@@ -268,7 +268,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
     end
 
-    it "creates a whisper as a TL0 user with system authorization", :aggregate_failures do
+    it "creates a whisper as a TL0 user when bypassing permission checks", :aggregate_failures do
       SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
       tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       private_message = Fabricate(:private_message_topic, user: user, recipient: other_user)
@@ -290,7 +290,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
               "topic_id" => private_message.id.to_s,
               "raw" => "Staff-only automated note from a TL0 user.",
               "author_username" => tl0_user.username,
-              "authorization_mode" => "system",
+              "bypass_permission_checks" => true,
               "whisper" => true,
             },
             item: item,
@@ -309,7 +309,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       )
     end
 
-    it "creates a post in a closed topic with system authorization", :aggregate_failures do
+    it "creates a post in a closed topic when bypassing permission checks", :aggregate_failures do
       tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
       topic = first_post.topic
@@ -322,7 +322,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
             "topic_id" => topic.id.to_s,
             "raw" => "System authorization can reply to closed topics.",
             "author_username" => tl0_user.username,
-            "authorization_mode" => "system",
+            "bypass_permission_checks" => true,
           },
           item: item,
         )
