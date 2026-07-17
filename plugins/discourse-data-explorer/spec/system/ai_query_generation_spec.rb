@@ -114,4 +114,30 @@ RSpec.describe "Data Explorer AI query generation" do
       expect(page).to have_no_css(".query-ai-prompt")
     end
   end
+
+  context "when remembering the last used mode" do
+    fab!(:query) { Fabricate(:query, name: "First query", sql: "SELECT 1", user: admin) }
+    fab!(:other_query) { Fabricate(:query, name: "Second query", sql: "SELECT 2", user: admin) }
+
+    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+
+    it "opens subsequent queries and the new query page in the last used mode" do
+      visit("/admin/plugins/discourse-data-explorer/queries/new")
+      expect(page).to have_css(".query-new__ai-section")
+
+      find(".query-new__top-bar .back-button").click
+      within(".discourse-data-explorer-query-list") { click_link("First query") }
+      find(".query-mode-switch .d-segmented-control__label", text: "Write SQL").click
+      expect(page).to have_no_css(".query-ai-prompt")
+
+      find(".back-button").click
+      find(".d-page-subheader .btn-primary").click
+      expect(page).to have_css(".query-new__manual-form")
+      expect(page).to have_no_css(".query-new__ai-section")
+
+      visit("/admin/plugins/discourse-data-explorer/queries/#{other_query.id}")
+      expect(page).to have_css(".query-editor")
+      expect(page).to have_no_css(".query-ai-prompt")
+    end
+  end
 end

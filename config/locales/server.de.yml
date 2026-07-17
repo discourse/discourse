@@ -2559,7 +2559,6 @@ de:
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
       content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
-      content_localization_language_switcher_requirements: "Für den Sprachumschalter müssen die Seiteneinstellungen ‚set locale from cookie‘ und ‚allow user locale‘ aktiviert sein und ‚content localization supported locales‘ muss mindestens eine Sprache enthalten."
       mediaconvert_role_arn_required: "Die AWS IAM role ARN ist erforderlich, wenn du AWS MediaConvert für die Videokonvertierung verwendest."
       mediaconvert_output_subdirectory_required: "Die Einstellung „MediaConvert output subdirectory“ muss ausgefüllt sein."
       s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."

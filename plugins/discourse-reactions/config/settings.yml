@@ -50,6 +50,6 @@ discourse_reactions:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403390"

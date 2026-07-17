@@ -1550,6 +1550,19 @@ sr:
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
+        invite_roles:
+          member_title: "Pozovi članove"
+          member_tab: "Članovi"
+          admin_tab: "Admini"
+          email_placeholder: "ime@primer.com"
+          invite_by_email: "E-mail"
+          more_options: "Više opcija"
+          summary:
+            role_member: "Član"
+            role_admin: "Admin"
+            method_email: "E-mail"
+            topic: "Tema"
+            groups: "Grupe"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."

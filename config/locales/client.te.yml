@@ -1705,6 +1705,21 @@ te:
           send_invite_email_instructions: "ఆహ్వాన ఇమెయిల్‌ను పంపడానికి ఇమెయిల్‌కి ఆహ్వానాన్ని పరిమితం చేయండి"
           update_invite: "నవీకరించండి"
           cancel: "రద్దుచేయండి"
+        invite_roles:
+          member_tab: "సభ్యులు"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ఈమెయిల్"
+          restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
+          domain_placeholder: "example.com"
+          update: "నవీకరించండి"
+          summary:
+            role_member: "సభ్యుడు"
+            role_admin: "నిర్వాహకుడు"
+            method_email: "ఈమెయిల్"
+            uses: "గరిష్ట ఉపయోగాలు"
+            expires: "గడువు ముగుస్తుంది"
+            topic: "విషయం"
+            groups: "సమూహాలు"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"

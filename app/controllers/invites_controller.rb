@@ -122,6 +122,25 @@ class InvitesController < ApplicationController
   end
 
   def create
+    is_admin_invite = params[:is_admin].to_s == "true"
+
+    if is_admin_invite
+      guardian.ensure_can_create_admin_invite!
+
+      if params[:topic_id].present? || params[:group_ids].present? ||
+           params[:group_names].present? || params[:domain].present?
+        raise Discourse::InvalidParameters.new(:is_admin)
+      end
+
+      RateLimiter.new(
+        current_user,
+        "admin-invites-per-day",
+        10,
+        1.day,
+        apply_limit_to_staff: true,
+      ).performed!
+    end
+
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])
       raise Discourse::InvalidParameters.new(:topic_id) if topic.blank?
@@ -152,7 +171,8 @@ class InvitesController < ApplicationController
         skip_email: skip_email_param,
         invited_by: current_user,
         custom_message: params[:custom_message],
-        max_redemptions_allowed: params[:max_redemptions_allowed],
+        max_redemptions_allowed: is_admin_invite ? nil : params[:max_redemptions_allowed],
+        admin: is_admin_invite,
         topic_id: topic&.id,
         group_ids: groups&.map(&:id),
         expires_at: params[:expires_at],
@@ -198,6 +218,12 @@ class InvitesController < ApplicationController
   def update
     invite = Invite.find_by(invited_by: current_user, id: params[:id])
     raise Discourse::InvalidParameters.new(:id) if invite.blank?
+
+    if invite.admin?
+      %i[topic_id group_ids group_names].each do |param|
+        raise Discourse::InvalidParameters.new(param) if params[param].present?
+      end
+    end
 
     if params[:topic_id].present?
       topic = Topic.find_by(id: params[:topic_id])

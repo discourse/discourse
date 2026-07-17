@@ -237,6 +237,8 @@ cs:
           mistral: "Mistral"
           open_router: "OpenRouter"
           fake: "Přizpůsobené"
+        provider_fields:
+          region: "Region"
       related_topics:
         title: "Související témata"
         pill: "Související"

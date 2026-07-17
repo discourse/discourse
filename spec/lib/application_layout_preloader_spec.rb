@@ -106,6 +106,29 @@ RSpec.describe ApplicationLayoutPreloader do
           list_type: group
           resolve_group_membership: true
           default: "#{other_group.id}"
+        menu_sections:
+          type: objects
+          default:
+            - name: "member section"
+              groups:
+                - #{group.id}
+              visible_groups:
+                - #{other_group.id}
+            - name: "other section"
+              groups:
+                - #{other_group.id}
+              visible_groups:
+                - #{group.id}
+          schema:
+            name: "section"
+            properties:
+              name:
+                type: string
+              groups:
+                type: groups
+                resolve_group_membership: true
+              visible_groups:
+                type: groups
       YAML
 
       component.set_field(target: :settings, name: :yaml, value: <<~YAML)
@@ -138,6 +161,18 @@ RSpec.describe ApplicationLayoutPreloader do
               "color" => "red",
               "user_in_allowed_groups" => true,
               "user_in_other_allowed_groups" => false,
+              "menu_sections" => [
+                {
+                  "name" => "member section",
+                  "user_in_groups" => true,
+                  "visible_groups" => [other_group.id],
+                },
+                {
+                  "name" => "other section",
+                  "user_in_groups" => false,
+                  "visible_groups" => [group.id],
+                },
+              ],
             },
           },
           component.id.to_s => {

@@ -39,6 +39,7 @@ class Invite < ActiveRecord::Base
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
   validate :email_xor_domain
+  validate :ensure_valid_admin_invite, if: :admin?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -169,11 +170,15 @@ class Invite < ActiveRecord::Base
       end
 
     if invite
+      was_admin = invite.admin?
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
         expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
         emailed_status: emailed_status,
+        # update_columns skips validations, so the inviter check from
+        # ensure_valid_admin_invite has to be re-applied here
+        admin: !!opts[:admin] && !!invited_by&.admin?,
       )
     else
       create_args =
@@ -182,6 +187,7 @@ class Invite < ActiveRecord::Base
           :description,
           :domain,
           :moderator,
+          :admin,
           :custom_message,
           :max_redemptions_allowed,
         )
@@ -194,12 +200,21 @@ class Invite < ActiveRecord::Base
       invite = Invite.create!(create_args)
     end
 
-    topic_id = opts[:topic]&.id || opts[:topic_id]
-    invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+    DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
 
-    group_ids = opts[:group_ids]
-    if group_ids.present?
-      group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+    if invite.admin?
+      # admin invites never carry topic or group associations; clear any left
+      # over from a reused member invite
+      invite.topic_invites.destroy_all
+      invite.invited_groups.destroy_all
+    else
+      topic_id = opts[:topic]&.id || opts[:topic_id]
+      invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+
+      group_ids = opts[:group_ids]
+      if group_ids.present?
+        group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+      end
     end
 
     if emailed_status == emailed_status_types[:pending]
@@ -345,6 +360,16 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  def ensure_valid_admin_invite
+    errors.add(:base, I18n.t("invite.admin_invite_requires_email")) if email.blank?
+
+    # only checked when the flag is set so that later saves (e.g. marking the
+    # invite redeemed) don't fail if the inviter has since been demoted
+    if (new_record? || will_save_change_to_admin?) && !invited_by&.admin?
+      errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
+    end
+  end
+
   def valid_domain
     return if domain.blank?
 
@@ -365,6 +390,7 @@ end
 # Table name: invites
 #
 #  id                      :integer          not null, primary key
+#  admin                   :boolean          default(FALSE), not null
 #  custom_message          :text
 #  deleted_at              :datetime
 #  description             :string(100)

@@ -194,6 +194,8 @@ sv:
         providers:
           google: "Google"
           fake: "Anpassad"
+        provider_fields:
+          region: "Region"
       ai_helper:
         context_menu:
           cancel: "Avbryt"

@@ -165,7 +165,25 @@ export default class SiteSetting extends EmberObject {
       max: this.max,
       choices: this.choices,
       valid_values: this.validValues,
+      allows_none: !!this.allowsNone,
+      allow_any: this.allow_any,
+      mandatory_values: this.mandatory_values,
+      disallowed_groups: this.disallowed_groups,
+      currentSavedValue: this.value,
     };
+  }
+
+  get pendingValue() {
+    return this.buffered.get("value");
+  }
+
+  commit() {
+    this.validationMessage = null;
+    this.buffered.applyChanges();
+  }
+
+  rollback() {
+    this.buffered.discardChanges();
   }
 
   get requiresConfirmation() {

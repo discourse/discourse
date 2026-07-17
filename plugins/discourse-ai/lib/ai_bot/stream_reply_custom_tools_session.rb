@@ -195,6 +195,7 @@ module DiscourseAi
           temperature: @temperature,
           top_p: @top_p,
           execution_context: execution_context,
+          feature_name: "bot",
         }
 
         # Pre-check: if budget already exhausted on resume, force a final

@@ -1388,6 +1388,15 @@ id:
           hide_advanced: "Sembunyikan Opsi Lanjutan"
           description: "Deskripsi"
           cancel: "Batal"
+        invite_roles:
+          member_tab: "Anggota"
+          invite_by_email: "Email"
+          summary:
+            role_member: "Anggota"
+            role_admin: "Admin"
+            method_email: "Email"
+            topic: "Topik"
+            groups: "Grup"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:

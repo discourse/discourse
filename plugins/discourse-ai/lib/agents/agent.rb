@@ -111,6 +111,7 @@ module DiscourseAi
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
+            Tools::ReadSiteSetting,
             Tools::ChangeSiteSetting,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,

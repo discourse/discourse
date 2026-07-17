@@ -1841,6 +1841,23 @@ hy:
           update_invite: "Թարմացնել"
           update_invite_and_send_email: "Թարմացնել և ուղարկել էլ. նամակ"
           cancel: "Չեղարկել"
+        invite_roles:
+          member_title: "Հրավիրեք մասնակիցներին"
+          member_tab: "Անդամներ"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Էլ. հասցե"
+          restrict_domain: "Սահմանափակել դոմենով"
+          more_options: "Ավելի շատ տարբերակներ"
+          update: "Թարմացնել"
+          summary:
+            role_member: "Անդամ"
+            role_admin: "Ադմին"
+            method_email: "Էլ. հասցե"
+            uses: "Առավելագույն օգտագործման քանակը"
+            expires: "Ժամկետը լրանում է"
+            topic: "Թեմա"
+            groups: "Խմբեր"
+            edit: "Խմբագրել հրավերը"
         bulk_invite:
           none: "Այս էջում ցուցադրելու հրավերներ չկան:"
           text: "Զանգվածային Հրավեր"

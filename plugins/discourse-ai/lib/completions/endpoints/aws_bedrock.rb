@@ -14,6 +14,10 @@ module DiscourseAi
           llm_model.provider == "aws_bedrock"
         end
 
+        def self.requires_configured_url?
+          false
+        end
+
         def default_options(dialect)
           options =
             if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)

@@ -1585,6 +1585,18 @@ sl:
           expires_after: "Poteče po"
           send_invite_email: "Shrani in pošlji e-pošto"
           cancel: "Prekliči"
+        invite_roles:
+          member_tab: "Člani"
+          admin_tab: "Administratorji"
+          email_placeholder: "name@example.com"
+          invite_by_email: "E-naslov"
+          summary:
+            role_member: "Polnopraven član"
+            role_admin: "Admin"
+            method_email: "E-naslov"
+            expires: "Poteče"
+            topic: "Tema"
+            groups: "Skupine"
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"

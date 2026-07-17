@@ -253,6 +253,81 @@ RSpec.describe Invite do
         end
       end
     end
+
+    context "with admin invites" do
+      fab!(:admin)
+
+      it "creates a single-use email invite" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(invite.admin).to eq(true)
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "requires an email address" do
+        expect { Invite.generate(admin, admin: true) }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          /#{I18n.t("invite.admin_invite_requires_email")}/,
+        )
+      end
+
+      it "requires the inviter to be an admin" do
+        expect { Invite.generate(user, email: "test@example.com", admin: true) }.to raise_error(
+          ActiveRecord::RecordInvalid,
+          /#{I18n.t("invite.admin_invite_requires_admin_inviter")}/,
+        )
+      end
+
+      it "cannot be combined with a domain restriction" do
+        invite = Fabricate.build(:invite, email: nil, domain: "example.com", admin: true)
+        expect(invite).not_to be_valid
+      end
+
+      it "triggers an event when created" do
+        events =
+          DiscourseEvent.track_events(:admin_invite_created) do
+            Invite.generate(admin, email: "test@example.com", admin: true)
+          end
+
+        expect(events.first[:params].first.email).to eq("test@example.com")
+      end
+
+      it "clears the admin flag when the invite is reused without it" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        reused = Invite.generate(admin, email: "test@example.com")
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.admin).to eq(false)
+      end
+
+      it "keeps the admin flag when the invite is reused with it" do
+        invite = Invite.generate(admin, email: "test@example.com", admin: true)
+        reused = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.admin).to eq(true)
+      end
+
+      it "clears topic and group associations when a member invite is reused as an admin invite" do
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+        invite =
+          Invite.generate(
+            admin,
+            email: "test@example.com",
+            topic_id: topic.id,
+            group_ids: [group.id],
+          )
+        expect(invite.topics).to contain_exactly(topic)
+        expect(invite.groups).to contain_exactly(group)
+
+        reused = Invite.generate(admin, email: "test@example.com", admin: true)
+
+        expect(reused.id).to eq(invite.id)
+        expect(reused.topics).to be_empty
+        expect(reused.groups).to be_empty
+      end
+    end
   end
 
   describe "#redeem" do

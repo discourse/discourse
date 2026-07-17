@@ -616,7 +616,7 @@ sk:
           fake: "Vlastné"
         provider_fields:
           access_key_id: "ID prístupového kľúča AWS Bedrock"
-          region: "Región AWS Bedrock"
+          region: "Región"
           organization: "Voliteľné ID organizácie OpenAI"
           disable_system_prompt: "Zakázať systémové správy vo výzvach"
           enable_native_tool: "Povoliť podporu natívnych nástrojov"

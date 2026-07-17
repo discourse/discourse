@@ -171,7 +171,8 @@ html:not(.keyboard-visible).mobile-device {
 
       &[type="text"],
       &[type="password"],
-      &[type="number"] {
+      &[type="number"],
+      &[type="email"] {
         width: 100%;
       }
     }
