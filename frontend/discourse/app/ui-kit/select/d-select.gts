@@ -22,7 +22,9 @@ import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
+import dRovingFocus, {
+  type DRovingFocusApi,
+} from "discourse/ui-kit/modifiers/d-roving-focus";
 import ComboboxQueryInput from "discourse/ui-kit/select/-internals/combobox-query-input";
 import SelectItem from "discourse/ui-kit/select/-internals/select-item";
 import SelectionLabel from "discourse/ui-kit/select/-internals/selection-label";
@@ -161,6 +163,11 @@ export default class DSelect extends Component<DSelectSignature> {
   // the compat bridge can reach the trigger element.
   #menu: DMenuInstance | null = null;
 
+  // Controls for moving focus into the multi-select chip group, registered by the
+  // chips' `dRovingFocus` (desktop only). Read imperatively from the keyboard handlers,
+  // so a plain field rather than tracked; `null` while unregistered (mobile / single).
+  #chipRoving: DRovingFocusApi | null = null;
+
   #listboxId = `d-combobox-listbox-${guidFor(this)}`;
 
   // The last count announced, so rapid re-filters that don't change the count don't spam
@@ -182,6 +189,11 @@ export default class DSelect extends Component<DSelectSignature> {
   /** Stable prefix for the per-chip element ids (label + remove button). */
   get chipIdPrefix() {
     return `d-combobox-chip-${guidFor(this)}`;
+  }
+
+  /** Stable id for the query input's `aria-describedby` chip-navigation hint. */
+  get chipHintId() {
+    return `d-combobox-chip-hint-${guidFor(this)}`;
   }
 
   /**
@@ -294,6 +306,18 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   registerMenu(api: DMenuInstance): void {
     this.#menu = api;
+  }
+
+  /**
+   * Captures the chip group's roving-focus controls so the query input can move focus
+   * into the chips (ArrowLeft) and a keyboard removal can restore focus to a neighbor.
+   * The modifier passes `null` on teardown.
+   *
+   * @param api - The roving-focus controls, or `null` on teardown.
+   */
+  @action
+  registerChipRoving(api: DRovingFocusApi | null): void {
+    this.#chipRoving = api;
   }
 
   /**
@@ -444,14 +468,34 @@ export default class DSelect extends Component<DSelectSignature> {
 
   @action
   handleInputKeydown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+
     if (
       event.key === "Backspace" &&
       !event.isComposing &&
-      (event.target as HTMLInputElement).value === "" &&
+      input.value === "" &&
       this.engine.hasValue
     ) {
       event.preventDefault();
       this.engine.deselectLast();
+      return;
+    }
+
+    // Desktop multi: ArrowLeft at the very start of the query moves focus into the chip
+    // group (the chip nearest the input). Only the desktop trigger hosts the chips inline;
+    // the mobile input lives in the modal, so entering the trigger chips would break out of
+    // it. `preventDefault` only when a chip actually took focus, so an empty control (or a
+    // loading re-flash) leaves ArrowLeft as a plain no-op caret move.
+    if (
+      this.isDesktopTypeahead &&
+      event.key === "ArrowLeft" &&
+      !event.isComposing &&
+      input.selectionStart === 0 &&
+      input.selectionEnd === 0 &&
+      this.engine.hasValue &&
+      this.#chipRoving?.focusLast()
+    ) {
+      event.preventDefault();
     }
   }
 
@@ -528,13 +572,83 @@ export default class DSelect extends Component<DSelectSignature> {
 
   /**
    * Removes a chip's item, stops the click from opening the menu, and restores input focus
-   * after the focused remove button unmounts.
+   * after the focused remove button unmounts. Handles a pointer click and the button's
+   * native Enter/Space activation; Backspace/Delete go through `handleChipKeydown`.
    */
   @action
   removeItem(item: SelectItemModel, event?: MouseEvent): void {
     event?.stopPropagation();
     this.engine.deselect(item);
     this.filterInput?.focus();
+  }
+
+  /**
+   * Returns focus to the query input when the roving cursor steps off the right (input-side)
+   * edge of the chip group. At the left edge (`backward`) it stays on the first chip.
+   *
+   * @param direction - The travel direction that hit the edge.
+   */
+  @action
+  exitChipsToInput(direction: "forward" | "backward"): void {
+    if (direction === "forward") {
+      this.filterInput?.focus();
+    }
+  }
+
+  /**
+   * Desktop multi: keyboard handling for a focused chip.
+   *
+   * - **ArrowDown / ArrowUp** move focus back to the query input and open the overlay — the same
+   *   "go to the options" gesture the input itself uses. Focus has to land on the input because
+   *   the listbox highlight is driven by `aria-activedescendant` on the input (active mode), not
+   *   on the chip; this is also how the control is reopened after Escape.
+   * - **Backspace / Delete** remove the chip and keep the cursor in the group, landing on the
+   *   previous chip (or the input when the first/last one goes or a loading re-flash leaves no
+   *   button to focus).
+   * - **Enter / Space** are left to the button's native activation (→ `removeItem`, which returns
+   *   focus to the input), so there is a single removal path and no synthesized-click race.
+   * - **Escape** is not handled here — float-kit's document-level capture listener closes the
+   *   overlay first; focus stays on the chip (still arrow-navigable, reopen with ArrowDown).
+   *
+   * @param item - The chip's item.
+   * @param index - The chip's position, for restoring focus to a neighbor.
+   * @param event - The keydown event.
+   */
+  @action
+  handleChipKeydown(
+    item: SelectItemModel,
+    index: number,
+    event: KeyboardEvent
+  ): void {
+    if (!this.isDesktopTypeahead) {
+      return;
+    }
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      this.filterInput?.focus();
+      this.#menu?.show();
+      return;
+    }
+
+    if (event.key === "Backspace" || event.key === "Delete") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.engine.deselect(item);
+      // The chip DOM re-renders on the value change; restore focus once it settles. A
+      // macrotask lands after the render flush, and the boolean guard falls back to the
+      // input if the group is momentarily empty.
+      nextRunloop(() => {
+        const remaining = makeArray(this.args.value).length;
+        if (
+          remaining > 0 &&
+          this.#chipRoving?.focusIndex(Math.max(0, index - 1))
+        ) {
+          return;
+        }
+        this.filterInput?.focus();
+      });
+    }
   }
 
   /**
@@ -580,53 +694,90 @@ export default class DSelect extends Component<DSelectSignature> {
           async context does not churn each render; a content-only skeleton shows while
           it resolves, so a bare id never flashes. }}
         {{#if @multiple}}
-          <div
-            class="d-combobox__chips"
-            role="group"
-            aria-label={{i18n "d_select.selected_items"}}
-          >
-            <DAsyncContent @asyncData={{this.resolveMulti}} @context={{@value}}>
-              <:loading>
-                {{#each this.chipSkeletons key="key" as |row|}}
-                  <span class="d-combobox__chip" data-key={{row.key}}>
-                    <DSkeleton @variant="text" @width="6ch" />
-                  </span>
-                {{/each}}
-              </:loading>
-              <:content as |chips|>
-                {{#each chips key="key" as |chip index|}}
-                  <span class="d-combobox__chip">
-                    <span
-                      class="d-combobox__chip-label"
-                      id="{{this.chipIdPrefix}}-{{index}}-label"
-                    >
-                      {{#if (has-block "selection")}}
-                        {{yield chip.item to="selection"}}
-                      {{else}}
-                        <SelectionLabel
-                          @item={{chip.item}}
-                          @labelField={{this.labelField}}
-                        />
-                      {{/if}}
-                    </span>
-                    <button
-                      type="button"
-                      class="d-combobox__chip-remove"
-                      aria-labelledby="{{this.chipIdPrefix}}-{{index}}-remove {{this.chipIdPrefix}}-{{index}}-label"
-                      {{on "click" (fn this.removeItem chip.item)}}
-                    >
+          {{! Desktop multi: the chips are a horizontal arrow-roving group whose remove buttons
+            are the navigable items (`tabindex=-1` below), so the query input stays the sole tab
+            stop. Gated to desktop — the mobile trigger has no inline input to enter the chips
+            from (Mobile M5 is separate). }}
+          {{! The chips are a real list (ul/li) so assistive tech announces them as a
+            navigable collection; display:contents keeps the items flowing inline with the
+            query input, which is a sibling of the list (an input cannot be a child of a ul). }}
+          <div class="d-combobox__chips">
+            <ul
+              class="d-combobox__chip-list"
+              aria-label={{i18n "d_select.selected_items"}}
+              {{(if
+                this.isDesktopTypeahead
+                (modifier
+                  dRovingFocus
+                  tabStop=false
+                  orientation="horizontal"
+                  itemSelector=".d-combobox__chip-remove"
+                  onExit=this.exitChipsToInput
+                  onRegisterApi=this.registerChipRoving
+                )
+              )}}
+            >
+              <DAsyncContent
+                @asyncData={{this.resolveMulti}}
+                @context={{@value}}
+              >
+                <:loading>
+                  {{#each this.chipSkeletons key="key" as |row|}}
+                    <li class="d-combobox__chip" data-key={{row.key}}>
+                      <DSkeleton @variant="text" @width="6ch" />
+                    </li>
+                  {{/each}}
+                </:loading>
+                <:content as |chips|>
+                  {{#each chips key="key" as |chip index|}}
+                    <li class="d-combobox__chip">
+                      {{! Hidden from assistive tech: the remove button's accessible name
+                      already carries this label (via aria-labelledby), so exposing the
+                      text again would double every chip during item-by-item navigation. }}
                       <span
-                        class="sr-only"
-                        id="{{this.chipIdPrefix}}-{{index}}-remove"
+                        class="d-combobox__chip-label"
+                        id="{{this.chipIdPrefix}}-{{index}}-label"
+                        aria-hidden="true"
                       >
-                        {{i18n "d_select.remove"}}
+                        {{#if (has-block "selection")}}
+                          {{yield chip.item to="selection"}}
+                        {{else}}
+                          <SelectionLabel
+                            @item={{chip.item}}
+                            @labelField={{this.labelField}}
+                          />
+                        {{/if}}
                       </span>
-                      {{dIcon "xmark"}}
-                    </button>
-                  </span>
-                {{/each}}
-              </:content>
-            </DAsyncContent>
+                      <button
+                        type="button"
+                        class="d-combobox__chip-remove"
+                        {{! Desktop: never a tab stop — reached by arrow-roving from the input.
+                        A static -1 keeps every newly-rendered chip out of the tab order with
+                        no dependence on the modifier re-seeding. Mobile keeps native tab stops. }}
+                        tabindex={{if this.isDesktopTypeahead "-1"}}
+                        {{! Name leads with the item, then how to remove it (e.g. "Orange, Press
+                          Backspace or Delete to remove") so it reads as a selected item rather
+                          than a bare action. }}
+                        aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
+                        {{on "click" (fn this.removeItem chip.item)}}
+                        {{on
+                          "keydown"
+                          (fn this.handleChipKeydown chip.item index)
+                        }}
+                      >
+                        <span
+                          class="sr-only"
+                          id="{{this.chipIdPrefix}}-{{index}}-remove"
+                        >
+                          {{i18n "d_select.remove_hint"}}
+                        </span>
+                        {{dIcon "xmark"}}
+                      </button>
+                    </li>
+                  {{/each}}
+                </:content>
+              </DAsyncContent>
+            </ul>
             {{#if this.isDesktopTypeahead}}
               <ComboboxQueryInput
                 @engine={{this.engine}}
@@ -643,8 +794,14 @@ export default class DSelect extends Component<DSelectSignature> {
                 @onBlur={{this.handleTriggerBlur}}
                 @onEdit={{this.beginQuery}}
                 @registerInput={{this.registerTriggerInput}}
+                aria-describedby={{if this.engine.hasValue this.chipHintId}}
                 {{on "keydown" this.handleInputKeydown}}
               />
+              {{#if this.engine.hasValue}}
+                <span id={{this.chipHintId}} class="sr-only">
+                  {{i18n "d_select.chips_hint"}}
+                </span>
+              {{/if}}
             {{/if}}
           </div>
           {{dIcon "angle-down" class="d-combobox__caret"}}

@@ -7,11 +7,15 @@ import { bind } from "discourse/lib/decorators";
 type SelectionMode = "focus" | "active";
 type Orientation = "grid" | "horizontal" | "vertical";
 
-/** Controls for moving the cursor to a live item in the roving-focus group. */
+/**
+ * Controls for moving the cursor to a live item in the roving-focus group. Each
+ * returns whether it landed on an item — `false` when the group is currently empty
+ * (e.g. a re-render dropped every item), so the caller can fall back.
+ */
 export interface DRovingFocusApi {
-  focusFirst(): void;
-  focusLast(): void;
-  focusIndex(index: number): void;
+  focusFirst(): boolean;
+  focusLast(): boolean;
+  focusIndex(index: number): boolean;
 }
 
 interface DRovingFocusArgs {
@@ -111,24 +115,27 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     focusFirst: () => {
       const items = this.#items();
       if (!items.length) {
-        return;
+        return false;
       }
       this.#setActive(items[0], items);
+      return true;
     },
     focusLast: () => {
       const items = this.#items();
       if (!items.length) {
-        return;
+        return false;
       }
       this.#setActive(items[items.length - 1], items);
+      return true;
     },
     focusIndex: (index) => {
       const items = this.#items();
       if (!items.length) {
-        return;
+        return false;
       }
       const last = items.length - 1;
       this.#setActive(items[Math.max(0, Math.min(index, last))], items);
+      return true;
     },
   };
 

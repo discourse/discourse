@@ -163,6 +163,15 @@
   width: 100%;
 }
 
+.d-combobox__chip-list {
+  // The chips need real list semantics (ul/li) so assistive tech announces them as a
+  // collection, but they must also flow inline with the query input, which is a sibling of
+  // the list (an <input> cannot be a child of a <ul>). display:contents drops the <ul>'s own
+  // box so its <li> chips participate directly in the parent flex row alongside the input,
+  // keeping the token-input layout while the list role is preserved in the accessibility tree.
+  display: contents;
+}
+
 .d-combobox__chip {
   display: inline-flex;
   align-items: center;
@@ -171,6 +180,17 @@
   background: var(--primary-low);
   color: var(--primary);
   border-radius: var(--d-input-border-radius, 0.25em);
+
+  &:hover {
+    background: var(--primary-low-mid);
+  }
+
+  // The roving cursor lands on the inner remove button; ring the whole chip so the focus
+  // indicator frames the token being acted on, not just the × control.
+  &:has(.d-combobox__chip-remove:focus-visible) {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 1px;
+  }
 }
 
 .d-combobox__chip-remove {
@@ -181,4 +201,14 @@
   background: none;
   color: var(--primary-medium);
   cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  // The whole-chip ring above is the focus indicator, so suppress the button's own
+  // outline to avoid a second ring around the × while it holds the roving focus.
+  &:focus-visible {
+    outline: none;
+  }
 }
