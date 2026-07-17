@@ -98,6 +98,17 @@ RSpec.describe SiteSetting do
         Discourse.stubs(:filters).returns(filters)
         expect(SiteSetting.homepage).to eq("categories")
       end
+
+      it "falls back when the persisted value is no longer an eligible choice" do
+        SiteSetting.enable_unified_new = false
+        SiteSetting.top_menu = "categories|latest"
+        SiteSetting.default_homepage = "unread"
+        expect(SiteSetting.homepage).to eq("unread")
+
+        # enabling unified-new removes unread from the eligible homepage choices
+        SiteSetting.enable_unified_new = true
+        expect(SiteSetting.homepage).to eq("categories")
+      end
     end
   end
 

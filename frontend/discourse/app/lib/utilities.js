@@ -283,14 +283,8 @@ export function setCaretPosition(ctrl, pos) {
 export function siteDefaultHomepage(siteSettings) {
   const configured = siteSettings.default_homepage;
 
-  // A persisted value can outlive the plugin that registered its filter;
-  // site.filters is what discovery routes are generated from, so fall back
-  // rather than targeting a route that no longer exists.
-  const filters = Site.current()?.filters;
-  if (
-    configured &&
-    (configured === "categories" || !filters || filters.includes(configured))
-  ) {
+  const choices = Site.current()?.homepage_choices;
+  if (configured && (!choices || choices.includes(configured))) {
     return configured;
   }
 

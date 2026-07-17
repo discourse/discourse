@@ -192,7 +192,7 @@ class SiteSetting < ActiveRecord::Base
   def self.homepage
     configured = default_homepage.presence
 
-    if configured && (configured == "categories" || Discourse.filters.include?(configured.to_sym))
+    if configured && TopMenu.homepage_choices.include?(configured)
       configured
     else
       top_menu_items[0].name

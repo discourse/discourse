@@ -125,32 +125,32 @@ module("Unit | Utilities", function (hooks) {
     );
   });
 
-  test("defaultHomepage ignores a default_homepage value whose filter is no longer registered", function (assert) {
+  test("defaultHomepage ignores a default_homepage value that is no longer an eligible choice", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.top_menu = "top|latest|hot";
     siteSettings.default_homepage = "votes";
 
     const site = Site.current();
-    const originalFilters = site.filters;
+    const originalChoices = site.homepage_choices;
 
     try {
-      site.set("filters", ["latest", "top", "hot"]);
+      site.set("homepage_choices", ["latest", "top", "hot"]);
       initializeDefaultHomepage(siteSettings);
       assert.strictEqual(
         defaultHomepage(),
         "top",
-        "a stale value falls back to the first top_menu item"
+        "an ineligible value falls back to the first top_menu item"
       );
 
-      site.set("filters", ["latest", "top", "hot", "votes"]);
+      site.set("homepage_choices", ["latest", "top", "hot", "votes"]);
       initializeDefaultHomepage(siteSettings);
       assert.strictEqual(
         defaultHomepage(),
         "votes",
-        "a registered value is used"
+        "an eligible value is used"
       );
     } finally {
-      site.set("filters", originalFilters);
+      site.set("homepage_choices", originalChoices);
     }
   });
 
