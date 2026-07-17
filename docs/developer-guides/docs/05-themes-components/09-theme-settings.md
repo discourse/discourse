@@ -264,7 +264,7 @@ export default apiInitializer((api) => {
 });
 ```
 
-The generated boolean also works with automatic groups such as `logged_in_users` and `anonymous_users`.
+The generated boolean also works with automatic groups such as `logged_in_users` and `anonymous_users`. Object theme settings can use the same option on `type: groups` properties. See [objects type for theme settings](./10-objects-for-theme-settings.md#resolving-group-membership) for details.
 
 ## :link: Related Topics
 
