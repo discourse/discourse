@@ -75,6 +75,51 @@ module PageObjects
         has_field?("reply-title", with: value)
       end
 
+      # Methods for when the enable_composer_redesign upcoming change is enabled.
+
+      def has_footer_toolbar?
+        page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
+      end
+
+      def has_title_below_category_row?
+        page.has_css?("#{@composer_id} .title-and-category + .title-input")
+      end
+
+      def has_pm_recipients_in_category_row?
+        page.has_css?("#{@composer_id} .title-and-category .user-selector")
+      end
+
+      def has_no_toggle_toolbar_button?
+        page.has_no_css?("#{@composer_id} .toggle-toolbar")
+      end
+
+      # Methods for when the enable_composer_redesign upcoming change is disabled.
+
+      def has_no_footer_toolbar?
+        page.has_no_css?("#{@composer_id} .composer-footer")
+      end
+
+      def has_inline_toolbar?
+        page.has_css?("#{@composer_id} .d-editor-textarea-wrapper .d-editor-button-bar")
+      end
+
+      def has_title_in_category_row?
+        page.has_css?("#{@composer_id} .title-and-category .title-input")
+      end
+
+      def toggle_toolbar
+        find("#{@composer_id} .toggle-toolbar").click
+        self
+      end
+
+      def has_visible_toolbar?
+        page.has_css?("#{@composer_id} .d-editor-button-bar")
+      end
+
+      def has_no_visible_toolbar?
+        page.has_no_css?("#{@composer_id} .d-editor-button-bar")
+      end
+
       def fill_content(content)
         find("#{@composer_id} .d-editor .d-editor-input").fill_in(with: content)
         self
