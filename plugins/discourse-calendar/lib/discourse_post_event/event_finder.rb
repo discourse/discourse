@@ -5,8 +5,9 @@ module DiscoursePostEvent
     def self.search(user, params = {})
       guardian = Guardian.new(user)
 
-      build_base_query(guardian, user)
+      build_base_query(guardian, user, params)
         .then { |query| filter_by_post_id(query, params) }
+        .then { |query| filter_by_topic_id(query, params) }
         .then { |query| filter_by_attending_user(query, params, guardian, user) }
         .then { |query| filter_by_dates(query, params) }
         .then { |query| filter_by_category(query, params) }
@@ -16,13 +17,14 @@ module DiscoursePostEvent
 
     private
 
-    def self.build_base_query(guardian, user)
+    def self.build_base_query(guardian, user, params)
       topics = listable_topics(guardian)
       pms = private_messages(user)
 
-      DiscoursePostEvent::Event
-        .visible
-        .open
+      scope = DiscoursePostEvent::Event.visible
+      scope = scope.open if params[:include_closed].blank?
+
+      scope
         .joins(post: :topic)
         .merge(Post.secured(guardian))
         .merge(topics.or(pms))
@@ -55,6 +57,11 @@ module DiscoursePostEvent
     def self.filter_by_post_id(events, params)
       return events if params[:post_id].blank?
       events.where(id: params[:post_id])
+    end
+
+    def self.filter_by_topic_id(events, params)
+      return events if params[:topic_id].blank?
+      events.where(topics: { id: params[:topic_id] })
     end
 
     def self.filter_by_attending_user(events, params, guardian, user)

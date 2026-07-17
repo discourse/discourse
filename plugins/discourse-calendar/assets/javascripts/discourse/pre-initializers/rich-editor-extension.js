@@ -1,5 +1,8 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
+import DiscoursePostEventOneboxNodeView, {
+  topicIdFromUrl,
+} from "../components/discourse-post-event/onebox-node-view";
 import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../lib/event-preview";
 import {
@@ -35,6 +38,14 @@ const buildExtension = (siteSettings) => ({
     event: {
       component: EventNodeView,
     },
+    // render event-topic oneboxes as the read-only event card; non-event topic
+    // oneboxes (shouldRender false) keep the default onebox rendering
+    ...(siteSettings.discourse_post_event_enabled && {
+      onebox: {
+        component: DiscoursePostEventOneboxNodeView,
+        shouldRender: ({ node }) => topicIdFromUrl(node.attrs.url) !== null,
+      },
+    }),
   },
 
   nodeSpec: {

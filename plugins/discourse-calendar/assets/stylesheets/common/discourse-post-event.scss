@@ -5,6 +5,23 @@ $show-interested: inherit;
   display: none;
 }
 
+.discourse-post-event-onebox {
+  display: block;
+  margin: var(--space-4) 0;
+}
+
+.discourse-post-event-onebox .discourse-post-event-widget,
+.discourse-post-event--preview .discourse-post-event-widget {
+  box-shadow: 0 0 0 3px var(--primary-100);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  margin: var(--space-1) 0;
+}
+
+.composer-onebox-node {
+  white-space: normal;
+}
+
 .discourse-post-event {
   display: flex;
   justify-content: center;
