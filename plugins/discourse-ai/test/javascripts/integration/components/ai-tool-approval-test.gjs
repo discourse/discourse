@@ -21,6 +21,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     id: 42,
     version: 0,
     status: 0,
+    post_id: 456,
     tool_name: "suspend_user",
     tool_parameters: { username: "baduser", duration_days: 7, reason: "Spam" },
     payload: { agent_name: "Snorlax" },
@@ -33,16 +34,14 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     pretender.put("/review/42/perform/approve", (request) => {
       assert.strictEqual(
         request.requestBody,
-        "post_id=123&version=0",
-        "sends the rendered post id with the inline action"
+        "post_id=456&version=0",
+        "sends the reviewable target post id with the inline action"
       );
 
       return response({ reviewable_perform_result: { success: true } });
     });
 
-    await render(
-      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
-    );
+    await render(<template><AiToolApproval @reviewableId="42" /></template>);
 
     assert.dom(".ai-tool-approval__value").exists("shows the tool's details");
     assert
@@ -71,9 +70,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     const approved = { ...reviewable, status: 1 };
     pretender.get("/review/42", () => response({ reviewable: approved }));
 
-    await render(
-      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
-    );
+    await render(<template><AiToolApproval @reviewableId="42" /></template>);
 
     assert
       .dom(".ai-tool-approval__toggle")
@@ -94,9 +91,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     pretender.get("/review/42", () => response({ reviewable }));
 
-    await render(
-      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
-    );
+    await render(<template><AiToolApproval @reviewableId="42" /></template>);
 
     assert
       .dom(".ai-tool-approval__actions")
@@ -111,9 +106,7 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     pretender.get("/review/42", () => response(403, {}));
 
-    await render(
-      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
-    );
+    await render(<template><AiToolApproval @reviewableId="42" /></template>);
 
     assert
       .dom(".ai-tool-approval__status")
