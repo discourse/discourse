@@ -17,10 +17,6 @@ describe Jobs::PostImageCaptionsBackfill do
     enable_current_plugin
     llm_model = assign_fake_provider_to(:ai_default_llm_model)
     llm_model.update!(vision_enabled: true)
-    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(
-      enabled: true,
-      vision_enabled: true,
-    )
     SiteSetting.ai_post_image_captions_enabled = true
     SiteSetting.ai_helper_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
