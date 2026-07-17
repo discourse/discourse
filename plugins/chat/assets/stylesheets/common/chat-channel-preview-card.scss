@@ -12,6 +12,13 @@
   width: max-content;
   min-width: 60%;
   gap: var(--space-3);
+  box-sizing: border-box;
+
+  .chat-drawer &,
+  .full-page-chat & {
+    margin-inline: var(--space-4);
+    max-width: calc(100% - var(--space-8));
+  }
 
   &__icon {
     display: flex;

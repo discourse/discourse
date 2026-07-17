@@ -7,20 +7,18 @@
     max-width: 60ch;
     display: flex;
     flex-direction: column;
+    padding: var(--space-4);
+    margin-inline: auto;
 
-    &__container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: var(--space-4);
-    }
+    &__image {
+      margin-top: 0; // specific chat overrule for default Emptystate component
 
-    &__image svg,
-    &__image img {
-      width: 4rem;
-      height: 4rem;
-      margin-bottom: var(--space-4);
+      svg,
+      img {
+        width: 4rem;
+        height: 4rem;
+        margin-bottom: var(--space-4);
+      }
     }
 
     &__title {
@@ -33,6 +31,8 @@
     }
 
     &__tip {
+      position: relative; // overrule for core component being pos abs
+      bottom: 0; // overrule for core component being pos abs
       margin: 0;
       display: flex;
       flex-direction: column;
