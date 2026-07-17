@@ -11,20 +11,30 @@ export default class SettingFieldCategoryList extends Component {
 
   constructor() {
     super(...arguments);
-    this.loadCategories();
+    this.pendingCategoriesRequest = Promise.resolve();
+    this.valueChanged();
   }
 
   get categoryIds() {
     return splitString(this.args.field.value, "|");
   }
 
+  async updateSelectedCategories(previousRequest) {
+    const categories = await Category.asyncFindByIds(this.categoryIds);
+
+    // This is to prevent a race. We want to ensure that the update to
+    // selectedCategories for this request happens after the update for the
+    // previous request.
+    await previousRequest;
+
+    this.selectedCategories = categories;
+  }
+
   @action
-  async loadCategories() {
-    if (this.categoryIds.length) {
-      this.selectedCategories = await Category.asyncFindByIds(this.categoryIds);
-    } else {
-      this.selectedCategories = [];
-    }
+  valueChanged() {
+    const previousRequest = this.pendingCategoriesRequest;
+    this.pendingCategoriesRequest =
+      this.updateSelectedCategories(previousRequest);
   }
 
   @action
@@ -34,7 +44,7 @@ export default class SettingFieldCategoryList extends Component {
 
   <template>
     <@field.Control>
-      <div {{didUpdate this.loadCategories @field.value}}>
+      <div {{didUpdate this.valueChanged @field.value}}>
         <CategorySelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onChangeCategories}}
