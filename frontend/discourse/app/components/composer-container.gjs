@@ -39,7 +39,11 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
-const trackFieldsHeight = modifier((element) => {
+const trackFieldsHeight = modifier((element, [enabled]) => {
+  if (!enabled) {
+    return;
+  }
+
   const target = document.getElementById("reply-control");
   if (!target) {
     return;
@@ -376,7 +380,10 @@ export default class ComposerContainer extends Component {
             </div>
 
             <ComposerEditor @toolbarPortalTarget={{this.toolbarPortalTarget}}>
-              <div class="composer-fields" {{trackFieldsHeight}}>
+              <div
+                class="composer-fields"
+                {{trackFieldsHeight this.composerRedesign}}
+              >
                 <PluginOutlet
                   @name="before-composer-fields"
                   @outletArgs={{lazyHash model=this.composer.model}}
