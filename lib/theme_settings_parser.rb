@@ -38,6 +38,7 @@ class ThemeSettingsParser
     end
 
     opts[:list_type] = raw_opts[:list_type] if raw_opts[:list_type]
+    opts[:disallowed_groups] = raw_opts[:disallowed_groups] if raw_opts[:disallowed_groups]
     opts[:resolve_group_membership] = !!raw_opts[:resolve_group_membership]
 
     opts[:textarea] = !!raw_opts[:textarea]
