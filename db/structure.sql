@@ -10621,7 +10621,8 @@ CREATE TABLE public.uploads (
     verification_status integer DEFAULT 1 NOT NULL,
     security_last_changed_at timestamp without time zone,
     security_last_changed_reason character varying,
-    dominant_color text
+    dominant_color text,
+    primary_upload_id bigint
 );
 
 
@@ -21627,6 +21628,20 @@ CREATE INDEX index_uploads_on_original_sha1 ON public.uploads USING btree (origi
 
 
 --
+-- Name: index_uploads_on_primary_lookup; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_uploads_on_primary_lookup ON public.uploads USING btree (original_sha1, secure) WHERE ((primary_upload_id IS NULL) AND (original_sha1 IS NOT NULL));
+
+
+--
+-- Name: index_uploads_on_primary_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_uploads_on_primary_upload_id ON public.uploads USING btree (primary_upload_id);
+
+
+--
 -- Name: index_uploads_on_sha1; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22644,6 +22659,14 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 
 
 --
+-- Name: uploads fk_rails_fce8fca60c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.uploads
+    ADD CONSTRAINT fk_rails_fce8fca60c FOREIGN KEY (primary_upload_id) REFERENCES public.uploads(id) ON DELETE SET NULL;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -22801,6 +22824,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260206000937'),
 ('20260206000936'),
 ('20260205065417'),
+('20260130220000'),
 ('20260126204830'),
 ('20260122214226'),
 ('20260122134202'),
