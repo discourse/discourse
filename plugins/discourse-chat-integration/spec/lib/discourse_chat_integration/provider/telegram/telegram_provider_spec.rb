@@ -34,6 +34,18 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
       expect(stub1).to have_been_requested.once
     end
 
+    it "uses the configured API base URL" do
+      SiteSetting.chat_integration_telegram_api_base_url = "https://telegram.example.com/api/"
+      request_stub =
+        stub_request(:post, "https://telegram.example.com/api/botTOKEN/sendMessage").to_return(
+          body: "{\"ok\":true}",
+        )
+
+      described_class.trigger_notification(post, chan1, nil)
+
+      expect(request_stub).to have_been_requested.once
+    end
+
     it "handles errors correctly" do
       stub1 =
         stub_request(:post, "https://api.telegram.org/botTOKEN/sendMessage").to_return(
@@ -81,8 +93,10 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
     end
 
     it "persists settings when setWebhook succeeds" do
+      SiteSetting.chat_integration_telegram_api_base_url = "https://telegram.example.com/"
+
       stub =
-        stub_request(:post, %r{https://api\.telegram\.org/botnewtok/setWebhook}).to_return(
+        stub_request(:post, %r{https://telegram\.example\.com/botnewtok/setWebhook}).to_return(
           body: { ok: true }.to_json,
           headers: {
             "Content-Type" => "application/json",

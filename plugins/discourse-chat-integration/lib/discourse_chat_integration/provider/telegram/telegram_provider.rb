@@ -82,12 +82,18 @@ module DiscourseChatIntegration
       end
 
       def self.do_api_request(method_name, message, access_token: nil)
-        http = FinalDestination::HTTP.new("api.telegram.org", 443)
-        http.use_ssl = true
-
         token = access_token.presence || SiteSetting.chat_integration_telegram_access_token
+        api_base_url = SiteSetting.chat_integration_telegram_api_base_url
 
-        uri = URI("https://api.telegram.org/bot#{token}/#{method_name}")
+        if !ChatIntegrationTelegramApiBaseUrlSettingValidator.valid_value?(api_base_url)
+          raise URI::InvalidURIError, "Invalid Telegram API base URL"
+        end
+
+        uri = URI(api_base_url)
+        uri.path = "#{uri.path.sub(%r{/+\z}, "")}/bot#{token}/#{method_name}"
+
+        http = FinalDestination::HTTP.new(uri.host, uri.port)
+        http.use_ssl = (uri.scheme == "https")
 
         req = Net::HTTP::Post.new(uri, "Content-Type" => "application/json")
         req.body = message.to_json
