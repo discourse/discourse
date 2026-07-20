@@ -1,7 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Location from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event/location";
+import { i18n } from "discourse-i18n";
+import DiscoursePostEventLocation from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event/location";
 
 module(
   "Integration | Component | DiscoursePostEventLocation",
@@ -9,8 +10,12 @@ module(
     setupRenderingTest(hooks);
 
     test("renders a plain-text location", async function (assert) {
+      this.event = { location: "Conference Room A" };
+
       await render(
-        <template><Location @location="Conference Room A" /></template>
+        <template>
+          <DiscoursePostEventLocation @event={{this.event}} />
+        </template>
       );
 
       assert
@@ -19,9 +24,11 @@ module(
     });
 
     test("renders a URL location as a plain link, never a onebox", async function (assert) {
+      this.event = { location: "https://youtube.com/watch?v=123" };
+
       await render(
         <template>
-          <Location @location="https://youtube.com/watch?v=123" />
+          <DiscoursePostEventLocation @event={{this.event}} />
         </template>
       );
 
@@ -37,10 +44,35 @@ module(
         );
     });
 
-    test("links urls inside surrounding text", async function (assert) {
+    test("renders a single URL location as Zoom-only text for Zoom livestreams", async function (assert) {
+      this.event = {
+        location: "https://zoom.us/j/123",
+        isZoomLivestream: true,
+      };
+
       await render(
         <template>
-          <Location @location="Zoom: https://zoom.us/j/123 (room 2)" />
+          <DiscoursePostEventLocation @event={{this.event}} />
+        </template>
+      );
+
+      assert
+        .dom(".event-location")
+        .hasText(
+          i18n("discourse_calendar.livestream.zoom.zoom_only"),
+          "shows the Zoom-only location text"
+        );
+      assert
+        .dom(".event-location a")
+        .doesNotExist("does not link the raw Zoom URL");
+    });
+
+    test("links URLs inside surrounding text", async function (assert) {
+      this.event = { location: "Zoom: https://zoom.us/j/123 (room 2)" };
+
+      await render(
+        <template>
+          <DiscoursePostEventLocation @event={{this.event}} />
         </template>
       );
 
