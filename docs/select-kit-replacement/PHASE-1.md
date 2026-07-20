@@ -135,9 +135,17 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 - ☐ **Large-list windowing** (Decision 5): internal render chunk (client) / server
   page-size auto-detected; hard `MAX_RENDERED` cap; `DLoadMore` reveal → "filter to
   narrow" at the cap; `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
-- ☐ **Chrome args**: `@clearable`, `@caretIcon` (open/closed pair), `@icon`, `@disabled`/
-  `@readonly`, `@onShow`/`@onClose`, `@placement`/`@offset`, `@focusWrap`, `@openOn`,
-  `@minChars`/`@debounceMs`, `:empty` block override, create-on-the-fly (`validateCreate`).
+- ☑ **Chrome args** (commit `0f93bdf`): the trigger is unified onto a focusable `div` with
+  per-variant WAI-ARIA roles (static select-only combobox, button disclosure, typeahead/multi
+  input) and the leading-icon/clear/caret are extracted into one no-wrapper trigger frame. On
+  it: `@icon`, `@caretIcon` (`string | {open, closed}`), `@clearable`, `@disabled`/`@readonly`
+  (the locked gate covers every open+mutate path, including option activation itself so a
+  control locked mid-close can't mutate), `@debounce`/`@minChars`, `@placement`/`@offset`,
+  composed `@onShow`/`@onClose`, and a consumer `:empty` block. Supporting float-kit: a single
+  `resolveRenderInModal` source, a reactive DMenu `@disabled` veto (closes an open menu),
+  roving-focus scrolls the listbox not the page, and DAsyncContent assimilates sync sources.
+  **Deferred:** `@openOn` (needs a float-kit `focus` trigger), `@focusWrap`, create-on-the-fly
+  (`@validateCreate`).
 - ☐ **Group/section-aware model** (Decision 2): flat engine list + `role="group"` +
   `@groupBy`; UI exercised later by the category family.
 - ☑ **Value-equality contract**: the engine matches ids by a normalized string key
