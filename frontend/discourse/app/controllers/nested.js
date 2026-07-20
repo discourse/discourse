@@ -43,6 +43,7 @@ export default class NestedController extends Controller {
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
   @tracked sort;
+  @tracked effectiveSort;
   @tracked messageBusLastId;
   @tracked postNumber;
   @tracked context = null;
@@ -258,7 +259,7 @@ export default class NestedController extends Controller {
       const nextPage = this.page + 1;
       const query = new URLSearchParams({
         page: nextPage,
-        sort: this.sort || "top",
+        sort: this.effectiveSort || this.sort || "top",
       });
       const data = await ajax(
         `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
@@ -366,6 +367,7 @@ export default class NestedController extends Controller {
       page: this.page,
       hasMoreRoots: this.hasMoreRoots,
       sort: this.sort,
+      effectiveSort: this.effectiveSort,
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
       postNumber: this.postNumber,
