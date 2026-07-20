@@ -3,6 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
+import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import ChatChannelPreviewCard from "discourse/plugins/chat/discourse/components/chat-channel-preview-card";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { LIVESTREAM_CHAT_CONTEXT } from "discourse/plugins/discourse-calendar/discourse/components/livestream/embeddable-chat-channel";
@@ -109,5 +110,52 @@ module("Discourse Calendar | Component | livestream-rsvp", function (hooks) {
     assert.dom(".livestream-rsvp__message").doesNotExist();
     assert.dom(".livestream-rsvp__going-button").doesNotExist();
     assert.dom(".toggle-channel-membership-button.-join").exists();
+  });
+
+  module("browse channels card", function () {
+    test("replaces the join button with the RSVP button for livestream channels", async function (assert) {
+      this.setLivestreamTopic();
+
+      await render(
+        <template><ChatChannelCard @channel={{this.channel}} /></template>
+      );
+
+      assert
+        .dom(".chat-channel-card__cta .livestream-rsvp__going-button")
+        .exists("renders the RSVP button in the card CTA");
+      assert.dom(".toggle-channel-membership-button.-join").doesNotExist();
+    });
+
+    test("keeps the default join button when the user cannot join the event", async function (assert) {
+      this.setLivestreamTopic({ can_update_attendance: false });
+
+      await render(
+        <template><ChatChannelCard @channel={{this.channel}} /></template>
+      );
+
+      assert.dom(".toggle-channel-membership-button.-join").exists();
+      assert.dom(".livestream-rsvp__going-button").doesNotExist();
+    });
+
+    test("keeps the default join button for regular channels", async function (assert) {
+      await render(
+        <template><ChatChannelCard @channel={{this.channel}} /></template>
+      );
+
+      assert.dom(".toggle-channel-membership-button.-join").exists();
+      assert.dom(".livestream-rsvp__going-button").doesNotExist();
+    });
+
+    test("keeps the leave button for existing chat members", async function (assert) {
+      this.setLivestreamTopic();
+      this.channel.currentUserMembership = { following: true };
+
+      await render(
+        <template><ChatChannelCard @channel={{this.channel}} /></template>
+      );
+
+      assert.dom(".toggle-channel-membership-button.-leave").exists();
+      assert.dom(".livestream-rsvp__going-button").doesNotExist();
+    });
   });
 });

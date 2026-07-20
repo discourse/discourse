@@ -46,16 +46,12 @@ export default class EmbedableChatChannel extends Component {
     return `/discourse-calendar/livestream/chat-status/${this.currentUser.id}`;
   }
 
-  get hiddenReferenceMessageCss() {
+  get hiddenMessageIds() {
     // the pinned topic reference message is redundant when the chat is
     // embedded in the livestream topic it links to
     const messageId = this.activeChannel?.livestreamTopic?.reference_message_id;
 
-    if (!messageId) {
-      return "";
-    }
-
-    return `#custom-chat-container .chat-message-container[data-id="${Number(messageId)}"] { display: none; }`;
+    return messageId ? [Number(messageId)] : [];
   }
 
   @bind
@@ -92,12 +88,6 @@ export default class EmbedableChatChannel extends Component {
       }}
       {{this.updateChannel}}
     >
-      {{#if this.hiddenReferenceMessageCss}}
-        {{! eslint-disable ember/template-no-forbidden-elements }}
-        <style>
-          {{this.hiddenReferenceMessageCss}}
-        </style>
-      {{/if}}
       {{#if this.showCloseButton}}
         <div class="c-navbar-container livestream-chat-close">
 
@@ -115,6 +105,7 @@ export default class EmbedableChatChannel extends Component {
             <ChatChannel
               @channel={{channel}}
               @context={{LIVESTREAM_CHAT_CONTEXT}}
+              @hiddenMessageIds={{this.hiddenMessageIds}}
             />
           {{/each}}
         {{/if}}
