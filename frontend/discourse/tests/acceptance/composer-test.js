@@ -1463,7 +1463,7 @@ acceptance(`Composer - default category not set`, function (needs) {
     assert.strictEqual(selectKit(".category-chooser").header().value(), null);
     assert.strictEqual(
       selectKit(".category-chooser").header().name(),
-      "category&hellip;"
+      i18n("category.choose")
     );
   });
 });
