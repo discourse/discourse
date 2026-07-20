@@ -7,8 +7,11 @@
 ur:
   js:
     user_api_key:
-      authorize: "اجازت دیں"
+      title: '"%{application_name} " کو مجاز بنائیں'
+      authorize: "مجاز بنائیں"
       deny: "منسوخ کریں"
+      logged_in_as: "کے طور پر لاگ ان"
+      permissions_header: 'یہ "%{application_name}" کو اجازت دے گا:'
       copied: "کاپی کر لیا!"
       otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
       no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
