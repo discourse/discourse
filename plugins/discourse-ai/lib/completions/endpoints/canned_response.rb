@@ -46,6 +46,7 @@ module DiscourseAi
 
           @completions += 1
           response_enum = response.is_a?(Array) ? response : [response]
+          response_enum = output_tool_calls(response_enum) if output_tool
           if block_given?
             cancelled = false
             cancel_fn = lambda { cancelled = true }
@@ -118,6 +119,68 @@ module DiscourseAi
 
         def is_tool?(response)
           response.is_a?(DiscourseAi::Completions::ToolCall)
+        end
+
+        def output_tool
+          dialect&.prompt&.tools&.find { |tool| tool.name == "submit_response" }
+        end
+
+        def output_tool_calls(response_enum)
+          return response_enum if response_enum.all? { |response| is_tool?(response) }
+
+          raw_responses =
+            response_enum.reject { |response| is_thinking?(response) || is_tool?(response) }
+          if output_tool.parameters.one? && output_tool.parameters.first.type == :array &&
+               raw_responses.many?
+            return [build_output_tool_call({ output_tool.parameters.first.name => raw_responses })]
+          end
+
+          accumulated_strings = {}
+          raw_index = 0
+          response_enum.map do |response|
+            next response if is_thinking?(response) || is_tool?(response)
+
+            raw_index += 1
+            parameters = output_tool_parameters(response)
+            output_tool.parameters.each do |parameter|
+              next if parameter.type != :string || !parameters[parameter.name].is_a?(String)
+
+              accumulated_strings[parameter.name] ||= +""
+              accumulated_strings[parameter.name] << parameters[parameter.name]
+              parameters[parameter.name] = accumulated_strings[parameter.name].dup
+            end
+
+            build_output_tool_call(parameters, partial: raw_index < raw_responses.length)
+          end
+        end
+
+        def output_tool_parameters(response)
+          parsed = parse_structured_response(response)
+          parsed = response if parsed.nil? && !response.nil?
+          if parsed.is_a?(Hash)
+            parsed = parsed.stringify_keys
+            return(
+              output_tool
+                .parameters
+                .each_with_object({}) do |parameter, result|
+                  result[parameter.name] = parsed[parameter.name] if parsed.key?(parameter.name)
+                end
+            )
+          end
+
+          return {} if output_tool.parameters.empty?
+          { output_tool.parameters.first.name => parsed }
+        end
+
+        def build_output_tool_call(parameters, partial: false)
+          call =
+            DiscourseAi::Completions::ToolCall.new(
+              id: "canned_output",
+              name: output_tool.name,
+              parameters: parameters,
+            )
+          call.partial = partial
+          call
         end
 
         def as_structured_output(response)

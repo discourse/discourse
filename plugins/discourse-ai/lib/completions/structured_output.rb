@@ -46,6 +46,13 @@ module DiscourseAi
         @done = true
       end
 
+      def update_from_tool_arguments(arguments, finished: false)
+        @raw_response.replace(arguments.to_json)
+        arguments.each { |name, value| notify_progress(name, value) }
+        finish if finished
+        self
+      end
+
       def finished?
         @done
       end

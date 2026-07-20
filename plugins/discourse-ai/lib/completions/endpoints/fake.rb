@@ -135,6 +135,8 @@ module DiscourseAi
           content = self.class.fake_content
 
           content = content.shift if content.is_a?(Array)
+          content = output_tool_call(dialect, content) if output_tool(dialect) &&
+            !content.is_a?(DiscourseAi::Completions::ToolCall)
 
           if block_given?
             if content.is_a?(DiscourseAi::Completions::ToolCall)
@@ -177,6 +179,42 @@ module DiscourseAi
           end
 
           content
+        end
+
+        private
+
+        def output_tool(dialect)
+          dialect.prompt.tools.find { |tool| tool.name == "submit_response" }
+        end
+
+        def output_tool_call(dialect, content)
+          tool = output_tool(dialect)
+          parsed = JSON.parse(content)
+          parsed = parsed.stringify_keys if parsed.is_a?(Hash)
+          parameters =
+            tool
+              .parameters
+              .each_with_object({}) do |parameter, result|
+                result[parameter.name] = parsed[parameter.name] if parsed.is_a?(Hash) &&
+                  parsed.key?(parameter.name)
+              end
+          if parameters.empty? && tool.parameters.first
+            parameters[tool.parameters.first.name] = parsed
+          end
+
+          DiscourseAi::Completions::ToolCall.new(
+            id: "fake_output",
+            name: tool.name,
+            parameters: parameters,
+          )
+        rescue JSON::ParserError
+          DiscourseAi::Completions::ToolCall.new(
+            id: "fake_output",
+            name: tool.name,
+            parameters: {
+              tool.parameters.first.name => content,
+            },
+          )
         end
       end
     end

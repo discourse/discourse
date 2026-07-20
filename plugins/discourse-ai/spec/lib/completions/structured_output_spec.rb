@@ -151,6 +151,25 @@ RSpec.describe DiscourseAi::Completions::StructuredOutput do
     end
   end
 
+  describe "streaming tool arguments" do
+    it "buffers appended string content and serializes the latest arguments" do
+      structured_output.update_from_tool_arguments({ message: "Hello", bool: true })
+
+      expect(structured_output.read_buffered_property(:message)).to eq("Hello")
+      expect(structured_output.read_buffered_property(:bool)).to eq(true)
+      expect(structured_output).not_to be_finished
+
+      structured_output.update_from_tool_arguments(
+        { message: "Hello world", bool: true },
+        finished: true,
+      )
+
+      expect(structured_output.read_buffered_property(:message)).to eq(" world")
+      expect(structured_output).to be_finished
+      expect(structured_output.to_s).to eq({ message: "Hello world", bool: true }.to_json)
+    end
+  end
+
   describe "recovering from streams with unescaped control characters" do
     # regression specs for https://meta.discourse.org/t/407251
     it "streams the full content instead of truncating at escaped quotes" do

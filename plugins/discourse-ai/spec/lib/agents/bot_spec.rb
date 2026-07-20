@@ -108,6 +108,219 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(captured_kwargs.first[:extra_model_params]).to be_nil
     end
 
+    context "with a response format" do
+      fab!(:response_agent_record) do
+        Fabricate(
+          :ai_agent,
+          name: "Response agent",
+          response_format: [{ "key" => "output", "type" => "string" }],
+        )
+      end
+
+      it "forces a terminal tool call and yields it as structured output" do
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+              output: "Hello world",
+            },
+          )
+        captured_prompt = nil
+        captured_model_params = nil
+        result = nil
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) do
+          response_bot =
+            described_class.as(bot_user, agent: response_agent_record.class_instance.new)
+          context =
+            DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "Say hello" }])
+
+          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+            :generate,
+          ).and_wrap_original do |original, *args, **kwargs, &block|
+            captured_prompt = args.first
+            captured_model_params = kwargs
+            original.call(*args, **kwargs, &block)
+          end
+
+          response_bot.reply(context) do |partial, _, type|
+            result = partial if type == :structured_output
+          end
+        end
+
+        output_tool = captured_prompt.tools.find { |tool| tool.name == "submit_response" }
+
+        expect(captured_prompt.tool_choice).to eq("submit_response")
+        expect(captured_prompt.system_message_text).to include(
+          "Any instructions or examples that describe JSON output refer to the arguments of submit_response.",
+        )
+        expect(output_tool.parameters_json_schema).to eq(
+          {
+            type: "object",
+            properties: {
+              "output" => {
+                type: :string,
+                description: "The output value for the response.",
+              },
+            },
+            required: ["output"],
+          },
+        )
+        expect(captured_model_params).not_to have_key(:response_format)
+        expect(result).to be_a(DiscourseAi::Completions::StructuredOutput)
+        expect(result).to be_finished
+        expect(result.to_s).to eq({ output: "Hello world" }.to_json)
+        expect(result.read_buffered_property(:output)).to eq("Hello world")
+      end
+
+      it "allows operational tools before the terminal response tool" do
+        response_agent_record.update!(tools: [["ListCategories", nil, false]])
+        category_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "categories_1",
+            name: "categories",
+            parameters: {
+            },
+          )
+        output_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+              output: "There are several categories",
+            },
+          )
+        tool_choices = []
+        result = nil
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([category_call, output_call]) do
+          response_bot =
+            described_class.as(bot_user, agent: response_agent_record.class_instance.new)
+          context =
+            DiscourseAi::Agents::BotContext.new(
+              messages: [{ type: :user, content: "List the categories" }],
+            )
+
+          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+            :generate,
+          ).and_wrap_original do |original, *args, **kwargs, &block|
+            tool_choices << args.first.tool_choice
+            original.call(*args, **kwargs, &block)
+          end
+
+          response_bot.reply(context) do |partial, _, type|
+            result = partial if type == :structured_output
+          end
+        end
+
+        expect(tool_choices).to eq([nil, nil])
+        expect(result.read_buffered_property(:output)).to eq("There are several categories")
+      end
+
+      it "streams changing terminal tool arguments through the structured output buffer" do
+        partial_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+              output: "Hello",
+            },
+          )
+        partial_call.partial = true
+        final_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+              output: "Hello world",
+            },
+          )
+        chunks = []
+        completion_states = []
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([[partial_call, final_call]]) do
+          response_bot =
+            described_class.as(bot_user, agent: response_agent_record.class_instance.new)
+          context =
+            DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "Say hello" }])
+
+          response_bot.reply(context) do |partial, _, type|
+            next if type != :structured_output
+
+            chunks << partial.read_buffered_property(:output)
+            completion_states << partial.finished?
+          end
+        end
+
+        expect(chunks).to eq(["Hello", " world"])
+        expect(completion_states).to eq([false, true])
+      end
+
+      it "retries once with a forced tool when the model returns plain text" do
+        output_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+              output: "Corrected response",
+            },
+          )
+        generated_responses = ["Plain response", output_call]
+        tool_choices = []
+        yielded_plain_text = false
+        result = nil
+        response_bot = described_class.as(bot_user, agent: response_agent_record.class_instance.new)
+        context =
+          DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "Respond" }])
+
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ) do |_, prompt, **_kwargs, &callback|
+          tool_choices << prompt.tool_choice
+          response = generated_responses.shift
+          if response.is_a?(DiscourseAi::Completions::ToolCall)
+            callback.call(response)
+          else
+            response.each_char { |character| callback.call(character) }
+          end
+          response
+        end
+
+        response_bot.reply(context) do |partial, _, type|
+          yielded_plain_text = true if type.nil? && partial.present?
+          result = partial if type == :structured_output
+        end
+
+        expect(tool_choices).to eq(%w[submit_response submit_response])
+        expect(yielded_plain_text).to eq(false)
+        expect(result.read_buffered_property(:output)).to eq("Corrected response")
+      end
+
+      it "rejects a terminal tool call with missing required arguments" do
+        output_call =
+          DiscourseAi::Completions::ToolCall.new(
+            id: "output_1",
+            name: "submit_response",
+            parameters: {
+            },
+          )
+
+        expect do
+          DiscourseAi::Completions::Llm.with_prepared_responses([output_call]) do
+            response_bot =
+              described_class.as(bot_user, agent: response_agent_record.class_instance.new)
+            context =
+              DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "Respond" }])
+            response_bot.reply(context)
+          end
+        end.to raise_error(
+          DiscourseAi::Agents::Bot::OUTPUT_TOOL_NOT_CALLED,
+          "submit_response returned invalid arguments",
+        )
+      end
+    end
+
     context "when using function chaining" do
       it "yields a loading placeholder while proceeds to invoke the command" do
         tool = DiscourseAi::Agents::Tools::ListCategories.new({}, bot_user: nil, llm: nil)

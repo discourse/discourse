@@ -4,6 +4,15 @@ module DiscourseAi
   module Agents
     class Bot
       BOT_NOT_FOUND = Class.new(StandardError)
+      OUTPUT_TOOL_NOT_CALLED = Class.new(StandardError)
+
+      OUTPUT_TOOL_NAME = "submit_response"
+      OUTPUT_TOOL_RETRY_INSTRUCTION =
+        "Submit the final response by calling #{OUTPUT_TOOL_NAME}. Do not reply with plain text."
+      OUTPUT_TOOL_INSTRUCTION = <<~TEXT.strip
+        Submit the final response by calling #{OUTPUT_TOOL_NAME}. Do not return the final response as JSON or plain text.
+        Any instructions or examples that describe JSON output refer to the arguments of #{OUTPUT_TOOL_NAME}.
+      TEXT
 
       DEFAULT_MAX_TURN_TOKENS = 32_000
       CONTEXT_TOKEN_BUDGET_RATIO = 0.5
@@ -89,9 +98,16 @@ module DiscourseAi
         current_llm = llm
         prompt = agent.craft_prompt(context, llm: current_llm)
 
+        response_format = agent.response_format if !context.bypass_response_format
+        response_properties = build_response_properties(response_format)
+        output_tool = add_output_tool(prompt, response_format) if response_format.present?
+        output_tool_only =
+          response_format.present? && prompt.tools.one? && !prompt.has_native_tools?
+
         total_completions = 0
         ongoing_chain = true
         raw_context = []
+        force_output_tool = false
 
         user = context.user
 
@@ -101,9 +117,7 @@ module DiscourseAi
         llm_kwargs[:top_p] = agent.top_p if agent.top_p
         llm_kwargs[:thinking_effort] = agent.thinking_effort if agent.thinking_effort.present?
 
-        if !context.bypass_response_format && agent.response_format.present?
-          llm_kwargs[:response_format] = build_json_schema(agent.response_format)
-        end
+        llm_kwargs.delete(:response_format) if response_format.present?
 
         needs_newlines = false
 
@@ -127,7 +141,7 @@ module DiscourseAi
 
         while ongoing_chain
           if final_answer_requested
-            break # already ran the final text-only generate
+            break # already ran the final constrained generate
           end
 
           should_stop = token_usage_tracker.total >= token_budget
@@ -135,7 +149,7 @@ module DiscourseAi
           if should_stop
             if prompt.messages.last&.dig(:type) == :tool
               self.class.inject_budget_exhausted_hint(prompt)
-              prompt.tool_choice = :none
+              prompt.tool_choice = response_format.present? ? OUTPUT_TOOL_NAME : :none
               final_answer_requested = true
             else
               break
@@ -154,13 +168,18 @@ module DiscourseAi
 
           tool_found = false
           force_tool_if_needed(prompt, context)
+          if response_format.present? && (output_tool_only || force_output_tool)
+            prompt.tool_choice = OUTPUT_TOOL_NAME
+          end
 
           tool_halted = false
 
-          allow_partial_tool_calls = agent.allow_partial_tool_calls?
+          allow_partial_tool_calls = response_format.present? || agent.allow_partial_tool_calls?
           existing_tools = Set.new
           current_thinking = []
           thinking_placeholder = nil
+          structured_output = nil
+          output_submitted = false
 
           result =
             current_llm.generate(
@@ -171,6 +190,37 @@ module DiscourseAi
               cancel_manager: context.cancel_manager,
               **llm_kwargs,
             ) do |partial|
+              next if output_submitted
+
+              if output_tool_call?(partial)
+                output_arguments = output_tool.coerce_parameters(partial.parameters)
+                if !partial.partial? &&
+                     !valid_output_tool_arguments?(
+                       output_tool,
+                       partial.parameters,
+                       output_arguments,
+                     )
+                  raise OUTPUT_TOOL_NOT_CALLED, "#{OUTPUT_TOOL_NAME} returned invalid arguments"
+                end
+
+                structured_output ||=
+                  DiscourseAi::Completions::StructuredOutput.new(response_properties)
+                structured_output.update_from_tool_arguments(
+                  output_arguments,
+                  finished: !partial.partial?,
+                )
+                update_blk.call(structured_output, nil, :structured_output)
+
+                if !partial.partial?
+                  tool_found = true
+                  tool_halted = true
+                  output_submitted = true
+                  ongoing_chain = false
+                  raw_context << [structured_output.to_s, bot_user&.username]
+                end
+                next
+              end
+
               tool =
                 agent.find_tool(
                   partial,
@@ -234,6 +284,8 @@ module DiscourseAi
                   else
                     if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
                       update_blk.call(partial, nil, :structured_output)
+                    elsif response_format.present?
+                      next
                     else
                       update_blk.call(partial)
                     end
@@ -243,7 +295,6 @@ module DiscourseAi
             end
 
           if !tool_found
-            ongoing_chain = false
             text = result
 
             # we must strip out thinking and other types of blocks
@@ -251,14 +302,30 @@ module DiscourseAi
               text = +""
               result.each { |item| text << item if item.is_a?(String) }
             end
-            raw_context << [text, bot_user&.username]
+
+            if response_format.present?
+              if force_output_tool || final_answer_requested
+                raise OUTPUT_TOOL_NOT_CALLED, "LLM did not call #{OUTPUT_TOOL_NAME}"
+              end
+
+              prompt.push_model_response(result)
+              prompt.push(type: :user, content: OUTPUT_TOOL_RETRY_INSTRUCTION)
+              force_output_tool = true
+              ongoing_chain = true
+            else
+              ongoing_chain = false
+              raw_context << [text, bot_user&.username]
+            end
           end
 
           total_completions += 1
 
           if !final_answer_requested
             total_used = token_usage_tracker.total
-            prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
+            if total_used >= (token_budget * 0.85)
+              prompt.tool_choice = response_format.present? ? OUTPUT_TOOL_NAME : :none
+              force_output_tool = true if response_format.present?
+            end
 
             # Safety valve against pathological tool loops.
             break if total_completions >= 100
@@ -701,34 +768,59 @@ module DiscourseAi
         placeholder
       end
 
-      def build_json_schema(response_format)
-        properties =
-          response_format
-            .to_a
-            .reduce({}) do |memo, format|
-              type_desc = { type: format["type"] }
+      def add_output_tool(prompt, response_format)
+        if prompt.tools.any? { |tool| tool.name == OUTPUT_TOOL_NAME }
+          raise ArgumentError, "#{OUTPUT_TOOL_NAME} is reserved for structured responses"
+        end
 
-              if format["type"] == "array"
-                type_desc[:items] = { type: format["array_type"] || "string" }
-              end
+        parameters =
+          response_format.to_a.map do |format|
+            parameter = {
+              name: format["key"],
+              description: "The #{format["key"]} value for the response.",
+              type: format["type"],
+              required: true,
+            }
+            parameter[:item_type] = format["array_type"] || "string" if format["type"] == "array"
+            parameter
+          end
 
-              memo[format["key"].to_sym] = type_desc
-              memo
-            end
+        prompt.append_system_message(OUTPUT_TOOL_INSTRUCTION)
 
-        {
-          type: "json_schema",
-          json_schema: {
-            name: "reply",
-            schema: {
-              type: "object",
-              properties: properties,
-              required: properties.keys.map(&:to_s),
-              additionalProperties: false,
-            },
-            strict: true,
-          },
-        }
+        prompt.tools =
+          prompt.tools +
+            [
+              {
+                name: OUTPUT_TOOL_NAME,
+                description:
+                  "Submit the final response. Call this tool instead of returning a plain-text final answer.",
+                parameters: parameters,
+              },
+            ]
+
+        prompt.tools.find { |tool| tool.name == OUTPUT_TOOL_NAME }
+      end
+
+      def build_response_properties(response_format)
+        response_format
+          .to_a
+          .each_with_object({}) do |format, properties|
+            property = { type: format["type"] }
+            property[:items] = { type: format["array_type"] || "string" } if format["type"] ==
+              "array"
+            properties[format["key"].to_sym] = property
+          end
+      end
+
+      def output_tool_call?(partial)
+        partial.is_a?(DiscourseAi::Completions::ToolCall) && partial.name == OUTPUT_TOOL_NAME
+      end
+
+      def valid_output_tool_arguments?(tool, raw_arguments, coerced_arguments)
+        tool.parameters.all? do |parameter|
+          key = parameter.name.to_sym
+          raw_arguments.key?(key) && !coerced_arguments[key].nil?
+        end
       end
     end
   end

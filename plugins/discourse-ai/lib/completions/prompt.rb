@@ -68,6 +68,15 @@ module DiscourseAi
           end
       end
 
+      def append_system_message(content)
+        if system_message = messages.find { |message| message[:type] == :system }
+          system_message[:content] = "#{system_message[:content]}\n\n#{content}"
+        else
+          messages.unshift(type: :system, content: content)
+        end
+        @system_message_text = messages.first[:content]
+      end
+
       # this new api tries to create symmetry between responses and prompts
       # this means anything we get back from the model via endpoint can be easily appended
       def push_model_response(response)
