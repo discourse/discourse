@@ -165,7 +165,7 @@ export default function () {
     );
 
     this.route("adminBrowserTraffic", {
-      path: "/site-traffic",
+      path: "/browser-traffic",
       resetNamespace: true,
     });
 

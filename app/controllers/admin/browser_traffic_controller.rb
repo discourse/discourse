@@ -2,7 +2,7 @@
 
 class Admin::BrowserTrafficController < Admin::AdminController
   def show
-    raise Discourse::NotFound unless SiteSetting.enable_site_traffic_explorer
+    raise Discourse::NotFound unless SiteSetting.enable_browser_traffic_explorer
 
     render json:
              BrowserTrafficExplorerQuery.call(

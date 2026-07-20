@@ -842,7 +842,6 @@ class Middleware::RequestTracker
       ip_address: data[:request_remote_ip],
       country_code: ip_info[:country_code],
       asn: ip_info[:asn],
-      asn_organization: ip_info[:organization],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],

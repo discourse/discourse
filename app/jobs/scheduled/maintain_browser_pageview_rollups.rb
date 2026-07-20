@@ -18,15 +18,10 @@ module Jobs
 
     def aggregate_pageviews
       start_date, end_date = pageview_aggregation_window
-      if start_date
-        BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-        BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      end
+      return if start_date.nil?
 
-      start_date, end_date = url_aggregation_window
-      if start_date
-        BrowserPageviewUrlDailyRollup.aggregate(start_date: start_date, end_date: end_date)
-      end
+      BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
+      BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
     end
 
     def aggregate_engagement
@@ -62,19 +57,6 @@ module Jobs
       else
         [1.day.ago.to_date, end_date]
       end
-    end
-
-    def url_aggregation_window
-      end_date = Time.zone.today
-      return 1.day.ago.to_date, end_date if BrowserPageviewUrlDailyRollup.exists?
-
-      earliest_event_date =
-        BrowserPageviewEvent
-          .where(source: BrowserPageviewEvent.rollup_source)
-          .where.not(normalized_url: nil)
-          .minimum(:created_at)
-          &.to_date
-      [earliest_event_date, end_date]
     end
 
     def backfill_referrers

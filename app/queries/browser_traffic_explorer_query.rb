@@ -9,12 +9,39 @@ class BrowserTrafficExplorerQuery
 
   EVENT_LIMIT = 1_000_000
   FACET_LIMIT = 8
-  BROWSER_SQL = "COALESCE(browser_family, 'unknown')"
-  private_constant :BROWSER_SQL
+  BROWSER_SQL = <<~SQL.squish
+    CASE
+      WHEN position('Edg' IN user_agent) > 0 THEN 'edge'
+      WHEN position('Opera' IN user_agent) > 0 OR position('OPR' IN user_agent) > 0 THEN 'opera'
+      WHEN position('Firefox' IN user_agent) > 0 THEN 'firefox'
+      WHEN position('Chrome' IN user_agent) > 0 OR position('CriOS' IN user_agent) > 0 THEN 'chrome'
+      WHEN position('Safari' IN user_agent) > 0 THEN 'safari'
+      WHEN position('MSIE' IN user_agent) > 0 OR position('Trident' IN user_agent) > 0 THEN 'ie'
+      WHEN position('Discourse' IN user_agent) > 0 THEN 'discoursehub'
+      ELSE 'unknown'
+    END
+  SQL
+  NORMALIZED_URL_SQL = <<~SQL.squish
+    COALESCE(
+      NULLIF(
+        regexp_replace(
+          CASE
+            WHEN url ~* '^https?://' THEN
+              regexp_replace(split_part(split_part(url, '?', 1), '#', 1), '^https?://[^/]+', '', 'i')
+            ELSE split_part(split_part(url, '?', 1), '#', 1)
+          END,
+          '/+$',
+          ''
+        ),
+        ''
+      ),
+      '/'
+    )
+  SQL
+  private_constant :BROWSER_SQL, :NORMALIZED_URL_SQL
 
   FACETS = {
     "normalized_url" => {
-      column: "normalized_url",
       max_length: 2000,
     },
     "normalized_referrer" => {
@@ -168,8 +195,11 @@ class BrowserTrafficExplorerQuery
 
   def filtered_scope
     filters.reduce(analysis_scope) do |scope, (facet, value)|
-      if facet == "browser"
-        scope.where(browser_family: value == "unknown" ? [nil, value] : value)
+      case facet
+      when "browser"
+        scope.where("#{BROWSER_SQL} = ?", value)
+      when "normalized_url"
+        scope.where("#{NORMALIZED_URL_SQL} = ?", value)
       else
         scope.where(FACETS.fetch(facet)[:column] => value)
       end
@@ -218,7 +248,7 @@ class BrowserTrafficExplorerQuery
 
   def result_cache_key
     identity = {
-      version: 3,
+      version: 4,
       start_date: effective_start_date,
       end_date: effective_end_date,
       source: BrowserPageviewEvent.rollup_source,
@@ -247,13 +277,12 @@ class BrowserTrafficExplorerQuery
         #{
         scope.select(
           :created_at,
-          :normalized_url,
+          :url,
           :normalized_referrer,
           :country_code,
           :asn,
-          :asn_organization,
           :ip_address,
-          :browser_family,
+          :user_agent,
           :user_id,
           :session_id,
         ).to_sql
@@ -263,7 +292,7 @@ class BrowserTrafficExplorerQuery
         SELECT
           CASE
             WHEN GROUPING(date_trunc('day', created_at)) = 0 THEN 'date'
-            WHEN GROUPING(normalized_url) = 0 THEN 'normalized_url'
+            WHEN GROUPING(#{NORMALIZED_URL_SQL}) = 0 THEN 'normalized_url'
             WHEN GROUPING(normalized_referrer) = 0 THEN 'normalized_referrer'
             WHEN GROUPING(country_code) = 0 THEN 'country_code'
             WHEN GROUPING(asn) = 0 THEN 'asn'
@@ -273,7 +302,7 @@ class BrowserTrafficExplorerQuery
           CASE
             WHEN GROUPING(date_trunc('day', created_at)) = 0
               THEN to_char(date_trunc('day', created_at), 'YYYY-MM-DD')
-            WHEN GROUPING(normalized_url) = 0 THEN normalized_url::text
+            WHEN GROUPING(#{NORMALIZED_URL_SQL}) = 0 THEN #{NORMALIZED_URL_SQL}
             WHEN GROUPING(normalized_referrer) = 0 THEN normalized_referrer::text
             WHEN GROUPING(country_code) = 0 THEN country_code::text
             WHEN GROUPING(asn) = 0 THEN asn::text
@@ -281,13 +310,13 @@ class BrowserTrafficExplorerQuery
             ELSE #{BROWSER_SQL}
           END AS value,
           COUNT(*) AS pageviews,
-          MAX(asn_organization) AS asn_organization,
+          MIN(host(ip_address)) AS representative_ip,
           COUNT(*) FILTER (WHERE user_id IS NOT NULL) AS logged_in_pageviews,
           COUNT(*) FILTER (WHERE user_id IS NULL) AS anonymous_pageviews
         FROM filtered_events
         GROUP BY GROUPING SETS (
           (date_trunc('day', created_at)),
-          (normalized_url),
+          (#{NORMALIZED_URL_SQL}),
           (normalized_referrer),
           (country_code),
           (asn),
@@ -304,7 +333,7 @@ class BrowserTrafficExplorerQuery
           ) AS facet_rank
         FROM grouped
       )
-      SELECT dimension, value, pageviews, asn_organization, logged_in_pageviews, anonymous_pageviews
+      SELECT dimension, value, pageviews, representative_ip, logged_in_pageviews, anonymous_pageviews
       FROM ranked
       WHERE dimension = 'date' OR facet_rank <= :facet_limit
       ORDER BY dimension, facet_rank
@@ -398,6 +427,12 @@ class BrowserTrafficExplorerQuery
     ]
   end
 
+  def asn_name(row)
+    return if row.value.nil? || row.representative_ip.nil?
+
+    DiscourseIpInfo.get(row.representative_ip)[:organization]
+  end
+
   def facets_for(rows)
     FACETS.keys.index_with do |facet|
       rows
@@ -405,7 +440,7 @@ class BrowserTrafficExplorerQuery
         .map do |row|
           {
             value: facet == "asn" && row.value ? row.value.to_i : row.value,
-            name: facet == "asn" ? row.asn_organization : nil,
+            name: facet == "asn" ? asn_name(row) : nil,
             pageviews: row.pageviews.to_i,
             logged_in_pageviews: row.logged_in_pageviews.to_i,
             anonymous_pageviews: row.anonymous_pageviews.to_i,

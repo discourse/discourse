@@ -121,7 +121,6 @@ export default class RedesignedAdminDashboard extends Component {
               @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
-              @isAdmin={{this.currentUser.admin}}
             />
           {{else if (eq section.id "engagement")}}
             <DashboardEngagement

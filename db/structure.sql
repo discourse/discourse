@@ -2030,10 +2030,7 @@ CREATE TABLE public.browser_pageview_events (
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL,
-    normalized_url character varying(2000),
-    browser_family character varying(20),
-    asn_organization character varying
+    source smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -2158,38 +2155,6 @@ CREATE SEQUENCE public.browser_pageview_session_engagements_id_seq
 --
 
 ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY public.browser_pageview_session_engagements.id;
-
-
---
--- Name: browser_pageview_url_daily_rollups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_url_daily_rollups (
-    id bigint NOT NULL,
-    date date NOT NULL,
-    normalized_url character varying(2000),
-    count bigint NOT NULL,
-    logged_in_count bigint NOT NULL
-);
-
-
---
--- Name: browser_pageview_url_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_url_daily_rollups_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_url_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_url_daily_rollups_id_seq OWNED BY public.browser_pageview_url_daily_rollups.id;
 
 
 --
@@ -12600,13 +12565,6 @@ ALTER TABLE ONLY public.browser_pageview_session_engagements ALTER COLUMN id SET
 
 
 --
--- Name: browser_pageview_url_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_url_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_url_daily_rollups_id_seq'::regclass);
-
-
---
 -- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14860,14 +14818,6 @@ ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups
 
 ALTER TABLE ONLY public.browser_pageview_session_engagements
     ADD CONSTRAINT browser_pageview_session_engagements_pkey PRIMARY KEY (id);
-
-
---
--- Name: browser_pageview_url_daily_rollups browser_pageview_url_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_url_daily_rollups
-    ADD CONSTRAINT browser_pageview_url_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -17287,20 +17237,6 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 
 
 --
--- Name: idx_bpe_source_browser_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_source_browser_created_at_id ON public.browser_pageview_events USING btree (source, browser_family, created_at DESC, id DESC);
-
-
---
--- Name: idx_bpe_source_created_at_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_source_created_at_id ON public.browser_pageview_events USING btree (source, created_at DESC, id DESC);
-
-
---
 -- Name: idx_bprd_rollups_date_referrer_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17312,13 +17248,6 @@ CREATE UNIQUE INDEX idx_bprd_rollups_date_referrer_unique ON public.browser_page
 --
 
 CREATE UNIQUE INDEX idx_bpse_rollups_date_logged_in_unique ON public.browser_pageview_session_engagement_daily_rollups USING btree (date, logged_in);
-
-
---
--- Name: idx_bpud_rollups_date_url_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_bpud_rollups_date_url_unique ON public.browser_pageview_url_daily_rollups USING btree (date, normalized_url) NULLS NOT DISTINCT;
 
 
 --
@@ -22720,13 +22649,6 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260720022418'),
-('20260720021100'),
-('20260720021000'),
-('20260720013645'),
-('20260717062834'),
-('20260717044856'),
-('20260717044217'),
 ('20260715183411'),
 ('20260715090434'),
 ('20260715090355'),

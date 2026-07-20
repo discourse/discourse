@@ -5,33 +5,7 @@ require "discourse_dev"
 module DiscourseDev
   class BrowserPageviewEvent
     DEFAULT_COUNT = 1500
-    BATCH_SIZE = 10_000
-    private_constant :BATCH_SIZE
-
-    DESTINATIONS = %w[
-      /
-      /latest
-      /top
-      /categories
-      /t/welcome-to-discourse/1
-      /t/product-feedback/2
-      /search
-      /tags
-    ].freeze
-
-    USER_AGENTS = [
-      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/126.0",
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 Version/17.5 Mobile/15E148 Safari/604.1",
-      "Mozilla/5.0 (X11; Linux x86_64) Gecko/20100101 Firefox/127.0",
-      "Mozilla/5.0 (compatible; diagnostic traffic prototype)",
-    ].freeze
-
-    NETWORKS = [
-      [64_500, "192.0.2", "Example Broadband"],
-      [64_501, "198.51.100", "Example Cloud"],
-      [64_502, "203.0.113", "Example Mobile"],
-      [nil, "100.64.0", nil],
-    ].freeze
+    DEFAULT_RANGE = 3.months
 
     COUNTRY_WEIGHTS = {
       "US" => 40,
@@ -74,21 +48,12 @@ module DiscourseDev
 
       SiteSetting.persist_browser_pageview_events = true
 
-      request_counts = Hash.new(0)
-      inserted_count = 0
+      rows = build_rows
+      ::BrowserPageviewEvent.insert_all(rows)
+      mirror_to_application_requests(rows)
 
-      while inserted_count < count
-        rows = build_rows([BATCH_SIZE, count - inserted_count].min)
-        ::BrowserPageviewEvent.insert_all(rows)
-        collect_application_request_counts(rows, request_counts)
-        inserted_count += rows.size
-        puts "Inserted #{inserted_count} of #{count} events." if (inserted_count % 100_000).zero?
-      end
-
-      mirror_to_application_requests(request_counts)
-
-      puts "Enabled persist_browser_pageview_events and inserted #{inserted_count} events."
-      inserted_count
+      puts "Enabled persist_browser_pageview_events and inserted #{rows.size} events."
+      rows.size
     end
 
     def self.populate!(count: nil)
@@ -99,52 +64,36 @@ module DiscourseDev
 
     attr_reader :count
 
-    def build_rows(batch_size)
+    def build_rows
       country_pool = COUNTRY_WEIGHTS.flat_map { |code, weight| [code] * weight }
       user_ids = ::User.real.limit(20).pluck(:id)
       user_id_pool = user_ids + ([nil] * [user_ids.size / 4, 1].max)
-      range_start = 29.days.ago.beginning_of_day
-      range_seconds = (Time.current - range_start).to_i
 
-      Array.new(batch_size) do
-        destination = DESTINATIONS.sample
-        normalized_referrer = REFERRERS.sample
-        asn, network, asn_organization = NETWORKS.sample
-        user_agent = USER_AGENTS.sample
-        query = rand < 0.35 ? "?utm_source=prototype&visit=#{rand(100)}" : ""
-        fragment = rand < 0.15 ? "#post_#{rand(1..20)}" : ""
-
+      Array.new(count) do
+        normalized = REFERRERS.sample
         {
-          url: "https://forum.example.com#{destination}/#{query}#{fragment}",
-          normalized_url: destination,
-          ip_address: "#{network}.#{rand(1..254)}",
-          user_agent:,
-          browser_family: ::BrowserDetection.browser(user_agent).to_s,
+          url: "https://forum.example.com/t/sample-topic/#{rand(1000)}",
+          ip_address: "192.0.2.#{rand(1..254)}",
+          user_agent: "Mozilla/5.0 (X11; Linux x86_64) Chrome/123",
           session_id: SecureRandom.hex(16),
           country_code: country_pool.sample,
-          asn:,
-          asn_organization:,
-          normalized_referrer:,
-          referrer: normalized_referrer ? "https://#{normalized_referrer}" : nil,
-          normalized_referrer_version: ::BrowserPageviewReferrerInspector::VERSION,
+          normalized_referrer: normalized,
+          referrer: normalized ? "https://#{normalized}" : nil,
           user_id: user_id_pool.sample,
-          source: ::BrowserPageviewEvent.rollup_source,
-          created_at: range_start + rand(range_seconds).seconds,
+          created_at: DEFAULT_RANGE.ago + rand(DEFAULT_RANGE.to_i).seconds,
         }
       end
     end
 
-    def collect_application_request_counts(rows, request_counts)
-      rows.each do |row|
-        req_type = row[:user_id] ? :page_view_logged_in_browser : :page_view_anon_browser
-        request_counts[[row[:created_at].to_date, req_type]] += 1
-      end
-    end
-
-    def mirror_to_application_requests(request_counts)
-      request_counts.each do |(date, req_type), request_count|
-        ::ApplicationRequest.write_cache!(req_type, request_count, date)
-      end
+    def mirror_to_application_requests(rows)
+      rows
+        .group_by do |row|
+          req_type = row[:user_id] ? :page_view_logged_in_browser : :page_view_anon_browser
+          [row[:created_at].to_date, req_type]
+        end
+        .each do |(date, req_type), grouped|
+          ::ApplicationRequest.write_cache!(req_type, grouped.size, date)
+        end
     end
   end
 end

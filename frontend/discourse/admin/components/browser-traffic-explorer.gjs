@@ -324,7 +324,7 @@ export default class BrowserTrafficExplorer extends Component {
                   {{i18n "admin.browser_traffic.analysis.limited"}}
                 </span>
                 <DTooltip
-                  @identifier="site-traffic-analysis-limit"
+                  @identifier="browser-traffic-analysis-limit"
                   @icon="circle-info"
                 >
                   <:content>

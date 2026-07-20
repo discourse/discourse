@@ -4516,7 +4516,7 @@ dashboard:
     client: true
 
 experimental:
-  enable_site_traffic_explorer:
+  enable_browser_traffic_explorer:
     default: false
     client: true
     hidden: true

@@ -21,7 +21,7 @@ export default class AdminBrowserTrafficRoute extends DiscourseRoute {
   beforeModel() {
     if (
       !this.currentUser.admin ||
-      !this.siteSettings.enable_site_traffic_explorer
+      !this.siteSettings.enable_browser_traffic_explorer
     ) {
       return this.router.transitionTo("admin.dashboard.general");
     }

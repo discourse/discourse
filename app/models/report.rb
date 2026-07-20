@@ -42,13 +42,11 @@ class Report
     topic_view_stats
     top_referrers_by_browser_pageviews
     top_countries_by_browser_pageviews
-    top_urls_by_browser_pageviews
   ]
   IP_ADDRESS_REPORTS = %w[suspicious_logins]
   BROWSER_PAGEVIEW_REPORTS = %w[
     top_countries_by_browser_pageviews
     top_referrers_by_browser_pageviews
-    top_urls_by_browser_pageviews
   ]
 
   def self.hidden?(type, guardian:)
@@ -129,7 +127,6 @@ class Report
   include Reports::TopReferrers
   include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
-  include Reports::TopUrlsByBrowserPageviews
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
   include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople

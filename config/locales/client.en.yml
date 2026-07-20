@@ -7151,10 +7151,10 @@ en:
         title: "What's new?"
         check_for_updates: "Check for updates"
       browser_traffic:
-        title: "Site traffic explorer"
-        description: "Explore recent site traffic by applying filters and comparing breakdowns."
-        loaded: "Site traffic results loaded."
-        error: "Site traffic couldn't be loaded. Try again."
+        title: "Browser traffic explorer"
+        description: "Explore recent browser traffic by applying filters and comparing breakdowns."
+        loaded: "Browser traffic results loaded."
+        error: "Browser traffic couldn't be loaded. Try again."
         timeout: "The traffic query timed out. Narrow the date range or try again."
         retry: "Retry"
         clear_all: "Clear all"
@@ -7514,10 +7514,6 @@ en:
             title: "Top referrers"
             empty: "No referrer data for this period."
             error: "Couldn't load top referrers. Try refreshing the page."
-          top_urls:
-            title: "Top URLs"
-            empty: "No URL data for this period."
-            error: "Couldn't load top URLs. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"

@@ -13,7 +13,7 @@ export default <template>
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
       <DBreadcrumbsItem
-        @path="/admin/site-traffic"
+        @path="/admin/browser-traffic"
         @label={{i18n "admin.browser_traffic.title"}}
       />
     </:breadcrumbs>
