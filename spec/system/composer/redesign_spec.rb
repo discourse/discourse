@@ -58,7 +58,7 @@ describe "Composer redesign" do
 
       expect(composer).to be_opened
       expect(composer).to have_footer_toolbar
-      expect(composer).to have_no_toggle_toolbar_button
+      expect(composer).to have_toggle_toolbar_button
     end
   end
 

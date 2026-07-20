@@ -89,8 +89,8 @@ module PageObjects
         page.has_css?("#{@composer_id} .title-and-category .user-selector")
       end
 
-      def has_no_toggle_toolbar_button?
-        page.has_no_css?("#{@composer_id} .toggle-toolbar")
+      def has_toggle_toolbar_button?
+        page.has_css?("#{@composer_id} .toggle-toolbar")
       end
 
       # Methods for when the enable_composer_redesign upcoming change is disabled.
