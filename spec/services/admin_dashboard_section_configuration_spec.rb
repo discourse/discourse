@@ -410,4 +410,86 @@ describe AdminDashboardSectionConfiguration do
       expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
     end
   end
+
+  describe "plugin-registered settings" do
+    def stub_plugin_sections(sections)
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(sections)
+    end
+
+    let(:fake_setting) do
+      Class.new do
+        def self.permit
+          [:category_id]
+        end
+
+        def self.validate(attrs)
+          id = attrs[:category_id]
+          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
+          { "category_id" => id.to_i }
+        end
+      end
+    end
+
+    def stub_support_section(enabled: true)
+      stub_plugin_sections(
+        [
+          {
+            id: "support",
+            enabled: -> { enabled },
+            loader: -> {},
+            settings: {
+              "category_id" => fake_setting,
+            },
+          },
+        ],
+      )
+    end
+
+    it "resolves a setting definition registered on an enabled plugin section" do
+      stub_support_section
+
+      definition = described_class.setting_definition("support", "category_id")
+
+      expect(definition[:permit]).to eq([:category_id])
+      expect(definition[:validate].call(category_id: category.id)).to eq(
+        { "category_id" => category.id },
+      )
+    end
+
+    it "returns nil for an unregistered setting key on a plugin section" do
+      stub_support_section
+
+      expect(described_class.setting_definition("support", "not_a_real_setting")).to be_nil
+    end
+
+    it "returns nil when the section's enabled proc is false" do
+      stub_support_section(enabled: false)
+
+      expect(described_class.setting_definition("support", "category_id")).to be_nil
+    end
+
+    it "creates a section row on the fly when persisting a plugin section's setting for the first time" do
+      stub_support_section
+      expect(AdminDashboardSection.find_by(section_id: "support")).to be_nil
+
+      described_class.update_setting(
+        section_id: "support",
+        key: "category_id",
+        attrs: {
+          category_id: category.id,
+        },
+      )
+
+      record = AdminDashboardSection.find_by(section_id: "support")
+      expect(record.settings).to eq({ "category_id" => { "category_id" => category.id } })
+    end
+
+    it "still raises for an unregistered setting key on a plugin section" do
+      stub_support_section
+
+      expect {
+        described_class.update_setting(section_id: "support", key: "not_a_real_setting", attrs: {})
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
 end

@@ -881,6 +881,42 @@ RSpec.describe Admin::DashboardController do
 
       expect(response.status).to eq(404)
     end
+
+    it "resolves a plugin-registered setting's permit shape and persists it" do
+      fake_setting =
+        Class.new do
+          def self.permit
+            [:category_id]
+          end
+
+          def self.validate(attrs)
+            { "category_id" => attrs[:category_id].to_i }
+          end
+        end
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
+        [
+          {
+            id: "support",
+            enabled: -> { true },
+            loader: -> {},
+            settings: {
+              "category_id" => fake_setting,
+            },
+          },
+        ],
+      )
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/support/settings/category_id.json",
+          params: {
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("support")).to eq(
+        { "category_id" => { "category_id" => category.id } },
+      )
+    end
   end
 
   describe "#problems" do

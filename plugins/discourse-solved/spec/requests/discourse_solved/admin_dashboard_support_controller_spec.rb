@@ -25,6 +25,7 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
         "whos_answering",
         "response_time_distribution",
         "category_options",
+        "category_ids",
       )
     end
 
@@ -33,10 +34,31 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
 
       get "/admin/plugins/solved/dashboard-support.json",
           params: {
-            category_id: support_category.id,
+            category_ids: [support_category.id],
           }
 
       expect(response.status).to eq(200)
+      expect(response.parsed_body["category_ids"]).to eq([support_category.id])
+    end
+
+    it "accepts multiple categories in a comma-separated string" do
+      sign_in(admin)
+      other_support_category = Fabricate(:category)
+      other_support_category.custom_fields[
+        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+      ] = "true"
+      other_support_category.save!
+
+      get "/admin/plugins/solved/dashboard-support.json",
+          params: {
+            category_ids: "#{support_category.id},#{other_support_category.id}",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["category_ids"]).to contain_exactly(
+        support_category.id,
+        other_support_category.id,
+      )
     end
 
     it "is available to moderators" do
@@ -59,6 +81,53 @@ RSpec.describe DiscourseSolved::AdminDashboardSupportController do
       get "/admin/plugins/solved/dashboard-support.json"
 
       expect(response.status).to eq(404)
+    end
+  end
+
+  describe "persisting the category filter via the core dashboard settings endpoint" do
+    fab!(:other_support_category, :category)
+
+    before do
+      other_support_category.custom_fields[
+        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+      ] = "true"
+      other_support_category.save!
+    end
+
+    it "persists the selection and reflects it back from the section loader" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/support/settings/categories.json",
+          params: {
+            category_ids: [support_category.id, other_support_category.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("support")).to eq(
+        { "categories" => { "category_ids" => [support_category.id, other_support_category.id] } },
+      )
+
+      SiteSetting.dashboard_improvements = true
+      get "/admin/dashboard.json"
+
+      support_data =
+        response.parsed_body["sections"].find { |section| section["id"] == "support" }["data"]
+      expect(support_data["category_ids"]).to contain_exactly(
+        support_category.id,
+        other_support_category.id,
+      )
+    end
+
+    it "returns 400 when more than ten categories are given" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/support/settings/categories.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("support")).to eq({})
     end
   end
 end

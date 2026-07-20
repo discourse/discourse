@@ -137,12 +137,12 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       expect(build[:kpis][:resolution_rate][:value]).to eq(33.3)
     end
 
-    it "carries the selected category into the report drill-down query" do
+    it "carries the selected categories into the report drill-down query" do
       solved_topic
 
-      query = build(category_id: support_category.id)[:kpis][:resolution_rate][:report_query]
+      query = build(category_ids: [support_category.id])[:kpis][:resolution_rate][:report_query]
 
-      expect(query[:filters]).to eq(category: support_category.id)
+      expect(query[:filters]).to eq(category_ids: support_category.id.to_s)
     end
 
     it "omits the category filter when viewing all categories" do
@@ -218,7 +218,31 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       solved_topic(category: second_support_category)
 
       expect(build[:topic_outcomes][:resolved]).to eq(2)
-      expect(build(category_id: support_category.id)[:topic_outcomes][:resolved]).to eq(1)
+      expect(build(category_ids: [support_category.id])[:topic_outcomes][:resolved]).to eq(1)
+    end
+
+    it "limits metrics to the union of multiple selected categories" do
+      solved_topic(category: support_category)
+      solved_topic(category: second_support_category)
+
+      result = build(category_ids: [support_category.id, second_support_category.id])
+
+      expect(result[:topic_outcomes][:resolved]).to eq(2)
+    end
+
+    it "strips ids that don't correspond to a support category" do
+      solved_topic(category: support_category)
+      other_category = Fabricate(:category)
+
+      result = build(category_ids: [support_category.id, other_category.id])
+
+      expect(result[:category_ids]).to contain_exactly(support_category.id)
+    end
+
+    it "echoes back the selected category ids" do
+      expect(build(category_ids: [support_category.id])[:category_ids]).to contain_exactly(
+        support_category.id,
+      )
     end
 
     it "lists both support categories as filter options" do

@@ -1,22 +1,24 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
-import ComboBox from "discourse/select-kit/components/combo-box";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
 
-const ALL_CATEGORIES = "all";
+const MAX_CATEGORIES = 10;
 
 const DeltaPill = <template>
   {{#if @delta.hasDelta}}
@@ -31,9 +33,20 @@ const DeltaPill = <template>
 </template>;
 
 export default class SupportSection extends Component {
-  @tracked categoryId = ALL_CATEGORIES;
+  @service currentUser;
+  @service toasts;
+
+  @tracked selectedCategories = [];
   @tracked override = null;
   @tracked loading = false;
+
+  constructor() {
+    super(...arguments);
+
+    this.selectedCategories = (this.args.data?.category_ids ?? [])
+      .map((id) => Category.findById(id))
+      .filter(Boolean);
+  }
 
   // The active payload: the category-filtered refetch when present, otherwise
   // the data supplied by the main dashboard request.
@@ -45,16 +58,6 @@ export default class SupportSection extends Component {
   // category is selected; it's hidden when there's at most one support category.
   get showFilter() {
     return (this.args.data?.category_options?.length ?? 0) > 1;
-  }
-
-  get categoryOptions() {
-    return [
-      {
-        id: ALL_CATEGORIES,
-        name: i18n("admin.dashboard.sections.support.filter.all_categories"),
-      },
-      ...(this.args.data?.category_options ?? []),
-    ];
   }
 
   get headline() {
@@ -161,14 +164,36 @@ export default class SupportSection extends Component {
   }
 
   @action
-  onCategoryChange(categoryId) {
-    this.categoryId = categoryId;
+  onCategoriesChange(categories) {
+    this.selectedCategories = categories;
     this.refetch();
+    this.#persistSelection();
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax("/admin/dashboard/sections/support/settings/categories.json", {
+      type: "PUT",
+      contentType: "application/json",
+      data: JSON.stringify({
+        category_ids: this.selectedCategories.map((c) => c.id),
+      }),
+    }).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n("admin.dashboard.sections.support.save_error"),
+        },
+      });
+    });
   }
 
   @action
   onPeriodChange() {
-    if (this.categoryId === ALL_CATEGORIES) {
+    if (this.selectedCategories.length === 0) {
       this.override = null;
     } else {
       this.refetch();
@@ -185,8 +210,9 @@ export default class SupportSection extends Component {
     if (this.args.endDate) {
       data.end_date = moment(this.args.endDate).format("YYYY-MM-DD");
     }
-    if (this.categoryId !== ALL_CATEGORIES) {
-      data.category_id = this.categoryId;
+    const ids = this.selectedCategories.map((c) => c.id);
+    if (ids.length > 0) {
+      data.category_ids = ids.join(",");
     }
 
     try {
@@ -292,12 +318,10 @@ export default class SupportSection extends Component {
 
         {{#if this.showFilter}}
           <div class="db-support__filter">
-            <ComboBox
-              @content={{this.categoryOptions}}
-              @value={{this.categoryId}}
-              @onChange={{this.onCategoryChange}}
-              @valueProperty="id"
-              @nameProperty="name"
+            <CategorySelector
+              @categories={{this.selectedCategories}}
+              @onChange={{this.onCategoriesChange}}
+              @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
             />
           </div>
         {{/if}}

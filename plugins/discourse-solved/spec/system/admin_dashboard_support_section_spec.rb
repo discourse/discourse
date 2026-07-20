@@ -54,4 +54,42 @@ describe "Admin dashboard Support section" do
     # With a single support category there is nothing to filter between.
     expect(support).to have_no_category_filter
   end
+
+  context "with multiple support categories" do
+    fab!(:other_support_category, :category)
+    fab!(:moderator)
+
+    before do
+      other_support_category.custom_fields[
+        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+      ] = "true"
+      other_support_category.save!
+    end
+
+    it "persists an admin's category selection per-site across a refresh" do
+      dashboard.visit
+      expect(support).to have_category_filter
+
+      support.select_category(support_category)
+      expect(support).to have_selected_category(support_category)
+
+      dashboard.visit
+
+      support.expand_category_filter
+      expect(support).to have_selected_category(support_category)
+    end
+
+    it "does not persist a moderator's category selection" do
+      sign_in(moderator)
+
+      dashboard.visit
+      support.select_category(support_category)
+      expect(support).to have_selected_category(support_category)
+
+      dashboard.visit
+      support.expand_category_filter
+
+      expect(support).to have_no_selected_category(support_category)
+    end
+  end
 end

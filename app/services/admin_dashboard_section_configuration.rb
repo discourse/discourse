@@ -85,7 +85,21 @@ class AdminDashboardSectionConfiguration
   end
 
   def self.setting_definition(section_id, key)
-    SUPPORTED_SETTINGS.dig(section_id.to_s, key.to_s)
+    section_id = section_id.to_s
+    key = key.to_s
+
+    SUPPORTED_SETTINGS.dig(section_id, key) || plugin_setting_definition(section_id, key)
+  end
+
+  def self.plugin_setting_definition(section_id, key)
+    entry = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == section_id }
+    return nil if entry.nil?
+    return nil if entry[:enabled].respond_to?(:call) && !entry[:enabled].call
+
+    klass = entry[:settings]&.dig(key)
+    return nil if klass.nil?
+
+    { permit: klass.permit, validate: ->(attrs) { klass.validate(attrs) } }
   end
 
   def self.update_setting(section_id:, key:, attrs:)
@@ -97,8 +111,11 @@ class AdminDashboardSectionConfiguration
 
     value = definition[:validate].call(attrs.to_h.with_indifferent_access)
 
-    record = AdminDashboardSection.find_by(section_id:)
-    raise Discourse::InvalidParameters.new(:section_id) if record.nil?
+    record =
+      AdminDashboardSection.find_or_create_by!(section_id:) do |r|
+        r.position = (AdminDashboardSection.maximum(:position) || -1) + 1
+        r.visible = true
+      end
 
     record.with_lock { record.update!(settings: record.settings.to_h.deep_merge(key => value)) }
 

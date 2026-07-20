@@ -42,6 +42,31 @@ module PageObjects
       def has_no_category_filter?
         has_no_css?("#{SELECTOR} .db-support__filter")
       end
+
+      CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .category-selector"
+
+      def category_filter
+        PageObjects::Components::SelectKit.new(CATEGORY_FILTER)
+      end
+
+      def expand_category_filter
+        category_filter.expand
+        self
+      end
+
+      def select_category(category)
+        expand_category_filter
+        category_filter.select_row_by_value(category.id)
+        self
+      end
+
+      def has_selected_category?(category)
+        has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+      end
+
+      def has_no_selected_category?(category)
+        has_no_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+      end
     end
   end
 end
