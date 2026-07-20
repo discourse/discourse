@@ -3,6 +3,11 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
+      WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
+      WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
+      NODE_ID_FIELD = "discourse_workflows_node_id"
+
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS
@@ -315,15 +320,26 @@ module DiscourseWorkflows
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
       end
 
-      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil, whisper: false)
+      def create_post(
+        user:,
+        raw:,
+        topic_id:,
+        reply_to_post_number: nil,
+        whisper: false,
+        bypass_permission_checks: false
+      )
         topic = ::Topic.find(topic_id)
-        guardian = user.guardian
-        guardian.ensure_can_see!(topic)
-        raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+        bypass_permission_checks = ActiveModel::Type::Boolean.new.cast(bypass_permission_checks)
+        guardian = bypass_permission_checks ? Discourse.system_user.guardian : user.guardian
 
-        if topic.closed? || topic.archived?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+        if !bypass_permission_checks
+          guardian.ensure_can_see!(topic)
+          raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+
+          if topic.closed? || topic.archived?
+            raise DiscourseWorkflows::NodeError,
+                  I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+          end
         end
 
         post_args = {
@@ -345,7 +361,14 @@ module DiscourseWorkflows
           post_args[:post_type] = ::Post.types[:whisper]
         end
 
-        PostCreator.new(user, post_args).create!
+        if bypass_permission_checks
+          post_args[:guardian] = guardian
+          post_args[:skip_staff_author_pm_membership_sync] = true
+        end
+
+        post = PostCreator.new(user, post_args).create!
+        record_permission_bypass!(post) if bypass_permission_checks
+        post
       end
 
       def edit_post(user:, post_id:, raw:)
@@ -448,6 +471,16 @@ module DiscourseWorkflows
       end
 
       private
+
+      def record_permission_bypass!(post)
+        post.custom_fields[BYPASSED_PERMISSION_CHECKS_FIELD] = "true"
+        post.custom_fields[WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
+        if @workflow&.active_version_id
+          post.custom_fields[WORKFLOW_VERSION_ID_FIELD] = @workflow.active_version_id
+        end
+        post.custom_fields[NODE_ID_FIELD] = @node_id if @node_id
+        post.save_custom_fields
+      end
 
       def fetch_credentials(slot, item_index)
         raise ArgumentError, "credential slot is required" if slot.blank?
