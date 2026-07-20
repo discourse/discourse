@@ -199,7 +199,7 @@ class BrowserTrafficExplorerQuery
       when "browser"
         scope.where("#{BROWSER_SQL} = ?", value)
       when "normalized_url"
-        scope.where("#{NORMALIZED_URL_SQL} = ?", value)
+        scope.where("#{NORMALIZED_URL_SQL} = :normalized_url", normalized_url: value)
       else
         scope.where(FACETS.fetch(facet)[:column] => value)
       end
