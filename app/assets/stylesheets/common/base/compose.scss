@@ -1526,6 +1526,10 @@ body.has-sidebar-page {
     .reply-area {
       background: var(--secondary);
       padding: 0 0 max(env(safe-area-inset-bottom), var(--space-2)) !important;
+
+      html.keyboard-visible & {
+        padding-bottom: var(--space-2) !important;
+      }
     }
 
     .reply-to {
