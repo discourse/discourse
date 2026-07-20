@@ -5,8 +5,6 @@ module DiscourseAi
     class UpdateConversationStar
       include Service::Base
 
-      policy :feature_enabled
-
       params do
         attribute :topic_id, :integer
         attribute :starred, :boolean
@@ -35,10 +33,6 @@ module DiscourseAi
       end
 
       private
-
-      def feature_enabled
-        SiteSetting.enable_ai_bot_starred_conversations
-      end
 
       def fetch_user(guardian:)
         guardian.user
