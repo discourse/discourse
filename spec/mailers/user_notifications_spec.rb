@@ -1000,6 +1000,10 @@ RSpec.describe UserNotifications do
       before do
         SiteSetting.group_in_subject = true
         SiteSetting.simple_email_subject = true
+
+        # Enabling simple_email_subject rewrites email_subject to a template
+        # without %{optional_pm}, which is where the group name is rendered.
+        SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 
       let(:group) { Fabricate(:group, name: "my_group") }

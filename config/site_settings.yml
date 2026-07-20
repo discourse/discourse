@@ -2083,14 +2083,6 @@ email:
   simple_email_subject:
     default: false
     client: true
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      allow_enabled_for:
-        - everyone
-      learn_more_url: "https://meta.discourse.org/t/-/395927"
-      permanent_warning: false
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
