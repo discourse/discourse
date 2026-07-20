@@ -11,7 +11,11 @@ end
 Fabricator(:topic_with_op, from: :topic) do
   transient :raw
   after_create do |topic, transient|
-    Fabricate(:post, topic: topic, user: topic.user, raw: transient[:raw] || Faker::Lorem.sentence)
+    if transient[:raw].present?
+      Fabricate(:post, topic: topic, user: topic.user, raw: transient[:raw])
+    else
+      Fabricate(:post, topic: topic, user: topic.user)
+    end
   end
 end
 
