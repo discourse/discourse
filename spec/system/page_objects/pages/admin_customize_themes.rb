@@ -10,6 +10,14 @@ module PageObjects
         self
       end
 
+      def finish_install
+        find(".finish-install").click
+      end
+
+      def has_incomplete_installation?
+        has_button?(I18n.t("admin_js.admin.customize.theme.finish_install"))
+      end
+
       def has_colors_tab?
         header.has_tab?("colors")
       end
