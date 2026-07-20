@@ -171,24 +171,25 @@ module NestedReplies
       all_posts = starting_posts.dup
       children_map = {}
       max_preload_depth = [max_depth, configured_max_depth, PRELOAD_DEPTH].min
-      hot_starting_posts =
+      visible_starting_posts =
         starting_posts.select do |post|
-          HotScoreCalculator.public_post_types.include?(post.post_type)
+          visible_post_types.include?(post.post_type) &&
+            (post.post_type != Post.types[:whisper] || post.action_code.blank?)
         end
 
-      if hot_starting_posts.empty? || max_preload_depth <= 0 || HOT_PRELOAD_POST_BUDGET <= 0 ||
+      if visible_starting_posts.empty? || max_preload_depth <= 0 || HOT_PRELOAD_POST_BUDGET <= 0 ||
            HOT_PRELOAD_PER_ROOT_BUDGET <= 0 || PRELOAD_CHILDREN_PER_PARENT <= 0
         return { children_map: children_map, all_posts: all_posts }
       end
 
       # Discover only the three-wide, three-deep score frontier; hydrate posts after the global
       # and per-root budgets choose which branches should arrive expanded.
-      candidate_rows = hot_preload_candidate_rows(hot_starting_posts, max_preload_depth)
+      candidate_rows = hot_preload_candidate_rows(visible_starting_posts, max_preload_depth)
       root_rows = candidate_rows.select { |row| row.depth.zero? }.index_by(&:post_number)
       rows_by_parent =
         candidate_rows.select { |row| row.depth.positive? }.group_by(&:reply_to_post_number)
       candidates =
-        hot_starting_posts.filter_map do |post|
+        visible_starting_posts.filter_map do |post|
           row = root_rows[post.post_number]
           next if row.blank?
 
@@ -295,6 +296,11 @@ module NestedReplies
             WHERE posts.topic_id = :topic_id
               AND posts.id IN (:starting_post_ids)
               AND posts.post_type IN (:post_types)
+              AND (
+                posts.post_type != :whisper_post_type
+                OR posts.action_code IS NULL
+                OR posts.action_code = ''
+              )
 
             UNION ALL
 
@@ -318,6 +324,11 @@ module NestedReplies
                 AND posts.reply_to_post_number = preload_tree.post_number
                 AND posts.post_number > 1
                 AND posts.post_type IN (:post_types)
+                AND (
+                  posts.post_type != :whisper_post_type
+                  OR posts.action_code IS NULL
+                  OR posts.action_code = ''
+                )
                 AND NOT posts.post_number = ANY(preload_tree.path)
               ORDER BY #{NestedReplies::Sort.sql_order_expression("hot")}
               LIMIT :children_per_parent
@@ -338,7 +349,8 @@ module NestedReplies
         SQL
         topic_id: topic.id,
         starting_post_ids: starting_posts.map(&:id),
-        post_types: HotScoreCalculator.public_post_types,
+        post_types: visible_post_types,
+        whisper_post_type: Post.types[:whisper],
         children_per_parent: PRELOAD_CHILDREN_PER_PARENT,
         max_depth: max_depth,
       )

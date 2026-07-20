@@ -356,6 +356,51 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(root_json["children"].map { |child| child["id"] }).to eq([new_child.id])
     end
 
+    it "preloads visible whisper branches for whisperers when sorting by hot" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      Fabricate(:nested_topic, topic: topic)
+      regular_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: regular_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      whisper_root =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: nil,
+          post_type: Post.types[:whisper],
+        )
+      whisper_grandchild =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: whisper_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(admin)
+
+      get show_url(topic, sort: "hot")
+
+      roots = response.parsed_body["roots"]
+      regular_root_json = roots.find { |root| root["id"] == regular_root.id }
+      whisper_root_json = roots.find { |root| root["id"] == whisper_root.id }
+      expect(regular_root_json["children"].map { |child| child["id"] }).to eq([whisper_child.id])
+      expect(whisper_root_json["children"].map { |child| child["id"] }).to eq(
+        [whisper_grandchild.id],
+      )
+    end
+
     it "piggybacks suggested topics at the top level when the first page is the last page" do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       suggested = Fabricate(:post).topic
