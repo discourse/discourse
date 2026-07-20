@@ -248,7 +248,7 @@ class BrowserTrafficExplorerQuery
 
   def result_cache_key
     identity = {
-      version: 4,
+      version: 5,
       start_date: effective_start_date,
       end_date: effective_end_date,
       source: BrowserPageviewEvent.rollup_source,
@@ -402,7 +402,7 @@ class BrowserTrafficExplorerQuery
           if completed_sessions.zero?
             nil
           else
-            (session_summary[:engaged_seconds_total].to_f / completed_sessions).round
+            (session_summary[:engaged_seconds_total].to_f / completed_sessions).round(2)
           end
         ),
     }

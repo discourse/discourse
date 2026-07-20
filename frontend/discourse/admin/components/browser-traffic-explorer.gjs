@@ -163,9 +163,18 @@ export default class BrowserTrafficExplorer extends Component {
 
   get averageSessionDuration() {
     const value = this.data?.summary.average_session_duration_seconds;
-    return value === null || value === undefined
-      ? "—"
-      : formatMinutesSeconds(value);
+    if (value === null || value === undefined) {
+      return "—";
+    }
+
+    if (value < 60) {
+      const count = I18n.toNumber(value, { precision: 2 })
+        .replace(/([.,]\d*[1-9])0$/, "$1")
+        .replace(/[.,]00$/, "");
+      return i18n("dates.tiny.x_seconds", { count });
+    }
+
+    return formatMinutesSeconds(value);
   }
 
   get chartModel() {
