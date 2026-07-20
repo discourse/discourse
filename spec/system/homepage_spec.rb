@@ -80,6 +80,42 @@ describe "Homepage" do
     expect(page).to have_css(".navigation-container .categories.active", text: "Categories")
   end
 
+  it "diverges for a user-scoped homepage: logged-in users get it, anon falls back" do
+    SiteSetting.top_menu = "latest|new|bookmarks|categories"
+    SiteSetting.default_homepage = "bookmarks"
+
+    visit "/"
+    expect(page).to have_current_path("/")
+    expect(page).to have_css(".navigation-container .latest.active", text: "Latest")
+
+    sign_in user
+    visit "/"
+    expect(page).to have_current_path("/")
+    expect(page).to have_css(".navigation-container .bookmarks.active", text: "Bookmarks")
+  end
+
+  it "renders an empty state when a user-scoped homepage has no content" do
+    SiteSetting.top_menu = "latest|new|bookmarks|categories"
+    SiteSetting.default_homepage = "bookmarks"
+
+    sign_in user
+
+    expect(page).to have_current_path("/")
+    expect(page).to have_css(".navigation-container .bookmarks.active", text: "Bookmarks")
+    expect(discovery.topic_list).to have_no_topics
+  end
+
+  it "renders the homepage but highlights no nav tab when the homepage is not a top_menu item" do
+    SiteSetting.top_menu = "latest|new|categories"
+    SiteSetting.default_homepage = "top"
+
+    visit "/"
+
+    expect(page).to have_css(".list-container")
+    expect(page).to have_no_css(".nav-item_top")
+    expect(page).to have_no_css(".navigation-container .active")
+  end
+
   shared_examples "a custom homepage" do
     it "shows the custom homepage component" do
       visit "/"
