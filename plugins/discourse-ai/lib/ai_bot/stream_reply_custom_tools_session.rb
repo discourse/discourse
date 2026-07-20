@@ -198,22 +198,20 @@ module DiscourseAi
           feature_name: "bot",
         }
 
-        # Pre-check: if budget already exhausted on resume, force a final
-        # text-only call or finalize immediately — don't overshoot.
+        # Pre-check: if budget is already exhausted on resume, force one final
+        # text-only call instead of starting another tool round.
         if @accumulated_tokens >= token_budget
-          if @prompt.messages.last&.dig(:type) == :tool
-            DiscourseAi::Agents::Bot.inject_budget_exhausted_hint(@prompt)
-            @prompt.tool_choice = :none
+          DiscourseAi::Agents::Bot.inject_token_budget_final_answer_hint(@prompt)
+          @prompt.tool_choice = :none
 
-            final_reply = +""
-            llm.generate(@prompt, **generate_options) do |partial|
-              if partial.is_a?(String) && !partial.empty?
-                final_reply << partial
-                yield(:partial, partial)
-              end
+          final_reply = +""
+          llm.generate(@prompt, **generate_options) do |partial|
+            if partial.is_a?(String) && !partial.empty?
+              final_reply << partial
+              yield(:partial, partial)
             end
-            @accumulated_reply << final_reply
           end
+          @accumulated_reply << final_reply
 
           persist_reply_post!
           clear_resume_state!
@@ -277,7 +275,7 @@ module DiscourseAi
               )
             end
 
-            DiscourseAi::Agents::Bot.inject_budget_exhausted_hint(@prompt)
+            DiscourseAi::Agents::Bot.inject_token_budget_final_answer_hint(@prompt)
             @prompt.tool_choice = :none
 
             final_reply = +""
