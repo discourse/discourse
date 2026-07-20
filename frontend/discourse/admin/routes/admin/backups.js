@@ -50,7 +50,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
     if (log.message === "[STARTED]") {
       this.currentUser.set("hideReadOnlyAlert", true);
       this.controllerFor("admin.backups").set("model.isOperationRunning", true);
-      this.controllerFor("admin.backups.logs").get("logs").clear();
+      this.controllerFor("admin.backups.logs").get("logs").splice(0);
     } else if (log.message === "[FAILED]") {
       this.controllerFor("admin.backups").set(
         "model.isOperationRunning",
