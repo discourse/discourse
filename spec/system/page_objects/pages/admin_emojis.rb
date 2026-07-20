@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def visit_import_page
+        page.visit "/admin/config/emoji/import"
+        self
+      end
+
       def has_emoji_listed?(name)
         page.has_css?(emoji_table_selector, text: name)
       end
@@ -18,6 +23,25 @@ module PageObjects
 
       def delete_emoji(name)
         find(".d-table__row", text: name).find(delete_button_selector).click
+      end
+
+      def upload_zip(path)
+        attach_file(path, class: "admin-emoji-import__file-input", make_visible: true)
+        self
+      end
+
+      def has_import_preview?
+        page.has_css?(".admin-emoji-import__summary")
+      end
+
+      def confirm_import
+        find(".admin-emoji-import__actions .btn-primary").click
+        self
+      end
+
+      def click_tab(tab_name)
+        find(".nav-pills a", text: tab_name).click
+        self
       end
 
       private

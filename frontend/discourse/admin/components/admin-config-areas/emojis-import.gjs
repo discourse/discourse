@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
 import { eq, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -310,6 +311,12 @@ export default class AdminConfigAreasEmojisImport extends Component {
           }}</h2>
         <p class="admin-emoji-import__description">
           {{i18n "admin.emoji.import_description"}}
+          <br />
+          <a
+            href={{getURL "/emoji-import-sample.zip"}}
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{i18n "admin.emoji.import_download_sample"}}</a>
         </p>
         <div class="inputs">
           <input

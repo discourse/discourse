@@ -9832,6 +9832,7 @@ en:
         import: "Import"
         import_heading: "Import emojis"
         import_description: "Upload a ZIP file containing an emojis.csv manifest and image files."
+        import_download_sample: "Download an example template."
         import_preview_heading: "Review import"
         import_summary: "%{new} new · %{conflicts} conflicts · %{unchanged} unchanged · %{invalid} errors"
         import_confirm: "Confirm import"
