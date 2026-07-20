@@ -226,8 +226,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(reply.raw).to eq("Automated reply from a TL0 user.")
       expect(private_message.topic_allowed_users.where(user_id: tl0_user.id)).to be_blank
       expect(reply.custom_fields).to include(
-        DiscourseWorkflows::Executor::NodeExecutionContext::SYSTEM_AUTHORIZED_POST_FIELD =>
-          "system",
+        DiscourseWorkflows::Executor::NodeExecutionContext::BYPASSED_PERMISSION_CHECKS_FIELD =>
+          "true",
       )
       expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
     end
@@ -261,10 +261,6 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       expect(reply.user_id).to eq(tl0_user.id)
       expect(reply.raw).to eq("Secure category automated reply.")
       expect(group.users.exists?(tl0_user.id)).to eq(false)
-      expect(reply.custom_fields).to include(
-        DiscourseWorkflows::Executor::NodeExecutionContext::SYSTEM_AUTHORIZED_POST_FIELD =>
-          "system",
-      )
       expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
     end
 

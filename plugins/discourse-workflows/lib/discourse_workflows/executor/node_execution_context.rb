@@ -3,11 +3,10 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
-      SYSTEM_AUTHORIZATION_MODE = "system"
-      SYSTEM_AUTHORIZED_POST_FIELD = "discourse_workflows_authorization_mode"
-      SYSTEM_AUTHORIZED_WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
-      SYSTEM_AUTHORIZED_WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
-      SYSTEM_AUTHORIZED_NODE_ID_FIELD = "discourse_workflows_node_id"
+      BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
+      WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
+      WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
+      NODE_ID_FIELD = "discourse_workflows_node_id"
 
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
@@ -368,7 +367,7 @@ module DiscourseWorkflows
         end
 
         post = PostCreator.new(user, post_args).create!
-        record_system_authorized_post!(post) if bypass_permission_checks
+        record_permission_bypass!(post) if bypass_permission_checks
         post
       end
 
@@ -472,15 +471,13 @@ module DiscourseWorkflows
 
       private
 
-      def record_system_authorized_post!(post)
-        post.custom_fields[SYSTEM_AUTHORIZED_POST_FIELD] = SYSTEM_AUTHORIZATION_MODE
-        post.custom_fields[SYSTEM_AUTHORIZED_WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
+      def record_permission_bypass!(post)
+        post.custom_fields[BYPASSED_PERMISSION_CHECKS_FIELD] = "true"
+        post.custom_fields[WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
         if @workflow&.active_version_id
-          post.custom_fields[
-            SYSTEM_AUTHORIZED_WORKFLOW_VERSION_ID_FIELD
-          ] = @workflow.active_version_id
+          post.custom_fields[WORKFLOW_VERSION_ID_FIELD] = @workflow.active_version_id
         end
-        post.custom_fields[SYSTEM_AUTHORIZED_NODE_ID_FIELD] = @node_id if @node_id
+        post.custom_fields[NODE_ID_FIELD] = @node_id if @node_id
         post.save_custom_fields
       end
 
