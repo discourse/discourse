@@ -6359,6 +6359,23 @@ en:
       unsafe_description: "has an unsafe HTML description"
       invalid_tag_group: "has invalid tag group: %{tag_group_name}"
 
+  emoji:
+    export:
+      no_selection: "Select at least one emoji to export."
+    import:
+      missing_file: "No ZIP file provided."
+      missing_csv: "The ZIP must contain an emojis.csv file."
+      too_many_entries: "The ZIP contains too many entries (maximum 1000)."
+      file_too_large: "One or more files in the ZIP are too large."
+      session_expired: "Import session has expired. Please start the import again."
+      validation:
+        missing_name: "Name is required."
+        missing_filename: "Filename is required."
+        invalid_name: "Name contains invalid characters."
+        group_too_long: "Group name must be 20 characters or fewer."
+        unsupported_extension: "File extension .%{ext} is not supported (use png, gif, or svg)."
+        duplicate_filename: "Filename appears more than once in the CSV."
+
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"
     errors:
