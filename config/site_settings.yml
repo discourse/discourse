@@ -1698,13 +1698,7 @@ posting:
   enable_gifs:
     default: false
     client: true
-    hidden: true
     area: "gifs"
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/404829"
-      permanent_warning: false
   klipy_api_key:
     default: ""
     secret: true
