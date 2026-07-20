@@ -105,10 +105,10 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # The normalizer has already made the label legal — markbridge's
-              # defaults hoist block content out, and our Discourse rules hoist
-              # images, uploads and attachments out of the link before
-              # rendering. What's left to decide is deferral:
+              # The normalizer has made the label legal CommonMark, but a legal
+              # label can still hold an image, upload or attachment (a linked
+              # image, which Discourse cooks fine). What's left to decide is
+              # deferral:
               # only a label of plain text or simple inline formatting may be
               # recorded into the `text` column, because a deferrable embed
               # nested in a deferred label would mint its token into that
@@ -185,16 +185,13 @@ module Migrations
         require FORMATS.fetch(@format)
       end
 
-      # Markbridge's default rules only enforce CommonMark legality (unwrapping a
-      # link nested in a link, hoisting block and multi-line-code content out of
-      # inline containers). The Discourse policy on top is ours to add:
+      # Markbridge's default rules cover CommonMark legality only: they unwrap a
+      # link nested in a link and hoist block or multi-line-code content out of
+      # an inline container. A linked image is legal CommonMark and Discourse
+      # cooks it fine (the anchor simply wraps the image), so an image stays
+      # inside its link — the defaults leave it alone and we add nothing for it.
       #
-      # The three `hoist_after` rules move an image-like node (image, upload,
-      # attachment) out of a surrounding link. Discourse doesn't render a linked
-      # image inline, so the embed leaves the link and follows it in the output
-      # rather than being lost.
-      #
-      # The mention rule turns a mention inside a link label into plain text.
+      # Our one rule turns a mention inside a link label into plain text.
       # Discourse doesn't cook mentions inside links, so nothing is lost — and as
       # text the label stays deferrable, so the link keeps its import-time
       # rewrite instead of falling back to native rendering. The trade: the name
@@ -206,21 +203,6 @@ module Migrations
         @normalizer ||=
           Markbridge::Normalizer
             .default
-            .rule(
-              parent: Markbridge::AST::Url,
-              child: Markbridge::AST::Image,
-              strategy: :hoist_after,
-            )
-            .rule(
-              parent: Markbridge::AST::Url,
-              child: Markbridge::AST::Upload,
-              strategy: :hoist_after,
-            )
-            .rule(
-              parent: Markbridge::AST::Url,
-              child: Markbridge::AST::Attachment,
-              strategy: :hoist_after,
-            )
             .rule(parent: Markbridge::AST::Url, child: Markbridge::AST::Mention, strategy: :textify)
             .freeze
       end
@@ -233,15 +215,47 @@ module Migrations
       # @return [String] Discourse Markdown.
       def to_markdown(source, on_embed: nil, defer: DEFAULT_DEFER)
         renderer = on_embed ? deferring_renderer(on_embed, defer) : nil
-        Markbridge.convert(
-          source,
-          format: @format,
-          renderer:,
-          normalize: self.class.normalizer,
-        ).markdown
+        Markbridge
+          .convert(source, format: @format, renderer:, normalize: self.class.normalizer) do |ast|
+            unwrap_self_links(ast)
+          end
+          .markdown
       end
 
       private
+
+      # An image linked to its own source URL — the thumbnail-links-to-itself
+      # pattern — is just noise: the anchor points where the image already
+      # lives. Drop the link so the bare image gets Discourse's lightbox on
+      # import. This runs in markbridge's parse-time yield hook, before
+      # normalization, so the freed image is normalized like any other node.
+      def unwrap_self_links(element)
+        element.children.dup.each do |child|
+          unwrap_self_links(child) if child.is_a?(Markbridge::AST::Element)
+
+          image = self_link_image(child)
+          element.replace_child(child, image) if image
+        end
+      end
+
+      # The lone Image a self-link wraps, or nil when `node` is not a self-link:
+      # a Url whose only non-whitespace child is an Image whose `src` is exactly
+      # the link's href. Only Image carries a source URL to compare — Upload and
+      # Attachment reference their target by sha1/id, not a URL, so they never
+      # match here.
+      def self_link_image(node)
+        return unless node.is_a?(Markbridge::AST::Url)
+
+        content = node.children.reject { |child| whitespace_text?(child) }
+        return unless content.size == 1
+
+        image = content.first
+        image if image.is_a?(Markbridge::AST::Image) && image.src == node.href
+      end
+
+      def whitespace_text?(node)
+        node.instance_of?(Markbridge::AST::Text) && node.text.strip.empty?
+      end
 
       def deferring_renderer(sink, defer)
         tags =

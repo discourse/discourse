@@ -25,14 +25,30 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       ).to eq("[outer inner end](https://a.com)")
     end
 
-    it "hoists a linked image out of the link (Discourse policy)" do
-      # Discourse doesn't render a linked image inline; our rule moves the image
-      # out so the link renders bare and the image follows it.
+    it "keeps a linked image inside the link" do
+      # A linked image is legal Markdown and Discourse cooks it fine (the anchor
+      # wraps the image), so the image stays nested inside the link.
       expect(
         renderer.to_markdown(
           "[url=https://example.com][img]https://example.com/pic.png[/img][/url]",
         ),
-      ).to eq("https://example.com![](https://example.com/pic.png)")
+      ).to eq("[![](https://example.com/pic.png)](https://example.com)")
+    end
+
+    it "unwraps a self-link so the image stands alone" do
+      # The image links to its own source URL — the link is noise. Dropping it
+      # leaves a bare image, which gets Discourse's lightbox on import.
+      expect(
+        renderer.to_markdown("[url=https://x/pic.png][img]https://x/pic.png[/img][/url]"),
+      ).to eq("![](https://x/pic.png)")
+    end
+
+    it "keeps the link when the image points elsewhere" do
+      # Only an exact src == href match is a self-link; a near miss (image is a
+      # different resource on the same host) keeps the link.
+      expect(renderer.to_markdown("[url=https://x/page][img]https://x/pic.png[/img][/url]")).to eq(
+        "[![](https://x/pic.png)](https://x/page)",
+      )
     end
   end
 
@@ -134,7 +150,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(buffer.quotes.first[:placeholder])
     end
 
-    it "records a bare link when the normalizer hoists the image out" do
+    it "renders a linked image natively instead of deferring the link" do
       raw =
         renderer.to_markdown(
           "[url=https://example.com][img]https://example.com/pic.png[/img][/url]",
@@ -142,25 +158,24 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
           defer: %i[link],
         )
 
-      # The link is recorded label-less (a bare URL at import); the image
-      # follows it in the raw instead of cooking into a clickable image.
-      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
-      expect(raw).to include(buffer.links.first[:placeholder])
-      expect(raw).to include("![](https://example.com/pic.png)")
+      # An image label isn't deferrable, so the link falls back to native
+      # rendering and stays a clickable image — nothing is recorded.
+      expect(buffer.links).to be_empty
+      expect(raw).to eq("[![](https://example.com/pic.png)](https://example.com)")
     end
 
-    it "records a bare link when the image sat inside formatting" do
+    it "unwraps a self-link even with link deferral on" do
       raw =
         renderer.to_markdown(
-          "[url=https://example.com][b][img]https://example.com/pic.png[/img][/b][/url]",
+          "[url=https://x/pic.png][img]https://x/pic.png[/img][/url]",
           on_embed: buffer,
           defer: %i[link],
         )
 
-      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
-      expect(raw).to include(buffer.links.first[:placeholder])
-      expect(raw).to include("![](https://example.com/pic.png)")
-      expect(raw).not_to include("****")
+      # The self-link is dropped before rendering, so there is no link to defer;
+      # the bare image renders inline.
+      expect(buffer.links).to be_empty
+      expect(raw).to eq("![](https://x/pic.png)")
     end
 
     it "records a bare URL's text as nil so the importer re-emits it bare" do
@@ -302,10 +317,9 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(sink.links).to contain_exactly(hash_including(text: "`x`"))
     end
 
-    it "falls back to native rendering for a label the normalizer has not cleaned" do
-      # The normalizer hoists uploads out of links before rendering, so this
-      # tree can't arrive through the pipeline — the fallback is defense in
-      # depth for a direct/custom rendering path.
+    it "falls back to native rendering for a label containing an upload" do
+      # An upload inside a link keeps the label non-deferrable, so the link
+      # renders natively rather than deferring a token into its `text` column.
       _node_class, extract = described_class.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
       node << Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
