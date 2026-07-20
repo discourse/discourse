@@ -105,19 +105,16 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # The normalizer has made the label legal CommonMark, but a legal
-              # label can still hold an image, upload or attachment (a linked
-              # image, which Discourse cooks fine). What's left to decide is
-              # deferral:
-              # only a label of plain text or simple inline formatting may be
-              # recorded into the `text` column, because a deferrable embed
-              # nested in a deferred label would mint its token into that
-              # column, where the importer's single-pass substitution never
-              # looks (false orphan, embed lost). Everything else renders
-              # natively; a nested deferrable embed then tokenizes into the
-              # raw where the importer resolves it (a mention degrades to
-              # remapped plain text, which is all Discourse would cook inside
-              # a link anyway).
+              # After normalization the only deferrable embed a label can still
+              # hold is an upload/attachment (a linked image, which Discourse
+              # cooks fine). What's left to decide is deferral: only a label of
+              # plain text or simple inline formatting may be recorded into the
+              # `text` column, because a deferrable embed nested in a deferred
+              # label would mint its token into that column, where the
+              # importer's single-pass substitution never looks (false orphan,
+              # embed lost). When the label isn't deferrable the link renders
+              # natively and the nested embed tokenizes into the raw, where the
+              # importer resolves it.
               next interface.render_default(node) unless deferrable_label?(node)
 
               # A bare URL records no text, so the importer re-emits it bare
@@ -160,22 +157,16 @@ module Migrations
         when Markbridge::AST::Text, Markbridge::AST::MarkdownText
           true
         when Markbridge::AST::Code
-          # Inline code is a code without a language (a language implies a
-          # fenced block) and with a single line — multi-line code renders as
-          # a block even without one.
-          node.language.nil? && single_line_code?(node)
+          # The normalizer already hoisted any multi-line code out of inline
+          # containers, so a Code still sitting in a label renders inline (a
+          # backtick span) whether or not it carries a language — a language
+          # alone never makes it a block. Safe to record.
+          true
         else
           label_formatting?(node) && deferrable_label?(node)
         end
       end
       private_class_method :deferrable_label_node?
-
-      def self.single_line_code?(node)
-        node.children.all? do |child|
-          child.instance_of?(Markbridge::AST::Text) && !child.text.include?("\n")
-        end
-      end
-      private_class_method :single_line_code?
 
       # @param format [Symbol] one of {FORMATS}.
       def initialize(format: :bbcode)

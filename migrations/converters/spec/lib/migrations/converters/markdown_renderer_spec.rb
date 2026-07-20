@@ -133,6 +133,38 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(buffer.links.first[:placeholder])
     end
 
+    it "defers a link whose label is inline code carrying a language" do
+      # A language attribute alone never makes code a block, so code-with-a-
+      # language still renders inline inside a link and stays deferrable — only
+      # multi-line code is hoisted out.
+      raw =
+        renderer.to_markdown(
+          "see [url=https://example.com/t/5][code=ruby]x = 1[/code][/url]",
+          on_embed: buffer,
+          defer: %i[link],
+        )
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first[:text]).to eq("`x = 1`")
+      expect(raw).to include(buffer.links.first[:placeholder])
+    end
+
+    it "hoists multi-line code out of a link label instead of deferring it into text" do
+      # The normalizer pulls multi-line code out of the inline container before
+      # we render, so the link arrives with an empty (deferrable) label and the
+      # code fence lands as a sibling block in the raw.
+      raw =
+        renderer.to_markdown(
+          "[url=https://example.com][code=ruby]a\nb[/code][/url]",
+          on_embed: buffer,
+          defer: %i[link],
+        )
+
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include(buffer.links.first[:placeholder])
+      expect(raw).to include("```ruby\na\nb\n```")
+    end
+
     it "defers a link whose quote label the normalizer hoisted out" do
       # Markbridge's normalizer pulls the quote out of the link before we
       # render, so the link arrives with an empty (hence deferrable) label
@@ -239,11 +271,12 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "leaves a mention-in-link label deferrable so the link still defers" do
-      # A raw Mention would make the link fall back to native rendering (see the
-      # embed-handlers specs); once the normalizer textifies it, the label is
-      # plain text and the :link handler records it instead. Formats that emit
-      # mentions need nokogiri (absent from this gem's bundle), so exercise the
-      # normalizer and the deferral predicate directly on the AST.
+      # A raw Mention is a deferrable embed, so it would keep the label
+      # non-deferrable and the link would fall back to native rendering; once
+      # the normalizer textifies it, the label is plain text and the :link
+      # handler records it instead. Formats that emit mentions need nokogiri
+      # (absent from this gem's bundle), so exercise the normalizer and the
+      # deferral predicate directly on the AST.
       node = Markbridge::AST::Url.new(href: "https://example.com")
       node << Markbridge::AST::Mention.new(name: "sam", type: :user)
       document = Markbridge::AST::Document.new
@@ -323,19 +356,6 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       _node_class, extract = described_class.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
       node << Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
-      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
-      allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
-
-      result = extract.call(sink, node, interface)
-
-      expect(result).to eq("NATIVE")
-      expect(sink.links).to be_empty
-    end
-
-    it "falls back to native rendering for a label with multi-line code" do
-      _node_class, extract = described_class.embed_handlers.fetch(:link)
-      node = Markbridge::AST::Url.new(href: "https://example.com")
-      node << (Markbridge::AST::Code.new << Markbridge::AST::Text.new("a\nb"))
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
 
