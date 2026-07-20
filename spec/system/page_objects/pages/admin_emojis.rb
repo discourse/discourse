@@ -40,7 +40,7 @@ module PageObjects
       end
 
       def click_tab(tab_name)
-        find(".nav-pills a", text: tab_name).click
+        find(".admin-emoji-tabs__#{tab_name}").click
         self
       end
 
