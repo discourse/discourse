@@ -9,6 +9,7 @@ import { THEMES } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
@@ -69,11 +70,7 @@ export default class AdminConfigAreasThemes extends Component {
       duration: "short",
     });
 
-    this.router.transitionTo(
-      "adminCustomizeThemes.show.index",
-      "themes",
-      theme.id
-    );
+    DiscourseURL.routeTo(`/admin/customize/themes/${theme.id}`);
   }
 
   @action

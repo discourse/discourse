@@ -82,6 +82,24 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
     raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
   end
 
+  def raise_command_import_error!(error)
+    message = error.stderr.to_s
+    translation_key =
+      if error.status && (error.status.exitstatus == 124 || !error.status.exited?)
+        "themes.import_error.git_timeout"
+      elsif message.match?(/Permission denied|publickey|Authentication failed|access denied/i)
+        "themes.import_error.git_authentication"
+      elsif message.match?(/Remote branch .* not found/i)
+        "themes.import_error.git_branch_not_found"
+      elsif message.match?(/Repository not found|does not appear to be a git repository/i)
+        "themes.import_error.git_repository_not_found"
+      else
+        "themes.import_error.git"
+      end
+
+    raise RemoteTheme::ImportError.new(I18n.t(translation_key))
+  end
+
   def clone!
     begin
       @uri = URI.parse(@url)
@@ -133,8 +151,8 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
     begin
       Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-    rescue RuntimeError
-      raise_import_error!
+    rescue Discourse::Utils::CommandError => error
+      raise_command_import_error!(error)
     end
   end
 
@@ -151,8 +169,8 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
       begin
         Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-      rescue RuntimeError
-        raise_import_error!
+      rescue Discourse::Utils::CommandError => error
+        raise_command_import_error!(error)
       end
     end
   end

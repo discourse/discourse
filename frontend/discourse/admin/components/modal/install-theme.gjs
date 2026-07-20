@@ -65,6 +65,10 @@ export default class InstallThemeModal extends Component {
     return `admin.customize.theme.${this.create ? "create" : "install"}`;
   }
 
+  get showStageButton() {
+    return this.remote && this.showPublicKey && !this.themeCannotBeInstalled;
+  }
+
   get component() {
     return this.selectedType === COMPONENTS;
   }
@@ -97,6 +101,7 @@ export default class InstallThemeModal extends Component {
     return (
       this.loading ||
       (this.remote && !this.uploadUrl) ||
+      (this.remote && this.showPublicKey && !this.publicKey) ||
       (this.local && !this.localFile) ||
       (this.create && this.nameTooShort)
     );
@@ -189,6 +194,15 @@ export default class InstallThemeModal extends Component {
 
   @action
   async installTheme() {
+    return this.#installTheme();
+  }
+
+  @action
+  async stageTheme() {
+    return this.#installTheme({ placeholder: true });
+  }
+
+  async #installTheme({ placeholder = false } = {}) {
     if (this.create) {
       return this.#createTheme();
     }
@@ -222,6 +236,10 @@ export default class InstallThemeModal extends Component {
         branch: this.branch,
         public_key: this.publicKey,
       };
+
+      if (placeholder) {
+        options.data.placeholder = true;
+      }
     }
 
     // User knows that theme cannot be installed, but they want to continue
@@ -244,7 +262,7 @@ export default class InstallThemeModal extends Component {
       this.args.model.addTheme(theme);
       this.args.closeModal();
     } catch (err) {
-      if (!this.publicKey || this.themeCannotBeInstalled) {
+      if (placeholder || !this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(err);
       }
       this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
@@ -510,6 +528,14 @@ export default class InstallThemeModal extends Component {
             class={{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}
             @label={{this.submitLabel}}
           />
+          {{#if this.showStageButton}}
+            <DButton
+              @action={{this.stageTheme}}
+              @disabled={{this.installDisabled}}
+              class="btn-default create-placeholder"
+              @label="admin.customize.theme.create_placeholder"
+            />
+          {{/if}}
           <DButton
             class="btn-flat d-modal-cancel"
             @action={{@closeModal}}

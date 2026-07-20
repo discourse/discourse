@@ -93,6 +93,10 @@ export default <template>
           </div>
         {{/if}}
 
+        <p class="description">
+          {{i18n "admin.customize.theme.placeholder_description"}}
+        </p>
+
         {{#if @controller.showRemoteError}}
           <div class="error-message">
             {{dIcon "triangle-exclamation"}}
