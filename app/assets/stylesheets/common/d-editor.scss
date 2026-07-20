@@ -405,6 +405,13 @@
   -ms-overflow-style: none;
   max-width: 100%;
 
+  // the toolbar can be rendered outside .d-editor-textarea-wrapper, so the
+  // disabled state is carried on the bar itself
+  &.--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &::-webkit-scrollbar {
     display: none;
   }

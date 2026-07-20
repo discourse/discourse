@@ -58,6 +58,8 @@ ca:
         filter_all: Tot
         filter_open: Obre
         filter_closed: Tancat
+        filter_joined_all: "Tots"
+        filter_joined_joined: "Registrat"
       chat_message_separator:
         today: Avui
         yesterday: Ahir

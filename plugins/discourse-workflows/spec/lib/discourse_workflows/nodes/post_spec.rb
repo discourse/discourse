@@ -194,6 +194,141 @@ RSpec.describe DiscourseWorkflows::Nodes::Post::V1 do
       end.to raise_error(Discourse::InvalidAccess).and not_change { hidden_topic.posts.count }
     end
 
+    it "creates a PM reply as a TL0 user when bypassing permission checks", :aggregate_failures do
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      private_message = Fabricate(:private_message_topic, user: user, recipient: other_user)
+      Fabricate(
+        :post,
+        topic: private_message,
+        user: user,
+        raw: "Please help with my account.",
+        post_number: 1,
+      )
+      item = { "json" => { "topic" => { "id" => private_message.id } } }
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "topic_id" => private_message.id.to_s,
+              "raw" => "Automated reply from a TL0 user.",
+              "author_username" => tl0_user.username,
+              "bypass_permission_checks" => true,
+            },
+            item: item,
+          )
+      end.to change { private_message.posts.count }.by(1)
+
+      reply = private_message.posts.order(:id).last
+      expect(reply.user_id).to eq(tl0_user.id)
+      expect(reply.raw).to eq("Automated reply from a TL0 user.")
+      expect(private_message.topic_allowed_users.where(user_id: tl0_user.id)).to be_blank
+      expect(reply.custom_fields).to include(
+        DiscourseWorkflows::Executor::NodeExecutionContext::BYPASSED_PERMISSION_CHECKS_FIELD =>
+          "true",
+      )
+      expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
+    end
+
+    it "creates a secure category reply as a TL0 user when bypassing permission checks",
+       :aggregate_failures do
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      first_post =
+        create_post(user: admin, category: private_category, raw: "Secure category topic.")
+      topic = first_post.topic
+      item = { "json" => { "post" => { "topic_id" => topic.id } } }
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "topic_id" => topic.id.to_s,
+              "raw" => "Secure category automated reply.",
+              "author_username" => tl0_user.username,
+              "bypass_permission_checks" => true,
+            },
+            item: item,
+          )
+      end.to change { topic.posts.count }.by(1)
+
+      reply = topic.posts.order(:id).last
+      expect(reply.user_id).to eq(tl0_user.id)
+      expect(reply.raw).to eq("Secure category automated reply.")
+      expect(group.users.exists?(tl0_user.id)).to eq(false)
+      expect(result["post"]).to include("id" => reply.id, "username" => tl0_user.username)
+    end
+
+    it "creates a whisper as a TL0 user when bypassing permission checks", :aggregate_failures do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      private_message = Fabricate(:private_message_topic, user: user, recipient: other_user)
+      Fabricate(
+        :post,
+        topic: private_message,
+        user: user,
+        raw: "Please help with my account.",
+        post_number: 1,
+      )
+      item = { "json" => { "topic" => { "id" => private_message.id } } }
+      result = nil
+
+      expect do
+        result =
+          execute_node(
+            configuration: {
+              "operation" => "create",
+              "topic_id" => private_message.id.to_s,
+              "raw" => "Staff-only automated note from a TL0 user.",
+              "author_username" => tl0_user.username,
+              "bypass_permission_checks" => true,
+              "whisper" => true,
+            },
+            item: item,
+          )
+      end.to change { private_message.posts.count }.by(1)
+
+      reply = private_message.posts.order(:id).last
+      expect(reply.user_id).to eq(tl0_user.id)
+      expect(reply.raw).to eq("Staff-only automated note from a TL0 user.")
+      expect(reply.post_type).to eq(Post.types[:whisper])
+      expect(private_message.topic_allowed_users.where(user_id: tl0_user.id)).to be_blank
+      expect(result["post"]).to include(
+        "id" => reply.id,
+        "username" => tl0_user.username,
+        "post_type" => Post.types[:whisper],
+      )
+    end
+
+    it "creates a post in a closed topic when bypassing permission checks", :aggregate_failures do
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
+      topic = first_post.topic
+      topic.update!(closed: true)
+
+      expect do
+        execute_node(
+          configuration: {
+            "operation" => "create",
+            "topic_id" => topic.id.to_s,
+            "raw" => "System authorization can reply to closed topics.",
+            "author_username" => tl0_user.username,
+            "bypass_permission_checks" => true,
+          },
+          item: item,
+        )
+      end.to change { topic.posts.count }.by(1)
+
+      reply = topic.posts.order(:id).last
+      expect(reply.user_id).to eq(tl0_user.id)
+      expect(reply.raw).to eq("System authorization can reply to closed topics.")
+    end
+
     it "raises when creating in a closed or archived topic" do
       first_post = Fabricate(:post, user: user, raw: "First post", post_number: 1)
       topic = first_post.topic

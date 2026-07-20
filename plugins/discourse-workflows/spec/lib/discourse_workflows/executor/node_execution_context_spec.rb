@@ -982,6 +982,55 @@ RSpec.describe DiscourseWorkflows::Executor::NodeExecutionContext do
     end
   end
 
+  describe "#create_post" do
+    it "records bypass provenance custom fields on the created post" do
+      author = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      workflow = Fabricate(:discourse_workflows_workflow, published: true)
+      first_post = Fabricate(:post)
+
+      ctx =
+        described_class.new(input_items: [], resolver: nil, workflow: workflow, node_id: "post-1")
+
+      post =
+        ctx.create_post(
+          user: author,
+          raw: "Reply created with a permission bypass",
+          topic_id: first_post.topic_id,
+          bypass_permission_checks: true,
+        )
+
+      expect(post.reload.custom_fields).to include(
+        described_class::BYPASSED_PERMISSION_CHECKS_FIELD => "true",
+        described_class::WORKFLOW_ID_FIELD => workflow.id.to_s,
+        described_class::WORKFLOW_VERSION_ID_FIELD => workflow.active_version_id.to_s,
+        described_class::NODE_ID_FIELD => "post-1",
+      )
+    end
+
+    it "does not record provenance custom fields without a bypass" do
+      author = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      workflow = Fabricate(:discourse_workflows_workflow, published: true)
+      first_post = Fabricate(:post)
+
+      ctx =
+        described_class.new(input_items: [], resolver: nil, workflow: workflow, node_id: "post-1")
+
+      post =
+        ctx.create_post(
+          user: author,
+          raw: "Reply created with the author permissions",
+          topic_id: first_post.topic_id,
+        )
+
+      expect(post.reload.custom_fields.keys).not_to include(
+        described_class::BYPASSED_PERMISSION_CHECKS_FIELD,
+        described_class::WORKFLOW_ID_FIELD,
+        described_class::WORKFLOW_VERSION_ID_FIELD,
+        described_class::NODE_ID_FIELD,
+      )
+    end
+  end
+
   def workflow_with_data_table_dependency(data_table)
     graph =
       build_workflow_graph do |g|

@@ -382,6 +382,9 @@ en:
         filter_closed: Closed
         filter_archived: Archived
         filter_input_placeholder: Search channel by name
+        filter_joined_all: "All"
+        filter_joined_joined: "Joined"
+        filter_joined_not_joined: "Not joined"
 
       chat_message_separator:
         today: Today

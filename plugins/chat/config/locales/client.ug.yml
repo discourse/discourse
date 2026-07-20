@@ -323,6 +323,8 @@ ug:
         filter_closed: تاقالدى
         filter_archived: ئارخىپلاشتۇرۇلغان
         filter_input_placeholder: ئىسمى بويىچە قانال ئىزدە
+        filter_joined_all: "ھەممىسى"
+        filter_joined_joined: "قوشۇلدى"
       chat_message_separator:
         today: بۈگۈن
         yesterday: تۈنۈگۈن
@@ -389,6 +391,9 @@ ug:
         memberships_count:
           one: "%{count} ئەزا"
           other: "%{count} ئەزا"
+        preview_card:
+          log_in: "تىزىمغا كىرىش"
+          sign_up: "تىزىملىتىڭ"
       create_channel:
         threading:
           label: "تېما رەتلەشنى قوزغات"

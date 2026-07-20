@@ -16,3 +16,6 @@ te:
         week: "వారం"
         month: "ఈ నెల"
         year: "సంవత్సరం"
+  discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
