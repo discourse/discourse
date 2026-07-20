@@ -7150,6 +7150,65 @@ en:
       new_features:
         title: "What's new?"
         check_for_updates: "Check for updates"
+      browser_traffic:
+        title: "Site traffic explorer"
+        description: "Explore recent site traffic by applying filters and comparing breakdowns."
+        loaded: "Site traffic results loaded."
+        error: "Site traffic couldn't be loaded. Try again."
+        timeout: "The traffic query timed out. Narrow the date range or try again."
+        retry: "Retry"
+        clear_all: "Clear all"
+        pageviews: "Pageviews"
+        chart_title: "Site traffic"
+        filter_by: "Filter to %{dimension}: %{value}"
+        active_filter: "%{dimension} is %{value}"
+        operators:
+          is: "is"
+        analysis:
+          events: "Analyzing %{count} recent events"
+          limited: "Limited"
+          limited_description: "Limited to the latest %{count} pageviews. Earlier pageviews in this date range are excluded; select a shorter date range for complete results."
+        metrics:
+          pageviews: "Pageviews"
+          sessions: "Distinct sessions"
+          logged_in: "Logged-in share"
+          anonymous: "Anonymous share"
+          bounce_rate: "Bounce rate"
+          average_session_duration: "Avg. session duration"
+        cards:
+          sources: "Traffic sources"
+          clients: "Traffic clients"
+        dimensions:
+          url: "URL"
+          traffic_source: "Traffic source"
+          country: "Country"
+          network: "Network"
+          ip_address: "IP address"
+          browser: "Browser"
+        tabs:
+          sources: "Sources"
+          networks: "Networks"
+          pages: "Top pages"
+          countries: "Countries"
+          browsers: "Browsers"
+          ip_addresses: "IP addresses"
+        browsers:
+          chrome: "Chrome"
+          discoursehub: "DiscourseHub"
+          edge: "Microsoft Edge"
+          firefox: "Firefox"
+          ie: "Internet Explorer"
+          opera: "Opera"
+          safari: "Safari"
+          unknown: "Unknown browser"
+        null_values:
+          normalized_url: "Unknown page"
+          normalized_referrer: "Direct or unknown"
+          country_code: "Unknown country"
+          asn: "Unknown network"
+          ip_address: "Unknown IP address"
+          user_agent: "Unknown user agent"
+
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -7455,6 +7514,10 @@ en:
             title: "Top referrers"
             empty: "No referrer data for this period."
             error: "Couldn't load top referrers. Try refreshing the page."
+          top_urls:
+            title: "Top URLs"
+            empty: "No URL data for this period."
+            error: "Couldn't load top URLs. Try refreshing the page."
           series:
             logged_in: "Logged in"
             anonymous: "Anonymous"

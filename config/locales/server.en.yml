@@ -1637,6 +1637,12 @@ en:
       labels:
         normalized_referrer: "Referrer"
         count: "Visits"
+    top_urls_by_browser_pageviews:
+      title: "Top URLs"
+      description: "URLs receiving the most browser pageviews in the selected period."
+      labels:
+        normalized_url: "URL"
+        count: "Visits"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -2901,6 +2907,7 @@ en:
     enable_form_templates: "Enable the form templates feature. With it, you can enforce a structured form with data validation as part of the topic creation flow."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
+    enable_site_traffic_explorer: "Enable the experimental Site traffic explorer for administrators."
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."

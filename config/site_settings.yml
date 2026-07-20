@@ -4516,6 +4516,11 @@ dashboard:
     client: true
 
 experimental:
+  enable_site_traffic_explorer:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
   reporting_improvements:
     default: false
     client: true

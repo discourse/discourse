@@ -6,6 +6,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_REFERRER_LENGTH = 2000
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
+  MAX_NORMALIZED_URL_LENGTH = 2000
   RETENTION_PERIOD = 3.months
   SOURCE_PIGGYBACK = 1
   SOURCE_BEACON = 2
@@ -131,6 +132,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
+        asn_organization: payload[:asn_organization],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
@@ -146,15 +148,19 @@ class BrowserPageviewEvent < ActiveRecord::Base
 
     def attributes_from_payload(payload)
       normalized_referrer = BrowserPageviewReferrerInspector.normalize(payload[:referrer])
+      normalized_url = BrowserPageviewUrlInspector.normalize(payload[:url])
 
       {
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
+        normalized_url: normalized_url&.slice(0, MAX_NORMALIZED_URL_LENGTH),
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
         asn: payload[:asn],
+        asn_organization: payload[:asn_organization],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
+        browser_family: BrowserDetection.browser(payload[:user_agent]).to_s,
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
@@ -197,12 +203,22 @@ class BrowserPageviewEvent < ActiveRecord::Base
     end
   end
 
-  before_save :truncate_fields
+  before_save :normalize_url, :normalize_browser_family, :truncate_fields
 
   private
 
+  def normalize_url
+    self.normalized_url = BrowserPageviewUrlInspector.normalize(url)
+  end
+
+  def normalize_browser_family
+    self.browser_family = BrowserDetection.browser(user_agent).to_s
+  end
+
   def truncate_fields
     self.url = url.slice(0, MAX_URL_LENGTH) if url.present?
+    self.normalized_url =
+      normalized_url.slice(0, MAX_NORMALIZED_URL_LENGTH) if normalized_url.present?
     self.referrer = referrer.slice(0, MAX_REFERRER_LENGTH) if referrer.present?
     self.user_agent = user_agent.slice(0, MAX_USER_AGENT_LENGTH) if user_agent.present?
     self.session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH) if session_id.present?
@@ -218,10 +234,13 @@ end
 #
 #  id                          :bigint           not null, primary key
 #  asn                         :integer
+#  asn_organization            :string
+#  browser_family              :string(20)
 #  country_code                :string(2)
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
+#  normalized_url                :string(2000)
 #  referrer                    :string(2000)
 #  score                       :integer
 #  source                      :integer          default("piggyback"), not null
@@ -239,6 +258,8 @@ end
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_session_created_at                   (session_id,created_at)
+#  idx_bpe_source_browser_created_at_id          (source,browser_family,created_at DESC,id DESC)
+#  idx_bpe_source_created_at_id                  (source,created_at DESC,id DESC)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)

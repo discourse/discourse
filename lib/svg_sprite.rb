@@ -121,6 +121,10 @@ module SvgSprite
         fab-android
         fab-apple
         fab-chrome
+        fab-edge
+        fab-firefox-browser
+        fab-opera
+        fab-safari
         fab-discord
         fab-discourse
         fab-facebook
