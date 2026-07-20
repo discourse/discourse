@@ -5139,7 +5139,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
@@ -5872,7 +5872,7 @@ en:
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
-      choose_for_topic: "Optional tags"
+      choose_for_topic: "Optional tags…"
       choose_for_topic_required:
         one: "select at least %{count} tag…"
         other: "select at least %{count} tags…"
