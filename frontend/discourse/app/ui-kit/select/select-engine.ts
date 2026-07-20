@@ -142,6 +142,14 @@ export interface SelectEngineOptions {
    */
   filterBy?: string | ((item: SelectItem, term: string) => boolean);
 
+  /**
+   * Minimum filter length before the list searches. `0` (default) searches on any input.
+   * A query shorter than this — including the empty query — is "below threshold": the list
+   * issues no source call and the component shows a keep-typing hint. See
+   * {@link SelectEngine#belowMinChars}.
+   */
+  minChars?: number;
+
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
 
@@ -279,6 +287,7 @@ export default class SelectEngine {
 
   #multiple: boolean;
   #identifiers: string[];
+  #minChars: number;
   #valueField: string;
   #labelField: string;
   #filterBy?: string | ((item: SelectItem, term: string) => boolean);
@@ -348,6 +357,7 @@ export default class SelectEngine {
   constructor(opts: SelectEngineOptions = {}) {
     this.#multiple = opts.multiple ?? false;
     this.#identifiers = makeArray(opts.identifiers) as string[];
+    this.#minChars = opts.minChars ?? 0;
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     this.#filterBy = opts.filterBy;
@@ -404,6 +414,26 @@ export default class SelectEngine {
   /** Whether the source is server-backed (drives debouncing). */
   get isAsync(): boolean {
     return this.#isAsync;
+  }
+
+  /** The minimum filter length before the list searches (`0` = no minimum). */
+  get minChars(): number {
+    return this.#minChars;
+  }
+
+  /**
+   * Whether the current query is shorter than {@link minChars} — the "keep typing" state, in
+   * which the list should not search. Reads the filter reactively, so the component's gate
+   * re-evaluates as the user types. An empty query counts as below the threshold: with a
+   * minimum set, opening should prompt for input, not load (and then hide) the whole list.
+   */
+  get belowMinChars(): boolean {
+    return this.#minChars > 0 && this.#state.filter.length < this.#minChars;
+  }
+
+  /** How many more characters are needed to reach {@link minChars} (reactive). */
+  get remainingMinChars(): number {
+    return Math.max(0, this.#minChars - this.#state.filter.length);
   }
 
   getItemLabel(item: SelectItem | null | undefined): string {

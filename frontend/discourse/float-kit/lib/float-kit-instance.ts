@@ -26,6 +26,17 @@ function cancelEvent(event: Event) {
  * orchestrates (`options`, `trigger`, `expanded`, and the trigger/pointer actions).
  */
 export default abstract class FloatKitInstance {
+  /**
+   * The single source of truth for the float-kit modal decision: does a float with this
+   * `modalForMobile` option render as a mobile modal (an `aria-modal` dialog) instead of an
+   * inline popover? Exposed as a static so the instance-less caller
+   * (`menu.shouldRenderInModal`, which decides before an instance exists) resolves through the
+   * exact same formula and can't drift from what a float actually renders.
+   */
+  static resolveRenderInModal(site: Site, modalForMobile?: boolean): boolean {
+    return site.mobileView && !!modalForMobile;
+  }
+
   @service declare site: Site;
 
   @tracked id: string | null = null;
@@ -50,6 +61,14 @@ export default abstract class FloatKitInstance {
   declare delayedHoverTimeout: ReturnType<typeof discourseLater>;
 
   declare openedByDelayedHover: boolean;
+
+  /** Whether THIS instance renders in a mobile modal (see {@link resolveRenderInModal}). */
+  get renderInModal(): boolean {
+    return FloatKitInstance.resolveRenderInModal(
+      this.site,
+      this.options.modalForMobile
+    );
+  }
 
   /**
    * The trigger narrowed to a real element, or `null` when it is a virtual reference.

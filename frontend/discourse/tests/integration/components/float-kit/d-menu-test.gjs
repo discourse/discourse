@@ -1,17 +1,23 @@
 import { array, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import {
   click,
+  find,
   render,
+  rerender,
   settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ModalContainer from "discourse/components/modal-container";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DMenus from "discourse/float-kit/components/d-menus";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -85,6 +91,47 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu-modal[data-identifier='foo']").hasText("content");
+  });
+
+  test("DMenu uses a modal while DTooltip stays inline on mobile", async function (assert) {
+    forceMobile();
+
+    await render(
+      <template>
+        <div class="menu-trigger"></div>
+        <div class="tooltip-trigger"></div>
+        <DMenus />
+        <DTooltips />
+        <ModalContainer />
+      </template>
+    );
+
+    const menu = await getOwner(this)
+      .lookup("service:menu")
+      .show(find(".menu-trigger"), {
+        content: "menu content",
+        identifier: "mobile-menu",
+        modalForMobile: true,
+      });
+    const tooltip = await getOwner(this)
+      .lookup("service:tooltip")
+      .show(find(".tooltip-trigger"), {
+        content: "tooltip content",
+        identifier: "mobile-tooltip",
+      });
+    await settled();
+
+    assert.true(menu.renderInModal, "the menu instance selects the modal path");
+    assert.false(
+      tooltip.renderInModal,
+      "the tooltip instance keeps the default inline path"
+    );
+    assert
+      .dom(".fk-d-menu-modal")
+      .hasText("menu content", "the menu renders in a modal");
+    assert
+      .dom(".fk-d-tooltip__content[data-identifier='mobile-tooltip']")
+      .hasText("tooltip content", "the tooltip renders as an inline float");
   });
 
   test("@modalForMobile - swipe down to close", async function (assert) {
@@ -651,6 +698,152 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     await open();
 
     assert.dom("span.fk-d-menu__trigger").exists();
+  });
+
+  test("@disabled blocks a custom trigger and updates reactively", async function (assert) {
+    this.disabled = true;
+
+    await render(
+      <template>
+        <DMenu
+          @disabled={{this.disabled}}
+          @inline={{true}}
+          @triggerComponent={{dElement "div"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("a custom trigger cannot open while disabled");
+
+    this.set("disabled", false);
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .exists("clearing disabled after mount restores trigger opening");
+
+    await click(".fk-d-menu__trigger");
+    this.set("disabled", true);
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("setting disabled after mount re-gates trigger opening");
+  });
+
+  test("@disabled blocks the default button trigger", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @disabled={{true}}
+          @inline={{true}}
+          @label="label"
+          @content="content"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".fk-d-menu__trigger")
+      .isDisabled("the default trigger retains its native disabled state");
+
+    find(".fk-d-menu__trigger").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    await settled();
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("the default trigger cannot open while disabled");
+  });
+
+  test("disabled delayed-hover does not swallow the first click after re-enabling", async function (assert) {
+    this.disabled = true;
+
+    await render(
+      <template>
+        <DMenu
+          @disabled={{this.disabled}}
+          @inline={{true}}
+          @triggerComponent={{dElement "div"}}
+          @triggers={{array "delayed-hover" "click"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    triggerEvent(".fk-d-menu__trigger", "pointerenter");
+    await settled();
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist("disabled vetoes the delayed-hover open");
+
+    this.set("disabled", false);
+    await click(".fk-d-menu__trigger");
+    assert
+      .dom(".fk-d-menu")
+      .exists("the first click after re-enabling opens the menu");
+  });
+
+  test("disabling during beforeTrigger vetoes the pending open", async function (assert) {
+    this.disabled = false;
+    this.beforeTrigger = () =>
+      new Promise((resolve) => (this.resolveBeforeTrigger = resolve));
+
+    await render(
+      <template>
+        <DMenu
+          @beforeTrigger={{this.beforeTrigger}}
+          @disabled={{this.disabled}}
+          @inline={{true}}
+          @triggerComponent={{dElement "div"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    find(".fk-d-menu__trigger").dispatchEvent(
+      new MouseEvent("click", { bubbles: true })
+    );
+    this.set("disabled", true);
+    await rerender();
+    this.resolveBeforeTrigger();
+    await settled();
+
+    assert
+      .dom(".fk-d-menu")
+      .doesNotExist(
+        "a pending trigger cannot open after the menu becomes disabled"
+      );
+  });
+
+  test("a disabled trigger still consumes its click (does not fall through to a clickable ancestor)", async function (assert) {
+    let ancestorClicks = 0;
+    const onAncestorClick = () => ancestorClicks++;
+
+    await render(
+      <template>
+        {{! eslint-disable ember/template-no-invalid-interactive }}
+        <div {{on "click" onAncestorClick}}>
+          <DMenu
+            @disabled={{true}}
+            @inline={{true}}
+            @triggerComponent={{dElement "div"}}
+            @content="content"
+          />
+        </div>
+      </template>
+    );
+
+    await click(".fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu").doesNotExist("the disabled menu does not open");
+    assert.strictEqual(
+      ancestorClicks,
+      0,
+      "the disabled trigger consumes the click instead of activating its ancestor"
+    );
   });
 
   test("@matchTriggerWidth", async function (assert) {

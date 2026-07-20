@@ -2,12 +2,14 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { trackedSet } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import type {
   FloatKitTrigger,
   MenuOptions,
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
+import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import type Site from "discourse/models/site";
 
 /**
  * The service that shows menus imperatively, outside the `<DMenu />` component.
@@ -17,7 +19,21 @@ import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
  * and content directly.
  */
 export default class Menu extends Service {
+  @service declare site: Site;
+
   registeredMenus = trackedSet<DMenuInstance>();
+
+  /**
+   * Whether a menu with the given `modalForMobile` option renders as a mobile modal (an
+   * `aria-modal` dialog) rather than an inline popover. This is the instance-less accessor a
+   * caller uses before a menu exists; it delegates to the shared formula in
+   * {@link FloatKitInstance.resolveRenderInModal}, so it can't drift from what `<DMenu>` renders.
+   *
+   * @param modalForMobile - the menu's `@modalForMobile` option.
+   */
+  shouldRenderInModal(modalForMobile?: boolean): boolean {
+    return FloatKitInstance.resolveRenderInModal(this.site, modalForMobile);
+  }
 
   /**
    * Render a menu.
