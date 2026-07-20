@@ -1,8 +1,7 @@
 @use "sass:map";
 @use "breakpoints";
 
-// The shared scale plus an `xs` step, since containers (e.g. sidebars) can
-// be narrower than any viewport.
+// Containers add an `xs` breakpoint step, since containers can be narrower than any viewport
 $breakpoints: map.merge(
   (
     xs: 20rem,
