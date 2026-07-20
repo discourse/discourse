@@ -1,12 +1,7 @@
 @use "sass:map";
+@use "breakpoints";
 
-$breakpoints: (
-  sm: 40rem,
-  md: 48rem,
-  lg: 64rem,
-  xl: 80rem,
-  2xl: 96rem,
-);
+$breakpoints: breakpoints.$breakpoints;
 
 @function _get-breakpoint($bp) {
   @if not map.has-key($breakpoints, $bp) {

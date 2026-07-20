@@ -1,0 +1,9 @@
+// Shared breakpoint scale used by both the viewport (media query) and
+// container (container query) libraries.
+$breakpoints: (
+  sm: 40rem,
+  md: 48rem,
+  lg: 64rem,
+  xl: 80rem,
+  2xl: 96rem,
+);
