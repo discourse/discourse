@@ -47,6 +47,49 @@
   justify-content: flex-start;
 }
 
+.d-combobox__trigger.--control {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  cursor: pointer;
+
+  &:focus-visible {
+    @include default-focus;
+  }
+}
+
+// Disabled dims the whole trigger and blocks the pointer; readonly stays visually active
+// (it is focusable and readable, just not editable — the aria/native state carries that).
+.d-combobox__trigger.--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// Leading icon and the growing value keep the trailing clear + caret pinned to the end.
+.d-combobox__leading-icon {
+  flex-shrink: 0;
+  color: var(--primary-medium);
+}
+
+.d-combobox__value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.d-combobox__clear {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
 .d-combobox__presentation {
   min-width: 0;
   overflow: hidden;
@@ -56,6 +99,11 @@
 
 .d-combobox__placeholder {
   color: var(--primary-medium);
+
+  // As a direct trigger child (control empty state) it grows so the caret stays pinned right;
+  // nested inside a non-flex `.d-combobox__presentation` (mobile typeahead) this is inert.
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .d-combobox__unresolved {
@@ -137,6 +185,7 @@
 }
 
 .d-combobox__empty,
+.d-combobox__min-chars,
 .d-combobox__error {
   padding: 0.75em;
   color: var(--primary-medium);

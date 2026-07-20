@@ -16,6 +16,13 @@ interface SelectItemSignature {
     descriptor: SelectDescriptor;
     multiple?: boolean;
     selectedIcon?: string;
+    /**
+     * When true, the whole control is disabled/read-only and no option may be activated,
+     * regardless of the row's own flag. Closing the overlay on lock is asynchronous (it
+     * awaits the exit animation), so an option can stay clickable for that window — the
+     * lock has to gate the activation itself, not only the close.
+     */
+    locked?: boolean;
   };
   Element: HTMLLIElement;
   Blocks: {
@@ -34,12 +41,12 @@ interface SelectItemSignature {
  */
 export default class SelectItem extends Component<SelectItemSignature> {
   /**
-   * Activates the item unless it is disabled (the modifier already skips disabled
-   * items for the keyboard; this guards the pointer path).
+   * Activates the item unless the control is locked or the row itself is disabled (the
+   * modifier already skips disabled items for the keyboard; this guards the pointer path).
    */
   @action
   handleClick(): void {
-    if (this.args.descriptor.flags.disabled) {
+    if (this.args.locked || this.args.descriptor.flags.disabled) {
       return;
     }
     this.args.engine.activate(this.args.descriptor.item);

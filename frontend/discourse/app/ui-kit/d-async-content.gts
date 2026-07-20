@@ -272,10 +272,13 @@ export default class DAsyncContent<T> extends Component<
     // When a resolve fn is provided (the debounced path) we settle the outer promise;
     // otherwise we return the function's result directly (a promise OR a sync value).
     //
-    // The debounced path only runs against async data sources, so the result is
-    // cast to `Promise<T>` to settle the outer promise via `.then`/`.catch`.
+    // A consumer can force debouncing on a synchronous source (`@debounce={{true}}` over
+    // `@items`/a sync `@load`), so the result may be a plain value rather than a promise;
+    // `Promise.resolve` assimilates either shape (a value, a native promise, or a thenable)
+    // before settling the outer promise, so the debounced path never calls `.then` on a
+    // non-promise.
     return resolve
-      ? (asyncData(context, { signal }) as Promise<T>)
+      ? Promise.resolve(asyncData(context, { signal }))
           .then(resolve)
           .catch(reject)
       : asyncData(context, { signal });
