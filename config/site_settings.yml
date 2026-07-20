@@ -2681,6 +2681,8 @@ files:
       - staff
       - no_one
     validator: "SelectableAvatarsModeValidator"
+  selectable_avatars_random_on_signup:
+    default: true
   selectable_avatars:
     default: ""
     client: true
