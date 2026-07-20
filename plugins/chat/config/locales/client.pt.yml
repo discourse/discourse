@@ -117,6 +117,8 @@ pt:
         filter_all: Tudo
         filter_open: Abrir
         filter_closed: Fechado
+        filter_joined_all: "Todos"
+        filter_joined_joined: "Juntou-se"
       chat_message_separator:
         today: Hoje
         yesterday: Ontem
@@ -141,6 +143,9 @@ pt:
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
+      channel:
+        preview_card:
+          log_in: "Efetuar login"
       create_channel:
         description: "Descrição"
         title: "Novo canal"

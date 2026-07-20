@@ -87,6 +87,8 @@ ar:
     holiday_status:
       description: "في عطلة"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%-d %B %Y"
     notifications:
       before_event_reminder: "%{title} على وشك البدء."
       after_event_reminder: "انتهى %{title}."

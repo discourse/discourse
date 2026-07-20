@@ -352,6 +352,8 @@ de:
         filter_closed: Geschlossen
         filter_archived: Archiviert
         filter_input_placeholder: Kanal nach Namen suchen
+        filter_joined_all: "Alle"
+        filter_joined_joined: "Beigetreten"
       chat_message_separator:
         today: Heute
         yesterday: Gestern
@@ -423,6 +425,9 @@ de:
         memberships_count:
           one: "%{count} Mitglied"
           other: "%{count} Mitglieder"
+        preview_card:
+          log_in: "Anmelden"
+          sign_up: "Registrierung"
       create_channel:
         threading:
           label: "Threading aktivieren"
