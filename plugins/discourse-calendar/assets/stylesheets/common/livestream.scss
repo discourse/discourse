@@ -103,6 +103,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   &__waiting-wrapper {
     border: 1px solid var(--primary-300);
     border-radius: var(--d-border-radius);
+    overflow: hidden;
   }
 
   &__waiting {
