@@ -49,7 +49,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
 
-              expect(select_kit).to have_selected_name("category&hellip;")
+              expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
             end
           end
         end
@@ -79,7 +79,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
               category_page.new_topic_button.click
               select_kit =
                 PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-              expect(select_kit).to have_selected_name("category&hellip;")
+              expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
             end
           end
         end
@@ -91,7 +91,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
             select_kit =
               PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-            expect(select_kit).to have_selected_name("category&hellip;")
+            expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
           end
         end
       end
@@ -109,7 +109,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting" do
 
         page.find("#create-topic").click
         select_kit = PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-        expect(select_kit).to have_selected_name("category&hellip;")
+        expect(select_kit).to have_selected_name(I18n.t("js.category.choose"))
       end
     end
   end
