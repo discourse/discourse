@@ -171,7 +171,7 @@ export default class BrowserTrafficExplorer extends Component {
       const count = I18n.toNumber(value, { precision: 2 })
         .replace(/([.,]\d*[1-9])0$/, "$1")
         .replace(/[.,]00$/, "");
-      return i18n("dates.tiny.x_seconds", { count });
+      return i18n("admin.browser_traffic.duration_seconds", { count });
     }
 
     return formatMinutesSeconds(value);

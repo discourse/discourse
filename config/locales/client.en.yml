@@ -7160,6 +7160,7 @@ en:
         clear_all: "Clear all"
         pageviews: "Pageviews"
         chart_title: "Site traffic"
+        duration_seconds: "%{count}s"
         filter_by: "Filter to %{dimension}: %{value}"
         active_filter: "%{dimension} is %{value}"
         operators:
