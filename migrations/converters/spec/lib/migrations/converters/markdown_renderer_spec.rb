@@ -15,6 +15,25 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         described_class::UnknownFormat,
       )
     end
+
+    it "unwraps a link nested in a link (CommonMark legality)" do
+      # A link inside a link is illegal Markdown; markbridge's default rules
+      # unwrap the inner one, keeping only its label, so the outer link stays
+      # the single link.
+      expect(
+        renderer.to_markdown("[url=https://a.com]outer [url=https://b.com]inner[/url] end[/url]"),
+      ).to eq("[outer inner end](https://a.com)")
+    end
+
+    it "hoists a linked image out of the link (Discourse policy)" do
+      # Discourse doesn't render a linked image inline; our rule moves the image
+      # out so the link renders bare and the image follows it.
+      expect(
+        renderer.to_markdown(
+          "[url=https://example.com][img]https://example.com/pic.png[/img][/url]",
+        ),
+      ).to eq("https://example.com![](https://example.com/pic.png)")
+    end
   end
 
   describe "#to_markdown deferring embeds into an EmbedBuffer" do
@@ -202,6 +221,22 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       # label, which the :link handler will accept for deferral.
       expect(node.children.map(&:class)).to eq([Markbridge::AST::Text])
       expect(node.children.first.text).to eq("hi @sam")
+    end
+
+    it "leaves a mention-in-link label deferrable so the link still defers" do
+      # A raw Mention would make the link fall back to native rendering (see the
+      # embed-handlers specs); once the normalizer textifies it, the label is
+      # plain text and the :link handler records it instead. Formats that emit
+      # mentions need nokogiri (absent from this gem's bundle), so exercise the
+      # normalizer and the deferral predicate directly on the AST.
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
+      document = Markbridge::AST::Document.new
+      document << node
+
+      described_class.normalizer.normalize(document)
+
+      expect(described_class.send(:deferrable_label?, node)).to be(true)
     end
 
     it "is what to_markdown converts through" do

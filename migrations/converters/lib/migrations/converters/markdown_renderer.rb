@@ -105,9 +105,10 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # Markbridge's normalizer has already made the label legal —
-              # images, uploads, attachments and block content are hoisted out
-              # of links before rendering. What's left to decide is deferral:
+              # The normalizer has already made the label legal — markbridge's
+              # defaults hoist block content out, and our Discourse rules hoist
+              # images, uploads and attachments out of the link before
+              # rendering. What's left to decide is deferral:
               # only a label of plain text or simple inline formatting may be
               # recorded into the `text` column, because a deferrable embed
               # nested in a deferred label would mint its token into that
@@ -184,18 +185,42 @@ module Migrations
         require FORMATS.fetch(@format)
       end
 
-      # The shared Discourse normalizer plus our one consumer rule: a mention
-      # inside a link label becomes plain text before rendering. Discourse
-      # doesn't cook mentions inside links, so nothing is lost — and as text the
-      # label stays deferrable, so the link keeps its import-time rewrite
-      # instead of falling back to native rendering. The trade: the name is
-      # frozen source text, not remapped through the user map (fine for what is
-      # label text either way). Built once; safe to share, the normalizer keeps
-      # no per-run state.
+      # Markbridge's default rules only enforce CommonMark legality (unwrapping a
+      # link nested in a link, hoisting block and multi-line-code content out of
+      # inline containers). The Discourse policy on top is ours to add:
+      #
+      # The three `hoist_after` rules move an image-like node (image, upload,
+      # attachment) out of a surrounding link. Discourse doesn't render a linked
+      # image inline, so the embed leaves the link and follows it in the output
+      # rather than being lost.
+      #
+      # The mention rule turns a mention inside a link label into plain text.
+      # Discourse doesn't cook mentions inside links, so nothing is lost — and as
+      # text the label stays deferrable, so the link keeps its import-time
+      # rewrite instead of falling back to native rendering. The trade: the name
+      # is frozen source text, not remapped through the user map (fine for what
+      # is label text either way).
+      #
+      # Built once; safe to share, the frozen normalizer keeps no per-run state.
       def self.normalizer
         @normalizer ||=
           Markbridge::Normalizer
-            .for(:discourse)
+            .default
+            .rule(
+              parent: Markbridge::AST::Url,
+              child: Markbridge::AST::Image,
+              strategy: :hoist_after,
+            )
+            .rule(
+              parent: Markbridge::AST::Url,
+              child: Markbridge::AST::Upload,
+              strategy: :hoist_after,
+            )
+            .rule(
+              parent: Markbridge::AST::Url,
+              child: Markbridge::AST::Attachment,
+              strategy: :hoist_after,
+            )
             .rule(parent: Markbridge::AST::Url, child: Markbridge::AST::Mention, strategy: :textify)
             .freeze
       end

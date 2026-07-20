@@ -5,7 +5,7 @@ PATH
       activesupport
       colored2
       i18n
-      markbridge (>= 0.3.0)
+      markbridge (>= 0.3.1)
       migrations-core
       pg
       zeitwerk
@@ -349,7 +349,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    markbridge (0.3.0)
+    markbridge (0.3.1)
     matrix (0.4.3)
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
@@ -1119,7 +1119,7 @@ CHECKSUMS
   lru_redux (1.1.0) sha256=ee71d0ccab164c51de146c27b480a68b3631d5b4297b8ffe8eda1c72de87affb
   lz4-ruby (0.3.3) sha256=011be5ee230cfddc8308d4e2e0b05300c7bc755a887de799377ca6c5b6aede89
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
-  markbridge (0.3.0) sha256=ec49fc84eb3817c5f83eaa670464040d3284218836579ef9132549ab54a58549
+  markbridge (0.3.1) sha256=a36dff4e79e666fe7f944d4a806f507212191b80d22878ab3ee9008d9df975a3
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
