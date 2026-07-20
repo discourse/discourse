@@ -1449,7 +1449,6 @@ body.has-sidebar-page {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    gap: var(--space-2);
 
     @include viewport.from(sm) {
       padding: var(--space-2) var(--space-4);
@@ -1486,6 +1485,13 @@ body.has-sidebar-page {
           margin-left: auto;
           flex: unset !important;
           margin-right: 0 !important;
+
+          // temporary overrule, should be done in template eventually
+          .btn.btn-primary {
+            background: transparent;
+            color: var(--tertiary);
+            font-weight: bold;
+          }
         }
 
         #draft-status {
@@ -1529,7 +1535,7 @@ body.has-sidebar-page {
     }
 
     .reply-to {
-      padding: var(--space-3);
+      padding: var(--space-1) var(--space-3);
     }
   }
 }
