@@ -3,6 +3,15 @@ import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
+const FILTER_QUERY_PARAMS = {
+  normalized_url: "url",
+  normalized_referrer: "source",
+  country_code: "country",
+  asn: "network",
+  ip_address: "ip",
+  browser: "browser",
+};
+
 export default class AdminBrowserTrafficRoute extends DiscourseRoute {
   @service router;
   @service siteSettings;
@@ -34,14 +43,12 @@ export default class AdminBrowserTrafficRoute extends DiscourseRoute {
     const filters = this.filtersFromParams(params);
 
     try {
-      const result = await ajax("/admin/browser-traffic.json", {
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
+      const result = await ajax("/admin/browser-traffic/data.json", {
+        data: {
           start_date: startDate,
           end_date: endDate,
-          browser_traffic_filters: filters,
-        }),
+          ...this.filterParams(filters),
+        },
       });
       return { startDate, endDate, filters, result };
     } catch (error) {
@@ -73,6 +80,15 @@ export default class AdminBrowserTrafficRoute extends DiscourseRoute {
     }
 
     return filters;
+  }
+
+  filterParams(filters) {
+    return Object.fromEntries(
+      Object.entries(filters).map(([facet, value]) => [
+        FILTER_QUERY_PARAMS[facet],
+        value === null ? "__null__" : value,
+      ])
+    );
   }
 
   titleToken() {

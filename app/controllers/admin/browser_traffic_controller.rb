@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 class Admin::BrowserTrafficController < Admin::AdminController
+  FILTER_PARAMS = {
+    "normalized_url" => :url,
+    "normalized_referrer" => :source,
+    "country_code" => :country,
+    "asn" => :network,
+    "ip_address" => :ip,
+    "browser" => :browser,
+  }.freeze
+  private_constant :FILTER_PARAMS
+
   def show
     raise Discourse::NotFound unless SiteSetting.enable_browser_traffic_explorer
 
@@ -20,13 +30,15 @@ class Admin::BrowserTrafficController < Admin::AdminController
   private
 
   def permitted_filters
-    raw_filters = params[:browser_traffic_filters]
-    return {} if raw_filters.nil?
-    raise BrowserTrafficExplorerQuery::InvalidParameter unless raw_filters.respond_to?(:permit)
+    FILTER_PARAMS.each_with_object({}) do |(facet, parameter), filters|
+      next unless params.key?(parameter)
 
-    allowed_keys = BrowserTrafficExplorerQuery::FACETS.keys
-    raise BrowserTrafficExplorerQuery::InvalidParameter if (raw_filters.keys - allowed_keys).any?
-
-    raw_filters.permit(*allowed_keys).to_h
+      value = params[parameter]
+      value = nil if value == "__null__"
+      value = Integer(value, 10) if facet == "asn" && value.present?
+      filters[facet] = value
+    end
+  rescue ArgumentError, TypeError
+    raise BrowserTrafficExplorerQuery::InvalidParameter
   end
 end

@@ -275,6 +275,15 @@ export default class BrowserTrafficExplorer extends Component {
     this.router.replaceWith("adminBrowserTraffic", { queryParams });
   }
 
+  filterParams() {
+    return Object.fromEntries(
+      Object.entries(this.filters).map(([facet, value]) => [
+        FILTER_QUERY_PARAMS[facet],
+        value === null ? "__null__" : value,
+      ])
+    );
+  }
+
   @action
   retry() {
     this.load();
@@ -289,15 +298,13 @@ export default class BrowserTrafficExplorer extends Component {
     this.errorType = null;
 
     try {
-      this.data = await ajax("/admin/browser-traffic.json", {
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
+      this.data = await ajax("/admin/browser-traffic/data.json", {
+        data: {
           start_date: this.startDate.format("YYYY-MM-DD"),
           end_date: this.endDate.format("YYYY-MM-DD"),
           snapshot_event_id: this.data?.snapshot_event_id,
-          browser_traffic_filters: this.filters,
-        }),
+          ...this.filterParams(),
+        },
       });
       this.a11y.announce(i18n("admin.browser_traffic.loaded"), "polite");
     } catch (error) {
