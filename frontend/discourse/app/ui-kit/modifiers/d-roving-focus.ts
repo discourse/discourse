@@ -488,7 +488,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         target.classList.add(this.activeClass);
       }
       this.#listenElement?.setAttribute("aria-activedescendant", id);
-      target.scrollIntoView({ block: "nearest" });
+      this.#scrollActiveIntoView(target);
     } else {
       for (const el of items) {
         el.tabIndex = this.tabStop && el === target ? 0 : -1;
@@ -496,6 +496,54 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       target.focus();
     }
     this.onActiveChange?.(target);
+  }
+
+  /**
+   * Scrolls the active item into view within its nearest scrollable ancestor ONLY — never the
+   * page. `scrollIntoView` scrolls every scrollable ancestor including the window, and while an
+   * overlay listbox is portalled and not yet positioned by floating-ui, the item's page position
+   * is at the portal root (top of the page), so scrolling the window jumps the whole page to the
+   * top. Adjusting only the container's `scrollTop` keeps a long list navigable without ever
+   * moving the page; when the only scroller up the tree is the document, it does nothing.
+   */
+  #scrollActiveIntoView(target: HTMLElement): void {
+    const container = this.#scrollableAncestor(target);
+    if (!container) {
+      return;
+    }
+    const itemRect = target.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    if (itemRect.top < containerRect.top) {
+      container.scrollTop -= containerRect.top - itemRect.top;
+    } else if (itemRect.bottom > containerRect.bottom) {
+      container.scrollTop += itemRect.bottom - containerRect.bottom;
+    }
+  }
+
+  /**
+   * The nearest scrollable ancestor of `element`, stopping before the document scroller so the
+   * page is never a scroll target. Returns `null` when the only scroller up the tree is the
+   * document/body.
+   */
+  #scrollableAncestor(element: HTMLElement): HTMLElement | null {
+    let node = element.parentElement;
+    while (
+      node &&
+      node !== document.body &&
+      node !== document.documentElement
+    ) {
+      const overflowY = getComputedStyle(node).overflowY;
+      if (
+        (overflowY === "auto" ||
+          overflowY === "scroll" ||
+          overflowY === "overlay") &&
+        node.scrollHeight > node.clientHeight
+      ) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
   }
 
   /**

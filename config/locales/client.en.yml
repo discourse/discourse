@@ -3289,6 +3289,11 @@ en:
       search_placeholder: "Search…"
       no_results: "No results found"
       label: "Options"
+      clear: "Clear selection"
+      clear_all: "Clear all"
+      min_chars:
+        one: "Keep typing %{count} more character…"
+        other: "Keep typing %{count} more characters…"
       remove_hint: "Press Backspace or Delete to remove"
       selected_items: "Selected items"
       chips_hint: "Press Left arrow to reach selected items."

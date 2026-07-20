@@ -23,6 +23,14 @@ interface ComboboxQueryInputSignature {
     /** Whether the input is displaying the active query. */
     editing?: boolean;
     /**
+     * Locks the input: no typing, no open. `disabled` also drops it from the tab order (native
+     * `disabled`); `readonly` keeps it focusable (native `readonly`). Both block the open/edit
+     * paths this component owns (type-to-open, ArrowDown-to-open), which native attrs alone
+     * don't fully cover on a `readonly` input.
+     */
+    disabled?: boolean;
+    readonly?: boolean;
+    /**
      * Emit `aria-owns` (in addition to `aria-controls`) while open. Needed on desktop,
      * where the listbox is portaled out of the input's subtree; omitted on mobile, where
      * both live inside the same modal.
@@ -76,6 +84,11 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     return this.args.editing
       ? this.args.engine.filter
       : (this.args.displayValue ?? this.args.engine.filter);
+  }
+
+  /** No typing, no open when disabled or readonly. */
+  get locked(): boolean {
+    return !!(this.args.disabled || this.args.readonly);
   }
 
   /** `aria-controls` only resolves to a live element while the listbox is rendered. */
@@ -152,7 +165,9 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       (event.key === "ArrowDown" || event.key === "ArrowUp")
     ) {
       event.preventDefault();
-      this.args.onOpen();
+      if (!this.locked) {
+        this.args.onOpen();
+      }
       return;
     }
 
@@ -183,6 +198,9 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   }
 
   #commitQuery(value: string): void {
+    if (this.locked) {
+      return;
+    }
     this.args.onEdit?.();
     this.args.engine.setFilter(value);
     if (!this.args.expanded) {
@@ -204,6 +222,8 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       aria-owns={{this.ownsId}}
       placeholder={{@placeholder}}
       value={{this.value}}
+      disabled={{@disabled}}
+      readonly={{@readonly}}
       {{on "input" this.handleInput}}
       {{on "compositionend" this.handleCompositionEnd}}
       {{on "keydown" this.handleKeydown}}
