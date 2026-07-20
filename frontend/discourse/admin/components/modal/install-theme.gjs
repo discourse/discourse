@@ -525,7 +525,7 @@ export default class InstallThemeModal extends Component {
           <DButton
             @action={{this.installTheme}}
             @disabled={{this.installDisabled}}
-            class={{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}
+            class={{if this.themeCannotBeInstalled "btn-default" "btn-primary"}}
             @label={{this.submitLabel}}
           />
           {{#if this.showStageButton}}
