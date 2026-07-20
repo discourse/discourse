@@ -22,6 +22,9 @@ module Chat
     end
 
     def public_channels
+      shared_channel_serializer_options =
+        DiscoursePluginRegistry.apply_modifier(:chat_channel_serializer_public_options, {}, scope)
+
       object[:public_channels].map do |channel|
         message_bus_last_ids = {
           channel_message_bus_last_id:
@@ -43,8 +46,7 @@ module Chat
           )
         end
 
-        Chat::ChannelSerializer.new(
-          channel,
+        channel_serializer_options = {
           root: nil,
           scope: scope,
           membership: channel_membership(channel.id),
@@ -55,7 +57,9 @@ module Chat
           # the login/signup flow before attempting to join.
           can_join_chat_channel: true,
           post_allowed_category_ids: @options[:post_allowed_category_ids],
-        )
+        }.merge(shared_channel_serializer_options)
+
+        Chat::ChannelSerializer.new(channel, channel_serializer_options)
       end
     end
 

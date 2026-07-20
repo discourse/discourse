@@ -407,6 +407,7 @@ module DiscoursePostEvent
     def can_access_livestream_chat?(user, invitee_event_ids: nil, group_names: nil)
       return true if !private?
       return false if user.blank?
+      return true if user.admin?
 
       invited?(user, invitee_event_ids:, group_names:)
     end
