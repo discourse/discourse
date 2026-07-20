@@ -18,6 +18,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -55,6 +56,10 @@ export default class InstallThemeModal extends Component {
 
   get showPublicKey() {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
+  }
+
+  get showGithubDeployKeyHelp() {
+    return /^(?:ssh:\/\/)?git@github\.com[:/]/.test(this.uploadUrl?.trim());
   }
 
   get submitLabel() {
@@ -450,7 +455,24 @@ export default class InstallThemeModal extends Component {
                 {{#if this.showPublicKey}}
                   <div class="public-key">
                     <div class="label">
-                      {{i18n "admin.customize.theme.public_key"}}
+                      {{#if this.showGithubDeployKeyHelp}}
+                        <DInterpolatedTranslation
+                          @key="admin.customize.theme.public_key_github"
+                          as |Placeholder|
+                        >
+                          <Placeholder @name="link">
+                            <a
+                              href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >{{i18n
+                                "admin.customize.theme.deploy_key_instructions"
+                              }}</a>
+                          </Placeholder>
+                        </DInterpolatedTranslation>
+                      {{else}}
+                        {{i18n "admin.customize.theme.public_key"}}
+                      {{/if}}
                     </div>
                     <div class="public-key-text-wrapper">
                       <textarea
