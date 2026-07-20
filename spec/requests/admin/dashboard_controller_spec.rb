@@ -790,6 +790,32 @@ RSpec.describe Admin::DashboardController do
       expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
     end
 
+    it "persists the selected category ids and returns 204 for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
+          params: {
+            category_ids: [category_3.id, category.id, category_2.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq(
+        { "whos_posting" => { "category_ids" => [category_3.id, category.id, category_2.id] } },
+      )
+    end
+
+    it "returns 400 when more than ten categories are given for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
     it "returns 400 when a category with the given id does not exist" do
       sign_in(admin)
 

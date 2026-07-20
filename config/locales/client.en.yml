@@ -7253,12 +7253,11 @@ en:
               save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
-              all_categories: "All categories"
-              include_subcategories: "Include subcategories"
               new_members: "New members"
               returning: "Returning"
               staff: "Staff"
               empty: "No posts in the selected period."
+              save_error: "Couldn't save your selection for next time."
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:

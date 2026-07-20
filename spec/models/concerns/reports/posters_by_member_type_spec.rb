@@ -120,7 +120,7 @@ describe Reports::PostersByMemberType do
     expect(row(report, :returning)[:count]).to eq(0)
   end
 
-  it "filters by category when the category filter is provided" do
+  it "filters by category when the category_ids filter is provided" do
     user = Fabricate(:user, created_at: start_date - 30.days)
     target_category = Fabricate(:category)
     other_category = Fabricate(:category)
@@ -129,9 +129,82 @@ describe Reports::PostersByMemberType do
     Fabricate(:post, user: user, topic: target_topic, created_at: start_date + 1.day)
     Fabricate(:post, user: user, topic: other_topic, created_at: start_date + 1.day)
 
-    report = build(filters: { category: target_category.id })
+    report = build(filters: { category_ids: [target_category.id] })
 
     expect(row(report, :returning)[:count]).to eq(1)
+  end
+
+  it "filters by the union of multiple categories" do
+    user = Fabricate(:user, created_at: start_date - 30.days)
+    first_category = Fabricate(:category)
+    second_category = Fabricate(:category)
+    other_category = Fabricate(:category)
+    first_topic = Fabricate(:topic, category: first_category)
+    second_topic = Fabricate(:topic, category: second_category)
+    other_topic = Fabricate(:topic, category: other_category)
+    Fabricate(:post, user: user, topic: first_topic, created_at: start_date + 1.day)
+    Fabricate(:post, user: user, topic: second_topic, created_at: start_date + 1.day)
+    Fabricate(:post, user: user, topic: other_topic, created_at: start_date + 1.day)
+
+    report = build(filters: { category_ids: [first_category.id, second_category.id] })
+
+    expect(row(report, :returning)[:count]).to eq(2)
+  end
+
+  it "accepts a comma-separated string of category ids" do
+    user = Fabricate(:user, created_at: start_date - 30.days)
+    target_category = Fabricate(:category)
+    other_category = Fabricate(:category)
+    target_topic = Fabricate(:topic, category: target_category)
+    other_topic = Fabricate(:topic, category: other_category)
+    Fabricate(:post, user: user, topic: target_topic, created_at: start_date + 1.day)
+    Fabricate(:post, user: user, topic: other_topic, created_at: start_date + 1.day)
+
+    report = build(filters: { category_ids: target_category.id.to_s })
+
+    expect(row(report, :returning)[:count]).to eq(1)
+  end
+
+  it "returns zero counts when a requested filter resolves to no valid ids" do
+    user = Fabricate(:user, created_at: start_date - 30.days)
+    topic = Fabricate(:topic, category: Fabricate(:category))
+    Fabricate(:post, user: user, topic: topic, created_at: start_date + 1.day)
+
+    report = build(filters: { category_ids: "foo,bar" })
+
+    expect(report.total).to eq(0)
+    expect(report.data.sum { |r| r[:count] }).to eq(0)
+  end
+
+  it "strips category ids that don't correspond to an existing category" do
+    nonexistent_id = Category.unscoped.maximum(:id).to_i + 1
+
+    report = build(filters: { category_ids: [nonexistent_id] })
+
+    expect(report.available_filters["category_ids"][:default]).to eq([])
+  end
+
+  it "keeps only the existing ids when the filter mixes real and nonexistent categories" do
+    user = Fabricate(:user, created_at: start_date - 30.days)
+    target_category = Fabricate(:category)
+    target_topic = Fabricate(:topic, category: target_category)
+    Fabricate(:post, user: user, topic: target_topic, created_at: start_date + 1.day)
+    nonexistent_id = Category.unscoped.maximum(:id).to_i + 1
+
+    report = build(filters: { category_ids: [target_category.id, nonexistent_id] })
+
+    expect(report.available_filters["category_ids"][:default]).to eq([target_category.id])
+    expect(row(report, :returning)[:count]).to eq(1)
+  end
+
+  it "caps the requested ids at MAX_CATEGORY_IDS" do
+    cats = Array.new(60) { Fabricate(:category) }
+
+    report = build(filters: { category_ids: cats.map(&:id).join(",") })
+
+    expect(report.available_filters["category_ids"][:default].length).to eq(
+      Reports::PostersByMemberType::MAX_CATEGORY_IDS,
+    )
   end
 
   it "renders a unicode category name without errors" do
@@ -140,7 +213,7 @@ describe Reports::PostersByMemberType do
     topic = Fabricate(:topic, category: cat)
     Fabricate(:post, user: user, topic: topic, created_at: start_date + 1.day)
 
-    expect { build(filters: { category: cat.id }) }.not_to raise_error
+    expect { build(filters: { category_ids: [cat.id] }) }.not_to raise_error
   end
 
   describe "secured categories" do
@@ -165,7 +238,7 @@ describe Reports::PostersByMemberType do
       topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, user: poster, topic: topic, created_at: start_date + 1.day)
 
-      report = build(filters: { category: private_category.id }, current_user: moderator)
+      report = build(filters: { category_ids: [private_category.id] }, current_user: moderator)
 
       expect(row(report, :returning)[:count]).to eq(0)
     end
@@ -176,7 +249,7 @@ describe Reports::PostersByMemberType do
       topic = Fabricate(:topic, category: private_category)
       Fabricate(:post, user: poster, topic: topic, created_at: start_date + 1.day)
 
-      report = build(filters: { category: private_category.id }, current_user: admin)
+      report = build(filters: { category_ids: [private_category.id] }, current_user: admin)
 
       expect(row(report, :returning)[:count]).to eq(1)
     end

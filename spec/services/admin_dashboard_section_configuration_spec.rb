@@ -184,6 +184,34 @@ describe AdminDashboardSectionConfiguration do
         { "activity_by_category" => { "category_ids" => [category.id, category_2.id] } },
       )
     end
+
+    it "returns the persisted settings for whos_posting independently of activity_by_category" do
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "activity_by_category",
+        attrs: {
+          category_ids: [category.id],
+        },
+      )
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "whos_posting",
+        attrs: {
+          category_ids: [category_2.id],
+        },
+      )
+
+      expect(described_class.settings_for("engagement")).to eq(
+        {
+          "activity_by_category" => {
+            "category_ids" => [category.id],
+          },
+          "whos_posting" => {
+            "category_ids" => [category_2.id],
+          },
+        },
+      )
+    end
   end
 
   describe ".update_setting" do
@@ -199,6 +227,32 @@ describe AdminDashboardSectionConfiguration do
       expect(described_class.settings_for("engagement")).to eq(
         { "activity_by_category" => { "category_ids" => [category.id, category_2.id] } },
       )
+    end
+
+    it "persists a valid selection for whos_posting under its key" do
+      described_class.update_setting(
+        section_id: "engagement",
+        key: "whos_posting",
+        attrs: {
+          category_ids: [category.id, category_2.id],
+        },
+      )
+
+      expect(described_class.settings_for("engagement")).to eq(
+        { "whos_posting" => { "category_ids" => [category.id, category_2.id] } },
+      )
+    end
+
+    it "raises when more than the allowed number of categories are given for whos_posting" do
+      expect {
+        described_class.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: (1..11).to_a,
+          },
+        )
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "raises when a category with the given id does not exist" do
