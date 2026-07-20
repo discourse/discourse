@@ -31,6 +31,8 @@ fa_IR:
     holiday_status:
       description: "در تعطیلات"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d، %Y"
     errors:
       bulk_invite:
         error: "خطایی هنگام آپلود فایل رخ داده است. لطفا بعدا امتحان کنید."

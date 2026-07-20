@@ -376,6 +376,8 @@ ru:
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию
+        filter_joined_all: "Все"
+        filter_joined_joined: "Регистрация"
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
@@ -451,6 +453,9 @@ ru:
           few: "%{count} участника"
           many: "%{count} участников"
           other: "%{count} участников"
+        preview_card:
+          log_in: "Войти"
+          sign_up: "Регистрация"
       create_channel:
         threading:
           label: "Включить цепочки сообщений"

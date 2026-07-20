@@ -400,6 +400,8 @@ ar:
         filter_closed: مغلقة
         filter_archived: مؤرشفة
         filter_input_placeholder: البحث عن القناة بالاسم
+        filter_joined_all: "الكل"
+        filter_joined_joined: "تاريخ الانضمام"
       chat_message_separator:
         today: اليوم
         yesterday: الأمس
@@ -479,6 +481,9 @@ ar:
           few: "%{count} أعضاء"
           many: "%{count} عضوًا"
           other: "%{count} عضوًا"
+        preview_card:
+          log_in: "تسجيل الدخول"
+          sign_up: "الاشتراك"
       create_channel:
         threading:
           label: "تفعيل سلاسل الدردشة"
