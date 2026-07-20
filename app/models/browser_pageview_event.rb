@@ -240,7 +240,7 @@ end
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
-#  normalized_url                :string(2000)
+#  normalized_url              :string(2000)
 #  referrer                    :string(2000)
 #  score                       :integer
 #  source                      :integer          default("piggyback"), not null
@@ -258,8 +258,8 @@ end
 #  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
 #  idx_bpe_session_created_at                   (session_id,created_at)
-#  idx_bpe_source_browser_created_at_id          (source,browser_family,created_at DESC,id DESC)
-#  idx_bpe_source_created_at_id                  (source,created_at DESC,id DESC)
+#  idx_bpe_source_browser_created_at_id         (source,browser_family,created_at DESC,id DESC)
+#  idx_bpe_source_created_at_id                 (source,created_at DESC,id DESC)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)

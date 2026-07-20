@@ -2027,13 +2027,13 @@ CREATE TABLE public.browser_pageview_events (
     country_code character varying(2),
     created_at timestamp without time zone NOT NULL,
     asn integer,
-    asn_organization character varying,
     score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
     source smallint DEFAULT 1 NOT NULL,
     normalized_url character varying(2000),
-    browser_family character varying(20)
+    browser_family character varying(20),
+    asn_organization character varying
 );
 
 

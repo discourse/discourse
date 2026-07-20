@@ -7188,7 +7188,7 @@ en:
         tabs:
           sources: "Sources"
           networks: "Networks"
-          pages: "Top pages"
+          pages: "Top URLs"
           countries: "Countries"
           browsers: "Browsers"
           ip_addresses: "IP addresses"
