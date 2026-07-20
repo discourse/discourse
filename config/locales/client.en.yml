@@ -8431,7 +8431,7 @@ en:
           import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
-          placeholder_description: "This theme was added as a placeholder. Once the deploy key has been installed, click the button below to finish installation."
+          placeholder_description: "This theme was installed as a placeholder with a deploy key that needs to be stored in the repository configuration. Once the deploy key has been installed, click the button below to finish installation."
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           remote_branch_placeholder: "Choose a specific branch or keep empty"
