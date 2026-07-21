@@ -2439,6 +2439,7 @@ da:
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3513,7 +3514,7 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -3980,7 +3981,6 @@ da:
       selector_no_tags: "ingen tags"
       selector_remove_filter: "fjern filter"
       tags: "Tags"
-      choose_for_topic: "valgfri tags"
       choose_for_topic_required:
         one: "vælg mindst %{count} mærke…"
         other: "vælg mindst %{count} tags…"
@@ -6387,6 +6387,10 @@ da:
         alt: "brugerdefineret humøikons forhåndsvisning"
         delete_confirm: "Er du sikker på du vil slette emojien: %{name} ?"
         settings: "Indstillinger"
+        export: "Eksporter"
+        import: "Importer"
+        import_category:
+          new: "Nye"
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
         delete: "Slet"

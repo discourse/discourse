@@ -3034,6 +3034,7 @@ de:
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
       topic_featured_link_placeholder: "Link zum Titel eingeben."
@@ -3738,6 +3739,7 @@ de:
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
+        hot: "Angesagt"
         new: "Neue"
         old: "Alt"
       load_more_children:
@@ -5165,7 +5167,6 @@ de:
       selector_no_tags: "keine Schlagwörter"
       selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
-      choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
         one: "mindestens %{count} Schlagwort auswählen …"
         other: "mindestens %{count} Schlagwörter auswählen …"
@@ -8722,6 +8723,10 @@ de:
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
         settings: "Einstellungen"
+        export: "Exportieren"
+        import: "Importieren"
+        import_category:
+          new: "Neue"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         delete: "Löschen"

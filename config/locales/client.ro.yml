@@ -2280,6 +2280,7 @@ ro:
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
+      title_placeholder_redesign: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2628,6 +2629,7 @@ ro:
       sort:
         label: "Sortează după"
         top: "Top"
+        hot: "Cald"
         new: "Nou"
       load_more_children:
         one: "Încă un răspuns"
@@ -3614,7 +3616,6 @@ ro:
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"
-      choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
       delete_tag: "Șterge etichetă"
       delete_confirm:
@@ -5729,6 +5730,10 @@ ro:
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
         settings: "Setări"
+        export: "Exportă"
+        import: "Importă"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         delete: "Șterge"

@@ -1356,6 +1356,7 @@ be:
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
+      title_placeholder_redesign: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -1673,7 +1674,7 @@ be:
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "катэгорыя&hellip;"
+      choose: "Катэгорыя&hellip;"
       edit: "Рэдагаваць"
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
@@ -1895,7 +1896,6 @@ be:
       selector_tags: "тэгі"
       selector_remove_filter: "выдаліць фільтр"
       tags: "Тэгі"
-      choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "Дадаць"
       description: "Апісанне"
       settings:
@@ -2964,6 +2964,9 @@ be:
         group: "Група"
         image: "Выява"
         settings: "Налады"
+        export: "Экспарт"
+        import_category:
+          new: "Новае"
       embedding:
         delete: "выдаляць"
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"

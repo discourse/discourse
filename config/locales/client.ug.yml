@@ -2949,6 +2949,7 @@ ug:
       draft_saved: "دەسلەپكى نۇسخا ساقلاندى"
       users_placeholder: "ئىشلەتكۈچى ياكى گۇرۇپپا قوش"
       title_placeholder: "قىسقا بىر جۈملە بىلەن سۆھبەت مەزمۇنىنى ئىپادىلەشكە توغرا كەلسە ئۇ نېمە؟"
+      title_placeholder_redesign: "ئاتاق"
       title_or_link_placeholder: "بۇ جايغا ماۋزۇ كىرگۈزۈلىدۇ ياكى ئۇلانما چاپلىنىدۇ"
       edit_reason_placeholder: "نېمىشقا تەھرىرلىدىڭىز؟"
       topic_featured_link_placeholder: "ماۋزۇدا كۆرۈنىدىغان ئۇلانما كىرگۈزۈلىدۇ"
@@ -3553,6 +3554,7 @@ ug:
       sort:
         label: "تەرتىپى"
         top: "قىزغىن"
+        hot: "قىزىق"
         new: "يېڭى"
       load_more_children:
         one: "باشقا %{count} جاۋاب"
@@ -4887,7 +4889,6 @@ ug:
       selector_no_tags: "بەلگە يوق"
       selector_remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       tags: "بەلگە"
-      choose_for_topic: "تاللانما بەلگە"
       choose_for_topic_required:
         one: "ئاز دېگەندە %{count} بەلگە تاللايدۇ…"
         other: "ئاز دېگەندە %{count} بەلگە تاللايدۇ…"
@@ -8255,6 +8256,9 @@ ug:
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"
         delete_confirm: "سىز راستتىنلا %{name}: چىراي ئىپادە: نى ئۆچۈرەمسىز؟"
         settings: "تەڭشەكلەر"
+        export: "چىقار"
+        import_category:
+          new: "يېڭى"
       embedding:
         get_started: "ئەگەر Discourse نى باشقا تور بېكەتكە سىڭدۈرمەكچى بولسىڭىز، ئۇنىڭ مۇلازىمېتىرىنى قوشۇشتىن باشلاڭ."
         delete: "ئۆچۈر"

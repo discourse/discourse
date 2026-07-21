@@ -58,6 +58,7 @@ zh_CN:
         access_permission_viewer: "查看器"
         access_permission_viewer_description: "可以查看此对象中的内容"
         access_permission_remove: "移除"
+        mandatory_acl_tooltip: "此权限是 %{name} 的必要权限，无法移除"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -809,6 +810,7 @@ zh_CN:
         help: "移除此认领"
       awaiting_approval: "需要审批"
       delete: "删除"
+      delete_confirm: "您确定要从等待审核队列中删除此项目吗？"
       settings:
         saved: "已保存"
         save_changes: "保存变更"
@@ -1568,6 +1570,7 @@ zh_CN:
         perm_denied_expl: "您拒绝了通知的权限。通过您的浏览器设置允许通知。"
         disable: "禁用通知"
         enable: "启用通知"
+        enable_failed: "无法启用通知。您的浏览器阻止了该请求，或者其推送服务不可用。"
         each_browser_note: "注意：您必须在使用的每个浏览器上更改此设置。如果您从用户菜单暂停通知，则无论此设置如何，所有通知都将被禁用。"
         consent_prompt: "当其他人回复您的帖子时是否接收实时通知？"
       dismiss: "忽略"
@@ -2254,20 +2257,33 @@ zh_CN:
           invite_saved_with_sending_email: "邀请电子邮件已发送。您也可以复制下面的链接并分享，立即授予此网站的访问权限。"
         invite_roles:
           member_title: "邀请成员"
+          admin_title: "邀请管理员"
+          edit_title: "编辑邀请"
+          created_title: "邀请已创建"
           sent_title: "邀请已发送"
           member_tab: "成员"
           admin_tab: "管理员"
           admin_email_label: "电子邮件地址"
+          member_email_help: "我们将向该邮箱地址发送邀请链接。"
           email_placeholder: "name@example.com"
           invite_by_email: "电子邮件"
           restrict_domain: "仅限网域"
+          restrict_domain_help: "只有拥有此域名邮箱地址的用户才能接受此链接。如需邀请特定人员，请使用上方的“邮箱”选项。"
           domain_placeholder: "example.com"
+          domain_invalid: "请输入有效的域名，例如 example.com"
+          arrive_at_topic_help: "用户接受邀请后，使他们跳转到特定的主题。"
+          create_and_send: "创建并发送"
+          create_and_copy: "创建并复制链接"
           more_options: "更多选项"
+          fewer_options: "收起"
           update: "更新"
+          role_locked: "创建邀请后，邀请类型无法更改。"
           summary:
+            sent_to: "已向 %{email} 发送邀请邮件。您也可以直接分享此链接："
             role_member: "成员"
             role_admin: "管理员"
             method: "分享"
+            method_link: "分享链接"
             method_email: "电子邮件"
             restriction: "限于"
             uses: "最大使用次数"
@@ -2275,6 +2291,9 @@ zh_CN:
             topic: "话题"
             groups: "群组"
             edit: "编辑邀请"
+            view_invites: "查看邀请"
+          email_sent:
+            body: "已向 %{email} 发送邀请邮件。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -3006,6 +3025,7 @@ zh_CN:
       draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
+      title_placeholder_redesign: "标题"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
@@ -3699,6 +3719,7 @@ zh_CN:
       sort:
         label: "排序依据"
         top: "热门"
+        hot: "热议"
         new: "新"
         old: "旧"
       load_more_children:
@@ -4251,6 +4272,7 @@ zh_CN:
           title: "翻译"
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
           post_language: "帖子语言"
+          discard_language_change: "舍弃更改"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -4384,6 +4406,8 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
+        diff_too_complex: "这次编辑一次性更改了帖子太多内容，所以无法显示。"
+        diff_hidden: "该帖子的部分编辑历史已被隐藏，因此无法显示此条编辑记录。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -5146,7 +5170,7 @@ zh_CN:
       selector_no_tags: "无标签"
       selector_remove_filter: "移除筛选器"
       tags: "标签"
-      choose_for_topic: "可选标签"
+      choose_for_topic: "可选标签…"
       choose_for_topic_required:
         other: "至少选择 %{count} 个标签…"
       choose_for_topic_required_group:
@@ -5720,6 +5744,7 @@ zh_CN:
         title: "可用报告列表"
         sidebar_title: "报告"
         back: "返回到所有报告"
+        back_to_dashboard: "返回信息中心"
         all_groups: "所有群组"
         group_engagement: "参与度"
         group_traffic: "流量"
@@ -5766,6 +5791,7 @@ zh_CN:
         enabled_for_throttle: "您修改此更改启用对象的速度过快。请稍等片刻后再试。"
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此更改"
+        depends_on_notice: "此更改需要启用 %{dependencyLinks} 。"
         permanent_notice: "此更改现已永久生效，并将很快被移除。您无法再选择退出。"
         permanent_soon_notice: "此更改将很快永久生效。您将无法再选择退出。"
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
@@ -5936,6 +5962,7 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
+              help_text: "建议尺寸为 180 x 180 像素，不要使用SVG图像，不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
@@ -6139,6 +6166,7 @@ zh_CN:
             all:
               title: "所有类别"
           filter_placeholder: "筛选类别"
+          open_settings: "打开设置"
           table:
             category: "类别"
             visibility: "公开范围"
@@ -6347,6 +6375,7 @@ zh_CN:
             title: "高亮显示"
           reports:
             title: "举报"
+            fetch_error: "报告加载失败。请尝试刷新页面。"
           traffic:
             title: "网站流量"
           engagement:
@@ -6383,6 +6412,12 @@ zh_CN:
                   other: "+%{count} 升级"
                 dropping:
                   other: "-%{count} 降级"
+              signups_title: "达到此信任级别的新注册用户数量"
+              count_title: "该信任层级的用户总数"
+              arrivals_aria:
+                other: "%{count} 个用户已升级至该信任级别"
+              demotions_in_aria:
+                other: "%{count} 个用户已降级至该信任级别"
               stable_aria: "不变"
             headline:
               healthy_growth:
@@ -6536,6 +6571,7 @@ zh_CN:
             effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "使用与此列表中的电子邮件网域完全匹配的电子邮件网域注册的用户将被自动添加到此群组："
+            automatic_membership_email_domains_instructions: "请单独输入每个域名，例如 discourse.org。"
             automatic_membership_user_count:
               other: "%{count} 个用户具有新的电子邮件网域，将被添加到群组中。"
             automatic_membership_user_unknown_count: "拥有其中一个新电子邮件域的用户将被添加到群组中。"
@@ -8295,7 +8331,12 @@ zh_CN:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
         delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
+        delete_and_block: "删除并禁止该电子邮件和 IP 地址"
+        delete_and_block_description: "删除用户并屏蔽其电子邮件地址和 IP 地址。"
+        delete_and_block_email: "删除并屏蔽其电子邮件地址"
+        delete_and_block_email_description: "删除该用户并屏蔽其电子邮件地址，但允许重新使用其 IP 地址。"
         delete_dont_block: "删除用户"
+        delete_dont_block_description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址。"
         deleting_user: "正在删除用户…"
         deleted: "该用户已被删除。"
         delete_failed: "删除该用户时出错。在尝试删除用户之前，请确保已删除所有帖子。"
@@ -8483,6 +8524,8 @@ zh_CN:
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
         depends_on_notice:
           other: "此设置仅在启用%{dependencyLinks}时生效。"
+        depends_on_values_notice:
+          other: "此设置仅当 %{dependencyLinks} 设置为兼容值时生效。"
         discard:
           other: "舍弃更改"
         save:
@@ -8712,6 +8755,23 @@ zh_CN:
         alt: "自定义表情符号预览"
         delete_confirm: "确定要删除 :%{name}: 表情符号吗？"
         settings: "设置"
+        export: "导出"
+        export_count: "导出（已选择 %{count} 个）"
+        export_failed: "导出失败，请重试。"
+        select_to_export: "选择以导出"
+        import: "导入"
+        import_heading: "导入 emoji"
+        import_description: "上传包含 emojis.csv 清单文件和图像文件的 ZIP 文件。"
+        import_download_sample: "下载示例模板。"
+        import_preview_heading: "查看导入内容"
+        import_summary: "%{new} 个新增 · %{conflicts} 个冲突 · %{unchanged} 个未更改 · %{invalid} 个错误"
+        import_confirm: "确认导入"
+        import_category:
+          new: "新"
+          conflict: "冲突"
+          invalid: "错误"
+        select_all: "选择所有emoji"
+        select: "选择 %{name}"
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         delete: "删除"

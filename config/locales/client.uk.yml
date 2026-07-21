@@ -3550,6 +3550,7 @@ uk:
       draft_saved: "Чернетку збережено!"
       users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, в одному короткому реченні?"
+      title_placeholder_redesign: "Назва"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "Чому ви редагуєте допис?"
       topic_featured_link_placeholder: "Введіть посилання, що показується з заголовком."
@@ -4410,6 +4411,7 @@ uk:
       sort:
         label: "Сортувати за"
         top: "Топ"
+        hot: "Гаряче"
         new: "Новий"
         old: "Старий"
       load_more_children:
@@ -5378,7 +5380,7 @@ uk:
     category:
       none: "(без розділу)"
       all: "Всі розділи"
-      choose: "розділ &hellip;"
+      choose: "Розділ &hellip;"
       edit: "Редагувати"
       edit_title: "Редагувати цей розділ"
       edit_dialog_title: "Редагувати:%{categoryName}"
@@ -6124,7 +6126,6 @@ uk:
       selector_no_tags: "без теґів"
       selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"
-      choose_for_topic: "додаткові теґи"
       choose_for_topic_required:
         one: "виберіть принаймні %{count} тег…"
         few: "виберіть принаймні %{count} теги…"
@@ -10162,6 +10163,10 @@ uk:
         alt: "попередній перегляд смайлів"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
         settings: "Налаштування"
+        export: "Експорт"
+        import: "Імпорт"
+        import_category:
+          new: "Новий"
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         delete: "Видалити"

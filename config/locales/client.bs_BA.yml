@@ -1734,6 +1734,7 @@ bs_BA:
       edit_shared_draft: "Izmijeni dijeljenu skicu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
+      title_placeholder_redesign: "Naslov"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
       edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
@@ -2546,7 +2547,7 @@ bs_BA:
     category:
       none: "(no category)"
       all: "Sve kategorije"
-      choose: "kategorij i pomoć"
+      choose: "Kategorij i pomoć"
       edit: "Izmijeni"
       edit_dialog_title: "promjeni: %{categoryName}"
       view: "View Topics in Category"
@@ -2943,7 +2944,6 @@ bs_BA:
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"
-      choose_for_topic: "neobavezne oznake"
       default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
@@ -4597,6 +4597,9 @@ bs_BA:
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati: %{name}: emoji?"
         settings: "Postavke"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Ako želite da ugradite Discourse na drugu web lokaciju, počnite sa dodavanjem njegovog hosta."
         delete: "Delete"

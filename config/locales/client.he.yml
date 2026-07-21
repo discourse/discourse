@@ -3253,6 +3253,7 @@ he:
       draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_placeholder_redesign: "כותרת"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -3971,6 +3972,7 @@ he:
       sort:
         label: "מיון לפי"
         top: "מובילים"
+        hot: "חמים"
         new: "חדשות"
         old: "ישן"
       load_more_children:
@@ -5496,7 +5498,6 @@ he:
       selector_no_tags: "ללא תגיות"
       selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
-      choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
         one: "נא לבחור תגית %{count} לפחות…"
         two: "נא לבחור %{count} תגיות לפחות…"
@@ -9104,6 +9105,10 @@ he:
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
         settings: "הגדרות"
+        export: "ייצוא"
+        import: "ייבוא"
+        import_category:
+          new: "חדשות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         delete: "מחיקה"

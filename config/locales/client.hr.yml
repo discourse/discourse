@@ -2937,6 +2937,7 @@ hr:
       draft_saved: "Skica spremljena!"
       users_placeholder: "Dodajte korisnike ili grupe"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Titula"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "Zašto uređuješ?"
       topic_featured_link_placeholder: "Unesite vezu prikazanu s naslovom."
@@ -3546,6 +3547,7 @@ hr:
       sort:
         label: "Sortiraj po"
         top: "Najaktivnije"
+        hot: "Vruće"
         new: "Novo"
       load_more_children:
         one: "još %{count} odgovor"
@@ -4306,7 +4308,7 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "kategorija&hellip;"
+      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -4878,7 +4880,6 @@ hr:
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
-      choose_for_topic: "neobavezne oznake"
       choose_for_topic_required:
         one: "odaberite najmanje %{count} oznaku"
         few: "odaberite najmanje %{count} oznake"
@@ -7615,6 +7616,9 @@ hr:
         alt: "prilagođeni pregled emotikona"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Postavke"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         delete: "Pobriši"

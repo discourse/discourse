@@ -2298,6 +2298,7 @@ sv:
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
+      title_placeholder_redesign: "Rubrik"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
@@ -2793,6 +2794,7 @@ sv:
       sort:
         label: "Sortera efter"
         top: "Topp"
+        hot: "Hett"
         new: "Nya"
       load_more_children:
         one: "Ytterligare %{count} svar"
@@ -3460,7 +3462,7 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
@@ -3940,7 +3942,6 @@ sv:
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
-      choose_for_topic: "alternativa taggar"
       choose_for_topic_required:
         one: "välj minst %{count} tagg…"
         other: "välj minst %{count} taggar…"
@@ -6347,6 +6348,10 @@ sv:
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"
         settings: "Inställningar"
+        export: "Exportera"
+        import: "Importera"
+        import_category:
+          new: "Nya"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         delete: "Radera"

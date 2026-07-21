@@ -1866,6 +1866,7 @@ gl:
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -2781,7 +2782,7 @@ gl:
     category:
       none: "(sen categoría)"
       all: "Todas as categorías"
-      choose: "categoría&hellip;"
+      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Ver os temas na categoría"
@@ -3188,7 +3189,6 @@ gl:
       selector_no_tags: "sen etiquetas"
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas opcionais"
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
@@ -5046,6 +5046,10 @@ gl:
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"
         settings: "Configuración"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         delete: "Eliminar"

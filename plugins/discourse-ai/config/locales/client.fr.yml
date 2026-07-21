@@ -569,7 +569,6 @@ fr:
           anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
-          open_ai-gpt-5-4-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
         configured:
           title: "LLM configurés"

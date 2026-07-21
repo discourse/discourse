@@ -3312,6 +3312,7 @@ ru:
       draft_saved: "Черновик сохранен!"
       users_placeholder: "Добавьте пользователей или группы"
       title_placeholder: "Название: суть темы коротким предложением"
+      title_placeholder_redesign: "Название"
       title_or_link_placeholder: "Введите название или вставьте здесь ссылку"
       edit_reason_placeholder: "Причина редактирования…"
       topic_featured_link_placeholder: "Введите ссылку с названием."
@@ -4019,6 +4020,7 @@ ru:
       sort:
         label: "Сортировать по"
         top: "Обсуждаемые"
+        hot: "Горячие"
         new: "Новое"
       load_more_children:
         one: "Ещё %{count} ответ"
@@ -5534,7 +5536,6 @@ ru:
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"
-      choose_for_topic: "Выберите теги..."
       choose_for_topic_required:
         one: "Выберите минимум %{count} тег…"
         few: "Выберите минимум %{count} тега…"
@@ -9178,6 +9179,10 @@ ru:
         alt: "предпросмотр пользовательских эмодзи"
         delete_confirm: "Действительно удалить эмодзи :%{name}:?"
         settings: "Настройки"
+        export: "Экспорт"
+        import: "Импорт"
+        import_category:
+          new: "Новое"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
         delete: "Удалить"
