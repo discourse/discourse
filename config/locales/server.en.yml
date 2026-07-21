@@ -6365,13 +6365,17 @@ en:
     import:
       missing_file: "No ZIP file provided."
       missing_csv: "The ZIP must contain an emojis.csv file."
+      invalid_csv: "The emojis.csv file could not be parsed."
+      empty_manifest: "The emojis.csv file does not list any emojis."
       too_many_entries: "The ZIP contains too many entries (maximum 1000)."
       file_too_large: "One or more files in the ZIP are too large."
+      suspicious_entry: "One or more files in the ZIP have a suspicious compression ratio."
       session_expired: "Import session has expired. Please start the import again."
       validation:
         missing_name: "Name is required."
+        duplicate_name: "Name appears more than once in the CSV."
         missing_filename: "Filename is required."
-        invalid_name: "Name contains invalid characters."
+        missing_image: "Image file is missing from the ZIP."
         group_too_long: "Group name must be 20 characters or fewer."
         unsupported_extension: "File extension .%{ext} is not supported (use png, gif, or svg)."
         duplicate_filename: "Filename appears more than once in the CSV."
