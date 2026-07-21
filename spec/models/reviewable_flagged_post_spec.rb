@@ -68,9 +68,50 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
       end
 
-      it "returns `agree_and_restore` if the post is user deleted" do
-        post.update(user_deleted: true)
-        expect(reviewable.actions_for(guardian).has?(:agree_and_restore)).to eq(true)
+      it "does not return post visibility or delete actions if the post is user deleted" do
+        post.update!(user_deleted: true, reply_count: 3)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_keep_deleted)).to eq(true)
+        expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
+        expect(actions.has?(:agree_and_edit)).to eq(false)
+        expect(actions.has?(:delete_and_agree)).to eq(false)
+        expect(actions.has?(:delete_and_agree_replies)).to eq(false)
+        expect(actions.has?(:delete_and_ignore)).to eq(false)
+        expect(actions.has?(:delete_and_ignore_replies)).to eq(false)
+      end
+
+      it "returns an unsilence action without restore actions if a silenced user deleted the flagged post" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_keep_deleted)).to eq(true)
+        expect(actions.has?(:unsilence_user_and_ignore)).to eq(true)
+        expect(actions.has?(:agree_and_silence)).to eq(false)
+        expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
+        expect(actions.has?(:agree_and_restore)).to eq(false)
+        expect(actions.has?(:disagree_and_restore)).to eq(false)
+      end
+
+      it "returns ignore without restore actions if a suspended user deleted the flagged post" do
+        post.update!(hidden: true, user_deleted: true)
+        UserSuspender.new(
+          post.user,
+          suspended_till: 5.days.from_now,
+          reason: "spam",
+          by_user: moderator,
+          post_id: post.id,
+        ).suspend
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:ignore_and_do_nothing)).to eq(true)
+        expect(actions.has?(:agree_and_restore)).to eq(false)
+        expect(actions.has?(:disagree_and_restore)).to eq(false)
       end
 
       it "returns delete replies options if there are replies" do
@@ -88,6 +129,15 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         post.user.update(moderator: true)
         expect(reviewable.actions_for(guardian).has?(:agree_and_silence)).to eq(false)
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
+      end
+
+      it "doesn't return the silence action if the user is already silenced" do
+        UserSilencer.silence(post.user, moderator, post_id: post.id)
+
+        actions = reviewable.actions_for(guardian)
+
+        expect(actions.has?(:agree_and_silence)).to eq(false)
+        expect(actions.has?(:agree_and_suspend)).to eq(true)
       end
 
       it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
@@ -493,6 +543,22 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       flagged_post.perform(moderator, :delete_and_agree_replies)
 
       expect(flagged_reply.reload).to be_ignored
+    end
+  end
+
+  describe "#perform_unsilence_user_and_ignore" do
+    it "unsilences the user and resolves the reviewable without restoring the deleted post" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      flagged_post = reviewable.post
+      target_user = flagged_post.user
+      flagged_post.update!(hidden: true, user_deleted: true)
+      UserSilencer.silence(target_user, moderator, post_id: flagged_post.id)
+
+      reviewable.perform(moderator, :unsilence_user_and_ignore)
+
+      expect(target_user.reload.silenced?).to eq(false)
+      expect(flagged_post.reload.user_deleted?).to eq(true)
+      expect(reviewable.reload).to be_ignored
     end
   end
 

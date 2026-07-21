@@ -20,6 +20,7 @@ class LocalizedCookedPostProcessor
   def post_process
     post_process_oneboxes
     post_process_images
+    DiscourseEvent.trigger(:post_process_localized_cooked, @doc, @post, @post_localization)
     @post_localization.link_post_uploads(fragments: @doc)
   end
 

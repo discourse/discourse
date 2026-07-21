@@ -81,8 +81,6 @@ vi:
       no_direct_message_channels: "Bạn chưa nhắn riêng!"
       no_public_channels: "Bạn chưa tham gia kênh nào!"
       chat_notifications_title: "Thông báo chat"
-      only_chat_push_notifications:
-        title: "Chỉ gửi thông báo đẩy chat"
       personalization_title: "Cá nhân hóa"
       ignore_channel_wide_mention:
         title: "Bỏ qua các lượt nhắc trên toàn kênh"
@@ -110,6 +108,8 @@ vi:
         filter_closed: Đã đóng
         filter_archived: Đã lưu trữ
         filter_input_placeholder: Tìm kênh theo tên
+        filter_joined_all: "Tất cả"
+        filter_joined_joined: "Đã tham gia"
       chat_message_separator:
         today: Hôm nay
         yesterday: Hôm qua
@@ -139,6 +139,9 @@ vi:
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"
+      channel:
+        preview_card:
+          log_in: "Đăng nhập"
       create_channel:
         description: "Mô tả"
         type: "Loại"

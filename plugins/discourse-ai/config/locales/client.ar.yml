@@ -21,7 +21,6 @@ ar:
       dashboard:
         emotion:
           title: "العاطفة"
-          description: "يسرد الجدول عدد المنشورات المصنَّفة بعاطفة محدَّدة. مصنَّفة باستخدام النموذج 'SamLowe/roberta-base-go_emotions'."
         reports:
           filters:
             group_by:
@@ -354,7 +353,6 @@ ar:
           translate: "ترجم"
           markdown_tables: "إنشاء جدول Markdown"
           custom_prompt: "رسالة مطالبة مخصَّصة"
-          image_caption: "وضع تسميات توضيحية للصور"
           translator: "مترجم"
           post_illustrator: "مُوضِّح المنشورات"
           chat_thread_titles: "عناوين سلاسل المحادثات"
@@ -363,6 +361,9 @@ ar:
             enabled_features: "الميزات المُفعّلة"
             automation: "الأتمتة"
             agents: "الوكلاء"
+        image_caption:
+          setting_groups:
+            settings: "الإعدادان"
         translation:
           name: "ترجمة"
           description: "يترجم المحتوى إلى اللغات المدعومة"
@@ -595,16 +596,6 @@ ar:
         description: "الوصف"
         no_llm_selected: "لم يتم تحديد نموذج لغة"
         use_parent_llm: "استخدم نموذج اللغة الخاص بالوكيل"
-        max_context_posts: "أقصى عدد من المنشورات في السياق"
-        max_context_posts_help: "الحد الأقصى لعدد المنشورات التي سيتم استخدامها كسياق للذكاء الاصطناعي عند الرد على مستخدم. (اترك القيمة فارغة للإعداد الافتراضي)"
-        execution_mode: "وضع التنفيذ"
-        execution_mode_help: "يتحكم في كيفية إدارة الوكيل لتنفيذ الأدوات وسياق المحادثة. يستخدم الوضع الافتراضي حدودًا ثابتة لعدد الأدوار والأدوات. أما الوضع الوكيلي فيستخدم ميزانية من الرموز مع ضغط تلقائي للسياق، ما يتيح جلسات أطول وأكثر قدرة على استخدام الأدوات."
-        execution_mode_options:
-          default: "الوضع الافتراضي (حدود ثابتة)"
-          agentic: "الوضع الوكيلي (ميزانية الرموز)"
-        max_turn_tokens: "الحد الأقصى لرموز الدور"
-        max_turn_tokens_help: "الحد الأقصى لإجمالي الرموز (المدخلات + المخرجات) المستهلكة عبر جميع استدعاءات نموذج اللغة الكبير (LLM) خلال رد واحد من الروبوت. عند تحديد هذا الخيار، يتم استبدال حدود الإكمال/الأدوات الثابتة بميزانية من الرموز، ما يتيح سلوكًا أكثر اعتمادًا على الوكيل. اتركه فارغًا لاستخدام الحدود الافتراضية."
-        compression_threshold: "حدّ الضغط"
         compression_threshold_help: "النسبة المئوية لاستخدام السياق (من 20 إلى 99) التي يبدأ عندها الضغط التلقائي. تؤدي القيم الأقل إلى بدء الضغط في وقت أبكر، ما يحافظ على مساحة أكبر."
         vision_enabled: تضمين تحميل الصور
         vision_enabled_help: إذا كان مفعّلًا، يمكن لهذا الوكيل تضمين الصور من المنشورات والدردشات عندما يدعم النموذج المحدد إدخال الصور.
@@ -978,7 +969,7 @@ ar:
         usage:
           ai_bot: "روبوت الذكاء الاصطناعي"
           ai_helper: "مساعد (%{agent})"
-          ai_helper_image_caption: "وصف الصورة"
+          ai_image_caption: "وصف الصورة"
           ai_agent: "الوكيل (%{agent})"
           ai_summarization: "تلخيص"
           ai_embeddings_semantic_search: "البحث باستخدام الذكاء الاصطناعي"
@@ -998,9 +989,6 @@ ar:
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
           google-gemini-3-1-pro: "النموذج الأكثر ذكاءً لدى Google"
           google-gemini-3-flash: "سريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
-          open_ai-gpt-5-5: "أقوى نموذج من OpenAI مع سياق موسّع"
-          open_ai-gpt-5-4: "النموذج الرائد لدى OpenAI، وهو مناسب جدًا لحل المشكلات عبر نطاقات متعددة"
-          open_ai-gpt-5-4-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
           open_router-moonshotai-kimi-k2-6: "نموذج Moonshot متعدد الوسائط القادر على الرؤية"
           open_router-deepseek-deepseek-v4-flash: "أحدث نموذج عالي الأداء من DeepSeek مع سياق يصل إلى 1 مليون رمز"
           open_router-minimax-minimax-m2-7: "نموذج MiniMax مع سياق كبير"
@@ -1058,7 +1046,7 @@ ar:
           access_key_id: "معرِّف مفتاح الوصول إلى AWS Bedrock"
           role_arn: "معرّف المورد الموحد (ARN) لدور AWS Bedrock"
           inference_profile_arn: "معرّف الموارد (ARN) لملف استدلال التطبيق في AWS Bedrock"
-          region: "منطقة AWS Bedrock"
+          region: "المنطقة"
           organization: "معرِّف مؤسسة OpenAI الاختياري"
           disable_system_prompt: "إيقاف رسالة النظام في رسائل المطالبة"
           enable_native_tool: "تفعيل دعم الأدوات الأصلية"
@@ -1123,11 +1111,6 @@ ar:
           select: "تحديد"
           selected: "محدَّدة"
           try_again: "إعادة المحاولة"
-        image_caption:
-          button_label: "التسمية التوضيحية بالذكاء الاصطناعي"
-          generating: "جارٍ إنشاء تسمية توضيحية.."
-          credits: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
-          save_caption: "حفظ"
         no_content_error: "ينبغي إضافة المحتوى أولًا لتنفيذ إجراءات الذكاء الاصطناعي عليه"
       errors:
         credit_limit_dialog:
@@ -1222,8 +1205,8 @@ ar:
         click_to_run_label: "تشغيل أداة الويب"
       ai_bot:
         title: "روبوت الذكاء الاصطناعي"
-        agent: "الوكيل"
-        llm: "النموذج"
+        agent: "الوكيل:"
+        llm: "النموذج:"
         pm_warning: "تتم مراقبة رسائل روبوت دردشة الذكاء الاصطناعي بانتظام من قِبل المشرفين."
         cancel_streaming: "إيقاف الرد"
         try_again: "إعادة المحاولة"

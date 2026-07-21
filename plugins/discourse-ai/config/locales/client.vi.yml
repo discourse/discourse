@@ -68,6 +68,9 @@ vi:
           explain: "Giải thích"
           smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
+        image_caption:
+          setting_groups:
+            settings: "Cài đặt"
         spam:
           name: "Rác"
       modals:
@@ -220,8 +223,6 @@ vi:
         thumbnail_suggestions:
           select: "Chọn"
           try_again: "Thử lại"
-        image_caption:
-          save_caption: "Lưu lại"
         no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
         save: "Lưu lại"

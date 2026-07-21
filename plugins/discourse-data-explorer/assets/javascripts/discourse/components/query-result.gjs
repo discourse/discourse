@@ -6,13 +6,13 @@ import { service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import moment from "moment";
 import DSegmentedControl from "discourse/components/d-segmented-control";
-import KeyValueStore from "discourse/lib/key-value-store";
 import Badge from "discourse/models/badge";
 import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import { chartability, defaultView, looksLikeDate } from "../lib/chart-helpers";
+import { dataExplorerStore } from "../lib/data-explorer-store";
 import DataExplorerChart from "./data-explorer-chart";
 import QueryChartEmptyState from "./query-chart-empty-state";
 import QueryResultDownloadButtons from "./query-result-download-buttons";
@@ -29,8 +29,6 @@ import TextViewComponent from "./result-types/text";
 import TopicViewComponent from "./result-types/topic";
 import UrlViewComponent from "./result-types/url";
 import UserViewComponent from "./result-types/user";
-
-const store = new KeyValueStore("discourse_data_explorer_");
 
 const VIEW_COMPONENTS = {
   topic: TopicViewComponent,
@@ -62,7 +60,7 @@ export default class QueryResult extends Component {
     const queryId = this.args.query?.id;
 
     if (!this.args.view) {
-      const stored = queryId ? store.get(`view_${queryId}`) : null;
+      const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
       if (stored === "chart" || stored === "table") {
         this.internalView = stored;
       } else {
@@ -70,7 +68,9 @@ export default class QueryResult extends Component {
       }
     }
 
-    const storedChartForm = queryId ? store.get(`chart_form_${queryId}`) : null;
+    const storedChartForm = queryId
+      ? dataExplorerStore.get(`chart_form_${queryId}`)
+      : null;
     if (CHART_FORMS.includes(storedChartForm)) {
       this.internalChartForm = storedChartForm;
     }
@@ -89,7 +89,7 @@ export default class QueryResult extends Component {
     this.internalView = value;
     const queryId = this.args.query?.id;
     if (queryId) {
-      store.set({ key: `view_${queryId}`, value });
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
     }
   }
 
@@ -103,7 +103,7 @@ export default class QueryResult extends Component {
     this.internalChartForm = value;
     const queryId = this.args.query?.id;
     if (queryId) {
-      store.set({ key: `chart_form_${queryId}`, value });
+      dataExplorerStore.set({ key: `chart_form_${queryId}`, value });
     }
   }
 

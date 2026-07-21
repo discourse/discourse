@@ -111,7 +111,11 @@ module DiscourseAi
 
           DiscourseAi::AiBot::Playground
             .new(bot)
-            .reply_to(post, custom_instructions: custom_instructions) do |partial|
+            .reply_to(
+              post,
+              custom_instructions: custom_instructions,
+              feature_name: "bot",
+            ) do |partial|
               next if partial.empty?
 
               write_chunk(io, { partial: partial })

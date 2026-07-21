@@ -83,6 +83,7 @@ const StatusPlaceholder = <template>
 export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
+  @service embeddableChat;
   @service messageBus;
   @service siteSettings;
 
@@ -113,6 +114,14 @@ export default class DiscoursePostEvent extends Component {
 
   get event() {
     return this.fetchedEvent ?? this.args.event;
+  }
+
+  get useLivestreamLayout() {
+    return (
+      this.event.livestream &&
+      this.embeddableChat.chatChannelId &&
+      !this.embeddableChat.isChannelOpenInDrawer
+    );
   }
 
   get isPartialEvent() {
@@ -376,10 +385,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location
-                @location={{event.location}}
-                @livestream={{event.livestream}}
-              />
+              <Location @location={{event.location}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 
@@ -402,10 +408,12 @@ export default class DiscoursePostEvent extends Component {
                 <StatusPlaceholder />
               {{/if}}
 
-              {{#if event.livestream}}
-                {{bodyClass "livestream-topic"}}
-              {{/if}}
-              <Livestream @event={{event}} />
+              {{#unless @hideLivestreamVideo}}
+                {{#if this.useLivestreamLayout}}
+                  {{bodyClass "livestream-topic"}}
+                {{/if}}
+                <Livestream @event={{event}} />
+              {{/unless}}
             </PluginOutlet>
           {{/if}}
         </div>

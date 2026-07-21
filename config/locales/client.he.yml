@@ -1718,6 +1718,9 @@ he:
       notifications: "התראות"
       statistics: "סטטיסטיקות"
       desktop_notifications:
+        push_level:
+          none: "כבוי"
+          all: "פעיל"
         not_supported: "התראות לא נתמכות בדפדפן זה. עמך הסליחה."
         perm_denied_expl: "דחית הרשאה לקבלת התראות. יש לאפשר התראות בהגדרות הדפדפן שלך."
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
@@ -2452,6 +2455,28 @@ he:
           create_link_and_send_email: "יצירת קישור ושליחת דוא״ל"
           invite_saved_without_sending_email: "הזמנה נשלחה. יש להעתיק את הקישור שלהלן ולשתף אותו כדי להעניק גישה מיידית לאתר הזה."
           invite_saved_with_sending_email: "הודעת הזמנה נשלחה בדוא״ל. אפשר גם להעתיק את הקישור להלן ולשתף אותו כדי להעניק גישה מיידית לאתר."
+        invite_roles:
+          member_title: "הזמנת חברים"
+          sent_title: "נשלחה הזמנה"
+          member_tab: "חברים"
+          admin_tab: "מנהלים ראשיים"
+          admin_email_label: "כתובת דוא״ל"
+          email_placeholder: "name@example.com"
+          invite_by_email: "דוא״ל"
+          restrict_domain: "הגבלה לשם תחום"
+          more_options: "אפשרויות נוספות"
+          update: "עדכון"
+          summary:
+            role_member: "חברים"
+            role_admin: "הנהלה"
+            method: "שיתוף"
+            method_email: "דוא״ל"
+            restriction: "מוגבלת לכדי"
+            uses: "כמות שימושים מרבית"
+            expires: "תפוג"
+            topic: "נושא"
+            groups: "קבוצות"
+            edit: "עריכת הזמנה"
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -3099,6 +3124,8 @@ he:
       default: אמוג׳ים מותאמים
     filter_input:
       clear: "פינוי המסנן"
+    filter_controls:
+      reset: "איפוס המסנן"
     d_icon_grid_picker:
       select_icon: "נא לבחור סמל"
       search_placeholder: "חיפוש סמלים…"
@@ -3226,6 +3253,7 @@ he:
       draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_placeholder_redesign: "כותרת"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -3944,6 +3972,7 @@ he:
       sort:
         label: "מיון לפי"
         top: "מובילים"
+        hot: "חמים"
         new: "חדשות"
         old: "ישן"
       load_more_children:
@@ -4043,6 +4072,7 @@ he:
       read_more_in_category: "רוצה לקרוא עוד? אפשר לעיין בנושאים שתחת %{categoryLink} או <a href='%{latestLink}'>להציג את הנושאים האחרונים</a>."
       read_more: "מעניין אותך לקרוא עוד? אפשר <a href='%{categoryLink}'>לעיין בכל הקטגוריות</a> או <a href='%{latestLink}'>לצפות בנושאים העדכניים ביותר</a>."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
+      sr_read: "קריאה"
       participant_groups: "קבוצות משתתפים"
       reply_count_link:
         one: "תגובה אחת, קפיצה לפוסט הראשון"
@@ -4574,8 +4604,10 @@ he:
           many: "הצגת %{count} שפות מתורגמות"
           other: "הצגת %{count} שפות מתורגמות"
         modal:
-          title: "תרגומים לפוסט"
+          title: "תרגומים"
           confirm_delete: "למחוק את התרגומים ל־‚%{languageCode}’?"
+          post_language: "שפת הפוסט"
+          discard_language_change: "התעלמות מהשינוי"
         success: "התרגומים עודכנו בהצלחה"
         post_language_selector:
           title: "שפת הפוסט"
@@ -5466,7 +5498,6 @@ he:
       selector_no_tags: "ללא תגיות"
       selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
-      choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
         one: "נא לבחור תגית %{count} לפחות…"
         two: "נא לבחור %{count} תגיות לפחות…"
@@ -6075,7 +6106,6 @@ he:
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
-    reset_filter: "איפוס המסנן"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -6286,7 +6316,6 @@ he:
             apple_touch_icon:
               title: "סמל Apple touch"
               description: "סמל המשמש למכשירי Apple touch. אם נותר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-              help_text: "הגודל המומלץ הוא 180 × 180 פיקסלים. לא מומלץ רקע שקוף."
             digest_logo:
               title: "לוגו תמצית"
               description: "תמונת הלוגו החלופית בה נעשה שימוש בתקצירי הדוא״ל שנשלחים מהאתר שלך. במקרה של העדר בחירה, ייעשה שימוש בהגדרות התמונה מה־`logo`."
@@ -6472,6 +6501,22 @@ he:
               title: "פוסטים ונושאים"
             stats_and_thresholds:
               title: "סטטיסטיקות וספים"
+        category_management:
+          create_category: "יצירת קטגוריה"
+          tabs:
+            settings: "הגדרות"
+          types:
+            all:
+              title: "כל הקטגוריות"
+          filter_placeholder: "סינון קטגוריות"
+          table:
+            category: "קטגוריה"
+            visibility: "חשיפה"
+            topics: "נושאים"
+          visibility:
+            public: "ציבורי"
+          visibility_filter:
+            all: "כל הקטגוריות"
         permalinks:
           title: "קישורים קבועים"
           header_description: "הפניות להחיל על כתובות שאינן מוכרות לפורום"
@@ -6694,6 +6739,7 @@ he:
               searches: "חיפושים"
               status: "מצב"
         reports_section:
+          header_action: "ניהול"
           no_data: "אין נתונים להצגה"
           modal:
             enabled_heading: "פעיל"
@@ -8209,6 +8255,7 @@ he:
             header: "כותרת"
             full_page: "עמוד מלא"
             click_through_only: "הכול (שיעור לחיצה בלבד)"
+            non_staff_only: "משתמשים שאינם חברי סגל"
           header_search_results: "תוצאות חיפוש כותרות"
         logster:
           title: "יומני שגיאות"
@@ -9058,6 +9105,10 @@ he:
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
         settings: "הגדרות"
+        export: "ייצוא"
+        import: "ייבוא"
+        import_category:
+          new: "חדשות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         delete: "מחיקה"

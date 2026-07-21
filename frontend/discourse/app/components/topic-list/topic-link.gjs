@@ -21,11 +21,11 @@ export default class TopicLink extends Component {
         class="title"
         ...attributes
       >
-        {{trustHTML @topic.fancyTitle}}
-        {{#if @topic.visited}}
+        {{~trustHTML @topic.fancyTitle~}}
+        {{~#if @topic.visited~}}
           <span class="sr-only">&nbsp;{{i18n "topic.sr_read"}}</span>
-        {{/if}}
-        {{yield}}
+        {{~/if~}}
+        {{~yield~}}
       </a>
       {{~! no whitespace ~}}
     </PluginOutlet>

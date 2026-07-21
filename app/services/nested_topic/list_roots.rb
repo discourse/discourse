@@ -125,6 +125,7 @@ class NestedTopic::ListRoots
     response[:topic] = serializer.serialize_topic
     response[:op_post] = serializer.serialize_post(loader.op_post, reply_counts, descendant_counts)
     response[:sort] = params.sort
+    response[:effective_sort] = loader.effective_sort(params.sort)
     response[:message_bus_last_id] = topic_view.message_bus_last_id
     response[:pinned_post_ids] = pinned_post_ids if pinned_post_ids.present?
   end

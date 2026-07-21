@@ -33,6 +33,9 @@ nl:
             topic_id:
               label: Topic-ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
       preferences:
         all_events: "Discourse-kalender - Alle evenementen"

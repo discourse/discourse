@@ -55,9 +55,10 @@ en:
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
-        access_permission_remove_description: "Remove permission for this group"
-        add_group: "Add group"
-        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
+        access_permission_remove_description: "Remove permission for this grantee"
+        add_group: "Add user or group"
+        mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
+        mandatory: "Mandatory"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -940,6 +941,7 @@ en:
         help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this item from the review queue?"
       settings:
         saved: "Saved"
         save_changes: "Save Changes"
@@ -1741,12 +1743,18 @@ en:
       statistics: "Stats"
       desktop_notifications:
         label: "Live notifications"
+        push_level:
+          title: "Push notifications are…"
+          none: "Disabled"
+          all: "Enabled"
+          chat_only: "Enabled for chat only"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn on notifications"
         perm_denied_btn: "Permission denied"
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable notifications"
         enable: "Enable notifications"
+        enable_failed: "Could not enable notifications. Your browser blocked the request or its push service is unavailable."
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
@@ -2517,6 +2525,58 @@ en:
           invite_saved_without_sending_email: "Invite saved. Copy the link below and share it to instantly grant access to this site."
           invite_saved_with_sending_email: "Invite email has been sent. You can also copy the link below and share it to instantly grant access to this site."
 
+        invite_roles:
+          member_title: "Invite members"
+          admin_title: "Invite staff"
+          edit_title: "Editing invite"
+          created_title: "Invite created"
+          sent_title: "Invitation sent"
+          member_tab: "Members"
+          admin_tab: "Staff"
+          member_description: "Invite people to join this site. Share a link or send an email invitation."
+          admin_description: "Invite people to join your staff team. Admins have full access to this site."
+          moderator_description: "Invite people to join your staff team. Moderators can help manage content and members."
+          staff_role_label: "Invite as"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          admin_email_label: "Email address"
+          member_email_label: "Send to"
+          member_email_help: "We'll email an invitation link to this address."
+          email_placeholder: "name@example.com"
+          invite_by: "Invite by"
+          invite_by_link: "Shareable link"
+          invite_by_email: "Email"
+          role_label: "Invite as"
+          restrict_domain: "Restrict to domain"
+          restrict_domain_help: "Only people with an email at this domain can accept the link. To invite a specific person, use Email above."
+          domain_placeholder: "example.com"
+          domain_invalid: "Enter a valid domain, e.g. example.com"
+          arrive_at_topic_help: "Send people to a specific topic after they accept."
+          create_and_send: "Create & send"
+          create_and_copy: "Create & copy link"
+          more_options: "More options"
+          fewer_options: "Fewer options"
+          update: "Update"
+          role_locked: "The invite type can't be changed after the invite is created."
+          summary:
+            sent_to: "An invitation was emailed to %{email}. You can also share this link directly:"
+            role: "Role"
+            role_member: "Member"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method: "Sharing"
+            method_link: "Shareable link"
+            method_email: "Email"
+            restriction: "Restricted to"
+            uses: "Max uses"
+            expires: "Expires"
+            topic: "Topic"
+            groups: "Groups"
+            edit: "Edit invite"
+            view_invites: "View invites"
+          email_sent:
+            body: "An invitation was emailed to %{email}."
+
         bulk_invite:
           none: "No invitations to display on this page."
 
@@ -3207,6 +3267,10 @@ en:
     filter_input:
       clear: "Clear filter"
 
+    filter_controls:
+      reset: "Reset filter"
+      toggle: "Toggle dropdown filters"
+
     d_icon_grid_picker:
       select_icon: "Select icon"
       search_placeholder: "Search icons..."
@@ -3416,6 +3480,7 @@ en:
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
+      title_placeholder_redesign: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
@@ -4194,6 +4259,7 @@ en:
       sort:
         label: "Sort by"
         top: "Top"
+        hot: "Hot"
         new: "New"
         old: "Old"
       load_more_children:
@@ -4869,8 +4935,16 @@ en:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
         modal:
-          title: "Translations for post"
+          title: "Translations"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
+          language_notice: "Set the original post language so translations can be shown to readers."
+          post_language: "Post language"
+          topic_language: "Topic title language"
+          save_post_language: "Save post language"
+          save_topic_language: "Save topic title language"
+          discard_language_change: "Discard change"
+          post_language_updated: "Post language updated"
+          topic_language_updated: "Topic title language updated"
         success: "Translations have been updated successfully"
         post_language_selector:
           title: "Post language"
@@ -5118,7 +5192,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
@@ -5851,7 +5925,7 @@ en:
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
-      choose_for_topic: "optional tags"
+      choose_for_topic: "Optional tags…"
       choose_for_topic_required:
         one: "select at least %{count} tag…"
         other: "select at least %{count} tags…"
@@ -6142,7 +6216,16 @@ en:
           public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
+          localizations:
+            title: "Translations"
+            locale: "Language"
+            title_label: "Section title"
+            link_label: "Link name"
+            add_section: "Add section title translation"
+            add_link: "Add link name translation"
+            remove: "Remove translation"
           links:
+            title: "Section links"
             add: "Add another link"
             delete: "Delete link"
             reset: "Reset to default"
@@ -6471,8 +6554,6 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
-    reset_filter: "Reset filter"
-    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -6922,6 +7003,32 @@ en:
               title: "Posts & topics"
             stats_and_thresholds:
               title: "Stats & thresholds"
+        category_management:
+          title: "Category management"
+          header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
+          keywords: "categories|category types|discussion|category management"
+          create_category: "Create category"
+          tabs:
+            settings: "Settings"
+          types:
+            unavailable: "The category type %{categoryType} is not available."
+            all:
+              title: "All categories"
+              description: "All categories across every configured category type."
+          filter_placeholder: "Filter categories"
+          no_results: "No %{type} categories found."
+          open_settings: "Open settings"
+          table:
+            category: "Category"
+            visibility: "Visibility"
+            topics: "Topics"
+          visibility:
+            public: "Public"
+            restricted: "Restricted"
+          visibility_filter:
+            all: "All categories"
+            public: "Public categories"
+            restricted: "Restricted categories"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
@@ -7135,6 +7242,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        fetch_error: "Couldn't load the dashboard. Try refreshing the page."
         stable: "stable"
 
         sections:
@@ -7142,6 +7250,7 @@ en:
             title: "Highlights"
           reports:
             title: "Reports"
+            fetch_error: "Couldn't load reports. Try refreshing the page."
           traffic:
             title: "Site traffic"
           engagement:
@@ -7157,6 +7266,7 @@ en:
               share: "Share"
               vs_prior: "Vs Prior"
               empty: "No activity in the selected period."
+              save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
               all_categories: "All categories"
@@ -7264,6 +7374,7 @@ en:
                 poor_match: "Poor match"
                 poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
         reports_section:
+          header_action: "Manage"
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
           remove: "Remove report"
@@ -9789,6 +9900,31 @@ en:
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Settings"
+        export: "Export"
+        export_count: "Export (%{count} selected)"
+        export_failed: "Export failed. Please try again."
+        select_to_export: "Select to export"
+        import: "Import"
+        import_heading: "Import emojis"
+        import_description: "Upload a ZIP file containing an emojis.csv manifest and image files."
+        import_download_sample: "Download an example template."
+        import_preview_heading: "Review import"
+        import_summary: "%{new} new · %{conflicts} conflicts · %{unchanged} unchanged · %{invalid} errors"
+        import_confirm: "Confirm import"
+        import_unchanged_count: "%{count} unchanged"
+        import_will_skip: "Unchanged — will skip"
+        import_excluded: "Excluded from import"
+        import_incoming_alt: "Incoming: %{name}"
+        import_existing_alt: "Existing: %{name}"
+        import_existing_group_alt: "Existing group"
+        import_use_incoming: "Use new"
+        import_keep_existing: "Keep existing"
+        import_category:
+          new: "New"
+          conflict: "Conflicts"
+          invalid: "Errors"
+        select_all: "Select all emojis"
+        select: "Select %{name}"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

@@ -412,6 +412,39 @@ RSpec.describe Admin::DashboardController do
         expect(ids).to eq(%w[reports highlights])
       end
 
+      it "returns successful sections when another section fails to build" do
+        error = StandardError.new("boom")
+        configure_dashboard_sections(%w[highlights search])
+        AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
+        AdminDashboardSearch.stubs(:build).raises(error)
+        Discourse.expects(:warn_exception).with(
+          error,
+          message: "Failed to build admin dashboard section",
+          env: {
+            section_id: "search",
+          },
+        )
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(section_payloads).to eq(
+          "highlights" => {
+            "id" => "highlights",
+            "data" => {
+              "value" => "highlights",
+            },
+          },
+          "search" => {
+            "id" => "search",
+            "data" => nil,
+            "error" => true,
+          },
+        )
+        expect(response.parsed_body["configuration"]).to be_present
+        expect(response.parsed_body).to have_key("problems")
+      end
+
       it "omits hidden sections from the data payload" do
         configure_dashboard_sections(%w[highlights reports])
 
@@ -717,6 +750,110 @@ RSpec.describe Admin::DashboardController do
 
       ids = response.parsed_body["sections"].map { |s| s["id"] }
       expect(ids).to eq(["highlights"])
+    end
+  end
+
+  describe "#update_section_settings" do
+    fab!(:category)
+    fab!(:category_2, :category)
+    fab!(:category_3, :category)
+
+    before { SiteSetting.dashboard_improvements = true }
+
+    it "persists the selected category ids and returns 204 for admins" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [category_3.id, category.id, category_2.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq(
+        {
+          "activity_by_category" => {
+            "category_ids" => [category_3.id, category.id, category_2.id],
+          },
+        },
+      )
+    end
+
+    it "returns 400 when more than ten categories are given" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "returns 400 when a category with the given id does not exist" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [category.id, Category.maximum(:id) + 1],
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "returns 400 for an unknown section id" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/frobnitz/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 400 for a known section that does not support this setting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/traffic/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("traffic")).to eq({})
+    end
+
+    it "returns 400 for an unknown setting key" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/not_a_real_setting.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for anonymous users" do
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(404)
     end
   end
 

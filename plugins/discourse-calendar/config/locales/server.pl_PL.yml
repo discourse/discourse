@@ -75,6 +75,9 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    livestream_zoom_enabled: "Włącz osadzanie wideo Zoom w przypadku tematów transmitowanych na żywo."
+    livestream_zoom_sdk_key: "Identyfikator klienta Zoom Meeting SDK."
+    livestream_zoom_sdk_secret: "Tajny klucz klienta Zoom Meeting SDK."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:
@@ -103,6 +106,9 @@ pl_PL:
       all_events_feed_name: "%{site_title} - Wszystkie wydarzenia"
       my_events_feed_name: "%{site_title} - Moje wydarzenia"
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "Ten kanał jest przeznaczony na wydarzenie [%{title}](%{url}) — odwiedź temat, aby uzyskać więcej szczegółów i potwierdzić obecność."
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
     more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."
@@ -111,6 +117,13 @@ pl_PL:
     holiday_status:
       description: "Na świętach"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
+      date_format: "%-d %B %Y"
+      datetime_format: "%-d %B %Y, %k:%M"
     notifications:
       before_event_reminder: "%{title} wkrótce się rozpocznie."
       after_event_reminder: "%{title} dobiegło końca."

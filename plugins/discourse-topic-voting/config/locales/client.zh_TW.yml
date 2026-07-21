@@ -10,16 +10,11 @@ zh_TW:
       sort_options:
         votes: "票數"
     topic_voting:
-      reached_limit: "您已退出投票，移除現有的投票！"
-      list_votes: "列出您的投票"
       voted: "您已在此主題投票過了"
-      allow_topic_voting: "讓使用者可以在這個分類中的主題裡投票"
       vote_title: "投票"
       vote_title_plural: "票數"
       votes:
         other: "%{count} 票"
-      anonymous_button:
-        other: "票數"
       remove_vote: "移除投票"
       and_more_voters: "和%{count}更多。"
       show_voters: "顯示投票人"
@@ -34,7 +29,3 @@ zh_TW:
         help: "您投過票的主題"
     search:
       most_votes: "票數最多"
-      advanced:
-        vote:
-          count:
-            label: "最低投票數"

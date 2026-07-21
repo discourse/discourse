@@ -10,7 +10,6 @@ tr_TR:
     chat_enabled: "Sohbeti etkinleştir."
     chat_pinned_messages: "Sohbet kanallarında sabitlenmiş mesajları etkinleştirin."
     enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
-    chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Yöneticilerin ve moderatörlerin her zaman sohbete erişebileceğini unutmayın."
     chat_channel_retention_days: "Normal kanallardaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
     chat_dm_retention_days: "Kişisel sohbet kanallarındaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
     chat_auto_silence_duration: "Kullanıcıların sohbet mesajı oluşturma hızı sınırını aştıklarında susturulacağı dakika sayısı. Otomatik susturmayı devre dışı bırakmak için \"0\" olarak ayarlayın."

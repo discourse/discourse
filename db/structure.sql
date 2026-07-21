@@ -340,7 +340,8 @@ CREATE TABLE public.admin_dashboard_sections (
     "position" integer NOT NULL,
     visible boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    settings jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -449,7 +450,6 @@ CREATE TABLE public.ai_agents (
     temperature double precision,
     top_p double precision,
     user_id integer,
-    max_context_posts integer,
     vision_enabled boolean DEFAULT false NOT NULL,
     vision_max_pixels integer DEFAULT 1048576 NOT NULL,
     rag_chunk_tokens integer DEFAULT 374 NOT NULL,
@@ -469,8 +469,7 @@ CREATE TABLE public.ai_agents (
     examples jsonb,
     show_thinking boolean DEFAULT true NOT NULL,
     max_turn_tokens integer,
-    compression_threshold integer,
-    execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
+    compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
     thinking_effort character varying
 );
@@ -844,6 +843,44 @@ CREATE SEQUENCE public.ai_moderation_settings_id_seq
 --
 
 ALTER SEQUENCE public.ai_moderation_settings_id_seq OWNED BY public.ai_moderation_settings.id;
+
+
+--
+-- Name: ai_post_image_captions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_post_image_captions (
+    id bigint NOT NULL,
+    post_id integer NOT NULL,
+    upload_id integer NOT NULL,
+    base62_sha1 character varying(27) NOT NULL,
+    locale character varying(20) NOT NULL,
+    description text,
+    attempts integer DEFAULT 0 NOT NULL,
+    last_attempted_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_post_image_captions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_post_image_captions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_post_image_captions_id_seq OWNED BY public.ai_post_image_captions.id;
 
 
 --
@@ -6418,7 +6455,8 @@ CREATE TABLE public.invites (
     expires_at timestamp without time zone NOT NULL,
     email_token character varying,
     domain character varying,
-    description character varying(100)
+    description character varying(100),
+    admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -6522,7 +6560,8 @@ CREATE TABLE public.livestream_topic_chat_channels (
     topic_id bigint NOT NULL,
     chat_channel_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    reference_message_id bigint
 );
 
 
@@ -6908,6 +6947,28 @@ CREATE SEQUENCE public.muted_users_id_seq
 --
 
 ALTER SEQUENCE public.muted_users_id_seq OWNED BY public.muted_users.id;
+
+
+--
+-- Name: nested_hot_post_scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nested_hot_post_scores (
+    post_id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    hot_score double precision NOT NULL,
+    thread_hot_score double precision NOT NULL
+);
+
+
+--
+-- Name: nested_hot_score_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nested_hot_score_snapshots (
+    topic_id bigint NOT NULL,
+    calculated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -8763,6 +8824,39 @@ ALTER SEQUENCE public.sidebar_section_links_id_seq OWNED BY public.sidebar_secti
 
 
 --
+-- Name: sidebar_section_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sidebar_section_localizations (
+    id bigint NOT NULL,
+    sidebar_section_id bigint NOT NULL,
+    locale character varying(20) NOT NULL,
+    title character varying(30) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sidebar_section_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sidebar_section_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sidebar_section_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sidebar_section_localizations_id_seq OWNED BY public.sidebar_section_localizations.id;
+
+
+--
 -- Name: sidebar_sections; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8773,7 +8867,8 @@ CREATE TABLE public.sidebar_sections (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     public boolean DEFAULT false NOT NULL,
-    section_type integer
+    section_type integer,
+    locale character varying(20)
 );
 
 
@@ -8797,6 +8892,39 @@ ALTER SEQUENCE public.sidebar_sections_id_seq OWNED BY public.sidebar_sections.i
 
 
 --
+-- Name: sidebar_url_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sidebar_url_localizations (
+    id bigint NOT NULL,
+    sidebar_url_id bigint NOT NULL,
+    locale character varying(20) NOT NULL,
+    name character varying(80) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sidebar_url_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sidebar_url_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sidebar_url_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sidebar_url_localizations_id_seq OWNED BY public.sidebar_url_localizations.id;
+
+
+--
 -- Name: sidebar_urls; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8808,7 +8936,8 @@ CREATE TABLE public.sidebar_urls (
     updated_at timestamp(6) without time zone NOT NULL,
     icon character varying(40) NOT NULL,
     external boolean DEFAULT false NOT NULL,
-    segment integer DEFAULT 0 NOT NULL
+    segment integer DEFAULT 0 NOT NULL,
+    locale character varying(20)
 );
 
 
@@ -11534,7 +11663,8 @@ CREATE TABLE public.user_options (
     show_original_content boolean DEFAULT false NOT NULL,
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
-    chat_new_message_sound boolean DEFAULT false NOT NULL
+    chat_new_message_sound boolean DEFAULT false NOT NULL,
+    push_notification_level integer DEFAULT 1 NOT NULL
 );
 
 
@@ -12335,6 +12465,13 @@ ALTER TABLE ONLY public.ai_mcp_servers ALTER COLUMN id SET DEFAULT nextval('publ
 --
 
 ALTER TABLE ONLY public.ai_moderation_settings ALTER COLUMN id SET DEFAULT nextval('public.ai_moderation_settings_id_seq'::regclass);
+
+
+--
+-- Name: ai_post_image_captions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_captions ALTER COLUMN id SET DEFAULT nextval('public.ai_post_image_captions_id_seq'::regclass);
 
 
 --
@@ -13794,10 +13931,24 @@ ALTER TABLE ONLY public.sidebar_section_links ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: sidebar_section_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_section_localizations ALTER COLUMN id SET DEFAULT nextval('public.sidebar_section_localizations_id_seq'::regclass);
+
+
+--
 -- Name: sidebar_sections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sidebar_sections ALTER COLUMN id SET DEFAULT nextval('public.sidebar_sections_id_seq'::regclass);
+
+
+--
+-- Name: sidebar_url_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_url_localizations ALTER COLUMN id SET DEFAULT nextval('public.sidebar_url_localizations_id_seq'::regclass);
 
 
 --
@@ -14549,6 +14700,14 @@ ALTER TABLE ONLY public.ai_mcp_servers
 
 ALTER TABLE ONLY public.ai_moderation_settings
     ADD CONSTRAINT ai_moderation_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_post_image_captions ai_post_image_captions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_captions
+    ADD CONSTRAINT ai_post_image_captions_pkey PRIMARY KEY (id);
 
 
 --
@@ -16264,11 +16423,27 @@ ALTER TABLE ONLY public.sidebar_section_links
 
 
 --
+-- Name: sidebar_section_localizations sidebar_section_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_section_localizations
+    ADD CONSTRAINT sidebar_section_localizations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: sidebar_sections sidebar_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sidebar_sections
     ADD CONSTRAINT sidebar_sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sidebar_url_localizations sidebar_url_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_url_localizations
+    ADD CONSTRAINT sidebar_url_localizations_pkey PRIMARY KEY (id);
 
 
 --
@@ -17121,6 +17296,20 @@ CREATE UNIQUE INDEX idx_ai_bot_conversation_stars_user_topic ON public.discourse
 
 
 --
+-- Name: idx_ai_post_image_captions_lookup; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ai_post_image_captions_lookup ON public.ai_post_image_captions USING btree (post_id, locale, base62_sha1);
+
+
+--
+-- Name: idx_ai_post_image_captions_reuse; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions USING btree (base62_sha1, locale);
+
+
+--
 -- Name: idx_bookmarks_user_polymorphic_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17594,6 +17783,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 --
 
 CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_feature_credit_costs USING btree (llm_model_id, feature_name);
+
+
+--
+-- Name: idx_on_sidebar_section_id_locale_271bd8ee1c; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_sidebar_section_id_locale_271bd8ee1c ON public.sidebar_section_localizations USING btree (sidebar_section_id, locale);
 
 
 --
@@ -19893,6 +20089,34 @@ CREATE UNIQUE INDEX index_muted_users_on_user_id_and_muted_user_id ON public.mut
 
 
 --
+-- Name: index_nested_hot_post_scores_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_nested_hot_post_scores_on_post_id ON public.nested_hot_post_scores USING btree (post_id);
+
+
+--
+-- Name: index_nested_hot_post_scores_on_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_nested_hot_post_scores_on_topic_id ON public.nested_hot_post_scores USING btree (topic_id);
+
+
+--
+-- Name: index_nested_hot_score_snapshots_on_calculated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_nested_hot_score_snapshots_on_calculated_at ON public.nested_hot_score_snapshots USING btree (calculated_at);
+
+
+--
+-- Name: index_nested_hot_score_snapshots_on_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_nested_hot_score_snapshots_on_topic_id ON public.nested_hot_score_snapshots USING btree (topic_id);
+
+
+--
 -- Name: index_nested_topics_on_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20775,6 +20999,13 @@ CREATE INDEX index_sidebar_section_links_on_linkable_type_and_linkable_id ON pub
 
 
 --
+-- Name: index_sidebar_section_localizations_on_sidebar_section_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sidebar_section_localizations_on_sidebar_section_id ON public.sidebar_section_localizations USING btree (sidebar_section_id);
+
+
+--
 -- Name: index_sidebar_sections_on_section_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20786,6 +21017,20 @@ CREATE UNIQUE INDEX index_sidebar_sections_on_section_type ON public.sidebar_sec
 --
 
 CREATE UNIQUE INDEX index_sidebar_sections_on_user_id_and_title ON public.sidebar_sections USING btree (user_id, title);
+
+
+--
+-- Name: index_sidebar_url_localizations_on_sidebar_url_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sidebar_url_localizations_on_sidebar_url_id ON public.sidebar_url_localizations USING btree (sidebar_url_id);
+
+
+--
+-- Name: index_sidebar_url_localizations_on_sidebar_url_id_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sidebar_url_localizations_on_sidebar_url_id_and_locale ON public.sidebar_url_localizations USING btree (sidebar_url_id, locale);
 
 
 --
@@ -22582,14 +22827,28 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715202231'),
+('20260715183411'),
+('20260715134306'),
+('20260715113008'),
+('20260715090434'),
+('20260715090355'),
+('20260715064155'),
+('20260714152340'),
 ('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),
+('20260708051450'),
+('20260707184150'),
+('20260707184146'),
 ('20260707013407'),
+('20260706151932'),
 ('20260703164430'),
 ('20260703163425'),
 ('20260702102111'),
 ('20260701073045'),
+('20260701013609'),
+('20260701013606'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),

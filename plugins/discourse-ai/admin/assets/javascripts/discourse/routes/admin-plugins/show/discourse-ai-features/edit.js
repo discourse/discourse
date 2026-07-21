@@ -33,13 +33,6 @@ export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRo
         value = value === "true" || value === true;
       }
 
-      if (setting.type === "enum" && typeof value === "string") {
-        const numValue = parseInt(value, 10);
-        if (!isNaN(numValue) && numValue.toString() === value) {
-          value = numValue;
-        }
-      }
-
       currentFeature.formData[setting.setting] = value;
     });
 

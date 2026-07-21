@@ -2,6 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 import ComposerEventEditor from "discourse/plugins/discourse-calendar/discourse/components/composer-event-editor";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
+import DiscoursePostEventOneboxPreview from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event/onebox-preview";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 
 const ComposerEventEditorTemplate = <template>
@@ -20,6 +21,69 @@ function _invalidEventPreview(eventContainer) {
   );
 }
 
+function _decorateEventOneboxes(cooked, helper) {
+  const oneboxes = helper.getModel()?.event_oneboxes;
+  if (!oneboxes) {
+    return;
+  }
+
+  cooked
+    .querySelectorAll(
+      "aside.quote[data-topic][data-post='1']:not([data-username])"
+    )
+    .forEach((aside) => {
+      const topicId = parseInt(aside.dataset.topic, 10);
+      const data = topicId && oneboxes[topicId];
+      if (!data) {
+        return;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "discourse-post-event-onebox";
+      aside.replaceWith(wrapper);
+
+      const event = DiscoursePostEventEvent.create(data);
+      helper.renderGlimmer(
+        wrapper,
+        <template>
+          <DiscoursePostEvent @event={{event}} @linkToPost={{true}} />
+        </template>
+      );
+    });
+}
+
+function _decorateEventPreviewOneboxes(cooked, helper) {
+  // In the composer preview there's no post model / preloaded data, so we fetch
+  // the event by topic id and render a read-only card. The original quote is
+  // passed as a fallback so non-event links (and the loading state) keep showing
+  // the normal onebox.
+  cooked
+    .querySelectorAll(
+      "aside.quote[data-topic][data-post='1']:not([data-username])"
+    )
+    .forEach((aside) => {
+      const topicId = parseInt(aside.dataset.topic, 10);
+      if (!topicId) {
+        return;
+      }
+
+      const fallbackHtml = aside.outerHTML;
+      const wrapper = document.createElement("div");
+      wrapper.className = "discourse-post-event-onebox";
+      aside.replaceWith(wrapper);
+
+      helper.renderGlimmer(
+        wrapper,
+        <template>
+          <DiscoursePostEventOneboxPreview
+            @topicId={{topicId}}
+            @fallbackHtml={{fallbackHtml}}
+          />
+        </template>
+      );
+    });
+}
+
 function _decorateEventPreview(api, cooked, helper) {
   const eventContainers = cooked.querySelectorAll(".discourse-post-event");
 
@@ -35,14 +99,21 @@ function _decorateEventPreview(api, cooked, helper) {
 }
 
 function initializeDiscoursePostEventDecorator(api) {
+  api.addTrackedPostProperties("event_oneboxes");
+
   api.decorateCookedElement(
     (cooked, helper) => {
       if (cooked.classList.contains("d-editor-preview")) {
         _decorateEventPreview(api, cooked, helper);
+        if (helper) {
+          _decorateEventPreviewOneboxes(cooked, helper);
+        }
         return;
       }
 
       if (helper) {
+        _decorateEventOneboxes(cooked, helper);
+
         const post = helper.getModel();
 
         if (!post?.event) {
@@ -55,6 +126,15 @@ function initializeDiscoursePostEventDecorator(api) {
           return;
         }
 
+        let hideLivestreamVideo = false;
+        if (
+          postEventNode.parentElement.classList.contains(
+            "post__contents-cooked-quote"
+          )
+        ) {
+          hideLivestreamVideo = true;
+        }
+
         const wrapper = document.createElement("div");
         postEventNode.before(wrapper);
 
@@ -63,7 +143,11 @@ function initializeDiscoursePostEventDecorator(api) {
         helper.renderGlimmer(
           wrapper,
           <template>
-            <DiscoursePostEvent @event={{event}} @post={{post}} />
+            <DiscoursePostEvent
+              @event={{event}}
+              @post={{post}}
+              @hideLivestreamVideo={{hideLivestreamVideo}}
+            />
           </template>
         );
       }

@@ -11,10 +11,6 @@ export default {
     withPluginApi((api) => {
       const chat = container.lookup("service:chat");
 
-      if (!chat.userCanChat) {
-        return;
-      }
-
       if (api.registerNotificationTypeRenderer) {
         api.registerNotificationTypeRenderer(
           "chat_invitation",
@@ -141,6 +137,10 @@ export default {
             };
           }
         );
+      }
+
+      if (!chat.userCanChat) {
+        return;
       }
 
       if (api.registerUserMenuTab) {

@@ -169,6 +169,8 @@ hr:
         filter_all: Sve
         filter_open: Otvori
         filter_closed: Zatvoreno
+        filter_joined_all: "Sve"
+        filter_joined_joined: "Pridružio/la se"
       chat_message_separator:
         today: Danas
         yesterday: Jučer
@@ -195,6 +197,9 @@ hr:
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"
+      channel:
+        preview_card:
+          log_in: "Prijavite se"
       create_channel:
         auto_join_users:
           warning_1_group:

@@ -16,6 +16,31 @@ RSpec.describe Oneboxer do
     expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 
+  it "shows the bot challenge error message when the response is a verification challenge" do
+    url = "https://challenged.example.com/page"
+    %i[head get].each do |method|
+      stub_request(method, url).to_return(
+        status: 202,
+        headers: {
+          "x-amzn-waf-action" => "challenge",
+        },
+      )
+    end
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.bot_challenge").sub(" :cry:", ""),
+    )
+  end
+
+  it "shows the status code error message for a plain error response" do
+    url = "https://error.example.com/page"
+    %i[head get].each { |method| stub_request(method, url).to_return(status: 403) }
+
+    expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+      I18n.t("errors.onebox.error_response", status_code: 403).sub(" :cry:", ""),
+    )
+  end
+
   describe "#invalidate" do
     let(:url) { "http://test.com" }
     it "clears the cached preview for the onebox URL and the failed URL cache" do

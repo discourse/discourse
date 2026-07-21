@@ -27,6 +27,9 @@ ja:
             topic_id:
               label: トピック ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "チャット"
       invite_user_notification: "%{username} があなたを招待しました: %{description}"
       on_holiday: "休暇中"
       disable_holiday: "無効化"

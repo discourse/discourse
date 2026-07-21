@@ -22,6 +22,13 @@ export default class PostLocalization extends RestModel {
     });
   }
 
+  static updateLocale(postId, locale) {
+    return ajax(`/post_localizations/${postId}/locale`, {
+      type: "PUT",
+      data: { locale: locale ?? "" },
+    });
+  }
+
   static destroy(postId, locale) {
     return ajax("/post_localizations/destroy", {
       type: "DELETE",

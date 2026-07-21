@@ -55,3 +55,12 @@ discourse_topic_voting:
       status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
+      requires_plugin_enabled: false
+  enable_topic_voting_badges:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/401731"

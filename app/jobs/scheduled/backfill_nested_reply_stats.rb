@@ -13,7 +13,7 @@ module Jobs
       topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
       return if topic_ids.empty?
 
-      topic_ids.each { |topic_id| backfill_topic(topic_id) }
+      topic_ids.each { |topic_id| self.class.backfill_topic(topic_id) }
     end
 
     private
@@ -59,7 +59,7 @@ module Jobs
       )
     end
 
-    def backfill_topic(topic_id)
+    def self.backfill_topic(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
         WITH RECURSIVE
         edges AS (

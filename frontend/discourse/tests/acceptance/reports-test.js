@@ -109,7 +109,7 @@ acceptance("Reports | Filter query params", function (needs) {
   test("typing in the filter box reflects the search in the URL", async function (assert) {
     await visit("/admin/reports");
 
-    await fillIn(".admin-filter-controls__input", "signups");
+    await fillIn(".d-filter-controls__input", "signups");
 
     assert.strictEqual(
       currentURL(),
@@ -121,10 +121,10 @@ acceptance("Reports | Filter query params", function (needs) {
       .dom(".admin-section-landing-item__title")
       .hasHtml("Signups", "only shows the matching report");
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
 
-    await fillIn(".admin-filter-controls__input", "");
+    await fillIn(".d-filter-controls__input", "");
 
     assert.strictEqual(
       currentURL(),
@@ -137,7 +137,7 @@ acceptance("Reports | Filter query params", function (needs) {
   test("selecting a group reflects it in the URL", async function (assert) {
     await visit("/admin/reports");
 
-    await select(".admin-filter-controls__dropdown", "moderation_and_security");
+    await select(".d-filter-controls__dropdown", "moderation_and_security");
 
     assert.strictEqual(
       currentURL(),
@@ -147,7 +147,7 @@ acceptance("Reports | Filter query params", function (needs) {
     assert.dom(".admin-reports-group").exists({ count: 1 });
     assert.dom(".admin-section-landing-item__content").exists({ count: 1 });
 
-    await select(".admin-filter-controls__dropdown", "all");
+    await select(".d-filter-controls__dropdown", "all");
 
     assert.strictEqual(
       currentURL(),
@@ -161,7 +161,7 @@ acceptance("Reports | Filter query params", function (needs) {
     await visit("/admin/reports?group=content");
 
     assert.strictEqual(currentURL(), "/admin/reports?group=content");
-    assert.dom(".admin-filter-controls__dropdown").hasValue("content");
+    assert.dom(".d-filter-controls__dropdown").hasValue("content");
     assert.dom(".admin-reports-group").exists({ count: 1 });
     assert
       .dom(".admin-section-landing-item__title")
@@ -174,12 +174,12 @@ acceptance("Reports | Filter query params", function (needs) {
     // same-route transition to the bare URL fires no route event at all
     await visit("/admin/reports?group=content");
 
-    assert.dom(".admin-filter-controls__dropdown").hasValue("content");
+    assert.dom(".d-filter-controls__dropdown").hasValue("content");
 
     await visit("/admin/reports?group=moderation_and_security");
 
     assert
-      .dom(".admin-filter-controls__dropdown")
+      .dom(".d-filter-controls__dropdown")
       .hasValue(
         "moderation_and_security",
         "re-selects the dropdown from the new URL"
@@ -192,7 +192,7 @@ acceptance("Reports | Filter query params", function (needs) {
   test("falls back to all groups when the URL group is unknown", async function (assert) {
     await visit("/admin/reports?group=nonsense");
 
-    assert.dom(".admin-filter-controls__dropdown").hasValue("all");
+    assert.dom(".d-filter-controls__dropdown").hasValue("all");
     assert.dom(".admin-reports-group").exists({ count: 3 });
     assert.dom(".admin-section-landing-item__content").exists({ count: 3 });
   });
@@ -200,8 +200,8 @@ acceptance("Reports | Filter query params", function (needs) {
   test("reset button clears both params from the URL", async function (assert) {
     await visit("/admin/reports");
 
-    await fillIn(".admin-filter-controls__input", "signups");
-    await select(".admin-filter-controls__dropdown", "engagement");
+    await fillIn(".d-filter-controls__input", "signups");
+    await select(".d-filter-controls__dropdown", "engagement");
 
     assert.strictEqual(
       currentURL(),
@@ -209,15 +209,15 @@ acceptance("Reports | Filter query params", function (needs) {
       "both filters are in the URL"
     );
 
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.strictEqual(
       currentURL(),
       "/admin/reports",
       "clears both params in one write"
     );
-    assert.dom(".admin-filter-controls__input").hasValue("");
-    assert.dom(".admin-filter-controls__dropdown").hasValue("all");
+    assert.dom(".d-filter-controls__input").hasValue("");
+    assert.dom(".d-filter-controls__dropdown").hasValue("all");
     assert.dom(".admin-section-landing-item__content").exists({ count: 3 });
   });
 });

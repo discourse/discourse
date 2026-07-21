@@ -271,8 +271,6 @@ tr_TR:
       no_public_channels_cta: "Kanallara göz at"
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       chat_notifications_title: "Sohbet bildirimleri"
-      only_chat_push_notifications:
-        title: "Yalnızca sohbet anlık bildirimleri gönder"
       personalization_title: "Kişiselleştirme"
       ignore_channel_wide_mention:
         title: "Kanal genelindeki bahsetmeleri yok say"
@@ -354,6 +352,8 @@ tr_TR:
         filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
+        filter_joined_all: "Tümü"
+        filter_joined_joined: "Katılma Tarihi"
       chat_message_separator:
         today: Bugün
         yesterday: Dün
@@ -425,6 +425,9 @@ tr_TR:
         memberships_count:
           one: "%{count} üye"
           other: "%{count} üye"
+        preview_card:
+          log_in: "Giriş Yap"
+          sign_up: "Kaydol"
       create_channel:
         threading:
           label: "İleti dizisine izin ver"

@@ -1478,6 +1478,17 @@ RSpec.describe User do
       user.update_last_seen!(second_visit_date)
       expect(user.reload.first_seen_at).to eq_time(first_visit_date)
     end
+
+    it "triggers user_seen with the previous seen timestamp" do
+      user.update_last_seen!(first_visit_date)
+
+      events =
+        DiscourseEvent.track_events(:user_seen) do
+          user.update_last_seen!(second_visit_date, force: true)
+        end
+
+      expect(events.first[:params]).to eq([user, first_visit_date])
+    end
   end
 
   describe "update_timezone_if_missing" do
@@ -3053,6 +3064,16 @@ RSpec.describe User do
       expect(user.uploaded_avatar_id).not_to be(nil)
       expect([avatar1.id, avatar2.id]).to include(user.uploaded_avatar_id)
       expect(user.user_avatar.custom_upload_id).to eq(user.uploaded_avatar_id)
+    end
+
+    it "does not set a random avatar when selectable avatar assignment on signup is disabled" do
+      SiteSetting.selectable_avatars = [Fabricate(:upload), Fabricate(:upload)]
+      SiteSetting.selectable_avatars_mode = "everyone"
+      SiteSetting.selectable_avatars_random_on_signup = false
+
+      user = Fabricate(:user)
+
+      expect(user.uploaded_avatar_id).to be_nil
     end
   end
 

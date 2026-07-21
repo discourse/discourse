@@ -34,10 +34,8 @@ de:
               label: Themen-ID
     discourse_calendar:
       livestream:
-        chat:
-          going: "Klicke auf \"Dabei\""
-          join_channel_header: "🌟Mach mit! 🌟"
-          join_channel_message: "Bestätige deine Teilnahme und schalte unseren Event-Chat frei. Beteilige dich an Diskussionen, teile deine Begeisterung und vernetze dich mit anderen Teilnehmern!"
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} lädt dich ein zu: %{description}"
       preferences:
         all_events: "Discourse Kalender – Alle Ereignisse"

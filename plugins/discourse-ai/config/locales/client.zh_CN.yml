@@ -21,7 +21,7 @@ zh_CN:
       dashboard:
         emotion:
           title: "情绪"
-          description: "该表列出了按确定的情绪分类的帖子数量。使用 'SamLowe/roberta-base-go_emotions' 模型进行分类。"
+          description: "该表格列出了按特定情绪分类的帖子数量。根据所选的情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
         reports:
           filters:
             group_by:
@@ -233,6 +233,12 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      post_image_captions:
+        edit: "编辑 AI 图片摘要"
+        title: "编辑 AI 图片摘要"
+        description: "摘要"
+        save: "保存摘要"
+        saved: "AI 图片摘要已保存"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -242,6 +248,7 @@ zh_CN:
         tab_label: "机器人聊天"
       ai_tool_approval:
         loading: "正在加载…"
+        load_error: "操作失败，无法加载此待处理操作。"
         agent: "智能体"
         tool: "操作"
         user: "用户"
@@ -249,6 +256,7 @@ zh_CN:
         reject: "拒绝"
         approved: "已批准"
         rejected: "遭拒"
+        awaiting_staff: "等待管理人员审批"
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
@@ -348,7 +356,6 @@ zh_CN:
           translate: "翻译"
           markdown_tables: "生成 Markdown 表"
           custom_prompt: "自定义提示"
-          image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建工具"
           chat_thread_titles: "聊天消息串标题"
@@ -357,6 +364,12 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        image_caption:
+          name: "图片摘要"
+          description: "为帖子图片生成 AI 摘要，将其提供给读者和辅助阅读技术。"
+          post_image_captions: "帖子图片摘要"
+          setting_groups:
+            settings: "设置"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -393,6 +406,7 @@ zh_CN:
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
         category_scope: "类别"
+        category_scope_description: "选择自动翻译时使用所有类别、公开类别还是选定的类别。"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
@@ -544,16 +558,9 @@ zh_CN:
         description: "描述"
         no_llm_selected: "未选择语言模型"
         use_parent_llm: "使用智能体的语言模型"
-        max_context_posts: "最大上下文帖子数"
-        max_context_posts_help: "AI 在回复用户时用作上下文的最大帖子数。（默认为空）"
-        execution_mode: "执行模式"
-        execution_mode_help: "控制智能体如何管理工具执行和对话上下文。默认设置使用固定的回合/工具限制。Agentic 使用 token 预算和自动上下文压缩，以实现更长时间、更强大的工具使用会话。"
-        execution_mode_options:
-          default: "默认值（固定限值）"
-          agentic: "Agentic（Token 预算）"
         max_turn_tokens: "最大回合 Token"
-        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
-        compression_threshold: "压缩阈值"
+        max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数量（输入 + 输出）。留空则默认值为模型上下文窗口的一半。"
+        compression_threshold: "上下文压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
         vision_enabled: 包含图片上传功能
         vision_enabled_help: 如果启用，当所选模型支持图像输入时，此代理可以包含帖子和聊天中的图像。
@@ -626,12 +633,17 @@ zh_CN:
         temperature_help: "用于 LLM 的 Temperature。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
+        thinking_effort: "思考强度"
+        thinking_effort_help: "推理模型在回答问题前应该思考多少。较高的值可能有助于解决复杂任务，但会增加延迟和成本。不支持的提供商会忽略此设置。"
         thinking_effort_options:
+          default: "模型默认值"
           none: "无"
-          low: "低"
-          medium: "中"
-          high: "高"
-          max: "最大"
+          minimal: "最低 - minimal"
+          low: "低 - low"
+          medium: "中 - medium"
+          high: "高 - high"
+          xhigh: "极高 - xhigh"
+          max: "最高 - max"
         priority: "优先级"
         priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
@@ -893,7 +905,7 @@ zh_CN:
         usage:
           ai_bot: "AI 机器人"
           ai_helper: "助手 (%{agent})"
-          ai_helper_image_caption: "图片标题"
+          ai_image_caption: "图片摘要"
           ai_agent: "智能体（%{agent}）"
           ai_summarization: "总结"
           ai_embeddings_semantic_search: "AI 搜索"
@@ -908,9 +920,9 @@ zh_CN:
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-1-pro: "Google 最智能的模型"
           google-gemini-3-flash: "快速且经济实惠，并具备多模态推理能力"
-          open_ai-gpt-5-5: "OpenAI 功能最强大的模型，具备扩展上下文信息"
-          open_ai-gpt-5-4: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
-          open_ai-gpt-5-4-nano: "最快、最具成本效益的 GPT-5 模型"
+          open_ai-gpt-5-6-sol: "OpenAI 用于处理复杂专业工作的前沿模型"
+          open_ai-gpt-5-6-terra: "在满足高需求场景的同时，兼顾智能性和成本。"
+          open_ai-gpt-5-6-luna: "为注重成本、工作负载量大的场景而优化"
           open_router-moonshotai-kimi-k2-6: "Moonshot 具有视觉能力的多模态模型"
           open_router-deepseek-deepseek-v4-flash: "DeepSeek 最新高性能模型，具备 100 万上下文信息"
           open_router-minimax-minimax-m2-7: "MiniMax 的大上下文模型"
@@ -958,6 +970,7 @@ zh_CN:
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -970,7 +983,8 @@ zh_CN:
           access_key_id: "AWS Bedrock 访问密钥 ID"
           role_arn: "AWS Bedrock 角色 ARN"
           inference_profile_arn: "AWS Bedrock 应用程序推理配置文件 ARN"
-          region: "AWS Bedrock 区域"
+          region: "区域"
+          project_id: "GCP Project ID"
           organization: "可选 OpenAI 组织 ID"
           disable_system_prompt: "在提示中禁用系统消息"
           enable_native_tool: "启用原生工具支持"
@@ -980,6 +994,7 @@ zh_CN:
           provider_quantizations: "提供商量化顺序（逗号分隔列表，例如：fp16,fp8）"
           disable_streaming: "禁用流式补全（将流式请求转换为非流式请求）"
           reasoning_effort: "推理工作（仅适用于推理模型）"
+          reasoning_mode: "推理模式"
           service_tier: "服务层级（灵活层级 = 成本更低/延迟更高，优先层级 = 处理速度更快）"
           enable_reasoning: "启用推理（仅适用于推理模型）"
           adaptive_thinking: "启用自适应思考（推荐用于 Claude 4.6 模型）"
@@ -994,6 +1009,9 @@ zh_CN:
           prompt_caching_tool_results: "工具结果 - 存在工具结果时进行缓存（推荐）"
           prompt_caching_always: "始终 - 始终使用提示缓存"
           effort: "作用等级"
+        provider_field_hints:
+          reasoning_mode: "标准模式使用提供商的默认设置。专业模式需要 Responses API 以及所选模型的支持，且会增加延迟和令牌消耗。"
+          azure_reasoning_effort: "可用的思考强度取决于 Azure 中部署的模型。Azure 会拒绝不支持的值。"
       related_topics:
         title: "相关话题"
         pill: "相关"
@@ -1038,11 +1056,6 @@ zh_CN:
           select: "选择"
           selected: "已选择"
           try_again: "重试"
-        image_caption:
-          button_label: "使用 AI 生成标题"
-          generating: "正在生成标题…"
-          credits: "由 AI 生成标题"
-          save_caption: "保存"
         no_content_error: "先添加内容，然后对其执行 AI 操作"
       errors:
         credit_limit_dialog:
@@ -1132,8 +1145,8 @@ zh_CN:
         click_to_run_label: "运行工件"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体"
-        llm: "模型"
+        agent: "智能体:"
+        llm: "模型:"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"

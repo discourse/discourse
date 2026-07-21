@@ -147,6 +147,30 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_create_admin_invite" do
+    let(:payload) { serializer.as_json }
+
+    it "is true for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+      user.update!(admin: true)
+
+      expect(payload[:can_create_admin_invite]).to eq(true)
+    end
+
+    it "is absent for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
+      user.update!(admin: true)
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+
+    it "is absent for regular users when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+
+      expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
@@ -319,7 +343,7 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id],
           )
         end.count
@@ -333,7 +357,7 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
           )
         end.count

@@ -13,6 +13,7 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
     SiteSetting.chat_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:everyone].to_s
+    topic_livestream.cache_livestream_onebox
     sign_in(current_user)
   end
 
@@ -22,9 +23,7 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
 
       expect(topic_page).to have_css("#custom-chat-container")
       expect(topic_page).to have_css("#custom-chat-container .chat-channel-preview-card")
-      expect(topic_page).to have_text(
-        I18n.t("js.discourse_calendar.livestream.chat.join_channel_header"),
-      )
+      expect(topic_page).to have_text(I18n.t("js.discourse_calendar.livestream.chat.rsvp_to_event"))
     end
 
     it "does not create a chat channel for regular topics" do
@@ -32,7 +31,7 @@ describe "Discourse Livestream - Topic Livestream - Desktop - Authenticated" do
 
       expect(topic_page).not_to have_css("#custom-chat-container")
       expect(topic_page).not_to have_text(
-        I18n.t("js.discourse_calendar.livestream.chat.join_channel_header"),
+        I18n.t("js.discourse_calendar.livestream.chat.rsvp_to_event"),
       )
     end
   end

@@ -952,6 +952,9 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
+      desktop_notifications:
+        push_level:
+          none: "Адключаныя"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -1152,6 +1155,17 @@ be:
         invite:
           description: "Апісанне"
           cancel: "Скасаваць"
+        invite_roles:
+          member_tab: "Члены"
+          admin_tab: "Адміністратары"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Электронная пошта"
+          summary:
+            role_member: "Член"
+            role_admin: "адміністратар"
+            method_email: "Электронная пошта"
+            topic: "Тэма"
+            groups: "Груп"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
@@ -1342,6 +1356,7 @@ be:
       cancel: "Скасаваць"
       create_topic: "Стварыць тэму"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
+      title_placeholder_redesign: "Загаловак"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
       edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
@@ -1518,6 +1533,7 @@ be:
       back_to_list: "Вярнуцца да спісу тэм"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
+      sr_read: "счытванне"
       deleted: "Тэма была выдалена"
       slow_mode_update:
         enable: "Уключыць"
@@ -1658,7 +1674,7 @@ be:
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
-      choose: "катэгорыя&hellip;"
+      choose: "Катэгорыя&hellip;"
       edit: "Рэдагаваць"
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
@@ -1880,7 +1896,6 @@ be:
       selector_tags: "тэгі"
       selector_remove_filter: "выдаліць фільтр"
       tags: "Тэгі"
-      choose_for_topic: "дадатковыя тэгі"
       add_synonyms: "Дадаць"
       description: "Апісанне"
       settings:
@@ -2134,6 +2149,19 @@ be:
               title: "Налады"
         badges:
           title: "Значкі"
+        category_management:
+          tabs:
+            settings: "Налады"
+          types:
+            all:
+              title: "Усе катэгорыі"
+          table:
+            category: "Катэгорыя"
+            topics: "тэмы"
+          visibility:
+            public: "Публічная"
+          visibility_filter:
+            all: "Усе катэгорыі"
         permalinks:
           title: "Пастаянныя спасылкі"
         emoji:
@@ -2936,6 +2964,9 @@ be:
         group: "Група"
         image: "Выява"
         settings: "Налады"
+        export: "Экспарт"
+        import_category:
+          new: "Новае"
       embedding:
         delete: "выдаляць"
         confirm_delete: "Вы ўпэўненыя, што жадаеце выдаліць гэты хост?"

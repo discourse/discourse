@@ -26,8 +26,6 @@ export default class AiConversationsSidebarManager extends Service {
   @service router;
   @service menu;
   @service capabilities;
-  @service currentUser;
-  @service siteSettings;
 
   @tracked topics = [];
   @tracked sections = trackedArray();
@@ -334,15 +332,11 @@ export default class AiConversationsSidebarManager extends Service {
         return bDate - aDate;
       });
 
-    if (this.siteSettings.enable_ai_bot_starred_conversations) {
-      fresh.push({
-        name: "starred-conversations",
-        title: i18n("discourse_ai.ai_bot.conversations.starred"),
-        links: trackedArray(
-          starredTopics.map((t) => this._conversationLink(t))
-        ),
-      });
-    }
+    fresh.push({
+      name: "starred-conversations",
+      title: i18n("discourse_ai.ai_bot.conversations.starred"),
+      links: trackedArray(starredTopics.map((t) => this._conversationLink(t))),
+    });
 
     const todaySection = {
       name: "today",
@@ -353,11 +347,7 @@ export default class AiConversationsSidebarManager extends Service {
     fresh.push(todaySection);
 
     this.topics
-      .filter(
-        (t) =>
-          !this.siteSettings.enable_ai_bot_starred_conversations ||
-          !t.ai_conversation_starred
-      )
+      .filter((t) => !t.ai_conversation_starred)
       .sort((a, b) => {
         const bDate = new Date(b.last_posted_at || now);
         const aDate = new Date(a.last_posted_at || now);
@@ -486,10 +476,7 @@ export default class AiConversationsSidebarManager extends Service {
 
   _conversationLink(topic) {
     const isStarred = !!topic.ai_conversation_starred;
-    const canShowConversationMenu =
-      (this.siteSettings.enable_ai_bot_starred_conversations ||
-        this.currentUser?.can_share_ai_bot_conversations) &&
-      !this.capabilities.isIpadOS;
+    const canShowConversationMenu = !this.capabilities.isIpadOS;
 
     return {
       key: topic.id,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  include Localizable
+
   enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
 
   MAX_ICON_LENGTH = 40
@@ -62,7 +64,10 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
+  accepts_nested_attributes_for :localizations, allow_destroy: true
+
   before_validation :remove_internal_hostname, :set_external
+  before_validation :set_default_locale
 
   def path_validator
     return true if !external?
@@ -81,6 +86,10 @@ class SidebarUrl < ActiveRecord::Base
   def set_external
     self.external = value.start_with?("http://", "https://")
   end
+
+  def set_default_locale
+    self.locale ||= SiteSetting.default_locale.to_s
+  end
 end
 
 # == Schema Information
@@ -90,6 +99,7 @@ end
 #  id         :bigint           not null, primary key
 #  external   :boolean          default(FALSE), not null
 #  icon       :string(40)       not null
+#  locale     :string(20)
 #  name       :string(80)       not null
 #  segment    :integer          default("primary"), not null
 #  value      :string(1000)     not null

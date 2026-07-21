@@ -134,22 +134,31 @@ RSpec.describe TopicViewSerializer do
 
   describe "#chat_channel_id" do
     fab!(:category)
+    fab!(:viewer, :user)
     let(:topic) { Fabricate(:topic, category:) }
 
     before do
       SiteSetting.chat_enabled = true
-      # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+      # Don't do onebox-warming job so it doesn't make a real request
       Jobs.run_later!
       first_post
     end
 
-    def create_event(livestream:)
+    def create_event(livestream:, status: :public, raw_invitees: nil)
       DiscoursePostEvent::Event.create!(
         id: first_post.id,
         original_starts_at: 1.hour.from_now,
         original_ends_at: 2.hours.from_now,
         location: "https://example.com/live",
+        status: DiscoursePostEvent::Event.statuses[status],
+        raw_invitees:,
         livestream:,
+      )
+    end
+
+    def parsed_json_for(user)
+      JSON.parse(
+        described_class.new(TopicView.new(topic), scope: Guardian.new(user), root: false).to_json,
       )
     end
 
@@ -157,7 +166,9 @@ RSpec.describe TopicViewSerializer do
       create_event(livestream: true)
 
       expect(topic.topic_chat_channel).to be_present
-      expect(parsed_json["chat_channel_id"]).to eq(topic.topic_chat_channel.chat_channel_id)
+      expect(parsed_json_for(viewer)["chat_channel_id"]).to eq(
+        topic.topic_chat_channel.chat_channel_id,
+      )
     end
 
     it "is not included once livestream is disabled, even if the channel row remains" do
@@ -165,7 +176,55 @@ RSpec.describe TopicViewSerializer do
       event.update!(livestream: false)
 
       expect(topic.reload.topic_chat_channel).to be_present
-      expect(parsed_json).not_to have_key("chat_channel_id")
+      expect(parsed_json_for(viewer)).not_to have_key("chat_channel_id")
+    end
+
+    it "is not included for users who cannot join the event" do
+      create_event(livestream: true, status: :private, raw_invitees: ["some_group"])
+
+      expect(parsed_json_for(viewer)).not_to have_key("chat_channel_id")
+    end
+
+    it "is not included for anonymous users on private events" do
+      create_event(livestream: true, status: :private, raw_invitees: ["some_group"])
+
+      expect(parsed_json_for(nil)).not_to have_key("chat_channel_id")
+    end
+
+    it "is included for anonymous users on public events" do
+      create_event(livestream: true)
+
+      expect(parsed_json_for(nil)["chat_channel_id"]).to eq(
+        topic.topic_chat_channel.chat_channel_id,
+      )
+    end
+
+    it "is still included once the event is expired" do
+      create_event(livestream: true)
+
+      freeze_time(3.hours.from_now)
+
+      expect(parsed_json_for(viewer)["chat_channel_id"]).to eq(
+        topic.topic_chat_channel.chat_channel_id,
+      )
+    end
+
+    it "is included for users in a group that can join the event" do
+      group = Fabricate(:group)
+      group.add(viewer)
+      create_event(livestream: true, status: :private, raw_invitees: [group.name])
+
+      expect(parsed_json_for(viewer)["chat_channel_id"]).to eq(
+        topic.topic_chat_channel.chat_channel_id,
+      )
+    end
+
+    it "is included for admins even when they cannot join the event" do
+      create_event(livestream: true, status: :private, raw_invitees: ["some_group"])
+
+      expect(parsed_json_for(Fabricate(:admin))["chat_channel_id"]).to eq(
+        topic.topic_chat_channel.chat_channel_id,
+      )
     end
   end
 end

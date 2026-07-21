@@ -1589,6 +1589,9 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
+        push_level:
+          none: "Deaktiviert"
+          all: "Aktiviert"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
@@ -2295,6 +2298,29 @@ de:
           create_link_and_send_email: "Link erstellen und E-Mail senden"
           invite_saved_without_sending_email: "Einladung gespeichert. Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Website zu gewähren."
           invite_saved_with_sending_email: "Die Einladungs-E-Mail wurde verschickt. Du kannst auch den Link unten kopieren und teilen, um sofort Zugang zu dieser Website zu gewähren."
+        invite_roles:
+          member_title: "Mitglieder einladen"
+          sent_title: "Einladung gesendet"
+          member_tab: "Mitglieder"
+          admin_tab: "Administratoren"
+          admin_email_label: "E-Mail-Adresse"
+          email_placeholder: "name@example.com"
+          invite_by_email: "E-Mail"
+          restrict_domain: "Auf Domain beschränken"
+          domain_placeholder: "example.com"
+          more_options: "Mehr Optionen"
+          update: "Aktualisieren"
+          summary:
+            role_member: "Mitglied"
+            role_admin: "Admin"
+            method: "Teilen"
+            method_email: "E-Mail"
+            restriction: "Beschränkt auf"
+            uses: "Max. Verwendungen"
+            expires: "Gültig bis"
+            topic: "Thema"
+            groups: "Gruppen"
+            edit: "Einladung bearbeiten"
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2893,6 +2919,9 @@ de:
       default: Benutzerdefinierte Emojis
     filter_input:
       clear: "Filter löschen"
+    filter_controls:
+      reset: "Filter zurücksetzen"
+      toggle: "Dropdowns zum Filtern anzeigen/ausblenden"
     d_icon_grid_picker:
       select_icon: "Symbol auswählen"
       search_placeholder: "Symbole durchsuchen..."
@@ -3005,6 +3034,7 @@ de:
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
       topic_featured_link_placeholder: "Link zum Titel eingeben."
@@ -3709,6 +3739,7 @@ de:
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
+        hot: "Angesagt"
         new: "Neue"
         old: "Alt"
       load_more_children:
@@ -3795,6 +3826,7 @@ de:
       read_more_in_category: "Willst du mehr lesen? Durchstöbere andere Themen in %{categoryLink} oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       read_more: "Willst du mehr lesen? <a href='%{categoryLink}'>Durchstöbere alle Kategorien</a> oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
+      sr_read: "lesen"
       participant_groups: "Teilnehmergruppen"
       reply_count_link:
         one: "%{count} Antwort, zum ersten Beitrag springen"
@@ -4278,8 +4310,10 @@ de:
           one: "%{count} übersetzte Sprachvariante anzeigen"
           other: "%{count} übersetzte Sprachvarianten anzeigen"
         modal:
-          title: "Übersetzungen für Beitrag"
+          title: "Übersetzungen"
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
+          post_language: "Sprache des Beitrags"
+          discard_language_change: "Änderung verwerfen"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
           title: "Sprache des Beitrags"
@@ -5133,7 +5167,6 @@ de:
       selector_no_tags: "keine Schlagwörter"
       selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
-      choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
         one: "mindestens %{count} Schlagwort auswählen …"
         other: "mindestens %{count} Schlagwörter auswählen …"
@@ -5704,8 +5737,6 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
-    reset_filter: "Filter zurücksetzen"
-    toggle_filters: "Dropdowns zum Filtern anzeigen/ausblenden"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5935,7 +5966,6 @@ de:
             apple_touch_icon:
               title: "Apple-Touch-Symbol"
               description: "Dieses Symbol wird für Apple-Touch-Geräte verwendet. Wenn es leer bleibt, wird large_icon verwendet."
-              help_text: "Die empfohlene Größe ist 180 x 180 Pixel. Ein transparenter Hintergrund wird nicht empfohlen."
             digest_logo:
               title: "Digest-Logo"
               description: "Das alternative Logobild, das oben in der E-Mail-Zusammenfassung deiner Website verwendet wird. Wenn du nichts angibst, wird das Bild aus der Einstellung „Logo“ verwendet."
@@ -6127,6 +6157,22 @@ de:
               title: "Beiträge und Themen"
             stats_and_thresholds:
               title: "Statistiken & Schwellenwerte"
+        category_management:
+          create_category: "Kategorie erstellen"
+          tabs:
+            settings: "Einstellungen"
+          types:
+            all:
+              title: "Alle Kategorien"
+          filter_placeholder: "Kategorien filtern"
+          table:
+            category: "Kategorie"
+            visibility: "Sichtbarkeit"
+            topics: "Themen"
+          visibility:
+            public: "Öffentlich"
+          visibility_filter:
+            all: "Alle Kategorien"
         permalinks:
           title: "Permalinks"
           header_description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind"
@@ -6351,6 +6397,7 @@ de:
               searches: "Suchen"
               status: "Status"
         reports_section:
+          header_action: "Verwalten"
           no_data: "Keine Daten anzuzeigen"
           modal:
             enabled_heading: "Aktiviert"
@@ -8676,6 +8723,10 @@ de:
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
         settings: "Einstellungen"
+        export: "Exportieren"
+        import: "Importieren"
+        import_category:
+          new: "Neue"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         delete: "Löschen"

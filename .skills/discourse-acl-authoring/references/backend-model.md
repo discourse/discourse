@@ -11,7 +11,7 @@ Important columns:
 - `target_type`, `target_id`: polymorphic target.
 - `permission`: freeform string such as `view`, `edit`, `manage`, or target-specific permissions.
 - `allowed_group_ids`: bigint array of groups that hold the permission.
-- `allowed_user_ids`: bigint array exists, but current authoring/UI support is incomplete.
+- `allowed_user_ids`: bigint array of users that hold the permission. Backend lookup and persistence support is partial; the main remaining gap is complete `DAccessControl` user editing.
 - `owner`: string identifying the owning subsystem, usually `"core"` or a plugin name.
 
 The model has a uniqueness validation and DB index for target + permission. Multiple groups for the same permission collapse into one row.
@@ -23,13 +23,13 @@ The frontend and service params use flattened entries:
 ```ruby
 [
   { type: "group", id: group.id, permission: "view" },
-  { type: "group", id: other_group.id, permission: "edit" },
+  { type: "user", id: user.id, permission: "edit" },
 ]
 ```
 
-`AccessControlList.expand_list_for_bulk_insert(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`.
+`AccessControlList.expand_list_for_bulk_insert(list, target, owner)` groups those entries by permission and returns rows suitable for `insert_all!`. It fills both `allowed_group_ids` and `allowed_user_ids`.
 
-`AccessControlList.where(target: target).flattened_list` returns one entry per group per permission, including group metadata:
+`AccessControlList.where(target: target).flattened_list` returns one entry per group or user per permission. Group entries include group metadata:
 
 ```ruby
 {
@@ -37,13 +37,14 @@ The frontend and service params use flattened entries:
   id: group.id,
   permission: "view",
   mandatory: false,
-  name: group.name,
-  full_name: group.full_name,
+  display_name: group.full_name.presence || group.name,
   metadata: { auto_group: group.automatic? },
   target_id: target.id,
   target_type: target.class.polymorphic_name,
 }
 ```
+
+User entries use `type: :user`, `display_name: user.display_name`, and do not include group metadata.
 
 Pass `for_target:` only when every row is for the same target; mixed targets raise `Acl::MixedTargetError`.
 
@@ -58,7 +59,7 @@ Pass `for_target:` only when every row is for the same target; mixed targets rai
 
 `AccessControlList.matching_group(group)` returns ACL rows granted directly to the group or directly to users in that group.
 
-Use `AccessControlList.preload_allowed` before flattening relations that may include many rows. It batches group lookup and memoizes `allowed_groups_preloaded`; user preloading is still a TODO.
+Use `AccessControlList.preload_allowed` before flattening relations that may include many rows. It batches group and user lookups, then memoizes `allowed_groups_preloaded` and `allowed_users_preloaded`.
 
 ## Lookup Objects
 
@@ -69,9 +70,13 @@ target.permission_acl.group_has_permission?(group, "view")
 target.permission_acl.group_has_any_permission?(group.id, %w[edit manage])
 target.permission_acl.permission_group_ids("view")
 target.permission_acl.group_ids_with_any_permission(%w[view edit manage])
+target.permission_acl.user_has_permission?(user, "view")
+target.permission_acl.user_has_any_permission?(user.id, %w[edit manage])
+target.permission_acl.permission_user_ids("view")
+target.permission_acl.user_ids_with_any_permission(%w[view edit manage])
 ```
 
-`permission_group_ids` and `group_ids_with_any_permission` return defensive array copies. Missing permissions return `[]`, not `nil`.
+`permission_group_ids`, `group_ids_with_any_permission`, `permission_user_ids`, and `user_ids_with_any_permission` return defensive array copies. Missing permissions return `[]`, not `nil`.
 
 `AccessControlList#user_acl` builds `Acl::User` for a user:
 
@@ -178,13 +183,13 @@ Banned entries are consumed by both backend writes and frontend rendering:
 - `Site#access_control` exposes banned ACL metadata for registered targets.
 - `DAccessControl` filters banned permission options for the matching grantee.
 
-Keep mandatory and banned ACLs group-based unless user ACL support has been completed end-to-end.
+Keep mandatory and banned ACL metadata group-based unless the target flow has explicit user ACL UI and review coverage. Backend lookups can understand user ACL rows, but shared frontend editing is not complete.
 
 ## Stale References
 
 `flattened_list` is defensive around stale data:
 
 - Unknown `target_type` values are logged and skipped when no `for_target:` is provided.
-- Deleted groups are skipped instead of raising while flattening.
+- Deleted groups and users are skipped instead of raising while flattening.
 
-This is a read-path fallback, not a substitute for validation. Validate group ids at the service/contract boundary, and rely on `Jobs::CleanupAclsForDeleted` to remove deleted group ids from persisted ACL rows.
+This is a read-path fallback, not a substitute for validation. Validate group and user ids at the service/contract boundary, and rely on `Jobs::CleanupAclsForDeleted` to remove deleted grantee ids from persisted ACL rows.

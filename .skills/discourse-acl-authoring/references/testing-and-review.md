@@ -32,13 +32,17 @@ For cleanup behavior:
 
 - Destroying a group enqueues `:cleanup_acls_for_deleted`.
 - `Jobs::CleanupAclsForDeleted` removes the group id from ACL rows.
+- Destroying a user enqueues `:cleanup_acls_for_deleted`.
+- `Jobs::CleanupAclsForDeleted` removes the user id from ACL rows.
 - ACL rows with no remaining group or user ids are deleted.
 - ACL rows that still have user ids are preserved.
+- ACL rows that still have group ids are preserved.
 
 For lookup objects:
 
 - `Acl::Target#permission_group_ids` returns `[]` for missing permissions and a defensive copy for present permissions.
 - `Acl::Target#group_ids_with_any_permission` replaces the older `multi_permission_group_ids` name.
+- `Acl::Target#permission_user_ids` and `#user_ids_with_any_permission` return `[]` for missing permissions and defensive array copies for present permissions.
 - `Acl::User#target_ids_with_permission` and `#target_ids_with_any_permissions` return defensive array copies.
 
 For migration specs:
@@ -73,7 +77,7 @@ Ask these questions during code review:
 - Does the UI `@aclTarget` string match the target's `acl_target_key`?
 - Is ACL serialization limited to users who can manage the specific target?
 - Are list/index queries using `Target.with_acl_permission`, `Target.with_any_acl_permissions`, `guardian.target_ids_with_acl_permission`, or `target_ids_with_any_acl_permissions` instead of ad hoc SQL?
-- Are group IDs validated before persistence when they come from params?
+- Are group and user IDs validated before persistence when they come from params?
 - Are plugin target classes registered with `DiscoursePluginRegistry.register_acl_target_class`?
 - Do tests cover anonymous users and pseudo-group semantics if `anonymous_users`, `logged_in_users`, or `everyone` can appear in ACLs?
 - Do tests cover stale group rows or missing plugin target classes if the code serializes ACLs that may outlive their original target or group?
@@ -81,8 +85,9 @@ Ask these questions during code review:
 ## Known Sharp Edges
 
 - `AccessControlListManager` currently assumes caller-side authorization.
-- Group support is complete enough for current UI; user ACL support is not.
+- Backend user ACL support is partial: expansion, flattening, preloading, lookup helpers, matching scopes, and cleanup jobs handle `allowed_user_ids`, but shared UI authoring is not complete.
+- `DAccessControl` remains group-first and does not provide complete user ACL editing yet.
 - `DAccessControl` injects mandatory rows for display but does not notify the parent on render.
 - `DAccessControl` filters banned permission options for UX, but hidden options are not authorization. The manager policy is the enforcement point.
 - Mandatory ACLs from site settings need extra care in migrations because raw stored settings may omit `mandatory_values`.
-- `flattened_list` skips stale group IDs and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.
+- `flattened_list` skips stale group IDs, stale user IDs, and unknown target classes, so a missing row can disappear from serialized ACL output while cleanup or validation catches up.

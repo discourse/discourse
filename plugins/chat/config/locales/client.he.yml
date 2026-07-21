@@ -272,8 +272,6 @@ he:
       no_public_channels: "לא הצטרפת לערוצים כלשהם עדיין!"
       no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
-      only_chat_push_notifications:
-        title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
       personalization_title: "התאמה אישית"
       ignore_channel_wide_mention:
         title: "התעלמות מאזכורים לכל הערוץ"
@@ -356,6 +354,8 @@ he:
         filter_closed: סגור
         filter_archived: בארכיון
         filter_input_placeholder: חיפוש ערוץ לפי שם
+        filter_joined_all: "הכול"
+        filter_joined_joined: "הצטרפו"
       chat_message_separator:
         today: היום
         yesterday: אתמול
@@ -429,6 +429,9 @@ he:
           two: "%{count} חברים"
           many: "%{count} חברים"
           other: "%{count} חברים"
+        preview_card:
+          log_in: "כניסה"
+          sign_up: "הרשמה"
       create_channel:
         threading:
           label: "הפעלת שרשור"

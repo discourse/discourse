@@ -945,6 +945,9 @@ lv:
       notifications: "Paziņojumi"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Atslēgt"
+          all: "Ieslēgts"
         not_supported: "Atvainojiet, bet šī pārlūkprogramma neatbalsta paziņojumus."
         perm_denied_expl: "Jūs neatļāvāt paziņojumus. Atļaujiet paziņojumus jūsu pārlūkprogrammas iestatījumos."
         consent_prompt: "Vai vēlaties saņemt tiešraides paziņojumus, kad cilvēki atbild uz jūsu ziņām?"
@@ -1363,6 +1366,19 @@ lv:
           expires_after: "Derīguma termiņš beidzas"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
           cancel: "Atcelt"
+        invite_roles:
+          member_tab: "Dalībnieki"
+          admin_tab: "Administratori"
+          email_placeholder: "vards@piemers.com"
+          invite_by_email: "E-pasts"
+          summary:
+            role_member: "Biedrs"
+            role_admin: "Administrators"
+            method_email: "E-pasts"
+            uses: "Maksimāli izmantojams"
+            expires: "Derīguma termiņš beidzas"
+            topic: "Tēmas"
+            groups: "Grupas"
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
@@ -1703,6 +1719,7 @@ lv:
       create_topic: "Izveidot tēmu"
       discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
+      title_placeholder_redesign: "Virsraksts"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
@@ -2008,6 +2025,7 @@ lv:
       back_to_list: "Atpakaļ pie tēmu saraksta "
       options: "Tēmas iestatījumi "
       show_links: "rādīt saites šajā tēmā"
+      sr_read: "izlasīts"
       deleted: "Tēma ir dzēsta "
       slow_mode_update:
         enable: "Ieslēgt"
@@ -2982,6 +3000,19 @@ lv:
               title: "Iestatījumi"
         badges:
           title: "Žetoni"
+        category_management:
+          tabs:
+            settings: "Iestatījumi"
+          types:
+            all:
+              title: "Visas sadaļas"
+          table:
+            category: "Sadaļa"
+            topics: "Tēmas"
+          visibility:
+            public: "Publisks"
+          visibility_filter:
+            all: "Visas sadaļas"
         permalinks:
           title: "Patstāvīgā saite"
         emoji:
@@ -3073,6 +3104,7 @@ lv:
             table:
               status: "Statuss"
         reports_section:
+          header_action: "Pārvaldīt"
           modal:
             enabled_heading: "Ieslēgts"
             apply: "Pielietot"
@@ -3972,6 +4004,10 @@ lv:
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
         settings: "Iestatījumi"
+        export: "Eksportēt"
+        import: "Importēt"
+        import_category:
+          new: "Jauns"
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         delete: "Dzēst"

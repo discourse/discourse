@@ -10,7 +10,6 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
         default_llm_id: llm.id,
         allow_personal_messages: true,
-        execution_mode: "agentic",
         max_turn_tokens: 5000,
         compression_threshold: 80,
       )
@@ -55,6 +54,49 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
     events
   end
 
+  describe "custom tool resume" do
+    it "reconstructs resumed parallel vLLM tool calls as one assistant batch" do
+      vllm_model = Fabricate(:vllm_model)
+      ai_agent.update!(default_llm_id: vllm_model.id)
+      provider_data = { vllm: { tool_batch_id: "response-1" } }
+      tool_calls =
+        %w[one two].map do |input|
+          DiscourseAi::Completions::ToolCall.new(
+            name: "client_tool",
+            parameters: {
+              input: input,
+            },
+            id: "tool_#{input}",
+            provider_data: provider_data,
+          )
+        end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_calls, "Final answer after tools.", "Test title"],
+      ) do |_, _, prompts|
+        tool_event = collect_events(build_session).find { |type, _| type == :tool_calls }
+
+        collect_events(
+          build_session(
+            resume_token: tool_event[1][:resume_token],
+            tool_results: [
+              { tool_call_id: "tool_one", content: "first result" },
+              { tool_call_id: "tool_two", content: "second result" },
+            ],
+          ),
+        )
+
+        translated =
+          DiscourseAi::Completions::Dialects::Vllm.new(prompts.second, vllm_model).translate
+        assistant_tool_messages = translated.select { |message| message[:tool_calls] }
+
+        expect(
+          assistant_tool_messages.map { |message| message[:tool_calls].map { |call| call[:id] } },
+        ).to eq([%w[tool_one tool_two]])
+      end
+    end
+  end
+
   describe "token budget enforcement" do
     it "enforces budget before generate when resuming over budget" do
       tool_call =
@@ -66,9 +108,21 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           id: "tool_1",
         )
 
+      generated_requests = []
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        [tool_call, "Final answer after budget pre-check."],
+        [tool_call, "Final answer after budget pre-check.", "Test title"],
       ) do
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ).and_wrap_original do |original, *args, **kwargs, &blk|
+          prompt = args.first
+          generated_requests << {
+            tool_choice: prompt.tool_choice,
+            last_message: prompt.messages.last.dup,
+          }
+          original.call(*args, **kwargs, &blk)
+        end
+
         session = build_session
         events = collect_events(session)
 
@@ -98,6 +152,18 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
 
         partials = resumed_events.select { |type, _| type == :partial }.map { |_, data| data }
         expect(partials.join).to eq("Final answer after budget pre-check.")
+        finalization_request =
+          generated_requests.find do |request|
+            request[:last_message][:content] ==
+              DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT
+          end
+        expect(finalization_request).to eq(
+          tool_choice: :none,
+          last_message: {
+            type: :user,
+            content: DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+          },
+        )
 
         tool_events = resumed_events.select { |type, _| type == :tool_calls }
         expect(tool_events).to be_empty
@@ -141,10 +207,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       end
     end
 
-    it "defaults the budget to half the context window when agentic without max_turn_tokens" do
-      # "Leave empty for default limits": an agentic agent with no
-      # max_turn_tokens must not crash, and the budget defaults to half the LLM
-      # context window (fake_llm has max_prompt_tokens 131_072 → 65_536).
+    it "defaults the budget to half the context window without max_turn_tokens" do
+      # An agent with no max_turn_tokens uses half the LLM context window
+      # (fake_llm has max_prompt_tokens 131_072 → 65_536).
       ai_agent.update!(max_turn_tokens: nil)
 
       tool_call =

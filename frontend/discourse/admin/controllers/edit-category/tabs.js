@@ -155,7 +155,7 @@ export default class EditCategoryTabsController extends Controller {
       });
 
       categoryType.configuration_schema.site_settings?.forEach((setting) => {
-        data.category_type_site_settings[setting.key] = this.model.id
+        data.category_type_site_settings[setting.key] = setting.overridden
           ? setting.current
           : setting.default;
       });

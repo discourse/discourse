@@ -189,8 +189,6 @@ el:
       no_public_channels_cta: "Περιήγηση καναλιών"
       kicked_from_channel: "Δεν έχετε πλέον πρόσβαση σε αυτό το κανάλι."
       chat_notifications_title: "Ειδοποιήσεις συνομιλίας"
-      only_chat_push_notifications:
-        title: "Αποστολή μόνο ειδοποιήσεων push συνομιλίας"
       personalization_title: "Εξατομίκευση"
       ignore_channel_wide_mention:
         title: "Αγνόηση επισημάνσεων σε όλο το κανάλι"
@@ -267,6 +265,8 @@ el:
         filter_closed: Κλειστό
         filter_archived: Αρχειοθετημένα
         filter_input_placeholder: Αναζήτηση καναλιού με βάση το όνομα
+        filter_joined_all: "Όλα"
+        filter_joined_joined: "Έγινε μέλος"
       chat_message_separator:
         today: Σήμερα
         yesterday: Χτες
@@ -337,6 +337,8 @@ el:
         memberships_count:
           one: "%{count} μέλος"
           other: "%{count} μέλη"
+        preview_card:
+          log_in: "Σύνδεση"
       create_channel:
         auto_join_users:
           public_category_warning: "Η κατηγορία %{category} είναι δημόσια. Να προστεθούν αυτόματα όλοι οι πρόσφατα ενεργοί χρήστες σε αυτό το κανάλι;"

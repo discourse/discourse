@@ -924,6 +924,31 @@ RSpec.describe Stylesheet::Manager do
       expect(StylesheetCache.pluck(:target)).to contain_exactly(*core_targets)
     end
 
+    it "hydrates core CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+
+      expect(output.scan(/\(cached\)/).length).to eq(core_targets.length)
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(core_targets.length)
+    end
+
+    it "hydrates theme CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+      cached_count = StylesheetCache.count
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+
+      expect(output).to include("(cached)")
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(cached_count)
+    end
+
     it "generates precompiled CSS - only themes" do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
 

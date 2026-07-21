@@ -10,18 +10,12 @@ it:
       sort_options:
         votes: "Voti"
     topic_voting:
-      reached_limit: "Hai terminato i voti, rimuovi un voto esistente!"
-      list_votes: "Elenca i tuoi voti"
       voted: "Hai votato su questo argomento"
-      allow_topic_voting: "Permetti agli utenti di votare gli argomenti in questa categoria"
       vote_title: "Vota"
       vote_title_plural: "Voti"
       votes:
         one: "%{count} voto"
         other: "%{count} voti"
-      anonymous_button:
-        one: "Voto"
-        other: "Voti"
       remove_vote: "Rimuovi voto"
       and_more_voters: "e altre %{count}..."
       show_voters: "Mostra i votanti"
@@ -36,10 +30,6 @@ it:
         help: "argomenti su cui hai votato"
     search:
       most_votes: "I più votati"
-      advanced:
-        vote:
-          count:
-            label: "Numero minimo di voti"
     admin:
       web_hooks:
         voting_event:

@@ -64,6 +64,9 @@ hr:
           reset: "Resetirati"
         search:
           name: "Pretraživanje"
+        image_caption:
+          setting_groups:
+            settings: "Postavke"
         spam:
           name: "Nepoželjno"
       modals:
@@ -205,8 +208,6 @@ hr:
           select: "Odaberite"
           selected: "Odabrano"
           try_again: "Pokušaj ponovno"
-        image_caption:
-          save_caption: "Spremi"
       embeddings:
         save: "Spremi"
         delete: "Izbriši"

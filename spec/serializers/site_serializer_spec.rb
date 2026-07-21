@@ -340,9 +340,9 @@ RSpec.describe SiteSerializer do
 
           expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].last[:links].map { |link| link.id }).to eq(
-            [public_section_link.linkable.id],
-          )
+          expect(
+            serialized[:anonymous_sidebar_sections].last[:links].map { |link| link[:id] },
+          ).to eq([public_section_link.linkable.id])
         end.count
 
       public_section_link_2 =
@@ -356,7 +356,9 @@ RSpec.describe SiteSerializer do
 
           expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(
+            serialized[:anonymous_sidebar_sections].last[:links].map { |link| link[:id] },
+          ).to eq(
             [
               public_section_link.linkable.id,
               public_section_link_2.linkable.id,

@@ -286,8 +286,6 @@ en:
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
       chat_notifications_title: "Chat notifications"
-      only_chat_push_notifications:
-        title: "Only send chat push notifications"
       personalization_title: "Personalization"
       accessibility_title: "Accessibility"
       ignore_channel_wide_mention:
@@ -351,6 +349,10 @@ en:
         ethereal: "Ethereal glass"
       title: "chat"
       title_capitalized: "Chat"
+      disabled:
+        title: "You have disabled chat"
+        body: "Turn it back on to view channels and messages."
+        cta: "My chat preferences"
       upload: "Attach a file"
       upload_to_channel: "Upload to %{title}"
       upload_to_thread: "Upload to thread"
@@ -380,6 +382,9 @@ en:
         filter_closed: Closed
         filter_archived: Archived
         filter_input_placeholder: Search channel by name
+        filter_joined_all: "All"
+        filter_joined_joined: "Joined"
+        filter_joined_not_joined: "Not joined"
 
       chat_message_separator:
         today: Today
@@ -463,6 +468,23 @@ en:
         memberships_count:
           one: "%{count} member"
           other: "%{count} members"
+        empty_state:
+          title: "This is the start of %{channelName}"
+          joined_title: "You're the first in %{channelName}"
+          guest_tip: "You're reading along as a guest. The conversation starts the moment members post — join in to be one of them."
+          joined_tip: "Be the first to post and start the conversation."
+          members_here:
+            one: "<strong>%{count} member</strong> here"
+            other: "<strong>%{count} members</strong> here"
+          no_other_members: "No other members yet"
+        preview_card:
+          guest_title: "Join %{channelName} to start chatting"
+          guest_body: "Reading is free for everyone. Sign up to post, react, and reply — it takes about 30 seconds."
+          join_body: "You'll be able to post and reply, and it'll show up in your channel list."
+          no_access_title: "You can't join %{channelName}"
+          no_access_body: "This channel isn't open to new members right now."
+          log_in: "Log in"
+          sign_up: "Sign up"
 
       create_channel:
         threading:

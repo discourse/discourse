@@ -27,6 +27,7 @@ import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { eq, gt, includes, notEq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
@@ -339,22 +340,43 @@ export default class EmojiPicker extends Component {
     this.lastVisibleSection = section;
 
     next(() => {
-      schedule("afterRender", () => {
-        const targetSection = document.querySelector(
-          `.emoji-picker__section[data-section="${section}"]`
-        );
-
-        if (targetSection && this.scrollableNode) {
-          const titleContainer = targetSection.querySelector(
-            ".emoji-picker__section-title-container"
-          );
-          const titleHeight = titleContainer?.offsetHeight ?? 0;
-          this.scrollableNode.scrollTop = targetSection.offsetTop - titleHeight;
-        }
-
-        this.scrollObserverEnabled = true;
-      });
+      schedule("afterRender", () => this._scrollToSection(section));
     });
+  }
+
+  // re-enables the scroll observer only once the final scroll has happened, so
+  // the expand-and-retry path below doesn't let it re-detect a section mid-jump
+  _scrollToSection(section) {
+    const targetSection = document.querySelector(
+      `.emoji-picker__section[data-section="${section}"]`
+    );
+
+    if (!targetSection || !this.scrollableNode) {
+      this.scrollObserverEnabled = true;
+      return;
+    }
+
+    const node = this.scrollableNode;
+    const titleHeight =
+      targetSection.querySelector(".emoji-picker__section-title-container")
+        ?.offsetHeight ?? 0;
+    const desiredScrollTop = targetSection.offsetTop - titleHeight;
+    const maxScrollTop = node.scrollHeight - node.clientHeight;
+
+    // when the sections below the target don't fill the panel, the target can't
+    // reach the top and the jump lands in empty space; expand the remaining
+    // sections so real content fills it, then scroll once they've rendered
+    if (
+      desiredScrollTop > maxScrollTop &&
+      this.visibleSections.length < Object.keys(this.groups).length
+    ) {
+      this.addVisibleSections(Object.keys(this.groups));
+      schedule("afterRender", () => this._scrollToSection(section));
+      return;
+    }
+
+    node.scrollTop = Math.min(desiredScrollTop, maxScrollTop);
+    this.scrollObserverEnabled = true;
   }
 
   @action
@@ -404,12 +426,18 @@ export default class EmojiPicker extends Component {
       this.lastVisibleSection = sectionElement.dataset.section;
       this.addVisibleSections(visibleSections.map((s) => s.dataset.section));
 
-      document
-        .querySelector(".emoji-picker__section-btn.active")
-        ?.scrollIntoView({
-          block: "nearest",
-          inline: "start",
-        });
+      // target the button by section rather than `.active`, which only updates
+      // on the next render and would leave us scrolling the previous one
+      const navButton = document.querySelector(
+        `.emoji-picker__section-btn[data-section="${this.lastVisibleSection}"]`
+      );
+
+      if (navButton) {
+        navButton.scrollIntoView({ block: "nearest", inline: "start" });
+        // scrollIntoView doesn't emit a scroll event, so nudge the surrounding
+        // scroll container to refresh its scroll indicators
+        navButton.parentElement?.dispatchEvent(new Event("scroll"));
+      }
     }
   }
 
@@ -437,9 +465,8 @@ export default class EmojiPicker extends Component {
     for (const sectionNode of document.querySelectorAll(
       ".emoji-picker__section"
     )) {
-      const sectionName = sectionNode.dataset.section;
       sections.push(sectionNode.dataset.section);
-      if (sectionName === section) {
+      if (sectionNode.dataset.section === section) {
         break;
       }
     }
@@ -493,7 +520,11 @@ export default class EmojiPicker extends Component {
       </div>
 
       <div class="emoji-picker__content">
-        <div class="emoji-picker__sections-nav" {{this.setupSectionsNavScroll}}>
+        <DOverflowControls
+          @wrapperClass="emoji-picker__sections-nav-wrap"
+          @class="emoji-picker__sections-nav"
+          {{this.setupSectionsNavScroll}}
+        >
           {{#each-in this.groups as |section emojis|}}
             {{#if emojis.length}}
               <DButton
@@ -522,7 +553,7 @@ export default class EmojiPicker extends Component {
               </DButton>
             {{/if}}
           {{/each-in}}
-        </div>
+        </DOverflowControls>
 
         {{#if this.emojiStore.list}}
           <div class="emoji-picker__scrollable-content" {{this.scrollListener}}>

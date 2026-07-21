@@ -63,6 +63,9 @@ sl:
           reset: "Ponastavi"
         search:
           name: "Išči"
+        image_caption:
+          setting_groups:
+            settings: "Nastavitve"
         spam:
           name: "Neželeno"
       modals:
@@ -186,6 +189,8 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+        provider_fields:
+          region: "Regija"
       ai_helper:
         context_menu:
           cancel: "Prekliči"
@@ -198,8 +203,6 @@ sl:
           cancel: "Prekliči"
         thumbnail_suggestions:
           try_again: "Poskusi ponovno"
-        image_caption:
-          save_caption: "Shrani"
       embeddings:
         save: "Shrani"
         delete: "Izbriši"

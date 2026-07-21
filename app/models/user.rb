@@ -194,6 +194,12 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :clear_acls
+
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
+  end
+
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
@@ -389,7 +395,7 @@ class User < ActiveRecord::Base
   def all_sidebar_sections
     sidebar_sections
       .or(SidebarSection.public_sections)
-      .includes(:sidebar_urls)
+      .includes(:localizations, sidebar_urls: :localizations)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
@@ -1199,12 +1205,13 @@ class User < ActiveRecord::Base
       return if !User.should_update_last_seen?(id, now)
     end
 
+    previous_seen_at = last_seen_at
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless first_seen_at
 
-    DiscourseEvent.trigger(:user_seen, self)
+    DiscourseEvent.trigger(:user_seen, self, previous_seen_at)
   end
 
   def self.gravatar_template(email)
@@ -1757,7 +1764,8 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_mode != "disabled"
+    if SiteSetting.selectable_avatars_random_on_signup &&
+         SiteSetting.selectable_avatars_mode != "disabled"
       if upload = SiteSetting.selectable_avatars.sample
         update_column(:uploaded_avatar_id, upload.id)
         UserAvatar.create!(user_id: id, custom_upload_id: upload.id)

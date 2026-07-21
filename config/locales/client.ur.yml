@@ -7,8 +7,11 @@
 ur:
   js:
     user_api_key:
-      authorize: "اجازت دیں"
+      title: '"%{application_name} " کو مجاز بنائیں'
+      authorize: "مجاز بنائیں"
       deny: "منسوخ کریں"
+      logged_in_as: "کے طور پر لاگ ان"
+      permissions_header: 'یہ "%{application_name}" کو اجازت دے گا:'
       copied: "کاپی کر لیا!"
       otp_description: 'کیا آپ "%{application_name}" کو اِس سائٹ تک رسائی دینا پسند کریں گے؟'
       no_trust_level: "معذرت، آپ کے پاس رکن API تک رسائی کے لیے مطلوبہ فعالیت کا درجہ نہیں ہے۔"
@@ -35,6 +38,8 @@ ur:
     access_control:
       manage:
         access_permission_editor: "ترمیم کنندہ"
+        access_permission_editor_description: "اس اکائی کے لیے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_viewer_description: "اس اکائی کے لیے مواد دیکھا جا سکتا ہے"
         access_permission_remove: "خارج کریں"
     carousel:
       go_to_slide: "سلائیڈ %{index}پر جائیں"
@@ -1208,7 +1213,7 @@ ur:
         handle: "رکنیت کی درخواست سے نمٹیں"
         undo: "کالعدم کریں"
       manage:
-        title: "مَینَیج"
+        title: "منتظمی"
         name: "نام"
         full_name: "پورا نام"
         add_members: "اراکین کو شامل کریں"
@@ -1258,7 +1263,11 @@ ur:
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
         membership:
           title: رکنیت
+          visibility_and_access: "رسائی اور مرئیت"
+          join_method_title: "صارفین کیسے شامل ہو سکتے ہیں؟"
           join_method:
+            free: "کوئی بھی آزادانہ طور پر شامل ہو سکتا ہے"
+            request: "کوئی بھی شامل ہونے کی درخواست کر سکتا ہے"
             invite: "صرف دعوت"
         categories:
           title: زمرہ جات
@@ -1603,6 +1612,9 @@ ur:
       statistics: "اعدادوشمار"
       desktop_notifications:
         label: "براہِ راست اطلاعات"
+        push_level:
+          none: "غیر فعال"
+          all: "فعال شدہ"
         not_supported: "اس براؤزر پر نوٹیفیکیشنز کی سہولت نہیں۔ معذرت۔"
         perm_default: "اطلاعات دکھائیں"
         perm_denied_btn: "اجازت نامنظور"
@@ -2307,6 +2319,26 @@ ur:
           create_link_and_send_email: "رابطہ بنائیں اور ای میل بھیجیں"
           invite_saved_without_sending_email: "دعوت محفوظ ہو گئی۔ اس سائٹ تک فوری رسائی دینے کے لیے نیچے دیے گئے رابطہ کو کاپی کریں اور اسے شیئر کریں۔"
           invite_saved_with_sending_email: "دعوت نامہ بھیج دیا گیا ہے۔ آپ نیچے دیے گئے رابطہ کو بھی کاپی کر سکتے ہیں اور اس سائٹ تک فوری رسائی دینے کے لیے اسے شیئر کر سکتے ہیں۔"
+        invite_roles:
+          member_title: "ممبران کو مدعو کریں"
+          sent_title: "دعوت نامہ بھیج دیا گیا"
+          member_tab: "ممبران"
+          admin_tab: "منتظمین"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ای میل"
+          restrict_domain: "ڈومین تک محدود"
+          more_options: "مزید اختیارات"
+          update: "اپ ڈیٹ"
+          summary:
+            role_member: "معتمد"
+            role_admin: "منتظم"
+            method: "شیئرنگ"
+            method_email: "ای میل"
+            uses: "زیادہ سے زیادہ استعمال"
+            expires: "میعاد ختم"
+            topic: "ٹاپک"
+            groups: "گروپس"
+            edit: "دعوت میں ترمیم"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
           text: "مجموئی دعوت نامہ"
@@ -2632,6 +2664,7 @@ ur:
     created: "بنایا گیا"
     created_lowercase: "بنایا گیا"
     trust_level: "فعالیت کا درجہ"
+    search_hint: "اسم صارف یا ای میل (جدا کرنے کے لیے کامہ یا خالی جگہ)، یا ایک آئی پی"
     create_account:
       header_title: "خوش آمدید!"
       disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پردہ داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
@@ -3030,6 +3063,7 @@ ur:
       draft_saved: "مسودہ محفوظ ہو گیا!"
       users_placeholder: "اراکین یا گروپس شامل"
       title_placeholder: "ایک مختصر جملہ میں بتائیے کہ یہ بحث کس چیز کے بارے میں ہے؟"
+      title_placeholder_redesign: "عنوان"
       title_or_link_placeholder: "عنوان کو ٹائپ کریں، یا ایک رابطہ یہاں چسپاں کریں"
       edit_reason_placeholder: "آپ ترمیم کیوں کر رہے ہیں؟"
       topic_featured_link_placeholder: "عنوان کے ساتھ دکھایا گیا رابطہ درج کریں۔"
@@ -3738,6 +3772,7 @@ ur:
       sort:
         label: "ترتیب بہ"
         top: "سب سے اوپر"
+        hot: "گرما گرم"
         new: "نیا"
         old: "پرانا"
       load_more_children:
@@ -3834,6 +3869,7 @@ ur:
       read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{categoryLink} میں دیگر موضوعات کو براؤز کریں یا <a href='%{latestLink}'> تازہ ترین موضوعات دیکھیں</a>۔"
       read_more: "مزید پڑھنا چاہتے ہیں؟ <a href='%{categoryLink}'>تمام زمروں کو براؤز کریں</a> یا <a href='%{latestLink}'>تازہ ترین موضوعات دیکھیں</a>۔"
       unread_indicator: "کسی رکن نے ابھی تک اِس موضوع کا آخری دھاگہ نہیں پڑھا۔"
+      sr_read: "رِیڈ"
       participant_groups: "شرکاء گروپس"
       reply_count_link:
         one: "%{count} جواب، پہلے دھاگہ پر جائیں"
@@ -4318,8 +4354,9 @@ ur:
           one: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
           other: "ملاحظہ کریں %{count} مقامی ترجمہ شدہ"
         modal:
-          title: "پوسٹ کے لیے ترجمہ"
+          title: "ترجمہ"
           confirm_delete: "کیا آپ واقعی '%{languageCode}' کے ترجمے حذف کرنا چاہتے ہیں؟"
+          post_language: "دھاگے کی زبان"
         success: "ترجمے کو کامیابی کے ساتھ اپ ڈیٹ کر دیا گیا"
         post_language_selector:
           title: "دھاگے کی زبان"
@@ -5143,7 +5180,6 @@ ur:
       selector_no_tags: "کوئی ٹیگ نہیں"
       selector_remove_filter: "فِلٹر ہٹائیں"
       tags: "ٹیگز"
-      choose_for_topic: "اختیاری ٹیگز"
       choose_for_topic_required:
         one: "کم از کم %{count} دھجی کا انتخاب"
         other: "کم از کم %{count} دھجیوں کا انتخاب"
@@ -5231,9 +5267,11 @@ ur:
           description: "آپ کو اِس ٹیگ کے ساتھ موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
       groups:
         back_btn: "تمام دہجیوں پر واپس جائیں"
+        title: "ٹیگ گروپس"
         about_heading: "ایک ٹیگ گروپ منتخب کریں یا ایک نیا بنائیں"
         about_heading_empty: "شروع کرنے کے لیے ایک نیا ٹیگ گروپ بنائیں"
         about_description: "ٹیگ گروپس آپ کو ایک جگہ پر بہت سے ٹیگز کی اجازتوں کا انتظام کرنے میں مدد کرتے ہیں۔"
+        new: "نیا گروپ"
         tags_label: "اِس گروپ میں ٹیگز"
         parent_tag_label: "بالائی ٹیگ"
         parent_tag_description: "اس گروپ کے ٹیگز صرف اس صورت میں استعمال کیے جاسکتے ہیں جب پیرنٹ ٹیگ موجود ہو۔"
@@ -5722,6 +5760,7 @@ ur:
         save_groups: "گروپ محفوظ کریں"
         select_groups: "گروپس کا انتخاب"
         opt_in_groups_instructions: "آپٹ ان گروپس مخصوص صارفین کے ایک گروپ کو تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دینے کے لیے استعمال کیے جا سکتے ہیں۔ نوٹ کریں کہ جب تبدیلی مستحکم حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
+        depends_on_notice: "اس تبدیلی کے لیے %{dependencyLinks} کا فعال ہونا ضروری ہے۔"
         preview: "جھلک دیکھیں"
         enabled_for_options:
           everyone: "ہر کوئی"
@@ -5837,7 +5876,6 @@ ur:
             apple_touch_icon:
               title: "ایپل ٹچ آئیکن"
               description: "ایپل ٹچ ڈیوائسز کے لیے استعمال ہونے والا آئیکن۔ اگر خالی چھوڑ دیا جائے تو large_icon استعمال کیا جائے گا۔"
-              help_text: "تجویز کردہ سائز 180 x 180 پکسلز ہے۔ شفاف پس منظر کی سفارش نہیں کی جاتی ہے۔"
             digest_logo:
               title: "ڈائجسٹ کا لوگو"
               description: "آپ کی سائٹ کے ای میل خلاصے کے اوپری حصے میں استعمال ہونے والی متبادل لوگو کی تصویر۔ اگر خالی چھوڑ دیا جائے تو، `لوگو` ترتیب سے تصویر استعمال کی جائے گی۔"
@@ -5988,6 +6026,22 @@ ur:
               title: "دھاگے اور موضوعات"
             stats_and_thresholds:
               title: "اعدادوشمار اور حد"
+        category_management:
+          create_category: "زمرہ بنائیں"
+          tabs:
+            settings: "سیٹِنگ"
+          types:
+            all:
+              title: "تمام زُمرَہ جات"
+          filter_placeholder: "زمرہ جات چھانیے"
+          table:
+            category: "زُمرَہ"
+            visibility: "نموداری"
+            topics: "موضوعات"
+          visibility:
+            public: "عوامی"
+          visibility_filter:
+            all: "تمام زُمرَہ جات"
         permalinks:
           title: "دائمی لِنکس"
           header_description: "یو آر ایل کے لیے درخواست دینے کے لیے ری ڈائریکشنز جو فورم کو معلوم نہیں"
@@ -6264,14 +6318,22 @@ ur:
                 no_match: "مماثلت نہیں"
                 poor_match: "ناقص مماثلت"
         reports_section:
+          header_action: "مَینَیج"
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
           add: "رپورٹ شامل کریں"
           no_data: "دکھانے کے لیے کچھ نہیں"
           modal:
             title: "رپورٹس کا انتظام کریں"
+            search_placeholder: "رپورٹس کی تلاش"
+            counter: "%{count} / %{max} رپورٹس شامل ہوئیں"
             enabled_heading: "فعال شدہ"
             all_heading: "تمام رپورٹیں"
             apply: "لاگو کریں"
+            enable: "%{title} فعال ہے"
+            disable: "%{title} غیر فعال ہے"
+            move_up: "%{title} کو اوپر منتقل کریں"
+            move_down: "%{title} کو نیچے منتقل کریں"
+            footer_note: "یہ تبدیلیاں تمام صارفین پر لاگو ہوں گی۔"
         configure:
           button: "ترتیب دیں"
           tooltip: "اس سائٹ پر ہر کسی کے لیے اس ڈیش بورڈ کی ظاہری شکل ترتیب دیں۔"
@@ -7167,6 +7229,7 @@ ur:
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
           broken_theme_tooltip: "اِس تِھیم کے CSS، HTML یا YAML میں غلطیاں موجود ہیں"
+          broken_theme: "خراب تھیم کو غیر فعال کریں"
           disabled_component_tooltip: "یہ کمپنَینٹ غیر فعال کردیا گیا ہے"
           default_theme_tooltip: "یہ تِھیم سائٹ کی ڈیفالٹ تِھیم ہے"
           updates_available_tooltip: "اِس تِھیم کیلئے اَپ ڈیٹس دستیاب ہیں۔"
@@ -7387,6 +7450,9 @@ ur:
         html_preview: "ای میل مواد کی جھلک دیکھیں"
         last_seen_user: "آخری بار دیکھا گیا صارف:"
         no_result: "ڈائجسٹ کیلئے کوئی نتائج نہیں پائے گئے۔"
+        reply_key: "جواب دینے کی کلید"
+        post_link_with_smtp: "دھاگے اور SMTP کی تفصیلات"
+        skipped_reason: "وجہ کو چھوڑیں"
         incoming_emails:
           from_address: "سے"
           to_addresses: "کے لئے"
@@ -7424,6 +7490,7 @@ ur:
           delete_topic: "موضوع مٹادیا گیا۔"
           post_approved: "منظورشدہ پوسٹ"
       logs:
+        description: "لاگز اور اسکریننگ آپ کو اپنی کمیونٹی کی نگرانی اور انتظام کرنے کی سہولت دیتے ہیں تاکہ یہ محفوظ اور بااحترام رہے۔ آپ عملے کے تمام اقدامات کے لاگز دیکھ سکتے ہیں، لاگز میں تلاش کر سکتے ہیں، اور صارف اسکریننگ کی ترتیب کر سکتے ہیں۔"
         nav_title: "لاگز"
         action: "عمل"
         created_at: "بنائے گئی"
@@ -7662,6 +7729,8 @@ ur:
             first: "اختيار 1"
             second: "اختيار 2"
             third: "اختيار 3"
+        edit_category:
+          select_template_help: "فارم کے ٹیمپلیٹس کو شامل/ترمیم کریں"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -7669,6 +7738,7 @@ ur:
         invalid: "معذرت، آپ اِس صارف کی نقالی نہیں کرسکتے۔"
       users:
         title: "اراکین"
+        description: "صارفین کو دیکھیں اور منظم کریں۔"
         create: "ایڈمِن صارف شامل کریں"
         last_emailed: "آخری ای میل"
         not_found: "معذرت، وہ اسم صارف نظام میں موجود نہیں۔"
@@ -7698,6 +7768,7 @@ ur:
         activation_filter:
           all: "تمام اراکین"
           activated: "فعال"
+          not_activated: "فعال نہیں"
         approved: "منظورشدہ؟"
         titles:
           active: "فعال اراکین"
@@ -7766,6 +7837,7 @@ ur:
         suspended: "معطل کردہ؟"
         staged: "عارضی؟"
         show_admin_profile: "منتظم"
+        manage_user: "صارف کا نظم کریں"
         show_public_profile: "پبلک پروفائل دکھائیں"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
@@ -8007,6 +8079,9 @@ ur:
         save: "محفوظ کریں"
         cancel: "منسوخ"
       site_settings:
+        depends_on_values_notice:
+          one: "یہ ترتیب صرف اس وقت لاگو ہوتی ہیں جب %{dependencyLinks} کو مطابقت پذیر قدر پر سیٹ کیا گیا ہو۔"
+          other: "یہ ترتیب صرف اس وقت لاگو ہوتی ہے جب %{dependencyLinks} کو مطابقت پذیر اقدار پر سیٹ کیا گیا ہو۔"
         emoji_list:
           invalid_input: "ایموجی لسٹ میں صرف درست ایموجی نام ہونے چاہئیں، جیسے: گلے ملنا"
           add_emoji_button:
@@ -8169,6 +8244,10 @@ ur:
         alt: "حسب ضرورت ایموجی پیش نظارہ"
         delete_confirm: "کیا آپ واقعی :%{name}: اِیمَوجی حذف کرنا چاہتے ہیں؟"
         settings: "ترتیبات"
+        export: "برآمد"
+        import: "درآمد"
+        import_category:
+          new: "نئے"
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         delete: "مٹائیں"

@@ -30,6 +30,11 @@ module DiscoursePostEvent
     attributes :chat_enabled
     attributes :livestream
     attributes :livestream_onebox
+    attributes :livestream_url
+    # TODO (martin) We need to merge this and the event channel ID which
+    # comes from chat_enabled on the event, we dont need 2 channels per event
+    attributes :livestream_chat_channel_id
+    attributes :is_zoom_livestream
     attributes :channel
     attributes :rrule
     attributes :max_attendees
@@ -37,12 +42,35 @@ module DiscoursePostEvent
 
     has_one :image_upload, embed: :object, serializer: UploadSerializer
 
-    def include_livestream_onebox?
-      object.livestream? && object.location.present?
+    def livestream_enabled
+      object.livestream? && object.livestream_url.present?
     end
 
+    def include_livestream_onebox?
+      livestream_enabled && !object.is_zoom_livestream?
+    end
+
+    def include_livestream_chat_channel_id?
+      livestream_enabled
+    end
+
+    def include_livestream_url?
+      livestream_enabled
+    end
+
+    def is_zoom_livestream
+      object.is_zoom_livestream?
+    end
+
+    # Only ever reads the cache. Fetching here would put a blocking outbound
+    # request in the middle of serialization, once per event in a list. The
+    # `warm_livestream_onebox` job fills the cache and republishes the post.
     def livestream_onebox
-      Oneboxer.cached_onebox(object.location).presence
+      Oneboxer.cached_onebox(object.livestream_url).presence
+    end
+
+    def livestream_chat_channel_id
+      object.post.topic.topic_chat_channel&.id
     end
 
     def channel

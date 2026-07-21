@@ -19,6 +19,7 @@ class UserOption < ActiveRecord::Base
 
   self.ignored_columns = [
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
+    "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
   ]
 
   self.primary_key = :user_id
@@ -31,6 +32,7 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where("user_id > 0") }
 
   enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
+  enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -316,8 +318,8 @@ end
 #  notify_on_linked_posts                         :boolean          default(TRUE), not null
 #  notify_on_solved                               :boolean          default(TRUE), not null
 #  oldest_search_log_date                         :datetime
-#  only_chat_push_notifications                   :boolean
 #  policy_email_frequency                         :integer          default("never"), not null
+#  push_notification_level                        :integer          default("all"), not null
 #  seen_popups                                    :integer          is an Array
 #  show_original_content                          :boolean          default(FALSE), not null
 #  show_thread_title_prompts                      :boolean          default(TRUE), not null

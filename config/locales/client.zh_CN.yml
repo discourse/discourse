@@ -58,9 +58,7 @@ zh_CN:
         access_permission_viewer: "查看器"
         access_permission_viewer_description: "可以查看此对象中的内容"
         access_permission_remove: "移除"
-        access_permission_remove_description: "移除该群组的权限"
-        add_group: "添加群组"
-        mandatory_acl_tooltip: "此权限对该对象而言是强制性的，无法移除。"
+        mandatory_acl_tooltip: "此权限是 %{name} 的必要权限，无法移除"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -812,6 +810,7 @@ zh_CN:
         help: "移除此认领"
       awaiting_approval: "需要审批"
       delete: "删除"
+      delete_confirm: "您确定要从等待审核队列中删除此项目吗？"
       settings:
         saved: "已保存"
         save_changes: "保存变更"
@@ -1562,12 +1561,16 @@ zh_CN:
       statistics: "统计信息"
       desktop_notifications:
         label: "实时通知"
+        push_level:
+          none: "已禁用"
+          all: "已启用"
         not_supported: "抱歉，此浏览器不支持通知。"
         perm_default: "启用通知"
         perm_denied_btn: "权限被拒绝"
         perm_denied_expl: "您拒绝了通知的权限。通过您的浏览器设置允许通知。"
         disable: "禁用通知"
         enable: "启用通知"
+        enable_failed: "无法启用通知。您的浏览器阻止了该请求，或者其推送服务不可用。"
         each_browser_note: "注意：您必须在使用的每个浏览器上更改此设置。如果您从用户菜单暂停通知，则无论此设置如何，所有通知都将被禁用。"
         consent_prompt: "当其他人回复您的帖子时是否接收实时通知？"
       dismiss: "忽略"
@@ -2252,6 +2255,45 @@ zh_CN:
           create_link_and_send_email: "创建链接并发送电子邮件"
           invite_saved_without_sending_email: "邀请已保存。复制下面的链接并分享，即可立即授予此网站的访问权限。"
           invite_saved_with_sending_email: "邀请电子邮件已发送。您也可以复制下面的链接并分享，立即授予此网站的访问权限。"
+        invite_roles:
+          member_title: "邀请成员"
+          admin_title: "邀请管理员"
+          edit_title: "编辑邀请"
+          created_title: "邀请已创建"
+          sent_title: "邀请已发送"
+          member_tab: "成员"
+          admin_tab: "管理员"
+          admin_email_label: "电子邮件地址"
+          member_email_help: "我们将向该邮箱地址发送邀请链接。"
+          email_placeholder: "name@example.com"
+          invite_by_email: "电子邮件"
+          restrict_domain: "仅限网域"
+          restrict_domain_help: "只有拥有此域名邮箱地址的用户才能接受此链接。如需邀请特定人员，请使用上方的“邮箱”选项。"
+          domain_placeholder: "example.com"
+          domain_invalid: "请输入有效的域名，例如 example.com"
+          arrive_at_topic_help: "用户接受邀请后，使他们跳转到特定的主题。"
+          create_and_send: "创建并发送"
+          create_and_copy: "创建并复制链接"
+          more_options: "更多选项"
+          fewer_options: "收起"
+          update: "更新"
+          role_locked: "创建邀请后，邀请类型无法更改。"
+          summary:
+            sent_to: "已向 %{email} 发送邀请邮件。您也可以直接分享此链接："
+            role_member: "成员"
+            role_admin: "管理员"
+            method: "分享"
+            method_link: "分享链接"
+            method_email: "电子邮件"
+            restriction: "限于"
+            uses: "最大使用次数"
+            expires: "过期时间"
+            topic: "话题"
+            groups: "群组"
+            edit: "编辑邀请"
+            view_invites: "查看邀请"
+          email_sent:
+            body: "已向 %{email} 发送邀请邮件。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -2828,6 +2870,9 @@ zh_CN:
       default: 自定义表情符号
     filter_input:
       clear: "清除筛选器"
+    filter_controls:
+      reset: "重置筛选器"
+      toggle: "切换下拉筛选器"
     d_icon_grid_picker:
       select_icon: "选择图标"
       search_placeholder: "搜索图标…"
@@ -2851,6 +2896,8 @@ zh_CN:
       no_results: "在上方输入关键词搜索 GIF 动图。"
       browse_categories: "按类别浏览"
       bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
+      error_rate_limit: "我们已经达到了 GIF API 的速率限制。请稍等片刻，然后重试。"
+      error_search_too_long: "请将搜索词缩短至 50 个字符以内，然后重试。"
     codemirror:
       expression:
         sections:
@@ -2877,6 +2924,16 @@ zh_CN:
             substring: "返回字符串中两个索引之间的部分。"
             indexOf: "返回首次出现的位置索引；若未找到，则返回 -1。"
             match: "将字符串与正则表达式进行匹配。"
+            concat: "连接一个或多个字符串。"
+          number:
+            toFixed: "使用固定的小数位数格式化数字。"
+            toString: "返回该数字的字符串表示形式。"
+            toPrecision: "将数字格式化为指定的精度。"
+            toLocaleString: "返回与区域设置相关的字符串表示形式。"
+          boolean:
+            toString: "将 true 转换为 'true'，将 false 转换为 'false'。"
+          array:
+            length: "数组中元素的数量。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -2968,6 +3025,7 @@ zh_CN:
       draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
+      title_placeholder_redesign: "标题"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
       edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
@@ -3661,6 +3719,7 @@ zh_CN:
       sort:
         label: "排序依据"
         top: "热门"
+        hot: "热议"
         new: "新"
         old: "旧"
       load_more_children:
@@ -3755,6 +3814,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？请浏览%{categoryLink}中的其他话题或<a href='%{latestLink}'>查看最新话题</a>。"
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
+      sr_read: "阅读时间"
       participant_groups: "参与者群组"
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
@@ -4209,8 +4269,10 @@ zh_CN:
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
-          title: "帖子的翻译"
+          title: "翻译"
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
+          post_language: "帖子语言"
+          discard_language_change: "舍弃更改"
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
@@ -4344,6 +4406,8 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
+        diff_too_complex: "这次编辑一次性更改了帖子太多内容，所以无法显示。"
+        diff_hidden: "该帖子的部分编辑历史已被隐藏，因此无法显示此条编辑记录。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -4560,6 +4624,7 @@ zh_CN:
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
         inherited: '此权限继承自“%{everyone_group}”'
+        remove_all: "全部删除"
       special_warning: "这是一个预先设置的类别，安全设置无法编辑。如果您不想使用此类别，请将其删除，而不是重新用于其他用途。"
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
@@ -5105,7 +5170,7 @@ zh_CN:
       selector_no_tags: "无标签"
       selector_remove_filter: "移除筛选器"
       tags: "标签"
-      choose_for_topic: "可选标签"
+      choose_for_topic: "可选标签…"
       choose_for_topic_required:
         other: "至少选择 %{count} 个标签…"
       choose_for_topic_required_group:
@@ -5156,6 +5221,7 @@ zh_CN:
         slug: "缩略名"
         name_placeholder: "标签名称"
         slug_placeholder: "标签缩略名（可选，根据名称自动生成）"
+        invalid_slug: "在单词之间使用小写字母、数字和单个连字符."
         saved: "标签设置已保存"
         no_synonyms: "没有为此缩略名定义同义词。"
         add_synonym_placeholder: "搜索可添加为同义词的标签…"
@@ -5664,8 +5730,6 @@ zh_CN:
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
-    reset_filter: "重置筛选器"
-    toggle_filters: "切换下拉筛选器"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -5680,6 +5744,7 @@ zh_CN:
         title: "可用报告列表"
         sidebar_title: "报告"
         back: "返回到所有报告"
+        back_to_dashboard: "返回信息中心"
         all_groups: "所有群组"
         group_engagement: "参与度"
         group_traffic: "流量"
@@ -5726,6 +5791,7 @@ zh_CN:
         enabled_for_throttle: "您修改此更改启用对象的速度过快。请稍等片刻后再试。"
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此更改"
+        depends_on_notice: "此更改需要启用 %{dependencyLinks} 。"
         permanent_notice: "此更改现已永久生效，并将很快被移除。您无法再选择退出。"
         permanent_soon_notice: "此更改将很快永久生效。您将无法再选择退出。"
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
@@ -5896,17 +5962,22 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
+              help_text: "建议尺寸为 180 x 180 像素，不要使用SVG图像，不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"
               help_text: "使用宽矩形图片。不要使用 SVG 图片。"
+            og_image_source:
+              title: "OpenGraph 图像源"
+              description: "选择如何为没有自己图像的话题提供OpenGraph预览图像。"
+              uploaded: "使用上传的图片"
             opengraph_image:
               title: "OpenGraph 图片"
               description: "默认 opengraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
             og_image_preview:
               generate: "生成"
               topic_id_label: "话题 ID"
+              topic_id_placeholder: "例如 123"
             x_summary_large_image:
               title: "X 摘要大图"
               description: "X 卡摘要大图。如果留空，则使用 OpenGraph_image（只要它不是 .svg）生成常规卡片元数据。"
@@ -6087,6 +6158,23 @@ zh_CN:
               title: "帖子和话题"
             stats_and_thresholds:
               title: "统计数据和阈值"
+        category_management:
+          create_category: "创建类别"
+          tabs:
+            settings: "设置"
+          types:
+            all:
+              title: "所有类别"
+          filter_placeholder: "筛选类别"
+          open_settings: "打开设置"
+          table:
+            category: "类别"
+            visibility: "公开范围"
+            topics: "话题"
+          visibility:
+            public: "公开"
+          visibility_filter:
+            all: "所有类别"
         permalinks:
           title: "永久链接"
           header_description: "为论坛无法识别的 URL 应用的重定向"
@@ -6287,6 +6375,7 @@ zh_CN:
             title: "高亮显示"
           reports:
             title: "举报"
+            fetch_error: "报告加载失败。请尝试刷新页面。"
           traffic:
             title: "网站流量"
           engagement:
@@ -6323,6 +6412,12 @@ zh_CN:
                   other: "+%{count} 升级"
                 dropping:
                   other: "-%{count} 降级"
+              signups_title: "达到此信任级别的新注册用户数量"
+              count_title: "该信任层级的用户总数"
+              arrivals_aria:
+                other: "%{count} 个用户已升级至该信任级别"
+              demotions_in_aria:
+                other: "%{count} 个用户已降级至该信任级别"
               stable_aria: "不变"
             headline:
               healthy_growth:
@@ -6343,6 +6438,7 @@ zh_CN:
               searches: "搜索"
               status: "状态"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "已启用"
             all_heading: "所有报告"
@@ -6475,6 +6571,7 @@ zh_CN:
             effects: 影响
             trust_levels_none: "无"
             automatic_membership_email_domains: "使用与此列表中的电子邮件网域完全匹配的电子邮件网域注册的用户将被自动添加到此群组："
+            automatic_membership_email_domains_instructions: "请单独输入每个域名，例如 discourse.org。"
             automatic_membership_user_count:
               other: "%{count} 个用户具有新的电子邮件网域，将被添加到群组中。"
             automatic_membership_user_unknown_count: "拥有其中一个新电子邮件域的用户将被添加到群组中。"
@@ -8234,7 +8331,12 @@ zh_CN:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
         delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
+        delete_and_block: "删除并禁止该电子邮件和 IP 地址"
+        delete_and_block_description: "删除用户并屏蔽其电子邮件地址和 IP 地址。"
+        delete_and_block_email: "删除并屏蔽其电子邮件地址"
+        delete_and_block_email_description: "删除该用户并屏蔽其电子邮件地址，但允许重新使用其 IP 地址。"
         delete_dont_block: "删除用户"
+        delete_dont_block_description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址。"
         deleting_user: "正在删除用户…"
         deleted: "该用户已被删除。"
         delete_failed: "删除该用户时出错。在尝试删除用户之前，请确保已删除所有帖子。"
@@ -8422,6 +8524,8 @@ zh_CN:
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
         depends_on_notice:
           other: "此设置仅在启用%{dependencyLinks}时生效。"
+        depends_on_values_notice:
+          other: "此设置仅当 %{dependencyLinks} 设置为兼容值时生效。"
         discard:
           other: "舍弃更改"
         save:
@@ -8651,6 +8755,23 @@ zh_CN:
         alt: "自定义表情符号预览"
         delete_confirm: "确定要删除 :%{name}: 表情符号吗？"
         settings: "设置"
+        export: "导出"
+        export_count: "导出（已选择 %{count} 个）"
+        export_failed: "导出失败，请重试。"
+        select_to_export: "选择以导出"
+        import: "导入"
+        import_heading: "导入 emoji"
+        import_description: "上传包含 emojis.csv 清单文件和图像文件的 ZIP 文件。"
+        import_download_sample: "下载示例模板。"
+        import_preview_heading: "查看导入内容"
+        import_summary: "%{new} 个新增 · %{conflicts} 个冲突 · %{unchanged} 个未更改 · %{invalid} 个错误"
+        import_confirm: "确认导入"
+        import_category:
+          new: "新"
+          conflict: "冲突"
+          invalid: "错误"
+        select_all: "选择所有emoji"
+        select: "选择 %{name}"
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         delete: "删除"

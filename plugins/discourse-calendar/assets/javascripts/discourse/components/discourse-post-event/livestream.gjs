@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { optionalRequire } from "discourse/lib/utilities";
+import { eventHasLivestream } from "../../lib/livestream-utils";
+import LivestreamZoomEntry from "../livestream/zoom-entry";
 
 // Renders the event's livestream as a playable video at the bottom of the event
 // card, from the cooked onebox served on the event (EventSerializer#livestream_
@@ -12,10 +15,13 @@ export default class Livestream extends Component {
   @service siteSettings;
 
   get show() {
+    return eventHasLivestream(this.args.event);
+  }
+
+  get isZoomLivestream() {
     return (
-      this.args.event?.livestream &&
-      this.args.event?.location &&
-      this.args.event?.livestreamOnebox
+      this.siteSettings.livestream_zoom_enabled &&
+      this.args.event?.isZoomLivestream
     );
   }
 
@@ -49,6 +55,10 @@ export default class Livestream extends Component {
       : null;
   }
 
+  get hasLivestreamOnebox() {
+    return !isEmpty(this.args.event?.livestreamOnebox);
+  }
+
   get oneboxHtml() {
     return this.videoAttributes
       ? null
@@ -58,10 +68,14 @@ export default class Livestream extends Component {
   <template>
     {{#if this.show}}
       <section class="event__section event-livestream">
-        {{#if this.videoAttributes}}
-          <this.lazyVideo @videoAttributes={{this.videoAttributes}} />
-        {{else}}
-          {{this.oneboxHtml}}
+        {{#if this.isZoomLivestream}}
+          <LivestreamZoomEntry @event={{@event}} />
+        {{else if this.hasLivestreamOnebox}}
+          {{#if this.videoAttributes}}
+            <this.lazyVideo @videoAttributes={{this.videoAttributes}} />
+          {{else}}
+            {{this.oneboxHtml}}
+          {{/if}}
         {{/if}}
       </section>
     {{/if}}

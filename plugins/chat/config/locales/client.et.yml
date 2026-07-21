@@ -79,6 +79,8 @@ et:
         filter_all: Kõik
         filter_open: Ava
         filter_closed: Suletud
+        filter_joined_all: "Kõik"
+        filter_joined_joined: "Liitus"
       chat_message_separator:
         today: Täna
         yesterday: Eile

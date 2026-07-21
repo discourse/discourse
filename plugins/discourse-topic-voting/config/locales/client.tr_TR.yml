@@ -15,29 +15,18 @@ tr_TR:
       sort_options:
         votes: "Oylar"
     topic_voting:
-      category_type_ideas:
-        title: "Fikirler"
       notification_label:
         vote_released: "Oy iade edildi"
-      title: "Konu oylaması"
-      reached_limit: "Oy hakkınız kalmadı, mevcut bir oyunuzu kaldırın!"
-      list_votes: "Oylarınızı listeleyin"
-      votes_nav_help: "Tüm zamanların en çok oy alan konuları"
       hot_nav_help: "en son oylananlar da dahil olmak üzere en popüler konular"
       voted: "Bu konuyu oyladınız"
-      allow_topic_voting: "Kullanıcıların bu kategorideki konularda oy kullanmasına izin verilsin mi?"
       vote_title: "Oy ver"
       vote_title_plural: "Oylar"
       voting_closed_description: "Bu konudaki oylama sona ermiştir"
       see_votes: "%{count}/%{max} oy hakkınız kaldı"
-      locked: "Kilitli"
       locked_description: "Oy vermek için güven düzeyinizi artırın"
       votes:
         one: "%{count} oy"
         other: "%{count} oy"
-      anonymous_button:
-        one: "Oy ver"
-        other: "Oylar"
       remove_vote: "Oyu kaldır"
       watch_topic: "Yeni gönderiler hakkında beni bilgilendir"
       no_votes_yet: "Henüz kimse buna oy vermedi"
@@ -55,10 +44,6 @@ tr_TR:
         help: "oy verdiğiniz konular"
     search:
       most_votes: "En Çok Oy"
-      advanced:
-        vote:
-          count:
-            label: "En Düşük Oy Sayısı"
     admin:
       web_hooks:
         voting_event:

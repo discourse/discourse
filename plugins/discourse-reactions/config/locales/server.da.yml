@@ -13,8 +13,6 @@ da:
     first_reaction:
       name: Første reaktion
       description: Reagerede på indlægget
-      long_description: |
-        Dette emblem tildeles første gang du reagerer på et indlæg. Det at reagere på indlæg er en fantastisk måde at fortælle andre medlemmer, at det, de skrev om, var interessant, nyttigt, sejt eller sjovt. Del din reaktion!
   reports:
     reactions:
       title: "Reaktioner"

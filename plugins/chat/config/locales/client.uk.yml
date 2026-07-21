@@ -322,8 +322,6 @@ uk:
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       chat_notifications_title: "Сповіщення чату"
-      only_chat_push_notifications:
-        title: "Надсилати лише push-сповіщення в чаті"
       personalization_title: "Персоналізація"
       accessibility_title: "Доступність"
       ignore_channel_wide_mention:
@@ -421,6 +419,8 @@ uk:
         filter_closed: Закриті
         filter_archived: Архівовано
         filter_input_placeholder: Пошук каналу за назвою
+        filter_joined_all: "Всі"
+        filter_joined_joined: "Приєднався(лась)"
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
@@ -498,6 +498,9 @@ uk:
           few: "%{count} учасники"
           many: "%{count} учасників"
           other: "%{count} учасників"
+        preview_card:
+          log_in: "Увійти"
+          sign_up: "Зареєструватися"
       create_channel:
         threading:
           label: "Увімкнути потоки/ланцюжки"

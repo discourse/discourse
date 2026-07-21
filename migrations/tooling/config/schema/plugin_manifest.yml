@@ -226,12 +226,12 @@ plugin_checksums:
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
   discourse-calendar: 07aa9951f5fde7daf03be9edfbda4dec
+  discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
   discourse-data-explorer: ba288745bea628996590debdf02fbaa4
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
-  discourse-hcaptcha: fd538c1338062354276ccfda4cbafd55
   discourse-lazy-videos: a916a4f265d1cc6f99a3e53f5bcd1e9e
   discourse-local-dates: 18d3ec627bf8546fe13bae24c6a5bb6c
   discourse-microsoft-auth: 3a95a5b50edc156ad06f40aadda7d6bc

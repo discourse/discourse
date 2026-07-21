@@ -61,11 +61,11 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     );
 
     assert
-      .dom(".admin-filter-controls__input")
+      .dom(".d-filter-controls__input")
       .hasValue("alpha_composer,beta_sidebar");
     assert.dom(".upcoming-change-row").exists({ count: 2 });
 
-    await fillIn(".admin-filter-controls__input", "beta_sidebar");
+    await fillIn(".d-filter-controls__input", "beta_sidebar");
     assert.strictEqual(
       currentURL(),
       "/admin/config/upcoming-changes?changeNamesFilter=beta_sidebar"
@@ -78,8 +78,8 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     );
     await visit("/admin/config/upcoming-changes?status=stable");
 
-    assert.dom(".admin-filter-controls__input").hasValue("");
-    assert.dom(".admin-filter-controls__dropdown--status").hasValue("stable");
+    assert.dom(".d-filter-controls__input").hasValue("");
+    assert.dom(".d-filter-controls__dropdown--status").hasValue("stable");
     assert
       .dom(".upcoming-change-row[data-upcoming-change='stable_defaults']")
       .exists();
@@ -91,11 +91,11 @@ acceptance("Admin - Upcoming Changes - URL filters", function (needs) {
     );
 
     assert.dom(".upcoming-change-row").exists({ count: 1 });
-    await click(".admin-filter-controls__reset");
+    await click(".d-filter-controls__reset");
 
     assert.strictEqual(currentURL(), "/admin/config/upcoming-changes");
-    assert.dom(".admin-filter-controls__input").hasValue("");
-    assert.dom(".admin-filter-controls__dropdown--status").hasValue("all");
+    assert.dom(".d-filter-controls__input").hasValue("");
+    assert.dom(".d-filter-controls__dropdown--status").hasValue("all");
     assert.dom(".upcoming-change-row").exists({ count: 3 });
   });
 });
