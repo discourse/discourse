@@ -65,7 +65,7 @@ module Migrations
             # and an explicit `http(s)://host` both yield the host; a leading `/` (but
             # not `//`) is relative. Anything else (`mailto:`, `#anchor`, a bare word)
             # returns nil and isn't an internal link.
-            SPLIT = %r{\A(?:(?:https?:)?//(?<host>[^/]+))?(?<rest>/[^\s]*)?\z}
+            SPLIT = %r{\A(?:(?:https?:)?//(?<host>[^/]+))?(?<rest>/\S*)?\z}
             private_constant :SPLIT
 
             # A `/u/<name>` segment, read like a username (see `Base::WORD_SOURCE`)
@@ -149,12 +149,12 @@ module Migrations
             # A markdown link, unless it's the `]` of an image `![…](…)`, whose `[`
             # sits right after the `!`.
             def detect_link(input, pos)
-              return nil if pos > 0 && bang_before?(input, pos)
+              return nil if bang_before?(input, pos)
 
               match = match_at(LINK, input, pos)
               return nil unless match
 
-              build(input, pos, match, url: match[:url], text: match[:text])
+              build(pos, match, url: match[:url], text: match[:text])
             end
 
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
@@ -170,10 +170,10 @@ module Migrations
               match = match_at(BARE, input, pos)
               return nil unless match
 
-              build(input, pos, match, url: match[:url], text: nil)
+              build(pos, match, url: match[:url], text: nil)
             end
 
-            def build(input, pos, match, url:, text:)
+            def build(pos, match, url:, text:)
               host, rest = split_host(url)
               return nil unless rest
 

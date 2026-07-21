@@ -35,25 +35,20 @@ module Migrations
             end
 
             # Anchored match at a byte offset: every PATTERN here is `\G`-anchored, so
-            # `byteindex` matches AT `pos` or returns nil (no forward drift) — the
-            # byte-offset analogue of `PATTERN.match(input, pos)`, but positioned in
-            # O(1) no matter how many multibyte characters precede `pos`. The returned
-            # MatchData's `byteoffset`s are byte offsets into `input`.
-            #
-            # `byteindex` returns `0` for a match at the start of input, which is
-            # falsy, so the result is nil-checked rather than tested for truthiness.
+            # `byteindex` matches at `pos` or not at all — the byte-offset analogue of
+            # `PATTERN.match(input, pos)`, but positioned in O(1) no matter how many
+            # multibyte characters precede `pos`. The returned MatchData's
+            # `byteoffset`s are byte offsets into `input`.
             def match_at(pattern, input, pos)
-              return nil if input.byteindex(pattern, pos).nil?
-
-              Regexp.last_match
+              input.byteindex(pattern, pos) && Regexp.last_match
             end
 
             # A username the way core's `UsernameValidator` (and the markdown-it
             # mentions rule) reads it: it starts with a Unicode alphanumeric, mark or
             # `_`; its interior may also hold `.` and `-`; and it ends on an
-            # alphanumeric or mark — never on `.`, `-` or `_`. So a sentence's
-            # trailing `@bob.` keeps its period out of the name, while `@john.doe`
-            # matches whole. Plain `\w` is ASCII-only (it would cut `@café` to `@caf`);
+            # alphanumeric or mark — never on `.`, `-` or `_`. So in `@bob.` the
+            # trailing `.` is not part of the name, while `@john.doe` matches whole.
+            # Plain `\w` is ASCII-only (it would cut `@café` to `@caf`);
             # `\p{Alnum}\p{M}` also covers decomposed forms like `@café`.
             #
             # The source is shared with `InternalLink::WORD`, which reads a `/u/<name>`
@@ -65,8 +60,8 @@ module Migrations
             WORD_PATTERN = /\G#{WORD_SOURCE}/
             private_constant :WORD_PATTERN
 
-            WORD_BOUNDARY = /[\p{Alnum}\p{M}_]/
-            private_constant :WORD_BOUNDARY
+            WORD_CHAR = /[\p{Alnum}\p{M}_]/
+            private_constant :WORD_CHAR
 
             # A record id: at most 18 digits. Ids are stored as SQLite signed 64-bit
             # integers, and a 19-digit run overflows that range (binding the bignum
@@ -87,17 +82,17 @@ module Migrations
             # `pos` is a byte offset, so `getbyte(pos - 1)` is always the last byte of
             # the previous character. An ASCII byte (< 0x80) is that whole character,
             # tested directly. A byte >= 0x80 is the trailing byte of a multibyte
-            # character, and the boundary test is Unicode-aware (`WORD_BOUNDARY`
+            # character, and the boundary test is Unicode-aware (`WORD_CHAR`
             # matches marks and non-ASCII alphanumerics), so we recover the actual
             # character with {#previous_char} and test it.
-            def word_boundary?(input, pos)
+            def word_boundary_before?(input, pos)
               return true if pos.zero?
 
               byte = input.getbyte(pos - 1)
               if byte < 0x80
                 !(ascii_alnum_byte?(byte) || byte == 0x5f) # 0x5f = `_`
               else
-                !previous_char(input, pos).match?(WORD_BOUNDARY)
+                !previous_char(input, pos).match?(WORD_CHAR)
               end
             end
 
@@ -122,10 +117,11 @@ module Migrations
             #     sits right before the `]`, as in `[![img](upload)](/t/5)` or an old
             #     lightbox — is an outer link target we want; rewrite it.
             #   * A `](…)` after plain bracket text — `[pic](…)`, `![alt](…)`,
-            #     `[text](foreign)` — is the image's or link's own target. The
-            #     image/link branch already had its say (an image src is not ours; a
-            #     foreign link is already signalled once), so leave it alone. Firing
-            #     here would rewrite an image's source or double-report a foreign host.
+            #     `[text](foreign)` — is the image's or link's own target. That
+            #     target was already handled at its own trigger (an image src is not
+            #     ours; a foreign link is already signalled once), so leave it alone.
+            #     Firing here would rewrite an image's source or double-report a
+            #     foreign host.
             #
             # All the bytes tested (`(`, `]`, `)`) are ASCII, so a multibyte previous
             # character can never equal them.
@@ -140,9 +136,11 @@ module Migrations
               paren_pos >= 2 && input.getbyte(paren_pos - 2) == 0x29 # 0x29 = `)`
             end
 
-            # Caller guarantees `pos > 0`. `!` is ASCII, so a multibyte previous
-            # character's trailing byte simply isn't 0x21.
+            # `!` is ASCII, so a multibyte previous character's trailing byte simply
+            # isn't 0x21.
             def bang_before?(input, pos)
+              return false if pos.zero?
+
               input.getbyte(pos - 1) == 0x21 # `!`
             end
 

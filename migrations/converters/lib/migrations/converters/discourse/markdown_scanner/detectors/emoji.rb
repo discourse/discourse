@@ -8,10 +8,7 @@ module Migrations
           # Detects a custom emoji shortcode (`:name:`) and defers it only when the
           # name is one of the source's own custom emoji. Standard emoji, a stray
           # `:word:` in prose, and clock times all pass through untouched. This
-          # detector requires its name set (there's nothing to defer without it),
-          # whereas the other name-gated detectors take an optional gate — `Mention`
-          # and `Hashtag` default to no name set, and `InternalLink` takes a host set
-          # plus a foreign-host callback.
+          # detector requires its name set (there's nothing to defer without it).
           #
           # This follows core's emoji rule (`discourse-markdown-it/src/features/
           # emoji.js`): the `:` must sit on a boundary — start of input, whitespace,
@@ -47,7 +44,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil if @names.exclude?(name)
+              return nil if !@names.include?(name)
 
               Match.new(
                 start_pos: pos,

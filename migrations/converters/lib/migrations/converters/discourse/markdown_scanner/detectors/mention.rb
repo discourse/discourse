@@ -14,8 +14,8 @@ module Migrations
           # When the caller supplies the source's mention names (every username,
           # group name, the `here_mention` value and `all`), only a mention naming
           # one of them is deferred; anything else (`@3pm`) stays literal text.
-          # Without a name set every `@word` that parses is deferred, so callers with
-          # no source metadata keep the old syntactic behavior.
+          # Without a name set, every `@word` that parses is deferred (purely
+          # syntactic), for callers with no source metadata.
           class Mention < Base
             TRIGGERS = ["@"].freeze
 
@@ -27,7 +27,7 @@ module Migrations
             end
 
             def detect(input, pos, _byte)
-              return nil unless word_boundary?(input, pos)
+              return nil unless word_boundary_before?(input, pos)
 
               name = extract_word(input, pos + 1)
               return nil if name.empty?

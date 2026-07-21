@@ -12,6 +12,7 @@ module Migrations
             TRIGGERS = ["["].freeze
 
             OPENING = /\G\[quote="(?<attribution>[^"\]]*)"\]/
+            private_constant :OPENING
 
             def detect(input, pos, _byte)
               match = match_at(OPENING, input, pos)

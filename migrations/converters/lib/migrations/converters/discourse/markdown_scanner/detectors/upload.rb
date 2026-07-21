@@ -31,6 +31,7 @@ module Migrations
               \(upload://(?<url>[^)]+)\)
               (?:\s*\((?<size>[^)]+)\))?
             }xi
+            private_constant :IMAGE_PATTERN, :ATTACHMENT_PATTERN
 
             def detect(input, pos, byte)
               case byte
@@ -81,10 +82,11 @@ module Migrations
               Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
 
-            # URL format: `sha1.ext` or just `sha1`. Returns `[sha1, filename-or-nil]`.
+            # URL format: `sha1.ext` or just `sha1`. Returns the sha1 and the
+            # filename, which is the full `sha1.ext` string (nil without extension).
             def parse_upload_url(url_part)
-              sha1, _, ext = url_part.partition(".")
-              [sha1, ext.empty? ? nil : url_part]
+              sha1, _, rest = url_part.partition(".")
+              [sha1, rest.empty? ? nil : url_part]
             end
           end
         end
