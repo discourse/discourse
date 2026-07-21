@@ -63,6 +63,7 @@ import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-opt
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
+import { devToolsDAG } from "discourse/lib/dev-tools/registry";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { isDevelopment, isTesting } from "discourse/lib/environment";
@@ -1983,6 +1984,34 @@ class _PluginApi {
    **/
   get headerButtons() {
     return headerButtonsDAG();
+  }
+
+  /**
+   * Allows for manipulation of the developer tools toolbar. This includes adding, removing, or modifying the order of tools.
+   *
+   * Developer tools are only loaded when they are enabled, so a registered tool is never rendered otherwise. Registration
+   * itself is cheap and always runs, so there is no need to guard the call.
+   *
+   * Only the passing of components is supported. By default tools are added after the ones shipped with Discourse.
+   *
+   * Example: Add a `foo` tool to the developer tools toolbar
+   * ```
+   * api.devToolsToolbar.add("foo", FooComponent)
+   * ```
+   *
+   * Example: Add a `foo` tool before the block debugging tool
+   * ```
+   * api.devToolsToolbar.add("foo", FooComponent, { before: "block-debug" })
+   * ```
+   *
+   * Example: Remove the `foo` tool from the toolbar
+   * ```
+   * api.devToolsToolbar.delete("foo")
+   * ```
+   *
+   **/
+  get devToolsToolbar() {
+    return devToolsDAG();
   }
 
   /**

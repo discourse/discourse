@@ -3,21 +3,22 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
+import { devToolsDAG } from "discourse/lib/dev-tools/registry";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import I18n, { i18n } from "discourse-i18n";
-import BlockDebugButton from "./block-debug/button";
-import PluginOutletDebugButton from "./plugin-outlet-debug/button";
-import SafeModeButton from "./safe-mode/button";
-import UpcomingChangesDebugButton from "./upcoming-changes-debug/button";
-import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
   @tracked activeDragOffset;
   @tracked ownSize = 0;
   @tracked top = 250;
+
+  // Registered tools, in the order resolved from their before/after rules.
+  get tools() {
+    return devToolsDAG().resolve();
+  }
 
   get style() {
     const clampedTop = Math.max(this.top, 0);
@@ -76,11 +77,9 @@ export default class Toolbar extends Component {
       >
         {{dIcon "grip-lines"}}
       </button>
-      <PluginOutletDebugButton />
-      <BlockDebugButton />
-      <UpcomingChangesDebugButton />
-      <SafeModeButton />
-      <VerboseLocalizationButton />
+      {{#each this.tools key="key" as |tool|}}
+        <tool.value />
+      {{/each}}
       <button
         type="button"
         title={{i18n "dev_tools.disable_dev_tools"}}
