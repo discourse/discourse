@@ -125,7 +125,8 @@ module DiscourseAi::Completions
       usage = json.dig(:usage)
       return if !usage
 
-      cached_tokens = usage.dig(:prompt_tokens_details, :cached_tokens).to_i
+      cached_tokens =
+        (usage.dig(:prompt_tokens_details, :cached_tokens) || usage[:prompt_cache_hit_tokens]).to_i
 
       prompt_tokens = usage[:prompt_tokens].to_i
       completion_tokens = usage[:completion_tokens].to_i

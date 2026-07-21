@@ -1007,6 +1007,27 @@ TEXT
           end
         end
 
+        it "uses proper token accounting with top-level cache usage" do
+          response = <<~TEXT.strip
+            data: {"id":"chatcmpl-cached","object":"chat.completion.chunk","created":1715644203,"model":"gpt-4o-2024-05-13","choices":[],"usage":{"prompt_tokens":25,"completion_tokens":10,"total_tokens":35,"prompt_cache_hit_tokens":5,"prompt_cache_miss_tokens":20}}|
+            data: [DONE]
+          TEXT
+
+          chunks = response.split("|")
+          open_ai_mock.with_chunk_array_support do
+            open_ai_mock.stub_raw(chunks)
+
+            dialect = compliance.dialect(prompt: compliance.generic_prompt)
+            endpoint.perform_completion!(dialect, user) { |partial| }
+
+            log = AiApiAuditLog.order("id desc").first
+
+            expect(log.request_tokens).to eq(20)
+            expect(log.cache_read_tokens).to eq(5)
+            expect(log.response_tokens).to eq(10)
+          end
+        end
+
         it "properly handles multiple params in partial tool calls" do
           # this is not working and it is driving me nuts so I will use a sledghammer
           # text = plugin_file_from_fixtures("openai_artifact_call.txt", "bot")
