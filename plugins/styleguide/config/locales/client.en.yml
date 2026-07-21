@@ -153,6 +153,8 @@ en:
           title: "Signup CTA"
         topic_timer_info:
           title: "Topic Timers"
+        virtual_list:
+          title: "Virtual List"
         topic_footer_buttons:
           title: "Topic Footer Buttons"
         topic_notifications:
