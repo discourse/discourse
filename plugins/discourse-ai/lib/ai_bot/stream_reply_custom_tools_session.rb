@@ -272,6 +272,7 @@ module DiscourseAi
                 id: call.id,
                 name: call.name,
                 content: { error: "Not executed — token budget exhausted." }.to_json,
+                provider_data: call.provider_data,
               )
             end
 
@@ -381,14 +382,21 @@ module DiscourseAi
 
           content = content.to_json if !content.is_a?(String)
 
+          provider_data = deep_symbolize(tool_call["provider_data"])
           @prompt.push(
             type: :tool_call,
             id: id,
             name: tool_call["name"],
             content: { arguments: tool_call["parameters"] || {} }.to_json,
-            provider_data: tool_call["provider_data"],
+            provider_data: provider_data,
           )
-          @prompt.push(type: :tool, id: id, name: tool_call["name"], content: content)
+          @prompt.push(
+            type: :tool,
+            id: id,
+            name: tool_call["name"],
+            content: content,
+            provider_data: provider_data,
+          )
         end
       end
 
