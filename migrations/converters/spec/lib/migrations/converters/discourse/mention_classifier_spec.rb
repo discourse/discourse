@@ -18,10 +18,10 @@ RSpec.describe Migrations::Converters::Discourse::MentionClassifier do
     end
 
     it "honors a custom here_mention setting value" do
-      resolver = described_class.new(here_mention: "staff")
+      classifier = described_class.new(here_mention: "staff")
 
-      expect(resolver.call("staff")).to eq(mention_type::HERE)
-      expect(resolver.call("here")).to eq(mention_type::USER)
+      expect(classifier.call("staff")).to eq(mention_type::HERE)
+      expect(classifier.call("here")).to eq(mention_type::USER)
     end
 
     it "disables here-detection when here_mention is blank" do
@@ -30,15 +30,15 @@ RSpec.describe Migrations::Converters::Discourse::MentionClassifier do
   end
 
   describe "group mentions" do
-    subject(:resolver) { described_class.new(group_names: %w[Admins Moderators]) }
+    subject(:classifier) { described_class.new(group_names: %w[Admins Moderators]) }
 
     it "recognizes a source group name, case-insensitively" do
-      expect(resolver.call("admins")).to eq(mention_type::GROUP)
-      expect(resolver.call("Moderators")).to eq(mention_type::GROUP)
+      expect(classifier.call("admins")).to eq(mention_type::GROUP)
+      expect(classifier.call("Moderators")).to eq(mention_type::GROUP)
     end
 
     it "treats an unknown name as a user mention" do
-      expect(resolver.call("gerhard")).to eq(mention_type::USER)
+      expect(classifier.call("gerhard")).to eq(mention_type::USER)
     end
 
     # Same name, two Unicode forms: the group is stored decomposed (NFD), the
@@ -46,9 +46,9 @@ RSpec.describe Migrations::Converters::Discourse::MentionClassifier do
     # normalization makes them match.
     it "matches regardless of Unicode encoding" do
       name = "Café"
-      resolver = described_class.new(group_names: [name.unicode_normalize(:nfd)])
+      classifier = described_class.new(group_names: [name.unicode_normalize(:nfd)])
 
-      expect(resolver.call(name.unicode_normalize(:nfc))).to eq(mention_type::GROUP)
+      expect(classifier.call(name.unicode_normalize(:nfc))).to eq(mention_type::GROUP)
     end
   end
 end

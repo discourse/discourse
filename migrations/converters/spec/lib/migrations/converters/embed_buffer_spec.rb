@@ -243,6 +243,13 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)
+      link =
+        buffer.link(
+          url: "https://example.com",
+          text: "here",
+          target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::TOPIC,
+          target_id: 9,
+        )
       mention = buffer.mention(mention_type: mention_type::USER, target_id: 7)
       hashtag = buffer.hashtag(name: "support:billing")
       emoji = buffer.emoji(name: "parrot")
@@ -252,6 +259,17 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
       expect(rows("embed_quotes")).to contain_exactly(
         hash_including(owner_type:, owner_id: 42, placeholder: quote, quoted_user_id: 5),
+      )
+      expect(rows("embed_links")).to contain_exactly(
+        hash_including(
+          owner_type:,
+          owner_id: 42,
+          placeholder: link,
+          url: "https://example.com",
+          text: "here",
+          target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::TOPIC,
+          target_id: 9,
+        ),
       )
       expect(rows("embed_mentions")).to contain_exactly(
         hash_including(

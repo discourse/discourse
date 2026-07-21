@@ -138,7 +138,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(Migrations::Placeholder).not_to be_include(resolved[100])
     end
 
-    it "resolves a batch of owners, loading linkage rows once" do
+    it "resolves a batch of owners" do
       first = placeholder.mint(:mention)
       second = placeholder.mint(:mention)
 

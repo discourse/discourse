@@ -326,23 +326,6 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(node.children.first.text).to eq("hi @sam")
     end
 
-    it "leaves a mention-in-link label deferrable so the link still defers" do
-      # A raw Mention is a deferrable embed, so it would keep the label
-      # non-deferrable and the link would fall back to native rendering; once
-      # the normalizer textifies it, the label is plain text and the :link
-      # handler records it instead. Formats that emit mentions need nokogiri
-      # (absent from this gem's bundle), so exercise the normalizer and the
-      # deferral predicate directly on the AST.
-      node = Markbridge::AST::Url.new(href: "https://example.com")
-      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
-      document = Markbridge::AST::Document.new
-      document << node
-
-      described_class.normalizer.normalize(document)
-
-      expect(described_class.send(:deferrable_children?, node)).to be(true)
-    end
-
     it "is what to_markdown converts through" do
       allow(Markbridge).to receive(:convert).and_call_original
 
@@ -442,23 +425,12 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     it "falls back to native rendering for a label containing an upload" do
       # An upload inside a link keeps the label non-deferrable, so the link
       # renders natively rather than deferring a token into its `text` column.
+      # An upload is the only deferrable embed that reaches this branch; a
+      # mention never does, because the normalizer textifies it before the
+      # :link handler sees the label.
       _node_class, extract = described_class.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
       node << Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
-      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
-      allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
-
-      result = extract.call(collector, node, interface)
-
-      expect(result).to eq("NATIVE")
-      expect(collector.links).to be_empty
-    end
-
-    it "falls back to native rendering for a label containing a mention" do
-      _node_class, extract = described_class.embed_handlers.fetch(:link)
-      node = Markbridge::AST::Url.new(href: "https://example.com")
-      node << Markbridge::AST::Text.new("hi ")
-      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
 

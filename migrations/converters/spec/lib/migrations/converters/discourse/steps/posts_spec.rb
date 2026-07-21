@@ -78,9 +78,9 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
         locale: "de",
         original_raw: raw,
       )
-      # The mention is deferred to a placeholder, so the stored raw differs from
-      # the input body.
-      expect(post[:raw]).not_to eq(raw)
+      # The mention is deferred, so the stored raw carries a placeholder token
+      # in place of the input body's mention.
+      expect(Migrations::Placeholder).to be_include(post[:raw])
 
       mention = rows("embed_mentions").first
       expect(mention).to include(owner_id: 42, name: "alice")

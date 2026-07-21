@@ -956,10 +956,12 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   it "raises on a node type it has no defer handler for" do
-    expect { extractor.send(:defer, Object.new, buffer) }.to raise_error(
-      NotImplementedError,
-      /Object/,
-    )
+    # `extract` builds its detectors internally and never produces an unknown
+    # node, so this guard is unreachable through the public API; open up the
+    # private method deliberately to exercise it.
+    seam = Class.new(described_class) { public :defer }.new
+
+    expect { seam.defer(Object.new, buffer) }.to raise_error(NotImplementedError, /Object/)
   end
 
   # The contract: every token spliced into the result maps to exactly one recorded
