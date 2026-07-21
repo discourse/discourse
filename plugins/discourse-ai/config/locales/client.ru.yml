@@ -768,9 +768,6 @@ ru:
           anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
           google-gemini-3-1-pro: "Самая интеллектуальная модель Google"
           google-gemini-3-flash: "Быстрое и экономичное решение с использованием мультимодального подхода."
-          open_ai-gpt-5-5: "Самая мощная модель OpenAI с расширенным контекстом"
-          open_ai-gpt-5-4: "Флагманская модель OpenAI, отлично подходящая для решения задач в различных областях."
-          open_ai-gpt-5-4-nano: "Самая быстрая и экономичная модель GPT-5"
           open_router-moonshotai-kimi-k2-6: "Мультимодальная модель Moonshot с возможностями компьютерного зрения"
           open_router-deepseek-deepseek-v4-flash: "Новейшая высокопроизводительная модель DeepSeek с обработкой 1 миллиона контекстных данных."
           open_router-minimax-minimax-m2-7: "Модель MiniMax с большим контекстом"
@@ -819,7 +816,7 @@ ru:
           fake: "Другое"
         provider_fields:
           access_key_id: "Идентификатор ключа доступа к AWS Bedrock"
-          region: "Регион AWS Bedrock"
+          region: "Регион"
           organization: "Необязательный идентификатор организации OpenAI"
           disable_system_prompt: "Отключить системное сообщение в запросах"
           enable_native_tool: "Включить поддержку встроенных инструментов"

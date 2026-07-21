@@ -395,7 +395,7 @@ class User < ActiveRecord::Base
   def all_sidebar_sections
     sidebar_sections
       .or(SidebarSection.public_sections)
-      .includes(:sidebar_urls)
+      .includes(:localizations, sidebar_urls: :localizations)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
@@ -1764,7 +1764,8 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_mode != "disabled"
+    if SiteSetting.selectable_avatars_random_on_signup &&
+         SiteSetting.selectable_avatars_mode != "disabled"
       if upload = SiteSetting.selectable_avatars.sample
         update_column(:uploaded_avatar_id, upload.id)
         UserAvatar.create!(user_id: id, custom_upload_id: upload.id)

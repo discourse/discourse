@@ -3,6 +3,9 @@ export function serializeTags(tags) {
     if (typeof t === "string") {
       return { name: t };
     }
+    if (t.isNew) {
+      return { name: t.name };
+    }
     const numId = Number(t.id);
     if (Number.isInteger(numId) && numId > 0) {
       return { id: numId, name: t.name };

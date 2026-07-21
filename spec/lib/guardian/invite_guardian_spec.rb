@@ -45,6 +45,23 @@ RSpec.describe InviteGuardian do
 
   ###### INVITING ######
 
+  describe "#can_create_admin_invite?" do
+    it "is true only for admins when enable_invite_modal_with_roles is enabled" do
+      SiteSetting.enable_invite_modal_with_roles = true
+
+      expect(Guardian.new(admin).can_create_admin_invite?).to eq(true)
+      expect(Guardian.new(moderator).can_create_admin_invite?).to eq(false)
+      expect(Guardian.new(user).can_create_admin_invite?).to eq(false)
+      expect(Guardian.new(nil).can_create_admin_invite?).to eq(false)
+    end
+
+    it "is false for admins when enable_invite_modal_with_roles is disabled" do
+      SiteSetting.enable_invite_modal_with_roles = false
+
+      expect(Guardian.new(admin).can_create_admin_invite?).to eq(false)
+    end
+  end
+
   describe "#can_invite_to_forum?" do
     it "returns true if user has sufficient trust level" do
       SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]

@@ -1388,6 +1388,15 @@ id:
           hide_advanced: "Sembunyikan Opsi Lanjutan"
           description: "Deskripsi"
           cancel: "Batal"
+        invite_roles:
+          member_tab: "Anggota"
+          invite_by_email: "Email"
+          summary:
+            role_member: "Anggota"
+            role_admin: "Admin"
+            method_email: "Email"
+            topic: "Topik"
+            groups: "Grup"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1662,6 +1671,7 @@ id:
       edit_shared_draft: "Sunting Konsep Bersama"
       discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
+      title_placeholder_redesign: "Judul"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
@@ -3055,6 +3065,9 @@ id:
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"
+        export: "Ekspor"
+        import_category:
+          new: "Baru"
       embedding:
         delete: "Hapus"
         edit: "Ubah"

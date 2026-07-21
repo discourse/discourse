@@ -299,6 +299,8 @@ sv:
         filter_closed: Stängd
         filter_archived: Arkiverad
         filter_input_placeholder: Sök kanal efter namn
+        filter_joined_all: "Alla"
+        filter_joined_joined: "Gick med"
       chat_message_separator:
         today: Idag
         yesterday: Igår
@@ -365,6 +367,8 @@ sv:
         memberships_count:
           one: "%{count} medlem"
           other: "%{count} medlemmar"
+        preview_card:
+          log_in: "Logga in"
       create_channel:
         threading:
           label: "Aktivera trådning"

@@ -230,6 +230,8 @@ ur:
         filter_closed: بند
         filter_archived: محفوظ شدہ
         filter_input_placeholder: نام سے چینل تلاش کریں
+        filter_joined_all: "تمام"
+        filter_joined_joined: "شمولیت اختیار کی"
       chat_message_separator:
         today: آج
         yesterday: کَل
@@ -278,6 +280,9 @@ ur:
         memberships_count:
           one: "%{count} رکن"
           other: "%{count} اراکین"
+        preview_card:
+          log_in: "لاگ ان"
+          sign_up: "سائن اپ"
       create_channel:
         choose_category:
           label: "ایک زمرہ منتخب کریں"

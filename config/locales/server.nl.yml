@@ -2559,7 +2559,6 @@ nl:
       invalid_uncategorized_category_setting: 'De categorie ''Ongecategoriseerd'' kan niet worden geselecteerd als ''Ongecategoriseerde topics toestaan'' niet is ingeschakeld.'
       invalid_search_ranking_weights: "Waarde is ongeldig voor site-instelling search_ranking_weights. Voorbeeld: '{0.1,0.2,0.3,1.0}'. Merk op dat de maximale waarde voor elk gewicht 1,0 is."
       content_localization_locale_limit: "Het aantal ondersteunde talen mag niet meer dan %{max} zijn."
-      content_localization_language_switcher_requirements: "De taalkiezer vereist dat de site-instellingen 'set locale from cookie' en 'allow user locale' zijn ingeschakeld en dat 'content localization supported locales' ten minste één taal heeft."
       mediaconvert_role_arn_required: "AWS IAM-rol ARN is vereist wanneer je AWS MediaConvert gebruikt voor videoconversie."
       mediaconvert_output_subdirectory_required: "De submap MediaConvert-uitvoer is vereist."
       s3_credentials_required_for_video_conversion: "S3-aanmeldgegevens zijn vereist voor videoconversie. Configureer S3-toegangssleutels of schakel het IAM-profiel in."

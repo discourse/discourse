@@ -144,4 +144,25 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
       processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
     }.to raise_error(JSON::ParserError)
   end
+
+  it "separates uncached, cache-read, and cache-write input tokens" do
+    processor = described_class.new
+
+    processor.process_message(
+      choices: [],
+      usage: {
+        prompt_tokens: 2_006,
+        completion_tokens: 300,
+        prompt_tokens_details: {
+          cached_tokens: 1_920,
+          cache_write_tokens: 64,
+        },
+      },
+    )
+
+    expect(processor.prompt_tokens).to eq(22)
+    expect(processor.completion_tokens).to eq(300)
+    expect(processor.cache_read_tokens).to eq(1_920)
+    expect(processor.cache_write_tokens).to eq(64)
+  end
 end

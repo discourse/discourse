@@ -43,16 +43,17 @@ function userGranteeResult(user) {
  * excludedGrantees: an array of grantee values (in format type:id) that should be excluded from the search results,
  * since they have already been selected. These are passed from DAccessControl.
  *
- * onlyShowGroupFullName: for DAccessControl, it's ugly/unnecessary to show the group short_name_with_underscores, we only
- * want to show the group full name.
- *
  * prioritizeUserNameOrdering: for DAccessControl, we want to respect the prioritize_username_in_ux site setting and
  * show the name before the username in the search results depending on the setting.
+ *
+ * prioritizeGroupFullNameOrdering: for DAccessControl, we want to show the full
+ * name before the group name in the search results.
  */
 @selectKitOptions({
   excludedGrantees: undefined,
-  onlyShowGroupFullName: true,
   prioritizeUserNameOrdering: true,
+  prioritizeGroupFullNameOrdering: true,
+  excludeGroupNameWhenMatchingFullName: true,
 })
 export default class DAccessControlGranteeChooser extends EmailGroupUserChooser {
   valueProperty = "value";
@@ -71,8 +72,9 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
           acl_target: this.selectKit.options.aclTarget,
         },
       });
-      const results_2 = this.normalizeGranteeResults(results);
-      return this.excludeSelectedGrantees(results_2);
+      return this.excludeSelectedGrantees(
+        this.normalizeGranteeResults(results)
+      );
     } catch {
       return [];
     }

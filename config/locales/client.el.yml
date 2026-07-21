@@ -2291,6 +2291,28 @@ el:
           create_link_and_send_email: "Δημιουργία συνδέσμου και αποστολή email"
           invite_saved_without_sending_email: "Η πρόσκληση αποθηκεύτηκε. Αντιγράψτε τον παρακάτω σύνδεσμο και κοινοποιήστε τον για να παραχωρήσετε άμεσα πρόσβαση σε αυτόν τον ιστότοπο."
           invite_saved_with_sending_email: "Η πρόσκληση έχει αποσταλεί. Μπορείτε επίσης να αντιγράψετε τον παρακάτω σύνδεσμο και να τον κοινοποιήσετε για να παραχωρήσετε άμεσα πρόσβαση σε αυτόν τον ιστότοπο."
+        invite_roles:
+          member_title: "Πρόσκληση μελών"
+          sent_title: "Η πρόσκληση στάλθηκε"
+          member_tab: "Μέλη"
+          admin_tab: "Διαχειριστές"
+          admin_email_label: "Διεύθυνση email"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Διεύθυνση Email"
+          restrict_domain: "Περιορισμός σε τομέα"
+          more_options: "Περισσότερες επιλογές"
+          update: "Ενημέρωση"
+          summary:
+            role_member: "Μέλος"
+            role_admin: "Διαχειριστής"
+            method: "Κοινοποίηση"
+            method_email: "Διεύθυνση Email"
+            restriction: "Περιορίζεται σε"
+            uses: "Μέγιστες χρήσεις"
+            expires: "Λήγει"
+            topic: "Νήμα"
+            groups: "Ομάδες"
+            edit: "Επεξεργασία πρόσκλησης"
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
           text: "Μαζική πρόσκληση"
@@ -3003,6 +3025,7 @@ el:
       draft_saved: "Το προσχέδιο αποθηκεύτηκε!"
       users_placeholder: "Προσθήκη χρηστών ή ομάδων"
       title_placeholder: "Τι αφορά αυτή η συζήτησης σε μία σύντομη πρόταση;"
+      title_placeholder_redesign: "Τίτλος"
       title_or_link_placeholder: "Πληκτρολόγησε τίτλο, ή κάνε επικόλληση ένα σύνδεσμο εδώ"
       edit_reason_placeholder: "Γιατί κάνετε επεξεργασία;"
       topic_featured_link_placeholder: "Εισάγετε τον συνδέσμο που εμφανίζεται με τον τίτλο."
@@ -3728,6 +3751,7 @@ el:
       sort:
         label: "Ταξινόμηση κατά"
         top: "Κορυφαία"
+        hot: "Δημοφιλή"
         new: "Νέο"
         old: "Παλιές"
       load_more_children:
@@ -4522,7 +4546,7 @@ el:
     category:
       none: "(χωρίς κατηγορία)"
       all: "Όλες οι κατηγορίες"
-      choose: "κατηγορία&hellip;"
+      choose: "Κατηγορία&hellip;"
       edit: "Επεξεργασία"
       edit_title: "Επεξεργασία αυτής της κατηγορίας"
       edit_dialog_title: "Επεξεργασία: %{categoryName}"
@@ -5172,7 +5196,6 @@ el:
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
-      choose_for_topic: "προαιρετικές ετικέτες"
       choose_for_topic_required:
         one: "επιλέξτε τουλάχιστον %{count} ετικέτα…"
         other: "επιλέξτε τουλάχιστον %{count} ετικέτες…"
@@ -8490,6 +8513,10 @@ el:
         alt: "προεπισκόπηση προσαρμοσμένου emoji"
         delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις το emoji :%{name}:;"
         settings: "Ρυθμίσεις"
+        export: "Εξαγωγή"
+        import: "Εισαγωγή"
+        import_category:
+          new: "Νέος"
       embedding:
         get_started: "Εάν θέλεις να ενσωματώσεις το Discourse σε μια άλλη ιστοσελίδα, ξεκίνα με το να προσθέσεις το host του."
         delete: "Διαγραφή"

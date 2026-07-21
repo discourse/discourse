@@ -718,8 +718,6 @@ pt_BR:
           anthropic-claude-haiku-4-5: "Rápido e econômico"
           google-gemini-3-1-pro: "O modelo mais inteligente do Google"
           google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-4: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
-          open_ai-gpt-5-4-nano: "O modelo do GPT-5 mais rápido e econômico"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
@@ -768,7 +766,7 @@ pt_BR:
         provider_fields:
           access_key_id: "ID da chave de acesso do AWS Bedrock"
           role_arn: "AWS Bedrock Role ARN"
-          region: "Região do AWS Bedrock"
+          region: "Região"
           organization: "ID da organização opcional da OpenAI"
           disable_system_prompt: "Desativar mensagens de sistema nos prompts"
           enable_native_tool: "Ativar suporte para ferramenta nativa"

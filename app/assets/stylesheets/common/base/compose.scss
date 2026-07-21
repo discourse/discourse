@@ -1249,3 +1249,310 @@ body.has-sidebar-page {
     display: none;
   }
 }
+
+.uc-enable-composer-redesign {
+  .composer-actions-trigger {
+    background: var(--secondary);
+  }
+
+  #reply-control {
+    // the redesigned grippie is taller than the height the default layout
+    // reserves for it, so size the reply area with flex instead
+    .grippie ~ .reply-area {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 0;
+    }
+  }
+
+  .grippie {
+    padding-block: var(--space-1);
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
+    background: var(--primary-very-low);
+  }
+
+  .reply-to {
+    padding: var(--space-2) var(--space-4);
+    margin: 0 !important;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .reply-area {
+    padding: 0 !important;
+  }
+
+  .composer-controls {
+    .btn {
+      font-size: var(--font-down-1-rem);
+    }
+  }
+
+  .title-and-category {
+    padding: 0 !important;
+    width: 100% !important;
+    gap: 0 !important;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .category-input,
+  .users-input {
+    border-right: 1px solid var(--primary-low);
+
+    @include viewport.until(sm) {
+      flex-grow: 1;
+    }
+  }
+
+  .tags-input {
+    @include viewport.until(sm) {
+      flex-grow: 0 !important;
+    }
+
+    @include viewport.until(sm) {
+      .select-kit {
+        .formatted-selection {
+          display: none !important;
+        }
+      }
+    }
+
+    .select-kit-header-wrapper {
+      gap: var(--space-1);
+
+      .formatted-selection {
+        color: var(--primary-medium);
+      }
+
+      .d-icon-plus {
+        @include viewport.until(sm) {
+          display: none;
+        }
+      }
+
+      .d-icon-tag {
+        color: var(--primary-low-mid) !important;
+      }
+    }
+
+    .has-selection {
+      .select-kit-header-wrapper {
+        .formatted-selection {
+          color: var(--primary-high);
+        }
+
+        .d-icon-tag {
+          color: var(--tertiary) !important;
+        }
+      }
+    }
+  }
+
+  .category-input,
+  .tags-input,
+  .users-input {
+    margin: 0 !important;
+    max-width: unset !important;
+    width: 50% !important;
+    box-sizing: border-box;
+
+    @include viewport.until(sm) {
+      width: auto !important;
+    }
+
+    .select-kit.combo-box .select-kit-header,
+    .select-kit.multi-select .multi-select-header {
+      border: 0;
+      padding: var(--space-3) var(--space-4);
+
+      .d-icon {
+        font-size: var(--font-down-1-rem);
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .title-input {
+    #reply-title {
+      border: 0;
+      padding: var(--space-4);
+      font-size: var(--font-up-3);
+      margin-bottom: 0 !important;
+
+      &::placeholder {
+        color: var(--primary-medium);
+      }
+
+      @include viewport.until(sm) {
+        font-size: var(--font-up-2);
+      }
+
+      &:focus {
+        outline: 0;
+      }
+    }
+  }
+
+  .d-editor-textarea-wrapper {
+    --composer-slide-easing: cubic-bezier(0.2, 0, 0, 1);
+    border: 0;
+
+    // padding and border-radius must animate in lockstep with margin,
+    // otherwise the text counter-jumps when the focus state toggles
+    transition:
+      margin 250ms var(--composer-slide-easing),
+      padding 250ms var(--composer-slide-easing),
+      border-radius 250ms var(--composer-slide-easing),
+      box-shadow 250ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:focus,
+    &.in-focus {
+      outline: none;
+      border: 0;
+    }
+  }
+
+  #reply-control.has-composer-fields .d-editor-textarea-wrapper {
+    &:focus,
+    &.in-focus {
+      @include viewport.until(sm) {
+        margin-top: calc(
+          (
+              var(--composer-fields-height, 0px) +
+                (var(--header-offset, 0px) / 3)
+            ) *
+            -1
+        );
+        z-index: z("composer", "dropdown") + 1;
+        box-shadow: 0 -12px 12px 0 rgb(var(--primary-rgb), 0.15);
+        border-top-left-radius: var(--d-border-radius-large);
+        border-top-right-radius: var(--d-border-radius-large);
+        padding-top: var(--space-4);
+      }
+    }
+  }
+
+  .d-editor-input {
+    padding-inline: var(--space-4);
+    padding-top: 0 !important;
+  }
+
+  .wmd-controls:not(.toolbar-visible)
+    ~ .composer-footer
+    .d-editor-button-bar__wrap {
+    display: none;
+  }
+
+  // clean up selector once the uc- body class is no longer in the way
+  .show-preview .d-editor-container.--markdown-editor-enabled {
+    .d-editor-textarea-column {
+      border-right: 1px solid var(--primary-low);
+    }
+
+    .d-editor-preview-wrapper {
+      margin-top: var(--space-2);
+    }
+  }
+
+  .composer-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    @include viewport.from(sm) {
+      padding: var(--space-2) var(--space-4);
+      border-top: 1px solid var(--primary-low);
+    }
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
+
+    &__toolbar {
+      overflow: hidden;
+      flex-grow: 1;
+
+      @include viewport.until(sm) {
+        width: 100%;
+        padding-inline: var(--space-2);
+        box-sizing: border-box;
+        border-top: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+
+    .submit-panel {
+      margin: 0 !important;
+
+      @include viewport.until(sm) {
+        width: 100%;
+        padding-inline: var(--space-2);
+        box-sizing: border-box;
+
+        .save-or-cancel {
+          display: inline-flex !important;
+          margin-left: auto;
+          flex: unset !important;
+          margin-right: 0 !important;
+
+          // temporary overrule, should be done in template eventually
+          .btn.btn-primary {
+            background: transparent;
+            color: var(--tertiary);
+            font-weight: bold;
+          }
+        }
+
+        #draft-status {
+          margin-left: 0 !important;
+        }
+      }
+    }
+
+    .d-editor-button-bar__wrap {
+      @include viewport.until(sm) {
+        margin: 0;
+      }
+    }
+
+    .d-editor-button-bar {
+      @include viewport.until(sm) {
+        padding-inline: var(--space-2);
+      }
+
+      &__scroll-btn {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1-rem);
+      }
+
+      .btn,
+      .composer-toggle-switch__left-icon,
+      .composer-toggle-switch__right-icon {
+        font-size: var(--font-down-1-rem);
+      }
+    }
+
+    .composer-toggle-switch {
+      margin-left: 0;
+    }
+  }
+
+  @include viewport.until(sm) {
+    .reply-area {
+      background: var(--secondary);
+      padding: 0 0 max(env(safe-area-inset-bottom), var(--space-2)) !important;
+
+      html.keyboard-visible & {
+        padding-bottom: var(--space-2) !important;
+      }
+    }
+
+    .reply-to {
+      padding: var(--space-1) var(--space-3);
+    }
+  }
+}

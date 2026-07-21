@@ -729,7 +729,7 @@ ja:
         provider_fields:
           access_key_id: "AWS Bedrock アクセスキー ID"
           role_arn: "AWS Bedrock のロール ARN"
-          region: "AWS Bedrock リージョン"
+          region: "地域"
           organization: "オプションの OpenAI 組織 ID"
           disable_system_prompt: "プロンプトでシステムメッセージを無効にする"
           enable_native_tool: "ネイティブツールのサポートを有効にする"

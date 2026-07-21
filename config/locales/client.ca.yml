@@ -1384,6 +1384,17 @@ ca:
         invite:
           description: "Descripció"
           cancel: "Cancel·la"
+        invite_roles:
+          member_tab: "Membres"
+          admin_tab: "Administradors"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Correu electrònic"
+          summary:
+            role_member: "Membre"
+            role_admin: "Administració"
+            method_email: "Correu electrònic"
+            topic: "Tema"
+            groups: "Grups"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1727,6 +1738,7 @@ ca:
       edit_shared_draft: "Edita l'esborrany compartit"
       discard: "Descarta"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
+      title_placeholder_redesign: "Títol"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
@@ -2508,7 +2520,7 @@ ca:
     category:
       none: "(sense categoria)"
       all: "Totes les categories"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Edita"
       edit_dialog_title: "Edita: %{categoryName}"
       view: "Mostra temes per categories"
@@ -2892,7 +2904,6 @@ ca:
       selector_no_tags: "sense etiquetes"
       selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
-      choose_for_topic: "etiquetes opcionals"
       add_synonyms: "Afegeix"
       delete_tag: "Suprimeix l'etiqueta"
       delete_confirm:
@@ -4547,6 +4558,10 @@ ca:
         image: "Imatge"
         delete_confirm: "Esteu segur que voleu suprimir l'emoji :%{name}:?"
         settings: "Configuració"
+        export: "Exporta"
+        import: "Importa"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         delete: "Suprimeix"

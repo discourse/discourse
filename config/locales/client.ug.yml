@@ -2230,6 +2230,28 @@ ug:
           create_link_and_send_email: "ئۇلانما قۇرۇپ ئېلخەت يوللا"
           invite_saved_without_sending_email: "تەكلىپ ساقلاندى. تۆۋەندىكى ئۇلانمىنى كۆچۈرۈپ، بۇ تور بېكەتنى دەرھال زىيارەت قىلىش ئۈچۈن ھەمبەھىرلىگىلى بولىدۇ."
           invite_saved_with_sending_email: "تەكلىپ ئېلخەت يوللانغان. تۆۋەندىكى ئۇلانمىنى كۆچۈرۈپ، بۇ تور بېكەتنى دەرھال زىيارەت قىلىش ئۈچۈن ھەمبەھىرلىيەلەيسىز."
+        invite_roles:
+          member_title: "ئەزا تەكلىپ"
+          sent_title: "تەكلىپ يوللاندى"
+          member_tab: "ئەزا"
+          admin_tab: "باشقۇرغۇچى"
+          admin_email_label: "ئېلخەت ئادرېسى"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ئېلخەت"
+          restrict_domain: "دائىرە بىلەنلا چەكلىنىدۇ"
+          domain_placeholder: "example.com"
+          more_options: "تېخىمۇ كۆپ تاللانما"
+          update: "يېڭىلا"
+          summary:
+            role_member: "ئەزا"
+            role_admin: "باشقۇرغۇچى"
+            method: "ھەمبەھىرلەش"
+            method_email: "ئېلخەت"
+            uses: "ئەڭ كۆپ ئىشلىتىلىشى"
+            expires: "ۋاقتى توشىدۇ"
+            topic: "تېما"
+            groups: "گۇرۇپپا"
+            edit: "تەكلىپ تەھرىر"
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
           text: "توپ تەكلىپ"
@@ -2927,6 +2949,7 @@ ug:
       draft_saved: "دەسلەپكى نۇسخا ساقلاندى"
       users_placeholder: "ئىشلەتكۈچى ياكى گۇرۇپپا قوش"
       title_placeholder: "قىسقا بىر جۈملە بىلەن سۆھبەت مەزمۇنىنى ئىپادىلەشكە توغرا كەلسە ئۇ نېمە؟"
+      title_placeholder_redesign: "ئاتاق"
       title_or_link_placeholder: "بۇ جايغا ماۋزۇ كىرگۈزۈلىدۇ ياكى ئۇلانما چاپلىنىدۇ"
       edit_reason_placeholder: "نېمىشقا تەھرىرلىدىڭىز؟"
       topic_featured_link_placeholder: "ماۋزۇدا كۆرۈنىدىغان ئۇلانما كىرگۈزۈلىدۇ"
@@ -3531,6 +3554,7 @@ ug:
       sort:
         label: "تەرتىپى"
         top: "قىزغىن"
+        hot: "قىزىق"
         new: "يېڭى"
       load_more_children:
         one: "باشقا %{count} جاۋاب"
@@ -4865,7 +4889,6 @@ ug:
       selector_no_tags: "بەلگە يوق"
       selector_remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       tags: "بەلگە"
-      choose_for_topic: "تاللانما بەلگە"
       choose_for_topic_required:
         one: "ئاز دېگەندە %{count} بەلگە تاللايدۇ…"
         other: "ئاز دېگەندە %{count} بەلگە تاللايدۇ…"
@@ -8233,6 +8256,9 @@ ug:
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"
         delete_confirm: "سىز راستتىنلا %{name}: چىراي ئىپادە: نى ئۆچۈرەمسىز؟"
         settings: "تەڭشەكلەر"
+        export: "چىقار"
+        import_category:
+          new: "يېڭى"
       embedding:
         get_started: "ئەگەر Discourse نى باشقا تور بېكەتكە سىڭدۈرمەكچى بولسىڭىز، ئۇنىڭ مۇلازىمېتىرىنى قوشۇشتىن باشلاڭ."
         delete: "ئۆچۈر"

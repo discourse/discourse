@@ -98,6 +98,8 @@ bg:
         filter_all: Всички
         filter_open: Отвори
         filter_closed: Затворена
+        filter_joined_all: "Всички"
+        filter_joined_joined: "Присъединен"
       chat_message_separator:
         today: Днес
         yesterday: Вчера
@@ -119,6 +121,9 @@ bg:
       direct_message_creator:
         title: Ново Съобщение
         prefix: "До:"
+      channel:
+        preview_card:
+          log_in: "Вход"
       create_channel:
         description: "Описание"
         type: "Тип"

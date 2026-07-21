@@ -1174,6 +1174,17 @@ RSpec.describe PostCreator do
       PostCreator.create!(admin2, raw: "I am also an admin, and a mod", topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      PostCreator.create!(
+        tl0_user,
+        raw: "Automated support reply",
+        topic_id: post.topic_id,
+        guardian: Discourse.system_user.guardian,
+        skip_staff_author_pm_membership_sync: true,
+      )
+
+      expect(post.topic.topic_allowed_users.where(user_id: tl0_user.id).count).to eq(0)
     end
 
     it "does not add whisperers to allowed users of the topic" do

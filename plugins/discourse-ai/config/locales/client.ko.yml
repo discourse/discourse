@@ -206,6 +206,8 @@ ko:
         providers:
           google: "구글"
           fake: "사용자 정의"
+        provider_fields:
+          region: "지역"
       ai_helper:
         context_menu:
           cancel: "취소"

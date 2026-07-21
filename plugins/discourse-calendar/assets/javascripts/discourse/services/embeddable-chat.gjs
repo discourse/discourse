@@ -10,11 +10,20 @@ export default class EmbeddableChat extends Service {
   @service currentUser;
   @service capabilities;
   @optionalService chat;
+  @optionalService chatStateManager;
 
   @tracked isMobileChatVisible = false;
 
   get userCanChat() {
     return this.chat?.userCanChat ?? false;
+  }
+
+  get isChannelOpenInDrawer() {
+    return (
+      this.chatStateManager?.isDrawerActive &&
+      this.chatStateManager?.isDrawerExpanded &&
+      this.chat?.activeChannel?.id === this.chatChannelId
+    );
   }
 
   canRenderChatChannel(mobileViewAllowed = false) {
@@ -33,7 +42,7 @@ export default class EmbeddableChat extends Service {
       );
 
       if (withinPathsAllowed && this.chatChannelId) {
-        return true;
+        return !this.isChannelOpenInDrawer;
       }
     }
 

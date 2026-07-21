@@ -2268,6 +2268,29 @@ hu:
           create_link_and_send_email: "Hivatkozás létrehozása és e-mail küldése"
           invite_saved_without_sending_email: "Meghívó mentve. Másolja ki az alábbi linket, és ossza meg, hogy azonnal hozzáférést biztosítson ehhez az oldalhoz."
           invite_saved_with_sending_email: "A meghívó e-mail elküldve. Az alábbi linket is kimásolhatja és megoszthatja, hogy azonnal hozzáférést biztosítson ehhez az oldalhoz."
+        invite_roles:
+          member_title: "Tagok meghívása"
+          sent_title: "Meghívó elküldve"
+          member_tab: "Tagok"
+          admin_tab: "Adminisztrátorok"
+          admin_email_label: "E-mail-cím"
+          email_placeholder: "név@example.com"
+          invite_by_email: "E-mail:"
+          restrict_domain: "Domainre korlátozás"
+          domain_placeholder: "example.com"
+          more_options: "További lehetőségek"
+          update: "Frissítés"
+          summary:
+            role_member: "Tag"
+            role_admin: "Adminisztrátor"
+            method: "Megosztás"
+            method_email: "E-mail:"
+            restriction: "Korlátozva a következőre:"
+            uses: "Maximális használat"
+            expires: "Lejár"
+            topic: "Téma"
+            groups: "Csoportok"
+            edit: "Meghívó szerkesztése"
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2966,6 +2989,7 @@ hu:
       draft_saved: "Vázlat mentve!"
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
+      title_placeholder_redesign: "Cím"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
@@ -3594,6 +3618,7 @@ hu:
       sort:
         label: "Rendezés"
         top: "Népszerű"
+        hot: "Felkapott"
         new: "Új"
       load_more_children:
         one: "és %{count} további válasz"
@@ -4346,7 +4371,7 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "kategória&hellip;"
+      choose: "Kategória&hellip;"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"
@@ -4969,7 +4994,6 @@ hu:
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
-      choose_for_topic: "Megadható címke"
       choose_for_topic_required:
         one: "válasszon legalább %{count} címkét"
         other: "válasszon legalább %{count} címkét"
@@ -8489,6 +8513,10 @@ hu:
         alt: "egyéni emodzsi előnézete"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
         settings: "Beállítások"
+        export: "Exportálás"
+        import: "Importálás"
+        import_category:
+          new: "Új"
       embedding:
         get_started: "Ha a Discourse-ot egy másik weboldalba akarja ágyazni, akkor kezdje a gépnév megadásával."
         delete: "Törlés"

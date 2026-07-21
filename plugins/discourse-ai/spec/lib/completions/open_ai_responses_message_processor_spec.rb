@@ -86,4 +86,27 @@ RSpec.describe DiscourseAi::Completions::OpenAiResponsesMessageProcessor do
       expect(result.last).to eq("HN summary")
     end
   end
+
+  describe "usage" do
+    it "separates uncached, cache-read, and cache-write input tokens" do
+      processor = described_class.new
+
+      processor.process_message(
+        output: [],
+        usage: {
+          input_tokens: 2_006,
+          output_tokens: 300,
+          input_tokens_details: {
+            cached_tokens: 1_920,
+            cache_write_tokens: 64,
+          },
+        },
+      )
+
+      expect(processor.prompt_tokens).to eq(22)
+      expect(processor.completion_tokens).to eq(300)
+      expect(processor.cache_read_tokens).to eq(1_920)
+      expect(processor.cache_write_tokens).to eq(64)
+    end
+  end
 end

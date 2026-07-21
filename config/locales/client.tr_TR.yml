@@ -2310,6 +2310,29 @@ tr_TR:
           create_link_and_send_email: "Bağlantı oluştur ve e-posta gönder"
           invite_saved_without_sending_email: "Davet kaydedildi. Bu siteye anında erişim sağlamak için aşağıdaki bağlantıyı kopyalayın ve paylaşın."
           invite_saved_with_sending_email: "Davet e-postası gönderildi. Ayrıca aşağıdaki bağlantıyı kopyalayabilir ve bu siteye anında erişim sağlamak için paylaşabilirsiniz."
+        invite_roles:
+          member_title: "Üye davet edin"
+          sent_title: "Davet gönderildi"
+          member_tab: "Üyeler"
+          admin_tab: "Yöneticiler"
+          admin_email_label: "E-posta adresi"
+          email_placeholder: "ad@ornek.com"
+          invite_by_email: "E-posta"
+          restrict_domain: "Alan adıyla kısıtla"
+          domain_placeholder: "example.com"
+          more_options: "Daha fazla seçenek"
+          update: "Güncelle"
+          summary:
+            role_member: "Üye"
+            role_admin: "Yönetici"
+            method: "Paylaşma"
+            method_email: "E-posta"
+            restriction: "Sınırlı"
+            uses: "Maksimum kullanım"
+            expires: "Bitiş tarihi"
+            topic: "Konu"
+            groups: "Gruplar"
+            edit: "Daveti düzenleyin"
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
           text: "Toplu Davet"
@@ -3032,6 +3055,7 @@ tr_TR:
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
+      title_placeholder_redesign: "Başlık"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
       edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
@@ -3738,6 +3762,7 @@ tr_TR:
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
+        hot: "Popüler"
         new: "Yeni"
         old: "Eski"
       load_more_children:
@@ -4532,7 +4557,7 @@ tr_TR:
     category:
       none: "(kategori yok)"
       all: "Tüm kategoriler"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Düzenle"
       edit_title: "Bu kategoriyi düzenle"
       edit_dialog_title: "Düzenle: %{categoryName}"
@@ -5165,7 +5190,6 @@ tr_TR:
       selector_no_tags: "etiket yok"
       selector_remove_filter: "filtreyi kaldır"
       tags: "Etiketler"
-      choose_for_topic: "isteğe bağlı etiketler"
       choose_for_topic_required:
         one: "en az %{count} etiket seç…"
         other: "en az %{count} etiket seç…"
@@ -8722,6 +8746,10 @@ tr_TR:
         alt: "özel emoji ön izlemesi"
         delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
         settings: "Ayarlar"
+        export: "Dışarı Aktar"
+        import: "İçe Aktar"
+        import_category:
+          new: "Yeni"
       embedding:
         get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
         delete: "Sil"

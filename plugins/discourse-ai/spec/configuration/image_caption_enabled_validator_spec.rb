@@ -20,7 +20,7 @@ describe DiscourseAi::Configuration::ImageCaptionEnabledValidator do
   end
 
   def set_caption_agent(agent)
-    SiteSetting.provider.save("ai_image_caption_agent", agent.id, SiteSetting.types[:enum])
+    SiteSetting.provider.save(:ai_image_caption_agent, agent.id, SiteSetting.types[:enum])
     SiteSetting.refresh!
   end
 

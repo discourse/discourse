@@ -568,7 +568,6 @@ fi:
           anthropic-claude-opus-4-7: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-6: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
-          open_ai-gpt-5-4-nano: "Nopein ja kustannustehokkain GPT-5-malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -611,7 +610,7 @@ fi:
           fake: "Mukautettu"
         provider_fields:
           access_key_id: "AWS Bedrockin käyttöavaintunnus"
-          region: "AWS Bedrockin alue"
+          region: "Alue"
           organization: "Valinnainen OpenAI:n organisaatiotunnus"
           disable_system_prompt: "Poista järjestelmäviesti käytöstä kehotteissa"
           enable_native_tool: "Ota käyttöön natiivityökalujen tuki"

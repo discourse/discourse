@@ -910,8 +910,8 @@ fr:
           one: "Signalé par %{count} utilisateur unique"
           other: "Signalé par %{count} utilisateurs uniques"
         flagged_in_timeframe:
-          one: "%{count} marquage confirmé"
-          other: "%{count} marquages confirmés"
+          one: "%{count} signalement confirmé"
+          other: "%{count} signalements confirmés"
         activities:
           trust_level: "niveau de confiance : %{trustLevelName}"
           posts:
@@ -1080,7 +1080,7 @@ fr:
           smtp_settings_valid: "Paramètres SMTP valides."
           smtp_title: "SMTP"
           smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les e-mails envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
-          additional_settings: "Paramètres additionnels"
+          additional_settings: "Paramètres supplémentaires"
           prefill:
             title: "Renseigner les paramètres pour :"
             gmail: "Gmail"
@@ -1569,8 +1569,8 @@ fr:
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
       api_last_used_at: "Dernière utilisation :"
-      api_expires_at: "Expire le:"
-      api_expired_at: "Expiré:"
+      api_expires_at: "Date d'expiration :"
+      api_expired_at: "Expiré :"
       api_expires_never: "jamais"
       theme: "Thème"
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
@@ -1691,7 +1691,7 @@ fr:
         calendar_subscriptions: "Calendrier"
       calendar_subscriptions:
         copied: "Copié !"
-        add_to_google: "Calendrier Google"
+        add_to_google: "Google Agenda"
       change_password:
         success: "(e-mail envoyé)"
         in_progress: "(e-mail en cours d'envoi)"
@@ -2118,6 +2118,27 @@ fr:
           create_link_and_send_email: "Créer un lien et envoyer un e-mail"
           invite_saved_without_sending_email: "Invitation enregistrée. Copiez le lien ci-dessous et partagez-le pour accorder instantanément l'accès à ce site."
           invite_saved_with_sending_email: "Un e-mail d'invitation a été envoyé. Vous pouvez également copier le lien ci-dessous et le partager pour accorder instantanément l'accès à ce site."
+        invite_roles:
+          member_title: "Inviter des membres"
+          sent_title: "Invitation envoyée"
+          member_tab: "Membres"
+          admin_tab: "Administrateurs "
+          admin_email_label: "Adresse e-mail"
+          email_placeholder: "nom@exemple.com"
+          invite_by_email: "E-mail"
+          restrict_domain: "Restreindre au domaine"
+          more_options: "Plus d'options"
+          update: "Mettre à jour"
+          summary:
+            role_member: "Membre"
+            role_admin: "Administrateur"
+            method: "Partage"
+            method_email: "E-mail"
+            uses: "Nombre max. d'utilisations"
+            expires: "Expire le"
+            topic: "Sujet"
+            groups: "Groupes"
+            edit: "Modifier l'invitation"
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation groupée"
@@ -2293,8 +2314,8 @@ fr:
       label: "Sélectionnez les options"
     d_otp:
       screen_reader:
-        one: Entrez un chiffre
-        other: Entrez %{count} chiffre
+        one: Saisissez un chiffre
+        other: Saisissez %{count} chiffres
     form_kit:
       reset: Réinitialiser
       optional: facultatif
@@ -2790,8 +2811,9 @@ fr:
       discard: "Abandonner"
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
+      title_placeholder_redesign: "Titre"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
-      edit_reason_placeholder: "Pourquoi modifiez-vous le tableau ?"
+      edit_reason_placeholder: "Quelle est la raison de la modification ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
       remove_featured_link: "Retirer le lien du sujet."
       reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
@@ -2847,7 +2869,7 @@ fr:
         attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
-      edit_reason: "Pourquoi modifiez-vous le tableau ?"
+      edit_reason: "Quelle est la raison de la modification ?"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
       cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -3261,14 +3283,14 @@ fr:
         dismiss_new_topics: "Ignorer les nouveaux sujets"
         dismiss_new_replies: "Ignorer les nouvelles réponses"
         dismiss_new_topics_with_selected:
-          one: "Marquer comme lus (%{count})"
-          other: "Marquer comme lus (%{count})"
+          one: "Rejeter (%{count})"
+          other: "Rejeter (%{count})"
         dismiss_new_replies_with_selected:
-          one: "Marquer comme lus (%{count})"
-          other: "Marquer comme lus (%{count})"
+          one: "Rejeter (%{count})"
+          other: "Rejeter (%{count})"
         dismiss_all_with_selected:
-          one: "Marquer comme lus (%{count})"
-          other: "Marquer comme lus (%{count})"
+          one: "Rejeter (%{count})"
+          other: "Rejeter (%{count})"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
@@ -3355,7 +3377,8 @@ fr:
     nested_replies:
       sort:
         label: "Trier par"
-        top: "Top"
+        top: "Populaires"
+        hot: "Populaires"
         new: "Nouveau"
       load_more_children:
         one: "%{count} réponse supplémentaire"
@@ -4085,7 +4108,7 @@ fr:
     category:
       none: "(aucune catégorie)"
       all: "Toutes les catégories"
-      choose: "catégorie&hellip;"
+      choose: "Catégorie&hellip;"
       edit: "Modifier"
       edit_title: "Modifier cette catégorie"
       edit_dialog_title: "Modifier : %{categoryName}"
@@ -4624,14 +4647,14 @@ fr:
     download_calendar:
       title: "Télécharger le calendrier"
       save_ics: "Télécharger le fichier .ics"
-      save_google: "Ajouter au calendrier Google"
+      save_google: "Ajouter à Google Agenda"
       remember: "Ne plus me le proposer"
       remember_explanation: "(vous pouvez changer ce réglage dans vos préférences utilisateur)"
       download: "Télécharger"
       default_calendar: "Calendrier par défaut"
       default_calendar_instruction: "Définir le calendrier à utiliser lorsqu'une date est enregistrée"
       add_to_calendar: "Ajouter au calendrier"
-      google: "Calendrier Google"
+      google: "Google Agenda"
       ics: "ICS"
     tagging:
       all_tags: "Toutes les étiquettes"
@@ -4640,7 +4663,6 @@ fr:
       selector_no_tags: "aucune étiquette"
       selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"
-      choose_for_topic: "étiquettes optionnelles"
       choose_for_topic_required:
         one: "sélectionnez au moins %{count} étiquette…"
         other: "sélectionnez au moins %{count} étiquettes…"
@@ -5055,7 +5077,7 @@ fr:
           title: "Modifier le tableau"
           cancel: "annuler"
           create: "Enregistrer"
-          reason: "Pourquoi modifiez-vous le tableau ?"
+          reason: "Quelle est la raison de la modification ?"
           trigger_reason: "Ajouter la raison de la modification"
         default_edit_reason: "Modifier avec l'éditeur de tableaux"
       default_header:
@@ -7914,6 +7936,10 @@ fr:
         alt: "aperçu de l'émoji personnalisé"
         delete_confirm: "Voulez-vous vraiment supprimer l'émoji :%{name}: ?"
         settings: "Paramètres"
+        export: "Exporter"
+        import: "Importer"
+        import_category:
+          new: "Nouveau"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         delete: "Supprimer"

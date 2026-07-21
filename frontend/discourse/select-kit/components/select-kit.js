@@ -780,7 +780,11 @@ export default class SelectKit extends Component {
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
-            this.selectKit.set("newItem", this.defaultItem(filter, filter));
+            const newItem = this.defaultItem(filter, filter);
+            if (typeof newItem === "object" && newItem !== null) {
+              newItem.isNew = true;
+            }
+            this.selectKit.set("newItem", newItem);
             content.unshift(this.selectKit.newItem);
           }
         }

@@ -2107,6 +2107,28 @@ fi:
           create_link_and_send_email: "Luo linkki ja lähetä sähköposti"
           invite_saved_without_sending_email: "Kutsu tallennettu. Kopioi alla oleva linkki ja jaa se antaaksesi välittömästi pääsyn tälle sivustolle."
           invite_saved_with_sending_email: "Kutsusähköposti on lähetetty. Voit myös kopioida alla olevan linkin ja jakaa sen antaaksesi välittömästi pääsyn tälle sivustolle."
+        invite_roles:
+          member_title: "Kutsu jäseniä"
+          sent_title: "Kutsu lähetetty"
+          member_tab: "Jäsenet"
+          admin_tab: "Ylläpitäjät"
+          admin_email_label: "Sähköpostiosoite"
+          email_placeholder: "nimi@esimerkki.fi"
+          invite_by_email: "Sähköpostiosoite"
+          restrict_domain: "Rajoita verkkotunnukseen"
+          domain_placeholder: "example.com"
+          more_options: "Lisää vaihtoehtoja"
+          update: "Päivitä"
+          summary:
+            role_member: "Konkari"
+            role_admin: "Ylläpitäjä"
+            method: "Jakaminen"
+            method_email: "Sähköpostiosoite"
+            uses: "Käyttökertoja enintään"
+            expires: "Vanhenee"
+            topic: "Ketju"
+            groups: "Ryhmät"
+            edit: "Muokkaa kutsua"
         bulk_invite:
           none: "Ei näytettäviä kutsuja tällä sivulla."
           text: "Joukkokutsu"
@@ -2775,6 +2797,7 @@ fi:
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
+      title_placeholder_redesign: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -3341,6 +3364,7 @@ fi:
       sort:
         label: "Järjestys"
         top: "Suositut"
+        hot: "Liekeissä"
         new: "Uudet"
       load_more_children:
         one: "%{count} muu kommentti"
@@ -4059,7 +4083,7 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "alue&hellip;"
+      choose: "Alue&hellip;"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
@@ -4614,7 +4638,6 @@ fi:
       selector_no_tags: "ei tunnisteita"
       selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"
-      choose_for_topic: "valinnaiset tunnisteet"
       choose_for_topic_required:
         one: "valitse ainakin %{count} tunniste…"
         other: "valitse ainakin %{count} tunnistetta…"
@@ -7893,6 +7916,10 @@ fi:
         alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
         settings: "Asetukset"
+        export: "Vie"
+        import: "Tuo"
+        import_category:
+          new: "Uudet"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         delete: "Poista"

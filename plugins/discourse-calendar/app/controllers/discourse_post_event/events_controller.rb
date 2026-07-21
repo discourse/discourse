@@ -167,10 +167,12 @@ module DiscoursePostEvent
     def filtered_events_params
       params.permit(
         :post_id,
+        :topic_id,
         :category_id,
         :include_subcategories,
         :include_interested,
         :include_ongoing,
+        :include_closed,
         :limit,
         :attending_user,
         :before,

@@ -1639,6 +1639,21 @@ bg:
           send_invite_email_instructions: "Ограничете поканата до имейл, за да изпратите имейл с покана"
           update_invite: "Актуализация"
           cancel: "Прекрати"
+        invite_roles:
+          member_tab: "Членове"
+          admin_tab: "Админи"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Имейл"
+          restrict_domain: "Ограничаване до домейн"
+          update: "Актуализация"
+          summary:
+            role_member: "Член"
+            role_admin: "Администратор"
+            method_email: "Имейл"
+            uses: "Максимум използвания"
+            expires: "Изтича"
+            topic: "Тема"
+            groups: "Групи"
         bulk_invite:
           none: "Няма покани за показване на тази страница."
           text: "Групова покана"
@@ -2110,6 +2125,7 @@ bg:
       title: "Или натиснете %{modifier}Enter"
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
+      title_placeholder_redesign: "Заглавие"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
@@ -3276,7 +3292,6 @@ bg:
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
-      choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
       description: "Описание"
@@ -4584,6 +4599,10 @@ bg:
         image: "Изображение "
         delete_confirm: "Сигурни ли сте че искате да изтриете тази :%{name}% емотикона? "
         settings: "Настройки"
+        export: "Експорт "
+        import: "Импорт"
+        import_category:
+          new: "Нов"
       embedding:
         get_started: "Ако искате да внедрите Discourse в друг сайт, започнете с добавянето на хоста му."
         delete: "Изтрий"

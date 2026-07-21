@@ -234,6 +234,37 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("root pagination uses the effective sort", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    let requestedSort;
+
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      requestedSort = request.queryParams.sort;
+      return response({ roots: [], page: 1, has_more_roots: false });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+
+    await this.controller.loadMoreRoots();
+
+    assert.strictEqual(
+      requestedSort,
+      "top",
+      "continues the ordering selected by the initial response"
+    );
+    assert.strictEqual(
+      this.controller.sort,
+      "hot",
+      "keeps the requested sort selected"
+    );
+  });
+
   test("deletePost delegates first post deletion to the topic controller", function (assert) {
     const topic = buildTopic(this.store, 724);
     const op = buildPost(this.store, topic, 1001, 1);
@@ -392,5 +423,23 @@ module("Unit | Controller | nested", function (hooks) {
       "stores the post URL cache entry under the focused post number"
     );
     assert.strictEqual(cached.modelData.context, 0, "preserves context depth");
+  });
+
+  test("cache snapshots preserve the effective sort", function (assert) {
+    const topic = buildTopic(this.store, 726);
+    const cacheKey = this.nestedViewCache.buildKey(topic.id, { sort: "hot" });
+
+    this.controller.setProperties({
+      topic,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+    this.controller.saveToCache();
+
+    assert.strictEqual(
+      this.nestedViewCache.get(cacheKey).modelData.effectiveSort,
+      "top",
+      "restored pagination continues using the original effective sort"
+    );
   });
 });

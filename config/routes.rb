@@ -327,6 +327,9 @@ Discourse::Application.routes.draw do
       get "dashboard" => "dashboard#index"
       put "dashboard/configuration" => "dashboard#update_configuration",
           :constraints => AdminConstraint.new
+      put "dashboard/sections/:section_id/settings/:setting_key" =>
+            "dashboard#update_section_settings",
+          :constraints => AdminConstraint.new
       get "dashboard/general" => "dashboard#general"
       get "dashboard/moderation" => "dashboard#moderation"
       get "dashboard/security" => "dashboard#security"
@@ -506,9 +509,16 @@ Discourse::Application.routes.draw do
         get "user_fields/:id" => "user_fields#show"
         get "user_fields/:id/edit" => "user_fields#edit"
 
-        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new
+        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new do
+          collection do
+            post :export
+            post :import_preview
+            post :import_confirm
+          end
+        end
         get "emoji/new" => "emoji#index"
         get "emoji/settings" => "emoji#index"
+        get "emoji/import" => "emoji#index"
         resources :permalinks, only: %i[index new create show destroy]
       end
 
@@ -1954,7 +1964,7 @@ Discourse::Application.routes.draw do
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 
-    resources :sidebar_sections, only: %i[index create update destroy]
+    resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "/form-templates/:id" => "form_templates#show"

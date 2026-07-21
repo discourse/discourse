@@ -142,6 +142,23 @@ RSpec.describe ThemeSettingsManager do
       expect(list_setting.list_type).to eq("compact")
     end
 
+    it "removes disallowed group ids before saving group list settings" do
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          disallowed_groups: "0|1"
+          default: ""
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      setting = theme.settings[:groups_setting]
+      setting.value = "0|1|2|3"
+
+      expect(theme.reload.settings[:groups_setting].value).to eq("2|3")
+    end
+
     describe "#resolve_group_membership?" do
       it "returns true when opted-in with list_type group" do
         yaml = <<~YAML

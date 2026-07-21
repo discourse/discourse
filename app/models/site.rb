@@ -231,7 +231,7 @@ class Site
   def anonymous_sidebar_sections
     SidebarSection
       .public_sections
-      .includes(:sidebar_urls)
+      .includes(:localizations, sidebar_urls: :localizations)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 

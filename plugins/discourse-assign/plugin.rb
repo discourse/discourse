@@ -19,6 +19,7 @@ module ::DiscourseAssign
 end
 
 require_relative "lib/discourse_assign/engine"
+require_relative "lib/discourse_assign/assignee_resolver"
 require_relative "lib/discourse_assign/assignment_permissions"
 require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
@@ -708,27 +709,43 @@ after_initialize do
 
   # TopicsBulkAction
   TopicsBulkAction.register_operation("assign") do
-    if @user.can_assign?
-      assign_user = User.find_by_username(@operation[:username])
-      topics.each do |topic|
-        next if !@user.can_assign?(topic)
+    raise Discourse::InvalidAccess if !guardian.can_assign?
 
+    assign_to =
+      DiscourseAssign::AssigneeResolver.resolve!(
+        guardian,
+        username: @operation[:username],
+        group_name: @operation[:group_name],
+      )
+
+    topics.each do |topic|
+      next if !guardian.can_see?(topic)
+
+      result =
         Assigner.new(topic, @user).assign(
-          assign_user,
-          status: @operation[:status],
-          note: @operation[:note],
+          assign_to,
+          status: @operation[:status].presence,
+          note: @operation[:note].presence,
         )
+
+      if result[:success] || %i[already_assigned group_already_assigned].include?(result[:reason])
+        @changed_ids << topic.id
+      else
+        @errors[Assigner.failure_message(result[:reason], assign_to)] += 1
       end
     end
   end
 
   TopicsBulkAction.register_operation("unassign") do
-    if @user.can_assign?
-      topics.each { |topic| Assigner.new(topic, @user).unassign if guardian.can_assign?(topic) }
+    topics.each do |topic|
+      next if !guardian.can_see?(topic) || !guardian.can_assign?(topic)
+
+      Assigner.new(topic, @user).unassign
     end
   end
 
   register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :group_name
   register_permitted_bulk_action_parameter :status
   register_permitted_bulk_action_parameter :note
 

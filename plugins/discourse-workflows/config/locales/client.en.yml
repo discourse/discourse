@@ -418,6 +418,8 @@ en:
         reply_to_post_number_description: "Reply to a specific post number in the topic"
         whisper: "Create as whisper"
         whisper_description: "Create the post as a whisper. The author must be allowed to create whispers."
+        bypass_permission_checks: "Bypass permission checks"
+        bypass_permission_checks_description: "The post will be created as the selected author even if they cannot see or reply to the topic — including closed topics, secure categories, and personal messages. The author will not be granted access to the topic."
         author_username: "Author"
         post_id: "Post ID"
         editor_username: "Editor"

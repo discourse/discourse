@@ -1670,6 +1670,24 @@ ko:
           cancel: "취소"
           create_link: "링크 만들기"
           create_link_and_send_email: "링크를 만들고 이메일 보내기"
+        invite_roles:
+          member_title: "회원 초대"
+          member_tab: "회원"
+          admin_tab: "관리자"
+          email_placeholder: "이메일 주소"
+          invite_by_email: "이메일"
+          restrict_domain: "도메인으로 제한"
+          domain_placeholder: "example.com"
+          more_options: "추가 옵션"
+          update: "업데이트"
+          summary:
+            role_member: "회원"
+            role_admin: "관리자"
+            method_email: "이메일"
+            uses: "최대 사용"
+            expires: "만료"
+            topic: "글"
+            groups: "그룹"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -2093,6 +2111,7 @@ ko:
       discard: "취소"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
+      title_placeholder_redesign: "제목"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
       edit_reason_placeholder: "왜 편집 중입니까?"
       topic_featured_link_placeholder: "제목과 함께 표시된 링크를 입력하세요."
@@ -2495,6 +2514,7 @@ ko:
       sort:
         label: "정렬 기준"
         top: "인기글"
+        hot: "인기"
         new: "신규"
       load_more_children:
         other: "추가 %{count} 개 댓글"
@@ -3513,7 +3533,6 @@ ko:
       selector_no_tags: "태그 없음"
       selector_remove_filter: "필터 제거"
       tags: "태그"
-      choose_for_topic: "태그(선택사항)"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"
@@ -5516,6 +5535,10 @@ ko:
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"
         settings: "설정"
+        export: "내보내기"
+        import: "가져오기"
+        import_category:
+          new: "신규"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
         delete: "삭제하기"

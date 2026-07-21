@@ -184,6 +184,8 @@ module BackupRestore
         "pg_dump", # the pg_dump command
         "--schema=public", # only public schema
         "-T public.pg_*", # exclude tables and views whose name starts with "pg_"
+        "--exclude-table-data=public.nested_hot_post_scores",
+        "--exclude-table-data=public.nested_hot_score_snapshots",
         "--file='#{@dump_filename}'", # output to the dump.sql file
         "--no-owner", # do not output commands to set ownership of objects
         "--no-privileges", # prevent dumping of access privileges

@@ -902,8 +902,6 @@ tr_TR:
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
           google-gemini-3-1-pro: "Google'ın en akıllı modeli"
           google-gemini-3-flash: "Hızlı ve uygun maliyetli, çok modlu akıl yürütme"
-          open_ai-gpt-5-4: "OpenAI'nin amiral gemisi modeli, farklı alanlarda problem çözme için son derece uygun"
-          open_ai-gpt-5-4-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli"
           open_router-moonshotai-kimi-k2-6: "Moonshot'ın vizyon yeteneklerine sahip multimodal modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
@@ -954,7 +952,7 @@ tr_TR:
           access_key_id: "AWS Bedrock erişim anahtarı kimliği"
           role_arn: "AWS Bedrock Rolü ARN'si"
           inference_profile_arn: "AWS Bedrock uygulama çıkarım profili ARN'si"
-          region: "AWS Bedrock bölgesi"
+          region: "Bölge"
           organization: "İsteğe bağlı OpenAI kuruluş kimliği"
           disable_system_prompt: "İstemlerde sistem mesajını devre dışı bırakın"
           enable_native_tool: "Yerel araç desteğini etkinleştirin"

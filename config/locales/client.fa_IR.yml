@@ -1972,6 +1972,25 @@ fa_IR:
           create_link_and_send_email: "ایجاد لینک و ارسال ایمیل"
           invite_saved_without_sending_email: "دعوت ذخیره شده لینک زیر را کپی کرده و آن را به اشتراک بگذارید تا بلافاصله دسترسی به این سایت را اعطا کنید."
           invite_saved_with_sending_email: "ایمیل دعوت ارسال شد. همچنین می توانید لینک زیر را کپی کرده و آن را به اشتراک بگذارید تا بلافاصله دسترسی به این سایت را اعطا کنید."
+        invite_roles:
+          member_title: "دعوت‌نامه عضوها"
+          member_tab: "اعضاء"
+          admin_tab: "مدیران ارشد"
+          admin_email_label: "آدرس ایمیل"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ایمیل"
+          restrict_domain: "محدود کردن دامنه"
+          more_options: "گزینه‌های بیشتر"
+          update: "به‌روزرسانی"
+          summary:
+            role_member: "عضو"
+            role_admin: "مدیر کل"
+            method_email: "ایمیل"
+            uses: "حداکثر استفاده"
+            expires: "انقضاء"
+            topic: "موضوع"
+            groups: "گروه‌ها"
+            edit: "ویرایش دعوت‌نامه"
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2598,6 +2617,7 @@ fa_IR:
       discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
+      title_placeholder_redesign: "عنوان"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
@@ -3123,6 +3143,7 @@ fa_IR:
       sort:
         label: "مرتب‌سازی بر اساس"
         top: "برترین‌ها"
+        hot: "داغ"
         new: "جدید"
       load_more_children:
         one: "%{count} پاسخ دیگر"
@@ -4359,7 +4380,6 @@ fa_IR:
       selector_no_tags: "بدون برچسب"
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
-      choose_for_topic: "برچسب‌های اختیاری"
       choose_for_topic_required:
         one: "برچسب انتخاب کنید... %{count} حداقل"
         other: "برچسب انتخاب کنید... %{count} حداقل"
@@ -7154,6 +7174,10 @@ fa_IR:
         alt: "پیش نمایش ایموجی سفارشی"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
         settings: "تنظیمات"
+        export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
+        import_category:
+          new: "جدید"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         delete: "حذف"

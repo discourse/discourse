@@ -115,6 +115,10 @@ module Chat
         )
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
+      extra_includes =
+        DiscoursePluginRegistry.apply_modifier(:chat_channel_fetcher_public_includes, [])
+      channels = channels.includes(*extra_includes) if extra_includes.present?
+
       channels =
         channels
           .with_categories
@@ -192,6 +196,7 @@ module Chat
         end
       else
         channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+        channels = channels.order("LOWER(chat_channels.name) ASC")
       end
 
       if options.key?(:slugs)

@@ -47,6 +47,8 @@ be:
         back: "Назад"
         filter_all: Усё
         filter_closed: Закрыта
+        filter_joined_all: "Усе"
+        filter_joined_joined: "Далучыўся(-лася)"
       chat_message_separator:
         today: сёння
         yesterday: учора

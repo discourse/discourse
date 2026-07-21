@@ -2455,6 +2455,28 @@ he:
           create_link_and_send_email: "יצירת קישור ושליחת דוא״ל"
           invite_saved_without_sending_email: "הזמנה נשלחה. יש להעתיק את הקישור שלהלן ולשתף אותו כדי להעניק גישה מיידית לאתר הזה."
           invite_saved_with_sending_email: "הודעת הזמנה נשלחה בדוא״ל. אפשר גם להעתיק את הקישור להלן ולשתף אותו כדי להעניק גישה מיידית לאתר."
+        invite_roles:
+          member_title: "הזמנת חברים"
+          sent_title: "נשלחה הזמנה"
+          member_tab: "חברים"
+          admin_tab: "מנהלים ראשיים"
+          admin_email_label: "כתובת דוא״ל"
+          email_placeholder: "name@example.com"
+          invite_by_email: "דוא״ל"
+          restrict_domain: "הגבלה לשם תחום"
+          more_options: "אפשרויות נוספות"
+          update: "עדכון"
+          summary:
+            role_member: "חברים"
+            role_admin: "הנהלה"
+            method: "שיתוף"
+            method_email: "דוא״ל"
+            restriction: "מוגבלת לכדי"
+            uses: "כמות שימושים מרבית"
+            expires: "תפוג"
+            topic: "נושא"
+            groups: "קבוצות"
+            edit: "עריכת הזמנה"
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -3231,6 +3253,7 @@ he:
       draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_placeholder_redesign: "כותרת"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -3949,6 +3972,7 @@ he:
       sort:
         label: "מיון לפי"
         top: "מובילים"
+        hot: "חמים"
         new: "חדשות"
         old: "ישן"
       load_more_children:
@@ -5474,7 +5498,6 @@ he:
       selector_no_tags: "ללא תגיות"
       selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
-      choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
         one: "נא לבחור תגית %{count} לפחות…"
         two: "נא לבחור %{count} תגיות לפחות…"
@@ -8232,6 +8255,7 @@ he:
             header: "כותרת"
             full_page: "עמוד מלא"
             click_through_only: "הכול (שיעור לחיצה בלבד)"
+            non_staff_only: "משתמשים שאינם חברי סגל"
           header_search_results: "תוצאות חיפוש כותרות"
         logster:
           title: "יומני שגיאות"
@@ -9081,6 +9105,10 @@ he:
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
         settings: "הגדרות"
+        export: "ייצוא"
+        import: "ייבוא"
+        import_category:
+          new: "חדשות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         delete: "מחיקה"

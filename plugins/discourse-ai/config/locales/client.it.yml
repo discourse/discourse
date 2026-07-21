@@ -568,7 +568,6 @@ it:
           anthropic-claude-opus-4-7: "Il modello più intelligente di Anthropic"
           anthropic-claude-sonnet-4-6: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
-          open_ai-gpt-5-4-nano: "Il modello GPT-5 più veloce ed economicamente efficiente"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
         configured:
           title: "LLM configurati"
@@ -611,7 +610,7 @@ it:
           fake: "Personalizzato"
         provider_fields:
           access_key_id: "ID chiave di accesso AWS Bedrock"
-          region: "Regione AWS Bedrock"
+          region: "Regione"
           organization: "ID organizzazione OpenAI facoltativo"
           disable_system_prompt: "Disabilita il messaggio di sistema nei comandi"
           enable_native_tool: "Abilita il supporto degli strumenti nativi"

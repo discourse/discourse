@@ -2107,6 +2107,28 @@ it:
           create_link_and_send_email: "Crea un link e invia e-mail"
           invite_saved_without_sending_email: "Invito salvato. Copia il link sottostante e condividilo per concedere immediatamente l'accesso a questo sito."
           invite_saved_with_sending_email: "L'e-mail di invito è stata inviata. Puoi anche copiare il link qui sotto e condividerlo per concedere immediatamente l'accesso a questo sito."
+        invite_roles:
+          member_title: "Invita membri"
+          sent_title: "Invito inviato"
+          member_tab: "Membri"
+          admin_tab: "Amministratori"
+          admin_email_label: "Indirizzo e-mail"
+          email_placeholder: "nome@esempio.com"
+          invite_by_email: "E-mail"
+          restrict_domain: "Limita al dominio"
+          domain_placeholder: "example.com"
+          more_options: "Altre opzioni"
+          update: "Aggiorna"
+          summary:
+            role_member: "Membro"
+            role_admin: "Amministrazione"
+            method: "Condivisione"
+            method_email: "E-mail"
+            uses: "Limite max di utilizzi"
+            expires: "Scadenza"
+            topic: "Argomento"
+            groups: "Gruppi"
+            edit: "Modifica invito"
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2772,6 +2794,7 @@ it:
       discard: "Elimina"
       users_placeholder: "Aggiungi utenti o gruppi"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
+      title_placeholder_redesign: "Titolo"
       title_or_link_placeholder: "Digita il titolo o incolla qui il collegamento"
       edit_reason_placeholder: "Perché stai modificando?"
       topic_featured_link_placeholder: "Inserisci il collegamento mostrato con il titolo."
@@ -3338,6 +3361,7 @@ it:
       sort:
         label: "Ordina per"
         top: "Popolari"
+        hot: "Popolari"
         new: "Nuovo"
       load_more_children:
         one: "%{count} ulteriore risposta"
@@ -4056,7 +4080,7 @@ it:
     category:
       none: "(nessuna categoria)"
       all: "Tutte le categorie"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Modifica"
       edit_title: "Modifica questa categoria"
       edit_dialog_title: "Modifica: %{categoryName}"
@@ -4611,7 +4635,6 @@ it:
       selector_no_tags: "nessuna etichetta"
       selector_remove_filter: "rimuovi filtro"
       tags: "Etichette"
-      choose_for_topic: "etichette facoltative"
       choose_for_topic_required:
         one: "seleziona almeno %{count} etichetta…"
         other: "seleziona almeno %{count} etichette…"
@@ -7884,6 +7907,10 @@ it:
         alt: "anteprima emoji personalizzata"
         delete_confirm: "Sicuro di voler cancellare l'emoji :%{name}:?"
         settings: "Impostazioni"
+        export: "Esporta"
+        import: "Importa"
+        import_category:
+          new: "Nuovo"
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         delete: "Elimina"

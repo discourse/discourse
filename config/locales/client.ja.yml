@@ -2090,6 +2090,27 @@ ja:
           create_link_and_send_email: "リンクを作成してメールを送信"
           invite_saved_without_sending_email: "招待が保存されました。以下のリンクをコピーして共有し、このサイトへのアクセスを即座に許可します。"
           invite_saved_with_sending_email: "招待メールが送信されました。このサイトへのアクセスを即座に許可するには、以下のリンクをコピーして共有することもできます。"
+        invite_roles:
+          member_title: "メンバーの招待"
+          member_tab: "メンバー"
+          admin_tab: "管理者"
+          admin_email_label: "メールアドレス"
+          email_placeholder: "name@example.com"
+          invite_by_email: "メールアドレス"
+          restrict_domain: "ドメインに制限"
+          domain_placeholder: "example.com"
+          more_options: "その他のオプション"
+          update: "更新"
+          summary:
+            role_member: "メンバー"
+            role_admin: "管理"
+            method: "共有"
+            method_email: "メールアドレス"
+            uses: "最大使用回数"
+            expires: "有効期限"
+            topic: "トピック"
+            groups: "グループ"
+            edit: "招待の編集"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2739,6 +2760,7 @@ ja:
       draft_saved: "下書きが保存されました！"
       users_placeholder: "ユーザーまたはグループを追加"
       title_placeholder: "トピックのタイトルを入力してください"
+      title_placeholder_redesign: "タイトル"
       title_or_link_placeholder: "タイトルを入力するか、リンクを貼り付けてください"
       edit_reason_placeholder: "編集する理由は？"
       topic_featured_link_placeholder: "タイトルに表示されるリンクを入力してください。"
@@ -3312,6 +3334,7 @@ ja:
       sort:
         label: "並べ替え"
         top: "人気"
+        hot: "ホット"
         new: "新規"
       load_more_children:
         other: "他 %{count} 件の返信"
@@ -4595,7 +4618,6 @@ ja:
       selector_no_tags: "タグなし"
       selector_remove_filter: "フィルタを削除"
       tags: "タグ"
-      choose_for_topic: "オプションのタグ"
       choose_for_topic_required:
         other: "少なくとも %{count} 個のタグを選択してください…"
       choose_for_topic_required_group:
@@ -8005,6 +8027,10 @@ ja:
         alt: "カスタム絵文字のプレビュー"
         delete_confirm: ":%{name}: 絵文字を削除してもよろしいですか？"
         settings: "設定"
+        export: "エクスポート"
+        import: "インポート"
+        import_category:
+          new: "新規"
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         delete: "削除"

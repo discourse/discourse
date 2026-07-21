@@ -105,6 +105,9 @@ en:
       all_events_feed_name: "%{site_title} - All events"
       my_events_feed_name: "%{site_title} - My events"
     invite_user_notification: "%{username} invited you to: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."
     more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."
@@ -113,6 +116,13 @@ en:
     holiday_status:
       description: "On holiday"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
+      date_format: "%B %-d, %Y"
+      datetime_format: "%B %-d, %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} is about to start."
       after_event_reminder: "%{title} has ended."

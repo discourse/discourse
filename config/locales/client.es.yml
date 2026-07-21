@@ -2295,6 +2295,28 @@ es:
           create_link_and_send_email: "Crear enlace y enviar correo electrónico"
           invite_saved_without_sending_email: "Invitación guardada. Copia el enlace de abajo y compártelo para conceder acceso instantáneo a este sitio."
           invite_saved_with_sending_email: "Se ha enviado el correo electrónico de invitación. También puedes copiar el enlace de abajo y compartirlo para conceder acceso instantáneo a este sitio."
+        invite_roles:
+          member_title: "Invitar a miembros"
+          sent_title: "Invitación enviada"
+          member_tab: "Miembros"
+          admin_tab: "Administradores"
+          admin_email_label: "Dirección de correo electrónico"
+          email_placeholder: "nombre@ejemplo.com"
+          invite_by_email: "Correo electrónico"
+          restrict_domain: "Restringir a un dominio"
+          more_options: "Más opciones"
+          update: "Actualizar"
+          summary:
+            role_member: "Miembro"
+            role_admin: "Administrador"
+            method: "Compartir"
+            method_email: "Correo electrónico"
+            restriction: "Restringido a"
+            uses: "Máximo de usos"
+            expires: "Caduca"
+            topic: "Tema"
+            groups: "Grupos"
+            edit: "Editar invitación"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -3007,6 +3029,7 @@ es:
       draft_saved: "¡Borrador guardado!"
       users_placeholder: "Añadir usuarios o grupos"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué estás editando?"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
@@ -3688,6 +3711,7 @@ es:
       sort:
         label: "Ordenar por"
         top: "Destacados"
+        hot: "Caliente"
         new: "Nuevo"
       load_more_children:
         one: "%{count} respuesta más"
@@ -4451,7 +4475,7 @@ es:
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
-      choose: "categoría&hellip;"
+      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoría"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -5080,7 +5104,6 @@ es:
       selector_no_tags: "sin etiquetas"
       selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas (opcional)"
       choose_for_topic_required:
         one: "selecciona al menos %{count} etiqueta…"
         other: "selecciona al menos %{count} etiquetas…"
@@ -8617,6 +8640,10 @@ es:
         alt: "vista previa de emoji personalizado"
         delete_confirm: "¿Seguro que quieres eliminar el emoji :%{name}:?"
         settings: "Ajustes"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Nuevo"
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         delete: "Eliminar"

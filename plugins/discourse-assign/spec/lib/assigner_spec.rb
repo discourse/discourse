@@ -21,6 +21,11 @@ RSpec.describe Assigner do
     let(:assigner) { described_class.new(topic, moderator_2) }
     let(:assigner_self) { described_class.new(topic, moderator) }
 
+    it "returns a failure instead of raising when there is no assignee" do
+      expect(assigner.assign(nil)).to eq({ success: false, reason: :no_assignee })
+      expect(topic.reload.assignment).to be_blank
+    end
+
     it "can assign and unassign correctly" do
       expect_enqueued_with(job: :assign_notification) { assigner.assign(moderator) }
 
@@ -1001,7 +1006,11 @@ RSpec.describe Assigner do
           messageable_level: Group::ALIAS_LEVELS[:nobody],
         )
       group.add(Fabricate(:user))
-      expect { assigner.assign(group) }.to raise_error(Discourse::InvalidAccess)
+      expect(assigner.assign(group)).to eq(
+        { success: false, reason: :forbidden_group_assignee_not_pm_participant },
+      )
+      expect(topic.reload.allowed_groups).to be_empty
+      expect(topic.assignment).to be_blank
     end
   end
 

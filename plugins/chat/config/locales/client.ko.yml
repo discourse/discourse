@@ -160,6 +160,8 @@ ko:
         filter_closed: 닫힘
         filter_archived: 보관됨
         filter_input_placeholder: 이름으로 채널 검색
+        filter_joined_all: "모두"
+        filter_joined_joined: "가입"
       chat_message_separator:
         today: 오늘
         yesterday: 어제
@@ -210,6 +212,8 @@ ko:
         no_memberships_found: 회원을 찾을 수 없음
         memberships_count:
           other: "회원 %{count}명"
+        preview_card:
+          log_in: "로그인"
       create_channel:
         choose_category:
           label: "카테고리 선택"

@@ -16,3 +16,6 @@ lv:
         week: "Nedēļas"
         month: "Mēneša"
         year: "Gada"
+  discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
