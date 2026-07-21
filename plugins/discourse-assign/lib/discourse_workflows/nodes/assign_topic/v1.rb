@@ -103,7 +103,7 @@ if defined?(DiscourseWorkflows)
                 raise_node_error!(
                   I18n.t(
                     "discourse_assign.discourse_workflows.assign_topic.error",
-                    reason: result[:reason],
+                    reason: Assigner.failure_message(result[:reason], assignee),
                   ),
                 )
               end
