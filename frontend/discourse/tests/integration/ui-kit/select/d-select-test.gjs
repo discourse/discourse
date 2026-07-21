@@ -1331,6 +1331,38 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
       );
   });
 
+  test("@selected seeds part of an async multi selection", async function (assert) {
+    const resolvedValues = [];
+    const selected = { id: 1, name: "One" };
+    const resolveValues = (values) => {
+      resolvedValues.push(...values);
+      return Promise.resolve(
+        values.map((value) => ({ id: value, name: "Two" }))
+      );
+    };
+
+    await render(
+      <template>
+        <DSelect
+          @items={{array}}
+          @multiple={{true}}
+          @value={{array 1 2}}
+          @selected={{selected}}
+          @resolveValues={{resolveValues}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__chip")
+      .exists({ count: 2 }, "both selected values render as chips");
+    assert.deepEqual(
+      resolvedValues,
+      [2],
+      "only the value missing from @selected is resolved"
+    );
+  });
+
   test("a custom createUnresolvedItem names the fallback on every surface", async function (assert) {
     const resolveValue = () => Promise.reject(new Error("404"));
     const createUnresolvedItem = (id) => ({ id, name: `Topic #${id}` });
@@ -2273,6 +2305,35 @@ module(
           "Keep typing 1 more character…",
           "the threshold hint replaces all list items"
         );
+    });
+
+    test("a create-enabled select offers a create row when the source has no matches", async function (assert) {
+      const createItem = (filter) => ({
+        id: filter,
+        name: `Create ${filter}`,
+        __create: true,
+      });
+
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @allowCreate={{true}}
+            @createItem={{createItem}}
+            @identifier="test-select"
+          />
+        </template>
+      );
+
+      await fillIn("[role='combobox']", "dragonfruit");
+
+      assert
+        .dom("[role='option'].--create")
+        .exists("the synthetic create row replaces the raw empty state")
+        .hasText("Create dragonfruit", "the row uses the proposed value");
+      assert
+        .dom(".d-combobox__empty")
+        .doesNotExist("the final list is not treated as empty");
     });
 
     test("mobile typeahead renders the @minChars hint inside its modal", async function (assert) {
