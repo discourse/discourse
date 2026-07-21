@@ -112,7 +112,7 @@ module Migrations
         # concurrently, and a child forked by a sibling step inherits any open
         # writer end and holds the pipe open — `drain` then never sees EOF (and a
         # leaked chunk-queue writer keeps `claim` from ever returning nil) until
-        # that foreign child exits.
+        # that other step's child exits.
         @fork_mutex.synchronize do
           chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
           pipes = Array.new(worker_count) { IO.pipe }
@@ -217,7 +217,7 @@ module Migrations
         return if failed.empty?
 
         raise WorkerCrashedError,
-              "A worker for #{@step_class.title} exited unexpectedly " \
+              "#{failed.size} worker(s) for #{@step_class.title} exited unexpectedly " \
                 "(#{failed.join("; ")}). Check the error output above for the cause."
       end
 

@@ -9,9 +9,9 @@ module Migrations
   # hook lists. A fork copies the child hooks under that mutex, so the child always
   # runs a consistent list.
   module ForkManager
-    # Batching is thread-local: several coordinator threads batch their forks at
-    # once, and a process-global flag would be safe only as long as every caller
-    # held a shared mutex around the whole call.
+    # The batching flag is per-thread: a batch belongs to the thread that opened
+    # it, so the module stays correct even if callers stop serializing their
+    # forks behind a shared mutex (today the coordinators do).
     BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
     private_constant :BATCHED_FORKS_KEY
 
@@ -35,9 +35,8 @@ module Migrations
           # `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
           # before-fork hooks' effects — a locked writer mutex, a closed run
           # connection — would never be undone and the run would hang instead of
-          # failing the step. A before-fork hook that raises is handled the same
-          # as before: the after-fork hooks do not run for a batch that never
-          # started.
+          # failing the step. If a before-fork hook raises, these after-fork
+          # hooks don't run — the batch never started.
           begin
             yield
           ensure

@@ -85,18 +85,12 @@ module Migrations
         @closed = true
         enqueue([:close])
 
-        begin
-          if @render_thread.join(CLOSE_TIMEOUT).nil?
-            # The render thread is wedged (e.g. blocked in `write` on a stopped
-            # tty). `close` runs inside the run's `ensure`, so it must not hang.
-            @render_thread.kill
-            warn("TUI reporter did not stop in time and was killed.")
-            show_cursor_best_effort
-          end
-        rescue StandardError => e
-          # `join` re-raises whatever killed the thread. Keep it as the render
-          # error instead of raising out of `close`.
-          @render_error ||= e
+        if @render_thread.join(CLOSE_TIMEOUT).nil?
+          # The render thread is wedged (e.g. blocked in `write` on a stopped
+          # tty). `close` runs inside the run's `ensure`, so it must not hang.
+          @render_thread.kill
+          warn("TUI reporter did not stop in time and was killed.")
+          show_cursor_best_effort
         end
 
         report_render_error
@@ -123,7 +117,10 @@ module Migrations
 
         @renderer.on_start
         run_frames
-      rescue StandardError => e
+      rescue Exception => e
+        # The thread boundary: nothing may escape, or `close`'s `join` would
+        # re-raise it inside the run's `ensure`. Fatal errors land in the render
+        # error report like everything else.
         @render_error = e
       ensure
         # Two independent steps: a failure restoring the trap must not skip the
@@ -154,8 +151,11 @@ module Migrations
         warn(@render_error.backtrace.first(5).join("\n")) if @render_error.backtrace
       end
 
+      # `write_nonblock`: the render thread was most likely killed because it was
+      # blocked writing to this same output, so a plain `write` here could block
+      # `close` all over again.
       def show_cursor_best_effort
-        @output.write(Ansi::SHOW_CURSOR)
+        @output.write_nonblock(Ansi::SHOW_CURSOR)
       rescue StandardError
         nil
       end
