@@ -5,7 +5,8 @@ module Migrations
     # The import-time counterpart of `EmbedBuffer`. It swaps the tokens left in an
     # owner's markdown back to real Markdown, now that the `original_id ->
     # discourse_id` maps exist. One resolver instance serves one owner kind
-    # (`owner_type`); the owner is a post today, a user bio etc. later.
+    # (`owner_type`); currently the owner is always a post, later this will also
+    # cover user bios and other records.
     #
     # It loads every linkage row for a batch of owners once (one query per kind),
     # resolves the references the converter could only record by source coordinates
@@ -42,15 +43,15 @@ module Migrations
     #
     # A missing lookup falls back to the source value. Uploads, polls and events
     # have no source value to fall back to: when the map can't resolve one, the
-    # embed disappears. Each is sent to {#unresolved_sink}.
+    # embed disappears. Each is sent to {#unresolved_embeds}.
     #
     # An internal link that can't be resolved does have a fallback (its source URL),
     # but it is still reported: a stale internal link points at the wrong record
-    # rather than failing loudly, so operators need the trail (see #render_link).
+    # rather than failing loudly, so operators need the report (see #render_link).
     #
     # A token with no linkage row at all is an orphan — the token and its row were
     # not written together upstream. It is stripped (so no U+E000 character reaches
-    # the owner's markdown) and sent to {#orphan_sink}. The unresolved reporting
+    # the owner's markdown) and sent to {#orphan_placeholders}. The unresolved reporting
     # can't see this case, because there is no row behind it.
     class PlaceholderResolver
       # An embed whose entity the maps couldn't resolve. Its token becomes an empty
@@ -78,24 +79,30 @@ module Migrations
       Enums = Migrations::Database::IntermediateDB::Enums
       private_constant :Enums
 
-      # Where unresolved embeds and orphan tokens go. Each is the sink passed to the
-      # constructor — anything that responds to `<<`. By default an Array you can read
-      # back after the run. For a large run, pass a sink that writes straight to disk,
-      # so a systemic failure (say, every upload unresolved) does not keep one record
-      # per embed in memory.
-      attr_reader :unresolved_sink, :orphan_sink
+      # Where unresolved embeds and orphan tokens are reported. Each is whatever was
+      # passed to the constructor — anything that responds to `<<`. By default an Array
+      # you can read back after the run. For a large run, pass an object that writes
+      # straight to disk, so a systemic failure (say, every upload unresolved) does not
+      # keep one record per embed in memory.
+      attr_reader :unresolved_embeds, :orphan_placeholders
 
       # @param owner_type [Integer] the owner kind this resolver serves, an
       #   `Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
       # @param maps see the class description for the methods it must answer.
-      # @param unresolved_sink [#<<] collects {UnresolvedEmbed}s.
-      # @param orphan_sink [#<<] collects {OrphanPlaceholder}s.
-      def initialize(intermediate_db, maps, owner_type:, unresolved_sink: [], orphan_sink: [])
+      # @param unresolved_embeds [#<<] collects {UnresolvedEmbed}s.
+      # @param orphan_placeholders [#<<] collects {OrphanPlaceholder}s.
+      def initialize(
+        intermediate_db,
+        maps,
+        owner_type:,
+        unresolved_embeds: [],
+        orphan_placeholders: []
+      )
         @intermediate_db = intermediate_db
         @maps = maps
         @owner_type = owner_type
-        @unresolved_sink = unresolved_sink
-        @orphan_sink = orphan_sink
+        @unresolved_embeds = unresolved_embeds
+        @orphan_placeholders = orphan_placeholders
       end
 
       # @param items [Array<Hash>] each with `:id` (the owner's original_id) and `:raw`.
@@ -105,11 +112,11 @@ module Migrations
         # written together), so there's nothing to load for it. Most bodies are
         # plain text, so this skips the linkage queries for the bulk of a batch.
         # `String#include?` of the one-char delimiter is a `memchr`, far cheaper
-        # than probing six indexes per owner.
+        # than querying every linkage table per owner.
         with_embeds =
           items.select { |item| item[:raw]&.include?(Migrations::Placeholder::DELIMITER) }
         linkages = load_linkages(with_embeds.map { |item| item[:id] })
-        normalize_linkages(linkages)
+        resolve_linkage_ids(linkages)
 
         items.each_with_object({}) do |item, result|
           body = substitute(item[:raw], linkages[item[:id]])
@@ -119,8 +126,8 @@ module Migrations
 
       private
 
-      # Rewrites the tokens in one body in a single `gsub` pass, so the cost does not
-      # grow with the number of embeds.
+      # Rewrites the tokens in one body in a single `gsub` pass — one scan of the body
+      # instead of one `gsub` per embed.
       #
       # The block form is required. With a string replacement, `gsub` reads `\1`,
       # `\0` etc. in the rendered Markdown as backreferences and drops backslashes,
@@ -149,7 +156,7 @@ module Migrations
         Migrations::Placeholder
           .scan(body)
           .each do |token|
-            @orphan_sink << OrphanPlaceholder.new(
+            @orphan_placeholders << OrphanPlaceholder.new(
               kind: Migrations::Placeholder.kind(token),
               owner_id:,
               owner_url:,
@@ -162,7 +169,7 @@ module Migrations
 
       # One query per kind, grouped by owner id. The only place that reads the database.
       def load_linkages(owner_ids)
-        buckets = Hash.new { |hash, key| hash[key] = [] }
+        buckets = {}
         return buckets if owner_ids.empty?
 
         bind_params = (["?"] * owner_ids.size).join(", ")
@@ -170,47 +177,46 @@ module Migrations
         TABLES.each do |kind, table|
           sql = "SELECT * FROM #{table} WHERE owner_type = ? AND owner_id IN (#{bind_params})"
           @intermediate_db.query(sql, @owner_type, *owner_ids) do |row|
-            buckets[row[:owner_id]] << [kind, row]
+            (buckets[row[:owner_id]] ||= []) << [kind, row]
           end
         end
 
         buckets
       end
 
-      # Fills in the ids that only become knowable once the whole IntermediateDB is
+      # Fills in the ids that can only be resolved once the whole IntermediateDB is
       # loaded: a quoted post named by source coordinates, and a quoted user or
       # mentioned user/group named by name. Runs once per batch in the load phase, so
       # no query runs while substituting. Rows are mutated in place; from here on the
       # render path treats them as if the converter had known the ids all along.
-      def normalize_linkages(linkages)
+      def resolve_linkage_ids(linkages)
         rows_by_kind = Hash.new { |hash, kind| hash[kind] = [] }
         linkages.each_value { |pairs| pairs.each { |kind, row| rows_by_kind[kind] << row } }
 
-        resolve_quote_coordinates(rows_by_kind[:quote])
-        resolve_names(rows_by_kind[:quote], rows_by_kind[:mention])
+        # Turn the source coordinates (topic id + post number) a quote carries into
+        # the quoted post's source original_id. A miss leaves it nil, so the username
+        # fallback still applies.
+        fill_post_ids(
+          rows_by_kind[:quote],
+          id: :quoted_post_id,
+          topic: :quoted_topic_id,
+          number: :quoted_post_number,
+        )
+        resolve_quoted_usernames(rows_by_kind[:quote])
+        resolve_mention_names(rows_by_kind[:mention])
         resolve_hashtags(rows_by_kind[:hashtag])
         resolve_links(rows_by_kind[:link])
       end
 
-      # Turns the source coordinates (topic id + post number) a quote carries into
-      # the quoted post's source original_id, for the rows that have coordinates but
-      # no id. Coordinates with no matching post leave `quoted_post_id` nil, so the
-      # username fallback still applies.
-      def resolve_quote_coordinates(quote_rows)
-        pending =
-          quote_rows.select do |row|
-            row[:quoted_post_id].nil? && row[:quoted_topic_id] && row[:quoted_post_number]
-          end
+      # Fills the nil `id` column for rows that carry source `(topic, number)`
+      # coordinates, via one batched lookup. A pair with no matching post leaves the
+      # id nil, so callers keep their fallback.
+      def fill_post_ids(rows, id:, topic:, number:)
+        pending = rows.select { |row| row[id].nil? && row[topic] && row[number] }
         return if pending.empty?
 
-        post_ids =
-          post_ids_for_coordinates(
-            pending.map { |row| [row[:quoted_topic_id], row[:quoted_post_number]] },
-          )
-
-        pending.each do |row|
-          row[:quoted_post_id] = post_ids[[row[:quoted_topic_id], row[:quoted_post_number]]]
-        end
+        post_ids = post_ids_for_coordinates(pending.map { |row| [row[topic], row[number]] })
+        pending.each { |row| row[id] = post_ids[[row[topic], row[number]]] }
       end
 
       # Batch-resolves source `(topic_id, post_number)` coordinates to source post
@@ -243,27 +249,15 @@ module Migrations
       # substituting. On a miss nothing is mutated; render_link falls back to the
       # source URL (and reports it).
       def resolve_links(link_rows)
-        resolve_link_coordinates(link_rows)
+        # A `/t/slug/<topic>/<post>` link records the post by its source coordinates,
+        # exactly like a quote; resolve it through the same batch lookup.
+        fill_post_ids(
+          link_rows,
+          id: :target_id,
+          topic: :target_topic_id,
+          number: :target_post_number,
+        )
         resolve_link_names(link_rows)
-      end
-
-      # A `/t/slug/<topic>/<post>` link records the post by its source coordinates,
-      # exactly like a quote; resolve it through the same batch lookup.
-      def resolve_link_coordinates(link_rows)
-        pending =
-          link_rows.select do |row|
-            row[:target_id].nil? && row[:target_topic_id] && row[:target_post_number]
-          end
-        return if pending.empty?
-
-        post_ids =
-          post_ids_for_coordinates(
-            pending.map { |row| [row[:target_topic_id], row[:target_post_number]] },
-          )
-
-        pending.each do |row|
-          row[:target_id] = post_ids[[row[:target_topic_id], row[:target_post_number]]]
-        end
       end
 
       # A link that named its target (a username, group/tag name, or category slug
@@ -274,11 +268,11 @@ module Migrations
         link_rows.each do |row|
           next if row[:target_id] || row[:target_name].blank?
 
-          row[:target_id] = target_id_by_name(row[:target_type], row[:target_name])
+          row[:target_id] = lookup_target_id(row[:target_type], row[:target_name])
         end
       end
 
-      def target_id_by_name(target_type, name)
+      def lookup_target_id(target_type, name)
         case target_type
         when Enums::LinkTarget::USER
           user_id_by_name[normalize(name)]
@@ -291,14 +285,18 @@ module Migrations
         end
       end
 
-      # Fills a quoted user's id and a mention's target id from the recorded name,
-      # for rows that carry a name but no id. `here`/`all` mentions name no entity.
-      def resolve_names(quote_rows, mention_rows)
+      # Fills a quoted user's id from the recorded name, for rows that carry a name
+      # but no id.
+      def resolve_quoted_usernames(quote_rows)
         quote_rows.each do |row|
           next if row[:quoted_user_id] || row[:quoted_username].blank?
           row[:quoted_user_id] = user_id_by_name[normalize(row[:quoted_username])]
         end
+      end
 
+      # Fills a mention's target id from the recorded name, for rows that carry a
+      # name but no id. `here`/`all` mentions name no entity.
+      def resolve_mention_names(mention_rows)
         mention_rows.each do |row|
           next if row[:target_id] || row[:name].blank?
 
@@ -418,19 +416,20 @@ module Migrations
       # Tag name => canonical original_id, with synonyms folded onto their target so
       # `#oldname` and `#newname` resolve to the same tag.
       def tag_id_by_name
-        @tag_id_by_name ||=
-          begin
-            canonical = {}
-            @intermediate_db.query(
-              "SELECT synonym_tag_id, target_tag_id FROM tag_synonyms",
-            ) { |row| canonical[row[:synonym_tag_id]] = row[:target_tag_id] }
+        @tag_id_by_name ||= build_tag_id_map
+      end
 
-            map = {}
-            @intermediate_db.query("SELECT original_id, name FROM tags") do |row|
-              map[normalize(row[:name])] = canonical[row[:original_id]] || row[:original_id]
-            end
-            map
-          end
+      def build_tag_id_map
+        canonical = {}
+        @intermediate_db.query("SELECT synonym_tag_id, target_tag_id FROM tag_synonyms") do |row|
+          canonical[row[:synonym_tag_id]] = row[:target_tag_id]
+        end
+
+        map = {}
+        @intermediate_db.query("SELECT original_id, name FROM tags") do |row|
+          map[normalize(row[:name])] = canonical[row[:original_id]] || row[:original_id]
+        end
+        map
       end
 
       def normalize(name)
@@ -470,7 +469,7 @@ module Migrations
         return markdown if markdown.present?
 
         # Always report: the report is the only signal this entity needs attention.
-        @unresolved_sink << UnresolvedEmbed.new(
+        @unresolved_embeds << UnresolvedEmbed.new(
           kind:,
           entity_id:,
           owner_id: row[:owner_id],
@@ -489,8 +488,8 @@ module Migrations
       # once stripped, leaves its `[/quote]` behind.
       def render_quote(row)
         user = row[:quoted_user_id] ? @maps.user(row[:quoted_user_id]) : nil
-        username = user&.fetch(:username, nil) || row[:quoted_username]
-        name = user&.fetch(:name, nil) || row[:quoted_name]
+        username = user&.dig(:username) || row[:quoted_username]
+        name = user&.dig(:name) || row[:quoted_name]
 
         if row[:quoted_post_id] && (post = @maps.post(row[:quoted_post_id]))
           topic_id = post[:topic_id]
@@ -583,7 +582,7 @@ module Migrations
       def report_unresolved_link(row)
         # A coordinate-form post link has neither a target id nor a name; the
         # original URL is the most useful identifier a report can carry for it.
-        @unresolved_sink << UnresolvedEmbed.new(
+        @unresolved_embeds << UnresolvedEmbed.new(
           kind: :link,
           entity_id: row[:target_id] || row[:target_name] || row[:url],
           owner_id: row[:owner_id],
@@ -603,7 +602,7 @@ module Migrations
           when Enums::MentionType::GROUP
             @maps.group_name(row[:target_id]) || row[:name]
           else # USER, or an unspecified (nil) mention
-            @maps.user(row[:target_id])&.fetch(:username, nil) || row[:name]
+            @maps.user(row[:target_id])&.dig(:username) || row[:name]
           end
 
         # The token spans exactly the original `@name`, so the surrounding text is
@@ -674,7 +673,7 @@ module Migrations
           post = @maps.post(owner_id)
           post && post[:topic_id] && post[:post_number] ? post_url(post) : nil
         when Enums::EmbedOwner::USER
-          username = @maps.user(owner_id)&.fetch(:username, nil)
+          username = @maps.user(owner_id)&.dig(:username)
           username ? "#{@maps.base_url}/u/#{username}" : nil
         end
       end

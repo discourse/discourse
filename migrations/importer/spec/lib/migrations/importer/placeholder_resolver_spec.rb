@@ -170,7 +170,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       # The row belongs to a user, not a post, so the token is an orphan here.
       expect(resolved[1]).to eq("a  b")
-      expect(resolver.orphan_sink.map(&:placeholder)).to eq([token])
+      expect(resolver.orphan_placeholders.map(&:placeholder)).to eq([token])
     end
 
     it "leaves a body untouched when it has no linkage rows" do
@@ -473,7 +473,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
       expect(resolved[1]).to eq("x https://old.example.com/t/slug/300 y")
-      expect(resolver.unresolved_sink).to contain_exactly(
+      expect(resolver.unresolved_embeds).to contain_exactly(
         described_class::UnresolvedEmbed.new(
           kind: :link,
           entity_id: 300,
@@ -489,7 +489,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
-      expect(resolver.unresolved_sink.map(&:entity_id)).to eq(["ghost"])
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["ghost"])
     end
 
     it "does not report an external link that falls back" do
@@ -498,7 +498,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
 
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
   end
 
@@ -628,7 +628,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "see #{upload} here" }])
 
       expect(resolved[1]).to eq("see #{snippet} here")
-      expect(resolver.unresolved_sink.map(&:entity_id)).to eq(["sha1"])
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(["sha1"])
     end
 
     it "prefers the mapped upload markdown over the verbatim snippet" do
@@ -646,11 +646,11 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
 
       expect(resolved[1]).to eq("x ![x](upload://sha1.png) y")
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
   end
 
-  describe "#unresolved_sink" do
+  describe "#unresolved_embeds" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 
     it "records each entity-backed embed the maps can't resolve, with the owner URL" do
@@ -678,7 +678,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 100, raw: "#{upload} #{poll} #{event}" }])
 
-      expect(resolver.unresolved_sink).to contain_exactly(
+      expect(resolver.unresolved_embeds).to contain_exactly(
         described_class::UnresolvedEmbed.new(
           kind: :upload,
           entity_id: "sha1",
@@ -713,7 +713,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
 
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
 
     it "does not record quotes, external links or mentions (they fall back to source values)" do
@@ -735,7 +735,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 100, raw: "#{link} #{mention}" }])
 
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
 
     it "leaves the owner URL nil when the containing post is unmapped" do
@@ -749,7 +749,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 555, raw: "x #{upload} y" }])
 
-      expect(resolver.unresolved_sink.first.owner_url).to be_nil
+      expect(resolver.unresolved_embeds.first.owner_url).to be_nil
     end
 
     it "accumulates across resolve_all calls for the run" do
@@ -771,17 +771,17 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolver.resolve_all([{ id: 100, raw: "x #{first} y" }])
       resolver.resolve_all([{ id: 100, raw: "x #{second} y" }])
 
-      expect(resolver.unresolved_sink.map(&:entity_id)).to eq(%w[a b])
+      expect(resolver.unresolved_embeds.map(&:entity_id)).to eq(%w[a b])
     end
 
-    it "writes to an injected sink instead of buffering in memory" do
-      sink = []
+    it "writes to an injected collector instead of buffering in memory" do
+      collector = []
       resolver =
         described_class.new(
           intermediate_db,
           maps,
           owner_type: embed_owner::POST,
-          unresolved_sink: sink,
+          unresolved_embeds: collector,
         )
       upload = placeholder.mint(:upload)
       Migrations::Database::IntermediateDB::EmbedUpload.create(
@@ -793,12 +793,12 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
 
-      expect(sink.map(&:entity_id)).to eq(["sha1"])
-      expect(resolver.unresolved_sink).to be(sink)
+      expect(collector.map(&:entity_id)).to eq(["sha1"])
+      expect(resolver.unresolved_embeds).to be(collector)
     end
   end
 
-  describe "#orphan_sink" do
+  describe "#orphan_placeholders" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 
     it "strips a token with no linkage row and records it with the owner URL" do
@@ -808,7 +808,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       expect(resolved[100]).to eq("before  after")
       expect(Migrations::Placeholder).not_to be_include(resolved[100])
-      expect(resolver.orphan_sink).to contain_exactly(
+      expect(resolver.orphan_placeholders).to contain_exactly(
         described_class::OrphanPlaceholder.new(
           kind: "quote",
           owner_id: 100,
@@ -844,8 +844,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 100, raw: "#{upload} and #{orphan}" }])
 
       expect(resolved[100]).to eq("![x](upload://sha1.png) and ")
-      expect(resolver.orphan_sink.map(&:placeholder)).to eq([orphan])
-      expect(resolver.orphan_sink.map(&:kind)).to eq(["link"])
+      expect(resolver.orphan_placeholders.map(&:placeholder)).to eq([orphan])
+      expect(resolver.orphan_placeholders.map(&:kind)).to eq(["link"])
     end
 
     it "records nothing when every token has a linkage row" do
@@ -859,7 +859,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
 
-      expect(resolver.orphan_sink).to be_empty
+      expect(resolver.orphan_placeholders).to be_empty
     end
 
     it "leaves the owner URL nil when the containing post is unmapped" do
@@ -867,7 +867,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 555, raw: "x #{orphan} y" }])
 
-      expect(resolver.orphan_sink.first).to have_attributes(owner_id: 555, owner_url: nil)
+      expect(resolver.orphan_placeholders.first).to have_attributes(owner_id: 555, owner_url: nil)
     end
   end
 
@@ -1119,7 +1119,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "a #{forced} b #{bare} c" }])
 
       expect(resolved[1]).to eq("a #ghost::category b #missing c")
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
 
     it "rebuilds the source text when the name resolved but the destination dropped it" do
@@ -1132,7 +1132,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "see #{hashtag}" }])
 
       expect(resolved[1]).to eq("see #support::category")
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
   end
 
@@ -1165,7 +1165,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "hi #{emoji}" }])
 
       expect(resolved[1]).to eq("hi :parrot:")
-      expect(resolver.unresolved_sink).to be_empty
+      expect(resolver.unresolved_embeds).to be_empty
     end
   end
 
@@ -1200,7 +1200,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 7, raw: "bio #{upload} end" }])
 
-      expect(resolver.unresolved_sink).to contain_exactly(
+      expect(resolver.unresolved_embeds).to contain_exactly(
         described_class::UnresolvedEmbed.new(
           kind: :upload,
           entity_id: "sha1",
@@ -1215,7 +1215,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 7, raw: "bio #{orphan} end" }])
 
-      expect(resolver.orphan_sink).to contain_exactly(
+      expect(resolver.orphan_placeholders).to contain_exactly(
         described_class::OrphanPlaceholder.new(
           kind: "quote",
           owner_id: 7,
@@ -1230,7 +1230,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolver.resolve_all([{ id: 99, raw: "bio #{orphan} end" }])
 
-      expect(resolver.orphan_sink.first).to have_attributes(owner_id: 99, owner_url: nil)
+      expect(resolver.orphan_placeholders.first).to have_attributes(owner_id: 99, owner_url: nil)
     end
   end
 end
