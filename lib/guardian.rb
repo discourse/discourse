@@ -102,10 +102,6 @@ class Guardian
     end
 
     def in_any_groups?(group_ids)
-      if !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
-        return group_ids.include?(Group::AUTO_GROUPS[:everyone])
-      end
-
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
     end
 
@@ -666,7 +662,8 @@ class Guardian
   end
 
   def can_lazy_load_categories?
-    in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
+    SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
+      in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
   def is_me?(other)
