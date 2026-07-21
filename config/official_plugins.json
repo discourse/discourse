@@ -28,7 +28,7 @@
   "discourse-gradle-issue",
   "discourse-graphviz",
   "discourse-group-tracker",
-  "discourse-hcaptcha",
+  "discourse-captcha",
   "discourse-invite-tokens",
   "discourse-jira",
   "discourse-lazy-videos",
