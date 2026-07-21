@@ -65,16 +65,17 @@ module Migrations
             # integers, and a 19-digit run overflows that range (binding the bignum
             # raises). No real record has more than 18 digits anyway — a longer run is
             # a numeric title or junk that names no record, so it stays literal text.
-            # Unanchored on purpose: inside an anchored context a 19+-digit run
-            # backtracks to no match rather than matching a 18-digit prefix.
+            # Unanchored, so it composes into the route patterns; every use site
+            # anchors it or guards it with a lookahead, which makes an overlong run
+            # fail entirely instead of matching an 18-digit prefix.
             ID_PATTERN = /\d{1,18}/
 
             # The characters that terminate a URL body: whitespace, `)` (which closes
             # a markdown link), and the quotes and angle brackets that delimit a bare
-            # URL. This is the inner negated set, so `[^#{URL_BODY_SOURCE}]` is a
+            # URL. This is the inner negated set, so `[^#{URL_TERMINATORS}]` is a
             # URL-body character. `UploadUrl::URL` also excludes `/` from it
-            # (`[^/#{URL_BODY_SOURCE}]`) to match a single path segment.
-            URL_BODY_SOURCE = "\\s)\"'<>"
+            # (`[^/#{URL_TERMINATORS}]`) to match a single path segment.
+            URL_TERMINATORS = "\\s)\"'<>"
 
             # `pos` is a byte offset, so `getbyte(pos - 1)` is always the last byte of
             # the previous character. An ASCII byte (< 0x80) is that whole character,

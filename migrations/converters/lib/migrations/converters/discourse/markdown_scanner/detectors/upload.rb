@@ -15,8 +15,14 @@ module Migrations
 
             # `\G` anchors each match at `pos` so we match in place rather than
             # slicing the tail of the input on every `!`/`[`.
+            #
+            # The alt class excludes `[` so a nested image `![![…](…)](…)` can't be
+            # matched from the outer `!` (see `UploadUrl::LINK` for the full why). The
+            # trade-off: an alt with a lone unmatched `[` no longer matches, so that
+            # upload stays a literal URL — nested-image safety wins over that rarer
+            # shape.
             IMAGE_PATTERN =
-              %r{\G!\[(?<alt>[^|\]]*)(?:\|(?<dimensions>[^\]]*))?\]\(upload://(?<url>[^)]+)\)}
+              %r{\G!\[(?<alt>[^|\[\]]*)(?:\|(?<dimensions>[^\]]*))?\]\(upload://(?<url>[^)]+)\)}
 
             ATTACHMENT_PATTERN =
               %r{

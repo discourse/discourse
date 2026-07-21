@@ -155,6 +155,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("[#{upload[:placeholder]}](https://other.example.com/page)")
     end
 
+    it "defers only the inner image of an image nested in an image description" do
+      inner = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      result = extract("![![inner](#{inner})](https://elsewhere.example.com/x.png)")
+
+      expect(buffer.uploads.size).to eq(1)
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq(sha1)
+      # The inner image alone is deferred; the outer `![` and `](…)` stay literal
+      # instead of the greedy alt class swallowing through the inner `)`.
+      expect(upload[:original_markdown]).to eq("![inner](#{inner})")
+      expect(result).to eq("![#{upload[:placeholder]}](https://elsewhere.example.com/x.png)")
+    end
+
+    it "defers only the inner short-form upload of an image nested in an image description" do
+      result = extract("![![inner](upload://abc123XYZ.png)](https://elsewhere.example.com/x.png)")
+
+      expect(buffer.uploads.size).to eq(1)
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq("abc123XYZ")
+      expect(result).to eq("![#{upload[:placeholder]}](https://elsewhere.example.com/x.png)")
+    end
+
     it "defers both images of an old lightbox (a thumbnail linking to the full image)" do
       thumb = "/uploads/default/optimized/2X/a/ab/#{sha1}_2_100x75.png"
       full = "/uploads/default/original/2X/a/ab/#{sha1}.png"

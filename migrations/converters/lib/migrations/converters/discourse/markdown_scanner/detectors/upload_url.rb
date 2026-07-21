@@ -21,25 +21,27 @@ module Migrations
             TRIGGERS = ["!", "[", "h", "/"].freeze
 
             # A full upload URL, from an optional scheme/host down to the sha1 at the
-            # start of the basename. `[^/#{Base::URL_BODY_SOURCE}]` is a path-segment
+            # start of the basename. `[^/#{Base::URL_TERMINATORS}]` is a path-segment
             # character (a URL-body character minus the slash; see
-            # `Base::URL_BODY_SOURCE`). The trailing `\w` keeps a sentence's `.`/`,`
+            # `Base::URL_TERMINATORS`). The trailing `\w` keeps a sentence's `.`/`,`
             # after a bare URL out of the match.
             URL =
               %r{
-                (?: (?:https?:)? // [^/#{Base::URL_BODY_SOURCE}]+ )?   # optional scheme + host
-                (?: / [^/#{Base::URL_BODY_SOURCE}]+ )*?                # optional leading path (subfolder installs)
+                (?: (?:https?:)? // [^/#{Base::URL_TERMINATORS}]+ )?   # optional scheme + host
+                (?: / [^/#{Base::URL_TERMINATORS}]+ )*?                # optional leading path (subfolder installs)
                 / (?:secure-)? uploads /
-                (?: [^/#{Base::URL_BODY_SOURCE}]+ / )*?                # site name and any segments before original/
+                (?: [^/#{Base::URL_TERMINATORS}]+ / )*?                # site name and any segments before original/
                 (?: original | optimized ) /
-                (?: [^/#{Base::URL_BODY_SOURCE}]+ / )*                 # depth/partition segments (2X/a/ab/ …)
+                (?: [^/#{Base::URL_TERMINATORS}]+ / )*                 # depth/partition segments (2X/a/ab/ …)
                 (?<sha1> \h{40} ) (?=[._])                             # sha1, then the extension or `_WxH` suffix
-                [^#{Base::URL_BODY_SOURCE}]* \w
+                [^#{Base::URL_TERMINATORS}]* \w
               }x
             private_constant :URL
 
-            # `\G` anchors each match at `pos` so scanning stays linear.
-            IMAGE = /\G!\[[^\]]*\]\(#{URL}\)/
+            # `\G` anchors each match at `pos` so scanning stays linear. The alt
+            # class excludes `[` for the same reason as `LINK` below: a nested image
+            # `![![…](…)](…)` must not match from the outer `!`.
+            IMAGE = /\G!\[[^\[\]]*\]\(#{URL}\)/
             private_constant :IMAGE
 
             # The text class excludes `[` so the `[` of a nested image

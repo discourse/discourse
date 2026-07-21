@@ -37,10 +37,10 @@ module Migrations
             # since relative detection is unconditional.
             GATE = %r{/(?:#{ROUTE_SEGMENT})/}
 
-            # A URL-body character (see `Base::URL_BODY_SOURCE`). The trailing `\w` on
+            # A URL-body character (see `Base::URL_TERMINATORS`). The trailing `\w` on
             # the bare form keeps a sentence's `.`/`,` after the URL out of the match
             # (mirrors `UploadUrl`).
-            URL_BODY = /[^#{Base::URL_BODY_SOURCE}]/
+            URL_BODY = /[^#{Base::URL_TERMINATORS}]/
             private_constant :URL_BODY
 
             # The text class excludes `[` for the same reason as `UploadUrl::LINK` (see
@@ -56,7 +56,8 @@ module Migrations
             # rejection left to `split_host`/`parse_route`) costs a MatchData and a
             # string per h-word of every scanned post, which is measurable across a
             # whole conversion.
-            BARE = %r{\G(?<url>(?:(?:https?:)?//[^/\s)"'<>]+)?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
+            BARE =
+              %r{\G(?<url>(?:(?:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
             private_constant :BARE
 
             # Splits a URL into its host (nil when relative) and the rest (path, query
