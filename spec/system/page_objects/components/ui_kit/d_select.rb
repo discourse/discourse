@@ -94,6 +94,51 @@ module PageObjects
         def remove_button_tabindexes
           remove_buttons.map { |button| button[:tabindex] }
         end
+
+        def listbox
+          find("[role='listbox']")
+        end
+
+        def option_count
+          options.size
+        end
+
+        # Whether the reveal sentinel is mounted. It disappears once the source is exhausted
+        # or the render cap is reached.
+        def sentinel?
+          page.has_css?("[role='listbox'] .d-combobox__sentinel", wait: 0)
+        end
+
+        # Whether the "keep filtering" hint is showing, i.e. the list is pinned at the cap
+        # with more results behind it.
+        def narrow_hint?
+          page.has_css?(".d-combobox__narrow", wait: 0)
+        end
+
+        # Scrolls the listbox itself, which is the reveal sentinel's intersection root — the
+        # page never scrolls for this control.
+        def scroll_listbox_to_bottom
+          page.execute_script(<<~JS)
+            (function () {
+              const list = document.querySelector("[role='listbox']");
+              list.scrollTop = list.scrollHeight;
+            })()
+          JS
+        end
+
+        # Scrolls until `target` options are rendered. The reveal observer is debounced, so
+        # each step waits for the count to grow rather than sleeping a fixed amount. Waiting
+        # toward a known target keeps every wait a positive one, which resolves as soon as the
+        # chunk lands instead of burning the full Capybara timeout.
+        def reveal_until(target, max_scrolls: 12)
+          max_scrolls.times do
+            break if option_count >= target
+            before = option_count
+            scroll_listbox_to_bottom
+            break unless page.has_css?("[role='listbox'] [role='option']", minimum: before + 1)
+          end
+          option_count
+        end
       end
     end
   end

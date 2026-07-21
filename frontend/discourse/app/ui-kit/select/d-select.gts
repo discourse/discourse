@@ -7,6 +7,7 @@ import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next as nextRunloop, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -16,10 +17,11 @@ import type Menu from "discourse/float-kit/services/menu";
 import booleanString from "discourse/helpers/boolean-string";
 import { makeArray } from "discourse/lib/helpers";
 import type A11y from "discourse/services/a11y";
-import { or } from "discourse/truth-helpers";
+import { and, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -158,6 +160,9 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @tracked filterInput: HTMLElement | null = null;
 
+  /** The listbox element, which is the reveal sentinel's intersection root. */
+  @tracked listboxElement: HTMLElement | null = null;
+
   @tracked queryActive = false;
 
   @tracked isExpanded = false;
@@ -215,12 +220,19 @@ export default class DSelect extends Component<DSelectSignature> {
 
   #listboxId = `d-combobox-listbox-${guidFor(this)}`;
 
-  // The last count announced, so rapid re-filters that don't change the count don't spam
-  // the screen reader (and don't compete with the moving `aria-activedescendant`).
-  #lastAnnouncedCount: number | null = null;
-
   // The last keep-typing "characters remaining" announced, so a repeat isn't re-read.
   #lastAnnouncedRemaining: number | null = null;
+
+  // Deduping on the message rather than a count is what keeps a reveal silent: it grows the
+  // mounted rows without changing the total the message reports.
+  #lastAnnouncedCountMessage: string | null = null;
+
+  // Keyed on the query, not a flag: the hint unmounts and remounts as the window grows, and
+  // only a new query should re-read it.
+  #narrowAnnouncedFor: string | null = null;
+
+  // Whether a "loading more" was announced and still owes its completion.
+  #revealAnnounced = false;
 
   #suppressNextCount = false;
 
@@ -831,23 +843,89 @@ export default class DSelect extends Component<DSelectSignature> {
 
   /**
    * Politely announces the result count to screen readers via the shared `a11y`
-   * service (never a per-component live region, never assertive), skipping repeats of the
-   * same count.
+   * service (never a per-component live region, never assertive), skipping repeats.
+   *
+   * Reports the true total when the source can supply one, not how many rows happen to be
+   * mounted, so a 5000-result query does not announce "50 results". A source with no total
+   * announces the loaded count instead.
    */
   @action
-  announceCount(_element: HTMLElement, [count]: [number]): void {
+  announceCount(
+    _element: HTMLElement,
+    [rendered, total]: [number, number | undefined]
+  ): void {
+    // Mid-load the rows on screen are the previous query's and the total is already cleared,
+    // so any count now describes stale rows. Settling re-fires this with the real numbers.
+    if (this.engine.serverPending) {
+      return;
+    }
+
+    const message =
+      total == null
+        ? i18n("d_select.results_loaded", { count: rendered })
+        : i18n("d_select.results_count", { count: total });
+
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
-      // Record the suppressed count as last-known, or a later genuine search that lands on
-      // the pre-suppression count would be treated as a repeat and never announced.
-      this.#lastAnnouncedCount = count;
+      // Record the suppressed message as last-known, or a later genuine search that lands on
+      // the same count would be treated as a repeat and never announced.
+      this.#lastAnnouncedCountMessage = message;
       return;
     }
-    if (count === this.#lastAnnouncedCount) {
+    if (message === this.#lastAnnouncedCountMessage) {
       return;
     }
-    this.#lastAnnouncedCount = count;
-    this.a11y.announce(i18n("d_select.results_count", { count }), "polite");
+    this.#lastAnnouncedCountMessage = message;
+    this.a11y.announce(message, "polite");
+  }
+
+  /** Captures the listbox so the reveal sentinel can be rooted at its scroll container. */
+  @action
+  captureListbox(element: HTMLElement): void {
+    this.listboxElement = element;
+  }
+
+  /**
+   * Drops the listbox ref on unmount. Kept stale, it would root a reopened list's observer at
+   * a detached node, which never intersects, and the list could never be revealed again.
+   */
+  @action
+  releaseListbox(): void {
+    this.listboxElement = null;
+  }
+
+  /**
+   * Politely reports a server reveal, which is otherwise silent: the rows stay put while the
+   * next page is in flight, so nothing visibly changes until it lands.
+   */
+  @action
+  announceReveal(): void {
+    // A new query is also pending and also retains its rows, but it is not more results — its
+    // own count announcement covers it when it lands.
+    if (this.engine.serverRevealPending) {
+      this.#revealAnnounced = true;
+      this.a11y.announce(i18n("d_select.loading_more"), "polite");
+      return;
+    }
+
+    if (this.#revealAnnounced && !this.engine.serverPending) {
+      this.#revealAnnounced = false;
+      this.a11y.announce(i18n("d_select.loading_complete"), "polite");
+    }
+  }
+
+  /**
+   * Announces the keep-filtering hint once per query. The visible status node stays for
+   * sighted users; a live region announces unreliably on the render that mounts it.
+   */
+  @action
+  announceNarrow(): void {
+    const filter = this.engine.filter;
+    if (filter === this.#narrowAnnouncedFor) {
+      return;
+    }
+    this.#narrowAnnouncedFor = filter;
+    this.a11y.announce(i18n("d_select.filter_to_narrow"), "polite");
   }
 
   /**
@@ -1376,8 +1454,25 @@ export default class DSelect extends Component<DSelectSignature> {
                     id={{this.listboxId}}
                     aria-label={{or @label (i18n "d_select.label")}}
                     aria-multiselectable={{booleanString @multiple}}
-                    {{didInsert this.announceCount items.length}}
-                    {{didUpdate this.announceCount items.length}}
+                    {{! A reveal or re-query keeps its rows mounted, so there is no skeleton
+                    to show for it and the listbox reports the fetch itself. }}
+                    aria-busy={{booleanString
+                      this.engine.serverPending
+                      omitFalse=false
+                    }}
+                    {{didInsert this.captureListbox}}
+                    {{willDestroy this.releaseListbox}}
+                    {{didInsert
+                      this.announceCount
+                      items.length
+                      this.engine.total
+                    }}
+                    {{didUpdate
+                      this.announceCount
+                      items.length
+                      this.engine.total
+                    }}
+                    {{didUpdate this.announceReveal this.engine.serverPending}}
                     {{! Static in the mobile modal moves DOM focus into the listbox; every other
                     surface keeps focus on its controller (no-op there). }}
                     {{didInsert this.focusListboxIfSimple}}
@@ -1405,6 +1500,8 @@ export default class DSelect extends Component<DSelectSignature> {
                         @multiple={{@multiple}}
                         @selectedIcon={{@selectedIcon}}
                         @locked={{this.isLocked}}
+                        aria-posinset={{descriptor.posInSet}}
+                        aria-setsize={{descriptor.setSize}}
                         {{! Keep focus in the trigger input on pointer-select so the input
                         doesn't blur-close the menu before the click resolves (needed for
                         action rows, which keep the menu open). mousedown is required —
@@ -1419,7 +1516,42 @@ export default class DSelect extends Component<DSelectSignature> {
                         {{/if}}
                       </SelectItem>
                     {{/each}}
+
+                    {{#if (and this.listboxElement this.engine.canRevealMore)}}
+                      {{! The list-item wrapper is structural: DLoadMore renders a plain
+                      div, which is invalid as a direct child of a list, and the presentation
+                      role keeps it out of the option set dRovingFocus queries.
+
+                      Gated on the captured listbox because the observer roots at the scroll
+                      container; mounting before that ref lands would root it at the viewport,
+                      which the sentinel already intersects, firing an unasked-for reveal. }}
+                      <li
+                        class="d-combobox__sentinel"
+                        role="presentation"
+                        aria-hidden="true"
+                      >
+                        <DLoadMore
+                          @action={{this.engine.revealMore}}
+                          @enabled={{this.engine.canRevealMore}}
+                          @root={{this.listboxElement}}
+                          @rootMargin="200px"
+                        />
+                      </li>
+                    {{/if}}
                   </ul>
+
+                  {{#if this.engine.atCapWithMore}}
+                    {{! Sits outside the listbox, which admits only list items. The text also
+                    goes through the a11y service because a live region announces unreliably on
+                    the render that mounts it. }}
+                    <div
+                      class="d-combobox__narrow"
+                      role="status"
+                      {{didInsert this.announceNarrow}}
+                    >
+                      {{i18n "d_select.filter_to_narrow"}}
+                    </div>
+                  {{/if}}
                 {{/let}}
               </:content>
 
