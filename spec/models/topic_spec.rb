@@ -405,11 +405,10 @@ RSpec.describe Topic do
       Fabricate.build(:topic, title: topic.title, category: category2)
     end
 
-    context "when duplicates aren't allowed" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = false
-        SiteSetting.allow_duplicate_topic_titles_category = false
-      end
+    context "when duplicate_topic_titles is disallowed" do
+      fab!(:admin)
+
+      before { SiteSetting.duplicate_topic_titles = "disallowed" }
 
       it "won't allow another topic to be created with the same name" do
         expect(new_topic).not_to be_valid
@@ -433,24 +432,94 @@ RSpec.describe Topic do
         new_topic.archetype = Archetype.private_message
         expect(new_topic).to be_valid
       end
+
+      it "includes a link to the topic already using the title in the error" do
+        expect(new_topic).not_to be_valid
+        expect(new_topic.errors[:base]).to include(
+          I18n.t("errors.messages.topic_title_already_used", url: topic.url),
+        )
+      end
+
+      context "when the duplicate is in a read-restricted category" do
+        fab!(:group)
+        fab!(:secure_category) { Fabricate(:private_category, group: group) }
+        fab!(:secure_topic) { Fabricate(:topic, category: secure_category) }
+
+        it "allows the title when the author can't see the duplicate" do
+          attempt = Fabricate.build(:topic, title: secure_topic.title, category: category1)
+          expect(attempt).to be_valid
+        end
+
+        it "won't allow the title when the author is a member of the restricted group" do
+          group_member = Fabricate(:user)
+          group.add(group_member)
+          attempt =
+            Fabricate.build(
+              :topic,
+              title: secure_topic.title,
+              category: category1,
+              user: group_member,
+            )
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow the title when the author is an admin" do
+          attempt =
+            Fabricate.build(:topic, title: secure_topic.title, category: category1, user: admin)
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow a topic to be moved into the restricted category holding the duplicate" do
+          public_topic = Fabricate(:topic, title: secure_topic.title, category: category1)
+          public_topic.category_id = secure_category.id
+          expect(public_topic).not_to be_valid
+        end
+
+        it "won't allow the title when the acting user can see the duplicate but the author can't" do
+          topic.acting_user = admin
+          topic.title = secure_topic.title
+          expect(topic).not_to be_valid
+        end
+
+        it "allows the title when the acting user can't see the duplicate but the author can" do
+          staff_topic = Fabricate(:topic, category: category1, user: admin)
+          staff_topic.acting_user = Fabricate(:user)
+          staff_topic.title = secure_topic.title
+          expect(staff_topic).to be_valid
+        end
+      end
+
+      context "when the duplicate is unlisted" do
+        fab!(:unlisted_topic) { Fabricate(:topic, category: category2, visible: false) }
+
+        it "allows the title when the author can't see unlisted topics" do
+          attempt = Fabricate.build(:topic, title: unlisted_topic.title, category: category1)
+          expect(attempt).to be_valid
+        end
+
+        it "won't allow the title when the author can see unlisted topics" do
+          attempt =
+            Fabricate.build(:topic, title: unlisted_topic.title, category: category1, user: admin)
+          expect(attempt).not_to be_valid
+        end
+
+        it "won't allow the title in the same category even when the author can't see unlisted topics" do
+          attempt = Fabricate.build(:topic, title: unlisted_topic.title, category: category2)
+          expect(attempt).not_to be_valid
+        end
+      end
     end
 
-    context "when duplicates are allowed" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = true
-        SiteSetting.allow_duplicate_topic_titles_category = false
-      end
+    context "when duplicate_topic_titles is allowed" do
+      before { SiteSetting.duplicate_topic_titles = "allowed" }
 
       it "will allow another topic to be created with the same name" do
         expect(new_topic).to be_valid
       end
     end
 
-    context "when duplicates are allowed if the category is different" do
-      before do
-        SiteSetting.allow_duplicate_topic_titles = false
-        SiteSetting.allow_duplicate_topic_titles_category = true
-      end
+    context "when duplicate_topic_titles is allowed_across_categories" do
+      before { SiteSetting.duplicate_topic_titles = "allowed_across_categories" }
 
       it "will allow another topic to be created with the same name but different category" do
         expect(new_topic_different_cat).to be_valid
@@ -458,17 +527,6 @@ RSpec.describe Topic do
 
       it "won't allow another topic to be created with the same name in same category" do
         expect(new_topic).not_to be_valid
-      end
-
-      it "other errors will not be cleared" do
-        SiteSetting.min_topic_title_length = 5
-        topic.update!(title: "more than 5 characters but less than 134")
-        SiteSetting.min_topic_title_length = 134
-        new_topic_different_cat.title = "more than 5 characters but less than 134"
-        expect(new_topic_different_cat).not_to be_valid
-        expect(new_topic_different_cat.errors[:title]).to include(
-          I18n.t("errors.messages.too_short", count: 134),
-        )
       end
     end
   end

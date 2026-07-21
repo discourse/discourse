@@ -8201,6 +8201,11 @@ en:
       homepage:
         top_menu_default: "First item in top menu"
 
+      duplicate_topic_titles:
+        disallowed: "Disallowed"
+        allowed_across_categories: "Allowed across categories"
+        allowed: "Allowed"
+
       backups:
         title: "Backups"
         files_title: "Backup files"

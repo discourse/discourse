@@ -138,6 +138,15 @@ RSpec.describe PostMover do
       end
 
       context "with errors" do
+        it "raises when the mover can see a duplicate title the first post's author cannot" do
+          SiteSetting.duplicate_topic_titles = "disallowed"
+          secure_topic =
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect { topic.move_posts(user, [p2.id], title: secure_topic.title) }.to raise_error(
+            ActiveRecord::RecordInvalid,
+          )
+        end
+
         it "raises an error when one of the posts doesn't exist" do
           non_existent_post_id = Post.maximum(:id)&.next || 1
           expect {
