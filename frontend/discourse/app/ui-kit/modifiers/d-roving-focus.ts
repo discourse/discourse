@@ -52,6 +52,16 @@ interface DRovingFocusArgs {
    * combobox pattern. Default `false` (the cursor starts empty until an Arrow keypress).
    */
   autoActivateFirst?: boolean;
+  /**
+   * Active mode only — when the cursor has none, prefer the item marked `aria-selected="true"`
+   * over the first one. Restores the user's existing choice when a list is reopened, rather than
+   * pointing them at an unrelated row. Takes priority over {@link autoActivateFirst}, so a list
+   * that deliberately starts without a cursor still gets its selection back.
+   *
+   * The consumer owns `aria-selected`; this only reads it, mirroring what `#seedTabStop` already
+   * does in focus mode. Default `false`.
+   */
+  autoActivateSelected?: boolean;
 }
 
 interface DRovingFocusSignature {
@@ -104,6 +114,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   activeClass: string | null = null;
   itemsKey: unknown;
   autoActivateFirst = false;
+  autoActivateSelected = false;
 
   /** The element keydown is bound to: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
@@ -179,6 +190,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.tabStop = named.tabStop ?? true;
     this.activeClass = named.activeClass ?? null;
     this.autoActivateFirst = named.autoActivateFirst ?? false;
+    this.autoActivateSelected = named.autoActivateSelected ?? false;
     // Reading `itemsKey` here keeps `modify()` reactive to it; the value itself
     // isn't used beyond triggering a re-run + reconcile.
     this.itemsKey = named.itemsKey;
@@ -585,11 +597,16 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     const stillPresent =
       this.#activeId != null && items.some((el) => el.id === this.#activeId);
     if (!stillPresent) {
-      // Auto-highlight the first item when asked (combobox automatic-selection). The
-      // stale `#activeId` can't match any current element, so `#setActive` finds no
-      // previous highlight to clear before it points the cursor at `items[0]`.
-      if (this.autoActivateFirst && items.length) {
-        this.#setActive(items[0], items);
+      // Seed the cursor when asked (combobox automatic-selection). The stale `#activeId` can't
+      // match any current element, so `#setActive` finds no previous highlight to clear.
+      // The user's own choice outranks the first row: reopening a list should point at what
+      // they already picked, not at an unrelated option.
+      const selected = this.autoActivateSelected
+        ? items.find((el) => el.getAttribute("aria-selected") === "true")
+        : undefined;
+      const seed = selected ?? (this.autoActivateFirst ? items[0] : undefined);
+      if (seed) {
+        this.#setActive(seed, items);
         return;
       }
       this.#activeId = null;

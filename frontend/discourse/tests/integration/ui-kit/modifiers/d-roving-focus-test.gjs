@@ -460,6 +460,131 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".b").doesNotHaveClass("--active");
   });
 
+  test("active mode: autoActivateSelected prefers the selected item over the first", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=true
+            autoActivateSelected=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="false">A</button>
+          <button class="b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".b")
+      .hasClass(
+        "--active",
+        "the user's existing choice wins over the first row"
+      );
+    assert.dom(".a").doesNotHaveClass("--active");
+    const activeId = document
+      .querySelector(".search")
+      .getAttribute("aria-activedescendant");
+    assert.dom(".b").hasAttribute("id", activeId);
+  });
+
+  test("active mode: autoActivateSelected seeds a list that would otherwise start with no cursor", async function (assert) {
+    // `autoActivateFirst` is deliberately false for lists that wait for the user to act. That
+    // rule exists to avoid highlighting an arbitrary row; a restored selection is not arbitrary.
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=false
+            autoActivateSelected=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="false">A</button>
+          <button class="b" role="option" aria-selected="true">B</button>
+        </div>
+      </template>
+    );
+
+    assert.dom(".b").hasClass("--active", "the selection is restored");
+  });
+
+  test("active mode: autoActivateSelected leaves the cursor empty when nothing is selected", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=false
+            autoActivateSelected=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="false">A</button>
+          <button class="b" role="option" aria-selected="false">B</button>
+        </div>
+      </template>
+    );
+
+    assert.dom(".a").doesNotHaveClass("--active");
+    assert.dom(".b").doesNotHaveClass("--active");
+    assert
+      .dom(".search")
+      .doesNotHaveAttribute(
+        "aria-activedescendant",
+        "no selection and no first-item fallback means no cursor"
+      );
+  });
+
+  test("active mode: autoActivateSelected does not move a cursor the user has set", async function (assert) {
+    await render(
+      <template>
+        <input class="search" role="combobox" />
+        <div
+          role="listbox"
+          {{dRovingFocus
+            selectionMode="active"
+            controllerElement=".search"
+            itemSelector="[role=option]"
+            activeClass="--active"
+            autoActivateFirst=true
+            autoActivateSelected=true
+          }}
+        >
+          <button class="a" role="option" aria-selected="false">A</button>
+          <button class="b" role="option" aria-selected="true">B</button>
+          <button class="c" role="option" aria-selected="false">C</button>
+        </div>
+      </template>
+    );
+
+    assert.dom(".b").hasClass("--active", "seeded on the selection");
+
+    await triggerKeyEvent(".search", "keydown", "ArrowDown");
+
+    assert
+      .dom(".c")
+      .hasClass("--active", "the user's arrow key moves off the selection");
+    assert
+      .dom(".b")
+      .doesNotHaveClass("--active", "and the preference does not drag it back");
+  });
+
   test("active mode: autoActivateFirst re-seeds the first item when the set changes", async function (assert) {
     class State {
       @tracked items = ["a", "b", "c"];
