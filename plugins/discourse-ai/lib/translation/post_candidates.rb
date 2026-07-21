@@ -50,7 +50,7 @@ module DiscourseAi
               "posts.created_at > ?",
               SiteSetting.ai_translation_backfill_max_age_days.days.ago,
             )
-            .where(deleted_at: nil)
+            .where(deleted_at: nil, user_deleted: false)
             .where.not(raw: [nil, ""])
             .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
 
@@ -84,7 +84,7 @@ module DiscourseAi
         # Always include posts from banner topics regardless of age or category filters
         banner_posts =
           Post
-            .where(deleted_at: nil)
+            .where(deleted_at: nil, user_deleted: false)
             .where.not(raw: [nil, ""])
             .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
             .joins(:topic)

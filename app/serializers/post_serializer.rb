@@ -116,6 +116,14 @@ class PostSerializer < BasicPostSerializer
     object&.url
   end
 
+  def cooked
+    if SiteSetting.content_localization_enabled && object.user_deleted?
+      ContentLocalization.user_deleted_post_cooked(object)
+    else
+      super
+    end
+  end
+
   def topic_slug
     topic&.slug
   end

@@ -36,12 +36,20 @@ module Jobs
       end
 
       if (post_id = payload[:post_id])
-        post_localization =
-          PostLocalization.find_by(post_id: post_id, locale: locale) ||
-            PostLocalization.matching_locale(locale).find_by(post_id: post_id)
-        if post_localization
+        post = Post.select(:id, :post_number, :user_deleted).find_by(id: post_id)
+        cooked =
+          if post&.user_deleted?
+            ContentLocalization.user_deleted_post_cooked(post, locale: locale)
+          else
+            (
+              PostLocalization.find_by(post_id: post_id, locale: locale) ||
+                PostLocalization.matching_locale(locale).find_by(post_id: post_id)
+            )&.cooked
+          end
+
+        if cooked.present?
           payload[:excerpt] = Post.excerpt(
-            post_localization.cooked,
+            cooked,
             400,
             text_entities: true,
             strip_links: true,

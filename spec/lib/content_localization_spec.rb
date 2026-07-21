@@ -91,6 +91,13 @@ describe ContentLocalization do
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
       end
 
+      it "returns false when the author deleted the post" do
+        post.update!(user_deleted: true)
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_post?(post, scope)).to be false
+      end
+
       it "returns false when post is in user locale" do
         post.update!(locale: I18n.locale)
         scope = create_scope
@@ -103,6 +110,34 @@ describe ContentLocalization do
 
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
       end
+    end
+  end
+
+  describe ".user_deleted_post_cooked" do
+    fab!(:post) { Fabricate(:post, post_number: 2) }
+
+    it "uses the requested locale" do
+      expect(ContentLocalization.user_deleted_post_cooked(post, locale: "ja")).to eq(
+        "<p>(作成者が削除した投稿)</p>",
+      )
+    end
+
+    it "falls back to the default locale when the requested locale is invalid" do
+      translated = I18n.t("js.post.deleted_by_author_simple", locale: SiteSetting.default_locale)
+
+      expect(ContentLocalization.user_deleted_post_cooked(post, locale: "invalid")).to eq(
+        "<p>#{ERB::Util.html_escape(translated)}</p>",
+      )
+    end
+
+    it "escapes the translated text" do
+      allow(I18n).to receive(:t).with("js.post.deleted_by_author_simple", locale: "ja").and_return(
+        "<deleted>",
+      )
+
+      expect(ContentLocalization.user_deleted_post_cooked(post, locale: "ja")).to eq(
+        "<p>&lt;deleted&gt;</p>",
+      )
     end
   end
 

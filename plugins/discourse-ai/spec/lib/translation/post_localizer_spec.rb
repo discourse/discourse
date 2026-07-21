@@ -30,6 +30,14 @@ describe DiscourseAi::Translation::PostLocalizer do
       expect(described_class.localize(post, "")).to eq(nil)
     end
 
+    it "does not localize a user-deleted post" do
+      post.user_deleted = true
+      allow(DiscourseAi::Translation::PostRawTranslator).to receive(:new)
+
+      expect(described_class.localize(post, "ja")).to eq(nil)
+      expect(DiscourseAi::Translation::PostRawTranslator).not_to have_received(:new)
+    end
+
     it "returns nil if target_locale is same as post locale" do
       post.locale = "en"
 

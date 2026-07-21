@@ -41,6 +41,14 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
     end
 
+    it "does not return user-deleted posts" do
+      post = Fabricate(:post, user_deleted: true)
+      banner_post =
+        Fabricate(:post, topic: Fabricate(:topic, archetype: Archetype.banner), user_deleted: true)
+
+      expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post, banner_post)
+    end
+
     it "does not return posts longer than ai_translation_max_post_length" do
       SiteSetting.ai_translation_max_post_length = 100
       short_post = Fabricate(:post, raw: "This is a short post that fits within the limit.")

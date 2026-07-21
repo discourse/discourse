@@ -76,6 +76,71 @@ describe "Content Localization" do
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
     end
 
+    it "shows an author's localized deletion notice and restores the translation on recovery" do
+      localized_text = "最大の勝利は戦いを必要としないものです"
+      authored_post =
+        Fabricate(
+          :post,
+          topic:,
+          user: japanese_user,
+          locale: "en",
+          raw: "The supreme art of war is to subdue the enemy without fighting",
+        )
+      Fabricate(:post_localization, post: authored_post, locale: "ja", cooked: localized_text)
+      deletion_notice = I18n.t("js.post.deleted_by_author_simple", locale: japanese_user.locale)
+      SiteSetting.post_menu_hidden_items = ""
+      sign_in(japanese_user)
+
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_exact_post_content(
+        post_number: authored_post.post_number,
+        content: localized_text,
+      )
+
+      using_session(:second_tab) do
+        sign_in(japanese_user)
+        topic_page.visit_topic(topic)
+        expect(topic_page).to have_exact_post_content(
+          post_number: authored_post.post_number,
+          content: localized_text,
+        )
+      end
+
+      topic_page.click_post_action_button(authored_post, :delete)
+
+      expect(topic_page).to have_exact_post_content(
+        post_number: authored_post.post_number,
+        content: deletion_notice,
+      )
+      expect(topic_page).to have_post_action_button(authored_post, :recover)
+
+      using_session(:second_tab) do
+        try_until_success(reason: "Relies on the deleted-post MessageBus update") do
+          expect(topic_page).to have_exact_post_content(
+            post_number: authored_post.post_number,
+            content: deletion_notice,
+          )
+        end
+      end
+
+      topic_page.click_post_action_button(authored_post, :recover)
+
+      expect(topic_page).to have_post_action_button(authored_post, :delete)
+      expect(topic_page).to have_exact_post_content(
+        post_number: authored_post.post_number,
+        content: localized_text,
+      )
+
+      using_session(:second_tab) do
+        try_until_success(reason: "Relies on the recovered-post MessageBus update") do
+          expect(topic_page).to have_exact_post_content(
+            post_number: authored_post.post_number,
+            content: localized_text,
+          )
+        end
+      end
+    end
+
     it "persists 'Show Original' preference from user preferences interface" do
       sign_in(japanese_user)
 
