@@ -99,6 +99,7 @@ describe "Homepage" do
     SiteSetting.default_homepage = "bookmarks"
 
     sign_in user
+    visit "/"
 
     expect(page).to have_current_path("/")
     expect(page).to have_css(".navigation-container .bookmarks.active", text: "Bookmarks")
