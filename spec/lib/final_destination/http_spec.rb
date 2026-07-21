@@ -216,6 +216,15 @@ describe FinalDestination::HTTP do
         socket.close
       end
     end
+
+    it "does not break TCPServer.open with only a port argument" do
+      # TCPServer < TCPSocket inherits this singleton method, and TCPServer.open
+      # takes just a port; the patch must not force TCPSocket's host/port arity.
+      server = TCPServer.open(0)
+      expect(server).to be_a(TCPServer)
+    ensure
+      server&.close
+    end
   end
 
   describe "via a proxy" do
