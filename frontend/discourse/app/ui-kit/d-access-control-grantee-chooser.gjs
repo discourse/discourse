@@ -8,7 +8,7 @@ export function granteeValue(type, id) {
   return `${type}:${id}`;
 }
 
-export function groupGranteeResult(group) {
+export function groupGranteeResult(group, isDisabled = false) {
   return {
     value: granteeValue("group", group.id),
     id: group.name,
@@ -19,10 +19,11 @@ export function groupGranteeResult(group) {
     display_name: group.display_name,
     automatic: group.automatic,
     isGroup: true,
+    disabled: isDisabled,
   };
 }
 
-function userGranteeResult(user) {
+function userGranteeResult(user, isDisabled = false) {
   const sortName = user.name || user.display_name || user.username;
 
   return {
@@ -36,6 +37,7 @@ function userGranteeResult(user) {
     showUserStatus: false,
     avatar_template: user.avatar_template,
     isUser: true,
+    disabled: isDisabled,
   };
 }
 
@@ -86,8 +88,12 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return [
-      ...(results.groups || []).map(groupGranteeResult),
-      ...(results.users || []).map(userGranteeResult),
+      ...(results.groups || []).map((group) =>
+        groupGranteeResult(group, this.isGranteeDisabled(group))
+      ),
+      ...(results.users || []).map((user) =>
+        userGranteeResult(user, this.isGranteeDisabled(user))
+      ),
     ];
   }
 
@@ -99,5 +105,11 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return results.filter((result) => !excludedGrantees.includes(result.value));
+  }
+
+  isGranteeDisabled(grantee) {
+    const disabledGrantees = this.selectKit.options.disabledGrantees || [];
+
+    return disabledGrantees.includes(granteeValue(grantee.type, grantee.id));
   }
 }
