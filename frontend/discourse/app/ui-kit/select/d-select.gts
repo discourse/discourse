@@ -8,7 +8,7 @@ import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { next as nextRunloop, schedule } from "@ember/runloop";
+import { cancel, next as nextRunloop, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import type { MenuOptions } from "discourse/float-kit/lib/constants";
@@ -16,6 +16,7 @@ import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type Menu from "discourse/float-kit/services/menu";
 import booleanString from "discourse/helpers/boolean-string";
 import { makeArray } from "discourse/lib/helpers";
+import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
 import { and, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
@@ -47,6 +48,10 @@ const SELECT_VARIANTS = {
   button: "button",
   static: "static",
 } as const;
+// A source that answers faster than this never shows a placeholder, so a quick server does
+// not flash one; only a wait long enough to read as "stuck" gets visible feedback.
+const LOADING_FEEDBACK_DELAY = 250;
+
 export type SelectVariant =
   (typeof SELECT_VARIANTS)[keyof typeof SELECT_VARIANTS];
 
@@ -163,6 +168,9 @@ export default class DSelect extends Component<DSelectSignature> {
   /** The listbox element, which is the reveal sentinel's intersection root. */
   @tracked listboxElement: HTMLElement | null = null;
 
+  /** Whether a server load has run long enough to deserve a visible placeholder. */
+  @tracked loadFeedbackDue = false;
+
   @tracked queryActive = false;
 
   @tracked isExpanded = false;
@@ -234,6 +242,8 @@ export default class DSelect extends Component<DSelectSignature> {
   // Whether a "loading more" was announced and still owes its completion.
   #revealAnnounced = false;
 
+  #loadFeedbackTimer?: ReturnType<typeof discourseLater>;
+
   #suppressNextCount = false;
 
   // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
@@ -280,7 +290,9 @@ export default class DSelect extends Component<DSelectSignature> {
    * default 5).
    */
   get skeletonRows(): Array<{ key: number }> {
-    const count = this.args.skeletonCount ?? 5;
+    // Enough to fill the listbox viewport (20em against a ~2.4em row) and overflow it
+    // slightly, so a clipped final placeholder reads as more content rather than a short list.
+    const count = this.args.skeletonCount ?? 10;
     return Array.from({ length: count }, (_, key) => ({ key }));
   }
 
@@ -893,6 +905,41 @@ export default class DSelect extends Component<DSelectSignature> {
     this.announceCount(element, args);
   }
 
+  /** Placeholders stand in for a pending page, appended after the rows already shown. */
+  get showRevealPlaceholder(): boolean {
+    return this.loadFeedbackDue && this.engine.serverRevealPending;
+  }
+
+  /**
+   * Placeholders replace the list outright, because a re-query's retained rows are answers to
+   * the previous query and the new ones arrive at the top, where the user is looking.
+   */
+  get showQueryPlaceholder(): boolean {
+    return (
+      this.loadFeedbackDue &&
+      this.engine.serverPending &&
+      !this.engine.serverRevealPending
+    );
+  }
+
+  /**
+   * Arms the placeholder only once a load has been pending past the threshold, so a source
+   * that answers quickly shows nothing at all.
+   */
+  @action
+  trackLoadFeedback(_element: HTMLElement, [pending]: [boolean]): void {
+    cancel(this.#loadFeedbackTimer);
+    if (!pending) {
+      this.loadFeedbackDue = false;
+      return;
+    }
+    this.#loadFeedbackTimer = discourseLater(
+      this,
+      () => (this.loadFeedbackDue = true),
+      LOADING_FEEDBACK_DELAY
+    );
+  }
+
   /** Captures the listbox so the reveal sentinel can be rooted at its scroll container. */
   @action
   captureListbox(element: HTMLElement): void {
@@ -906,6 +953,8 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   releaseListbox(): void {
     this.listboxElement = null;
+    cancel(this.#loadFeedbackTimer);
+    this.loadFeedbackDue = false;
   }
 
   /**
@@ -1489,6 +1538,14 @@ export default class DSelect extends Component<DSelectSignature> {
                       this.engine.total
                     }}
                     {{didUpdate this.announceReveal this.engine.serverPending}}
+                    {{didInsert
+                      this.trackLoadFeedback
+                      this.engine.serverPending
+                    }}
+                    {{didUpdate
+                      this.trackLoadFeedback
+                      this.engine.serverPending
+                    }}
                     {{! Static in the mobile modal moves DOM focus into the listbox; every other
                     surface keeps focus on its controller (no-op there). }}
                     {{didInsert this.focusListboxIfSimple}}
@@ -1509,65 +1566,79 @@ export default class DSelect extends Component<DSelectSignature> {
                       autoActivateFirst=this.shouldAutoActivateFirst
                     }}
                   >
-                    {{#each items key="key" as |descriptor|}}
-                      <SelectItem
-                        @descriptor={{descriptor}}
-                        @engine={{this.engine}}
-                        @multiple={{@multiple}}
-                        @selectedIcon={{@selectedIcon}}
-                        @locked={{this.isLocked}}
-                        aria-posinset={{descriptor.posInSet}}
-                        aria-setsize={{descriptor.setSize}}
-                        {{! Keep focus in the trigger input on pointer-select so the input
-                        doesn't blur-close the menu before the click resolves (needed for
-                        action rows, which keep the menu open). mousedown is required —
-                        blur fires before click; the handler no-ops for non-typeahead. }}
-                        {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                        {{on "mousedown" this.preventPointerBlur}}
-                      >
-                        {{#if (has-block "item")}}
-                          {{yield descriptor.item to="item"}}
-                        {{else}}
-                          {{selectItemLabel descriptor.item this.labelField}}
-                        {{/if}}
-                      </SelectItem>
-                    {{/each}}
-
-                    {{#if this.engine.serverPending}}
-                      {{! The rows are retained across a fetch, so without a placeholder the
-                      list simply stops with no sighted feedback; aria-busy covers only
-                      assistive tech. Hidden and role-free so the option set is unchanged. }}
+                    {{#if this.showQueryPlaceholder}}
                       {{#each this.skeletonRows key="key" as |row|}}
                         <li
                           class="d-combobox__skeleton"
+                          role="presentation"
                           aria-hidden="true"
                           data-key={{row.key}}
                         >
                           <DSkeleton @variant="text" />
                         </li>
                       {{/each}}
-                    {{else if
-                      (and this.listboxElement this.engine.canRevealMore)
-                    }}
-                      {{! The list-item wrapper is structural: DLoadMore renders a plain
+                    {{else}}
+                      {{#each items key="key" as |descriptor|}}
+                        <SelectItem
+                          @descriptor={{descriptor}}
+                          @engine={{this.engine}}
+                          @multiple={{@multiple}}
+                          @selectedIcon={{@selectedIcon}}
+                          @locked={{this.isLocked}}
+                          aria-posinset={{descriptor.posInSet}}
+                          aria-setsize={{descriptor.setSize}}
+                          {{! Keep focus in the trigger input on pointer-select so the input
+                        doesn't blur-close the menu before the click resolves (needed for
+                        action rows, which keep the menu open). mousedown is required —
+                        blur fires before click; the handler no-ops for non-typeahead. }}
+                          {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+                          {{on "mousedown" this.preventPointerBlur}}
+                        >
+                          {{#if (has-block "item")}}
+                            {{yield descriptor.item to="item"}}
+                          {{else}}
+                            {{selectItemLabel descriptor.item this.labelField}}
+                          {{/if}}
+                        </SelectItem>
+                      {{/each}}
+
+                      {{#if this.showRevealPlaceholder}}
+                        {{! The rows are retained across a fetch, so without a placeholder the
+                      list simply stops with no sighted feedback; aria-busy covers only
+                      assistive tech. Hidden and role-free so the option set is unchanged. }}
+                        {{#each this.skeletonRows key="key" as |row|}}
+                          <li
+                            class="d-combobox__skeleton"
+                            role="presentation"
+                            aria-hidden="true"
+                            data-key={{row.key}}
+                          >
+                            <DSkeleton @variant="text" />
+                          </li>
+                        {{/each}}
+                      {{else if
+                        (and this.listboxElement this.engine.canRevealMore)
+                      }}
+                        {{! The list-item wrapper is structural: DLoadMore renders a plain
                       div, which is invalid as a direct child of a list, and the presentation
                       role keeps it out of the option set dRovingFocus queries.
 
                       Gated on the captured listbox because the observer roots at the scroll
                       container; mounting before that ref lands would root it at the viewport,
                       which the sentinel already intersects, firing an unasked-for reveal. }}
-                      <li
-                        class="d-combobox__sentinel"
-                        role="presentation"
-                        aria-hidden="true"
-                      >
-                        <DLoadMore
-                          @action={{this.engine.revealMore}}
-                          @enabled={{this.engine.canRevealMore}}
-                          @root={{this.listboxElement}}
-                          @rootMargin="200px"
-                        />
-                      </li>
+                        <li
+                          class="d-combobox__sentinel"
+                          role="presentation"
+                          aria-hidden="true"
+                        >
+                          <DLoadMore
+                            @action={{this.engine.revealMore}}
+                            @enabled={{this.engine.canRevealMore}}
+                            @root={{this.listboxElement}}
+                            @rootMargin="200px"
+                          />
+                        </li>
+                      {{/if}}
                     {{/if}}
                   </ul>
 

@@ -144,6 +144,33 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     announcements through the `a11y` service. Styleguide large-list example plus a system
     spec that drives a real container scroll — the one gate QUnit cannot cover, since
     IntersectionObserver does not fire there.
+  - ☑ Loading feedback: placeholders appear only after a delay, so a fast source never
+    flashes one; a re-query replaces the list, a reveal appends. Paginated styleguide
+    examples (with and without a reported total) cover the busy state, the loading
+    announcements, and the unknown-set-size encoding.
+  - ☐ **Placeholder placement.** Placeholders append below the last row, so they sit outside
+    the viewport exactly when they matter: arrowing to the last option, scrolling to the
+    bottom, or re-querying above stale rows. The listbox viewport fits 9 rows (320px against a
+    38.4px row). A sticky bottom indicator is position-independent and would supersede the
+    appended rows for reveals.
+  - ☐ **Separate `hasMore` from `total`.** `total` currently drives both `aria-setsize` (size)
+    and exhaustion (pagination); they are orthogonal, and a cursor source knows there is more
+    without knowing how many. A source reporting neither triggers one speculative fetch on a
+    short first page, which shows a second placeholder. Add an authoritative `hasMore` to the
+    response, and derive the true set size once exhausted — today an exhausted source with no
+    reported total keeps announcing `aria-setsize="-1"` for a set we have fully enumerated.
+    Do not fix by sending a `limit` on page 0: a source ignoring `limit` would be wrongly
+    exhausted.
+  - ☐ **Selected option unreachable on open.** Opening with a selection past the window starts
+    at option 1; `dRovingFocus` only ever activates the first option, and the selected row is
+    not rendered. Pre-existing, but windowing removes the ability to reach it at all. APG
+    expects the selected option active and scrolled into view.
+  - ☐ **`Home`/`End`.** Optional per APG, and reserved for the text caret in an editable
+    combobox, so they suit the static variant only. `End` under a bounded window would land on
+    the last rendered row rather than the last of the set; settle with the item above.
+  - ☐ **Status-message contrast.** `--primary-medium` measures 3.15:1 on light (AA needs
+    4.5:1); shared by the empty, keep-typing, narrow and error messages, so it is a
+    token-level decision.
   - ☐ 5k-sync performance gate; visual pass (Foundation + Horizon, light + dark).
   - ☐ Deferred to its own cycle: the `dRovingFocus` keyboard-boundary hook. v1 reveals
     through the prefetch sentinel for both pointer and keyboard.
