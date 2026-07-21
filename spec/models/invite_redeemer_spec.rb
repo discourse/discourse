@@ -754,6 +754,16 @@ RSpec.describe InviteRedeemer do
         expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
       end
 
+      it "grants moderator when an existing user redeems" do
+        existing_user = Fabricate(:user, email: invite.email)
+
+        InviteRedeemer.new(invite: invite, redeeming_user: existing_user).redeem
+
+        expect(existing_user.reload.moderator).to eq(true)
+        expect(existing_user.admin).to eq(false)
+        expect(AdminConfirmation.exists_for?(existing_user.id)).to eq(false)
+      end
+
       it "does not grant moderator when the inviter is no longer staff" do
         invite.invited_by.update!(admin: false, moderator: false)
 
