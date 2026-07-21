@@ -2261,6 +2261,7 @@ te:
       discard: "విస్మరించండి"
       users_placeholder: "సభ్యులను లేదా సమూహాలను జోడించండి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
+      title_placeholder_redesign: "శీర్షిక"
       title_or_link_placeholder: "శీర్షికను టైప్ చేయండి లేదా లింక్‌ను ఇక్కడ అతికించండి"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       topic_featured_link_placeholder: "శీర్షికతో చూపబడిన లింక్‌ని నమోదు చేయండి."
@@ -2756,6 +2757,7 @@ te:
       sort:
         label: "క్రమబద్ధీకరించండి"
         top: "అగ్ర"
+        hot: "హాట్"
         new: "కొత్త"
       load_more_children:
         one: "మరో జవాబు ఉంది"
@@ -3898,7 +3900,6 @@ te:
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"
-      choose_for_topic: "ఐచ్ఛిక ట్యాగ్‌లు"
       choose_for_topic_required:
         one: "కనీసం %{count} ట్యాగ్ ని ఎంచుకోండి…"
         other: "కనీసం %{count} ట్యాగ్‌లను ఎంచుకోండి…"
@@ -6288,6 +6289,9 @@ te:
         alt: "అనుకూల ఎమోజి ప్రివ్యూ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
         settings: "అమరికలు"
+        export: "ఎగుమతి"
+        import_category:
+          new: "కొత్త"
       embedding:
         get_started: "మీరు మరొక వెబ్సైట్లో డిస్కోర్స్ పొందుపరచాలనుకుంటే, దాని హోస్ట్ను జోడించడం ద్వారా ప్రారంభించండి."
         delete: "తొలగించు"

@@ -2294,6 +2294,7 @@ hy:
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
       discard: "Ջնջել"
       title_placeholder: "Համառոտ մեկ նախադասությամբ ներկայացրեք թե ինչի՞ մասին է քննարկումը:"
+      title_placeholder_redesign: "Վերնագիր"
       title_or_link_placeholder: "Գրեք վերնագիրը կամ տեղադրեք հղումն այստեղ"
       edit_reason_placeholder: "Ո՞րն է խմբագրման պատճառը:"
       topic_featured_link_placeholder: "Մուտքագրել վերնագրի հետ ցուցադրվող հղում"
@@ -2634,6 +2635,7 @@ hy:
       sort:
         label: "Դասավորել ըստ"
         top: "Ամենահայտնի"
+        hot: "Թոփ"
         new: "Նոր"
       load_more_children:
         one: "%{count} պատասխան ևս"
@@ -3170,7 +3172,7 @@ hy:
     category:
       none: "(կատեգորիա չկա)"
       all: "Բոլոր կատեգորիաները"
-      choose: "կատեգորիա&hellip;"
+      choose: "Կատեգորիա&hellip;"
       edit: "Խմբագրել"
       edit_dialog_title: "Խմբագրել՝ %{categoryName}"
       view: "Դիտել Կատեգորիայի Թեմաները"
@@ -3587,7 +3589,6 @@ hy:
       selector_no_tags: "առանց պիտակների"
       selector_remove_filter: "հանել ֆիլտրը"
       tags: "Պիտակներ"
-      choose_for_topic: "ընտրովի պիտակներ"
       default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
@@ -5346,6 +5347,10 @@ hy:
         alt: "մասնավոր էմոջիի նախնական դիտում "
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել :%{name}: էմոջին:"
         settings: "Կարգավորումներ"
+        export: "Արտահանել"
+        import: "Ներմուծել"
+        import_category:
+          new: "Նոր"
       embedding:
         get_started: "Եթե Դուք ցանկանում եք զետեղել Discourse-ը մեկ այլ կայքում, սկսեք նրա հոսթի ավելացմամբ:"
         delete: "Ջնջել"

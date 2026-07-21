@@ -902,8 +902,6 @@ nl:
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
           google-gemini-3-1-pro: "Het intelligentste model van Google"
           google-gemini-3-flash: "Snel en kostenefficiënt met multimodale redenering"
-          open_ai-gpt-5-4: "Het vlaggenschipmodel van OpenAI. Het is zeer geschikt voor probleemoplossing in verschillende domeinen."
-          open_ai-gpt-5-4-nano: "Snelste en meest kostenefficiënte GPT-5-model"
           open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:

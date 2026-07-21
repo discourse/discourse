@@ -899,8 +899,6 @@ es:
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-3-1-pro: "El modelo de Google más inteligente"
           google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
-          open_ai-gpt-5-4: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
-          open_ai-gpt-5-4-nano: "El modelo GPT-5 más rápido y rentable"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:

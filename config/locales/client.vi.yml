@@ -2751,6 +2751,7 @@ vi:
       draft_saved: "Đã lưu bản nháp!"
       users_placeholder: "Thêm người dùng hoặc nhóm"
       title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
+      title_placeholder_redesign: "Tiêu đề"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
       edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
@@ -3322,6 +3323,7 @@ vi:
       sort:
         label: "Sắp xếp theo"
         top: "Top"
+        hot: "Nổi bật"
         new: "Chủ đề mới"
       load_more_children:
         other: "còn %{count} câu trả lời"
@@ -4026,7 +4028,7 @@ vi:
     category:
       none: "(chưa có chuyên mục)"
       all: "Tất cả chuyên mục"
-      choose: "chuyênmục&hellip;"
+      choose: "Chuyênmục&hellip;"
       edit: "Sửa"
       edit_title: "Sửa chuyên mục này"
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
@@ -4606,7 +4608,6 @@ vi:
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ điều kiện lọc"
       tags: "Thẻ"
-      choose_for_topic: "Tùy chọn thẻ"
       choose_for_topic_required:
         other: "chọn ít nhất %{count} thẻ…"
       choose_for_topic_required_group:
@@ -8020,6 +8021,10 @@ vi:
         alt: "xem trước biểu tượng cảm xúc tùy chỉnh"
         delete_confirm: "Bạn có chắc chắn muốn xóa emoji :%{name}:?"
         settings: "Cài đặt"
+        export: "Xuất"
+        import: "Nhập"
+        import_category:
+          new: "Chủ đề mới"
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         delete: "Xóa"

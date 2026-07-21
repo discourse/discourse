@@ -2540,6 +2540,7 @@ zh_TW:
       discard: "捨棄"
       users_placeholder: "新增使用者或群組"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
+      title_placeholder_redesign: "標題"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
       topic_featured_link_placeholder: "在標題裡輸入連結"
@@ -3037,6 +3038,7 @@ zh_TW:
       sort:
         label: "排序"
         top: "精選"
+        hot: "熱門"
         new: "新使用者"
       load_more_children:
         other: "%{count} 個更多回覆"
@@ -4202,7 +4204,6 @@ zh_TW:
       selector_no_tags: "無標記"
       selector_remove_filter: "取消過濾"
       tags: "標記"
-      choose_for_topic: "可選標籤"
       choose_for_topic_required:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
@@ -7131,6 +7132,10 @@ zh_TW:
         alt: "自訂表情符號預覽"
         delete_confirm: "你確定要刪除 :%{name}: emoji ?"
         settings: "設定"
+        export: "匯出"
+        import: "匯入"
+        import_category:
+          new: "新使用者"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         delete: "刪除"

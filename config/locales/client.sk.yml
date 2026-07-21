@@ -2971,6 +2971,7 @@ sk:
       discard: "Zahodiť"
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
+      title_placeholder_redesign: "Názov"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
       edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
@@ -3599,6 +3600,7 @@ sk:
       sort:
         label: "Zoradiť podľa"
         top: "Najlepšie"
+        hot: "Horúce"
         new: "Nový"
       load_more_children:
         one: "%{count} ďalšia odpoveď"
@@ -4404,7 +4406,7 @@ sk:
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
-      choose: "kategória&hellip;"
+      choose: "Kategória&hellip;"
       edit: "Upraviť"
       edit_title: "Upraviť túto kategóriu"
       edit_dialog_title: "Úprava: %{categoryName}"
@@ -5002,7 +5004,6 @@ sk:
       selector_no_tags: "žiadne značky"
       selector_remove_filter: "zruš filter"
       tags: "Značky"
-      choose_for_topic: "voliteľné značky"
       choose_for_topic_required:
         one: "vyberte aspoň %{count} značku…"
         few: "vyberte aspoň %{count} značiek…"
@@ -8381,6 +8382,10 @@ sk:
         alt: "náhľad vlastných emoji"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"
         settings: "Nastavenia"
+        export: "Exportovať"
+        import: "Import"
+        import_category:
+          new: "Nový"
       embedding:
         get_started: "Pokiaľ chcete vložiť Discourse na inú stránku, začnite pridaním jej hostiteľa."
         delete: "Odstrániť"

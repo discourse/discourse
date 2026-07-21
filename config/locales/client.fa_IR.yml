@@ -2617,6 +2617,7 @@ fa_IR:
       discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
+      title_placeholder_redesign: "عنوان"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
@@ -3142,6 +3143,7 @@ fa_IR:
       sort:
         label: "مرتب‌سازی بر اساس"
         top: "برترین‌ها"
+        hot: "داغ"
         new: "جدید"
       load_more_children:
         one: "%{count} پاسخ دیگر"
@@ -4378,7 +4380,6 @@ fa_IR:
       selector_no_tags: "بدون برچسب"
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
-      choose_for_topic: "برچسب‌های اختیاری"
       choose_for_topic_required:
         one: "برچسب انتخاب کنید... %{count} حداقل"
         other: "برچسب انتخاب کنید... %{count} حداقل"
@@ -7173,6 +7174,10 @@ fa_IR:
         alt: "پیش نمایش ایموجی سفارشی"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
         settings: "تنظیمات"
+        export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
+        import_category:
+          new: "جدید"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         delete: "حذف"

@@ -2797,6 +2797,7 @@ fi:
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
+      title_placeholder_redesign: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -3363,6 +3364,7 @@ fi:
       sort:
         label: "Järjestys"
         top: "Suositut"
+        hot: "Liekeissä"
         new: "Uudet"
       load_more_children:
         one: "%{count} muu kommentti"
@@ -4081,7 +4083,7 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "alue&hellip;"
+      choose: "Alue&hellip;"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
@@ -4636,7 +4638,6 @@ fi:
       selector_no_tags: "ei tunnisteita"
       selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"
-      choose_for_topic: "valinnaiset tunnisteet"
       choose_for_topic_required:
         one: "valitse ainakin %{count} tunniste…"
         other: "valitse ainakin %{count} tunnistetta…"
@@ -7915,6 +7916,10 @@ fi:
         alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
         settings: "Asetukset"
+        export: "Vie"
+        import: "Tuo"
+        import_category:
+          new: "Uudet"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         delete: "Poista"

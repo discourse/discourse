@@ -1502,6 +1502,7 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
+      title_placeholder_redesign: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -2480,7 +2481,6 @@ th:
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
-      choose_for_topic: "แท็กทางเลือก"
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
@@ -3581,6 +3581,9 @@ th:
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"
+        export: "ส่งออก"
+        import_category:
+          new: "ใหม่"
       embedding:
         delete: "ลบ"
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"

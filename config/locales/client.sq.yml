@@ -2523,6 +2523,7 @@ sq:
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
+      title_placeholder_redesign: "Titulli"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
@@ -5039,6 +5040,10 @@ sq:
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"
+        export: "Eksporto"
+        import: "Importo"
+        import_category:
+          new: "I Ri"
       embedding:
         delete: "Fshij"
         title: "Embedding"

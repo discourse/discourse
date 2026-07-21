@@ -1744,7 +1744,7 @@ fr:
     polling_interval: "À quelle fréquence les clients connectés devraient-ils interroger le serveur, en millisecondes (sans utiliser les requêtes longues)"
     anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils envoyer une requête au serveur, en millisecondes"
     background_polling_interval: "À quelle fréquence les clients doivent-ils envoyer une requête au serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
-    hide_post_sensitivity: "La probabilité qu'un message marqué soit masqué"
+    hide_post_sensitivity: "La probabilité qu'un message signalé soit masqué"
     silence_new_user_sensitivity: "La probabilité qu'un nouvel utilisateur soit mis en sourdine en fonction des signalements de contenu indésirable"
     auto_close_topic_sensitivity: "La probabilité qu'un sujet signalé soit automatiquement fermé"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
@@ -1760,7 +1760,7 @@ fr:
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis en sourdine, envoyer un message à tous les modérateurs."
-    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que l'utilisateur qui a commencé le sujet, leurs publications seront automatiquement marquées comme contenu indésirable."
+    flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que l'utilisateur qui a commencé le sujet, leurs publications seront automatiquement signalées comme contenu indésirable."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     enable_markdown_typographer: "Utilisez les règles de typographie pour améliorer la lisibilité du texte : remplacez les guillemets droits « par des chevrons », (tm) par un symbole, -- par un emdash —, etc."
     enable_markdown_linkify: "Traiter automatiquement le texte qui ressemble à un lien comme un lien : www.site.com et https://site.com seront automatiquement liés."
@@ -2136,7 +2136,7 @@ fr:
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Autoriser les utilisateurs à publier de nouveaux sujets par e-mail. Après avoir activé ce paramètre, vous pourrez configurer les adresses e-mail entrantes pour les groupes et les catégories."
     email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail. Les administrateurs et les modérateurs peuvent toujours publier de nouveaux sujets par e-mail."
-    email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est marqué comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
+    email_in_spam_header: "Sélectionne l'en-tête d'e-mail spécifique à utiliser pour identifier le courrier indésirable. Cette option peut être X-Spam-Flag, X-Spam-Status ou X-SES-Spam-Verdict, et l'e-mail est signalé comme spam en fonction de la valeur de l'en-tête. Par exemple, si le paramètre choisi est X-Spam-Flag, un e-mail dont la valeur d'en-tête est définie sur OUI sera classé comme courrier indésirable."
     enable_smtp: "Activer SMTP pour l'envoi de notifications concernant les messages de groupe."
     find_related_post_with_key: "N'utiliser que la « reply key » pour trouver le message auquel on a répondu. ATTENTION : la désactivation de cette option permet l'usurpation d'identité de l'utilisateur sur la base de l'adresse e-mail."
     minimum_topics_similar: "Combien de sujets ont besoin d'exister dans la base de données avant que des sujets similaires soient présentés lors de la rédaction de nouveaux sujets."
@@ -3364,7 +3364,7 @@ fr:
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre e-mail à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
-        Votre e-mail a été marqué comme « généré automatiquement », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain ; nous ne pouvons pas accepter ce type d'e-mail. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
+        Votre e-mail a été signalé comme « généré automatiquement », ce qui signifie qu'il a été créé par un ordinateur au lieu d'être rédigé par un humain. Nous ne pouvons pas accepter ce type d'e-mail. Si vous pensez qu'il s'agit d'une erreur, [contactez un responsable](%{base_url}/about).
     email_reject_unrecognized_error:
       title: "E-mail rejeté - Erreur inconnue"
       subject_template: "[%{email_prefix}] Problème d'e-mail - Erreur inconnue"

@@ -50,6 +50,7 @@ zh_CN:
     prioritize_solved_topics_in_search: "在搜索结果中优先显示已解决的话题。"
     enable_support_category_type_setup: "在创建类别设置期间启用“支持”类别类型选项。"
     enable_solved_shared_issues: "在支持类别中未解决的主题中添加“我也是”按钮，让成员表明他们遇到了同样的问题，并选择接收有关该主题解决方案的通知。"
+    enable_solved_badges: "启用“已解决”徽章，当用户为其他用户的问题提供解决方案时，即可获得该徽章。"
     show_who_marked_solved: "显示谁将该话题标记为已解决。它会在该话题的第一个帖子以及工具提示中的回答帖子中显示。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

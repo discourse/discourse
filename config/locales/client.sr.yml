@@ -1835,6 +1835,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2642,7 +2643,6 @@ sr:
       download: "Preuzmi"
     tagging:
       selector_remove_filter: "uklonite filter"
-      choose_for_topic: "opcione oznake"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
       description: "Opis"
@@ -3847,6 +3847,9 @@ sr:
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         delete: "Obriši"
         title: "Ugrađivanje"

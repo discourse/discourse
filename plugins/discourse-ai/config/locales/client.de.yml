@@ -902,8 +902,6 @@ de:
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-1-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-4: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-4-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
           open_router-moonshotai-kimi-k2-6: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:

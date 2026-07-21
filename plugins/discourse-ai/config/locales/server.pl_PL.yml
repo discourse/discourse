@@ -1044,6 +1044,7 @@ pl_PL:
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       invalid_provider_param: "%{param} ma nieprawidłowy format"
+      reasoning_mode_requirements: "Tryb rozumowania w wersji Pro wymaga interfejsu API Responses"
       secret_required: "Należy wybrać poświadczenie"
       secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
