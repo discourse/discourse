@@ -1,0 +1,18 @@
+.d-virtual-list {
+  // This element IS the scroll viewport the virtualizer measures and drives, so
+  // it must scroll and must establish the containing block for the translated
+  // window. Height belongs to the consumer: the virtualizer computes an empty
+  // window from a zero-height element, and silently renders nothing.
+  position: relative;
+  overflow-y: auto;
+
+  // The window and spacer are approximate-height placeholders, so the browser
+  // must not pick them as scroll anchors — its correction would fight the
+  // virtualizer's own scroll compensation and produce a jump.
+  overflow-anchor: none;
+
+  // No padding or border on this element: `scrollEndThreshold` is compared in
+  // two different coordinate spaces (DOM scrollHeight vs the engine's measured
+  // total), and box spacing here offsets one from the other permanently. Put
+  // spacing on `.d-virtual-list__item` instead.
+}

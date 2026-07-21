@@ -131,6 +131,7 @@
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
     "@types/sinon": "^21.0.1",
+    "@tanstack/virtual-core": "3.17.5",
     "@uppy/aws-s3": "^5.1.0",
     "@uppy/core": "^5.2.0",
     "@uppy/drop-target": "^4.1.0",
