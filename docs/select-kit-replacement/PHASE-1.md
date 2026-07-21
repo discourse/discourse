@@ -219,6 +219,33 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     adopts `DVirtualList` (`scrollToIndex` handles any index); a selection at 50–199 is reachable
     by scrolling today, so no prefix-window stopgap was built. The server half is not solvable by
     rendering at all — it needs a locate-by-value contract from the source.
+- ☑ **`DVirtualList` folded into this branch** (Decision 5 reversed on the record in the RFC).
+  The windowing primitive, its bridge modifier, the library wall over `@tanstack/virtual-core`
+  (pinned `3.17.5`), its SCSS, both test suites and a 10k-row styleguide demo now live here, so
+  the two engines can be shaped against each other. Nothing is wired to `DSelect` yet.
+  - ☐ **Wire DSelect to the primitive.** `@items` = the accumulated array, `@role="listbox"`,
+    `@itemRole="option"`. Collides with `#describeList`'s own `posInSet`/`setSize` stamping —
+    the primitive's row wrapper owns those once wired, and only a position-aware `@itemRole`
+    stamps them, so the ownership boundary needs settling rather than assuming. `MAX_RENDERED`
+    stops being necessary at that point.
+  - ☐ **Roving focus over a moving window** — the blocker. `dRovingFocus` re-queries
+    `querySelectorAll("[role=option]")` and assumes every navigable option is mounted, which is
+    false once the window moves. An await-based shape was already rejected upstream (six
+    verified defects) in favour of flag-and-reconcile at `#reconcileActive` — the same seam the
+    selected-option restoration uses. Do not rediscover that.
+  - ☐ **Edge-triggered fetching.** The primitive ships no load-more affordance, so the
+    `DLoadMore` sentinel is replaced by comparing the visible range against the row count.
+    `onVisibleRangeChange` fires on any state change, not only range changes, so it needs
+    dedup and a per-edge latch with mount suppression.
+  - ☐ **Primitive defects carried over, none blocking:** the API handle pins the items array on
+    teardown, fractional/negative `@overscan` throws, the render-all fallback still measures
+    every row, `onVisibleRangeChange` over-fires, and symbol-keyed items are held strongly.
+  - ☐ **Engine path unification** (analysis done, not implemented). `this.#load` is branched on
+    at eight sites, each a parallel implementation of accumulate / window / count / exhaustion —
+    against the RFC's async-first intent, where the client case is "the same loader, not a
+    separate path". Two standalone bugs fell out: a server source refetches a value already in
+    its accumulator because the resolve ladder's known-rows rung is client-only, and `reveal`
+    sits inside the load key so a reveal reads as a full re-identification of the query.
   - ☐ **`Home`/`End`.** Optional per APG, and reserved for the text caret in an editable
     combobox, so they suit the static variant only. `End` under a bounded window would land on
     the last rendered row rather than the last of the set; settle with the item above.

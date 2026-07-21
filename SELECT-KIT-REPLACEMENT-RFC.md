@@ -381,6 +381,26 @@ complete 5k **client** list — so this must be designed in from the start. Appr
 | **B. Bounded reveal** (recommended) | render a capped prefix (internal chunk; server page size auto-detected); reveal more via the SAME `DLoadMore` sentinel up to a hard `MAX_RENDERED` cap, then "filter to narrow" — server fetches the next page, a sync source slices the next chunk (no network); filtering re-slices | reuses `DLoadMore` + `d-observe-intersection`; **bounded DOM**; `dRovingFocus`/keyboard/ARIA work **unchanged** (every option is a real node); matches select-kit's idiomatic "server `limit` + filter-for-more"; trivial perf (slice + ~100 rows); unifies sync + async | can't scroll all 5k continuously — must reveal-more or (the intended path) filter |
 | **C. Hybrid** | ship B now; keep A behind the same seam for a future browse-all need | safe one-way door | — |
 
+> **SUPERSEDED (2026-07-21) — virtualization is adopted after all.** The reasoning below
+> stands as written for the case it was decided on, and one of its own conditions came true:
+> it left virtualization "a future drop-in if a genuine browse-the-whole-list case ever
+> appears", and that case appeared. A bounded prefix cannot reach a selection deep in a large
+> set — a value at index 3000 of 5000 is not merely unfocused but *unreachable by any amount
+> of scrolling*, because the cap stops at 200. That defect was deferred twice before being
+> traced to this decision rather than to an implementation gap.
+>
+> What changes: the invariant is no longer "every rendered option is a real DOM node" but
+> **every *mounted* option is a real DOM node**. The `DVirtualList` primitive owns the render
+> window, row measurement, and per-row position ARIA; the engine owns the row set and its
+> totals. Reason (1) below is the cost now being paid deliberately — `dRovingFocus`
+> enumerates options from the DOM and assumes all are mounted, which is false over a moving
+> window, so the keyboard layer needs the windowing-aware work this decision was written to
+> avoid. Reasons (2)–(5) are simply overtaken: the primitive now exists in core, so
+> virtualization is no longer net-new.
+>
+> This reversal is deliberate and was not folded in quietly: the original was deep-planned
+> with four adversarial lenses, and reversing it is a plan-level call recorded here.
+
 **Recommendation: B, framed as C.** Bounded reveal is the shipped model; the seam
 (and `aria-setsize`/`aria-posinset` from day one) leaves virtualization a future
 drop-in if a genuine browse-the-whole-list case ever appears. Reasons: (1) **preserves

@@ -27,6 +27,7 @@ import tooltips from "../components/sections/molecules/tooltips";
 import topicListItem from "../components/sections/molecules/topic-list-item";
 import topicNotifications from "../components/sections/molecules/topic-notifications";
 import topicTimerInfo from "../components/sections/molecules/topic-timer-info";
+import virtualList from "../components/sections/molecules/virtual-list";
 import post from "../components/sections/organisms/00-post";
 import postList from "../components/sections/organisms/01-post-list";
 import postOneboxes from "../components/sections/organisms/02-post-oneboxes";
@@ -95,6 +96,7 @@ const SECTIONS = [
     id: "topic-notifications",
   },
   { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
+  { component: virtualList, category: "molecules", id: "virtual-list" },
   { component: post, category: "organisms", id: "post", priority: 0 },
   { component: postList, category: "organisms", id: "post-list", priority: 1 },
   {
