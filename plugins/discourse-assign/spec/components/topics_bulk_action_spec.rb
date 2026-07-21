@@ -76,6 +76,20 @@ describe TopicsBulkAction do
       )
     end
 
+    it "does not report topics already assigned to the same assignee" do
+      Assigner.new(post.topic, user).assign(user)
+
+      action =
+        TopicsBulkAction.new(
+          user,
+          [post.topic.id, post1.topic.id],
+          { type: "assign", username: user.username },
+        )
+
+      expect(action.perform!).to contain_exactly(post.topic.id, post1.topic.id)
+      expect(action.errors).to be_empty
+    end
+
     it "skips topics the acting user cannot see" do
       secret_topic =
         Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))

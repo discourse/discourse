@@ -728,7 +728,7 @@ after_initialize do
           note: @operation[:note].presence,
         )
 
-      if result[:success]
+      if result[:success] || %i[already_assigned group_already_assigned].include?(result[:reason])
         @changed_ids << topic.id
       else
         @errors[Assigner.failure_message(result[:reason], assign_to)] += 1

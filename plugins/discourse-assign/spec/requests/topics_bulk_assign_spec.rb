@@ -88,15 +88,34 @@ RSpec.describe TopicsController do
     end
 
     it "returns the per-topic failures alongside the topics that succeeded" do
+      add_to_assign_allowed_group(allowed_user)
+      private_group = Fabricate(:group, users: [actor])
+      hidden_topic = Fabricate(:topic, category: Fabricate(:private_category, group: private_group))
+
+      bulk_assign(
+        { type: "assign", username: allowed_user.username },
+        ids: [hidden_topic.id, topic2.id],
+      )
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(topic2.id)
+      expect(response.parsed_body["errors"]).to eq(
+        I18n.t(
+          "discourse_assign.forbidden_assignee_cant_see_topic",
+          username: allowed_user.username,
+        ) =>
+          1,
+      )
+    end
+
+    it "reports the topics already assigned to the same assignee as succeeded" do
       Assigner.new(topic1, actor).assign(assign_allowed_group)
 
       bulk_assign({ type: "assign", group_name: assign_allowed_group.name })
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["topic_ids"]).to contain_exactly(topic2.id)
-      expect(response.parsed_body["errors"]).to eq(
-        I18n.t("discourse_assign.group_already_assigned", group: assign_allowed_group.name) => 1,
-      )
+      expect(response.parsed_body["topic_ids"]).to contain_exactly(topic1.id, topic2.id)
+      expect(response.parsed_body["errors"]).to be_blank
     end
 
     it "keeps assigning the rest of the selection when a PM invite is refused" do
