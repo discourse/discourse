@@ -103,8 +103,8 @@ module PageObjects
           options.size
         end
 
-        # Whether the reveal sentinel is mounted. It disappears once the source is exhausted
-        # or the render cap is reached.
+        # Whether the reveal sentinel is mounted. It disappears once the source stops offering
+        # more — which a source does by saying so, or by saying nothing — or the cap is reached.
         def sentinel?
           page.has_css?("[role='listbox'] .d-combobox__sentinel", wait: 0)
         end
