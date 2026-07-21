@@ -551,6 +551,22 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq('x [quote="Ghost User, username:ghost"] y')
     end
 
+    it "omits the username: part when the name equals the username" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_user_id: 5,
+        quoted_username: "ghost",
+        quoted_name: "ghost",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="ghost"] y')
+    end
+
     it "renders a bare [quote] when nothing identifies the quoted author" do
       quote = placeholder.mint(:quote)
       Migrations::Database::IntermediateDB::EmbedQuote.create(

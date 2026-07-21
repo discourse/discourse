@@ -17,24 +17,30 @@ module Migrations
               match = match_at(OPENING, input, pos)
               return nil unless match
 
-              username, post_number, topic_id = parse_attribution(match[:attribution])
+              username, name, post_number, topic_id = parse_attribution(match[:attribution])
               return nil if username.nil?
 
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
-                node: QuoteAttribution.new(username:, post_number:, topic_id:),
+                node: QuoteAttribution.new(username:, name:, post_number:, topic_id:),
               )
             end
 
             private
 
-            # The username is the explicit `username:` value when present (Discourse
-            # uses it when the display name differs), else the leading bare token.
-            # `post:`/`topic:` are the source's own post number and topic id; keep
-            # them as integers so the importer can look up the quoted post by them.
+            # Splits a Discourse attribution into username, display name, and the
+            # source coordinates. `post:`/`topic:` are the source's own post number
+            # and topic id; keep them as integers so the importer can look up the
+            # quoted post by them.
+            #
+            # With an explicit `username:` part, that is the username and the leading
+            # bare token is the display name (kept only when it differs). Without one,
+            # the leading token IS the username: Discourse omits `username:` exactly
+            # when the display name equals the username, so a lone token is not a
+            # distinct name.
             def parse_attribution(string)
-              username = name = nil
+              explicit_username = name = nil
               post_number = topic_id = nil
 
               string
@@ -50,13 +56,18 @@ module Migrations
                   when /\Atopic:(\d{1,18})\z/
                     topic_id = Regexp.last_match(1).to_i
                   when /\Ausername:(.+)\z/
-                    username = Regexp.last_match(1)
+                    explicit_username = Regexp.last_match(1)
                   else
                     name = part if index.zero? && !part.empty?
                   end
                 end
 
-              [username || name, post_number, topic_id]
+              if explicit_username
+                display_name = name if name && name != explicit_username
+                [explicit_username, display_name, post_number, topic_id]
+              else
+                [name, nil, post_number, topic_id]
+              end
             end
           end
         end

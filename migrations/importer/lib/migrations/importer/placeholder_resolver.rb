@@ -503,7 +503,7 @@ module Migrations
         parts << (name.presence || username)
         parts << "post:#{post_number}" if post_number.present?
         parts << "topic:#{topic_id}" if topic_id.present?
-        parts << "username:#{username}" if username.present? && name.present?
+        parts << "username:#{username}" if username.present? && name.present? && name != username
 
         "[quote=\"#{parts.join(", ")}\"]"
       end
