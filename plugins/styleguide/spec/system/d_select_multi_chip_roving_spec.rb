@@ -12,13 +12,17 @@
 describe "UiKit | DSelect multi-select chip roving" do
   fab!(:admin)
 
-  let(:combobox) { PageObjects::Components::UiKit::DSelect.new(".d-combobox__trigger.--multiple") }
+  let(:combobox) do
+    PageObjects::Components::UiKit::DSelect.new(
+      ".select-examples__multi .d-combobox__trigger.--multiple",
+    )
+  end
 
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
     visit "/styleguide/molecules/select"
-    expect(page).to have_css(".d-combobox__trigger.--multiple")
+    expect(page).to have_css(".select-examples__multi .d-combobox__trigger.--multiple")
   end
 
   # Seeds three chips (Orange, Blue, Red) via the typeahead, leaving focus in the input.

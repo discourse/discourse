@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "../../styleguide-example";
+import SelectShowcases from "./select-showcases";
 
 function delay(signal, milliseconds = 750) {
   return new Promise((resolve, reject) => {
@@ -426,7 +427,7 @@ export default class Select extends Component {
       @title={{i18n "styleguide.sections.select.default_example"}}
       @code={{this.defaultCode}}
     >
-      <div class="select-examples__control">
+      <div class="select-examples__control select-examples__default">
         <DSelect
           @items={{this.items}}
           @value={{this.defaultValue}}
@@ -476,7 +477,7 @@ export default class Select extends Component {
       @title={{i18n "styleguide.sections.select.multi_example"}}
       @code={{this.multiCode}}
     >
-      <div class="select-examples__control">
+      <div class="select-examples__control select-examples__multi">
         <DSelect
           @items={{this.items}}
           @multiple={{true}}
@@ -795,5 +796,7 @@ export default class Select extends Component {
         </DSelect>
       </div>
     </StyleguideExample>
+
+    <SelectShowcases @categories={{@dummy.categories}} />
   </template>
 }
