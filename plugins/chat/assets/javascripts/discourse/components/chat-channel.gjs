@@ -350,6 +350,13 @@ export default class ChatChannel extends Component {
     const messages = [];
     let foundFirstNew = false;
 
+    const hiddenMessageIds = new Set(
+      (this.args.hiddenMessageIds ?? []).map(Number)
+    );
+    const messagesData = (result?.messages ?? []).filter(
+      (messageData) => !hiddenMessageIds.has(messageData.id)
+    );
+
     // Only compute the newest message marker on a full load.
     // In an already loaded list we need to preserve the "last visit" line.
     const hasNewest = this.messagesManager.messages.some(
@@ -359,7 +366,7 @@ export default class ChatChannel extends Component {
       channel.newestMessage = null;
     }
 
-    result?.messages?.forEach((messageData, index) => {
+    messagesData.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
       if (this.currentUser?.ignored_users) {
@@ -828,7 +835,7 @@ export default class ChatChannel extends Component {
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
-          <ChatChannelPreviewCard @channel={{@channel}} />
+          <ChatChannelPreviewCard @channel={{@channel}} @context={{@context}} />
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}

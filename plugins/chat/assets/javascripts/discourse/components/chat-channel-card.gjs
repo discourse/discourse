@@ -1,6 +1,8 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
@@ -48,24 +50,30 @@ export default <template>
       </div>
 
       <div class="chat-channel-card__cta">
-        {{#if @channel.isFollowing}}
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash
-              leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
-              labelType="short"
-            }}
-          />
+        <PluginOutlet
+          @name="chat-channel-card-cta"
+          @outletArgs={{lazyHash channel=@channel}}
+          @defaultGlimmer={{true}}
+        >
+          {{#if @channel.isFollowing}}
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash
+                leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
+                labelType="short"
+              }}
+            />
 
-        {{else if @channel.isJoinable}}
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash
-              joinClass="btn-primary btn-small chat-channel-card__join-btn"
-              labelType="short"
-            }}
-          />
-        {{/if}}
+          {{else if @channel.isJoinable}}
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash
+                joinClass="btn-primary btn-small chat-channel-card__join-btn"
+                labelType="short"
+              }}
+            />
+          {{/if}}
+        </PluginOutlet>
       </div>
 
       {{#if (gt @channel.membershipsCount 0)}}

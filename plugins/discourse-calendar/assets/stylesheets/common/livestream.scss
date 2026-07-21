@@ -29,6 +29,12 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
+.livestream-rsvp__going-button {
+  @container (width < 40rem) {
+    width: 100%;
+  }
+}
+
 .discourse-calendar-livestream-zoom-entry-container {
   margin-top: 1rem;
 }
@@ -133,28 +139,6 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     right: 1rem;
     bottom: 4rem;
     z-index: 3;
-  }
-}
-
-body.chat-enabled.livestream-topic,
-body.chat-enabled.websdk-body {
-  .chat-channel-preview-card {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    .chat-channel__placeholder {
-      display: none;
-    }
-  }
-}
-
-.livestream-join-channel-message {
-  text-align: center;
-  margin-top: 1rem;
-
-  h2 {
-    margin-bottom: 0.5rem;
   }
 }
 
