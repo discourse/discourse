@@ -8824,6 +8824,39 @@ ALTER SEQUENCE public.sidebar_section_links_id_seq OWNED BY public.sidebar_secti
 
 
 --
+-- Name: sidebar_section_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sidebar_section_localizations (
+    id bigint NOT NULL,
+    sidebar_section_id bigint NOT NULL,
+    locale character varying(20) NOT NULL,
+    title character varying(30) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sidebar_section_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sidebar_section_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sidebar_section_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sidebar_section_localizations_id_seq OWNED BY public.sidebar_section_localizations.id;
+
+
+--
 -- Name: sidebar_sections; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8834,7 +8867,8 @@ CREATE TABLE public.sidebar_sections (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     public boolean DEFAULT false NOT NULL,
-    section_type integer
+    section_type integer,
+    locale character varying(20)
 );
 
 
@@ -8858,6 +8892,39 @@ ALTER SEQUENCE public.sidebar_sections_id_seq OWNED BY public.sidebar_sections.i
 
 
 --
+-- Name: sidebar_url_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sidebar_url_localizations (
+    id bigint NOT NULL,
+    sidebar_url_id bigint NOT NULL,
+    locale character varying(20) NOT NULL,
+    name character varying(80) NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sidebar_url_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sidebar_url_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sidebar_url_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sidebar_url_localizations_id_seq OWNED BY public.sidebar_url_localizations.id;
+
+
+--
 -- Name: sidebar_urls; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8869,7 +8936,8 @@ CREATE TABLE public.sidebar_urls (
     updated_at timestamp(6) without time zone NOT NULL,
     icon character varying(40) NOT NULL,
     external boolean DEFAULT false NOT NULL,
-    segment integer DEFAULT 0 NOT NULL
+    segment integer DEFAULT 0 NOT NULL,
+    locale character varying(20)
 );
 
 
@@ -13863,10 +13931,24 @@ ALTER TABLE ONLY public.sidebar_section_links ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: sidebar_section_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_section_localizations ALTER COLUMN id SET DEFAULT nextval('public.sidebar_section_localizations_id_seq'::regclass);
+
+
+--
 -- Name: sidebar_sections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sidebar_sections ALTER COLUMN id SET DEFAULT nextval('public.sidebar_sections_id_seq'::regclass);
+
+
+--
+-- Name: sidebar_url_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_url_localizations ALTER COLUMN id SET DEFAULT nextval('public.sidebar_url_localizations_id_seq'::regclass);
 
 
 --
@@ -16341,11 +16423,27 @@ ALTER TABLE ONLY public.sidebar_section_links
 
 
 --
+-- Name: sidebar_section_localizations sidebar_section_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_section_localizations
+    ADD CONSTRAINT sidebar_section_localizations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: sidebar_sections sidebar_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sidebar_sections
     ADD CONSTRAINT sidebar_sections_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sidebar_url_localizations sidebar_url_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sidebar_url_localizations
+    ADD CONSTRAINT sidebar_url_localizations_pkey PRIMARY KEY (id);
 
 
 --
@@ -17685,6 +17783,13 @@ CREATE INDEX idx_notifications_speedup_unread_count ON public.notifications USIN
 --
 
 CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_feature_credit_costs USING btree (llm_model_id, feature_name);
+
+
+--
+-- Name: idx_on_sidebar_section_id_locale_271bd8ee1c; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_sidebar_section_id_locale_271bd8ee1c ON public.sidebar_section_localizations USING btree (sidebar_section_id, locale);
 
 
 --
@@ -20894,6 +20999,13 @@ CREATE INDEX index_sidebar_section_links_on_linkable_type_and_linkable_id ON pub
 
 
 --
+-- Name: index_sidebar_section_localizations_on_sidebar_section_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sidebar_section_localizations_on_sidebar_section_id ON public.sidebar_section_localizations USING btree (sidebar_section_id);
+
+
+--
 -- Name: index_sidebar_sections_on_section_type; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20905,6 +21017,20 @@ CREATE UNIQUE INDEX index_sidebar_sections_on_section_type ON public.sidebar_sec
 --
 
 CREATE UNIQUE INDEX index_sidebar_sections_on_user_id_and_title ON public.sidebar_sections USING btree (user_id, title);
+
+
+--
+-- Name: index_sidebar_url_localizations_on_sidebar_url_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sidebar_url_localizations_on_sidebar_url_id ON public.sidebar_url_localizations USING btree (sidebar_url_id);
+
+
+--
+-- Name: index_sidebar_url_localizations_on_sidebar_url_id_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sidebar_url_localizations_on_sidebar_url_id_and_locale ON public.sidebar_url_localizations USING btree (sidebar_url_id, locale);
 
 
 --
@@ -22704,6 +22830,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260715202231'),
 ('20260715183411'),
 ('20260715134306'),
+('20260715113008'),
 ('20260715090434'),
 ('20260715090355'),
 ('20260715064155'),

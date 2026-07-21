@@ -6211,7 +6211,16 @@ en:
           public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
+          localizations:
+            title: "Translations"
+            locale: "Language"
+            title_label: "Section title"
+            link_label: "Link name"
+            add_section: "Add section title translation"
+            add_link: "Add link name translation"
+            remove: "Remove translation"
           links:
+            title: "Section links"
             add: "Add another link"
             delete: "Delete link"
             reset: "Reset to default"
