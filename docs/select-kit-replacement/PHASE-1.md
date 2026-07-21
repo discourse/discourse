@@ -189,10 +189,36 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     is also why a derived total describes the *navigable* set rather than the source's true count.
   - ☐ **`atCapWithMore` phrasing under truncation.** "Keep typing to narrow the results" is sound
     for a client cap; for a server-truncated set, typing may not help.
-  - ☐ **Selected option unreachable on open.** Opening with a selection past the window starts
-    at option 1; `dRovingFocus` only ever activates the first option, and the selected row is
-    not rendered. Pre-existing, but windowing removes the ability to reach it at all. APG
-    expects the selected option active and scrolled into view.
+  - ☐ **`itemsKey` is conditional** (`d-select.gts`): non-typeahead variants key roving-focus
+    reconciliation on the filter, so appended server pages never re-run `modify()`. Latent; the
+    first run always sees real rows because the loading block is a separate list without the
+    modifier.
+  - ☐ **`selectKit.triggerSearch()` missing from the compat bridge.** The facade exposes only
+    `value`/`filter`/`isLoading`/`close`/`select`/`set`, but at least one plugin calls
+    `triggerSearch()`. It will throw once `mini-tag-chooser` moves to `DSelect`.
+  - ☐ **Flaky: "resets the window when the query changes"** (`d_select_bounded_reveal_spec.rb`,
+    client path, pre-existing). Observed failing once with 100 options where it asserts 50, then
+    passing 3/3 isolated and 2/2 paired. After a filter reset the sentinel can already be within
+    the observer's 200px root margin, so a client reveal — which needs no network — fires before
+    the assertion runs. Waiting for a stable count rather than an immediate one would mask a real
+    regression just as well, so the fix is probably to assert the reset synchronously (the window
+    is one chunk at the moment the filter changes) rather than after the DOM settles.
+  - ☑ **Selected option active on open.** `dRovingFocus` gained `autoActivateSelected`, giving
+    active mode the `aria-selected` preference `#seedTabStop` already had in focus mode, so a
+    rendered selection is activated and scrolled to (restoring what select-kit's `_scrollToCurrent`
+    did). It outranks `autoActivateFirst`, so `button` restores too; it is off while filtering
+    (the first match is what Enter should take) and off for `multiple`, where activating a
+    selected row would make Enter call `deselect` and silently drop a value. Re-picking the
+    current value now closes without emitting a change — otherwise the restored cursor made Enter
+    inert — which also fixed the pointer case where clicking the selected row did nothing.
+    `#requestClose` is gated on the overlay actually being open, since `DMenuInstance.close`
+    focuses the trigger by default and the compat bridge lets consumers call `select()` long
+    after dismissing the overlay.
+  - ☐ **Selection outside the render window.** Still unreachable: a client selection past
+    `MAX_RENDERED`, or a server selection in no fetched page. Close the client half when DSelect
+    adopts `DVirtualList` (`scrollToIndex` handles any index); a selection at 50–199 is reachable
+    by scrolling today, so no prefix-window stopgap was built. The server half is not solvable by
+    rendering at all — it needs a locate-by-value contract from the source.
   - ☐ **`Home`/`End`.** Optional per APG, and reserved for the text caret in an editable
     combobox, so they suit the static variant only. `End` under a bounded window would land on
     the last rendered row rather than the last of the set; settle with the item above.

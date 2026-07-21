@@ -1017,6 +1017,12 @@ export default class SelectEngine {
   @bind
   select(item: SelectItem): void {
     if (this.isSelected(item)) {
+      // Re-picking the current value is a confirmation, not a change: emit nothing, but still
+      // close. Since the list restores the cursor to the selected option, this is the first
+      // keystroke after opening, and leaving it inert would read as a broken control.
+      if (!this.#multiple && this.#closeOnSelect) {
+        this.#requestClose?.();
+      }
       return;
     }
     this.#cacheResolved(item);
