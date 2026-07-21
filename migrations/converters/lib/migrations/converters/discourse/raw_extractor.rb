@@ -5,14 +5,14 @@ module Migrations
     module Discourse
       # Extracts deferred embeds from a Discourse post's Markdown `raw` and replaces
       # each with a placeholder token, recording a typed descriptor on the given
-      # embed sink (an {EmbedBuffer}). The importer's `PlaceholderResolver` rewrites
-      # the tokens once the `original_id -> discourse_id` maps exist.
+      # embed collector (an {EmbedBuffer}). The importer's `PlaceholderResolver`
+      # rewrites the tokens once the `original_id -> discourse_id` maps exist.
       #
       # The hard part of extracting from Markdown is *not* extracting from places
       # that only look like embeds — inside fenced/indented/inline code. That is
       # handled by {MarkdownScanner}, which we drive here: for each detected node we
-      # record the embed on the sink and return the placeholder token the scanner
-      # splices into the output.
+      # record the embed on the collector and return the placeholder token the
+      # scanner splices into the output.
       #
       # We detect uploads, quote attributions, internal links, mentions, hashtags and
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
@@ -106,40 +106,40 @@ module Migrations
 
           # The detectors are stateless (the emoji one only reads a frozen name set)
           # and the scanner resets its state on each `scan`, so build them once and
-          # reuse them for every post. The block reads `@sink` (set per call), so the
-          # one scanner serves whatever buffer we're filling.
+          # reuse them for every post. The block reads `@collector` (set per call), so
+          # the one scanner serves whatever buffer we're filling.
           @scanner =
-            MarkdownScanner::Scanner.new(detectors:, extra_gate:) { |node| defer(node, @sink) }
+            MarkdownScanner::Scanner.new(detectors:, extra_gate:) { |node| defer(node, @collector) }
         end
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
-        # @param on_embed [#upload, #quote, #link, #mention, #hashtag, #emoji] the
-        #   embed sink.
+        # @param embeds [#upload, #quote, #link, #mention, #hashtag, #emoji] the
+        #   embed collector.
         # @param topic_id [Integer, nil] the source topic id of the containing post,
         #   used to complete a quote attribution that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
-        def extract(raw, on_embed:, topic_id: nil)
+        def extract(raw, embeds:, topic_id: nil)
           return raw if raw.nil?
 
-          @sink = on_embed
+          @collector = embeds
           @topic_id = topic_id
           @scanner.scan(raw)
         end
 
         private
 
-        # Records the detected embed on the sink and returns the placeholder token.
-        def defer(node, sink)
+        # Records the detected embed on the collector and returns the placeholder token.
+        def defer(node, collector)
           case node
           when Markbridge::AST::Upload
-            sink.upload(upload_id: node.sha1)
+            collector.upload(upload_id: node.sha1)
           when MarkdownScanner::UploadUrlReference
-            sink.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
+            collector.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
           when Markbridge::AST::Mention
-            sink.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
+            collector.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
           when MarkdownScanner::InternalLinkReference
-            sink.link(
+            collector.link(
               url: node.url,
               text: node.text,
               target_type: LINK_TARGET_TYPES.fetch(node.target_type),
@@ -150,11 +150,11 @@ module Migrations
               target_suffix: node.target_suffix,
             )
           when MarkdownScanner::HashtagReference
-            sink.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
+            collector.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
           when MarkdownScanner::EmojiReference
-            sink.emoji(name: node.name)
+            collector.emoji(name: node.name)
           when MarkdownScanner::QuoteAttribution
-            defer_quote(node, sink)
+            defer_quote(node, collector)
           end
         end
 
@@ -162,12 +162,13 @@ module Migrations
         # so it records the source coordinates (topic id + post number) instead and
         # lets the importer resolve them. A quote with a `post:` but no `topic:`
         # points into its own topic. A quote with neither is username-only.
-        def defer_quote(node, sink)
+        def defer_quote(node, collector)
           post_number = node.post_number
           topic_id = post_number ? (node.topic_id || @topic_id) : nil
 
-          sink.quote(
+          collector.quote(
             quoted_username: node.username,
+            quoted_name: node.name,
             quoted_topic_id: topic_id,
             quoted_post_number: post_number,
           )

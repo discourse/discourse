@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::MarkdownRenderer do
-  describe "#to_markdown without an embed sink" do
+  describe "#to_markdown without an embed collector" do
     subject(:renderer) { described_class.new(format: :bbcode) }
 
     it "renders BBCode to Discourse Markdown" do
@@ -65,7 +65,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           '[quote="John, post:12, topic:34, username:john"]quoted body[/quote]',
-          on_embed: buffer,
+          embeds: buffer,
         )
 
       expect(buffer.quotes.size).to eq(1)
@@ -76,6 +76,9 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(descriptor[:quoted_topic_id]).to eq(34)
       expect(descriptor[:quoted_post_number]).to eq(12)
       expect(descriptor[:quoted_username]).to eq("John")
+      # The BBCode parser copies the leading token into both author and username,
+      # so there's no distinct display name to keep.
+      expect(descriptor[:quoted_name]).to be_nil
 
       # The token stands in for the opening tag; the body and closer remain.
       expect(raw).to include(descriptor[:placeholder])
@@ -88,7 +91,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           '[quote="A, post:77777777777777777789999, topic:2"]q[/quote]',
-          on_embed: buffer,
+          embeds: buffer,
         )
 
       descriptor = buffer.quotes.first
@@ -99,7 +102,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "renders an unattributed quote natively (nothing to remap)" do
-      raw = renderer.to_markdown("[quote]just text[/quote]", on_embed: buffer)
+      raw = renderer.to_markdown("[quote]just text[/quote]", embeds: buffer)
 
       expect(buffer).to be_empty
       expect(Migrations::Placeholder).not_to be_include(raw)
@@ -109,7 +112,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "see [url=https://example.com/t/5]here[/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -124,7 +127,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "see [url=https://example.com/t/5][b]here[/b][/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -140,7 +143,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "see [url=https://example.com/t/5][code=ruby]x = 1[/code][/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -156,7 +159,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "[url=https://example.com][code=ruby]a\nb[/code][/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -172,7 +175,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           '[url=https://example.com][quote="A, post:1, topic:2"]q[/quote][/url]',
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[quote link],
         )
 
@@ -186,7 +189,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "[url=https://example.com][img]https://example.com/pic.png[/img][/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -200,7 +203,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       raw =
         renderer.to_markdown(
           "[url=https://x/pic.png][img]https://x/pic.png[/img][/url]",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[link],
         )
 
@@ -213,7 +216,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     it "records a bare URL's text as nil so the importer re-emits it bare" do
       renderer.to_markdown(
         "see [url=https://example.com/t/5]https://example.com/t/5[/url]",
-        on_embed: buffer,
+        embeds: buffer,
         defer: %i[link],
       )
 
@@ -224,7 +227,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     it "records a text-less link's text as nil, not an empty string" do
       renderer.to_markdown(
         "see [url=https://example.com/t/5][/url]",
-        on_embed: buffer,
+        embeds: buffer,
         defer: %i[link],
       )
 
@@ -233,7 +236,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "leaves links alone by default" do
-      raw = renderer.to_markdown("see [url=https://example.com]here[/url]", on_embed: buffer)
+      raw = renderer.to_markdown("see [url=https://example.com]here[/url]", embeds: buffer)
 
       expect(buffer.links).to be_empty
       expect(raw).to eq("see [here](https://example.com)")
@@ -246,11 +249,64 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         renderer.to_markdown(
           'a [quote="A, post:1, topic:2, username:a"]q[/quote] b ' \
             "[url=https://example.com/t/9]L[/url] c",
-          on_embed: buffer,
+          embeds: buffer,
           defer: %i[quote link],
         )
 
       expect(Migrations::Placeholder.scan(raw)).to match_array(buffer.placeholders)
+    end
+
+    it "raises for an unknown defer kind" do
+      expect { renderer.to_markdown("x", embeds: buffer, defer: %i[bogus]) }.to raise_error(
+        ArgumentError,
+        /Unknown defer kind :bogus; expected one of/,
+      )
+    end
+  end
+
+  describe "#to_markdown reusing the deferring renderer across posts" do
+    subject(:renderer) { described_class.new(format: :bbcode) }
+
+    let(:buffer) do
+      Migrations::Converters::EmbedBuffer.new(
+        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+      )
+    end
+
+    let(:built_renderers) { [] }
+
+    before do
+      allow(Markbridge).to receive(:convert).and_wrap_original do |original, *args, **kwargs|
+        built_renderers << kwargs[:renderer]
+        original.call(*args, **kwargs)
+      end
+    end
+
+    it "reuses the same renderer for the same collector and defer set" do
+      renderer.to_markdown("a", embeds: buffer)
+      renderer.to_markdown("b", embeds: buffer)
+
+      expect(built_renderers.size).to eq(2)
+      expect(built_renderers.first).to be(built_renderers.last)
+    end
+
+    it "builds a fresh renderer when the collector changes" do
+      other =
+        Migrations::Converters::EmbedBuffer.new(
+          owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+        )
+
+      renderer.to_markdown("a", embeds: buffer)
+      renderer.to_markdown("b", embeds: other)
+
+      expect(built_renderers.first).not_to be(built_renderers.last)
+    end
+
+    it "builds a fresh renderer when the defer set changes" do
+      renderer.to_markdown("a", embeds: buffer)
+      renderer.to_markdown("b", embeds: buffer, defer: %i[link])
+
+      expect(built_renderers.first).not_to be(built_renderers.last)
     end
   end
 
@@ -284,7 +340,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
       described_class.normalizer.normalize(document)
 
-      expect(described_class.send(:deferrable_label?, node)).to be(true)
+      expect(described_class.send(:deferrable_children?, node)).to be(true)
     end
 
     it "is what to_markdown converts through" do
@@ -301,8 +357,8 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
   describe ".embed_handlers extraction" do
     # Upload and Mention nodes don't arise from BBCode, so exercise their
-    # extraction lambdas directly against the real AST nodes.
-    let(:sink) do
+    # extraction methods directly against the real AST nodes.
+    let(:collector) do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
@@ -312,16 +368,16 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       _node_class, extract = described_class.embed_handlers.fetch(:upload)
       node = Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
 
-      token = extract.call(sink, node, nil)
+      token = extract.call(collector, node, nil)
 
-      expect(sink.uploads).to contain_exactly(
+      expect(collector.uploads).to contain_exactly(
         { placeholder: token, upload_id: "abc123", original_markdown: nil },
       )
     end
 
     it "maps a Quote node's ids to quoted_post_id and quoted_user_id" do
       # BBCode can't carry them (phpBB-style id attribution arrives via the
-      # TextFormatter parser), so exercise the lambda directly.
+      # TextFormatter parser), so exercise the method directly.
       _node_class, extract = described_class.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(username: "alice", post_id: 9001, user_id: 12)
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
@@ -330,10 +386,43 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         "body",
       )
 
-      extract.call(sink, node, interface)
+      extract.call(collector, node, interface)
 
-      expect(sink.quotes).to contain_exactly(
+      expect(collector.quotes).to contain_exactly(
         hash_including(quoted_post_id: 9001, quoted_user_id: 12, quoted_username: "alice"),
+      )
+    end
+
+    it "records a display name that differs from the username" do
+      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      node = Markbridge::AST::Quote.new(author: "John Doe", username: "jdoe", user_id: 12)
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
+      allow(interface).to receive(:render_children).with(node, context: :child_context).and_return(
+        "body",
+      )
+
+      extract.call(collector, node, interface)
+
+      expect(collector.quotes).to contain_exactly(
+        hash_including(quoted_username: "jdoe", quoted_name: "John Doe"),
+      )
+    end
+
+    it "records no name when the author equals the username" do
+      # The BBCode parser fills author and username with the same leading token.
+      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      node = Markbridge::AST::Quote.new(author: "john", username: "john", post_id: 9001)
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
+      allow(interface).to receive(:render_children).with(node, context: :child_context).and_return(
+        "body",
+      )
+
+      extract.call(collector, node, interface)
+
+      expect(collector.quotes).to contain_exactly(
+        hash_including(quoted_username: "john", quoted_name: nil),
       )
     end
 
@@ -345,9 +434,9 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_children).with(node).and_return("`x`")
 
-      extract.call(sink, node, interface)
+      extract.call(collector, node, interface)
 
-      expect(sink.links).to contain_exactly(hash_including(text: "`x`"))
+      expect(collector.links).to contain_exactly(hash_including(text: "`x`"))
     end
 
     it "falls back to native rendering for a label containing an upload" do
@@ -359,10 +448,10 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
 
-      result = extract.call(sink, node, interface)
+      result = extract.call(collector, node, interface)
 
       expect(result).to eq("NATIVE")
-      expect(sink.links).to be_empty
+      expect(collector.links).to be_empty
     end
 
     it "falls back to native rendering for a label containing a mention" do
@@ -373,19 +462,19 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
 
-      result = extract.call(sink, node, interface)
+      result = extract.call(collector, node, interface)
 
       expect(result).to eq("NATIVE")
-      expect(sink.links).to be_empty
+      expect(collector.links).to be_empty
     end
 
     it "maps a Mention node's type and name" do
       _node_class, extract = described_class.embed_handlers.fetch(:mention)
       node = Markbridge::AST::Mention.new(name: "gerhard", type: :user)
 
-      token = extract.call(sink, node, nil)
+      token = extract.call(collector, node, nil)
 
-      expect(sink.mentions).to contain_exactly(
+      expect(collector.mentions).to contain_exactly(
         {
           placeholder: token,
           mention_type: Migrations::Database::IntermediateDB::Enums::MentionType::USER,

@@ -14,7 +14,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   def extract(raw, topic_id: nil)
-    extractor.extract(raw, on_embed: buffer, topic_id:)
+    extractor.extract(raw, embeds: buffer, topic_id:)
   end
 
   it "returns nil for a nil body" do
@@ -158,14 +158,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("#{quote[:placeholder]}\nquoted body\n[/quote]")
     end
 
-    it "uses the explicit username: attribute when a display name is present" do
+    it "uses the explicit username: attribute and keeps the display name" do
       extract(%([quote="Bob Jones, post:1, topic:2, username:bjones"]hi[/quote]))
 
       expect(buffer.quotes.first).to include(
         quoted_username: "bjones",
+        quoted_name: "Bob Jones",
         quoted_topic_id: 2,
         quoted_post_number: 1,
       )
+    end
+
+    it "records no name for a bare leading token that IS the username" do
+      # Without an explicit username:, the leading token is the username itself
+      # (Discourse omits username: when the display name equals it).
+      extract(%([quote="jane, post:1"]hi[/quote]))
+
+      expect(buffer.quotes.first).to include(quoted_username: "jane", quoted_name: nil)
+    end
+
+    it "records no name when the display name equals the explicit username" do
+      extract(%([quote="jane, post:1, topic:2, username:jane"]hi[/quote]))
+
+      expect(buffer.quotes.first).to include(quoted_username: "jane", quoted_name: nil)
     end
 
     it "fills the containing topic id when the attribution names a post but no topic" do
@@ -245,7 +260,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         )
       extractor = described_class.new(mention_resolver: resolver)
 
-      extractor.extract("@gerhard @admins @here all there", on_embed: buffer)
+      extractor.extract("@gerhard @admins @here all there", embeds: buffer)
 
       expect(buffer.mentions.map { |m| [m[:name], m[:mention_type]] }).to eq(
         [
@@ -315,7 +330,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "defers every parsed @word when no gate is given" do
       ungated = described_class.new
-      ungated.extract("meet at @3pm please", on_embed: buffer)
+      ungated.extract("meet at @3pm please", embeds: buffer)
 
       expect(buffer.mentions.first[:name]).to eq("3pm")
     end
@@ -519,7 +534,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       plain_extractor = described_class.new
       raw = "a :parrot: and :smile:"
 
-      expect(plain_extractor.extract(raw, on_embed: buffer)).to eq(raw)
+      expect(plain_extractor.extract(raw, embeds: buffer)).to eq(raw)
       expect(buffer.emojis).to be_empty
     end
   end
@@ -774,7 +789,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       plain_extractor.extract(
         "rel /t/slug/12 and abs https://forum.example.com/t/slug/99",
-        on_embed: buffer,
+        embeds: buffer,
       )
 
       expect(buffer.links.map { |l| l[:url] }).to eq(["/t/slug/12"])
@@ -830,7 +845,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "treats every absolute route-shaped link as foreign when no host is configured" do
       no_host = described_class.new(on_foreign_host: ->(host) { foreign_hosts << host })
-      no_host.extract("read https://any.example.com/t/slug/99 now", on_embed: buffer)
+      no_host.extract("read https://any.example.com/t/slug/99 now", embeds: buffer)
 
       expect(foreign_hosts).to eq(["any.example.com"])
     end
@@ -839,7 +854,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       plain = described_class.new(internal_link_hosts: Set["forum.example.com"])
 
       expect(
-        plain.extract("elsewhere https://old-forum.example.com/t/slug/99 done", on_embed: buffer),
+        plain.extract("elsewhere https://old-forum.example.com/t/slug/99 done", embeds: buffer),
       ).to eq("elsewhere https://old-forum.example.com/t/slug/99 done")
     end
   end
@@ -961,7 +976,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       it "still defers a custom emoji" do
         emoji_extractor = described_class.new(custom_emoji_names: %w[parrot])
-        emoji_extractor.extract("schön :parrot:", on_embed: buffer)
+        emoji_extractor.extract("schön :parrot:", embeds: buffer)
 
         expect(buffer.emojis.first[:name]).to eq("parrot")
       end
