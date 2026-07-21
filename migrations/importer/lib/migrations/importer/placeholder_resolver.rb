@@ -171,6 +171,10 @@ module Migrations
       end
 
       # One query per kind, grouped by owner id. The only place that reads the database.
+      #
+      # Each query binds one variable per owner id, so a batch has to stay well
+      # under SQLite's variable limit (999 on old builds, 32766 on current ones).
+      # That limit is the real ceiling on batch size; the caller picks the size.
       def load_linkages(owner_ids)
         buckets = {}
         return buckets if owner_ids.empty?
@@ -228,6 +232,9 @@ module Migrations
       # values match the pairs against the `(topic_id, post_number)` index. A pair with
       # no matching post is simply absent from the result, so each caller keeps its own
       # fallback.
+      #
+      # Two binds per pair, so the same SQLite variable-limit ceiling applies (see
+      # #load_linkages).
       def post_ids_for_coordinates(coordinates)
         coordinates = coordinates.uniq
         return {} if coordinates.empty?
@@ -376,7 +383,8 @@ module Migrations
       end
 
       # Two lazily-built category lookups, keyed by normalized slug:
-      #   * `by_path` — the full slug path (`"slug"` or `"parent:child"`) => original_id.
+      #   * `by_path` — the full slug path, root-first `:`-joined
+      #     (`"slug"`, `"parent:child"`, `"a:b:c"`, …) => original_id.
       #   * `by_slug` — the leaf slug => original_id, top-level category preferred.
       def category_maps
         @category_maps ||= build_category_maps
@@ -406,14 +414,32 @@ module Migrations
         by_slug = {}
         order.each do |id|
           slug = slug_of[id]
-          parent_slug = (parent_id = parent_of[id]) && slug_of[parent_id]
-          path = parent_slug ? "#{parent_slug}:#{slug}" : slug
-
-          by_path[path] ||= id
+          by_path[category_path(id, slug_of, parent_of)] ||= id
           by_slug[slug] ||= id
         end
 
         { by_path:, by_slug: }
+      end
+
+      # The full slug path for a category, root-first, every ancestor slug joined
+      # with ":". A source with deeper nesting (max_category_nesting = 3) records
+      # id-less `/c/a/b/c` links as "a:b:c", so the path must carry every level,
+      # not just the immediate parent. A two-level category still comes out as
+      # "parent:child", exactly as before.
+      #
+      # The visited check guards a corrupt source whose parent chain loops. On
+      # hitting the guard we keep the path built so far rather than raising: one
+      # bad chain should degrade, not crash the whole import.
+      def category_path(id, slug_of, parent_of)
+        slugs = [slug_of[id]]
+        seen = { id => true }
+        parent_id = parent_of[id]
+        while parent_id && !seen[parent_id]
+          seen[parent_id] = true
+          slugs.unshift(slug_of[parent_id])
+          parent_id = parent_of[parent_id]
+        end
+        slugs.join(":")
       end
 
       # Tag name => canonical original_id, with synonyms folded onto their target so
@@ -609,7 +635,17 @@ module Migrations
 
         # The token spans exactly the original `@name`, so the surrounding text is
         # already intact — rendering verbatim keeps the source spacing.
-        name.present? ? "@#{name}" : ""
+        return "@#{name}" if name.present?
+
+        # Nearly unreachable: the converter always records a name. But an embed may
+        # only vanish with a report, so record one before dropping it.
+        @unresolved_embeds << UnresolvedEmbed.new(
+          kind: :mention,
+          entity_id: row[:target_id] || row[:name],
+          owner_id: row[:owner_id],
+          owner_url: owner_url_for(row[:owner_id]),
+        )
+        ""
       end
 
       # A resolved category renders as `#<slug path>`, honoring any rename or merge

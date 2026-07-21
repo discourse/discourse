@@ -438,6 +438,33 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq("x https://dest.example.com/c/support/billing/20 y")
     end
 
+    it "resolves a deeply nested category target by its full grandparent:parent:child path" do
+      create_category(1, "grandparent")
+      create_category(2, "parent", parent_category_id: 1)
+      create_category(3, "child", parent_category_id: 2)
+      maps =
+        FakePlaceholderMaps.new(
+          category_id: {
+            3 => 30,
+          },
+          category_slug_path: {
+            3 => "grandparent:parent:child",
+          },
+        )
+
+      resolved =
+        render(
+          {
+            url: "/c/grandparent/parent/child",
+            target_type: link_target::CATEGORY,
+            target_name: "grandparent:parent:child",
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/c/grandparent/parent/child/30 y")
+    end
+
     it "resolves a tag target by name, folding a synonym onto its target" do
       create_tag(3, "release")
       create_tag(4, "releases")
@@ -1015,6 +1042,31 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "ping #{mention}" }])
 
       expect(resolved[1]).to eq("ping @cafe")
+    end
+  end
+
+  describe "a mention that renders to nothing" do
+    it "drops the mention and records it" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: mention,
+        mention_type: mention_type::USER,
+        target_id: 7,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hey #{mention} there" }])
+
+      expect(resolved[1]).to eq("hey  there")
+      expect(resolver.unresolved_embeds).to contain_exactly(
+        described_class::UnresolvedEmbed.new(
+          kind: :mention,
+          entity_id: 7,
+          owner_id: 1,
+          owner_url: nil,
+        ),
+      )
     end
   end
 
