@@ -441,12 +441,6 @@ export default class SelectEngine {
     // parent's `@value` without storing any selection of its own.
     this.#readValue = opts.getValue ?? (() => null);
     this.#isAsync = typeof opts.load === "function";
-
-    // Seed the resolved-item cache with any already-known items so the trigger can
-    // display them synchronously (no fetch, no skeleton).
-    for (const item of makeArray(opts.selected) as SelectItem[]) {
-      this.#cacheResolved(item);
-    }
   }
 
   /** The current filter term. */

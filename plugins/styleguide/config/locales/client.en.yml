@@ -61,6 +61,55 @@ en:
           multi_placeholder: "Choose options"
           empty_label: "No matching options"
           request_error: "The first request failed."
+          showcases:
+            title: "Real-world compositions"
+            description: "Composite examples that combine rich presentation, custom data contracts, asynchronous resolution, and less common interaction modes."
+            reviewers:
+              title: "Assign reviewers"
+              placeholder: "Search for reviewers"
+              deleted_name: "Deleted account"
+              deleted_description: "This reviewer is no longer available"
+              deleted_username: "deleted-user"
+            reviewer_roles:
+              design: "Design systems"
+              frontend: "Frontend"
+              accessibility: "Accessibility"
+              security: "Security"
+              performance: "Performance"
+              documentation: "Documentation"
+              unavailable: "Unavailable"
+            categories:
+              title: "Choose a category"
+              placeholder: "Choose a category"
+              uncategorized: "Uncategorized"
+              uncategorized_description: "Topics without a category"
+              topic_count:
+                one: "%{count} topic"
+                other: "%{count} topics"
+            tags:
+              title: "Add or create tags"
+              placeholder: "Choose tags"
+              search_placeholder: "Search or create a tag"
+              create: "Create “%{tag}”"
+            notifications:
+              title: "Choose a notification level"
+              placeholder: "Choose a notification level"
+              muted: "Muted"
+              muted_description: "Never notify me about this topic."
+              normal: "Normal"
+              normal_description: "Notify me only when someone mentions me."
+              tracking: "Tracking"
+              tracking_description: "Show a count of new replies."
+              watching: "Watching"
+              watching_description: "Notify me about every new reply."
+              mentions: "Mentions only"
+              mentions_description: "Unavailable while digest mode is enabled."
+              manage: "Manage notification settings"
+              manage_description: "Open the full notification preferences."
+              event_idle: "The action row has not been used."
+              action_count:
+                one: "The action row was used %{count} time without changing the selection."
+                other: "The action row was used %{count} times without changing the selection."
         toasts:
           title: "Toasts"
         font_scale:

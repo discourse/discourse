@@ -70,7 +70,9 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
     screenshot_marker(label: "styleguide-select")
 
-    click_button("Choose an option", match: :first)
+    select =
+      PageObjects::Components::UiKit::DSelect.new(".select-examples__default .d-combobox__trigger")
+    select.open
     expect(page).to have_text("Orange")
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
