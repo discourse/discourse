@@ -50,10 +50,9 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   }
 
   const update = (height) => {
-    target.style.setProperty(
-      "--composer-fields-height",
-      `${Math.round(height)}px`
-    );
+    const rounded = Math.round(height);
+    target.style.setProperty("--composer-fields-height", `${rounded}px`);
+    target.classList.toggle("has-composer-fields", rounded > 0);
   };
 
   update(element.offsetHeight);
@@ -66,6 +65,7 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   return () => {
     observer.disconnect();
     target.style.removeProperty("--composer-fields-height");
+    target.classList.remove("has-composer-fields");
   };
 });
 
