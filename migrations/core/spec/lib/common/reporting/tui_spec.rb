@@ -707,7 +707,10 @@ RSpec.describe Migrations::Reporting::Tui do
     end
 
     it "drops a coalesced progress report that lands after its step finished" do
-      reporter = described_class.new(fps: 60, output: io)
+      # `apply_coalesced_progress` is private and normally only runs on the render
+      # thread; expose it through a subclass to drive a frame by hand.
+      reporter =
+        Class.new(described_class) { public :apply_coalesced_progress }.new(fps: 60, output: io)
       reporter.start_step("Users").finish
       reporter.close # drains the finish and joins the render thread
 
@@ -717,7 +720,7 @@ RSpec.describe Migrations::Reporting::Tui do
 
       # The next frame swaps the map out, so the stale entry can't linger and be
       # re-applied as a no-op on every frame for the rest of the run.
-      reporter.send(:apply_coalesced_progress)
+      reporter.apply_coalesced_progress
       expect(reporter.instance_variable_get(:@progress)).to be_empty
     end
   end

@@ -122,7 +122,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     expect(rows("topics")).to eq((0..49).to_a)
     expect(rows("users")).to eq((0..4).to_a)
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "splits a partitioned step across forks and merges every slice" do
@@ -194,7 +194,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     expect(Migrations::Conversion::ChunkQueue).to have_received(:filled).with(chunks)
     expect(rows("topics")).to eq((0..59).to_a)
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   # The coordinator caps the fork count at the number of chunks, so a source with
@@ -263,7 +263,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     expect(rows("topics")).to eq([0, 1, 2]) # every row merged exactly once
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "runs a single empty worker for a partitioned step over an empty source" do
@@ -320,7 +320,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     expect(rows("topics")).to eq([])
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "runs the step inline, without forking, when no_fork is set" do
@@ -390,7 +390,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     expect(Migrations::ForkManager).not_to have_received(:fork)
     expect(rows("topics")).to eq((0..19).to_a)
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "logs and skips a bad row instead of failing the step" do
@@ -465,7 +465,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     expect(rows("users")).to eq((0..4).to_a)
     expect(log_entry_count).to eq(1)
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "fails the step and finishes the run when a worker dies mid-stream" do
@@ -542,7 +542,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     # the crashed worker's half-written shard is discarded, not merged
     expect(rows("topics")).to eq([])
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   # Runs `TempIntegrationSteps::Keyed`, whose processor writes each item into the
@@ -604,7 +604,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     # the existing row is kept and the new, non-colliding rows are appended
     expect(keyed).to eq([[1, "existing"], [2, "added"], [3, "more"]])
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 
   it "fails the run, naming the table, when a shard row collides with an existing one" do
@@ -641,6 +641,6 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     expect { run_keyed_step }.to raise_error(Migrations::Conversion::ConvertError, /keyed/)
   ensure
-    Object.send(:remove_const, "TempIntegrationSteps")
+    remove_test_const("TempIntegrationSteps")
   end
 end
