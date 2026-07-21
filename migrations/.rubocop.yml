@@ -8,3 +8,6 @@ Style/ModuleFunction:
 
 Style/EndlessMethod:
   EnforcedStyle: disallow
+
+Style/Send:
+  Enabled: true
