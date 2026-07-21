@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-# Real-browser oracle for the core ui-kit `DSelect` multi-select chip arrow-roving (the
-# "6b" a11y work). The fast qunit oracle (d-select-multi-flip-test.gjs) can't reproduce two
-# things a keyboard user actually relies on: the browser's NATIVE activation of a focused
-# button on Enter/Space (a synthetic keydown never fires the click), and the real Tab order.
+# Real-browser coverage for the core ui-kit `DSelect` multi-select chip arrow-roving. The
+# qunit tests (d-select-multi-flip-test.gjs) can't reproduce two things a keyboard user
+# actually relies on: the browser's NATIVE activation of a focused button on Enter/Space (a
+# synthetic keydown never fires the click), and the real Tab order.
 #
 # System tests need a real rendered page, and the styleguide's multi `DSelect` example is the
 # only one that exists today — so this lives in the styleguide plugin for now. Move it to a

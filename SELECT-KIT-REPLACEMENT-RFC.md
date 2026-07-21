@@ -369,7 +369,7 @@ direction-aware placement — we improve on that):
 - Both reference libraries (Base-UI, React-Aria) treat RTL as standard; we match.
 - Added to the verification matrix (RTL locale × both themes) below.
 
-### Decision 5 — Large-list performance: bounded windowing, not virtualization
+### Decision 5 — Large-list performance: bounded reveal, not virtualization
 
 A synchronous source can hand us thousands of items; rendering them all on open hangs
 the tab (we've hit this pain before). Pagination fixes server sources but not a known-
@@ -378,10 +378,10 @@ complete 5k **client** list — so this must be designed in from the start. Appr
 | Approach | How | Pros | Cons |
 |---|---|---|---|
 | **A. True DOM virtualization** | render only the visible window over the full array, recycle on scroll | scroll the whole list continuously; constant DOM at any N | **net-new in core** (no primitive; post-stream *cloaking* isn't reusable and keeps all rows in the DOM anyway); **breaks our a11y/keyboard layer** — `dRovingFocus` + both existing pickers enumerate options from the DOM (`querySelectorAll`/`offsetTop`/index) and assume all are present; needs net-new `aria-setsize`/`aria-posinset` + windowing-aware keyboard + render-then-focus for off-screen active rows + row-height measurement. Fights the headline "accessible by construction". |
-| **B. Bounded windowing + reveal** (recommended) | render a capped window (internal chunk; server page size auto-detected); reveal more via the SAME `DLoadMore` sentinel up to a hard `MAX_RENDERED` cap, then "filter to narrow" — server fetches the next page, a sync source slices the next chunk (no network); filtering re-slices | reuses `DLoadMore` + `d-observe-intersection`; **bounded DOM**; `dRovingFocus`/keyboard/ARIA work **unchanged** (every option is a real node); matches select-kit's idiomatic "server `limit` + filter-for-more"; trivial perf (slice + ~100 rows); unifies sync + async | can't scroll all 5k continuously — must reveal-more or (the intended path) filter |
+| **B. Bounded reveal** (recommended) | render a capped prefix (internal chunk; server page size auto-detected); reveal more via the SAME `DLoadMore` sentinel up to a hard `MAX_RENDERED` cap, then "filter to narrow" — server fetches the next page, a sync source slices the next chunk (no network); filtering re-slices | reuses `DLoadMore` + `d-observe-intersection`; **bounded DOM**; `dRovingFocus`/keyboard/ARIA work **unchanged** (every option is a real node); matches select-kit's idiomatic "server `limit` + filter-for-more"; trivial perf (slice + ~100 rows); unifies sync + async | can't scroll all 5k continuously — must reveal-more or (the intended path) filter |
 | **C. Hybrid** | ship B now; keep A behind the same seam for a future browse-all need | safe one-way door | — |
 
-**Recommendation: B, framed as C.** Bounded windowing is the shipped model; the seam
+**Recommendation: B, framed as C.** Bounded reveal is the shipped model; the seam
 (and `aria-setsize`/`aria-posinset` from day one) leaves virtualization a future
 drop-in if a genuine browse-the-whole-list case ever appears. Reasons: (1) **preserves
 accessibility-by-construction** — every rendered option is a real DOM node, no new
@@ -390,7 +390,7 @@ focus/ARIA complexity this project exists to eliminate; (2) **reuses proven infr
 (`DLoadMore`) + select-kit's idiomatic capping, vs net-new virtualization (post-stream
 cloaking is not reusable); (3) the **5k-node hang is eliminated at the source** (never
 rendered); (4) the intended interaction for a huge list is **filter, not scroll**, so B
-makes the happy path fast and honest; (5) **unifies sync and async** — one windowing
+makes the happy path fast and honest; (5) **unifies sync and async** — one reveal
 model, sync slices locally, server pages, both via the same sentinel + "N of M" hint.
 
 **Design:**
@@ -404,19 +404,28 @@ model, sync slices locally, server pages, both via the same sentinel + "N of M" 
   user reveals more.
 - Reveal = a `DLoadMore` sentinel inside the listbox scroll container (`@root` = the
   listbox). On reveal: **sync** → widen the slice (no network); **server** → fetch +
-  append the next page — **up to `MAX_RENDERED`**. ArrowDown at the last rendered row
-  reveals the next chunk, then moves into it.
+  append the next page — **up to `MAX_RENDERED`**.
+- **The sentinel serves both pointer and keyboard in v1.** Arrowing down scrolls the
+  listbox (`dRovingFocus` scrolls the container, never the page), which trips the
+  sentinel's prefetch margin before the last mounted row is reached. An *explicit*
+  "ArrowDown at the last row reveals, then lands on the new row" hook is **deferred to
+  its own cycle**: an adversarial pass found the obvious shape unimplementable — the
+  engine never holds the list's promise (`DAsyncContent` owns it), so there is nothing to
+  await; awaiting anyway races the render flush and cannot keep `preventDefault`
+  synchronous; and a generation guard keyed on the item list cancels its own
+  continuation. The shape that survives is *flag-and-reconcile* — set a pending-advance
+  flag, let the next `modify()` (which runs after render by construction) consume it.
 - **At `MAX_RENDERED` with more still available → stop loading and show a "keep typing
   to narrow the list" message** (the `filter-for-more` affordance); never keep loading
   into the degenerate case. Filtering shrinks the set back under the cap.
 - `aria-setsize` = the true total when known (client: full filtered count; server:
   total if the response provides it), `aria-posinset` per option — so SR users know the
-  list extends beyond the rendered window / the cap.
-- The engine windows the **final** (filtered → transformed → normalized) descriptor
-  list; a query change or `reload` resets the window to the first chunk.
-- **Groups × windowing**: *client* windowing (slicing a known-complete list) composes
+  list extends beyond the rendered prefix / the cap.
+- The engine renders a bounded prefix of the **final** (filtered → transformed →
+  normalized) descriptor list; a query change or `reload` resets the reveal to the first chunk.
+- **Groups × reveal**: *client* reveal (slicing a known-complete list) composes
   with `@groupBy` — the full order is known, headers stay stable. This refines Decision 2:
-  only *server infinite pagination* + groups is out of scope (reflow); client windowing +
+  only *server infinite pagination* + groups is out of scope (reflow); client reveal +
   groups is fine.
 
 ### Decision 6 — Author the family in TypeScript (PR #41478)
@@ -597,7 +606,7 @@ master RFC was kept local for Phase 0):
 
 1. **Master reference — `SELECT-KIT-REPLACEMENT-RFC.md`** (worktree root; exists but is
    now stale). Fold this whole refinement into it — Decisions 1–6, the Decision-1b
-   state model, batch/fallback/normalization, windowing, tokenization, the
+   state model, batch/fallback/normalization, reveal, tokenization, the
    reconciliation table, and the adversarial findings — so it mirrors this plan. Single
    source of truth for the **design**.
 2. **Per-phase tracker docs — `docs/select-kit-replacement/PHASE-0.md … PHASE-5.md`**
@@ -1001,7 +1010,7 @@ keyboard nav · combobox/listbox ARIA · overlay positioning · mobile modal.
   `@onClose`.
 - **Chrome** (see API refinement): `@clearable`, `@caretIcon` (customize/hide),
   `@icon` (leading), `@placement` / `@offset`, `@groupBy` (section headers),
-  `@openOn` (open behavior), `@focusWrap`. (Windowing is automatic — no `@pageSize`:
+  `@openOn` (open behavior), `@focusWrap`. (Reveal is automatic — no `@pageSize`:
   client uses an internal chunk, server auto-detects page size; hard `MAX_RENDERED` cap.)
 
 ### Testing DevEx
@@ -1209,7 +1218,7 @@ end state is core + bundled plugins migrated off select-kit and banned from usin
   bug; keep its 3 consumers + test suite green); chip UX (keyboard remove + focus
   move), `@maximum`/`@minimum`; create-on-the-fly; `DLoadMore` pagination +
   loading-state granularity.
-- **Large-list windowing (Decision 5), from the start**: internal render chunk (client
+- **Large-list reveal (Decision 5), from the start**: internal render chunk (client
   default; server page size auto-detected from the first response); reveal via the
   `DLoadMore` sentinel up to a hard `MAX_RENDERED` cap, then stop + "filter to narrow"
   message; `aria-setsize`/`aria-posinset`. Ship with the 5k-sync performance gate. Not
