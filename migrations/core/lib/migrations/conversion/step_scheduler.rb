@@ -63,7 +63,7 @@ module Migrations
         @reserved_forks = {}
         @threads = []
         @failures = {}
-        @merge_errors = []
+        @finalization_errors = []
       end
 
       attr_reader :budget
@@ -88,20 +88,21 @@ module Migrations
           # them before `Base#run`'s ensure tears down the IntermediateDB and
           # shards under them. Ctrl-C reaches the forked children too (same
           # process group), so the join is quick; under --no-fork the inline step
-          # finishes first — accepted, killing a thread mid-write is worse.
+          # finishes first, which we accept — killing a thread mid-write is worse.
           begin
             @threads.each(&:join)
             # Every step is done, but the background merges may still be catching
             # up. Show a "finishing up" status until they drain, so the display
             # doesn't sit silently at 100%.
-            @merge_errors = @reporter.finalizing { @consolidator.drain }
+            @finalization_errors = @reporter.finalizing { @consolidator.drain }
           rescue StandardError => e
-            # An ensure that raises replaces the in-flight exception. If we are
-            # here because the wait loop raised — typically the operator's Ctrl-C
-            # landing in `@condition.wait` — a teardown failure must not swallow
-            # it. Record it for the end-of-run summary and let the original
-            # exception win the raise.
-            @merge_errors << e
+            # Two cases land here. The wait loop finished and only this teardown
+            # raised: record the error and the summary below reports it. The wait
+            # loop itself raised (typically the operator's Ctrl-C in
+            # `@condition.wait`): an ensure that raises would replace that
+            # in-flight exception, so record instead — the run exits on the
+            # original error and never reaches the summary.
+            @finalization_errors << e
           end
         end
 
@@ -180,14 +181,10 @@ module Migrations
           outcome = :failed
           begin
             outcome = coordinator.run
-          rescue SignalException => e
-            # Record it, or the end-of-run ConvertError renders this step with an
-            # empty error class and message.
-            record_failure(step_class, e)
-            outcome = :failed
-          rescue StandardError => e
-            # Must be recorded even if `run` should have handled it, or the step
-            # never reaches a terminal state and the scheduler waits on it forever.
+          rescue SignalException, StandardError => e
+            # The backstop for anything `run` didn't record itself — without it
+            # the step's summary entry would be empty (a signal) or the failure
+            # lost entirely (an unexpected StandardError).
             record_failure(step_class, e)
             outcome = :failed
           ensure
@@ -285,12 +282,12 @@ module Migrations
       def raise_summary_if_unsuccessful
         failed = @states.select { |_, state| state == :failed }.keys
         skipped = @states.select { |_, state| state == :skipped }.keys
-        return if failed.empty? && skipped.empty? && @merge_errors.empty?
+        return if failed.empty? && skipped.empty? && @finalization_errors.empty?
 
         raise ConvertError.new(
                 failures: failed.to_h { |step_class| [step_class, @failures[step_class]] },
                 skipped:,
-                merge_errors: @merge_errors,
+                finalization_errors: @finalization_errors,
               )
       end
     end

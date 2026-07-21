@@ -226,9 +226,8 @@ module Migrations
             out << "\r\n" if index < live.size - 1
           end
 
-          # The permanent lines printed this frame already overwrote that many
-          # rows of the old live region, so only the rows past both the new live
-          # lines and those permanents are still stale and need erasing.
+          # This frame wrote `permanent.size + live.size` rows over the old live
+          # region, so only the old rows beyond that are stale and need erasing.
           leftover = [@live_count - permanent.size - live.size, 0].max
           if leftover > 0
             leftover.times { out << "\r\n" << Ansi::ERASE_LINE }
@@ -447,12 +446,12 @@ module Migrations
         # and the run summary. It uses the same widths as the live rows, so every
         # count and duration lines up down the whole display. The percent is
         # always blank here; a finished row dims its duration, the summary doesn't.
-        def padded_columns(count, duration, dim:)
+        def padded_columns(count_text, duration, dim:)
           time = Ansi.pad(format_duration(duration), @column_widths[:elapsed], :right)
           time = "#{Ansi::DIM}#{time}#{Ansi::RESET}" if dim
           [
             Ansi.pad("", @column_widths[:percent]),
-            Ansi.pad(count, @column_widths[:count], :right),
+            Ansi.pad(count_text, @column_widths[:count], :right),
             time,
           ].join("  ")
         end
@@ -465,12 +464,14 @@ module Migrations
         # rows): a notice is prose, not a table row.
         def notice_lines(title, message)
           lines = message.to_s.split("\n").map(&:rstrip).reject(&:empty?)
+          # `[""]` keeps a title-only line when the message is empty.
           lines = [""] if lines.empty?
           prefix = title ? "#{title}  " : ""
 
           lines.each_with_index.map do |text, index|
-            head = index == 0 ? prefix : "  "
-            "#{head}#{Ansi::DIM}#{text}#{Ansi::RESET}"
+            # Continuation lines get a two-space indent instead of the title.
+            lead = index == 0 ? prefix : "  "
+            "#{lead}#{Ansi::DIM}#{text}#{Ansi::RESET}"
           end
         end
 
