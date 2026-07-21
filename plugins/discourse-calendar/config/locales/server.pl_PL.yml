@@ -114,6 +114,13 @@ pl_PL:
     holiday_status:
       description: "Na świętach"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
+      date_format: "%-d %B %Y"
+      datetime_format: "%B %-d, %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} wkrótce się rozpocznie."
       after_event_reminder: "%{title} dobiegło końca."

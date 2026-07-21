@@ -3,6 +3,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -41,24 +43,30 @@ export default class ChatChannelPreviewCard extends Component {
     {{#if this.currentUser}}
       {{#if this.showJoinButton}}
         <div class="chat-channel-preview-card --logged-in">
-          <div class="chat-channel-preview-card__icon">
-            {{dIcon "lock"}}
-          </div>
+          <PluginOutlet
+            @name="chat-channel-preview-card-content"
+            @outletArgs={{lazyHash channel=@channel context=@context}}
+            @defaultGlimmer={{true}}
+          >
+            <div class="chat-channel-preview-card__icon">
+              {{dIcon "lock"}}
+            </div>
 
-          <div class="chat-channel-preview-card__title">
-            {{this.guestTitle}}
-          </div>
+            <div class="chat-channel-preview-card__title">
+              {{this.guestTitle}}
+            </div>
 
-          <div class="chat-channel-preview-card__body">
-            {{i18n "chat.channel.preview_card.join_body"}}
-          </div>
+            <div class="chat-channel-preview-card__body">
+              {{i18n "chat.channel.preview_card.join_body"}}
+            </div>
 
-          <div class="chat-channel-preview-card__actions">
-            <ToggleChannelMembershipButton
-              @channel={{@channel}}
-              @options={{hash joinClass="btn-primary" labelType="short"}}
-            />
-          </div>
+            <div class="chat-channel-preview-card__actions">
+              <ToggleChannelMembershipButton
+                @channel={{@channel}}
+                @options={{hash joinClass="btn-primary" labelType="short"}}
+              />
+            </div>
+          </PluginOutlet>
         </div>
       {{else}}
         <div class="chat-channel-preview-card --logged-in --no-access">

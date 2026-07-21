@@ -286,6 +286,35 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
   end
 
+  describe "hot sorting" do
+    def build_hot_topic(root_count)
+      hot_topic = Fabricate(:topic, user: user)
+      Fabricate(:post, topic: hot_topic, user: user, post_number: 1)
+      Fabricate(:nested_topic, topic: hot_topic)
+      root_count.times { Fabricate(:post, topic: hot_topic, user: user) }
+      hot_topic.update_columns(posts_count: root_count + 1, last_posted_at: Time.current)
+      NestedReplies::HotScoreCalculator.recalculate_topic(hot_topic.id)
+      hot_topic
+    end
+
+    it "uses a constant number of cache queries as the root count grows" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      small_topic = build_hot_topic(5)
+      large_topic = build_hot_topic(50)
+      sign_in(user)
+
+      small_queries =
+        track_sql_queries { get "/n/#{small_topic.slug}/#{small_topic.id}.json?sort=hot" }
+      large_queries =
+        track_sql_queries { get "/n/#{large_topic.slug}/#{large_topic.id}.json?sort=hot" }
+      cache_query = /nested_hot_(post_scores|score_snapshots)/
+      small_cache_query_count = small_queries.grep(cache_query).size
+
+      expect(small_cache_query_count).to be_positive
+      expect(large_queries.grep(cache_query).size).to eq(small_cache_query_count)
+    end
+  end
+
   describe "edge cases" do
     it "handles reply to OP (no ancestors)" do
       reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)

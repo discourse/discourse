@@ -65,9 +65,21 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           id: "tool_1",
         )
 
+      generated_requests = []
       DiscourseAi::Completions::Llm.with_prepared_responses(
-        [tool_call, "Final answer after budget pre-check."],
+        [tool_call, "Final answer after budget pre-check.", "Test title"],
       ) do
+        allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+          :generate,
+        ).and_wrap_original do |original, *args, **kwargs, &blk|
+          prompt = args.first
+          generated_requests << {
+            tool_choice: prompt.tool_choice,
+            last_message: prompt.messages.last.dup,
+          }
+          original.call(*args, **kwargs, &blk)
+        end
+
         session = build_session
         events = collect_events(session)
 
@@ -97,6 +109,18 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
 
         partials = resumed_events.select { |type, _| type == :partial }.map { |_, data| data }
         expect(partials.join).to eq("Final answer after budget pre-check.")
+        finalization_request =
+          generated_requests.find do |request|
+            request[:last_message][:content] ==
+              DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT
+          end
+        expect(finalization_request).to eq(
+          tool_choice: :none,
+          last_message: {
+            type: :user,
+            content: DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT,
+          },
+        )
 
         tool_events = resumed_events.select { |type, _| type == :tool_calls }
         expect(tool_events).to be_empty

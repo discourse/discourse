@@ -30,12 +30,15 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
     memberships = current_user ? Chat::ChannelMembershipManager.all_for_user(current_user) : []
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
+    shared_channel_serializer_options =
+      DiscoursePluginRegistry.apply_modifier(:chat_channel_serializer_public_options, {}, guardian)
     serialized_channels =
       channels.map do |channel|
         Chat::ChannelSerializer.new(
           channel,
-          scope: Guardian.new(current_user),
+          scope: guardian,
           membership: memberships.find { |membership| membership.chat_channel_id == channel.id },
+          **shared_channel_serializer_options,
         )
       end
 

@@ -86,6 +86,8 @@ sq:
         back: "Kthehu mbrapa"
         filter_all: Të Gjithë
         filter_open: Fillo
+        filter_joined_all: "Të gjitha"
+        filter_joined_joined: "Anëtarësuar"
       chat_message_separator:
         today: Sot
         yesterday: Dje
@@ -107,6 +109,9 @@ sq:
       direct_message_creator:
         title: Mesazh i ri
         prefix: "Për:"
+      channel:
+        preview_card:
+          log_in: "Identifikohu"
       create_channel:
         description: "Përshkrimi"
         type: "Lloji"

@@ -3475,6 +3475,7 @@ en:
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
+      title_placeholder_redesign: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
@@ -4253,6 +4254,7 @@ en:
       sort:
         label: "Sort by"
         top: "Top"
+        hot: "Hot"
         new: "New"
         old: "Old"
       load_more_children:
@@ -5185,7 +5187,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
@@ -5918,7 +5920,7 @@ en:
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
-      choose_for_topic: "optional tags"
+      choose_for_topic: "Optional tags…"
       choose_for_topic_required:
         one: "select at least %{count} tag…"
         other: "select at least %{count} tags…"
@@ -9884,6 +9886,31 @@ en:
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Settings"
+        export: "Export"
+        export_count: "Export (%{count} selected)"
+        export_failed: "Export failed. Please try again."
+        select_to_export: "Select to export"
+        import: "Import"
+        import_heading: "Import emojis"
+        import_description: "Upload a ZIP file containing an emojis.csv manifest and image files."
+        import_download_sample: "Download an example template."
+        import_preview_heading: "Review import"
+        import_summary: "%{new} new · %{conflicts} conflicts · %{unchanged} unchanged · %{invalid} errors"
+        import_confirm: "Confirm import"
+        import_unchanged_count: "%{count} unchanged"
+        import_will_skip: "Unchanged — will skip"
+        import_excluded: "Excluded from import"
+        import_incoming_alt: "Incoming: %{name}"
+        import_existing_alt: "Existing: %{name}"
+        import_existing_group_alt: "Existing group"
+        import_use_incoming: "Use new"
+        import_keep_existing: "Keep existing"
+        import_category:
+          new: "New"
+          conflict: "Conflicts"
+          invalid: "Errors"
+        select_all: "Select all emojis"
+        select: "Select %{name}"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

@@ -8254,6 +8254,7 @@ he:
             header: "כותרת"
             full_page: "עמוד מלא"
             click_through_only: "הכול (שיעור לחיצה בלבד)"
+            non_staff_only: "משתמשים שאינם חברי סגל"
           header_search_results: "תוצאות חיפוש כותרות"
         logster:
           title: "יומני שגיאות"

@@ -6560,7 +6560,8 @@ CREATE TABLE public.livestream_topic_chat_channels (
     topic_id bigint NOT NULL,
     chat_channel_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    reference_message_id bigint
 );
 
 
@@ -6946,6 +6947,28 @@ CREATE SEQUENCE public.muted_users_id_seq
 --
 
 ALTER SEQUENCE public.muted_users_id_seq OWNED BY public.muted_users.id;
+
+
+--
+-- Name: nested_hot_post_scores; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nested_hot_post_scores (
+    post_id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    hot_score double precision NOT NULL,
+    thread_hot_score double precision NOT NULL
+);
+
+
+--
+-- Name: nested_hot_score_snapshots; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.nested_hot_score_snapshots (
+    topic_id bigint NOT NULL,
+    calculated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -19961,6 +19984,34 @@ CREATE UNIQUE INDEX index_muted_users_on_user_id_and_muted_user_id ON public.mut
 
 
 --
+-- Name: index_nested_hot_post_scores_on_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_nested_hot_post_scores_on_post_id ON public.nested_hot_post_scores USING btree (post_id);
+
+
+--
+-- Name: index_nested_hot_post_scores_on_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_nested_hot_post_scores_on_topic_id ON public.nested_hot_post_scores USING btree (topic_id);
+
+
+--
+-- Name: index_nested_hot_score_snapshots_on_calculated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_nested_hot_score_snapshots_on_calculated_at ON public.nested_hot_score_snapshots USING btree (calculated_at);
+
+
+--
+-- Name: index_nested_hot_score_snapshots_on_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_nested_hot_score_snapshots_on_topic_id ON public.nested_hot_score_snapshots USING btree (topic_id);
+
+
+--
 -- Name: index_nested_topics_on_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22650,7 +22701,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260715202231'),
 ('20260715183411'),
+('20260715134306'),
 ('20260715090434'),
 ('20260715090355'),
 ('20260715064155'),

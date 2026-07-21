@@ -145,6 +145,7 @@ pl_PL:
         other: "Wartość musi mieć maksymalnie %{count} znaków."
       resolve_group_membership_requires_list: "resolve_group_membership można używać tylko z typem: lista"
       resolve_group_membership_requires_group_list: "resolve_group_membership wymaga typu listy: grupa"
+      resolve_group_membership_requires_groups_property: "Argumentu resolve_group_membership można używać tylko z typem: grupy w schematach obiektów. Nieprawidłowa właściwość: %{property}"
       objects:
         humanize_required: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być obecny."
         required: "musi zostać podana"
@@ -458,6 +459,8 @@ pl_PL:
     max_redemptions_allowed_one: "dla zaproszeń e-mail powinno wynosić 1."
     redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
+    admin_invite_requires_email: "Zaproszenia administratora muszą być wysyłane na adres e-mail"
+    admin_invite_requires_admin_inviter: "Tylko administratorzy mogą tworzyć zaproszenia administratorów"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
     email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
   bulk_invite:
@@ -2828,6 +2831,7 @@ pl_PL:
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."
     dashboard_improvements: "Umożliwia dostęp do przeprojektowanego pulpitu administracyjnego, który umożliwia przypinanie niestandardowych raportów i obejmuje ulepszone dane dotyczące ruchu w witrynie, zaangażowania i inne analizy powiązane z sukcesem i wartością społeczności."
+    enable_invite_modal_with_roles: "Umożliwia przeprojektowany proces zapraszania, który pozwala administratorom zapraszać kogoś bezpośrednio jako administratora. Zaproszona osoba staje się moderatorem po rejestracji, a administratorem po potwierdzeniu zaproszenia przez osobę zapraszającą e-mailem."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."
@@ -2914,6 +2918,7 @@ pl_PL:
       invalid_uncategorized_category_setting: 'Kategorii „Bez kategorii” nie można wybrać, jeśli opcja ''allow uncategorized topics'' nie jest włączona.'
       invalid_search_ranking_weights: "Wartość jest nieprawidłowa dla ustawienia witryny search_ranking_weights. Przykład: '{0.1,0.2,0.3,1.0}'. Należy pamiętać, że maksymalna wartość dla każdej wagi wynosi 1.0."
       content_localization_locale_limit: "Liczba obsługiwanych ustawień regionalnych nie może przekroczyć %{max}."
+      content_localization_language_switcher_requirements: "Przełącznik języka wymaga włączenia opcji {{setting:set_locale_from_cookie}} i {{setting:allow_user_locale}} , a także ustawienia opcji {{setting:content_localization_supported_locales}} , co najmniej jednego języka. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "Przed włączeniem tego ustawienia należy najpierw włączyć opcję „ustaw ustawienia regionalne z parametrów”."
       mediaconvert_role_arn_required: "Rola AWS IAM ARN jest wymagana w przypadku korzystania z AWS MediaConvert do konwersji wideo."
       mediaconvert_output_subdirectory_required: "Podkatalog wyjściowy MediaConvert jest wymagany."

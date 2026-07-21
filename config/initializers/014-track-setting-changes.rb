@@ -74,6 +74,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
+  if name == :simple_email_subject
+    SiteSetting::Action::SimpleEmailSubjectToggled.call(enabled: new_value)
+  end
+
   if name == :content_localization_enabled && new_value == true
     %i[post_menu post_menu_hidden_items].each do |setting_name|
       current_items = SiteSetting.get(setting_name).split("|")

@@ -269,6 +269,8 @@ fi:
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä
+        filter_joined_all: "Kaikki"
+        filter_joined_joined: "Liittyi"
       chat_message_separator:
         today: Tänään
         yesterday: Eilen
@@ -335,6 +337,9 @@ fi:
         memberships_count:
           one: "%{count} jäsen"
           other: "%{count} jäsentä"
+        preview_card:
+          log_in: "Kirjaudu"
+          sign_up: "Rekisteröityminen"
       create_channel:
         threading:
           label: "Käytä ketjutusta"

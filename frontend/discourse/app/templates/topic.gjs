@@ -112,6 +112,7 @@ export default <template>
             @loadingMore={{nested.loadingMore}}
             @loadMoreRoots={{nested.loadMoreRoots}}
             @sort={{nested.sort}}
+            @effectiveSort={{nested.effectiveSort}}
             @changeSort={{nested.changeSort}}
             @replyToPost={{nested.replyToPost}}
             @editPost={{nested.editPost}}

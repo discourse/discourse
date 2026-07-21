@@ -87,6 +87,8 @@ tr_TR:
     holiday_status:
       description: "Tatilde"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     notifications:
       before_event_reminder: "%{title} başlamak üzere."
       after_event_reminder: "%{title} sona erdi."

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module DiscourseAi::Completions
   class OpenAiMessageProcessor
-    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
 
     def initialize(partial_tool_calls: false)
       @tool = nil
@@ -9,6 +9,7 @@ module DiscourseAi::Completions
       @prompt_tokens = nil
       @completion_tokens = nil
       @cache_read_tokens = nil
+      @cache_write_tokens = nil
       @partial_tool_calls = partial_tool_calls
     end
 
@@ -125,15 +126,17 @@ module DiscourseAi::Completions
       usage = json.dig(:usage)
       return if !usage
 
-      cached_tokens =
-        (usage.dig(:prompt_tokens_details, :cached_tokens) || usage[:prompt_cache_hit_tokens]).to_i
+      token_details = usage[:prompt_tokens_details] || {}
+      cached_tokens = (token_details[:cached_tokens] || usage[:prompt_cache_hit_tokens]).to_i
+      cache_write_tokens = token_details[:cache_write_tokens].to_i
 
       prompt_tokens = usage[:prompt_tokens].to_i
       completion_tokens = usage[:completion_tokens].to_i
 
-      @prompt_tokens = prompt_tokens - cached_tokens
+      @prompt_tokens = prompt_tokens - cached_tokens - cache_write_tokens
       @completion_tokens = completion_tokens if completion_tokens.positive?
       @cache_read_tokens = cached_tokens
+      @cache_write_tokens = cache_write_tokens
     end
   end
 end
