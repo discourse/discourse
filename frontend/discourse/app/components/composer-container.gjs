@@ -174,14 +174,14 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
-    this.composer.set("composerHeight", `${size}px`);
-    this.keyValueStore.set({
-      key: "composerHeight",
-      value: this.composer.composerHeight,
-    });
+
+    const height = `${size}px`;
+    // resuming from minimized restores the height from the model
+    this.composer.model?.set("composerHeight", height);
+    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
-      size ? `${size}px` : ""
+      size ? height : ""
     );
 
     this._triggerComposerResized();
