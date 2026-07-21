@@ -73,7 +73,7 @@ module Migrations
         # the importer normalizes a mention when it resolves it, so the two sides
         # agree on what matches.
         #
-        # Usernames can reach seven figures, so they're streamed straight into the
+        # Usernames can run into the millions, so they're streamed straight into the
         # gate; the query is drained fully (every row consumed) so the connection is
         # clean for the queries that follow.
         def mention_names(source_db, group_names, here_mention)
@@ -84,7 +84,9 @@ module Migrations
             .each { |row| names << normalize(row[:username]) }
 
           group_names.each { |name| names << normalize(name) }
-          names << normalize(here_mention)
+          # `here_mention` only falls back to "here" for a NULL setting, so a blank
+          # value would slip an empty name into the gate.
+          names << normalize(here_mention) if here_mention.present?
           names << normalize("all")
 
           Migrations::SortedStringSet.new(names)

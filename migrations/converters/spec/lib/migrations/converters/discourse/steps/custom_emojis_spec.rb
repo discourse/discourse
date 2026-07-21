@@ -49,6 +49,34 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
     )
   end
 
+  it "warns and skips an emoji whose upload is missing, but converts the rest" do
+    processor.process(
+      {
+        id: 7,
+        name: "orphan",
+        group: nil,
+        upload_url: nil,
+        upload_filename: nil,
+        upload_origin: nil,
+        created_at: Time.utc(2020, 1, 2, 3, 4, 5),
+      },
+    )
+    processor.process(
+      {
+        id: 8,
+        name: "smile",
+        group: nil,
+        upload_url: "/uploads/s.png",
+        upload_filename: "s.png",
+        upload_origin: nil,
+        created_at: Time.utc(2020, 1, 2, 3, 4, 5),
+      },
+    )
+
+    expect(processor.tracker.stats.warning_count).to eq(1)
+    expect(rows("custom_emojis")).to contain_exactly(hash_including(original_id: 8, name: "smile"))
+  end
+
   it "keeps a nil group for an ungrouped emoji" do
     processor.process(
       {
