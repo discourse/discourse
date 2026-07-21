@@ -1,7 +1,7 @@
 # JSON:API Kit — API Docs Generation (research findings)
 
-**Status:** research notes (2026-07-17), decisions pending discussion. Facts below were
-verified in-repo and against the live site/repos on this date.
+**Status:** research notes (2026-07-17) + decisions from the 2026-07-21 discussion (§7).
+Facts were verified in-repo and against the live site/repos/gem sources on those dates.
 **References:** [versioning design](./versioning-design.md) · [plugins design](./plugins-design.md).
 
 ---
@@ -73,12 +73,8 @@ document's intro prose would confuse both audiences.
 ## 5. Honest gaps
 
 - **Attribute types are the real missing input.** The serializer knows attribute *names*;
-  it does not know types (`attribute :ran_at, &:last_run_at` is an opaque block). Options,
-  combinable: (a) AR column introspection for column-backed attributes; (b) an explicit
-  type declaration for block-backed attributes (a small DSL addition); (c) sampling — core
-  already auto-derives JSON schemas from live values in its shared examples
-  (`schema_for_json_value`), and the same trick could seed schemas from the contract-guard
-  baseline. A decision for the design discussion.
+  it does not know types (`attribute :ran_at, &:last_run_at` is an opaque block).
+  **RESOLVED 2026-07-21 — mandatory explicit types on the resource; see §7.**
 - **Validation shouldn't be lost.** rswag's strength is that docs are exercised by specs.
   Derivation makes *declared* drift impossible, but block-backed values still need a truth
   check: one generic spec per resource validating a real response against the generated
@@ -92,13 +88,90 @@ document's intro prose would confuse both audiences.
   docs generated for pins after its date (and keeps it, marked deprecated, for older
   pins). Falls out of per-version generation.
 
-## 6. Open questions (for the next session)
+## 6. Open questions
 
-- Type metadata source: introspection vs declaration vs sampling (or layered: introspect,
-  allow override).
+- ~~Type metadata source~~ — RESOLVED, see §7.
 - Generator home and shape: a Kit module walking the registry → hash → YAML, exposed as a
   rake task (and possibly a controller for per-site docs).
 - Should the spike build a minimal generator increment (queries resource → valid OpenAPI
   3.1 document + a spec validating a live response against a generated schema)?
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
+- ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see
+  [resource design](./resource-design.md).
+
+## 7. Decisions and design notes (2026-07-21)
+
+**Direction confirmed:** derive the OpenAPI document from the Kit registry; reuse the
+existing publication tail (§4) as a second document.
+
+### Types: mandatory explicit declarations on the resource
+
+No AR column introspection — a resource does not always map to an AR model (the plugins
+spike's PORO-backed type is a live example). Every attribute declares its type.
+
+**Graphiti precedent (verified from source):** the type is a *required positional
+argument* — `attribute :title, :string` — validated at declaration
+(`lib/graphiti/resource/dsl.rb:126`, `Errors::TypeNotFound`); no introspection anywhere.
+Types are a dry-types registry (`lib/graphiti/types.rb`) with three coercion contexts
+(`read` for serialization, `write` for payloads, `params` for query params), they cascade
+into auto-derived typed filters, and they flow into `Graphiti::Schema.generate`, whose
+output is diffed against a committed baseline that fails on backwards-incompatible changes
+(`schema.rb`, `SchemaDiff`) — the same committed-baseline pattern as the Kit's contract
+guard, with types included. Two implications adopted: the Kit's contract descriptor should
+carry types (a type change *is* a breaking change the guard currently cannot see), and
+filter-value coercion can later ride the same declarations (blocks currently receive raw
+strings).
+
+### The docs pipeline chain — one owner per link
+
+> **response schema ← resource** (attributes + types) ·
+> **request schema ← service contract** (← resource via `from_resource`, enriched by the
+> contract's own validators)
+
+Services describe *inputs*, so they can never source response schemas (readable-only
+attributes appear in no contract), and contracts carry non-resource params too
+(`group_ids`) — hence resource-as-source with the service *deriving* from it, not the
+reverse. But the contract remains the right source for request-schema **constraints**:
+ActiveModel validators are introspectable — `presence` → `required`, `length:
+{ maximum: }` → `maxLength`, `inclusion` → `enum`, `attribute … default:` → `default`.
+
+### `from_resource` (core-phase Service::Base extension, sketched)
+
+`params(from_resource: SomeResource)` imports the resource's *writable* attribute
+declarations (names + types) into the contract. Notes:
+
+- **Additive**: imported attributes coexist with inline extras (`group_ids` stays declared
+  in the service). A full version could import writable *relationships* as
+  `<name>_ids, :array` — exactly what `jsonapi_deserialize` produces.
+- **Per-action subsetting** (`except:`/`only:`) since create/update writability differs.
+- **Shape from the resource; rules from the action.** Validations and
+  `before_validation` normalization are never imported — a service is a business action
+  and its rules are action-specific.
+- **Removes the declaration duplication — not the whole rename cost.** The spike's
+  `sql → query` rename required a manual contract edit (`attribute :query, :string`);
+  with `from_resource` that declaration follows the resource automatically. Honest limit:
+  the service speaks the wire vocabulary throughout, so custom validations,
+  `before_validation` normalization, and steps referencing the attribute by name still
+  need their own edits on a rename. One duplication point gone, not a free rename.
+- Core-phase change (Service::Base lives in core); the spike designs it, not builds it.
+
+### Missing DSL keywords discovered so far
+
+`type` (mandatory, positional), `description` (attributes/filters/sorts — prose semantics
+for docs, e.g. predicate filter keys), `writable:` (gates `from_resource` import;
+readable-only attributes like `created_at` must not enter write contracts). This is
+Graphiti's attribute option set, independently rediscovered — and none of it fits
+jsonapi-serializer's DSL, which is the strongest argument yet for the **resource class**
+as the declaration home.
+
+### The live-values trick, disposed
+
+Core's shared examples auto-derive JSON-schema snippets from live response values
+(`schema_for_json_value`) and print them as copy-pasteable *suggested fixes* in validation
+failure messages — repair tooling for hand-written schemas. Derivation removes that
+paste-loop; two pieces survive: (a) sampling as a **one-time scaffold** (a rake task
+proposing type declarations for existing block-backed attributes from live serialized
+values — human-reviewed, then committed as declarations, never a runtime source); (b) the
+**validation loop** as a generic spec validating a live response against the *generated*
+schema, with failure messages pointing at the declaration to fix rather than a JSON file.
