@@ -62,6 +62,6 @@ module LocalizationGuardian
           SidebarSection.find_by(id: section_or_section_id)
         end
       )
-    section.present? && section.public?
+    section.present? && section.public? && section.custom_section?
   end
 end

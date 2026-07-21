@@ -32,7 +32,12 @@ class SidebarSection < ActiveRecord::Base
             }
 
   scope :public_sections, -> { where("public") }
+  scope :custom_sections, -> { where(section_type: nil) }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
+
+  def custom_section?
+    section_type.blank?
+  end
 
   def reset_community!
     ActiveRecord::Base.transaction do

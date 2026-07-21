@@ -135,12 +135,9 @@ class SidebarSectionsController < ApplicationController
     section_is_public = ActiveModel::Type::Boolean.new.cast(section_params[:public])
     section_params.merge!(user: current_user) if !section_is_public
     if section_params[:localizations]
-      section_params[:localizations].each do |localization|
-        localization[:_destroy] = true if ActiveModel::Type::Boolean.new.cast(
-          localization[:_destroy],
-        )
-      end
-      section_params[:localizations_attributes] = section_params.delete(:localizations)
+      section_params[:localizations_attributes] = prepare_localization_attributes(
+        section_params.delete(:localizations),
+      )
     end
     section_params
   end
@@ -156,12 +153,7 @@ class SidebarSectionsController < ApplicationController
     links&.each do |link|
       next if link[:localizations].blank?
 
-      link[:localizations].each do |localization|
-        localization[:_destroy] = true if ActiveModel::Type::Boolean.new.cast(
-          localization[:_destroy],
-        )
-      end
-      link[:localizations_attributes] = link.delete(:localizations)
+      link[:localizations_attributes] = prepare_localization_attributes(link.delete(:localizations))
     end
 
     links
@@ -197,5 +189,16 @@ class SidebarSectionsController < ApplicationController
 
   def localization_params_present?
     params[:localizations].present? || params[:links]&.any? { |link| link[:localizations].present? }
+  end
+
+  def prepare_localization_attributes(localizations)
+    localizations.filter_map do |localization|
+      destroy = ActiveModel::Type::Boolean.new.cast(localization[:_destroy])
+      if !destroy && LocaleNormalizer.is_same?(localization[:locale], SiteSetting.default_locale)
+        next
+      end
+
+      localization
+    end
   end
 end

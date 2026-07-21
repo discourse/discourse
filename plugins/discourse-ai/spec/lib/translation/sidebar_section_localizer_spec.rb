@@ -46,4 +46,13 @@ describe DiscourseAi::Translation::SidebarSectionLocalizer do
     expect(existing.reload.title).to eq("参加")
     expect(sidebar_url.localizations.last.reload.name).to eq("ようこそ")
   end
+
+  it "does not translate built-in sidebar sections" do
+    community_section =
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+
+    expect { localizer.localize(community_section, "ja") }.not_to change {
+      SidebarSectionLocalization.count
+    }
+  end
 end

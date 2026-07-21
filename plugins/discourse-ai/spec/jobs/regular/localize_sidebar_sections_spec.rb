@@ -51,6 +51,19 @@ describe Jobs::LocalizeSidebarSections do
     job.execute({ limit: 10 })
   end
 
+  it "does not translate built-in sidebar sections" do
+    community_section =
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+    community_section.update!(locale: "en")
+
+    DiscourseAi::Translation::SidebarSectionLocalizer
+      .expects(:localize)
+      .with(community_section, any_parameters)
+      .never
+
+    job.execute({ limit: 10 })
+  end
+
   it "skips target locales that match the source locale" do
     sidebar_section = Fabricate(:sidebar_section, public: true, locale: "pt")
 

@@ -4,7 +4,7 @@ module DiscourseAi
   module Translation
     class SidebarSectionLocalizer
       def self.localize(sidebar_section, target_locale = I18n.locale, short_text_llm_model: nil)
-        return if sidebar_section.blank? || target_locale.blank?
+        return if sidebar_section.blank? || !sidebar_section.custom_section? || target_locale.blank?
 
         target_locale = target_locale.to_s.sub("-", "_")
 

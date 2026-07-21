@@ -422,7 +422,7 @@ describe "Custom sidebar sections" do
 
   it "shows translation controls only when a section is visible to everyone" do
     SiteSetting.content_localization_enabled = true
-    SiteSetting.content_localization_supported_locales = "ja"
+    SiteSetting.content_localization_supported_locales = "ja|zh_CN"
     sidebar_section =
       Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
     Fabricate(:sidebar_section_localization, sidebar_section:, locale: "ja", title: "公開セクション")
@@ -440,6 +440,68 @@ describe "Custom sidebar sections" do
     section_modal.mark_as_public
 
     expect(section_modal).to have_no_localization_controls
+  end
+
+  it "does not show translation controls for the built-in community section" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.click_community_section_more_button
+    sidebar.click_customize_community_section_button
+
+    expect(section_modal).to have_no_localization_controls
+  end
+
+  it "does not offer the default locale as a translation target" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.default_locale = "en"
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Public section")
+    find(".add-localization").click
+
+    expect(section_modal).to have_locale_option("ja")
+    expect(section_modal).to have_no_locale_option(SiteSetting.default_locale)
+  end
+
+  it "does not allow duplicate section title translation locales" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.default_locale = "en"
+    SiteSetting.content_localization_supported_locales = "en|zh_CN|ja"
+    sidebar_section =
+      Fabricate(:sidebar_section, title: "Public section", public: true, locale: "en")
+    sidebar_url = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section:, linkable: sidebar_url)
+
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Public section")
+    section_modal.add_section_title_translation
+    section_modal.add_section_title_translation
+
+    section_title_translation_locales = section_modal.section_title_translation_locales
+
+    expect(section_title_translation_locales).to contain_exactly("zh_CN", "ja")
+    expect(section_modal).to have_disabled_section_title_translation_locale(
+      0,
+      section_title_translation_locales.second,
+    )
+    expect(section_modal).to have_disabled_section_title_translation_locale(
+      1,
+      section_title_translation_locales.first,
+    )
+    expect(section_modal).to have_no_add_section_title_translation
   end
 
   it "displays warning when public section is marked as private" do

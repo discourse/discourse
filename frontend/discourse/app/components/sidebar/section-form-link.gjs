@@ -84,6 +84,16 @@ export default class SectionFormLink extends Component {
     );
   }
 
+  get canAddLocalization() {
+    const selectedLocales = this.activeLocalizations.map(
+      (localization) => localization.locale
+    );
+
+    return this.args.localeOptions.some(
+      (locale) => !selectedLocales.includes(locale.value)
+    );
+  }
+
   <template>
     <div class="sidebar-section-form-link-wrapper" role="rowgroup">
       <div
@@ -179,7 +189,7 @@ export default class SectionFormLink extends Component {
             <div class="sidebar-section-form__localization-row">
               <DSelect
                 @value={{localization.locale}}
-                @onChange={{fn (mut localization.locale)}}
+                @onChange={{fn @setLocalizationLocale @link localization}}
                 @includeNone={{false}}
                 class="sidebar-section-form__localization-locale"
                 aria-label={{i18n
@@ -190,6 +200,11 @@ export default class SectionFormLink extends Component {
                 {{#each @localeOptions as |locale|}}
                   <select.Option
                     @value={{locale.value}}
+                    disabled={{@isLocalizationLocaleDisabled
+                      @link
+                      localization
+                      locale.value
+                    }}
                   >{{locale.name}}</select.Option>
                 {{/each}}
               </DSelect>
@@ -222,13 +237,15 @@ export default class SectionFormLink extends Component {
             {{/if}}
           {{/each}}
 
-          <DButton
-            @action={{fn @addLocalization @link}}
-            @title="sidebar.sections.custom.localizations.add_link"
-            @icon="plus"
-            @label="sidebar.sections.custom.localizations.add_link"
-            class="btn-flat btn-text add-link-localization"
-          />
+          {{#if this.canAddLocalization}}
+            <DButton
+              @action={{fn @addLocalization @link}}
+              @title="sidebar.sections.custom.localizations.add_link"
+              @icon="plus"
+              @label="sidebar.sections.custom.localizations.add_link"
+              class="btn-flat btn-text add-link-localization"
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

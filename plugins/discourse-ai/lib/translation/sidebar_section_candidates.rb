@@ -6,7 +6,7 @@ module DiscourseAi
       private
 
       def self.get
-        SidebarSection.public_sections
+        SidebarSection.public_sections.custom_sections
       end
 
       def self.calculate_completion_per_locale(locale)

@@ -11,7 +11,7 @@ class SidebarSectionSerializer < ApplicationSerializer
         sidebar_url,
         root: false,
         scope: scope,
-        show_translated_name: object.public?,
+        show_translated_name: object.public? && object.custom_section?,
       ).as_json
     end
   end

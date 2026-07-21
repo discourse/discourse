@@ -66,6 +66,27 @@ RSpec.describe SidebarSectionsController do
       ).to eq("タグ")
     end
 
+    it "does not return localization rows for admins editing a built-in section" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+      community_section =
+        SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+      topics_link = community_section.sidebar_urls.find_by(name: "Topics")
+      Fabricate(:sidebar_section_localization, sidebar_section: community_section, locale: "ja")
+      Fabricate(:sidebar_url_localization, sidebar_url: topics_link, locale: "ja")
+
+      get "/sidebar_sections/#{community_section.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("sidebar_section", "localizations")).to eq(nil)
+      expect(
+        response
+          .parsed_body
+          .dig("sidebar_section", "links")
+          .filter_map { |link| link["localizations"] },
+      ).to be_empty
+    end
+
     it "does not allow regular users to load a public section for editing" do
       sign_in(user)
 
@@ -246,13 +267,19 @@ RSpec.describe SidebarSectionsController do
            params: {
              title: "custom section",
              public: true,
-             localizations: [{ locale: "ja", title: "カスタム" }],
+             localizations: [
+               { locale: SiteSetting.default_locale, title: "Default locale" },
+               { locale: "ja", title: "カスタム" },
+             ],
              links: [
                {
                  icon: "link",
                  name: "categories",
                  value: "/categories",
-                 localizations: [{ locale: "ja", name: "カテゴリー" }],
+                 localizations: [
+                   { locale: SiteSetting.default_locale, name: "Default locale" },
+                   { locale: "ja", name: "カテゴリー" },
+                 ],
                },
              ],
            }
@@ -441,6 +468,7 @@ RSpec.describe SidebarSectionsController do
             localizations: [
               { id: section_localization.id, locale: "ja", title: "新しい" },
               { locale: "fr", title: "Nouveau" },
+              { locale: SiteSetting.default_locale, title: "Default locale" },
             ],
             links: [
               {
@@ -451,6 +479,7 @@ RSpec.describe SidebarSectionsController do
                 localizations: [
                   { id: url_localization.id, locale: "ja", name: "最新" },
                   { locale: "fr", name: "Récent" },
+                  { locale: SiteSetting.default_locale, name: "Default locale" },
                 ],
               },
             ],
@@ -465,6 +494,31 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_url_1.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
         [%w[fr Récent], %w[ja 最新]],
       )
+    end
+
+    it "does not allow admin to update built-in section localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+      topics_link = community_section.sidebar_urls.find_by(name: "Topics")
+
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "community section edited",
+            localizations: [{ locale: "ja", title: "コミュニティ" }],
+            links: [
+              {
+                icon: "link",
+                id: topics_link.id,
+                name: "topics edited",
+                value: "/latest",
+                localizations: [{ locale: "ja", name: "トピック" }],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(403)
+      expect(community_section.reload.localizations).to be_blank
+      expect(topics_link.reload.localizations).to be_blank
     end
 
     it "allows admin to remove public section localizations" do

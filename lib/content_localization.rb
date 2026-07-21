@@ -47,8 +47,8 @@ class ContentLocalization
   end
 
   def self.show_translated_sidebar_section?(section, scope)
-    SiteSetting.content_localization_enabled && section.public? && section.locale.present? &&
-      !section.in_user_locale?
+    SiteSetting.content_localization_enabled && section.public? && section.custom_section? &&
+      section.locale.present? && !section.in_user_locale?
   end
 
   def self.show_translated_sidebar_url?(sidebar_url, scope)

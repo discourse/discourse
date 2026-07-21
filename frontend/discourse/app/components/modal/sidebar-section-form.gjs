@@ -66,6 +66,10 @@ class Section {
     return this.validTitle && validLinks && validLocalizations;
   }
 
+  get customSection() {
+    return !this.sectionType;
+  }
+
   get validTitle() {
     return !this.#blankTitle && !this.#tooLongTitle;
   }
@@ -520,18 +524,25 @@ export default class SidebarSectionForm extends Component {
         )
       );
 
-    return [...locales].filter(Boolean).map((locale) => ({
-      name: this.languageNameLookup.getLanguageName(locale),
-      value: locale,
-    }));
+    return [...locales]
+      .filter((locale) => locale && locale !== this.siteSettings.default_locale)
+      .map((locale) => ({
+        name: this.languageNameLookup.getLanguageName(locale),
+        value: locale,
+      }));
   }
 
   get showLocalizations() {
     return (
       this.currentUser?.admin &&
       this.siteSettings.content_localization_enabled &&
-      this.transformedModel.public
+      this.transformedModel.public &&
+      this.transformedModel.customSection
     );
+  }
+
+  get canAddSectionLocalization() {
+    return this.nextLocale(this.transformedModel.localizations) !== "";
   }
 
   get header() {
@@ -615,18 +626,28 @@ export default class SidebarSectionForm extends Component {
 
   @bind
   addLinkLocalization(link) {
+    const locale = this.nextLocale(link.localizations);
+    if (!locale) {
+      return;
+    }
+
     link.localizations.push(
       new LinkLocalization({
-        locale: this.nextLocale(link.localizations),
+        locale,
       })
     );
   }
 
   @action
   addLocalization() {
+    const locale = this.nextLocale(this.transformedModel.localizations);
+    if (!locale) {
+      return;
+    }
+
     this.transformedModel.localizations.push(
       new SectionLocalization({
-        locale: this.nextLocale(this.transformedModel.localizations),
+        locale,
       })
     );
   }
@@ -641,6 +662,57 @@ export default class SidebarSectionForm extends Component {
         (locale) => !selectedLocales.includes(locale.value)
       )?.value || ""
     );
+  }
+
+  @bind
+  setSectionLocalizationLocale(localization, locale) {
+    this.setLocalizationLocale(
+      this.transformedModel.localizations,
+      localization,
+      locale
+    );
+  }
+
+  @bind
+  setLinkLocalizationLocale(link, localization, locale) {
+    this.setLocalizationLocale(link.localizations, localization, locale);
+  }
+
+  @bind
+  isSectionLocalizationLocaleDisabled(localization, locale) {
+    return this.isLocalizationLocaleSelected(
+      this.transformedModel.localizations,
+      localization,
+      locale
+    );
+  }
+
+  @bind
+  isLinkLocalizationLocaleDisabled(link, localization, locale) {
+    return this.isLocalizationLocaleSelected(
+      link.localizations,
+      localization,
+      locale
+    );
+  }
+
+  setLocalizationLocale(localizations, localization, locale) {
+    if (
+      !this.isLocalizationLocaleSelected(localizations, localization, locale)
+    ) {
+      localization.locale = locale;
+    }
+  }
+
+  isLocalizationLocaleSelected(localizations, localization, locale) {
+    return localizations
+      .filter((existingLocalization) => {
+        return (
+          existingLocalization !== localization &&
+          !existingLocalization._destroy
+        );
+      })
+      .some((existingLocalization) => existingLocalization.locale === locale);
   }
 
   serializeSectionLocalizations() {
@@ -800,7 +872,10 @@ export default class SidebarSectionForm extends Component {
                 <div class="sidebar-section-form__localization-row">
                   <DSelect
                     @value={{localization.locale}}
-                    @onChange={{fn (mut localization.locale)}}
+                    @onChange={{fn
+                      this.setSectionLocalizationLocale
+                      localization
+                    }}
                     @includeNone={{false}}
                     class="sidebar-section-form__localization-locale"
                     aria-label={{i18n
@@ -811,6 +886,10 @@ export default class SidebarSectionForm extends Component {
                     {{#each this.localeOptions as |locale|}}
                       <select.Option
                         @value={{locale.value}}
+                        disabled={{this.isSectionLocalizationLocaleDisabled
+                          localization
+                          locale.value
+                        }}
                       >{{locale.name}}</select.Option>
                     {{/each}}
                   </DSelect>
@@ -846,13 +925,15 @@ export default class SidebarSectionForm extends Component {
                 {{/if}}
               {{/each}}
 
-              <DButton
-                @action={{this.addLocalization}}
-                @title="sidebar.sections.custom.localizations.add_section"
-                @icon="plus"
-                @label="sidebar.sections.custom.localizations.add_section"
-                class="btn-flat btn-text add-localization"
-              />
+              {{#if this.canAddSectionLocalization}}
+                <DButton
+                  @action={{this.addLocalization}}
+                  @title="sidebar.sections.custom.localizations.add_section"
+                  @icon="plus"
+                  @label="sidebar.sections.custom.localizations.add_section"
+                  class="btn-flat btn-text add-localization"
+                />
+              {{/if}}
             </div>
             <hr />
           {{/if}}
@@ -916,6 +997,8 @@ export default class SidebarSectionForm extends Component {
                 @localeOptions={{this.localeOptions}}
                 @deleteLocalization={{this.deleteLinkLocalization}}
                 @addLocalization={{this.addLinkLocalization}}
+                @setLocalizationLocale={{this.setLinkLocalizationLocale}}
+                @isLocalizationLocaleDisabled={{this.isLinkLocalizationLocaleDisabled}}
               />
             {{/each}}
 
@@ -942,6 +1025,8 @@ export default class SidebarSectionForm extends Component {
                 @localeOptions={{this.localeOptions}}
                 @deleteLocalization={{this.deleteLinkLocalization}}
                 @addLocalization={{this.addLinkLocalization}}
+                @setLocalizationLocale={{this.setLinkLocalizationLocale}}
+                @isLocalizationLocaleDisabled={{this.isLinkLocalizationLocaleDisabled}}
               />
             {{/each}}
             <DButton
