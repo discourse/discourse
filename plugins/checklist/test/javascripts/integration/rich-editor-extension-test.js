@@ -13,8 +13,6 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
-
       resetRichEditorExtensions().then(() => {
         registerRichEditorExtension(richEditorExtension);
       });
