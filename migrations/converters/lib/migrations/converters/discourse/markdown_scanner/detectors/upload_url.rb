@@ -13,7 +13,7 @@ module Migrations
           # filename convention; see core's `Upload` and `FileStore`). Both relative
           # and absolute (http/https and protocol-relative) forms are recognized.
           #
-          # Recognition is deliberately greedy and does no host allowlisting: a URL
+          # Recognition is deliberately permissive and does no host allowlisting: a URL
           # that looks like an upload but points at some other forum still resolves to
           # nothing at import and comes back verbatim (see `UploadUrlReference`), so
           # there's no risk in matching it here.
@@ -21,27 +21,34 @@ module Migrations
             TRIGGERS = ["!", "[", "h", "/"].freeze
 
             # A full upload URL, from an optional scheme/host down to the sha1 at the
-            # start of the basename. `[^/\s)"'<>]` is a path-segment character: not a
-            # slash, whitespace, closing paren (a markdown link's terminator) or a
-            # quote/angle bracket. The trailing `\w` keeps a sentence's `.`/`,` after
-            # a bare URL out of the match.
-            URL = Regexp.new(<<~'REGEX', Regexp::EXTENDED)
-                (?: (?:https?:)? // [^/\s)"'<>]+ )?   # optional scheme + host
-                (?: / [^/\s)"'<>]+ )*?                # optional leading path (subfolder installs)
+            # start of the basename. `[^/#{Base::URL_BODY_SOURCE}]` is a path-segment
+            # character (a URL-body character minus the slash; see
+            # `Base::URL_BODY_SOURCE`). The trailing `\w` keeps a sentence's `.`/`,`
+            # after a bare URL out of the match.
+            URL =
+              %r{
+                (?: (?:https?:)? // [^/#{Base::URL_BODY_SOURCE}]+ )?   # optional scheme + host
+                (?: / [^/#{Base::URL_BODY_SOURCE}]+ )*?                # optional leading path (subfolder installs)
                 / (?:secure-)? uploads /
-                (?: [^/\s)"'<>]+ / )*?                # site name and any segments before original/
+                (?: [^/#{Base::URL_BODY_SOURCE}]+ / )*?                # site name and any segments before original/
                 (?: original | optimized ) /
-                (?: [^/\s)"'<>]+ / )*                 # depth/partition segments (2X/a/ab/ …)
-                (?<sha1> \h{40} ) (?=[._])            # sha1, then the extension or `_WxH` suffix
-                [^\s)"'<>]* \w
-              REGEX
+                (?: [^/#{Base::URL_BODY_SOURCE}]+ / )*                 # depth/partition segments (2X/a/ab/ …)
+                (?<sha1> \h{40} ) (?=[._])                             # sha1, then the extension or `_WxH` suffix
+                [^#{Base::URL_BODY_SOURCE}]* \w
+              }x
             private_constant :URL
 
             # `\G` anchors each match at `pos` so scanning stays linear.
             IMAGE = /\G!\[[^\]]*\]\(#{URL}\)/
             private_constant :IMAGE
 
-            LINK = /\G\[[^\]]*\]\(#{URL}\)/
+            # The text class excludes `[` so the `[` of a nested image
+            # `[![…](…)](…)` never starts a match at the outer bracket — otherwise
+            # `[^\]]*` would run across the `![…]` and match from the outer `[` down to
+            # the inner `)`, swallowing the image and leaving a dangling `](…)`. With
+            # `[` excluded the outer bracket fails here and the inner image is deferred
+            # on its own at the `!` trigger.
+            LINK = /\G\[[^\[\]]*\]\(#{URL}\)/
             private_constant :LINK
 
             BARE = /\G#{URL}/
@@ -61,11 +68,14 @@ module Migrations
 
             private
 
-            # A bare URL is whitespace-delimited, so it must start the line or follow
-            # whitespace. This also keeps it from firing on a URL sitting inside a
-            # markdown link's `(…)`, which the link/image branches already handle.
+            # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
+            # right kind of `(…)`; see {Base#bare_url_boundary_before?}). A normal
+            # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
+            # inner URL only when the outer bracket wasn't a handled link — a nested
+            # image `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
+            # in place is what we want.
             def detect_bare(input, pos)
-              return nil unless whitespace_before?(input, pos)
+              return nil unless bare_url_boundary_before?(input, pos)
               match_with(BARE, input, pos)
             end
 

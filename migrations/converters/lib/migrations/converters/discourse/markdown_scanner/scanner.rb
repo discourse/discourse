@@ -22,22 +22,32 @@ module Migrations
         # an off-boundary offset, so a logic bug here raises instead of producing a
         # wrong result.
         class Scanner
-          # Presence gate. Every construct we extract contains an
+          # Presence gate for the built-in constructs. Each of these contains an
           # `@` (mention), a `[` (quote, attachment, and an image's `![`), a `#`
-          # (hashtag), or the `uploads/` segment of a full-URL upload — so a body
-          # with none of those can't have one and skips the walk. `#` is included
-          # because it's rare in plain prose. `!` and the bare-URL triggers are
-          # deliberately not gates on their own: they're common characters, and each
-          # extractable construct they start also carries one of these signals.
+          # (hashtag), or the `uploads/` segment of a full-URL upload — so a body with
+          # none of those can't hold one and skips the walk. `#` is included because
+          # it's rare in plain prose. `!` and the bare-URL triggers are deliberately
+          # not gates on their own: they're common characters, and each built-in
+          # construct they start also carries one of these signals.
+          #
+          # A detector whose constructs don't necessarily contain one of these
+          # characters — a bare internal link like `/t/5` carries none — must
+          # contribute its own gate through `extra_gate`, otherwise its posts would
+          # wrongly skip the walk.
           MAYBE_EMBED = %r{[@\[#]|uploads/}
           private_constant :MAYBE_EMBED
 
           # @param detectors [Array<Detectors::Base>] detector instances in priority
           #   order; each declares the characters it can match at (`#triggers`).
           # @param extra_gate [Regexp, nil] an extra presence-gate alternative OR'd
-          #   into {MAYBE_EMBED}, so a detector that's only wired in for some runs
-          #   (the custom-emoji `:name:` shape) doesn't widen every run's gate.
-          # @yieldparam node the detected AST node; the block returns its replacement.
+          #   into {MAYBE_EMBED}, for a detector whose constructs don't always contain
+          #   a {MAYBE_EMBED} character. Whether the detector is always wired (internal
+          #   links, whose gate is always present) or only wired for some runs (the
+          #   custom-emoji `:name:` shape), its gate rides here so it only widens the
+          #   runs that actually use the detector.
+          # @yieldparam node the detected AST node. The block returns the node's
+          #   replacement, or nil to decline the match and pass the matched text
+          #   through unchanged (see {#handle_match}).
           def initialize(detectors:, extra_gate: nil, &on_node)
             @on_node = on_node
             @gate = extra_gate ? Regexp.union(MAYBE_EMBED, extra_gate) : MAYBE_EMBED
@@ -61,7 +71,7 @@ module Migrations
             # line-start code checks. Runs of anything else are skipped in one
             # regex jump and appended as one slice.
             chars = (detectors.flat_map(&:triggers) + ["`", "\n"]).uniq
-            @interesting = Regexp.new("[#{chars.map { |char| Regexp.escape(char) }.join}]")
+            @stop_pattern = Regexp.new("[#{chars.map { |char| Regexp.escape(char) }.join}]")
           end
 
           # @param input [String]
@@ -87,23 +97,23 @@ module Migrations
 
           # Inside code only a backtick (a possible inline-code closer) or a newline
           # (which re-arms the line-start checks) can change anything.
-          CODE_INTERESTING = /[`\n]/
-          private_constant :CODE_INTERESTING
+          CODE_STOP_PATTERN = /[`\n]/
+          private_constant :CODE_STOP_PATTERN
 
           def scan_input
             length = @input.bytesize
 
             while @pos < length
               if @line_start
-                next if advance_code_boundary(:check_fenced_boundary)
-                next if advance_code_boundary(:check_indented_boundary)
+                next if advance_past_code_line(@code_tracker.check_fenced_boundary(@input, @pos))
+                next if advance_past_code_line(@code_tracker.check_indented_boundary(@input, @pos))
               end
 
               # Jump straight to the next position anything can react to; the run
               # of plain characters before it is appended as one slice. Walking
               # char-by-char instead costs a one-character string per position.
-              interesting = @code_tracker.in_code? ? CODE_INTERESTING : @interesting
-              index = @input.byteindex(interesting, @pos)
+              stop_pattern = @code_tracker.in_code? ? CODE_STOP_PATTERN : @stop_pattern
+              index = @input.byteindex(stop_pattern, @pos)
 
               unless index
                 @result << @input.byteslice(@pos..)
@@ -137,17 +147,20 @@ module Migrations
                 end
               end
 
-              # A failed trigger, backtick or newline. Every interesting byte is
-              # ASCII, so appending the byte as a codepoint reproduces the one
-              # character without allocating a slice for it.
+              # The byte is a trigger that matched nothing, a backtick, or a newline.
+              # Every byte we stop at is ASCII, so appending the byte as a codepoint
+              # reproduces the one character without allocating a slice for it.
               @result << byte
               @line_start = byte == 0x0a # 0x0a = newline
               @pos += 1
             end
           end
 
-          def advance_code_boundary(method)
-            new_pos = @code_tracker.public_send(method, @input, @pos, line_start: true)
+          # Takes the position a line-start code check returned (or nil). On nil the
+          # check didn't apply and we report that so the caller falls through. On a
+          # position the line is code: append its slice, advance past it, and stay
+          # armed at the next line start.
+          def advance_past_code_line(new_pos)
             return false unless new_pos
 
             @result << @input.byteslice(@pos...new_pos)
@@ -165,7 +178,17 @@ module Migrations
           end
 
           def handle_match(match)
-            @result << @on_node.call(match.node).to_s
+            replacement = @on_node.call(match.node)
+            # A block declines a match by returning nil: the matched span passes
+            # through unchanged (the byte slice, since positions are byte offsets)
+            # instead of being replaced. Anything else is stringified and spliced in.
+            @result << (
+              if replacement.nil?
+                @input.byteslice(match.start_pos...match.end_pos)
+              else
+                replacement.to_s
+              end
+            )
             @pos = match.end_pos
             @line_start = false
           end

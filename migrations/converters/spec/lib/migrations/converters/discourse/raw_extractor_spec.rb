@@ -141,6 +141,30 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.uploads.size).to eq(1)
       expect(result).to include("code ![pic](#{url}) and bare #{url}")
     end
+
+    it "defers only the inner image of a linked image, leaving the outer link literal" do
+      inner = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      result = extract("[![alt|690x388](#{inner})](https://other.example.com/page)")
+
+      expect(buffer.uploads.size).to eq(1)
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq(sha1)
+      # The inner image alone is deferred; the mangled half-link the greedy `[…]`
+      # class used to produce is gone.
+      expect(upload[:original_markdown]).to eq("![alt|690x388](#{inner})")
+      expect(result).to eq("[#{upload[:placeholder]}](https://other.example.com/page)")
+    end
+
+    it "defers both images of an old lightbox (a thumbnail linking to the full image)" do
+      thumb = "/uploads/default/optimized/2X/a/ab/#{sha1}_2_100x75.png"
+      full = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      result = extract("[![thumb](#{thumb})](#{full})")
+
+      expect(buffer.uploads.size).to eq(2)
+      expect(buffer.uploads.map { |u| u[:original_markdown] }).to eq(["![thumb](#{thumb})", full])
+      thumb_ph, full_ph = buffer.uploads.map { |u| u[:placeholder] }
+      expect(result).to eq("[#{thumb_ph}](#{full_ph})")
+    end
   end
 
   describe "quotes" do
@@ -769,6 +793,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.links).to be_empty
     end
 
+    it "rewrites an internal URL inside a prose paren group" do
+      link, result = link_for("(/t/slug/5)")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(result).to eq("(#{link[:placeholder]})")
+    end
+
+    it "defers the inner image and rewrites the outer topic URL of a linked image" do
+      sha1 = "0123456789abcdef0123456789abcdef01234567"
+      inner = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"
+      result = extract("[![alt](#{inner})](https://forum.example.com/t/some-topic/5)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+      link = buffer.links.first
+      expect(link).to include(
+        url: "https://forum.example.com/t/some-topic/5",
+        target_type: link_target::TOPIC,
+        target_id: 5,
+      )
+      expect(result).to eq("[#{buffer.uploads.first[:placeholder]}](#{link[:placeholder]})")
+    end
+
     it "does not extract an internal link inside a fenced code block" do
       raw = <<~MD
         real /t/slug/12
@@ -885,6 +931,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |m| m[:name] }).to eq(%w[alice])
       expect(result).to include("`@channel`")
     end
+  end
+
+  it "raises on a node type it has no defer handler for" do
+    expect { extractor.send(:defer, Object.new, buffer) }.to raise_error(
+      NotImplementedError,
+      /Object/,
+    )
   end
 
   # The contract: every token spliced into the result maps to exactly one recorded

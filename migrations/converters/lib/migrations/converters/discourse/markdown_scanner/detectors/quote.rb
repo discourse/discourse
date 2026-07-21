@@ -29,6 +29,17 @@ module Migrations
 
             private
 
+            # The id bound (see `Base::ID_PATTERN`): an overlong run names no real
+            # record, so the part is ignored like any unrecognized one.
+            POST_PART = /\Apost:(#{Base::ID_PATTERN})\z/
+            private_constant :POST_PART
+
+            TOPIC_PART = /\Atopic:(#{Base::ID_PATTERN})\z/
+            private_constant :TOPIC_PART
+
+            USERNAME_PART = /\Ausername:(.+)\z/
+            private_constant :USERNAME_PART
+
             # Splits a Discourse attribution into username, display name, and the
             # source coordinates. `post:`/`topic:` are the source's own post number
             # and topic id; keep them as integers so the importer can look up the
@@ -48,14 +59,11 @@ module Migrations
                 .map(&:strip)
                 .each_with_index do |part, index|
                   case part
-                  # At most 18 digits — a longer run overflows the signed 64-bit
-                  # integer SQLite stores ids in, and names no real record. The
-                  # attribution part is then ignored, like any unrecognized part.
-                  when /\Apost:(\d{1,18})\z/
+                  when POST_PART
                     post_number = Regexp.last_match(1).to_i
-                  when /\Atopic:(\d{1,18})\z/
+                  when TOPIC_PART
                     topic_id = Regexp.last_match(1).to_i
-                  when /\Ausername:(.+)\z/
+                  when USERNAME_PART
                     explicit_username = Regexp.last_match(1)
                   else
                     name = part if index.zero? && !part.empty?

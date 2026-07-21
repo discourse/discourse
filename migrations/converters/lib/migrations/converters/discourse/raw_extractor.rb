@@ -155,6 +155,11 @@ module Migrations
             collector.emoji(name: node.name)
           when MarkdownScanner::QuoteAttribution
             defer_quote(node, collector)
+          else
+            # A new detector whose node type isn't handled here would otherwise fall
+            # through and — via the scanner's nil-return passthrough — leave the
+            # matched text in place silently. Fail loudly instead.
+            raise NotImplementedError, "no defer handler for #{node.class}"
           end
         end
 

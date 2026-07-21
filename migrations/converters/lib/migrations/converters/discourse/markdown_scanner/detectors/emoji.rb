@@ -7,8 +7,11 @@ module Migrations
         module Detectors
           # Detects a custom emoji shortcode (`:name:`) and defers it only when the
           # name is one of the source's own custom emoji. Standard emoji, a stray
-          # `:word:` in prose, and clock times all pass through untouched, so this is
-          # the one detector configured with state: the set of custom emoji names.
+          # `:word:` in prose, and clock times all pass through untouched. This
+          # detector requires its name set (there's nothing to defer without it),
+          # whereas the other name-gated detectors take an optional gate — `Mention`
+          # and `Hashtag` default to no name set, and `InternalLink` takes a host set
+          # plus a foreign-host callback.
           #
           # This follows core's emoji rule (`discourse-markdown-it/src/features/
           # emoji.js`): the `:` must sit on a boundary — start of input, whitespace,
@@ -57,7 +60,7 @@ module Migrations
 
             # A shortcode opens on a boundary: the start, whitespace, or punctuation
             # — including the closing colon of an adjacent shortcode, so chains like
-            # `:smile::wink:` defer every link. Only an alphanumeric before the `:`
+            # `:smile::wink:` defer every shortcode. Only an alphanumeric before the `:`
             # disqualifies it (glued to a word, or the inside of a `10:30:45`
             # timestamp); anything that slips past still has to name a source custom
             # emoji to be deferred.

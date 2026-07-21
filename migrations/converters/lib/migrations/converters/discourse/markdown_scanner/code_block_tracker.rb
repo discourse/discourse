@@ -26,9 +26,7 @@ module Migrations
           end
 
           # @return [Integer, nil] end position after a fence, or nil.
-          def check_fenced_boundary(input, pos, line_start:)
-            return nil unless line_start
-
+          def check_fenced_boundary(input, pos)
             input_length = input.bytesize
             scan_pos = skip_leading_spaces(input, pos)
             fence_byte = input.getbyte(scan_pos)
@@ -45,8 +43,7 @@ module Migrations
           end
 
           # @return [Integer, nil] end position after an indented-code line, or nil.
-          def check_indented_boundary(input, pos, line_start:)
-            return nil unless line_start
+          def check_indented_boundary(input, pos)
             return nil if @in_fenced_block
 
             input_length = input.bytesize
@@ -121,15 +118,20 @@ module Migrations
             pos_after_line(scan_pos, input_length)
           end
 
+          # A backtick run closes an inline span only when its length matches the
+          # opening delimiter's exactly (CommonMark). Count the whole run at `pos`
+          # and consume all of it either way: on a match, close and return the
+          # position after it; on a mismatch (a shorter or a longer run), the run is
+          # literal code, so stay inside the span but still return past it — that
+          # keeps the next close attempt landing on a run start instead of stepping
+          # one backtick into this run, where a length-2 run's second backtick could
+          # otherwise be mistaken for a length-1 close.
           def try_close_inline(input, pos, input_length)
-            delimiter_length = @inline_delimiter.bytesize
-            return nil unless input.byteslice(pos, delimiter_length) == @inline_delimiter
+            run_end = pos
+            run_end += 1 while run_end < input_length && input.getbyte(run_end) == 0x60 # 0x60 = backtick
 
-            next_pos = pos + delimiter_length
-            return nil if next_pos < input_length && input.getbyte(next_pos) == 0x60 # backtick
-
-            @in_inline_code = false
-            next_pos
+            @in_inline_code = false if run_end - pos == @inline_delimiter.bytesize
+            run_end
           end
 
           def open_inline(input, pos, input_length)

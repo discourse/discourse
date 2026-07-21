@@ -37,14 +37,16 @@ module Migrations
             # since relative detection is unconditional.
             GATE = %r{/(?:#{ROUTE_SEGMENT})/}
 
-            # A URL body: no whitespace, and none of the characters that close a
-            # markdown link or delimit a bare URL. The trailing `\w` on the bare form
-            # keeps a sentence's `.`/`,` after the URL out of the match (mirrors
-            # `UploadUrl`).
-            URL_BODY = /[^\s)"'<>]/
+            # A URL-body character (see `Base::URL_BODY_SOURCE`). The trailing `\w` on
+            # the bare form keeps a sentence's `.`/`,` after the URL out of the match
+            # (mirrors `UploadUrl`).
+            URL_BODY = /[^#{Base::URL_BODY_SOURCE}]/
             private_constant :URL_BODY
 
-            LINK = /\G\[(?<text>[^\]]*)\]\((?<url>#{URL_BODY}+)\)/
+            # The text class excludes `[` for the same reason as `UploadUrl::LINK` (see
+            # the comment there): the `[` of a nested image `[![…](…)](…)` must not
+            # start a match at the outer bracket.
+            LINK = /\G\[(?<text>[^\[\]]*)\]\((?<url>#{URL_BODY}+)\)/
             private_constant :LINK
 
             # The bare form fires at every whitespace-preceded `h` and `/` the scanner
@@ -65,36 +67,34 @@ module Migrations
             SPLIT = %r{\A(?:(?:https?:)?//(?<host>[^/]+))?(?<rest>/[^\s]*)?\z}
             private_constant :SPLIT
 
-            # A word segment matched the way the mention detector reads a username
-            # (see `Base::WORD_PATTERN`): starts and ends on an alphanumeric/mark/`_`,
-            # may hold `.`/`-` inside.
-            WORD = /[\p{Alnum}\p{M}_](?:[\p{Alnum}\p{M}._-]*[\p{Alnum}\p{M}])?/
+            # A `/u/<name>` segment, read like a username (see `Base::WORD_SOURCE`)
+            # but unanchored.
+            WORD = /#{Base::WORD_SOURCE}/
             private_constant :WORD
 
             # A single path segment, up to the next `/`, query `?` or fragment `#`.
-            SEG = %r{[^/?#]+}
-            private_constant :SEG
+            SEGMENT = %r{[^/?#]+}
+            private_constant :SEGMENT
 
-            # A record id. At most 18 digits: ids are stored as SQLite signed 64-bit
-            # integers (19 digits can overflow, and binding one raises), and no real
-            # record has one anyway — a longer digit run is a numeric topic *title*,
-            # like meta's `/t/77777777777777777789999/`, which Discourse itself
-            # doesn't resolve either. The routes' trailing lookaheads keep a longer
-            # run from matching partially, so such a URL just stays literal text.
-            ID = /\d{1,18}/
-            private_constant :ID
+            # A path segment that is entirely an id (see `Base::ID_PATTERN`).
+            NUMERIC_SEGMENT = /\A#{Base::ID_PATTERN}\z/
+            private_constant :NUMERIC_SEGMENT
 
             # `/t/<id>` (topic) or `/t/<id>/<post_number>` (post by coordinates), the
-            # id-only forms where the first `/t/` component is all digits.
-            TOPIC_NUMERIC = %r{\A/t/(?<id>#{ID})(?:/(?<pn>#{ID}))?(?=[/?#]|\z)}
+            # id-only forms where the first `/t/` component is all digits. The id
+            # bound (see `Base::ID_PATTERN`) keeps a 19+-digit numeric title literal:
+            # its trailing lookahead makes an overlong run backtrack to no match.
+            TOPIC_NUMERIC =
+              %r{\A/t/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?(?=[/?#]|\z)}
             private_constant :TOPIC_NUMERIC
 
             # `/t/<slug>/<id>` (topic) or `/t/<slug>/<id>/<post_number>` (post by
             # coordinates). The slug is `-` for the slugless `/t/-/<id>` form.
-            TOPIC_SLUG = %r{\A/t/#{SEG}/(?<id>#{ID})(?:/(?<pn>#{ID}))?(?=[/?#]|\z)}
+            TOPIC_SLUG =
+              %r{\A/t/#{SEGMENT}/(?<id>#{Base::ID_PATTERN})(?:/(?<post_number>#{Base::ID_PATTERN}))?(?=[/?#]|\z)}
             private_constant :TOPIC_SLUG
 
-            POST = %r{\A/p/(?<id>#{ID})(?=[/?#]|\z)}
+            POST = %r{\A/p/(?<id>#{Base::ID_PATTERN})(?=[/?#]|\z)}
             private_constant :POST
 
             USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
@@ -103,20 +103,20 @@ module Migrations
             # `/c/<slug-path>/<id>` (id wins) or the legacy `/c/<slug-path>`. The
             # segments are split in Ruby: a trailing all-digits segment is the id,
             # otherwise the segments join with `:` into a `parent:child` slug path.
-            CATEGORY = %r{\A/c/(?<path>#{SEG}(?:/#{SEG})*)(?=[/?#]|\z)}
+            CATEGORY = %r{\A/c/(?<path>#{SEGMENT}(?:/#{SEGMENT})*)(?=[/?#]|\z)}
             private_constant :CATEGORY
 
             # `/tag/<name>` / `/tags/<name>`. The `(?!c/)` guard leaves the
             # `/tags/c/<category>/<tag>` intersection form undetected (out of scope).
-            TAG = %r{\A/tags?/(?!c/)(?<name>#{SEG})}
+            TAG = %r{\A/tags?/(?!c/)(?<name>#{SEGMENT})}
             private_constant :TAG
 
-            GROUP = %r{\A/g/(?<name>#{SEG})}
+            GROUP = %r{\A/g/(?<name>#{SEGMENT})}
             private_constant :GROUP
 
             # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated at
             # import, so it's consumed by the route rather than kept as suffix.
-            BADGE = %r{\A/badges/(?<id>#{ID})(?:/#{SEG})?(?=[/?#]|\z)}
+            BADGE = %r{\A/badges/(?<id>#{Base::ID_PATTERN})(?:/#{SEGMENT})?(?=[/?#]|\z)}
             private_constant :BADGE
 
             # @param hosts [Set<String>, #include?] the source's own hosts (base URL
@@ -156,11 +156,15 @@ module Migrations
               build(input, pos, match, url: match[:url], text: match[:text])
             end
 
-            # A bare URL is whitespace-delimited, so it must open the input or follow
-            # whitespace — which also keeps it from firing on the URL inside a markdown
-            # link's `(…)`, already handled by the link branch.
+            # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
+            # right kind of `(…)`; see {Base#bare_url_boundary_before?}). A normal
+            # `[text](url)` is consumed whole at its `[` trigger, so the walk reaches an
+            # inner URL only when the outer bracket wasn't a handled link — a nested
+            # image `[![…](…)](url)` whose outer target we do want, versus an image's
+            # own `![alt](url)` src or a foreign link's target, which the paren check
+            # deliberately leaves alone.
             def detect_bare(input, pos)
-              return nil unless whitespace_before?(input, pos)
+              return nil unless bare_url_boundary_before?(input, pos)
 
               match = match_at(BARE, input, pos)
               return nil unless match
@@ -236,12 +240,12 @@ module Migrations
               match = TOPIC_NUMERIC.match(rest) || TOPIC_SLUG.match(rest)
               return nil unless match
 
-              if match[:pn]
+              if match[:post_number]
                 target(
                   match,
                   :post,
                   target_topic_id: match[:id].to_i,
-                  target_post_number: match[:pn].to_i,
+                  target_post_number: match[:post_number].to_i,
                 )
               else
                 target(match, :topic, target_id: match[:id].to_i)
@@ -263,9 +267,9 @@ module Migrations
               return nil unless match
 
               segments = match[:path].split("/")
-              # The id bound matches ID: a longer digit run can't be a real id, so
-              # it reads as a (numeric) slug and fails name resolution instead.
-              if segments.last.match?(/\A\d{1,18}\z/)
+              # The id bound (see `Base::ID_PATTERN`): a longer digit run can't be a
+              # real id, so it reads as a (numeric) slug and fails name resolution.
+              if segments.last.match?(NUMERIC_SEGMENT)
                 target(match, :category, target_id: segments.last.to_i)
               else
                 target(match, :category, target_name: segments.join(":"))
