@@ -541,7 +541,6 @@ es:
           default: "Por defecto (límites fijos)"
           agentic: "Agéntico (presupuesto de tokens)"
         max_turn_tokens: "Máximo de tokens de turno"
-        max_turn_tokens_help: "Máximo total de tokens (entrada + salida) consumidos en todas las llamadas LLM durante una única respuesta del bot. Cuando se establece, sustituye los límites fijos de finalización/herramienta por un presupuesto de tokens, permitiendo un comportamiento más agéntico. Déjalo vacío para que permanezcan los límites por defecto."
         compression_threshold: "Umbral de compresión"
         compression_threshold_help: "Porcentaje de uso del contexto (20-99) a partir del cual se activa la compresión automática. Los valores más bajos activan la compresión antes, preservando más espacio libre."
         vision_max_pixel_sizes:

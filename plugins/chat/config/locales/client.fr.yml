@@ -702,7 +702,7 @@ fr:
         chat_reviewable_message:
           title: "Message de discussion signalé"
         reviewable_chat_message:
-          title: "Message de discussion marqué"
+          title: "Message de discussion signalé"
           noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:

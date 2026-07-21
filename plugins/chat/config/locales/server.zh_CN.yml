@@ -10,7 +10,6 @@ zh_CN:
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理员和版主始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"

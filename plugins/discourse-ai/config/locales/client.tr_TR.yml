@@ -544,7 +544,6 @@ tr_TR:
           default: "Varsayılan (Sabit Limitler)"
           agentic: "Agentic (Token Bütçesi)"
         max_turn_tokens: "Maksimum Dönüş Jetonları"
-        max_turn_tokens_help: "Tek bir bot yanıtı sırasında tüm LLM çağrıları boyunca tüketilen maksimum toplam jeton (giriş + çıkış). Ayarlandığında, sabit tamamlama/araç sınırlarını bir jeton bütçesi ile değiştirerek daha fazla ajan davranışı sağlar. Varsayılan sınırlar için boş bırakın."
         compression_threshold: "Sıkıştırma Eşiği"
         compression_threshold_help: "Otomatik sıkıştırmanın devreye girdiği bağlam kullanım yüzdesi (20–99). Daha düşük değerler sıkıştırmayı daha erken tetikler ve daha fazla boşluk bırakır."
         vision_max_pixel_sizes:
