@@ -663,7 +663,9 @@ export default class Nested extends Component {
 
   <template>
     <div
+      id="topic"
       class={{this.viewClass}}
+      data-topic-id={{@topic.id}}
       {{didInsert this.scheduleTargetScroll}}
       {{didInsert this.restoreStoredScrollAnchor}}
       {{didUpdate this.scheduleTargetScroll @targetPostNumber @rootNodes}}
