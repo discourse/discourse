@@ -125,6 +125,44 @@ module("Integration | Component | CreateInviteWithRoles", function (hooks) {
     );
   });
 
+  test("creating a moderator invite posts is_moderator and shows the summary", async function (assert) {
+    this.currentUser.set("can_create_admin_invite", true);
+    const model = { defaultRole: "admin", invites: [] };
+
+    let requestBody;
+    pretender.post("/invites", (request) => {
+      requestBody = new URLSearchParams(request.requestBody);
+      return response({
+        id: 44,
+        invite_key: "mod123",
+        link: "http://example.com/invites/mod123",
+        email: "new-mod@example.com",
+        grants_moderator: true,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+
+    await render(
+      <template>
+        <CreateInviteWithRoles @inline={{true}} @model={{model}} />
+      </template>
+    );
+
+    await click(
+      ".create-invite-with-roles-modal__staff-role input[value='moderator']"
+    );
+    await formKit().field("email").fillIn("new-mod@example.com");
+    await click(".save-invite");
+
+    assert.strictEqual(requestBody.get("is_moderator"), "true");
+    assert.strictEqual(requestBody.get("is_admin"), null);
+    assert.strictEqual(requestBody.get("email"), "new-mod@example.com");
+
+    assert
+      .dom(".create-invite-with-roles-modal__sent-to")
+      .includesText("new-mod@example.com");
+  });
+
   test("validates the admin email address", async function (assert) {
     this.currentUser.set("can_create_admin_invite", true);
     const model = { defaultRole: "admin" };

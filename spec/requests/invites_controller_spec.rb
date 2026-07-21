@@ -777,6 +777,61 @@ RSpec.describe InvitesController do
       end
     end
 
+    context "with moderator invite" do
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      it "creates a single-use moderator invite" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_moderator"]).to eq(true)
+        expect(response.parsed_body["grants_admin"]).to eq(false)
+
+        invite = Invite.last
+        expect(invite.moderator).to eq(true)
+        expect(invite.admin).to eq(false)
+        expect(invite.email).to eq("test@example.com")
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails for moderators and regular users" do
+        sign_in(Fabricate(:moderator))
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+        expect(response.status).to eq(403)
+
+        sign_in(user)
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails when combined with a topic, groups or a domain" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_moderator: "true",
+               topic_id: topic.id,
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_moderator: "true",
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json", params: { is_moderator: "true", domain: "example.com" }
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "with link invite" do
       it "works" do
         sign_in(admin)

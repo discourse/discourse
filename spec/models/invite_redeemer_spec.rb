@@ -729,5 +729,39 @@ RSpec.describe InviteRedeemer do
         expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
       end
     end
+
+    context "with a moderator invite" do
+      fab!(:invite) do
+        Fabricate(:invite, email: "future-mod@example.com", moderator: true, invited_by: admin)
+      end
+
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      def redeem
+        InviteRedeemer.new(
+          invite: invite,
+          email: invite.email,
+          username: "futuremod",
+          name: "Future Mod",
+        ).redeem
+      end
+
+      it "grants moderator without any admin confirmation" do
+        user = redeem
+
+        expect(user.moderator).to eq(true)
+        expect(user.admin).to eq(false)
+        expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
+      end
+
+      it "does not grant moderator when the inviter is no longer staff" do
+        invite.invited_by.update!(admin: false, moderator: false)
+
+        user = redeem
+
+        expect(user.moderator).to eq(false)
+        expect(user.admin).to eq(false)
+      end
+    end
   end
 end

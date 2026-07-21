@@ -73,19 +73,22 @@
     font-size: var(--font-down-1);
   }
 
-  &__delivery {
+  &__delivery,
+  &__staff-role {
     margin: 0 0 1em;
     padding: 0;
     border: 0;
   }
 
-  &__delivery-label {
+  &__delivery-label,
+  &__staff-role-label {
     padding: 0;
     margin-bottom: 0.5em;
     font-weight: bold;
   }
 
-  &__delivery-option {
+  &__delivery-option,
+  &__staff-role-option {
     display: inline-flex;
     align-items: center;
     gap: 0.5em;

@@ -123,13 +123,15 @@ class InvitesController < ApplicationController
 
   def create
     is_admin_invite = params[:is_admin].to_s == "true"
+    is_moderator_invite = params[:is_moderator].to_s == "true"
+    is_staff_invite = is_admin_invite || is_moderator_invite
 
-    if is_admin_invite
+    if is_staff_invite
       guardian.ensure_can_create_admin_invite!
 
       if params[:topic_id].present? || params[:group_ids].present? ||
            params[:group_names].present? || params[:domain].present?
-        raise Discourse::InvalidParameters.new(:is_admin)
+        raise Discourse::InvalidParameters.new(is_admin_invite ? :is_admin : :is_moderator)
       end
 
       RateLimiter.new(
@@ -171,8 +173,9 @@ class InvitesController < ApplicationController
         skip_email: skip_email_param,
         invited_by: current_user,
         custom_message: params[:custom_message],
-        max_redemptions_allowed: is_admin_invite ? nil : params[:max_redemptions_allowed],
+        max_redemptions_allowed: is_staff_invite ? nil : params[:max_redemptions_allowed],
         admin: is_admin_invite,
+        moderator: is_moderator_invite,
         topic_id: topic&.id,
         group_ids: groups&.map(&:id),
         expires_at: params[:expires_at],
