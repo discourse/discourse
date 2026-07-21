@@ -161,7 +161,7 @@
     "message-bus-client": "^4.4.1",
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
-    "qunit-dom": "^3.5.1",
+    "qunit-dom": "^3.6.0",
     "rolldown": "1.1.2",
     "sinon": "^22.0.0",
     "testem": "^3.20.1",
