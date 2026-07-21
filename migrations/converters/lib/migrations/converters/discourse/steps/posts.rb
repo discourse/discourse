@@ -6,7 +6,7 @@ module Migrations
       class Posts < Conversion::Step
         # One log entry for the whole run: each worker tallies foreign-host links
         # per host, and the reducer (`combine_results`) merges the tallies into a
-        # single entry with the full host list in `details`, sorted by link count.
+        # single entry with the top hosts in `details`, sorted by link count.
         # Posts link many other Discourse sites, so a long list of hosts with a few
         # links each is normal and the entry stays INFO. It becomes a WARNING (and
         # the step shows one warning) only when a single host holds a large share
@@ -22,22 +22,31 @@ module Migrations
         DOMINANT_HOST_MINIMUM = 100
         private_constant :DOMINANT_HOST_SHARE, :DOMINANT_HOST_MINIMUM
 
+        # The most hosts we keep in `details`. The dominance signal and the
+        # former-domain forensics only need the top of the list, and an unbounded
+        # list bloats one log row on link-heavy forums.
+        DETAILS_HOST_LIMIT = 500
+        private_constant :DETAILS_HOST_LIMIT
+
         # Merges every worker's per-host link tally and logs the one entry through
-        # `tracker`, which feeds the step's warning tally by itself (see
+        # `tracker`, which counts the warning automatically (see
         # {StepCoordinator#reduce_results}). Runs in the parent under the run DB's
         # single-writer discipline; `results` are the workers' `result` hashes,
         # with string keys from crossing the process boundary as JSON.
         def self.combine_results(results, tracker)
           totals = Hash.new(0)
-          results.each { |hosts| hosts.each { |host, count| totals[host] += count } }
+          results.each { |tally| tally.each { |host, count| totals[host] += count } }
           return if totals.empty?
 
           total = totals.values.sum
-          hosts = totals.sort_by { |host, count| [-count, host] }
-          top_count = hosts.first[1]
+          sorted_hosts = totals.sort_by { |host, count| [-count, host] }
+          _top_host, top_count = sorted_hosts.first
           dominant = top_count >= DOMINANT_HOST_MINIMUM && top_count >= total * DOMINANT_HOST_SHARE
 
-          details = { total:, hosts: hosts.map { |host, count| { host:, count: } } }
+          kept = sorted_hosts.take(DETAILS_HOST_LIMIT)
+          details = { total:, hosts: kept.map { |host, count| { host:, count: } } }
+          omitted = sorted_hosts.size - kept.size
+          details[:omitted] = omitted if omitted > 0
 
           if dominant
             tracker.log_warning(FOREIGN_LINK_LOG_MESSAGE, details:)
@@ -171,7 +180,6 @@ module Migrations
           # Keeps only values the enum recognizes, otherwise the fallback (the
           # source may carry values from plugins or versions we don't model).
           def valid_enum(enum_module, value, fallback: nil)
-            return fallback if value.nil?
             enum_module.valid?(value) ? value : fallback
           end
         end

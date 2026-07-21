@@ -5,6 +5,10 @@ require "tmpdir"
 RSpec.describe Migrations::Converters::Discourse::Posts do
   subject(:processor) { described_class.processor_class.new({}) }
 
+  def enums
+    Migrations::Database::IntermediateDB::Enums
+  end
+
   around do |example|
     Dir.mktmpdir do |dir|
       db_path = File.join(dir, "intermediate.db")
@@ -54,6 +58,45 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
     end
   end
 
+  describe "converting a post" do
+    before do
+      processor.internal_link_hosts = Set["forum.example.com"]
+      processor.setup
+    end
+
+    it "writes the post row and the deferred embed linkage" do
+      raw = "Welcome @alice, glad you joined!"
+      processor.process(
+        post_item(raw, id: 42).merge(locale: "de", post_type: enums::PostType::REGULAR),
+      )
+
+      post = rows("posts").first
+      expect(post).to include(
+        original_id: 42,
+        topic_id: 10,
+        post_number: 42,
+        locale: "de",
+        original_raw: raw,
+      )
+      # The mention is deferred to a placeholder, so the stored raw differs from
+      # the input body.
+      expect(post[:raw]).not_to eq(raw)
+
+      mention = rows("embed_mentions").first
+      expect(mention).to include(owner_id: 42, name: "alice")
+    end
+
+    it "falls back on unknown enum values and passes known ones through" do
+      processor.process(post_item("first", id: 1).merge(post_type: 999, hidden_reason_id: 999))
+      processor.process(post_item("second", id: 2).merge(post_type: enums::PostType::WHISPER))
+
+      by_id = rows("posts").index_by { |row| row[:original_id] }
+      expect(by_id[1][:post_type]).to eq(enums::PostType::REGULAR)
+      expect(by_id[1][:hidden_reason_id]).to be_nil
+      expect(by_id[2][:post_type]).to eq(enums::PostType::WHISPER)
+    end
+  end
+
   describe ".combine_results" do
     let(:tracker) { Migrations::Conversion::StepTracker.new }
 
@@ -85,6 +128,24 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       expect(hosts_in(entry[:details])).to eq(
         [["old-forum.example.com", 5], ["another.example.com", 4], ["legacy.example.com", 1]],
       )
+      expect(JSON.parse(entry[:details])).not_to have_key("omitted")
+    end
+
+    it "caps the host list and records how many hosts it dropped" do
+      # One more host than the cap, each with a distinct count so the order is
+      # deterministic and the smallest one is the host that gets dropped.
+      tally = {}
+      501.times { |i| tally["host#{i}.example"] = i + 1 }
+
+      described_class.combine_results([tally], tracker)
+
+      details = JSON.parse(entry[:details])
+      expect(details["hosts"].size).to eq(500)
+      expect(details["omitted"]).to eq(1)
+      # `total` still sums every host, dropped ones included.
+      expect(details["total"]).to eq((1..501).sum)
+      # The busiest host stays at the head of the kept list.
+      expect(hosts_in(entry[:details]).first).to eq(["host500.example", 501])
     end
 
     it "logs a WARNING through the tracker when a host dominates the list" do
