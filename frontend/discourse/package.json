@@ -61,7 +61,7 @@
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "codemirror": "^6.0.2",
-    "decorator-transforms": "^2.3.2",
+    "decorator-transforms": "^2.4.0",
     "diff": "^9.0.0",
     "ember-curry-component": "^0.5.0",
     "ember-resolver": "^13.2.0",
