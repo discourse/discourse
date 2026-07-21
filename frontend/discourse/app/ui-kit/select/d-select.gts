@@ -207,7 +207,15 @@ export default class DSelect extends Component<DSelectSignature> {
     createUnresolvedItem: this.args.createUnresolvedItem,
     specialItems: this.args.specialItems,
     onChange: this.handleChange,
-    requestClose: () => this.#menu?.close(),
+    // Gated on the overlay actually being open: `DMenuInstance.close` focuses the trigger by
+    // default, so closing an already-closed menu would steal focus from wherever the user has
+    // moved on to. Reachable from the compat bridge, which exposes both `close()` and a
+    // `select()` that consumers call asynchronously long after dismissing the overlay.
+    requestClose: () => {
+      if (this.isExpanded) {
+        this.#menu?.close();
+      }
+    },
     // Handles for the `modifySelectKit` compat bridge. The element must be the trigger
     // (which stays in the host DOM) — not the panel, which the overlay portals out — so
     // legacy callbacks that walk up from it (e.g. `.closest("#reply-control")`) resolve.
@@ -489,6 +497,21 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   get shouldAutoActivateFirst(): boolean {
     return this.isTypeahead || (this.isStatic && !this.overlayIsModal);
+  }
+
+  /**
+   * Whether to restore the cursor to the already-selected option on open. This outranks
+   * {@link shouldAutoActivateFirst} and so also applies to `button`, whose "wait for the user"
+   * rule exists to avoid pre-highlighting an *arbitrary* row — the user's own choice is not one.
+   *
+   * Excluded while filtering (the first match is what Enter should take, not a row the user
+   * already holds) and for `multiple`, where activating a selected row would make Enter call
+   * `deselect` and silently drop a value.
+   */
+  get shouldActivateSelected(): boolean {
+    return (
+      !this.args.multiple && this.engine.hasValue && this.engine.filter === ""
+    );
   }
 
   get fallbackSelectionLabel(): string {
@@ -1588,6 +1611,7 @@ export default class DSelect extends Component<DSelectSignature> {
                         activeClass="--active"
                         onActivate=this.activateElement
                         autoActivateFirst=this.shouldAutoActivateFirst
+                        autoActivateSelected=this.shouldActivateSelected
                       }}
                     >
                       {{#if this.showQueryPlaceholder}}

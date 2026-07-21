@@ -11,6 +11,7 @@ import {
   findAll,
   focus,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
   waitFor,
@@ -2815,6 +2816,61 @@ module(
       );
     });
 
+    test("opening with a value activates the selected option and scrolls to it", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+      const spy = sinon.spy(HTMLElement.prototype, "scrollIntoView");
+
+      await render(
+        <template>
+          <DSelect @items={{many}} @value={{30}} @identifier="test-select" />
+        </template>
+      );
+      spy.resetHistory();
+
+      await click("[role='combobox']");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 30",
+          "the cursor is restored to the user's choice, not the first row"
+        );
+      assert.true(
+        find("[role='listbox']").scrollTop > 0,
+        "and the listbox is scrolled to it"
+      );
+      assert.false(
+        spy.called,
+        "scrolled within the listbox, never via scrollIntoView"
+      );
+    });
+
+    test("opening with a value while filtering activates the first match, not the selection", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+
+      await render(
+        <template>
+          <DSelect @items={{many}} @value={{30}} @identifier="test-select" />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "Item 1");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 1",
+          "Enter should take the best match for what was typed"
+        );
+    });
+
     test("keyboard navigation scrolls an off-screen option into view within the listbox", async function (assert) {
       const many = Array.from({ length: 40 }, (_, i) => ({
         id: i + 1,
@@ -3050,6 +3106,90 @@ module(
           { count: 1 },
           "Backspace deletes backward toward the chip before the caret, the token-input convention"
         );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (re-selection)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.afterEach(function () {
+      clearCallbacks();
+      resetLegacyBridge();
+    });
+
+    test("Enter on the restored selection closes without emitting a change", async function (assert) {
+      // Restoring the cursor to the selected option makes Enter the first keystroke after
+      // opening. Leaving it inert (no change, no close) would read as a broken control.
+      let changes = 0;
+      const onChange = () => changes++;
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @value={{2}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      assert.dom("[role='option'].--active").hasText("Banana");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+      assert.dom("[role='listbox']").doesNotExist("the overlay closes");
+      assert.strictEqual(changes, 0, "re-picking the same value emits nothing");
+    });
+
+    test("clicking the already-selected option closes without emitting a change", async function (assert) {
+      // Enter and the pointer share one activation path, so they must agree.
+      let changes = 0;
+      const onChange = () => changes++;
+
+      await render(
+        <template>
+          <DSelect @items={{ITEMS}} @value={{2}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await click("[role='option'].--active");
+
+      assert.dom("[role='listbox']").doesNotExist("the overlay closes");
+      assert.strictEqual(changes, 0, "no change is emitted");
+    });
+
+    test("selecting the current value while closed does not steal focus", async function (assert) {
+      // The compat bridge lets a consumer dismiss the overlay, await a request, and only then
+      // call select() — by which time the user has moved on. Closing an already-closed menu
+      // would focus its trigger and pull them back.
+      let selectKit;
+      withPluginApi((api) => {
+        api.modifySelectKit("test-select").prependContent(() => ({
+          id: "act",
+          name: "Act now",
+          onSelect: (facade) => (selectKit = facade),
+        }));
+      });
+
+      await render(
+        <template>
+          <input class="elsewhere" />
+          <DSelect @items={{ITEMS}} @value={{2}} @identifier="test-select" />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      // An action row captures the facade without selecting or closing.
+      await click("[role='option']");
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      assert.dom("[role='listbox']").doesNotExist("the overlay is closed");
+
+      await focus(".elsewhere");
+      selectKit.select(2, { id: 2, name: "Banana" });
+      await settled();
+
+      assert.dom(".elsewhere").isFocused("focus stays where the user put it");
     });
   }
 );
