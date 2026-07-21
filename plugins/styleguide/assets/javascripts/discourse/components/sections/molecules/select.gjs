@@ -43,6 +43,7 @@ export default class Select extends Component {
   @tracked placementValue = null;
   @tracked debounceValue = null;
   @tracked eventsValue = null;
+  @tracked largeListValue = null;
   @tracked openCount = 0;
   @tracked closeCount = 0;
 
@@ -50,6 +51,13 @@ export default class Select extends Component {
 
   defaultCode = `<DSelect
   @items={{this.items}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+/>`;
+
+  largeListCode = `{{! 5000 items; the window, sentinel and cap are automatic }}
+<DSelect
+  @items={{this.hugeList}}
   @value={{this.value}}
   @onChange={{this.onChange}}
 />`;
@@ -223,6 +231,15 @@ export default class Select extends Component {
     return this.args.dummy.options;
   }
 
+  // Far past the render cap, so the sentinel, the hard cap, and the keep-filtering hint are
+  // all reachable by hand and by a system spec.
+  get largeListItems() {
+    return Array.from({ length: 5000 }, (_, index) => ({
+      id: index + 1,
+      name: `Option ${index + 1}`,
+    }));
+  }
+
   filterItems(filter) {
     const normalizedFilter = filter.toLowerCase();
     return this.items.filter((item) =>
@@ -257,6 +274,11 @@ export default class Select extends Component {
   @action
   updateAsyncButton(value) {
     this.asyncButtonValue = value;
+  }
+
+  @action
+  updateLargeList(value) {
+    this.largeListValue = value;
   }
 
   @action
@@ -652,6 +674,23 @@ export default class Select extends Component {
             opened=this.openCount
             closed=this.closeCount
           }}
+        </p>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.large_list_example"}}
+      @code={{this.largeListCode}}
+    >
+      <div class="select-examples__control select-examples__large-list">
+        <DSelect
+          @items={{this.largeListItems}}
+          @value={{this.largeListValue}}
+          @onChange={{this.updateLargeList}}
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        />
+        <p class="styleguide-note">
+          {{i18n "styleguide.sections.select.large_list_note"}}
         </p>
       </div>
     </StyleguideExample>

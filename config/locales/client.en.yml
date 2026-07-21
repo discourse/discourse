@@ -3306,6 +3306,12 @@ en:
       results_count:
         one: "%{count} result"
         other: "%{count} results"
+      results_loaded:
+        one: "%{count} result loaded"
+        other: "%{count} results loaded"
+      filter_to_narrow: "Showing the first results only. Keep typing to narrow them down."
+      loading_more: "Loading more results…"
+      loading_complete: "More results loaded"
 
     shared_drafts:
       title: "Shared Drafts"

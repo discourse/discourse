@@ -12,6 +12,9 @@ import {
   applyLegacySelectKitOnChange,
 } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
 
+const CLIENT_CHUNK = 50;
+const MAX_RENDERED = 200;
+
 /**
  * A single item's value id. Items carry arbitrary, dynamically-keyed fields, so the
  * value read out of an item is `unknown` rather than a fixed scalar type.
@@ -69,13 +72,21 @@ export interface SelectDescriptor {
     selected: boolean;
     /** Whether the row cannot be activated (guards both pointer and keyboard). */
     disabled: boolean;
-    /** Reserved for group headers (Decision 2); always false today. */
+    /** Reserved for group headers; always false today. */
     group: boolean;
     /** Marks the synthetic create-on-the-fly row. */
     __create: boolean;
     /** True for an unresolved held value; false on list rows. */
     __unresolved: boolean;
   };
+  /**
+   * 1-based position in the whole result set, not in the rendered window, so a screen reader
+   * reports "50 of 5000" while only 50 rows are mounted. Stamped by
+   * {@link SelectEngine#buildItems} only; the trigger/chip path leaves it undefined.
+   */
+  posInSet?: number;
+  /** Size of the whole result set, or `-1` when the source cannot report a total. */
+  setSize?: number;
 }
 
 export function selectItemLabel(
@@ -87,8 +98,24 @@ export function selectItemLabel(
 
 /** Options threaded into a source (`load` / `resolveValue`) call. */
 export interface SelectLoadOptions {
+  /** Maximum page length requested from a paginated source. */
+  limit?: number;
+  /** Raw source offset for a paginated request. */
+  offset?: number;
+  /** Cancels a superseded request. */
   signal?: AbortSignal;
 }
+
+/** A paginated source response with its true result count when known. */
+export interface SelectLoadResponse {
+  /** The page returned for the requested offset. */
+  items: SelectItem[];
+  /** The source's true result count when available. */
+  total?: number;
+}
+
+/** Shapes accepted from a select item source. */
+export type SelectLoadResult = SelectItem[] | SelectLoadResponse;
 
 /** A frozen read-only view of the engine state passed to a `specialItems` builder. */
 export interface SelectSnapshot {
@@ -128,13 +155,13 @@ export interface SelectEngineOptions {
   items?: SelectItem[] | (() => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal }) => items | Promise<items>`. Returning an array is a
-   * synchronous/client source; a promise is server-backed.
+   * `(filter, { signal, offset, limit }) => items | { items, total }`, synchronously
+   * or as a promise. Pagination starts without a limit so the source defines its page size.
    */
   load?: (
     filter: string,
     opts: SelectLoadOptions
-  ) => SelectItem[] | Promise<SelectItem[]>;
+  ) => SelectLoadResult | Promise<SelectLoadResult>;
 
   /**
    * Client-filter field name or `(item, term) => boolean`. Defaults to a substring
@@ -244,6 +271,35 @@ class SelectState {
   /** The current filter/search term. */
   @tracked filter = "";
 
+  /** Advances the render window without making the engine own the rendered list. */
+  @tracked reveal = 0;
+
+  /** The server's true result count when it reports one. */
+  @tracked serverTotal?: number;
+
+  /** Whether the paginated source has no page left to reveal. */
+  @tracked serverExhausted = false;
+
+  /**
+   * How many deduped rows the accumulator holds. Mirrors the untracked buffer's length so
+   * the gating getters depend on real tracked state rather than reading the buffer.
+   */
+  @tracked serverLoadedCount = 0;
+
+  /**
+   * The load context whose page **succeeded**, or `null` before the first one. Gates
+   * reusing the accumulator, so a failed load never passes its empty buffer off as a
+   * result. Written only after an await, never during render.
+   */
+  @tracked serverSettledKey: string | null = null;
+
+  /**
+   * The load context that last **finished**, successfully or not. Deliberately distinct
+   * from {@link serverSettledKey}: a rejection has to stop reading as in-flight (or
+   * `aria-busy` pins on and reveal dies), but must not imply there is data to show.
+   */
+  @tracked serverCompletedKey: string | null = null;
+
   /**
    * Bumped by {@link SelectEngine#reload} to force the list to re-fetch even when the
    * filter is unchanged (e.g. an "AI suggestions" flow).
@@ -295,7 +351,7 @@ export default class SelectEngine {
   #load?: (
     filter: string,
     opts: SelectLoadOptions
-  ) => SelectItem[] | Promise<SelectItem[]>;
+  ) => SelectLoadResult | Promise<SelectLoadResult>;
   #selected?: SelectItem | SelectItem[];
   #resolveValue?: (
     value: SelectItemId,
@@ -318,6 +374,12 @@ export default class SelectEngine {
   #readValue: () => SelectValue;
   #isAsync: boolean;
   #legacy: SelectLegacyContext | null;
+  #serverItems: SelectItem[] = [];
+  #serverOffset = 0;
+  #serverPageSize?: number;
+  #serverGeneration = 0;
+  #serverBarrenPages = 0;
+  #serverRequest?: Promise<SelectLoadResult>;
 
   /**
    * @param opts.multiple - Multi-select when true (drives value shape, chips, and
@@ -327,8 +389,9 @@ export default class SelectEngine {
    * @param opts.identifiers - Keys plugin `select-content` transformers match on.
    * @param opts.items - A static array (or `() => array`) of items — the client-only
    *   source. Provide this or `load`, not both.
-   * @param opts.load - `(filter, { signal }) => items | Promise<items>`. Returning an
-   *   array is a synchronous/client source; a promise is server-backed.
+   * @param opts.load - `(filter, { signal, offset, limit }) => items | { items, total }`,
+   *   synchronously or as a promise. Pagination starts without a limit so the source
+   *   defines its page size.
    * @param opts.filterBy - Client-filter field name or `(item, term) => boolean`.
    *   Defaults to a substring match on `labelField`.
    * @param opts.valueField - Field holding an item's value. Defaults to `"id"`.
@@ -482,12 +545,109 @@ export default class SelectEngine {
 
   /**
    * A stable-until-invalidated context object for the list `DAsyncContent`. Its
-   * identity changes when the filter or the reload nonce changes, which is what makes
-   * the list re-fetch.
+   * identity changes when the filter, reload nonce, or reveal cursor changes, which is
+   * what makes the list re-fetch.
    */
   @cached
-  get loadContext(): { filter: string; nonce: number } {
-    return { filter: this.#state.filter, nonce: this.#state.nonce };
+  get loadContext(): { filter: string; nonce: number; reveal: number } {
+    return {
+      filter: this.#state.filter,
+      nonce: this.#state.nonce,
+      reveal: this.#state.reveal,
+    };
+  }
+
+  /**
+   * The client list after `filterBy`, before the render window is applied. Deriving this
+   * is the engine's job, so it is exposed rather than recomputed by each caller — and it
+   * is `@cached` so the gating getters, `total`, and `loadItems` share one filter pass per
+   * render instead of each walking the list again. Empty for a server source.
+   */
+  @cached
+  get filteredItems(): readonly SelectItem[] {
+    // Copied AND frozen. With no filter `#filterLocal` passes the consumer's own array
+    // straight through, and `readonly` is erased at runtime — but copying alone is not
+    // enough either, because `@cached` hands the same array to every reader in the render,
+    // so mutating it would corrupt what the engine itself reads next. Matches `buildItems`,
+    // which also yields a frozen projection.
+    return Object.freeze([...this.#filterLocal(this.#state.filter)]);
+  }
+
+  /** Whether the current source has another window or page available below the cap. */
+  get canRevealMore(): boolean {
+    if (!this.#load) {
+      const total = this.filteredItems.length;
+      return this.#clientWindow.end < Math.min(total, MAX_RENDERED);
+    }
+
+    return (
+      !this.serverPending &&
+      !this.#state.serverExhausted &&
+      this.#state.serverLoadedCount < MAX_RENDERED
+    );
+  }
+
+  /**
+   * Identifies the load the accumulator is (or should be) holding. Any change to it means
+   * the accumulated pages no longer answer the current question.
+   */
+  get #loadKey(): string {
+    const { filter, nonce, reveal } = this.#state;
+    return JSON.stringify([filter, nonce, reveal]);
+  }
+
+  /** Whether rendering stopped at the cap while the source still has more results. */
+  get atCapWithMore(): boolean {
+    if (!this.#load) {
+      return (
+        this.#clientWindow.end >= MAX_RENDERED &&
+        this.filteredItems.length > MAX_RENDERED
+      );
+    }
+
+    const { serverLoadedCount, serverExhausted, serverTotal } = this.#state;
+    return (
+      serverLoadedCount >= MAX_RENDERED &&
+      !serverExhausted &&
+      (serverTotal == null || serverLoadedCount < serverTotal)
+    );
+  }
+
+  /** The true result count when the source makes it knowable. */
+  get total(): number | undefined {
+    return this.#load ? this.#state.serverTotal : this.filteredItems.length;
+  }
+
+  /**
+   * Whether a **reload** of an already-settled list is in flight — a new query, a
+   * `reload()`, or a reveal — which is what `aria-busy` on the retained listbox reports.
+   * The *initial* load is deliberately not pending: the listbox does not exist yet then,
+   * its loading block does.
+   *
+   * Derived from tracked state rather than an imperative flag, because the flag would have
+   * to be raised synchronously inside `loadItems`, which runs during render, and so could
+   * never invalidate a consumer that had already read it — `aria-busy` would switch off
+   * but never on.
+   */
+  get serverPending(): boolean {
+    const completed = this.#state.serverCompletedKey;
+    return (
+      this.#load != null && completed != null && completed !== this.#loadKey
+    );
+  }
+
+  /**
+   * Whether the in-flight load is fetching more rows for the query already on screen rather
+   * than replacing them for a new one. Both retain the old rows, so only this tells them apart.
+   */
+  get serverRevealPending(): boolean {
+    const completed = this.#state.serverCompletedKey;
+    if (!this.serverPending || completed == null) {
+      return false;
+    }
+    // The key is `[filter, nonce, reveal]`: same query, different cursor means a reveal.
+    const [filter, nonce] = JSON.parse(completed) as [string, number, number];
+    return filter === this.#state.filter && nonce === this.#state.nonce;
   }
 
   /**
@@ -506,9 +666,8 @@ export default class SelectEngine {
   }
 
   /**
-   * The async-data function for the list `DAsyncContent`. Ignores the context arg (it
-   * exists only to drive reactivity) and calls the normalized source with the live
-   * filter, forwarding the abort signal.
+   * The async-data function for the list `DAsyncContent`. Returns the current local
+   * range or the accumulated server pages, bounded by the render cap.
    *
    * @param _context - Reactivity trigger only; unused.
    * @returns Items, or a promise of items.
@@ -518,7 +677,30 @@ export default class SelectEngine {
     _context: unknown,
     opts: SelectLoadOptions = {}
   ): SelectItem[] | Promise<SelectItem[]> {
-    return this.#source(this.#state.filter, opts);
+    if (this.#load) {
+      return this.#loadServerItems(this.#state.filter, opts);
+    }
+
+    const items = this.filteredItems;
+    return items.slice(this.#clientWindow.start, this.#clientWindow.end);
+  }
+
+  /**
+   * Advances the bounded window when another client chunk or server page can be shown.
+   *
+   * @returns Whether the reveal cursor advanced.
+   */
+  @bind
+  revealMore(): boolean {
+    // `#serverRequest` is the authoritative in-flight check and is read directly because
+    // this runs from an action, never during render. `canRevealMore` is its reactive
+    // counterpart for gating the sentinel.
+    if (this.#serverRequest || !this.canRevealMore) {
+      return false;
+    }
+
+    this.#state.reveal++;
+    return true;
   }
 
   /**
@@ -544,17 +726,64 @@ export default class SelectEngine {
     // does not depend on global transformer registration order.
     items = applyLegacySelectKitContent(this, items);
 
+    const sourceCount = items.length;
+    let createCount = 0;
     if (this.#shouldOfferCreate(items)) {
       // `#shouldOfferCreate` already guaranteed a `#createItem` is present.
       items = [...items, this.#createItem!(this.#state.filter)];
+      createCount = 1;
     }
 
     const special = this.#specialItems?.(this.#snapshot()) ?? [];
-    const finalItems = [...(makeArray(special) as SelectItem[]), ...items];
+    const specialItems = makeArray(special) as SelectItem[];
+    const finalItems = [...specialItems, ...items];
 
     // Normalize as the final step: everything above operates on raw items (so the
     // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
-    return this.describeItems(finalItems);
+    return this.#describeList(
+      finalItems,
+      specialItems.length,
+      sourceCount,
+      createCount
+    );
+  }
+
+  /**
+   * Normalizes the list rows — specials, then source rows, then create — and stamps each with
+   * its position in the whole result set. Positions come from the engine's own totals rather
+   * than the DOM index, so they stay correct while only a window is mounted.
+   */
+  #describeList(
+    items: SelectItem[],
+    specialCount: number,
+    sourceCount: number,
+    createCount: number
+  ): readonly SelectDescriptor[] {
+    const total = this.total;
+    // A transformer or the legacy bridge can add rows the source never reported, so the
+    // window can outgrow the total; trusting it blindly would emit a position past the set.
+    const sourceTotal = total == null ? null : Math.max(total, sourceCount);
+    const setSize =
+      sourceTotal == null ? -1 : specialCount + sourceTotal + createCount;
+
+    // The window is a prefix, so a row's position is known even when the total is not; a set
+    // size of -1 with real positions is the unknown-size encoding ARIA describes.
+    const lastSourceIndex = specialCount + sourceCount;
+
+    return Object.freeze(
+      items.map((item, index) => ({
+        ...this.#normalize(item, index),
+        setSize,
+        posInSet:
+          index < lastSourceIndex
+            ? index + 1
+            : // The create row closes the set, wherever the window ends — but only a known
+              // set has a last slot to close.
+              sourceTotal == null
+              ? undefined
+              : setSize,
+      }))
+    );
   }
 
   /**
@@ -698,7 +927,13 @@ export default class SelectEngine {
    */
   @bind
   setFilter(term: string): void {
-    this.#state.filter = term ?? "";
+    const filter = term ?? "";
+    if (filter === this.#state.filter) {
+      return;
+    }
+
+    this.#resetWindow();
+    this.#state.filter = filter;
   }
 
   /**
@@ -782,9 +1017,9 @@ export default class SelectEngine {
   }
 
   /**
-   * Forces the list to re-fetch even when the filter is unchanged, and drops the fallbacks
-   * left by failed value resolutions so they are attempted again. Successfully resolved
-   * items stay cached — only the failures are worth retrying.
+   * Resets the list window and forces a re-fetch even when the filter is unchanged. Also
+   * drops failed value-resolution fallbacks so they are attempted again; successful items
+   * stay cached.
    */
   @bind
   reload(): void {
@@ -798,6 +1033,7 @@ export default class SelectEngine {
         this.#synchronousOutcomes.delete(key);
       }
     }
+    this.#resetWindow();
     this.#state.nonce++;
   }
 
@@ -854,16 +1090,141 @@ export default class SelectEngine {
       .filter((item): item is SelectItem => item != null);
   }
 
-  // The one normalized source: a server `load` (may return a promise or, for a
-  // dual-mode picker, a synchronous array) or a client-side filter over `items`.
-  #source(
+  get #clientWindow(): { start: number; end: number } {
+    return {
+      start: 0,
+      end: Math.min(CLIENT_CHUNK * (this.#state.reveal + 1), MAX_RENDERED),
+    };
+  }
+
+  #loadServerItems(
     filter: string,
     opts: SelectLoadOptions
   ): SelectItem[] | Promise<SelectItem[]> {
-    if (this.#load) {
-      return this.#load(filter, opts);
+    if (
+      this.#serverRequest ||
+      this.#state.serverExhausted ||
+      this.#serverItems.length >= MAX_RENDERED ||
+      this.#state.serverSettledKey === this.#loadKey
+    ) {
+      return this.#serverItems.slice(0, MAX_RENDERED);
     }
-    return this.#filterLocal(filter);
+
+    const generation = this.#serverGeneration;
+    const key = this.#loadKey;
+    const request = Promise.resolve(
+      this.#load!(filter, {
+        ...opts,
+        offset: this.#serverOffset,
+        limit: this.#serverPageSize,
+      })
+    );
+    this.#serverRequest = request;
+    return this.#settleServerPage(request, key, generation, opts.signal);
+  }
+
+  async #settleServerPage(
+    request: Promise<SelectLoadResult>,
+    key: string,
+    generation: number,
+    signal?: AbortSignal
+  ): Promise<SelectItem[]> {
+    let settled = false;
+    try {
+      const response = await request;
+      if (signal?.aborted || generation !== this.#serverGeneration) {
+        return this.#serverItems.slice(0, MAX_RENDERED);
+      }
+
+      const { items, total } = this.#unwrapLoadResult(response);
+      const previousPageSize = this.#serverPageSize;
+      const knownTotal = total ?? this.#state.serverTotal;
+      const before = this.#serverItems.length;
+      this.#serverOffset += items.length;
+      this.#serverPageSize ??= items.length || undefined;
+      this.#appendServerItems(items);
+      const added = this.#serverItems.length - before;
+
+      // A non-empty page that survives dedup as nothing means the source is replaying rows
+      // we already hold — true of any `load` that ignores `offset`, i.e. every
+      // implementation predating pagination, which would otherwise refetch forever. But a
+      // genuine paginated source can serve one duplicate-heavy page and still have more
+      // after it, so tolerate a single barren page and stop only on the second in a row.
+      this.#serverBarrenPages = added === 0 ? this.#serverBarrenPages + 1 : 0;
+
+      this.#state.serverTotal = knownTotal;
+      this.#state.serverExhausted =
+        items.length === 0 ||
+        this.#serverBarrenPages >= 2 ||
+        (previousPageSize != null && items.length < previousPageSize) ||
+        // Against *deduped* rows: the raw cursor outruns them whenever pages overlap, and
+        // comparing it here would strand the tail.
+        (knownTotal != null && this.#serverItems.length >= knownTotal);
+      this.#state.serverLoadedCount = this.#serverItems.length;
+      settled = true;
+
+      return this.#serverItems.slice(0, MAX_RENDERED);
+    } finally {
+      if (this.#serverRequest === request) {
+        this.#serverRequest = undefined;
+      }
+      if (generation === this.#serverGeneration) {
+        // Completion covers rejection AND abort: this request is over either way. Skipping
+        // it on abort left the key behind the live one forever, pinning `aria-busy` on and
+        // making `canRevealMore` permanently false — the list could never be revealed
+        // again. The cost is that a same-key retry reads as settled while it is genuinely
+        // in flight, which is a brief missing busy signal rather than a dead control.
+        this.#state.serverCompletedKey = key;
+        if (settled) {
+          // Only a success may authorise reusing the accumulator. Marking a failed key
+          // settled would make the next `loadItems` hand back the empty buffer instead of
+          // the rejection, replacing the error UI (and its retry) with an empty list.
+          this.#state.serverSettledKey = key;
+        }
+      }
+    }
+  }
+
+  #appendServerItems(items: SelectItem[]): void {
+    const keys = new Set(
+      this.#serverItems
+        .map((item) => this.#valueKey(this.#itemValue(item)))
+        .filter((key): key is string => key != null)
+    );
+
+    for (const item of items) {
+      if (this.#serverItems.length >= MAX_RENDERED) {
+        return;
+      }
+
+      const key = this.#valueKey(this.#itemValue(item));
+      if (key == null || !keys.has(key)) {
+        this.#serverItems.push(item);
+        if (key != null) {
+          keys.add(key);
+        }
+      }
+    }
+  }
+
+  #unwrapLoadResult(response: SelectLoadResult): SelectLoadResponse {
+    return Array.isArray(response) ? { items: response } : response;
+  }
+
+  #resetWindow(): void {
+    this.#state.reveal = 0;
+    this.#state.serverTotal = undefined;
+    this.#state.serverExhausted = false;
+    this.#state.serverLoadedCount = 0;
+    // Neither key is cleared: leaving them pointing at the previous load is what makes the
+    // new one read as pending until its first page lands, and what stops the stale
+    // accumulator being reused for it.
+    this.#serverItems = [];
+    this.#serverOffset = 0;
+    this.#serverPageSize = undefined;
+    this.#serverBarrenPages = 0;
+    this.#serverGeneration++;
+    this.#serverRequest = undefined;
   }
 
   #filterLocal(filter: string): SelectItem[] {

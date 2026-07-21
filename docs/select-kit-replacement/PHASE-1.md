@@ -132,9 +132,21 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     clear-all (`@clearable`); rewrite on-`main` `DMultiSelect` as a thin `@multiple` alias.
   - ☐ Styleguide `@variant="button"`+`@multiple` and 6+-chip wrap examples; RFC line-123 vs
     238-242 mobile contradiction.
-- ☐ **Large-list windowing** (Decision 5): internal render chunk (client) / server
+- ☐ **Large-list reveal** (Decision 5): internal render chunk (client) / server
   page-size auto-detected; hard `MAX_RENDERED` cap; `DLoadMore` reveal → "filter to
   narrow" at the cap; `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
+  - ☑ Engine: `reveal` cursor, client range-slice and server page accumulator behind one
+    `loadItems`, `canRevealMore`/`atCapWithMore`/`total`/`serverPending` gating, window reset
+    on filter and reload.
+  - ☑ Template: listbox `aria-busy`, the `<li role="presentation">` sentinel rooted at the
+    listbox (the observer now takes an element, not just a selector), the narrow hint,
+    per-option `aria-setsize`/`aria-posinset` from true totals, and count / loading-more
+    announcements through the `a11y` service. Styleguide large-list example plus a system
+    spec that drives a real container scroll — the one gate QUnit cannot cover, since
+    IntersectionObserver does not fire there.
+  - ☐ 5k-sync performance gate; visual pass (Foundation + Horizon, light + dark).
+  - ☐ Deferred to its own cycle: the `dRovingFocus` keyboard-boundary hook. v1 reveals
+    through the prefetch sentinel for both pointer and keyboard.
 - ☑ **Chrome args** (commit `0f93bdf`): the trigger is unified onto a focusable `div` with
   per-variant WAI-ARIA roles (static select-only combobox, button disclosure, typeahead/multi
   input) and the leading-icon/clear/caret are extracted into one no-wrapper trigger frame. On
