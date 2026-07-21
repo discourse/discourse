@@ -225,10 +225,9 @@ module(
         .doesNotExist("the reset window is no longer at the cap");
     });
 
-    // The window is a prefix from the first row, so a row's position is known even when the
-    // set size is not: `aria-setsize="-1"` paired with real positions is the encoding ARIA
-    // describes for an unknown-size set.
-    test("a bare-array server source exposes an unknown set size with real positions", async function (assert) {
+    // A source that declares no paging is taken to have returned the whole set, so its row
+    // count is a truthful `aria-setsize` rather than the -1 unknown-size encoding.
+    test("a bare-array server source exposes an exact set size", async function (assert) {
       const load = () => buildItems(3);
 
       await render(
@@ -242,17 +241,15 @@ module(
       findAll(OPTION_SELECTOR).forEach((option, index) => {
         assert
           .dom(option)
-          .hasAttribute("aria-setsize", "-1", "the unknown total is explicit")
-          .hasAttribute(
-            "aria-posinset",
-            String(index + 1),
-            "a prefix row knows its position even in an unsized set"
-          );
+          .hasAttribute("aria-setsize", "3", "silence sized the set")
+          .hasAttribute("aria-posinset", String(index + 1));
       });
     });
 
     test("the create row has no position when the set size is unknown", async function (assert) {
-      const load = () => buildItems(2);
+      // Unknown size now requires a source that is actively mid-paging: it has told us more
+      // exists without saying how much.
+      const load = () => ({ items: buildItems(2), hasMore: true });
       const createItem = (filter) => ({ id: `new:${filter}`, name: filter });
 
       await render(
@@ -307,6 +304,89 @@ module(
           "500",
           "the response total, not the page length, sizes the set"
         );
+    });
+
+    // A cursor source knows there is more without knowing how many. The set size must stay
+    // honestly unknown while it pages, then become exact the moment the source declares
+    // completeness — through the template, not merely on the getter: a value already read in
+    // a render has to be invalidated to reach the DOM.
+    test("a cursor source's set size stays unknown until it declares completeness", async function (assert) {
+      let engine;
+      const allItems = buildItems(5, (value) => (engine = value));
+      const load = (_filter, { offset = 0 }) =>
+        offset === 0
+          ? { items: allItems.slice(0, 3), hasMore: true }
+          : { items: allItems.slice(3, 5), hasMore: false };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+
+      assert
+        .dom(findAll(OPTION_SELECTOR)[0])
+        .hasAttribute(
+          "aria-setsize",
+          "-1",
+          "a source still paging cannot size its set"
+        );
+
+      engine.revealMore();
+      await settled();
+
+      const options = findAll(OPTION_SELECTOR);
+      assert.strictEqual(options.length, 5, "the final page is mounted");
+      options.forEach((option, index) => {
+        assert
+          .dom(option)
+          .hasAttribute(
+            "aria-setsize",
+            "5",
+            "completeness re-renders every row with the real set size"
+          )
+          .hasAttribute("aria-posinset", String(index + 1));
+      });
+    });
+
+    test("completing a cursor source announces the real count, not the loaded count", async function (assert) {
+      let engine;
+      const announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+      const allItems = buildItems(5, (value) => (engine = value));
+      const load = (_filter, { offset = 0 }) =>
+        offset === 0
+          ? { items: allItems.slice(0, 3), hasMore: true }
+          : { items: allItems.slice(3, 5), hasMore: false };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+
+      assert.strictEqual(
+        announce.withArgs(
+          i18n("d_select.results_loaded", { count: 3 }),
+          "polite"
+        ).callCount,
+        1,
+        "an unsized source announces only what it has loaded"
+      );
+
+      engine.revealMore();
+      await settled();
+
+      assert.strictEqual(
+        announce.withArgs(
+          i18n("d_select.results_count", { count: 5 }),
+          "polite"
+        ).callCount,
+        1,
+        "the final page announces the true result count"
+      );
     });
 
     test("a held server reveal makes the retained listbox busy and announces its transitions", async function (assert) {

@@ -235,8 +235,10 @@ export default class DSelect extends Component<DSelectSignature> {
   // The last keep-typing "characters remaining" announced, so a repeat isn't re-read.
   #lastAnnouncedRemaining: number | null = null;
 
-  // Deduping on the message rather than a count is what keeps a reveal silent: it grows the
-  // mounted rows without changing the total the message reports.
+  // Deduping on the message rather than a count keeps a reveal silent whenever it does not
+  // change what the message says — the usual case, since a reported total does not move as
+  // rows mount. A cursor source is the exception: it has no count to report until its last
+  // page declares completeness, so that one reveal legitimately announces.
   #lastAnnouncedCountMessage: string | null = null;
 
   // Keyed on the query, not a flag: the hint unmounts and remounts as the window grows, and
@@ -873,8 +875,9 @@ export default class DSelect extends Component<DSelectSignature> {
    * service (never a per-component live region, never assertive), skipping repeats.
    *
    * Reports the true total when the source can supply one, not how many rows happen to be
-   * mounted, so a 5000-result query does not announce "50 results". A source with no total
-   * announces the loaded count instead.
+   * mounted, so a 5000-result query does not announce "50 results". Only a source still
+   * paging under `hasMore` lacks a total; it announces the loaded count until its last page
+   * declares completeness and the real count becomes knowable.
    */
   @action
   announceCount(
