@@ -18,7 +18,7 @@ function clientItems(count) {
  * A fake server source that records every call's offset/limit so the tests can assert the
  * raw cursor advances independently of the deduped accumulator.
  *
- * @param page - `(offset, limit) => items | { items, total }` for one page.
+ * @param page - `(offset, limit) => items | { items, total?, hasMore? }` for one page.
  */
 function recordingLoad(page) {
   const calls = [];
@@ -251,12 +251,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // Every page overlaps the previous by half. The accumulator therefore grows by 5 per
       // page while the cursor must still advance by the full 10, or the source is asked for
       // the same rows forever.
-      const { load, calls } = recordingLoad((offset) =>
-        Array.from({ length: 10 }, (_, i) => {
+      const { load, calls } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => {
           const id = offset + i + 1 - (offset > 0 ? 5 : 0);
           return { id, name: `Item ${id}` };
-        })
-      );
+        }),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
@@ -280,12 +281,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     });
 
     test("appends across reveals instead of replacing", async function (assert) {
-      const { load } = recordingLoad((offset) =>
-        Array.from({ length: 10 }, (_, i) => ({
+      const { load } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
-        }))
-      );
+        })),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
@@ -300,12 +302,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     test("caps the RETURNED slice, not just the decision to fetch", async function (assert) {
       // 60-row pages: the accumulator reaches 180 (under the cap, so another page is
       // fetched) and that page would take it to 240.
-      const { load } = recordingLoad((offset) =>
-        Array.from({ length: 60 }, (_, i) => ({
+      const { load } = recordingLoad((offset) => ({
+        items: Array.from({ length: 60 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
-        }))
-      );
+        })),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       let result;
@@ -348,12 +351,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       // Guards the aria-busy path: pending must be derivable from tracked state, not from
       // a flag raised synchronously inside loadItems (which runs during render and so
       // could never invalidate a consumer that already read it).
-      const { load } = recordingLoad((offset) =>
-        Array.from({ length: 10 }, (_, i) => ({
+      const { load } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
-        }))
-      );
+        })),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
@@ -375,36 +379,24 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       assert.false(engine.serverPending, "no server, nothing in flight");
     });
 
-    test("an empty page marks the source exhausted", async function (assert) {
-      const { load } = recordingLoad((offset) =>
-        offset === 0 ? clientItems(10) : []
-      );
+    test("paging stops the moment a page stops declaring more", async function (assert) {
+      // Page shape says nothing: the second page here is the same length as the first, which
+      // under the old contract left the source revealable. Only the declaration ends it.
+      const { load } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
+          id: offset + i + 1,
+          name: `Item ${offset + i + 1}`,
+        })),
+        hasMore: offset === 0,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
-      engine.revealMore();
+      assert.true(engine.revealMore(), "the first page declared more");
       await engine.loadItems(engine.loadContext);
 
       assert.false(engine.canRevealMore, "exhausted, so the sentinel is off");
       assert.false(engine.atCapWithMore, "no narrow hint when nothing is left");
-    });
-
-    test("a short page marks the source exhausted", async function (assert) {
-      const { load } = recordingLoad((offset) =>
-        offset === 0
-          ? Array.from({ length: 10 }, (_, i) => ({ id: i + 1, name: `I${i}` }))
-          : [{ id: 99, name: "last" }]
-      );
-      const engine = new SelectEngine({ load });
-
-      await engine.loadItems(engine.loadContext);
-      engine.revealMore();
-      await engine.loadItems(engine.loadContext);
-
-      assert.false(
-        engine.canRevealMore,
-        "a page shorter than the detected size means the end"
-      );
     });
 
     test("reaching the reported total marks the source exhausted", async function (assert) {
@@ -425,17 +417,19 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     });
 
     test("changing the filter discards the accumulated pages", async function (assert) {
-      const { load, calls } = recordingLoad((offset) =>
-        Array.from({ length: 10 }, (_, i) => ({
+      const { load, calls } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
-        }))
-      );
+        })),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      const accumulated = await engine.loadItems(engine.loadContext);
+      assert.strictEqual(accumulated.length, 20, "two pages accumulated");
 
       engine.setFilter("new search");
       const result = await engine.loadItems(engine.loadContext);
@@ -453,17 +447,19 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
     });
 
     test("reload discards the accumulated pages", async function (assert) {
-      const { load, calls } = recordingLoad((offset) =>
-        Array.from({ length: 10 }, (_, i) => ({
+      const { load, calls } = recordingLoad((offset) => ({
+        items: Array.from({ length: 10 }, (_, i) => ({
           id: offset + i + 1,
           name: `Item ${offset + i + 1}`,
-        }))
-      );
+        })),
+        hasMore: true,
+      }));
       const engine = new SelectEngine({ load });
 
       await engine.loadItems(engine.loadContext);
       engine.revealMore();
-      await engine.loadItems(engine.loadContext);
+      const accumulated = await engine.loadItems(engine.loadContext);
+      assert.strictEqual(accumulated.length, 20, "two pages accumulated");
 
       engine.reload();
       const result = await engine.loadItems(engine.loadContext);
@@ -482,10 +478,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         if (offset > 0) {
           controller.abort();
         }
-        return Array.from({ length: 10 }, (_, i) => ({
-          id: offset + i + 1,
-          name: `Item ${offset + i + 1}`,
-        }));
+        return {
+          items: Array.from({ length: 10 }, (_, i) => ({
+            id: offset + i + 1,
+            name: `Item ${offset + i + 1}`,
+          })),
+          hasMore: true,
+        };
       });
       const engine = new SelectEngine({ load });
 
@@ -559,7 +558,8 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       let release;
       let gate = new Promise((resolve) => (release = resolve));
       const engine = new SelectEngine({
-        load: () => gate.then(() => clientItems(10)),
+        load: () =>
+          gate.then(() => ({ items: clientItems(10), hasMore: true })),
       });
 
       release();
@@ -621,7 +621,7 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         load: () =>
           fail
             ? Promise.reject(new Error("boom"))
-            : Promise.resolve(clientItems(10)),
+            : Promise.resolve({ items: clientItems(10), hasMore: true }),
       });
 
       await engine.loadItems(engine.loadContext);
@@ -708,12 +708,11 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       );
     });
 
-    test("a source that ignores offset is treated as exhausted", async function (assert) {
-      // The whole pre-pagination back-compat surface: `offset`/`limit` are optional, so an
-      // existing load() returns the same rows every time. Dedup keeps the accumulator flat,
-      // which must terminate or the sentinel re-fetches identical data forever. One barren
-      // page is tolerated (a real source can serve a duplicate-heavy page), so termination
-      // lands on the second — bounded, not immediate.
+    test("a source that declares nothing is never asked for a second page", async function (assert) {
+      // A source that cannot say whether more exists is not a paginated source, so the engine
+      // takes it at its word rather than probing. This is the whole reason the contract was
+      // inverted: the probe cost every such source two wasted round-trips, each one long
+      // enough to paint a loading placeholder.
       const { load, calls } = recordingLoad(() => clientItems(10));
       const engine = new SelectEngine({ load });
 
@@ -724,14 +723,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         }
       }
 
-      assert.false(
-        engine.canRevealMore,
-        "a source replaying rows we hold is treated as exhausted"
-      );
+      assert.false(engine.canRevealMore, "silence ends the paging");
       assert.false(engine.revealMore(), "further reveals are refused");
-      assert.true(
-        calls.length <= 3,
-        `stopped re-fetching after a bounded number of pages (${calls.length})`
+      assert.strictEqual(calls.length, 1, "no speculative refetch at all");
+      assert.strictEqual(
+        engine.total,
+        10,
+        "and what it returned is taken as the whole set"
       );
     });
 
@@ -768,6 +766,360 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
         result.length,
         20,
         "every row the total promised is reachable"
+      );
+    });
+  });
+
+  module("hasMore vs total", function () {
+    function uniquePage(offset, length) {
+      return Array.from({ length }, (_, i) => ({
+        id: offset + i + 1,
+        name: `Item ${offset + i + 1}`,
+      }));
+    }
+
+    test("an explicit hasMore:false ends the source, same as silence", async function (assert) {
+      // Redundant with omitting the field, and deliberately still legal: a cursor API can
+      // forward its own flag straight through without having to strip the false case.
+      const { load, calls } = recordingLoad((offset) => ({
+        items: uniquePage(offset, 50),
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.false(
+        engine.canRevealMore,
+        "the source said there is no next page"
+      );
+      assert.false(engine.revealMore(), "further reveals are refused");
+      assert.strictEqual(calls.length, 1, "no speculative second fetch");
+    });
+
+    test("hasMore:true keeps a SHORT page revealable", async function (assert) {
+      // A source that DB-pages 20 and returns 18 survivors after permission filtering is
+      // not exhausted, but page shape alone cannot tell that from a genuine last page.
+      const { load } = recordingLoad((offset) =>
+        offset === 0
+          ? { items: uniquePage(0, 20), hasMore: true }
+          : { items: uniquePage(offset, 18), hasMore: true }
+      );
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      assert.true(engine.revealMore(), "the first reveal is accepted");
+      await engine.loadItems(engine.loadContext);
+
+      assert.true(
+        engine.canRevealMore,
+        "a short page the source declares non-final stays revealable"
+      );
+    });
+
+    test("hasMore:false on a one-row first page fetches exactly once", async function (assert) {
+      // A single row never fills the listbox, so the reveal sentinel is in view from the
+      // start and fires the moment anything lets it. Only the source's own declaration keeps
+      // that from becoming a second fetch and a second loading placeholder.
+      const { load, calls } = recordingLoad(() => ({
+        items: [{ id: 1, name: "only" }],
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 4; i++) {
+        await engine.loadItems(engine.loadContext);
+        if (!engine.revealMore()) {
+          break;
+        }
+      }
+
+      assert.strictEqual(calls.length, 1, "no second page is requested");
+    });
+
+    test("hasMore:false makes the loaded count the reportable total", async function (assert) {
+      // A cursor source that pages to completion knows its size only in retrospect. Without
+      // this the set size stays -1 forever, even once every row is in hand.
+      const { load } = recordingLoad(() => ({
+        items: uniquePage(0, 7),
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        engine.total,
+        7,
+        "a declared-complete source reports what it handed us"
+      );
+    });
+
+    test("hasMore:true never defeats the barren-page brake", async function (assert) {
+      // The termination proof. `hasMore` is a claim from the source, and a source that
+      // ignores `offset` while hardcoding `hasMore: true` would otherwise re-fetch
+      // identical rows forever: the accumulator stays flat, so the cap guard never arms,
+      // and every reveal mints a fresh load key past the per-key guard.
+      const { load, calls } = recordingLoad(() => ({
+        items: clientItems(20),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 8; i++) {
+        await engine.loadItems(engine.loadContext);
+        if (!engine.revealMore()) {
+          break;
+        }
+      }
+
+      assert.false(engine.canRevealMore, "the brake still stops it");
+      assert.true(
+        calls.length <= 3,
+        `terminated in a bounded number of pages (${calls.length})`
+      );
+    });
+
+    test("hasMore:true never pages past a reported total", async function (assert) {
+      // The other safety clause: a source cannot claim more rows than it said exist.
+      const { load, calls } = recordingLoad((offset) => ({
+        items: uniquePage(offset, 10),
+        total: 20,
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 8; i++) {
+        await engine.loadItems(engine.loadContext);
+        if (!engine.revealMore()) {
+          break;
+        }
+      }
+
+      assert.false(engine.canRevealMore, "the reported total is a ceiling");
+      assert.true(
+        calls.length <= 3,
+        `stopped at the total (${calls.length} pages)`
+      );
+    });
+
+    test("a source stopped by the brake never gets to size the set", async function (assert) {
+      // The one invariant this contract must hold. The barren-page brake is the "source is
+      // replaying rows" detector: this source claims more forever while serving the same 20
+      // rows behind a set of unknown size. Sizing the set from where the brake happened to
+      // stop would announce "20 results" — a paging stop condition promoted into a factual
+      // claim to assistive tech, from the one source already proven untrustworthy.
+      const { load, calls } = recordingLoad(() => ({
+        items: clientItems(20),
+        hasMore: true,
+      }));
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 6; i++) {
+        await engine.loadItems(engine.loadContext);
+        if (!engine.revealMore()) {
+          break;
+        }
+      }
+
+      assert.false(engine.canRevealMore, "the brake stopped the paging");
+      assert.true(
+        calls.length > 1,
+        "the brake was what stopped it, not silence"
+      );
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "but it says nothing about how many results exist"
+      );
+    });
+
+    test("a truncated declared-complete page still hints and reports no total", async function (assert) {
+      // 300 rows with `hasMore: false` both fills the cap and latches exhaustion. Without
+      // consulting truncation the user gets exactly 200 rows with no hint, no total and no
+      // sentinel: 100 results gone with zero signal.
+      const { load } = recordingLoad(() => ({
+        items: uniquePage(0, 300),
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      const result = await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        result.length,
+        MAX_RENDERED,
+        "the render stays capped"
+      );
+      assert.true(engine.atCapWithMore, "the narrow hint still shows");
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "the loaded count is not the set size when rows were discarded"
+      );
+    });
+
+    test("a declared-complete page outranks a larger reported total", async function (assert) {
+      // "99 matched, you may see 5, no more pages" is a legitimate permission-filtered
+      // shape. Letting the reported total win claims a sixth option that does not exist.
+      const { load } = recordingLoad(() => ({
+        items: uniquePage(0, 5),
+        total: 99,
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        engine.total,
+        5,
+        "the set size describes navigable options, not matched rows"
+      );
+    });
+
+    test("an overflow tail of duplicates is not truncation", async function (assert) {
+      // Truncation must mean "a row we did not already hold was discarded at the cap", not
+      // "the page was longer than the room left". 250 rows whose last 50 repeat ids already
+      // held lose nothing, so the derived total survives.
+      const { load } = recordingLoad(() => ({
+        items: [
+          ...uniquePage(0, MAX_RENDERED),
+          ...uniquePage(0, 50).map((item) => ({ ...item })),
+        ],
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        engine.total,
+        MAX_RENDERED,
+        "nothing was lost, so completeness still bounds the set"
+      );
+    });
+
+    test("the derived total counts deduped rows, not the raw cursor", async function (assert) {
+      // Overlapping pages make the raw cursor outrun the accumulator. Completeness bounds
+      // the set at what is actually navigable, so the derived total must come from the
+      // deduped rows — 15 distinct ids served as two 10-row pages overlapping by 5.
+      const pages = [
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      ];
+      let call = 0;
+      const load = () =>
+        Promise.resolve({
+          items: pages[Math.min(call++, pages.length - 1)].map((id) => ({
+            id,
+            name: `Item ${id}`,
+          })),
+          hasMore: call < pages.length,
+        });
+      const engine = new SelectEngine({ load });
+
+      for (let i = 0; i < 6; i++) {
+        await engine.loadItems(engine.loadContext);
+        if (!engine.revealMore()) {
+          break;
+        }
+      }
+
+      assert.strictEqual(
+        engine.total,
+        15,
+        "the set size is the distinct rows held, not the pages consumed"
+      );
+    });
+
+    test("a new query drops the previous query's declared completeness", async function (assert) {
+      const { load } = recordingLoad((offset) => ({
+        items: uniquePage(offset, 6),
+        hasMore: false,
+      }));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+      assert.strictEqual(engine.total, 6, "settled and complete");
+
+      engine.setFilter("q");
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "a new filter knows nothing about its own result count yet"
+      );
+
+      await engine.loadItems(engine.loadContext);
+      assert.strictEqual(engine.total, 6, "the new query settles complete too");
+
+      engine.reload();
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "reload() clears it as well as a filter change"
+      );
+    });
+
+    test("a bare source overshooting the cap hints instead of losing rows silently", async function (assert) {
+      // A source handing over more than the cap in one response has its tail discarded. It
+      // declared completeness by staying silent, but 50 rows were dropped, so the count is
+      // NOT a truthful set size and the user must be told the list is clipped.
+      const { load } = recordingLoad(() => uniquePage(0, 250));
+      const engine = new SelectEngine({ load });
+
+      const result = await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(result.length, MAX_RENDERED, "the cap holds");
+      assert.false(engine.canRevealMore, "there is no second page to ask for");
+      assert.true(
+        engine.atCapWithMore,
+        "discarded rows are surfaced rather than silently dropped"
+      );
+      assert.strictEqual(
+        engine.total,
+        undefined,
+        "and truncation withdraws the derived set size"
+      );
+    });
+
+    test("a bare page landing exactly on the cap is complete, not clipped", async function (assert) {
+      // The boundary the truncation flag exists to get right: the 200th row is the last one
+      // pushed, so nothing was discarded. A "keep typing to narrow" hint here would be a lie.
+      const { load } = recordingLoad(() => uniquePage(0, MAX_RENDERED));
+      const engine = new SelectEngine({ load });
+
+      const result = await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(result.length, MAX_RENDERED, "every row is mounted");
+      assert.false(engine.atCapWithMore, "nothing was dropped, so no hint");
+      assert.strictEqual(engine.total, MAX_RENDERED, "and the set is sized");
+    });
+
+    test("a bare array declares completeness and reports its count", async function (assert) {
+      // The inverted contract stated directly. A source that says nothing about paging is
+      // taken to have returned everything, which is what makes its count a truthful
+      // `aria-setsize` rather than the -1 unknown encoding.
+      const { load, calls } = recordingLoad(() => uniquePage(0, 10));
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(calls.length, 1, "one fetch, no probing");
+      assert.false(engine.canRevealMore, "nothing left to reveal");
+      assert.strictEqual(engine.total, 10, "the count is the set size");
+    });
+
+    test("an empty bare response reports a set size of zero, like a client source", async function (assert) {
+      const { load } = recordingLoad(() => []);
+      const engine = new SelectEngine({ load });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        engine.total,
+        0,
+        "an empty result set has a known size, not an unknown one"
       );
     });
   });

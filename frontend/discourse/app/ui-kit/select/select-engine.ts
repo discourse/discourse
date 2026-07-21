@@ -85,7 +85,11 @@ export interface SelectDescriptor {
    * {@link SelectEngine#buildItems} only; the trigger/chip path leaves it undefined.
    */
   posInSet?: number;
-  /** Size of the whole result set, or `-1` when the source cannot report a total. */
+  /**
+   * Size of the whole result set, or `-1` when it cannot be reported or derived — which now
+   * means a source mid-paging under `hasMore: true` with no `total`, or one stopped by the
+   * barren-page brake.
+   */
   setSize?: number;
 }
 
@@ -106,12 +110,26 @@ export interface SelectLoadOptions {
   signal?: AbortSignal;
 }
 
-/** A paginated source response with its true result count when known. */
+/** A page from a server-backed source, with optional pagination metadata. */
 export interface SelectLoadResponse {
   /** The page returned for the requested offset. */
   items: SelectItem[];
-  /** The source's true result count when available. */
+  /**
+   * The source's true result count when available. This is a fact about the whole set and
+   * is carried forward across responses for the current query. It also licenses another
+   * fetch on its own: a total above the rows returned so far means more remain.
+   */
   total?: number;
+  /**
+   * Whether another page exists. This applies only to this response and is not carried
+   * forward. `true` promises the next requested offset will yield rows not already returned.
+   *
+   * **Omitting it means `false`.** A source that paginates must say so; one that stays silent
+   * is taken at its word that the rows it returned are the whole set, and they are reported
+   * as such through `aria-setsize`. Passing `false` explicitly is equivalent and allowed, so
+   * a cursor API can forward its own flag unmodified.
+   */
+  hasMore?: boolean;
 }
 
 /** Shapes accepted from a select item source. */
@@ -155,8 +173,13 @@ export interface SelectEngineOptions {
   items?: SelectItem[] | (() => SelectItem[] | null | undefined);
 
   /**
-   * `(filter, { signal, offset, limit }) => items | { items, total }`, synchronously
-   * or as a promise. Pagination starts without a limit so the source defines its page size.
+   * `(filter, { signal, offset, limit }) => items | { items, total?, hasMore? }`,
+   * synchronously or as a promise. Pagination starts without a limit so the source defines
+   * its page size.
+   *
+   * A response that declares neither `total` nor `hasMore` — including a bare array — is
+   * taken as the complete set, so a paginating source **must** declare one of them or only
+   * its first page is ever shown.
    */
   load?: (
     filter: string,
@@ -281,6 +304,21 @@ class SelectState {
   @tracked serverExhausted = false;
 
   /**
+   * Whether the source asserted that what it returned is the whole set — by declaring no
+   * more pages, or by staying silent, which the contract treats as the same claim. Kept
+   * distinct from {@link serverExhausted} because paging can also stop for reasons that say
+   * nothing about size (the barren-page brake, a reported ceiling), and those must never
+   * become a factual set size for assistive technology.
+   */
+  @tracked serverComplete = false;
+
+  /**
+   * Whether a row not already held was discarded at the render cap. Merely filling the cap
+   * exactly does not make the result truncated.
+   */
+  @tracked serverTruncated = false;
+
+  /**
    * How many deduped rows the accumulator holds. Mirrors the untracked buffer's length so
    * the gating getters depend on real tracked state rather than reading the buffer.
    */
@@ -389,9 +427,10 @@ export default class SelectEngine {
    * @param opts.identifiers - Keys plugin `select-content` transformers match on.
    * @param opts.items - A static array (or `() => array`) of items — the client-only
    *   source. Provide this or `load`, not both.
-   * @param opts.load - `(filter, { signal, offset, limit }) => items | { items, total }`,
-   *   synchronously or as a promise. Pagination starts without a limit so the source
-   *   defines its page size.
+   * @param opts.load - `(filter, { signal, offset, limit }) => items | { items, total?,
+   *   hasMore? }`, synchronously or as a promise. Pagination starts without a limit so the
+   *   source defines its page size. Declaring neither `total` nor `hasMore` means the
+   *   response is the complete set.
    * @param opts.filterBy - Client-filter field name or `(item, term) => boolean`.
    *   Defaults to a substring match on `labelField`.
    * @param opts.valueField - Field holding an item's value. Defaults to `"id"`.
@@ -599,17 +638,31 @@ export default class SelectEngine {
       );
     }
 
-    const { serverLoadedCount, serverExhausted, serverTotal } = this.#state;
+    const { serverLoadedCount, serverExhausted, serverTotal, serverTruncated } =
+      this.#state;
     return (
-      serverLoadedCount >= MAX_RENDERED &&
-      !serverExhausted &&
-      (serverTotal == null || serverLoadedCount < serverTotal)
+      serverTruncated ||
+      (serverLoadedCount >= MAX_RENDERED &&
+        !serverExhausted &&
+        (serverTotal == null || serverLoadedCount < serverTotal))
     );
   }
 
-  /** The true result count when the source makes it knowable. */
+  /**
+   * The true result count when the source makes it knowable.
+   *
+   * A reported `total` outranks the count of rows actually navigable, deliberately: the engine
+   * cannot tell an honest total whose tail it has not fetched from an inflated one, so it
+   * trusts the source. A source that declares 500 and holds 90 therefore reports 500.
+   */
   get total(): number | undefined {
-    return this.#load ? this.#state.serverTotal : this.filteredItems.length;
+    if (!this.#load) {
+      return this.filteredItems.length;
+    }
+
+    const { serverComplete, serverLoadedCount, serverTotal, serverTruncated } =
+      this.#state;
+    return serverComplete && !serverTruncated ? serverLoadedCount : serverTotal;
   }
 
   /**
@@ -754,14 +807,15 @@ export default class SelectEngine {
     createCount: number
   ): readonly SelectDescriptor[] {
     const total = this.total;
-    // A transformer or the legacy bridge can add rows the source never reported, so the
-    // window can outgrow the total; trusting it blindly would emit a position past the set.
+    // A transformer or the legacy bridge can add rows absent from a reported or derived
+    // total, so trusting that total blindly could emit a position past the set.
     const sourceTotal = total == null ? null : Math.max(total, sourceCount);
     const setSize =
       sourceTotal == null ? -1 : specialCount + sourceTotal + createCount;
 
-    // The window is a prefix, so a row's position is known even when the total is not; a set
-    // size of -1 with real positions is the unknown-size encoding ARIA describes.
+    // The window is a prefix, so a row's position is known even while the set size is not —
+    // a source still paging under `hasMore: true`. `-1` with real positions is the
+    // unknown-size encoding ARIA describes.
     const lastSourceIndex = specialCount + sourceCount;
 
     return Object.freeze(
@@ -1130,30 +1184,43 @@ export default class SelectEngine {
         return this.#serverItems.slice(0, MAX_RENDERED);
       }
 
-      const { items, total } = this.#unwrapLoadResult(response);
-      const previousPageSize = this.#serverPageSize;
+      const { items, total, hasMore } = this.#unwrapLoadResult(response);
       const knownTotal = total ?? this.#state.serverTotal;
       const before = this.#serverItems.length;
       this.#serverOffset += items.length;
       this.#serverPageSize ??= items.length || undefined;
-      this.#appendServerItems(items);
+      const truncated = this.#appendServerItems(items);
       const added = this.#serverItems.length - before;
 
-      // A non-empty page that survives dedup as nothing means the source is replaying rows
-      // we already hold — true of any `load` that ignores `offset`, i.e. every
-      // implementation predating pagination, which would otherwise refetch forever. But a
-      // genuine paginated source can serve one duplicate-heavy page and still have more
-      // after it, so tolerate a single barren page and stop only on the second in a row.
+      // Reachable only under `hasMore: true`, since silence now ends paging on its own. It is
+      // the residual brake on a source that claims more forever: tolerating one barren page
+      // still supports overlapping pages, and the second stops it.
       this.#serverBarrenPages = added === 0 ? this.#serverBarrenPages + 1 : 0;
 
+      // Against *deduped* rows: the raw cursor outruns them whenever pages overlap, and
+      // comparing it here would strand the tail.
+      const ceilingReached =
+        knownTotal != null && this.#serverItems.length >= knownTotal;
+
+      // Silence means the set is complete, so only an affirmative signal buys another fetch.
+      // An explicit `hasMore: false` is terminal whatever `total` says: a source may report 99
+      // matches while permitting only 5, and those 5 are all the user can ever navigate to.
+      const moreDeclared =
+        hasMore === true ||
+        (hasMore == null &&
+          knownTotal != null &&
+          this.#serverItems.length < knownTotal);
+
       this.#state.serverTotal = knownTotal;
+      // Silence is an assertion of completeness, so it may size the set. The extra guard is
+      // narrower than it looks: it only catches a source that replayed pages and *then*
+      // declared completeness, which has already proven it cannot be trusted to count.
+      this.#state.serverComplete = !moreDeclared && this.#serverBarrenPages < 2;
+      // Assigned rather than accumulated: filling the cap stops the next fetch outright, so
+      // no page can follow a truncating one within a query.
+      this.#state.serverTruncated = truncated;
       this.#state.serverExhausted =
-        items.length === 0 ||
-        this.#serverBarrenPages >= 2 ||
-        (previousPageSize != null && items.length < previousPageSize) ||
-        // Against *deduped* rows: the raw cursor outruns them whenever pages overlap, and
-        // comparing it here would strand the tail.
-        (knownTotal != null && this.#serverItems.length >= knownTotal);
+        !moreDeclared || ceilingReached || this.#serverBarrenPages >= 2;
       this.#state.serverLoadedCount = this.#serverItems.length;
       settled = true;
 
@@ -1179,26 +1246,33 @@ export default class SelectEngine {
     }
   }
 
-  #appendServerItems(items: SelectItem[]): void {
+  #appendServerItems(items: SelectItem[]): boolean {
     const keys = new Set(
       this.#serverItems
         .map((item) => this.#valueKey(this.#itemValue(item)))
         .filter((key): key is string => key != null)
     );
-
     for (const item of items) {
-      if (this.#serverItems.length >= MAX_RENDERED) {
-        return;
+      const key = this.#valueKey(this.#itemValue(item));
+      if (key != null && keys.has(key)) {
+        continue;
       }
 
-      const key = this.#valueKey(this.#itemValue(item));
-      if (key == null || !keys.has(key)) {
-        this.#serverItems.push(item);
-        if (key != null) {
-          keys.add(key);
-        }
+      if (this.#serverItems.length >= MAX_RENDERED) {
+        // The accumulator can no longer grow and `keys` is never read again, so one
+        // discarded row settles the question. Returning here also keeps the scan bounded by
+        // the cap rather than by the page, which a pre-pagination source sizes at the whole
+        // dataset.
+        return true;
+      }
+
+      this.#serverItems.push(item);
+      if (key != null) {
+        keys.add(key);
       }
     }
+
+    return false;
   }
 
   #unwrapLoadResult(response: SelectLoadResult): SelectLoadResponse {
@@ -1209,6 +1283,8 @@ export default class SelectEngine {
     this.#state.reveal = 0;
     this.#state.serverTotal = undefined;
     this.#state.serverExhausted = false;
+    this.#state.serverComplete = false;
+    this.#state.serverTruncated = false;
     this.#state.serverLoadedCount = 0;
     // Neither key is cleared: leaving them pointing at the previous load is what makes the
     // new one read as pending until its first page lands, and what stops the stale

@@ -418,9 +418,13 @@ model, sync slices locally, server pages, both via the same sentinel + "N of M" 
 - **At `MAX_RENDERED` with more still available → stop loading and show a "keep typing
   to narrow the list" message** (the `filter-for-more` affordance); never keep loading
   into the degenerate case. Filtering shrinks the set back under the cap.
-- `aria-setsize` = the true total when known (client: full filtered count; server:
-  total if the response provides it), `aria-posinset` per option — so SR users know the
-  list extends beyond the rendered prefix / the cap.
+- `aria-setsize` = the true total when known (client: full filtered count; server: the
+  reported total, or the accumulated count once the source asserts completeness — by
+  declaring no more pages, or by declaring nothing at all), `aria-posinset` per option — so
+  SR users know the list extends beyond the rendered prefix / the cap. A size inferred from
+  paging *behaviour* is never reported: a source stopped by the duplicate-page brake, or one
+  whose overflow was clipped at the cap, falls back to `-1`, the honest unknown-size
+  encoding. A wrong number is worse than no number.
 - The engine renders a bounded prefix of the **final** (filtered → transformed →
   normalized) descriptor list; a query change or `reload` resets the reveal to the first chunk.
 - **Groups × reveal**: *client* reveal (slicing a known-complete list) composes
@@ -945,7 +949,11 @@ extensibility for free.
 An author declares *where rows come from*, never *how to fetch-and-track* them:
 - `@options` — an array or `() => array`. Client-only; the engine filters it
   (`@filterBy` = a field name or `(item, term) => boolean` to customize matching).
-- `@load` — `(filter, { signal }) => items[] | Promise<items[]>`. The general form:
+- `@load` — `(filter, { signal, offset, limit }) => items[] | { items, total?, hasMore? }`,
+  synchronously or as a promise. A paginated source reports `total` when it knows the set
+  size and `hasMore` when it only knows another page exists. **Declaring neither — including
+  returning a bare array — means the response is the complete set**, so a source that
+  paginates must say so or only its first page is ever shown. The general form:
   **return an array for a sync/client source, a promise for a server source** — and a
   **dual-mode** select is a *single* function that returns either per call
   (`return this.lazy ? this.server(filter, { signal }) : this.local(filter)`). No

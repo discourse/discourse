@@ -46,7 +46,7 @@ export default class Select extends Component {
   @tracked eventsValue = null;
   @tracked largeListValue = null;
   @tracked pagedValue = null;
-  @tracked pagedUnknownValue = null;
+  @tracked pagedCursorValue = null;
   @tracked openCount = 0;
   @tracked closeCount = 0;
 
@@ -65,8 +65,13 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
 />
 
-// (filter, { offset, limit, signal }) => { items, total }
-// Returning a bare array instead reports an unknown set size.`;
+// (filter, { offset, limit, signal }) => one of:
+//   { items, total }    a known set size; paging stops when it is reached
+//   { items, hasMore }  more-ness without a size; size is known once hasMore is false
+//   items               a bare array: this IS the whole set, so no second page is fetched
+//
+// A source that paginates MUST report total or hasMore. Say nothing and the
+// engine takes the first response as complete.`;
 
   largeListCode = `{{! 5000 items; the window, sentinel and cap are automatic }}
 <DSelect
@@ -308,11 +313,13 @@ export default class Select extends Component {
     };
   }
 
-  // The same source without a total, so the set size is unknown and rows report -1.
+  // A cursor source: it knows another page exists without knowing the set size, so rows
+  // report -1 until the last page declares completeness and the real count becomes known.
   @action
-  async loadPageUnknownTotal(filter, options) {
-    const { items } = await this.loadPage(filter, options);
-    return items;
+  async loadPageCursor(filter, options) {
+    const { items, total } = await this.loadPage(filter, options);
+    const { offset = 0 } = options;
+    return { items, hasMore: offset + items.length < total };
   }
 
   @action
@@ -321,8 +328,8 @@ export default class Select extends Component {
   }
 
   @action
-  updatePagedUnknown(value) {
-    this.pagedUnknownValue = value;
+  updatePagedCursor(value) {
+    this.pagedCursorValue = value;
   }
 
   @action
@@ -441,7 +448,7 @@ export default class Select extends Component {
       @title={{i18n "styleguide.sections.select.async_button_example"}}
       @code={{this.asyncButtonCode}}
     >
-      <div class="select-examples__control">
+      <div class="select-examples__control select-examples__async-button">
         <DSelect
           @load={{this.loadOptions}}
           @value={{this.asyncButtonValue}}
@@ -760,21 +767,21 @@ export default class Select extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.paged_unknown_example"}}
+      @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
       @code={{this.pagedCode}}
     >
-      <div class="select-examples__control select-examples__paged-unknown">
+      <div class="select-examples__control select-examples__paged-cursor">
         <DSelect
-          @load={{this.loadPageUnknownTotal}}
-          @value={{this.pagedUnknownValue}}
-          @onChange={{this.updatePagedUnknown}}
+          @load={{this.loadPageCursor}}
+          @value={{this.pagedCursorValue}}
+          @onChange={{this.updatePagedCursor}}
           @placeholder={{i18n "styleguide.sections.select.placeholder"}}
         >
           <:selection as |item|>{{item.name}}</:selection>
           <:item as |item|>{{item.name}}</:item>
         </DSelect>
         <p class="styleguide-note">
-          {{i18n "styleguide.sections.select.paged_unknown_note"}}
+          {{i18n "styleguide.sections.select.paged_cursor_note"}}
         </p>
       </div>
     </StyleguideExample>

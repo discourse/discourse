@@ -132,6 +132,21 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     clear-all (`@clearable`); rewrite on-`main` `DMultiSelect` as a thin `@multiple` alias.
   - ☐ Styleguide `@variant="button"`+`@multiple` and 6+-chip wrap examples; RFC line-123 vs
     238-242 mobile contradiction.
+- ☐ **Post-showcase UX follow-ups** — address after the concurrent implementation work lands:
+  - Selecting an already-selected item does not close the dropdown. Define and implement
+    consistent re-selection behavior across variants.
+  - Created items need a stable, discoverable position in long or paginated lists. Prefer
+    staging them at the top, but do not make the create action the default while ordinary
+    matches remain. Research select-kit's current ordering and activation behavior before
+    settling the interaction.
+  - Decide whether removing a newly created item's chip should also remove that staged item
+    from the open list. The current preference is yes for the lifetime of the open list;
+    validate that against established multi-select UX before implementing it.
+  - Decide whether a multi-select typeahead should retain an input placeholder when it already
+    has selected items instead of presenting an empty input.
+  - Add a `title` to each chip's remove button in addition to its accessible name.
+  - Give disabled options a visually distinct default treatment, potentially reduced opacity,
+    while preserving sufficient text and icon contrast.
 - ☐ **Large-list reveal** (Decision 5): internal render chunk (client) / server
   page-size auto-detected; hard `MAX_RENDERED` cap; `DLoadMore` reveal → "filter to
   narrow" at the cap; `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
@@ -146,21 +161,34 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     IntersectionObserver does not fire there.
   - ☑ Loading feedback: placeholders appear only after a delay, so a fast source never
     flashes one; a re-query replaces the list, a reveal appends. Paginated styleguide
-    examples (with and without a reported total) cover the busy state, the loading
-    announcements, and the unknown-set-size encoding.
+    examples (reported total, cursor) cover the busy state, the loading announcements, and the
+    unknown-set-size encoding.
   - ☐ **Placeholder placement.** Placeholders append below the last row, so they sit outside
     the viewport exactly when they matter: arrowing to the last option, scrolling to the
     bottom, or re-querying above stale rows. The listbox viewport fits 9 rows (320px against a
     38.4px row). A sticky bottom indicator is position-independent and would supersede the
     appended rows for reveals.
-  - ☐ **Separate `hasMore` from `total`.** `total` currently drives both `aria-setsize` (size)
-    and exhaustion (pagination); they are orthogonal, and a cursor source knows there is more
-    without knowing how many. A source reporting neither triggers one speculative fetch on a
-    short first page, which shows a second placeholder. Add an authoritative `hasMore` to the
-    response, and derive the true set size once exhausted — today an exhausted source with no
-    reported total keeps announcing `aria-setsize="-1"` for a set we have fully enumerated.
-    Do not fix by sending a `limit` on page 0: a source ignoring `limit` would be wrongly
-    exhausted.
+  - ☑ **Separate `hasMore` from `total`, and invert the default.** `SelectLoadResponse` gained
+    `hasMore`, and **silence now means complete**: only `hasMore: true` or a `total` above the
+    rows returned buys another fetch. A source that cannot say whether more exists is not fit for
+    pagination, so the engine takes it at its word instead of probing — which previously cost
+    every such source two wasted round-trips, each long enough to paint a loading placeholder.
+    Because silence is an assertion of completeness, the accumulated count becomes a truthful
+    `aria-setsize`; `-1` now means only "mid-paging under `hasMore`". Exhaustion reached *without*
+    such an assertion — the barren-page brake, a reported ceiling — must never size the set, since
+    the brake is the "source ignores `offset`" detector. Truncation at the cap is exact (a
+    discarded non-duplicate row, not merely a full list), so it both withdraws the derived size
+    and drives the narrow hint. `hasMore` is per-response; `total` stays sticky and outranks the
+    navigable row count.
+  - ☐ **`serverCompletedKey` write ordering on abort** (pre-existing). `#settleServerPage` sets it
+    from `finally` on the abort path, and the generation counter is bumped only by `#resetWindow`,
+    which the reveal path never calls. Two settles racing in one generation can leave the key on
+    the older load, pinning `serverPending` true and `canRevealMore` false.
+  - ☐ **Dedup key collisions across heterogeneous sources.** `#valueKey` is `String(value)` with no
+    type namespace, so a user `id: 5` and a group `id: 5` collide and the second is dropped. This
+    is also why a derived total describes the *navigable* set rather than the source's true count.
+  - ☐ **`atCapWithMore` phrasing under truncation.** "Keep typing to narrow the results" is sound
+    for a client cap; for a server-truncated set, typing may not help.
   - ☐ **Selected option unreachable on open.** Opening with a selection past the window starts
     at option 1; `dRovingFocus` only ever activates the first option, and the selected row is
     not rendered. Pre-existing, but windowing removes the ability to reach it at all. APG
