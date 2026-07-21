@@ -63,6 +63,10 @@
       "type": "boolean",
       "example": false
     },
+    "grants_moderator": {
+      "type": "boolean",
+      "example": false
+    },
     "topics": {
       "type": "array",
       "items": {
@@ -93,6 +97,7 @@
     "expires_at",
     "expired",
     "grants_admin",
+    "grants_moderator",
     "topics",
     "groups"
   ]
