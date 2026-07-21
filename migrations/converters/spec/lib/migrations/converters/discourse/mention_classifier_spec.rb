@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Converters::Discourse::MentionResolver do
+RSpec.describe Migrations::Converters::Discourse::MentionClassifier do
   let(:mention_type) { Migrations::Database::IntermediateDB::Enums::MentionType }
 
   it "classifies a plain name as a user mention" do
@@ -22,6 +22,10 @@ RSpec.describe Migrations::Converters::Discourse::MentionResolver do
 
       expect(resolver.call("staff")).to eq(mention_type::HERE)
       expect(resolver.call("here")).to eq(mention_type::USER)
+    end
+
+    it "disables here-detection when here_mention is blank" do
+      expect(described_class.new(here_mention: nil).call("here")).to eq(mention_type::USER)
     end
   end
 

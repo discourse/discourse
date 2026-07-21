@@ -8,7 +8,7 @@ module Migrations
       module MarkdownScanner
         module Detectors
           # Detects user and group mentions (`@name`). The mention *type* is decided
-          # later by the converter's MentionResolver (it needs the source's groups
+          # later by the converter's MentionClassifier (it needs the source's groups
           # and `here_mention` setting), so the node just carries the name.
           #
           # When the caller supplies the source's mention names (every username,
@@ -38,14 +38,6 @@ module Migrations
                 end_pos: pos + 1 + name.bytesize, # +1 for the `@` (one byte)
                 node: Markbridge::AST::Mention.new(name:),
               )
-            end
-
-            private
-
-            # Same normalization the importer applies when it resolves the mention to
-            # a user or group, so the gate and the resolution can't disagree.
-            def normalize(name)
-              Migrations::NameNormalizer.normalize(name)
             end
           end
         end

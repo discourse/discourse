@@ -16,14 +16,15 @@ module Migrations
       # Names are normalized like Discourse does it (Unicode NFC, then downcase), so
       # a mention and a group/user name compare equal however the source encoded
       # them. The importer remaps the recorded name to a destination user or group.
-      class MentionResolver
+      class MentionClassifier
         MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
         private_constant :MentionType
 
         # @param here_mention [String, nil] the source's `here_mention` setting value.
+        #   Nil or blank disables here-detection, so no name will classify as HERE.
         # @param group_names [Enumerable<String>] the source's group names.
         def initialize(here_mention: "here", group_names: [])
-          @here_mention = normalize(here_mention) if here_mention
+          @here_mention = normalize(here_mention) if here_mention.presence
           @group_names = group_names.map { |name| normalize(name) }.to_set
         end
 

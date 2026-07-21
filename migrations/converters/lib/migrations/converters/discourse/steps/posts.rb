@@ -108,8 +108,8 @@ module Migrations
 
             @extractor =
               RawExtractor.new(
-                mention_resolver:
-                  MentionResolver.new(here_mention:, group_names: group_names || []),
+                mention_classifier:
+                  MentionClassifier.new(here_mention:, group_names: group_names || []),
                 mention_names:,
                 hashtag_names:,
                 custom_emoji_names:,

@@ -67,12 +67,6 @@ module Migrations
 
             private
 
-            # Same normalization the importer applies when it resolves the name to a
-            # category or tag, so the gate and the resolution can't disagree.
-            def normalize(name)
-              Migrations::NameNormalizer.normalize(name)
-            end
-
             # A hashtag starts a new token: the `#` must open the input, or follow
             # whitespace or an opening paren. This drops markdown headings (`# x`,
             # whose `#` is followed by a space anyway), a URL fragment's `/#…`, and a

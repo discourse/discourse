@@ -19,6 +19,7 @@ module Migrations
       # they're left in `raw` verbatim.
       class RawExtractor
         Detectors = MarkdownScanner::Detectors
+        private_constant :Detectors
 
         HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
         private_constant :HashtagType
@@ -44,16 +45,16 @@ module Migrations
         }.freeze
         private_constant :LINK_TARGET_TYPES
 
-        # The stateless detectors, built fresh per extractor. The mention, hashtag
-        # and custom-emoji detectors are not here: they're the ones configured with
-        # state (the source's mention names, category/tag names and emoji names),
-        # built below.
+        # The stateless detectors, built fresh per extractor. The four configured
+        # detectors are not here: internal link, mention, hashtag and custom emoji all
+        # carry the source's data (its hosts and foreign-host callback, mention names,
+        # category/tag names and emoji names), so they're built in the initializer.
         DETECTORS = [Detectors::Upload, Detectors::UploadUrl, Detectors::Quote].freeze
         private_constant :DETECTORS
 
-        # @param mention_resolver [#call] maps a mention name to its `mention_type`
+        # @param mention_classifier [#call] maps a mention name to its `mention_type`
         #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
-        #   Defaults to a resolver with no group knowledge (so only `@here` / `@all`
+        #   Defaults to a classifier with no group knowledge (so only `@here` / `@all`
         #   are special-cased).
         # @param mention_names [Migrations::SortedStringSet, nil] the source's
         #   mention names (usernames, group names, the `here_mention` value and
@@ -78,18 +79,18 @@ module Migrations
         #   that a former domain may be missing from the source_site settings. Nil (the
         #   default) skips the signal.
         def initialize(
-          mention_resolver: MentionResolver.new,
+          mention_classifier: MentionClassifier.new,
           mention_names: nil,
           hashtag_names: nil,
           custom_emoji_names: nil,
           internal_link_hosts: Set.new,
           on_foreign_host: nil
         )
-          @mention_resolver = mention_resolver
+          @mention_classifier = mention_classifier
 
           detectors = DETECTORS.map(&:new)
-          # After UploadUrl (index 1 of DETECTORS), so an upload URL still wins over a
-          # bare internal link that happens to look like one.
+          # After UploadUrl, so an upload URL still wins over a bare internal link that
+          # happens to look like one.
           detectors << Detectors::InternalLink.new(hosts: internal_link_hosts, on_foreign_host:)
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
@@ -106,8 +107,9 @@ module Migrations
 
           # The detectors are stateless (the emoji one only reads a frozen name set)
           # and the scanner resets its state on each `scan`, so build them once and
-          # reuse them for every post. The block reads `@collector` (set per call), so
-          # the one scanner serves whatever buffer we're filling.
+          # reuse them for every post. The block reads `@collector`, which `extract`
+          # swaps per call, so one extractor must not run in two threads at once — each
+          # worker holds its own (the posts step builds it in per-worker `setup`).
           @scanner =
             MarkdownScanner::Scanner.new(detectors:, extra_gate:) { |node| defer(node, @collector) }
         end
@@ -137,7 +139,7 @@ module Migrations
           when MarkdownScanner::UploadUrlReference
             collector.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
           when Markbridge::AST::Mention
-            collector.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
+            collector.mention(mention_type: @mention_classifier.call(node.name), name: node.name)
           when MarkdownScanner::InternalLinkReference
             collector.link(
               url: node.url,
@@ -166,7 +168,9 @@ module Migrations
         # The Discourse converter never knows the quoted post's source `original_id`,
         # so it records the source coordinates (topic id + post number) instead and
         # lets the importer resolve them. A quote with a `post:` but no `topic:`
-        # points into its own topic. A quote with neither is username-only.
+        # points into its own topic. A `topic:` with no `post:` drops both coordinates,
+        # because the importer can only resolve them as a pair. A quote with neither is
+        # username-only.
         def defer_quote(node, collector)
           post_number = node.post_number
           topic_id = post_number ? (node.topic_id || @topic_id) : nil

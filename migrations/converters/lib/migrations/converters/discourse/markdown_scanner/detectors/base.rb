@@ -27,6 +27,13 @@ module Migrations
 
             private
 
+            # Same normalization the importer applies when it resolves the name to a
+            # user, group, category or tag, so the gate and the resolution can't
+            # disagree.
+            def normalize(name)
+              Migrations::NameNormalizer.normalize(name)
+            end
+
             # Anchored match at a byte offset: every PATTERN here is `\G`-anchored, so
             # `byteindex` matches AT `pos` or returns nil (no forward drift) — the
             # byte-offset analogue of `PATTERN.match(input, pos)`, but positioned in

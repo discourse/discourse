@@ -298,13 +298,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.first[:name]).to eq("some-user")
     end
 
-    it "classifies mention types via the injected resolver" do
-      resolver =
-        Migrations::Converters::Discourse::MentionResolver.new(
+    it "classifies mention types via the injected classifier" do
+      classifier =
+        Migrations::Converters::Discourse::MentionClassifier.new(
           here_mention: "here",
           group_names: %w[admins],
         )
-      extractor = described_class.new(mention_resolver: resolver)
+      extractor = described_class.new(mention_classifier: classifier)
 
       extractor.extract("@gerhard @admins @here all there", embeds: buffer)
 
