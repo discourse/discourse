@@ -2952,7 +2952,7 @@ pl_PL:
       topic_before: "Pokaż wpisy w tematach utworzonych przed datą (RRRR-MM-DD lub dni temu)"
       keywords: "Pokaż wpisy zawierające dowolne ze wskazanych słów kluczowych"
       topic_keywords: "Pokaż wpisy w tematach zawierających dowolne ze wskazanych słów kluczowych"
-      post_type: "Pokaż pierwsze wpisy lub odpowiedzi"
+      post_type: "Filtruj posty według typu lub pozycji"
       post_type_regular: "Tylko zwykłe wpisy"
       post_type_all: "Wszystkie widoczne typy wpisów"
       post_type_first: "Tylko pierwsze wpisy"

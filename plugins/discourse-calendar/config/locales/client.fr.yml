@@ -38,7 +38,7 @@ fr:
         pick_region_description: "Choisissez une région pour voir les jours fériés de cette région."
         disabled_holidays_description: "Les vacances pour personnes handicapées seront exclues du calendrier des jours fériés du personnel."
       date: "Date"
-      add_to_calendar: "Ajouter à Google Calendar"
+      add_to_calendar: "Ajouter à Google Agenda"
       toggle_timezone_offset_title: "Activer/désactiver le décalage horaire"
       local_time: "Heure locale"
       region:

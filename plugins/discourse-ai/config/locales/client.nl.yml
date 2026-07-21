@@ -544,7 +544,6 @@ nl:
           default: "Standaard (vaste limieten)"
           agentic: "Agentic (tokenbudget)"
         max_turn_tokens: "Maximaal aantal beurttokens"
-        max_turn_tokens_help: "Maximaal totaal aantal tokens (invoer + uitvoer) verbruikt over alle LLM-aanroepen tijdens een enkele botantwoord. Als dit is ingesteld, worden de vaste voltooiing-/toollimieten vervangen door een tokenbudget, waardoor meer agentgedrag mogelijk is. Laat leeg voor standaard limieten."
         compression_threshold: "Compressiedrempel"
         compression_threshold_help: "Percentage van contextgebruik (20-99) waarbij automatische compressie begint. Lagere waarden activeren compressie eerder, waardoor meer ruimte behouden blijft."
         vision_max_pixel_sizes:

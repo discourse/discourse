@@ -2624,7 +2624,6 @@ zh_CN:
       topic_before: "显示日期（YYYY-MM-DD 或天数前）之前创建的主题中的帖子"
       keywords: "显示包含指定关键词的帖子"
       topic_keywords: "显示包含指定关键词的主题中的帖子"
-      post_type: "显示首条帖子或回复"
       post_type_first: "仅第一个帖子"
       post_type_reply: "仅回复"
       status: "按主题状态筛选帖子"

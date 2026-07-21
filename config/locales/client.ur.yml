@@ -38,7 +38,12 @@ ur:
     access_control:
       manage:
         access_permission_editor: "ترمیم کنندہ"
+        access_permission_editor_description: "اس اکائی کے لیے مواد کی تخلیق اور ترمیم ہو سکتی ہے"
+        access_permission_viewer_description: "اس اکائی کے لیے مواد دیکھا جا سکتا ہے"
         access_permission_remove: "خارج کریں"
+        access_permission_remove_description: "اس گروپ کی اجازت ختم کریں"
+        add_group: "گروپ شامل کریں"
+        mandatory_acl_tooltip: "یہ اجازت اس اکائی کے لیے لازم ہے اور اسے ہٹانا ممکن نہیں"
     carousel:
       go_to_slide: "سلائیڈ %{index}پر جائیں"
       previous: "گزشتہ سلائیڈ"
@@ -1211,7 +1216,7 @@ ur:
         handle: "رکنیت کی درخواست سے نمٹیں"
         undo: "کالعدم کریں"
       manage:
-        title: "مَینَیج"
+        title: "منتظمی"
         name: "نام"
         full_name: "پورا نام"
         add_members: "اراکین کو شامل کریں"
@@ -1261,7 +1266,11 @@ ur:
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
         membership:
           title: رکنیت
+          visibility_and_access: "رسائی اور مرئیت"
+          join_method_title: "صارفین کیسے شامل ہو سکتے ہیں؟"
           join_method:
+            free: "کوئی بھی آزادانہ طور پر شامل ہو سکتا ہے"
+            request: "کوئی بھی شامل ہونے کی درخواست کر سکتا ہے"
             invite: "صرف دعوت"
         categories:
           title: زمرہ جات
@@ -5235,9 +5244,11 @@ ur:
           description: "آپ کو اِس ٹیگ کے ساتھ موجود نئے ٹاپکس کی کسی بھی چیز کے بارے میں مطلع نہیں کیا جائے گا، اور یہ تازہ ترین میں بھی نظر نہیں آئیں گے۔"
       groups:
         back_btn: "تمام دہجیوں پر واپس جائیں"
+        title: "ٹیگ گروپس"
         about_heading: "ایک ٹیگ گروپ منتخب کریں یا ایک نیا بنائیں"
         about_heading_empty: "شروع کرنے کے لیے ایک نیا ٹیگ گروپ بنائیں"
         about_description: "ٹیگ گروپس آپ کو ایک جگہ پر بہت سے ٹیگز کی اجازتوں کا انتظام کرنے میں مدد کرتے ہیں۔"
+        new: "نیا گروپ"
         tags_label: "اِس گروپ میں ٹیگز"
         parent_tag_label: "بالائی ٹیگ"
         parent_tag_description: "اس گروپ کے ٹیگز صرف اس صورت میں استعمال کیے جاسکتے ہیں جب پیرنٹ ٹیگ موجود ہو۔"
@@ -6280,9 +6291,16 @@ ur:
           no_data: "دکھانے کے لیے کچھ نہیں"
           modal:
             title: "رپورٹس کا انتظام کریں"
+            search_placeholder: "رپورٹس کی تلاش"
+            counter: "%{count} / %{max} رپورٹس شامل ہوئیں"
             enabled_heading: "فعال شدہ"
             all_heading: "تمام رپورٹیں"
             apply: "لاگو کریں"
+            enable: "%{title} فعال ہے"
+            disable: "%{title} غیر فعال ہے"
+            move_up: "%{title} کو اوپر منتقل کریں"
+            move_down: "%{title} کو نیچے منتقل کریں"
+            footer_note: "یہ تبدیلیاں تمام صارفین پر لاگو ہوں گی۔"
         configure:
           button: "ترتیب دیں"
           tooltip: "اس سائٹ پر ہر کسی کے لیے اس ڈیش بورڈ کی ظاہری شکل ترتیب دیں۔"
@@ -7178,6 +7196,7 @@ ur:
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
           broken_theme_tooltip: "اِس تِھیم کے CSS، HTML یا YAML میں غلطیاں موجود ہیں"
+          broken_theme: "خراب تھیم کو غیر فعال کریں"
           disabled_component_tooltip: "یہ کمپنَینٹ غیر فعال کردیا گیا ہے"
           default_theme_tooltip: "یہ تِھیم سائٹ کی ڈیفالٹ تِھیم ہے"
           updates_available_tooltip: "اِس تِھیم کیلئے اَپ ڈیٹس دستیاب ہیں۔"
@@ -7398,6 +7417,9 @@ ur:
         html_preview: "ای میل مواد کی جھلک دیکھیں"
         last_seen_user: "آخری بار دیکھا گیا صارف:"
         no_result: "ڈائجسٹ کیلئے کوئی نتائج نہیں پائے گئے۔"
+        reply_key: "جواب دینے کی کلید"
+        post_link_with_smtp: "دھاگے اور SMTP کی تفصیلات"
+        skipped_reason: "وجہ کو چھوڑیں"
         incoming_emails:
           from_address: "سے"
           to_addresses: "کے لئے"
@@ -7435,6 +7457,7 @@ ur:
           delete_topic: "موضوع مٹادیا گیا۔"
           post_approved: "منظورشدہ پوسٹ"
       logs:
+        description: "لاگز اور اسکریننگ آپ کو اپنی کمیونٹی کی نگرانی اور انتظام کرنے کی سہولت دیتے ہیں تاکہ یہ محفوظ اور بااحترام رہے۔ آپ عملے کے تمام اقدامات کے لاگز دیکھ سکتے ہیں، لاگز میں تلاش کر سکتے ہیں، اور صارف اسکریننگ کی ترتیب کر سکتے ہیں۔"
         nav_title: "لاگز"
         action: "عمل"
         created_at: "بنائے گئی"
@@ -7673,6 +7696,8 @@ ur:
             first: "اختيار 1"
             second: "اختيار 2"
             third: "اختيار 3"
+        edit_category:
+          select_template_help: "فارم کے ٹیمپلیٹس کو شامل/ترمیم کریں"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -7680,6 +7705,7 @@ ur:
         invalid: "معذرت، آپ اِس صارف کی نقالی نہیں کرسکتے۔"
       users:
         title: "اراکین"
+        description: "صارفین کو دیکھیں اور منظم کریں۔"
         create: "ایڈمِن صارف شامل کریں"
         last_emailed: "آخری ای میل"
         not_found: "معذرت، وہ اسم صارف نظام میں موجود نہیں۔"
@@ -7709,6 +7735,7 @@ ur:
         activation_filter:
           all: "تمام اراکین"
           activated: "فعال"
+          not_activated: "فعال نہیں"
         approved: "منظورشدہ؟"
         titles:
           active: "فعال اراکین"
@@ -7777,6 +7804,7 @@ ur:
         suspended: "معطل کردہ؟"
         staged: "عارضی؟"
         show_admin_profile: "منتظم"
+        manage_user: "صارف کا نظم کریں"
         show_public_profile: "پبلک پروفائل دکھائیں"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
