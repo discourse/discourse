@@ -575,10 +575,11 @@ describe "Admin upcoming changes" do
       expect(
         settings_page.find_setting(:limit_suggested_to_category).find(
           ".setting-value input[type=checkbox]",
+          visible: :all,
         ),
       ).to be_checked
 
-      settings_page.toggle_setting(:limit_suggested_to_category)
+      settings_page.toggle_bool_setting(:limit_suggested_to_category)
 
       # Wait for the save to land in the DB before forcing the in-process
       # SiteSetting refresh below — the .overridden class only appears once
@@ -604,6 +605,7 @@ describe "Admin upcoming changes" do
       expect(
         settings_page.find_setting(:limit_suggested_to_category).find(
           ".setting-value input[type=checkbox]",
+          visible: :all,
         ),
       ).not_to be_checked
     end

@@ -29,6 +29,14 @@ describe "Admin Site Setting Requires Confirmation" do
     expect(settings_page).to have_overridden_setting("min_password_length", value: 12)
   end
 
+  it "shows the confirmation when submitting the change with the Enter key" do
+    settings_page.visit("min_password_length")
+    input = settings_page.find_setting("min_password_length").find("input[type='number']")
+    input.set(12)
+    input.send_keys(:enter)
+    expect(dialog).to be_open
+  end
+
   it "does not save the new setting value if the admin cancels confirmation" do
     settings_page.visit("min_password_length")
     settings_page.change_number_setting("min_password_length", 12)
