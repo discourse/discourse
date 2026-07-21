@@ -44,7 +44,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil if !@names.include?(name)
+              return nil if @names.exclude?(name)
 
               Match.new(
                 start_pos: pos,

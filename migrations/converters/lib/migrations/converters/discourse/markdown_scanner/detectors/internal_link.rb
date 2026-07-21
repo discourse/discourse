@@ -146,7 +146,7 @@ module Migrations
 
             private
 
-            # A markdown link, unless it's the `]` of an image `![…](…)`, whose `[`
+            # A markdown link, unless it's the `[` of an image `![…](…)`, whose `[`
             # sits right after the `!`.
             def detect_link(input, pos)
               return nil if bang_before?(input, pos)
