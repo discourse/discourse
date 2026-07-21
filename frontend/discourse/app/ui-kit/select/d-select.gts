@@ -879,6 +879,20 @@ export default class DSelect extends Component<DSelectSignature> {
     this.a11y.announce(message, "polite");
   }
 
+  /**
+   * A freshly mounted listbox is a fresh context, so the count always announces on open even
+   * when it matches what the previous open announced. Updates while the list stays mounted
+   * keep deduping through {@link announceCount}.
+   */
+  @action
+  announceCountOnEntry(
+    element: HTMLElement,
+    args: [number, number | undefined]
+  ): void {
+    this.#lastAnnouncedCountMessage = null;
+    this.announceCount(element, args);
+  }
+
   /** Captures the listbox so the reveal sentinel can be rooted at its scroll container. */
   @action
   captureListbox(element: HTMLElement): void {
@@ -925,7 +939,9 @@ export default class DSelect extends Component<DSelectSignature> {
       return;
     }
     this.#narrowAnnouncedFor = filter;
-    this.a11y.announce(i18n("d_select.filter_to_narrow"), "polite");
+    // Longer than the default window: the cap is typically reached while scrolling, when a
+    // screen reader is still voicing option changes and would miss a short-lived message.
+    this.a11y.announce(i18n("d_select.filter_to_narrow"), "polite", 5000);
   }
 
   /**
@@ -1463,7 +1479,7 @@ export default class DSelect extends Component<DSelectSignature> {
                     {{didInsert this.captureListbox}}
                     {{willDestroy this.releaseListbox}}
                     {{didInsert
-                      this.announceCount
+                      this.announceCountOnEntry
                       items.length
                       this.engine.total
                     }}
@@ -1517,7 +1533,22 @@ export default class DSelect extends Component<DSelectSignature> {
                       </SelectItem>
                     {{/each}}
 
-                    {{#if (and this.listboxElement this.engine.canRevealMore)}}
+                    {{#if this.engine.serverPending}}
+                      {{! The rows are retained across a fetch, so without a placeholder the
+                      list simply stops with no sighted feedback; aria-busy covers only
+                      assistive tech. Hidden and role-free so the option set is unchanged. }}
+                      {{#each this.skeletonRows key="key" as |row|}}
+                        <li
+                          class="d-combobox__skeleton"
+                          aria-hidden="true"
+                          data-key={{row.key}}
+                        >
+                          <DSkeleton @variant="text" />
+                        </li>
+                      {{/each}}
+                    {{else if
+                      (and this.listboxElement this.engine.canRevealMore)
+                    }}
                       {{! The list-item wrapper is structural: DLoadMore renders a plain
                       div, which is invalid as a direct child of a list, and the presentation
                       role keeps it out of the option set dRovingFocus queries.

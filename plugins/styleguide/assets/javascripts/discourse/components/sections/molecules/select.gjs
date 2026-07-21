@@ -44,6 +44,8 @@ export default class Select extends Component {
   @tracked debounceValue = null;
   @tracked eventsValue = null;
   @tracked largeListValue = null;
+  @tracked pagedValue = null;
+  @tracked pagedUnknownValue = null;
   @tracked openCount = 0;
   @tracked closeCount = 0;
 
@@ -54,6 +56,16 @@ export default class Select extends Component {
   @value={{this.value}}
   @onChange={{this.onChange}}
 />`;
+
+  pagedCode = `{{! The source pages; the engine accumulates and caps }}
+<DSelect
+  @load={{this.loadPage}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+/>
+
+// (filter, { offset, limit, signal }) => { items, total }
+// Returning a bare array instead reports an unknown set size.`;
 
   largeListCode = `{{! 5000 items; the window, sentinel and cap are automatic }}
 <DSelect
@@ -279,6 +291,37 @@ export default class Select extends Component {
   @action
   updateLargeList(value) {
     this.largeListValue = value;
+  }
+
+  // Slow enough that aria-busy and the "loading more" announcement are perceptible while a
+  // page is in flight.
+  @action
+  async loadPage(filter, { signal, offset = 0, limit = 50 }) {
+    await delay(signal, 900);
+    const matches = this.largeListItems.filter((item) =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    return {
+      items: matches.slice(offset, offset + limit),
+      total: matches.length,
+    };
+  }
+
+  // The same source without a total, so the set size is unknown and rows report -1.
+  @action
+  async loadPageUnknownTotal(filter, options) {
+    const { items } = await this.loadPage(filter, options);
+    return items;
+  }
+
+  @action
+  updatePaged(value) {
+    this.pagedValue = value;
+  }
+
+  @action
+  updatePagedUnknown(value) {
+    this.pagedUnknownValue = value;
   }
 
   @action
@@ -691,6 +734,46 @@ export default class Select extends Component {
         />
         <p class="styleguide-note">
           {{i18n "styleguide.sections.select.large_list_note"}}
+        </p>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.paged_example"}}
+      @code={{this.pagedCode}}
+    >
+      <div class="select-examples__control select-examples__paged">
+        <DSelect
+          @load={{this.loadPage}}
+          @value={{this.pagedValue}}
+          @onChange={{this.updatePaged}}
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        >
+          <:selection as |item|>{{item.name}}</:selection>
+          <:item as |item|>{{item.name}}</:item>
+        </DSelect>
+        <p class="styleguide-note">
+          {{i18n "styleguide.sections.select.paged_note"}}
+        </p>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.paged_unknown_example"}}
+      @code={{this.pagedCode}}
+    >
+      <div class="select-examples__control select-examples__paged-unknown">
+        <DSelect
+          @load={{this.loadPageUnknownTotal}}
+          @value={{this.pagedUnknownValue}}
+          @onChange={{this.updatePagedUnknown}}
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        >
+          <:selection as |item|>{{item.name}}</:selection>
+          <:item as |item|>{{item.name}}</:item>
+        </DSelect>
+        <p class="styleguide-note">
+          {{i18n "styleguide.sections.select.paged_unknown_note"}}
         </p>
       </div>
     </StyleguideExample>
