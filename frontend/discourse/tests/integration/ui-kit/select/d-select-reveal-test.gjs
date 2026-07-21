@@ -488,6 +488,128 @@ module(
       );
     });
 
+    test("a held server reveal shows skeleton rows below the mounted options", async function (assert) {
+      let engine;
+      let releaseReveal;
+      let revealRequested = false;
+      const allItems = buildItems(500, (value) => (engine = value));
+      const revealPromise = new Promise((resolve) => (releaseReveal = resolve));
+      const load = (_filter, { offset = 0 }) => {
+        if (offset === 0) {
+          return { items: allItems.slice(0, 50), total: allItems.length };
+        }
+        revealRequested = true;
+        return revealPromise;
+      };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+      assert
+        .dom("ul[role='listbox'] .d-combobox__skeleton")
+        .doesNotExist("a settled list shows no placeholder rows");
+
+      engine.revealMore();
+      await waitUntil(() => revealRequested);
+
+      // Released in `finally`: a throwing assertion would otherwise leave the load pending,
+      // hanging teardown until the qunit timeout and poisoning the next test.
+      try {
+        // Retained rows plus a placeholder for the page in flight: without this the list just
+        // stops with no sighted feedback, since aria-busy is only exposed to assistive tech.
+        assert
+          .dom(OPTION_SELECTOR)
+          .exists({ count: 50 }, "the already-loaded rows stay mounted");
+        const skeletons = findAll("ul[role='listbox'] .d-combobox__skeleton");
+        assert.true(
+          skeletons.length > 0,
+          "placeholder rows mark the pending page"
+        );
+        assert
+          .dom(skeletons[0])
+          .hasAttribute(
+            "aria-hidden",
+            "true",
+            "placeholders are hidden from AT"
+          );
+        assert.false(
+          skeletons.some((el) => el.matches("[role='option']")),
+          "placeholders never enter the roving-focus option set"
+        );
+        assert
+          .dom(".d-combobox__sentinel")
+          .doesNotExist("the sentinel yields to the placeholder while pending");
+      } finally {
+        releaseReveal({
+          items: allItems.slice(50, 100),
+          total: allItems.length,
+        });
+        await settled();
+      }
+
+      assert
+        .dom("ul[role='listbox'] .d-combobox__skeleton")
+        .doesNotExist("placeholders clear once the page lands");
+      assert.dom(OPTION_SELECTOR).exists({ count: 100 }, "the page appended");
+    });
+
+    test("reaching the cap announces the keep-filtering hint", async function (assert) {
+      let engine;
+      const a11y = getOwner(this).lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const items = buildItems(5000, (value) => (engine = value));
+
+      await render(<template><DSelect @items={{items}} /></template>);
+      await openSelect();
+      await click(findAll(OPTION_SELECTOR)[0]);
+
+      for (let index = 0; index < 6; index++) {
+        engine.revealMore();
+        await settled();
+      }
+
+      assert.dom(".d-combobox__narrow").exists("the list is pinned at the cap");
+      assert.true(
+        announce
+          .getCalls()
+          .some(
+            ({ args }) =>
+              args[0] === i18n("d_select.filter_to_narrow") &&
+              args[1] === "polite"
+          ),
+        "the hint is announced through the a11y service"
+      );
+    });
+
+    test("reopening the list announces the result count again", async function (assert) {
+      const a11y = getOwner(this).lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const items = buildItems(5000);
+      const message = i18n("d_select.results_count", { count: 5000 });
+
+      await render(<template><DSelect @items={{items}} /></template>);
+      await openSelect();
+      assert.strictEqual(
+        announce.withArgs(message, "polite").callCount,
+        1,
+        "opening announces the count"
+      );
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      assert.dom("ul[role='listbox']").doesNotExist("the overlay closed");
+      await openSelect();
+
+      // A fresh listbox is a fresh context: the count describes what just appeared, so the
+      // dedupe from the previous open must not silence it.
+      assert.strictEqual(
+        announce.withArgs(message, "polite").callCount,
+        2,
+        "reopening announces the count again"
+      );
+    });
+
     test("reopening the list roots the sentinel at the new listbox", async function (assert) {
       const roots = [];
       const observerStub = sinon.stub(window, "IntersectionObserver").value(
