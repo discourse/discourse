@@ -38,6 +38,9 @@ module Migrations
     #   * `emoji_name(source_name)`         => the destination custom emoji name (a
     #                                          conflict may rename it) or `nil`
     #   * `base_url`                        => the destination site's base URL
+    #   * `here_mention`                    => the destination's `here_mention` site
+    #                                          setting value (the name that acts as the
+    #                                          "@here" mention)
     #
     # ## Reporting
     #
@@ -594,9 +597,8 @@ module Migrations
         name =
           case row[:mention_type]
           when Enums::MentionType::HERE
-            # The destination's `here_mention` name is configurable; rendering the
-            # literal "here" would be the place to honor it, a possible refinement.
-            "here"
+            # The destination decides which name acts as the here-mention.
+            @maps.here_mention.presence || "here"
           when Enums::MentionType::ALL
             "all"
           when Enums::MentionType::GROUP

@@ -28,6 +28,10 @@ class FakePlaceholderMaps
   def base_url
     @lookups.fetch(:base_url, "https://dest.example.com")
   end
+
+  def here_mention
+    @lookups.fetch(:here_mention, "here")
+  end
 end
 
 RSpec.describe Migrations::Importer::PlaceholderResolver do
@@ -155,6 +159,22 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         resolver.resolve_all([{ id: 1, raw: "a #{first} b" }, { id: 2, raw: "c #{second} d" }])
 
       expect(resolved).to eq({ 1 => "a @all b", 2 => "c @here d" })
+    end
+
+    it "renders a here mention with the destination's configured here_mention name" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: mention,
+        mention_type: mention_type::HERE,
+      )
+      maps = FakePlaceholderMaps.new(here_mention: "hier")
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "cc #{mention} please" }])
+
+      expect(resolved[1]).to eq("cc @hier please")
     end
 
     it "only loads linkage rows of its own owner_type" do
