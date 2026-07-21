@@ -522,6 +522,16 @@ module(
         assert
           .dom(OPTION_SELECTOR)
           .exists({ count: 50 }, "the already-loaded rows stay mounted");
+        assert
+          .dom("ul[role='listbox'] .d-combobox__skeleton")
+          .doesNotExist(
+            "a source that answers quickly never flashes a placeholder"
+          );
+
+        // Only a load slow enough to read as stuck earns visible feedback.
+        await waitUntil(() =>
+          document.querySelector("ul[role='listbox'] .d-combobox__skeleton")
+        );
         const skeletons = findAll("ul[role='listbox'] .d-combobox__skeleton");
         assert.true(
           skeletons.length > 0,
@@ -533,6 +543,13 @@ module(
             "aria-hidden",
             "true",
             "placeholders are hidden from AT"
+          )
+          // A listbox admits only option and group children, so a bare list item would be
+          // an invalid child even though aria-hidden already removes it from the tree.
+          .hasAttribute(
+            "role",
+            "presentation",
+            "placeholders carry no list semantics"
           );
         assert.false(
           skeletons.some((el) => el.matches("[role='option']")),
