@@ -2119,6 +2119,9 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
+  nested_replies_stats_maintenance_enabled:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
