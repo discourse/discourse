@@ -116,7 +116,6 @@ en:
       unpublished_changes_message: "You have unpublished changes"
       unpublished_changes_message_detail: "Publish to make them live"
       unpublished_changes_confirmation: "This workflow has unpublished changes. If you leave now, those changes will stay in draft and won't run until you publish them."
-      leave_without_publishing: "Leave without publishing"
       keep_editing: "Keep editing"
       workflow_name: "Workflow name"
       creator: "Creator"
@@ -1207,6 +1206,10 @@ en:
         view_execution: "View execution"
         listening: "Listening for test webhook event"
         needs_pin_data: "Pin sample data on this trigger before running it manually."
+      execute_step:
+        run: "Execute step"
+        triggered: "Step execution started"
+        view_execution: "View execution"
       pin_data:
         pin: "Pin data"
         unpin: "Unpin"

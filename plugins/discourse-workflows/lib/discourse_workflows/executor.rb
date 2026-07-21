@@ -127,23 +127,12 @@ module DiscourseWorkflows
       return @store.create_rate_limited_execution unless rate_limiter.within_limits?
 
       execute_flow(:start_execution!) do
+        next prepare_step_flow! if step_mode?
+
         trigger_node = @snapshot.find_node(@trigger_node_id)
         raise "Trigger node #{@trigger_node_id} not found in workflow snapshot" if trigger_node.nil?
 
-        trigger_items =
-          pinned_items_for(trigger_node) ||
-            (
-              if @trigger_data.is_a?(Array)
-                @trigger_data.map { |data| Item.wrap(data) }
-              else
-                [Item.wrap(@trigger_data)]
-              end
-            )
-        ItemContract.validate_items!(trigger_items, source: "trigger:#{trigger_node.type}")
-        record_step(trigger_node, [], output: trigger_items, status: Step::SUCCESS)
-        @context.store_node_output(trigger_node, trigger_items)
-        @context.store_node_run(trigger_node, inputs: [], outputs: [trigger_items])
-        enqueue_downstream(trigger_node, 0, trigger_items)
+        seed_trigger_node!(trigger_node)
       end
     end
 
@@ -201,6 +190,56 @@ module DiscourseWorkflows
     end
 
     private
+
+    def step_mode?
+      @options.step_node_id.present?
+    end
+
+    def prepare_step_flow!
+      step_node = @snapshot.find_node(@options.step_node_id)
+      raise "Step node #{@options.step_node_id} not found in workflow snapshot" if step_node.nil?
+
+      @pin_data_by_node_name.delete(step_node.name.to_s)
+      @step_plan =
+        StepExecutionPlan.new(
+          snapshot: @snapshot,
+          target: step_node,
+          run_data: @store.existing_run_data,
+        )
+
+      if @step_plan.standalone_target?
+        @queue << [step_node, { 0 => [Item.wrap({})] }, {}]
+        return
+      end
+
+      @step_plan.cached_frontier.each { |node| emit_cached_node!(node) }
+      @step_plan.trigger_roots_to_run.each { |trigger_node| seed_trigger_node!(trigger_node) }
+    end
+
+    def emit_cached_node!(node)
+      output_groups = @step_plan.cached_outputs(node)
+      step = record_step(node, [])
+      step.succeed!(output: output_groups.flatten(1))
+      step.add_metadata("cached", true)
+      route_downstream(node, output_groups)
+    end
+
+    def seed_trigger_node!(trigger_node)
+      trigger_items =
+        pinned_items_for(trigger_node) ||
+          (
+            if @trigger_data.is_a?(Array)
+              @trigger_data.map { |data| Item.wrap(data) }
+            else
+              [Item.wrap(@trigger_data)]
+            end
+          )
+      ItemContract.validate_items!(trigger_items, source: "trigger:#{trigger_node.type}")
+      record_step(trigger_node, [], output: trigger_items, status: Step::SUCCESS)
+      @context.store_node_output(trigger_node, trigger_items)
+      @context.store_node_run(trigger_node, inputs: [], outputs: [trigger_items])
+      enqueue_downstream(trigger_node, 0, trigger_items)
+    end
 
     def normalized_workflow_call_stack
       stack = Array(@options.workflow_call_stack).map(&:to_s)
@@ -317,6 +356,10 @@ module DiscourseWorkflows
 
         wait_request = runtime_state.wait_request
         if wait_request
+          if step_mode?
+            raise StandardError, I18n.t("discourse_workflows.errors.step_execution.wait_requested")
+          end
+
           step.mark_waiting!
           @waiting_node = node
           @waiting_step = step
@@ -685,21 +728,24 @@ module DiscourseWorkflows
     end
 
     def enqueue_downstream(node, output_index, items)
+      return if step_mode? && node.id.to_s == @step_plan.target_id
+
       @snapshot
         .connections_from_output_index(node, output_index)
         .each do |conn|
           target = @snapshot.target_node(conn)
-          if target
-            enqueue_target(
-              target,
-              conn.target_input_index,
-              items,
-              source: {
-                "node_name" => node.name,
-                "output_index" => output_index,
-              },
-            )
-          end
+          next if target.nil?
+          next if step_mode? && !@step_plan.runnable?(target)
+
+          enqueue_target(
+            target,
+            conn.target_input_index,
+            items,
+            source: {
+              "node_name" => node.name,
+              "output_index" => output_index,
+            },
+          )
         end
     end
 
