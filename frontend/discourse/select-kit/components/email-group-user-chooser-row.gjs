@@ -21,6 +21,22 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
     return "nameFirst";
   }
 
+  get groupNameOrdering() {
+    if (!this.selectKit.options.prioritizeGroupFullNameOrdering) {
+      return "groupNameFirst";
+    }
+
+    return "groupFullNameFirst";
+  }
+
+  get shouldExcludeGroupName() {
+    return (
+      this.selectKit.options.excludeGroupNameWhenMatchingFullName &&
+      this.item.full_name.toLowerCase() ===
+        this.item.id.toLowerCase().replaceAll("_", " ").replaceAll("-", " ")
+    );
+  }
+
   <template>
     {{#if this.item.isUser}}
       {{dAvatar this.item imageSize="tiny"}}
@@ -36,9 +52,13 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       >
         {{#if (eq this.userNameOrdering "usernameFirst")}}
           <span class="identifier">{{formatUsername this.item.id}}</span>
-          <span class="name">{{this.item.name}}</span>
+          {{#if this.item.name}}
+            <span class="name">{{this.item.name}}</span>
+          {{/if}}
         {{else}}
-          <span class="name">{{this.item.name}}</span>
+          {{#if this.item.name}}
+            <span class="name">{{this.item.name}}</span>
+          {{/if}}
           <span class="identifier">{{formatUsername this.item.id}}</span>
         {{/if}}
       </div>
@@ -54,23 +74,24 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       <div
         class={{dConcatClass
           "email-group-user-chooser--group"
-          (if this.selectKit.options.onlyShowGroupFullName "--full-name-only")
+          (if
+            (eq this.groupNameOrdering "groupNameFirst")
+            "--group-name-first"
+            "--group-full-name-first"
+          )
         }}
       >
-        {{#unless this.selectKit.options.onlyShowGroupFullName}}
-          <span class="identifier">{{this.item.id}}</span>
-        {{/unless}}
-        <span class="name">
-          {{#if this.selectKit.options.onlyShowGroupFullName}}
-            {{#if this.item.full_name}}
-              {{this.item.full_name}}
-            {{else}}
-              {{this.item.name}}
-            {{/if}}
-          {{else}}
-            {{this.item.name}}
-          {{/if}}
-        </span>
+        {{#if (eq this.groupNameOrdering "groupNameFirst")}}
+          {{#unless this.shouldExcludeGroupName}}
+            <span class="identifier">{{this.item.id}}</span>
+          {{/unless}}
+          <span class="name">{{this.item.full_name}}</span>
+        {{else}}
+          <span class="name">{{this.item.full_name}}</span>
+          {{#unless this.shouldExcludeGroupName}}
+            <span class="identifier">{{this.item.id}}</span>
+          {{/unless}}
+        {{/if}}
       </div>
     {{else}}
       {{dIcon "envelope"}}

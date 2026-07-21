@@ -22,8 +22,10 @@
       @include ellipsis;
     }
 
-    .email-group-user-chooser--user {
-      &.--username-first {
+    .email-group-user-chooser--user,
+    .email-group-user-chooser--group {
+      &.--username-first,
+      &.--group-name-first {
         .identifier {
           color: var(--primary);
           white-space: nowrap;
@@ -39,11 +41,13 @@
         }
       }
 
-      &.--name-first {
+      &.--name-first,
+      &.--group-full-name-first {
         .name {
           color: var(--primary);
           white-space: nowrap;
           line-height: var(--line-height-medium);
+          font-size: var(--font-0);
           margin-right: 0.5em;
         }
 
