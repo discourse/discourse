@@ -6373,14 +6373,14 @@ RSpec.describe TopicsController do
 
       context "with some errors" do
         it "returns the error messages" do
-          Fabricate(:topic, title: topic.title, category: category)
+          existing_topic = Fabricate(:topic, title: topic.title, category: category)
 
           sign_in(admin)
           put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"][0]).to end_with(
-            I18n.t("errors.messages.has_already_been_used"),
+            I18n.t("errors.messages.topic_title_already_used", url: existing_topic.url),
           )
         end
       end

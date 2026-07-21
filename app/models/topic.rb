@@ -196,18 +196,10 @@ class Topic < ActiveRecord::Base
             max_emojis: true,
             unique_among: {
               unless:
-                Proc.new { |t| SiteSetting.allow_duplicate_topic_titles? || t.private_message? },
-              message: :has_already_been_used,
+                Proc.new { |t| SiteSetting.duplicate_topic_titles.allowed? || t.private_message? },
+              message: :topic_title_already_used,
               allow_blank: true,
-              case_sensitive: false,
-              collection:
-                Proc.new { |t|
-                  if SiteSetting.allow_duplicate_topic_titles_category?
-                    Topic.listable_topics.where("category_id = ?", t.category_id)
-                  else
-                    Topic.listable_topics
-                  end
-                },
+              collection: ->(t) { t.duplicate_title_candidates },
             }
 
   validates :category_id,
@@ -1806,6 +1798,19 @@ class Topic < ActiveRecord::Base
 
   def acting_user=(u)
     @acting_user = u
+  end
+
+  def duplicate_title_candidates
+    candidates = Topic.listable_topics.where(category_id:)
+
+    if SiteSetting.duplicate_topic_titles.disallowed?
+      guardian = acting_user&.guardian
+      visible_topics = Topic.listable_topics.secured(guardian)
+      visible_topics = visible_topics.visible if !guardian&.can_see_unlisted_topics?
+      candidates = candidates.or(visible_topics)
+    end
+
+    candidates
   end
 
   def secure_group_ids
