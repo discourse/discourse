@@ -712,34 +712,20 @@ class ApplicationController < ActionController::Base
   def mini_profiler_flamegraph_request?
     return false if !mini_profiler_enabled?
 
-    mini_profiler_profile_modes.any? { |mode| %w[flamegraph async-flamegraph].include?(mode) }
+    mini_profiler_matches_action?("flamegraph") ||
+      mini_profiler_matches_action?("async-flamegraph") ||
+      request.referer.to_s.match?(/pp=async-flamegraph/)
   end
 
   def authorize_mini_profiler
     MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
   end
 
-  def mini_profiler_profile_modes
-    [
-      request.get_header("HTTP_X_RACK_MINI_PROFILER"),
-      params[mini_profiler_profile_parameter],
-      mini_profiler_referer_profile_mode,
-    ].compact.flat_map { |mode| Array(mode).map(&:to_s) }
-  end
+  def mini_profiler_matches_action?(action)
+    profile_parameter = Regexp.escape(MINI_PROFILER_CLASS.config.profile_parameter)
 
-  def mini_profiler_profile_parameter
-    MINI_PROFILER_CLASS.config.profile_parameter
-  end
-
-  def mini_profiler_referer_profile_mode
-    return if request.referer.blank?
-
-    referer = URI.parse(request.referer)
-    return if referer.query.blank?
-
-    Rack::Utils.parse_nested_query(referer.query)[mini_profiler_profile_parameter]
-  rescue URI::InvalidURIError
-    nil
+    request.query_string.match?(/#{profile_parameter}=#{Regexp.escape(action)}/) ||
+      request.get_header("HTTP_X_RACK_MINI_PROFILER") == action
   end
 
   def check_xhr
