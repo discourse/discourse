@@ -7231,6 +7231,37 @@ RSpec.describe TopicsController do
       end
     end
 
+    context "with a tagged personal message rendered in the crawler layout" do
+      fab!(:participant) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:pm_tag, :tag)
+      fab!(:pm) { Fabricate(:private_message_topic, user: user, recipient: participant) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm, user: user) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        pm.tags << pm_tag
+      end
+
+      it "does not include the tags in the print view for participants who cannot tag PMs" do
+        sign_in(participant)
+
+        get "#{pm.relative_url}/print"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(pm_tag.name)
+      end
+
+      it "includes the tags in the print view for participants who can tag PMs" do
+        SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+        sign_in(participant)
+
+        get "#{pm.relative_url}/print"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(pm_tag.name)
+      end
+    end
+
     context "when a crawler" do
       fab!(:page1_time) { 3.months.ago }
       fab!(:page2_time) { 2.months.ago }

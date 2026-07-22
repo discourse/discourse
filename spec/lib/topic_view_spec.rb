@@ -972,6 +972,27 @@ RSpec.describe TopicView do
       end
     end
 
+    context "with a tagged personal message" do
+      fab!(:pm) { Fabricate(:private_message_topic, user: user) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.topic_page_title_includes_category = true
+        pm.tags << tag2
+      end
+
+      it "does not include the tag for participants who cannot tag personal messages" do
+        expect(TopicView.new(pm.id, user).page_title).not_to include(tag2.name)
+      end
+
+      it "includes the tag for participants who can tag personal messages" do
+        SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        expect(TopicView.new(pm.id, user).page_title).to end_with(tag2.name)
+      end
+    end
+
     context "with categorized topic" do
       let(:category) { Fabricate(:category) }
 
