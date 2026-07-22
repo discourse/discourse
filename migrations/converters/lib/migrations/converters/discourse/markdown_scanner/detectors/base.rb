@@ -123,8 +123,10 @@ module Migrations
             # URL the walk reaches only because the surrounding `[…]` bracket wasn't
             # consumed as a link — but only the right kind of `(…)`:
             #
-            #   * A bare paren group — `(` not preceded by `]` — is prose like
-            #     `(see /t/5)`; rewrite it.
+            #   * A bare paren group — `(` not preceded by `]` — is prose
+            #     punctuation with the URL right after the paren, `(/t/5)`;
+            #     rewrite it. (A URL deeper inside the parens, `(see /t/5)`,
+            #     is admitted by the whitespace rule instead.)
             #   * A `](…)` whose bracket wrapped an already-consumed construct — a `)`
             #     sits right before the `]`, as in `[![img](upload)](/t/5)` or an old
             #     lightbox — is an outer link target we want; rewrite it.
