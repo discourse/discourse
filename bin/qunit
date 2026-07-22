@@ -11,6 +11,9 @@ require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
+  DEFAULT_BROWSER_START_TIMEOUT = 45
+  DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+
   def initialize(args)
     @file_paths = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
@@ -29,6 +32,11 @@ class QunitRunner
     @plugin_targets = []
 
     @headless = true
+    @browser_watchdog = boolean_env("QUNIT_BROWSER_WATCHDOG", default: true)
+    @browser_start_timeout =
+      positive_integer_env("QUNIT_BROWSER_START_TIMEOUT", DEFAULT_BROWSER_START_TIMEOUT)
+    @browser_inactivity_timeout =
+      positive_integer_env("QUNIT_BROWSER_INACTIVITY_TIMEOUT", DEFAULT_BROWSER_INACTIVITY_TIMEOUT)
 
     parse_options(args)
   end
@@ -110,6 +118,27 @@ class QunitRunner
 
         opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
           @headless = h
+        end
+
+        opts.on(
+          "--[no-]browser-watchdog",
+          "Fail fast if the browser stalls on startup or between tests (env: QUNIT_BROWSER_WATCHDOG)",
+        ) { |enabled| @browser_watchdog = enabled }
+
+        opts.on(
+          "--browser-start-timeout SECONDS",
+          Integer,
+          "Browser connection timeout (default: 45; env: QUNIT_BROWSER_START_TIMEOUT)",
+        ) do |seconds|
+          @browser_start_timeout = positive_integer(seconds, "--browser-start-timeout")
+        end
+
+        opts.on(
+          "--browser-inactivity-timeout SECONDS",
+          Integer,
+          "Browser inactivity timeout outside active tests (default: 30; env: QUNIT_BROWSER_INACTIVITY_TIMEOUT)",
+        ) do |seconds|
+          @browser_inactivity_timeout = positive_integer(seconds, "--browser-inactivity-timeout")
         end
 
         opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
@@ -243,6 +272,9 @@ class QunitRunner
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
     env["QUNIT_HEADLESS"] = "0" if !@headless
+    env["QUNIT_BROWSER_WATCHDOG"] = @browser_watchdog ? "1" : "0"
+    env["QUNIT_BROWSER_START_TIMEOUT"] = @browser_start_timeout.to_s
+    env["QUNIT_BROWSER_INACTIVITY_TIMEOUT"] = @browser_inactivity_timeout.to_s
 
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
@@ -608,6 +640,28 @@ class QunitRunner
 
     str = value.to_s
     str.empty? ? nil : str
+  end
+
+  def boolean_env(name, default:)
+    value = ENV[name]
+    return default if value.nil?
+    return true if %w[1 true].include?(value.downcase)
+    return false if %w[0 false].include?(value.downcase)
+
+    abort "Error: #{name} must be one of: 1, 0, true, false"
+  end
+
+  def positive_integer_env(name, default)
+    value = ENV[name]
+    return default if value.nil?
+
+    positive_integer(Integer(value, exception: false), name)
+  end
+
+  def positive_integer(value, name)
+    abort "Error: #{name} must be greater than 0" if !value || value <= 0
+
+    value
   end
 
   def resolve_plugin_namespace(directory_name)
