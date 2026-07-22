@@ -34,17 +34,29 @@ class AdminDashboardSearch
   def build
     return { logging_enabled: false } if !SiteSetting.log_search_queries
 
-    current = window_stats(window_start: start_date, window_end: end_date)
-    prior = window_stats(window_start: prior_start_date, window_end: prior_end_date)
+    if async_queries_available?
+      current_stats = async_window_stats(window_start: start_date, window_end: end_date)
+      prior_stats = async_window_stats(window_start: prior_start_date, window_end: prior_end_date)
+      trending_rows = trending_relation.load_async
+      content_gap_rows = content_gaps_relation.load_async
+
+      current = current_stats.value
+      prior = prior_stats.value
+    else
+      current = window_stats(window_start: start_date, window_end: end_date)
+      prior = window_stats(window_start: prior_start_date, window_end: prior_end_date)
+      trending_rows = trending_relation
+      content_gap_rows = content_gaps_relation
+    end
     kpis = build_kpis(current: current, prior: prior)
 
     {
       logging_enabled: true,
       headline_state: headline_state(current: current, kpis: kpis),
       kpis: kpis,
-      trending: trending,
+      trending: serialize_trending(trending_rows),
       trending_period: trending_period,
-      content_gaps: content_gaps,
+      content_gaps: serialize_content_gaps(content_gap_rows),
     }
   end
 
@@ -104,18 +116,19 @@ class AdminDashboardSearch
     "healthy"
   end
 
-  def trending
-    rows =
-      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
-        .select(<<~SQL)
-          lower(search_logs.term) AS term,
-          COUNT(*) AS searches,
-          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-        SQL
-        .group("lower(search_logs.term)")
-        .order("searches DESC, clicks DESC, term ASC")
-        .limit(TOP_TERMS_LIMIT)
+  def trending_relation
+    non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+      .select(<<~SQL)
+        lower(search_logs.term) AS term,
+        COUNT(*) AS searches,
+        SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+      SQL
+      .group("lower(search_logs.term)")
+      .order("searches DESC, clicks DESC, term ASC")
+      .limit(TOP_TERMS_LIMIT)
+  end
 
+  def serialize_trending(rows)
     rows.map { |row| { term: row.term, searches: row.searches } }
   end
 
@@ -127,22 +140,23 @@ class AdminDashboardSearch
     "all"
   end
 
-  def content_gaps
-    rows =
-      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
-        .select(<<~SQL)
-          lower(search_logs.term) AS term,
-          COUNT(*) AS searches,
-          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-        SQL
-        .group("lower(search_logs.term)")
-        .having(<<~SQL, POOR_MATCH_MAX_CTR_PERCENT)
-          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
-            COUNT(*) * ?
-        SQL
-        .order("searches DESC, term ASC")
-        .limit(TOP_TERMS_LIMIT)
+  def content_gaps_relation
+    non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+      .select(<<~SQL)
+        lower(search_logs.term) AS term,
+        COUNT(*) AS searches,
+        SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+      SQL
+      .group("lower(search_logs.term)")
+      .having(<<~SQL, POOR_MATCH_MAX_CTR_PERCENT)
+        SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
+          COUNT(*) * ?
+      SQL
+      .order("searches DESC, term ASC")
+      .limit(TOP_TERMS_LIMIT)
+  end
 
+  def serialize_content_gaps(rows)
     rows.map do |row|
       {
         term: row.term,
@@ -152,7 +166,31 @@ class AdminDashboardSearch
     end
   end
 
+  def async_queries_available?
+    executor = ActiveRecord::Base.connection_pool.async_executor
+    executor && executor.max_length > 1
+  end
+
+  def async_window_stats(window_start:, window_end:)
+    window_stats_relation(window_start: window_start, window_end: window_end)
+      .async_pick(
+        "COALESCE(SUM(searches), 0)::bigint",
+        "COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint",
+      )
+      .then { |total, no_match| { total: total, no_match: no_match } }
+  end
+
   def window_stats(window_start:, window_end:)
+    row =
+      window_stats_relation(window_start: window_start, window_end: window_end).select(<<~SQL).take
+          COALESCE(SUM(searches), 0)::bigint AS total,
+          COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
+        SQL
+
+    { total: row.total, no_match: row.no_match }
+  end
+
+  def window_stats_relation(window_start:, window_end:)
     term_stats =
       non_staff_search_logs_in(window_start: window_start, window_end: window_end).select(
         <<~SQL,
@@ -161,12 +199,7 @@ class AdminDashboardSearch
         SQL
       ).group("lower(search_logs.term)")
 
-    row = SearchLog.from("(#{term_stats.to_sql}) term_stats").select(<<~SQL).take
-          COALESCE(SUM(searches), 0)::bigint AS total,
-          COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
-        SQL
-
-    { total: row.total, no_match: row.no_match }
+    SearchLog.from("(#{term_stats.to_sql}) term_stats")
   end
 
   def non_staff_search_logs_in(window_start:, window_end:)

@@ -10,20 +10,6 @@ class AdminDashboardSectionLoader
     ).build
   end
 
-  def self.pool_size
-    desired =
-      AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
-        DiscoursePluginRegistry.admin_dashboard_sections.size
-
-    available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
-    [desired, available].min
-  end
-
-  def self.thread_pool
-    @thread_pool ||=
-      Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
-  end
-
   def initialize(section_ids:, current_user:, start_date:, end_date:)
     @section_ids = section_ids
     @current_user = current_user
@@ -32,38 +18,18 @@ class AdminDashboardSectionLoader
   end
 
   def build
-    results = Queue.new
-
-    section_ids.each do |id|
-      self.class.thread_pool.post do
-        ActiveRecord::Base.with_connection(prevent_permanent_checkout: true) do
-          results << { id: id, data: section_data(id, current_user) }
-        end
-      rescue StandardError => e
-        results << { id: id, error: e }
-      end
+    section_ids.map do |id|
+      { id: id, data: section_data(id, current_user) }
+    rescue StandardError => error
+      Discourse.warn_exception(
+        error,
+        message: "Failed to build admin dashboard section",
+        env: {
+          section_id: id,
+        },
+      )
+      { id: id, data: nil, error: true }
     end
-
-    results_by_id = {}
-
-    section_ids.size.times do
-      result = results.pop
-
-      if result[:error]
-        Discourse.warn_exception(
-          result[:error],
-          message: "Failed to build admin dashboard section",
-          env: {
-            section_id: result[:id],
-          },
-        )
-        result = { id: result[:id], data: nil, error: true }
-      end
-
-      results_by_id[result[:id]] = result
-    end
-
-    section_ids.map { |id| results_by_id.fetch(id) }
   end
 
   private

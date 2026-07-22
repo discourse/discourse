@@ -29,8 +29,15 @@ class AdminDashboardSiteTraffic
   end
 
   def build
-    current_rows = traffic_rows(start_date.to_date, end_date.to_date)
-    prior_rows = traffic_rows(prior_start_date, prior_end_date)
+    if async_queries_available?
+      current_rows_result = async_traffic_rows(start_date.to_date, end_date.to_date)
+      prior_rows_result = async_traffic_rows(prior_start_date, prior_end_date)
+      current_rows = current_rows_result.value
+      prior_rows = prior_rows_result.value
+    else
+      current_rows = traffic_rows(start_date.to_date, end_date.to_date)
+      prior_rows = traffic_rows(prior_start_date, prior_end_date)
+    end
     include_embedded = include_embedded_series?
     totals = build_totals(current_rows, include_embedded: include_embedded)
 
@@ -195,7 +202,7 @@ class AdminDashboardSiteTraffic
   end
 
   def pageview_series_point(row, id)
-    { x: row.date.iso8601, y: row.public_send(id).to_i }
+    { x: row_value(row, :date).iso8601, y: row_value(row, id).to_i }
   end
 
   def series_req(id)
@@ -277,9 +284,28 @@ class AdminDashboardSiteTraffic
       end.merge(crawlers: "page_view_crawler", embedded: "page_view_embed")
   end
 
+  def async_queries_available?
+    executor = ActiveRecord::Base.connection_pool.async_executor
+    executor && executor.max_length > 1
+  end
+
+  def async_traffic_rows(range_start_date, range_end_date)
+    sql =
+      ActiveRecord::Base.sanitize_sql(
+        [traffic_rows_sql, traffic_rows_params(range_start_date, range_end_date)],
+      )
+    ActiveRecord::Base
+      .connection
+      .select_all(sql, "Admin Dashboard Traffic", [], async: true)
+      .then { |result| result.to_a.map(&:symbolize_keys) }
+  end
+
   def traffic_rows(range_start_date, range_end_date)
-    DB.query(
-      <<~SQL,
+    DB.query(traffic_rows_sql, traffic_rows_params(range_start_date, range_end_date))
+  end
+
+  def traffic_rows_sql
+    <<~SQL
         WITH dates AS (
           SELECT
             request_date::date AS date
@@ -306,14 +332,18 @@ class AdminDashboardSiteTraffic
           )
         GROUP BY dates.date
         ORDER BY dates.date ASC
-      SQL
+    SQL
+  end
+
+  def traffic_rows_params(range_start_date, range_end_date)
+    {
       start_date: range_start_date,
       end_date: range_end_date,
       logged_in_req_type: selected_request_types[:logged_in],
       anonymous_req_type: selected_request_types[:anonymous],
       crawler_req_type: selected_request_types[:crawlers],
       embedded_req_type: selected_request_types[:embedded],
-    )
+    }
   end
 
   def build_totals(rows, include_embedded:)
@@ -362,7 +392,11 @@ class AdminDashboardSiteTraffic
   end
 
   def sum_rows(rows, field)
-    rows.sum { |row| row.public_send(field).to_i }
+    rows.sum { |row| row_value(row, field).to_i }
+  end
+
+  def row_value(row, field)
+    row.respond_to?(field) ? row.public_send(field) : row.fetch(field)
   end
 
   def include_embedded_series?

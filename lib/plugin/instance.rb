@@ -1276,7 +1276,9 @@ class Plugin::Instance
   #   without disabling the plugin entirely — e.g. only when relevant data
   #   exists.
   # @yield [start_date:, end_date:, current_user:] block returning the section's
-  #   data hash, run inside the dashboard's parallel section loader.
+  #   data hash. Loaders may run synchronously; SQL remains attributed to the
+  #   profiled dashboard request. Use supported async database primitives when
+  #   the loader needs database concurrency.
   def register_admin_dashboard_section(id:, enabled: nil, &loader)
     DiscoursePluginRegistry.register_admin_dashboard_section(
       { id: id.to_s, enabled: enabled, loader: loader },

@@ -97,6 +97,9 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     end
 
   Rack::MiniProfiler.counter_method(Redis::Client, :call_v) { "redis" }
+
+  require "rack_mini_profiler_async_sql"
+  RackMiniProfilerAsyncSql.install
 end
 
 if ENV["PRINT_EXCEPTIONS"]
