@@ -362,10 +362,12 @@
 }
 
 .styleguide-virtual-list {
-  // The consumer owns the viewport height; the primitive only supplies
-  // overflow and positioning.
-  height: 400px;
-  border: 1px solid var(--primary-low);
+  // The consumer owns the viewport height, set on the scroll element via CSS;
+  // the primitive only supplies overflow and positioning.
+  .d-virtual-list {
+    height: 400px;
+    border: 1px solid var(--primary-low);
+  }
 
   &__note {
     color: var(--primary-medium);
