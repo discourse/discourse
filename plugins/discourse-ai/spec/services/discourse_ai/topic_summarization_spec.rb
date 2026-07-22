@@ -165,6 +165,31 @@ describe DiscourseAi::TopicSummarization do
       end
     end
 
+    it "regenerates a fresh cached summary when forced" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+        result = summarization.summarize(force_regenerate: true)
+
+        expect(result).to have_attributes(id: cached_summary.id, summarized_text: summary)
+      end
+    end
+
+    it "preserves a fresh cached summary when forced generation fails" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("LLM failed")]) do
+        expect { summarization.summarize(force_regenerate: true) }.to raise_error(
+          RuntimeError,
+          "LLM failed",
+        )
+      end
+
+      expect(cached_summary.reload.summarized_text).to eq("Cached summary")
+    end
+
     context "when the user is anonymous" do
       let(:summarization) { described_class.new(strategy, nil) }
 

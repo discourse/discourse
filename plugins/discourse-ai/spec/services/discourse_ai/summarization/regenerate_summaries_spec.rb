@@ -86,13 +86,19 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
           )
         end
 
-        it "deletes every cached gist locale before enqueueing replacements" do
+        it "preserves cached gists while enqueueing forced replacements" do
           english_gist = Fabricate(:topic_ai_gist, target: topic, locale: "en")
           hebrew_gist = Fabricate(:topic_ai_gist, target: topic, locale: "he")
 
           result
 
-          expect(AiSummary.where(id: [english_gist.id, hebrew_gist.id])).to be_empty
+          expect(AiSummary.where(id: [english_gist.id, hebrew_gist.id])).to contain_exactly(
+            english_gist,
+            hebrew_gist,
+          )
+          expect(Jobs::FastTrackTopicGist.jobs.first.dig("args", 0)).to include(
+            "force_regenerate" => true,
+          )
         end
       end
 
@@ -127,17 +133,20 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
           expect { result }.to change { Jobs::StreamTopicAiSummary.jobs.size }.by(1)
         end
 
-        it "enqueues job with correct parameters" do
+        it "enqueues a forced job instead of using the age-check override" do
           result
 
           job_args = Jobs::StreamTopicAiSummary.jobs.first["args"].first
-          expect(job_args["topic_id"]).to eq(topic.id)
-          expect(job_args["user_id"]).to eq(admin.id)
-          expect(job_args["locale"]).to eq(SiteSetting.default_locale)
-          expect(job_args["skip_age_check"]).to eq(true)
+          expect(job_args).to include(
+            "topic_id" => topic.id,
+            "user_id" => admin.id,
+            "locale" => SiteSetting.default_locale,
+            "force_regenerate" => true,
+          )
+          expect(job_args).not_to have_key("skip_age_check")
         end
 
-        it "deletes every cached summary locale before enqueueing a replacement" do
+        it "preserves cached summary locales while enqueueing a replacement" do
           SiteSetting.content_localization_enabled = true
           SiteSetting.content_localization_supported_locales = "he"
           topic.update!(locale: "en")
@@ -146,7 +155,10 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
 
           I18n.with_locale(:he) { result }
 
-          expect(AiSummary.where(id: [english_summary.id, hebrew_summary.id])).to be_empty
+          expect(AiSummary.where(id: [english_summary.id, hebrew_summary.id])).to contain_exactly(
+            english_summary,
+            hebrew_summary,
+          )
           expect(Jobs::StreamTopicAiSummary.jobs.first.dig("args", 0, "locale")).to eq("he")
         end
       end

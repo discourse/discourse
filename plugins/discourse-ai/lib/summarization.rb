@@ -58,11 +58,12 @@ module DiscourseAi
       end
 
       def gist_locales(topic)
+        topic_source_locale = source_locale(topic)
         locales =
           if SiteSetting.content_localization_enabled
-            [*SiteSetting.content_localization_locales, topic.locale]
+            [*SiteSetting.content_localization_locales, topic_source_locale]
           else
-            [topic.locale.presence || SiteSetting.default_locale]
+            [topic_source_locale]
           end
 
         locales.each_with_object([]) do |locale, result|
@@ -80,13 +81,16 @@ module DiscourseAi
 
       def display_locale(topic, scope:)
         source_locale = raw_source_locale(topic)
+        should_show_localized_content =
+          SiteSetting.content_localization_enabled && !ContentLocalization.show_original?(scope)
+
         locale =
-          if !SiteSetting.content_localization_enabled || ContentLocalization.show_original?(scope)
-            source_locale
-          else
+          if should_show_localized_content
             SiteSetting.content_localization_locales.find do |supported_locale|
               LocaleNormalizer.is_same?(supported_locale, I18n.locale)
             end || source_locale
+          else
+            source_locale
           end
 
         LocaleNormalizer.normalize_to_i18n(locale)&.to_s

@@ -28,16 +28,14 @@ module DiscourseAi
       summarizer&.strategy&.locale
     end
 
-    def summarize(skip_age_check: false, &on_partial_blk)
+    def summarize(skip_age_check: false, force_regenerate: false, &on_partial_blk)
       # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
       return if !user && !cached_summary
 
       can_summarize = Guardian.new(user).can_request_summary?
       return if !can_summarize && cached_summary&.outdated
 
-      return cached_summary if use_cached?(skip_age_check)
-
-      summarizer.delete_cached_summaries! if cached_summary
+      return cached_summary if !force_regenerate && use_cached?(skip_age_check)
 
       summarizer.summarize(user, &on_partial_blk)
     end

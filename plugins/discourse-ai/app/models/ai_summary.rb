@@ -6,6 +6,8 @@ class AiSummary < ActiveRecord::Base
   enum :summary_type, { complete: 0, gist: 1 }
   enum :origin, { human: 0, system: 1 }
 
+  LEGACY_UNIQUE_INDEX_NAME = "idx_on_target_id_target_type_summary_type_3355609fbb"
+
   def self.store!(strategy, llm_model, summary, og_content, human:)
     attributes = {
       target_id: strategy.target.id,
@@ -15,7 +17,7 @@ class AiSummary < ActiveRecord::Base
       summarized_text: summary,
       original_content_sha: build_sha(og_content.map { |content| content[:id] }.join),
       summary_type: strategy.type,
-      origin: !!human ? origins[:human] : origins[:system],
+      origin: human ? origins[:human] : origins[:system],
       locale: strategy.locale,
     }
 
@@ -31,22 +33,43 @@ class AiSummary < ActiveRecord::Base
   end
 
   def self.upsert_summary!(attributes)
-    AiSummary
-      .upsert(
-        attributes,
-        unique_by: %i[target_id target_type summary_type locale],
-        update_only: %i[
-          summarized_text
-          original_content_sha
-          algorithm
-          origin
-          highest_target_number
-        ],
-      )
-      .first
-      .then { AiSummary.find_by(id: it["id"]) }
+    upsert_summary(attributes)
+  rescue ActiveRecord::RecordNotUnique => error
+    raise if !legacy_unique_index_conflict?(error)
+
+    where(attributes.slice(:target_id, :target_type, :summary_type)).delete_all
+    upsert_summary(attributes)
   end
   private_class_method :upsert_summary!
+
+  def self.upsert_summary(attributes)
+    transaction(requires_new: true) do
+      AiSummary
+        .upsert(
+          attributes,
+          unique_by: %i[target_id target_type summary_type locale],
+          update_only: %i[
+            summarized_text
+            original_content_sha
+            algorithm
+            origin
+            highest_target_number
+          ],
+        )
+        .first
+        .then { AiSummary.find_by(id: it["id"]) }
+    end
+  end
+  private_class_method :upsert_summary
+
+  def self.legacy_unique_index_conflict?(error)
+    cause = error.cause
+    return false if !cause.respond_to?(:result)
+
+    constraint_name = cause.result.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
+    constraint_name == LEGACY_UNIQUE_INDEX_NAME
+  end
+  private_class_method :legacy_unique_index_conflict?
 
   def self.remove_superseded_summaries!(strategy, stored_summary)
     other_summaries =

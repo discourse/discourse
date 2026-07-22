@@ -22,6 +22,18 @@ RSpec.describe DiscourseAi::Summarization do
       expect(described_class.gist_locales(topic)).to eq(%w[en ja fr])
     end
 
+    it "includes the normalized default locale once when the topic locale is unset" do
+      topic.update!(locale: nil)
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "ja"
+
+      expect(described_class.gist_locales(topic)).to eq(%w[ja en])
+
+      SiteSetting.content_localization_supported_locales = "en|ja"
+
+      expect(described_class.gist_locales(topic)).to eq(%w[en ja])
+    end
+
     it "deduplicates equivalent regional locales" do
       topic.update!(locale: "en_GB")
       SiteSetting.content_localization_enabled = true

@@ -361,20 +361,23 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     context "when a single topic id is provided" do
       before { sign_in(admin) }
 
-      it "deletes cached summary and enqueues regeneration job" do
+      it "preserves the cached summary and enqueues a forced regeneration job" do
         existing_summary = Fabricate(:ai_summary, target: topic, locale: SiteSetting.default_locale)
 
         put "/discourse-ai/summarization/regen_summary", params: { topic_id: topic.id }
 
         expect(response.status).to eq(200)
-        expect(AiSummary.find_by(id: existing_summary.id)).to be_nil
+        expect(AiSummary.find_by(id: existing_summary.id)).to eq(existing_summary)
         expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
 
         job_args = Jobs::StreamTopicAiSummary.jobs.first["args"].first
-        expect(job_args["topic_id"]).to eq(topic.id)
-        expect(job_args["user_id"]).to eq(admin.id)
-        expect(job_args["locale"]).to eq(SiteSetting.default_locale)
-        expect(job_args["skip_age_check"]).to eq(true)
+        expect(job_args).to include(
+          "topic_id" => topic.id,
+          "user_id" => admin.id,
+          "locale" => SiteSetting.default_locale,
+          "force_regenerate" => true,
+        )
+        expect(job_args).not_to have_key("skip_age_check")
       end
 
       it "enqueues job even when there is no existing summary" do

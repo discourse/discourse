@@ -54,6 +54,16 @@ RSpec.describe Jobs::FastTrackTopicGist do
         expect(ai_gist.reload.summarized_text).to eq(updated_gist)
       end
 
+      it "preserves the gist when forced generation fails" do
+        DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("LLM failed")]) do
+          expect do
+            job.execute(topic_id: topic.id, locale: "en", force_regenerate: true)
+          end.to raise_error(RuntimeError, "LLM failed")
+        end
+
+        expect(ai_gist.reload.summarized_text).to eq("gist")
+      end
+
       it "regenerates an outdated gist using the latest data" do
         Fabricate(:post, topic:, post_number: 3)
 

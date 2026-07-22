@@ -81,6 +81,26 @@ RSpec.describe Jobs::StreamTopicAiSummary do
       )
     end
 
+    it "forwards forced regeneration and preserves the cached summary when the LLM fails" do
+      cached_summary =
+        Fabricate(
+          :ai_summary,
+          target: topic,
+          locale: SiteSetting.default_locale,
+          summarized_text: "Cached summary",
+          original_content_sha: AiSummary.build_sha("12"),
+          highest_target_number: topic.highest_post_number,
+        )
+
+      with_responses([RuntimeError.new("LLM failed")]) do
+        expect do
+          job.execute(topic_id: topic.id, user_id: user.id, force_regenerate: true)
+        end.to raise_error(RuntimeError, "LLM failed")
+      end
+
+      expect(cached_summary.reload.summarized_text).to eq("Cached summary")
+    end
+
     it "publishes a final update to signal we're done and provide metadata" do
       summary = "dummy"
 

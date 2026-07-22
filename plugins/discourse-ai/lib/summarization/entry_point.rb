@@ -138,12 +138,10 @@ module DiscourseAi
                     LocaleNormalizer.is_same?(gist.locale, locale)
                 )
             end
-          if !force_regenerate && existing_gist &&
-               (
-                 existing_gist.highest_target_number >= target_number ||
-                   existing_gist.created_at >= 5.minutes.ago
-               )
-            next
+          if existing_gist && !force_regenerate
+            gist_is_current = existing_gist.highest_target_number >= target_number
+            gist_is_recent = existing_gist.created_at >= 5.minutes.ago
+            next if gist_is_current || gist_is_recent
           end
 
           Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, locale:, force_regenerate:)

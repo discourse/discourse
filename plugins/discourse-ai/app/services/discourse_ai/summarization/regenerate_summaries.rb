@@ -65,8 +65,6 @@ module DiscourseAi
       def regenerate(topics:, params:, guardian:)
         topics.each do |topic|
           if params.type == "gist"
-            AiSummary.gist.where(target: topic).destroy_all
-
             DiscourseAi::Summarization
               .gist_locales(topic)
               .each do |locale|
@@ -78,8 +76,6 @@ module DiscourseAi
                 )
               end
           else
-            AiSummary.complete.where(target: topic).destroy_all
-
             locale = DiscourseAi::Summarization.display_locale(topic, scope: guardian)
             summarizer = DiscourseAi::Summarization.topic_summary(topic, locale:)
             next if summarizer.blank?
@@ -89,7 +85,7 @@ module DiscourseAi
               topic_id: topic.id,
               user_id: guardian.user.id,
               locale:,
-              skip_age_check: true,
+              force_regenerate: true,
             )
           end
         end

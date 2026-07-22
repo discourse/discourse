@@ -6,7 +6,9 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return if !DiscourseAi::Translation.enabled? && !source_gist_detection_enabled?
+      should_process_topic = DiscourseAi::Translation.enabled? || source_gist_detection_enabled?
+
+      return if !should_process_topic
       return if args[:topic_id].blank?
 
       topic = Topic.find_by(id: args[:topic_id])
@@ -90,7 +92,9 @@ module Jobs
     private
 
     def enqueue_gist(topic, desired_locale)
-      return if !SiteSetting.ai_summarization_enabled || !SiteSetting.ai_summary_gists_enabled
+      gists_enabled = SiteSetting.ai_summarization_enabled && SiteSetting.ai_summary_gists_enabled
+
+      return if !gists_enabled
 
       locale =
         DiscourseAi::Summarization
