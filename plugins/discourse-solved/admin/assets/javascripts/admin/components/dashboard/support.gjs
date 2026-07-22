@@ -46,6 +46,7 @@ export default class SupportSection extends Component {
     this.selectedCategories = (this.args.data?.category_ids ?? [])
       .map((id) => Category.findById(id))
       .filter(Boolean);
+    this.appliedCategoryIds = this.selectedCategories.map((c) => c.id);
   }
 
   // The active payload: the category-filtered refetch when present, otherwise
@@ -173,6 +174,20 @@ export default class SupportSection extends Component {
   @action
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
+  }
+
+  @action
+  onClose() {
+    const ids = this.selectedCategories.map((c) => c.id);
+    const unchanged =
+      ids.length === this.appliedCategoryIds.length &&
+      ids.every((id) => this.appliedCategoryIds.includes(id));
+
+    if (unchanged) {
+      return;
+    }
+
+    this.appliedCategoryIds = ids;
     this.refetch();
     this.#persistSelection();
   }
@@ -329,6 +344,7 @@ export default class SupportSection extends Component {
               @categories={{this.selectedCategories}}
               @blockedCategories={{this.blockedCategories}}
               @onChange={{this.onCategoriesChange}}
+              @onClose={{this.onClose}}
               @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
             />
           </div>

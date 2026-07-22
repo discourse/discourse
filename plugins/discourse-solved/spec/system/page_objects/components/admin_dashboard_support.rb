@@ -60,6 +60,11 @@ module PageObjects
         self
       end
 
+      def close_category_filter
+        category_filter.collapse
+        self
+      end
+
       def has_selected_category?(category)
         has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
       end

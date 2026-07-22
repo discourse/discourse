@@ -57,12 +57,15 @@ describe "Admin dashboard Support section" do
     fab!(:other_support_category, :support_category)
     fab!(:moderator)
 
-    it "persists an admin's category selection per-site across a refresh" do
+    it "saves an admin's category selection when the picker closes, and persists it across a refresh" do
       dashboard.visit
       expect(support).to have_category_filter
       expect(support).to have_no_selected_category(support_category)
 
       support.select_category(support_category)
+      support.close_category_filter
+
+      support.expand_category_filter
       expect(support).to have_selected_category(support_category)
 
       dashboard.visit
@@ -76,7 +79,7 @@ describe "Admin dashboard Support section" do
 
       dashboard.visit
       support.select_category(support_category)
-      expect(support).to have_selected_category(support_category)
+      support.close_category_filter
 
       dashboard.visit
       support.expand_category_filter
