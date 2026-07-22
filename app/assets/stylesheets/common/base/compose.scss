@@ -1250,7 +1250,7 @@ body.has-sidebar-page {
   }
 }
 
-.uc-enable-composer-redesign {
+:where(.uc-enable-composer-redesign) {
   // flat to match the rest of the bar, aligned to the content gutter
   #reply-control .reply-to .composer-actions-trigger {
     padding-inline-start: 0;

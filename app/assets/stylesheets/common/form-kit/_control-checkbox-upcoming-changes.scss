@@ -1,4 +1,4 @@
-.uc-enable-new-checkbox-style {
+:where(.uc-enable-new-checkbox-style) {
   .form-kit {
     &__control-checkbox {
       /* hide native checkbox */
