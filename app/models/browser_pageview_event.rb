@@ -77,6 +77,29 @@ class BrowserPageviewEvent < ActiveRecord::Base
       Discourse.redis.llen(REDIS_QUEUE_KEY).to_i
     end
 
+    def beacon_cutover_date
+      return if SiteSetting.use_legacy_pageviews
+      return if !UpcomingChanges.enabled?(:dashboard_improvements)
+      if !SiteSetting.trigger_browser_pageview_events &&
+           !SiteSetting.persist_browser_pageview_events
+        return
+      end
+
+      enabled_at = [
+        UpcomingChangeEvent.where(
+          upcoming_change_name: "dashboard_improvements",
+          event_type: %i[manual_opt_in automatically_promoted],
+        ).maximum(:created_at),
+        SiteSetting.where(name: "dashboard_improvements").maximum(:updated_at),
+      ].compact.max
+
+      return enabled_at.utc.to_date.tomorrow if enabled_at
+
+      ApplicationRequest.where(
+        req_type: %w[page_view_logged_in_browser_beacon page_view_anon_browser_beacon],
+      ).minimum(:date)
+    end
+
     def clear_queued!
       Discourse.redis.del(REDIS_QUEUE_KEY)
     end

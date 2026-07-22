@@ -11,6 +11,88 @@ RSpec.describe BrowserPageviewEvent do
     Discourse.clear_readonly!
   end
 
+  describe ".beacon_cutover_date" do
+    it "returns the day after dashboard improvements was manually opted into" do
+      SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.zone.local(2026, 5, 1, 10),
+      )
+
+      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
+    end
+
+    it "returns the day after dashboard improvements was automatically promoted" do
+      SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :automatically_promoted,
+        created_at: Time.zone.local(2026, 5, 1, 10),
+      )
+
+      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
+    end
+
+    it "falls back to the site setting row when no enablement event exists" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting
+        .stubs(:where)
+        .with(name: "dashboard_improvements")
+        .returns(stub(maximum: Time.zone.local(2026, 5, 1, 10)))
+
+      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 2))
+    end
+
+    it "uses the most recent enablement time across events and the setting row" do
+      SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :automatically_promoted,
+        created_at: Time.zone.local(2026, 5, 1, 10),
+      )
+      SiteSetting
+        .stubs(:where)
+        .with(name: "dashboard_improvements")
+        .returns(stub(maximum: Time.zone.local(2026, 5, 5, 10)))
+
+      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 6))
+    end
+
+    it "returns nil when dashboard improvements are disabled" do
+      SiteSetting.dashboard_improvements = false
+
+      expect(described_class.beacon_cutover_date).to be_nil
+    end
+
+    it "falls back to the first beacon counter date when no enablement record exists" do
+      SiteSetting.dashboard_improvements = true
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-04", count: 2)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-05", count: 1)
+
+      expect(described_class.beacon_cutover_date).to eq(Date.new(2026, 5, 4))
+    end
+
+    it "returns nil when no beacons are collected" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.trigger_browser_pageview_events = false
+      SiteSetting.persist_browser_pageview_events = false
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+      )
+
+      expect(described_class.beacon_cutover_date).to be_nil
+    end
+
+    it "returns nil when legacy pageviews are enabled" do
+      SiteSetting.use_legacy_pageviews = true
+      SiteSetting.dashboard_improvements = true
+
+      expect(described_class.beacon_cutover_date).to be_nil
+    end
+  end
+
   it "truncates string fields before saving" do
     event =
       described_class.create!(
