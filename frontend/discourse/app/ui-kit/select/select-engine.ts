@@ -1373,9 +1373,17 @@ export default class SelectEngine {
     return (
       this.#matching(makeArray(this.#selected) as SelectItem[], key) ??
       recorded.find((item) => !item.__unresolved) ??
-      this.#matching(this.#localItems(), key) ??
+      this.#matching(this.#knownRows(), key) ??
       recorded[0]
     );
+  }
+
+  // The rows already in hand for the current source, whichever kind it is. A server source
+  // accumulates into `#serverItems`; without this rung it would refetch a value whose row is
+  // already on screen. Read untracked on purpose — this runs during render, and the fetch
+  // path already covers the case where the row has not landed yet.
+  #knownRows(): SelectItem[] {
+    return this.#load ? this.#serverItems : this.#localItems();
   }
 
   /**
