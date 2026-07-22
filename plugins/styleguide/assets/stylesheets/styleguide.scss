@@ -381,3 +381,40 @@
     border-bottom: 1px solid var(--primary-very-low);
   }
 }
+
+// SPIKE: virtualized <table>. A single table inside the scroll element with a sticky
+// <thead> and a virtualized <tbody>; `table-layout: fixed` + the colgroup keep the
+// columns stable as the window changes.
+.d-virtual-table {
+  &__grid {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 0.5em 1em;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--primary-very-low);
+    }
+  }
+
+  // The header sticks to the top of the scroll element and needs a solid background
+  // (and to sit above the rows) so the rows scroll cleanly underneath it.
+  &__head th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--secondary);
+    border-bottom: 2px solid var(--primary-low);
+  }
+
+  // The spacer cell only stands in for height; it must add no box of its own.
+  &__spacer td {
+    padding: 0;
+    border: none;
+  }
+}
