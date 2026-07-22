@@ -38,10 +38,6 @@ export default class AdminEmojis extends Service {
     }
   }
 
-  get sortedEmojis() {
-    return this.filteredEmojis.toSorted((a, b) => a.name.localeCompare(b.name));
-  }
-
   get emojiGroups() {
     return uniqueItemsFromArray(
       [DEFAULT_GROUP].concat(this.emojis.map((e) => e.group))
@@ -53,7 +49,7 @@ export default class AdminEmojis extends Service {
   }
 
   get allVisibleSelected() {
-    const visible = this.sortedEmojis;
+    const visible = this.filteredEmojis;
     return (
       visible.length > 0 &&
       visible.every((e) => this.selectedEmojis.has(e.get("name")))
@@ -63,7 +59,7 @@ export default class AdminEmojis extends Service {
   get someVisibleSelected() {
     return (
       !this.allVisibleSelected &&
-      this.sortedEmojis.some((e) => this.selectedEmojis.has(e.get("name")))
+      this.filteredEmojis.some((e) => this.selectedEmojis.has(e.get("name")))
     );
   }
 
@@ -147,7 +143,7 @@ export default class AdminEmojis extends Service {
 
   @action
   toggleAllVisible() {
-    const emojis = this.sortedEmojis;
+    const emojis = this.filteredEmojis;
     const next = new Set(this.selectedEmojis);
     if (this.allVisibleSelected) {
       emojis.forEach((e) => next.delete(e.get("name")));

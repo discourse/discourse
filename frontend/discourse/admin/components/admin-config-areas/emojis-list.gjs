@@ -18,8 +18,8 @@ export default class AdminConfigAreasEmojisList extends Component {
     return this.adminEmojis.emojis;
   }
 
-  get sortedEmojis() {
-    return this.adminEmojis.sortedEmojis;
+  get filteredEmojis() {
+    return this.adminEmojis.filteredEmojis;
   }
 
   get filteringGroups() {
@@ -85,9 +85,9 @@ export default class AdminConfigAreasEmojisList extends Component {
               }}</th>
           </tr>
         </thead>
-        {{#if this.sortedEmojis}}
+        {{#if this.filteredEmojis}}
           <tbody class="d-table__body">
-            {{#each this.sortedEmojis as |emoji|}}
+            {{#each this.filteredEmojis as |emoji|}}
               <tr class="d-table__row">
                 {{#if this.adminEmojis.isSelecting}}
                   <td class="d-table__cell admin-emoji-list__select-col">

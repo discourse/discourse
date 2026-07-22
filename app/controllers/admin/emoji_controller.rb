@@ -4,7 +4,13 @@ class Admin::EmojiController < Admin::AdminController
   skip_before_action :check_xhr, only: [:export]
 
   def index
-    render_serialized(Emoji.custom, EmojiSerializer, root: false)
+    render_serialized(
+      Emoji.custom.sort_by do |emoji|
+        [emoji.group == "default" ? 0 : 1, emoji.group.downcase, emoji.name.downcase]
+      end,
+      EmojiSerializer,
+      root: false,
+    )
   end
 
   # NOTE: This kind of custom logic also needs to be implemented to
