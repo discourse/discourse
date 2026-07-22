@@ -2720,6 +2720,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    emoji_picker_pinned_groups: "Emoji groups to pin to the top of the emoji picker. All other groups follow after any pinned groups."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
     klipy_api_key: "Klipy API key. Required to power GIF search."
     klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
@@ -2982,6 +2983,9 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
+      emoji_picker_pinned_groups_invalid:
+        one: "Unknown emoji group: %{groups}."
+        other: "Unknown emoji groups: %{groups}."
       must_include_latest: "Top menu must include the 'latest' tab."
       top_menu_unread_not_allowed_with_unified_new: "The 'unread' menu item cannot be used when unified new is enabled."
       invalid_string: "Invalid value."

@@ -1695,6 +1695,15 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  emoji_picker_pinned_groups:
+    type: list
+    list_type: simple
+    allow_any: true
+    default: ""
+    client: true
+    refresh: true
+    validator: "EmojiPickerPinnedGroupsValidator"
+    area: "emojis"
   enable_gifs:
     default: false
     client: true
