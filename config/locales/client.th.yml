@@ -1186,13 +1186,16 @@ th:
           cancel: "ยกเลิก"
         invite_roles:
           member_tab: "สมาชิก"
-          admin_tab: "แอดมิน"
+          admin_tab: "ทีมงาน"
+          staff_role_admin: "ผู้ดูแลระบบ"
+          staff_role_moderator: "ผู้ดูแล"
           email_placeholder: "name@example.com"
           invite_by_email: "อีเมล"
           update: "อัปเดต"
           summary:
             role_member: "สมาชิก"
             role_admin: "ผู้ดูแลระบบ"
+            role_moderator: "ผู้ดูแล"
             method_email: "อีเมล"
             expires: "หมดอายุ"
             topic: "หัวข้อ"

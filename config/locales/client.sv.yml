@@ -1745,7 +1745,9 @@ sv:
         invite_roles:
           sent_title: "Inbjudan skickad"
           member_tab: "Medlemmar"
-          admin_tab: "Administratörer"
+          admin_tab: "Personal"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "namn@exempel.com"
           invite_by_email: "E-postadress"
           restrict_domain: "Begränsa till domän"
@@ -1754,6 +1756,7 @@ sv:
           summary:
             role_member: "Medlem"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-postadress"
             uses: "Max antal användningar"
             expires: "Utgår"
@@ -4156,6 +4159,11 @@ sv:
           public: "Synligt för alla"
           always_public: "Innehållet i det här avsnittet är alltid offentligt"
           more_menu: "Menyn Mer"
+          localizations:
+            title: "Översättningar"
+            locale: "Språk"
+            title_label: "Avsnittstitel"
+            link_label: "Länknamn"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"

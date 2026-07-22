@@ -109,7 +109,6 @@ nl:
     ai_summarization_agent: "De te gebruiken agent voor de samenvattingsfunctie"
     ai_pm_summarization_allowed_groups: "Groepen mogen samenvattingen maken en bekijken in PB's."
     ai_summary_gists_enabled: "Genereer automatisch korte samenvattingen van de nieuwste reacties in topics"
-    ai_summary_backfill_maximum_topics_per_hour: "Aantal topicsamenvattingen om aan te vullen per uur."
     ai_bot_enabled: "Schakel de AI-botmodule in."
     ai_bot_enabled_llms: "LLM's beschikbaar om te selecteren voor AI-botconversaties"
     ai_bot_enable_chat_warning: "Geef een waarschuwing weer wanneer een privéchat wordt gestart. Kan worden genegeerd door de vertaling te bewerken: discourse_ai.ai_bot.pm_warning"

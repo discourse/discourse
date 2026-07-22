@@ -2413,7 +2413,9 @@ cs:
           member_title: "Pozvat členy"
           sent_title: "Pozvánka odeslána"
           member_tab: "Členové"
-          admin_tab: "Administrátoři"
+          admin_tab: "Redakce"
+          staff_role_admin: "Administrace"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mailová adresa"
           email_placeholder: "jmeno@example.com"
           invite_by_email: "Email"
@@ -2424,6 +2426,7 @@ cs:
           summary:
             role_member: "Člen"
             role_admin: "Administrace"
+            role_moderator: "Moderátor"
             method: "Sdílení"
             method_email: "Email"
             uses: "Max. použití"
@@ -5655,6 +5658,10 @@ cs:
           public: "Viditelné pro všechny"
           always_public: "Obsah v této sekci je vždy veřejný"
           more_menu: "Další menu"
+          localizations:
+            title: "Překlady"
+            locale: "Jazyk"
+            title_label: "Název sekce"
           links:
             add: "Přidat další odkaz"
             delete: "Odstranit odkaz"

@@ -1368,12 +1368,15 @@ lv:
           cancel: "Atcelt"
         invite_roles:
           member_tab: "Dalībnieki"
-          admin_tab: "Administratori"
+          admin_tab: "Personāls"
+          staff_role_admin: "Administrators"
+          staff_role_moderator: "Moderātors"
           email_placeholder: "vards@piemers.com"
           invite_by_email: "E-pasts"
           summary:
             role_member: "Biedrs"
             role_admin: "Administrators"
+            role_moderator: "Moderātors"
             method_email: "E-pasts"
             uses: "Maksimāli izmantojams"
             expires: "Derīguma termiņš beidzas"

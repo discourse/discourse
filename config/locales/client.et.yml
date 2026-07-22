@@ -1206,12 +1206,15 @@ et:
           cancel: "Tühista"
         invite_roles:
           member_tab: "Liikmed"
-          admin_tab: "Adminnid"
+          admin_tab: "Meeskond"
+          staff_role_admin: "Adminn"
+          staff_role_moderator: "Moderaator"
           email_placeholder: "nimi@näide.ee"
           invite_by_email: "E-post"
           summary:
             role_member: "Liige"
             role_admin: "Adminn"
+            role_moderator: "Moderaator"
             method_email: "E-post"
             topic: "Teema"
             groups: "Rühmad"

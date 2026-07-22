@@ -1896,7 +1896,9 @@ sq:
           member_title: "Ftoni anëtarë"
           sent_title: "Ftesa u dërgua"
           member_tab: "Anëtarë"
-          admin_tab: "Administratorët"
+          admin_tab: "Stafi"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
@@ -1905,6 +1907,7 @@ sq:
           summary:
             role_member: "Anëtar"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             uses: "Përdorimet maksimale"
             expires: "Skadon"

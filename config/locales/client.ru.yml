@@ -2502,7 +2502,9 @@ ru:
           member_title: "Пригласите участников"
           sent_title: "Приглашение отправлено"
           member_tab: "Участники"
-          admin_tab: "Администраторы"
+          admin_tab: "Персонал"
+          staff_role_admin: "Администрирование"
+          staff_role_moderator: "Модератор"
           admin_email_label: "Адрес электронной почты"
           email_placeholder: "имя@пример.com"
           invite_by_email: "Эл. почта"
@@ -2513,6 +2515,7 @@ ru:
           summary:
             role_member: "Участник"
             role_admin: "Администрирование"
+            role_moderator: "Модератор"
             method: "Распространение"
             method_email: "Эл. почта"
             restriction: "Ограничено"
@@ -5804,6 +5807,10 @@ ru:
           public: "Видно всем"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
+          localizations:
+            title: "Переводы"
+            locale: "Язык"
+            title_label: "Заголовок раздела"
           links:
             add: "Добавить еще ссылку"
             delete: "Удалить ссылку"

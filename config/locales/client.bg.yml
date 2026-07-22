@@ -1641,7 +1641,9 @@ bg:
           cancel: "Прекрати"
         invite_roles:
           member_tab: "Членове"
-          admin_tab: "Админи"
+          admin_tab: "Персонал"
+          staff_role_admin: "Администратор"
+          staff_role_moderator: "Модератор"
           email_placeholder: "name@example.com"
           invite_by_email: "Имейл"
           restrict_domain: "Ограничаване до домейн"
@@ -1649,6 +1651,7 @@ bg:
           summary:
             role_member: "Член"
             role_admin: "Администратор"
+            role_moderator: "Модератор"
             method_email: "Имейл"
             uses: "Максимум използвания"
             expires: "Изтича"

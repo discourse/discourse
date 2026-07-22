@@ -2234,7 +2234,9 @@ ug:
           member_title: "ئەزا تەكلىپ"
           sent_title: "تەكلىپ يوللاندى"
           member_tab: "ئەزا"
-          admin_tab: "باشقۇرغۇچى"
+          admin_tab: "باشقۇرغۇچى خادىم"
+          staff_role_admin: "باشقۇرغۇچى"
+          staff_role_moderator: "رىياسەتچى"
           admin_email_label: "ئېلخەت ئادرېسى"
           email_placeholder: "name@example.com"
           invite_by_email: "ئېلخەت"
@@ -2245,6 +2247,7 @@ ug:
           summary:
             role_member: "ئەزا"
             role_admin: "باشقۇرغۇچى"
+            role_moderator: "رىياسەتچى"
             method: "ھەمبەھىرلەش"
             method_email: "ئېلخەت"
             uses: "ئەڭ كۆپ ئىشلىتىلىشى"
@@ -5121,6 +5124,10 @@ ug:
           public: "ھەممەيلەنگە كۆرۈنىدۇ"
           always_public: "بۇ بۆلەكتىكى مەزمۇنلار ھەمىشە ئاشكارا"
           more_menu: "تېخىمۇ كۆپ تىزىملىك"
+          localizations:
+            title: "تەرجىمە"
+            locale: "تىل"
+            title_label: "بۆلەك ماۋزۇسى"
           links:
             add: "باشقا ئۇلانما قوش"
             delete: "ئۇلانما ئۆچۈر"

@@ -2093,7 +2093,9 @@ ja:
         invite_roles:
           member_title: "メンバーの招待"
           member_tab: "メンバー"
-          admin_tab: "管理者"
+          admin_tab: "スタッフ"
+          staff_role_admin: "管理"
+          staff_role_moderator: "モデレーター"
           admin_email_label: "メールアドレス"
           email_placeholder: "name@example.com"
           invite_by_email: "メールアドレス"
@@ -2104,6 +2106,7 @@ ja:
           summary:
             role_member: "メンバー"
             role_admin: "管理"
+            role_moderator: "モデレーター"
             method: "共有"
             method_email: "メールアドレス"
             uses: "最大使用回数"
@@ -4847,6 +4850,10 @@ ja:
           public: "全員に表示"
           always_public: "このセクションのコンテンツは常に公開される"
           more_menu: "その他のメニュー"
+          localizations:
+            title: "翻訳"
+            locale: "言語"
+            title_label: "セクションのタイトル"
           links:
             add: "別のリンクを追加する"
             delete: "リンクを削除する"
