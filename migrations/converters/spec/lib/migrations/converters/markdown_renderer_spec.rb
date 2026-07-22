@@ -274,7 +274,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
   end
 
-  describe ".embed_handlers extraction" do
+  describe "#embed_handlers extraction" do
     # Upload and Mention nodes don't arise from BBCode, so exercise their
     # extraction methods directly against the real AST nodes.
     let(:collector) do
@@ -283,11 +283,13 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       )
     end
 
+    let(:renderer) { described_class.new(format: :bbcode, embeds: collector) }
+
     it "maps an Upload node's sha1 to upload_id" do
-      _node_class, extract = described_class.embed_handlers.fetch(:upload)
+      _node_class, extract = renderer.embed_handlers.fetch(:upload)
       node = Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
 
-      token = extract.call(collector, node, nil)
+      token = extract.call(node, nil)
 
       expect(collector.uploads).to contain_exactly(
         { placeholder: token, upload_id: "abc123", original_markdown: nil },
@@ -297,7 +299,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     it "maps a Quote node's ids to quoted_post_id and quoted_user_id" do
       # BBCode can't carry them (phpBB-style id attribution arrives via the
       # TextFormatter parser), so exercise the method directly.
-      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      _node_class, extract = renderer.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(username: "alice", post_id: 9001, user_id: 12)
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
@@ -305,7 +307,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         "body",
       )
 
-      extract.call(collector, node, interface)
+      extract.call(node, interface)
 
       expect(collector.quotes).to contain_exactly(
         hash_including(quoted_post_id: 9001, quoted_user_id: 12, quoted_username: "alice"),
@@ -313,7 +315,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "records a display name that differs from the username" do
-      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      _node_class, extract = renderer.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(author: "John Doe", username: "jdoe", user_id: 12)
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
@@ -321,7 +323,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         "body",
       )
 
-      extract.call(collector, node, interface)
+      extract.call(node, interface)
 
       expect(collector.quotes).to contain_exactly(
         hash_including(quoted_username: "jdoe", quoted_name: "John Doe"),
@@ -330,7 +332,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
     it "records no name when the author equals the username" do
       # The BBCode parser fills author and username with the same leading token.
-      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      _node_class, extract = renderer.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(author: "john", username: "john", post_id: 9001)
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
@@ -338,7 +340,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
         "body",
       )
 
-      extract.call(collector, node, interface)
+      extract.call(node, interface)
 
       expect(collector.quotes).to contain_exactly(
         hash_including(quoted_username: "john", quoted_name: nil),
@@ -346,14 +348,14 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "defers a link whose label is single-line inline code" do
-      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      _node_class, extract = renderer.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
       code = Markbridge::AST::Code.new << Markbridge::AST::Text.new("x")
       node << code
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_children).with(node).and_return("`x`")
 
-      extract.call(collector, node, interface)
+      extract.call(node, interface)
 
       expect(collector.links).to contain_exactly(hash_including(text: "`x`"))
     end
@@ -364,23 +366,23 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       # An upload is the only deferrable embed that reaches this branch; a
       # mention never does, because the normalizer textifies it before the
       # :link handler sees the label.
-      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      _node_class, extract = renderer.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
       node << Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
       allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
 
-      result = extract.call(collector, node, interface)
+      result = extract.call(node, interface)
 
       expect(result).to eq("NATIVE")
       expect(collector.links).to be_empty
     end
 
     it "maps a Mention node's type and name" do
-      _node_class, extract = described_class.embed_handlers.fetch(:mention)
+      _node_class, extract = renderer.embed_handlers.fetch(:mention)
       node = Markbridge::AST::Mention.new(name: "gerhard", type: :user)
 
-      token = extract.call(collector, node, nil)
+      token = extract.call(node, nil)
 
       expect(collector.mentions).to contain_exactly(
         {

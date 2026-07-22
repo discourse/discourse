@@ -69,126 +69,6 @@ module Migrations
       }.freeze
       private_constant :MENTION_TYPES
 
-      # Maps each deferrable embed kind to the Markbridge AST node class it
-      # overrides and the class method that records it on the collector. Each
-      # method returns the placeholder token, which Markbridge then emits as the
-      # node's rendered output.
-      def self.embed_handlers
-        @embed_handlers ||= {
-          upload: [Markbridge::AST::Upload, method(:defer_upload)],
-          quote: [Markbridge::AST::Quote, method(:defer_quote)],
-          mention: [Markbridge::AST::Mention, method(:defer_mention)],
-          link: [Markbridge::AST::Url, method(:defer_link)],
-        }
-      end
-
-      def self.defer_upload(collector, node, _interface)
-        collector.upload(upload_id: node.sha1)
-      end
-      private_class_method :defer_upload
-
-      def self.defer_quote(collector, node, interface)
-        # Only the attribution carries the foreign post/topic/user reference that
-        # needs remapping; the quoted body renders normally and the closing tag
-        # stays in place. A quote attributed only by a display name (`author`) has
-        # nothing to remap, so it renders natively and keeps that attribution as
-        # written. The token stands in for the opening `[quote="…"]`, which
-        # PlaceholderResolver#render_quote rebuilds.
-        return interface.render_default(node) unless attributed?(node)
-
-        token =
-          collector.quote(
-            quoted_post_id: storable_id(node.post_id),
-            quoted_topic_id: storable_id(node.topic_id),
-            quoted_post_number: storable_id(node.post_number),
-            quoted_user_id: storable_id(node.user_id),
-            quoted_username: node.username,
-            # The BBCode parser copies the leading token into both author and
-            # username, so recording that as a name too would just repeat the
-            # username. Keep the name only when it is distinct.
-            quoted_name: (node.author unless node.author == node.username),
-          )
-        content = interface.render_children(node, context: interface.with_parent(node))
-        "\n\n#{token}\n#{content}\n[/quote]\n\n"
-      end
-      private_class_method :defer_quote
-
-      def self.defer_mention(collector, node, _interface)
-        collector.mention(mention_type: MENTION_TYPES[node.type], name: node.name)
-      end
-      private_class_method :defer_mention
-
-      def self.defer_link(collector, node, interface)
-        # After normalization the only deferrable embed a label can still hold is
-        # an upload or attachment — a linked image, which is legal and Discourse
-        # cooks fine. What is left to decide is deferral. Only a label of plain
-        # text or simple inline formatting may be recorded into the `text` column.
-        # If the label contained a deferrable embed, its placeholder would be
-        # recorded into the `text` column — but the importer only substitutes
-        # placeholders in the raw, so that embed would never be resolved and would
-        # be reported as an orphan. Such a link renders natively instead; the
-        # nested embed then tokenizes into the raw, where the importer resolves it.
-        return interface.render_default(node) unless deferrable_children?(node)
-
-        # A bare URL records no text, so the importer re-emits it bare and
-        # autolinking/oneboxing keep working; `presence` catches a blank label the
-        # same way (`[](url)` shows nothing).
-        text = node.bare? ? nil : interface.render_children(node).presence
-        collector.link(url: node.href, text:)
-      end
-      private_class_method :defer_link
-
-      # Whether the quote carries a source post/topic/user reference that needs
-      # remapping. A quote attributed only by a display name has none.
-      def self.attributed?(node)
-        node.post_number || node.topic_id || node.post_id || node.user_id || node.username
-      end
-      private_class_method :attributed?
-
-      # Markbridge attribution numbers are unbounded Integers, but the
-      # IntermediateDB stores ids as SQLite signed 64-bit integers (binding a
-      # bignum raises). At most 18 digits fit. A longer number is a numeric post
-      # title or junk, not a real id — drop it and let the remaining attribution
-      # carry the quote. The Discourse MarkdownScanner quote detector applies the
-      # same 18-digit bound (see markdown_scanner/detectors/quote.rb).
-      def self.storable_id(value)
-        value if value && value < 10**18
-      end
-      private_class_method :storable_id
-
-      def self.label_formatting?(node)
-        node.instance_of?(Markbridge::AST::Bold) || node.instance_of?(Markbridge::AST::Italic) ||
-          node.instance_of?(Markbridge::AST::Strikethrough)
-      end
-      private_class_method :label_formatting?
-
-      # Whether a link label contains only plain text and the inline formatting
-      # Discourse allows inside `[…](url)`. This is the single policy point for
-      # what a *deferred* link may carry. Extend this list carefully: a kind
-      # qualifies only if it renders inline (no blank lines) and is not deferrable
-      # itself. Called on the link node and recursively on formatting nodes, so it
-      # checks a parent's children either way.
-      def self.deferrable_children?(node)
-        node.children.all? { |child| deferrable_label_node?(child) }
-      end
-      private_class_method :deferrable_children?
-
-      def self.deferrable_label_node?(node)
-        case node
-        when Markbridge::AST::Text, Markbridge::AST::MarkdownText
-          true
-        when Markbridge::AST::Code
-          # The normalizer already hoisted any multi-line code out of inline
-          # containers, so a Code still sitting in a label renders inline (a
-          # backtick span) whether or not it carries a language — a language
-          # alone never makes it a block. Safe to record.
-          true
-        else
-          label_formatting?(node) && deferrable_children?(node)
-        end
-      end
-      private_class_method :deferrable_label_node?
-
       # @param format [Symbol] one of {FORMATS}.
       # @param embeds [#upload, #quote, #mention, #link, nil] the embed collector;
       #   when nil the embeds render natively.
@@ -200,7 +80,8 @@ module Migrations
 
         require FORMATS.fetch(@format)
 
-        @renderer = embeds ? build_deferring_renderer(embeds, defer) : nil
+        @embeds = embeds
+        @renderer = embeds ? build_deferring_renderer(defer) : nil
       end
 
       # Markbridge's default rules cover CommonMark legality only: they unwrap a
@@ -239,7 +120,115 @@ module Migrations
           .markdown
       end
 
+      # Maps each deferrable embed kind to the Markbridge AST node class it
+      # overrides and the method that records it on the collector. Each method
+      # returns the placeholder token, which Markbridge then emits as the
+      # node's rendered output.
+      def embed_handlers
+        {
+          upload: [Markbridge::AST::Upload, method(:defer_upload)],
+          quote: [Markbridge::AST::Quote, method(:defer_quote)],
+          mention: [Markbridge::AST::Mention, method(:defer_mention)],
+          link: [Markbridge::AST::Url, method(:defer_link)],
+        }
+      end
+
       private
+
+      def defer_upload(node, _interface)
+        @embeds.upload(upload_id: node.sha1)
+      end
+
+      def defer_quote(node, interface)
+        # Only the attribution carries the foreign post/topic/user reference that
+        # needs remapping; the quoted body renders normally and the closing tag
+        # stays in place. A quote attributed only by a display name (`author`) has
+        # nothing to remap, so it renders natively and keeps that attribution as
+        # written. The token stands in for the opening `[quote="…"]`, which
+        # PlaceholderResolver#render_quote rebuilds.
+        return interface.render_default(node) unless attributed?(node)
+
+        token =
+          @embeds.quote(
+            quoted_post_id: storable_id(node.post_id),
+            quoted_topic_id: storable_id(node.topic_id),
+            quoted_post_number: storable_id(node.post_number),
+            quoted_user_id: storable_id(node.user_id),
+            quoted_username: node.username,
+            # The BBCode parser copies the leading token into both author and
+            # username, so recording that as a name too would just repeat the
+            # username. Keep the name only when it is distinct.
+            quoted_name: (node.author unless node.author == node.username),
+          )
+        content = interface.render_children(node, context: interface.with_parent(node))
+        "\n\n#{token}\n#{content}\n[/quote]\n\n"
+      end
+
+      def defer_mention(node, _interface)
+        @embeds.mention(mention_type: MENTION_TYPES[node.type], name: node.name)
+      end
+
+      def defer_link(node, interface)
+        # After normalization the only deferrable embed a label can still hold is
+        # an upload or attachment — a linked image, which is legal and Discourse
+        # cooks fine. What is left to decide is deferral. Only a label of plain
+        # text or simple inline formatting may be recorded into the `text` column.
+        # If the label contained a deferrable embed, its placeholder would be
+        # recorded into the `text` column — but the importer only substitutes
+        # placeholders in the raw, so that embed would never be resolved and would
+        # be reported as an orphan. Such a link renders natively instead; the
+        # nested embed then tokenizes into the raw, where the importer resolves it.
+        return interface.render_default(node) unless deferrable_children?(node)
+
+        # A bare URL records no text, so the importer re-emits it bare and
+        # autolinking/oneboxing keep working; `presence` catches a blank label the
+        # same way (`[](url)` shows nothing).
+        text = node.bare? ? nil : interface.render_children(node).presence
+        @embeds.link(url: node.href, text:)
+      end
+
+      # Whether the quote carries a source post/topic/user reference that needs
+      # remapping. A quote attributed only by a display name has none.
+      def attributed?(node)
+        node.post_number || node.topic_id || node.post_id || node.user_id || node.username
+      end
+
+      # Markbridge attribution numbers are unbounded Integers, but the
+      # IntermediateDB stores ids as SQLite signed 64-bit integers (binding a
+      # bignum raises). At most 18 digits fit. A longer number is a numeric post
+      # title or junk, not a real id — drop it and let the remaining attribution
+      # carry the quote. The Discourse MarkdownScanner quote detector applies the
+      # same 18-digit bound (see markdown_scanner/detectors/quote.rb).
+      def storable_id(value)
+        value if value && value < 10**18
+      end
+
+      # Whether a link label contains only plain text and the inline formatting
+      # Discourse allows inside `[…](url)`. This is the single policy point for
+      # what a *deferred* link may carry. Extend the formatting list carefully: a
+      # kind qualifies only if it renders inline (no blank lines) and is not
+      # deferrable itself. Called on the link node and recursively on formatting
+      # nodes, so it checks a parent's children either way.
+      def deferrable_children?(node)
+        node.children.all? { |child| deferrable_label_node?(child) }
+      end
+
+      def deferrable_label_node?(node)
+        case node
+        when Markbridge::AST::Text, Markbridge::AST::MarkdownText
+          true
+        when Markbridge::AST::Code
+          # The normalizer already hoisted any multi-line code out of inline
+          # containers, so a Code still sitting in a label renders inline (a
+          # backtick span) whether or not it carries a language — a language
+          # alone never makes it a block. Safe to record.
+          true
+        when Markbridge::AST::Bold, Markbridge::AST::Italic, Markbridge::AST::Strikethrough
+          deferrable_children?(node)
+        else
+          false
+        end
+      end
 
       # An image linked to its own source URL — the thumbnail-links-to-itself
       # pattern — is just noise: the anchor points where the image already
@@ -278,24 +267,18 @@ module Migrations
       # Discourse renderer costs about as much as converting a small post, so a
       # per-post build would roughly double the hot path (the collector serves a
       # worker's whole run anyway — EmbedBuffer#clear resets it between posts).
-      def build_deferring_renderer(collector, defer)
+      def build_deferring_renderer(defer)
         tags =
           Array(defer).to_h do |kind|
             node_class, handler =
-              self.class.embed_handlers.fetch(kind) { unknown_defer_kind!(kind) }
-            tag =
-              Markbridge::Renderers::Discourse::Tag.new do |node, interface|
-                handler.call(collector, node, interface)
+              embed_handlers.fetch(kind) do
+                raise ArgumentError,
+                      "Unknown defer kind #{kind.inspect}; expected one of #{embed_handlers.keys.join(", ")}"
               end
-            [node_class, tag]
+            [node_class, Markbridge::Renderers::Discourse::Tag.new(&handler)]
           end
 
         Markbridge.discourse_renderer(tags:)
-      end
-
-      def unknown_defer_kind!(kind)
-        valid = self.class.embed_handlers.keys.join(", ")
-        raise ArgumentError, "Unknown defer kind #{kind.inspect}; expected one of #{valid}"
       end
     end
   end
