@@ -913,6 +913,19 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    context "when target user only allows private messages from other users" do
+      fab!(:allowed_user, :user)
+
+      before do
+        other_user.user_option.update!(enable_allowed_pm_users: true)
+        AllowedPmUser.create!(user: other_user, allowed_pm_user: allowed_user)
+      end
+
+      it "returns false" do
+        expect(guardian).not_to be_able_to_receive_direct_message(other_user)
+      end
+    end
+
     context "when target user is suspended" do
       before do
         UserSuspender.new(

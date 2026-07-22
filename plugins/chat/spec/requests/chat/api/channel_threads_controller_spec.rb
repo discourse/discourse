@@ -363,6 +363,33 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
     end
 
+    context "when a direct-message recipient excludes the current user from their PM allowlist" do
+      fab!(:recipient, :user)
+      fab!(:allowed_user, :user)
+      fab!(:channel_1) do
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      before do
+        recipient.user_option.update!(enable_allowed_pm_users: true)
+        AllowedPmUser.create!(user: recipient, allowed_pm_user: allowed_user)
+      end
+
+      it "does not create a thread" do
+        expect { post "/chat/api/channels/#{channel_id}/threads", params: params }.not_to change {
+          Chat::Thread.count
+        }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+      end
+    end
+
     context "when channel does not have threading enabled" do
       fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: false) }
 
