@@ -2,6 +2,38 @@
 
 module RailsMultisite
   class ConnectionManagement
+    class ConnectionSpecification
+      class << self
+        prepend(
+          Module.new do
+            def db_spec_cache(configs)
+              super(configs.transform_values { |config| reserve_caller_connection(config) })
+            end
+
+            private
+
+            def reserve_caller_connection(config)
+              pool = config["pool"] || config[:pool]
+              return config if pool.blank?
+
+              safe_max_threads = [pool.to_i - 1, 0].max
+              configured_max_threads = config["max_threads"] || config[:max_threads]
+              max_threads =
+                (
+                  if configured_max_threads
+                    [configured_max_threads.to_i, safe_max_threads].min
+                  else
+                    safe_max_threads
+                  end
+                )
+
+              config.merge("max_threads" => max_threads)
+            end
+          end,
+        )
+      end
+    end
+
     def self.each_active_connection(&blk)
       if ENV["RAILS_DB"]
         blk.call(current_db)

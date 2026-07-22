@@ -37,11 +37,16 @@ class AdminDashboardSearch
     if async_queries_available?
       current_stats = async_window_stats(window_start: start_date, window_end: end_date)
       prior_stats = async_window_stats(window_start: prior_start_date, window_end: prior_end_date)
-      trending_rows = trending_relation.load_async
-      content_gap_rows = content_gaps_relation.load_async
+      async_trending_rows = trending_relation.load_async
+      async_content_gap_rows = content_gaps_relation.load_async
 
-      current = current_stats.value
-      prior = prior_stats.value
+      current, prior, trending_rows, content_gap_rows =
+        drain_async_results(
+          -> { current_stats.value },
+          -> { prior_stats.value },
+          -> { async_trending_rows.to_a },
+          -> { async_content_gap_rows.to_a },
+        )
     else
       current = window_stats(window_start: start_date, window_end: end_date)
       prior = window_stats(window_start: prior_start_date, window_end: prior_end_date)
@@ -63,6 +68,21 @@ class AdminDashboardSearch
   private
 
   attr_reader :start_date, :end_date
+
+  def drain_async_results(*readers)
+    results = []
+    first_error = nil
+
+    readers.each_with_index do |reader, index|
+      results[index] = reader.call
+    rescue => error
+      first_error ||= error
+    end
+
+    raise first_error if first_error
+
+    results
+  end
 
   def build_kpis(current:, prior:)
     {

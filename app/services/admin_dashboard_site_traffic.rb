@@ -32,8 +32,8 @@ class AdminDashboardSiteTraffic
     if async_queries_available?
       current_rows_result = async_traffic_rows(start_date.to_date, end_date.to_date)
       prior_rows_result = async_traffic_rows(prior_start_date, prior_end_date)
-      current_rows = current_rows_result.value
-      prior_rows = prior_rows_result.value
+      current_rows, prior_rows =
+        drain_async_results(-> { current_rows_result.value }, -> { prior_rows_result.value })
     else
       current_rows = traffic_rows(start_date.to_date, end_date.to_date)
       prior_rows = traffic_rows(prior_start_date, prior_end_date)
@@ -60,6 +60,21 @@ class AdminDashboardSiteTraffic
   private
 
   attr_reader :start_date, :end_date, :guardian
+
+  def drain_async_results(*readers)
+    results = []
+    first_error = nil
+
+    readers.each_with_index do |reader, index|
+      results[index] = reader.call
+    rescue => error
+      first_error ||= error
+    end
+
+    raise first_error if first_error
+
+    results
+  end
 
   def fetch_card(type)
     return nil if Report.hidden?(type, guardian: guardian)
