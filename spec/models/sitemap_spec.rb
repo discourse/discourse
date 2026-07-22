@@ -74,6 +74,17 @@ RSpec.describe Sitemap do
 
         expect(topics_data).to be_empty
       end
+
+      it "doesn't include shared draft topics from unrestricted categories" do
+        shared_drafts_category = Fabricate(:category, read_restricted: false)
+        SiteSetting.shared_drafts_category = shared_drafts_category.id
+        shared_draft_topic = Fabricate(:topic, category: shared_drafts_category)
+        Fabricate(:shared_draft, topic: shared_draft_topic)
+
+        topics_data = sitemap.topics
+
+        expect(topics_data).to be_empty
+      end
     end
 
     context "when the sitemap corresponds to a page" do
