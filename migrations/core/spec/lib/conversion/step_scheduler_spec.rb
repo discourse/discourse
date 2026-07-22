@@ -1,57 +1,57 @@
 # frozen_string_literal: true
 
+# Fake StepCoordinator: announces its step, then blocks until the example
+# releases it, so we can drive ordering and concurrency without forking.
+class FakeCoordinator
+  attr_reader :step_class
+
+  def initialize(
+    step_class,
+    scheduler,
+    events:,
+    outcome: :done,
+    raise_in_run: false,
+    raise_signal: false
+  )
+    @step_class = step_class
+    @scheduler = scheduler
+    @events = events
+    @outcome = outcome
+    @raise_in_run = raise_in_run
+    @raise_signal = raise_signal
+    @finish = Queue.new
+  end
+
+  def run
+    @events << @step_class.name.demodulize
+    @finish.pop
+
+    raise Interrupt if @raise_signal
+    raise "unhandled error in #{@step_class.name.demodulize}" if @raise_in_run
+
+    if @outcome == :failed
+      @scheduler.record_failure(
+        @step_class,
+        RuntimeError.new("boom in #{@step_class.name.demodulize}"),
+      )
+    end
+
+    @outcome
+  end
+
+  def finish!
+    @finish << true
+  end
+
+  # Simulate `count` of this step's workers finishing early, handing their forks
+  # back to the scheduler while `run` is still blocked (the step isn't done yet).
+  def release!(count = 1)
+    @scheduler.release_forks(@step_class, count)
+  end
+end
+
 RSpec.describe Migrations::Conversion::StepScheduler do
   let(:events) { Queue.new }
-
-  # Fake StepCoordinator: announces its step, then blocks until the example
-  # releases it, so we can drive ordering and concurrency without forking.
-  class FakeCoordinator
-    attr_reader :step_class
-
-    def initialize(
-      step_class,
-      scheduler,
-      events:,
-      outcome: :done,
-      raise_in_run: false,
-      raise_signal: false
-    )
-      @step_class = step_class
-      @scheduler = scheduler
-      @events = events
-      @outcome = outcome
-      @raise_in_run = raise_in_run
-      @raise_signal = raise_signal
-      @finish = Queue.new
-    end
-
-    def run
-      @events << @step_class.name.demodulize
-      @finish.pop
-
-      raise Interrupt if @raise_signal
-      raise "unhandled error in #{@step_class.name.demodulize}" if @raise_in_run
-
-      if @outcome == :failed
-        @scheduler.record_failure(
-          @step_class,
-          RuntimeError.new("boom in #{@step_class.name.demodulize}"),
-        )
-      end
-
-      @outcome
-    end
-
-    def finish!
-      @finish << true
-    end
-
-    # Simulate `count` of this step's workers finishing early, handing their forks
-    # back to the scheduler while `run` is still blocked (the step isn't done yet).
-    def release!(count = 1)
-      @scheduler.release_forks(@step_class, count)
-    end
-  end
 
   # Builds named step classes in a throwaway namespace so `depends_on` (which
   # resolves names lexically) and the class-name tie-break have real classes to

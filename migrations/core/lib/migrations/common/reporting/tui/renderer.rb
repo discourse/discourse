@@ -166,7 +166,10 @@ module Migrations
             return unless step && running?(step)
             step.total = max_progress
             step.state = :running
-            step.started_at = now # start timing the work, not the counting before it
+            # The step clock keeps running from :start — the planning/counting
+            # seconds belong to the step's elapsed and final duration (the plain
+            # reporter counts them too). Only the rate anchors reset here, so
+            # items/s and the ETA measure the work window, not the counting.
             step.rate_sampled_at = now
             step.rate_sampled_current = step.current
           when :progress
@@ -329,8 +332,12 @@ module Migrations
           short = remaining && elapsed + remaining < SHORT_STEP_SECONDS
 
           if step.total&.positive?
-            fraction = [step.current.to_f / step.total, 1.0].min
-            fields[:percent] = "#{Ansi::BOLD}#{format("%3.0f%%", fraction * 100)}#{Ansi::RESET}"
+            # Floor, don't round: rounding would show "100%" from 99.5% on, which
+            # on the heaviest step is the trailing fork still converting tens of
+            # thousands of posts — seconds of a bar that reads done but isn't. The
+            # plain reporter floors too.
+            percent = [step.current * 100 / step.total, 100].min
+            fields[:percent] = "#{Ansi::BOLD}#{format("%3d%%", percent)}#{Ansi::RESET}"
             fields[:count] = format_count(step.total)
             if remaining && elapsed > ETA_AFTER_SECONDS && !short
               fields[:eta] = "#{Ansi::DIM}#{@eta_label} #{format_duration(remaining)}#{Ansi::RESET}"

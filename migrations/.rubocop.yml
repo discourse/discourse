@@ -11,3 +11,9 @@ Style/EndlessMethod:
 
 Style/Send:
   Enabled: true
+
+# Constants (and classes) declared inside example groups are global — they leak
+# across spec files and collide load-order-dependently. Use `let` for aliases
+# and top-level (or stubbed) classes for test doubles.
+RSpec/LeakyConstantDeclaration:
+  Enabled: true

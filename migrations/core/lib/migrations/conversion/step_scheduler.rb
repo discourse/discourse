@@ -61,6 +61,7 @@ module Migrations
         # finish (`release_forks`); the rest returns when the step ends
         # (`step_finished`).
         @reserved_forks = {}
+        @preplans = {}
         @threads = []
         @failures = {}
         @finalization_errors = []
@@ -91,6 +92,7 @@ module Migrations
           # finishes first, which we accept — killing a thread mid-write is worse.
           begin
             @threads.each(&:join)
+            join_leftover_preplans
             # Every step is done, but the background merges may still be catching
             # up. Show a "finishing up" status until they drain, so the display
             # doesn't sit silently at 100%.
@@ -150,6 +152,10 @@ module Migrations
         ready_steps.each do |step_class|
           forks = forks_for(step_class)
           if forks > @available_forks
+            # Waiting for forks is exactly the window to count in: compute the
+            # step's plan now so it doesn't spend its first seconds counting once
+            # the forks finally free up.
+            preplan(step_class, forks)
             # Let single-fork steps use a running partitioned step's freed forks
             # instead of idling. With nothing partitioned running, stop instead, so
             # a waiting partitioned step can gather the whole budget at once.
@@ -172,8 +178,28 @@ module Migrations
         [@budget - 1, 1].max
       end
 
+      # Computes a fork-starved step's plan (row count + partition boundaries) in
+      # the background, overlapped with the steps still holding the forks; the
+      # coordinator picks it up through `Thread#value` when the step starts. One
+      # live planner at a time keeps the extra load on the source bounded. Safe
+      # because `fork_count` is deterministic (`forks_for`) and the source is
+      # static — the plan is the same one the coordinator would compute later.
+      def preplan(step_class, fork_count)
+        return if @no_fork
+        return if @preplans.key?(step_class)
+        return if @preplans.values.any?(&:alive?)
+
+        @preplans[step_class] = Thread.new do
+          Thread.current.name = "plan_#{step_class.name.demodulize}"
+          # The coordinator surfaces a planning failure via `value`; without this,
+          # the thread would also report the exception to stderr on its own.
+          Thread.current.report_on_exception = false
+          StepCoordinator.compute_plan(step_class:, step_factory: @step_factory, fork_count:)
+        end
+      end
+
       def spawn_coordinator(step_class, fork_count)
-        coordinator = build_coordinator(step_class, fork_count)
+        coordinator = build_coordinator(step_class, fork_count, @preplans.delete(step_class))
 
         @threads << Thread.new do
           Thread.current.name = "step_#{step_class.name.demodulize}"
@@ -193,7 +219,7 @@ module Migrations
         end
       end
 
-      def build_coordinator(step_class, fork_count)
+      def build_coordinator(step_class, fork_count, plan)
         StepCoordinator.new(
           step_class:,
           step_factory: @step_factory,
@@ -204,7 +230,19 @@ module Migrations
           consolidator: @consolidator,
           fork_count:,
           no_fork: @no_fork,
+          plan:,
         )
+      end
+
+      # A preplanned step that got skipped (its dependency failed) leaves its
+      # planner behind; let it finish so its source connection cleans up. Its
+      # failure, if any, has no step to fail — the step never ran.
+      def join_leftover_preplans
+        @preplans.each_value do |planner|
+          planner.join
+        rescue StandardError
+          # ignored
+        end
       end
 
       def step_finished(step_class, outcome)
