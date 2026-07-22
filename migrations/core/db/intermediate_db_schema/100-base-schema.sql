@@ -117,6 +117,16 @@ CREATE TABLE category_users
 );
 
 
+CREATE TABLE custom_emojis
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    "group"     TEXT,
+    name        TEXT     NOT NULL,
+    upload_id   TEXT     NOT NULL
+);
+
+
 CREATE TABLE embed_emojis
 (
     name        TEXT         NOT NULL,
@@ -280,6 +290,35 @@ CREATE TABLE permalink_normalizations
     normalization TEXT NOT NULL PRIMARY KEY
 );
 
+
+CREATE TABLE posts
+(
+    original_id      NUMERIC      NOT NULL PRIMARY KEY,
+    action_code      TEXT,
+    created_at       DATETIME,
+    deleted_at       DATETIME,
+    deleted_by_id    NUMERIC,
+    hidden           BOOLEAN,
+    hidden_at        DATETIME,
+    hidden_reason_id ENUM_INTEGER,
+    last_editor_id   NUMERIC,
+    like_count       INTEGER,
+    locale           TEXT,
+    locked_by_id     NUMERIC,
+    original_raw     TEXT,
+    post_number      INTEGER,
+    post_type        ENUM_INTEGER,
+    raw              TEXT         NOT NULL,
+    reply_to_post_id INTEGER,
+    reply_to_user_id NUMERIC,
+    sort_order       INTEGER,
+    topic_id         NUMERIC      NOT NULL,
+    user_deleted     BOOLEAN,
+    user_id          NUMERIC,
+    wiki             BOOLEAN
+);
+
+CREATE INDEX idx_posts_topic_id_post_number ON posts (topic_id, post_number);
 
 CREATE TABLE site_settings
 (
