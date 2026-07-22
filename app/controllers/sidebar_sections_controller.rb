@@ -57,32 +57,12 @@ class SidebarSectionsController < ApplicationController
     permitted_section_params = section_params(sidebar_section)
     permitted_links_params = links_params(sidebar_section)
 
-    ActiveRecord::Base.transaction do
-      sidebar_section.update!(
-        permitted_section_params.merge(sidebar_urls_attributes: permitted_links_params),
-      )
-      sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
-
-      order =
-        sidebar_section
-          .sidebar_urls
-          .sort_by do |url|
-            permitted_links_params.index do |link|
-              link["name"] == url.name && link["value"] == url.value
-            end || -1
-          end
-          .each_with_index
-          .map { |url, index| [url.id, index] }
-          .to_h
-
-      set_order(sidebar_section, order)
-    end
-
-    if sidebar_section.public?
-      StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
-      MessageBus.publish("/refresh-sidebar-sections", nil)
-      Site.clear_anon_cache!
-    end
+    SidebarSectionUpdater.update!(
+      sidebar_section:,
+      user: current_user,
+      section_params: permitted_section_params,
+      links_params: permitted_links_params,
+    )
 
     render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
@@ -175,21 +155,6 @@ class SidebarSectionsController < ApplicationController
   end
 
   private
-
-  def set_order(sidebar_section, order)
-    position_generator =
-      (0..sidebar_section.sidebar_section_links.count * 2).excluding(
-        sidebar_section.sidebar_section_links.map(&:position),
-      ).each
-
-    links =
-      sidebar_section
-        .sidebar_section_links
-        .sort_by { |link| order[link.linkable_id] }
-        .map { |link| link.attributes.merge(position: position_generator.next) }
-
-    sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
-  end
 
   def check_access_if_public
     public_section = ActiveModel::Type::Boolean.new.cast(params[:public])
