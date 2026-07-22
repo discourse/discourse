@@ -39,6 +39,10 @@ class SidebarSection < ActiveRecord::Base
     section_type.blank?
   end
 
+  def community_section?
+    section_type == "community"
+  end
+
   def reset_community!
     ActiveRecord::Base.transaction do
       update!(title: "Community")

@@ -96,15 +96,18 @@ describe SidebarSectionSerializer do
     end
   end
 
-  it "returns original labels for built-in sections with localizations" do
+  it "returns localized labels only for manually created built-in section links" do
     SiteSetting.content_localization_enabled = true
     community_section =
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     community_section.update!(locale: "en")
     topics_link = community_section.sidebar_urls.find_by(name: "Topics")
     topics_link.update!(locale: "en")
+    manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+    Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
     Fabricate(:sidebar_section_localization, sidebar_section: community_section, locale: "ja")
     Fabricate(:sidebar_url_localization, sidebar_url: topics_link, locale: "ja")
+    Fabricate(:sidebar_url_localization, sidebar_url: manual_link, locale: "ja", name: "解決策")
 
     I18n.with_locale("ja") do
       reloaded =
@@ -115,8 +118,10 @@ describe SidebarSectionSerializer do
 
       expect(json[:title]).to eq("Community")
       expect(json[:links].find { |link| link[:id] == topics_link.id }[:name]).to eq("Topics")
+      expect(json[:links].find { |link| link[:id] == manual_link.id }[:name]).to eq("解決策")
       expect(json[:localizations]).to eq(nil)
       expect(json[:links].find { |link| link[:id] == topics_link.id }[:localizations]).to eq(nil)
+      expect(json[:links].find { |link| link[:id] == manual_link.id }[:localizations]).to eq(nil)
     end
   end
 end
