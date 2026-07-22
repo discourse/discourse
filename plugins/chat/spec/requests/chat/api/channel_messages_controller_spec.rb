@@ -189,6 +189,43 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
     before { sign_in(current_user) }
 
+    context "when a recipient limits direct messages to specific users" do
+      fab!(:recipient, :user)
+      fab!(:allowed_user, :user)
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [current_user, recipient]) }
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "does not let an excluded existing participant send another message" do
+        expect { post "/chat/#{channel.id}.json", params: params }.to change {
+          channel.chat_messages.count
+        }.by(1)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["message_id"]).to eq(channel.chat_messages.last.id)
+
+        sign_in(recipient)
+        put "/u/#{recipient.username}.json",
+            params: {
+              enable_allowed_pm_users: true,
+              allowed_pm_usernames: allowed_user.username,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("user", "id")).to eq(recipient.id)
+        expect(AllowedPmUser.exists?(user: recipient, allowed_pm_user: allowed_user)).to eq(true)
+
+        sign_in(current_user)
+        expect {
+          post "/chat/#{channel.id}.json", params: params.merge(message: "excluded message")
+        }.not_to change { channel.chat_messages.count }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.not_accepting_dms", username: recipient.username),
+        )
+      end
+    end
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
