@@ -369,7 +369,22 @@
     border: 1px solid var(--primary-low);
   }
 
+  &--tall .d-virtual-list {
+    height: 600px;
+  }
+
   &__note {
+    color: var(--primary-medium);
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
     color: var(--primary-medium);
   }
 
@@ -379,5 +394,18 @@
     height: 44px;
     padding: 0 1em;
     border-bottom: 1px solid var(--primary-very-low);
+
+    &--selected {
+      background: var(--tertiary-low);
+      font-weight: bold;
+    }
+  }
+
+  // Intrinsic (measured) height rather than a fixed one, so wrapped text of varying
+  // length gives each row a different height and forces re-measurement.
+  &__vrow {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+    line-height: 1.4;
   }
 }

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { render, settled, triggerEvent } from "@ember/test-helpers";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import {
@@ -341,13 +341,7 @@ module("Integration | ui-kit | DVirtualList | windowing", function (hooks) {
     );
   });
 
-  // SKIPPED: the per-row absolute-translate rendering (Unit 2a) over-scrolls under
-  // `anchorTo:"end"` prepend anchoring — the scroll compensation and the per-row
-  // offsets no longer reconcile the way the old single-window translate did. This
-  // is DEFERRED: prepend anchoring exists only for the bidirectional load-above
-  // seam, which has no v1 consumer (v1 only appends at the tail / holds the full
-  // client array). Re-solve this together with the bidirectional load-above unit.
-  skip("prepending preserves the viewport position on a top-resting list", async function (assert) {
+  test("prepending preserves the viewport position on a top-resting list", async function (assert) {
     // Cursor-paginated sources have no total, so loading older content means
     // genuinely inserting above the viewport. Without anchoring, every row the
     // user is reading jumps down by the height of whatever arrived.
