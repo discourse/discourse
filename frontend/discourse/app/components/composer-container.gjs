@@ -718,28 +718,6 @@ export default class ComposerContainer extends Component {
                       {{dIcon this.composer.uploadIcon}}
                     </a>
                   {{/if}}
-
-                  {{#if this.composer.allowPreview}}
-                    <a
-                      href
-                      class="btn btn-default no-text mobile-preview"
-                      title={{i18n "composer.show_preview"}}
-                      {{on "click" this.composer.togglePreview}}
-                      aria-label={{i18n "composer.show_preview"}}
-                    >
-                      {{dIcon "desktop"}}
-                    </a>
-                  {{/if}}
-
-                  {{#if this.composer.isPreviewVisible}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @title="composer.hide_preview"
-                      @ariaLabel="composer.hide_preview"
-                      @icon="pencil"
-                      class="hide-preview"
-                    />
-                  {{/if}}
                 {{/if}}
 
                 {{#if
