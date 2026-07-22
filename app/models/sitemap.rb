@@ -53,7 +53,13 @@ class Sitemap < ActiveRecord::Base
 
   def sitemap_topics
     indexable_topics =
-      Topic.where(visible: true).joins(:category).where(categories: { read_restricted: false })
+      Topic
+        .visible
+        .listable_topics
+        .where
+        .missing(:shared_draft)
+        .joins(:category)
+        .where(categories: { read_restricted: false })
 
     if name == RECENT_SITEMAP_NAME
       indexable_topics.where("bumped_at > ?", 3.days.ago).order(bumped_at: :desc)
