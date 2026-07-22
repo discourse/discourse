@@ -492,7 +492,7 @@ describe DiscourseReactions::CustomReactionsController do
       expect(response.status).to eq(200)
       users = response.parsed_body["reaction_users"].flat_map { |reaction| reaction["users"] }
       expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
-      expect(users).to all(exclude("name"))
+      expect(users.all? { |user| !user.key?("name") }).to eq(true)
       expect(response.body).not_to include(user_2.name, user_5.name)
     end
 
