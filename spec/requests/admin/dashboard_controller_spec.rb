@@ -146,13 +146,13 @@ RSpec.describe Admin::DashboardController do
         expect(response.status).to eq(200)
       end
 
-      it "keeps the section loader parallel for normal mini-profiler requests" do
+      it "keeps the section loader parallel for normal requests" do
         AdminDashboardSectionLoader
           .expects(:build)
           .with { |kwargs| kwargs[:parallel] == true }
           .returns([])
 
-        get "/admin/dashboard.json", params: { pp: "help" }
+        get "/admin/dashboard.json"
 
         expect(response.status).to eq(200)
       end

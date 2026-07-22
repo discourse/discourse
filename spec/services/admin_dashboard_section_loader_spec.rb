@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require "rack-mini-profiler"
-require "rack_mini_profiler_sql_collector"
-
-RSpec.describe AdminDashboardSectionLoader do
+describe AdminDashboardSectionLoader do
   fab!(:admin)
 
   after do
@@ -48,75 +45,80 @@ RSpec.describe AdminDashboardSectionLoader do
       )
     end
 
-    it "runs independent plugin sections concurrently off the request thread while preserving order and failures" do
-      started_sections = Queue.new
-      release_sections = Queue.new
-      loader_threads = Queue.new
-      section_loader =
-        lambda do |start_date:, end_date:, current_user:|
-          loader_threads << Thread.current
-          started_sections << current_user.id
-          release_sections.pop
-          { start_date: start_date, end_date: end_date }
-        end
-      failing_loader = ->(**) { raise StandardError, "boom" }
-      described_class.stubs(:pool_size).returns(3)
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [
-          { id: "second", enabled: -> { true }, loader: section_loader },
-          { id: "first", enabled: -> { true }, loader: section_loader },
-          { id: "failing", enabled: -> { true }, loader: failing_loader },
-        ],
-      )
-      Discourse.stubs(:warn_exception)
-
-      builder_thread =
-        Thread.new do
-          described_class.build(
-            section_ids: %w[first failing second],
-            current_user: admin,
-            start_date: "2026-05-01",
-            end_date: "2026-05-07",
-          )
-        end
-
-      2.times { expect(started_sections.pop).to eq(admin.id) }
-      2.times { release_sections << true }
-      result = builder_thread.value
-      worker_threads = 2.times.map { loader_threads.pop }
-
-      expect(result).to eq(
-        [
-          { id: "first", data: { start_date: "2026-05-01", end_date: "2026-05-07" } },
-          { id: "failing", data: nil, error: true },
-          { id: "second", data: { start_date: "2026-05-01", end_date: "2026-05-07" } },
-        ],
-      )
-      expect(worker_threads).to all(be_a(Thread))
-      expect(worker_threads).not_to include(builder_thread)
-    end
-
-    it "runs section loaders on the request thread when parallel mode is disabled" do
-      loader_thread = nil
-      loader =
-        lambda do |start_date:, end_date:, current_user:|
-          loader_thread = Thread.current
-          { value: current_user.id }
-        end
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [{ id: "profiled", enabled: -> { true }, loader: loader }],
+    it "returns partial section data when a section fails to build" do
+      error = StandardError.new("boom")
+      AdminDashboardSiteTraffic.stubs(:build).returns({ value: "traffic" })
+      AdminDashboardSearch.stubs(:build).raises(error)
+      Discourse.expects(:warn_exception).with(
+        error,
+        message: "Failed to build admin dashboard section",
+        env: {
+          section_id: "search",
+        },
       )
 
       expect(
         described_class.build(
-          section_ids: ["profiled"],
+          section_ids: %w[traffic search],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        ),
+      ).to eq(
+        [{ id: "traffic", data: { value: "traffic" } }, { id: "search", data: nil, error: true }],
+      )
+    end
+
+    it "runs section and plugin loaders on the caller thread when parallel mode is disabled" do
+      error = StandardError.new("boom")
+      loader_threads = []
+      plugin_loader =
+        lambda do |start_date:, end_date:, current_user:|
+          loader_threads << Thread.current
+          { start_date: start_date, end_date: end_date, user_id: current_user.id }
+        end
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
+        [{ id: "support", enabled: -> { true }, loader: plugin_loader }],
+      )
+      AdminDashboardSearch
+        .expects(:build)
+        .with do |kwargs|
+          loader_threads << Thread.current
+          kwargs == { start_date: "2026-05-01", end_date: "2026-05-07" }
+        end
+        .returns({ value: "search" })
+      AdminDashboardSiteTraffic.stubs(:build).raises(error)
+      Discourse.expects(:warn_exception).with(
+        error,
+        message: "Failed to build admin dashboard section",
+        env: {
+          section_id: "traffic",
+        },
+      )
+
+      expect(
+        described_class.build(
+          section_ids: %w[search support traffic],
           current_user: admin,
           start_date: "2026-05-01",
           end_date: "2026-05-07",
           parallel: false,
         ),
-      ).to eq([{ id: "profiled", data: { value: admin.id } }])
-      expect(loader_thread).to eq(Thread.current)
+      ).to eq(
+        [
+          { id: "search", data: { value: "search" } },
+          {
+            id: "support",
+            data: {
+              start_date: "2026-05-01",
+              end_date: "2026-05-07",
+              user_id: admin.id,
+            },
+          },
+          { id: "traffic", data: nil, error: true },
+        ],
+      )
+      expect(loader_threads).to eq([Thread.current, Thread.current])
     end
   end
 
@@ -153,149 +155,6 @@ RSpec.describe AdminDashboardSectionLoader do
     end
   end
 
-  describe "rack-mini-profiler SQL collection" do
-    after { Rack::MiniProfiler.current = nil }
-
-    it "replays worker SQL once on the parent request and keeps concurrent requests isolated" do
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [
-          {
-            id: "sql",
-            enabled: -> { true },
-            loader:
-              lambda do |start_date:, end_date:, current_user:|
-                ActiveRecord::Base.connection.exec_query(
-                  "SELECT 1 AS tagged_active_record_#{current_user.id}",
-                )
-                DB.query_single("SELECT 1 AS tagged_minisql_#{current_user.id}")
-                DB.query_single("SELECT 1 AS repeated_sql_#{current_user.id}")
-                DB.query_single("SELECT 1 AS repeated_sql_#{current_user.id}")
-                { value: current_user.id }
-              end,
-          },
-        ],
-      )
-      results = Queue.new
-
-      [Fabricate(:admin), Fabricate(:admin)].each do |request_admin|
-        Thread.new do
-          Rack::MiniProfiler.create_current(
-            "REQUEST_METHOD" => "GET",
-            "PATH_INFO" => "/admin/dashboard.json",
-          )
-          described_class.build(
-            section_ids: ["sql"],
-            current_user: request_admin,
-            start_date: "2026-05-01",
-            end_date: "2026-05-07",
-          )
-          sql = profiler_sql_strings
-          Rack::MiniProfiler.current = nil
-          results << [request_admin.id, sql]
-        end
-      end
-
-      first_id, first_sql = results.pop
-      second_id, second_sql = results.pop
-
-      expect(first_sql.grep(/tagged_active_record_#{first_id}/).size).to eq(1)
-      expect(first_sql.grep(/tagged_minisql_#{first_id}/).size).to eq(1)
-      expect(first_sql.grep(/repeated_sql_#{first_id}/).size).to eq(2)
-      expect(
-        first_sql.grep(
-          /tagged_active_record_#{second_id}|tagged_minisql_#{second_id}|repeated_sql_#{second_id}/,
-        ),
-      ).to be_empty
-      expect(second_sql.grep(/tagged_active_record_#{second_id}/).size).to eq(1)
-      expect(second_sql.grep(/tagged_minisql_#{second_id}/).size).to eq(1)
-      expect(second_sql.grep(/repeated_sql_#{second_id}/).size).to eq(2)
-      expect(
-        second_sql.grep(
-          /tagged_active_record_#{first_id}|tagged_minisql_#{first_id}|repeated_sql_#{first_id}/,
-        ),
-      ).to be_empty
-    end
-
-    it "replays SQL collected before a failed section and cleans up pool threads" do
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [
-          {
-            id: "failing_sql",
-            enabled: -> { true },
-            loader:
-              lambda do |**|
-                DB.query_single("SELECT 1 AS sql_before_failure")
-                raise StandardError, "boom"
-              end,
-          },
-        ],
-      )
-      Discourse.stubs(:warn_exception)
-      Rack::MiniProfiler.create_current(
-        "REQUEST_METHOD" => "GET",
-        "PATH_INFO" => "/admin/dashboard.json",
-      )
-
-      expect(
-        described_class.build(
-          section_ids: ["failing_sql"],
-          current_user: admin,
-          start_date: "2026-05-01",
-          end_date: "2026-05-07",
-        ),
-      ).to eq([{ id: "failing_sql", data: nil, error: true }])
-      first_request_sql = profiler_sql_strings
-      Rack::MiniProfiler.current = nil
-
-      DB.query_single("SELECT 1 AS sql_after_profiler_request")
-      Rack::MiniProfiler.create_current(
-        "REQUEST_METHOD" => "GET",
-        "PATH_INFO" => "/admin/dashboard.json",
-      )
-      Rack::MiniProfiler.record_sql("SELECT 1 AS parent_request_only", 1.0)
-      second_request_sql = profiler_sql_strings
-
-      expect(first_request_sql.grep(/sql_before_failure/).size).to eq(1)
-      expect(second_request_sql.grep(/sql_before_failure|sql_after_profiler_request/)).to be_empty
-      expect(second_request_sql.grep(/parent_request_only/).size).to eq(1)
-    end
-
-    it "accepts reader duration reports from PG results captured in workers" do
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [
-          {
-            id: "reader",
-            enabled: -> { true },
-            loader:
-              lambda do |**|
-                ActiveRecord::Base
-                  .connection
-                  .raw_connection
-                  .exec("SELECT 1 AS reader_duration_query")
-                  .values
-                { value: "read" }
-              end,
-          },
-        ],
-      )
-      Rack::MiniProfiler.create_current(
-        "REQUEST_METHOD" => "GET",
-        "PATH_INFO" => "/admin/dashboard.json",
-      )
-
-      expect(
-        described_class.build(
-          section_ids: ["reader"],
-          current_user: admin,
-          start_date: "2026-05-01",
-          end_date: "2026-05-07",
-        ),
-      ).to eq([{ id: "reader", data: { value: "read" } }])
-
-      expect(profiler_sql_strings.grep(/reader_duration_query/).size).to eq(1)
-    end
-  end
-
   describe ".pool_size" do
     it "caps at the DB connection pool, reserving one for the request thread" do
       ActiveRecord::Base.connection_pool.stubs(:size).returns(3)
@@ -315,15 +174,9 @@ RSpec.describe AdminDashboardSectionLoader do
       expect(described_class.pool_size).to eq(1)
     end
   end
-
-  def profiler_sql_strings
-    Rack::MiniProfiler.current.page_struct[:root].sql_timings.map do |timing|
-      CGI.unescapeHTML(timing[:formatted_command_string].to_s)
-    end
-  end
 end
 
-RSpec.describe AdminDashboardSectionLoader do
+describe AdminDashboardSectionLoader do
   self.use_transactional_tests = false
 
   after do
@@ -336,12 +189,11 @@ RSpec.describe AdminDashboardSectionLoader do
 
   it "returns database connections to the pool once a section finishes building" do
     worker_thread = nil
-    loader =
-      lambda do |start_date:, end_date:, current_user:|
-        worker_thread = Thread.current
-        ActiveRecord::Base.connection.execute("SELECT 1")
-        { value: "leaky" }
-      end
+    loader = ->(start_date:, end_date:, current_user:) do
+      worker_thread = Thread.current
+      ActiveRecord::Base.connection.execute("SELECT 1")
+      { value: "leaky" }
+    end
     DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
       [{ id: "leaky", enabled: -> { true }, loader: loader }],
     )

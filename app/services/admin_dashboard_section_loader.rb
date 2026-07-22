@@ -47,55 +47,37 @@ class AdminDashboardSectionLoader
 
   def build_in_parallel
     results = Queue.new
-    collect_sql = collect_worker_sql?
 
     section_ids.each do |id|
-      self.class.thread_pool.post { results << build_worker_section(id, collect_sql: collect_sql) }
+      self.class.thread_pool.post do
+        ActiveRecord::Base.with_connection(prevent_permanent_checkout: true) do
+          results << { id: id, data: section_data(id, current_user) }
+        end
+      rescue StandardError => e
+        results << { id: id, error: e }
+      end
     end
 
     results_by_id = {}
 
     section_ids.size.times do
       result = results.pop
-      RackMiniProfilerSqlCollector.replay(result[:sql_timings]) if result[:sql_timings]
-      results_by_id[result[:id]] = normalize_result(result)
+
+      result = failed_result(result) if result[:error]
+
+      results_by_id[result[:id]] = result
     end
 
     section_ids.map { |id| results_by_id.fetch(id) }
   end
 
-  def build_worker_section(id, collect_sql:)
-    records = nil
-    result = nil
-
-    ActiveRecord::Base.with_connection(prevent_permanent_checkout: true) do
-      if collect_sql
-        collector = RackMiniProfilerSqlCollector::Collector.new
-        records = collector.records
-        RackMiniProfilerSqlCollector.with_collector(collector) { result = raw_section_result(id) }
-      else
-        result = raw_section_result(id)
-      end
-    end
-
-    result.merge(sql_timings: records)
-  rescue StandardError => error
-    { id: id, error: error, sql_timings: records }
-  end
-
   def build_section(id)
-    normalize_result(raw_section_result(id))
-  rescue StandardError => error
-    normalize_result(id: id, error: error)
-  end
-
-  def raw_section_result(id)
     { id: id, data: section_data(id, current_user) }
+  rescue StandardError => e
+    failed_result(id: id, error: e)
   end
 
-  def normalize_result(result)
-    return result.except(:sql_timings) if !result[:error]
-
+  def failed_result(result)
     Discourse.warn_exception(
       result[:error],
       message: "Failed to build admin dashboard section",
@@ -105,11 +87,6 @@ class AdminDashboardSectionLoader
     )
 
     { id: result[:id], data: nil, error: true }
-  end
-
-  def collect_worker_sql?
-    defined?(RackMiniProfilerSqlCollector) && defined?(Rack::MiniProfiler) &&
-      Rack::MiniProfiler.current&.measure
   end
 
   def section_data(id, user)
