@@ -11,7 +11,5 @@ if Rails.env.production?
   ActiveSupport::Notifications.notifier.unsubscribe("sql.active_record")
 end
 
-RackMiniProfilerAsyncSql.install if defined?(RackMiniProfilerAsyncSql)
-
 # this hook can be used by plugins to amend the middleware stack or patch any initializer behavior
 DiscourseEvent.trigger(:after_initializers)

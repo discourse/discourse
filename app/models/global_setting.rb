@@ -154,7 +154,6 @@ class GlobalSetting
 
     hash["host_names"] = hostnames
     hash["database"] = db_name
-    hash["max_threads"] = [hash["pool"].to_i - 1, 0].max if hash["pool"].present?
     hash["prepared_statements"] = !!db_prepared_statements
     hash["idle_timeout"] = connection_reaper_age if connection_reaper_age.present?
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?

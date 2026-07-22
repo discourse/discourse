@@ -124,6 +124,39 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
+      it "passes serial mode to the section loader for rack-mini-profiler flamegraph requests" do
+        AdminDashboardSectionLoader
+          .expects(:build)
+          .with { |kwargs| kwargs[:parallel] == false }
+          .returns([])
+
+        get "/admin/dashboard.json", params: { pp: "flamegraph" }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "passes serial mode to the section loader for rack-mini-profiler flamegraph headers" do
+        AdminDashboardSectionLoader
+          .expects(:build)
+          .with { |kwargs| kwargs[:parallel] == false }
+          .returns([])
+
+        get "/admin/dashboard.json", headers: { "X-Rack-Mini-Profiler" => "async-flamegraph" }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "keeps the section loader parallel for normal mini-profiler requests" do
+        AdminDashboardSectionLoader
+          .expects(:build)
+          .with { |kwargs| kwargs[:parallel] == true }
+          .returns([])
+
+        get "/admin/dashboard.json", params: { pp: "help" }
+
+        expect(response.status).to eq(200)
+      end
+
       context "with highlights_data" do
         let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
 
