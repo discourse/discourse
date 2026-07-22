@@ -186,10 +186,6 @@
 }
 
 .theme-picker-modal {
-  .d-modal__container {
-    background-color: var(--primary-very-low);
-  }
-
   &__loading {
     display: flex;
     justify-content: center;
@@ -212,7 +208,6 @@
       border: 2px solid var(--content-border-color);
       height: 250px;
       border-radius: var(--d-border-radius);
-      box-shadow: var(--shadow-card);
 
       @include viewport.from(md) {
         height: 24vw; // adjusts with window width (like the modal itself)
@@ -251,6 +246,8 @@
     background: var(--tertiary);
     padding: var(--space-1) var(--space-2);
     border-radius: var(--d-border-radius);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
     z-index: 1;
   }
 
