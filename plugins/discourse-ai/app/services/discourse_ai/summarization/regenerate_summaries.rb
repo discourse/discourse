@@ -65,18 +65,30 @@ module DiscourseAi
       def regenerate(topics:, params:, guardian:)
         topics.each do |topic|
           if params.type == "gist"
-            summarizer = DiscourseAi::Summarization.topic_gist(topic)
-            summarizer.presence&.delete_cached_summaries!
+            AiSummary.gist.where(target: topic).destroy_all
 
-            Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
+            DiscourseAi::Summarization
+              .gist_locales(topic)
+              .each do |locale|
+                Jobs.enqueue(
+                  :fast_track_topic_gist,
+                  topic_id: topic.id,
+                  locale:,
+                  force_regenerate: true,
+                )
+              end
           else
-            summarizer = DiscourseAi::Summarization.topic_summary(topic)
-            summarizer.presence&.delete_cached_summaries!
+            AiSummary.complete.where(target: topic).destroy_all
+
+            locale = DiscourseAi::Summarization.display_locale(topic, scope: guardian)
+            summarizer = DiscourseAi::Summarization.topic_summary(topic, locale:)
+            next if summarizer.blank?
 
             Jobs.enqueue(
               :stream_topic_ai_summary,
               topic_id: topic.id,
               user_id: guardian.user.id,
+              locale:,
               skip_age_check: true,
             )
           end

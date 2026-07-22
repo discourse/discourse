@@ -23,7 +23,7 @@ module DiscourseAi
 
         plugin.add_to_serializer(:web_hook_topic_view, :summarizable) do
           cached_summary =
-            DiscourseAi::TopicSummarization.for(object.topic, scope.user).cached_summary
+            DiscourseAi::TopicSummarization.for(object.topic, scope.user, scope:).cached_summary
           scope.can_see_summary?(object.topic, cached_summary: cached_summary)
         end
 
@@ -34,7 +34,7 @@ module DiscourseAi
         ) do
           return @ai_summary_record if defined?(@ai_summary_record)
           @ai_summary_record =
-            DiscourseAi::TopicSummarization.for(object.topic, scope.user).cached_summary
+            DiscourseAi::TopicSummarization.for(object.topic, scope.user, scope:).cached_summary
         end
 
         plugin.add_to_serializer(
@@ -65,12 +65,12 @@ module DiscourseAi
 
           if topics.respond_to?(:includes)
             # For ActiveRecord relations, use includes to preload gists
-            topics.includes(:ai_gist_summary)
+            topics.includes(:ai_gist_summaries)
           elsif topics.is_a?(Array) && topics.present?
             # For Arrays (like suggested topics), preload associations manually
             ActiveRecord::Associations::Preloader.new(
               records: topics,
-              associations: :ai_gist_summary,
+              associations: :ai_gist_summaries,
             ).call
             topics
           else
@@ -82,20 +82,20 @@ module DiscourseAi
           :topic_list_item,
           :ai_topic_gist,
           include_condition: -> { scope.can_see_gists? },
-        ) { object.ai_gist_summary&.summarized_text }
+        ) { DiscourseAi::Summarization.gist_for(object, scope:)&.summarized_text }
 
         plugin.add_to_serializer(
           :suggested_topic,
           :ai_topic_gist,
           include_condition: -> { scope.can_see_gists? },
-        ) { object.ai_gist_summary&.summarized_text }
+        ) { DiscourseAi::Summarization.gist_for(object, scope:)&.summarized_text }
 
         # As this event can be triggered quite often, let's be overly cautious enqueueing
         # jobs if the feature is disabled.
         plugin.on(:post_created) do |post|
           if SiteSetting.discourse_ai_enabled && SiteSetting.ai_summarization_enabled &&
                SiteSetting.ai_summary_gists_enabled && post.topic
-            Jobs.enqueue(:fast_track_topic_gist, topic_id: post&.topic_id)
+            enqueue_gist_jobs(post.topic, minimum_target_number: post.post_number)
           end
         end
 
@@ -111,11 +111,42 @@ module DiscourseAi
 
             # Fast-track gist regeneration since they appear in topic lists
             if SiteSetting.ai_summary_gists_enabled
-              topic_ids.each do |topic_id|
-                Jobs.enqueue(:fast_track_topic_gist, topic_id: topic_id, force_regenerate: true)
-              end
+              Topic
+                .where(id: topic_ids)
+                .find_each { |topic| enqueue_gist_jobs(topic, force_regenerate: true) }
             end
           end
+        end
+      end
+
+      private
+
+      def enqueue_gist_jobs(topic, force_regenerate: false, minimum_target_number: nil)
+        locales = DiscourseAi::Summarization.gist_locales(topic)
+        return if locales.empty?
+
+        target_number = [topic.highest_post_number, minimum_target_number].compact.max
+        existing_gists =
+          AiSummary.gist.where(target: topic).select(:locale, :created_at, :highest_target_number)
+
+        locales.each do |locale|
+          existing_gist =
+            existing_gists.find do |gist|
+              gist.locale == locale ||
+                (
+                  gist.locale.present? && locale.present? &&
+                    LocaleNormalizer.is_same?(gist.locale, locale)
+                )
+            end
+          if !force_regenerate && existing_gist &&
+               (
+                 existing_gist.highest_target_number >= target_number ||
+                   existing_gist.created_at >= 5.minutes.ago
+               )
+            next
+          end
+
+          Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, locale:, force_regenerate:)
         end
       end
     end

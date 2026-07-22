@@ -7,21 +7,34 @@ class AiSummary < ActiveRecord::Base
   enum :origin, { human: 0, system: 1 }
 
   def self.store!(strategy, llm_model, summary, og_content, human:)
-    content_ids = og_content.map { |c| c[:id] }
+    attributes = {
+      target_id: strategy.target.id,
+      target_type: strategy.target.class.name,
+      algorithm: llm_model.name,
+      highest_target_number: strategy.highest_target_number,
+      summarized_text: summary,
+      original_content_sha: build_sha(og_content.map { |content| content[:id] }.join),
+      summary_type: strategy.type,
+      origin: !!human ? origins[:human] : origins[:system],
+      locale: strategy.locale,
+    }
 
+    strategy.target.with_lock do
+      stored_summary = upsert_summary!(attributes)
+      remove_superseded_summaries!(strategy, stored_summary)
+      stored_summary
+    end
+  end
+
+  def self.build_sha(joined_ids)
+    Digest::SHA256.hexdigest(joined_ids)
+  end
+
+  def self.upsert_summary!(attributes)
     AiSummary
       .upsert(
-        {
-          target_id: strategy.target.id,
-          target_type: strategy.target.class.name,
-          algorithm: llm_model.name,
-          highest_target_number: strategy.highest_target_number,
-          summarized_text: summary,
-          original_content_sha: build_sha(content_ids.join),
-          summary_type: strategy.type,
-          origin: !!human ? origins[:human] : origins[:system],
-        },
-        unique_by: %i[target_id target_type summary_type],
+        attributes,
+        unique_by: %i[target_id target_type summary_type locale],
         update_only: %i[
           summarized_text
           original_content_sha
@@ -33,10 +46,23 @@ class AiSummary < ActiveRecord::Base
       .first
       .then { AiSummary.find_by(id: it["id"]) }
   end
+  private_class_method :upsert_summary!
 
-  def self.build_sha(joined_ids)
-    Digest::SHA256.hexdigest(joined_ids)
+  def self.remove_superseded_summaries!(strategy, stored_summary)
+    other_summaries =
+      where(target: strategy.target, summary_type: strategy.type)
+        .where.not(id: stored_summary.id)
+        .select(:id, :locale)
+    ids_to_remove =
+      other_summaries.filter_map do |candidate|
+        if candidate.locale.present? && LocaleNormalizer.is_same?(candidate.locale, strategy.locale)
+          candidate.id
+        end
+      end
+
+    where(id: ids_to_remove).delete_all if ids_to_remove.present?
   end
+  private_class_method :remove_superseded_summaries!
 
   def mark_as_outdated
     @outdated = true
@@ -54,6 +80,7 @@ end
 #  id                    :bigint           not null, primary key
 #  algorithm             :string           not null
 #  highest_target_number :integer          default(1), not null
+#  locale                :string(20)
 #  origin                :integer
 #  original_content_sha  :string           not null
 #  summarized_text       :string           not null
@@ -65,6 +92,6 @@ end
 #
 # Indexes
 #
-#  idx_on_target_id_target_type_summary_type_3355609fbb  (target_id,target_type,summary_type) UNIQUE
-#  index_ai_summaries_on_target_type_and_target_id       (target_type,target_id)
+#  idx_ai_summaries_on_target_type_and_locale       (target_id,target_type,summary_type,locale) UNIQUE NULLS NOT DISTINCT
+#  index_ai_summaries_on_target_type_and_target_id  (target_type,target_id)
 #

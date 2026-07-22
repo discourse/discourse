@@ -12,13 +12,14 @@ describe DiscourseAi::TopicSummarization do
     SiteSetting.ai_summarization_enabled = true
   end
 
-  def create_cached_summary(topic)
-    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+  def create_cached_summary(topic, locale: SiteSetting.default_locale)
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: locale)
     content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
 
     Fabricate(
       :ai_summary,
       target: topic,
+      locale: locale,
       original_content_sha: content_sha,
       highest_target_number: topic.highest_post_number,
     )
@@ -27,6 +28,27 @@ describe DiscourseAi::TopicSummarization do
   let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
 
   let(:summary) { "This is the final summary" }
+
+  describe ".for" do
+    it "selects the displayed locale and respects the show-original preference" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "he"
+      topic.update!(locale: "en")
+      english_summary = create_cached_summary(topic, locale: "en")
+      english_summary.update!(summarized_text: "English summary")
+      hebrew_summary = create_cached_summary(topic, locale: "he")
+      hebrew_summary.update!(summarized_text: "סיכום בעברית")
+
+      localized_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(localized_service.cached_summary).to eq(hebrew_summary)
+
+      user.user_option.update!(show_original_content: true)
+      original_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(original_service.cached_summary).to eq(english_summary)
+    end
+  end
 
   describe "#summarize" do
     subject(:summarization) { described_class.new(strategy, user) }

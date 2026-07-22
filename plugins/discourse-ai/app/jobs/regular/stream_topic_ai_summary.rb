@@ -8,10 +8,10 @@ module Jobs
       return unless topic = Topic.find_by(id: args[:topic_id])
       return unless user = User.find_by(id: args[:user_id])
 
-      strategy = DiscourseAi::Summarization.topic_summary(topic)
-      return if strategy.nil?
+      summarizer = DiscourseAi::Summarization.topic_summary(topic, locale: args[:locale])
+      return if summarizer.nil?
 
-      summarization_service = DiscourseAi::TopicSummarization.new(strategy, user)
+      summarization_service = DiscourseAi::TopicSummarization.new(summarizer, user)
       cached_summary = summarization_service.cached_summary
 
       guardian = Guardian.new(user)

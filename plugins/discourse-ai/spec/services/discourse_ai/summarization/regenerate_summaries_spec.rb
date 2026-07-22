@@ -75,16 +75,24 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
       context "when regenerating a single topic" do
         it { is_expected.to run_successfully }
 
-        it "enqueues the gist generation job" do
+        it "enqueues a forced gist generation job for the default locale" do
           expect { result }.to change { Jobs::FastTrackTopicGist.jobs.size }.by(1)
+
+          job_args = Jobs::FastTrackTopicGist.jobs.first["args"].first
+          expect(job_args).to include(
+            "topic_id" => topic.id,
+            "locale" => SiteSetting.default_locale,
+            "force_regenerate" => true,
+          )
         end
 
-        it "deletes existing cached gist" do
-          gist = Fabricate(:ai_summary, target: topic, summary_type: AiSummary.summary_types[:gist])
+        it "deletes every cached gist locale before enqueueing replacements" do
+          english_gist = Fabricate(:topic_ai_gist, target: topic, locale: "en")
+          hebrew_gist = Fabricate(:topic_ai_gist, target: topic, locale: "he")
 
           result
 
-          expect(AiSummary.find_by(id: gist.id)).to be_nil
+          expect(AiSummary.where(id: [english_gist.id, hebrew_gist.id])).to be_empty
         end
       end
 
@@ -125,15 +133,21 @@ RSpec.describe DiscourseAi::Summarization::RegenerateSummaries do
           job_args = Jobs::StreamTopicAiSummary.jobs.first["args"].first
           expect(job_args["topic_id"]).to eq(topic.id)
           expect(job_args["user_id"]).to eq(admin.id)
+          expect(job_args["locale"]).to eq(SiteSetting.default_locale)
           expect(job_args["skip_age_check"]).to eq(true)
         end
 
-        it "deletes existing cached summary" do
-          summary = Fabricate(:ai_summary, target: topic)
+        it "deletes every cached summary locale before enqueueing a replacement" do
+          SiteSetting.content_localization_enabled = true
+          SiteSetting.content_localization_supported_locales = "he"
+          topic.update!(locale: "en")
+          english_summary = Fabricate(:ai_summary, target: topic, locale: "en")
+          hebrew_summary = Fabricate(:ai_summary, target: topic, locale: "he")
 
-          result
+          I18n.with_locale(:he) { result }
 
-          expect(AiSummary.find_by(id: summary.id)).to be_nil
+          expect(AiSummary.where(id: [english_summary.id, hebrew_summary.id])).to be_empty
+          expect(Jobs::StreamTopicAiSummary.jobs.first.dig("args", 0, "locale")).to eq("he")
         end
       end
 

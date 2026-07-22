@@ -69,6 +69,18 @@ RSpec.describe Jobs::StreamTopicAiSummary do
       end
     end
 
+    it "stores the completed summary for the requested locale" do
+      hebrew_summary = "סיכום בעברית"
+
+      with_responses([hebrew_summary]) do
+        job.execute(topic_id: topic.id, user_id: user.id, locale: "he")
+      end
+
+      expect(AiSummary.complete.find_by!(target: topic, locale: "he").summarized_text).to eq(
+        hebrew_summary,
+      )
+    end
+
     it "publishes a final update to signal we're done and provide metadata" do
       summary = "dummy"
 

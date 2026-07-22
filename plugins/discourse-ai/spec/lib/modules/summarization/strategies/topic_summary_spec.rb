@@ -130,6 +130,18 @@ RSpec.describe DiscourseAi::Summarization::Strategies::TopicSummary do
       expect(content).to include("The discussion title is: Test Topic Title")
     end
 
+    it "requests output in the selected locale" do
+      localized_summary = described_class.new(topic, locale: "he")
+
+      message_content = localized_summary.as_llm_messages(contents).first[:content]
+
+      expect(localized_summary.locale).to eq("he")
+      expect(message_content).to include(
+        "Write the summary in Hebrew (עברית), regardless of the language used in the input.",
+      )
+      expect(message_content).not_to include("required output locale")
+    end
+
     context "when topic has a category" do
       fab!(:category) { Fabricate(:category, name: "Test Category") }
 
