@@ -14,7 +14,7 @@ module DiscourseDataExplorer
       attribute :updated_at, :datetime
       # Wire attribute renamed from `sql` (2026-06-15 breaking change); the DB
       # column keeps its name — versioning is representation-only.
-      attribute :query, :string, writable: true, &:sql
+      attribute :query, :string, writable: true, description: "The SQL source of the query.", &:sql
       # Wire attribute renamed from `last_run_at` (2026-07-08) — same rule.
       attribute :ran_at, :datetime, &:last_run_at
       # Admin-only field. The guardian is passed in via the serializer `params`

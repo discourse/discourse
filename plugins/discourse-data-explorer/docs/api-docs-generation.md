@@ -91,10 +91,21 @@ document's intro prose would confuse both audiences.
 ## 6. Open questions
 
 - ~~Type metadata source~~ — RESOLVED, see §7.
-- Generator home and shape: a Kit module walking the registry → hash → YAML, exposed as a
-  rake task (and possibly a controller for per-site docs).
-- Should the spike build a minimal generator increment (queries resource → valid OpenAPI
-  3.1 document + a spec validating a live response against a generated schema)?
+- ~~Should the spike build a minimal generator increment?~~ — BUILT (2026-07-21):
+  `JsonApiKit::OpenApiGenerator` derives the queries document from the declarations
+  (typed/nullable attribute schemas, relationship linkage by cardinality, the full query
+  surface as parameters, request bodies from `Query::Create::Contract` types + validators,
+  `info.version` = the advertised date), and the drift-proof loop is executable —
+  `spec/requests/…/open_api_document_spec.rb` validates live responses (collection,
+  nested includes + stats, strict-400 errors) against the generated schemas with
+  `json_schemer`. Spike input is an explicit `endpoints: [{ path:, controller:, create: }]`
+  map; the schemas are strict (`additionalProperties: false`), which the loop needs to
+  bite. Attributes generate as *nullable* types (a `null: false` declaration can tighten
+  this later) — the loop itself forced that call: never-run queries answer `ran_at: null`.
+- Generator tail still open: YAML emission + rake task + publication wiring; route
+  introspection replacing the explicit endpoint map; per-version documents (down-applied
+  renames); the extensions section (per-site docs); the changelog section from change
+  descriptions; `deprecated: true` (needs the `deprecate` keyword).
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
 - ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see
