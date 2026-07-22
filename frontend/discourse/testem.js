@@ -4,6 +4,9 @@ const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
 require("./patch-testem-output")();
+const patchTestemBrowserWatchdog = require("./patch-testem-browser-watchdog");
+
+patchTestemBrowserWatchdog();
 
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
@@ -52,6 +55,18 @@ class Reporter extends TapReporter {
   }
 
   report(prefix, data) {
+    // Record browser-start failures and real test failures under separate markers so the
+    // retry loop can retry only when the browser never connected, without masking a genuine
+    // test failure that occurred in the same (parallel) run.
+    patchTestemBrowserWatchdog.markBrowserStartFailure(
+      data,
+      process.env.QUNIT_BROWSER_START_FAILURE_FILE
+    );
+    patchTestemBrowserWatchdog.markBrowserTestFailure(
+      data,
+      process.env.QUNIT_BROWSER_TEST_FAILURE_FILE
+    );
+
     if (data.failed) {
       this.failReports.push([prefix, data, this.id]);
     }
@@ -269,7 +284,10 @@ module.exports = {
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },
-  browser_start_timeout: 120,
+  browser_start_timeout:
+    process.env.QUNIT_BROWSER_WATCHDOG === "1"
+      ? parseInt(process.env.QUNIT_BROWSER_START_TIMEOUT, 10)
+      : 120,
   browser_disconnect_timeout: 30,
   browser_args: {
     Chromium: [

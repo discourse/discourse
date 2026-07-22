@@ -11,6 +11,18 @@ require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
+  DEFAULT_BROWSER_START_TIMEOUT = 45
+  DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+  DEFAULT_BROWSER_START_ATTEMPTS = 3
+
+  # A browser-start failure means the browser never connected, so no tests ran and the
+  # whole attempt can safely be retried. Once a browser connects, any test failure is a
+  # real failure that must not be retried away (which would mask it, especially in parallel
+  # runs where one browser can fail to start while another reports a genuine failure).
+  def self.retry_browser_start?(start_failed:, test_failed:, attempt:, attempts:)
+    start_failed && !test_failed && attempt < attempts
+  end
+
   def initialize(args)
     @file_paths = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
@@ -29,6 +41,13 @@ class QunitRunner
     @plugin_targets = []
 
     @headless = true
+    @browser_watchdog = boolean_env("QUNIT_BROWSER_WATCHDOG", default: true)
+    @browser_start_timeout =
+      positive_integer_env("QUNIT_BROWSER_START_TIMEOUT", DEFAULT_BROWSER_START_TIMEOUT)
+    @browser_inactivity_timeout =
+      positive_integer_env("QUNIT_BROWSER_INACTIVITY_TIMEOUT", DEFAULT_BROWSER_INACTIVITY_TIMEOUT)
+    @browser_start_attempts =
+      positive_integer_env("QUNIT_BROWSER_START_ATTEMPTS", DEFAULT_BROWSER_START_ATTEMPTS)
 
     parse_options(args)
   end
@@ -118,6 +137,33 @@ class QunitRunner
         opts.on("--[no-]headless", "Run tests in headless mode (env: QUNIT_HEADLESS)") do |h|
           @headless = h
         end
+
+        opts.on(
+          "--[no-]browser-watchdog",
+          "Detect stalled browser startup and test loading (env: QUNIT_BROWSER_WATCHDOG)",
+        ) { |enabled| @browser_watchdog = enabled }
+
+        opts.on(
+          "--browser-start-timeout SECONDS",
+          Integer,
+          "Browser connection timeout (default: 45; env: QUNIT_BROWSER_START_TIMEOUT)",
+        ) do |seconds|
+          @browser_start_timeout = positive_integer(seconds, "--browser-start-timeout")
+        end
+
+        opts.on(
+          "--browser-inactivity-timeout SECONDS",
+          Integer,
+          "Browser inactivity timeout outside active tests (default: 30; env: QUNIT_BROWSER_INACTIVITY_TIMEOUT)",
+        ) do |seconds|
+          @browser_inactivity_timeout = positive_integer(seconds, "--browser-inactivity-timeout")
+        end
+
+        opts.on(
+          "--browser-start-attempts COUNT",
+          Integer,
+          "Total browser start attempts (default: 3; env: QUNIT_BROWSER_START_ATTEMPTS)",
+        ) { |count| @browser_start_attempts = positive_integer(count, "--browser-start-attempts") }
 
         opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
 
@@ -254,6 +300,10 @@ class QunitRunner
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
     env["QUNIT_HEADLESS"] = "0" if !@headless
+    env["QUNIT_BROWSER_WATCHDOG"] = @browser_watchdog ? "1" : "0"
+    env["QUNIT_BROWSER_START_TIMEOUT"] = @browser_start_timeout.to_s
+    env["QUNIT_BROWSER_INACTIVITY_TIMEOUT"] = @browser_inactivity_timeout.to_s
+    env["QUNIT_BROWSER_START_ATTEMPTS"] = @browser_start_attempts.to_s
 
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
@@ -287,8 +337,40 @@ class QunitRunner
       exit 0
     end
 
-    system(env, *args, chdir: dir)
-    exit $?.exitstatus
+    browser_start_failure_file =
+      File.join(rails_root, "tmp", "qunit_browser_start_failure_#{Process.pid}.marker")
+    browser_test_failure_file =
+      File.join(rails_root, "tmp", "qunit_browser_test_failure_#{Process.pid}.marker")
+    env["QUNIT_BROWSER_START_FAILURE_FILE"] = browser_start_failure_file
+    env["QUNIT_BROWSER_TEST_FAILURE_FILE"] = browser_test_failure_file
+    attempts = @browser_watchdog ? @browser_start_attempts : 1
+    exit_status = nil
+
+    begin
+      1.upto(attempts) do |attempt|
+        FileUtils.rm_f(browser_start_failure_file)
+        FileUtils.rm_f(browser_test_failure_file)
+        system(env, *args, chdir: dir)
+        exit_status = $?.exitstatus
+        break if exit_status == 0
+
+        unless self.class.retry_browser_start?(
+                 start_failed: File.exist?(browser_start_failure_file),
+                 test_failed: File.exist?(browser_test_failure_file),
+                 attempt: attempt,
+                 attempts: attempts,
+               )
+          break
+        end
+
+        warn "Browser failed to connect; retrying (attempt #{attempt + 1}/#{attempts})"
+      end
+    ensure
+      FileUtils.rm_f(browser_start_failure_file)
+      FileUtils.rm_f(browser_test_failure_file)
+    end
+
+    exit exit_status
   end
 
   def convert_to_ember_relative_path(file_path)
@@ -624,6 +706,28 @@ class QunitRunner
     str.empty? ? nil : str
   end
 
+  def boolean_env(name, default:)
+    value = ENV[name]
+    return default if value.nil?
+    return true if %w[1 true].include?(value.downcase)
+    return false if %w[0 false].include?(value.downcase)
+
+    abort "Error: #{name} must be one of: 1, 0, true, false"
+  end
+
+  def positive_integer_env(name, default)
+    value = ENV[name]
+    return default if value.nil?
+
+    positive_integer(Integer(value, exception: false), name)
+  end
+
+  def positive_integer(value, name)
+    abort "Error: #{name} must be greater than 0" if !value || value <= 0
+
+    value
+  end
+
   def resolve_plugin_namespace(directory_name)
     @plugin_namespace_cache ||= {}
     return @plugin_namespace_cache[directory_name] if @plugin_namespace_cache.key?(directory_name)
@@ -668,4 +772,4 @@ class QunitRunner
   end
 end
 
-QunitRunner.new(ARGV).run
+QunitRunner.new(ARGV).run if __FILE__ == $PROGRAM_NAME
