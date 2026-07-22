@@ -2298,7 +2298,7 @@ en:
         any: "any"
 
       homepage:
-        default: "(default)"
+        default: "Default"
 
       password_confirmation:
         title: "Password Again"
@@ -8196,6 +8196,9 @@ en:
         sidebar: "Sidebar"
         header_dropdown: "Header Dropdown"
         legacy: "Legacy"
+
+      homepage:
+        top_menu_default: "First item in top menu"
 
       backups:
         title: "Backups"
