@@ -34,7 +34,6 @@ import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
-const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
 const tonableEmojiTitle = (emoji, diversity) => {
@@ -62,7 +61,7 @@ export default class EmojiPicker extends Component {
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
+  @tracked visibleSections = ["favorites"];
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
@@ -390,6 +389,14 @@ export default class EmojiPicker extends Component {
 
     try {
       this.emojiStore.list = await ajax("/emojis.json");
+
+      // Dynamically set visible sections to favorites + first actual group
+      // instead of hardcoding "smileys_&_emotion"
+      const sections = Object.keys(this.emojiStore.list);
+      const firstGroup = sections.find((g) => g !== "favorites");
+      this.visibleSections = firstGroup
+        ? ["favorites", firstGroup]
+        : ["favorites"];
 
       // we cant filter an empty list so have to wait for it
       this.didInputFilter(this.term);
