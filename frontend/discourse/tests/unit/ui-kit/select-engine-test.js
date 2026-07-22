@@ -370,6 +370,34 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
 
+    test("resolves a value from rows a server source already loaded", async function (assert) {
+      let fetches = 0;
+      const engine = new SelectEngine({
+        load: () =>
+          Promise.resolve([
+            { id: 1, name: "Apple" },
+            { id: 2, name: "Banana" },
+          ]),
+        resolveValue: (value) => {
+          fetches++;
+          return Promise.resolve({ id: value, name: "fetched" });
+        },
+      });
+
+      await engine.loadItems(engine.loadContext);
+
+      assert.strictEqual(
+        engine.resolveSelection(2)?.name,
+        "Banana",
+        "an accumulated row resolves the value without a fetch"
+      );
+      assert.strictEqual(
+        fetches,
+        0,
+        "no resolveValue request for a row already loaded"
+      );
+    });
+
     test("picking an item caches it so the trigger resolves synchronously", function (assert) {
       const { engine } = controlled({ load: () => Promise.resolve([]) });
       const topic = { id: 42, name: "Saved topic" };
