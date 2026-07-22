@@ -274,7 +274,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
           created_at: 10.minutes.ago,
         )
 
-        DiscourseEvent.trigger(:post_created, post)
+        DiscourseEvent.trigger(:post_created, post, {}, post.user)
 
         expect(Jobs::FastTrackTopicGist.jobs).to be_empty
       end
@@ -297,7 +297,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             locale: SiteSetting.default_locale,
             force_regenerate: false,
           },
-        ) { DiscourseEvent.trigger(:post_created, post) }
+        ) { DiscourseEvent.trigger(:post_created, post, {}, post.user) }
       end
 
       it "does not enqueue a job for a recently generated gist" do
@@ -309,7 +309,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
           created_at: 2.minutes.ago,
         )
 
-        DiscourseEvent.trigger(:post_created, post)
+        DiscourseEvent.trigger(:post_created, post, {}, post.user)
 
         expect(Jobs::FastTrackTopicGist.jobs).to be_empty
       end
@@ -330,7 +330,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             locale: SiteSetting.default_locale,
             force_regenerate: false,
           },
-        ) { DiscourseEvent.trigger(:post_created, post) }
+        ) { DiscourseEvent.trigger(:post_created, post, {}, post.user) }
       end
     end
 
