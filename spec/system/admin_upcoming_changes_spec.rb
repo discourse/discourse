@@ -62,7 +62,7 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
-  it "shows the permanent soon notice for stable changes but not for site_setting_default types" do
+  it "shows the permanent soon notice for stable changes unless permanent_warning is false" do
     mock_upcoming_change_metadata(
       {
         about_page_extra_groups_show_description: {
@@ -76,6 +76,7 @@ describe "Admin upcoming changes" do
           status: :stable,
           impact_type: "site_setting_default",
           impact_role: "all_members",
+          permanent_warning: false,
         },
       },
     )

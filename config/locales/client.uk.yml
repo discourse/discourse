@@ -58,9 +58,10 @@ uk:
         access_permission_viewer: "Переглядач"
         access_permission_viewer_description: "Може переглядати вміст для цього об'єкта"
         access_permission_remove: "Вилучити"
-        access_permission_remove_description: "Видалити дозвіл для цієї групи"
-        add_group: "Додати групу"
-        mandatory_acl_tooltip: "Цей дозвіл є обов’язковим для цього об’єкта і не може бути скасований"
+        access_permission_remove_description: "Видалити дозвіл для цього отримувача"
+        add_group: "Додати користувача або групу"
+        mandatory_acl_tooltip: "Цей дозвіл обов'язковий для %{name} і його не можна видалити"
+        mandatory: "Обов’язкове"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -992,6 +993,7 @@ uk:
         help: "Вилучити цю заявку"
       awaiting_approval: "Очікує схвалення"
       delete: "Вилучити"
+      delete_confirm: "Ви впевнені, що хочете видалити цей елемент із черги на перевірку?"
       settings:
         saved: "Збережено"
         save_changes: "Зберегти зміни"
@@ -1826,12 +1828,18 @@ uk:
       statistics: "Статистика"
       desktop_notifications:
         label: "Живі сповіщення"
+        push_level:
+          title: "Push-сповіщення…"
+          none: "Вимкнено"
+          all: "Включено"
+          chat_only: "Увімкнено лише для чату"
         not_supported: "Сповіщення не підтримуються у цьому оглядачі. Вибачте."
         perm_default: "Увімкнути сповіщення"
         perm_denied_btn: "Відмовлено у доступі"
         perm_denied_expl: "Ви заборонили сповіщення. Дозвольте сповіщення у налаштуваннях свого оглядача."
         disable: "Вимкнути сповіщення"
         enable: "Увімкнути сповіщення"
+        enable_failed: "Не вдалося увімкнути сповіщення. Ваш браузер заблокував запит або його служба push недоступна."
         each_browser_note: "Примітка. Вам потрібно змінити це налаштування в кожному браузері, який ви використовуєте. Усі сповіщення буде вимкнено, якщо призупинити сповіщення в меню користувача, незалежно від цього налаштування."
         consent_prompt: "Хочете отримувати сповіщення в реальному часі, коли люди відповідають на ваші дописи?"
       dismiss: "Відкинути"
@@ -2588,6 +2596,52 @@ uk:
           create_link_and_send_email: "Створити посилання і надіслати листа на електронну пошту"
           invite_saved_without_sending_email: "Запрошення збережено. Скопіюйте посилання нижче та поділіться ним, щоб миттєво надати доступ до цього сайту."
           invite_saved_with_sending_email: "Лист із запрошенням надіслано. Ви також можете скопіювати посилання нижче і поділитися ним, щоб миттєво надати доступ до цього сайту."
+        invite_roles:
+          member_title: "Запросити учасників"
+          admin_title: "Запросити адміністраторів"
+          edit_title: "Редагування запрошення"
+          created_title: "Запрошення створено"
+          sent_title: "Запрошення надіслано"
+          member_tab: "Учасники"
+          admin_tab: "Адміни"
+          member_description: "Запросіть людей приєднатися до цього сайту. Поділіться посиланням або надішліть запрошення електронною поштою."
+          admin_description: "Запрошуйте людей долучитися до вашої команди в якості адміністраторів. Адміністратори мають повний доступ до цього сайту."
+          admin_email_label: "Адреса електронної пошти"
+          member_email_label: "Надіслати"
+          member_email_help: "Ми надішлемо листа про запрошення на цю адресу."
+          email_placeholder: "електронна скринька"
+          invite_by: "Запрошення від"
+          invite_by_link: "Посилання для поширення"
+          invite_by_email: "E-mail"
+          role_label: "Запросити як"
+          restrict_domain: "Обмежити доменом"
+          restrict_domain_help: "Прийняти посилання можуть лише користувачі з електронною адресою в цьому домені. Щоб запросити певну особу, скористайтеся полем \"Електронна пошта\" вище."
+          domain_placeholder: "example.com"
+          domain_invalid: "Введіть дійсний домен, наприклад example.com"
+          arrive_at_topic_help: "Після того, як люди дадуть згоду, перенаправте їх на конкретну тему."
+          create_and_send: "Створити та надіслати"
+          create_and_copy: "Створити та скопіювати посилання"
+          more_options: "Більше опцій"
+          fewer_options: "Менше опцій"
+          update: "Оновити"
+          role_locked: "Тип запрошення не можна змінити після його створення."
+          summary:
+            sent_to: "Запрошення було надіслано електронною поштою на адресу %{email}. Ви також можете поділитися цим посиланням безпосередньо:"
+            role: "Роль"
+            role_member: "Учасник"
+            role_admin: "Адміністратор"
+            method: "Спільний доступ"
+            method_link: "Посилання для поширення"
+            method_email: "E-mail"
+            restriction: "Обмежено для"
+            uses: "Максимальна кількість використань"
+            expires: "Закінчується"
+            topic: "Тема"
+            groups: "Групи"
+            edit: "Редагувати запрошення"
+            view_invites: "Переглянути запрошення"
+          email_sent:
+            body: "Запрошення було надіслано електронною поштою на адресу %{email}."
         bulk_invite:
           none: "Немає запрошень для показу на цій сторінці."
           text: "Масове запрошення"
@@ -3275,6 +3329,9 @@ uk:
       default: Власні емодзі
     filter_input:
       clear: "Очистити фільтр"
+    filter_controls:
+      reset: "Скинути фільтр"
+      toggle: "Перемкнути випадаючі фільтри"
     d_icon_grid_picker:
       select_icon: "Виберіть іконку"
       search_placeholder: "Пошук значків..."
@@ -3297,6 +3354,7 @@ uk:
     gifs:
       modal_title: "Пошук GIF-файлів"
       composer_title: "Вставити GIF-файл"
+      placeholder: "Пошук KLIPY"
       powered_by: "Працює на Klipy"
       no_results: "Введіть ключове слово для пошуку GIF."
       browse_categories: "Переглянути за категоріями"
@@ -3492,6 +3550,7 @@ uk:
       draft_saved: "Чернетку збережено!"
       users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, в одному короткому реченні?"
+      title_placeholder_redesign: "Назва"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "Чому ви редагуєте допис?"
       topic_featured_link_placeholder: "Введіть посилання, що показується з заголовком."
@@ -4352,6 +4411,7 @@ uk:
       sort:
         label: "Сортувати за"
         top: "Топ"
+        hot: "Гаряче"
         new: "Новий"
         old: "Старий"
       load_more_children:
@@ -4474,6 +4534,7 @@ uk:
       read_more_in_category: "Хочете прочитати більше? Перегляньте інші теми на %{categoryLink} або <a href='%{latestLink}'>перегляньте останні теми</a>."
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
+      sr_read: "читання"
       participant_groups: "Групи учасників"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -5059,8 +5120,16 @@ uk:
           many: "Переглянути %{count} перекладів"
           other: "Переглянути %{count} перекладів"
         modal:
-          title: "Переклади для повідомлення"
+          title: "Переклади"
           confirm_delete: "Ви впевнені, що хочете видалити переклади для '%{languageCode}'?"
+          language_notice: "Встановіть оригінальну мову публікації, щоб читачам можна було бачити переклади."
+          post_language: "Мова публікації"
+          topic_language: "Мова назви теми"
+          save_post_language: "Зберегти мову публікації"
+          save_topic_language: "Зберегти мову назви теми"
+          discard_language_change: "Відхилити зміну"
+          post_language_updated: "Мову публікації оновлено"
+          topic_language_updated: "Мову назви теми оновлено"
         success: "Переклади були успішно оновлені"
         post_language_selector:
           title: "Мова публікації"
@@ -5311,7 +5380,7 @@ uk:
     category:
       none: "(без розділу)"
       all: "Всі розділи"
-      choose: "розділ &hellip;"
+      choose: "Розділ &hellip;"
       edit: "Редагувати"
       edit_title: "Редагувати цей розділ"
       edit_dialog_title: "Редагувати:%{categoryName}"
@@ -6057,7 +6126,6 @@ uk:
       selector_no_tags: "без теґів"
       selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"
-      choose_for_topic: "додаткові теґи"
       choose_for_topic_required:
         one: "виберіть принаймні %{count} тег…"
         few: "виберіть принаймні %{count} теги…"
@@ -6692,8 +6760,6 @@ uk:
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
-    reset_filter: "Скинути фільтр"
-    toggle_filters: "Перемкнути випадаючі фільтри"
     admin:
       title: "Адміністратор Discourse"
       moderator: "Модератор"
@@ -6755,6 +6821,7 @@ uk:
         enabled_for_throttle: "Ви занадто швидко змінили, для кого ввімкнено цю зміну. Зачекайте кілька секунд, перш ніж повторити спробу."
         change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
         change_disabled: "Ви відмовилися від цієї зміни"
+        depends_on_notice: "Для цієї зміни потрібно ввімкнути %{dependencyLinks}."
         permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
         permanent_soon_notice: "Ця зміна незабаром стане остаточною. Ви більше не зможете відмовитися від неї."
         permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
@@ -6928,7 +6995,7 @@ uk:
             apple_touch_icon:
               title: "Піктограма Apple touch"
               description: "Іконка, що використовується для сенсорних пристроїв Apple. Якщо залишити пустим, буде використано large_icon."
-              help_text: "Рекомендований розмір 180 x 180 пікселів. Прозорий фон не рекомендується."
+              help_text: "Рекомендований розмір – 180 x 180 пікселів. Не використовуйте зображення у форматі SVG. Прозорий фон не рекомендується."
             digest_logo:
               title: "Логотип дайджесту"
               description: "Альтернативне зображення логотипу, яке використовується у верхній частині резюме вашого сайту електронною поштою. Якщо залишити порожнім, буде використано зображення з налаштування «логотип»."
@@ -7138,6 +7205,32 @@ uk:
               title: "Повідомлення та теми"
             stats_and_thresholds:
               title: "Статистика та порогові значення"
+        category_management:
+          title: "Управління категоріями"
+          header_description: "Перегляньте типи категорій, ієрархію та категорії, призначені для кожного типу."
+          keywords: "categories|category types|discussion|category management"
+          create_category: "Створити категорію"
+          tabs:
+            settings: "Налаштування"
+          types:
+            unavailable: "Тип категорії %{categoryType} недоступний."
+            all:
+              title: "Всі розділи"
+              description: "Усі категорії в усіх налаштованих типах."
+          filter_placeholder: "Фільтр категорій"
+          no_results: "Не знайдено категорій %{type}."
+          open_settings: "Відкрити налаштування"
+          table:
+            category: "Категорія"
+            visibility: "Видимість"
+            topics: "Теми"
+          visibility:
+            public: "Публічні"
+            restricted: "Обмежено"
+          visibility_filter:
+            all: "Всі розділи"
+            public: "Загальнодоступні категорії"
+            restricted: "Обмежені категорії"
         permalinks:
           title: "Постійні посилання"
           header_description: "Перенаправлення на URL-адреси, не відомі форуму"
@@ -7357,12 +7450,14 @@ uk:
         not_found_error: Вибачте, цього звіту не існує
         custom_date_range: Вибрати дату та час
         loading: "Завантаження панелі інструментів…"
+        fetch_error: "Не вдалося завантажити панель інструментів. Спробуйте оновити сторінку."
         stable: "стабільна"
         sections:
           highlights:
             title: "Основні моменти"
           reports:
             title: "Звіти"
+            fetch_error: "Не вдалося завантажити звіти. Спробуйте оновити сторінку."
           traffic:
             title: "Трафік сайту"
           engagement:
@@ -7378,6 +7473,7 @@ uk:
               share: "Поширити"
               vs_prior: "Проти попереднього"
               empty: "Відсутня активність у вибраний період."
+              save_error: "Не вдалося зберегти ваш вибір на наступний раз."
             whos_posting:
               title: "Хто публікує?"
               all_categories: "Всі розділи"
@@ -7503,6 +7599,7 @@ uk:
                 poor_match: "Невідповідність"
                 poor_match_tooltip: "Пошукові терміни з коефіцієнтом кліків (CTR) від 1 до 20%."
         reports_section:
+          header_action: "Керувати"
           description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
           add: "Додати звіт"
           remove: "Видалити звіт"
@@ -10066,6 +10163,10 @@ uk:
         alt: "попередній перегляд смайлів"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
         settings: "Налаштування"
+        export: "Експорт"
+        import: "Імпорт"
+        import_category:
+          new: "Новий"
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         delete: "Видалити"

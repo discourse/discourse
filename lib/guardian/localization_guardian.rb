@@ -48,4 +48,20 @@ module LocalizationGuardian
     tag = tag_or_tag_id.is_a?(Tag) ? tag_or_tag_id : Tag.find_by(id: tag_or_tag_id)
     !hidden_tag_names.include?(tag.name)
   end
+
+  def can_localize_sidebar_section?(section_or_section_id)
+    return false if !SiteSetting.content_localization_enabled
+    return false if anonymous?
+    return false if !@user.admin?
+
+    section =
+      (
+        if section_or_section_id.is_a?(SidebarSection)
+          section_or_section_id
+        else
+          SidebarSection.find_by(id: section_or_section_id)
+        end
+      )
+    section.present? && section.public? && section.custom_section?
+  end
 end

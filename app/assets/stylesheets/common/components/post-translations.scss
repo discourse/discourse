@@ -1,6 +1,43 @@
+@use "lib/viewport";
+
 .post-translations-modal {
   table {
     width: 100%;
+  }
+
+  &__language-settings {
+    display: grid;
+    gap: var(--space-3);
+    margin-block-end: var(--space-4);
+  }
+
+  &__language-control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    align-items: end;
+
+    @include viewport.until(sm) {
+      display: contents;
+    }
+  }
+
+  &__language-actions {
+    display: flex;
+    gap: var(--space-1);
+
+    @include viewport.until(sm) {
+      order: 1;
+    }
+
+    &.is-hidden {
+      visibility: hidden;
+      pointer-events: none;
+
+      @include viewport.until(sm) {
+        display: none;
+      }
+    }
   }
 }
 

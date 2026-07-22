@@ -90,23 +90,7 @@ class PostMover
 
     ensure_acting_user_is_allowed_in_destination
 
-    # when a topic contains some posts after moving posts to another topic we shouldn't close it
-    # two types of posts should prevent a topic from closing:
-    #   1. regular posts
-    #   2. almost all whispers
-    # we should only exclude whispers with action_code: 'split_topic'
-    # because we use such whispers as a small-action posts when moving posts to the secret message
-    # (in this case we don't want everyone to see that posts were moved, that's why we use whispers)
-    original_topic_posts_count =
-      @original_topic
-        .posts
-        .where(
-          "post_type = ? or (post_type = ? and action_code != 'split_topic')",
-          Post.types[:regular],
-          Post.types[:whisper],
-        )
-        .count
-    @full_move = original_topic_posts_count == posts.length
+    @full_move = (posts_preventing_close.pluck(:id) - posts.map(&:id)).empty?
 
     @first_post_number_moved =
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
@@ -729,6 +713,14 @@ class PostMover
         .where.not(raw: "")
         .order(:created_at)
         .tap { |posts| raise Discourse::InvalidParameters.new(:post_ids) if posts.empty? }
+  end
+
+  def posts_preventing_close
+    @original_topic
+      .posts
+      .where(post_type: [Post.types[:regular], Post.types[:whisper]])
+      .where.not(raw: "")
+      .where("action_code IS DISTINCT FROM 'split_topic'")
   end
 
   def update_last_post_stats

@@ -1138,6 +1138,9 @@ te:
       notifications: "నోటిఫికేషన్‌లు"
       statistics: "గణాంకాలు"
       desktop_notifications:
+        push_level:
+          none: "నిలిపివేయబడింది"
+          all: "ప్రారంభించబడింది"
         not_supported: "ఈ బ్రౌజర్‌లో నోటిఫికేషన్‌లకు మద్దతు లేదు. క్షమించండి."
         perm_denied_expl: "మీరు నోటిఫికేషన్‌ల కోసం అనుమతిని నిరాకరించారు. మీ బ్రౌజర్ సెట్టింగ్‌ల ద్వారా నోటిఫికేషన్‌లను అనుమతించండి."
         each_browser_note: "గమనిక: మీరు ఉపయోగించే ప్రతి బ్రౌజర్‌లో మీరు ఈ సెట్టింగ్‌ని మార్చాలి. మీరు ఈ సెట్టింగ్‌తో సంబంధం లేకుండా మెను నుండి నోటిఫికేషన్‌లను పాజ్ చేస్తే అన్ని నోటిఫికేషన్‌లు నిలిపివేయబడతాయి."
@@ -1702,6 +1705,21 @@ te:
           send_invite_email_instructions: "ఆహ్వాన ఇమెయిల్‌ను పంపడానికి ఇమెయిల్‌కి ఆహ్వానాన్ని పరిమితం చేయండి"
           update_invite: "నవీకరించండి"
           cancel: "రద్దుచేయండి"
+        invite_roles:
+          member_tab: "సభ్యులు"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ఈమెయిల్"
+          restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
+          domain_placeholder: "example.com"
+          update: "నవీకరించండి"
+          summary:
+            role_member: "సభ్యుడు"
+            role_admin: "నిర్వాహకుడు"
+            method_email: "ఈమెయిల్"
+            uses: "గరిష్ట ఉపయోగాలు"
+            expires: "గడువు ముగుస్తుంది"
+            topic: "విషయం"
+            groups: "సమూహాలు"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"
@@ -2243,6 +2261,7 @@ te:
       discard: "విస్మరించండి"
       users_placeholder: "సభ్యులను లేదా సమూహాలను జోడించండి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
+      title_placeholder_redesign: "శీర్షిక"
       title_or_link_placeholder: "శీర్షికను టైప్ చేయండి లేదా లింక్‌ను ఇక్కడ అతికించండి"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       topic_featured_link_placeholder: "శీర్షికతో చూపబడిన లింక్‌ని నమోదు చేయండి."
@@ -2738,6 +2757,7 @@ te:
       sort:
         label: "క్రమబద్ధీకరించండి"
         top: "అగ్ర"
+        hot: "హాట్"
         new: "కొత్త"
       load_more_children:
         one: "మరో జవాబు ఉంది"
@@ -2797,6 +2817,7 @@ te:
       read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{categoryLink} లో ఇతర విషయాలను బ్రౌజ్ చేయండి లేదా <a href='%{latestLink}'>తాజా విషయాలను వీక్షించండి</a>."
       read_more: "మరింత చదవాలనుకుంటున్నారా? <a href='%{categoryLink}'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{latestLink}'>తాజా విషయాలను వీక్షించండి</a>."
       unread_indicator: "ఈ విషయం యొక్క చివరి పోస్ట్‌ను సభ్యులు ఎవరూ ఇంకా చదవలేదు."
+      sr_read: "చదివిన"
       participant_groups: "పాల్గొనే సమూహాలు"
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
@@ -3211,6 +3232,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        modal:
+          title: "అనువాదాలు"
         post_language_selector:
           none: "సెట్ చేయబడలేదు"
       errors:
@@ -3877,7 +3900,6 @@ te:
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"
-      choose_for_topic: "ఐచ్ఛిక ట్యాగ్‌లు"
       choose_for_topic_required:
         one: "కనీసం %{count} ట్యాగ్ ని ఎంచుకోండి…"
         other: "కనీసం %{count} ట్యాగ్‌లను ఎంచుకోండి…"
@@ -4434,6 +4456,21 @@ te:
               title: "అమరికలు"
         badges:
           title: "బ్యాడ్జీలు"
+        category_management:
+          tabs:
+            settings: "అమరికలు"
+          types:
+            all:
+              title: "అన్ని వర్గాలు"
+          filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
+          table:
+            category: "వర్గం"
+            visibility: "దృశ్యమానత"
+            topics: "విషయాలు"
+          visibility:
+            public: "బహిరంగం"
+          visibility_filter:
+            all: "అన్ని వర్గాలు"
         permalinks:
           title: "శాశ్వత లింక్‌లు"
         emoji:
@@ -4554,6 +4591,7 @@ te:
               searches: "శోధనలు"
               status: "స్థితి"
         reports_section:
+          header_action: "నిర్వహించండి"
           modal:
             enabled_heading: "ప్రారంభించబడింది"
             all_heading: "అన్ని నివేదికలు"
@@ -6251,6 +6289,9 @@ te:
         alt: "అనుకూల ఎమోజి ప్రివ్యూ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
         settings: "అమరికలు"
+        export: "ఎగుమతి"
+        import_category:
+          new: "కొత్త"
       embedding:
         get_started: "మీరు మరొక వెబ్సైట్లో డిస్కోర్స్ పొందుపరచాలనుకుంటే, దాని హోస్ట్ను జోడించడం ద్వారా ప్రారంభించండి."
         delete: "తొలగించు"

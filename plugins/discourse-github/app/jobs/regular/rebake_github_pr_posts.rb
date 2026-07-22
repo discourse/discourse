@@ -4,12 +4,11 @@ module Jobs
   class RebakeGithubPrPosts < ::Jobs::Base
     sidekiq_options queue: "low"
 
+    PR_PATH = %r{\A/[^/]+/[^/]+/pull/\d+\z}
+
     def execute(args)
       url = args[:pr_url]
-      return if url.blank?
-
-      Oneboxer.preview(url, invalidate_oneboxes: true)
-      InlineOneboxer.invalidate(url)
+      return unless pr_path(url)
 
       rebake_posts(url)
       rebake_chat_messages(url) if SiteSetting.chat_enabled
@@ -17,30 +16,63 @@ module Jobs
 
     private
 
+    def pr_path(url)
+      path = URI(url.to_s).path
+      path if path&.match?(PR_PATH)
+    rescue URI::InvalidURIError
+      nil
+    end
+
+    # tolerates scheme/host variants (http, www) the onebox engine accepts
+    def pr_url_pattern(url)
+      "https?://(www\\.)?github\\.com#{Regexp.escape(pr_path(url))}"
+    end
+
+    # anchored so /pull/12 does not match /pull/123
+    def pr_links(relation, url)
+      relation.where("url ~* ?", "^#{pr_url_pattern(url)}([/?#].*)?$")
+    end
+
+    # oneboxes are cached per exact URL - raw for inline, normalized for full
+    def invalidate_onebox_caches(urls)
+      urls
+        .flat_map { |url| [url, normalized(url)] }
+        .compact
+        .uniq
+        .each do |url|
+          Oneboxer.invalidate(url)
+          InlineOneboxer.invalidate(url)
+        end
+    end
+
+    def normalized(url)
+      UrlHelper.normalized_encode(url).to_s
+    rescue StandardError
+      nil
+    end
+
     def rebake_posts(url)
-      post_ids = TopicLink.where(url:).or(TopicLink.where("url LIKE ?", "#{url}%")).select(:post_id)
+      rows = pr_links(TopicLink, url).distinct.pluck(:url, :post_id)
+      invalidate_onebox_caches(rows.map(&:first).uniq)
 
       Post
-        .where(id: post_ids)
+        .where(id: rows.map(&:last).uniq)
         .where(
-          "cooked LIKE :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
-          pattern: "%#{url}%",
+          "cooked ~* :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
+          pattern: pr_url_pattern(url),
         )
         .find_each { |post| post.rebake!(priority: :low, skip_publish_rebaked_changes: true) }
     end
 
     def rebake_chat_messages(url)
-      message_ids =
-        ::Chat::MessageLink
-          .where(url:)
-          .or(::Chat::MessageLink.where("url LIKE ?", "#{url}%"))
-          .select(:chat_message_id)
+      rows = pr_links(::Chat::MessageLink, url).distinct.pluck(:url, :chat_message_id)
+      invalidate_onebox_caches(rows.map(&:first).uniq)
 
       ::Chat::Message
-        .where(id: message_ids)
+        .where(id: rows.map(&:last).uniq)
         .where(
-          "cooked LIKE :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
-          pattern: "%#{url}%",
+          "cooked ~* :pattern AND (cooked LIKE '%githubpullrequest%' OR cooked LIKE '%inline-onebox%')",
+          pattern: pr_url_pattern(url),
         )
         .find_each { |message| message.rebake!(priority: :low, skip_notifications: true) }
     end

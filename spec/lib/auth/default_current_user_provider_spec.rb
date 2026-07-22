@@ -317,6 +317,81 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(env[ActionDispatch::Http::Parameters::PARAMETERS_KEY]).to be_blank
       expect(provider.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY]).to eq(u)
     end
+
+    context "with the shared session key header" do
+      def authenticate_via_shared_key(stored_value)
+        key = SecureRandom.hex
+        Auth::DefaultCurrentUserProvider.store_shared_session_key(key, stored_value)
+        provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user
+      end
+
+      def expired_token(user)
+        UserAuthToken
+          .generate!(user_id: user.id)
+          .tap do |token|
+            token.update!(rotated_at: (SiteSetting.maximum_session_age.hours + 1.hour).ago)
+          end
+      end
+
+      it "authenticates the user of the bound auth token" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
+      end
+
+      it "returns nil once the bound user is suspended" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil once the bound user is deactivated" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.update!(active: false)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil after the bound auth token is destroyed" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        stored_value = token.id.to_s
+        token.destroy!
+        expect(authenticate_via_shared_key(stored_value)).to eq(nil)
+      end
+
+      it "does not authenticate an expired token" do
+        token = expired_token(user)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "authenticates the impersonated user while the bound token is impersonating" do
+        admin = Fabricate(:admin)
+        token = UserAuthToken.generate!(user_id: admin.id)
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(user)
+      end
+
+      it "authenticates the acting user once impersonation has expired" do
+        admin = Fabricate(:admin)
+        token = UserAuthToken.generate!(user_id: admin.id)
+        token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.ago)
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(admin)
+      end
+
+      it "returns nil when the bound token's user no longer exists" do
+        token = UserAuthToken.generate!(user_id: user.id)
+        user.delete
+        expect(authenticate_via_shared_key(token.id.to_s)).to eq(nil)
+      end
+
+      it "returns nil when the stored value is not a token id" do
+        expect(authenticate_via_shared_key("not-a-token-id")).to eq(nil)
+      end
+
+      it "returns nil for a value stored under the legacy namespace" do
+        key = SecureRandom.hex
+        Discourse.redis.setex("shared_session_key_#{key}", 7.days, user.id.to_s)
+        expect(provider("/", "HTTP_X_SHARED_SESSION_KEY" => key).current_user).to eq(nil)
+      end
+    end
   end
 
   it "should update last seen for non ajax" do

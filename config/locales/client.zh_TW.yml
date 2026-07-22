@@ -1294,6 +1294,9 @@ zh_TW:
       notifications: "通知"
       statistics: "統計"
       desktop_notifications:
+        push_level:
+          none: "停用"
+          all: "啟用"
         not_supported: "抱歉，您的瀏覽器不支援桌面通知。"
         perm_denied_expl: "你拒絶了通知提醒的權限。請在瀏覽器設定中允許桌面通知。"
         each_browser_note: "注意：您必須在所使用的每個瀏覽器上變更此設定。如果您暫停使用者功能表中的通知，所有通知都將被停用，無論此設定為何。"
@@ -1933,6 +1936,24 @@ zh_TW:
           create_link_and_send_email: "建立連結並發送電子郵件"
           invite_saved_without_sending_email: "邀請已儲存。複製以下連結並分享，即可立即授予本網站的存取權。"
           invite_saved_with_sending_email: "邀請電子郵件已寄出。您也可以複製以下連結並分享，以立即授予本網站的存取權。"
+        invite_roles:
+          member_title: "邀請成員"
+          member_tab: "成員"
+          admin_email_label: "電子郵件地址"
+          email_placeholder: "name@example.com"
+          invite_by_email: "電子信箱"
+          restrict_domain: "僅限網域"
+          more_options: "更多選項"
+          update: "更新"
+          summary:
+            role_member: "成員"
+            role_admin: "管理員"
+            method_email: "電子信箱"
+            uses: "最大使用次數"
+            expires: "過期時間"
+            topic: "話題"
+            groups: "群組"
+            edit: "編輯邀請"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           text: "批量邀請"
@@ -2519,6 +2540,7 @@ zh_TW:
       discard: "捨棄"
       users_placeholder: "新增使用者或群組"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
+      title_placeholder_redesign: "標題"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
       topic_featured_link_placeholder: "在標題裡輸入連結"
@@ -3016,6 +3038,7 @@ zh_TW:
       sort:
         label: "排序"
         top: "精選"
+        hot: "熱門"
         new: "新使用者"
       load_more_children:
         other: "%{count} 個更多回覆"
@@ -3074,6 +3097,7 @@ zh_TW:
       read_more_in_category: "想要閱讀更多？瀏覽 %{categoryLink} 中的其他主題或<a href='%{latestLink}'>檢視最新主題</a>。"
       read_more: "想要閱讀更多？<a href='%{categoryLink}'>瀏覽所有類別</a>或<a href='%{latestLink}'>檢視最新主題</a>。"
       unread_indicator: "尚無成員閱讀過該主題的最後一篇貼文。"
+      sr_read: "閲讀"
       participant_groups: "參與者群組"
       created_at: "創建日期： %{date}"
       bumped_at: "最新：%{date}"
@@ -3482,6 +3506,8 @@ zh_TW:
           actions: "動作"
           edit: "編輯"
           delete: "刪除"
+        modal:
+          title: "翻譯"
         post_language_selector:
           none: "未設定"
       errors:
@@ -4178,7 +4204,6 @@ zh_TW:
       selector_no_tags: "無標記"
       selector_remove_filter: "取消過濾"
       tags: "標記"
-      choose_for_topic: "可選標籤"
       choose_for_topic_required:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
@@ -4759,7 +4784,6 @@ zh_TW:
             apple_touch_icon:
               title: "Apple 觸控圖示"
               description: "Apple 觸控裝置使用的圖示。如果留空，則會使用 large_icon。"
-              help_text: "建議尺寸為 180 x 180 像素。不建議使用透明背景。"
             digest_logo:
               title: "摘要標誌"
               description: "網站電子郵件摘要頂部使用的替代標誌圖像。如果保留空白，則將使用「logo」設置中的圖像。"
@@ -4860,6 +4884,21 @@ zh_TW:
           sub_pages:
             posts_and_topics:
               title: "貼文和主題"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "所有分類"
+          filter_placeholder: "篩選分類"
+          table:
+            category: "分類"
+            visibility: "能見度"
+            topics: "話題"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "所有分類"
         permalinks:
           title: "固定連結"
           header_description: "為論壇無法識別的 URL 應用的重新導向。"
@@ -5035,6 +5074,7 @@ zh_TW:
               searches: "搜尋結果"
               status: "狀態"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "啟用"
             all_heading: "所有報告"
@@ -7092,6 +7132,10 @@ zh_TW:
         alt: "自訂表情符號預覽"
         delete_confirm: "你確定要刪除 :%{name}: emoji ?"
         settings: "設定"
+        export: "匯出"
+        import: "匯入"
+        import_category:
+          new: "新使用者"
       embedding:
         get_started: "如果你想要將 Discourse 嵌入至其他網站，添加他們的主機地址。"
         delete: "刪除"

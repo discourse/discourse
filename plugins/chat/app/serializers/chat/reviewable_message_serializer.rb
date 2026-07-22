@@ -5,7 +5,7 @@ require_dependency "reviewable_serializer"
 module Chat
   class ReviewableMessageSerializer < ReviewableSerializer
     target_attributes :cooked
-    payload_attributes :transcript_topic_id, :message_cooked
+    payload_attributes :transcript_topic_id, :message_cooked, :message_uploads
     attributes :target_id
 
     has_one :chat_channel, serializer: Chat::ChannelSerializer, root: false, embed: :objects

@@ -10,17 +10,9 @@ sl:
       sort_options:
         votes: "Glasovi"
     topic_voting:
-      reached_limit: "Nimate več glasov, odstranite obstoječega!"
-      list_votes: "Prikaži moje glasove"
       voted: "Glasovali ste v tej temi"
-      allow_topic_voting: "Dovolite uporabnikom, da glasujejo o temah v tej kategoriji"
       vote_title: "Glasuj"
       vote_title_plural: "Glasovi"
-      anonymous_button:
-        one: "Glas"
-        two: "Glasova"
-        few: "Glasovi"
-        other: "Glasovi"
       remove_vote: "Odstrani glas"
       show_voters: "Pokaži glasovalce"
       vote_count_thousands: "%{count}k"

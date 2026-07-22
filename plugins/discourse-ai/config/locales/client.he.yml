@@ -18,7 +18,6 @@ he:
       dashboard:
         emotion:
           title: "רגש"
-          description: "הטבלה מפרטת את כמות הפוסטים שסווגו עם רגש שנקבע. הסיווג נעשה בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
         reports:
           filters:
             group_by:
@@ -267,9 +266,11 @@ he:
           translate: "תרגום"
           markdown_tables: "יצירת טבלה ב־Markdown"
           custom_prompt: "בקשה מותאמת אישית"
-          image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+        image_caption:
+          setting_groups:
+            settings: "הגדרות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -436,8 +437,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        max_context_posts: "כמות מרבית של פוסטים להקשר"
-        max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
         vision_max_pixel_sizes:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
@@ -636,7 +635,7 @@ he:
         usage:
           ai_bot: "בוט בינה מלאכותית"
           ai_helper: "מסייע (%{agent})"
-          ai_helper_image_caption: "כותרת תמונה"
+          ai_image_caption: "כותרת תמונה"
           ai_summarization: "סיכום"
           ai_embeddings_semantic_search: "חיפוש בינה מלאכותית"
           ai_spam: "ספאם"
@@ -652,7 +651,6 @@ he:
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-1-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-4-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -698,7 +696,7 @@ he:
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
           role_arn: "ARN של AWS Bedrock"
-          region: "אזור של AWS Bedrock"
+          region: "אזור"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"
           enable_native_tool: "הפעלת תמיכה בכלים מובנים"
@@ -752,11 +750,6 @@ he:
           select: "בחירה"
           selected: "נבחרים"
           try_again: "ניסיון נוסף"
-        image_caption:
-          button_label: "מתן כותרת עם בינה מלאכותית"
-          generating: "הכותרת מתחוללת…"
-          credits: "הכותרת נוספה ע״י בינה מלאכותית"
-          save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
       errors:
         credit_limit_dialog:
@@ -824,7 +817,7 @@ he:
         click_to_run_label: "הרצת תוצר"
       ai_bot:
         title: "בוט בינה מלאכותית"
-        llm: "מודל"
+        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"

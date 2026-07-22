@@ -326,6 +326,17 @@ RSpec.describe Admin::UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["users"].map { |u| u["id"] }).to contain_exactly(similar_user.id)
     end
+
+    it "includes penalizability of each similar user" do
+      Fabricate(:user, ip_address: user.ip_address)
+
+      get "/admin/users/#{user.id}/similar-users.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"]).to all(
+        include("can_be_suspended" => true, "can_be_silenced" => true),
+      )
+    end
   end
 
   describe "#approve" do

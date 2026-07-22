@@ -327,6 +327,7 @@ zh_CN:
     onebox:
       invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
       error_response: "抱歉，我们无法为此网页生成预览，因为服务器返回错误代码 %{status_code}。您的帖子中只会显示链接，而不会显示预览。:cry:"
+      bot_challenge: "抱歉，我们无法生成此网页的预览，因为 Web 服务器要求访客在 Web 浏览器中完成验证步骤。你的帖子中只会显示一个链接，而不是预览。 :cry:"
       missing_data:
         other: "抱歉，我们无法为此网页生成预览，因为找不到以下 oEmbed / OpenGraph 标签：%{missing_attributes}"
   word_connector:
@@ -367,6 +368,8 @@ zh_CN:
     max_redemptions_allowed_one: "对于电子邮件邀请，应为 1。"
     redemption_count_less_than_max: "应小于 %{max_redemptions_allowed}。"
     email_xor_domain: "电子邮件和网域字段不允许同时出现"
+    admin_invite_requires_email: "管理员邀请必须发送至电子邮箱地址"
+    admin_invite_requires_admin_inviter: "只有管理员才能创建管理员邀请"
     existing_user_success: "邀请兑换成功"
     email_invites_disabled: "发送邀请邮件已禁用"
   bulk_invite:
@@ -1729,7 +1732,7 @@ zh_CN:
     manifest_icon: "在 Android 上用作徽标/初始屏幕图片的图片。将自动调整为 512 × 512。如果留空，将使用 large_icon。"
     manifest_screenshots: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
     favicon: "您的网站的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
-    apple_touch_icon: "用于 Apple 触控设备的图标。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 large_icon。"
+    apple_touch_icon: "用于 Apple 触控设备的图标。不要使用SVG图像。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 {{setting:large_icon}} 。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
@@ -1758,6 +1761,10 @@ zh_CN:
     silence_new_user_sensitivity: "根据垃圾信息举报新用户将被禁言的可能性"
     auto_close_topic_sensitivity: "被举报的话题将被自动关闭的可能性"
     cooldown_minutes_after_hiding_posts: "用户在编辑通过社区举报隐藏的帖子之前必须等待的分钟数"
+    max_topics_in_first_day: "信任等级 0 的用户在注册账号后 24 小时内允许创建的最大话题数"
+    max_replies_in_first_day: "信任等级 0 的用户在注册账号后 24 小时内允许创建的最大回复数"
+    tl1_max_topics_in_first_day: "信任等级 1 的用户在注册账号后 24 小时内允许创建的最大话题数"
+    tl1_max_replies_in_first_day: "信任等级 1 的用户在注册账号后 24 小时内允许创建的最大回复数"
     tl2_additional_likes_per_day_multiplier: "通过乘以此数字来提升 tl2（成员）每天的点赞限值"
     tl3_additional_likes_per_day_multiplier: "通过乘以此数字来提升 tl3（常规）每天的点赞限值"
     tl4_additional_likes_per_day_multiplier: "通过乘以此数字来提升 tl4（领导者）每天的点赞限值"
@@ -1897,6 +1904,7 @@ zh_CN:
     discourse_connect_allowed_redirect_domains: "对于 DiscourseConnect 提供的返回路径，限制为这些网域（返回路径默认必须在当前网站）。使用 * 可以允许任何域作为返回路径。不允许使用子域通配符 (`*.foobar.com`)。"
     enable_local_logins: "启用基于本地用户名和密码登录的帐户。警告：如果禁用，并且您之前没有配置至少一种备用登录方法，您可能无法登录。"
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
+    enable_local_logins_via_code: "允许用户使用一次性电子邮件验证码（OTP）更快地注册和登录。"
     allow_passkeys_for_2fa: "允许用户在确认敏感操作时使用密码密钥进行双因素身份验证。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
@@ -1995,6 +2003,7 @@ zh_CN:
     restrict_letter_avatar_colors: "用于字母头像背景的 6 位十六进制颜色值列表。"
     enable_listing_suspended_users_on_search: "使普通用户能够找到被封禁的用户。"
     selectable_avatars_mode: "允许用户从 selectable_avatars 列表中选择头像，并将自定义头像上传限制在所选信任级别。"
+    selectable_avatars_random_on_signup: "为新用户分配一个来自 {{setting:selectable_avatars}} 的随机头像。"
     selectable_avatars: "指定一组头像，用户可以从中选择自己的个人资料照片。该选择将在用户个人资料创建期间或更新个人资料头像时出现。"
     allow_all_attachments_for_group_messages: "允许群组消息的所有电子邮件附件。"
     image_quality: "设置上传到您的站点的图片的质量等级。较低的质量等级将缩减文件大小。"
@@ -2322,6 +2331,7 @@ zh_CN:
     emoji_autocomplete_min_chars: "触发自动填充表情符号弹出窗口所需的最少字符数"
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
+    klipy_api_key: "Klipy API 密钥。用于 GIF 搜索功能。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
     approve_unless_allowed_groups: "不属于这些群组的用户所发布的帖子必须经过批准。管理员和版主发布的帖子始终会被批准。"
     approve_new_topics_unless_allowed_groups: "不属于这些群组的用户所发布的话题必须经过批准。管理员和版主发布的话题始终会被批准。"
@@ -2469,6 +2479,7 @@ zh_CN:
     enable_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图片包装在 [grid] 标记中。"
     enable_new_checkbox_style: "为 FormKit 复选框启用重新设计的复选框样式。"
     enable_new_post_reactions_menu: "启用重新设计的帖子点赞和回应菜单，支持无限滚动和原生移动体验。"
+    enable_composer_redesign: "启用新设计的composer。"
     enable_new_composer_actions: "启用重新设计的作曲家操作菜单和组合保存按钮，保存操作旁边会显示轻声细语、无碰撞和取消列表切换按钮。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2578,7 +2589,6 @@ zh_CN:
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
       content_localization_locale_limit: "支持的语言环境数量不能超过 %{max} 个。"
-      content_localization_language_switcher_requirements: "语言切换器要求启用 'set locale from cookie' 和 'allow user locale' 站点设置，并且 'content localization supported locales' 至少有一种语言。"
       content_localization_crawler_param_requirements: "在启用此设置之前，您必须先启用“set locale from param”选项。"
       mediaconvert_role_arn_required: "使用 AWS MediaConvert 进行视频转换时需要具有 AWS IAM 角色 ARN。"
       mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录为必选项。"
@@ -2623,7 +2633,6 @@ zh_CN:
       topic_before: "显示日期（YYYY-MM-DD 或天数前）之前创建的主题中的帖子"
       keywords: "显示包含指定关键词的帖子"
       topic_keywords: "显示包含指定关键词的主题中的帖子"
-      post_type: "显示首条帖子或回复"
       post_type_first: "仅第一个帖子"
       post_type_reply: "仅回复"
       status: "按主题状态筛选帖子"
@@ -2727,6 +2736,7 @@ zh_CN:
       group: "按群组筛选话题"
       groups_any: "显示包含任意指定群组的话题（以逗号分隔）"
       groups_all: "显示包含所有指定群组的话题（以加号分隔）"
+      exclude_group: "排除特定群组成员参与的话题"
       locale: "按原始语言筛选话题"
       locale_any: "显示以任意指定语言撰写的原始话题（以逗号分隔）"
       exclude_locale: "排除最初以特定语言撰写的话题"
@@ -4609,267 +4619,8 @@ zh_CN:
       本网站由您[友好的版主团队](%{base_path}/about)和*您*（社区）共同运营。如果您对事情的运作方式有任何其他疑问，请在%{feedback_category}中开设新话题，我们一起讨论！如果您有无法通过元话题或举报解决的严重或紧急问题，请[联系版主](%{base_path}/about)。
   tos_topic:
     title: "服务条款"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">更改我</a></h2>
-
-      论坛管理员，下面是隐私政策的示例起始模板，您需要自定义该模板以满足您的网站需求。
-
-      这些条款并不制约 <%{base_url}> 上的本互联网论坛的使用，但有一天可能制约。这种情况下，要使用本论坛，您必须同意运营本论坛的公司 %{company_name} 的这些条款。
-
-      本公司可能根据其他条款提供其他产品和服务。这些条款仅适用于本论坛的使用。
-
-      跳到：
-
-      - [重要条款](#heading--important-terms)
-      - [您使用本论坛的权限](#heading--permission)
-      - [本论坛使用条件](#heading--conditions)
-      - [可接受的使用](#heading--acceptable-use)
-      - [内容标准](#heading--content-standards)
-      - [执法](#heading--enforcement)
-      - [您的帐户](#heading--your-account)
-      - [您的内容](#heading--your-content)
-      - [您的责任](#heading--responsibility)
-      - [免责声明](#heading--disclaimers)
-      - [责任限制](#heading--liability)
-      - [反馈](#heading--feedback)
-      - [终止](#heading--termination)
-      - [争议](#heading--disputes)
-      - [一般条款](#heading--general)
-      - [联系方式](#heading--contact)
-      - [变更](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">重要条款</a></h2>
-
-      ***这些条款包括许多影响您的权利和责任的重要条款，如[免责声明](#heading--disclaimers)中的免责声明、[责任限制](#heading--liability)中本公司对您的责任限制、您同意依据[使用的责任](#heading--responsibility)赔偿本公司因您滥用本论坛而造成的损失并同意依据[争议](#heading--disputes)解决争议。***
-
-      <h2 id="heading--permission"><a href="#heading--permission">您使用本论坛的权限</a></h2>
-
-      本公司依据这些条款向您授予使用本论坛的权限。每个人都需要同意这些条款才能使用本论坛。
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">本论坛使用条件</a></h2>
-
-      您使用本论坛的权限受以下条件限制：
-
-      1. 您必须年满十三周岁。
-
-      2. 如果本公司直接联系您，表示您无法再使用本论坛，您将无法再使用本论坛。
-
-      3. 您必须按照[可接受的使用](#heading--acceptable-use)和[内容标准](#heading--content-standards)使用本论坛。
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">可接受的使用</a></h2>
-
-      1.在使用本论坛时不得违反法律。
-
-      2. 未经他人特别许可，不得在本论坛上使用或试图使用他人的帐户。
-
-      3. 不得在本论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。
-
-      4. 不得通过本论坛发送广告、连锁信或其他征求，也不得使用本论坛收集地址或其他个人数据，将其用于商业邮寄名单或数据库。
-
-      5. 不得自动访问本论坛，或监控本论坛，如通过网络爬虫、浏览器插件或加载项，或其他非 Web 浏览器的计算机程序。如果您运行公开的搜索引擎，您可以爬取本论坛来为该搜索引擎建立索引。
-
-      6. 不得使用本论坛向分发名单、新闻组或群组邮件别名发送电子邮件。
-
-      7. 不得虚假地暗示您隶属于本公司或得到本公司的认可。
-
-      8. 不得在其他网页上对本论坛上的图片或其他非超文本内容建立超链接。
-
-      9. 不得从在本论坛上下载的材料中删除任何显示专有所有权的标记。
-
-      10. 不得在其他网站上使用 `<iframe>` 显示本论坛的任何部分。
-
-      11. 不得禁用、避免或规避本论坛的任何安全或访问限制。
-
-      12. 不得通过不合理的请求量，或旨在对本论坛底层的信息系统施加不合理负载的请求而使本论坛的基础设施紧张。
-
-      13. 不得通过本论坛冒充他人。
-
-      14. 不得鼓励或帮助任何人违反这些条款。
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">内容标准</a></h2>
-
-      1. 不得向本论坛提交非法、冒犯性或伤害他人的内容。这包括存在骚扰、不当、辱骂或仇恨行为的内容。
-
-      2. 不得向本论坛提交违反法律、侵犯任何人的知识产权、侵犯任何人隐私或违反您与他人签订的协议的内容。
-
-      3. 不得向本论坛提交包含恶意计算机代码（如计算机病毒或间谍软件）的内容。
-
-      4. 不得以占位符形式向本论坛提交内容来保留特定地址、用户名或其他唯一标识符。
-
-      5. 不得使用本论坛披露您无权披露的信息，如他人的机密或个人信息。
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">执法</a></h2>
-
-      本公司可以在最大的法律范围内调查和起诉违反这些条款的行为。本公司可以通知执法部门并与之合作起诉违反法律和这些条款的行为。
-
-      本公司保留出于任何理由更改、编辑和删除本论坛内容的权利。如果您认为有人在向本论坛提交内容时违反了这些条款，请[立即联系我们](#heading--contact)。
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">您的帐户</a></h2>
-
-      您必须创建并登录帐户才能使用本论坛的某些功能。
-
-      要创建帐户，您必须提供有关自己的一些信息。如果您创建帐户，您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过向 <%{contact_email}> 发送电子邮件关闭您的帐户。
-
-      您同意对使用您的帐户执行的所有操作负责，无论该操作是否经过您的授权，直到您关闭您的帐户或通知本公司您的帐户被盗用。如果您怀疑您的帐户被盗用，您同意立即通知本公司。您同意为您的帐户选择安全的密码并对其保密。
-
-      根据其处理版权相关撤除请求的政策，或者如果本公司合理地认为您违反了这些条款中的任何规则，本公司可能会限制、暂停或关闭您在本论坛上的帐户。
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">您的内容</a></h2>
-
-      这些条款中的任何内容都不赋予本公司对您在本论坛分享的知识产权的任何所有权，例如您的帐户信息、帖子或您提交给本论坛的其他内容。这些条款中的任何内容也不赋予您对本公司知识产权的任何所有权。
-
-      在您与本公司之间，您仍然对您提交到本论坛的内容全权负责。您同意不会错误地暗示您提交到本论坛的内容是由本公司倡议或获得本公司批准的。这些条款并不要求本公司根据这些条款存储、维护或提供您提交的内容的副本，也不要求本公司对其进行更改。
-
-      您提交到本论坛的内容属于您，您可以决定为别人赋予何种权限。但您至少应允许本公司向本论坛其他用户提供您提交到本论坛的内容。该特殊许可允许公司复制、发布和分析您提交到本论坛的内容。
-
-      当您提交的内容从本论坛中删除时，无论是由您还是由本公司删除，当最后一份副本从公司的备份、缓存和其他系统中消失时，本公司的特殊许可即告终止。您对提交的内容申请的其他许可，如[知识共享](https://creativecommons.org)许可，可以在您的内容删除后继续。这些许可可以授予他人或本公司再次通过本论坛分享您的内容的权利。
-
-      接收您提交到本论坛的内容的其他人可能会违反您的内容许可条款。您同意本公司不为这些违规行为或其后果对您负责。
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">您的责任</a></h2>
-
-      您同意赔偿本公司因您违反这些条款，或因其他人使用您在本论坛上的帐户违反这些条款而被他人提起的法律索赔。您和本公司都同意尽快就您可能需要赔偿本公司的任何法律索赔通知对方。如果本公司未能及时通知您某项法律索赔，您不必就您本可以通过及时通知进行辩护或减轻的损失对本公司进行赔偿。您同意允许本公司控制对您必须赔偿本公司的法律索赔进行的调查、辩护和解决，并配合这些努力。本公司同意，未经您事先同意，不会同意任何替您认错或给您强加义务的和解。
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">免责声明</a></h2>
-
-      ***您接受使用本论坛和本论坛内容的所有风险。在法律允许的范围内，本公司及其供应商按原样提供本论坛，不提供任何保证。***
-
-      本论坛可以超链接到和集成其他人运营的本论坛和服务。本公司不对他人运营的服务或可能提供的内容做出任何保证。使用他人运营的服务可能受您与运营该服务的一方之间的其他条款制约。
-
-      <h2 id="heading--liability"><a href="#heading--liability">责任限制</a></h2>
-
-      ***当您同意这些条款时，本公司及其供应商均不为其人员无法合理预见的违约损害对您承担责任。***
-
-      ***在法律允许的范围内，对于与本论坛或本论坛内容有关的任何类型的索赔，对您的全部责任将限制在 50 美元。***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">反馈</a></h2>
-
-      本公司欢迎您对本论坛提供反馈和建议。请参阅以下[联系](#heading--contact)部分，了解与我们联系的方式。
-
-      您同意本公司可以自由地根据您提供的反馈和建议采取行动，并且本公司不必通知您相关反馈已被使用，也不必获得您的使用许可或向您付款。您同意不向您或他人提交您认为可能为机密或专有的反馈或建议。
-
-      <h2 id="heading--termination"><a href="#heading--termination">终止</a></h2>
-
-      您或公司可以随时终止这些条款中所述的协议。当我们的协议终止时，您使用本论坛的权限即告终止。
-
-      以下条款在我们的协议终止后仍然有效：[您的内容](#heading--your-content)、[反馈](#heading--feedback)、[您的责任](#heading--responsibility)、[免责声明](#heading--disclaimers)、[责任限制](#heading--liability)和[一般条款](#heading--general)。
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">争议</a></h2>
-
-      %{governing_law} 将管控与这些条款或您对本论坛的使用有关的任何争议。
-
-      您和公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和本公司均不反对这些法院的管辖权、诉讼地或审判地。
-
-      ***您和本公司将通过具有约束力的美国仲裁协会仲裁解决任何争议，而不是根据《计算机欺诈和滥用法案》寻求禁令或索赔。仲裁将遵循美国仲裁协会的 Commercial Arbitration Rules（商业仲裁规则）和 Supplementary Procedures for Consumer Related Disputes（消费者相关争议补充程序）。仲裁将在%{city_for_disputes}进行。无论您是作为原告还是集体成员，您都将以个人身份解决任何争议，而不是作为集体诉讼或其他代表人诉讼的一部分。未经本公司许可，任何仲裁员不得将任何争议与任何其他仲裁合并。***
-
-      任何仲裁裁决都将包括仲裁费用、合理的律师费和证人的合理费用。您和本公司可以在任何有管辖权的法院进行仲裁裁决。
-
-      <h2 id="heading--general"><a href="#heading--general">一般条款</a></h2>
-
-      如果这些条款中的某项规定无法按书面规定执行，但可以通过修改使其可以执行，则应在必要的最低范围内修改该规定，使其可以执行。否则，应删除该规定。
-
-      您不得转让您与本公司签订的协议。本公司可以将您的协议转让给本公司的任何附属公司、获得本公司控制权的任何其他公司或购买与本论坛相关的公司资产的任何其他公司。任何试图违反这些条款进行的转让均不具有法律效力。
-
-      行使本协议项下的任何权利和对任何违反本协议的行为不予追究均不表示对违反本协议的任何其他行为不予追究。
-
-      这些条款包含了您与公司之间就您对本论坛使用达成的所有协议条款。这些条款完全取代关于您的本论坛使用的任何其他协议，无论是否为书面协议。
-
-      <h2 id="heading--contact"><a href="#heading--contact">联系方式</a></h2>
-
-      您可以通过以下方式根据这些条款通知本公司，以及将问题发送给本公司：<%{contact_email}>。
-
-      本公司可能会根据这些条款，使用您在本论坛上为您的帐户提供的电子邮件地址，或通过在本论坛首页或您的帐户页面上发布消息来通知您。
-
-      <h2 id="heading--changes"><a href="#heading--changes">变更</a></h2>
-
-      本公司上次更新这些条款的日期为 [在此处插入上次更新日期]，并可能再次更新这些条款。本公司将在本论坛上发布所有更新。对于包含重大变更的更新，如果您创建了帐户并提供了有效的电子邮件地址，本公司同意向您发送电子邮件。本公司还可能在本论坛上通过特殊消息或提醒来宣布更新。
-
-      当您注意到这些条款的更新后，您必须同意这些新条款才能继续使用本论坛。
   privacy_topic:
     title: "隐私政策"
-    body: |
-      ## [论坛管理员，下面是一个您应该为您的网站定制的隐私政策的示例起始模板。]
-
-      <a name="collect"></a>
-
-      ## [我们收集哪些信息？](#collect)
-
-      当您在我们的网站上注册时，我们会收集您的信息，当您通过阅读、撰写和评价本论坛上分享的内容参与本论坛时，我们会收集您的数据。
-
-      在我们的网站上注册时，您可能会被要求输入您的姓名和电子邮件地址。但是，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果访问了该链接，我们便知道您对该电子邮件地址有控制权。
-
-      在注册和发帖时，我们会记录帖子所来自的 IP 地址。我们还可能保留服务器日志，其中包含向我们的服务器发送的每个请求的 IP 地址。
-
-      <a name="use"></a>
-
-      ## [我们使用您的信息做什么？](#use)
-
-      我们向您收集的任何信息都可能通过下列一种方式使用：
-
-      * 个性化设置您的体验 &mdash; 您的信息可以帮助我们更好地满足您的个人需求。
-      * 改进我们的网站 &mdash; 我们根据您提供给我们的信息和反馈，不断努力改进我们的网站。
-      * 改进客户服务 &mdash; 您的信息可以帮助我们更高效地回应您的客户服务请求和支持需求。
-      * 定期发送电子邮件 &mdash; 您提供的电子邮件地址可能被用于向您发送信息、您请求的关于话题变更的通知、回应您的用户名、回复查询和/或其他请求或问题。
-
-      <a name="protect"></a>
-
-      ## [我们如何保护您的信息？](#protect)
-
-      我们采取各种安全措施，确保在您输入、提交或访问您的个人信息时您个人信息的安全。
-
-      <a name="data-retention"></a>
-
-      ## [数据保留策略是什么？](#data-retention)
-
-      我们会尽最大努力：
-
-      * 将服务器日志保留不超过 [天数] 天，该日志中包含所有发送到此服务器的请求的 IP 地址。
-
-      <a name="cookies"></a>
-
-      ## [我们使用 Cookie 吗？](#cookies)
-
-      是的。Cookie 是在您允许的情况下，网站或其服务提供商通过您的 Web 浏览器传输到您计算机硬盘上的小文件。这些 Cookie 使网站能够识别您的浏览器，并且如果您有注册帐户，将其与您的注册帐户相关联。
-
-      我们使用 Cookie 来了解和保存您的偏好以便将来访问，并收集关于网站流量和网站互动的汇总数据，以便将来可以提供更好的网站体验和工具。我们可能与第三方服务提供商签订合同，以帮助我们更好地了解我们的网站访客。这些服务提供商不允许使用代表我们收集的信息，除非为了帮助我们开展和改进业务。
-
-      <a name="disclose"></a>
-
-      ## [我们是否向外界披露任何信息？](#disclose)
-
-      我们不向外界出售、交易或以其他方式转让您的个人身份信息。这不包括协助我们运营网站、经营业务或为您提供服务的可信第三方，前提是这些第三方同意对这些信息保密。当我们认为为了遵守法律、执行我们的网站政策或保护我们或他人的权利、财产或安全而适合发布时，我们也可能发布您的信息。但是，无法识别个人身份的访客信息可能被提供给其他方，用于营销、广告或其他用途。
-
-      <a name="third-party"></a>
-
-      ## [第三方链接](#third-party)
-
-      有时，我们可能自行决定在我们的网站上包含或提供第三方产品或服务。这些第三方网站具有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担责任和义务。尽管如此，我们仍努力保护我们网站的完整性并欢迎对这些网站提供任何反馈。
-
-      <a name="coppa"></a>
-
-      ## [美国《儿童在线隐私保护法》合规性](#coppa)
-
-      我们的网站、产品和服务全部面向 13 岁或以上人群。如果此服务器在美国，而且您未满 13 岁，根据 COPPA（[儿童在线隐私保护法](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），请勿使用本网站。
-
-      <a name="online"></a>
-
-      ## [仅在线隐私政策](#online)
-
-      本在线隐私政策仅适用于通过我们的网站收集的信息，不适用于离线收集的信息。
-
-      <a name="consent"></a>
-
-      ## [您的内容](#consent)
-
-      使用本网站，即表示您同意我们网站的隐私政策。
-
-      <a name="changes"></a>
-
-      ## [我们隐私政策的变更](#changes)
-
-      如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。
-
-      本文档为 CC-BY-SA。它的最后更新日期为 [在此处插入最后更新日期]。
   badges:
     mass_award:
       errors:
@@ -5323,6 +5074,8 @@ zh_CN:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
     post_restored_by_author: "帖子被作者恢复。"
+    post_deleted_by_author_after_penalty: >-
+      该帖子在用户受到处罚后被作者删除。在不恢复帖子的情况下审核处罚。
     priorities:
       low: "低"
       medium: "中"
@@ -5370,6 +5123,10 @@ zh_CN:
         title: "保持帖子隐藏"
         description: "同意举报并保持帖子隐藏。"
         complete: "帖子保持隐藏。"
+      agree_and_keep_deleted:
+        title: "保持帖子删除"
+        description: "同意举报并保持帖子删除状态。"
+        complete: "帖子保持删除状态。"
       agree_and_suspend:
         title: "封禁用户"
         description: "同意举报并封禁用户。"
@@ -5435,6 +5192,10 @@ zh_CN:
         title: "不进行操作"
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
         complete: "举报已被忽略。"
+      unsilence_user_and_ignore:
+        title: "解除用户禁言并忽略"
+        description: "解除对用户的禁言，并从队列中移除该举报，但不会恢复已删除的帖子。"
+        complete: "用户已解除禁言，举报已忽略。"
       approve:
         title: "是"
         complete: "帖子已被批准。"
@@ -5584,6 +5345,22 @@ zh_CN:
       reserved_id: "有一个保留关键字 ID：%{id}"
       unsafe_description: "有不安全的 HTML 描述"
       invalid_tag_group: "具有无效的标签组：%{tag_group_name}"
+  emoji:
+    export:
+      no_selection: "请选择至少一个需要导出的emoji。"
+    import:
+      missing_file: "未提供 ZIP 文件。"
+      missing_csv: "上传的 ZIP 文件中必须包含emojis.csv文件。"
+      too_many_entries: "上传的 ZIP 文件包含的条目过多（最多 1000 个）。"
+      file_too_large: "上传的 ZIP 文件中一个或多个文件过大。"
+      session_expired: "导入emoji的会话已过期，请重新导入。"
+      validation:
+        missing_name: "emoji名称为必填项。"
+        missing_filename: "图像的文件名为必填项。"
+        invalid_name: "名称包含无效字符。"
+        group_too_long: "群组名称必须少于或等于 20 个字符。"
+        unsupported_extension: "不支持文件扩展名 .%{ext} （请使用 png、gif 或 svg）。"
+        duplicate_filename: "该文件名在 CSV 文件中出现了多次。"
   discourse_id:
     already_registered: "此站点已经使用 Discourse ID 注册"
     errors:

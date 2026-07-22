@@ -78,6 +78,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
               <span>
                 <DUserAvatar
                   class="trigger-user-card"
+                  @ariaHidden={{false}}
                   @size="tiny"
                   @user={{user}}
                 />
@@ -103,6 +104,7 @@ export default class DiscourseReactionsStatePanelReaction extends Component {
                 <span>
                   <DUserAvatar
                     class="trigger-user-card"
+                    @ariaHidden={{false}}
                     @size="tiny"
                     @user={{user}}
                   />

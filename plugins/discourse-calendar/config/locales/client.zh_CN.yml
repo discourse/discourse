@@ -34,10 +34,8 @@ zh_CN:
               label: 话题 ID
     discourse_calendar:
       livestream:
-        chat:
-          going: "点击“前往”"
-          join_channel_header: "🌟 加入我们吧！🌟"
-          join_channel_message: "确认出席即可解锁活动聊天室。参与讨论，分享您的喜悦，并与其他参会者交流互动！"
+        zoom:
+          chat: "聊天"
       invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
         all_events: "Discourse 日历 - 所有事件"

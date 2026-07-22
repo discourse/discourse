@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -16,7 +17,12 @@ import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
+const MAX_CATEGORIES = 10;
+
 export default class ActivityByCategory extends Component {
+  @service currentUser;
+  @service toasts;
+
   @tracked selectedCategories = [];
   @tracked overrideActivity = null;
   @tracked loading = false;
@@ -26,8 +32,12 @@ export default class ActivityByCategory extends Component {
   constructor() {
     super(...arguments);
 
-    this.selectedCategories = (this.args.activity?.rows ?? [])
-      .map((row) => Category.findById(row.category_id))
+    const ids =
+      this.args.activity?.category_ids ??
+      (this.args.activity?.rows ?? []).map((row) => row.category_id);
+
+    this.selectedCategories = ids
+      .map((id) => Category.findById(id))
       .filter(Boolean);
   }
 
@@ -68,6 +78,33 @@ export default class ActivityByCategory extends Component {
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
     this.refetch();
+    this.#persistSelection();
+  }
+
+  #persistSelection() {
+    if (!this.currentUser?.admin) {
+      return;
+    }
+
+    ajax(
+      "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+      {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({
+          category_ids: this.selectedCategories.map((c) => c.id),
+        }),
+      }
+    ).catch(() => {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n(
+            "admin.dashboard.sections.engagement.activity_by_category.save_error"
+          ),
+        },
+      });
+    });
   }
 
   @action
@@ -136,6 +173,7 @@ export default class ActivityByCategory extends Component {
         <CategorySelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
+          @options={{hash maximum=MAX_CATEGORIES}}
         />
       </div>
 

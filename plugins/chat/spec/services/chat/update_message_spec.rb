@@ -82,13 +82,13 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(og_message)
     end
 
-    it "errors when length is greater than `chat_maximum_message_length`" do
+    it "rejects an over-length edit at the contract" do
       SiteSetting.chat_maximum_message_length = 100
       og_message = "This won't be changed!"
       chat_message = create_chat_message(user1, og_message, public_chat_channel)
       new_message = "2 long" * 100
 
-      expect do
+      result =
         described_class.call(
           guardian: guardian,
           params: {
@@ -97,14 +97,9 @@ RSpec.describe Chat::UpdateMessage do
             message: new_message,
           },
         )
-      end.to raise_error(ActiveRecord::RecordInvalid).with_message(
-        "Validation failed: " +
-          I18n.t(
-            "chat.errors.message_too_long",
-            { count: SiteSetting.chat_maximum_message_length },
-          ),
-      )
 
+      expect(result).to fail_a_contract
+      expect(result.params.errors.of_kind?(:message, :too_long)).to eq(true)
       expect(chat_message.reload.message).to eq(og_message)
     end
 

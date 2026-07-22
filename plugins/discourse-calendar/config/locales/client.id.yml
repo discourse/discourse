@@ -13,6 +13,9 @@ id:
             topic_id:
               label: ID Topik
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Obrolan"
       invite_user_notification: "%{username} mengundang Anda ke: %{description}"
       on_holiday: "Saat Liburan"
       disable_holiday: "Nonaktifkan"

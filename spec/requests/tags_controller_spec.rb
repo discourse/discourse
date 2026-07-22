@@ -1597,6 +1597,26 @@ RSpec.describe TagsController do
         )
       end
 
+      it "surfaces the signed-in user's recently used tags first when the upcoming change is enabled" do
+        SiteSetting.prioritize_recently_used_tags = true
+        Fabricate(:tag, name: "popular", public_topic_count: 100)
+        recent = Fabricate(:tag, name: "recent", public_topic_count: 1)
+        Fabricate(:topic, user: user, tags: [recent])
+        sign_in(user)
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              prioritizeRecentTags: true,
+              filterForInput: true,
+            }
+
+        expect(response.status).to eq(200)
+        names = response.parsed_body["results"].map { |tag| tag["name"] }
+        expect(names.first).to eq("recent")
+        expect(names).to include("popular")
+      end
+
       context "with category restriction" do
         fab!(:yup) { Fabricate(:tag, name: "yup") }
         fab!(:category) { Fabricate(:category, tags: [yup]) }

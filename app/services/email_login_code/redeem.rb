@@ -5,6 +5,7 @@ class EmailLoginCode::Redeem
 
   params base_class: EmailLoginCode::Verify::Contract do
     attribute :user_fields
+    attribute :name, :string
 
     before_validation do
       # Only hash-like input can carry field values; anything else (a stray
@@ -18,7 +19,10 @@ class EmailLoginCode::Redeem
             {}
           end
         )
+      self.name = name.to_s.strip.presence
     end
+
+    validates :name, length: { maximum: 255 }
   end
 
   model :login_code
@@ -27,6 +31,7 @@ class EmailLoginCode::Redeem
   policy :email_available_for_new_account
   policy :can_register_new_account
   policy :required_fields_provided
+  policy :required_full_name_provided
 
   lock(:email) do
     transaction do
@@ -92,6 +97,12 @@ class EmailLoginCode::Redeem
       end
   end
 
+  def required_full_name_provided(existing_user:, params:)
+    return true if existing_user.present?
+
+    !Site.full_name_required_for_signup || params.name.present?
+  end
+
   def consume_code(login_code:)
     # consume! is atomic; if it lost a race with a concurrent redemption the
     # code is already spent, so this redemption must not log anyone in.
@@ -104,6 +115,7 @@ class EmailLoginCode::Redeem
         email: params.email,
         ip_address: ip_address,
         user_fields: params.user_fields,
+        name: params.name,
       )
   end
 

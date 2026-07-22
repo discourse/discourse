@@ -73,5 +73,41 @@ describe DiscourseAi::Translation::BaseTranslator do
         ).to eq "hur dur hur dur!"
       end
     end
+
+    it "sends the content to the model without HTML entity escaping" do
+      html_text = "List<string> and ?a=1&b=2"
+      post_translator =
+        DiscourseAi::Translation::PostRawTranslator.new(text: html_text, target_locale:, post:)
+
+      bot_context = instance_double(DiscourseAi::Agents::BotContext)
+      allow(DiscourseAi::Agents::BotContext).to receive(:new).and_return(bot_context)
+      mock_bot = instance_double(DiscourseAi::Agents::Bot)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(mock_bot)
+      allow(mock_bot).to receive(:reply).and_yield(llm_response, nil, nil)
+
+      post_translator.translate
+
+      expect(DiscourseAi::Agents::BotContext).to have_received(:new).with(
+        user: an_instance_of(User),
+        skip_show_thinking: true,
+        feature_name: "translation",
+        messages: [
+          {
+            type: :user,
+            content: "{\"content\":\"List<string> and ?a=1&b=2\",\"target_locale\":\"de\"}",
+          },
+        ],
+        topic: nil,
+        post: post,
+      )
+    end
+
+    it "strips control characters from the model response but keeps newlines" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["hur\u001Cdur \u001Ehur\ndur!"]) do
+        expect(
+          DiscourseAi::Translation::PostRawTranslator.new(text:, target_locale:).translate,
+        ).to eq "hurdur hur\ndur!"
+      end
+    end
   end
 end

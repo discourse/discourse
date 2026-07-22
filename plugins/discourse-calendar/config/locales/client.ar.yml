@@ -33,6 +33,9 @@ ar:
             topic_id:
               label: معرِّف الموضوع
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "الدردشة"
       invite_user_notification: "دعاك %{username} إلى: %{description}"
       preferences:
         all_events: "تقويم Discourse - جميع الأحداث"

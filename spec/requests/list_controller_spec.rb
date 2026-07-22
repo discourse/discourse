@@ -1107,6 +1107,18 @@ RSpec.describe ListController do
           expect(json["topic_list"]["for_period"]).to eq("monthly")
         end
 
+        it "falls back to the site default period when default_top_period is an unsupported value" do
+          SiteSetting.top_page_default_timeframe = "monthly"
+          category.update!(default_view: "top")
+          category.update_column(:default_top_period, "user~'^d'AND all")
+
+          get "/c/#{category.slug}/#{category.id}.json"
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["topic_list"]["for_period"]).to eq("monthly")
+        end
+
         it "has a default view of nil" do
           category.update!(default_view: nil)
           get "/c/#{category.slug}/#{category.id}.json"

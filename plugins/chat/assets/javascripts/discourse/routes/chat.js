@@ -22,6 +22,14 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   beforeModel(transition) {
+    if (this.chat.chatDisabledInPreferences) {
+      if (transition.to.name === "chat.disabled") {
+        return;
+      }
+
+      return this.router.replaceWith("chat.disabled");
+    }
+
     if (!this.chat.userCanChat && !this.chat.anonymousUserCanViewPublicChat) {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
@@ -77,6 +85,10 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
+    if (this.chat.chatDisabledInPreferences) {
+      return;
+    }
+
     withPluginApi((api) => {
       api.setSidebarPanel(CHAT_PANEL);
 

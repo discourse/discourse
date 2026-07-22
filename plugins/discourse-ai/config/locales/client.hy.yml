@@ -58,6 +58,9 @@ hy:
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        image_caption:
+          setting_groups:
+            settings: "Կարգավորումներ"
         spam:
           name: "Սպամ"
       modals:
@@ -181,8 +184,6 @@ hy:
           cancel: "Չեղարկել"
         thumbnail_suggestions:
           try_again: "Կրկին Փորձել"
-        image_caption:
-          save_caption: "Պահպանել"
       embeddings:
         save: "Պահպանել"
         delete: "Ջնջել"

@@ -117,7 +117,7 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
       reminders: [],
       raw_invitees: [],
       custom_fields: {},
-      location: "https://example.com/live",
+      location: "https://zoom.us/j/123456789",
       livestream: true,
     });
 

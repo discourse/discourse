@@ -53,6 +53,16 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 
+    // signals that the row continues past its edges; the ramps sit over the
+    // padding, so a row too short to scroll has nothing under them to fade
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black var(--space-4),
+      black calc(100% - var(--space-6)),
+      transparent 100%
+    );
+
     @include viewport.from(sm) {
       padding: var(--space-2) var(--space-3);
       border-bottom: 1px solid var(--primary-low);

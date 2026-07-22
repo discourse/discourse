@@ -769,6 +769,9 @@
             "notify_on_linked_posts": {
               "type": "boolean"
             },
+            "push_notification_level": {
+              "type": "string"
+            },
             "enable_upcoming_change_available_notifications": {
               "type": "boolean"
             },
@@ -878,6 +881,7 @@
             "email_in_reply_to",
             "like_notification_frequency",
             "notify_on_linked_posts",
+            "push_notification_level",
             "enable_upcoming_change_available_notifications",
             "include_tl0_in_digests",
             "theme_ids",

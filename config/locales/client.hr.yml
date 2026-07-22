@@ -1508,6 +1508,9 @@ hr:
       notifications: "Obavijesti"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Onemogućeno"
+          all: "Omogućeno"
         not_supported: "Nažalost, obavijesti nisu podržane u ovom pregledniku."
         perm_denied_expl: "Odbili ste dopuštenje za obavijesti. Dopusti obavijesti putem postavki preglednika."
         each_browser_note: "Napomena: ovu postavku morate promijeniti na svakom pregledniku koji koristite. Sve će obavijesti biti onemogućene ako pauzirate obavijesti iz korisničkog izbornika, bez obzira na ovu postavku."
@@ -2211,6 +2214,25 @@ hr:
           create_link_and_send_email: "Napravite poveznicu i pošaljite e-mail"
           invite_saved_without_sending_email: "Pozivnica je spremljena. Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
           invite_saved_with_sending_email: "E-mail s pozivnicom je poslan. Također možete kopirati donju poveznicu i podijeliti je kako biste odmah odobrili pristup ovoj stranici."
+        invite_roles:
+          member_title: "Pozovite članove"
+          member_tab: "Članovi"
+          admin_tab: "Admini"
+          admin_email_label: "E-mail adresa"
+          email_placeholder: "ime@primjer.com"
+          invite_by_email: "Email"
+          restrict_domain: "Ograniči na domenu"
+          more_options: "Više opcija"
+          update: "Ažuriraj"
+          summary:
+            role_member: "Član"
+            role_admin: "Administrator"
+            method_email: "Email"
+            uses: "Maks. korisnika"
+            expires: "Istječe"
+            topic: "Tema"
+            groups: "Grupe"
+            edit: "Uredi pozivnicu"
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
@@ -2915,6 +2937,7 @@ hr:
       draft_saved: "Skica spremljena!"
       users_placeholder: "Dodajte korisnike ili grupe"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Titula"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "Zašto uređuješ?"
       topic_featured_link_placeholder: "Unesite vezu prikazanu s naslovom."
@@ -3524,6 +3547,7 @@ hr:
       sort:
         label: "Sortiraj po"
         top: "Najaktivnije"
+        hot: "Vruće"
         new: "Novo"
       load_more_children:
         one: "još %{count} odgovor"
@@ -3597,6 +3621,7 @@ hr:
       read_more_in_category: "Želite čitati više? Pregledajte ostale teme u %{categoryLink} ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       read_more: "Želite čitati više? <a href='%{categoryLink}'>Pregledajte sve kategorije</a> ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
+      sr_read: "pročitajte"
       participant_groups: "Grupe sudionika"
       reply_count_link:
         one: "%{count} odgovor, idite na prvu objavu"
@@ -4066,7 +4091,7 @@ hr:
           few: "Prikaži %{count} prevedene lokalizacije"
           other: "Prikaži %{count} prevedenih lokalizacija"
         modal:
-          title: "Prijevodi za objavu"
+          title: "Prijevodi"
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
@@ -4283,7 +4308,7 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "kategorija&hellip;"
+      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -4855,7 +4880,6 @@ hr:
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
-      choose_for_topic: "neobavezne oznake"
       choose_for_topic_required:
         one: "odaberite najmanje %{count} oznaku"
         few: "odaberite najmanje %{count} oznake"
@@ -5563,7 +5587,6 @@ hr:
             apple_touch_icon:
               title: "Apple dodirna ikona"
               description: "Ikona koja se koristi za Apple uređaje osjetljive na dodir. Ako se ostavi prazno, koristit će se velika_ikona."
-              help_text: "Preporučena veličina je 180 x 180 piksela. Ne preporučuje se prozirna pozadina."
             digest_logo:
               title: "Digest logotip"
               description: "Alternativna slika logotipa koja se koristi na vrhu sažetka e-pošte vaše web stranice. Ako je ostavljena prazna, upotrijebit će se slika iz postavke `logo`."
@@ -5683,6 +5706,21 @@ hr:
               title: "Objave i teme"
             stats_and_thresholds:
               title: "Statistike i pragovi"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          filter_placeholder: "Filtrirajte kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tema"
+          visibility:
+            public: "Javnost"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Poveznice"
           header_description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna"
@@ -5848,6 +5886,7 @@ hr:
               searches: "Pretraživanja"
               status: "Statust"
         reports_section:
+          header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućeno"
@@ -7577,6 +7616,9 @@ hr:
         alt: "prilagođeni pregled emotikona"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Postavke"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         delete: "Pobriši"

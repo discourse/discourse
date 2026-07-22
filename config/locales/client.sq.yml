@@ -1233,6 +1233,9 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
+        push_level:
+          none: "E çaktivizuar"
+          all: "Aktivizuar"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
@@ -1889,6 +1892,25 @@ sq:
           create_link_and_send_email: "Krijoni lidhje dhe dërgo email"
           invite_saved_without_sending_email: "Ftesa e ruajtur. Kopjoni lidhjen më poshtë dhe ndani atë për të dhënë menjëherë akses në këtë faqe."
           invite_saved_with_sending_email: "Emaili i ftesës është dërguar. Ju gjithashtu mund të kopjoni lidhjen më poshtë dhe ta ndani atë për të dhënë menjëherë akses në këtë faqe."
+        invite_roles:
+          member_title: "Ftoni anëtarë"
+          sent_title: "Ftesa u dërgua"
+          member_tab: "Anëtarë"
+          admin_tab: "Administratorët"
+          email_placeholder: "emri@adresa.com"
+          invite_by_email: "Email"
+          restrict_domain: "Kufizoni në domein"
+          more_options: "Më shumë mundësi"
+          update: "Përditëso"
+          summary:
+            role_member: "Anëtar"
+            role_admin: "Admin"
+            method_email: "Email"
+            uses: "Përdorimet maksimale"
+            expires: "Skadon"
+            topic: "Topic"
+            groups: "Grupet"
+            edit: "Redaktoni ftesën"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -2501,6 +2523,7 @@ sq:
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
+      title_placeholder_redesign: "Titulli"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
@@ -3081,6 +3104,7 @@ sq:
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfletoni tema të tjera në %{categoryLink} ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       read_more: "Dëshironi të lexoni më shumë? <a href='%{categoryLink}'>Shfletoni të gjitha kategoritë</a> ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       unread_indicator: "Asnjë anëtar nuk e ka lexuar ende postimin e fundit të kësaj teme."
+      sr_read: "lexuar"
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"
@@ -4081,6 +4105,19 @@ sq:
               title: "Rregullimet"
         badges:
           title: "Stemat"
+        category_management:
+          tabs:
+            settings: "Rregullimet"
+          types:
+            all:
+              title: "Të gjitha kategoritë"
+          table:
+            category: "Kategori"
+            topics: "Topics"
+          visibility:
+            public: "Publike"
+          visibility_filter:
+            all: "Të gjitha kategoritë"
         permalinks:
           title: "Permalinks"
         emoji:
@@ -4169,6 +4206,7 @@ sq:
             table:
               status: "Status"
         reports_section:
+          header_action: "Menaxhoni"
           modal:
             enabled_heading: "Aktivizuar"
             apply: "Apliko"
@@ -5002,6 +5040,10 @@ sq:
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"
+        export: "Eksporto"
+        import: "Importo"
+        import_category:
+          new: "I Ri"
       embedding:
         delete: "Fshij"
         title: "Embedding"

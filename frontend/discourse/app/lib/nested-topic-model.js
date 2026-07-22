@@ -23,6 +23,11 @@ export function processNestedRootResponse({
     page: data.page || 0,
     hasMoreRoots: data.has_more_roots || false,
     sort: data.sort || siteSettings.nested_replies_default_sort || "top",
+    effectiveSort:
+      data.effective_sort ||
+      data.sort ||
+      siteSettings.nested_replies_default_sort ||
+      "top",
     messageBusLastId: data.message_bus_last_id,
     pinnedPostIds: data.pinned_post_ids || [],
     postNumber: params.post_number ? Number(params.post_number) : null,
@@ -80,6 +85,7 @@ export function processNestedContextResponse({
     topic,
     opPost,
     sort,
+    effectiveSort: data.effective_sort || sort,
     pinnedPostIds: [],
     messageBusLastId: data.message_bus_last_id,
     postNumber: Number(params.post_number),

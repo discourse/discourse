@@ -16,7 +16,7 @@ en:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "The table lists a count of posts classified with a determined emotion. Classified with the model 'SamLowe/roberta-base-go_emotions'."
+          description: "The table lists a count of posts classified with a determined emotion. Depending on the selected emotion classification method, posts are classified with either the configured emotion classification model ('SamLowe/roberta-base-go_emotions') or the configured emotion classification agent."
         reports:
           filters:
             group_by:
@@ -232,6 +232,12 @@ en:
 
     discourse_ai:
       title: "AI"
+      post_image_captions:
+        edit: "Edit AI image caption"
+        title: "Edit AI image caption"
+        description: "Caption"
+        save: "Save caption"
+        saved: "AI image caption saved"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -371,7 +377,6 @@ en:
           translate: "Translate"
           markdown_tables: "Generate Markdown table"
           custom_prompt: "Custom prompt"
-          image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
           chat_thread_titles: "Chat thread titles"
@@ -380,6 +385,13 @@ en:
             enabled_features: "Enabled Features"
             automation: "Automation"
             agents: "Agents"
+
+        image_caption:
+          name: "Image Caption"
+          description: "Generates AI captions for post images and makes them available to readers and assistive technology"
+          post_image_captions: "Post image captions"
+          setting_groups:
+            settings: "Settings"
 
         translation:
           name: "Translation"
@@ -589,16 +601,9 @@ en:
         description: "Description"
         no_llm_selected: "No language model selected"
         use_parent_llm: "Use agent's language model"
-        max_context_posts: "Max context posts"
-        max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
-        execution_mode: "Execution Mode"
-        execution_mode_help: "Controls how the agent manages tool execution and conversation context. Default uses fixed turn/tool limits. Agentic uses a token budget with automatic context compression for longer, more capable tool-use sessions."
-        execution_mode_options:
-          default: "Default (Fixed Limits)"
-          agentic: "Agentic (Token Budget)"
-        max_turn_tokens: "Max Turn Tokens"
-        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty to default to half of the model's context window."
-        compression_threshold: "Compression Threshold"
+        max_turn_tokens: "Max turn tokens"
+        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. Leave empty to default to half of the model's context window."
+        compression_threshold: "Compression threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
         vision_enabled: Include image uploads
         vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
@@ -966,7 +971,7 @@ en:
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Image caption"
+          ai_image_caption: "Image caption"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"
@@ -983,9 +988,9 @@ en:
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-1-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-5: "OpenAI's most capable model with extended context"
-          open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-4-nano: "Fastest, most cost-effective GPT-5 model"
+          open_ai-gpt-5-6-sol: "OpenAI's frontier model for complex professional work"
+          open_ai-gpt-5-6-terra: "Balances intelligence and cost for demanding workloads"
+          open_ai-gpt-5-6-luna: "Optimized for cost-sensitive, high-volume workloads"
           open_router-moonshotai-kimi-k2-6: "Moonshot's multimodal model with vision capabilities"
           open_router-deepseek-deepseek-v4-flash: "DeepSeek's latest high-performance model with 1M context"
           open_router-minimax-minimax-m2-7: "MiniMax's model with large context"
@@ -1037,6 +1042,7 @@ en:
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -1050,7 +1056,8 @@ en:
           access_key_id: "AWS Bedrock access key ID"
           role_arn: "AWS Bedrock Role ARN"
           inference_profile_arn: "AWS Bedrock application inference profile ARN"
-          region: "AWS Bedrock region"
+          region: "Region"
+          project_id: "GCP Project ID"
           organization: "Optional OpenAI organization ID"
           disable_system_prompt: "Disable system message in prompts"
           enable_native_tool: "Enable native tool support"
@@ -1060,6 +1067,7 @@ en:
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
+          reasoning_mode: "Reasoning mode"
           service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
           reasoning_parser: "vLLM reasoning parser"
           thinking_override: "Thinking override"
@@ -1079,6 +1087,8 @@ en:
           effort: "Effort level"
 
         provider_field_hints:
+          reasoning_mode: "Standard mode uses the provider default. Pro mode requires the Responses API and support from the selected model, and increases latency and token usage."
+          azure_reasoning_effort: "Available effort levels depend on the model deployed in Azure. Unsupported values are rejected by Azure."
           reasoning_parser: "Must match the vLLM server --reasoning-parser setting. Discourse cannot switch parsers per request; it uses this to shape request options."
           thinking_override: "Optionally force supported vLLM chat templates to enable or disable thinking for each request. Unsupported parsers keep the server default."
           reasoning_effort: "Sends vLLM's reasoning_effort request option for parsers that support it."
@@ -1128,11 +1138,6 @@ en:
           select: "Select"
           selected: "Selected"
           try_again: "Try Again"
-        image_caption:
-          button_label: "Caption with AI"
-          generating: "Generating caption..."
-          credits: "Captioned by AI"
-          save_caption: "Save"
         no_content_error: "Add content first to perform AI actions on it"
 
       errors:
@@ -1230,8 +1235,8 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"

@@ -1,17 +1,101 @@
 .chat-channel-preview-card {
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    "icon title title"
+    ". body body"
+    "actions actions actions";
   align-items: center;
-  justify-content: space-between;
-  z-index: 3;
-  border: 1px solid var(--d-chat-input-border-color);
-  background-color: var(--d-chat-input-bg-color);
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--tertiary-medium);
+  background: rgb(var(--tertiary-rgb), 0.075);
+  box-shadow: var(--shadow-card);
   border-radius: var(--d-border-radius-large);
-  margin: 1rem;
-  margin-top: 0.25rem;
+  margin: var(--space-4) auto;
+  margin-top: var(--space-1);
+  width: max-content;
+  min-width: 60%;
+  box-sizing: border-box;
 
-  .chat-channel__placeholder {
-    color: var(--primary-medium);
+  &.--no-access {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "icon title"
+      "body body";
+  }
+
+  @container (width >= 40rem) {
+    grid-template-areas:
+      "icon title actions"
+      "icon body  actions";
+
+    &.--no-access {
+      grid-template-areas:
+        "icon title"
+        "icon body";
+    }
+  }
+
+  .chat-drawer & {
+    margin-inline: var(--space-4);
+    max-width: calc(100% - var(--space-8));
+  }
+
+  .full-page-chat & {
+    @container (width < 40rem) {
+      margin-inline: var(--space-4);
+      max-width: calc(100% - var(--space-8));
+    }
+  }
+
+  &__icon {
+    grid-area: icon;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background-color: var(--tertiary);
+    color: var(--secondary);
+    width: 2.5rem;
+    height: 2.5rem;
+
+    @container (width < 40rem) {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  &__title {
+    grid-area: title;
+    font-weight: 700;
+  }
+
+  &__body {
+    grid-area: body;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__actions {
+    grid-area: actions;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    @container (width < 40rem) {
+      margin-top: var(--space-2);
+    }
+
+    .chat-channel-preview-card.--anon & {
+      justify-content: flex-end;
+    }
+  }
+
+  .toggle-channel-membership-button {
+    @container (width < 40rem) {
+      width: 100%;
+    }
   }
 }

@@ -72,3 +72,16 @@ discourse_openid_connect:
   openid_connect_use_pkce:
     default: false
     area: "oidc"
+  openid_connect_mtls_client_cert:
+    default: ""
+    textarea: true
+    area: "oidc"
+  openid_connect_mtls_client_key:
+    default: ""
+    textarea: true
+    secret: true
+    area: "oidc"
+  openid_connect_mtls_client_key_passcode:
+    default: ""
+    secret: true
+    area: "oidc"

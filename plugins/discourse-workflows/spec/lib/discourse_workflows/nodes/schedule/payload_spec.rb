@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseWorkflows::Nodes::Schedule::Payload do
   describe ".build" do
-    it "returns compatible timestamp fields" do
+    it "returns compatible timestamp fields", :aggregate_failures do
       payload = described_class.build(time: Time.utc(2026, 3, 18, 9, 0), timezone: "UTC")
 
       expect(payload).to include(
@@ -18,6 +18,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Schedule::Payload do
         "second" => "00",
         "timezone" => "UTC (UTC+00:00)",
       )
+      expect(payload).to match_node_output_schema(DiscourseWorkflows::Nodes::Schedule::V1)
     end
 
     it "formats fields in the resolved workflow timezone" do

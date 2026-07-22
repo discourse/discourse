@@ -47,11 +47,15 @@ export default class ComposerToggles extends Component {
     return !this.args.disableTextarea;
   }
 
+  get showToolbarToggle() {
+    return this.site.mobileView;
+  }
+
   <template>
     <div class={{dConcatClass "composer-controls" this.additionalClasses}}>
       <PluginOutlet @name="before-composer-toggles" @connectorTagName="div" />
 
-      {{#if this.site.mobileView}}
+      {{#if this.showToolbarToggle}}
         <DButton
           @icon="bars"
           @action={{@toggleToolbar}}

@@ -28,11 +28,7 @@ RSpec.describe DiscourseWorkflows::TriggerRuntime do
         described_class.activate_workflow!(workflow, workflow_version: workflow.active_version)
       }.not_to raise_error
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        entry[:value] == passive_trigger_class
-      end
-      DiscourseWorkflows::NodeType.registered_nodes.delete(passive_trigger_class)
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(passive_trigger_class)
     end
   end
 end

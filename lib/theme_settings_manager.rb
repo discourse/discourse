@@ -55,6 +55,10 @@ class ThemeSettingsManager
     @opts[:refresh]
   end
 
+  def disallowed_groups
+    @opts[:disallowed_groups]
+  end
+
   def value=(new_value)
     ensure_is_valid_value!(new_value)
     value = new_value.to_s

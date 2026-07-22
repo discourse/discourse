@@ -22,10 +22,60 @@
       @include ellipsis;
     }
 
+    .email-group-user-chooser--user,
+    .email-group-user-chooser--group {
+      &.--username-first,
+      &.--group-name-first {
+        .identifier {
+          color: var(--primary);
+          white-space: nowrap;
+          line-height: var(--line-height-medium);
+          margin-right: 0.5em;
+        }
+
+        .name {
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
+
+          @include ellipsis;
+        }
+      }
+
+      &.--name-first,
+      &.--group-full-name-first {
+        .name {
+          color: var(--primary);
+          white-space: nowrap;
+          line-height: var(--line-height-medium);
+          font-size: var(--font-0);
+          margin-right: 0.5em;
+        }
+
+        .identifier {
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
+
+          @include ellipsis;
+        }
+      }
+    }
+
     .avatar,
     .d-icon {
       margin-left: 0;
       margin-right: 0.5em;
+    }
+
+    .email-group-user-chooser--group {
+      &.--full-name-only {
+        .name {
+          color: var(--primary);
+          white-space: nowrap;
+          line-height: var(--line-height-medium);
+          font-size: var(--font-down-0);
+          margin-right: 0.5em;
+        }
+      }
     }
   }
 

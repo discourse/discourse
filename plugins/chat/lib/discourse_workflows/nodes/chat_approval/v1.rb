@@ -7,6 +7,19 @@ if defined?(DiscourseWorkflows)
         class V1 < DiscourseWorkflows::NodeType
           include ChatChannelSelection
 
+          APPROVAL_OUTPUT_SCHEMA = {
+            "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+            "type" => "object",
+            "properties" => {
+              "approved" => {
+                "type" => "boolean",
+              },
+              "channel_id" => {
+                "type" => "integer",
+              },
+            },
+          }.freeze
+
           description(
             name: "action:chat_approval",
             version: "1.0",
@@ -20,6 +33,25 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               waits_for_resume: true,
             },
+            output_contracts: [
+              {
+                schema: APPROVAL_OUTPUT_SCHEMA,
+                variants: [
+                  {
+                    schema: APPROVAL_OUTPUT_SCHEMA,
+                    mode: :union,
+                    display_options: {
+                      show: {
+                        timeout_minutes: [{ condition: { exists: true } }],
+                      },
+                      hide: {
+                        timeout_action: ["fail"],
+                      },
+                    },
+                  },
+                ],
+              },
+            ],
             properties: {
               message: {
                 type: :string,

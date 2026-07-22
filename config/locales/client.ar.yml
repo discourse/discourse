@@ -1956,6 +1956,9 @@ ar:
       notifications: "الإشعارات"
       statistics: "الإحصاءات"
       desktop_notifications:
+        push_level:
+          none: "متوقفة"
+          all: "مفعَّلة"
         not_supported: "عذرًا، لا يدعم هذا المتصفح الإشعارات."
         perm_denied_expl: "لقد رفضت منح الإذن بإرسال الإشعارات. يمكنك السماح بالإشعارات في إعدادات المتصفح."
         each_browser_note: "ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه. سيتم إيقاف جميع الإشعارات إذا أوقفت الإشعارات من قائمة المستخدم، بغض النظر عن هذا الإعداد."
@@ -2747,6 +2750,29 @@ ar:
           create_link_and_send_email: "إنشاء رابط وإرسال البريد الإلكتروني"
           invite_saved_without_sending_email: "تم حفظ الدعوة. انسخ الرابط أدناه وشاركه لمنح الوصول إلى هذا الموقع على الفور."
           invite_saved_with_sending_email: "تم إرسال البريد الإلكتروني للدعوة. يمكنك أيضًا نسخ الرابط أدناه ومشاركته لمنح الوصول إلى هذا الموقع على الفور."
+        invite_roles:
+          member_title: "دعوة أعضاء"
+          sent_title: "تم إرسال الدعوة"
+          member_tab: "الأعضاء"
+          admin_tab: "المسؤولون"
+          admin_email_label: "عنوان البريد الإلكتروني"
+          email_placeholder: "name@example.com"
+          invite_by_email: "البريد الإلكتروني"
+          restrict_domain: "التقييد إلى النطاق"
+          domain_placeholder: "example.com"
+          more_options: "المزيد من الخيارات"
+          update: "تحديث"
+          summary:
+            role_member: "عضو"
+            role_admin: "مسؤول"
+            method: "مشاركة"
+            method_email: "البريد الإلكتروني"
+            restriction: "مقيد إلى"
+            uses: "الحد الأقصى لمرات الاستخدام"
+            expires: "وقت الانتهاء"
+            topic: "الموضوع"
+            groups: "المجموعات"
+            edit: "تعديل الدعوة"
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة جماعية"
@@ -3457,6 +3483,9 @@ ar:
       default: الرموز التعبيرية المخصَّصة
     filter_input:
       clear: "مسح الفلتر"
+    filter_controls:
+      reset: "إعادة تعيين عامل التصفية"
+      toggle: "تبديل عوامل تصفية القائمة المنسدلة"
     d_icon_grid_picker:
       select_icon: "تحديد أيقونة"
       search_placeholder: "بحث عن أيقونات..."
@@ -3623,6 +3652,7 @@ ar:
       draft_saved: "حُفظت المسودة!"
       users_placeholder: "إضافة مستخدمين أو مجموعات"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
+      title_placeholder_redesign: "العنوان"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
       topic_featured_link_placeholder: "أدخِل الرابط الموضَّح مع العنوان."
@@ -4563,6 +4593,7 @@ ar:
       sort:
         label: "الترتيب حسب"
         top: "الأكثر نشاطًا"
+        hot: "رائج"
         new: "جديدة"
         old: "الأقدم"
       load_more_children:
@@ -4688,6 +4719,7 @@ ar:
       read_more_in_category: "هل تريد قراءة المزيد؟ استعرض موضوعات أخرى في %{categoryLink} أو <a href='%{latestLink}'>شاهد آخر الموضوعات</a>."
       read_more: "هل تريد قراءة المزيد؟ <a href='%{categoryLink}'>استعرض كل الفئات</a> أو <a href='%{latestLink}'>شاهد آخر الموضوعات</a>."
       unread_indicator: "لم يقرأ أي عضو آخر منشور في هذا الموضوع بعد."
+      sr_read: "قراءة"
       participant_groups: "المجموعات المشاركة"
       reply_count_link:
         zero: "%{count} من الردود، الانتقال إلى المنشور الأول"
@@ -5292,8 +5324,10 @@ ar:
           many: "عرض %{count} لغة الترجمة"
           other: "عرض %{count} لغة الترجمة"
         modal:
-          title: "الترجمات الخاصة بهذا المنشور"
+          title: "الترجمات"
           confirm_delete: "هل أنت متأكد أنك تريد حذف الترجمات للغة '%{languageCode}'؟"
+          post_language: "لغة المنشور"
+          discard_language_change: "تجاهل التغيير"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
           title: "لغة المنشور"
@@ -6281,7 +6315,6 @@ ar:
       selector_no_tags: "لا توجد وسوم"
       selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
-      choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:
         zero: "تحديد %{count} وسم على الأقل…"
         one: "تحديد وسم واحد (%{count}) على الأقل…"
@@ -6936,8 +6969,6 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
-    reset_filter: "إعادة تعيين عامل التصفية"
-    toggle_filters: "تبديل عوامل تصفية القائمة المنسدلة"
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
@@ -7171,7 +7202,6 @@ ar:
             apple_touch_icon:
               title: "أيقونة Apple Touch"
               description: "الأيقونة المستخدمة لأجهزة Apple Touch. إذا تُركت فارغة، سيتم استخدام large_icon."
-              help_text: "الحجم الموصى به هو 180 × 180 بكسل. ويُفضل تجنب استخدام خلفية شفافة."
             digest_logo:
               title: "شعار مختصر"
               description: "صورة الشعار البديلة المستخدمة في رأس ملخص البريد الإلكتروني لموقعك. إذا تُركت فارغة، سيتم استخدام الصورة المحددة في إعدادات \"الشعار\"."
@@ -7367,6 +7397,22 @@ ar:
               title: "المنشورات والموضوعات"
             stats_and_thresholds:
               title: "الإحصائيات والحدود"
+        category_management:
+          create_category: "إنشاء فئة"
+          tabs:
+            settings: "الإعدادان"
+          types:
+            all:
+              title: "كل الفئات"
+          filter_placeholder: "تصفية الفئات"
+          table:
+            category: "الفئة"
+            visibility: "الرؤية"
+            topics: "الموضوعات"
+          visibility:
+            public: "عام"
+          visibility_filter:
+            all: "كل الفئات"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي تُطبَّق على عناوين URL التي لا يعرفها المنتدى"
@@ -7618,6 +7664,7 @@ ar:
                 no_match: "لا يوجد تطابق"
                 poor_match: "تطابق ضعيف"
         reports_section:
+          header_action: "إدارة"
           no_data: "لا توجد بيانات لعرضها"
           modal:
             enabled_heading: "مفعَّلة"
@@ -10113,6 +10160,10 @@ ar:
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
         settings: "الإعدادات"
+        export: "تصدير"
+        import: "استيراد"
+        import_category:
+          new: "جديدة"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         delete: "حذف"

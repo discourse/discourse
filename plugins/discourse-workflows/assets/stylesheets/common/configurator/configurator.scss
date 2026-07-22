@@ -277,3 +277,26 @@
     min-width: 0;
   }
 }
+
+.workflows-user-seen-duration {
+  margin-inline-start: calc(var(--space-4) + var(--space-2));
+
+  > .form-kit__container-content {
+    display: grid;
+    grid-template-columns: minmax(4.5rem, 5.5rem) minmax(7rem, 8.5rem);
+    align-items: center;
+    gap: var(--space-2);
+    width: fit-content;
+  }
+
+  &__amount,
+  &__unit {
+    margin: 0;
+    min-width: 0;
+
+    > .form-kit__container-content {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+}

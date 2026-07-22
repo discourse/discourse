@@ -4,6 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import AssignUser from "../components/modal/assign-user";
+import assignmentPayload from "../lib/assignment-payload";
 
 export default class TaskActions extends Service {
   @service modal;
@@ -173,12 +174,9 @@ export default class TaskActions extends Service {
       await ajax(path, {
         type: "PUT",
         data: {
-          username: model.username,
-          group_name: model.group_name,
+          ...assignmentPayload(model),
           target_id: model.target.id,
           target_type: model.targetType,
-          note: model.note,
-          status: model.status,
         },
       });
 
@@ -192,12 +190,9 @@ export default class TaskActions extends Service {
     await ajax("/assign/assign", {
       type: "PUT",
       data: {
-        username: assignment.username,
-        group_name: assignment.group_name,
+        ...assignmentPayload(assignment),
         target_id: assignment.targetId,
         target_type: assignment.targetType,
-        note: assignment.note,
-        status: assignment.status,
       },
     });
   }

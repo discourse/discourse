@@ -4,6 +4,8 @@ RSpec.describe AccessControlList do
   fab!(:target, :category)
   fab!(:group) { Fabricate(:group, name: "marketing", full_name: "Marketing Team") }
   fab!(:other_group) { Fabricate(:group, name: "support", full_name: "Support Team") }
+  fab!(:user) { Fabricate(:user, name: "User One") }
+  fab!(:other_user) { Fabricate(:user, name: "User Two") }
 
   describe ".expand_list_for_bulk_insert" do
     it "collapses multiple groups sharing a permission into one record" do
@@ -19,6 +21,7 @@ RSpec.describe AccessControlList do
       expect(entry).to match(
         permission: "view",
         allowed_group_ids: contain_exactly(group.id, other_group.id),
+        allowed_user_ids: [],
         target_type: "Category",
         target_id: target.id,
         owner: "core",
@@ -48,10 +51,31 @@ RSpec.describe AccessControlList do
       expect(result.first[:owner]).to eq("chat")
     end
 
+    it "collapses users and groups sharing a permission into one record" do
+      list = [
+        { type: "group", id: group.id, permission: "view" },
+        { type: "user", id: user.id, permission: "view" },
+        { type: :user, id: other_user.id, permission: "view" },
+      ]
+
+      result = described_class.expand_list_for_bulk_insert(list, target, "core")
+
+      expect(result).to contain_exactly(
+        {
+          permission: "view",
+          allowed_group_ids: contain_exactly(group.id),
+          allowed_user_ids: contain_exactly(user.id, other_user.id),
+          target_type: "Category",
+          target_id: target.id,
+          owner: "core",
+        },
+      )
+    end
+
     it "returns records that insert_all! can persist as valid acls" do
       list = [
         { type: "group", id: group.id, permission: "view" },
-        { type: "group", id: other_group.id, permission: "edit" },
+        { type: "user", id: user.id, permission: "edit" },
       ]
 
       described_class.insert_all!(described_class.expand_list_for_bulk_insert(list, target, "core"))
@@ -59,7 +83,7 @@ RSpec.describe AccessControlList do
       acls = described_class.where(target: target)
       expect(acls.pluck(:permission)).to contain_exactly("view", "edit")
       expect(acls.find_by(permission: "view").allowed_group_ids).to contain_exactly(group.id)
-      expect(acls.find_by(permission: "edit").allowed_group_ids).to contain_exactly(other_group.id)
+      expect(acls.find_by(permission: "edit").allowed_user_ids).to contain_exactly(user.id)
     end
   end
 
@@ -156,6 +180,39 @@ RSpec.describe AccessControlList do
       expect(entry[:metadata]).to eq({ auto_group: true })
     end
 
+    it "returns one entry per user per acl with the user display name" do
+      Fabricate(
+        :access_control_list_with_users,
+        target: target,
+        permission: "manage",
+        users: [user, other_user],
+      )
+
+      list = described_class.where(target: target, permission: "manage").flattened_list
+
+      expect(list).to contain_exactly(
+        include(
+          type: :user,
+          id: user.id,
+          permission: "manage",
+          display_name: user.display_name,
+          mandatory: false,
+          target_type: "Category",
+          target_id: target.id,
+        ),
+        include(
+          type: :user,
+          id: other_user.id,
+          permission: "manage",
+          display_name: other_user.display_name,
+          mandatory: false,
+          target_type: "Category",
+          target_id: target.id,
+        ),
+      )
+      expect(list).to all(exclude(:metadata))
+    end
+
     it "marks mandatory acl entries" do
       target
         .class
@@ -208,6 +265,14 @@ RSpec.describe AccessControlList do
       expect(loaded.allowed_groups_preloaded.map(&:id)).to contain_exactly(group.id, other_group.id)
     end
 
+    it "populates allowed_users_preloaded from allowed_user_ids" do
+      acl = Fabricate(:access_control_list_with_users, users: [user, other_user])
+
+      loaded = described_class.where(id: acl.id).preload_allowed.first
+
+      expect(loaded.allowed_users_preloaded.map(&:id)).to contain_exactly(user.id, other_user.id)
+    end
+
     it "loads the allowed groups for the whole relation without an N+1" do
       one = Fabricate(:access_control_list_with_groups, groups: [group])
 
@@ -231,6 +296,27 @@ RSpec.describe AccessControlList do
         end
 
       expect(queries_for_many.size).to eq(queries_for_one.size)
+    end
+  end
+
+  describe ".matching_group" do
+    fab!(:member_user, :user)
+    fab!(:member_group) { Fabricate(:group).tap { |new_group| new_group.add(member_user) } }
+    fab!(:non_member_user, :user)
+    fab!(:group_acl) { Fabricate(:access_control_list_with_groups, groups: [member_group]) }
+    fab!(:direct_user_acl) { Fabricate(:access_control_list_with_users, users: [member_user]) }
+    fab!(:other_user_acl) { Fabricate(:access_control_list_with_users, users: [non_member_user]) }
+
+    it "matches acls allowing the group directly" do
+      expect(described_class.matching_group(member_group)).to include(group_acl)
+    end
+
+    it "matches acls allowing users in the group" do
+      expect(described_class.matching_group(member_group)).to include(direct_user_acl)
+    end
+
+    it "does not match acls for users outside the group" do
+      expect(described_class.matching_group(member_group)).not_to include(other_user_acl)
     end
   end
 

@@ -68,11 +68,11 @@ export function getPropertySchema(nodeTypes, nodeType, typeVersion = null) {
   }
 
   const versionedDefinition = resolveNodeTypeVersion(definition, typeVersion);
-  if (versionedDefinition?.properties) {
-    return versionedDefinition.properties;
+  if (!versionedDefinition) {
+    return {};
   }
 
-  return definition.properties || {};
+  return versionedDefinition.properties || definition.properties || {};
 }
 
 export function normalizeSchema(schema = {}) {

@@ -1,22 +1,17 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { eq, gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-/**
- * @type {import("@ember/component/template-only").TOC<{
- *   Args: {
- *     channel?: import("discourse/plugins/chat/discourse/models/chat-channel").default;
- *     showMembershipButton?: boolean;
- *   };
- * }>}
- */
-const ChatChannelCard = <template>
+export default <template>
   {{#if @channel}}
     <div
       class={{dConcatClass
@@ -36,6 +31,9 @@ const ChatChannelCard = <template>
           class="chat-channel-card__name-container"
         >
           <span class="chat-channel-card__name">
+            {{#if @channel.emoji}}
+              {{dEmoji @channel.emoji}}
+            {{/if}}
             {{dReplaceEmoji @channel.title}}
           </span>
           {{#if @channel.chatable.read_restricted}}
@@ -51,11 +49,13 @@ const ChatChannelCard = <template>
         </LinkTo>
       </div>
 
-      {{! The join/leave CTA is shown by default; consumers can hide it by
-          setting showMembershipButton to false, e.g. a read-only channel
-          showcase. }}
       {{#unless (eq @showMembershipButton false)}}
         <div class="chat-channel-card__cta">
+        <PluginOutlet
+          @name="chat-channel-card-cta"
+          @outletArgs={{lazyHash channel=@channel}}
+          @defaultGlimmer={{true}}
+        >
           {{#if @channel.isFollowing}}
             <ToggleChannelMembershipButton
               @channel={{@channel}}
@@ -74,6 +74,7 @@ const ChatChannelCard = <template>
               }}
             />
           {{/if}}
+        </PluginOutlet>
         </div>
       {{/unless}}
 
@@ -97,6 +98,4 @@ const ChatChannelCard = <template>
       {{/if}}
     </div>
   {{/if}}
-</template>;
-
-export default ChatChannelCard;
+</template>

@@ -70,6 +70,13 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .toggle-channel-membership-button.-join").click
       end
 
+      def click_preview_card_login
+        find(
+          "#{VISIBLE_DRAWER} .chat-channel-preview-card .btn",
+          text: I18n.t("js.chat.channel.preview_card.log_in"),
+        ).click
+      end
+
       def open_channel_row(channel)
         find("#{VISIBLE_DRAWER} .chat-channel-row[data-chat-channel-id='#{channel.id}']").click
         has_no_css?(".chat-skeleton")

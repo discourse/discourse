@@ -207,4 +207,30 @@ describe "Sign up via email code" do
       expect(user.custom_fields["user_field_#{user_field.id}"]).to eq("Dev")
     end
   end
+
+  context "when a full name is required at signup" do
+    before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+    it "collects the name after the code is verified" do
+      visit("/signup")
+      submit_email("named.person@example.com")
+      fill_code(latest_emailed_code("named.person@example.com"))
+
+      expect(page).to have_css(".code-login-form__user-fields-step")
+      expect(page).to have_css("#code-login-name")
+
+      find(".code-login-form__user-fields-step .code-login-form__verify").click
+      expect(page).to have_css(
+        ".code-login-form__name-field .code-login-form__error",
+        text: I18n.t("js.user.name.required"),
+      )
+      expect(page).to have_css(".code-login-form__user-fields-step")
+
+      fill_in("code-login-name", with: "Jane Doe")
+      find(".code-login-form__user-fields-step .code-login-form__verify").click
+
+      expect(page).to have_css(".code-login-form__complete-step")
+      expect(User.find_by_email("named.person@example.com").name).to eq("Jane Doe")
+    end
+  end
 end

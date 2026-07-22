@@ -44,6 +44,7 @@ register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
 register_svg_icon "arrows-up-to-line"
+extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -76,6 +77,7 @@ module ::DiscourseCalendar
           chatable_id: topic.category.id,
           chatable_type: "Category",
           name: topic.title,
+          emoji: "spiral_calendar",
           status: Chat::Channel.statuses[:open],
           type: "CategoryChannel",
           allow_channel_wide_mentions: true,
@@ -83,6 +85,61 @@ module ::DiscourseCalendar
 
       DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
       channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+      pin_topic_reference_message(topic, channel)
+    end
+
+    def self.pin_topic_reference_message(topic, channel)
+      guardian = Discourse.system_user.guardian
+      message = nil
+
+      Chat::CreateMessage.call(
+        guardian:,
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "discourse_calendar.livestream.chat.topic_reference_message",
+              title: topic.markdown_link_title,
+              url: topic.relative_url,
+            ),
+        },
+        options: {
+          enforce_membership: true,
+        },
+      ) do |create_result|
+        on_success { |message_instance:| message = message_instance }
+        on_failure do
+          Rails.logger.warn(
+            "Failed to create livestream topic reference message for channel #{channel.id}: #{create_result.inspect_steps}",
+          )
+        end
+      end
+
+      return if message.blank?
+
+      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).update_all(
+        reference_message_id: message.id,
+      )
+
+      return if !SiteSetting.chat_pinned_messages
+
+      Chat::PinMessage.call(
+        guardian:,
+        params: {
+          message_id: message.id,
+          channel_id: channel.id,
+        },
+      ) do |pin_result|
+        on_failure do
+          Rails.logger.warn(
+            "Failed to pin livestream topic reference message for channel #{channel.id}: #{pin_result.inspect_steps}",
+          )
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.warn(
+        "Failed to post livestream topic reference message for channel #{channel.id}: #{e.message}",
+      )
     end
 
     def self.livestream_chat_status_channel(user_id)
@@ -95,6 +152,51 @@ module ::DiscourseCalendar
         Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
         user_ids: [user.id],
       )
+    end
+
+    class ChannelSerializationContext
+      def initialize(user)
+        @user = user
+      end
+
+      def invitees_by_post_id
+        return {} if @user.nil?
+
+        @invitees_by_post_id ||=
+          DiscoursePostEvent::Invitee.where(user_id: @user.id).index_by(&:post_id)
+      end
+
+      def invitee_event_ids
+        invitees_by_post_id.keys
+      end
+
+      def group_names
+        return [] if @user.nil?
+
+        @group_names ||= @user.groups.pluck(:name)
+      end
+    end
+
+    module ChannelSerializerExtension
+      private
+
+      def livestream_serialization_context
+        @livestream_serialization_context ||=
+          @options[:livestream_context] ||
+            DiscourseCalendar::Livestream::ChannelSerializationContext.new(scope.user)
+      end
+
+      def livestream_invitees_by_post_id
+        livestream_serialization_context.invitees_by_post_id
+      end
+
+      def livestream_invitee_event_ids
+        livestream_serialization_context.invitee_event_ids
+      end
+
+      def livestream_user_group_names
+        livestream_serialization_context.group_names
+      end
     end
   end
 
@@ -119,6 +221,7 @@ end
 require_relative "lib/discourse_calendar/engine"
 require_relative "lib/discourse_calendar/livestream/topic_extension"
 require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
+require_relative "lib/discourse_calendar/livestream/zoom_url_parser"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))
@@ -177,7 +280,9 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
   require_relative "lib/discourse_post_event/email_renderer"
   require_relative "lib/discourse_post_event/engine"
+  require_relative "lib/discourse_post_event/event_excerpt"
   require_relative "lib/discourse_post_event/event_finder"
+  require_relative "lib/discourse_post_event/event_onebox_data"
   require_relative "lib/discourse_post_event/event_parser"
   require_relative "lib/discourse_post_event/event_validator"
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
@@ -286,6 +391,40 @@ after_initialize do
       SiteSetting.discourse_post_event_enabled && !object.nil? && !object.deleted_at.present?
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
+
+  TopicView.on_preload do |topic_view|
+    if SiteSetting.discourse_post_event_enabled
+      # always set the store (even when empty) and avoid a per-post query for every post in the topic
+      topic_view.set_preloaded_post_data(
+        :event_oneboxes,
+        DiscoursePostEvent::EventOneboxData.build(
+          posts: topic_view.posts,
+          guardian: topic_view.guardian,
+        ),
+      )
+    end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_oneboxes,
+    include_condition: -> { SiteSetting.discourse_post_event_enabled && event_oneboxes.present? },
+  ) do
+    # use the batched topic-view preload on the common read path
+    # otherwise compute just this post so the event card shows without a page refresh
+    @event_oneboxes ||=
+      begin
+        preloaded = topic_view&.preloaded_post_data(:event_oneboxes)
+        if preloaded
+          preloaded[object.id] || {}
+        elsif object.cooked&.include?("data-topic")
+          DiscoursePostEvent::EventOneboxData.build(posts: [object], guardian: scope)[object.id] ||
+            {}
+        else
+          {}
+        end
+      end
+  end
 
   on(:post_created) do |post|
     DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
@@ -663,6 +802,12 @@ after_initialize do
     end
   end
 
+  on(:reduce_excerpt) do |fragment, options|
+    if SiteSetting.discourse_post_event_enabled
+      DiscoursePostEvent::EventExcerpt.call(fragment, post: options[:post])
+    end
+  end
+
   on(:user_destroyed) { |user| DiscoursePostEvent::Invitee.where(user_id: user.id).destroy_all }
 
   add_post_revision_notifier_recipients do |post_revision|
@@ -799,11 +944,73 @@ after_initialize do
     :topic_view,
     :chat_channel_id,
     include_condition: -> do
-      object.topic.first_post&.event&.livestream? && object.topic.topic_chat_channel.present?
+      event = object.topic.first_post&.event
+      event&.livestream? && object.topic.topic_chat_channel.present? &&
+        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
     end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
+
+  register_modifier(:chat_channel_fetcher_public_includes) do |includes|
+    includes + [{ livestream_topic_chat_channel: { topic: { first_post: :event } } }]
+  end
+
+  register_modifier(:chat_channel_serializer_public_options) do |serializer_options, guardian|
+    serializer_options.merge(
+      livestream_context:
+        DiscourseCalendar::Livestream::ChannelSerializationContext.new(guardian.user),
+    )
+  end
+
+  add_to_serializer(
+    "Chat::Channel",
+    :livestream_topic,
+    include_condition: -> do
+      return false if object.chatable_type != "Category"
+
+      topic = object.livestream_topic_chat_channel&.topic
+      event = topic&.first_post&.event
+
+      return false if !event
+
+      event.livestream? &&
+        event.can_access_livestream_chat?(
+          scope.user,
+          invitee_event_ids: livestream_invitee_event_ids,
+          group_names: livestream_user_group_names,
+        )
+    end,
+  ) do
+    topic = object.livestream_topic_chat_channel.topic
+    event = topic.first_post&.event
+    watching_invitee = livestream_invitees_by_post_id[event&.id]
+
+    can_update_attendance =
+      if scope.anonymous? || !event
+        false
+      else
+        event.can_user_update_attendance?(
+          scope.user,
+          invitee_event_ids: livestream_invitee_event_ids,
+          group_names: livestream_user_group_names,
+        )
+      end
+
+    {
+      id: topic.id,
+      title: topic.title,
+      slug: topic.slug,
+      url: topic.relative_url,
+      event_id: topic.first_post&.id,
+      reference_message_id: object.livestream_topic_chat_channel.reference_message_id,
+      can_update_attendance: can_update_attendance,
+      watching_invitee_status:
+        watching_invitee && DiscoursePostEvent::Invitee.statuses[watching_invitee.status],
+    }
+  end
 
   on(:chat_channel_trashed) do |channel, user|
     # If the chat channel is deleted, delete the related TopicChatChannel record

@@ -508,6 +508,7 @@ module DiscourseTagging
   #   exclude_synonyms: exclude synonyms from results
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
+  #   order_recent_tag_ids: ordered tag ids (most recent first) to prioritize at the top of the results
   #   excluded_tag_names: an array of tag names not to include in the results
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids =
@@ -530,6 +531,10 @@ module DiscourseTagging
 
     builder_params[:selected_tag_ids] = selected_tag_ids unless selected_tag_ids.empty?
 
+    if opts[:order_recent_tag_ids].present?
+      builder_params[:order_recent_tag_ids] = opts[:order_recent_tag_ids]
+    end
+
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
     if (opts[:for_input] || opts[:for_topic]) && filter_for_non_admin
       sql << ", #{PERMITTED_TAGS_SQL} "
@@ -542,7 +547,9 @@ module DiscourseTagging
     topic_count_column = Tag.topic_count_column(guardian)
 
     distinct_clause =
-      if opts[:order_popularity]
+      if opts[:order_recent_tag_ids].present?
+        "DISTINCT ON (array_position(ARRAY[:order_recent_tag_ids]::int[], t.id), #{topic_count_column}, name)"
+      elsif opts[:order_popularity]
         "DISTINCT ON (#{topic_count_column}, name)"
       elsif opts[:order_search_results] && opts[:term].present?
         "DISTINCT ON (lower(name) = lower(:cleaned_term), #{topic_count_column}, name)"
@@ -695,7 +702,10 @@ module DiscourseTagging
       end
     end
 
-    if opts[:order_popularity]
+    if opts[:order_recent_tag_ids].present?
+      builder.order_by("array_position(ARRAY[:order_recent_tag_ids]::int[], t.id) ASC NULLS LAST")
+      builder.order_by("#{topic_count_column} DESC, name")
+    elsif opts[:order_popularity]
       builder.order_by("#{topic_count_column} DESC, name")
     elsif opts[:order_search_results] && term.present?
       builder.order_by("lower(name) = lower(:cleaned_term) DESC, #{topic_count_column} DESC, name")

@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import OutputContext from "discourse/plugins/discourse-workflows/admin/components/workflows/context/output";
@@ -97,6 +97,76 @@ module(
       assert
         .dom(".workflows-context-panel__empty-state-btn")
         .hasText(/Add sample data/);
+    });
+
+    test("renders a configuration-aware declaration before the first run", async function (assert) {
+      const node = {
+        clientId: "n1",
+        name: "Group",
+        type: "action:group",
+        typeVersion: "1.0",
+        configuration: { operation: "add" },
+      };
+      const nodeTypes = [
+        {
+          name: "action:group",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  mode: "merge",
+                  schema: {
+                    type: "object",
+                    properties: {
+                      group_membership: {
+                        type: "object",
+                        description: "Group membership result",
+                        properties: { in_group: { type: "boolean" } },
+                      },
+                    },
+                  },
+                  display_options: {
+                    show: { operation: ["check_membership"] },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ];
+      const configuration = { operation: "check_membership" };
+
+      await render(
+        <template>
+          <OutputContext
+            @node={{node}}
+            @nodes={{Array node}}
+            @connections={{(Array)}}
+            @nodeTypes={{nodeTypes}}
+            @session={{this.session}}
+            @configuration={{configuration}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".workflows-schema-field__key-title")
+        .hasText("group_membership", "shows the enabled declared schema");
+      assert
+        .dom(".workflows-context-panel__title-meta")
+        .doesNotExist("does not show a fabricated item count");
+      assert
+        .dom(".workflows-context-panel__pin-btn")
+        .isDisabled("does not allow declarations to be pinned as run data");
+
+      await click(".workflows-context-panel__tab:last-child");
+
+      assert
+        .dom(".workflows-context-panel__empty-state-title")
+        .hasText("No output yet", "keeps the JSON view based on actual data");
+      assert
+        .dom(".workflows-context-panel__empty-state-btn")
+        .hasText(/Add sample data/, "still offers adding real sample data");
     });
 
     test("does not show the pin tip when output data is already pinned", async function (assert) {

@@ -8,6 +8,13 @@ class LlmModel < ActiveRecord::Base
   FIRST_BOT_USER_ID = -1200
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
+  GOOGLE_VERTEX_AI_PROVIDER_NAME = "google_vertex_ai"
+  OPEN_AI_PROVIDER_NAME = "open_ai"
+  OPEN_AI_REASONING_MODES = %w[standard pro].freeze
+  # Interpolated into the Vertex AI hostname/path — must stay strict to avoid
+  # sending environment credentials to an attacker-controlled host.
+  GOOGLE_VERTEX_AI_REGION_FORMAT = /\A[a-z](?:[a-z0-9-]*[a-z0-9])?\z/
+  GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT = /\A[a-z][a-z0-9-]{4,28}[a-z0-9]\z/
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
     "markdown" => "md",
@@ -99,9 +106,7 @@ class LlmModel < ActiveRecord::Base
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
-  validates :url,
-            presence: true,
-            unless: -> { provider.in?([BEDROCK_PROVIDER_NAME, BEDROCK_CONVERSE_PROVIDER_NAME]) }
+  validates :url, presence: true, if: -> { llm_endpoint&.requires_configured_url? != false }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -238,16 +243,22 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+        },
+        reasoning_mode: {
+          type: :enum,
+          values: ["default", *OPEN_AI_REASONING_MODES],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
         },
         disable_temperature: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_top_p: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_streaming: :checkbox,
         service_tier: {
@@ -301,12 +312,35 @@ class LlmModel < ActiveRecord::Base
           default: "default",
         },
       },
+      google_vertex_ai: {
+        project_id: :text,
+        region: :text,
+        disable_native_tools: :checkbox,
+        enable_thinking: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          depends_on: :enable_thinking,
+        },
+        thinking_tokens: {
+          type: :number,
+          depends_on: :enable_thinking,
+          hidden_if: :thinking_level,
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :enable_thinking,
+        },
+        disable_top_p: :checkbox,
+      },
       azure: {
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
         },
         disable_temperature: {
           type: :checkbox,
@@ -570,8 +604,9 @@ class LlmModel < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
-    # Converse provider supports auto-resolved credentials (env vars, instance profile)
-    return if provider == BEDROCK_CONVERSE_PROVIDER_NAME
+
+    return if llm_endpoint&.supports_environment_credentials?
+
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
@@ -582,8 +617,19 @@ class LlmModel < ActiveRecord::Base
     errors.add(:base, I18n.t("discourse_ai.llm_models.secret_required"))
   end
 
+  def llm_endpoint
+    DiscourseAi::Completions::Endpoints::Base.endpoint_for(self)
+  rescue DiscourseAi::Completions::Llm::UNKNOWN_MODEL
+    nil
+  end
+
   def required_provider_params
-    if provider == BEDROCK_PROVIDER_NAME
+    reasoning_mode = lookup_custom_param("reasoning_mode")
+    if provider == OPEN_AI_PROVIDER_NAME && reasoning_mode == "pro"
+      if !url.to_s.include?("/v1/responses")
+        errors.add(:base, I18n.t("discourse_ai.llm_models.reasoning_mode_requirements"))
+      end
+    elsif provider == BEDROCK_PROVIDER_NAME
       if lookup_custom_param("region").blank?
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
@@ -596,6 +642,27 @@ class LlmModel < ActiveRecord::Base
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
       # access_key_id and role_arn are optional — SDK can auto-resolve credentials
+    elsif provider == GOOGLE_VERTEX_AI_PROVIDER_NAME
+      region = lookup_custom_param("region")
+      project_id = lookup_custom_param("project_id")
+
+      if region.blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      elsif !region.to_s.match?(GOOGLE_VERTEX_AI_REGION_FORMAT)
+        errors.add(:base, I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "region"))
+      end
+
+      if project_id.blank?
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"),
+        )
+      elsif !project_id.to_s.match?(GOOGLE_VERTEX_AI_PROJECT_ID_FORMAT)
+        errors.add(
+          :base,
+          I18n.t("discourse_ai.llm_models.invalid_provider_param", param: "project_id"),
+        )
+      end
     end
   end
 end

@@ -113,6 +113,7 @@ module DiscourseWorkflows
       textarea
       url_preview
       user
+      user_seen_trigger_options
       user_or_group
     ].freeze
 

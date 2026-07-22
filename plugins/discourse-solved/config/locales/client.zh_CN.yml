@@ -19,16 +19,72 @@ zh_CN:
         sections:
           support:
             title: "支持"
+            fetch_error: "无法加载支持数据。"
             filter:
               all_categories: "所有类别"
+            headline:
+              healthy:
+                title: "社区正在自行解决问题。"
+              struggling:
+                title: "大多数问题都没有得到解答。"
+              mixed:
+                title: "支持情况好坏参半。"
+              no_data:
+                title: "没有足够的支持活动"
+                summary: "在该时间段内尚无支持活动。一旦有话题出现，您将看到您的社区是如何处理这些话题的。"
+              resolution:
+                up: "问题解决率提升至 %{rate} %。"
+                down: "问题解决率降低至 %{rate} %。"
+                flat: "问题解决率保持在 %{rate} %。"
+              answerers:
+                members: "用户回复了 %{share} %的回复。"
+                staff: "管理人员回复了 %{share} %的回复。"
+              reply:
+                faster: "首次回复时间缩短至 %{time} ，比上一周期快了 %{delta} 。"
+                slower: "首次回复时间延长至 %{time} ，比上一周期慢了 %{delta} 。"
+                flat: "首次回复时间保持在 %{time} 。"
+              unanswered:
+                other: "此期间的%{count} 个话题仍无回复。"
+            kpi:
+              resolution_rate:
+                label: "解决率"
+                tooltip: "已解决支持话题的百分比。"
+              staff_involvement:
+                label: "管理人员参与"
+                tooltip: "在所有未解决的支持话题中，由管理人员首次回复的百分比。"
+              avg_first_reply:
+                label: "平均首次回复时间"
+                tooltip: "从支持话题发布，到收到第一个回复之间的平均时间。"
+            outcomes:
+              title: "话题类别"
+              resolved:
+                label: "已解决"
+                tooltip: "标记为已解决的话题数量。"
+              in_progress:
+                label: "进行中"
+                tooltip: "至少有一条回复的话题数量。"
+              unanswered:
+                label: "未解答"
+                tooltip: "没有回复的话题数量。"
             answerers:
+              title: "谁在回答？"
+              empty: "在此期间没有任何回复。"
               staff: "管理人员"
+              leader: "领导者"
+              regular: "活跃用户"
               member: "成员"
               basic: "基本用户"
             response_time:
+              title: "回复时间分布"
               buckets:
                 lt_1h: "< 1 小时"
+                "1_4h": "1–4 小时"
+                "4_24h": "4–24小时"
                 gt_24h: "> 24 小时"
+              trend:
+                faster: "%{duration} 更快"
+                slower: "%{duration} 更慢"
+                tooltip: "平均回复时间趋势。"
   js:
     notifications:
       alt:
@@ -78,6 +134,8 @@ zh_CN:
         label_with_count: "%{label} (%{count})"
         title: "我也遇到了这个问题。"
         author_title: "你发起了这个话题。"
+        closed_title: "该话题已关闭"
+        archived_title: "该话题已归档"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"

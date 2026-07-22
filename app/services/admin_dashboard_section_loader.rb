@@ -48,7 +48,17 @@ class AdminDashboardSectionLoader
 
     section_ids.size.times do
       result = results.pop
-      raise result[:error] if result[:error]
+
+      if result[:error]
+        Discourse.warn_exception(
+          result[:error],
+          message: "Failed to build admin dashboard section",
+          env: {
+            section_id: result[:id],
+          },
+        )
+        result = { id: result[:id], data: nil, error: true }
+      end
 
       results_by_id[result[:id]] = result
     end

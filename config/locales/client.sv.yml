@@ -1168,6 +1168,9 @@ sv:
       notifications: "Aviseringar"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Inaktiverad"
+          all: "Aktiverad"
         not_supported: "Aviseringar stöds tyvärr inte i den här webbläsaren."
         perm_denied_expl: "Du nekade tillåtelse för aviseringar. Tillåt aviseringar via din webbläsares inställningar."
         each_browser_note: "Obs: Du måste ändra den här inställningen i varje webbläsare du använder. Alla aviseringar kommer att inaktiveras om du pausar aviseringar från användarmenyn, oavsett denna inställning."
@@ -1739,6 +1742,23 @@ sv:
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
           update_invite: "Uppdatera"
           cancel: "Avbryt"
+        invite_roles:
+          sent_title: "Inbjudan skickad"
+          member_tab: "Medlemmar"
+          admin_tab: "Administratörer"
+          email_placeholder: "namn@exempel.com"
+          invite_by_email: "E-postadress"
+          restrict_domain: "Begränsa till domän"
+          domain_placeholder: "example.com"
+          update: "Uppdatera"
+          summary:
+            role_member: "Medlem"
+            role_admin: "Admin"
+            method_email: "E-postadress"
+            uses: "Max antal användningar"
+            expires: "Utgår"
+            topic: "Ämne"
+            groups: "Grupper"
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2278,6 +2298,7 @@ sv:
       discard: "Förkasta"
       users_placeholder: "Lägg till användare eller grupper"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
+      title_placeholder_redesign: "Rubrik"
       title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "Varför redigerar du?"
       topic_featured_link_placeholder: "Ange länken som visas med titeln."
@@ -2773,6 +2794,7 @@ sv:
       sort:
         label: "Sortera efter"
         top: "Topp"
+        hot: "Hett"
         new: "Nya"
       load_more_children:
         one: "Ytterligare %{count} svar"
@@ -2835,6 +2857,7 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      sr_read: "läs"
       participant_groups: "Deltagargrupper"
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
@@ -3252,6 +3275,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        modal:
+          title: "Översättningar"
         post_language_selector:
           none: "Inte inställd"
       errors:
@@ -3437,7 +3462,7 @@ sv:
     category:
       none: "(ingen kategori)"
       all: "Alla kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Redigera"
       edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
@@ -3917,7 +3942,6 @@ sv:
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
-      choose_for_topic: "alternativa taggar"
       choose_for_topic_required:
         one: "välj minst %{count} tagg…"
         other: "välj minst %{count} taggar…"
@@ -4480,6 +4504,21 @@ sv:
               title: "Inställningar"
         badges:
           title: "Utmärkelser"
+        category_management:
+          tabs:
+            settings: "Inställningar"
+          types:
+            all:
+              title: "Alla kategorier"
+          filter_placeholder: "Filterkategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Ämnen"
+          visibility:
+            public: "Offentligt"
+          visibility_filter:
+            all: "Alla kategorier"
         permalinks:
           title: "Permalänkar"
           header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
@@ -4607,6 +4646,7 @@ sv:
               searches: "Sökningar"
               status: "Status"
         reports_section:
+          header_action: "Hantera"
           no_data: "Ingen data att visa"
           modal:
             enabled_heading: "Aktiverad"
@@ -6308,6 +6348,10 @@ sv:
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"
         settings: "Inställningar"
+        export: "Exportera"
+        import: "Importera"
+        import_category:
+          new: "Nya"
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         delete: "Radera"

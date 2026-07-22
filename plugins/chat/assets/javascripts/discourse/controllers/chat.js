@@ -10,6 +10,10 @@ export default class ChatController extends Controller {
   @service router;
 
   get shouldUseChatSidebar() {
+    if (this.chat.chatDisabledInPreferences) {
+      return false;
+    }
+
     if (this.site.mobileView) {
       return false;
     }

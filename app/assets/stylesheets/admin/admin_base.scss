@@ -1287,7 +1287,6 @@ a.inline-editable-field {
 @import "admin/admin_dashboard";
 @import "admin/admin-dashboard-skeleton";
 @import "admin/admin_filter";
-@import "admin/admin_filter_controls";
 @import "admin/admin_reports";
 @import "admin/admin_report";
 @import "admin/admin_report_counters";
@@ -1307,6 +1306,8 @@ a.inline-editable-field {
 @import "admin/color-palette-editor";
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
+@import "admin/admin_category_management";
 @import "admin/upcoming-changes";
 @import "admin/discourse_id";
 @import "admin/admin_new_category_setup";
+@import "admin/admin_emoji";

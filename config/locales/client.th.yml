@@ -860,6 +860,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
+        push_level:
+          none: "ปิดใช้งานแล้ว"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
@@ -1182,6 +1184,19 @@ th:
           description: "รายละเอียด"
           update_invite: "อัปเดต"
           cancel: "ยกเลิก"
+        invite_roles:
+          member_tab: "สมาชิก"
+          admin_tab: "แอดมิน"
+          email_placeholder: "name@example.com"
+          invite_by_email: "อีเมล"
+          update: "อัปเดต"
+          summary:
+            role_member: "สมาชิก"
+            role_admin: "ผู้ดูแลระบบ"
+            method_email: "อีเมล"
+            expires: "หมดอายุ"
+            topic: "หัวข้อ"
+            groups: "กลุ่ม"
       password:
         title: "รหัสผ่าน"
         common: "รหัสผ่านง่ายเกินไป"
@@ -1487,6 +1502,7 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
+      title_placeholder_redesign: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -1800,6 +1816,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      sr_read: "อ่าน"
       bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
@@ -2464,7 +2481,6 @@ th:
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
-      choose_for_topic: "แท็กทางเลือก"
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
@@ -2723,6 +2739,19 @@ th:
               title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
+        category_management:
+          tabs:
+            settings: "การตั้งค่า"
+          types:
+            all:
+              title: "หมวดหมู่ทั้งหมด"
+          table:
+            category: "หมวดหมู่"
+            topics: "หัวข้อ"
+          visibility:
+            public: "สาธารณะ"
+          visibility_filter:
+            all: "หมวดหมู่ทั้งหมด"
         permalinks:
           title: "ลิงค์ถาวร"
         emoji:
@@ -2800,6 +2829,7 @@ th:
               searches: "ค้นหา"
               status: "สถานะ"
         reports_section:
+          header_action: "จัดการ"
           modal:
             apply: "นำไปใช้"
         site_traffic:
@@ -3551,6 +3581,9 @@ th:
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"
+        export: "ส่งออก"
+        import_category:
+          new: "ใหม่"
       embedding:
         delete: "ลบ"
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"

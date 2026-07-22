@@ -21,7 +21,7 @@ pl_PL:
       dashboard:
         emotion:
           title: "Emocje"
-          description: "Tabela zawiera liczbę postów sklasyfikowanych z określoną emocją. Sklasyfikowano je za pomocą modelu „SamLowe/roberta-base-go_emotions”."
+          description: "Tabela zawiera liczbę wpisów sklasyfikowanych według określonej emocji. W zależności od wybranej metody klasyfikacji emocji wpisy są klasyfikowane albo za pomocą skonfigurowanego modelu klasyfikacji emocji („SamLowe/roberta-base-go_emotions”), albo skonfigurowanego agenta klasyfikacji emocji."
         reports:
           filters:
             group_by:
@@ -233,6 +233,12 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      post_image_captions:
+        edit: "Edytuj podpis obrazu AI"
+        title: "Edytuj podpis obrazu AI"
+        description: "Podpis"
+        save: "Zapisz podpis"
+        saved: "Zapisano podpis obrazu AI"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -370,7 +376,6 @@ pl_PL:
           translate: "Przetłumacz"
           markdown_tables: "Wygeneruj tabelę Markdown"
           custom_prompt: "Niestandardowy prompt"
-          image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
           chat_thread_titles: "Tytuły wątków czatu"
@@ -379,6 +384,12 @@ pl_PL:
             enabled_features: "Włączone funkcje"
             automation: "Automatyzacja"
             agents: "Agenty"
+        image_caption:
+          name: "Podpis obrazu"
+          description: "Generuje podpisy AI do obrazów w wpisach i udostępnia je czytelnikom oraz technologiom wspomagającym"
+          post_image_captions: "Dodaj podpisy do obrazów"
+          setting_groups:
+            settings: "Ustawienia"
         translation:
           name: "Tłumaczenie"
           description: "Tłumaczy treści na obsługiwane języki"
@@ -596,15 +607,8 @@ pl_PL:
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
         use_parent_llm: "Użyj modelu językowego agenta"
-        max_context_posts: "Maksymalny kontekst postów"
-        max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
-        execution_mode: "Tryb wykonania"
-        execution_mode_help: "Kontroluje sposób, w jaki agent zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
-        execution_mode_options:
-          default: "Domyślne (stałe limity)"
-          agentic: "Agent (budżet tokenów)"
-        max_turn_tokens: "Maksymalna liczba żetonów tury"
-        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
+        max_turn_tokens: "Maksymalna liczba tokenów tury"
+        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Pozostaw puste, aby domyślnie wykorzystać połowę okna kontekstowego modelu."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
         vision_enabled: Dołącz przesyłanie obrazów
@@ -975,7 +979,7 @@ pl_PL:
         usage:
           ai_bot: "Bot AI"
           ai_helper: "Pomocnik (%{agent})"
-          ai_helper_image_caption: "Podpis pod obrazkiem"
+          ai_image_caption: "Podpis obrazu"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Podsumuj"
           ai_embeddings_semantic_search: "Wyszukiwanie AI"
@@ -993,9 +997,9 @@ pl_PL:
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-1-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
-          open_ai-gpt-5-5: "Najbardziej zaawansowany model OpenAI z rozszerzonym kontekstem"
-          open_ai-gpt-5-4: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-4-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
+          open_ai-gpt-5-6-sol: "Pionierski model OpenAI do złożonych prac profesjonalnych"
+          open_ai-gpt-5-6-terra: "Równoważy inteligencję i koszty w przypadku wymagających obciążeń"
+          open_ai-gpt-5-6-luna: "Zoptymalizowany pod kątem obciążeń o dużej objętości i ograniczonych kosztach"
           open_router-moonshotai-kimi-k2-6: "Multimodalny model Moonshot z funkcjami wizyjnymi"
           open_router-deepseek-deepseek-v4-flash: "Najnowszy, wysokowydajny model DeepSeek z kontekstem 1M"
           open_router-minimax-minimax-m2-7: "Model MiniMax z dużym kontekstem"
@@ -1043,6 +1047,7 @@ pl_PL:
           cohere: "Cohere"
           open_ai: "OpenAI"
           google: "Google"
+          google_vertex_ai: "Google Vertex AI"
           azure: "Azure"
           ollama: "Ollama"
           CDCK: "CDCK"
@@ -1055,7 +1060,8 @@ pl_PL:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
           role_arn: "Role ARN AWS Bedrock"
           inference_profile_arn: "Profil wnioskowania aplikacji AWS Bedrock ARN"
-          region: "Region AWS Bedrock"
+          region: "Region"
+          project_id: "Identyfikator projektu GCP"
           organization: "Opcjonalny identyfikator organizacji OpenAI"
           disable_system_prompt: "Wyłącz wiadomość systemową w promptach"
           enable_native_tool: "Włącz obsługę natywnych narzędzi"
@@ -1065,6 +1071,7 @@ pl_PL:
           provider_quantizations: "Kolejność kwantyzacji dostawców (lista rozdzielona przecinkami, np.: fp16,fp8)"
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
+          reasoning_mode: "Tryb rozumowania"
           service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
           reasoning_parser: "Analizator wnioskowania vLLM"
           thinking_override: "Zastąpienie myślenia"
@@ -1083,6 +1090,8 @@ pl_PL:
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
           effort: "Poziom wysiłku"
         provider_field_hints:
+          reasoning_mode: "Tryb standardowy korzysta z domyślnego ustawienia dostawcy. Tryb Pro wymaga interfejsu API Responses i obsługi wybranego modelu, a także zwiększa opóźnienie i zużycie tokenów."
+          azure_reasoning_effort: "Dostępne poziomy nakładu pracy zależą od modelu wdrożonego na platformie Azure. Nieobsługiwane wartości są odrzucane przez platformę Azure."
           reasoning_parser: "Musi być zgodny z ustawieniem serwera vLLM --reasoning-parser. Discourse nie może zmieniać parserów podczas żądania; wykorzystuje to do kształtowania opcji żądania."
           thinking_override: "Opcjonalnie wymuś obsługiwane szablony czatu vLLM, aby włączyć lub wyłączyć myślenie dla każdego żądania. Nieobsługiwane parsery zachowują domyślne ustawienia serwera."
           reasoning_effort: "Wysyła opcję żądania reasoning_effort vLLM dla parserów, które ją obsługują."
@@ -1131,11 +1140,6 @@ pl_PL:
           select: "Wybierz"
           selected: "Wybrany"
           try_again: "Spróbuj ponownie"
-        image_caption:
-          button_label: "Napisy z AI"
-          generating: "Generowanie napisów..."
-          credits: "Napisy z AI"
-          save_caption: "Zapisz"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
       errors:
         credit_limit_dialog:
@@ -1228,8 +1232,8 @@ pl_PL:
         click_to_run_label: "Uruchom Artifact"
       ai_bot:
         title: "Bot AI"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."
         cancel_streaming: "Zatrzymaj odpowiedź"
         try_again: "Spróbuj ponownie"

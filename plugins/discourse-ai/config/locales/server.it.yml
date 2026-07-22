@@ -99,7 +99,6 @@ it:
       description: "Questo rapporto contieni l'analisi del sentimento dei messaggi, raggruppati per categoria, con punteggi positivi, negativi e neutri per ciascun messaggio e ciascuna categoria."
     overall_sentiment:
       title: "Sentimento generale"
-      description: 'Il grafico confronta il numero di messaggi classificati come positivi o negativi. Questi vengono calcolati quando i punteggi positivi o negativi > il punteggio soglia impostato. Ciò significa che i messaggi neutri non vengono mostrati. Sono esclusi anche i messaggi personali (MP). Classificazione effettuata con "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Positività(%)"
       yaxis: "Data"
     emotion_admiration:
@@ -228,8 +227,6 @@ it:
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      image_caption:
-        attribution: "Didascalia da IA"
     share_ai:
       read_more: "Leggi la trascrizione completa"
       onebox_title: "Conversazione IA con %{llm_name}"

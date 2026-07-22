@@ -16,10 +16,12 @@ RSpec.describe DiscourseWorkflows::Nodes::UserSearch::V1 do
   end
 
   describe "#output" do
-    it "returns the query" do
+    it "returns the query", :aggregate_failures do
       trigger = described_class.new("workflow query")
+      output = trigger.output
 
-      expect(trigger.output).to eq(query: "workflow query")
+      expect(output).to eq(query: "workflow query")
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 end

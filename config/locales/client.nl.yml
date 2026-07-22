@@ -1588,6 +1588,9 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken"
       desktop_notifications:
+        push_level:
+          none: "Uitgeschakeld"
+          all: "Ingeschakeld"
         not_supported: "Meldingen worden niet ondersteund in deze browser. Sorry."
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
         each_browser_note: "Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld als je meldingen onderbreekt vanuit het gebruikersmenu, ongeacht deze instelling."
@@ -2294,6 +2297,28 @@ nl:
           create_link_and_send_email: "Link maken en e-mail verzenden"
           invite_saved_without_sending_email: "Uitnodiging opgeslagen. Kopieer de link hieronder en deel deze om direct toegang te geven tot deze site."
           invite_saved_with_sending_email: "Uitnodigings-e-mail is verzonden. Je kunt ook de link hieronder kopiëren en delen om direct toegang te geven tot deze site."
+        invite_roles:
+          member_title: "Leden uitnodigen"
+          sent_title: "Uitnodiging gestuurd"
+          member_tab: "Leden"
+          admin_tab: "Beheerders"
+          admin_email_label: "E-mailadres"
+          email_placeholder: "naam@voorbeeld.com"
+          invite_by_email: "E-mailadres"
+          restrict_domain: "Beperken tot domein"
+          more_options: "Meer opties"
+          update: "Bijwerken"
+          summary:
+            role_member: "Lid"
+            role_admin: "Beheerder"
+            method: "Delen"
+            method_email: "E-mailadres"
+            restriction: "Beperkt tot"
+            uses: "Max. gebruiken"
+            expires: "Verloopt"
+            topic: "Topic"
+            groups: "Groepen"
+            edit: "Uitnodiging bewerken"
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -2892,6 +2917,9 @@ nl:
       default: Eigen emoji's
     filter_input:
       clear: "Filter wissen"
+    filter_controls:
+      reset: "Filter resetten"
+      toggle: "Vervolgkeuzemenufilters in-/uitschakelen"
     d_icon_grid_picker:
       select_icon: "Selecteer pictogram"
       search_placeholder: "Pictogrammen zoeken..."
@@ -3004,6 +3032,7 @@ nl:
       draft_saved: "Concept opgeslagen!"
       users_placeholder: "Voeg gebruikers of groepen toe"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
       edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
@@ -3707,6 +3736,7 @@ nl:
       sort:
         label: "Sorteren op"
         top: "Top"
+        hot: "Populair"
         new: "Nieuw"
         old: "Oud"
       load_more_children:
@@ -3793,6 +3823,7 @@ nl:
       read_more_in_category: "Meer lezen? Blader door andere topics in %{categoryLink} of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       read_more: "Meer lezen? <a href='%{categoryLink}'>Blader door alle categorieën</a> of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
+      sr_read: "lezen"
       participant_groups: "Deelnemersgroepen"
       reply_count_link:
         one: "%{count} antwoord, ga naar eerste bericht"
@@ -4276,8 +4307,10 @@ nl:
           one: "%{count} vertaalde taal weergeven"
           other: "%{count} vertaalde talen weergeven"
         modal:
-          title: "Vertalingen voor bericht"
+          title: "Vertalingen"
           confirm_delete: "Weet je zeker dat je vertalingen voor '%{languageCode}' wilt verwijderen?"
+          post_language: "Berichttaal"
+          discard_language_change: "Wijziging negeren"
         success: "Vertalingen zijn bijgewerkt"
         post_language_selector:
           title: "Berichttaal"
@@ -4498,7 +4531,7 @@ nl:
     category:
       none: "(geen categorie)"
       all: "Alle categorieën"
-      choose: "categorie&hellip;"
+      choose: "Categorie&hellip;"
       edit: "Bewerken"
       edit_title: "Bewerk deze categorie"
       edit_dialog_title: "Bewerken: %{categoryName}"
@@ -5131,7 +5164,6 @@ nl:
       selector_no_tags: "geen tags"
       selector_remove_filter: "filter verwijderen"
       tags: "Tags"
-      choose_for_topic: "optionele tags"
       choose_for_topic_required:
         one: "selecteer minimaal %{count} tag…"
         other: "selecteer minimaal %{count} tags…"
@@ -5702,8 +5734,6 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
-    reset_filter: "Filter resetten"
-    toggle_filters: "Vervolgkeuzemenufilters in-/uitschakelen"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -5933,7 +5963,6 @@ nl:
             apple_touch_icon:
               title: "Apple-touchpictogram"
               description: "Pictogram dat wordt gebruikt voor Apple-touchapparaten. Als dit leeg wordt gelaten, wordt large_icon gebruikt."
-              help_text: "De aanbevolen grootte is 180 x 180 pixels. Een transparante achtergrond wordt niet aanbevolen."
             digest_logo:
               title: "Digestlogo"
               description: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van je website. Als dit leeg wordt laten, wordt de afbeelding van de 'logo'-instelling gebruikt."
@@ -6125,6 +6154,22 @@ nl:
               title: "Berichten en topics"
             stats_and_thresholds:
               title: "Statistieken en drempels"
+        category_management:
+          create_category: "Categorie maken"
+          tabs:
+            settings: "Instellingen"
+          types:
+            all:
+              title: "Alle categorieën"
+          filter_placeholder: "Filter categorieën"
+          table:
+            category: "Categorie"
+            visibility: "Zichtbaarheid"
+            topics: "Topics"
+          visibility:
+            public: "Openbaar"
+          visibility_filter:
+            all: "Alle categorieën"
         permalinks:
           title: "Permalinks"
           header_description: "Toe te passen omleidingen voor URL's die onbekend zijn voor het forum"
@@ -6349,6 +6394,7 @@ nl:
               searches: "Zoekopdrachten"
               status: "Status"
         reports_section:
+          header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
           modal:
             enabled_heading: "Ingeschakeld"
@@ -8674,6 +8720,10 @@ nl:
         alt: "voorbeeld van aangepaste emoji"
         delete_confirm: "Weet je zeker dat je de emoji :%{name}: wilt verwijderen?"
         settings: "Instellingen"
+        export: "Exporteren"
+        import: "Importeren"
+        import_category:
+          new: "Nieuw"
       embedding:
         get_started: "Als je Discourse wilt insluiren op een andere website, begin dan door de host ervan toe te voegen."
         delete: "Verwijderen"

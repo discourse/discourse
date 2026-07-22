@@ -50,6 +50,12 @@ function resolveNodeType(nodeTypeOrIdentifier) {
   return { name: nodeTypeOrIdentifier, identifier: nodeTypeOrIdentifier };
 }
 
+export const DEFAULT_TYPE_VERSION = "1.0";
+
+export function typeVersionForNode(node) {
+  return node ? (node.typeVersion ?? DEFAULT_TYPE_VERSION) : null;
+}
+
 export function resolveNodeTypeVersion(
   nodeTypeOrIdentifier,
   typeVersion = null
@@ -60,15 +66,11 @@ export function resolveNodeTypeVersion(
     return nodeType;
   }
 
-  if (typeVersion && nodeType.versions?.[typeVersion]) {
-    return nodeType.versions[typeVersion];
+  if (!typeVersion || !nodeType.versions) {
+    return nodeType.latest || nodeType;
   }
 
-  if (nodeType.latest) {
-    return nodeType.latest;
-  }
-
-  return nodeType;
+  return nodeType.versions[typeVersion] || null;
 }
 
 export function nodeTypeVersion(nodeTypeOrIdentifier, typeVersion = null) {
@@ -198,7 +200,7 @@ function indexedPort(port, index) {
 export function nodeTypeInputs(nodeTypeOrIdentifier, node = null) {
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
-    node?.typeVersion
+    typeVersionForNode(node)
   );
 
   const inputs = nodeType?.inputs;
@@ -262,7 +264,7 @@ export function nodeTypeHasConfigurationFields(
 
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
-    node?.typeVersion
+    typeVersionForNode(node)
   );
 
   return (
@@ -299,7 +301,11 @@ export function nodeTypePort(nodeTypeOrIdentifier, key, typeVersion = null) {
 }
 
 export function nodeTypePortLabel(nodeTypeOrIdentifier, key, node = null) {
-  const port = nodeTypePort(nodeTypeOrIdentifier, key, node?.typeVersion);
+  const port = nodeTypePort(
+    nodeTypeOrIdentifier,
+    key,
+    typeVersionForNode(node)
+  );
 
   if (port.label_key) {
     return translatedOrNull(port.label_key) || port.label || key;
@@ -309,7 +315,7 @@ export function nodeTypePortLabel(nodeTypeOrIdentifier, key, node = null) {
 }
 
 export function nodeTypeOutputKeys(nodeTypeOrIdentifier, node = null) {
-  return nodeTypePorts(nodeTypeOrIdentifier, node?.typeVersion).map(
+  return nodeTypePorts(nodeTypeOrIdentifier, typeVersionForNode(node)).map(
     (port) => port.key
   );
 }
@@ -342,7 +348,7 @@ function runScopeFromCapability(runScope, node, nodeType) {
 export function nodeTypeRunScopeLabelKey(nodeTypeOrIdentifier, node = null) {
   const nodeType = resolveNodeTypeVersion(
     nodeTypeOrIdentifier,
-    node?.typeVersion
+    typeVersionForNode(node)
   );
   const runScope = runScopeFromCapability(
     nodeTypeCapabilities(nodeType).run_scope,

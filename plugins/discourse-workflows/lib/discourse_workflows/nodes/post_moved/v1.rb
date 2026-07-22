@@ -4,6 +4,20 @@ module DiscourseWorkflows
   module Nodes
     module PostMoved
       class V1 < NodeType
+        OUTPUT_SCHEMA =
+          Schema.merge(
+            Schema::POST_SCHEMA,
+            Schema::TOPIC_LIST_ITEM_SCHEMA,
+            {
+              "$schema" => Schema::DRAFT_URI,
+              "type" => "object",
+              "properties" => {
+                "original_topic" =>
+                  Schema::TOPIC_LIST_ITEM_SCHEMA.fetch("properties").fetch("topic"),
+              },
+            },
+          ).freeze
+
         description(
           name: "trigger:post_moved",
           version: "1.0",
@@ -13,6 +27,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:post_moved],
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             category_id: {
               type: :integer,

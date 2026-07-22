@@ -31,6 +31,26 @@ RSpec.describe Category do
     expect(category.errors.to_hash.keys).to contain_exactly(:search_priority)
   end
 
+  describe "#default_top_period" do
+    it "keeps a supported period" do
+      category = Fabricate(:category, user: user, default_top_period: "weekly")
+
+      expect(category.reload.default_top_period).to eq("weekly")
+    end
+
+    it "is nil for an unsupported period" do
+      category = Fabricate(:category, user: user, default_top_period: "hourly")
+
+      expect(category.reload.default_top_period).to be_nil
+    end
+
+    it "is nil for a blank period" do
+      category = Fabricate(:category, user: user, default_top_period: "")
+
+      expect(category.reload.default_top_period).to be_nil
+    end
+  end
+
   it "validates uniqueness in case insensitive way" do
     Fabricate(:category_with_definition, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
@@ -96,6 +116,30 @@ RSpec.describe Category do
       )
 
       expect { category.destroy! }.to change { CategoryPostingReviewGroup.count }.by(-1)
+    end
+  end
+
+  describe ".matching_name_or_slug_ref" do
+    fab!(:guides_category) { Fabricate(:category, name: "Alpha Guides", slug: "alpha-guides") }
+    fab!(:support_category) { Fabricate(:category, name: "Support", slug: "support") }
+    fab!(:bugs_subcategory) do
+      Fabricate(:category, name: "Bug reports", slug: "bugs", parent_category: support_category)
+    end
+
+    it "matches category names, slugs, and parent slug refs" do
+      expect(Category.matching_name_or_slug_ref("alpha")).to contain_exactly(guides_category)
+      expect(Category.matching_name_or_slug_ref("#alpha-guides")).to contain_exactly(
+        guides_category,
+      )
+      expect(Category.matching_name_or_slug_ref("support/bugs")).to contain_exactly(
+        bugs_subcategory,
+      )
+    end
+
+    it "returns the current relation when the filter is blank" do
+      expect(
+        Category.where(id: guides_category.id).matching_name_or_slug_ref(" "),
+      ).to contain_exactly(guides_category)
     end
   end
 

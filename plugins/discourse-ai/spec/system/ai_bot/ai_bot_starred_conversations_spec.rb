@@ -34,7 +34,6 @@ RSpec.describe "AI Bot starred conversations" do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
-    SiteSetting.enable_ai_bot_starred_conversations = true
     SiteSetting.navigation_menu = "sidebar"
     toggle_enabled_bots(bots: [gpt_4])
 

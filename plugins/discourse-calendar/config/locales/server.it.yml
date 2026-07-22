@@ -71,6 +71,8 @@ it:
     holiday_status:
       description: "In vacanza"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     notifications:
       before_event_reminder: "%{title} sta per iniziare."
       after_event_reminder: "%{title} è terminato."

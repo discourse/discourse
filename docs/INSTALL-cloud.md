@@ -1,6 +1,6 @@
 # Install Discourse on a Cloud Server
 
-> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting takes care of everything for you.
+> To install and self-host Discourse, follow the steps below. But if you'd rather skip the setup, maintenance, and server management, our official Discourse hosting plans (Free, Pro, Business or Enterprise) take care of everything for you.
 >
 > [Learn more about Discourse hosting](https://discourse.org/pricing)
 

@@ -5,6 +5,15 @@ module DiscourseWorkflows
     module MarkdownTable
       class V1 < NodeType
         MAPPING_MODES = %w[manual auto].freeze
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "markdown" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
 
         description(
           name: "action:markdown_table",
@@ -17,6 +26,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "all_items",
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             mapping_mode: {
               type: :options,

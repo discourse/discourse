@@ -11,6 +11,7 @@ class SiteSetting < ActiveRecord::Base
     oidc
     saml
     badges
+    categories
     categories_and_tags
     email
     embedding

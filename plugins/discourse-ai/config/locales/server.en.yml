@@ -11,6 +11,12 @@ en:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
       ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
       ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_image_caption_agent: "AI image captions are enabled, but the selected image caption agent is not ready: %{reason}. <a href='%{url}'>Review the image caption agent</a>."
+      ai_image_caption_agent_reasons:
+        agent_missing: "the selected agent does not exist"
+        agent_vision_disabled: "the agent cannot include image uploads"
+        llm_missing: "the agent does not resolve to an LLM"
+        llm_vision_disabled: "the resolved LLM does not support image input"
   discourse_automation:
     ai:
       flag_types:
@@ -103,6 +109,11 @@ en:
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
+    ai_image_caption_agent: "The agent to use for AI image captions. Custom agents must have image uploads enabled and use a vision-capable LLM."
+    ai_post_image_captions_enabled: "Enable AI captions for post images. Generating missing captions requires a configured {{setting:ai_image_caption_agent}}."
+    ai_post_image_captions_per_post_limit: "Maximum number of post images to caption per post."
+    ai_post_image_captions_backfill_hourly_rate: "Maximum number of posts per hour to backfill with AI-generated image captions. Set to 0 to disable backfill."
+    ai_post_image_captions_backfill_max_age_days: "Maximum age in days of posts to backfill with AI-generated image captions."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_post_illustrator_agent: "The agent to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
     ai_helper_chat_thread_title_agent: "The agent to use for generating chat thread titles."
@@ -177,7 +188,7 @@ en:
       description: "This report provides sentiment analysis for posts, grouped by category, with positive, negative, and neutral scores for each post and category."
     overall_sentiment:
       title: "Overall sentiment"
-      description: 'The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Classified with "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      description: "The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Depending on the selected sentiment classification method, posts are classified with either the configured sentiment classification model ('cardiffnlp/twitter-roberta-base-sentiment-latest') or the configured sentiment classification agent."
       xaxis: "Positive(%)"
       yaxis: "Date"
     emotion_admiration:
@@ -378,7 +389,19 @@ en:
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
       image_caption:
-        attribution: "Captioned by AI"
+        aria_description: "%{description} (Captioned by AI)"
+    image_caption:
+      configuration:
+        agent_missing: "Select an existing agent for AI image captions."
+        agent_vision_disabled: "The AI image caption agent must have image uploads enabled."
+        llm_missing: "The AI image caption agent must use an LLM."
+        llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."
+    post_image_captions:
+      errors:
+        description_blank: "Caption can't be blank."
+        description_too_long:
+          one: "Caption must be %{count} character or fewer."
+          other: "Caption must be %{count} characters or fewer."
 
     share_ai:
       read_more: "Read full transcript"
@@ -453,6 +476,9 @@ en:
         discourse_helper:
           name: "Discourse Helper"
           description: "AI Bot specialized in helping with Discourse related tasks"
+        discourse_admin_assistant:
+          name: "Discourse Admin Assistant"
+          description: "AI Bot that answers Discourse questions and helps administrators manage site settings"
         web_artifact_creator:
           name: "Web Artifact Creator"
           description: "AI Bot specialized in creating interactive web artifacts"
@@ -497,7 +523,7 @@ en:
           description: "Default agent powering the Helper's translator feature"
         image_captioner:
           name: "Image captions"
-          description: "Default agent powering the Helper's image caption feature"
+          description: "Default agent powering the image caption feature"
         locale_detector:
           name: "Locale detector"
           description: "Powers the translation feature by detecting the locale of a given text (posts, titles, etc.)"
@@ -636,6 +662,8 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        read_site_setting: "Read site setting"
+        change_site_setting: "Change site setting"
         dall_e: "Generate image"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -686,6 +714,8 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        read_site_setting: "Read the current value of a site setting"
+        change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -755,6 +785,8 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        read_site_setting: "Reading site setting %{setting_name}"
+        change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
@@ -923,6 +955,29 @@ en:
           failed: "Failed to add the note"
         success: "Successfully added a note to review queue item %{reviewable_id}"
 
+      change_site_setting:
+        errors:
+          no_reason: "A reason is required to change a site setting."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          not_allowed: "You are not allowed to change site settings."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be changed here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be changed here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be changed here."
+          deprecated: "Site setting '%{setting_name}' is deprecated; use '%{new_name}' instead."
+          shadowed: "Site setting '%{setting_name}' is overridden globally and cannot be changed."
+          unconfigurable: "Site setting '%{setting_name}' belongs to a plugin that cannot be configured."
+          unsupported_type: "Site settings of type '%{type}' cannot be changed by the AI bot."
+          invalid_value: "Invalid value: %{error}"
+          failed: "Failed to change the site setting."
+        success: "Site setting %{setting_name} has been changed to '%{value}'."
+      read_site_setting:
+        errors:
+          not_allowed: "You are not allowed to read site settings."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be read here."
+          secret: "Site setting '%{setting_name}' contains a secret and cannot be read here."
+          themeable: "Site setting '%{setting_name}' requires a theme and cannot be read here."
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"
@@ -1005,6 +1060,8 @@ en:
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
+      invalid_provider_param: "%{param} has an invalid format"
+      reasoning_mode_requirements: "Pro reasoning mode requires the Responses API"
       secret_required: "A credential must be selected"
       secret_not_found: "The selected credential does not exist"
       bedrock_invalid_url: "Please complete all the fields to use this model."

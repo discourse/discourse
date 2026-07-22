@@ -10,20 +10,13 @@ bs_BA:
       sort_options:
         votes: "Glasovi"
     topic_voting:
-      reached_limit: "Ostali ste bez glasova, odstrani postojeći glas!"
-      list_votes: "Izlistaj svoje glasove"
       voted: "Glasali ste na ovoj temi"
-      allow_topic_voting: "Dozvolite korisnicima da glasaju na teme u ovoj kategoriji"
       vote_title: "Glasaj"
       vote_title_plural: "Glasovi"
       votes:
         one: "%{count} glas"
         few: "%{count} glasova"
         other: "%{count} glasova"
-      anonymous_button:
-        one: "Glas"
-        few: "Glasa"
-        other: "Glasova"
       remove_vote: "Odstrani glas"
       and_more_voters: "i %{count} više..."
       show_voters: "Pokaži ko je glasao"
@@ -36,7 +29,3 @@ bs_BA:
         help: "teme o kojima ste glasali"
     search:
       most_votes: "Većina glasova"
-      advanced:
-        vote:
-          count:
-            label: "Minimalni broj glasova"

@@ -19,54 +19,89 @@ const DEFAULT_ERROR_MODE = "flash";
 type ErrorMode = "flash" | "popup";
 
 /**
- * A function data source. It receives the `@context` value and an options
- * object carrying an `AbortSignal`, and returns either the resolved value
- * directly (a client-only data source) or a promise for it. Existing
- * zero/one-arg functions remain assignable because a function may declare
- * fewer parameters than it is called with.
+ * A function data source, re-invoked whenever the tracked state it reads
+ * (including `@context`) changes. Returns the value or a promise for it.
  */
 type AsyncDataFn<T> = (
+  /** The value passed through `@context`. */
   context: unknown,
-  options: { signal: AbortSignal }
+  /** Per-call values passed alongside `@context`. */
+  options: {
+    /**
+     * Aborted when a later call supersedes this one. Forward it to your request
+     * (e.g. `fetch`) to cancel the superseded work; ignoring it is fine.
+     */
+    signal: AbortSignal;
+  }
 ) => T | Promise<T>;
 
 interface DAsyncContentSignature<T> {
   Args: {
-    // Data source: a promise, an already-constructed `TrackedAsyncData`, or a
-    // function that produces the value (sync or async, and receives an
-    // `AbortSignal` so it can cancel a superseded request).
+    /**
+     * The source of the data to render. One of:
+     * - a `Promise` that resolves to the value;
+     * - an already-constructed `TrackedAsyncData`, when the caller manages the
+     *   async state itself;
+     * - an `AsyncDataFn` that produces the value on demand.
+     */
     asyncData: Promise<T> | TrackedAsyncData<T> | AsyncDataFn<T>;
 
-    // An arbitrary value forwarded to the function form of `@asyncData`.
+    /**
+     * A value forwarded to the function form of `@asyncData`. It is tracked, so
+     * updating it re-invokes the function and reloads the data. Pass the
+     * reactive state the data source depends on here to refresh the content
+     * when that state changes.
+     */
     context?: unknown;
 
-    // Debounce the function form: `true` uses the default input delay, a number
-    // sets the delay in milliseconds.
+    /**
+     * Whether to debounce re-invocations of the function form of `@asyncData`,
+     * so rapidly changing input does not refetch on every change. `true` uses
+     * the default input delay; a number sets the delay in milliseconds.
+     */
     debounce?: boolean | number;
 
-    // Keep rendering the previously resolved value while a subsequent load is
-    // pending, rather than reverting to the loading state.
+    /**
+     * Keep rendering the previously resolved value while a subsequent load is
+     * pending, rather than reverting to the loading state.
+     */
     retainWhileReloading?: boolean;
 
-    // How a rejection is surfaced when no `error` block is provided. Cannot be
-    // combined with an `error` block.
+    /**
+     * How a rejection is surfaced when no `error` block is provided. Cannot be
+     * combined with an `error` block.
+     */
     errorMode?: ErrorMode;
   };
 
   Blocks: {
-    // Rendered while the data is pending (no default: a loading spinner).
+    /**
+     * Rendered while the data is pending. When omitted, a loading spinner is
+     * shown in its place.
+     */
     loading: [];
 
-    // Rendered once resolved, yielding the resolved value.
-    content: [value: T];
+    /** Rendered once the data resolves. */
+    content: [
+      /** The resolved value. */
+      value: T,
+    ];
 
-    // Rendered instead of `content` when the resolved value is falsy.
+    /** Rendered in place of `content` when the resolved value is falsy. */
     empty: [];
 
-    // Rendered on rejection, yielding the error and a component (pre-bound to
-    // the error) that renders the default inline error message.
+    /**
+     * Rendered when the data rejects. When omitted, the rejection is handled
+     * according to `@errorMode`.
+     */
     error: [
+      /** The rejection reason. */
       error: Error,
+
+      /**
+       * A component, pre-bound to the error, that renders the default inline
+       * error message.
+       */
       retry: WithBoundArgs<typeof AsyncContentInlineError, "error">,
     ];
   };

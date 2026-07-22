@@ -18,8 +18,6 @@ es:
     first_reaction:
       name: Primera reacción
       description: Reaccionó a una publicación
-      long_description: |
-        Esta medalla se concede la primera vez que reaccionas a una publicación. Las reacciones son una buena manera de hacer saber a las demás personas de la comunidad que lo que publicaron era interesante, útil, divertido o guay. ¡Comparte tus reacciones!
   reports:
     reactions:
       title: "Reacciones"

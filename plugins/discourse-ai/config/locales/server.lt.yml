@@ -26,8 +26,6 @@ lt:
         markdown_table: Sukurti Markdown lentelę
         explain: "Paaiškinkite"
         replace_dates: "Išmaniosios datos"
-      image_caption:
-        attribution: "Antraštė teikiama AI"
     ai_bot:
       agents:
         custom_prompt:

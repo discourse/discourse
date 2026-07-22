@@ -286,6 +286,18 @@ after_initialize do
     scope.shared_issue_visible?(object.topic)
   end
 
+  on(:upcoming_change_enabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: true)
+    end
+  end
+
+  on(:upcoming_change_disabled) do |setting_name|
+    if setting_name == :enable_solved_badges
+      DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: false)
+    end
+  end
+
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(
       params: {

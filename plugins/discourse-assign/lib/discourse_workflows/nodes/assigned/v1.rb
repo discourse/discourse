@@ -16,6 +16,9 @@ if defined?(DiscourseWorkflows)
             events: [:assigned],
             available: -> { SiteSetting.assign_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_assign",
+            output_contracts: [
+              { schema: DiscourseAssign::Workflows::Schema::ASSIGNED_OUTPUT_SCHEMA },
+            ],
             properties: {
               topic_assignments_only: {
                 type: :boolean,

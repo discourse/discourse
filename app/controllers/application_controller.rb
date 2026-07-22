@@ -1065,6 +1065,10 @@ class ApplicationController < ActionController::Base
     fetch_int_from_params(:limit, params: params, default: default, max: max)
   end
 
+  def fetch_page_from_params(params: self.params, default: 0, max: nil)
+    fetch_int_from_params(:page, params: params, default: default, min: 0, max: max)
+  end
+
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
     key = key.to_sym
 

@@ -994,6 +994,9 @@ ca:
       notifications: "Notificacions"
       statistics: "Estats"
       desktop_notifications:
+        push_level:
+          none: "Desactivat"
+          all: "Activat"
         not_supported: "Aquest navegador no permet les notificacions. Ho sentim."
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
@@ -1381,6 +1384,17 @@ ca:
         invite:
           description: "Descripció"
           cancel: "Cancel·la"
+        invite_roles:
+          member_tab: "Membres"
+          admin_tab: "Administradors"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Correu electrònic"
+          summary:
+            role_member: "Membre"
+            role_admin: "Administració"
+            method_email: "Correu electrònic"
+            topic: "Tema"
+            groups: "Grups"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1724,6 +1738,7 @@ ca:
       edit_shared_draft: "Edita l'esborrany compartit"
       discard: "Descarta"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
+      title_placeholder_redesign: "Títol"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
       edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
@@ -2073,6 +2088,7 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
+      sr_read: "llegeix"
       bumped_at: "Més recent: %{date}"
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
@@ -2382,6 +2398,8 @@ ca:
           actions: "Accions"
           edit: "Edita"
           delete: "Suprimeix"
+        modal:
+          title: "Traduccions"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2502,7 +2520,7 @@ ca:
     category:
       none: "(sense categoria)"
       all: "Totes les categories"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Edita"
       edit_dialog_title: "Edita: %{categoryName}"
       view: "Mostra temes per categories"
@@ -2886,7 +2904,6 @@ ca:
       selector_no_tags: "sense etiquetes"
       selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"
-      choose_for_topic: "etiquetes opcionals"
       add_synonyms: "Afegeix"
       delete_tag: "Suprimeix l'etiqueta"
       delete_confirm:
@@ -3201,6 +3218,20 @@ ca:
               title: "Configuració"
         badges:
           title: "Insígnies"
+        category_management:
+          tabs:
+            settings: "Configuració"
+          types:
+            all:
+              title: "Totes les categories"
+          table:
+            category: "Categoria"
+            visibility: "Visibilitat"
+            topics: "Temes"
+          visibility:
+            public: "Públic"
+          visibility_filter:
+            all: "Totes les categories"
         permalinks:
           title: "Enllaços permanents"
         emoji:
@@ -3326,6 +3357,7 @@ ca:
               searches: "Cerques"
               status: "Estat"
         reports_section:
+          header_action: "Gestiona"
           modal:
             enabled_heading: "Activat"
             all_heading: "Tots els reports"
@@ -4526,6 +4558,10 @@ ca:
         image: "Imatge"
         delete_confirm: "Esteu segur que voleu suprimir l'emoji :%{name}:?"
         settings: "Configuració"
+        export: "Exporta"
+        import: "Importa"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Si voleu incrustar Discourse en un altre web, comenceu afegint-hi l'amfitrió."
         delete: "Suprimeix"

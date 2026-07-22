@@ -40,7 +40,7 @@ export default class Highlights extends Component {
       </:intro>
       <:default>
         {{#if @fetchError}}
-          <div class="db-highlights__error" role="alert">
+          <div class="db-section__error" role="alert">
             {{i18n "admin.dashboard.highlights.fetch_error"}}
           </div>
         {{else}}

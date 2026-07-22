@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   --d-button-default-bg-color: var(--secondary);
   --d-button-default-border: 1px solid var(--primary-300);
   --d-button-default-border--hover: 1px solid var(--primary-400);

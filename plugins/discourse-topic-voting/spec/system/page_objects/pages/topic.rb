@@ -17,12 +17,8 @@ module TopicVotingTopic
   end
 
   def remove_vote
-    if SiteSetting.topic_voting_enable_vote_limits
-      vote
-      find("button.remove-vote").click
-    else
-      find(".title-voting button.voting-wrapper__button").click
-    end
+    vote
+    find("button.remove-vote").click
     self
   end
 

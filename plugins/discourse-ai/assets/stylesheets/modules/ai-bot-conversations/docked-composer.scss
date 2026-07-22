@@ -112,12 +112,11 @@ body.has-ai-bot-docked-composer {
   // topic content doesn't show through the input while scrolling (the docked
   // composer's container is transparent, unlike chat's opaque pane).
   background-color: var(--secondary);
-  background-image: linear-gradient(
-    rgb(var(--primary-very-low-rgb), 0.5),
-    rgb(var(--primary-very-low-rgb), 0.5)
-  );
-  transition: border-color 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
   position: relative;
+  box-shadow: var(--shadow-docked-composer);
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
@@ -133,6 +132,10 @@ body.has-ai-bot-docked-composer {
       pointer-events: none;
     }
   }
+}
+
+.docked-composer--at-bottom.ai-bot-docked-composer .d-editor-textarea-wrapper {
+  box-shadow: none;
 }
 
 .docked-composer.ai-bot-docked-composer .d-editor-input {

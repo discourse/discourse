@@ -6,7 +6,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 interface DConditionalLoadingSpinnerSignature {
   Args: {
+    /** Whether the content is still loading. */
     condition?: boolean;
+
+    /** The spinner size. */
     size?: string;
   };
 
@@ -14,6 +17,7 @@ interface DConditionalLoadingSpinnerSignature {
   Element: HTMLDivElement;
 
   Blocks: {
+    /** The content to reveal once loading has finished. */
     default: [];
   };
 }

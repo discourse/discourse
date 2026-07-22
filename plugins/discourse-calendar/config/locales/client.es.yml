@@ -33,6 +33,9 @@ es:
             topic_id:
               label: ID del tema
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} te invitó a: %{description}"
       preferences:
         all_events: "Calendario de Discourse - Todos los eventos"

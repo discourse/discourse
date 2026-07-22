@@ -125,8 +125,10 @@ pt:
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Marcação"
           custom_prompt: "Janela personalizada"
-          image_caption: "Imagens de legenda"
           translator: "Tradutor"
+        image_caption:
+          setting_groups:
+            settings: "Configurações"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas suportados"
@@ -287,8 +289,6 @@ pt:
         thumbnail_suggestions:
           select: "Selecionar"
           try_again: "Tentar Novamente"
-        image_caption:
-          save_caption: "Guardar"
       embeddings:
         save: "Guardar"
         delete: "Eliminar"
@@ -299,6 +299,7 @@ pt:
           google: "Google"
           fake: "Personalizar"
       ai_bot:
+        llm: "Modelo:"
         debug_ai_modal:
           request: "Pedido"
           response: "Resposta"

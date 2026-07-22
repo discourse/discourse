@@ -414,13 +414,13 @@ describe PostRevisor do
       expect(post.locale).to eq("ja")
     end
 
-    it "also updates the topic's locale if first post" do
-      post = Fabricate(:post)
+    it "keeps the topic locale unchanged when editing the first post locale" do
+      post = Fabricate(:post, locale: "en")
+      post.topic.update!(locale: "fr")
 
       PostRevisor.new(post).revise!(post.user, locale: "ja")
 
-      post.reload
-      expect(post.topic.locale).to eq("ja")
+      expect(post.topic.reload.locale).to eq("fr")
     end
   end
 

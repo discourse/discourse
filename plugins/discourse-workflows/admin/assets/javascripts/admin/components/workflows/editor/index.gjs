@@ -21,6 +21,7 @@ import {
   nodeTypePrimaryOutputKey,
   nodeTypeVersion,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { mergeImportedStaticData } from "../../../lib/workflows/static-data";
 import StickyNote, { STICKY_NOTE_TYPE } from "../../../models/sticky-note";
@@ -55,7 +56,8 @@ export function isNodeUnavailable(workflowsNodeTypes, node) {
   }
 
   return (
-    resolveNodeTypeVersion(nodeType, node.typeVersion)?.available === false
+    resolveNodeTypeVersion(nodeType, typeVersionForNode(node))?.available ===
+    false
   );
 }
 

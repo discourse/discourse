@@ -66,6 +66,21 @@ RSpec.describe CategoriesController do
       )
     end
 
+    it "omits invisible topics with stale featured rows", :aggregate_failures do
+      topic = Fabricate(:topic, category: category)
+      CategoryFeaturedTopic.create!(category: category, topic: topic)
+      topic.update_column(:visible, false)
+
+      get "/categories.json?include_topics=true"
+
+      expect(response).to have_http_status(:ok)
+      category_response =
+        response.parsed_body["category_list"]["categories"].find do |category_json|
+          category_json["id"] == category.id
+        end
+      expect(category_response).not_to have_key("topics")
+    end
+
     it "does not returns subcategories without permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
       subcategory.set_permissions(admins: :full)

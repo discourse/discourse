@@ -229,21 +229,14 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
-    it "restricts the results to the given channel ids while keeping the guardian scope" do
-      other_channel = Fabricate(:category_channel, name: "other")
-      restricted_channel =
-        Fabricate(
-          :category_channel,
-          chatable: Fabricate(:private_category, group: Fabricate(:group)),
-        )
+    it "orders channels by lower-cased name by default" do
+      category_channel.update!(name: "Support")
+      Fabricate(:category_channel, name: "banana")
+      Fabricate(:category_channel, name: "Apple")
 
-      expect(
-        described_class.secured_public_channels(
-          guardian,
-          following: following,
-          ids: [category_channel.id, other_channel.id, restricted_channel.id],
-        ).map(&:id),
-      ).to match_array([category_channel.id, other_channel.id])
+      channels = described_class.secured_public_channels(guardian, following: following)
+
+      expect(channels.map(&:name)).to eq(%w[Apple banana Support])
     end
 
     context "with match_quality when filtering" do

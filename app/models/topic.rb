@@ -593,6 +593,12 @@ class Topic < ActiveRecord::Base
     fancy_title.length > Topic.max_fancy_title_length ? escaped : fancy_title
   end
 
+  # Used when interpolating a topic title into a Markdown link label, where
+  # unescaped brackets or parentheses could change the resulting link.
+  def markdown_link_title
+    title.gsub(/([\\\[\]()])/) { "\\#{$1}" }
+  end
+
   def fancy_title
     return ERB::Util.html_escape(title) unless SiteSetting.title_fancy_entities?
 

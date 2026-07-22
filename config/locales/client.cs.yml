@@ -1679,6 +1679,9 @@ cs:
       notifications: "Upozornění"
       statistics: "Statistiky"
       desktop_notifications:
+        push_level:
+          none: "Vypnuto"
+          all: "Zapnuto"
         not_supported: "Tento prohlížeč nepodporuje upozornění. Omlouváme se."
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         each_browser_note: "Poznámka: Toto nastavení musíte změnit v každém prohlížeči, který používáte. Všechna upozornění budou deaktivována, pokud vypnete upozornění z uživatelské nabídky."
@@ -2406,6 +2409,28 @@ cs:
           create_link_and_send_email: "Vytvořte odkaz a odešlete e-mail"
           invite_saved_without_sending_email: "Pozvánka byla uložena. Zkopírujte níže uvedený odkaz a sdílejte jej, abyste okamžitě udělili přístup k tomuto webu."
           invite_saved_with_sending_email: "E-mail s pozvánkou byl odeslán. Můžete také zkopírovat níže uvedený odkaz a sdílet jej, abyste okamžitě udělili přístup k tomuto webu."
+        invite_roles:
+          member_title: "Pozvat členy"
+          sent_title: "Pozvánka odeslána"
+          member_tab: "Členové"
+          admin_tab: "Administrátoři"
+          admin_email_label: "E-mailová adresa"
+          email_placeholder: "jmeno@example.com"
+          invite_by_email: "Email"
+          restrict_domain: "Omezit na doménu"
+          domain_placeholder: "example.com"
+          more_options: "Více možností"
+          update: "Aktualizovat"
+          summary:
+            role_member: "Člen"
+            role_admin: "Administrace"
+            method: "Sdílení"
+            method_email: "Email"
+            uses: "Max. použití"
+            expires: "Vyprší"
+            topic: "Témata"
+            groups: "Skupiny"
+            edit: "Upravit pozvánku"
         bulk_invite:
           none: "Na této stránce nejsou k zobrazení žádné pozvánky."
           text: "Hromadné pozvání"
@@ -3058,6 +3083,8 @@ cs:
       default: Vlastní emoji
     filter_input:
       clear: "Vymazat filtr"
+    filter_controls:
+      toggle: "Přepnout rozbalovací filtry"
     shared_drafts:
       title: "Sdílené koncepty"
       notice: "Toto téma je viditelné pouze pro ty, kteří mohou publikovat sdílené koncepty."
@@ -3177,6 +3204,7 @@ cs:
       draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
       title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
+      title_placeholder_redesign: "Název"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
       edit_reason_placeholder: "Proč byla nutná úprava?"
       topic_featured_link_placeholder: "Zadejte odkaz s titulkem"
@@ -3859,6 +3887,7 @@ cs:
       sort:
         label: "Řadit podle"
         top: "Nejlepší"
+        hot: "Žhavé"
         new: "Nový"
       load_more_children:
         one: "%{count} další odpověď"
@@ -3939,6 +3968,7 @@ cs:
       read_more_in_category: "Chcete si přečíst více? Projděte další témata v %{categoryLink} nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Projděte všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       unread_indicator: "Žádný člen zatím nečetl poslední příspěvek tohoto tématu."
+      sr_read: "čtení"
       participant_groups: "Skupiny účastníků"
       reply_count_link:
         one: "%{count} odpověď, přejít na první příspěvek"
@@ -4470,8 +4500,9 @@ cs:
           many: "Zobrazit %{count} překladů"
           other: "Zobrazit %{count} překladů"
         modal:
-          title: "Překlady pro příspěvek"
+          title: "Překlady"
           confirm_delete: "Opravdu chcete smazat překlady pro '%{languageCode}'?"
+          discard_language_change: "Zahodit změnu"
         success: "Překlady byly úspěšně aktualizovány"
         post_language_selector:
           none: "Nenastaveno"
@@ -4700,7 +4731,7 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "kategorie&hellip;"
+      choose: "Kategorie&hellip;"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"
@@ -5361,7 +5392,6 @@ cs:
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
       tags: "Štítky"
-      choose_for_topic: "volitelné štítky"
       choose_for_topic_required:
         one: "vyberte alespoň %{count} štítek..."
         few: "vyberte alespoň %{count} štítky..."
@@ -5958,7 +5988,6 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
-    toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -6170,7 +6199,6 @@ cs:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona používaná pro dotyková zařízení Apple. Pokud zůstane prázdná, použije se large_icon."
-              help_text: "Doporučená velikost je 180 x 180 pixelů. Průhledné pozadí se nedoporučuje."
             digest_logo:
               title: "Logo e-mailového souhrnu"
               description: "Alternativní obrázek loga použitý v horní části e-mailového souhrnu vašeho webu. Pokud zůstane prázdný, použije se obrázek z nastavení `logo`."
@@ -6355,6 +6383,22 @@ cs:
               title: "Příspěvky a témata"
             stats_and_thresholds:
               title: "Statistiky a prahové hodnoty"
+        category_management:
+          create_category: "Vytvořit kategorii"
+          tabs:
+            settings: "Nastavení"
+          types:
+            all:
+              title: "Všechny kategorie"
+          filter_placeholder: "Filtrovat kategorie"
+          table:
+            category: "Kategorie"
+            visibility: "Viditelnost"
+            topics: "Témata"
+          visibility:
+            public: "Veřejná"
+          visibility_filter:
+            all: "Všechny kategorie"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Přesměrování se použije pro adresy URL, které fórum nezná"
@@ -6577,6 +6621,7 @@ cs:
               searches: "Hledání"
               status: "Stav"
         reports_section:
+          header_action: "Spravovat"
           no_data: "Žádná data k zobrazení"
           modal:
             enabled_heading: "Zapnuto"
@@ -8957,6 +9002,10 @@ cs:
         alt: "náhled vlastních emoji"
         delete_confirm: "Určitě chcete smazat :%{name}: emoji?"
         settings: "Nastavení"
+        export: "Export"
+        import: "Import"
+        import_category:
+          new: "Nový"
       embedding:
         get_started: "Pokud chcete zabudovat Discourse do jiných webových stránek, začněte přidáním názvu hostitele."
         delete: "Smazat"

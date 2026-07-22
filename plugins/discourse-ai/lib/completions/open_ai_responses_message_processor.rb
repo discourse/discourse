@@ -3,7 +3,7 @@ module DiscourseAi::Completions
   class OpenAiResponsesMessageProcessor
     PROVIDER_KEY = :open_ai_responses
 
-    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens
+    attr_reader :prompt_tokens, :completion_tokens, :cache_read_tokens, :cache_write_tokens
 
     def initialize(partial_tool_calls: false, output_thinking: false)
       @tool = nil # currently streaming ToolCall
@@ -11,6 +11,7 @@ module DiscourseAi::Completions
       @prompt_tokens = nil
       @completion_tokens = nil
       @cache_read_tokens = nil
+      @cache_write_tokens = nil
       @partial_tool_calls = partial_tool_calls
       @streaming_parser = nil # JsonStreamingTracker, if used
       @has_new_data = false
@@ -281,14 +282,17 @@ module DiscourseAi::Completions
     end
 
     def update_usage(json)
-      usage = json.dig(:response, :usage)
+      usage = json.dig(:response, :usage) || json[:usage]
       return if !usage
 
-      cached_tokens = usage.dig(:input_tokens_details, :cached_tokens).to_i
+      token_details = usage[:input_tokens_details] || {}
+      cached_tokens = token_details[:cached_tokens].to_i
+      cache_write_tokens = token_details[:cache_write_tokens].to_i
 
-      @prompt_tokens ||= usage[:input_tokens] - cached_tokens
+      @prompt_tokens ||= usage[:input_tokens] - cached_tokens - cache_write_tokens
       @completion_tokens ||= usage[:output_tokens]
       @cache_read_tokens ||= cached_tokens
+      @cache_write_tokens ||= cache_write_tokens
     end
 
     def build_partial_reasoning_delta(json, prefix: nil)

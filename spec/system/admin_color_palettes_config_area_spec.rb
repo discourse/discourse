@@ -101,13 +101,13 @@ describe "Admin Color Palettes Config Area Page" do
     it "shows filters when there are more than 8 color schemes" do
       config_area.visit
 
-      expect(page).to have_css(".admin-filter-controls__input")
+      expect(page).to have_css(".d-filter-controls__input")
     end
 
     it "can filter by text search" do
       config_area.visit
 
-      find(".admin-filter-controls__input").fill_in(with: user_selectable_palette.name)
+      find(".d-filter-controls__input").fill_in(with: user_selectable_palette.name)
 
       expect(page).to have_css("[data-palette-id='#{user_selectable_palette.id}']")
       expect(page).to have_no_css("[data-palette-id='#{regular_palette.id}']")
@@ -127,10 +127,10 @@ describe "Admin Color Palettes Config Area Page" do
     it "shows no results state" do
       config_area.visit
 
-      find(".admin-filter-controls__input").fill_in(with: "bananas")
+      find(".d-filter-controls__input").fill_in(with: "bananas")
 
-      expect(page).to have_css(".admin-filter-controls__no-results")
-      expect(page).to have_css("button", text: I18n.t("admin_js.reset_filter"))
+      expect(page).to have_css(".d-filter-controls__no-results")
+      expect(page).to have_css("button", text: I18n.t("js.filter_controls.reset"))
     end
   end
 

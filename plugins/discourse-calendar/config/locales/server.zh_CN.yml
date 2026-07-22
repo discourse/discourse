@@ -108,6 +108,8 @@ zh_CN:
     holiday_status:
       description: "休假"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%Y 年%-m 月 %-d 日"
     notifications:
       before_event_reminder: "%{title} 即将开始。"
       after_event_reminder: "%{title} 已结束。"

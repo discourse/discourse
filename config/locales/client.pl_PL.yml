@@ -58,9 +58,10 @@ pl_PL:
         access_permission_viewer: "Przeglądający"
         access_permission_viewer_description: "Może przeglądać treści związane z tym podmiotem"
         access_permission_remove: "Usuń"
-        access_permission_remove_description: "Usuń uprawnienia dla tej grupy"
-        add_group: "Dodaj grupę"
-        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla tego podmiotu i nie można go usunąć"
+        access_permission_remove_description: "Cofnij uprawnienia temu uprawnionemu"
+        add_group: "Dodaj użytkownika lub grupę"
+        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
+        mandatory: "Obowiązkowe"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -988,6 +989,7 @@ pl_PL:
         help: "Usuń to przejęcie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
+      delete_confirm: "Czy na pewno chcesz usunąć ten element z kolejki recenzji?"
       settings:
         saved: "Zapisano"
         save_changes: "Zapisz zmiany"
@@ -1822,12 +1824,18 @@ pl_PL:
       statistics: "Statystyki"
       desktop_notifications:
         label: "Powiadomienia na żywo"
+        push_level:
+          title: "Powiadomienia push są…"
+          none: "Wyłączone"
+          all: "Włączone"
+          chat_only: "Włączone tylko dla czatu"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Odmowa uprawnienia"
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
+        enable_failed: "Nie można włączyć powiadomień. Twoja przeglądarka zablokowała żądanie lub usługa push jest niedostępna."
         each_browser_note: "Uwaga: musisz zmienić to ustawienie w każdej używanej przeglądarce. Wszystkie powiadomienia zostaną wyłączone, jeśli wstrzymasz powiadomienia z menu użytkownika, niezależnie od tego ustawienia."
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na Twoje wpisy?"
       dismiss: "Odrzuć"
@@ -2583,6 +2591,52 @@ pl_PL:
           create_link_and_send_email: "Utwórz link i wyślij e-mail"
           invite_saved_without_sending_email: "Zaproszenie zapisane. Skopiuj poniższy link i udostępnij go, aby natychmiast przyznać dostęp do tej strony."
           invite_saved_with_sending_email: "Wiadomość z zaproszeniem została wysłana. Możesz również skopiować poniższy link i udostępnić go, aby natychmiast przyznać dostęp do tej strony."
+        invite_roles:
+          member_title: "Zaproś członków"
+          admin_title: "Zaproś administratorów"
+          edit_title: "Edycja zaproszenia"
+          created_title: "Zaproszenie utworzone"
+          sent_title: "Zaproszenie wysłane"
+          member_tab: "Członkowie"
+          admin_tab: "Administratorzy"
+          member_description: "Zaproś innych do dołączenia do tej witryny. Udostępnij link lub wyślij zaproszenie e-mailem."
+          admin_description: "Zaproś osoby do dołączenia do Twojego zespołu jako administratorzy. Administratorzy mają pełny dostęp do tej witryny."
+          admin_email_label: "Adres e-mail"
+          member_email_label: "Wyślij do"
+          member_email_help: "Link z zaproszeniem wyślemy na ten adres e-mail."
+          email_placeholder: "nazwa@example.com"
+          invite_by: "Zaproszenie od"
+          invite_by_link: "Link do udostępniania"
+          invite_by_email: "E-mail"
+          role_label: "Zaproś jako"
+          restrict_domain: "Ogranicz do domeny"
+          restrict_domain_help: "Tylko osoby z adresem e-mail w tej domenie mogą zaakceptować link. Żeby zaprosić konkretną osobę, skorzystaj z pola „E-mail” powyżej."
+          domain_placeholder: "example.com"
+          domain_invalid: "Wpisz poprawną domenę, np. example.com"
+          arrive_at_topic_help: "Po zaakceptowaniu przekieruj użytkowników do konkretnego tematu."
+          create_and_send: "Utwórz i wyślij"
+          create_and_copy: "Utwórz i skopiuj link"
+          more_options: "Więcej opcji"
+          fewer_options: "Mniej opcji"
+          update: "Aktualizuj"
+          role_locked: "Po utworzeniu zaproszenia nie można zmienić jego typu."
+          summary:
+            sent_to: "Zaproszenie zostało wysłane e-mailem na adres %{email}. Możesz również udostępnić ten link bezpośrednio:"
+            role: "Rola"
+            role_member: "Uczestnik"
+            role_admin: "Administrator"
+            method: "Udostępnianie"
+            method_link: "Link do udostępniania"
+            method_email: "E-mail"
+            restriction: "Ograniczone do"
+            uses: "Maksymalna liczba użyć"
+            expires: "Wygasa"
+            topic: "Temat"
+            groups: "Grupy"
+            edit: "Edytuj zaproszenie"
+            view_invites: "Wyświetl zaproszenia"
+          email_sent:
+            body: "Zaproszenie zostało wysłane e-mailem na adres %{email}."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -3270,6 +3324,9 @@ pl_PL:
       default: Spersonalizowane emoji
     filter_input:
       clear: "Wyczyść filtr"
+    filter_controls:
+      reset: "Zresetuj filtr"
+      toggle: "Przełącz filtry rozwijane"
     d_icon_grid_picker:
       select_icon: "Wybierz ikonę"
       search_placeholder: "Szukaj ikon..."
@@ -3292,6 +3349,7 @@ pl_PL:
     gifs:
       modal_title: "Wyszukaj GIF-y"
       composer_title: "Wstaw GIF"
+      placeholder: "Przeszukaj KLIPY"
       powered_by: "Obsługiwane przez Klipy"
       no_results: "Wprowadź słowo kluczowe powyżej, aby wyszukać pliki GIF."
       browse_categories: "Przeglądaj według kategorii"
@@ -3487,6 +3545,7 @@ pl_PL:
       draft_saved: "Szkic zapisany!"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
+      title_placeholder_redesign: "Tytuł"
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
       edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
@@ -4347,6 +4406,7 @@ pl_PL:
       sort:
         label: "Sortuj po"
         top: "Popularne"
+        hot: "Gorące"
         new: "Nowe"
         old: "Stare"
       load_more_children:
@@ -4469,6 +4529,7 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      sr_read: "odczyt"
       participant_groups: "Grupy uczestników"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -5054,8 +5115,16 @@ pl_PL:
           many: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
           other: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
         modal:
-          title: "Tłumaczenia dla wpisu"
+          title: "Tłumaczenia"
           confirm_delete: "Czy na pewno chcesz usunąć tłumaczenia dla '%{languageCode}'?"
+          language_notice: "Ustaw język oryginalnego wpisu, aby czytelnicy mogli zobaczyć tłumaczenia."
+          post_language: "Język wpisu"
+          topic_language: "Język tytułu tematu"
+          save_post_language: "Zapisz język wpisu"
+          save_topic_language: "Zapisz język tytułu tematu"
+          discard_language_change: "Odrzuć zmianę"
+          post_language_updated: "Zaktualizowano język wpisu"
+          topic_language_updated: "Zaktualizowano język tytułu tematu"
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
           title: "Język wpisu"
@@ -5306,7 +5375,7 @@ pl_PL:
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
-      choose: "kategoria&hellip;"
+      choose: "Kategoria&hellip;"
       edit: "Edytuj"
       edit_title: "Edytuj tę kategorię"
       edit_dialog_title: "Edytuj: %{categoryName}"
@@ -6050,7 +6119,7 @@ pl_PL:
       selector_no_tags: "brak tagów"
       selector_remove_filter: "usuń filtr"
       tags: "Tagi"
-      choose_for_topic: "tagi opcjonalne"
+      choose_for_topic: "Opcjonalne tagi…"
       choose_for_topic_required:
         one: "wybierz co najmniej %{count} tag…"
         few: "wybierz co najmniej %{count} tagi…"
@@ -6685,8 +6754,6 @@ pl_PL:
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
-    reset_filter: "Zresetuj filtr"
-    toggle_filters: "Przełącz filtry rozwijane"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
@@ -6748,6 +6815,7 @@ pl_PL:
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
         change_disabled: "Zrezygnowałeś z tej zmiany"
+        depends_on_notice: "Aby wprowadzić tę zmianę, konieczne jest włączenie opcji %{dependencyLinks}."
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
         permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
@@ -6921,7 +6989,7 @@ pl_PL:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona używana dla urządzeń dotykowych Apple. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
-              help_text: "Zalecany rozmiar to 180 x 180 pikseli. Przezroczyste tło nie jest zalecane."
+              help_text: "Zalecany rozmiar to 180 x 180 pikseli. Nie używaj obrazu SVG. Nie zaleca się stosowania przezroczystego tła."
             digest_logo:
               title: "Logo skrótu"
               description: "Alternatywny obraz logo używany w górnej części podsumowania wiadomości e-mail Twojej witryny. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
@@ -7131,6 +7199,32 @@ pl_PL:
               title: "Wpisy i tematy"
             stats_and_thresholds:
               title: "Statystyki i progi"
+        category_management:
+          title: "Zarządzanie kategoriami"
+          header_description: "Przejrzyj typy kategorii, hierarchię i kategorie aktualnie przypisane do każdego typu."
+          keywords: "kategorie|typy kategorii|dyskusja|zarządzanie kategoriami"
+          create_category: "Utwórz kategorię"
+          tabs:
+            settings: "Ustawienia"
+          types:
+            unavailable: "Typ kategorii %{categoryType} jest niedostępny."
+            all:
+              title: "Wszystkie kategorie"
+              description: "Wszystkie kategorie w każdym skonfigurowanym typie kategorii."
+          filter_placeholder: "Filtruj kategorie"
+          no_results: "Nie znaleziono kategorii %{type}."
+          open_settings: "Otwórz ustawienia"
+          table:
+            category: "Kategoria"
+            visibility: "Widoczność"
+            topics: "Tematy"
+          visibility:
+            public: "Publiczny"
+            restricted: "Ograniczone"
+          visibility_filter:
+            all: "Wszystkie kategorie"
+            public: "Kategorie publiczne"
+            restricted: "Ograniczone kategorie"
         permalinks:
           title: "Permalinki"
           header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
@@ -7350,12 +7444,14 @@ pl_PL:
         not_found_error: Przepraszamy, ten raport nie istnieje.
         custom_date_range: Niestandardowy zakres dat
         loading: "Ładowanie pulpitu nawigacyjnego…"
+        fetch_error: "Nie udało się załadować pulpitu nawigacyjnego. Spróbuj odświeżyć stronę."
         stable: "stabilna"
         sections:
           highlights:
             title: "Najważniejsze wydarzenia"
           reports:
             title: "Zgłoszenia"
+            fetch_error: "Nie udało się załadować raportów. Spróbuj odświeżyć stronę."
           traffic:
             title: "Ruch w witrynie"
           engagement:
@@ -7371,6 +7467,7 @@ pl_PL:
               share: "Udział"
               vs_prior: "Kontra wcześniej"
               empty: "Brak aktywności w wybranym okresie."
+              save_error: "Nie udało się zapisać wyboru na następny raz."
             whos_posting:
               title: "Kto publikuje?"
               all_categories: "Wszystkie kategorie"
@@ -7496,6 +7593,7 @@ pl_PL:
                 poor_match: "Słabe dopasowanie"
                 poor_match_tooltip: "Hasła wyszukiwania ze współczynnikiem klikalności (CTR) wynoszącym od 1 do 20%."
         reports_section:
+          header_action: "Zarządzaj"
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
           remove: "Usuń raport"
@@ -9800,7 +9898,7 @@ pl_PL:
           other: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
         depends_on_values_notice:
           one: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawiony na zgodną wartość."
-          few: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
+          few: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawiony na zgodną wartość."
           many: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
           other: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawionych na zgodną wartość."
         discard:
@@ -10059,6 +10157,31 @@ pl_PL:
         alt: "podgląd niestandardowego emoji"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}:?"
         settings: "Ustawienia"
+        export: "Eksport"
+        export_count: "Eksportuj (wybrano%{count})"
+        export_failed: "Eksport nie powiódł się. Spróbuj ponownie."
+        select_to_export: "Wybierz, aby wyeksportować"
+        import: "Import"
+        import_heading: "Importuj emoji"
+        import_description: "Prześlij plik ZIP zawierający manifest emojis.csv i pliki obrazów."
+        import_download_sample: "Pobierz przykładowy szablon."
+        import_preview_heading: "Przegląd importu"
+        import_summary: "Nowe: %{new} · Konflikty: %{conflicts} · Niezmienione: %{unchanged} · Błędy %{invalid}"
+        import_confirm: "Potwierdź import"
+        import_unchanged_count: "Niezmienione: %{count}"
+        import_will_skip: "Bez zmian — pominięto"
+        import_excluded: "Wykluczone z importu"
+        import_incoming_alt: "Przychodzące: %{name}"
+        import_existing_alt: "Istniejące: %{name}"
+        import_existing_group_alt: "Istniejąca grupa"
+        import_use_incoming: "Użyj nowego"
+        import_keep_existing: "Zachowaj istniejące"
+        import_category:
+          new: "Nowe"
+          conflict: "Konflikty"
+          invalid: "Błędy"
+        select_all: "Zaznacz wszystkie emotikony"
+        select: "Wybierz %{name}"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         delete: "Usuń"

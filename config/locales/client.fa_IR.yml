@@ -1303,6 +1303,9 @@ fa_IR:
       notifications: "آگاه‌سازی‌ها"
       statistics: "وضعیت"
       desktop_notifications:
+        push_level:
+          none: "غیرفعال"
+          all: "فعال شده"
         not_supported: "با عرض پوزش، آگاه‌سازی بر روی این مرورگر پشتیبانی نمی‌شود."
         perm_denied_expl: "شما دسترسی دریافت اعلان را بسته‌اید. در تنظیمات مرورگر خود آن‌را فعال کنید."
         each_browser_note: "توجه: شما باید این تنظیمات را در هر مرورگری که استفاده می‌کنید، تغییر دهید. اگر آگاه‌سازی‌ها را از منوی کاربر متوقف کنید، صرف‌نظر از این تنظیم، همه آگاه‌سازی‌ها غیرفعال می‌شوند."
@@ -1969,6 +1972,25 @@ fa_IR:
           create_link_and_send_email: "ایجاد لینک و ارسال ایمیل"
           invite_saved_without_sending_email: "دعوت ذخیره شده لینک زیر را کپی کرده و آن را به اشتراک بگذارید تا بلافاصله دسترسی به این سایت را اعطا کنید."
           invite_saved_with_sending_email: "ایمیل دعوت ارسال شد. همچنین می توانید لینک زیر را کپی کرده و آن را به اشتراک بگذارید تا بلافاصله دسترسی به این سایت را اعطا کنید."
+        invite_roles:
+          member_title: "دعوت‌نامه عضوها"
+          member_tab: "اعضاء"
+          admin_tab: "مدیران ارشد"
+          admin_email_label: "آدرس ایمیل"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ایمیل"
+          restrict_domain: "محدود کردن دامنه"
+          more_options: "گزینه‌های بیشتر"
+          update: "به‌روزرسانی"
+          summary:
+            role_member: "عضو"
+            role_admin: "مدیر کل"
+            method_email: "ایمیل"
+            uses: "حداکثر استفاده"
+            expires: "انقضاء"
+            topic: "موضوع"
+            groups: "گروه‌ها"
+            edit: "ویرایش دعوت‌نامه"
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2595,6 +2617,7 @@ fa_IR:
       discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
+      title_placeholder_redesign: "عنوان"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       topic_featured_link_placeholder: "پیوندی که با عنوان نمایش داده می‌شود را وارد کنید."
@@ -3120,6 +3143,7 @@ fa_IR:
       sort:
         label: "مرتب‌سازی بر اساس"
         top: "برترین‌ها"
+        hot: "داغ"
         new: "جدید"
       load_more_children:
         one: "%{count} پاسخ دیگر"
@@ -3185,6 +3209,7 @@ fa_IR:
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟ موضوعات دیگر را در %{categoryLink} مرور کنید یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
+      sr_read: "خواندن"
       participant_groups: "گروه‌های شرکت کننده"
       created_at: "تاریخ ایجاد: %{date}"
       bumped_at: "جدیدترین: %{date}"
@@ -3617,6 +3642,8 @@ fa_IR:
           edit: "ویرایش"
           delete: "حذف"
         add: "افزودن ترجمه جدید"
+        modal:
+          title: "ترجمه‌ها"
         success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
         post_language_selector:
           none: "تنظیم نشده"
@@ -4353,7 +4380,6 @@ fa_IR:
       selector_no_tags: "بدون برچسب"
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
-      choose_for_topic: "برچسب‌های اختیاری"
       choose_for_topic_required:
         one: "برچسب انتخاب کنید... %{count} حداقل"
         other: "برچسب انتخاب کنید... %{count} حداقل"
@@ -4992,6 +5018,21 @@ fa_IR:
           sub_pages:
             posts_and_topics:
               title: "فرسته‌ها و موضوعات"
+        category_management:
+          tabs:
+            settings: "تنظیم"
+          types:
+            all:
+              title: "همه‌ی دسته‌بندی‌ها"
+          filter_placeholder: "فیلتر دسته‌بندی‌ها"
+          table:
+            category: "دسته‌بندی"
+            visibility: "قابل مشاهده"
+            topics: "موضوعات"
+          visibility:
+            public: "عمومی"
+          visibility_filter:
+            all: "همه‌ی دسته‌بندی‌ها"
         permalinks:
           title: " پیوند دائمی"
         user_fields:
@@ -5159,6 +5200,7 @@ fa_IR:
               searches: "جستجوها"
               status: "وضعیت"
         reports_section:
+          header_action: "مدیریت"
           modal:
             enabled_heading: "فعال شده"
             all_heading: "تمامی گزارشات"
@@ -7132,6 +7174,10 @@ fa_IR:
         alt: "پیش نمایش ایموجی سفارشی"
         delete_confirm: "آیا مطمئنید که می‌خواهید شکلک :{name}%: را پاک کنید؟"
         settings: "تنظیمات"
+        export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
+        import_category:
+          new: "جدید"
       embedding:
         get_started: "اگر مایل هستید که Discourse را بر روی یک وبسایت دیگر جاساز کنید, با اضافه کردن میزبان یا همان هاست آن وبسایت شروع کنید."
         delete: "حذف"

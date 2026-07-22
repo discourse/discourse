@@ -18,6 +18,9 @@ sl:
             topic_id:
               label: ID teme
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Klepet"
       invite_user_notification: "%{username} vas vabi na: %{description}"
       on_holiday: "Na počitnicah"
       disable_holiday: "Onemogoči"

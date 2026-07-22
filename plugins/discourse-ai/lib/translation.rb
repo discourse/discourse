@@ -188,5 +188,9 @@ module DiscourseAi
     def self.credits_available_for_tag_localization?
       credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
     end
+
+    def self.credits_available_for_sidebar_localization?
+      credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
+    end
   end
 end

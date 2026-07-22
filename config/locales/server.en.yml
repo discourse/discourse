@@ -149,6 +149,7 @@ en:
         other: "Value must be at most %{count} characters long."
       resolve_group_membership_requires_list: "resolve_group_membership can only be used with type: list"
       resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
+      resolve_group_membership_requires_groups_property: "resolve_group_membership can only be used with type: groups in object schemas. Invalid property: %{property}"
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -384,6 +385,7 @@ en:
     onebox:
       invalid_address: "Sorry, we were unable to generate a preview for this web page, because the server '%{hostname}' could not be found. Instead of a preview, only a link will appear in your post. :cry:"
       error_response: "Sorry, we were unable to generate a preview for this web page, because the web server returned an error code of %{status_code}. Instead of a preview, only a link will appear in your post. :cry:"
+      bot_challenge: "Sorry, we were unable to generate a preview for this web page, because the web server requires visitors to pass a verification step in a web browser. Instead of a preview, only a link will appear in your post. :cry:"
       missing_data:
         one: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tag could not be found: %{missing_attributes}"
         other: "Sorry, we were unable to generate a preview for this web page, because the following oEmbed / OpenGraph tags could not be found: %{missing_attributes}"
@@ -433,6 +435,10 @@ en:
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
+    admin_invite_requires_email: "Admin invites must be sent to an email address"
+    admin_invite_requires_admin_inviter: "Only admins can create admin invites"
+    moderator_invite_requires_email: "Moderator invites must be sent to an email address"
+    moderator_invite_requires_staff_inviter: "Only staff can create moderator invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
 
@@ -2284,6 +2290,7 @@ en:
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
     enable_listing_suspended_users_on_search: "Enable regular users to find suspended users."
     selectable_avatars_mode: "Allow users to select an avatar from the {{setting:selectable_avatars}} list and limit custom avatar uploads to the selected trust level."
+    selectable_avatars_random_on_signup: "Assign new users a random avatar from {{setting:selectable_avatars}}."
     selectable_avatars: "Specify a collection of avatars from which users can select their profile picture. The choice will appear during user profile creation or when updating the profile avatar."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
@@ -2900,7 +2907,9 @@ en:
     enable_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
+    enable_composer_redesign: "Enable the redesigned composer."
     enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
+    prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2923,9 +2932,29 @@ en:
     content_localization_allow_author_localization: "Allow authors update localizations of their own topics and posts via the post menu."
     nested_replies_enabled: "Enable the nested replies view for topics."
     nested_replies_default: "Use nested replies as the default view for all topics."
+    nested_replies_hot_sort_enabled: "Allow people to sort nested replies by a demand-driven hot score. Hot scores are calculated in the background only for topics where hot sorting is requested."
+    nested_replies_hot_like_weight: "Weight assigned to each point of a post's like score when calculating nested reply hotness."
+    nested_replies_hot_reply_weight: "Weight assigned to each direct reply when calculating nested reply hotness."
+    nested_replies_hot_freshness_max_bonus: "Maximum freshness bonus added to a newly created nested reply's hot score."
+    nested_replies_hot_freshness_half_life_hours: "Number of hours in which the nested reply freshness bonus is reduced by half."
+    nested_replies_hot_child_penalty: "Hot score subtracted for each ancestor when descendant hotness propagates upward."
+    nested_replies_hot_small_topic_post_limit: "Maximum topic post count that uses top sorting without calculating nested reply hot scores."
+    nested_replies_hot_max_inactivity_days: "Maximum number of days since a topic's latest public post during which hot sorting may be used. Older topics use top sorting without calculating or refreshing hot scores."
+    nested_replies_hot_snapshot_ttl_minutes: "Number of minutes a nested reply hot score snapshot remains fresh before a request may queue a refresh."
+    nested_replies_hot_max_stale_age_days: "Maximum age in days at which an existing nested reply hot score snapshot may still be served."
+    nested_replies_hot_refresh_requests_per_minute: "Maximum nested reply hot score refresh requests accepted from one requester per minute."
+    nested_replies_hot_max_topics_per_run: "Maximum number of queued topics inspected by each nested reply hot score job run."
+    nested_replies_hot_max_job_runtime_ms: "Maximum elapsed runtime in milliseconds for each nested reply hot score job run."
+    nested_replies_hot_max_statement_timeout_ms: "Maximum PostgreSQL statement timeout in milliseconds for one nested reply hot score calculation."
+    nested_replies_hot_lock_timeout_ms: "Maximum PostgreSQL lock wait in milliseconds for nested reply hot score database work."
+    nested_replies_hot_failure_cooldown_minutes: "Number of minutes before a failed nested reply hot score calculation may be queued again."
+    nested_replies_hot_max_pending_topics: "Maximum number of topics waiting in the nested reply hot score queue."
+    nested_replies_hot_max_queue_age_minutes: "Maximum number of minutes a nested reply hot score request may wait in the queue before it is discarded."
+    nested_replies_hot_preload_depth_penalty: "Priority subtracted for each level of depth when choosing nested replies to pre-expand in hot view."
     nested_replies_default_sort: "Default sort algorithm for nested replies view."
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
-    nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
+    nested_replies_backfill_batch_size: "Number of topics to process per nested reply stats backfill batch."
+    nested_replies_stats_maintenance_enabled: "Maintain nested reply statistics even while nested replies are disabled."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
@@ -2936,6 +2965,7 @@ en:
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
     dashboard_improvements: "Enables the redesigned admin dashboard that lets you pin custom reports and includes improved site traffic, engagement, and other analytics tied to community success and value."
+    enable_invite_modal_with_roles: "Enables a redesigned invite flow that lets admins invite someone directly as an admin. The invitee becomes a moderator on signup and an admin once the inviter confirms via email."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3017,7 +3047,7 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
+      content_localization_language_switcher_requirements: "The language switcher requires {{setting:set_locale_from_cookie}} and {{setting:allow_user_locale}} to be enabled, and {{setting:content_localization_supported_locales}} to have at least one language. {{settings:content_localization_language_switcher,set_locale_from_cookie,allow_user_locale,content_localization_supported_locales|All required settings}}"
       content_localization_crawler_param_requirements: "You must first enable 'set locale from param' before enabling this setting."
       mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
       mediaconvert_output_subdirectory_required: "MediaConvert output subdirectory is required."
@@ -3181,6 +3211,7 @@ en:
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
+      exclude_group: "Exclude topics with participants from specific groups"
       locale: "Filter topics by original language"
       locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
       exclude_locale: "Exclude topics originally written in a specific language"
@@ -3341,6 +3372,7 @@ en:
     wrong_invite_code: "The invite code you entered was incorrect."
     reserved_username: "That username is not allowed."
     missing_user_field: "You have not completed all the required user fields"
+    missing_full_name: "Please enter your full name"
     auth_complete: "Authentication is complete."
     click_to_continue: "Click here to continue."
     already_logged_in: "Sorry! This invitation is intended for new users, who do not already have an existing account."
@@ -5341,7 +5373,7 @@ en:
 
       Your permission to use the forum is subject to the following conditions:
 
-      1. You must be at least thirteen years old.
+      1. You must be at least eighteen years old.
 
       2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
@@ -5541,7 +5573,7 @@ en:
 
       ## [Children's Online Privacy Protection Act Compliance](#coppa)
 
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
+      Our site, products and services are all directed to people who are at least 18 years old or older. If this server is in the USA, and you are under the age of 18, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
 
       <a name="online"></a>
 
@@ -6046,6 +6078,8 @@ en:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
     post_restored_by_author: "Post was restored by the author"
+    post_deleted_by_author_after_penalty: >-
+      Post was deleted by the author after the user was penalized for it. Review the penalty without restoring the post.
     priorities:
       low: "Low"
       medium: "Medium"
@@ -6095,6 +6129,10 @@ en:
         title: "Keep post hidden"
         description: "Agree with flag and keep the post hidden."
         complete: "Post kept hidden."
+      agree_and_keep_deleted:
+        title: "Keep post deleted"
+        description: "Agree with flag and keep the post deleted."
+        complete: "Post kept deleted."
       agree_and_suspend:
         title: "Suspend user"
         description: "Agree with flag and suspend the user."
@@ -6160,6 +6198,10 @@ en:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
+      unsilence_user_and_ignore:
+        title: "Unsilence user and ignore"
+        description: "Unsilence the user and remove the flag from the queue without restoring the deleted post."
+        complete: "User unsilenced and flag ignored."
       approve:
         title: "Yes"
         complete: "Post approved."
@@ -6319,6 +6361,23 @@ en:
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
       invalid_tag_group: "has invalid tag group: %{tag_group_name}"
+
+  emoji:
+    export:
+      no_selection: "Select at least one emoji to export."
+    import:
+      missing_file: "No ZIP file provided."
+      missing_csv: "The ZIP must contain an emojis.csv file."
+      too_many_entries: "The ZIP contains too many entries (maximum 1000)."
+      file_too_large: "One or more files in the ZIP are too large."
+      session_expired: "Import session has expired. Please start the import again."
+      validation:
+        missing_name: "Name is required."
+        missing_filename: "Filename is required."
+        invalid_name: "Name contains invalid characters."
+        group_too_long: "Group name must be 20 characters or fewer."
+        unsupported_extension: "File extension .%{ext} is not supported (use png, gif, or svg)."
+        duplicate_filename: "Filename appears more than once in the CSV."
 
   discourse_id:
     already_registered: "This site is already registered with Discourse ID"

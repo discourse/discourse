@@ -20,6 +20,22 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               run_scope: "per_item",
             },
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "channel_id" => {
+                      "type" => "integer",
+                    },
+                    "message" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               channel_id: {
                 type: :integer,

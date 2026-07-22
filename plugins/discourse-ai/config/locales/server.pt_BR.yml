@@ -138,7 +138,6 @@ pt_BR:
       description: "Este relatório fornece análise de sentimento para a postagem agrupados por categorias, com pontuações positivas, negativas e neutras para cada postagem e categoria."
     overall_sentiment:
       title: "Sentimento geral"
-      description: 'Este gráfico compara a quantidade de postagens classificadas como positiva ou negativa. São calculadas quando as pontuações negativas e positivas forem maiores que a pontuação de limite. Ou seja, postagens neutras não são exibidas. Mensagens pessoais (PM) também não. Classificado com "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Positivo (%)"
       yaxis: "Data"
     emotion_admiration:
@@ -297,8 +296,6 @@ pt_BR:
         explain: "Explicar"
         illustrate_post: "Ilustrar postagem"
         replace_dates: "Datas inteligentes"
-      image_caption:
-        attribution: "Legendado por IA"
     share_ai:
       read_more: "Ler a transcrição completa"
       onebox_title: "Conversa de IA com %{llm_name}"
@@ -322,6 +319,8 @@ pt_BR:
       reply_error: "Desculpe, parece que nosso sistema encontrou um problema inesperado ao tentar responder.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[MP de bot de IA não identificado]"
       thinking: "Pensando"
+      chat_tool_approval:
+        unexpected_error: "ocorreu um erro inesperado."
       agents:
         default_llm_required: "É preciso de um modelo de LLM padrão para ativar o bate-papo"
         cannot_have_duplicate_tools: "Não pode haver ferramentas duplicadas"

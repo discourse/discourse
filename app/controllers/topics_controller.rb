@@ -1205,6 +1205,12 @@ class TopicsController < ApplicationController
       render_json_dump result
     rescue Discourse::InvalidParameters => ex
       render_json_error(ex, status: 400)
+    rescue ActiveRecord::RecordInvalid => ex
+      render_json_error(ex, type: :record_invalid, status: 422)
+    rescue Discourse::InvalidAccess
+      render_json_error(I18n.t("invalid_access"), type: :invalid_access, status: 403)
+    rescue Discourse::NotFound
+      render_json_error(I18n.t("not_found"), type: :not_found, status: 404)
     end
   end
 

@@ -9,7 +9,6 @@ import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
-/** @type {import("discourse/ui-kit/d-async-content.gts")} */
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";

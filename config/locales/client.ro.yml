@@ -1363,6 +1363,9 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
+        push_level:
+          none: "Dezactivate"
+          all: "Activate"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
@@ -1822,6 +1825,23 @@ ro:
           create_link_and_send_email: "Creează legătură și trimite email"
           invite_saved_without_sending_email: "Invitația a fost salvată. Copiază legătura de mai jos și partajeaz-o pentru a acorda acces instantaneu la acest site."
           invite_saved_with_sending_email: "Emailul de invitație a fost trimis. De asemenea, poți copia legătura de mai jos și o poți partaja pentru a acorda instantaneu acces la acest site."
+        invite_roles:
+          member_title: "Invită membri"
+          member_tab: "Membri"
+          admin_tab: "Admini"
+          admin_email_label: "Adresă email"
+          email_placeholder: "nume@exemplu.comb"
+          invite_by_email: "E-mail"
+          more_options: "Mai multe opțiuni"
+          update: "Actualizează"
+          summary:
+            role_member: "Membru"
+            role_admin: "Administrator"
+            method: "Partajare"
+            method_email: "E-mail"
+            topic: "Subiect"
+            groups: "Grupuri"
+            edit: "Editează invitație"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2260,6 +2280,7 @@ ro:
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
+      title_placeholder_redesign: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2608,6 +2629,7 @@ ro:
       sort:
         label: "Sortează după"
         top: "Top"
+        hot: "Cald"
         new: "Nou"
       load_more_children:
         one: "Încă un răspuns"
@@ -2676,6 +2698,7 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
+      sr_read: "citire"
       reply_count_link:
         one: "%{count} răspuns, sari la prima postare"
         few: "%{count} răspunsuri, sari la prima postare"
@@ -3009,8 +3032,9 @@ ro:
           few: "Vezi %{count} locale traduse"
           other: "Vezi %{count} de locale traduse"
         modal:
-          title: "Traduceri pentru postare"
+          title: "Traduceri"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
+          discard_language_change: "Renunță la modificare"
         success: "Traducerile au fost actualizate cu succes"
         edit_warning:
           action_original: "Editează postarea originală"
@@ -3592,7 +3616,6 @@ ro:
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"
-      choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
       delete_tag: "Șterge etichetă"
       delete_confirm:
@@ -4128,6 +4151,20 @@ ro:
               title: "Postări și subiecte"
             stats_and_thresholds:
               title: "Statistici și praguri"
+        category_management:
+          tabs:
+            settings: "Setări"
+          types:
+            all:
+              title: "Toate categoriile"
+          table:
+            category: "Categorie"
+            visibility: "Vizibilitate"
+            topics: "Discuții"
+          visibility:
+            public: "Public"
+          visibility_filter:
+            all: "Toate categoriile"
         permalinks:
           title: "Legături permanente"
         user_defaults:
@@ -4292,6 +4329,7 @@ ro:
               searches: "Căutări"
               status: "Stare"
         reports_section:
+          header_action: "Gestionează"
           add: "Adaugă raport"
           remove: "Elimină raportul"
           no_data: "Nu există date de afișat"
@@ -5692,6 +5730,10 @@ ro:
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
         settings: "Setări"
+        export: "Exportă"
+        import: "Importă"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         delete: "Șterge"

@@ -12,26 +12,16 @@ cs:
     topic_voting:
       notification_label:
         vote_released: "Hlas vrácen"
-      title: "Hlasování o tématu"
-      reached_limit: "Došly vám hlasy. Odeberte jiný hlas."
-      list_votes: "Seznam vašich hlasů"
       voted: "Pro toto téma jste hlasovali"
-      allow_topic_voting: "Povolit uživatelům hlasovat pro témata v této kategorii"
       vote_title: "Hlasovat"
       vote_title_plural: "Hlasy"
       see_votes: "Zbývá vám %{count}/%{max} hlasů"
-      locked: "Uzamčeno"
       locked_description: "Pro hlasování zvyšte svoji úroveň důvěry"
       votes:
         one: "%{count} hlas"
         few: "%{count} hlasy"
         many: "%{count} hlasy"
         other: "%{count} hlasy"
-      anonymous_button:
-        one: "Hlasovat"
-        few: "Hlasy"
-        many: "Hlasy"
-        other: "Hlasy"
       remove_vote: "Odebrat hlas"
       and_more_voters: "a %{count} další(ch)..."
       show_voters: "Zobrazit kdo hlasoval"
@@ -46,10 +36,6 @@ cs:
         help: "témata, o kterých jste hlasovali"
     search:
       most_votes: "Nejvíce hlasů"
-      advanced:
-        vote:
-          count:
-            label: "Minimální počet hlasů"
     admin:
       web_hooks:
         voting_event:

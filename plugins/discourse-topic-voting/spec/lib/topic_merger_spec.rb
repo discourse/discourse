@@ -114,6 +114,29 @@ describe DiscourseTopicVoting::TopicMerger do
       expect(merged_post.raw).to include(I18n.t("topic_voting.duplicated_votes", count: 2))
     end
 
+    it "moves votes when the source topic has an action whisper with no content" do
+      Fabricate(
+        :post,
+        topic: topic_0,
+        user: user_0,
+        post_type: Post.types[:whisper],
+        action_code: "some_action",
+      ).update_columns(raw: "", cooked: "")
+
+      topic_0.move_posts(
+        Discourse.system_user,
+        topic_0.posts.pluck(:id),
+        destination_topic_id: topic_1.id,
+      )
+
+      expect(topic_0.reload).to be_closed
+      expect(topic_0.vote_count).to eq(0)
+      expect(topic_1.reload.vote_count).to eq(5)
+
+      users[0].reload
+      expect(users[0].topics_with_vote.pluck(:topic_id)).to contain_exactly(topic_1.id)
+    end
+
     it "does not move votes when not all posts are moved and the original topic does not get closed" do
       topic_0.move_posts(
         Discourse.system_user,

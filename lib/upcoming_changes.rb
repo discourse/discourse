@@ -13,6 +13,10 @@ module UpcomingChanges
   # upcoming changes. If no conditional display rule is defined, the change will
   # always be displayed.
   #
+  # A plugin-owned change is hidden, and never takes effect, while its owning
+  # plugin is disabled -- unless it opts out with `requires_plugin_enabled: false`.
+  # See .owning_plugin_enabled?
+  #
   # Keep in mind this is called from UpcomingChanges::List service,
   # which loops over every change in an N1 depending on the filters admins
   # have selected, so caching may be appropriate at times.
@@ -21,6 +25,7 @@ module UpcomingChanges
       upcoming_change_name = upcoming_change_name.to_sym
 
       return false if !UpcomingChanges.owning_plugin_configurable?(upcoming_change_name)
+      return false if !UpcomingChanges.owning_plugin_enabled?(upcoming_change_name)
 
       if respond_to?("should_display_#{upcoming_change_name}?")
         return public_send("should_display_#{upcoming_change_name}?")
@@ -36,12 +41,6 @@ module UpcomingChanges
 
     def self.should_display_enable_horizon_high_context_topic_cards?
       Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
-    end
-
-    # Sites already running the discourse-gifs theme component will have their
-    # configuration migrated separately so they don't need to opt in via the upcoming change.
-    def self.should_display_enable_gifs?
-      !DiscourseGifs.component_installed?
     end
 
     # Only relevant on sites that currently allow uncategorized topics, and must
@@ -194,6 +193,33 @@ module UpcomingChanges
     Discourse.plugins_by_name[plugin_name]&.configurable? != false
   end
 
+  # Whether a plugin-owned change is gated on the plugin being enabled.
+  # By default: upcoming changes in plugins are neither displayed nor take effect.
+  # A plugin change can opt OUT with `requires_plugin_enabled: false`.
+  def self.requires_plugin_enabled?(change_setting_name)
+    change_metadata(change_setting_name)[:requires_plugin_enabled] != false
+  end
+
+  def self.owning_plugin_enabled?(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
+    return true if !requires_plugin_enabled?(change_setting_name)
+
+    plugin_name = settings_provider.plugins[change_setting_name]
+    return true if plugin_name.nil?
+
+    plugin = Discourse.plugins_by_name[plugin_name]
+    return true if plugin.nil?
+
+    # Recursion guard: a change that is its own plugin's enabled_site_setting
+    # must opt out with requires_plugin_enabled: false (enforced by the
+    # integrity spec), but if that metadata is forgotten, plugin.enabled? below
+    # would read the change setting, which resolves back through
+    # UpcomingChanges.enabled? and recurses infinitely.
+    return true if plugin.enabled_site_setting&.to_sym == change_setting_name
+
+    plugin.enabled? != false
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
@@ -211,6 +237,15 @@ module UpcomingChanges
     # This intentionally takes precedence over the :permanent status below, since
     # a permanent change to an unavailable plugin still cannot take effect.
     return false if !owning_plugin_configurable?(change_setting_name)
+
+    # The owning plugin is disabled, so the change must not take effect either.
+    # Without this guard an opted-in change would keep acting on the site after
+    # its plugin is switched off -- its `hide_settings` stay hidden and its
+    # default overrides stay applied -- while ConditionalDisplay (which also
+    # checks this) hides the change from admins, leaving them no way to see
+    # what is causing those effects. The stored opt-in is deliberately left
+    # untouched, so the change resumes when the plugin is re-enabled.
+    return false if !owning_plugin_enabled?(change_setting_name)
 
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes

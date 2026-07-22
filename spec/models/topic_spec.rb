@@ -556,6 +556,14 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#markdown_link_title" do
+    it "escapes markdown metacharacters that can break a link title" do
+      topic = Fabricate.build(:topic, title: "Party](https://evil.example) \\ oops")
+
+      expect(topic.markdown_link_title).to eq("Party\\]\\(https://evil.example\\) \\\\ oops")
+    end
+  end
+
   describe "fancy title" do
     let(:topic) { Fabricate.build(:topic, title: %{"this topic" -- has ``fancy stuff''}) }
 

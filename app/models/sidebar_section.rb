@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarSection < ActiveRecord::Base
+  include Localizable
+
   MAX_TITLE_LENGTH = 30
   MAX_USER_CATEGORY_LINKS = 100
 
@@ -15,7 +17,9 @@ class SidebarSection < ActiveRecord::Base
   accepts_nested_attributes_for :sidebar_urls,
                                 allow_destroy: true,
                                 limit: -> { SiteSetting.max_sidebar_section_links }
+  accepts_nested_attributes_for :localizations, allow_destroy: true
 
+  before_validation :set_default_locale
   before_save :set_system_user_for_public_section
 
   validates :title,
@@ -28,7 +32,12 @@ class SidebarSection < ActiveRecord::Base
             }
 
   scope :public_sections, -> { where("public") }
+  scope :custom_sections, -> { where(section_type: nil) }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
+
+  def custom_section?
+    section_type.blank?
+  end
 
   def reset_community!
     ActiveRecord::Base.transaction do
@@ -62,6 +71,10 @@ class SidebarSection < ActiveRecord::Base
   def set_system_user_for_public_section
     self.user_id = Discourse.system_user.id if public
   end
+
+  def set_default_locale
+    self.locale ||= SiteSetting.default_locale.to_s
+  end
 end
 
 # == Schema Information
@@ -69,6 +82,7 @@ end
 # Table name: sidebar_sections
 #
 #  id           :bigint           not null, primary key
+#  locale       :string(20)
 #  public       :boolean          default(FALSE), not null
 #  section_type :integer
 #  title        :string(30)       not null

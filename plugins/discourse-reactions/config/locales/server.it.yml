@@ -16,8 +16,6 @@ it:
     first_reaction:
       name: Prima reazione
       description: Ha reagito al messaggio
-      long_description: |
-        Questo distintivo è assegnato la prima volta che reagisci a un messaggio. Reagire ai messaggi è un ottimo modo per far sapere agli altri membri della tua comunità che quello che hanno pubblicato era interessante, utile, o divertente. Condividi la tua reazione!
   reports:
     reactions:
       title: "Reazioni"

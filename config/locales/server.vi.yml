@@ -2470,6 +2470,8 @@ vi:
     actions:
       agree:
         title: "Đồng ý"
+      agree_and_keep_deleted:
+        title: "Giữ tút bị xóa"
       delete:
         title: "Xóa"
         complete: "Tút đã bị xóa."

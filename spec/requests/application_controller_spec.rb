@@ -3,6 +3,31 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  describe "shared session key" do
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    it "renders the meta tag for a logged-in user" do
+      sign_in(user)
+
+      get "/latest"
+
+      expect(response.body).to match(/<meta name="shared_session_key" content="[^"]+">/)
+    end
+
+    it "authenticates a login-required route via the header" do
+      SiteSetting.login_required = true
+      token = UserAuthToken.generate!(user_id: user.id)
+      key = SecureRandom.hex
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
+
+      get "/latest.json"
+      expect(response.status).to eq(403)
+
+      get "/latest.json", headers: { "HTTP_X_SHARED_SESSION_KEY" => key }
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "for cache control headers" do
     it "sets the `no-cache, no-store` cache control response header when no error is raised" do
       get "/latest"

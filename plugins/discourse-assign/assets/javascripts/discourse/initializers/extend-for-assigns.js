@@ -713,8 +713,8 @@ export default {
         class: "assign-topics",
         description: "topics.bulk.assign_description",
         confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
-        action({ setComponent }) {
-          setComponent(BulkActionsAssignUser);
+        action({ setComponent, performAndRefresh }) {
+          setComponent(BulkActionsAssignUser, { onPerform: performAndRefresh });
         },
         actionType: "setComponent",
       });

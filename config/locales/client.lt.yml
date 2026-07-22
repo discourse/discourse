@@ -1362,6 +1362,9 @@ lt:
       notifications: "Perspėjimai"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Uždrausta"
+          all: "Galimas"
         not_supported: "Pranešimai neveikia ant šios naršyklės. Atsiprašome!"
         perm_denied_expl: "Užklausa atmesta nes jūs to neleidote. Jaigu norite gauti perspėjimus, tai galite jūsų naršyklės nustatymuose."
         each_browser_note: "Pastaba: šį nustatymą turite pakeisti kiekvienoje naudojamoje naršyklėje. Visi pranešimai bus išjungti, kai yra „netrukdyti“ režimas, neatsižvelgiant į šį nustatymą."
@@ -1912,6 +1915,24 @@ lt:
           send_invite_email: "Išsaugoti ir siųsti el. laišką"
           update_invite: "Atnaujinti"
           cancel: "Atšaukti"
+        invite_roles:
+          member_title: "Pakviesti narius"
+          member_tab: "Nariai"
+          admin_tab: "Administratoriai"
+          email_placeholder: "vardas@example.com"
+          invite_by_email: "Epaštas"
+          domain_placeholder: "example.com"
+          more_options: "Daugiau parinkčių"
+          update: "Atnaujinti"
+          summary:
+            role_member: "Narys"
+            role_admin: "Administratorius"
+            method_email: "Epaštas"
+            uses: "Maksimaliai naudoja"
+            expires: "Galiojimo laikas baigiasi"
+            topic: "Tema"
+            groups: "Grupės"
+            edit: "Redaguoti kvietimą"
         bulk_invite:
           text: "Masinis kvietimas"
           error: "Atsiprašome, failas privalo buti CSV formato."
@@ -2447,6 +2468,7 @@ lt:
       title: "Arba paspauskite %{modifier}Enter"
       discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
+      title_placeholder_redesign: "Antraštė"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "Kodėl jūs redaguojate?"
       topic_featured_link_placeholder: "Įveskite nuorodą, rodomą su pavadinimu."
@@ -2837,6 +2859,7 @@ lt:
       sort:
         label: "Rūšiuoti pagal"
         top: "Populiarios"
+        hot: "Karšta"
         new: "Naujas"
       load_more_children:
         one: "dar %{count} atsakymas"
@@ -2910,6 +2933,7 @@ lt:
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
+      sr_read: "skaityti"
       bumped_at: "Naujausi: %{date}"
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       deleted: "Tema buvo ištrinta"
@@ -3287,6 +3311,8 @@ lt:
           actions: "Veiksmai"
           edit: "Redaguoti"
           delete: "Pašalinti"
+        modal:
+          title: "Vertimai"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -3434,7 +3460,7 @@ lt:
     category:
       none: "(jokia kategorija)"
       all: "Visos kategorijos"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Redaguoti"
       edit_dialog_title: "Redaguoti: %{categoryName}"
       view: "Peržiūrėti temas kategorijoje"
@@ -3898,7 +3924,6 @@ lt:
       selector_no_tags: "nėra žymų"
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
-      choose_for_topic: "pasirenkamos žymos"
       default_info: "Ši žyma neapsiriboja jokiomis kategorijomis ir neturi sinonimų."
       staff_info: "Norėdami pridėti apribojimų, įtraukite šią žymą į <a href=%{basePath}/tag_groups>žymų grupę</a>."
       category_restricted: "Ši žyma skirta tik kategorijoms, prie kurių neturite prieigos teisės."
@@ -4288,6 +4313,20 @@ lt:
               title: "Nustatymai"
         badges:
           title: "Trofėjai"
+        category_management:
+          tabs:
+            settings: "Nustatymai"
+          types:
+            all:
+              title: "Visos kategorijos"
+          table:
+            category: "Kategorija"
+            visibility: "Matomumas"
+            topics: "Temos"
+          visibility:
+            public: "Vieša"
+          visibility_filter:
+            all: "Visos kategorijos"
         permalinks:
           title: "Laikinos Nuorodos"
           header_description: "Peradresavimai taikyti URL, kurių forumas nežino"
@@ -4404,6 +4443,7 @@ lt:
               searches: "Paieškos"
               status: "Statusas"
         reports_section:
+          header_action: "Redaguoti"
           no_data: "Nėra rodomų duomenų"
           modal:
             enabled_heading: "Galimas"
@@ -5716,6 +5756,10 @@ lt:
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
         settings: "Nustatymai"
+        export: "Eksportuoti"
+        import: "Importuoti"
+        import_category:
+          new: "Naujas"
       embedding:
         get_started: "Norėčiau pridėti Discourse prie kito puslapio. Pradėk tiesiog pridėdamas valdytoją."
         delete: "Pašalinti"

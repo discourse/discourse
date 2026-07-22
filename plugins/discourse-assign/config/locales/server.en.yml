@@ -36,6 +36,7 @@ en:
         nobody: "Filter topics that are not assigned to anyone"
         anyone: "Filter topics assigned to anyone"
     already_claimed: "That topic has already been claimed."
+    no_assignee: "No assignee was selected."
     already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
     too_many_assigns_for_topic: "Limit of %{limit} assignments per topic has been reached."

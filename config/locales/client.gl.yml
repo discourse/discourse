@@ -991,6 +991,9 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
+        push_level:
+          none: "Desactivado"
+          all: "Activado"
         not_supported: "Este navegador non admite notificacións. Desculpe."
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
@@ -1455,6 +1458,19 @@ gl:
           send_invite_email: "Gardar e enviar mensaxe de correo"
           update_invite: "Actualizar"
           cancel: "Cancelar"
+        invite_roles:
+          member_tab: "Membros"
+          admin_tab: "Administradores"
+          email_placeholder: "nome@exemplo.com"
+          invite_by_email: "Enderezo de correo"
+          update: "Actualizar"
+          summary:
+            role_member: "Membro"
+            role_admin: "Administrador"
+            method_email: "Enderezo de correo"
+            expires: "Caduca"
+            topic: "Tema"
+            groups: "Grupos"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -1850,6 +1866,7 @@ gl:
       edit_shared_draft: "Editar o borrador compartido"
       discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
@@ -2235,6 +2252,7 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
+      sr_read: "lectura"
       bumped_at: "Últimas: %{date}"
       deleted: "Eliminouse o tema"
       slow_mode_update:
@@ -2607,6 +2625,8 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
+        modal:
+          title: "Traducións"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2762,7 +2782,7 @@ gl:
     category:
       none: "(sen categoría)"
       all: "Todas as categorías"
-      choose: "categoría&hellip;"
+      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Ver os temas na categoría"
@@ -3169,7 +3189,6 @@ gl:
       selector_no_tags: "sen etiquetas"
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas opcionais"
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
@@ -3524,6 +3543,20 @@ gl:
               title: "Configuración"
         badges:
           title: "Insignias"
+        category_management:
+          tabs:
+            settings: "Configuración"
+          types:
+            all:
+              title: "Todas as categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidade"
+            topics: "Temas"
+          visibility:
+            public: "Pública"
+          visibility_filter:
+            all: "Todas as categorías"
         permalinks:
           title: "Ligazóns permanentes"
           header_description: "Redireccións que se lle aplicarán a URL non coñecidos polo foro"
@@ -3650,6 +3683,7 @@ gl:
               searches: "Buscas"
               status: "Estado"
         reports_section:
+          header_action: "Xestionar"
           no_data: "Non hai datos que amosar"
           modal:
             enabled_heading: "Activado"
@@ -5012,6 +5046,10 @@ gl:
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"
         settings: "Configuración"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Se quere incorporar o Discourse noutro sitio web, comece engadindo o seu servidor."
         delete: "Eliminar"
