@@ -57,6 +57,7 @@ class SidebarUrl < ActiveRecord::Base
     },
     { name: "Filter", path: "/filter", icon: "filter", segment: SidebarUrl.segments["secondary"] },
   ]
+  COMMUNITY_SECTION_LINK_PATHS = COMMUNITY_SECTION_LINKS.map { |link| link[:path] }.freeze
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }
@@ -89,6 +90,16 @@ class SidebarUrl < ActiveRecord::Base
 
   def set_default_locale
     self.locale ||= SiteSetting.default_locale.to_s
+  end
+
+  def self.built_in_community_section_link_value?(value)
+    normalized_value =
+      value.to_s.sub(%r{\Ahttps?://#{Regexp.escape(Discourse.current_hostname)}}, "")
+    COMMUNITY_SECTION_LINK_PATHS.include?(normalized_value)
+  end
+
+  def built_in_community_section_link?
+    self.class.built_in_community_section_link_value?(value)
   end
 end
 

@@ -51,20 +51,25 @@ class SidebarSectionsController < ApplicationController
   end
 
   def update
-    sidebar_section = SidebarSection.find(section_params["id"])
+    sidebar_section = SidebarSection.find(params[:id])
     @guardian.ensure_can_edit!(sidebar_section)
-    @guardian.ensure_can_localize_sidebar_section!(sidebar_section) if localization_params_present?
+    ensure_localization_params_allowed(sidebar_section) if localization_params_present?
+    permitted_section_params = section_params(sidebar_section)
+    permitted_links_params = links_params(sidebar_section)
 
     ActiveRecord::Base.transaction do
-      sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
+      sidebar_section.update!(
+        permitted_section_params.merge(sidebar_urls_attributes: permitted_links_params),
+      )
       sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
 
       order =
         sidebar_section
           .sidebar_urls
           .sort_by do |url|
-            links_params.index { |link| link["name"] == url.name && link["value"] == url.value } ||
-              -1
+            permitted_links_params.index do |link|
+              link["name"] == url.name && link["value"] == url.value
+            end || -1
           end
           .each_with_index
           .map { |url, index| [url.id, index] }
@@ -116,13 +121,14 @@ class SidebarSectionsController < ApplicationController
     render json: failed_json, status: :forbidden
   end
 
-  def section_params
+  def section_params(sidebar_section = nil)
     section_params = params.permit(:id, :title).to_h.with_indifferent_access
 
     if current_user.admin?
       section_params.merge!(params.permit(:public).to_h.with_indifferent_access)
 
-      if SiteSetting.content_localization_enabled
+      if SiteSetting.content_localization_enabled &&
+           (sidebar_section.blank? || guardian.can_localize_sidebar_section_title?(sidebar_section))
         section_params.merge!(
           params
             .permit(:locale, localizations: %i[id locale title _destroy])
@@ -142,7 +148,7 @@ class SidebarSectionsController < ApplicationController
     section_params
   end
 
-  def links_params
+  def links_params(sidebar_section = nil)
     permitted_link_params = %i[icon name value id _destroy segment]
     if current_user.admin? && SiteSetting.content_localization_enabled
       permitted_link_params << { localizations: %i[id locale name _destroy] }
@@ -152,6 +158,11 @@ class SidebarSectionsController < ApplicationController
 
     links&.each do |link|
       next if link[:localizations].blank?
+      if sidebar_section.present? &&
+           !guardian.can_localize_sidebar_section_link?(sidebar_section, link[:value])
+        link.delete(:localizations)
+        next
+      end
 
       link[:localizations_attributes] = prepare_localization_attributes(link.delete(:localizations))
     end
@@ -189,6 +200,20 @@ class SidebarSectionsController < ApplicationController
 
   def localization_params_present?
     params[:localizations].present? || params[:links]&.any? { |link| link[:localizations].present? }
+  end
+
+  def ensure_localization_params_allowed(sidebar_section)
+    if params[:localizations].present? &&
+         !guardian.can_localize_sidebar_section_title?(sidebar_section)
+      raise Discourse::InvalidAccess
+    end
+
+    params[:links]&.each do |link|
+      next if link[:localizations].blank?
+      next if guardian.can_localize_sidebar_section_link?(sidebar_section, link[:value])
+
+      raise Discourse::InvalidAccess
+    end
   end
 
   def prepare_localization_attributes(localizations)
