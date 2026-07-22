@@ -61,7 +61,9 @@ module Chat
       return true if is_staff?
       return false if !target.user_option.allow_private_messages
 
-      !is_ignored_by_user?(target) && !is_muted_by_user?(target) && !target.suspended?
+      user_comm_screener = UserCommScreener.new(acting_user: @user, target_user_ids: target.id)
+
+      !user_comm_screener.disallowing_pms_from_actor?(target.id) && !target.suspended?
     end
 
     def hidden_tag_names

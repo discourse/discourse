@@ -140,7 +140,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(:hidden_profile, :can_chat_user) do
@@ -148,7 +149,8 @@ after_initialize do
     return false if scope.user.blank?
     return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.can_direct_message? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat? &&
+      scope.recipient_allows_direct_messages?(object)
   end
 
   add_to_serializer(
