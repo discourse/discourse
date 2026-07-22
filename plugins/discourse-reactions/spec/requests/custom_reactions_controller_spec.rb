@@ -482,6 +482,20 @@ describe DiscourseReactions::CustomReactionsController do
       )
     end
 
+    it "does not expose reactor names to anonymous users when names are disabled" do
+      SiteSetting.enable_names = false
+      user_2.update!(name: "Hidden Reactor Name")
+      user_5.update!(name: "Hidden Liker Name")
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["reaction_users"].flat_map { |reaction| reaction["users"] }
+      expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
+      expect(users.all? { |user| !user.key?("name") }).to eq(true)
+      expect(response.body).not_to include(user_2.name, user_5.name)
+    end
+
     it "return reaction_users of reaction when there are parameters" do
       get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json?reaction_value=#{laughing_reaction.reaction_value}"
       parsed = response.parsed_body
