@@ -36,7 +36,7 @@ The Kit inverts that premise. The contract already *is* data:
 | Contract surface        | Source in the Kit                                          |
 | ----------------------- | ---------------------------------------------------------- |
 | types, attributes, relationships | serializers (`record_type`, `attributes_to_serialize`, `relationships_to_serialize`) |
-| filters, sorts, default sort, includes, page caps, stats | resource DSL config (`jsonapi do … end`) |
+| filters, sorts, default sort, includes, page caps, stats | resource class declarations ([resource design](./resource-design.md)) |
 | breaking changes + dates + prose descriptions | `VersionChange` classes (renames as data, `description` required) |
 | plugin contributions (relationships, namespaced keys, timelines) | extension registry |
 | error shapes | teaching 400s, cursor-profile errors, 422 + pointers — all Kit-owned |

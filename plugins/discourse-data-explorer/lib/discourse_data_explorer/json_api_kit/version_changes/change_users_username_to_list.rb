@@ -3,7 +3,7 @@
 module DiscourseDataExplorer
   module JsonApiKit
     module VersionChanges
-      # Pairs with the 2026-07-01 shape change in UserSerializer (string → array,
+      # Pairs with the 2026-07-01 shape change in UserResource (string → array,
       # modeled on Cadwyn's ChangeAddressToList — see docs/cadwyn-review.md §2.3).
       # The down converter is deliberately lossy: old clients get the first known
       # username, which is the pre-change meaning.

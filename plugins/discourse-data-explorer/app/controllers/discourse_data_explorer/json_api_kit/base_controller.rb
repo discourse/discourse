@@ -2,14 +2,15 @@
 
 module DiscourseDataExplorer
   module JsonApiKit
-    # JSON:API Kit — base controller + declarative query-surface DSL.
+    # JSON:API Kit — base controller.
     #
     # This is the "own a small framework" piece from the API-modernization exploration
-    # (docs/api-modernization-exploration.md, Part 9, punch-list #1). A resource declares
-    # its filters, sorts, includes, base scope, stats and pagination, and this base
-    # implements the mechanics once (strict params → 400, filtering, sorting, keyset
-    # pagination — the API's only pagination, per the cursor-pagination profile —
-    # sparse fieldsets, stats meta, Guardian scoping, JSON:API rendering).
+    # (docs/api-modernization-exploration.md, Part 9, punch-list #1). A resource class
+    # (docs/resource-design.md) declares the document shape and query surface (filters,
+    # sorts, includes, base scope, stats, pagination); this base implements the mechanics
+    # once (strict params → 400, filtering, sorting, keyset pagination — the API's only
+    # pagination, per the cursor-pagination profile — sparse fieldsets, stats meta,
+    # Guardian scoping, JSON:API rendering).
     #
     # No Ransack (it breaks core — see Part 9); filtering/sorting are plain AR blocks we
     # own. Reads are generic (index/show); writes stay per-controller (Service::Base).
@@ -37,63 +38,12 @@ module DiscourseDataExplorer
       before_action :upgrade_request
       before_action :reject_unknown_query_params!, only: :index
 
-      # Per-resource declarative config, populated by the `jsonapi do … end` block.
-      # (Plain value object, not a controller — the requires_plugin cop doesn't apply.)
-      # rubocop:disable Discourse/Plugins/CallRequiresPlugin
-      class Config
-        attr_reader :serializer_class,
-                    :base_scope_block,
-                    :default_sort_value,
-                    :filters,
-                    :sorts,
-                    :stats,
-                    :allowed_includes,
-                    :max_page_size,
-                    :default_page_size
-
-        def initialize
-          @filters = {}
-          @sorts = {}
-          @stats = {}
-          @allowed_includes = []
-          @max_page_size = 100
-          @default_page_size = 20
-        end
-
-        def serializer(klass) = @serializer_class = klass
-        def base_scope(&block) = @base_scope_block = block
-        def default_sort(hash) = @default_sort_value = hash
-        # Allowed include paths (dotted for nesting, e.g. "user.groups"). Preloads are
-        # derived from these per-request — the include path *is* the AR association path.
-        def includes(*names) = @allowed_includes = names.map(&:to_s)
-        def stat(name, kind) = @stats[name.to_s] = kind
-        # filter/sort take a block run in the controller instance (so they can read
-        # guardian/params/current_user). A `sort` WITHOUT a block is ATTRIBUTE-DERIVED:
-        # it orders by `column:` (default: the key) and follows the attribute through
-        # version renames. A sort/filter WITH a block is VIRTUAL — its own contract
-        # surface, never renamed by attribute changes. See docs/versioning-design.md.
-        # `nulls: :last` marks a derived sort's column as nullable: the paginator
-        # keysets it through a NULL-grouping helper so NULL rows stay reachable.
-        def filter(name, &block) = @filters[name.to_s] = block
-        def sort(name, column: nil, nulls: nil, &block)
-          @sorts[name.to_s] = { block:, column:, nulls: }
-        end
-
-        def virtual_sort_keys = @sorts.filter_map { |name, entry| name if entry[:block] }
-        def virtual_filter_keys = @filters.keys
-
-        def page(max: 100, default: 20)
-          @max_page_size = max
-          @default_page_size = default
-        end
-      end
-      # rubocop:enable Discourse/Plugins/CallRequiresPlugin
-
       class_attribute :_jsonapi_config, instance_writer: false
 
-      def self.jsonapi(&block)
-        self._jsonapi_config = Config.new
-        _jsonapi_config.instance_eval(&block)
+      # Endpoint wiring: the resource class (docs/resource-design.md) carries all
+      # declarations; the controller only names which resource it serves.
+      def self.resource(resource_class)
+        self._jsonapi_config = resource_class.jsonapi_config
       end
 
       # Machine-readable contract descriptor derived from the DSL config + serializer.
@@ -108,9 +58,12 @@ module DiscourseDataExplorer
         {
           "type" => serializer.record_type.to_s,
           "attributes" => serializer.attributes_to_serialize.keys.map(&:to_s).sort,
+          # Cardinality is the wire-level fact (to-one/to-many) — the gem's
+          # has_one/belongs_to labels render identically and must not diff.
           "relationships" =>
             serializer.relationships_to_serialize.to_h do |name, rel|
-              [name.to_s, rel.relationship_type.to_s]
+              kind = rel.relationship_type.to_s == "has_many" ? "to_many" : "to_one"
+              [name.to_s, kind]
             end,
           "filters" => config.filters.keys.sort,
           "sorts" => config.sorts.keys.sort,
@@ -494,6 +447,15 @@ module DiscourseDataExplorer
 
       def cursor_profile_content_type
         "application/vnd.api+json;profile=\"#{CURSOR_PAGINATION_PROFILE_URI}\""
+      end
+
+      # The official controller→service bridge (ApplicationController#service_params),
+      # reshaped for JSON:API: services receive the write document's deserialized
+      # attributes — already up-migrated to the latest shape by the before_action —
+      # instead of raw params. Endpoint-specific args deep_merge in at the call site,
+      # per the core convention.
+      def service_params
+        { params: jsonapi_deserialize(params), guardian: }
       end
 
       # Parse a JSON:API write document's `data` into a flat attributes hash.
