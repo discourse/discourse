@@ -17,8 +17,10 @@ module Migrations
     # ## The `maps` object
     #
     # Rendering needs the built import maps. They are passed in as one object so the
-    # resolver does no database work while substituting and stays easy to test. It
-    # must respond to:
+    # resolver does no database work while substituting and stays easy to test.
+    # Every method must answer from memory — no SQL, no I/O: the render path calls
+    # the maps once per token, and the no-queries-while-substituting guarantee
+    # holds only if the maps keep it too. It must respond to:
     #
     #   * `user(original_id)`               => `{ username:, name: }` or `nil`
     #   * `group_name(original_id)`         => `String` or `nil`
