@@ -33,7 +33,7 @@ RSpec.describe Migrations::Reporting::Tui do
       it "renders the percent, total count, elapsed, and rate" do
         row = screen.content_rows.first
         expect(row).to include("Categories")
-        expect(row).to include("47%") # 2000 / 4281
+        expect(row).to include("46%") # 2000 / 4281, floored
         expect(row).to include("4,281") # the total, not the running current
         expect(row).not_to include("2,000") # current is conveyed by the percent
         expect(row).to include("0:06") # elapsed
@@ -77,6 +77,31 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(rows.first).to include("4,281")
         expect(rows.first).not_to include("/") # the count is not repeated as current/max
         expect(rows.first).not_to include("%") # no lingering percent
+      end
+
+      it "includes the counting time before progress_begin in the step's duration" do
+        renderer.apply([:start, "Posts", "Posts"]) # the clock reads 6.0 here
+        at(11.0) # planning/counting takes 5s before the progress bar starts
+        renderer.apply([:progress_begin, "Posts", 100])
+        at(13.0)
+        renderer.apply([:progress, "Posts", 100, 0, 0, 0])
+        renderer.apply([:finish, "Posts", :done])
+        renderer.repaint
+
+        row = screen.content_rows.find { |r| r.include?("Posts") }
+        expect(row).to include("0:07") # 5s counting + 2s work, not just the 2s
+      end
+
+      it "does not read 100% until the very last item — floors, never rounds up" do
+        renderer.apply([:progress, "Categories", 4280, 0, 0, 0]) # 4280/4281 = 99.98%
+        at(8.0)
+        renderer.repaint
+        expect(screen.content_rows.first).to include(" 99%")
+        expect(screen.content_rows.first).not_to include("100%")
+
+        renderer.apply([:progress, "Categories", 4281, 0, 0, 0]) # done
+        renderer.repaint
+        expect(screen.content_rows.first).to include("100%")
       end
     end
 
@@ -384,8 +409,8 @@ RSpec.describe Migrations::Reporting::Tui do
         big = rows.find { |r| r.include?("Big") }
         # the count is right-aligned, so the duration after it starts at the same
         # screen column in both rows
-        expect(small.index("0:00")).to eq(big.index("0:00"))
-        expect(small.index("0:00")).to be > big.index("Big")
+        expect(small.index("<1s")).to eq(big.index("<1s"))
+        expect(small.index("<1s")).to be > big.index("Big")
       end
 
       it "reserves the title column so rows with different-length titles align" do
