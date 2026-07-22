@@ -44,6 +44,11 @@ module PageObjects
         self
       end
 
+      def close_whos_posting_category_filter
+        whos_posting_category_filter.collapse
+        self
+      end
+
       def has_activity_row?(category)
         has_css?(ACTIVITY_CATEGORY_CELL, text: category.name)
       end

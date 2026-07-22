@@ -29,6 +29,7 @@ export default class WhosPosting extends Component {
     this.selectedCategories = (this.args.posters?.category_ids ?? [])
       .map((id) => Category.findById(id))
       .filter(Boolean);
+    this.appliedCategoryIds = this.selectedCategories.map((c) => c.id);
   }
 
   get reportQuery() {
@@ -82,6 +83,21 @@ export default class WhosPosting extends Component {
   @action
   onCategoriesChange(categories) {
     this.selectedCategories = categories;
+  }
+
+  @action
+  onClose() {
+    const ids = this.selectedCategories.map((c) => c.id);
+    const unchanged =
+      ids.length === this.appliedCategoryIds.length &&
+      ids.every((id) => this.appliedCategoryIds.includes(id));
+
+    // apply and save once the picker closes, not on every individual pick
+    if (unchanged) {
+      return;
+    }
+
+    this.appliedCategoryIds = ids;
     this.refetch();
     this.#persistSelection();
   }
@@ -163,6 +179,7 @@ export default class WhosPosting extends Component {
           <CategorySelector
             @categories={{this.selectedCategories}}
             @onChange={{this.onCategoriesChange}}
+            @onClose={{this.onClose}}
             @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
           />
         </div>
