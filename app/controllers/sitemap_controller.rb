@@ -6,6 +6,7 @@ class SitemapController < ApplicationController
   before_action :check_sitemap_enabled
 
   def index
+    Sitemap.sync_published_pages_sitemap!
     @sitemaps = Sitemap.where(enabled: true).where.not(name: Sitemap::NEWS_SITEMAP_NAME)
 
     render :index
@@ -56,6 +57,20 @@ class SitemapController < ApplicationController
         end
 
     render plain: @output, content_type: "text/xml; charset=UTF-8" unless performed?
+  end
+
+  # Emits a sitemap of /pub/<slug> URLs for PublishedPage records that
+  # the PublishedPagesController would serve to anonymous visitors
+  # without a guardian check. Sitemap.publishable_pages enforces the
+  # same settings and visibility gates so the source of truth for
+  # "what's anonymously reachable" lives in one place.
+  def published_pages
+    raise Discourse::NotFound if !Sitemap.published_pages_sitemap_available?
+
+    sitemap = Sitemap.touch(Sitemap::PUBLISHED_PAGES_SITEMAP_NAME)
+    @pages = sitemap.published_pages
+
+    render :published_pages, content_type: "text/xml; charset=UTF-8"
   end
 
   private
