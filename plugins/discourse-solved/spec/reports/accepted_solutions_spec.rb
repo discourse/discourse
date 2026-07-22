@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Report do
+describe "accepted_solutions report" do # rubocop:disable RSpec/DescribeClass
   fab!(:author, :user)
 
   def solved_topic_in(category)

@@ -214,6 +214,63 @@ describe AdminDashboardSectionConfiguration do
     end
   end
 
+  describe ".setting_definition" do
+    let(:plugin) { Plugin::Instance.new }
+
+    let(:fake_setting) do
+      Class.new do
+        def self.permit
+          [:category_id]
+        end
+
+        def self.validate(attrs)
+          id = attrs[:category_id]
+          raise Discourse::InvalidParameters.new(:category_id) if id.blank?
+          { "category_id" => id.to_i }
+        end
+      end
+    end
+
+    def register_support_section(enabled: true)
+      plugin.register_admin_dashboard_section(
+        id: "support",
+        enabled: -> { enabled },
+        settings: {
+          "category_id" => fake_setting,
+        },
+      ) { {} }
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
+    it "resolves a setting definition registered on an enabled plugin section" do
+      register_support_section
+
+      definition = described_class.setting_definition("support", "category_id")
+
+      expect(definition[:permit]).to eq([:category_id])
+      expect(definition[:validate].call(category_id: category.id)).to eq(
+        { "category_id" => category.id },
+      )
+    end
+
+    it "returns nil for an unregistered setting key on a plugin section" do
+      register_support_section
+
+      expect(described_class.setting_definition("support", "not_a_real_setting")).to be_nil
+    end
+
+    it "returns nil when the section's enabled proc is false" do
+      register_support_section(enabled: false)
+
+      expect(described_class.setting_definition("support", "category_id")).to be_nil
+    end
+  end
+
   describe ".update_setting" do
     it "persists a valid selection under its key" do
       described_class.update_setting(
@@ -373,48 +430,8 @@ describe AdminDashboardSectionConfiguration do
         { "activity_by_category" => { "category_ids" => [category.id, category_2.id] } },
       )
     end
-  end
 
-  describe "plugin sections" do
-    def stub_plugin_sections(sections)
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(sections)
-    end
-
-    it "includes an enabled plugin section, visible by default" do
-      stub_plugin_sections([{ id: "support", enabled: -> { true }, loader: -> {} }])
-
-      expect(described_class.all_known_section_ids).to include("support")
-      expect(described_class.sections).to include({ id: "support", visible: true })
-      expect(described_class.visible_section_ids).to include("support")
-    end
-
-    it "hides a plugin section whose enabled proc returns false" do
-      stub_plugin_sections([{ id: "support", enabled: -> { false }, loader: -> {} }])
-
-      expect(described_class.all_known_section_ids).not_to include("support")
-      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
-      expect(described_class.visible_section_ids).not_to include("support")
-    end
-
-    it "includes a plugin section that has no enabled proc" do
-      stub_plugin_sections([{ id: "support", enabled: nil, loader: -> {} }])
-
-      expect(described_class.all_known_section_ids).to include("support")
-    end
-
-    it "drops a disabled plugin section id passed to update" do
-      stub_plugin_sections([{ id: "support", enabled: -> { false }, loader: -> {} }])
-
-      described_class.update([{ id: "support", visible: true }], actor: admin)
-
-      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
-    end
-  end
-
-  describe "plugin-registered settings" do
-    def stub_plugin_sections(sections)
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(sections)
-    end
+    let(:plugin) { Plugin::Instance.new }
 
     let(:fake_setting) do
       Class.new do
@@ -430,46 +447,24 @@ describe AdminDashboardSectionConfiguration do
       end
     end
 
-    def stub_support_section(enabled: true)
-      stub_plugin_sections(
-        [
-          {
-            id: "support",
-            enabled: -> { enabled },
-            loader: -> {},
-            settings: {
-              "category_id" => fake_setting,
-            },
-          },
-        ],
-      )
+    def register_support_section(enabled: true)
+      plugin.register_admin_dashboard_section(
+        id: "support",
+        enabled: -> { enabled },
+        settings: {
+          "category_id" => fake_setting,
+        },
+      ) { {} }
     end
 
-    it "resolves a setting definition registered on an enabled plugin section" do
-      stub_support_section
-
-      definition = described_class.setting_definition("support", "category_id")
-
-      expect(definition[:permit]).to eq([:category_id])
-      expect(definition[:validate].call(category_id: category.id)).to eq(
-        { "category_id" => category.id },
-      )
-    end
-
-    it "returns nil for an unregistered setting key on a plugin section" do
-      stub_support_section
-
-      expect(described_class.setting_definition("support", "not_a_real_setting")).to be_nil
-    end
-
-    it "returns nil when the section's enabled proc is false" do
-      stub_support_section(enabled: false)
-
-      expect(described_class.setting_definition("support", "category_id")).to be_nil
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
     end
 
     it "creates a section row on the fly when persisting a plugin section's setting for the first time" do
-      stub_support_section
+      register_support_section
       expect(AdminDashboardSection.find_by(section_id: "support")).to be_nil
 
       described_class.update_setting(
@@ -485,11 +480,55 @@ describe AdminDashboardSectionConfiguration do
     end
 
     it "still raises for an unregistered setting key on a plugin section" do
-      stub_support_section
+      register_support_section
 
       expect {
         described_class.update_setting(section_id: "support", key: "not_a_real_setting", attrs: {})
       }.to raise_error(Discourse::InvalidParameters)
+    end
+  end
+
+  describe "plugin sections" do
+    let(:plugin) { Plugin::Instance.new }
+
+    def register_support_section(enabled:)
+      plugin.register_admin_dashboard_section(id: "support", enabled: enabled) { {} }
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
+    it "includes an enabled plugin section, visible by default" do
+      register_support_section(enabled: -> { true })
+
+      expect(described_class.all_known_section_ids).to include("support")
+      expect(described_class.sections).to include({ id: "support", visible: true })
+      expect(described_class.visible_section_ids).to include("support")
+    end
+
+    it "hides a plugin section whose enabled proc returns false" do
+      register_support_section(enabled: -> { false })
+
+      expect(described_class.all_known_section_ids).not_to include("support")
+      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
+      expect(described_class.visible_section_ids).not_to include("support")
+    end
+
+    it "includes a plugin section that has no enabled proc" do
+      register_support_section(enabled: nil)
+
+      expect(described_class.all_known_section_ids).to include("support")
+    end
+
+    it "drops a disabled plugin section id passed to update" do
+      register_support_section(enabled: -> { false })
+
+      described_class.update([{ id: "support", visible: true }], actor: admin)
+
+      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
     end
   end
 end

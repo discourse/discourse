@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::AdminDashboardSupport do
-  fab!(:support_category, :category)
+  fab!(:support_category)
   fab!(:admin)
   fab!(:author) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:staff_user, :moderator)
   fab!(:member_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
-  before do
-    SiteSetting.solved_enabled = true
-    support_category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
-    support_category.save!
-  end
+  before { SiteSetting.solved_enabled = true }
 
   def build(**opts)
     described_class.build(
@@ -204,14 +200,7 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
   end
 
   describe "category scoping" do
-    fab!(:second_support_category, :category)
-
-    before do
-      second_support_category.custom_fields[
-        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-      ] = "true"
-      second_support_category.save!
-    end
+    fab!(:second_support_category, :support_category)
 
     it "limits metrics to a single category when one is selected" do
       solved_topic(category: support_category)
@@ -237,12 +226,6 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       result = build(category_ids: [support_category.id, other_category.id])
 
       expect(result[:category_ids]).to contain_exactly(support_category.id)
-    end
-
-    it "echoes back the selected category ids" do
-      expect(build(category_ids: [support_category.id])[:category_ids]).to contain_exactly(
-        support_category.id,
-      )
     end
 
     it "lists both support categories as filter options" do

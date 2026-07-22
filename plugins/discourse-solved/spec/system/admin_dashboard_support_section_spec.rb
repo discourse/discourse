@@ -2,7 +2,7 @@
 
 describe "Admin dashboard Support section" do
   fab!(:admin)
-  fab!(:support_category, :category)
+  fab!(:support_category)
   fab!(:author) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:staff_replier, :moderator)
   fab!(:member_replier) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -13,8 +13,6 @@ describe "Admin dashboard Support section" do
   before do
     SiteSetting.solved_enabled = true
     SiteSetting.dashboard_improvements = true
-    support_category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
-    support_category.save!
 
     # Resolved: staff makes the first reply, which is accepted as the solution.
     resolved = Fabricate(:topic, category: support_category, user: author)
@@ -56,19 +54,13 @@ describe "Admin dashboard Support section" do
   end
 
   context "with multiple support categories" do
-    fab!(:other_support_category, :category)
+    fab!(:other_support_category, :support_category)
     fab!(:moderator)
-
-    before do
-      other_support_category.custom_fields[
-        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-      ] = "true"
-      other_support_category.save!
-    end
 
     it "persists an admin's category selection per-site across a refresh" do
       dashboard.visit
       expect(support).to have_category_filter
+      expect(support).to have_no_selected_category(support_category)
 
       support.select_category(support_category)
       expect(support).to have_selected_category(support_category)
