@@ -604,6 +604,11 @@ en:
           boolean: "Boolean"
           array: "Array"
           object: "Object"
+        fields:
+          category_ids: "Categories"
+          category_ids_description: "Only trigger for topics in these categories. Leave empty to match all categories."
+          category_ids_placeholder: "All categories"
+          include_subcategories: "Include subcategories"
         dynamic_values:
           badge_id: "a badge ID"
           boolean: "true or false"
@@ -661,14 +666,10 @@ en:
       stale_topic:
         hours: "Hours with no reply"
         description: "Fires when a topic has had no replies for the specified number of hours"
-        category_id: "Category"
-        category_id_description: "Only consider topics in this category"
-        include_subcategories: "Include subcategories"
+        category_ids_description: "Only consider topics in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only consider topics that have at least one of these tags"
       topic_closed:
-        category_id: "Category"
-        category_id_description: "Only trigger for topics in this category"
         tag_names: "Tags"
         tag_names_description: "Only trigger for topics that have at least one of these tags"
       post_created:
@@ -680,14 +681,11 @@ en:
         group_inbox_id: "Group inbox"
         group_inbox_id_description: "Only trigger for personal messages in this group inbox"
         group_inbox_id_placeholder: "All group inboxes"
-        category_id: "Category"
-        category_id_description: "Only trigger for posts in this category"
-        include_subcategories: "Include subcategories"
+        category_ids_description: "Only trigger for posts in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
       post_edited:
-        category_id: "Category"
-        category_id_description: "Only trigger for posts in this category"
+        category_ids_description: "Only trigger for posts in these categories. Leave empty to match all categories."
         tag_names: "Tags"
         tag_names_description: "Only trigger for posts in topics that have at least one of these tags"
         post_scope: "Post scope"
@@ -698,8 +696,8 @@ en:
         trust_levels: "Trust levels"
         trust_levels_description: "Only trigger for posts created by users with these trust levels"
       post_moved:
-        category_id: "Destination category"
-        category_id_description: "Only trigger for posts moved into this category"
+        category_ids: "Destination categories"
+        category_ids_description: "Only trigger for posts moved into these categories. Leave empty to match all categories."
         tag_names: "Destination tags"
         tag_names_description: "Only trigger for posts moved into topics that have at least one of these tags"
       topic_created:
@@ -711,14 +709,8 @@ en:
         group_inbox_id: "Group inbox"
         group_inbox_id_description: "Only trigger for personal messages in this group inbox"
         group_inbox_id_placeholder: "All group inboxes"
-        category_id: "Category"
-        category_id_description: "Only trigger for topics in this category"
-        include_subcategories: "Include subcategories"
         tag_names: "Tags"
         tag_names_description: "Only trigger for topics that have at least one of these tags"
-      topic_tag_changed:
-        category_id: "Category"
-        category_id_description: "Only trigger for topics in this category"
       user_added_to_group:
         group_id: "Group"
         group_id_description: "Only trigger when a user is added to this group"

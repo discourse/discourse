@@ -46,11 +46,12 @@ module DiscourseWorkflows
                 none: "discourse_workflows.topic_created.group_inbox_id_placeholder",
               },
             },
-            category_id: {
-              type: :integer,
+            category_ids: {
+              type: :array,
               required: false,
               ui: {
                 control: :category,
+                multiple: true,
               },
             },
             include_subcategories: {
@@ -62,7 +63,7 @@ module DiscourseWorkflows
               },
               display_options: {
                 show: {
-                  category_id: [{ condition: { exists: true } }],
+                  category_ids: [{ condition: { exists: true } }],
                 },
               },
             },
@@ -104,9 +105,10 @@ module DiscourseWorkflows
         def matches?(trigger_ctx)
           matches_topic_type?(trigger_ctx.get_node_parameter("topic_type", "topics")) &&
             matches_group_inbox?(trigger_ctx.get_node_parameter("group_inbox_id")) &&
-            matches_category?(
-              trigger_ctx.get_node_parameter("category_id"),
-              trigger_ctx.get_node_parameter("include_subcategories", true),
+            matches_category_ids?(
+              @topic.category_id,
+              category_ids_parameter(trigger_ctx),
+              include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
             ) && matches_tags?(normalize_tag_names(trigger_ctx.get_node_parameter("tag_names")))
         end
 
@@ -138,15 +140,6 @@ module DiscourseWorkflows
           return false if !@topic.private_message?
 
           @topic.allowed_groups.exists?(id: group_id.to_i)
-        end
-
-        def matches_category?(category_id, include_subcategories)
-          return true if category_id.blank?
-
-          category_id = category_id.to_i
-          return @topic.category_id == category_id if include_subcategories == false
-
-          ::Category.subcategory_ids(category_id).include?(@topic.category_id)
         end
 
         def matches_tags?(tag_names)

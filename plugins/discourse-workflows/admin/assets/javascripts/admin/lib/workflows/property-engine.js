@@ -94,6 +94,8 @@ function i18nBase(nodeDefinitionOrType) {
   return `${i18nPrefix(nodeDefinitionOrType)}.${i18nScope(nodeDefinitionOrType)}`;
 }
 
+const SHARED_FIELDS_BASE = "discourse_workflows.property_engine.fields";
+
 export function propertyLabel(nodeDefinitionOrType, fieldName) {
   const base = i18nBase(nodeDefinitionOrType);
   const labelKey = localeKeyPart(fieldName);
@@ -101,25 +103,36 @@ export function propertyLabel(nodeDefinitionOrType, fieldName) {
   return (
     translatedOrNull(`${base}.${labelKey}`) ||
     translatedOrNull(`${base}.${labelKey}.title`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}`) ||
     humanize(fieldName)
   );
 }
 
 export function propertyDescription(nodeDefinitionOrType, fieldName) {
-  return translatedOrNull(
-    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_description`
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(`${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
   );
 }
 
 export function propertyTooltip(nodeDefinitionOrType, fieldName) {
-  return translatedOrNull(
-    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_tooltip`
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(`${i18nBase(nodeDefinitionOrType)}.${labelKey}_tooltip`) ||
+    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_tooltip`)
   );
 }
 
 export function propertyPlaceholder(nodeDefinitionOrType, fieldName) {
-  return translatedOrNull(
-    `${i18nBase(nodeDefinitionOrType)}.${localeKeyPart(fieldName)}_placeholder`
+  const labelKey = localeKeyPart(fieldName);
+
+  return (
+    translatedOrNull(
+      `${i18nBase(nodeDefinitionOrType)}.${labelKey}_placeholder`
+    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_placeholder`)
   );
 }
 
