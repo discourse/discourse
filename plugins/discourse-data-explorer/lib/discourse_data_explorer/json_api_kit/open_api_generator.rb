@@ -1,0 +1,475 @@
+# frozen_string_literal: true
+
+module DiscourseDataExplorer
+  module JsonApiKit
+    # Derives an OpenAPI 3.1 document from the Kit's declarations — resources
+    # (typed attributes, relationships, query surface), the version registry
+    # (info.version = the advertised date), and service contracts (request-body
+    # schemas from attribute types + validators). Documentation is generated,
+    # never authored: the same declarations feed the API and its docs, so they
+    # cannot drift — and the drift-proof loop (open_api_document_spec.rb)
+    # validates live responses against the generated schemas.
+    # See docs/api-docs-generation.md.
+    #
+    # Spike input shape: `endpoints: [{ path:, controller:, create: }]` — route
+    # introspection and the create-service linkage are real-phase concerns.
+    class OpenApiGenerator
+      CONTENT_TYPE = "application/vnd.api+json"
+
+      # ActiveModel::Type names → JSON Schema. Attributes render as nullable
+      # variants of these (no `null: false` declaration exists yet); parameters
+      # and request bodies use them as-is.
+      TYPE_SCHEMAS = {
+        string: {
+          "type" => "string",
+        },
+        integer: {
+          "type" => "integer",
+        },
+        big_integer: {
+          "type" => "integer",
+        },
+        float: {
+          "type" => "number",
+        },
+        decimal: {
+          "type" => "number",
+        },
+        boolean: {
+          "type" => "boolean",
+        },
+        date: {
+          "type" => "string",
+          "format" => "date",
+        },
+        datetime: {
+          "type" => "string",
+          "format" => "date-time",
+        },
+        immutable_string: {
+          "type" => "string",
+        },
+        time: {
+          "type" => "string",
+        },
+        array: {
+          "type" => "array",
+        },
+      }.freeze
+
+      ERRORS_SCHEMA = {
+        "type" => "object",
+        "properties" => {
+          "errors" => {
+            "type" => "array",
+            "items" => {
+              "type" => "object",
+              "properties" => {
+                "status" => {
+                  "type" => "string",
+                },
+                "code" => {
+                  "type" => "string",
+                },
+                "title" => {
+                  "type" => "string",
+                },
+                "detail" => {
+                  "type" => "string",
+                },
+                "source" => {
+                  "type" => "object",
+                },
+                "meta" => {
+                  "type" => "object",
+                },
+                "links" => {
+                  "type" => "object",
+                },
+              },
+              "additionalProperties" => false,
+            },
+          },
+        },
+        "required" => ["errors"],
+        "additionalProperties" => false,
+      }.freeze
+
+      def initialize(endpoints:)
+        @endpoints = endpoints
+      end
+
+      def document
+        {
+          "openapi" => "3.1.0",
+          "info" => {
+            "title" => "Discourse JSON:API",
+            "version" => JsonApiKit.api_versions.current_version.to_s,
+          },
+          "paths" => paths,
+          "components" => {
+            "schemas" => schemas,
+          },
+        }
+      end
+
+      private
+
+      # Every resource reachable from the endpoints' primaries through declared
+      # relationships, keyed by JSON:API type.
+      def resources
+        @resources ||=
+          begin
+            found = {}
+            queue = @endpoints.map { primary_resource(it) }
+            while (resource = queue.shift)
+              type = resource.record_type.to_s
+              next if found.key?(type)
+              found[type] = resource
+              queue.concat(relationship_definitions(resource).values.map { it[:resource] })
+            end
+            found
+          end
+      end
+
+      def primary_resource(endpoint) = endpoint[:controller]._jsonapi_config.serializer_class
+
+      # Extensions may register plain serializers as related resources; they
+      # carry no Kit definitions.
+      def relationship_definitions(resource)
+        resource.respond_to?(:relationship_definitions) ? resource.relationship_definitions : {}
+      end
+
+      def attribute_definitions(resource)
+        resource.respond_to?(:attribute_definitions) ? resource.attribute_definitions : {}
+      end
+
+      def schemas
+        resources.transform_values { resource_schema(it) }.merge("errors" => ERRORS_SCHEMA)
+      end
+
+      def resource_schema(resource)
+        {
+          "type" => "object",
+          "properties" => {
+            "id" => {
+              "type" => "string",
+            },
+            "type" => {
+              "const" => resource.record_type.to_s,
+            },
+            "attributes" => {
+              "type" => "object",
+              "properties" =>
+                attribute_definitions(resource).to_h do |name, definition|
+                  [name.to_s, attribute_schema(definition)]
+                end,
+              "additionalProperties" => false,
+            },
+            "relationships" => {
+              "type" => "object",
+              "properties" =>
+                relationship_definitions(resource).to_h do |name, definition|
+                  [name.to_s, relationship_schema(definition)]
+                end,
+              "additionalProperties" => false,
+            },
+            "meta" => {
+              "type" => "object",
+            },
+          },
+          "required" => %w[id type],
+          "additionalProperties" => false,
+        }
+      end
+
+      def attribute_schema(definition)
+        base = TYPE_SCHEMAS.fetch(definition[:type]) { {} }
+        schema = base.merge("type" => [base["type"], "null"].compact)
+        schema["description"] = definition[:description] if definition[:description]
+        schema
+      end
+
+      def relationship_schema(definition)
+        related_type = definition[:resource].record_type.to_s
+        linkage = {
+          "type" => "object",
+          "properties" => {
+            "id" => {
+              "type" => "string",
+            },
+            "type" => {
+              "const" => related_type,
+            },
+          },
+          "required" => %w[id type],
+          "additionalProperties" => false,
+        }
+        data = definition[:kind] == :has_many ? { "type" => "array", "items" => linkage } : linkage
+        schema = {
+          "type" => "object",
+          "properties" => {
+            "data" => data,
+          },
+          "additionalProperties" => false,
+        }
+        schema["description"] = definition[:description] if definition[:description]
+        schema
+      end
+
+      def paths
+        @endpoints.each_with_object({}) do |endpoint, result|
+          collection = { "get" => index_operation(endpoint) }
+          collection["post"] = create_operation(endpoint) if endpoint[:create]
+          result[endpoint[:path]] = collection
+          result["#{endpoint[:path]}/{id}"] = { "get" => show_operation(endpoint) }
+        end
+      end
+
+      def index_operation(endpoint)
+        resource = primary_resource(endpoint)
+        config = endpoint[:controller]._jsonapi_config
+        {
+          "parameters" => [
+            version_header_parameter,
+            *filter_parameters(resource),
+            list_parameter("sort", config.sorts.keys.flat_map { [it, "-#{it}"] }),
+            list_parameter("include", config.allowed_includes),
+            *fieldset_parameters,
+            page_size_parameter(config),
+            cursor_parameter("page[after]"),
+            cursor_parameter("page[before]"),
+          ],
+          "responses" => {
+            "200" => json_response("Paginated collection", collection_document_schema(resource)),
+            "400" => error_response,
+          },
+        }
+      end
+
+      def show_operation(endpoint)
+        resource = primary_resource(endpoint)
+        {
+          "parameters" => [
+            version_header_parameter,
+            {
+              "name" => "id",
+              "in" => "path",
+              "required" => true,
+              "schema" => {
+                "type" => "string",
+              },
+            },
+          ],
+          "responses" => {
+            "200" => json_response("Single resource", single_document_schema(resource)),
+            "400" => error_response,
+            "404" => {
+              "description" => "Not found",
+            },
+          },
+        }
+      end
+
+      def create_operation(endpoint)
+        resource = primary_resource(endpoint)
+        {
+          "parameters" => [version_header_parameter],
+          "requestBody" => {
+            "required" => true,
+            "content" => {
+              CONTENT_TYPE => {
+                "schema" => create_request_schema(endpoint, resource),
+              },
+            },
+          },
+          "responses" => {
+            "201" => json_response("Created resource", single_document_schema(resource)),
+            "400" => error_response,
+            "422" => error_response,
+          },
+        }
+      end
+
+      # The write document's attributes derive from the service contract
+      # (docs/api-docs-generation.md §7): ActiveModel attribute types, minus the
+      # relationship-derived `<name>_id(s)` params `jsonapi_deserialize` mints,
+      # with validators contributing constraints (presence → required, length →
+      # maxLength).
+      def create_request_schema(endpoint, resource)
+        contract = endpoint[:create].const_get(:Contract)
+        relationship_params =
+          relationship_definitions(resource).keys.flat_map do
+            ["#{it.to_s.singularize}_id", "#{it.to_s.singularize}_ids"]
+          end
+
+        properties = {}
+        required = []
+        contract.attribute_types.each do |name, type|
+          next if relationship_params.include?(name)
+          property = TYPE_SCHEMAS.fetch(type.type) { {} }.dup
+          contract
+            .validators_on(name)
+            .each do |validator|
+              case validator
+              when ActiveModel::Validations::PresenceValidator
+                required << name
+              when ActiveModel::Validations::LengthValidator
+                property["maxLength"] = validator.options[:maximum] if validator.options[:maximum]
+              end
+            end
+          properties[name] = property
+        end
+
+        attributes = { "type" => "object", "properties" => properties }
+        attributes["required"] = required if required.any?
+        {
+          "type" => "object",
+          "properties" => {
+            "data" => {
+              "type" => "object",
+              "properties" => {
+                "type" => {
+                  "const" => resource.record_type.to_s,
+                },
+                "attributes" => attributes,
+              },
+            },
+          },
+          "required" => ["data"],
+        }
+      end
+
+      def collection_document_schema(resource)
+        schema = {
+          "type" => "object",
+          "properties" => {
+            "data" => {
+              "type" => "array",
+              "items" => resource_ref(resource),
+            },
+            "included" => included_schema(resource),
+            "meta" => {
+              "type" => "object",
+            },
+            "links" => {
+              "type" => "object",
+              "properties" => {
+                "prev" => {
+                  "type" => %w[string null],
+                },
+                "next" => {
+                  "type" => %w[string null],
+                },
+              },
+              "additionalProperties" => false,
+            },
+          },
+          "required" => ["data"],
+          "additionalProperties" => false,
+        }
+        schema["properties"].delete("included") if included_schema(resource).nil?
+        schema
+      end
+
+      def single_document_schema(resource)
+        schema = {
+          "type" => "object",
+          "properties" => {
+            "data" => resource_ref(resource),
+            "included" => included_schema(resource),
+            "meta" => {
+              "type" => "object",
+            },
+          },
+          "required" => ["data"],
+          "additionalProperties" => false,
+        }
+        schema["properties"].delete("included") if included_schema(resource).nil?
+        schema
+      end
+
+      def included_schema(resource)
+        related = resources.values - [resource]
+        return if related.empty?
+        { "type" => "array", "items" => { "anyOf" => related.map { resource_ref(it) } } }
+      end
+
+      def resource_ref(resource)
+        { "$ref" => "#/components/schemas/#{resource.record_type}" }
+      end
+
+      def version_header_parameter
+        {
+          "name" => "Api-Version",
+          "in" => "header",
+          "required" => true,
+          "description" =>
+            "The pinned API version (snap-down date). The resolved version is echoed back.",
+          "schema" => {
+            "type" => "string",
+            "format" => "date",
+          },
+        }
+      end
+
+      def filter_parameters(resource)
+        resource.filter_definitions.map do |name, definition|
+          parameter = {
+            "name" => "filter[#{name}]",
+            "in" => "query",
+            "schema" => TYPE_SCHEMAS.fetch(definition[:type]) { {} },
+          }
+          parameter["description"] = definition[:description] if definition[:description]
+          parameter
+        end
+      end
+
+      # Comma-separated multi-value params (sort, include, fields) — OpenAPI's
+      # form style with explode:false is the spec-blessed encoding.
+      def list_parameter(name, values)
+        {
+          "name" => name,
+          "in" => "query",
+          "explode" => false,
+          "schema" => {
+            "type" => "array",
+            "items" => {
+              "enum" => values,
+            },
+          },
+        }
+      end
+
+      def fieldset_parameters
+        resources.map do |type, resource|
+          list_parameter("fields[#{type}]", attribute_definitions(resource).keys.map(&:to_s))
+        end
+      end
+
+      def page_size_parameter(config)
+        {
+          "name" => "page[size]",
+          "in" => "query",
+          "schema" => {
+            "type" => "integer",
+            "minimum" => 1,
+            "maximum" => config.max_page_size,
+          },
+        }
+      end
+
+      def cursor_parameter(name)
+        { "name" => name, "in" => "query", "schema" => { "type" => "string" } }
+      end
+
+      def json_response(description, schema)
+        { "description" => description, "content" => { CONTENT_TYPE => { "schema" => schema } } }
+      end
+
+      def error_response
+        json_response("Error document", { "$ref" => "#/components/schemas/errors" })
+      end
+    end
+  end
+end
