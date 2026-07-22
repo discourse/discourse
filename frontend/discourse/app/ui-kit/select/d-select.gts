@@ -191,18 +191,24 @@ export default class DSelect extends Component<DSelectSignature> {
   engine = new SelectEngine({
     // Read lazily so the engine reflects the parent's (reactive) @value — controlled.
     getValue: () => this.args.value,
-    multiple: this.args.multiple,
+    // Live readers for the reactive inputs, so a runtime change to any of these args
+    // propagates into the engine (which reads them on every access). Static-by-contract
+    // args below are passed by value.
+    getMultiple: () => this.args.multiple,
     identifiers: this.args.identifiers ?? this.args.identifier,
-    minChars: this.args.minChars,
-    items: this.args.items,
+    getMinChars: () => this.args.minChars,
+    items: () =>
+      typeof this.args.items === "function"
+        ? this.args.items()
+        : this.args.items,
     load: this.args.load,
     filterBy: this.args.filterBy,
     valueField: this.args.valueField,
     labelField: this.args.labelField,
-    selected: this.args.selected,
+    getSelected: () => this.args.selected,
     resolveValue: this.args.resolveValue,
     resolveValues: this.args.resolveValues,
-    allowCreate: this.args.allowCreate,
+    getAllowCreate: () => this.args.allowCreate,
     createItem: this.args.createItem,
     createUnresolvedItem: this.args.createUnresolvedItem,
     specialItems: this.args.specialItems,
