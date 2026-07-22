@@ -53,9 +53,10 @@ module Migrations
       #
       # @param quoted_post_id [Integer, String, nil] the quoted post's source
       #   `original_id`, when the converter knows it.
-      # @param quoted_topic_id [Integer, String, nil] with `quoted_post_number`, the
-      #   source coordinates the attribution carries — the alternative to
-      #   `quoted_post_id`.
+      # @param quoted_topic_id [Integer, String, nil] the quoted post's source
+      #   topic id. Together with `quoted_post_number` it forms the source
+      #   coordinates — the way the attribution identifies the post when
+      #   `quoted_post_id` is unknown.
       # @param quoted_post_number [Integer, nil] see `quoted_topic_id`.
       # @param quoted_user_id [Integer, String, nil] the quoted user's source
       #   `original_id`.
@@ -102,9 +103,10 @@ module Migrations
       # @param target_name [String, nil] the target's name — a username, group name,
       #   tag name, or a category slug path written `parent:child` — when the URL
       #   carries a name but no id.
-      # @param target_topic_id [Integer, String, nil] with `target_post_number`, the
-      #   source coordinates of a post addressed as `/t/slug/<topic_id>/<post_number>`;
-      #   post numbers are recomputed at import, so the importer resolves them.
+      # @param target_topic_id [Integer, String, nil] the source topic id of a post
+      #   addressed as `/t/slug/<topic_id>/<post_number>`. Together with
+      #   `target_post_number` it forms the source coordinates; post numbers are
+      #   recomputed at import, so the importer resolves the pair.
       # @param target_post_number [Integer, nil] see `target_topic_id`.
       # @param target_suffix [String, nil] everything after the matched route
       #   (further path, query string, fragment), reattached verbatim when the URL
