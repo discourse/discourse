@@ -40,6 +40,25 @@ module PageObjects
         PageObjects::Components::DFilterControls.new(".d-filter-controls")
       end
 
+      CATEGORY_FILTER = ".admin-report .chart__additional-filters .category-selector"
+
+      def visit_report(type)
+        page.visit("/admin/reports/#{type}")
+        self
+      end
+
+      def has_category_filter?
+        page.has_css?(CATEGORY_FILTER)
+      end
+
+      def category_filter
+        PageObjects::Components::SelectKit.new(CATEGORY_FILTER)
+      end
+
+      def has_selected_category?(category)
+        page.has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+      end
+
       def has_group?(name)
         page.has_css?(".admin-reports-group__title", text: name)
       end
