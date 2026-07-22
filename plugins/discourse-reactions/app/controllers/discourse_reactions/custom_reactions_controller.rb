@@ -242,6 +242,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   private
 
+  def format_user(user, avatar_template:, **extra_attributes)
+    attributes = { username: user.username }
+    attributes[:name] = user.name if SiteSetting.enable_names?
+    attributes[:avatar_template] = avatar_template
+    attributes.merge!(extra_attributes)
+  end
+
   def get_users(reaction)
     reaction
       .reaction_users
@@ -249,13 +256,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
       .map do |reaction_user|
-        {
-          username: reaction_user.user.username,
-          name: reaction_user.user.name,
+        format_user(
+          reaction_user.user,
           avatar_template: reaction_user.user.avatar_template,
           can_undo: reaction_user.can_undo?,
           created_at: reaction_user.created_at.to_s,
-        }
+        )
       end
   end
 
@@ -272,13 +278,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def format_like_user(like)
-    {
-      username: like.user.username,
-      name: like.user.name,
+    format_user(
+      like.user,
       avatar_template: like.user.avatar_template,
       can_undo: guardian.can_delete_post_action?(like),
       created_at: like.created_at.to_s,
-    }
+    )
   end
 
   def format_likes_users(likes)
