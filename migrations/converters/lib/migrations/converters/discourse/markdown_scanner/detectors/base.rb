@@ -119,17 +119,23 @@ module Migrations
             end
 
             # Where a bare URL may start: at the line start, after whitespace, or
-            # inside a `(…)` group. The paren case lets the two URL detectors rewrite a
-            # URL the walk reaches only because the surrounding `[…]` bracket wasn't
-            # consumed as a link — but only the right kind of `(…)`:
+            # right after a `(`. This is only the cheap first gate — the URL detectors
+            # narrow it further once a match tells them whether the URL is relative or
+            # absolute, because the boundary alone doesn't separate the two:
             #
-            #   * A bare paren group — `(` not preceded by `]` — is prose
-            #     punctuation with the URL right after the paren, `(/t/5)`;
-            #     rewrite it. (A URL deeper inside the parens, `(see /t/5)`,
-            #     is admitted by the whitespace rule instead.)
-            #   * A `](…)` whose bracket wrapped an already-consumed construct — a `)`
-            #     sits right before the `]`, as in `[![img](upload)](/t/5)` or an old
-            #     lightbox — is an outer link target we want; rewrite it.
+            #   * After whitespace or a bare `(` (prose punctuation, `(/t/5)`), only
+            #     an absolute URL is rewritten. A schemed or `//host` URL in prose
+            #     becomes a link once the post is cooked, so rewriting it keeps a
+            #     link a link. A relative path like `/t/5` stays plain text when
+            #     cooked, so rewriting it would turn prose into a link that wasn't
+            #     there — the detectors leave a relative prose URL alone. (A URL
+            #     deeper inside the parens, `(see /t/5)`, is admitted by the
+            #     whitespace rule instead.)
+            #   * A `](…)` whose bracket wrapped an already-consumed construct — a
+            #     `)` sits right before the `]`, as in `[![img](upload)](/t/5)` or an
+            #     old lightbox — is an outer link target we want. The URL there is a
+            #     real link whether it is relative or absolute, so both are rewritten;
+            #     see {#link_target_boundary_before?}.
             #   * A `](…)` after plain bracket text — `[pic](…)`, `![alt](…)`,
             #     `[text](foreign)` — is the image's or link's own target. That
             #     target was already handled at its own trigger (an image src is not
@@ -146,8 +152,23 @@ module Migrations
               paren_pos = pos - 1
               return true if paren_pos.zero? || input.getbyte(paren_pos - 1) != 0x5d # 0x5d = `]`
 
-              # A `](` target: only accept it when a `)` closes right before the `]`.
-              paren_pos >= 2 && input.getbyte(paren_pos - 2) == 0x29 # 0x29 = `)`
+              link_target_boundary_before?(input, pos)
+            end
+
+            # The `](…)` outer-link-target boundary: the URL sits right after a `](`
+            # and a `)` closes right before the `]`, the `)](` shape. That only
+            # happens when the bracket wrapped a construct the walk already consumed —
+            # the outer link of a nested image `[![img](upload)](/t/5)` or an old
+            # lightbox — so the URL here is a genuine link target. A relative URL is
+            # rewritten only at this boundary, where it is a link and not prose.
+            #
+            # All the bytes tested are ASCII (`(` 0x28, `]` 0x5d, `)` 0x29), so a
+            # multibyte previous character can never equal them.
+            def link_target_boundary_before?(input, pos)
+              return false if pos < 3
+
+              input.getbyte(pos - 1) == 0x28 && input.getbyte(pos - 2) == 0x5d &&
+                input.getbyte(pos - 3) == 0x29
             end
 
             # `!` is ASCII, so a multibyte previous character's trailing byte simply

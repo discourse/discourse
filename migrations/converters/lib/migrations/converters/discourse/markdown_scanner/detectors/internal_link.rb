@@ -16,10 +16,14 @@ module Migrations
           # An image `![](…)` is not our concern, and a raw HTML `<a>` is out of scope
           # (as with the upload detector), so neither is matched.
           #
-          # A URL qualifies when it is relative, or absolute with a host the caller
-          # allowlisted (the source's base URL and any former domains). The host match
-          # is scheme-insensitive, so `http://`, `https://` and protocol-relative
-          # `//host` all count. Without a host set, only relative URLs qualify.
+          # An absolute URL qualifies when its host is one the caller allowlisted (the
+          # source's base URL and any former domains); the host match is
+          # scheme-insensitive, so `http://`, `https://` and protocol-relative `//host`
+          # all count. A relative URL (a path, no host) qualifies only where it is
+          # actually a link: in link syntax `[text](/t/5)`, or as a bare URL the walk
+          # reaches at a `](…)` link target. A relative URL bare in prose is left
+          # alone, because it stays plain text when the post is cooked, so rewriting it
+          # would turn text into a link.
           #
           # The full original URL is kept (`url`) as the importer's fallback; the
           # route reveals the target, and everything after the route (further path,
@@ -159,7 +163,8 @@ module Migrations
               match = match_at(LINK, input, pos)
               return nil unless match
 
-              build(pos, match, url: match[:url], text: match[:text])
+              # Link syntax: the URL is a link, so a relative one is fine here.
+              build(pos, match, url: match[:url], text: match[:text], allow_relative: true)
             end
 
             # A bare URL starts at a bare-URL boundary (line start, whitespace, or the
@@ -169,18 +174,30 @@ module Migrations
             # image `[![…](…)](url)` whose outer target we do want, versus an image's
             # own `![alt](url)` src or a foreign link's target, which the paren check
             # deliberately leaves alone.
+            #
+            # A bare relative URL is a link only at a `](…)` target; in prose it stays
+            # plain text once cooked, so there we leave it literal (only an absolute
+            # bare URL is rewritten in prose). `split_host` reports the relative case
+            # inside `build`, so the boundary form we admit at is passed down.
             def detect_bare(input, pos)
               return nil unless bare_url_boundary_before?(input, pos)
 
               match = match_at(BARE, input, pos)
               return nil unless match
 
-              build(pos, match, url: match[:url], text: nil)
+              build(
+                pos,
+                match,
+                url: match[:url],
+                text: nil,
+                allow_relative: link_target_boundary_before?(input, pos),
+              )
             end
 
-            def build(pos, match, url:, text:)
+            def build(pos, match, url:, text:, allow_relative:)
               host, rest = split_host(url)
               return nil unless rest
+              return nil if host.nil? && !allow_relative
 
               if host && !@hosts.include?(host)
                 note_foreign_host(host, rest)

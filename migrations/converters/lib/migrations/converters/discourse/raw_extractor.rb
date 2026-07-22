@@ -67,8 +67,11 @@ module Migrations
         #   `:` trigger.
         # @param internal_link_hosts [Set<String>, #include?] the source's own hosts
         #   (its base URL and any former domains), already downcased. An absolute link
-        #   is treated as internal only when its host is one of these; relative links
-        #   are always internal. Empty (the default) means relative-only detection.
+        #   is treated as internal only when its host is one of these. A relative link
+        #   is internal wherever it is a real link (link syntax or a bare URL reached
+        #   at a `](…)` target); a relative URL bare in prose stays literal, since it
+        #   isn't a link once cooked. With the set empty (the default), only relative
+        #   links are detected.
         # @param on_foreign_host [#call, nil] called with the host of an absolute,
         #   internal-looking link whose host is not in `internal_link_hosts` — a hint
         #   that a former domain may be missing from the source_site settings. Nil (the

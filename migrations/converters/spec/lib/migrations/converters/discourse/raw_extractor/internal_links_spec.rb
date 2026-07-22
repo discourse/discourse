@@ -32,13 +32,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
 
       it "reads an oversized trailing category segment as a slug, not an id" do
-        link, _result = link_for("in /c/77777777777777777789999 maybe")
+        link, _result = link_for("[cat](/c/77777777777777777789999)")
 
         expect(link).to include(target_id: nil, target_name: "77777777777777777789999")
       end
 
       it "still defers an 18-digit id" do
-        link, _result = link_for("see /t/123456789012345678 here")
+        link, _result = link_for("[topic](/t/123456789012345678)")
 
         expect(link).to include(target_id: 123_456_789_012_345_678)
       end
@@ -55,32 +55,30 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers a topic link with a slug and id" do
-      link, result = link_for("see /t/some-slug/123 here")
+      link, = link_for("[the topic](/t/some-slug/123)")
 
       expect(link).to include(
         url: "/t/some-slug/123",
-        text: nil,
         target_type: link_target::TOPIC,
         target_id: 123,
         target_suffix: nil,
       )
-      expect(result).to eq("see #{link[:placeholder]} here")
     end
 
     it "defers the id-only topic form" do
-      link, = link_for("/t/123")
+      link, = link_for("[x](/t/123)")
 
       expect(link).to include(target_type: link_target::TOPIC, target_id: 123)
     end
 
     it "defers the slugless `/t/-/<id>` topic form" do
-      link, = link_for("/t/-/77")
+      link, = link_for("[x](/t/-/77)")
 
       expect(link).to include(target_type: link_target::TOPIC, target_id: 77)
     end
 
     it "defers a post link by coordinates, recording no target_id" do
-      link, = link_for("/t/some-slug/123/4")
+      link, = link_for("[x](/t/some-slug/123/4)")
 
       expect(link).to include(
         target_type: link_target::POST,
@@ -91,7 +89,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers the slugless post-coordinates form" do
-      link, = link_for("/t/12/3")
+      link, = link_for("[x](/t/12/3)")
 
       expect(link).to include(
         target_type: link_target::POST,
@@ -101,32 +99,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers a `/p/<id>` post link" do
-      link, = link_for("/p/55")
+      link, = link_for("[x](/p/55)")
 
       expect(link).to include(target_type: link_target::POST, target_id: 55, target_topic_id: nil)
     end
 
     it "defers a user link by name, for both `/u/` and `/users/`" do
-      expect(link_for("/u/bob").first).to include(
+      expect(link_for("[x](/u/bob)").first).to include(
         target_type: link_target::USER,
         target_name: "bob",
       )
 
       buffer.clear
-      expect(link_for("/users/alice").first).to include(
+      expect(link_for("[x](/users/alice)").first).to include(
         target_type: link_target::USER,
         target_name: "alice",
       )
     end
 
     it "defers a category link by id when the path ends in a number" do
-      link, = link_for("/c/support/billing/6")
+      link, = link_for("[x](/c/support/billing/6)")
 
       expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
     end
 
     it "defers a legacy category link by its parent:child slug path" do
-      link, = link_for("/c/support/billing")
+      link, = link_for("[x](/c/support/billing)")
 
       expect(link).to include(
         target_type: link_target::CATEGORY,
@@ -136,33 +134,33 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "defers a tag link for both `/tag/` and `/tags/`" do
-      expect(link_for("/tag/release").first).to include(
+      expect(link_for("[x](/tag/release)").first).to include(
         target_type: link_target::TAG,
         target_name: "release",
       )
 
       buffer.clear
-      expect(link_for("/tags/release").first).to include(
+      expect(link_for("[x](/tags/release)").first).to include(
         target_type: link_target::TAG,
         target_name: "release",
       )
     end
 
     it "leaves the `/tags/c/...` intersection form undetected" do
-      raw = "browse /tags/c/food/wine here"
+      raw = "browse [tags](/tags/c/food/wine) here"
 
       expect(extract(raw)).to eq(raw)
       expect(buffer.links).to be_empty
     end
 
     it "defers a group link by name" do
-      link, = link_for("/g/team")
+      link, = link_for("[x](/g/team)")
 
       expect(link).to include(target_type: link_target::GROUP, target_name: "team")
     end
 
     it "defers a badge link by id" do
-      link, = link_for("/badges/9/great")
+      link, = link_for("[x](/badges/9/great)")
 
       expect(link).to include(target_type: link_target::BADGE, target_id: 9)
     end
@@ -198,32 +196,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "keeps a bare URL bare (no captured text)" do
-      link, = link_for("/t/slug/12")
+      link, = link_for("https://forum.example.com/t/slug/12")
 
       expect(link[:text]).to be_nil
     end
 
     it "keeps trailing sentence punctuation out of a bare URL" do
-      link, result = link_for("go to /t/slug/12. Thanks")
+      link, result = link_for("go to https://forum.example.com/t/slug/12. Thanks")
 
-      expect(link[:url]).to eq("/t/slug/12")
+      expect(link[:url]).to eq("https://forum.example.com/t/slug/12")
       expect(result).to eq("go to #{link[:placeholder]}. Thanks")
     end
 
     it "captures a trailing sub-path as the suffix" do
-      link, = link_for("/u/bob/summary")
+      link, = link_for("[x](/u/bob/summary)")
 
       expect(link).to include(target_name: "bob", target_suffix: "/summary")
     end
 
     it "captures a query string as the suffix" do
-      link, = link_for("/users/alice?u=x")
+      link, = link_for("[x](/users/alice?u=x)")
 
       expect(link).to include(target_name: "alice", target_suffix: "?u=x")
     end
 
     it "captures a fragment as the suffix" do
-      link, = link_for("/t/slug/12#reply")
+      link, = link_for("[x](/t/slug/12#reply)")
 
       expect(link).to include(target_id: 12, target_suffix: "#reply")
     end
@@ -235,11 +233,25 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.links).to be_empty
     end
 
-    it "rewrites an internal URL inside a prose paren group" do
-      link, result = link_for("(/t/slug/5)")
+    it "leaves a relative URL inside a prose paren group literal" do
+      raw = "(/t/slug/5)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "rewrites an absolute self-host URL inside a prose paren group" do
+      link, result = link_for("(https://forum.example.com/t/slug/5)")
 
       expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
       expect(result).to eq("(#{link[:placeholder]})")
+    end
+
+    it "rewrites an absolute self-host bare URL in prose" do
+      link, result = link_for("look at https://forum.example.com/t/slug/5 please")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(result).to eq("look at #{link[:placeholder]} please")
     end
 
     it "defers the inner image and rewrites the outer topic URL of a linked image" do
@@ -257,27 +269,40 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("[#{buffer.uploads.first[:placeholder]}](#{link[:placeholder]})")
     end
 
+    it "rewrites the relative outer topic URL of a linked image" do
+      sha1 = "0123456789abcdef0123456789abcdef01234567"
+      result = extract("[![alt](upload://#{sha1}.png)](/t/slug/5)")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+      link = buffer.links.first
+      expect(link).to include(url: "/t/slug/5", target_type: link_target::TOPIC, target_id: 5)
+      expect(result).to eq("[#{buffer.uploads.first[:placeholder]}](#{link[:placeholder]})")
+    end
+
     it "does not extract an internal link inside a fenced code block" do
       raw = <<~MD
-        real /t/slug/12
+        real [x](/t/slug/12)
 
         ```
-        code /t/slug/99 here
+        code [x](/t/slug/99) here
         ```
       MD
 
       result = extract(raw)
 
       expect(buffer.links.map { |l| l[:target_id] }).to eq([12])
-      expect(result).to include("code /t/slug/99 here")
+      expect(result).to include("code [x](/t/slug/99) here")
     end
 
-    it "recognizes only relative links when no host set is given" do
+    it "detects a relative link only in link form when no host set is given" do
       plain_extractor = described_class.new(embeds: buffer)
 
-      plain_extractor.extract("rel /t/slug/12 and abs https://forum.example.com/t/slug/99")
+      result = plain_extractor.extract("bare /t/slug/12 and linked [x](/t/slug/34)")
 
-      expect(buffer.links.map { |l| l[:url] }).to eq(["/t/slug/12"])
+      # With no host set a relative link still qualifies, but only where it is a
+      # real link: the bare one in prose stays literal, the link-form one defers.
+      expect(buffer.links.map { |l| l[:url] }).to eq(["/t/slug/34"])
+      expect(result).to include("bare /t/slug/12 and linked")
     end
   end
 

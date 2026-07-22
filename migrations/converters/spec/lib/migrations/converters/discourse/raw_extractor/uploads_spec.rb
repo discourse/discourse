@@ -80,11 +80,27 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "keeps a bare URL's trailing sentence punctuation out of the match" do
-      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
       result = extract("look at #{url}.")
 
       expect(buffer.uploads.first[:original_markdown]).to eq(url)
       expect(result).to eq("look at #{buffer.uploads.first[:placeholder]}.")
+    end
+
+    it "leaves a relative upload URL bare in prose literal" do
+      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      raw = "see #{url} thanks"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "defers a bare absolute upload URL in prose" do
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+      result = extract("see #{url} thanks")
+
+      expect(buffer.uploads.first).to include(upload_id: sha1, original_markdown: url)
+      expect(result).to eq("see #{buffer.uploads.first[:placeholder]} thanks")
     end
 
     it "ignores a non-upload URL" do

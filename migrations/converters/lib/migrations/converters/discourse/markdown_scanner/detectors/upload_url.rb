@@ -11,7 +11,11 @@ module Migrations
           # `/secure-uploads/` segment with an `original/` or `optimized/` path below
           # it, and its basename must start with the upload's 40-hex sha1 (Discourse's
           # filename convention; see core's `Upload` and `FileStore`). Both relative
-          # and absolute (http/https and protocol-relative) forms are recognized.
+          # and absolute (http/https and protocol-relative) forms are recognized in
+          # image and link syntax. A bare URL follows the same rule as an internal
+          # link: an absolute bare URL is recognized in prose, a relative one only at
+          # a `](…)` link target — a relative path bare in prose stays plain text once
+          # cooked, so rewriting it would turn text into a link.
           #
           # Recognition is deliberately permissive and does no host allowlisting: a URL
           # that looks like an upload but points at some other forum still resolves to
@@ -76,20 +80,37 @@ module Migrations
             # inner URL only when the outer bracket wasn't a handled link — a nested
             # image `[![…](…)](url)` or an old lightbox, where rewriting the outer URL
             # in place is what we want.
+            #
+            # A relative upload URL is a link only at a `](…)` target; bare in prose it
+            # stays plain text once cooked, so we leave it literal there. The match's
+            # first bytes tell relative (`/…`) from absolute (`//host` or a scheme).
             def detect_bare(input, pos)
               return nil unless bare_url_boundary_before?(input, pos)
-              match_with(BARE, input, pos)
+
+              match = match_at(BARE, input, pos)
+              return nil unless match
+              return nil if relative_url?(match[0]) && !link_target_boundary_before?(input, pos)
+
+              build_match(pos, match)
             end
 
             def match_with(pattern, input, pos)
               match = match_at(pattern, input, pos)
-              return nil unless match
+              match && build_match(pos, match)
+            end
 
+            def build_match(pos, match)
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
                 node: UploadUrlReference.new(sha1: match[:sha1], original_markdown: match[0]),
               )
+            end
+
+            # A relative URL starts with a single `/`; `//host` is protocol-relative
+            # (absolute) and `https://…` schemed.
+            def relative_url?(url)
+              url.start_with?("/") && !url.start_with?("//")
             end
           end
         end

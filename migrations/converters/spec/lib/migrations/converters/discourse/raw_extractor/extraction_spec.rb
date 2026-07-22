@@ -133,7 +133,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
 
       it "still defers a bare internal link" do
-        extract("Höhe /t/thema/9 an")
+        # An absolute bare URL still detects in prose, so it exercises the
+        # byte-offset look-back with multibyte text before it.
+        host_extractor =
+          described_class.new(embeds: buffer, internal_link_hosts: Set["forum.example.com"])
+        host_extractor.extract("Höhe https://forum.example.com/t/thema/9 an")
 
         expect(buffer.links.first).to include(target_id: 9)
       end
