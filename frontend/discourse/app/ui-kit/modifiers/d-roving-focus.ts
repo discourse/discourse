@@ -16,6 +16,16 @@ export interface DRovingFocusApi {
   focusFirst(): boolean;
   focusLast(): boolean;
   focusIndex(index: number): boolean;
+  /**
+   * Move the cursor to the item whose `data-index` is the given ABSOLUTE logical
+   * index — the addressing a windowed list needs, where the mounted items are a
+   * slice of a much larger set and their NodeList position is not their true
+   * index. Returns `false` when that logical index is not currently mounted (the
+   * caller must scroll it into view first). When no item carries `data-index`
+   * (a non-windowed group) it falls back to positional addressing, like
+   * {@link focusIndex}.
+   */
+  focusLogicalIndex(index: number): boolean;
 }
 
 interface DRovingFocusArgs {
@@ -33,6 +43,14 @@ interface DRovingFocusArgs {
   onActiveChange?: (item: HTMLElement) => void;
   /** Called at a horizontal edge when `wrap` is false; wrapping suppresses it. */
   onExit?: (direction: "forward" | "backward") => void;
+  /**
+   * The vertical counterpart to {@link onExit}: called when ArrowDown from the
+   * last item, or ArrowUp from the first, would move past the edge with `wrap`
+   * false and a cursor present. `"forward"` is down, `"backward"` is up. A
+   * windowed list uses it to scroll or fetch the next rows before the cursor
+   * reaches the true end.
+   */
+  onEdgeReach?: (direction: "forward" | "backward") => void;
   /** Registers stable controls for moving the cursor, and receives `null` on teardown. */
   onRegisterApi?: (api: DRovingFocusApi | null) => void;
   /** Whether navigation wraps at the ends (default `false` = clamp). */
@@ -109,6 +127,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
   onActiveChange?: (item: HTMLElement) => void;
   onExit?: (direction: "forward" | "backward") => void;
+  onEdgeReach?: (direction: "forward" | "backward") => void;
   wrap = false;
   tabStop = true;
   activeClass: string | null = null;
@@ -148,6 +167,24 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       this.#setActive(items[Math.max(0, Math.min(index, last))], items);
       return true;
     },
+    focusLogicalIndex: (index) => {
+      const items = this.#items();
+      if (!items.length) {
+        return false;
+      }
+      const match = items.find((el) => el.dataset.index === String(index));
+      if (match) {
+        this.#setActive(match, items);
+        return true;
+      }
+      // No item carries `data-index` at all: a non-windowed group, so the logical
+      // index IS the positional index. If some do but none matched, the target
+      // sits outside the mounted window and cannot be focused here.
+      if (items.every((el) => el.dataset.index === undefined)) {
+        return this.#api.focusIndex(index);
+      }
+      return false;
+    },
   };
 
   /**
@@ -186,6 +223,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.onActivate = named.onActivate;
     this.onActiveChange = named.onActiveChange;
     this.onExit = named.onExit;
+    this.onEdgeReach = named.onEdgeReach;
     this.wrap = named.wrap ?? false;
     this.tabStop = named.tabStop ?? true;
     this.activeClass = named.activeClass ?? null;
@@ -283,12 +321,22 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         if (vertical) {
           // From no active option (current < 0), Down seeds the first item.
           next = current < 0 ? 0 : this.#stepRow(current, columns, last);
+          if (next == null && current >= 0 && this.onEdgeReach) {
+            event.preventDefault();
+            this.onEdgeReach("forward");
+            return;
+          }
         }
         break;
       case "ArrowUp":
         if (vertical) {
           // From no active option (current < 0), Up seeds the last item.
           next = current < 0 ? last : this.#stepRow(current, -columns, last);
+          if (next == null && current >= 0 && this.onEdgeReach) {
+            event.preventDefault();
+            this.onEdgeReach("backward");
+            return;
+          }
         }
         break;
       case "Home":
