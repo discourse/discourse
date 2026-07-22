@@ -4,6 +4,7 @@ class AdminDashboardSectionConfiguration
   KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
 
   ACTIVITY_BY_CATEGORY_MAX = 10
+  WHOS_POSTING_MAX = 10
 
   SUPPORTED_SETTINGS = {
     "engagement" => {
@@ -16,6 +17,26 @@ class AdminDashboardSectionConfiguration
           parsed = ids.map { |id| Integer(id, exception: false) }
 
           if parsed.size > ACTIVITY_BY_CATEGORY_MAX || parsed.any?(&:nil?) ||
+               parsed.uniq.size != parsed.size
+            raise Discourse::InvalidParameters.new(:category_ids)
+          end
+
+          if parsed.present? && Category.where(id: parsed).count != parsed.size
+            raise Discourse::InvalidParameters.new(:category_ids)
+          end
+
+          { "category_ids" => parsed }
+        end,
+      },
+      "whos_posting" => {
+        permit: [{ category_ids: [] }],
+        validate: ->(attrs) do
+          ids = attrs[:category_ids]
+          raise Discourse::InvalidParameters.new(:category_ids) if !ids.is_a?(Array)
+
+          parsed = ids.map { |id| Integer(id, exception: false) }
+
+          if parsed.size > WHOS_POSTING_MAX || parsed.any?(&:nil?) ||
                parsed.uniq.size != parsed.size
             raise Discourse::InvalidParameters.new(:category_ids)
           end
