@@ -84,9 +84,9 @@ export function attachEditorShortcuts(editor: WireframeWorkspace): () => void {
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
       if (editor.wireframeSelection.selectionCount > 1) {
-        mutations.removeBlocks(
-          editor.wireframeSelection.selectedKeysSnapshot()
-        );
+        mutations.removeBlocks([
+          ...editor.wireframeSelection.selectedKeysSnapshot(),
+        ]);
       } else {
         mutations.removeBlock(key);
       }

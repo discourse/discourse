@@ -1,13 +1,38 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { eq } from "discourse/truth-helpers";
 import {
   formatDimension,
   parseDimension,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/css-dimension";
+
+interface InspectorDimensionFieldSignature {
+  Args: {
+    custom?: { value: string | number | null; set: (value: unknown) => void };
+    value?: string | number | null;
+    onChange?: (value: unknown) => void;
+    units?: string[];
+    unit?: string;
+    unitless?: boolean;
+    min?: number;
+    max?: number;
+    step?: number | "any";
+    slider?: boolean;
+    schema?: {
+      min?: number;
+      max?: number;
+      ui?: {
+        units?: string[];
+        unit?: string;
+        step?: number | "any";
+        slider?: boolean;
+      };
+    };
+  };
+}
 
 /**
  * A CSS-dimension control: a numeric input with an optional inline slider and
@@ -31,7 +56,7 @@ import {
  * is clamped to `@min` / `@max` on commit so an out-of-range entry is corrected
  * here rather than silently rejected downstream.
  */
-export default class InspectorDimensionField extends Component {
+export default class InspectorDimensionField extends Component<InspectorDimensionFieldSignature> {
   /**
    * The working unit, used when the stored value carries none yet (an empty
    * field) and as the unit written on the next numeric edit. Seeded from the
@@ -40,8 +65,8 @@ export default class InspectorDimensionField extends Component {
    */
   @tracked selectedUnit;
 
-  constructor(...args: ConstructorParameters<typeof Component>) {
-    super(...args);
+  constructor(owner: Owner, args: InspectorDimensionFieldSignature["Args"]) {
+    super(owner, args);
     this.selectedUnit = this.#parsed?.unit || this.defaultUnit;
   }
 

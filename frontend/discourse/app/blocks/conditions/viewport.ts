@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import {
   BlockCondition,
   type ConditionContext,
@@ -107,8 +108,7 @@ const BREAKPOINTS: readonly Breakpoint[] = Object.freeze([
   },
 })
 export default class BlockViewportCondition extends BlockCondition {
-  @service
-  declare capabilities: import("discourse/services/capabilities").Capabilities;
+  @service declare capabilities: CapabilitiesService;
 
   /**
    * Returns the boolean source object the condition checks against. By

@@ -3,6 +3,8 @@ import { apiInitializer } from "discourse/lib/api";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import PreloadStore from "discourse/lib/preload-store";
 
+/** @typedef {import("discourse/lib/plugin-api").PluginApi} PluginApi */
+
 /**
  * Iterates every `{ theme_id, outlet, layout }` row in the supplied list and
  * publishes the layout to the block-outlet system's `theme` layer via
@@ -20,11 +22,11 @@ import PreloadStore from "discourse/lib/preload-store";
  * Exported separately from the `apiInitializer` callback so it can be unit-
  * tested without going through the full app-boot machinery.
  *
- * @param {import("discourse/lib/plugin-api").default} api
- * @param {Array<{theme_id: number, outlet: string, layout: Array<Object>}>} layouts
+ * @param {PluginApi} api
+ * @param {Array<{theme_id: number, outlet: string, layout: Array<Object>, schema_version?: number}>} layouts
  * @param {Object<string, {stack_index: number}>} [metaByThemeId] - Per-theme
  *   metadata from the `themeBlockLayoutMeta` preload, keyed by theme id. Supplies
- *   each entry's `stack_index`; the minimum-ranked theme owns the outlet.
+ *   each entry's `stack_index`; the maximum-ranked theme owns the outlet.
  */
 export function hydrateThemeBlockLayouts(api, layouts, metaByThemeId = {}) {
   if (!Array.isArray(layouts) || layouts.length === 0) {
@@ -38,12 +40,11 @@ export function hydrateThemeBlockLayouts(api, layouts, metaByThemeId = {}) {
     }
 
     try {
-      api.setLayoutLayer(outlet, api.LAYOUT_LAYERS.THEME, layout, {
+      api.setLayoutLayer(outlet, "theme", layout, {
         themeId,
-        // An outlet's owner is the theme with the minimum stack rank; that rank
+        // An outlet's owner is the theme with the maximum stack rank; that rank
         // is server-authoritative (the themeBlockLayoutMeta preload), not array
-        // order. A theme missing from the map (e.g. one that published after
-        // boot) falls back to lowest priority in the resolver.
+        // order. A theme missing from the map falls back to lowest priority.
         themeStackIndex: metaByThemeId[themeId]?.stack_index,
         lazy: true,
         // Theme-shipped layouts may have authoring errors (typos in
@@ -76,7 +77,7 @@ export function hydrateThemeBlockLayouts(api, layouts, metaByThemeId = {}) {
  * canvas in sync across browser tabs (and other admins) without a page
  * reload.
  *
- * @param {import("discourse/lib/plugin-api").default} api
+ * @param {PluginApi} api
  * @param {number[]} themeIds - the ids of every theme currently in the
  *   active stack. We subscribe per id; foreign-theme messages are filtered
  *   out at the channel level.

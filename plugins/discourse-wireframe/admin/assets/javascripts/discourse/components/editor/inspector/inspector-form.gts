@@ -4,12 +4,11 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { type ComponentLike } from "@glint/template";
 import type { ArgSchema } from "discourse/blocks/types";
 import Form from "discourse/components/form";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import InspectorFieldComponent from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
+import InspectorField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
 import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import {
   buildValidationRule,
@@ -22,7 +21,7 @@ import type WireframeInspectorArgsService from "discourse/plugins/discourse-wire
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 /** The inspector field descriptor produced by `schemaToFields`. */
-type InspectorField =
+type InspectorFieldDescriptor =
   import("discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields").InspectorField;
 
 /**
@@ -42,28 +41,6 @@ interface FormFieldSetContext {
   name: string;
   set: (name: string, value: unknown) => unknown;
 }
-
-/*
- * The shared inspector-field renderer is an untyped template-only `.gjs`, so
- * Glint sees no argument types for it. Cast it to the argument contract its
- * call sites rely on.
- *
- * TODO(devxp-typescript-pending): drop once inspector-field is authored in
- * `.gts` with a real Signature, then import it directly.
- */
-const InspectorField = InspectorFieldComponent as unknown as ComponentLike<{
-  Args: {
-    form: unknown;
-    field: InspectorField;
-    values: Record<string, unknown>;
-    onFieldSet: (
-      value: unknown,
-      ctx: FormFieldSetContext
-    ) => void | Promise<void>;
-    validationRuleFor?: (field: InspectorField) => string | undefined;
-    disabled?: boolean;
-  };
-}>;
 
 /**
  * Coerces a control's raw input value back into the type its schema
@@ -212,7 +189,9 @@ export default class InspectorForm extends Component {
    * without context, which throws when the body reads `this.values`.
    */
   @action
-  visibleFields(fields: InspectorField[]): InspectorField[] {
+  visibleFields(
+    fields: InspectorFieldDescriptor[]
+  ): InspectorFieldDescriptor[] {
     const visible = fields.filter((field) =>
       isFieldVisible(field, this.values)
     );
@@ -239,7 +218,7 @@ export default class InspectorForm extends Component {
    * selected composite part.
    */
   @action
-  isFieldDisabled(field: InspectorField): boolean {
+  isFieldDisabled(field: InspectorFieldDescriptor): boolean {
     if (this.disabled) {
       return true;
     }
@@ -254,7 +233,7 @@ export default class InspectorForm extends Component {
    * schema declares no constraints — keeps Form's tree shallow.
    */
   @action
-  validationRuleFor(field: InspectorField): string | undefined {
+  validationRuleFor(field: InspectorFieldDescriptor): string | undefined {
     return buildValidationRule(field);
   }
 

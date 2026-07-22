@@ -124,6 +124,13 @@ interface BlockChromeSignature {
   };
 }
 
+interface GridPlacement {
+  align?: string;
+  column?: string;
+  justify?: string;
+  row?: string;
+}
+
 /**
  * Wraps every rendered block while the editor is active so the canvas can
  * show selection chrome (an outline plus a corner handle when selected) and
@@ -245,7 +252,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const siblings = (grid.children ?? []).filter(
       (child) => entryKey(child) !== selfKey
     );
-    return computeOccupation(siblings, columns, rows);
+    return computeOccupation(siblings, columns, rows) as Set<string>;
   };
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
@@ -258,7 +265,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    *
    * @returns {Element|null}
    */
-  getImageMarkerEl = () => {
+  getImageMarkerEl = (): HTMLElement | null => {
     const arg = this.resizableImageArg;
     if (!arg || !this.chromeEl) {
       return null;
@@ -267,7 +274,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // not the overlay siblings (the filled image-arg overlay also
     // carries `data-block-arg` for its own click / drop dispatch).
     const escaped = CSS.escape(arg.name);
-    return this.chromeEl.querySelector(
+    return this.chromeEl.querySelector<HTMLElement>(
       `img[data-block-arg="${escaped}"], picture[data-block-arg="${escaped}"]`
     );
   };
@@ -372,7 +379,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
-    return entry?.containerArgs?.grid ?? null;
+    return (entry?.containerArgs?.grid as GridPlacement | undefined) ?? null;
   }
 
   /**
@@ -566,7 +573,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       origin: parseSlotPlacement(this.slotPlacement),
       columns: this.slotGridColumns,
       rows: this.slotGridRows,
-      occupied: this.getResizeOccupied(),
+      occupied: this.getResizeOccupied() as Set<string>,
     });
   }
 
@@ -1028,9 +1035,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     );
-    const label = richInlineToPlainText(
-      located?.entry?.containerArgs?.[namespace]?.label
-    ).trim();
+    const rawLabel = (
+      located?.entry?.containerArgs?.[namespace] as
+        | { label?: unknown }
+        | undefined
+    )?.label;
+    const label = richInlineToPlainText(rawLabel).trim();
     return label || null;
   }
 
@@ -1052,7 +1062,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     }
     if (
       name === "layout" &&
-      ["row", "tiles"].includes(ctx.parent.args?.mode ?? "stack")
+      ["row", "tiles"].includes(
+        (ctx.parent.args?.mode as string | undefined) ?? "stack"
+      )
     ) {
       return "horizontal";
     }
@@ -1840,7 +1852,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     if (!meta?.args || !this.chromeEl) {
       return;
     }
-    const linkEls = this.chromeEl.querySelectorAll(BLOCK_ARG_SELECTOR);
+    const linkEls =
+      this.chromeEl.querySelectorAll<HTMLElement>(BLOCK_ARG_SELECTOR);
     for (const linkEl of linkEls) {
       const argName = linkEl.dataset.blockArg;
       if (kindForArg(meta, argName) !== "url") {

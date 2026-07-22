@@ -14,7 +14,7 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dFit from "discourse/ui-kit/modifiers/d-fit";
+import dFitUntyped from "discourse/ui-kit/modifiers/d-fit";
 import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import {
@@ -118,6 +118,21 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
       itemsKey?: string;
     };
     Positional: [];
+  };
+}>;
+
+// TODO(devxp-typescript-pending): drop once d-fit is authored in .ts with a
+// real Signature, then import it directly.
+const dFit = dFitUntyped as unknown as ModifierLike<{
+  Element: HTMLElement;
+  Args: {
+    Positional: [(available: number, element: HTMLElement) => FitTier];
+    Named: {
+      observedEl?: HTMLElement;
+      attribute?: string;
+      active?: boolean;
+      remeasureOn?: unknown[];
+    };
   };
 }>;
 

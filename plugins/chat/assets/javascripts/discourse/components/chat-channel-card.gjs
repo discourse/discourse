@@ -51,30 +51,30 @@ export default <template>
 
       {{#unless (eq @showMembershipButton false)}}
         <div class="chat-channel-card__cta">
-        <PluginOutlet
-          @name="chat-channel-card-cta"
-          @outletArgs={{lazyHash channel=@channel}}
-          @defaultGlimmer={{true}}
-        >
-          {{#if @channel.isFollowing}}
-            <ToggleChannelMembershipButton
-              @channel={{@channel}}
-              @options={{hash
-                leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
-                labelType="short"
-              }}
-            />
+          <PluginOutlet
+            @name="chat-channel-card-cta"
+            @outletArgs={{lazyHash channel=@channel}}
+            @defaultGlimmer={{true}}
+          >
+            {{#if @channel.isFollowing}}
+              <ToggleChannelMembershipButton
+                @channel={{@channel}}
+                @options={{hash
+                  leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
+                  labelType="short"
+                }}
+              />
 
-          {{else if @channel.isJoinable}}
-            <ToggleChannelMembershipButton
-              @channel={{@channel}}
-              @options={{hash
-                joinClass="btn-primary btn-small chat-channel-card__join-btn"
-                labelType="short"
-              }}
-            />
-          {{/if}}
-        </PluginOutlet>
+            {{else if @channel.isJoinable}}
+              <ToggleChannelMembershipButton
+                @channel={{@channel}}
+                @options={{hash
+                  joinClass="btn-primary btn-small chat-channel-card__join-btn"
+                  labelType="short"
+                }}
+              />
+            {{/if}}
+          </PluginOutlet>
         </div>
       {{/unless}}
 

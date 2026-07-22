@@ -32,24 +32,20 @@ export default abstract class FloatKitInstance {
 
   /** The merged options bag; a menu or tooltip subclass narrows the exact shape. */
   abstract options: TooltipOptions;
-
   /**
    * The reference the float is anchored to — a real element, or a virtual one when the
    * float is positioned programmatically. Use `triggerElement` for element-only work.
    */
   abstract trigger: FloatKitTrigger;
-
   /** Whether the float is currently open. */
   abstract expanded: boolean;
-
   /** The rendered float body, assigned by the `apply-floating-ui` modifier. */
   declare content: HTMLElement;
-
   declare touchTimeout: ReturnType<typeof discourseLater>;
-
   declare delayedHoverTimeout: ReturnType<typeof discourseLater>;
-
   declare openedByDelayedHover: boolean;
+  #hoverCloseTimer: ReturnType<typeof discourseLater> | null = null;
+  #hoverFocusLocked = false;
 
   /**
    * The trigger narrowed to a real element, or `null` when it is a virtual reference.
@@ -68,6 +64,14 @@ export default abstract class FloatKitInstance {
   abstract onPointerLeave(event: PointerEvent): Promise<void>;
   abstract onTrigger(event?: Event): Promise<void>;
 
+  get hoverGracePeriod() {
+    return this.options?.hoverGracePeriod ?? 0;
+  }
+
+  get hasHoverGracePeriod() {
+    return this.hoverGracePeriod > 0;
+  }
+
   @action
   async show() {
     await this.options.onShow?.();
@@ -78,7 +82,50 @@ export default abstract class FloatKitInstance {
   // refocus its trigger); the base close has no trigger to refocus, so it ignores it.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async close(options?: { focusTrigger?: boolean }) {
+    this.resetHoverCloseState();
     await this.options.onClose?.();
+  }
+
+  @action
+  cancelHoverClose() {
+    cancel(this.#hoverCloseTimer);
+    this.#hoverCloseTimer = null;
+  }
+
+  resetHoverCloseState() {
+    this.cancelHoverClose();
+    this.#hoverFocusLocked = false;
+  }
+
+  @action
+  scheduleHoverClose() {
+    if (!this.hasHoverGracePeriod || this.#hoverFocusLocked) {
+      return;
+    }
+
+    this.cancelHoverClose();
+    this.#hoverCloseTimer = discourseLater(() => {
+      this.#hoverCloseTimer = null;
+      if (!this.#hoverFocusLocked) {
+        this.close();
+      }
+    }, this.hoverGracePeriod);
+  }
+
+  @action
+  onPointerEnterTrigger() {
+    this.cancelHoverClose();
+  }
+
+  @action
+  lockHoverCloseForFocus() {
+    this.#hoverFocusLocked = true;
+    this.cancelHoverClose();
+  }
+
+  @action
+  unlockHoverCloseForFocus() {
+    this.#hoverFocusLocked = false;
   }
 
   @action
@@ -145,6 +192,7 @@ export default abstract class FloatKitInstance {
   @action
   onDelayedHoverEnter(event: PointerEvent) {
     cancel(this.delayedHoverTimeout);
+    this.cancelHoverClose();
     this.delayedHoverTimeout = discourseLater(() => {
       if (this.expanded) {
         return;
@@ -157,6 +205,9 @@ export default abstract class FloatKitInstance {
   @action
   onDelayedHoverLeave() {
     cancel(this.delayedHoverTimeout);
+    if (this.expanded && this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+    }
   }
 
   @bind
@@ -174,6 +225,8 @@ export default abstract class FloatKitInstance {
   }
 
   tearDownListeners() {
+    this.resetHoverCloseState();
+
     const element = this.triggerElement;
     if (element) {
       element.removeEventListener("pointerdown", this.trapPointerDown);
@@ -200,8 +253,14 @@ export default abstract class FloatKitInstance {
             break;
           case "hover":
             element.removeEventListener("pointermove", this.onPointerMove);
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               element.removeEventListener("pointerleave", this.onPointerLeave);
+            }
+            if (this.hasHoverGracePeriod) {
+              element.removeEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger
+              );
             }
 
             break;
@@ -266,10 +325,17 @@ export default abstract class FloatKitInstance {
             element.addEventListener("pointermove", this.onPointerMove, {
               passive: true,
             });
-            if (!this.options.interactive) {
+            if (this.hasHoverGracePeriod || !this.options.interactive) {
               element.addEventListener("pointerleave", this.onPointerLeave, {
                 passive: true,
               });
+            }
+            if (this.hasHoverGracePeriod) {
+              element.addEventListener(
+                "pointerenter",
+                this.onPointerEnterTrigger,
+                { passive: true }
+              );
             }
 
             break;

@@ -2,6 +2,7 @@ import { gridDimensions, parsePlacement } from "discourse/blocks";
 import { entryKey } from "./entry-key";
 import {
   computeShiftPlan,
+  type GridEntry,
   isMergedCell,
   nextFreeCellInReadingOrder,
 } from "./grid-math";
@@ -128,9 +129,7 @@ interface ContainerArgs {
  * decision only reads its placement (`containerArgs.grid`) and identity
  * (`block` / `__stableKey`, via `entryKey`).
  */
-interface GridChildEntry {
-  block?: unknown;
-  __stableKey?: string | number;
+interface GridChildEntry extends GridEntry {
   containerArgs?: ContainerArgs | null;
 }
 

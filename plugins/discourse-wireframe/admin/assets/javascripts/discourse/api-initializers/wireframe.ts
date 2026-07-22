@@ -37,22 +37,6 @@ import type WireframeLayoutQuery from "../services/wireframe-layout-query";
 import type WireframeSimulation from "../services/wireframe-simulation";
 import type WireframeWorkspace from "../services/wireframe-workspace";
 
-// `ember-curry-component` is a dependency of the core `frontend/discourse`
-// package rather than of this plugin, so its published types sit off this
-// project's type-resolution path even though the module resolves at runtime
-// through the shared bundle. Declare the slice of its contract used here.
-// TODO(devxp-typescript-pending): drop this local declaration once the plugin
-// can resolve the package's own types directly.
-declare module "ember-curry-component" {
-  const curry: (
-    componentKlass: unknown,
-    namedArgs: object,
-    owner: import("@ember/owner").default
-  ) => import("@glint/template").ComponentLike;
-
-  export default curry;
-}
-
 /**
  * The workspace session as the block-chrome installer reaches it: alongside the
  * edit-mode flag it reads the layout-query service off the same session
@@ -346,7 +330,11 @@ function installGhostChildrenCreator() {
             { outletName: containerPath }
           ) as DebugGhostData | undefined;
           if (ghostData?.Component) {
-            result.push({ ...ghostData, key: blockKey });
+            result.push({
+              ...ghostData,
+              Component: ghostData.Component,
+              key: blockKey,
+            });
           }
           continue;
         }
@@ -413,7 +401,11 @@ function installGhostChildrenCreator() {
           { outletName: containerPath }
         ) as DebugGhostData | undefined;
         if (ghostData?.Component) {
-          result.push({ ...ghostData, key: blockKey });
+          result.push({
+            ...ghostData,
+            Component: ghostData.Component,
+            key: blockKey,
+          });
         }
       }
       return result;
@@ -466,7 +458,7 @@ function installBlockChrome(editor: ChromeEditor) {
       // below and the failing entry would disappear from the canvas.
       const isGhost = !!upstream?.isGhost || !!blockData.failureType;
 
-      const owner = getOwnerWithFallback();
+      const owner = getOwnerWithFallback(editor);
 
       // Use the layout's stable per-entry key when available (exposed via the
       // BLOCK_DEBUG payload, formatted as `${name}:${__stableKey}`). The

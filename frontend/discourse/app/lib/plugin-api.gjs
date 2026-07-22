@@ -3567,6 +3567,8 @@ class _PluginApi {
    * @param {Object} [options]
    * @param {number} [options.themeId] - Required when `layer === "theme"`. The
    *   id of the theme this layout originated from.
+   * @param {number} [options.themeStackIndex] - The theme's rank in the active
+   *   stack. The maximum-ranked theme owns the outlet.
    * @param {boolean} [options.lazy=false] - When true, defers layout
    *   validation until `BlockOutlet` first reads the entry at render
    *   time. Use this for boot-time hydration paths where blocks

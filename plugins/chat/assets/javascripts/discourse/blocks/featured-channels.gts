@@ -1,13 +1,20 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
+import { type ComponentLike } from "@glint/template";
 import { block } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
+import ChatChannelCardUntyped from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import type ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import FeaturedChannelsThumbnail from "./thumbnails/featured-channels";
+
+// TODO(devxp-typescript-pending): drop once ChatChannelCard is authored in
+// .gts with a real Signature, then import it directly.
+const ChatChannelCard = ChatChannelCardUntyped as unknown as ComponentLike<{
+  Args: { channel: ChatChannel; showMembershipButton?: boolean };
+}>;
 
 interface FeaturedChatChannelsSignature {
   Args: {

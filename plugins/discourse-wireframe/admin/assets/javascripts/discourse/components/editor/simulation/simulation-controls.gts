@@ -4,12 +4,71 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { type ComponentLike } from "@glint/template";
 import { buildSimulatedViewport } from "discourse/blocks/conditions/viewport";
-import DSegmentedControl from "discourse/components/d-segmented-control";
-import FKAlert from "discourse/form-kit/components/fk/alert";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DSegmentedControlUntyped from "discourse/components/d-segmented-control";
+import FKAlertUntyped from "discourse/form-kit/components/fk/alert";
+import DropdownSelectBoxUntyped from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+
+type PersonaId =
+  | "real"
+  | "anonymous"
+  | "tl0"
+  | "tl1"
+  | "tl2"
+  | "tl3"
+  | "tl4"
+  | "admin";
+type ViewportId = "real" | "mobile" | "tablet" | "desktop";
+type SimulatedBreakpoint = "sm" | "md" | "xl";
+
+interface PersonaOption {
+  id: PersonaId;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+interface ViewportItem {
+  value: ViewportId;
+  icon?: string;
+  label?: string;
+  title: string;
+}
+
+// TODO(devxp-typescript-pending): drop once FKAlert is authored in .gts with a
+// real Signature, then import it directly.
+const FKAlert = FKAlertUntyped as unknown as ComponentLike<{
+  Args: { type: string; icon?: string };
+  Element: HTMLElement;
+  Blocks: { default: [] };
+}>;
+
+// TODO(devxp-typescript-pending): drop once DropdownSelectBox is authored in
+// .gts with a real Signature, then import it directly.
+const DropdownSelectBox = DropdownSelectBoxUntyped as unknown as ComponentLike<{
+  Args: {
+    content: PersonaOption[];
+    value: PersonaId;
+    onChange: (value: PersonaId) => void;
+    options?: object;
+  };
+  Element: HTMLElement;
+}>;
+
+// TODO(devxp-typescript-pending): drop once DSegmentedControl is authored in
+// .gts with a real Signature, then import it directly.
+const DSegmentedControl = DSegmentedControlUntyped as unknown as ComponentLike<{
+  Args: {
+    name: string;
+    items: ViewportItem[];
+    value: ViewportId;
+    onSelect: (value: ViewportId) => void;
+  };
+  Element: HTMLElement;
+}>;
 
 /**
  * Map of persona keys → the simulated user payload the `user` condition
@@ -35,7 +94,7 @@ const PERSONAS = Object.freeze({
  * Persona option keys in display order. `real` (the un-simulated default) leads,
  * then the ascending trust levels bracketed by the anonymous and admin extremes.
  */
-const PERSONA_ORDER = [
+const PERSONA_ORDER: PersonaId[] = [
   "real",
   "anonymous",
   "tl0",
@@ -52,10 +111,8 @@ const PERSONA_ORDER = [
  * for staff (as in the group-member controls). Trust levels share the plain
  * `user` glyph (their name + description carry the distinction); the real
  * account uses `circle-user` to set it apart.
- *
- * @type {Record<string, string>}
  */
-const PERSONA_ICONS = {
+const PERSONA_ICONS: Record<PersonaId, string> = {
   real: "circle-user",
   anonymous: "user-xmark",
   tl0: "user",
@@ -66,7 +123,10 @@ const PERSONA_ICONS = {
   admin: "shield-halved",
 };
 
-const VIEWPORTS = Object.freeze({
+const VIEWPORTS: Record<
+  ViewportId,
+  { breakpoint: SimulatedBreakpoint; touch: boolean } | null
+> = Object.freeze({
   real: null,
   mobile: { breakpoint: "sm", touch: true },
   tablet: { breakpoint: "md", touch: true },
@@ -78,7 +138,7 @@ const VIEWPORTS = Object.freeze({
  * FontAwesome device glyphs (the Lucide tablet/phone read too alike);
  * `real` stays a short text label since no device glyph fits it.
  */
-const VIEWPORT_ITEMS = [
+const VIEWPORT_ITEMS: Array<{ value: ViewportId; icon?: string }> = [
   { value: "real" },
   { value: "desktop", icon: "desktop" },
   { value: "tablet", icon: "tablet-screen-button" },
@@ -97,7 +157,7 @@ const VIEWPORT_ITEMS = [
 export default class SimulationControls extends Component {
   @service wireframeSimulation;
 
-  get currentPersona() {
+  get currentPersona(): PersonaId {
     const sim = this.wireframeSimulation.value;
     if (!sim || !("user" in sim)) {
       return "real";
@@ -108,10 +168,10 @@ export default class SimulationControls extends Component {
     if (sim.user.admin) {
       return "admin";
     }
-    return `tl${sim.user.trust_level ?? 0}`;
+    return `tl${sim.user.trust_level ?? 0}` as PersonaId;
   }
 
-  get currentViewport() {
+  get currentViewport(): ViewportId {
     const sim = this.wireframeSimulation.value;
     if (!sim || !("viewport" in sim) || !sim.viewport) {
       return "real";
@@ -135,11 +195,9 @@ export default class SimulationControls extends Component {
    * Persona picker rows for the rich dropdown: each key paired with its
    * translated name, a one-line description, and an icon. `id` / `name` match
    * the select-kit defaults so the row renders icon + name + description.
-   *
-   * @returns {Array<{id: string, name: string, description: string, icon: string}>}
    */
   @cached
-  get personaOptions() {
+  get personaOptions(): PersonaOption[] {
     return PERSONA_ORDER.map((id) => ({
       id,
       name: i18n(`wireframe.chrome.simulation.persona_${id}`),
@@ -154,11 +212,9 @@ export default class SimulationControls extends Component {
    * Viewport segments for the segmented control. Devices are icon-only with a
    * translated `title` (which doubles as the tooltip and the accessible name);
    * the un-simulated default carries a short visible label instead.
-   *
-   * @returns {Array<{value: string, icon?: string, label?: string, title: string}>}
    */
   @cached
-  get viewportItems() {
+  get viewportItems(): ViewportItem[] {
     return VIEWPORT_ITEMS.map((item) => {
       const title = i18n(`wireframe.chrome.simulation.viewport_${item.value}`);
       return item.icon ? { ...item, title } : { ...item, label: title, title };
@@ -166,7 +222,7 @@ export default class SimulationControls extends Component {
   }
 
   @action
-  handlePersonaChange(value) {
+  handlePersonaChange(value: PersonaId) {
     if (value === "real") {
       this.wireframeSimulation.setUser(undefined);
       return;
@@ -178,7 +234,7 @@ export default class SimulationControls extends Component {
   }
 
   @action
-  handleViewportChange(value) {
+  handleViewportChange(value: ViewportId) {
     const pick = VIEWPORTS[value];
     if (!pick) {
       this.wireframeSimulation.setViewport(undefined);

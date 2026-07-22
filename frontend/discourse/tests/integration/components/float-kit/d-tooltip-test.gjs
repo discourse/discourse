@@ -517,6 +517,37 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
       .doesNotExist("closes after focus leaves and grace elapses");
   });
 
+  test("@hoverGracePeriod releases its focus lock when the tooltip closes", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      <template>
+        <DTooltip
+          @inline={{true}}
+          @label="label"
+          @hoverGracePeriod={{10}}
+          @onRegisterApi={{this.onRegisterApi}}
+        >
+          <:content>
+            <button type="button" class="focusable">click</button>
+          </:content>
+        </DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".focusable", "focusin");
+    await this.api.close();
+
+    await hover();
+    await leave();
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .doesNotExist("a reopened tooltip can close after its trigger is left");
+  });
+
   test("default hoverGracePeriod (0) keeps immediate close behavior", async function (assert) {
     await render(
       <template><DTooltip @inline={{true}} @label="label" /></template>

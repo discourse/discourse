@@ -75,8 +75,21 @@ type ActiveDragOverlay =
  * `seq` is stamped on. `null` becomes an own-but-blank claim.
  */
 type OverlayClaim =
-  | Omit<Extract<ActiveDragOverlay, { kind: "slot-insert" }>, "seq">
-  | Omit<Extract<ActiveDragOverlay, { kind: "image-arg" }>, "seq">
+  | {
+      kind: "slot-insert";
+      geometry: OverlayGeometry;
+      previewKind: string;
+      validity: "valid" | "invalid";
+      label: string | null;
+      dispatch: DropDispatch | null;
+    }
+  | {
+      kind: "image-arg";
+      blockKey: string;
+      argName: string;
+      isPassive: boolean;
+      variant: "light" | "dark";
+    }
   | null;
 
 /**

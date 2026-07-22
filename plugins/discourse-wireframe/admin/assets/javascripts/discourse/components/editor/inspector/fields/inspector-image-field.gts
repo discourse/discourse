@@ -1,17 +1,38 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import type Owner from "@ember/owner";
 import { service } from "@ember/service";
-import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import { type ComponentLike } from "@glint/template";
+import UppyImageUploaderUntyped from "discourse/components/uppy-image-uploader";
 import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const URL_PROBE_TIMEOUT_MS = 4000;
 const ASPECT_RATIO_EPSILON = 0.02;
+
+// TODO(devxp-typescript-pending): drop once UppyImageUploader is authored in
+// .gts with a real Signature, then import it directly.
+const UppyImageUploader = UppyImageUploaderUntyped as unknown as ComponentLike<{
+  Args: {
+    id: string;
+    imageUrl?: string;
+    onUploadDone: (upload: unknown) => void;
+    onUploadDeleted: () => void;
+    type: string;
+  };
+  Element: HTMLElement;
+}>;
+
+interface InspectorImageFieldSignature {
+  Args: {
+    custom?: { id?: string; name?: string };
+    schema?: { allowDark?: boolean; aspectRatio?: number };
+  };
+}
 
 /**
  * Custom FormKit control for `type: "image"` args.
@@ -45,7 +66,7 @@ const ASPECT_RATIO_EPSILON = 0.02;
  * @property {number} [height]
  * @property {ImageValue} [dark]
  */
-export default class InspectorImageField extends Component {
+export default class InspectorImageField extends Component<InspectorImageFieldSignature> {
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
   @service wireframeLayoutSignal;
@@ -82,8 +103,8 @@ export default class InspectorImageField extends Component {
   #lightProbeToken = 0;
   #darkProbeToken = 0;
 
-  constructor(...args: ConstructorParameters<typeof Component>) {
-    super(...args);
+  constructor(owner: Owner, args: InspectorImageFieldSignature["Args"]) {
+    super(owner, args);
     const value = this.liveValue;
     this.lightTab = value?.source ?? "upload";
     this.lightUrlDraft = value?.source === "url" ? (value.url ?? "") : "";
@@ -235,13 +256,13 @@ export default class InspectorImageField extends Component {
   }
 
   @action
-  onLightUrlDraftInput(event) {
-    this.lightUrlDraft = event.target.value;
+  onLightUrlDraftInput(event: Event) {
+    this.lightUrlDraft = (event.target as HTMLInputElement).value;
   }
 
   @action
-  onDarkUrlDraftInput(event) {
-    this.darkUrlDraft = event.target.value;
+  onDarkUrlDraftInput(event: Event) {
+    this.darkUrlDraft = (event.target as HTMLInputElement).value;
   }
 
   @action

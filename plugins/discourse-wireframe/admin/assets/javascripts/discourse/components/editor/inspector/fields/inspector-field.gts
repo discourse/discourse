@@ -1,5 +1,6 @@
-// @ts-check
+import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { get } from "@ember/helper";
+import type { ComponentLike } from "@glint/template";
 import { and, eq, not, or } from "discourse/truth-helpers";
 import InspectorCategoryField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-category-field";
 import InspectorDimensionField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-dimension-field";
@@ -13,6 +14,65 @@ import InspectorTagField from "discourse/plugins/discourse-wireframe/discourse/c
 import InspectorTopicField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-topic-field";
 import InspectorUserField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-user-field";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
+
+type InspectorFieldDescriptor =
+  import("discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields").InspectorField;
+
+interface FormFieldSetContext {
+  name: string;
+  set: (name: string, value: unknown) => unknown;
+}
+
+interface FormSelectContext {
+  Option: ComponentLike<{
+    Args: { value: unknown };
+    Blocks: { default: [] };
+  }>;
+}
+
+interface FormFieldContext {
+  Control: ComponentLike<{
+    Args: { placeholder?: string | null };
+    Element: HTMLElement;
+    Blocks: { default: [select: FormSelectContext] };
+  }>;
+  name: string;
+  set: (value: unknown) => void | Promise<void>;
+  value: unknown;
+}
+
+export interface InspectorFormContext {
+  Field: ComponentLike<{
+    Args: {
+      name: string;
+      title: string;
+      helpText?: string | null;
+      validation?: string;
+      type: string;
+      onSet: (
+        value: unknown,
+        context: FormFieldSetContext
+      ) => void | Promise<void>;
+      disabled?: boolean;
+    };
+    Element: HTMLElement;
+    Blocks: { default: [field: FormFieldContext] };
+  }>;
+}
+
+interface InspectorFieldSignature {
+  Args: {
+    form: InspectorFormContext;
+    field: InspectorFieldDescriptor;
+    values: Record<string, unknown>;
+    onFieldSet: (
+      value: unknown,
+      context: FormFieldSetContext
+    ) => void | Promise<void>;
+    validationRuleFor?: (field: InspectorFieldDescriptor) => string | undefined;
+    disabled?: boolean;
+  };
+}
 
 /**
  * Single source of truth for the `ui.control` → FormKit `@type`
@@ -110,130 +170,135 @@ export function fieldTypeFor(control) {
  *                      unregistered blocks — the editor doesn't know their
  *                      schema, so their values are shown but not editable.
  */
-const InspectorField = <template>
-  <@form.Field
-    @name={{@field.name}}
-    @title={{@field.title}}
-    @helpText={{@field.helpText}}
-    @validation={{if @validationRuleFor (@validationRuleFor @field)}}
-    @type={{fieldTypeFor @field.control}}
-    @onSet={{@onFieldSet}}
-    @disabled={{@disabled}}
-    as |formField|
-  >
-    {{#if (eq @field.control "select")}}
-      <formField.Control as |select|>
-        {{#each @field.options as |option|}}
-          <select.Option @value={{option}}>{{option}}</select.Option>
-        {{/each}}
-      </formField.Control>
-    {{else if
-      (or (eq @field.control "radio-group") (eq @field.control "segmented"))
-    }}
-      {{! Single-select enum. The unified field renders icon segments (with a
+const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
+  <template>
+    <@form.Field
+      @name={{@field.name}}
+      @title={{@field.title}}
+      @helpText={{@field.helpText}}
+      @validation={{if @validationRuleFor (@validationRuleFor @field)}}
+      @type={{fieldTypeFor @field.control}}
+      @onSet={{@onFieldSet}}
+      @disabled={{@disabled}}
+      as |formField|
+    >
+      {{#if (eq @field.control "select")}}
+        <formField.Control as |select|>
+          {{#each @field.options as |option|}}
+            <select.Option @value={{option}}>{{option}}</select.Option>
+          {{/each}}
+        </formField.Control>
+      {{else if
+        (or (eq @field.control "radio-group") (eq @field.control "segmented"))
+      }}
+        {{! Single-select enum. The unified field renders icon segments (with a
           tooltip per option) and falls back to a dropdown when the options
           don't fit a segmented row. Icons come from the arg's optionIcons map;
           the value doubles as the label / tooltip. }}
-      <formField.Control>
-        <InspectorSegmentedField
-          @custom={{formField}}
-          @options={{@field.options}}
-          @optionIcons={{@field.optionIcons}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "image")}}
-      {{! Image args own a bespoke custom control with Upload or URL
+        <formField.Control>
+          <InspectorSegmentedField
+            @custom={{formField}}
+            @options={{@field.options}}
+            @optionIcons={{@field.optionIcons}}
+          />
+        </formField.Control>
+      {{else if (eq @field.control "image")}}
+        {{! Image args own a bespoke custom control with Upload or URL
           tabs, an optional dark variant, and a ratio-mismatch warning.
           Mounted inside the FormKit custom control slot (a styling
           wrapper that yields its content) — the inner component
           reads/writes the field value directly via the yielded
           form field. }}
-      <formField.Control>
-        <InspectorImageField @custom={{formField}} @schema={{@field.schema}} />
-      </formField.Control>
-    {{else if (eq @field.control "repeatable")}}
-      {{! An array of structured items. The bespoke control reads/writes the
+        <formField.Control>
+          <InspectorImageField
+            @custom={{formField}}
+            @schema={{@field.schema}}
+          />
+        </formField.Control>
+      {{else if (eq @field.control "repeatable")}}
+        {{! An array of structured items. The bespoke control reads/writes the
           whole array live via the wireframe service and renders one editable
           row per item, built from the arg's item schema. }}
-      <formField.Control>
-        <InspectorRepeatableField
-          @custom={{formField}}
-          @schema={{@field.schema}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "category-select")}}
-      {{! The custom-type FormKit control renders a styling wrapper that
+        <formField.Control>
+          <InspectorRepeatableField
+            @custom={{formField}}
+            @schema={{@field.schema}}
+          />
+        </formField.Control>
+      {{else if (eq @field.control "category-select")}}
+        {{! The custom-type FormKit control renders a styling wrapper that
           just yields its content (FKControlCustom doesn't yield the field —
           it's empty). The chooser binds value/set off the OUTER form field
           (the FieldData yielded by the form's Field component), matching the
           established pattern in app/components/tag-settings.gjs for the
           synonyms picker. }}
-      <formField.Control>
-        <InspectorCategoryField
-          @custom={{formField}}
-          @schema={{@field.schema}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "tag-select")}}
-      <formField.Control>
-        <InspectorTagField @custom={{formField}} />
-      </formField.Control>
-    {{else if (eq @field.control "user-select")}}
-      <formField.Control>
-        <InspectorUserField @custom={{formField}} />
-      </formField.Control>
-    {{else if (eq @field.control "group-select")}}
-      <formField.Control>
-        <InspectorGroupField @custom={{formField}} />
-      </formField.Control>
-    {{else if (eq @field.control "topic-select")}}
-      <formField.Control>
-        <InspectorTopicField @custom={{formField}} />
-      </formField.Control>
-    {{else if (eq @field.control "dimension")}}
-      {{! Numeric value with an optional unit selector and inline slider. Reads
-          its configuration (units / step / slider / bounds) off the arg schema
-          and writes through the yielded field. }}
-      <formField.Control>
-        <InspectorDimensionField
-          @custom={{formField}}
-          @schema={{@field.schema}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "stepper")}}
-      {{! Numeric value with decrement / increment buttons. }}
-      <formField.Control>
-        <InspectorStepperField
-          @custom={{formField}}
-          @schema={{@field.schema}}
-        />
-      </formField.Control>
-    {{else if (eq @field.control "rich-inline")}}
-      {{#if (and @field.schema.ui.schema (not @disabled))}}
-        {{! Editable rich text editor (bold / italic / link), mounted in
-            the inspector for headless editing. Reads the schema variant from
-            the arg's ui.schema. }}
         <formField.Control>
-          <InspectorRichTextField
+          <InspectorCategoryField
             @custom={{formField}}
-            @schema={{@field.schema.ui.schema}}
+            @schema={{@field.schema}}
           />
         </formField.Control>
-      {{else}}
-        {{! Read-only summary — no schema variant declared, or the field is
+      {{else if (eq @field.control "tag-select")}}
+        <formField.Control>
+          <InspectorTagField @custom={{formField}} />
+        </formField.Control>
+      {{else if (eq @field.control "user-select")}}
+        <formField.Control>
+          <InspectorUserField @custom={{formField}} />
+        </formField.Control>
+      {{else if (eq @field.control "group-select")}}
+        <formField.Control>
+          <InspectorGroupField @custom={{formField}} />
+        </formField.Control>
+      {{else if (eq @field.control "topic-select")}}
+        <formField.Control>
+          <InspectorTopicField @custom={{formField}} />
+        </formField.Control>
+      {{else if (eq @field.control "dimension")}}
+        {{! Numeric value with an optional unit selector and inline slider. Reads
+          its configuration (units / step / slider / bounds) off the arg schema
+          and writes through the yielded field. }}
+        <formField.Control>
+          <InspectorDimensionField
+            @custom={{formField}}
+            @schema={{@field.schema}}
+          />
+        </formField.Control>
+      {{else if (eq @field.control "stepper")}}
+        {{! Numeric value with decrement / increment buttons. }}
+        <formField.Control>
+          <InspectorStepperField
+            @custom={{formField}}
+            @schema={{@field.schema}}
+          />
+        </formField.Control>
+      {{else if (eq @field.control "rich-inline")}}
+        {{#if (and @field.schema.ui.schema (not @disabled))}}
+          {{! Editable rich text editor (bold / italic / link), mounted in
+            the inspector for headless editing. Reads the schema variant from
+            the arg's ui.schema. }}
+          <formField.Control>
+            <InspectorRichTextField
+              @custom={{formField}}
+              @schema={{@field.schema.ui.schema}}
+            />
+          </formField.Control>
+        {{else}}
+          {{! Read-only summary — no schema variant declared, or the field is
             disabled. Flattens any marks to inline markdown so what they see
             here matches what they typed. }}
-        <div class="wireframe-inspector-rich-inline">
-          <span
-            class="wireframe-inspector-rich-inline__summary"
-          >{{toFlatMarkdown (get @values @field.name)}}</span>
-          <span class="wireframe-inspector-rich-inline__hint">Edit on the canvas</span>
-        </div>
+          <div class="wireframe-inspector-rich-inline">
+            <span
+              class="wireframe-inspector-rich-inline__summary"
+            >{{toFlatMarkdown (get @values @field.name)}}</span>
+            <span class="wireframe-inspector-rich-inline__hint">Edit on the
+              canvas</span>
+          </div>
+        {{/if}}
+      {{else}}
+        <formField.Control placeholder={{@field.placeholder}} />
       {{/if}}
-    {{else}}
-      <formField.Control placeholder={{@field.placeholder}} />
-    {{/if}}
-  </@form.Field>
-</template>;
+    </@form.Field>
+  </template>;
 
 export default InspectorField;

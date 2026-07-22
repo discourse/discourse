@@ -154,7 +154,7 @@ export default class WireframeImageUploadService extends Service {
         },
       });
 
-      upload.setup();
+      upload.setup(document.createElement("input"));
       upload.uppyWrapper?.uppyInstance?.on("upload-error", () => finish(null));
       upload.addFiles(file);
     });
@@ -195,7 +195,8 @@ export default class WireframeImageUploadService extends Service {
     // Derive the target arg from the inserted block's own schema rather
     // than assuming a name, mirroring how the paste handler picks its arg.
     const argName = imageArgEntries(
-      this.wireframeSelection.selectedBlockData?.metadata?.args
+      this.wireframeSelection.selectedBlockData?.metadata?.args,
+      this.wireframeSelection.selectedBlockData?.args
     )[0]?.name;
     if (!argName) {
       return false;
@@ -369,7 +370,8 @@ export default class WireframeImageUploadService extends Service {
       return;
     }
     const imageArgs = imageArgEntries(
-      this.wireframeSelection.selectedBlockData?.metadata?.args
+      this.wireframeSelection.selectedBlockData?.metadata?.args,
+      this.wireframeSelection.selectedBlockData?.args
     ).map((entry) => entry.name);
     if (imageArgs.length === 0) {
       return;

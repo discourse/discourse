@@ -21,6 +21,8 @@ import {
  */
 type GridDropDecision =
   import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision;
+type GridDropGesture =
+  import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropGesture;
 
 /** The axis-directed sense of an enter-style BESIDE drop. */
 type GridDropDirection = "left" | "right" | "up" | "down";
@@ -33,7 +35,7 @@ type EnterPosition = "before" | "after" | "inside";
  * drop into, ready for `decideGridDrop` to consume.
  */
 interface ClassifiedGridDrop {
-  gesture: string;
+  gesture: GridDropGesture;
   anchorKey?: string;
   direction?: GridDropDirection;
 }

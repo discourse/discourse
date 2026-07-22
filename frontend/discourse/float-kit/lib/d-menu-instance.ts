@@ -80,6 +80,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async close(options = { focusTrigger: true }) {
+    this.resetHoverCloseState();
     this.openedByDelayedHover = false;
 
     if (isDestroying(getOwner(this)!)) {
@@ -134,9 +135,14 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onPointerLeave(event: PointerEvent) {
-    if (this.untriggers.includes("hover")) {
-      await this.onUntrigger(event);
+    if (!this.untriggers.includes("hover")) {
+      return;
     }
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+    await this.onUntrigger(event);
   }
 
   @action

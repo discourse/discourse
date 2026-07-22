@@ -3,9 +3,8 @@ import { cached } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { type ComponentLike } from "@glint/template";
 import Form from "discourse/components/form";
-import InspectorFieldComponent from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
+import InspectorField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-field";
 import {
   isFieldVisible,
   schemaToFields,
@@ -14,7 +13,7 @@ import type WireframeEntryConfigService from "discourse/plugins/discourse-wirefr
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 /** The inspector field descriptor produced by `schemaToFields`. */
-type InspectorField =
+type InspectorFieldDescriptor =
   import("discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields").InspectorField;
 
 /**
@@ -30,30 +29,9 @@ interface FormFieldSetContext {
 interface ContainerArgsSection {
   namespace: string;
   label: string;
-  fields: InspectorField[];
+  fields: InspectorFieldDescriptor[];
   values: Record<string, unknown>;
 }
-
-/*
- * The shared inspector-field renderer is an untyped template-only `.gjs`, so
- * Glint sees no argument types for it. Cast it to the argument contract its
- * call sites rely on.
- *
- * TODO(devxp-typescript-pending): drop once inspector-field is authored in
- * `.gts` with a real Signature, then import it directly.
- */
-const InspectorField = InspectorFieldComponent as unknown as ComponentLike<{
-  Args: {
-    form: unknown;
-    field: InspectorField;
-    values: Record<string, unknown>;
-    onFieldSet: (
-      value: unknown,
-      ctx: FormFieldSetContext
-    ) => void | Promise<void>;
-    disabled?: boolean;
-  };
-}>;
 
 /**
  * Inspector form for the selected entry's `containerArgs` — placement
@@ -124,7 +102,7 @@ export default class InspectorContainerArgsForm extends Component {
       if (
         conditional &&
         !isFieldVisible(
-          { conditional } as unknown as InspectorField,
+          { conditional } as unknown as InspectorFieldDescriptor,
           this.parentArgs
         )
       ) {

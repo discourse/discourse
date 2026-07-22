@@ -5,12 +5,49 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
+import { type ModifierLike } from "@glint/template";
+import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 /** @type {import("./block-tile.gjs").default} */
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import { buildBlockPalette } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+
+// TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
+// with a real Signature, then import it directly.
+const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  Args: {
+    Named: {
+      itemSelector: string;
+      onActivate: (element: HTMLElement, event: KeyboardEvent) => void;
+    };
+    Positional: [];
+  };
+  Element: HTMLElement;
+}>;
+
+// TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
+// in .ts with a real Signature, then import it directly.
+const dDragAndDropSource =
+  dDragAndDropSourceUntyped as unknown as ModifierLike<{
+    Args: {
+      Named: {
+        type: string;
+        data: object;
+        dragPreview: (args: {
+          container: HTMLElement;
+          element: HTMLElement;
+        }) => () => void;
+        dragPreviewOffset: object;
+        onDragStart: (event: {
+          source: { data: Record<string, unknown> };
+        }) => void;
+        onDrop: (event: { source: { data: Record<string, unknown> } }) => void;
+      };
+      Positional: [];
+    };
+    Element: HTMLElement;
+  }>;
 
 /**
  * Decorated palette entry — the raw `{name, component, metadata}` from

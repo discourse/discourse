@@ -66,7 +66,7 @@ export default class WireframeGridPlacementService extends Service {
    *
    * @param {{
    *   targetGridKey: string,
-   *   gesture: string,
+   *   gesture: import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropGesture,
    *   cell?: {column: number, row: number}|null,
    *   anchorKey?: string|null,
    *   direction?: "left"|"right"|"up"|"down",
@@ -138,7 +138,13 @@ export default class WireframeGridPlacementService extends Service {
             rows: Number(gridEntry.args?.rows ?? DEFAULT_GRID_ROWS),
           },
           source: { kind: source.kind, key: source.key ?? null },
-          drop: { gesture, cell, anchorKey, direction, shift },
+          drop: {
+            gesture,
+            cell,
+            anchorKey,
+            direction,
+            shift,
+          },
         });
         switch (decision.action) {
           case GRID_DROP_ACTIONS.FILL:

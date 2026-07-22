@@ -48,7 +48,7 @@ interface InspectorSegmentedFieldSignature {
     /** Raw option values; the value doubles as its own label and tooltip. */
     options?: string[];
     /** Optional icon per option value, used with `@options`. */
-    optionIcons?: Record<string, string>;
+    optionIcons?: Record<string, string> | null;
   };
   Element: HTMLElement;
 }

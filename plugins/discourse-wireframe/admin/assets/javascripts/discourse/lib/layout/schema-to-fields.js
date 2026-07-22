@@ -43,6 +43,8 @@ const DEFAULT_GROUP = "General";
  * @property {*} default - The schema's `default` value, or `undefined`.
  * @property {Array|null} options - For `select` / `radio-group`, the enum
  *   values; otherwise `null`.
+ * @property {Object<string, string>|null} optionIcons - Optional icon names
+ *   keyed by enum value; otherwise `null`.
  * @property {{arg: string, equals?: *, notEmpty?: boolean}|null} conditional -
  *   Optional show-when-this predicate.
  * @property {Object} schema - The original schema entry, for runtime

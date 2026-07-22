@@ -104,7 +104,9 @@ export default class InplaceTextController extends Component {
         `[data-wf-container-arg-key="${CSS.escape(childKey)}"]` +
         `[data-wf-container-arg-namespace="${CSS.escape(namespace)}"]` +
         `[data-wf-container-arg-field="${CSS.escape(field)}"]`;
-      return document.querySelector(`${host} [data-wf-rich-text-arg]`);
+      return document.querySelector(
+        `${host} [data-wf-rich-text-arg]`
+      ) as HTMLElement | null;
     }
 
     if (!blockKey || !argName) {
@@ -112,7 +114,9 @@ export default class InplaceTextController extends Component {
     }
     const blockSelector = `[data-wf-block-key="${CSS.escape(blockKey)}"]`;
     const argSelector = `[data-wf-rich-text-arg="${CSS.escape(argName)}"]`;
-    return document.querySelector(`${blockSelector} ${argSelector}`);
+    return document.querySelector(
+      `${blockSelector} ${argSelector}`
+    ) as HTMLElement | null;
   }
 
   /**
@@ -513,13 +517,15 @@ export default class InplaceTextController extends Component {
       if (!view) {
         return false;
       }
-      const blockEl = view.dom.closest("[data-wf-block-key]");
+      const blockEl = view.dom.closest(
+        "[data-wf-block-key]"
+      ) as HTMLElement | null;
       if (!blockEl) {
         return false;
       }
       const argEls = Array.from(
         blockEl.querySelectorAll("[data-wf-rich-text-arg]")
-      );
+      ) as HTMLElement[];
       const currentArg = this.wireframeInplaceText.argName;
       const i = argEls.findIndex(
         (el) => el.dataset.wfRichTextArg === currentArg
