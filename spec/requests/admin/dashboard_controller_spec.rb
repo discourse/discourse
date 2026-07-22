@@ -124,24 +124,119 @@ RSpec.describe Admin::DashboardController do
         response.parsed_body["sections"].index_by { |section| section["id"] }
       end
 
-      it "passes serial mode to the section loader for rack-mini-profiler flamegraph requests" do
+      context "for mini profiler requests" do
+        mini_profiler_stub =
+          Class.new do
+            def self.authorize_request = nil
+
+            def self.config
+              @config ||= Struct.new(:profile_parameter).new("pp")
+            end
+          end
+
+        around do |example|
+          stub_const(ApplicationController, :MINI_PROFILER_CLASS, mini_profiler_stub) do
+            example.run
+          end
+        end
+
+        def authorize_mini_profiler_for_admin
+          Developer.create!(user_id: admin.id)
+          Developer.rebuild_cache
+          sign_out
+          sign_in(admin)
+        end
+
+        after { Developer.rebuild_cache }
+
+        it "passes serial mode to the section loader for query param flamegraph requests" do
+          authorize_mini_profiler_for_admin
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == false }
+            .returns([])
+
+          get "/admin/dashboard.json", params: { pp: "flamegraph" }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "passes serial mode to the section loader for flamegraph headers" do
+          authorize_mini_profiler_for_admin
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == false }
+            .returns([])
+
+          get "/admin/dashboard.json", headers: { "X-Rack-Mini-Profiler" => "flamegraph" }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "passes serial mode to the section loader for async-flamegraph referers" do
+          authorize_mini_profiler_for_admin
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == false }
+            .returns([])
+
+          get "/admin/dashboard.json",
+              headers: {
+                "Referer" => "http://test.host/admin?pp=async-flamegraph",
+              }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "passes serial mode when a non-flamegraph header conflicts with a flamegraph query param" do
+          authorize_mini_profiler_for_admin
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == false }
+            .returns([])
+
+          get "/admin/dashboard.json",
+              params: {
+                pp: "flamegraph",
+              },
+              headers: {
+                "X-Rack-Mini-Profiler" => "profile",
+              }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "keeps the section loader parallel for non-flamegraph modes" do
+          authorize_mini_profiler_for_admin
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == true }
+            .returns([])
+
+          get "/admin/dashboard.json", params: { pp: "profile" }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "keeps the section loader parallel for unauthorized profiler requests" do
+          AdminDashboardSectionLoader
+            .expects(:build)
+            .with { |kwargs| kwargs[:parallel] == true }
+            .returns([])
+
+          get "/admin/dashboard.json", params: { pp: "flamegraph" }
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "keeps the section loader parallel when mini profiler is unavailable" do
         AdminDashboardSectionLoader
           .expects(:build)
-          .with { |kwargs| kwargs[:parallel] == false }
+          .with { |kwargs| kwargs[:parallel] == true }
           .returns([])
 
         get "/admin/dashboard.json", params: { pp: "flamegraph" }
-
-        expect(response.status).to eq(200)
-      end
-
-      it "passes serial mode to the section loader for rack-mini-profiler flamegraph headers" do
-        AdminDashboardSectionLoader
-          .expects(:build)
-          .with { |kwargs| kwargs[:parallel] == false }
-          .returns([])
-
-        get "/admin/dashboard.json", headers: { "X-Rack-Mini-Profiler" => "async-flamegraph" }
 
         expect(response.status).to eq(200)
       end

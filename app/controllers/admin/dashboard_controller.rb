@@ -163,7 +163,7 @@ class Admin::DashboardController < Admin::StaffController
           current_user: current_user,
           start_date: params[:start_date],
           end_date: params[:end_date],
-          parallel: !rack_mini_profiler_flamegraph?,
+          parallel: !mini_profiler_flamegraph_request?,
         ),
       problems: serialized_problems,
     }
@@ -175,23 +175,6 @@ class Admin::DashboardController < Admin::StaffController
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
-  end
-
-  def rack_mini_profiler_flamegraph?
-    %w[flamegraph async-flamegraph].include?(rack_mini_profiler_profile_mode)
-  end
-
-  def rack_mini_profiler_profile_mode
-    request.get_header("HTTP_X_RACK_MINI_PROFILER").presence ||
-      params[rack_mini_profiler_profile_parameter]
-  end
-
-  def rack_mini_profiler_profile_parameter
-    if defined?(Rack::MiniProfiler) && Rack::MiniProfiler.respond_to?(:config)
-      Rack::MiniProfiler.config.profile_parameter
-    else
-      "pp"
-    end
   end
 
   def ensure_dashboard_improvements_enabled
