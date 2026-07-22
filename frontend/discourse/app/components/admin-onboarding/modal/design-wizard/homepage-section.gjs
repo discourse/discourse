@@ -46,6 +46,11 @@ const DesignWizardHomepageSection = <template>
           </select.Option>
         {{/each}}
       </DSelect>
+      <p class="design-wizard-modal__category-page-style-note">
+        {{i18n
+          "admin_onboarding_banner.design_wizard.homepage.category_page_style_note"
+        }}
+      </p>
     </div>
   {{/if}}
 </template>;

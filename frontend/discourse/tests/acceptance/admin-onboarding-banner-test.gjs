@@ -345,12 +345,21 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-modal__theme-card.--selected")
       .hasAttribute("data-theme-id", "-1", "preselects the default theme");
 
+    assert
+      .dom(".design-wizard-modal__preview iframe")
+      .hasAttribute(
+        "data-preview-url",
+        "/?preview_theme_id=-1",
+        "preview points at the default theme"
+      );
+
     await click(".design-wizard-modal__theme-card[data-theme-id='-2']");
     assert
-      .dom(".design-wizard-modal__preview")
-      .hasStyle(
-        { "--dw-accent": "#563fe3" },
-        "preview uses the selected theme's palette"
+      .dom(".design-wizard-modal__preview iframe")
+      .hasAttribute(
+        "data-preview-url",
+        "/?preview_theme_id=-2",
+        "preview reloads with the selected theme"
       );
 
     await click(
@@ -367,10 +376,19 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard-modal__swatch[data-pair-key='marigold']");
     assert
-      .dom(".design-wizard-modal__preview")
-      .hasStyle(
-        { "--dw-accent": "#b78d12" },
-        "preview updates when picking a palette"
+      .dom(".design-wizard-modal__swatch[data-pair-key='marigold']")
+      .hasClass("--selected", "palette selection updates");
+
+    await click(
+      ".design-wizard-modal__section[data-section-id='homepage'] .design-wizard-modal__section-toggle"
+    );
+    await click(".design-wizard-modal__homepage-card:nth-child(2)");
+    assert
+      .dom(".design-wizard-modal__preview iframe")
+      .hasAttribute(
+        "data-preview-url",
+        "/categories?preview_theme_id=-2",
+        "preview shows the categories page for a categories homepage"
       );
   });
 });

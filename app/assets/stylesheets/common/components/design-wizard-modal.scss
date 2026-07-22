@@ -297,7 +297,8 @@
   &__category-page-style {
     margin-top: var(--space-2);
 
-    label {
+    label,
+    .design-wizard-modal__category-page-style-note {
       display: block;
       font-size: var(--font-down-2);
       color: var(--primary-medium);
@@ -308,16 +309,13 @@
     }
   }
 
-  // the preview pane is colored exclusively via the --dw-* custom properties
-  // computed from the selected palette, so it stays unaffected by the actual
-  // site color scheme
   &__preview {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
     min-height: 0;
     padding: var(--space-4);
-    background: color-mix(in srgb, var(--dw-fg) 8%, var(--dw-bg));
+    background: var(--primary-very-low);
 
     @include viewport.until(md) {
       display: none;
@@ -332,160 +330,34 @@
     color: var(--primary-high);
   }
 
-  &__preview-site {
+  &__preview-frame-wrap {
+    position: relative;
     flex: 1;
-    display: flex;
-    flex-direction: column;
     min-height: 0;
     overflow: hidden;
-    background: var(--dw-bg);
-    color: var(--dw-fg);
     border-radius: 6px;
+    background: var(--secondary);
     box-shadow: var(--shadow-dropdown);
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
   }
 
-  &__preview-header {
+  &__preview-shield,
+  &__preview-loading {
+    position: absolute;
+    inset: 0;
+  }
+
+  &__preview-loading {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    flex: none;
-    height: 46px;
-    padding: 0 var(--space-3);
-    background: var(--dw-header-bg);
-    color: var(--dw-header-fg);
-    border-bottom: 1px solid var(--dw-border);
-
-    .d-icon {
-      color: var(--dw-header-fg);
-      opacity: 0.7;
-    }
-  }
-
-  &__preview-site-title {
-    font-weight: 700;
-    margin-right: auto;
-  }
-
-  &__preview-columns {
-    display: grid;
-    grid-template-columns: 12em 1fr;
-    flex: 1;
-    min-height: 0;
-  }
-
-  &__preview-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    padding: var(--space-2);
-    border-right: 1px solid var(--dw-border);
-    font-size: var(--font-down-1);
-  }
-
-  &__preview-new-topic {
-    text-align: center;
-    padding: var(--space-1) 0;
-    margin-bottom: var(--space-2);
-    background: var(--dw-accent);
-    color: var(--dw-bg);
-    border-radius: var(--dw-radius);
-    font-weight: 600;
-  }
-
-  &__preview-nav-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-1) var(--space-2);
-    color: var(--dw-muted);
-    border-radius: var(--dw-radius);
-
-    .d-icon {
-      color: currentcolor;
-      font-size: var(--font-down-2);
-    }
-
-    &.--active {
-      background: var(--dw-soft);
-      color: var(--dw-accent-fg);
-      font-weight: 600;
-    }
-  }
-
-  &__preview-palette-switcher {
-    margin-top: auto;
-    color: var(--dw-accent-fg);
-
-    .d-icon {
-      color: currentcolor;
-    }
-  }
-
-  &__preview-content {
-    padding: var(--space-3) var(--space-4);
-    overflow: hidden;
-
-    h3 {
-      margin: 0 0 var(--space-2);
-      color: var(--dw-fg);
-    }
-  }
-
-  &__preview-tabs {
-    display: flex;
-    gap: var(--space-3);
-    font-size: var(--font-down-1);
-    border-bottom: 1px solid var(--dw-border);
-
-    span {
-      padding: var(--space-1) 0;
-      color: var(--dw-muted);
-
-      &.--active {
-        color: var(--dw-accent-fg);
-        font-weight: 600;
-        border-bottom: 2px solid var(--dw-accent);
-      }
-    }
-  }
-
-  &__preview-topic-row,
-  &__preview-category-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-2) 0;
-    border-bottom: 1px solid var(--dw-border);
-    font-size: var(--font-down-1);
-    font-weight: 600;
-  }
-
-  &__preview-category-badge {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    flex: none;
-  }
-
-  &__preview-category-boxes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
-  }
-
-  &__preview-category-box {
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--dw-border);
-    border-top: 3px solid;
-    border-radius: var(--dw-radius);
-    font-size: var(--font-down-1);
-    font-weight: 700;
-  }
-
-  &__preview-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
+    justify-content: center;
+    background: var(--secondary);
   }
 
   .d-modal__footer {

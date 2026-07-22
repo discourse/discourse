@@ -48,8 +48,11 @@ module PageObjects
         find("#{MODAL_SELECTOR}__homepage-card:nth-child(#{index})").click
       end
 
-      def has_preview_accent?(hex)
-        find("#{MODAL_SELECTOR}__preview")[:style].include?("--dw-accent: ##{hex}")
+      def has_preview_frame_for_theme?(theme_id)
+        has_css?(
+          "#{MODAL_SELECTOR}__preview iframe[src*='preview_theme_id=#{theme_id}']",
+          visible: :all,
+        )
       end
 
       def save

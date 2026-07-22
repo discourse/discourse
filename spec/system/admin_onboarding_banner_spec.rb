@@ -120,6 +120,7 @@ describe "Admin Onboarding Banner" do
 
       expect(design_wizard_modal).to be_open
       expect(design_wizard_modal).to have_theme_cards(count: 2)
+      expect(design_wizard_modal).to have_preview_frame_for_theme(Theme.foundation_theme.id)
     end
 
     it "applies the design choices and marks step complete" do

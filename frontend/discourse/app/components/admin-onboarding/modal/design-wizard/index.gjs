@@ -295,8 +295,6 @@ export default class DesignWizardModal extends Component {
                 @bodyFont={{this.bodyFont}}
                 @headingFont={{this.headingFont}}
                 @homepage={{this.homepage}}
-                @categoryPageStyle={{this.categoryPageStyle}}
-                @userSelectable={{this.palettesUserSelectable}}
               />
             </div>
           {{/if}}
