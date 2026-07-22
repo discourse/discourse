@@ -293,6 +293,44 @@ RSpec.describe Admin::ThemesController do
         expect(response.parsed_body["theme"]["name"]).to eq("discourse-inexistent-theme")
       end
 
+      it "creates a private theme placeholder without cloning the repository" do
+        Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
+
+        expect do
+          post "/admin/themes/import.json",
+               params: {
+                 remote: "git@github.com:discourse/private-theme.git",
+                 branch: "main",
+                 public_key: "public_key",
+                 placeholder: true,
+               }
+        end.to change { Theme.count }.by(1).and change { RemoteTheme.count }.by(1)
+
+        expect(response.status).to eq(201)
+        remote_theme = Theme.last.remote_theme
+        expect(remote_theme.attributes.slice("remote_url", "branch", "private_key")).to eq(
+          "remote_url" => "git@github.com:discourse/private-theme.git",
+          "branch" => "main",
+          "private_key" => "private_key",
+        )
+      end
+
+      it "rolls back the remote theme when placeholder creation fails" do
+        Discourse.redis.setex("ssh_key_public_key", 1.hour, "private_key")
+        Theme.stubs(:create!).raises(ActiveRecord::RecordInvalid.new(Theme.new))
+
+        expect do
+          post "/admin/themes/import.json",
+               params: {
+                 remote: "git@github.com:discourse/private-theme.git",
+                 public_key: "public_key",
+                 placeholder: true,
+               }
+        end.not_to change { RemoteTheme.count }
+
+        expect(response.status).to eq(422)
+      end
+
       it "fails to import with an error if uploads are not allowed" do
         SiteSetting.theme_authorized_extensions = "nothing"
 

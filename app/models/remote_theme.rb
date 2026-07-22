@@ -249,7 +249,8 @@ class RemoteTheme < ActiveRecord::Base
     already_in_transaction: false,
     run_migrations: true,
     allow_out_of_sequence_migration: false,
-    before_save: nil
+    before_save: nil,
+    raise_on_import_error: false
   )
     cleanup = false
 
@@ -261,6 +262,7 @@ class RemoteTheme < ActiveRecord::Base
       rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
         save!
+        raise if raise_on_import_error
         return self
       else
         self.last_error_text = nil
