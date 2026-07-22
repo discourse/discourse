@@ -3,7 +3,7 @@
 module DiscourseDataExplorer
   module JsonApiKit
     module VersionChanges
-      # Pairs with the 2026-07-08 wire rename in QuerySerializer. The `ran_at`
+      # Pairs with the 2026-07-08 wire rename in QueryResource. The `ran_at`
       # sort key is attribute-derived (`sort :ran_at, column: :last_run_at`), so
       # old clients' `sort=last_run_at` follows this rename automatically — no
       # extra declaration needed.

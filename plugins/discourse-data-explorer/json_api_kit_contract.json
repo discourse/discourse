@@ -11,8 +11,8 @@
       "updated_at"
     ],
     "relationships": {
-      "user": "belongs_to",
-      "groups": "has_many"
+      "user": "to_one",
+      "groups": "to_many"
     },
     "filters": [
       "q"

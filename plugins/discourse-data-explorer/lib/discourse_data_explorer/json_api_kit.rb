@@ -50,7 +50,9 @@ module DiscourseDataExplorer
         return if !extension
 
         extension.attached_types.each do |type|
-          serializer_for(type).relationships_to_serialize&.delete(extension.namespace.to_sym)
+          target = serializer_for(type)
+          target.relationships_to_serialize&.delete(extension.namespace.to_sym)
+          target.relationship_definitions.delete(extension.namespace.to_sym)
         end
         extension.version_changes.each { api_versions.unregister(it) }
       end
@@ -75,7 +77,7 @@ module DiscourseDataExplorer
       # design follow-up (docs/versioning-design.md §3).
       def serializer_for(type)
         @resource_serializers ||=
-          [QuerySerializer, UserSerializer, GroupSerializer].to_h { [it.record_type.to_s, it] }
+          [QueryResource, UserResource, GroupResource].to_h { [it.record_type.to_s, it] }
         @resource_serializers[type.to_s]
       end
 
@@ -110,8 +112,7 @@ module DiscourseDataExplorer
           related = relationship[:block]
           serializer_for(type).has_one(
             extension.namespace.to_sym,
-            serializer: relationship[:serializer],
-            lazy_load_data: true,
+            resource: relationship[:serializer],
           ) { |record, _params| related.call(record) }
         end
         # One union registry per site: the extension's changes join the timeline

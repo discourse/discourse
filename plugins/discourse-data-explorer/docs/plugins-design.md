@@ -66,7 +66,7 @@ author rediscovering the boot-ordering problem. And the **namespace closes over 
 helper inside**: nothing can be registered without one, and no helper ever takes a prefix
 argument (see D's auto-namespacing). The `register_` verb is kept on the helpers because it
 marks "attaching to someone else's surface" — distinguishing this DSL from the *resource*
-`jsonapi` block, where bare declarations (`filter`, `sort`, …) describe the plugin's own
+resource class, where bare declarations (`filter`, `sort`, …) describe the plugin's own
 endpoints. Scope discipline: a plugin's own resources keep their declarations in the
 plugin's resource/controller classes, exactly like core's; the plugin.rb block holds only
 the extension surface (attachments to foreign types) and the plugin's version timeline.

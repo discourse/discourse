@@ -1,8 +1,10 @@
 # JSON:API Kit — Resource Class Design
 
-**Status:** design settled in a pairing session (2026-07-21); not built. The natural next
-spike increment: migrate the queries resource (serializer + controller `jsonapi` block →
-one `QueryResource`).
+**Status:** design settled in a pairing session (2026-07-21) and **built the same day**:
+`ResourceBase` (22 unit examples) plus the queries migration — `QueryResource`/
+`UserResource`/`GroupResource` replaced the Kit serializers and the controller's `jsonapi`
+block, with the full suite green throughout (behavior-preserving by construction). Still
+open from the plan: types in the contract-guard baseline, the real resource registry.
 **References:** [versioning design](./versioning-design.md) · [plugins design](./plugins-design.md) · [API docs generation](./api-docs-generation.md).
 
 Guiding principle, stated once for the whole Kit: this is a **new API** — every case the
@@ -28,9 +30,9 @@ Every recent design thread ends at the same missing home:
 - **Scope discipline** (plugins doc, B): "a plugin's own resources keep their declarations
   in resource classes" — which only makes sense once resource classes exist.
 
-Today those declarations are split between the controller's `jsonapi do … end` block
-(query surface) and a serializer class (document shape). The resource class is the merge
-of the two halves of one concept.
+Before this design landed, those declarations were split between the controller's
+`jsonapi do … end` block (query surface) and a serializer class (document shape). The
+resource class is the merge of the two halves of one concept.
 
 ## 2. Shape: the resource *is* the serializer
 
@@ -54,21 +56,26 @@ library. Our starting point differs (serializer classes are already written dire
 is-a is the smaller step: same keyword-mapping work, one less layer, equal swappability
 given the plumbing rule.
 
+**The `ApplicationResource` layer** (the ApplicationRecord convention): resources inherit
+from an application-owned abstract base, never from `ResourceBase` directly — the home
+for app-wide declarations (shared attributes, page defaults, …). Declarations inherit
+down: `ResourceBase` mirrors the gem's own inheritance hook for the Kit-side definitions
+(shallow dups — a subclass sees the parent's declarations and adds its own without
+mutating the parent). Without that mirror, a parent-declared attribute would *render* on
+the subclass (the gem inherits its state) while the docs/contract metadata silently missed
+it.
+
 ## 3. The DSL
 
 ```ruby
-class QueryResource < JsonApiKit::ResourceBase
+class QueryResource < ApplicationResource
   type :queries
 
   attribute :name, :string, writable: true
   attribute :description, :string, writable: true
-  attribute :query, :string, writable: true, description: "The SQL source of the query." do
-    object.sql
-  end
-  attribute :ran_at, :datetime do
-    object.last_run_at
-  end
-  attribute :hidden, :boolean, if: ->(params) { params[:guardian]&.is_admin? }
+  attribute :query, :string, writable: true, description: "The SQL source of the query.", &:sql
+  attribute :ran_at, :datetime, &:last_run_at
+  attribute :hidden, :boolean, if: proc { |_record, params| params[:guardian]&.is_admin? }
 
   has_one :user, resource: UserResource
   has_many :groups, resource: GroupResource
@@ -110,7 +117,13 @@ Graphiti's DSL is the model ("steal the shape"), with four deviations:
 
 1. **Opt-in query surface.** Graphiti defaults `filterable:`/`sortable:` on per attribute;
    the Kit keeps explicit `filter`/`sort` declarations only (default-on is an
-   unindexed-scan surface — decided long ago, unchanged).
+   unindexed-scan surface — decided long ago, unchanged). Considered and declined
+   (2026-07-21): `sortable:`/`filterable:` as *opt-in attribute options* — `sort :name`
+   with no block already means "sortable attribute", the standalone lines keep the whole
+   query surface readable as one block, and the sugar can't express the non-trivial cases
+   (`column:`, `nulls:`). If derived *filters* are ever designed, the shape is the
+   no-block `filter :name` (symmetric with sorts), not an attribute flag. Deferring
+   forecloses nothing — `attribute` takes kwargs, so the sugar stays addable.
 2. **`writable: false` by default** (Graphiti defaults on). Nothing enters a write
    contract without an explicit opt-in — what makes `from_resource` imports trustworthy.
 3. **`ActiveModel::Type`, not dry-types.** Zero new dependencies, and it is the *same
@@ -123,11 +136,20 @@ Graphiti's DSL is the model ("steal the shape"), with four deviations:
 
 ## 5. What remains in the controller
 
-Endpoint wiring only: `jsonapi_resource QueryResource` (replacing the `jsonapi do … end`
-block) and the write actions via `Service::Base` (future DSL:
-`create do service Query::Create end`). Execution context is unchanged: blocks are
+Endpoint wiring only: `resource QueryResource` (replacing the `jsonapi do … end` block)
+and the write actions via `Service::Base`. Execution context is unchanged: blocks are
 *declared* on the resource but still `instance_exec`'d in the controller (guardian,
 params, current_user) — moving the declaration home does not move the execution context.
+
+**Write actions stay fully explicit — no outcome-defaulting DSL** (decided 2026-07-21,
+retiring an earlier `create do service … end` sketch). Framework history is the argument:
+when the service framework introduced auto-merged default outcomes, developers couldn't
+tell which handlers were in place, and fully explicit won. Instead, the Kit adopts the
+*official* controller→service pattern: `Service.call(service_params) do … end`, with
+`service_params` overridden once in `BaseController` to
+`{ params: jsonapi_deserialize(params), guardian: }` — the deserialized (and already
+up-migrated) write document instead of raw params. Endpoint-specific args
+`deep_merge` into `service_params` at the call site, per the core convention.
 
 ## 6. Interactions with the rest of the design
 
@@ -149,13 +171,14 @@ params, current_user) — moving the declaration home does not move the executio
 
 ## 7. Migration plan (spike increment)
 
-1. `ResourceBase` with the wrapped keywords (TDD: unit spec on config recording +
-   delegation).
-2. `QueryResource` replaces `QuerySerializer` + the controller's `jsonapi` block;
-   controller becomes `jsonapi_resource QueryResource`. The full suite must stay green
-   throughout — the acceptance specs pin the wire contract, so the migration is proven
-   behavior-preserving by construction.
-3. `UserResource` / `GroupResource` follow; contract-guard baseline regenerated with
-   types added.
-4. The extension registry's `serializer_for` stand-in becomes a real resource registry
-   (already noted as a follow-up).
+1. ~~`ResourceBase` with the wrapped keywords~~ — DONE (TDD, 22 unit examples).
+2. ~~`QueryResource` replaces `QuerySerializer` + the controller's `jsonapi` block~~ —
+   DONE; controller is `resource QueryResource`, and the full suite stayed green
+   (the acceptance specs pin the wire contract, so the migration is proven
+   behavior-preserving by construction). One descriptor fix rode along: the contract
+   guard now records relationship *cardinality* (`to_one`/`to_many`) instead of the gem's
+   `belongs_to`/`has_one` labels, which render identically and must not diff.
+3. ~~`UserResource` / `GroupResource`~~ — DONE. Still open: contract-guard baseline
+   regenerated with **types** added.
+4. Still open: the extension registry's `serializer_for` stand-in becomes a real resource
+   registry.
