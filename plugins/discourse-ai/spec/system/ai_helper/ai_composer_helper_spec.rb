@@ -16,6 +16,7 @@ RSpec.describe "AI Composer helper" do
     SiteSetting.ai_helper_custom_prompt_agent = custom_prompts_agent.id
     DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
     SiteSetting.ai_helper_enabled = true
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
     Jobs.run_immediately!
     sign_in(user)
   end
