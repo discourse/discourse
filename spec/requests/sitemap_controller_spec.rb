@@ -69,6 +69,21 @@ RSpec.describe SitemapController do
       expect(loc).to eq("#{Discourse.base_url}/t/#{topic.slug}/#{topic.id}")
       expect(last_mod).to eq(topic.bumped_at.xmlschema)
     end
+
+    it "does not expose shared draft topics to anonymous users" do
+      shared_drafts_category = Fabricate(:category, read_restricted: false)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      shared_draft_topic =
+        Fabricate(:topic, title: "Confidential shared draft", category: shared_drafts_category)
+      Fabricate(:shared_draft, topic: shared_draft_topic)
+      Sitemap.create!(name: "1", enabled: true, last_posted_at: 1.minute.ago)
+
+      get "/sitemap_1.xml"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(shared_draft_topic.title)
+      expect(response.body).not_to include(shared_draft_topic.slug)
+    end
   end
 
   describe "#recent" do
@@ -91,6 +106,20 @@ RSpec.describe SitemapController do
 
       all_urls = urls.map { |u| u.at_css("loc").text }
       expect(all_urls).not_to include("#{Discourse.base_url}/t/#{old_topic.slug}/#{old_topic.id}")
+    end
+
+    it "does not expose shared draft topics to anonymous users" do
+      shared_drafts_category = Fabricate(:category, read_restricted: false)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      shared_draft_topic =
+        Fabricate(:topic, title: "Confidential shared draft", category: shared_drafts_category)
+      Fabricate(:shared_draft, topic: shared_draft_topic)
+
+      get "/sitemap_recent.xml"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(shared_draft_topic.title)
+      expect(response.body).not_to include(shared_draft_topic.slug)
     end
 
     it "generates correct page numbers based on the topic post count" do
@@ -134,6 +163,20 @@ RSpec.describe SitemapController do
 
       all_urls = urls.map { |u| u.at_css("loc").text }
       expect(all_urls).not_to include("#{Discourse.base_url}/t/#{old_topic.slug}/#{old_topic.id}")
+    end
+
+    it "does not expose shared draft topics to anonymous users" do
+      shared_drafts_category = Fabricate(:category, read_restricted: false)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      shared_draft_topic =
+        Fabricate(:topic, title: "Confidential shared draft", category: shared_drafts_category)
+      Fabricate(:shared_draft, topic: shared_draft_topic)
+
+      get "/news.xml"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(shared_draft_topic.title)
+      expect(response.body).not_to include(shared_draft_topic.slug)
     end
   end
 end
