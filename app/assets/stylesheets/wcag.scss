@@ -322,7 +322,7 @@ html {
 }
 
 // Modernize Foundation Theme specific WCAG overrides
-html.discourse-no-touch .uc-modernize-foundation-theme {
+html.discourse-no-touch :where(.uc-modernize-foundation-theme) {
   .btn-default {
     .d-icon {
       color: var(--d-button-default-icon-color);
@@ -347,7 +347,7 @@ html.discourse-no-touch .uc-modernize-foundation-theme {
   }
 }
 
-html .uc-modernize-foundation-theme {
+html :where(.uc-modernize-foundation-theme) {
   // Header icons with modernize theme colors
   .d-header-icons .d-icon,
   .header-sidebar-toggle button .d-icon {
