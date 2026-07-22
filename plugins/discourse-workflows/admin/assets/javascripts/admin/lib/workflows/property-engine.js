@@ -112,8 +112,9 @@ export function propertyDescription(nodeDefinitionOrType, fieldName) {
   const labelKey = localeKeyPart(fieldName);
 
   return (
-    translatedOrNull(`${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`) ||
-    translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
+    translatedOrNull(
+      `${i18nBase(nodeDefinitionOrType)}.${labelKey}_description`
+    ) || translatedOrNull(`${SHARED_FIELDS_BASE}.${labelKey}_description`)
   );
 }
 
