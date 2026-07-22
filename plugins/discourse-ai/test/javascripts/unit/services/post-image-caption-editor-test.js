@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { EDIT } from "discourse/models/composer";
+import { ADD_TRANSLATION, EDIT } from "discourse/models/composer";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Service | post-image-caption-editor", function (hooks) {
@@ -15,6 +15,7 @@ module("Unit | Service | post-image-caption-editor", function (hooks) {
       locale: "ja",
       post: { id: 42 },
     };
+    composer.selectedTranslationLocale = null;
 
     owner.lookup("service:site-settings").ai_post_image_captions_enabled = true;
 
@@ -41,6 +42,35 @@ module("Unit | Service | post-image-caption-editor", function (hooks) {
     await service.ensureLoaded();
 
     assert.strictEqual(service.captionFor("abc123"), "A stored description");
+  });
+
+  test("ensureLoaded fetches captions for the selected translation locale", async function (assert) {
+    const composer = getOwner(this).lookup("service:composer");
+    composer.model.action = ADD_TRANSLATION;
+    composer.selectedTranslationLocale = "fr";
+
+    pretender.get("/discourse-ai/post-image-captions/:post_id", (request) => {
+      assert.strictEqual(request.params.post_id, "42");
+      assert.strictEqual(request.queryParams.locale, "fr");
+
+      return response({
+        captions: [
+          {
+            base62_sha1: "abc123",
+            description: "Une description enregistrée",
+          },
+        ],
+      });
+    });
+
+    const service = getOwner(this).lookup("service:post-image-caption-editor");
+
+    await service.ensureLoaded();
+
+    assert.strictEqual(
+      service.captionFor("abc123"),
+      "Une description enregistrée"
+    );
   });
 
   test("ensureLoaded skips non-edit composers", async function (assert) {
