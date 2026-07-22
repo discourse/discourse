@@ -386,7 +386,7 @@ class UsersController < ApplicationController
     params.require(:email)
 
     user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
+    guardian.ensure_can_edit_email!(user)
 
     ActiveRecord::Base.transaction do
       if change_requests = user.email_change_requests.where(new_email: params[:email]).presence
