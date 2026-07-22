@@ -7,7 +7,11 @@ class User::Action::CreateFromVerifiedEmail < Service::ActionBase
   option :name, optional: true
 
   def call
-    username = UserNameSuggester.suggest(email)
+    # A random name beats the generic "userN" fallback here: there is no
+    # signup form where the user could pick one before the account exists.
+    username =
+      UserNameSuggester.suggest(email, allow_generic_fallback: false) ||
+        RandomUsernameGenerator.generate
 
     user = User.where(staged: true).with_email(email).first
     user&.unstage!
