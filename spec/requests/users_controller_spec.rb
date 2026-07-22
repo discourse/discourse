@@ -4496,6 +4496,22 @@ RSpec.describe UsersController do
       expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
+    it "prevents a moderator from destroying another user's secondary email" do
+      SiteSetting.email_editable = true
+      admin_secondary_email = Fabricate(:secondary_email, user: admin)
+      sign_in(moderator)
+
+      expect {
+        delete "/u/#{admin.username}/preferences/email.json",
+               params: {
+                 email: admin_secondary_email.email,
+               }
+      }.not_to change { UserEmail.exists?(admin_secondary_email.id) }
+
+      expect(response).to be_forbidden
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+    end
+
     context "when logged in" do
       before do
         SiteSetting.email_editable = true
