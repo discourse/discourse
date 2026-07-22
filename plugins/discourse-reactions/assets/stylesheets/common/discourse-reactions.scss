@@ -1,7 +1,12 @@
-html.discourse-reactions-no-select {
-  -webkit-touch-callout: none; /* Disables long-touch menu */
+// Long-press and drag targets: a touch here must not raise the callout menu or
+// start a selection. Keep this scoped to the elements the gesture touches — a
+// page-wide guard leaves the whole document unselectable when a gesture is
+// interrupted, which silently breaks quoting everywhere else.
+.discourse-reactions-reaction-button,
+.discourse-reactions-picker {
+  -webkit-touch-callout: none;
 
-  @include user-select(none); /* Disable text selection */
+  @include user-select(none);
 }
 
 .discourse-reactions-list {
