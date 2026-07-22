@@ -102,10 +102,32 @@ document's intro prose would confuse both audiences.
   map; the schemas are strict (`additionalProperties: false`), which the loop needs to
   bite. Attributes generate as *nullable* types (a `null: false` declaration can tighten
   this later) — the loop itself forced that call: never-run queries answer `ran_at: null`.
-- Generator tail still open: YAML emission + rake task + publication wiring; route
-  introspection replacing the explicit endpoint map; per-version documents (down-applied
-  renames); the extensions section (per-site docs); the changelog section from change
-  descriptions; `deprecated: true` (needs the `deprecate` keyword).
+- **The generator's generalization path (documented 2026-07-21).** The spike input
+  (`endpoints: [{ path:, controller:, create: }]`) is scaffolding at a deliberate seam;
+  the coupling surface is exactly three facts, each with a known resolution:
+
+  1. **Paths and operations ← routes.** `Rails.application.routes` yields verb, path
+     template (`{id}`-ready), and action per Kit controller — verified: three lines of
+     introspection reproduce the spike's endpoint map exactly. The generator grows one
+     operation builder per *routed* action; `update` (PATCH, body shaped like create's)
+     and `destroy` (DELETE → 204) are mechanical additions the current shape doesn't
+     foreclose.
+  2. **Request-body base ← the resource.** Which attributes a write accepts, and their
+     types, derive from the `writable:` declarations — their first consumer beyond
+     `from_resource`. (§7 chain amended accordingly: the contract is *enrichment*, not
+     source.)
+  3. **Constraint enrichment ← the contract, linked by one declaration.**
+     `required`/`maxLength` still come from validators. The contract↔resource edge
+     arrives with `from_resource` (the contract names its resource; a small registry
+     inverts the edge) — or, interim, a metadata-only declaration on the controller
+     (docs-only; unrelated to the retired outcome-defaulting sugar). Either way, declared
+     exactly once.
+
+  End state: the generator **self-assembles** — `BaseController` descendants + routes, no
+  arguments. Everything else it reads is already declarations.
+- Generator tail still open: YAML emission + rake task + publication wiring; per-version
+  documents (down-applied renames); the extensions section (per-site docs); the changelog
+  from change descriptions; `deprecated: true` (needs the `deprecate` keyword).
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
 - ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see
@@ -137,8 +159,14 @@ strings).
 ### The docs pipeline chain — one owner per link
 
 > **response schema ← resource** (attributes + types) ·
-> **request schema ← service contract** (← resource via `from_resource`, enriched by the
-> contract's own validators)
+> **request schema ← resource** (`writable:` attributes as the base) **+ contract
+> enrichment** (validators → `required`/`maxLength`; the contract itself derives from the
+> resource via `from_resource`)
+
+*(Amended 2026-07-21 while documenting the generator's generalization path: the resource
+sources the request base directly, the contract enriches. The spike generator still reads
+the contract for the base — flip it when the endpoint map is replaced by route
+introspection.)*
 
 Services describe *inputs*, so they can never source response schemas (readable-only
 attributes appear in no contract), and contracts carry non-resource params too
