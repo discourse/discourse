@@ -1167,8 +1167,8 @@ module SiteSettingExtension
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
         ids = public_send(clean_name).to_s.split("|").map(&:to_i)
-        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-             ids.include?(Group::AUTO_GROUPS[:everyone])
+        if ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+             SiteSetting.granular_anonymous_and_logged_in_groups_permissions
           ids =
             ids
               .map do |id|
