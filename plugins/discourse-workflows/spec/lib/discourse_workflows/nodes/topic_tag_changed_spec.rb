@@ -111,9 +111,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
     it "supports the legacy scalar category_id parameter" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
 
-      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(
-        true,
-      )
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
     it "matches subcategories by default for legacy category_id-only nodes" do
@@ -122,9 +120,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       trigger =
         described_class.new(subcategory_topic, old_tag_names: ["bug"], new_tag_names: %w[urgent])
 
-      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(
-        true,
-      )
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
     it "returns false when the category parameter does not match the topic category" do

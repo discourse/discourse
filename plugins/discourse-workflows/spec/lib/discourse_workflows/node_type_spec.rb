@@ -312,9 +312,9 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
 
     it "falls back to the legacy category_id parameter" do
-      expect(
-        described_class.category_ids_parameter(trigger_context("category_id" => "3")),
-      ).to eq([3])
+      expect(described_class.category_ids_parameter(trigger_context("category_id" => "3"))).to eq(
+        [3],
+      )
     end
 
     it "prefers category_ids over a stale category_id" do
@@ -341,12 +341,12 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
 
     it "expands subcategories by default" do
-      expect(
-        described_class.matches_category_ids?(subcategory.id, [parent_category.id]),
-      ).to eq(true)
-      expect(
-        described_class.matches_category_ids?(subcategory.id, [other_category.id]),
-      ).to eq(false)
+      expect(described_class.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(
+        true,
+      )
+      expect(described_class.matches_category_ids?(subcategory.id, [other_category.id])).to eq(
+        false,
+      )
     end
 
     it "matches exactly when include_subcategories is false" do

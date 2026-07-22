@@ -130,9 +130,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
     it "matches posts in any of the configured categories" do
       expect(
         described_class.new(reply).matches?(
-          trigger_context(
-            "category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s],
-          ),
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
         ),
       ).to eq(true)
     end

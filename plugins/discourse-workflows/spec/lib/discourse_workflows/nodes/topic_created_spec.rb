@@ -114,9 +114,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
     end
 
     it "matches all categories when the configured list is empty" do
-      expect(described_class.new(topic).matches?(trigger_context("category_ids" => []))).to eq(
-        true,
-      )
+      expect(described_class.new(topic).matches?(trigger_context("category_ids" => []))).to eq(true)
     end
 
     it "expands subcategories for every configured category" do
@@ -124,8 +122,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
       other_subcategory = Fabricate(:category, parent_category: other_parent)
       other_subcategory_topic = Fabricate(:topic, category: other_subcategory, user: user)
 
-      parameters =
-        trigger_context("category_ids" => [topic.category_id.to_s, other_parent.id.to_s])
+      parameters = trigger_context("category_ids" => [topic.category_id.to_s, other_parent.id.to_s])
 
       expect(described_class.new(subcategory_topic).matches?(parameters)).to eq(true)
       expect(described_class.new(other_subcategory_topic).matches?(parameters)).to eq(true)
