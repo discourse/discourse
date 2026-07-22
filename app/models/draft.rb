@@ -205,9 +205,13 @@ class Draft < ActiveRecord::Base
   end
 
   def self.allowed_draft_topics_for_user(user)
-    topics = Topic.listable_topics.secured(Guardian.new(user))
+    guardian = Guardian.new(user)
+    topics = Topic.listable_topics.secured(guardian)
     pms = Topic.private_messages_for_user(user)
-    topics.or(pms)
+    allowed_topics = topics.or(pms)
+    allowed_topics =
+      allowed_topics.where.not(id: SharedDraft.select(:topic_id)) if !guardian.can_see_shared_draft?
+    allowed_topics
   end
 
   def self.allowed_draft_posts_for_user(user)

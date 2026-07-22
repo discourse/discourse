@@ -50,6 +50,30 @@ RSpec.describe DraftsController do
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
 
+    it "does not include shared draft topic details when user cannot see shared drafts" do
+      shared_drafts_category = Fabricate(:category)
+      destination_category = Fabricate(:category)
+      shared_draft_topic = Fabricate(:topic, category: shared_drafts_category)
+      Fabricate(:shared_draft, topic: shared_draft_topic, category: destination_category)
+      SiteSetting.shared_drafts_category = shared_drafts_category.id
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
+      sign_in(user)
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic_#{shared_draft_topic.id}",
+             data: { reply: "draft reply" }.to_json,
+             sequence: 0,
+           }
+      expect(response.status).to eq(200)
+
+      get "/drafts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["drafts"].first["title"]).to be_nil
+      expect(response.body).not_to include(shared_draft_topic.title)
+    end
+
     it "returns categories when lazy load categories is enabled" do
       SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
       category = Fabricate(:category)
