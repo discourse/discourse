@@ -4,7 +4,7 @@ module DiscourseSolved
   # Builds the data for the "Support" section of the redesigned admin dashboard
   # (registered via `register_admin_dashboard_section`). All metrics are scoped
   # to "support categories" — categories where accepted answers are enabled — for
-  # the selected period, optionally narrowed to a single category.
+  # the selected period, optionally narrowed to one or more categories.
   class AdminDashboardSupport
     DEFAULT_RANGE_DAYS = 30
     AVAILABILITY_CACHE_KEY = "solved_admin_dashboard_support_available"
@@ -29,20 +29,21 @@ module DiscourseSolved
         end
     end
 
-    def self.build(start_date:, end_date:, current_user: nil, category_id: nil)
+    def self.build(start_date:, end_date:, current_user: nil, category_ids: nil)
       new(
         start_date: start_date,
         end_date: end_date,
         current_user: current_user,
-        category_id: category_id,
+        category_ids: category_ids,
       ).build
     end
 
-    def initialize(start_date:, end_date:, current_user: nil, category_id: nil)
+    def initialize(start_date:, end_date:, current_user: nil, category_ids: nil)
       @start_date = parse_date(start_date) || DEFAULT_RANGE_DAYS.days.ago.beginning_of_day
       @end_date = parse_date(end_date)&.end_of_day || Time.zone.now.end_of_day
       @current_user = current_user
-      @category_id = category_id.presence&.to_i
+      @requested_category_ids =
+        Array(category_ids.is_a?(String) ? category_ids.split(",") : category_ids).map(&:to_i)
     end
 
     def build
@@ -51,6 +52,7 @@ module DiscourseSolved
         .fetch(cache_key, expires_in: DATA_CACHE_DURATION) do
           {
             category_options: category_options,
+            category_ids: selected_category_ids,
             kpis: build_kpis,
             headline: build_headline,
             topic_outcomes: topic_outcomes,
@@ -62,7 +64,7 @@ module DiscourseSolved
 
     private
 
-    attr_reader :start_date, :end_date, :current_user, :category_id
+    attr_reader :start_date, :end_date, :current_user, :requested_category_ids
 
     def parse_date(value)
       return nil if value.blank?
@@ -98,12 +100,12 @@ module DiscourseSolved
       @all_support_category_ids ||= support_categories.pluck(:id)
     end
 
-    def selected_category_id
-      category_id if category_id && all_support_category_ids.include?(category_id)
+    def selected_category_ids
+      requested_category_ids & all_support_category_ids
     end
 
     def effective_category_ids
-      selected_category_id ? [selected_category_id] : all_support_category_ids
+      selected_category_ids.presence || all_support_category_ids
     end
 
     def category_options
@@ -115,7 +117,7 @@ module DiscourseSolved
         Digest::SHA1.hexdigest(
           [
             all_support_category_ids.sort,
-            selected_category_id,
+            selected_category_ids.sort,
             start_date.to_i,
             end_date.to_i,
           ].to_json,
@@ -147,7 +149,9 @@ module DiscourseSolved
 
     def resolution_report_query
       query = { start_date: start_date.to_date.iso8601, end_date: end_date.to_date.iso8601 }
-      query[:filters] = { category: selected_category_id } if selected_category_id
+      if selected_category_ids.present?
+        query[:filters] = { category_ids: selected_category_ids.join(",") }
+      end
       query
     end
 
