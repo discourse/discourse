@@ -91,7 +91,7 @@ document's intro prose would confuse both audiences.
 ## 6. Open questions
 
 - ~~Type metadata source~~ — RESOLVED, see §7.
-- ~~Should the spike build a minimal generator increment?~~ — BUILT (2026-07-21):
+- ~~Should the spike build a minimal generator increment?~~ — BUILT (2026-07-22):
   `JsonApiKit::OpenApiGenerator` derives the queries document from the declarations
   (typed/nullable attribute schemas, relationship linkage by cardinality, the full query
   surface as parameters, request bodies from `Query::Create::Contract` types + validators,
@@ -102,7 +102,7 @@ document's intro prose would confuse both audiences.
   map; the schemas are strict (`additionalProperties: false`), which the loop needs to
   bite. Attributes generate as *nullable* types (a `null: false` declaration can tighten
   this later) — the loop itself forced that call: never-run queries answer `ran_at: null`.
-- **The generator's generalization path (documented 2026-07-21).** The spike input
+- **The generator's generalization path (documented 2026-07-22).** The spike input
   (`endpoints: [{ path:, controller:, create: }]`) is scaffolding at a deliberate seam;
   the coupling surface is exactly three facts, each with a known resolution:
 
@@ -163,7 +163,7 @@ strings).
 > enrichment** (validators → `required`/`maxLength`; the contract itself derives from the
 > resource via `from_resource`)
 
-*(Amended 2026-07-21 while documenting the generator's generalization path: the resource
+*(Amended 2026-07-22 while documenting the generator's generalization path: the resource
 sources the request base directly, the contract enriches. The spike generator still reads
 the contract for the base — flip it when the endpoint map is replaced by route
 introspection.)*
