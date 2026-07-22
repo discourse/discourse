@@ -1,0 +1,44 @@
+@use "sass:map";
+@use "breakpoints";
+
+// Containers add an `xs` breakpoint step, since containers can be narrower than any viewport
+$breakpoints: map.merge(
+  (
+    xs: 20rem,
+  ),
+  breakpoints.$breakpoints
+);
+
+@function _get-breakpoint($bp) {
+  @if not map.has-key($breakpoints, $bp) {
+    @error "Invalid container breakpoint: #{$bp}";
+  }
+
+  @return map.get($breakpoints, $bp);
+}
+
+@function _container-name($name) {
+  @if $name {
+    @return "#{$name} ";
+  }
+
+  @return "";
+}
+
+@mixin from($bp, $name: null) {
+  @container #{_container-name($name)}(width >= #{_get-breakpoint($bp)}) {
+    @content;
+  }
+}
+
+@mixin until($bp, $name: null) {
+  @container #{_container-name($name)}(width < #{_get-breakpoint($bp)}) {
+    @content;
+  }
+}
+
+@mixin between($from, $until, $name: null) {
+  @container #{_container-name($name)}(#{_get-breakpoint($from)} <= width < #{_get-breakpoint($until)}) {
+    @content;
+  }
+}
