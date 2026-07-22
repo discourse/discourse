@@ -44,7 +44,7 @@ module Migrations
 
       # Embeds deferred unless the caller narrows or extends the set. These three
       # can't be finalized at convert time: an upload must first exist on the
-      # destination, an attributed quote references a source post the import
+      # destination, a quote can point at a source post the import
       # renumbers, and a mention names a user a merge may rename — they can only be
       # resolved at import time, using the import maps.
       #
@@ -137,13 +137,13 @@ module Migrations
       end
 
       def defer_quote(node, interface)
-        # Only the attribution carries the foreign post/topic/user reference that
+        # Only the opening tag carries the foreign post/topic/user reference that
         # needs remapping; the quoted body renders normally and the closing tag
-        # stays in place. A quote attributed only by a display name (`author`) has
-        # nothing to remap, so it renders natively and keeps that attribution as
+        # stays in place. A quote that names only a display name (`author`) has
+        # nothing to remap, so it renders natively and keeps that header as
         # written. The token stands in for the opening `[quote="…"]`, which
         # PlaceholderResolver#render_quote rebuilds.
-        return interface.render_default(node) unless attributed?(node)
+        return interface.render_default(node) unless remappable?(node)
 
         token =
           @embeds.quote(
@@ -185,15 +185,15 @@ module Migrations
       end
 
       # Whether the quote carries a source post/topic/user reference that needs
-      # remapping. A quote attributed only by a display name has none.
-      def attributed?(node)
+      # remapping. A quote that names only a display name has none.
+      def remappable?(node)
         node.post_number || node.topic_id || node.post_id || node.user_id || node.username
       end
 
-      # Markbridge attribution numbers are unbounded Integers, but the
+      # Markbridge quote ids are unbounded Integers, but the
       # IntermediateDB stores ids as SQLite signed 64-bit integers (binding a
       # bignum raises). At most 18 digits fit. A longer number is a numeric post
-      # title or junk, not a real id — drop it and let the remaining attribution
+      # title or junk, not a real id — drop it and let the remaining ids
       # carry the quote. The Discourse MarkdownScanner quote detector applies the
       # same 18-digit bound (see markdown_scanner/detectors/quote.rb).
       def storable_id(value)

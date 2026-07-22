@@ -14,7 +14,7 @@ module Migrations
       # record the embed on the collector and return the placeholder token the
       # scanner splices into the output.
       #
-      # We detect uploads, quote attributions, internal links, mentions, hashtags and
+      # We detect uploads, quote references, internal links, mentions, hashtags and
       # custom emoji. Polls and events are self-contained (no id remapping needed), so
       # they're left in `raw` verbatim.
       class RawExtractor
@@ -105,7 +105,7 @@ module Migrations
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
         # @param topic_id [Integer, nil] the source topic id of the containing post,
-        #   used to complete a quote attribution that names a `post:` but no `topic:`
+        #   used to complete a quote reference that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
         def extract(raw, topic_id: nil)
@@ -141,7 +141,7 @@ module Migrations
             @embeds.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
           when MarkdownScanner::EmojiReference
             @embeds.emoji(name: node.name)
-          when MarkdownScanner::QuoteAttribution
+          when MarkdownScanner::QuoteReference
             defer_quote(node)
           else
             raise NotImplementedError, "no defer handler for #{node.class}"

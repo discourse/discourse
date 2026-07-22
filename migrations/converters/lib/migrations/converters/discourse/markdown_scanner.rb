@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       # Single-pass scanner for Discourse Markdown that extracts specific constructs
-      # (uploads, internal links, quote attributions, mentions, hashtags, custom
+      # (uploads, internal links, quote references, mentions, hashtags, custom
       # emoji) while leaving everything else untouched — including anything inside
       # fenced, indented or inline code.
       #

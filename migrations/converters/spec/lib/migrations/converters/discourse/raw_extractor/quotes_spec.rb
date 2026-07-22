@@ -18,7 +18,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("#{quote[:placeholder]}\nquoted body\n[/quote]")
     end
 
-    it "uses the explicit username: attribute and keeps the display name" do
+    it "uses the explicit username: part and keeps the display name" do
       extract(%([quote="Bob Jones, post:1, topic:2, username:bjones"]hi[/quote]))
 
       expect(buffer.quotes.first).to include(
@@ -43,7 +43,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.quotes.first).to include(quoted_username: "jane", quoted_name: nil)
     end
 
-    it "fills the containing topic id when the attribution names a post but no topic" do
+    it "fills the containing topic id when the header names a post but no topic" do
       extract(%([quote="bob, post:12"]body[/quote]), topic_id: 77)
 
       expect(buffer.quotes.first).to include(quoted_topic_id: 77, quoted_post_number: 12)
@@ -60,7 +60,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       )
     end
 
-    it "leaves an unattributed quote alone" do
+    it "leaves a quote with no header alone" do
       raw = "[quote]anonymous[/quote]"
 
       expect(extract(raw)).to eq(raw)

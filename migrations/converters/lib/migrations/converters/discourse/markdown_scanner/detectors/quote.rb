@@ -7,24 +7,24 @@ module Migrations
         module Detectors
           # Detects only the opening tag of a Discourse quote (`[quote="…"]`); the
           # body and `[/quote]` stay in place, and any embeds inside the body are
-          # still scanned. Returns nil for an unattributed `[quote]`.
+          # still scanned. Returns nil for a `[quote]` with no header.
           class Quote < Base
             TRIGGERS = ["["].freeze
 
-            OPENING = /\G\[quote="(?<attribution>[^"\]]*)"\]/
+            OPENING = /\G\[quote="(?<header>[^"\]]*)"\]/
             private_constant :OPENING
 
             def detect(input, pos, _byte)
               match = match_at(OPENING, input, pos)
               return nil unless match
 
-              username, name, post_number, topic_id = parse_attribution(match[:attribution])
+              username, name, post_number, topic_id = parse_header(match[:header])
               return nil if username.nil?
 
               Match.new(
                 start_pos: pos,
                 end_pos: match.byteoffset(0).last,
-                node: QuoteAttribution.new(username:, name:, post_number:, topic_id:),
+                node: QuoteReference.new(username:, name:, post_number:, topic_id:),
               )
             end
 
@@ -41,8 +41,8 @@ module Migrations
             USERNAME_PART = /\Ausername:(.+)\z/
             private_constant :USERNAME_PART
 
-            # Splits a Discourse attribution into username, display name, and the
-            # source coordinates. `post:`/`topic:` are the source's own post number
+            # Splits a quote header into username, display name, and the source
+            # coordinates. `post:`/`topic:` are the source's own post number
             # and topic id; keep them as integers so the importer can look up the
             # quoted post by them.
             #
@@ -51,7 +51,7 @@ module Migrations
             # the leading token IS the username: Discourse omits `username:` exactly
             # when the display name equals the username, so a lone token is not a
             # distinct name.
-            def parse_attribution(string)
+            def parse_header(string)
               explicit_username = name = nil
               post_number = topic_id = nil
 
