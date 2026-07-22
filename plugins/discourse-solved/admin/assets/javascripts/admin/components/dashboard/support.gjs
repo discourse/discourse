@@ -60,6 +60,13 @@ export default class SupportSection extends Component {
     return (this.args.data?.category_options?.length ?? 0) > 1;
   }
 
+  get blockedCategories() {
+    const allowedIds = new Set(
+      (this.args.data?.category_options ?? []).map((option) => option.id)
+    );
+    return Category.list().filter((category) => !allowedIds.has(category.id));
+  }
+
   get headline() {
     const headline = this.data?.headline;
     if (!headline) {
@@ -320,6 +327,7 @@ export default class SupportSection extends Component {
           <div class="db-support__filter">
             <CategorySelector
               @categories={{this.selectedCategories}}
+              @blockedCategories={{this.blockedCategories}}
               @onChange={{this.onCategoriesChange}}
               @options={{hash maximum=MAX_CATEGORIES none="category.all"}}
             />
