@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import {
   createElementVirtualizer,
+  keyFor,
   stableKeyFor,
 } from "discourse/ui-kit/lib/virtualizer";
 
@@ -116,5 +117,54 @@ module("Unit | ui-kit | virtualizer", function () {
       "primitive is its own key"
     );
     assert.strictEqual(stableKeyFor(42), 42, "number is its own key");
+  });
+
+  module("keyFor (@key field)", function () {
+    test("keys by the field value when given a field on an object row", function (assert) {
+      // Distinct objects with the SAME field value must resolve to the SAME key —
+      // that is the whole point: a rebuilt object with a stable id keeps its row.
+      assert.strictEqual(
+        keyFor({ id: "u-5", n: 1 }, "id"),
+        keyFor({ id: "u-5", n: 2 }, "id"),
+        "same field value → same key across distinct objects"
+      );
+      assert.notStrictEqual(
+        keyFor({ id: "u-5" }, "id"),
+        keyFor({ id: "u-6" }, "id"),
+        "different field values → different keys"
+      );
+    });
+
+    test("with no field, falls back to identity keying", function (assert) {
+      const item = { id: "u-5" };
+      assert.strictEqual(
+        keyFor(item, undefined),
+        stableKeyFor(item),
+        "no field → same as stableKeyFor(item)"
+      );
+    });
+
+    test("a nullish or primitive row falls back to identity keying, never throws", function (assert) {
+      // The guard: a field name plus a null/primitive row must not attempt property
+      // access. It falls back to stableKeyFor, which supports every item shape.
+      assert.strictEqual(keyFor(null, "id"), stableKeyFor(null), "null row");
+      assert.strictEqual(
+        keyFor(undefined, "id"),
+        stableKeyFor(undefined),
+        "undefined row"
+      );
+      assert.strictEqual(keyFor(7, "id"), 7, "primitive row keys as itself");
+    });
+
+    test("routes the field value through stableKeyFor so a domain value can't collide with a generated key", function (assert) {
+      // A field value that looks like a generated object key must be escaped, not
+      // taken verbatim, or it could alias a real object's key.
+      const objectKey = stableKeyFor({});
+      assert.notStrictEqual(
+        keyFor({ id: objectKey }, "id"),
+        objectKey,
+        "a field value equal to a generated object key is escaped, not aliased"
+      );
+    });
   });
 });
