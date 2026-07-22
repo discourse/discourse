@@ -262,6 +262,29 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq("x https://dest.example.com/tag/shipped y")
     end
 
+    it "resolves a post target addressed by source coordinates" do
+      Migrations::Database::IntermediateDB::Post.create(
+        original_id: 500,
+        topic_id: 12,
+        post_number: 3,
+        raw: "body",
+      )
+      maps = FakePlaceholderMaps.new(post: { 500 => { topic_id: 42, post_number: 7 } })
+
+      resolved =
+        render(
+          {
+            url: "/t/slug/12/3",
+            target_type: link_target::POST,
+            target_topic_id: 12,
+            target_post_number: 3,
+          },
+          maps:,
+        )
+
+      expect(resolved).to eq("x https://dest.example.com/t/42/7 y")
+    end
+
     # Reporting: an internal link that can't be resolved falls back to the source URL
     # but is still recorded, since a stale internal link points at the wrong record.
 
