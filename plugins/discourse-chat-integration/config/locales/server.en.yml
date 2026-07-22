@@ -25,7 +25,7 @@ en:
     #######################################
     chat_integration_telegram_enabled: "Enable the Telegram chat-integration provider"
     chat_integration_telegram_access_token: "Your bot's access token from the Telegram botfather"
-    chat_integration_telegram_api_base_url: "Base URL used for Telegram Bot API requests. Change this only when routing requests through a trusted proxy."
+    chat_integration_telegram_api_base_url: "Base URL used for Telegram Bot API requests. Change this only when routing requests through a trusted HTTPS proxy. Hosts on private networks must also be added to the allowed internal hosts site setting."
     chat_integration_telegram_excerpt_length: "Telegram post excerpt length"
     chat_integration_telegram_enable_slash_commands: "Allow telegram subscriptions to be managed using 'slash commands'"
 

@@ -46,6 +46,20 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
       expect(request_stub).to have_been_requested.once
     end
 
+    it "raises a provider error when the effective base URL is invalid" do
+      SiteSetting.stubs(:chat_integration_telegram_api_base_url).returns(
+        "http://telegram.example.com",
+      )
+
+      expect { described_class.trigger_notification(post, chan1, nil) }.to raise_error(
+        DiscourseChatIntegration::ProviderError,
+      ) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.telegram.errors.invalid_api_base_url",
+        )
+      end
+    end
+
     it "handles errors correctly" do
       stub1 =
         stub_request(:post, "https://api.telegram.org/botTOKEN/sendMessage").to_return(
@@ -56,6 +70,13 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
         DiscourseChatIntegration::ProviderError,
       )
       expect(stub1).to have_been_requested.once
+    end
+  end
+
+  describe ".parse_base_url" do
+    it "returns the parsed URI for valid values and nil otherwise" do
+      expect(described_class.parse_base_url("https://telegram.example.com/api")).to be_a(URI::HTTPS)
+      expect(described_class.parse_base_url("http://telegram.example.com")).to be_nil
     end
   end
 
@@ -93,10 +114,8 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
     end
 
     it "persists settings when setWebhook succeeds" do
-      SiteSetting.chat_integration_telegram_api_base_url = "https://telegram.example.com/"
-
       stub =
-        stub_request(:post, %r{https://telegram\.example\.com/botnewtok/setWebhook}).to_return(
+        stub_request(:post, %r{https://api\.telegram\.org/botnewtok/setWebhook}).to_return(
           body: { ok: true }.to_json,
           headers: {
             "Content-Type" => "application/json",
@@ -109,6 +128,19 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
       expect(SiteSetting.chat_integration_telegram_access_token).to eq("newtok")
       expect(SiteSetting.chat_integration_telegram_secret).to be_present
       expect(SiteSetting.chat_integration_telegram_enabled).to eq(true)
+    end
+
+    it "registers the webhook through a custom API base URL" do
+      SiteSetting.chat_integration_telegram_api_base_url = "https://telegram.example.com/"
+
+      stub =
+        stub_request(:post, %r{https://telegram\.example\.com/botnewtok/setWebhook}).to_return(
+          body: "{\"ok\":true}",
+        )
+
+      described_class.setup(admin, { chat_integration_telegram_access_token: "newtok" })
+
+      expect(stub).to have_been_requested.once
     end
 
     it "raises and does not change stored token when setWebhook fails" do
