@@ -44,6 +44,7 @@ import {
   testsInitialized,
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
+import configureTestFilter from "discourse/tests/helpers/configure-test-filter";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import {
@@ -222,6 +223,11 @@ export default async function setupTests(config) {
       "0"
     );
   };
+
+  configureTestFilter(
+    QUnit.config,
+    new URLSearchParams(window.location.search)
+  );
 
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();

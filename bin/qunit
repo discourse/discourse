@@ -56,9 +56,16 @@ class QunitRunner
         opts.separator ""
         opts.separator "Options:"
 
-        opts.on("-f", "--filter FILTER", "Run tests matching this filter") do |filter|
-          @filter = filter
-        end
+        opts.on(
+          "-f",
+          "--filter FILTER",
+          "Run tests whose \"module: test name\" contains this literal, case-insensitive substring",
+        ) { |filter| @filter = filter }
+
+        opts.on(
+          "--filter-regex PATTERN",
+          "Run tests matching this case-insensitive JavaScript regular expression",
+        ) { |pattern| @filter_regex = pattern }
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
@@ -126,7 +133,8 @@ class QunitRunner
             bin/qunit --standalone --target plugins  # Run all plugin tests
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
-            bin/qunit --standalone --filter "Acceptance: Emoji"
+            bin/qunit --standalone --filter 'Integration | ui-kit | DButton'
+            bin/qunit --standalone --filter-regex 'DButton|DIconGridPicker'
         NOTES
       end
 
@@ -138,6 +146,8 @@ class QunitRunner
       puts parser
       exit 1
     end
+
+    abort "Error: Use either --filter or --filter-regex, not both" if @filter && @filter_regex
 
     ensure_supported_target!
 
@@ -211,10 +221,10 @@ class QunitRunner
 
     file_path_filter = build_file_path_filter(@file_paths)
 
-    run_ember_exam(file_path_filter: file_path_filter, filter: @filter)
+    run_ember_exam(file_path_filter: file_path_filter)
   end
 
-  def run_ember_exam(filter: nil, file_path_filter: nil)
+  def run_ember_exam(file_path_filter: nil)
     check_dev_environment!
 
     puts "\nRunning tests against Rails on localhost:#{@rails_port}"
@@ -225,7 +235,8 @@ class QunitRunner
     elsif file_path_filter
       puts "  Filtered by file path" if file_path_filter
     end
-    puts "  Filter: #{filter}" if filter
+    puts "  Filter: #{@filter}" if @filter
+    puts "  Filter regex: #{@filter_regex}" if @filter_regex
     puts "  Load plugins: #{should_load_plugins?}"
     puts ""
 
@@ -259,7 +270,6 @@ class QunitRunner
     else
       args = %w[pnpm ember exam]
       args += ["--query", query] if query && !query.empty?
-      args += ["--filter", filter] if filter
       args += ["--file-path", file_path_filter] if file_path_filter
       args += ["--load-balance", "--parallel", parallel.to_s] if parallel
       args += ["--random", resolved_seed]
@@ -525,6 +535,10 @@ class QunitRunner
       params["seed"] = resolved_seed
     end
     params["module"] = @module if @module
+    if @filter || @filter_regex
+      params["filter"] = @filter || @filter_regex
+      params["discourseTestFilterMode"] = @filter ? "literal" : "regex"
+    end
     params["theme_name"] = @theme_name if @theme_name
     params["theme_url"] = @theme_url if @theme_url
     params["theme_id"] = @theme_id if @theme_id

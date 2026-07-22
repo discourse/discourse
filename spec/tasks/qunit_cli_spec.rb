@@ -9,12 +9,18 @@ describe "bin/qunit" do
         [JSON.parse(parsed_result[:args]), JSON.parse(parsed_result[:env])]
       end
 
+    query =
+      if parsed_args && (query_index = parsed_args.index("--query"))
+        URI.decode_www_form(parsed_args.fetch(query_index + 1)).to_h
+      end
+
     OpenStruct.new(
       out: out,
       err: err,
       status: status.exitstatus,
       args: parsed_args,
       env: parsed_env,
+      query: query,
       launched_server: out.include?("[dry-run] skipping server startup"),
     )
   end
@@ -171,5 +177,32 @@ describe "bin/qunit" do
     result = run("--standalone")
     expect(result.status).to eq(0)
     expect(result.launched_server).to eq(true)
+  end
+
+  it "treats pipes in --filter as literal characters" do
+    result = run("--filter", "Integration | ui-kit | DButton")
+
+    expect(result.status).to eq(0)
+    expect(result.args).not_to include("--filter")
+    expect(result.query["filter"]).to eq("Integration | ui-kit | DButton")
+    expect(result.query["discourseTestFilterMode"]).to eq("literal")
+    expect(result.query).not_to have_key("discourseTestFilter")
+  end
+
+  it "treats pipes in --filter-regex as alternation" do
+    result = run("--filter-regex", "DButton|DIconGridPicker")
+
+    expect(result.status).to eq(0)
+    expect(result.args).not_to include("--filter")
+    expect(result.query["filter"]).to eq("DButton|DIconGridPicker")
+    expect(result.query["discourseTestFilterMode"]).to eq("regex")
+    expect(result.query).not_to have_key("discourseTestFilter")
+  end
+
+  it "rejects combining literal and regex filters" do
+    result = run("--filter", "DButton", "--filter-regex", "DIconGridPicker")
+
+    expect(result.status).to eq(1)
+    expect(result.err).to include("Use either --filter or --filter-regex, not both")
   end
 end

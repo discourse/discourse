@@ -38,6 +38,8 @@ Discourse is large with long history. Understand context before changes.
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+bin/qunit --filter "Some text" # Literal, case-insensitive match on "module: test name" (pipes are literal)
+bin/qunit --filter-regex "Foo|Bar" # JavaScript regex over "module: test name" (use for alternation)
 
 # Linting
 bin/lint --fix path/to/file path/to/another/file
