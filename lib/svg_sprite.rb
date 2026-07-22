@@ -82,6 +82,7 @@ module SvgSprite
         cubes
         desktop
         diagram-project
+        dice
         discourse-amazon
         discourse-bell-exclamation
         discourse-bell-one

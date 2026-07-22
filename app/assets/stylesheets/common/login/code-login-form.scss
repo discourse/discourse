@@ -1,5 +1,19 @@
 @use "lib/viewport";
 
+@keyframes code-login-form-dice-roll {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @keyframes code-login-form-step-in {
   from {
     opacity: 0;
@@ -114,9 +128,59 @@
     gap: 0.25em;
   }
 
+  &__username-input {
+    position: relative;
+    align-self: stretch;
+
+    // Outweigh the base input[type="text"] margin-bottom, which would make
+    // this wrapper taller than the input and push the vertically centered
+    // regenerate button off-center.
+    input[type="text"] {
+      margin: 0;
+
+      // Leave room for the regenerate button that overlays the input's edge.
+      // Scoped here so the non-editable username display stays centered.
+      padding-right: 2.75em;
+    }
+  }
+
   &__new-account-username {
     width: 100%;
-    margin: 0;
+
+    // Crossfade the text while a regenerated username is on its way, so the
+    // new name fades in rather than snapping into place.
+    @media (prefers-reduced-motion: no-preference) {
+      transition: color 0.2s ease;
+
+      &.--swapping {
+        color: transparent;
+      }
+    }
+  }
+
+  &__username-regen {
+    position: absolute;
+    top: 50%;
+    right: 0.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+
+    // The dice glyph is wider than it is tall, so at the default 1em it
+    // renders visually smaller than square icons.
+    .d-icon {
+      font-size: var(--font-up-2);
+    }
+
+    // One cycle matches the minimum rolling duration the component holds, so
+    // the spin completes cleanly on fast responses and keeps going on slow
+    // ones instead of freezing mid-roll.
+    @media (prefers-reduced-motion: no-preference) {
+      &.--rolling .d-icon {
+        animation: code-login-form-dice-roll 0.4s ease infinite;
+      }
+    }
   }
 
   &__continue-to-site {
