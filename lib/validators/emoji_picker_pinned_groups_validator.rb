@@ -24,6 +24,7 @@ class EmojiPickerPinnedGroupsValidator
     I18n.t(
       "site_settings.errors.emoji_picker_pinned_groups_invalid",
       groups: @invalid_groups.join(", "),
+      count: @invalid_groups.size,
     )
   end
 end

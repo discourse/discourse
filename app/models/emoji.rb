@@ -49,7 +49,7 @@ class Emoji
 
   def self.grouped
     groups = allowed.group_by(&:group)
-    pinned = SiteSetting.emoji_picker_pinned_groups.split("|").map(&:strip).reject(&:blank?)
+    pinned = SiteSetting.emoji_picker_pinned_groups_map
     return groups if pinned.empty?
 
     groups.sort_by { |key, _| pinned.index(key) || pinned.length }.to_h

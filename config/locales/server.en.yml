@@ -2983,7 +2983,9 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
-      emoji_picker_pinned_groups_invalid: "Unknown emoji group(s): %{groups}."
+      emoji_picker_pinned_groups_invalid:
+        one: "Unknown emoji group: %{groups}."
+        other: "Unknown emoji groups: %{groups}."
       must_include_latest: "Top menu must include the 'latest' tab."
       top_menu_unread_not_allowed_with_unified_new: "The 'unread' menu item cannot be used when unified new is enabled."
       invalid_string: "Invalid value."
