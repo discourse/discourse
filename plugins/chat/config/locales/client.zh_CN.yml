@@ -304,6 +304,11 @@ zh_CN:
         title: "桌面聊天通知声音"
       sounds:
         none: "无"
+        classic: "经典简约"
+        soft: "柔和的马林巴琴音"
+        retro: "复古的 8 位"
+        bubble: "好玩的泡泡"
+        ethereal: "空灵的玻璃"
       title: "聊天"
       title_capitalized: "聊天"
       upload: "附加文件"
@@ -383,6 +388,8 @@ zh_CN:
         input_placeholder: 添加名称
         slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
+        slug: 频道缩略名
+        emoji: 频道表情符号
         reset_emoji: 重置表情符号
       channel_edit_description_modal:
         title: 编辑描述
@@ -430,12 +437,14 @@ zh_CN:
         create: "创建频道"
         description: "描述"
         name: "频道名称"
+        slug: "频道缩略名"
         title: "新建频道"
         type: "类型"
         types:
           category: "类别"
           topic: "话题"
         emoji:
+          label: "频道表情符号"
           reset: "重置表情符号"
       reviewable:
         type: "聊天消息"
@@ -760,8 +769,10 @@ zh_CN:
       node_descriptions:
         "action:send_chat_message": "向聊天频道发送消息"
         "action:chat_approval": "向聊天频道发送审批请求并等待回复"
+        "trigger:chat_message_created": "创建新聊天消息时触发"
       chat_message_created:
         channel_id: "频道"
+        channel_id_description: "留空可触发所有聊天频道。"
       send_chat_message:
         channel_id: "频道"
         message: "发送私信"
