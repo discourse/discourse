@@ -4768,6 +4768,8 @@ en:
 
         %{message}
 
+        %{respond_instructions}
+
     account_suspended:
       title: "Account Suspended"
       subject_template: "[%{email_prefix}] Your account has been suspended"
