@@ -44,7 +44,7 @@ en:
         regenerate_placeholder: "e.g. Update the query to limit to 50 results"
         prompt_label: "Prompt"
         generate: "Generate"
-        regenerate: "Update prompt"
+        regenerate: "Update query"
         generating: "Generating query with AI..."
         generation_timeout: "AI query generation timed out. You can write the SQL manually."
         generation_error: "Something went wrong generating the query."

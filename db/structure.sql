@@ -986,7 +986,8 @@ CREATE TABLE public.ai_summaries (
     updated_at timestamp(6) without time zone NOT NULL,
     summary_type integer DEFAULT 0 NOT NULL,
     origin integer,
-    highest_target_number integer DEFAULT 1 NOT NULL
+    highest_target_number integer DEFAULT 1 NOT NULL,
+    locale character varying(20)
 );
 
 
@@ -17310,6 +17311,13 @@ CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions U
 
 
 --
+-- Name: idx_ai_summaries_on_target_type_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summaries USING btree (target_id, target_type, summary_type, locale) NULLS NOT DISTINCT;
+
+
+--
 -- Name: idx_bookmarks_user_polymorphic_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17790,13 +17798,6 @@ CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_fe
 --
 
 CREATE UNIQUE INDEX idx_on_sidebar_section_id_locale_271bd8ee1c ON public.sidebar_section_localizations USING btree (sidebar_section_id, locale);
-
-
---
--- Name: idx_on_target_id_target_type_summary_type_3355609fbb; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_on_target_id_target_type_summary_type_3355609fbb ON public.ai_summaries USING btree (target_id, target_type, summary_type);
 
 
 --
@@ -22827,6 +22828,10 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260721080424'),
+('20260721080420'),
+('20260721043536'),
+('20260721043534'),
 ('20260715202231'),
 ('20260715183411'),
 ('20260715134306'),

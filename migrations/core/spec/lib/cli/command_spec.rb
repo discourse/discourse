@@ -2,14 +2,16 @@
 
 RSpec.describe Migrations::CLI::Command do
   describe "#require_positional!" do
-    subject(:command) { described_class.new }
+    # `require_positional!` is private; expose it through a subclass so these
+    # specs can drive it directly.
+    subject(:command) { Class.new(described_class) { public :require_positional! }.new }
 
     it "returns the value when it is present" do
-      expect(command.send(:require_positional!, "discourse", "converter_type")).to eq("discourse")
+      expect(command.require_positional!("discourse", "converter_type")).to eq("discourse")
     end
 
     it "raises a presentable error when the value is missing" do
-      expect { command.send(:require_positional!, nil, "table_name") }.to raise_error(
+      expect { command.require_positional!(nil, "table_name") }.to raise_error(
         described_class::MissingPositionalError,
         "Missing required argument: <table_name>",
       )
@@ -17,12 +19,7 @@ RSpec.describe Migrations::CLI::Command do
 
     it "appends the hint to the error message" do
       expect {
-        command.send(
-          :require_positional!,
-          nil,
-          "converter_type",
-          hint: "Valid names are: discourse",
-        )
+        command.require_positional!(nil, "converter_type", hint: "Valid names are: discourse")
       }.to raise_error(
         described_class::MissingPositionalError,
         "Missing required argument: <converter_type>\nValid names are: discourse",

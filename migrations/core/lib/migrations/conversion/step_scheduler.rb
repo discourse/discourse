@@ -24,7 +24,9 @@ module Migrations
       #   merges shards into (held directly, so an inline step swapping the
       #   IntermediateDB connection can't divert a background merge)
       # @param budget [Integer] the most steps (forks) to run at once, usually cores - 1
-      # @param max_parallel_steps [Integer, nil] a lower cap from `--max-parallel-steps`
+      # @param max_parallel_steps [Integer, nil] a lower cap on the fork budget from
+      #   `--max-parallel-steps`; it caps concurrent worker forks, not steps (a
+      #   partitioned step consumes several)
       # @param no_fork [Boolean] run each step inline, one at a time (`--no-fork`)
       def initialize(
         step_classes:,
@@ -61,7 +63,7 @@ module Migrations
         @reserved_forks = {}
         @threads = []
         @failures = {}
-        @merge_errors = []
+        @finalization_errors = []
       end
 
       attr_reader :budget
@@ -72,19 +74,38 @@ module Migrations
         Process.warmup
         @consolidator = Consolidator.new(@shard_manager, @writer, @fork_mutex)
 
-        @mutex.synchronize do
-          loop do
-            schedule
-            break if all_finished?
-            @condition.wait(@mutex)
+        begin
+          @mutex.synchronize do
+            loop do
+              schedule
+              break if all_finished?
+              @condition.wait(@mutex)
+            end
+          end
+        ensure
+          # The wait loop can raise (Ctrl-C lands in `@condition.wait`) while the
+          # coordinator threads and the consolidator still run; join and drain
+          # them before `Base#run`'s ensure tears down the IntermediateDB and
+          # shards under them. Ctrl-C reaches the forked children too (same
+          # process group), so the join is quick; under --no-fork the inline step
+          # finishes first, which we accept — killing a thread mid-write is worse.
+          begin
+            @threads.each(&:join)
+            # Every step is done, but the background merges may still be catching
+            # up. Show a "finishing up" status until they drain, so the display
+            # doesn't sit silently at 100%.
+            @finalization_errors = @reporter.finalizing { @consolidator.drain }
+          rescue StandardError => e
+            # Two cases land here. The wait loop finished and only this teardown
+            # raised: record the error and the summary below reports it. The wait
+            # loop itself raised (typically the operator's Ctrl-C in
+            # `@condition.wait`): an ensure that raises would replace that
+            # in-flight exception, so record instead — the run exits on the
+            # original error and never reaches the summary.
+            @finalization_errors << e
           end
         end
 
-        @threads.each(&:join)
-        # Every step is done, but the background merges may still be catching up.
-        # Show a "finishing up" status until they drain, so the display doesn't sit
-        # silently at 100%.
-        @merge_errors = @reporter.finalizing { @consolidator.drain }
         report_summary(monotonic_time - started_at)
         raise_summary_if_unsuccessful
       end
@@ -160,11 +181,10 @@ module Migrations
           outcome = :failed
           begin
             outcome = coordinator.run
-          rescue SignalException
-            outcome = :failed
-          rescue StandardError => e
-            # Must be recorded even if `run` should have handled it, or the step
-            # never reaches a terminal state and the scheduler waits on it forever.
+          rescue SignalException, StandardError => e
+            # The backstop for anything `run` didn't record itself — without it
+            # the step's summary entry would be empty (a signal) or the failure
+            # lost entirely (an unexpected StandardError).
             record_failure(step_class, e)
             outcome = :failed
           ensure
@@ -262,12 +282,12 @@ module Migrations
       def raise_summary_if_unsuccessful
         failed = @states.select { |_, state| state == :failed }.keys
         skipped = @states.select { |_, state| state == :skipped }.keys
-        return if failed.empty? && skipped.empty? && @merge_errors.empty?
+        return if failed.empty? && skipped.empty? && @finalization_errors.empty?
 
         raise ConvertError.new(
                 failures: failed.to_h { |step_class| [step_class, @failures[step_class]] },
                 skipped:,
-                merge_errors: @merge_errors,
+                finalization_errors: @finalization_errors,
               )
       end
     end

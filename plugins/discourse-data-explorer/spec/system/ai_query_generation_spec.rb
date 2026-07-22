@@ -21,8 +21,27 @@ RSpec.describe "Data Explorer AI query generation" do
     end
   end
 
+  context "when Discourse AI is disabled" do
+    before do
+      SiteSetting.discourse_ai_enabled = false
+      SiteSetting.data_explorer_ai_queries_enabled = true
+    end
+
+    it "shows only the manual form with no mode switch" do
+      visit("/admin/plugins/discourse-data-explorer/queries/new")
+
+      expect(page).to have_css(".query-new")
+      expect(page).to have_no_css(".query-mode-switch")
+      expect(page).to have_css(".query-new [data-name='name']")
+      expect(page).to have_no_css(".query-new__ai-section")
+    end
+  end
+
   context "when ai queries setting is enabled" do
-    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.data_explorer_ai_queries_enabled = true
+    end
 
     it "shows the AI form with generate button by default" do
       visit("/admin/plugins/discourse-data-explorer/queries/new")
@@ -49,7 +68,10 @@ RSpec.describe "Data Explorer AI query generation" do
   context "when on the edit page" do
     fab!(:query) { Fabricate(:query, name: "Existing query", sql: "SELECT 1", user: admin) }
 
-    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.data_explorer_ai_queries_enabled = true
+    end
 
     it "shows the AI prompt and view segmented control (with SQL option) by default in AI mode" do
       visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
@@ -104,7 +126,10 @@ RSpec.describe "Data Explorer AI query generation" do
   end
 
   context "when on the edit page for a default query" do
-    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.data_explorer_ai_queries_enabled = true
+    end
 
     it "disables the AI option in the mode switch" do
       visit("/admin/plugins/discourse-data-explorer/queries/-1")
@@ -119,7 +144,10 @@ RSpec.describe "Data Explorer AI query generation" do
     fab!(:query) { Fabricate(:query, name: "First query", sql: "SELECT 1", user: admin) }
     fab!(:other_query) { Fabricate(:query, name: "Second query", sql: "SELECT 2", user: admin) }
 
-    before { SiteSetting.data_explorer_ai_queries_enabled = true }
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.data_explorer_ai_queries_enabled = true
+    end
 
     it "opens subsequent queries and the new query page in the last used mode" do
       visit("/admin/plugins/discourse-data-explorer/queries/new")
