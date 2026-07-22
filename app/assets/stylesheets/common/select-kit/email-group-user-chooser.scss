@@ -22,8 +22,20 @@
       @include ellipsis;
     }
 
-    .email-group-user-chooser--user,
-    .email-group-user-chooser--group {
+    .email-group-user-chooser__badge {
+      font-size: var(--font-down-3);
+      background: var(--primary-low);
+      padding: var(--space-half) var(--space-1);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-very-high);
+
+      .d-icon {
+        margin-right: 0;
+      }
+    }
+
+    .email-group-user-chooser__user,
+    .email-group-user-chooser__group {
       &.--username-first,
       &.--group-name-first {
         .identifier {

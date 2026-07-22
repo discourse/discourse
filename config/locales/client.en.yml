@@ -59,6 +59,7 @@ en:
         add_group: "Add user or group"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
+        disallowed: "Disallowed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"

@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 
@@ -20,6 +21,8 @@ export function groupGranteeResult(group, isDisabled = false) {
     automatic: group.automatic,
     isGroup: true,
     disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
@@ -38,6 +41,8 @@ function userGranteeResult(user, isDisabled = false) {
     avatar_template: user.avatar_template,
     isUser: true,
     disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
