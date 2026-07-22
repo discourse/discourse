@@ -45,8 +45,15 @@ describe "Sign up via email code" do
     expect(page).to have_css(".code-login-form__complete-step")
     screenshot_marker(label: "code-signup-complete-step")
 
-    # A username must be picked before the account can be used.
-    expect(page).to have_css(".code-login-form__continue-to-site[disabled]")
+    # A random username is assigned and prefilled, so the account is usable
+    # as-is; the user can roll a new suggestion or type their own.
+    generated = find("#code-login-username").value
+    expect(generated).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d*\z/)
+    expect(page).to have_no_css(".code-login-form__continue-to-site[disabled]")
+
+    find(".code-login-form__username-regen").click
+    expect(page).to have_no_field("code-login-username", with: generated)
+
     pick_username("new-person")
 
     find(".code-login-form__continue-to-site").click
