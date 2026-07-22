@@ -79,5 +79,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(plain_extractor.extract(raw)).to eq(raw)
       expect(buffer.emojis).to be_empty
     end
+
+    it "leaves a toned shortcode literal even when a custom emoji shadows the name" do
+      # `:parrot:t4:` cooks as the toned standard emoji when one exists — a tone
+      # suffix never resolves to a custom emoji — so the text must stay as written.
+      raw = "wave :parrot:t4: here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.emojis).to be_empty
+    end
+
+    it "defers the custom emoji when the tone-like text has no closing colon" do
+      result = extract("wave :parrot:t4 here")
+
+      expect(buffer.emojis.first[:name]).to eq("parrot")
+      expect(result).to eq("wave #{buffer.emojis.first[:placeholder]}t4 here")
+    end
   end
 end

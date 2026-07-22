@@ -24,7 +24,13 @@ module Migrations
             NAME = /[a-z0-9_+-]+/
             private_constant :NAME
 
-            PATTERN = /\G:(?<name>#{NAME}):/
+            # The lookahead rejects a toned shortcode (`:name:t4:`): core resolves a
+            # tone suffix to the toned standard emoji even when a custom emoji has
+            # the same name (the custom lookup runs on the tone-inclusive code and
+            # never matches), so a toned shortcode can't mean the source's custom
+            # emoji and must stay literal. Without the closing colon (`:name:t4`)
+            # there is no tone and the shortcode is the custom emoji as usual.
+            PATTERN = /\G:(?<name>#{NAME}):(?!t[2-6]:)/
             private_constant :PATTERN
 
             # A bare `:` is far too common for the scanner's skip check, but the
