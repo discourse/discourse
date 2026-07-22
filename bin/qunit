@@ -56,9 +56,11 @@ class QunitRunner
         opts.separator ""
         opts.separator "Options:"
 
-        opts.on("-f", "--filter FILTER", "Run tests matching this filter") do |filter|
-          @filter = filter
-        end
+        opts.on(
+          "-f",
+          "--filter FILTER",
+          "Run tests matching this filter against \"module: test name\" (case-insensitive substring, or a slash-wrapped regex like /foo/i)",
+        ) { |filter| @filter = filter }
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
@@ -127,6 +129,7 @@ class QunitRunner
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
             bin/qunit --standalone --filter "Acceptance: Emoji"
+            bin/qunit --standalone --filter "/DButton|DIconGridPicker/i"
         NOTES
       end
 
