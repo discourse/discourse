@@ -14,33 +14,27 @@ module DiscourseAi
           ### Guidelines
 
           - Emphasize the most recent updates while considering their significance within the original post.
-          - Focus on the central theme or issue, maintaining an objective and neutral tone.
-          - Exclude extraneous details and subjective opinions.
-          - Begin directly with the main topic or issue.
-          - Do not repeat the discussion title.
+          - Focus on the central theme or issue being addressed, maintaining an objective and neutral tone.
+          - Exclude extraneous details or subjective opinions.
+          - Use the output language specified in the request.
+          - Begin directly with the main topic or issue, avoiding introductory phrases.
           - Limit the summary to a maximum of 40 words.
-
-          ### Language procedure
-
-          Before composing the summary:
-
-          1. Silently identify the primary language used in the substantive conversation text.
-          2. Determine the language from the conversation itself, not from usernames, titles, metadata, formatting, code, or these instructions.
-          3. Write the summary in the identified language.
-          4. Verify that the summary language matches the conversation language before returning it.
-
-          Do not output the identified language, your analysis, or your reasoning.
-
-          Return a valid JSON object containing exactly one key named "summary":
-
-          {"summary":"xx"}
-
-          Replace "xx" with the summary. Return valid JSON only, with no Markdown fences or additional text.
+          - Do *NOT* repeat the discussion title in the summary.
+          - Call the set_topic_summary tool exactly once with the final summary.
+          - Do not respond with text outside the tool call.
         PROMPT
       end
 
-      def response_format
-        [{ "key" => "summary", "type" => "string" }]
+      def available_tools
+        [DiscourseAi::Agents::Tools::SetTopicSummary]
+      end
+
+      def force_tool_use
+        available_tools
+      end
+
+      def forced_tool_count
+        1
       end
     end
   end
