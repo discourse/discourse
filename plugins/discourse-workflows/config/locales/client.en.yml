@@ -253,6 +253,7 @@ en:
         "trigger:error": "Error trigger"
         "flow:wait": "Wait"
         "action:modal": "Modal"
+        "action:topic_category": "Topic category"
       node_descriptions:
         "trigger:topic_closed": "Fires when a topic is closed by a user or auto-close timer"
         "trigger:post_created": "Fires when a new post or reply is created"
@@ -302,6 +303,7 @@ en:
         "trigger:error": "Fires when another workflow fails"
         "flow:wait": "Pause workflow execution and resume after a delay or webhook callback"
         "action:modal": "Shows a modal to a user and waits for them to choose an option"
+        "action:topic_category": "Set or clear the category of a topic"
       topic_admin_button:
         label: "Button label"
         label_placeholder: "Run workflow"
@@ -355,6 +357,11 @@ en:
           remove: "Remove tag"
         topic_id: "Topic ID"
         tag_names: "Tags"
+        actor_username: "Performed by user"
+      topic_category:
+        topic_id: "Topic ID"
+        category_id: "Category"
+        category_id_description: "Leave empty to set no category."
         actor_username: "Performed by user"
       limit:
         max_items: "Max items"

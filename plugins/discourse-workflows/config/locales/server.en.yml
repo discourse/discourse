@@ -109,6 +109,10 @@ en:
       topic_tags:
         no_tag_names: "No tag names provided."
         operation_failed: "Tag operation failed: %{errors}"
+      topic_category:
+        operation_failed: "Category change failed."
+        private_message: "Personal messages cannot have a category."
+        uncategorized_not_allowed: "This site does not allow topics without a category."
       sort:
         code_missing_return: "Code must contain a return statement."
       split_out:
