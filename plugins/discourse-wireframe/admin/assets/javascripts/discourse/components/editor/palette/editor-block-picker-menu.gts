@@ -12,19 +12,25 @@ import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
-import type WireframeDropAuthority from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
-import type WireframeRail from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
+import type WireframeDropAuthorityService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
+import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 
 // TODO(devxp-typescript-pending): drop once d-auto-focus is authored in .gts
 // with a real Signature. Its DefaultSignature yields no callable modifier
 // overload in Glint, so a direct invocation is rejected.
 const dAutoFocus = dAutoFocusUntyped as unknown as ModifierLike<{
+  /** Input element receiving focus. */
   Element: HTMLInputElement;
+  /** Auto-focus configuration. */
   Args: {
+    /** Named auto-focus options. */
     Named: {
+      /** Whether the input text is selected after focusing. */
       selectText?: boolean;
+      /** Whether focusing avoids scrolling the input into view. */
       preventScroll?: boolean;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }>;
@@ -33,16 +39,31 @@ const dAutoFocus = dAutoFocusUntyped as unknown as ModifierLike<{
 // with a real Signature. Its DefaultSignature rejects the named args this
 // combobox passes.
 const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  /** Results container whose descendants participate in roving focus. */
   Element: HTMLElement;
+  /** Roving-focus configuration. */
   Args: {
+    /** Named roving-focus options. */
     Named: {
+      /** Whether navigation moves focus or only active state. */
       selectionMode?: "focus" | "active";
+      /** Element retaining DOM focus in active-descendant mode. */
       controllerElement?: Element | null;
+      /** Selector identifying navigable result items. */
       itemSelector?: string;
+      /** Value that invalidates the current item collection. */
       itemsKey?: string;
+      /** Class applied to the active result. */
       activeClass?: string;
-      onActivate?: (element: HTMLElement, event?: Event) => void;
+      /** Handles activation of the current result. */
+      onActivate?: (
+        /** Activated result element. */
+        element: HTMLElement,
+        /** Optional activation event. */
+        event?: Event
+      ) => void;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }>;
@@ -54,6 +75,7 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
 const CURATED_FIRST = ["paragraph", "heading", "image"];
 
 interface EditorBlockPickerMenuSignature {
+  /** FloatKit data and close callback for the picker menu. */
   Args: {
     /**
      * Injected by `menu.show(triggerEl, { component, data })`:
@@ -62,8 +84,14 @@ interface EditorBlockPickerMenuSignature {
      *   - `targetOutletName`: the outlet the drop target lives in, for validity.
      */
     data: {
+      /** Full set of palette entries available to the picker. */
       palette: BlockPaletteEntry[];
-      onPick?: (entry: BlockPaletteEntry) => void;
+      /** Handles a selected palette entry. */
+      onPick?: (
+        /** Palette entry selected by the author. */
+        entry: BlockPaletteEntry
+      ) => void;
+      /** Outlet against which insertion validity is checked. */
       targetOutletName: string;
     };
 
@@ -84,10 +112,13 @@ interface EditorBlockPickerMenuSignature {
  * searching filters that same valid set.
  */
 export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMenuSignature> {
-  @service declare wireframeDropAuthority: WireframeDropAuthority;
-  @service declare wireframeRail: WireframeRail;
+  /** Validates block insertion against the target outlet. */
+  @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+  /** Opens the full palette when requested. */
+  @service declare wireframeRail: WireframeRailService;
 
-  @tracked searchTerm = "";
+  /** Current palette search term. */
+  @tracked searchTerm: string = "";
 
   /** The search input element — the combobox controller `dRovingFocus` drives. */
   @tracked searchInput: HTMLInputElement | null = null;
@@ -95,7 +126,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
   /**
    * Stable id linking the input's `aria-controls` to the results listbox.
    */
-  get listboxId() {
+  get listboxId(): string {
     return `${guidFor(this)}-listbox`;
   }
 
@@ -136,18 +167,23 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
     return [...valid].sort((a, b) => rank(a.name) - rank(b.name));
   }
 
+  /** Captures the search input used as the combobox controller. */
   @action
-  captureInput(element: HTMLInputElement) {
+  captureInput(element: HTMLInputElement): void {
     this.searchInput = element;
   }
 
+  /** Updates the palette filter from the search input. */
   @action
-  updateSearch(event: Event) {
-    this.searchTerm = (event.target as HTMLInputElement).value;
+  updateSearch(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.searchTerm = event.target.value;
+    }
   }
 
+  /** Forwards a selected palette entry to the menu owner. */
   @action
-  pick(entry: BlockPaletteEntry) {
+  pick(entry: BlockPaletteEntry): void {
     this.args.data.onPick?.(entry);
   }
 
@@ -159,7 +195,7 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
    * @param element - The activated tile.
    */
   @action
-  activate(element: HTMLElement) {
+  activate(element: HTMLElement): void {
     const entry = this.results.find(
       (row) => row.name === element.dataset.blockName
     );
@@ -168,8 +204,9 @@ export default class EditorBlockPickerMenu extends Component<EditorBlockPickerMe
     }
   }
 
+  /** Opens the complete palette and closes the quick picker. */
   @action
-  browseAll() {
+  browseAll(): void {
     this.wireframeRail.showPalette();
     this.args.close?.();
   }

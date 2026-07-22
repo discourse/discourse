@@ -17,9 +17,13 @@ import { entryKey } from "./entry-key";
  * `align` / `justify` are the per-cell alignment keywords.
  */
 export interface GridPlacementArgs {
+  /** CSS Grid column-line shorthand. */
   column?: string;
+  /** CSS Grid row-line shorthand. */
   row?: string;
+  /** Cross-axis alignment within the cell. */
   align?: string;
+  /** Main-axis alignment within the cell. */
   justify?: string;
 }
 
@@ -30,7 +34,9 @@ export interface GridPlacementArgs {
  * args the parser and other layout modes expect.
  */
 export interface GridContainerArgs {
+  /** Grid placement namespace. */
   grid?: GridPlacementArgs;
+  /** Arguments belonging to another container mode. */
   [key: string]: unknown;
 }
 
@@ -40,26 +46,50 @@ export interface GridContainerArgs {
  * editor stamps on live entries so `entryKey` can address them.
  */
 export interface GridEntry extends Omit<LayoutEntry, "containerArgs"> {
+  /** Container arguments refined with grid placement. */
   containerArgs?: GridContainerArgs;
+  /** Runtime stable identity assigned by the block pipeline. */
   __stableKey?: string | number;
+}
+
+/** A grid-mode layout entry with grid-refined direct children. */
+export interface GridLayoutEntry extends Omit<LayoutEntry, "children"> {
+  /** Direct children placed or auto-flowed within the grid. */
+  children?: GridEntry[];
 }
 
 /** An integer grid cell: 1-indexed column / row lines. */
 export interface Cell {
+  /** One-based grid column. */
   column: number;
+  /** One-based grid row. */
   row: number;
 }
 
 /** A cell expressed as CSS Grid line shorthand strings (e.g. `"1 / 4"`). */
 export interface CellRect {
+  /** CSS Grid column-line shorthand. */
   column: string;
+  /** CSS Grid row-line shorthand. */
   row: string;
 }
 
 /** A cell's placement as resolved (non-null) start / end line numbers. */
 export interface EdgeRect {
-  column: { start: number; end: number };
-  row: { start: number; end: number };
+  /** Exclusive-start/end grid column lines. */
+  column: {
+    /** Inclusive starting column line. */
+    start: number;
+    /** Exclusive ending column line. */
+    end: number;
+  };
+  /** Exclusive-start/end grid row lines. */
+  row: {
+    /** Inclusive starting row line. */
+    start: number;
+    /** Exclusive ending row line. */
+    end: number;
+  };
 }
 
 /** The four cardinal edges an occupant can be dropped against. */
@@ -69,74 +99,120 @@ export type Direction = "left" | "right" | "up" | "down";
 export type ResizeDirection = "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw";
 
 /** Internal integer rectangle used by the cascade / shift planner. */
-interface Rect {
+type Rect = {
+  /** Inclusive starting column line. */
   colStart: number;
+  /** Exclusive ending column line. */
   colEnd: number;
+  /** Inclusive starting row line. */
   rowStart: number;
+  /** Exclusive ending row line. */
   rowEnd: number;
-}
+};
 
 /** The cascade axis a shift travels along. */
 type Axis = "column" | "row";
 
 /** A single slot move in a shift plan: the slot's key and its new placement. */
 export interface ShiftMove {
+  /** Stable key of the displaced slot. */
   slotKey: string;
+  /** Replacement column-line shorthand. */
   column: string;
+  /** Replacement row-line shorthand. */
   row: string;
 }
 
 /** The result of `computeShiftPlan`: slot moves plus where the source lands. */
 export interface ShiftPlan {
+  /** Existing slots displaced by the cascade. */
   moves: ShiftMove[];
-  sourceLanding: { column: string; row: string };
+  /** Placement assigned to the dropped source. */
+  sourceLanding: {
+    /** Source column-line shorthand. */
+    column: string;
+    /** Source row-line shorthand. */
+    row: string;
+  };
 }
 
 /** Arguments for `computeShiftPlan`. */
 export interface ShiftPlanArgs {
+  /** Current explicitly positioned grid entries. */
   slots?: GridEntry[] | null;
+  /** Stable key of an in-grid source, or `null` for a new source. */
   sourceKey: string | null;
+  /** Stable key of the slot under the drop, when any. */
   dropSlotKey: string | null;
+  /** Grid cell under the drop. */
   dropCell?: Cell | null;
+  /** Axis and direction in which existing slots move. */
   direction: Direction;
-  gridDims: { columns: number; rows: number };
+  /** Current effective grid dimensions. */
+  gridDims: {
+    /** Effective column count. */
+    columns: number;
+    /** Effective row count. */
+    rows: number;
+  };
+  /** Whether the cascade may extend the grid. */
   allowGrow?: boolean;
 }
 
 /** Arguments for `computeSpanResize`. */
 export interface SpanResizeArgs {
+  /** Original resolved slot rectangle. */
   origin: EdgeRect;
+  /** Cell currently under the resize pointer. */
   cell: Cell;
+  /** Edge or corner being dragged. */
   direction: ResizeDirection;
+  /** Effective grid column count. */
   columns: number;
+  /** Effective grid row count. */
   rows: number;
+  /** Occupied cells that constrain growth. */
   occupied?: Set<string>;
 }
 
 /** Arguments for `resizableDirections`. */
 export interface ResizableDirectionsArgs {
+  /** Original slot placement. */
   origin: SlotPlacement;
+  /** Effective grid column count. */
   columns: number;
+  /** Effective grid row count. */
   rows: number;
+  /** Occupied cells that constrain growth. */
   occupied: Set<string>;
 }
 
 /** Arguments for a single cascade attempt. */
-interface CascadeArgs {
+type CascadeArgs = {
+  /** Mutable slot rectangles keyed by stable slot identity. */
   rects: Map<string, Rect>;
+  /** One-based landing column. */
   landingCol: number;
+  /** One-based landing row. */
   landingRow: number;
+  /** Axis along which the cascade advances. */
   axis: Axis;
+  /** Whether the cascade advances toward increasing track numbers. */
   cascadeForward: boolean;
+  /** Maximum permitted column. */
   maxCol: number;
+  /** Maximum permitted row. */
   maxRow: number;
-}
+};
 
 /**
  * Whether an entry is a "merged cell" — the core `layout-merged-cell` block, an
  * empty positioned region in a grid. Merged cells live in the same `children`
  * array as content but hold no block; this predicate is the one place that
  * distinguishes them from content.
+ *
+ * @param entry - Grid entry to classify.
+ * @returns Whether the entry is a merged-cell placeholder.
  */
 export function isMergedCell(entry: GridEntry | null | undefined): boolean {
   return entry?.block === LAYOUT_MERGED_CELL_BLOCK;
@@ -146,6 +222,9 @@ export function isMergedCell(entry: GridEntry | null | undefined): boolean {
  * The content children of a grid — everything that isn't a merged cell. Used by
  * the few operations that reason about real content (reflow reading order,
  * "is the grid empty", template matching).
+ *
+ * @param children - Grid children to filter.
+ * @returns The non-placeholder children.
  */
 export function contentCells(
   children: GridEntry[] | null | undefined
@@ -166,6 +245,9 @@ export function contentCells(
  * Formats a track as a CSS Grid shorthand string suitable for writing
  * to `args.column` / `args.row`. Returns `"auto"` for null-valued
  * tracks so the serialised arg stays predictable.
+ *
+ * @param track - Parsed track to format.
+ * @returns CSS Grid shorthand for the track.
  */
 export function formatTrack(track: Track | null | undefined): string {
   if (!track || track.start == null) {
@@ -189,6 +271,9 @@ export function formatTrack(track: Track | null | undefined): string {
  *
  * @param slots - Child entries of a grid layout. Reads each entry's
  *   `containerArgs.grid.column` / `.row`.
+ * @param columns - Effective grid column count.
+ * @param rows - Effective grid row count.
+ * @returns Keys for every occupied cell.
  */
 export function computeOccupation(
   slots: GridEntry[] | null | undefined,
@@ -225,6 +310,11 @@ export function computeOccupation(
 /**
  * Returns the list of unoccupied cells as `{column, row}` objects.
  * Convenience wrapper for the overlay's `+` placeholders.
+ *
+ * @param occupied - Keys for cells already occupied.
+ * @param columns - Effective grid column count.
+ * @param rows - Effective grid row count.
+ * @returns Free cells in reading order.
  */
 export function unoccupiedCells(
   occupied: Set<string>,
@@ -252,10 +342,20 @@ export function unoccupiedCells(
  *
  * @param children - The grid's current children (exclude the entering block,
  *   so it doesn't occupy its own target).
+ * @param dimensions - Effective grid dimensions.
+ * @returns The first free cell, or `null` when the grid is full.
  */
 export function nextFreeCellInReadingOrder(
   children: GridEntry[] | null | undefined,
-  { columns, rows }: { columns: number; rows: number }
+  {
+    columns,
+    rows,
+  }: {
+    /** Effective grid column count. */
+    columns: number;
+    /** Effective grid row count. */
+    rows: number;
+  }
 ): Cell | null {
   const occupied = computeOccupation(children, columns, rows);
   return nextFreeCell(occupied, columns, rows, { row: 1, column: 1 });
@@ -267,6 +367,10 @@ export function nextFreeCellInReadingOrder(
  * left to right). Each cell is a `{column, row}` rect in CSS Grid line
  * shorthand. Used when reflowing content into a free grid (one with no
  * preset shape): each content block lands in the next cell.
+ *
+ * @param columns - Grid column count.
+ * @param rows - Grid row count.
+ * @returns Every single-cell placement in reading order.
  */
 export function cellsForFree(columns: number, rows: number): CellRect[] {
   const cells: CellRect[] = [];
@@ -428,6 +532,7 @@ export function syncContentToArrayOrder(
  * @param leftTrack - 0-indexed track on the LEFT of the dragged line (the
  *   line sits between `leftTrack` and `leftTrack + 1`).
  * @param deltaPx - Pixels the left track grows by.
+ * @param options - Minimum-width and proportional-resize options.
  * @returns A fraction per column, length `pxWidths.length`.
  */
 export function resizeColumnFractions(
@@ -437,7 +542,12 @@ export function resizeColumnFractions(
   {
     minPx = 24,
     proportional = false,
-  }: { minPx?: number; proportional?: boolean } = {}
+  }: {
+    /** Minimum permitted pixel width for an affected track. */
+    minPx?: number;
+    /** Whether every track to the right shares the resize delta. */
+    proportional?: boolean;
+  } = {}
 ): number[] {
   const widths = (pxWidths ?? []).map((w) =>
     Number.isFinite(w) && w > 0 ? w : 0
@@ -481,9 +591,20 @@ export function resizeColumnFractions(
  * Resolves the cell `{column, row}` under a pointer event, given the
  * grid container's bounding rect. Used by the drag handlers to compute
  * snap targets.
+ *
+ * @param event - Pointer viewport coordinates.
+ * @param gridRect - Grid container bounds.
+ * @param columns - Effective grid column count.
+ * @param rows - Effective grid row count.
+ * @returns The one-based cell under the pointer.
  */
 export function cellAt(
-  event: { clientX: number; clientY: number },
+  event: {
+    /** Pointer x-coordinate in viewport pixels. */
+    clientX: number;
+    /** Pointer y-coordinate in viewport pixels. */
+    clientY: number;
+  },
   gridRect: DOMRect,
   columns: number,
   rows: number
@@ -619,7 +740,12 @@ export function resizableDirections({
   occupied,
 }: ResizableDirectionsArgs): ResizeDirection[] {
   const { column, row } = origin;
-  if (column.start == null || row.start == null) {
+  if (
+    column.start == null ||
+    column.end == null ||
+    row.start == null ||
+    row.end == null
+  ) {
     return [];
   }
   const colSpan = column.end - column.start;
@@ -675,6 +801,12 @@ export function resizableDirections({
 /**
  * Whether any cell in column `column` across rows `[rowStart, rowEnd)` is
  * occupied. Rows / columns are 1-indexed cell indices (a track's leading line).
+ *
+ * @param occupied - Keys for cells already occupied.
+ * @param column - Column to scan.
+ * @param rowStart - Inclusive first row.
+ * @param rowEnd - Exclusive final row.
+ * @returns Whether the scanned column band is occupied.
  */
 function columnBlocked(
   occupied: Set<string>,
@@ -693,6 +825,12 @@ function columnBlocked(
 /**
  * Whether any cell in row `row` across columns `[colStart, colEnd)` is
  * occupied.
+ *
+ * @param occupied - Keys for cells already occupied.
+ * @param row - Row to scan.
+ * @param colStart - Inclusive first column.
+ * @param colEnd - Exclusive final column.
+ * @returns Whether the scanned row band is occupied.
  */
 function rowBlocked(
   occupied: Set<string>,
@@ -784,6 +922,10 @@ export function computeZoneCollapsed(
  *
  * Used by chrome decoration to flag visually-overlapping blocks so the
  * author notices an accidental resize past a neighbour.
+ *
+ * @param a - First parsed placement.
+ * @param b - Second parsed placement.
+ * @returns Whether both explicit placements overlap.
  */
 export function placementsOverlap(
   a: SlotPlacement | null | undefined,
@@ -791,9 +933,13 @@ export function placementsOverlap(
 ): boolean {
   if (
     a?.column?.start == null ||
+    a.column.end == null ||
     a?.row?.start == null ||
+    a.row.end == null ||
     b?.column?.start == null ||
-    b?.row?.start == null
+    b.column.end == null ||
+    b?.row?.start == null ||
+    b.row.end == null
   ) {
     return false;
   }
@@ -837,6 +983,9 @@ export function placementsOverlap(
  *
  * Assumes the source lands as 1×1; multi-span sources from other grids
  * (or the same grid) land 1×1 here and the author can resize.
+ *
+ * @param args - Grid state and requested cascade geometry.
+ * @returns The cascade plan, or `null` when no valid shift fits.
  */
 export function computeShiftPlan({
   slots,
@@ -1000,6 +1149,9 @@ export function computeShiftPlan({
  * cell is to the RIGHT/BELOW the landing) or backward (shift -1,
  * source's vacated cell is to the LEFT/ABOVE). Returns the move plan
  * if everything fits without overflowing the grid; `null` otherwise.
+ *
+ * @param args - Rectangles, landing point, axis, direction, and grid bounds.
+ * @returns The validated move plan, or `null` when it does not fit.
  */
 function _attemptCascade({
   rects,
@@ -1024,7 +1176,12 @@ function _attemptCascade({
     cascadeForward
   );
 
-  const moves: Array<{ slotKey: string; newRect: Rect }> = [];
+  const moves: Array<{
+    /** Stable key of the displaced slot. */
+    slotKey: string;
+    /** Rectangle assigned after displacement. */
+    newRect: Rect;
+  }> = [];
   const shifted = new Set<string>();
   let cursor = firstShifted;
 
@@ -1077,10 +1234,10 @@ function _attemptCascade({
       return null;
     }
   }
-  const keys = [...finalRects.keys()];
-  for (let i = 0; i < keys.length; i++) {
-    for (let j = i + 1; j < keys.length; j++) {
-      if (_rectsOverlap(finalRects.get(keys[i]), finalRects.get(keys[j]))) {
+  const finalRectValues = [...finalRects.values()];
+  for (const [index, rect] of finalRectValues.entries()) {
+    for (const other of finalRectValues.slice(index + 1)) {
+      if (_rectsOverlap(rect, other)) {
         return null;
       }
     }
@@ -1099,6 +1256,14 @@ function _attemptCascade({
   };
 }
 
+/**
+ * Finds the slot covering a cell.
+ *
+ * @param rects - Slot rectangles keyed by stable identity.
+ * @param col - One-based column to inspect.
+ * @param row - One-based row to inspect.
+ * @returns The covering slot key, or `null` for an empty cell.
+ */
 function _findSlotAt(
   rects: Map<string, Rect>,
   col: number,
@@ -1124,6 +1289,15 @@ function _findSlotAt(
  * found before the grid edge. Used to find the head of the cascade
  * chain regardless of whether the drop target itself is a slot or
  * an empty cell.
+ *
+ * @param rects - Slot rectangles keyed by stable identity.
+ * @param startCol - One-based starting column.
+ * @param startRow - One-based starting row.
+ * @param axis - Axis along which to scan.
+ * @param maxCol - Maximum permitted column.
+ * @param maxRow - Maximum permitted row.
+ * @param cascadeForward - Whether to scan toward increasing track numbers.
+ * @returns The first slot key in the scan direction, or `null`.
  */
 function _findFirstSlotInDirection(
   rects: Map<string, Rect>,
@@ -1170,6 +1344,14 @@ function _findFirstSlotInDirection(
   return null;
 }
 
+/**
+ * Shifts a rectangle by one track along an axis.
+ *
+ * @param rect - Rectangle to shift.
+ * @param axis - Axis along which to shift.
+ * @param cascadeForward - Whether to shift toward increasing track numbers.
+ * @returns The shifted rectangle.
+ */
 function _shiftRect(rect: Rect, axis: Axis, cascadeForward = true): Rect {
   const delta = cascadeForward ? 1 : -1;
   if (axis === "column") {
@@ -1188,6 +1370,13 @@ function _shiftRect(rect: Rect, axis: Axis, cascadeForward = true): Rect {
   };
 }
 
+/**
+ * Checks whether two internal grid rectangles overlap.
+ *
+ * @param a - First rectangle.
+ * @param b - Second rectangle.
+ * @returns Whether the rectangles share any cell.
+ */
 function _rectsOverlap(a: Rect, b: Rect): boolean {
   return (
     a.colStart < b.colEnd &&
@@ -1197,16 +1386,39 @@ function _rectsOverlap(a: Rect, b: Rect): boolean {
   );
 }
 
+/**
+ * Formats an internal start/end pair as CSS Grid shorthand.
+ *
+ * @param start - Inclusive starting grid line.
+ * @param end - Exclusive ending grid line.
+ * @returns The compact track shorthand.
+ */
 function _rectToTrackString(start: number, end: number): string {
   return end === start + 1 ? `${start}` : `${start} / ${end}`;
 }
 
+/**
+ * Adds the cells covered by a placement to an occupation set.
+ *
+ * @param occupied - Set to mutate with occupied cell keys.
+ * @param placement - Placement rectangle to add.
+ * @param columns - Effective grid column count.
+ * @param rows - Effective grid row count.
+ */
 function fillRect(
   occupied: Set<string>,
   placement: SlotPlacement,
   columns: number,
   rows: number
 ): void {
+  if (
+    placement.column.start == null ||
+    placement.column.end == null ||
+    placement.row.start == null ||
+    placement.row.end == null
+  ) {
+    return;
+  }
   const colStart = clamp(placement.column.start, 1, columns);
   const colEnd = clamp(placement.column.end, colStart + 1, columns + 1);
   const rowStart = clamp(placement.row.start, 1, rows);
@@ -1218,6 +1430,15 @@ function fillRect(
   }
 }
 
+/**
+ * Scans for a free cell in row-major order.
+ *
+ * @param occupied - Keys for cells already occupied.
+ * @param columns - Effective grid column count.
+ * @param rows - Effective grid row count.
+ * @param start - First cell to inspect.
+ * @returns The next free cell, or `null` at the grid boundary.
+ */
 function nextFreeCell(
   occupied: Set<string>,
   columns: number,
@@ -1234,6 +1455,13 @@ function nextFreeCell(
   return null;
 }
 
+/**
+ * Advances a row-major cursor by one cell.
+ *
+ * @param cursor - Current cell.
+ * @param columns - Number of columns before wrapping.
+ * @returns The following cell.
+ */
 function advance(cursor: Cell, columns: number): Cell {
   if (cursor.column >= columns) {
     return { row: cursor.row + 1, column: 1 };
@@ -1241,10 +1469,25 @@ function advance(cursor: Cell, columns: number): Cell {
   return { row: cursor.row, column: cursor.column + 1 };
 }
 
+/**
+ * Serializes a cell coordinate for occupation-set lookup.
+ *
+ * @param row - One-based row.
+ * @param column - One-based column.
+ * @returns The stable cell key.
+ */
 function cellKey(row: number, column: number): string {
   return `${row},${column}`;
 }
 
+/**
+ * Constrains a number to an inclusive range.
+ *
+ * @param value - Number to constrain.
+ * @param min - Inclusive lower bound.
+ * @param max - Inclusive upper bound.
+ * @returns The constrained number.
+ */
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
@@ -1254,6 +1497,10 @@ function clamp(value: number, min: number, max: number): number {
  * column. Mirrors the layout block's `sortedChildren` so the editor and
  * the rendered DOM agree on order. Auto / unset placements sort as the
  * first cell.
+ *
+ * @param a - First grid entry.
+ * @param b - Second grid entry.
+ * @returns Comparator result for row-major order.
  */
 function readingOrder(a: GridEntry, b: GridEntry): number {
   const pa = parsePlacement(a.containerArgs);
@@ -1270,6 +1517,10 @@ function readingOrder(a: GridEntry, b: GridEntry): number {
  * Reading-order comparator for `{column, row}` cell rects (the same
  * order as `readingOrder`, but keyed off plain rect objects rather than
  * entries). Top row first, then left column.
+ *
+ * @param a - First cell rectangle.
+ * @param b - Second cell rectangle.
+ * @returns Comparator result for row-major order.
  */
 function rectReadingOrder(a: CellRect, b: CellRect): number {
   const pa = parsePlacement({ grid: a });
@@ -1286,6 +1537,9 @@ function rectReadingOrder(a: CellRect, b: CellRect): number {
  * True when a `{column, row}` cell covers more than one grid track on
  * either axis. A bare line ("2") spans one track; a range ("1 / 4")
  * spans more.
+ *
+ * @param cell - Cell rectangle to inspect.
+ * @returns Whether either axis spans multiple tracks.
  */
 function isMultiCell(cell: CellRect): boolean {
   const placement = parsePlacement({ grid: cell });

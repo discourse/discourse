@@ -20,18 +20,20 @@ import {
   serializeLayoutForSave,
   wrapAsOutletRoot,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-import type WireframeDrafts from "./wireframe-drafts";
-import type WireframeEditMode from "./wireframe-edit-mode";
-import type WireframeInplaceText from "./wireframe-inplace-text";
-import type WireframeInspectorArgs from "./wireframe-inspector-args";
-import WireframeLayoutQuery, { OUTLET_STATE } from "./wireframe-layout-query";
-import type WireframeLiveLayout from "./wireframe-live-layout";
-import type WireframeMutationEngine from "./wireframe-mutation-engine";
-import type WireframePublishTarget from "./wireframe-publish-target";
+import type WireframeDraftsService from "./wireframe-drafts";
+import type WireframeEditModeService from "./wireframe-edit-mode";
+import type WireframeInplaceTextService from "./wireframe-inplace-text";
+import type WireframeInspectorArgsService from "./wireframe-inspector-args";
+import WireframeLayoutQueryService, {
+  OUTLET_STATE,
+} from "./wireframe-layout-query";
+import type WireframeLiveLayoutService from "./wireframe-live-layout";
+import type WireframeMutationEngineService from "./wireframe-mutation-engine";
+import type WireframePublishTargetService from "./wireframe-publish-target";
 
 /** A persisted per-user draft, as returned by the drafts I/O peer. */
 type PersistedDraft = Awaited<
-  ReturnType<WireframeDrafts["fetchDrafts"]>
+  ReturnType<WireframeDraftsService["fetchDrafts"]>
 >[number];
 
 /**
@@ -39,37 +41,61 @@ type PersistedDraft = Awaited<
  * duplicate theme): the new theme id to reload onto, or an error message for
  * the banner. Exactly one field is populated.
  */
-interface GitActionResult {
+type GitActionResult = {
+  /** Newly created destination theme, when the action succeeds. */
   themeId?: number;
+  /** Message shown when the action fails. */
   error?: string;
-}
+};
 
 /** One outlet's entry in a publish result — either published or failed. */
-interface PublishOutletError {
+type PublishOutletError = {
+  /** Outlet whose publish failed. */
   outlet: string;
+  /** Theme to which the outlet was being published. */
   themeId: number;
+  /** Human-readable failure message. */
   message: string;
+  /** Whether the failure represents a version conflict. */
   conflict: boolean;
+  /** Server's current version token, when the request conflicted. */
   currentVersion?: string;
+  /** Server publish timestamp associated with the conflict. */
   publishedAt?: string;
-}
+};
 
 /** A publish result, as consumed by the reconciliation step. */
-interface PublishResult {
-  saved: Array<{ outlet: string }>;
+type PublishResult = {
+  /** Outlets successfully written by the publish request. */
+  saved: Array<{
+    /** Name of the successfully published outlet. */
+    outlet: string;
+  }>;
+  /** Per-outlet failures returned by the publish request. */
   errors: PublishOutletError[];
-}
+};
 
 /**
  * The shape of a rejected ajax request — an object with no `message`, so the
  * server error, then the HTTP status, are read before any thrown Error's
  * `message`/`name`.
  */
-interface AjaxError {
-  jqXHR?: { status?: number; responseJSON?: { errors?: string[] } };
+type AjaxError = {
+  /** Underlying jQuery request metadata, when the rejection came from Ajax. */
+  jqXHR?: {
+    /** HTTP response status. */
+    status?: number;
+    /** Parsed JSON error response, when available. */
+    responseJSON?: {
+      /** Server-provided error messages. */
+      errors?: string[];
+    };
+  };
+  /** Error message supplied by a thrown value. */
   message?: string;
+  /** Error class name supplied by a thrown value. */
   name?: string;
-}
+};
 
 /**
  * The editor's staging area: the in-session editable draft layer plus the
@@ -91,15 +117,24 @@ interface AjaxError {
  * publish-review surfaces that inject it directly.
  */
 export default class WireframeStagingService extends Service {
+  /** Presents conflict and stale-draft decisions to the editor. */
   @service declare modal: ModalService;
-  @service declare wireframeInspectorArgs: WireframeInspectorArgs;
-  @service declare wireframeDrafts: WireframeDrafts;
-  @service declare wireframeMutationEngine: WireframeMutationEngine;
-  @service declare wireframeInplaceText: WireframeInplaceText;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service declare wireframeLiveLayout: WireframeLiveLayout;
-  @service declare wireframeEditMode: WireframeEditMode;
-  @service declare wireframePublishTarget: WireframePublishTarget;
+  /** Flushes pending inspector edits before staging operations. */
+  @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
+  /** Reads and writes the current user's persisted drafts. */
+  @service declare wireframeDrafts: WireframeDraftsService;
+  /** Tracks mutations, dirty outlets, snapshots, and undo state. */
+  @service declare wireframeMutationEngine: WireframeMutationEngineService;
+  /** Commits active in-place text edits before staging operations. */
+  @service declare wireframeInplaceText: WireframeInplaceTextService;
+  /** Resolves editable outlets, layout entries, and block metadata. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+  /** Reads and publishes live theme layouts. */
+  @service declare wireframeLiveLayout: WireframeLiveLayoutService;
+  /** Reports whether an editor session remains active. */
+  @service declare wireframeEditMode: WireframeEditModeService;
+  /** Resolves the active theme and per-outlet publish destinations. */
+  @service declare wireframePublishTarget: WireframePublishTargetService;
 
   /**
    * Whether the publish review surface (the save/publish drawer) is open. Held
@@ -266,6 +301,8 @@ export default class WireframeStagingService extends Service {
    * pristine pre-edit layout (in memory) and deletes the caller's persisted
    * draft for it. Does NOT touch the live field — the published layout is
    * unaffected.
+   *
+   * @param outletName - Outlet whose draft edits should be discarded.
    */
   @action
   async discardOutlet(outletName: string): Promise<void> {
@@ -274,11 +311,12 @@ export default class WireframeStagingService extends Service {
     // Drop the outlet's own undo/redo history so a later undo can't resurrect a
     // draft we just discarded.
     this.wireframeMutationEngine.dropUndoEntriesForOutlet(outletName);
-    await this.wireframeDrafts.deleteDraft(
+    const themeId =
       this.wireframePublishTarget.outletOwner(outletName).themeId ??
-        this.wireframePublishTarget.defaultThemeId,
-      outletName
-    );
+      this.wireframePublishTarget.defaultThemeId;
+    if (themeId != null) {
+      await this.wireframeDrafts.deleteDraft(themeId, outletName);
+    }
   }
 
   /**
@@ -305,6 +343,7 @@ export default class WireframeStagingService extends Service {
    * then re-seeds a fresh editable draft from it. Only valid for a PUBLISHED
    * outlet whose owner is not Git-managed.
    *
+   * @param outletName - Published outlet to reset to its underlying default.
    * @returns false when the outlet isn't eligible.
    */
   @action
@@ -313,7 +352,8 @@ export default class WireframeStagingService extends Service {
     if (
       this.wireframeLayoutQuery.outletState(outletName) !==
         OUTLET_STATE.PUBLISHED ||
-      owner.isGit
+      owner.isGit ||
+      owner.themeId == null
     ) {
       return false;
     }
@@ -351,6 +391,7 @@ export default class WireframeStagingService extends Service {
    * Publish). Shares the conflict + reconciliation handling with the toolbar
    * Save.
    *
+   * @param outletName - Outlet to publish to its resolved owner theme.
    * @returns a banner message, or null on success.
    */
   @action
@@ -401,10 +442,15 @@ export default class WireframeStagingService extends Service {
   /**
    * Saves a single outlet as a private, never-live draft (the inspector's Save
    * draft). The outlet stays edited — a draft doesn't go live.
+   *
+   * @param outletName - Outlet whose current draft should be persisted.
    */
   @action
   async saveDraftOutlet(outletName: string): Promise<void> {
     const themeId = this.wireframePublishTarget.activeThemeId;
+    if (themeId == null) {
+      throw new Error(i18n("generic_error"));
+    }
     // The live-layout layer owns the version-token map; read the baseline token
     // here and hand it to the draft-I/O leaf so that leaf needn't depend on the
     // live-layout service (keeps the peer graph acyclic).
@@ -428,6 +474,7 @@ export default class WireframeStagingService extends Service {
    * hatch for committing upstream). Exports the current draft when the outlet
    * has edits, otherwise the live field.
    *
+   * @param outletName - Outlet whose layout should be downloaded.
    * @returns an error message for the banner, or null on success.
    */
   @action
@@ -435,6 +482,12 @@ export default class WireframeStagingService extends Service {
     const themeId =
       this.wireframePublishTarget.outletOwner(outletName).themeId ??
       this.wireframePublishTarget.defaultThemeId;
+    if (themeId == null) {
+      return this.#gitActionError(
+        new Error("No theme owns this outlet"),
+        "wireframe.outlet.export_failed"
+      );
+    }
     try {
       await this.wireframeLiveLayout.exportOutlet(themeId, outletName, {
         useDraft: this.wireframeMutationEngine.isOutletEdited(outletName),
@@ -452,11 +505,15 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async createCustomizationComponent(): Promise<GitActionResult> {
+    const themeId = this.wireframePublishTarget.activeThemeId;
+    if (themeId == null) {
+      return {
+        error: i18n("wireframe.outlet.create_component_failed"),
+      };
+    }
     try {
       const { theme_id } =
-        await this.wireframeLiveLayout.createCustomizationComponent(
-          this.wireframePublishTarget.activeThemeId
-        );
+        await this.wireframeLiveLayout.createCustomizationComponent(themeId);
       return { themeId: theme_id };
     } catch (error) {
       return {
@@ -475,10 +532,13 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async duplicateForEditing(): Promise<GitActionResult> {
+    const themeId = this.wireframePublishTarget.activeThemeId;
+    if (themeId == null) {
+      return { error: i18n("wireframe.outlet.duplicate_failed") };
+    }
     try {
-      const { theme_id } = await this.wireframeLiveLayout.duplicateTheme(
-        this.wireframePublishTarget.activeThemeId
-      );
+      const { theme_id } =
+        await this.wireframeLiveLayout.duplicateTheme(themeId);
       return { themeId: theme_id };
     } catch (error) {
       return {
@@ -491,6 +551,8 @@ export default class WireframeStagingService extends Service {
    * Whether one outlet's current layout differs from the state Save draft would
    * have persisted: its last saved draft when one exists, otherwise the published
    * (underlying-layer) layout.
+   *
+   * @param outletName - Outlet whose current and persisted states should be compared.
    */
   #outletHasUnsavedDraftEdits(outletName: string): boolean {
     const current = this.#serializeBaseline(
@@ -510,6 +572,8 @@ export default class WireframeStagingService extends Service {
    * Canonical serialization of a resolved layout for baseline comparison — the
    * same shape a draft/publish would persist, so two layouts that would save
    * identically compare equal regardless of in-memory identity (`__stableKey`).
+   *
+   * @param layout - Resolved layout to serialize for comparison.
    */
   #serializeBaseline(layout: LayoutEntry[] | null): string {
     return JSON.stringify(serializeLayoutForSave(layout ?? []));
@@ -520,6 +584,8 @@ export default class WireframeStagingService extends Service {
    * its arg snapshots and edited flags WITHOUT rolling the layout back (the
    * published draft stays on the canvas). Unlike `discardOutlet`, nothing
    * reverts; this just reconciles "no unsaved changes" for that outlet.
+   *
+   * @param outletName - Published outlet whose edit bookkeeping should clear.
    */
   #clearOutletEditState(outletName: string): void {
     this.wireframeMutationEngine.clearOutletEditState(outletName);
@@ -532,6 +598,8 @@ export default class WireframeStagingService extends Service {
    * runs the conflict prompt for any stale-version 409, drops undo/redo history
    * once nothing is left edited, and returns a banner message for the remaining
    * (non-conflict) errors.
+   *
+   * @param result - Per-outlet successes and failures returned by publish.
    */
   async #processPublishResult(result: PublishResult): Promise<string | null> {
     for (const saved of result.saved) {
@@ -566,7 +634,7 @@ export default class WireframeStagingService extends Service {
     const result = await this.modal.show(ConflictModal, {
       model: { outlet: conflict.outlet, publishedAt: conflict.publishedAt },
     });
-    if (result?.choice !== "overwrite") {
+    if (result?.choice !== "overwrite" || !conflict.currentVersion) {
       return;
     }
     const ok = await this.wireframeLiveLayout.overwriteOutlet(
@@ -601,8 +669,14 @@ export default class WireframeStagingService extends Service {
     return error?.message || error?.name || String(error);
   }
 
-  // Pulls the server's error message out of a failed git-action request, falling
-  // back to a generic localized string.
+  /**
+   * Extracts a server message from a failed Git action, falling back to a
+   * localized generic message.
+   *
+   * @param error - Rejected request details returned by the Git action.
+   * @param fallbackKey - Translation key used when the response has no errors.
+   * @returns The message suitable for the editor error banner.
+   */
   #gitActionError(error: AjaxError, fallbackKey: string): string {
     const messages = error?.jqXHR?.responseJSON?.errors;
     return messages?.length ? messages.join(", ") : i18n(fallbackKey);
@@ -656,13 +730,7 @@ export default class WireframeStagingService extends Service {
       // up during editing.
       const draftLayout = normalizeImplicitChildren(
         wrapAsOutletRoot(layout ? cloneLayoutForDraft(layout) : []),
-        // `normalizeImplicitChildren` types its lookup ref as the loose
-        // `string | Function`; the layout query narrows it to the block-ref
-        // union. The runtime value is always a real block ref.
-        (ref) =>
-          this.wireframeLayoutQuery.lookupBlockMetadata(
-            ref as LayoutEntry["block"]
-          )
+        (ref) => this.wireframeLayoutQuery.lookupBlockMetadata(ref)
       );
       _setLayoutLayer(
         outletName,
@@ -703,6 +771,8 @@ export default class WireframeStagingService extends Service {
    * unpublishable parent. A no-op (and clears the resolving flag) when the theme
    * is already publishable or has no companion. Generation-guarded so a late
    * lookup never writes into a new session.
+   *
+   * @param generation - Session generation captured before the async lookup.
    */
   async #resolveCompanionTarget(generation: number): Promise<void> {
     const target = this.wireframePublishTarget.activeThemeTarget;
@@ -710,9 +780,7 @@ export default class WireframeStagingService extends Service {
       this.publishTargetResolving = false;
       return;
     }
-    const companionId = await this.wireframeDrafts.companionId(
-      this.wireframePublishTarget.activeThemeId
-    );
+    const companionId = await this.wireframeDrafts.companionId(target.themeId);
     if (generation !== this.#generation || !this.wireframeEditMode.active) {
       return;
     }
@@ -790,17 +858,13 @@ export default class WireframeStagingService extends Service {
    * the live clone, so a later discard reverts to the published layout, not the
    * draft.
    *
-   * @param layout - the persisted draft layout.
+   * @param outlet - Outlet receiving the persisted draft.
+   * @param layout - Persisted draft layout to apply.
    */
   #applyDraftToOutlet(outlet: string, layout: LayoutEntry[]): void {
     const draftLayout = normalizeImplicitChildren(
       wrapAsOutletRoot(cloneLayoutForDraft(layout ?? [])),
-      // The runtime lookup ref is always a real block ref; the loose
-      // `string | Function` from the callback contract is narrowed here.
-      (ref) =>
-        this.wireframeLayoutQuery.lookupBlockMetadata(
-          ref as LayoutEntry["block"]
-        )
+      (ref) => this.wireframeLayoutQuery.lookupBlockMetadata(ref)
     );
     _setLayoutLayer(
       outlet,
@@ -825,6 +889,8 @@ export default class WireframeStagingService extends Service {
    * Whether an outlet is untouched since `beginSession()` — safe to overlay a
    * draft onto. Conservative: any committed edit, pending arg flush, or open
    * inline edit anywhere blocks re-seeding so live work is never clobbered.
+   *
+   * @param outlet - Outlet whose in-session edit state should be checked.
    */
   #isOutletPristineSinceEnter(outlet: string): boolean {
     return (
@@ -848,6 +914,9 @@ export default class WireframeStagingService extends Service {
         return;
       }
       const item = this.#staleDraftQueue.shift();
+      if (!item) {
+        break;
+      }
       const result = await this.modal.show(StaleDraftModal, {
         model: { outlet: item.outlet },
       });

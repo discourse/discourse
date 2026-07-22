@@ -14,9 +14,9 @@ import {
   serializeEntryForSave,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { inferSchemaFromValues } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
-import type WireframeEditMode from "./wireframe-edit-mode";
-import type WireframeLayoutQuery from "./wireframe-layout-query";
-import type WireframeLayoutSignal from "./wireframe-layout-signal";
+import type WireframeEditModeService from "./wireframe-edit-mode";
+import type WireframeLayoutQueryService from "./wireframe-layout-query";
+import type WireframeLayoutSignalService from "./wireframe-layout-signal";
 
 /**
  * A `LayoutEntry` widened with the runtime-only fields the permissive-mode
@@ -25,7 +25,9 @@ import type WireframeLayoutSignal from "./wireframe-layout-signal";
  * on the shared `LayoutEntry`. They mirror the soft-failure shape the
  * validation layer writes.
  */
-interface ValidatedEntry extends LayoutEntry {
+// TODO(devxp-typescript-pending): use the core resolved-entry type once it
+// includes the runtime validation stamps produced by permissive rendering.
+type ValidatedEntry = LayoutEntry & {
   /** The failure category recognised by the ghost-rendering path. */
   __failureType?: string;
 
@@ -34,6 +36,21 @@ interface ValidatedEntry extends LayoutEntry {
 
   /** The structured, accumulated failure details for per-field display. */
   __failureDetails?: ValidationErrorDetails[];
+};
+
+/**
+ * Views a resolved layout entry through the permissive validation stamps that
+ * core attaches at runtime.
+ *
+ * @param entry - Resolved entry that may carry validation stamps.
+ * @returns The same entry with the runtime validation fields exposed.
+ */
+function validatedEntry(
+  entry: LayoutEntry | undefined
+): ValidatedEntry | undefined {
+  // TODO(devxp-typescript-pending): remove this cast once core's resolved-entry
+  // type includes the permissive validation stamps attached at runtime.
+  return entry as ValidatedEntry | undefined;
 }
 
 /**
@@ -99,21 +116,31 @@ export interface SelectedBlockData {
  * and the selected block is last.
  */
 export interface BlockAncestrySegment {
+  /** Composite key of the block, or `null` for the outlet segment. */
   key: string | null;
+  /** Registered block name, or `null` for the outlet segment. */
   blockName: string | null;
+  /** Human-readable label shown in the breadcrumb. */
   displayName: string;
+  /** Whether this segment represents the outlet boundary. */
   isOutlet: boolean;
+  /** Name of the outlet containing this ancestry path. */
   outletName: string | null;
 }
 
 /** A `selectBlock` pre-change hook, fired with the outgoing/incoming keys. */
 type BeforeChangeHook = (change: {
+  /** Composite key that will become the primary selection. */
   nextKey: string | null;
+  /** Composite key leaving the primary selection. */
   prevKey: string | null;
 }) => void;
 
 /** A `selectBlock` post-change hook, fired with the new primary key. */
-type AfterChangeHook = (change: { key: string | null }) => void;
+type AfterChangeHook = (change: {
+  /** Composite key of the new primary selection. */
+  key: string | null;
+}) => void;
 
 /**
  * Owns the editor's block-selection concern: the primary selection, the
@@ -129,9 +156,14 @@ type AfterChangeHook = (change: { key: string | null }) => void;
  * layout-query service (both downward, dependency-free) — never the orchestrator.
  */
 export default class WireframeSelectionService extends Service {
-  @service declare wireframeLayoutSignal: WireframeLayoutSignal;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service declare wireframeEditMode: WireframeEditMode;
+  /** Invalidates selection-derived layout state after structural changes. */
+  @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+
+  /** Resolves live entries, parents, outlets, and metadata. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
+  /** Gates document-level deselection to active editor sessions. */
+  @service declare wireframeEditMode: WireframeEditModeService;
 
   /**
    * The PRIMARY (anchor) selected block key — the block whose form the
@@ -191,7 +223,8 @@ export default class WireframeSelectionService extends Service {
    */
   #selectionMousedownTarget: EventTarget | null = null;
 
-  #onCanvasMouseDown = (event: MouseEvent) => {
+  /** Records the initial target of a possible outside-click deselection. */
+  #onCanvasMouseDown = (event: MouseEvent): void => {
     this.#selectionMousedownTarget = event.target;
   };
 
@@ -202,7 +235,7 @@ export default class WireframeSelectionService extends Service {
    * an editor session. Guards on `isDestroyed`/`isDestroying` (plain instance
    * flags, no service lookup) so a leaked listener firing after teardown bails.
    */
-  #onCanvasMouseUp = (event: MouseEvent) => {
+  #onCanvasMouseUp = (event: MouseEvent): void => {
     const downTarget = this.#selectionMousedownTarget;
     this.#selectionMousedownTarget = null;
     if (this.isDestroyed || this.isDestroying) {
@@ -220,6 +253,11 @@ export default class WireframeSelectionService extends Service {
     this.selectBlock(null);
   };
 
+  /**
+   * Creates the service and installs document-level selection listeners.
+   *
+   * @param owner - Ember owner used to initialize the service.
+   */
   constructor(owner: Owner) {
     super(owner);
     // Document-level so a click anywhere off the editor surface can deselect.
@@ -229,7 +267,8 @@ export default class WireframeSelectionService extends Service {
     document.addEventListener("mouseup", this.#onCanvasMouseUp);
   }
 
-  willDestroy() {
+  /** Removes document-level selection listeners during teardown. */
+  willDestroy(): void {
     super.willDestroy();
     document.removeEventListener("mousedown", this.#onCanvasMouseDown);
     document.removeEventListener("mouseup", this.#onCanvasMouseUp);
@@ -243,7 +282,9 @@ export default class WireframeSelectionService extends Service {
    * the whole-outlet warning list against the selected block's name.
    */
   get selectedBlockFailure(): {
+    /** Failure category recognised by the ghost-rendering path. */
     failureType: string;
+    /** Human-readable validation failure. */
     failureReason: string;
   } | null {
     // Republishes bump `structuralVersion`; in-place stamp clears
@@ -255,7 +296,7 @@ export default class WireframeSelectionService extends Service {
       return null;
     }
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(key);
-    const entry = located?.entry as ValidatedEntry | undefined;
+    const entry = validatedEntry(located?.entry);
     if (!entry?.__failureType) {
       return null;
     }
@@ -277,7 +318,7 @@ export default class WireframeSelectionService extends Service {
    * specific input).
    *
    * Drives FormKit's `addError` sync in the inspector — see
-   * `inspector-form.gjs`.
+   * `inspector-form.gts`.
    */
   get selectedBlockFieldErrors(): Record<string, ValidationErrorDetails[]> {
     void this.wireframeLayoutSignal.version;
@@ -285,8 +326,9 @@ export default class WireframeSelectionService extends Service {
     if (!key) {
       return {};
     }
-    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(key)
-      ?.entry as ValidatedEntry | undefined;
+    const entry = validatedEntry(
+      this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
+    );
     const list = entry?.__failureDetails ?? [];
     const byField: Record<string, ValidationErrorDetails[]> = {};
     for (const d of list) {
@@ -310,8 +352,9 @@ export default class WireframeSelectionService extends Service {
     if (!key) {
       return [];
     }
-    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(key)
-      ?.entry as ValidatedEntry | undefined;
+    const entry = validatedEntry(
+      this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry
+    );
     return (entry?.__failureDetails ?? []).filter((d) => !d?.field);
   }
 
@@ -355,6 +398,9 @@ export default class WireframeSelectionService extends Service {
     const layout = this.wireframeLayoutQuery.readResolvedLayout(
       located.outletName
     );
+    if (!layout) {
+      return false;
+    }
     const sibs = findEntrySiblings(layout, key);
     return sibs ? idx < sibs.siblings.length - 1 : false;
   }
@@ -518,13 +564,18 @@ export default class WireframeSelectionService extends Service {
    * (with `{ key }`) once the selection has settled.
    *
    * @param data - `{ key, ... }` (rest hydrated from the layout).
+   * @param options - Controls whether selecting a new primary preserves the
+   *   surrounding multi-selection.
    */
   selectBlock(
     data: SelectedBlockData | null,
     {
       preserveMultiSelection = false,
-    }: { preserveMultiSelection?: boolean } = {}
-  ) {
+    }: {
+      /** Whether existing multi-selection members should remain selected. */
+      preserveMultiSelection?: boolean;
+    } = {}
+  ): void {
     const nextKey = data?.key ?? null;
     const prevKey = this.selectedBlockKey;
 
@@ -643,7 +694,7 @@ export default class WireframeSelectionService extends Service {
    *
    * @param data - `{ key, ... }` for the toggled block.
    */
-  toggleBlockSelection(data: SelectedBlockData) {
+  toggleBlockSelection(data: SelectedBlockData): void {
     const key = data?.key;
     if (key == null) {
       return;
@@ -671,7 +722,7 @@ export default class WireframeSelectionService extends Service {
    * @param keys - The block keys to select.
    * @param anchorData - `{ key, ... }` for the anchor (clicked) block.
    */
-  setSelectionRange(keys: string[], anchorData: SelectedBlockData) {
+  setSelectionRange(keys: string[], anchorData: SelectedBlockData): void {
     this.#selectedKeys.clear();
     for (const key of keys) {
       this.#selectedKeys.add(key);
@@ -683,8 +734,10 @@ export default class WireframeSelectionService extends Service {
    * Selects an outlet by selecting its implicit root `layout` block. The
    * selection then hydrates through the normal block path, so the inspector
    * surfaces the layout form (mode / gap / grid) for the outlet.
+   *
+   * @param outletName - Outlet whose implicit root should be selected.
    */
-  selectOutlet(outletName: string) {
+  selectOutlet(outletName: string): void {
     const key = this.wireframeLayoutQuery.outletRootKey(outletName);
     if (key) {
       this.selectBlock({ key });
@@ -697,7 +750,7 @@ export default class WireframeSelectionService extends Service {
    * A one-click step up the tree that mirrors the breadcrumb. No-op when nothing
    * is selected or the selection has no ancestor above it (the outlet root).
    */
-  selectParent() {
+  selectParent(): void {
     // Ancestry is [outlet, ...ancestors, selectedBlock]; the parent is the entry
     // immediately before the selected block. Fewer than two entries means the
     // selection is already the top of its outlet, so there's nowhere to go up.
@@ -720,8 +773,10 @@ export default class WireframeSelectionService extends Service {
    * `selectedBlockKey` / `selectedBlockData`. If the key no longer exists,
    * clears the selection. Used after structural undo / redo to follow the
    * selection across layout snapshots.
+   *
+   * @param blockKey - Composite key to restore, or `null` to clear selection.
    */
-  restoreSelection(blockKey: string | null) {
+  restoreSelection(blockKey: string | null): void {
     if (!blockKey) {
       this.selectBlock(null);
       return;
@@ -752,7 +807,7 @@ export default class WireframeSelectionService extends Service {
    * meaningless once the session is ending, and routing exit through
    * `selectBlock(null)` would fire them.
    */
-  reset() {
+  reset(): void {
     this.selectedBlockKey = null;
     this.selectedBlockData = null;
     this.#selectedKeys.clear();
@@ -763,6 +818,8 @@ export default class WireframeSelectionService extends Service {
    * deselect — block chrome, the editor shell, the conditions floating panel,
    * or any Float-Kit portal (menus / modals / tooltips mount at body level,
    * outside the shell, but are conceptually part of the editor).
+   *
+   * @param target - Browser event target to test against editor surfaces.
    */
   isInsideAllowedScope(target: EventTarget | null): boolean {
     if (!(target instanceof Element)) {
@@ -781,16 +838,20 @@ export default class WireframeSelectionService extends Service {
   /**
    * Registers a callback fired at the start of every `selectBlock`, before
    * the selection mutates. Receives `{ nextKey, prevKey }`.
+   *
+   * @param fn - Hook invoked before each primary selection change.
    */
-  registerBeforeChange(fn: BeforeChangeHook) {
+  registerBeforeChange(fn: BeforeChangeHook): void {
     this.#beforeChange.push(fn);
   }
 
   /**
    * Registers a callback fired at the end of every `selectBlock`, after the
    * selection has settled. Receives `{ key }` (the new primary key).
+   *
+   * @param fn - Hook invoked after each primary selection change.
    */
-  registerAfterChange(fn: AfterChangeHook) {
+  registerAfterChange(fn: AfterChangeHook): void {
     this.#afterChange.push(fn);
   }
 
@@ -826,6 +887,8 @@ export default class WireframeSelectionService extends Service {
    * the key against the current layout. A no-op when the caller already
    * passed full data (block-chrome's own click handler does, since it has
    * the entry in hand).
+   *
+   * @param data - Partial selection payload to hydrate from the live layout.
    */
   #hydrateSelectionByKey(data: SelectedBlockData): SelectedBlockData {
     if (!data?.key) {
@@ -866,8 +929,10 @@ export default class WireframeSelectionService extends Service {
    * still pending we leave `data.args` as-is — the inspector renders against
    * the snapshot the caller passed in, and the next mutation flush picks up
    * the live binding.
+   *
+   * @param data - Selection payload whose arguments should be rebound.
    */
-  #bindLiveArgs(data: SelectedBlockData) {
+  #bindLiveArgs(data: SelectedBlockData): void {
     if (!data?.key) {
       return;
     }
@@ -896,6 +961,8 @@ export default class WireframeSelectionService extends Service {
    * blocks passed by class to `api.renderBlocks`) and a registered name
    * string (everything that's been through serialisation, including
    * theme-shipped layouts and the editor's own draft layer).
+   *
+   * @param key - Composite key of the entry whose parent schema is needed.
    */
   #resolveParentChildArgsSchema(
     key: string | null
@@ -923,6 +990,8 @@ export default class WireframeSelectionService extends Service {
    * Done at selection time, not in the inspector, so the schema is a stable
    * reference across the keystroke session — keeping the inspector's form fields
    * from remounting on every edit.
+   *
+   * @param data - Selection payload whose metadata may need an inferred schema.
    */
   #withInferredMetadata(data: SelectedBlockData): SelectedBlockData {
     const declared = data.metadata?.args;

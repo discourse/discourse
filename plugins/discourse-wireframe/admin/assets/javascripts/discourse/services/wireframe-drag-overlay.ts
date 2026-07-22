@@ -1,22 +1,20 @@
 import { trackedObject } from "@ember/reactive/collections";
 import Service from "@ember/service";
+import type { DropDispatch } from "discourse/plugins/discourse-wireframe/discourse/lib/drop-dispatch";
 
-/**
- * A layout mutation to run at drop time, executed by the orchestrator-registered
- * drop dispatcher (see `registerDispatcher`).
- */
-export interface DropDispatch {
-  action: string;
-  args: object;
-}
+export type { DropDispatch } from "discourse/plugins/discourse-wireframe/discourse/lib/drop-dispatch";
 
 /**
  * Viewport-relative pixel rect for the slot-insert indicator.
  */
 export interface OverlayGeometry {
+  /** Vertical viewport position in pixels. */
   top: number;
+  /** Horizontal viewport position in pixels. */
   left: number;
+  /** Indicator width in pixels. */
   width: number;
+  /** Indicator height in pixels. */
   height: number;
 }
 
@@ -25,12 +23,15 @@ export interface OverlayGeometry {
  * `claimSlotInsert`.
  */
 export interface SlotDropDescriptor {
+  /** Viewport rectangle occupied by the preview. */
   geometry: OverlayGeometry;
-  /** insert / inside / replace / swap / shift / occupy. */
+  /** Drop operation visualized by the preview. */
   kind: string;
+  /** Whether releasing the drag can execute this drop. */
   validity: "valid" | "invalid";
+  /** Optional label rendered inside the preview. */
   label: string | null;
-  /** `null` when the drop is invalid. */
+  /** Mutation dispatched on release, or `null` for an invalid drop. */
   dispatch: DropDispatch | null;
 }
 
@@ -38,7 +39,9 @@ export interface SlotDropDescriptor {
  * Identity of an image arg whose overlay is claiming the slot.
  */
 export interface ImageArgClaim {
+  /** Composite key of the block owning the image argument. */
   blockKey: string;
+  /** Name of the image argument claiming the overlay. */
   argName: string;
   /** A full-bleed background marker vs a foreground slot. */
   isPassive: boolean;
@@ -50,47 +53,48 @@ export interface ImageArgClaim {
  * The single active overlay. `kind` is the discriminator; `kind: null` is an
  * own-but-blank claim (the deepest target owns the slot but shows nothing).
  */
-type ActiveDragOverlay =
-  | {
-      kind: "slot-insert";
-      seq: number;
-      geometry: OverlayGeometry;
-      previewKind: string;
-      validity: "valid" | "invalid";
-      label: string | null;
-      dispatch: DropDispatch | null;
-    }
-  | {
-      kind: "image-arg";
-      seq: number;
-      blockKey: string;
-      argName: string;
-      isPassive: boolean;
-      variant: "light" | "dark";
-    }
-  | { kind: null; seq: number };
-
-/**
- * The overlay payload handed to `#claim`, i.e. an `ActiveDragOverlay` before its
- * `seq` is stamped on. `null` becomes an own-but-blank claim.
- */
 type OverlayClaim =
   | {
+      /** Identifies a structural slot-insert preview. */
       kind: "slot-insert";
+      /** Viewport rectangle occupied by the preview. */
       geometry: OverlayGeometry;
+      /** Drop operation visualized by the preview. */
       previewKind: string;
+      /** Whether releasing the drag can execute this drop. */
       validity: "valid" | "invalid";
+      /** Optional label rendered inside the preview. */
       label: string | null;
+      /** Mutation dispatched on release, or `null` for an invalid drop. */
       dispatch: DropDispatch | null;
     }
   | {
+      /** Identifies an image-argument preview. */
       kind: "image-arg";
+      /** Composite key of the block owning the image argument. */
       blockKey: string;
+      /** Name of the image argument claiming the overlay. */
       argName: string;
+      /** Whether the claim represents a full-bleed background image. */
       isPassive: boolean;
+      /** Image variant targeted by the drop. */
       variant: "light" | "dark";
     }
   | null;
+
+/**
+ * Active overlay after the monotonic claim sequence has been attached.
+ */
+type ActiveDragOverlay = (
+  | Exclude<OverlayClaim, null>
+  | {
+      /** Marks the absence of a current overlay claim. */
+      kind: null;
+    }
+) & {
+  /** Sequence token that prevents stale release callbacks clearing new claims. */
+  seq: number;
+};
 
 /**
  * The frozen, read-only projection of the active slot-insert that `slotPreview`
@@ -98,9 +102,13 @@ type OverlayClaim =
  * cannot mutate the coordinator's state.
  */
 export interface SlotPreview {
+  /** Drop operation visualized by the preview. */
   previewKind: string;
+  /** Whether releasing the drag can execute this drop. */
   validity: "valid" | "invalid";
+  /** Optional label rendered inside the preview. */
   label: string | null;
+  /** Frozen viewport rectangle occupied by the preview. */
   geometry: OverlayGeometry;
 }
 
@@ -136,7 +144,10 @@ export default class WireframeDragOverlay extends Service {
    * only through `slotPreview` (a frozen copy) and `isActiveImageArg` (a query).
    * A `trackedObject` because `@tracked` cannot decorate a `#` field.
    */
-  #state = trackedObject<{ active: ActiveDragOverlay | null }>({
+  #state = trackedObject<{
+    /** Current overlay claim, or `null` while no target owns the slot. */
+    active: ActiveDragOverlay | null;
+  }>({
     active: null,
   });
 
@@ -186,6 +197,7 @@ export default class WireframeDragOverlay extends Service {
    * region) becomes an own-but-blank claim, so the deepest target still owns
    * the slot and a stale ancestor preview can't show.
    *
+   * @param descriptor - Drop descriptor resolved for the deepest target.
    * @returns Release callback for the matching leave.
    */
   claimSlotInsert(descriptor: SlotDropDescriptor | null): () => void {
@@ -211,6 +223,7 @@ export default class WireframeDragOverlay extends Service {
    * re-claim). Identified by `(blockKey, argName, isPassive)` so the owning
    * overlay can match it via `isActiveImageArg`.
    *
+   * @param claim - Identity and variant of the image argument claiming the slot.
    * @returns Release callback for the matching leave.
    */
   claimImageArg({
@@ -234,6 +247,8 @@ export default class WireframeDragOverlay extends Service {
    * token, so the dark popover's same-identity re-claim keeps the tint on). Pass
    * `variant` to additionally require a specific variant — e.g. ask "is the dark
    * variant of this arg active?" without reaching into the raw overlay object.
+   *
+   * @param claim - Image-argument identity and optional variant to match.
    */
   isActiveImageArg({
     blockKey,
@@ -241,9 +256,13 @@ export default class WireframeDragOverlay extends Service {
     isPassive,
     variant,
   }: {
+    /** Composite key of the block owning the image argument. */
     blockKey: string;
+    /** Name of the image argument claiming the overlay. */
     argName: string;
+    /** Whether the claim represents a full-bleed background image. */
     isPassive: boolean;
+    /** Optional image variant that must be active. */
     variant?: "light" | "dark";
   }): boolean {
     const a = this.#state.active;
@@ -271,6 +290,8 @@ export default class WireframeDragOverlay extends Service {
    * return a boolean: `completeExternalImageDrop` branches on the result, then
    * reads the selection the mutation set, so an async dispatcher would break
    * that contract.
+   *
+   * @param fn - Synchronous function that executes a drop mutation.
    */
   registerDispatcher(fn: (payload: DropDispatch) => boolean): void {
     this.#dispatcher = fn;
@@ -299,6 +320,9 @@ export default class WireframeDragOverlay extends Service {
    * (mirroring `registerDragAndDropTarget` and friends) that clears the slot
    * only if this claim still holds it — so a stale leave from a superseded
    * claim is a safe no-op. Idempotent.
+   *
+   * @param overlay - New visible claim, or `null` for an own-but-blank claim.
+   * @returns Release callback scoped to this claim's sequence token.
    */
   #claim(overlay: OverlayClaim): () => void {
     const seq = ++this.#seq;

@@ -3,7 +3,7 @@ import type {
   BlockThumbnail,
 } from "discourse/blocks/types";
 import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
-import type Blocks from "discourse/services/blocks";
+import type BlocksService from "discourse/services/blocks";
 
 /**
  * A single row of the block palette, as returned by {@link buildBlockPalette}.
@@ -62,7 +62,9 @@ export interface BlockPaletteEntry {
  * @param blocksService - The `blocks` service (`@service blocks`).
  * @returns The pickable palette rows, sorted by display name.
  */
-export function buildBlockPalette(blocksService: Blocks): BlockPaletteEntry[] {
+export function buildBlockPalette(
+  blocksService: BlocksService
+): BlockPaletteEntry[] {
   return blocksService
     .listBlocksWithMetadata()
     .map(({ name, component, metadata }) => {

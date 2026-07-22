@@ -1,21 +1,36 @@
-import Owner, { getOwner } from "@ember/owner";
+import { type default as Owner, getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
-import type WireframeDragOverlay from "./wireframe-drag-overlay";
-import type WireframeEditMode from "./wireframe-edit-mode";
-import type WireframeMutationEngine from "./wireframe-mutation-engine";
-import type WireframeSelection from "./wireframe-selection";
+import type WireframeDragOverlayService from "./wireframe-drag-overlay";
+import type WireframeEditModeService from "./wireframe-edit-mode";
+import type WireframeMutationEngineService from "./wireframe-mutation-engine";
+import type WireframeSelectionService from "./wireframe-selection";
 
 /**
  * The image value returned to callers on a successful upload and re-used as the
  * shape written into a block's image arg.
  */
-interface ImageUploadResult {
+type ImageUploadResult = {
+  /** Canonical URL of the uploaded image. */
   url: string;
+  /** Uploaded image width in pixels, when known. */
   width?: number;
+  /** Uploaded image height in pixels, when known. */
   height?: number;
-}
+};
+
+/** Successful image payload emitted by the core Uppy upload wrapper. */
+export type ImageUploadPayload = {
+  /** Numeric upload identifier returned by the server. */
+  id: string;
+  /** Canonical URL of the uploaded image. */
+  url: string;
+  /** Uploaded image width in pixels, when known. */
+  width?: number;
+  /** Uploaded image height in pixels, when known. */
+  height?: number;
+};
 
 /**
  * Owns the editor's image-into-block-arg pipelines: the per-arg upload, OS
@@ -36,10 +51,17 @@ interface ImageUploadResult {
  * fires mid-teardown can't resolve a dependency on a dead owner.
  */
 export default class WireframeImageUploadService extends Service {
-  @service declare wireframeDragOverlay: WireframeDragOverlay;
-  @service declare wireframeMutationEngine: WireframeMutationEngine;
-  @service declare wireframeSelection: WireframeSelection;
-  @service declare wireframeEditMode: WireframeEditMode;
+  /** Owns the visual drop claim cleared after external file drops. */
+  @service declare wireframeDragOverlay: WireframeDragOverlayService;
+
+  /** Writes uploaded image values through the editor mutation path. */
+  @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
+  /** Resolves the selected block and its image arguments. */
+  @service declare wireframeSelection: WireframeSelectionService;
+
+  /** Gates document-level drag and paste handlers to active edit sessions. */
+  @service declare wireframeEditMode: WireframeEditModeService;
 
   /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
@@ -58,18 +80,27 @@ export default class WireframeImageUploadService extends Service {
    */
   #lastTouchedImageArg: string | null = null;
 
+  /** Installed window dragover handler, or `null` before setup/after teardown. */
   #handleFileDragOver: ((event: DragEvent) => void) | null = null;
 
+  /** Installed window drop handler, or `null` before setup/after teardown. */
   #handleFileDrop: ((event: DragEvent) => void) | null = null;
 
+  /** Installed document paste handler, or `null` before setup/after teardown. */
   #handleImagePaste: ((event: ClipboardEvent) => void) | null = null;
 
+  /**
+   * Creates the service and installs its browser-level input guards.
+   *
+   * @param owner - Ember owner used to initialize the service.
+   */
   constructor(owner: Owner) {
     super(owner);
     this.#installFileDragGuard();
     this.#installImagePasteListener();
   }
 
+  /** Removes browser-level listeners before the service is destroyed. */
   willDestroy(): void {
     super.willDestroy();
     this.#uninstallFileDragGuard();
@@ -98,7 +129,15 @@ export default class WireframeImageUploadService extends Service {
    */
   uploadImageForArg(
     file: File | Blob,
-    { blockKey, argName }: { blockKey: string; argName: string }
+    {
+      blockKey,
+      argName,
+    }: {
+      /** Composite key of the block receiving the image. */
+      blockKey: string;
+      /** Name of the image argument receiving the upload. */
+      argName: string;
+    }
   ): Promise<ImageUploadResult | null> {
     if (!file || !blockKey || !argName) {
       return Promise.resolve(null);
@@ -123,12 +162,7 @@ export default class WireframeImageUploadService extends Service {
       const upload = new UppyUpload(owner, {
         id: uploadId,
         type: "composer",
-        uploadDone: (result: {
-          id: string;
-          url: string;
-          width?: number;
-          height?: number;
-        }) => {
+        uploadDone: (result: ImageUploadPayload) => {
           // The upload can resolve after the editor session is torn down; bail
           // before writing so we don't resolve a dependency on a dead owner.
           if (this.isDestroyed || this.isDestroying) {
@@ -209,6 +243,10 @@ export default class WireframeImageUploadService extends Service {
    * Stages a dropped file against a block's image arg so the block's
    * `ImageArgOverlay` can upload it through its own pipeline once it mounts.
    * One-shot: `consumePendingDropFile` reads and removes it.
+   *
+   * @param blockKey - Composite key of the block receiving the file.
+   * @param argName - Image argument against which the file is staged.
+   * @param file - Dropped image file to upload after the block mounts.
    */
   stagePendingDropFile(blockKey: string, argName: string, file: File): void {
     this.#pendingDropFiles.set(JSON.stringify([blockKey, argName]), file);
@@ -217,6 +255,9 @@ export default class WireframeImageUploadService extends Service {
   /**
    * Returns and removes the file staged for a block's image arg, or `null`
    * when none was staged. Called by the arg's overlay as it sets up.
+   *
+   * @param blockKey - Composite key of the block consuming the file.
+   * @param argName - Image argument consuming the staged file.
    */
   consumePendingDropFile(blockKey: string, argName: string): File | null {
     const key = JSON.stringify([blockKey, argName]);
@@ -236,6 +277,10 @@ export default class WireframeImageUploadService extends Service {
    * image overlays and edit menu call this directly, and helpers like
    * `uploadImageForArg` build the full image-value shape before routing
    * here. Prefer those helpers when constructing a value from scratch.
+   *
+   * @param blockKey - Composite key of the block to update.
+   * @param argName - Image argument to update.
+   * @param value - Image value written to the block argument.
    */
   setImageArg(blockKey: string, argName: string, value: unknown): void {
     this.wireframeMutationEngine.setArg(blockKey, argName, value);
@@ -245,6 +290,8 @@ export default class WireframeImageUploadService extends Service {
    * Records the most recently interacted-with image arg of the selected block,
    * so a subsequent paste routes to it on a multi-image block. Called by the
    * chrome's image-arg overlay on focus / hover / click.
+   *
+   * @param argName - Image argument most recently touched by the user.
    */
   markImageArgTouched(argName: string): void {
     this.#lastTouchedImageArg = argName;
@@ -309,6 +356,7 @@ export default class WireframeImageUploadService extends Service {
     window.addEventListener("drop", this.#handleFileDrop, false);
   }
 
+  /** Removes the window drag handlers installed by `#installFileDragGuard`. */
   #uninstallFileDragGuard(): void {
     if (this.#handleFileDragOver) {
       window.removeEventListener("dragover", this.#handleFileDragOver, false);
@@ -344,6 +392,7 @@ export default class WireframeImageUploadService extends Service {
     document.addEventListener("paste", this.#handleImagePaste, true);
   }
 
+  /** Removes the document paste handler installed during construction. */
   #uninstallImagePasteListener(): void {
     if (this.#handleImagePaste) {
       document.removeEventListener("paste", this.#handleImagePaste, true);
@@ -363,6 +412,8 @@ export default class WireframeImageUploadService extends Service {
    * declared on the block) and routes the file through the shared upload helper.
    * Gates on the selected block rather than the session flag — selection is
    * cleared on exit, so a post-exit paste no-ops on the missing key.
+   *
+   * @param event - Browser paste event carrying the clipboard payload.
    */
   async #onImagePaste(event: ClipboardEvent): Promise<void> {
     const blockKey = this.wireframeSelection.selectedBlockKey;
@@ -402,6 +453,8 @@ export default class WireframeImageUploadService extends Service {
    *
    * Inputs INSIDE the editor chrome (e.g. an inspector field) are
    * also skipped — the inspector already has its own image controls.
+   *
+   * @param target - Browser event target on which the paste occurred.
    */
   #pasteTargetIsTextInput(target: EventTarget | null): boolean {
     if (!(target instanceof Element)) {
@@ -417,6 +470,8 @@ export default class WireframeImageUploadService extends Service {
    * Pulls the first image File out of a clipboard payload. Falls back
    * to `items` (where the file representation lives in some browsers
    * for image-only pastes) when `files` is empty.
+   *
+   * @param clipboardData - Clipboard payload from the browser paste event.
    */
   #pickImageFromClipboard(
     clipboardData: DataTransfer | null | undefined

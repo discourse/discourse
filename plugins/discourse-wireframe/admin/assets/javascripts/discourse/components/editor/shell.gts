@@ -4,10 +4,9 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { type ComponentLike } from "@glint/template";
 import bodyClass from "discourse/helpers/body-class";
-import type KeyValueStore from "discourse/lib/key-value-store";
 import type DragAndDropService from "discourse/services/drag-and-drop";
+import type KeyValueStoreService from "discourse/services/key-value-store";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -18,7 +17,7 @@ import ActivityBar from "discourse/plugins/discourse-wireframe/discourse/compone
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
 import PublishTargetStatus from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/publish-target-status";
 import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
-import ViewDrawerUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
+import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
 import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-floating-panel";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
 import InplaceTextController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-text-controller";
@@ -32,33 +31,36 @@ import type WireframeDragDwellService from "discourse/plugins/discourse-wirefram
 import type WireframeDragSessionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
 import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
-import type WireframeRail from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
+import type WireframeRailService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
 import type WireframeSimulationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-simulation";
 import type WireframeStagingService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-staging";
 import type WireframeWorkspaceService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-workspace";
 
-const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
+// TODO(devxp-typescript-pending): use the core service type directly once it
+// declares the `KeyValueStore` methods installed dynamically by its proxy loop.
+interface ProxiedKeyValueStoreService extends KeyValueStoreService {
+  /** Reads and parses a value stored under the supplied key. */
+  getObject<Value = unknown>(
+    /** Key within the service's global namespace. */
+    key: string
+  ): Value | null | undefined;
+  /** Serializes and stores a value under the supplied key. */
+  setObject<Value>(
+    /** Storage key and JSON-serializable value to persist. */
+    options: {
+      /** Key within the service's global namespace. */
+      key: string;
+      /** JSON-serializable value written for the key. */
+      value: Value;
+    }
+  ): void;
+}
 
-// TODO(devxp-typescript-pending): drop this cast once ViewDrawer is authored in
-// .gts with a real Signature, then import it directly. As an untyped template-only
-// .gjs it exposes no arg types today, so its invocation is typed here at the boundary.
-const ViewDrawer = ViewDrawerUntyped as unknown as ComponentLike<{
-  Args: {
-    isOpen: boolean;
-    dimNonEditable: boolean;
-    onToggleDim: () => void;
-    onClose: () => void;
-  };
-  Element: HTMLDivElement;
-}>;
+const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
 
 // Persisted under core's global key-value store; the `wireframe_` prefix
 // namespaces our keys within its shared `discourse_` bucket to avoid collisions.
 const DIM_NON_EDITABLE_KEY = "wireframe_dimNonEditable";
-
-interface EditorShellSignature {
-  Args: Record<string, never>;
-}
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).
@@ -68,22 +70,22 @@ interface EditorShellSignature {
  * underneath handles all clicks; only block-chrome wrappers and the panels
  * receive editor input.
  */
-export default class EditorShell extends Component<EditorShellSignature> {
+export default class EditorShell extends Component {
   @service declare dragAndDrop: DragAndDropService;
   @service declare wireframeWorkspace: WireframeWorkspaceService;
   @service declare wireframeDragSession: WireframeDragSessionService;
   @service declare wireframeDragDwell: WireframeDragDwellService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
   @service declare wireframeEditMode: WireframeEditModeService;
-  @service declare wireframeRail: WireframeRail;
+  @service declare wireframeRail: WireframeRailService;
   @service declare wireframeStaging: WireframeStagingService;
   @service declare wireframeSimulation: WireframeSimulationService;
-  @service declare keyValueStore: KeyValueStore;
+  @service declare keyValueStore: ProxiedKeyValueStoreService;
 
   @tracked dimNonEditable: boolean;
   @tracked viewSettingsOpen = false;
 
-  constructor(owner: Owner, args: EditorShellSignature["Args"]) {
+  constructor(owner: Owner, args: Component["args"]) {
     super(owner, args);
     // Hydrate persisted prefs in the constructor so `keyValueStore` is resolved.
     // Right-rail collapse + both rail widths live on the `wireframeRail` service.

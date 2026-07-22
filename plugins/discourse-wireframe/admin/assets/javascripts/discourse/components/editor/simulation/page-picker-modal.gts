@@ -10,13 +10,24 @@ import { i18n } from "discourse-i18n";
 // real Signature, then import it directly. Untyped .gjs today gives Glint no
 // arg/block/attr types, so we describe just the surface this modal uses.
 const DModal = DModalUntyped as unknown as ComponentLike<{
-  Args: { title?: string; closeModal?: () => void };
+  /** Modal title and close action. */
+  Args: {
+    /** Pre-translated modal title. */
+    title?: string;
+    /** Closes the modal. */
+    closeModal?: () => void;
+  };
+  /** Root modal element. */
   Element: HTMLDivElement;
-  Blocks: { body: [] };
+  /** Blocks yielded by the modal. */
+  Blocks: {
+    /** Modal body content. */
+    body: [];
+  };
 }>;
 
 /** A single navigable destination shown in the page picker. */
-interface TargetPage {
+type TargetPage = {
   /** Stable identifier for the row. */
   key: string;
 
@@ -25,12 +36,23 @@ interface TargetPage {
 
   /** Suffix appended to the `wireframe.page_picker.pages.` i18n key. */
   labelKey: string;
-}
+};
+
+type TargetTheme = {
+  /** Numeric theme identifier. */
+  id: number;
+  /** Human-readable theme name. */
+  name: string;
+};
 
 interface PagePickerModalSignature {
+  /** Page-picker model and modal lifecycle callback. */
   Args: {
     /** Modal payload carrying the theme the editor will bind to. */
-    model?: { theme?: { id: number; name: string } };
+    model?: {
+      /** Theme selected on the originating admin page. */
+      theme?: TargetTheme;
+    };
 
     /** Closes the modal; supplied by the modal service. */
     closeModal: () => void;
@@ -56,7 +78,8 @@ const TARGET_PAGES: TargetPage[] = [
 ];
 
 export default class PagePickerModal extends Component<PagePickerModalSignature> {
-  get theme() {
+  /** Theme selected on the originating admin page. */
+  get theme(): TargetTheme | undefined {
     return this.args.model?.theme;
   }
 
@@ -66,7 +89,7 @@ export default class PagePickerModal extends Component<PagePickerModalSignature>
    * editor mode against the right theme on arrival.
    */
   @action
-  navigate(page: TargetPage) {
+  navigate(page: TargetPage): void {
     if (!this.theme?.id) {
       return;
     }

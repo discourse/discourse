@@ -11,18 +11,25 @@
 // unchanged `resolveLinearDrop`. A single band reduces to exactly that call, so
 // unwrapped containers behave identically to before.
 
-import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
+import {
+  resolveLinearDrop,
+  type Segment,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
 
 /**
  * A child's bounding box (viewport coordinates), as returned by
  * `getBoundingClientRect()`.
  */
-export interface Rect {
+export type Rect = {
+  /** Left edge in viewport coordinates. */
   left: number;
+  /** Right edge in viewport coordinates. */
   right: number;
+  /** Top edge in viewport coordinates. */
   top: number;
+  /** Bottom edge in viewport coordinates. */
   bottom: number;
-}
+};
 
 /**
  * Where to paint the boundary tick: `x` is the tick's horizontal center and
@@ -30,41 +37,69 @@ export interface Rect {
  * the line the cursor is on rather than the whole container. Present only for
  * `gap` results in a genuinely wrapped (multi-band) container.
  */
-export interface Indicator {
+export type Indicator = {
+  /** Horizontal center of the boundary tick. */
   x: number;
+  /** Top of the target visual band. */
   top: number;
+  /** Bottom of the target visual band. */
   bottom: number;
-}
+};
+
+/** A boundary landing in a wrapping flow. */
+type WrappingFlowGapDrop = {
+  /** Identifies a boundary landing. */
+  kind: "gap";
+  /** Boundary index in the flat child list. */
+  gap: number;
+  /** Tick geometry when the container has multiple visual bands. */
+  indicator?: Indicator;
+};
+
+/** A landing in the middle third of a wrapping-flow child. */
+type WrappingFlowMiddleDrop = {
+  /** Identifies a child-middle landing. */
+  kind: "middle";
+  /** Index in the flat child list. */
+  index: number;
+};
 
 /**
  * The resolved landing: the SAME shape as `resolveLinearDrop`'s result, plus an
  * optional `indicator` on `gap` results (present only when the container wraps).
  */
 export type WrappingFlowDropResult =
-  | { kind: "gap"; gap: number; indicator?: Indicator }
-  | { kind: "middle"; index: number };
+  | WrappingFlowGapDrop
+  | WrappingFlowMiddleDrop;
 
 // The two rect edges that bound a child along a given axis, named as keys of
 // `Rect`, so `rect[edges.near]` / `rect[edges.far]` project onto that axis.
-interface AxisEdges {
+type AxisEdges = {
+  /** Rect edge at the start of the axis. */
   near: keyof Rect;
+  /** Rect edge at the end of the axis. */
   far: keyof Rect;
-}
+};
 
 // An axis projection: which rect edges bound the child on this axis, plus the
 // cursor's coordinate on the same axis.
-interface AxisProjection extends AxisEdges {
+type AxisProjection = AxisEdges & {
+  /** Cursor coordinate on the projected axis. */
   coord: number;
-}
+};
 
 // A visual line: the contiguous DOM-index run of children sharing a cross-axis
 // band, plus the band's cross-axis extent (`near`/`far` as numbers here).
-interface Band {
+type Band = {
+  /** Index of the band's first child in the flat list. */
   startIndex: number;
+  /** Flat child indexes belonging to the band. */
   indices: number[];
+  /** Leading edge on the cross axis. */
   near: number;
+  /** Trailing edge on the cross axis. */
   far: number;
-}
+};
 
 // Pixel slack when testing whether a child belongs to the current band. Two
 // children on the same visual line overlap heavily on the cross axis; a child
@@ -89,11 +124,22 @@ const BAND_OVERLAP_EPSILON = 1;
  * @param cursor - The cursor position.
  * @param options - The flow's main axis. `"x"` (default) is a horizontal flow
  *   that wraps into vertical lines (rows / tiles).
+ * @returns The resolved global landing and optional wrapped-band indicator.
  */
 export function resolveWrappingFlowDrop(
   rects: Rect[],
-  cursor: { x: number; y: number },
-  { mainAxis = "x" }: { mainAxis?: "x" | "y" } = {}
+  cursor: {
+    /** Cursor x-coordinate in viewport pixels. */
+    x: number;
+    /** Cursor y-coordinate in viewport pixels. */
+    y: number;
+  },
+  {
+    mainAxis = "x",
+  }: {
+    /** Axis along which children flow before wrapping. */
+    mainAxis?: "x" | "y";
+  } = {}
 ): WrappingFlowDropResult {
   const children = rects ?? [];
 
@@ -142,11 +188,12 @@ export function resolveWrappingFlowDrop(
 /**
  * Projects each rect onto the main axis into the `{near, far}` segments
  * `resolveLinearDrop` expects.
+ *
+ * @param rects - Child rectangles in DOM order.
+ * @param main - Rect edges defining the main axis.
+ * @returns One linear segment per rectangle.
  */
-function mainSegments(
-  rects: Rect[],
-  main: AxisEdges
-): Array<{ near: number; far: number }> {
+function mainSegments(rects: Rect[], main: AxisEdges): Segment[] {
   return rects.map((rect) => ({ near: rect[main.near], far: rect[main.far] }));
 }
 
@@ -158,6 +205,10 @@ function mainSegments(
  *
  * Because flow is line-major, bands are contiguous DOM-index runs, so a band's
  * `startIndex` plus a within-band index maps straight back to a global index.
+ *
+ * @param rects - Child rectangles in DOM order.
+ * @param cross - Rect edges defining the cross axis.
+ * @returns Visual bands in DOM order.
  */
 function groupIntoBands(rects: Rect[], cross: AxisEdges): Band[] {
   const bands: Band[] = [];
@@ -185,7 +236,9 @@ function groupIntoBands(rects: Rect[], cross: AxisEdges): Band[] {
  * inter-band gutter or beyond the ends. Ties resolve to the later (further along
  * the cross axis) band, so a cursor exactly on a seam prefers the lower row.
  *
+ * @param bands - Candidate visual bands.
  * @param coord - The cursor's cross-axis coordinate.
+ * @returns The containing or nearest visual band.
  */
 function pickBand(bands: Band[], coord: number): Band {
   let best = bands[0];
@@ -214,11 +267,13 @@ function pickBand(bands: Band[], coord: number): Band {
  * @param bandRects - The band's rects, in DOM order.
  * @param localGap - The gap index within the band, in `[0 .. length]`.
  * @param band - The band's cross-axis extent.
+ * @param main - Rect edges defining the main axis.
+ * @returns Geometry for the boundary tick.
  */
 function bandIndicator(
   bandRects: Rect[],
   localGap: number,
-  band: { near: number; far: number },
+  band: Pick<Band, "near" | "far">,
   main: AxisEdges
 ): Indicator {
   let x: number;

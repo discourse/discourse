@@ -14,6 +14,7 @@ import {
   parsePlacement,
   parseSlotPlacement,
 } from "discourse/blocks";
+import type DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import type TooltipService from "discourse/float-kit/services/tooltip";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
@@ -49,9 +50,11 @@ import {
   cellAt,
   computeOccupation,
   computeSpanResize,
+  type EdgeRect,
   formatTrack,
   placementsOverlap,
   resizableDirections,
+  type ResizeDirection,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import { kindForArg } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/kind-for-arg";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
@@ -61,30 +64,37 @@ import {
   CHILD_NUMBER_KEY_BY_PARENT,
   richInlineToPlainText,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/walk-layout";
-import { buildBlockPalette } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import {
+  type BlockPaletteEntry,
+  buildBlockPalette,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import containerDropTarget, {
+  type ContainerDropResolver,
   createContainerDropResolver,
+  type DragSource,
+  type PointerInput,
 } from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
 import proxyDragSources from "discourse/plugins/discourse-wireframe/discourse/modifiers/proxy-drag-sources";
-import type WireframeBlockMutations from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
-import type WireframeBlockReveal from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-reveal";
-import type WireframeDragOverlay from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-overlay";
-import type WireframeDropAuthority from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
-import type WireframeEditMode from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
-import type WireframeForceExpand from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
-import type WireframeGridPlacement from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
-import type WireframeImageUpload from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
-import type WireframeInplaceIcon from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-icon";
-import type WireframeInplaceLink from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-link";
-import type WireframeInplaceText from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
-import WireframeLayoutQuery, {
+import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
+import type WireframeBlockRevealService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-reveal";
+import type WireframeDragOverlayService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-overlay";
+import type WireframeDropAuthorityService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drop-authority";
+import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
+import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
+import type WireframeGridPlacementService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
+import type WireframeImageUploadService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
+import type WireframeInplaceIconService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-icon";
+import type WireframeInplaceLinkService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-link";
+import type WireframeInplaceTextService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
+import WireframeLayoutQueryService, {
   OUTLET_STATE,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
-import type WireframeLayoutSignal from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
-import type WireframeMutationEngine from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
-import type WireframeSelection from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
+import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
+import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 interface BlockChromeSignature {
+  /** Block identity, layout context, and wrapped component. */
   Args: {
     /** The wrapped block's registered name. */
     blockName: string;
@@ -124,12 +134,96 @@ interface BlockChromeSignature {
   };
 }
 
-interface GridPlacement {
+type GridPlacement = {
+  /** Cross-axis alignment within the grid cell. */
   align?: string;
+  /** CSS Grid column-line shorthand. */
   column?: string;
+  /** Main-axis alignment within the grid cell. */
   justify?: string;
+  /** CSS Grid row-line shorthand. */
   row?: string;
+};
+
+/**
+ * Checks whether a runtime container-argument value is a grid placement.
+ *
+ * @param value - Runtime container-argument value.
+ * @returns Whether the value contains only supported string placement fields.
+ */
+function isGridPlacement(value: unknown): value is GridPlacement {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  return ["align", "column", "justify", "row"].every((field) => {
+    const fieldValue = Reflect.get(value, field);
+    return fieldValue === undefined || typeof fieldValue === "string";
+  });
 }
+
+type ImageDimensions = {
+  /** Display width in pixels. */
+  width: number;
+  /** Display height in pixels. */
+  height: number;
+};
+
+// TODO(devxp-typescript-pending): replace this local boundary type once
+// `DResizeHandles` exports its callback payload and component signature.
+type ResizeDragInfo = {
+  /** Current pointer event for the resize frame. */
+  event: PointerEvent;
+};
+
+type GridResizeSession = {
+  /** Placement at the start of the resize gesture. */
+  origin: EdgeRect;
+  /** Effective grid column count captured for the gesture. */
+  columns: number;
+  /** Effective grid row count captured for the gesture. */
+  rows: number;
+  /** Grid viewport rectangle captured for pointer projection. */
+  gridRect: DOMRect;
+  /** Cells occupied by sibling entries when the gesture began. */
+  occupied: Set<string>;
+  /** Imperative ghost element showing the proposed placement. */
+  ghost: HTMLElement | null;
+  /** Latest valid placement to commit on release. */
+  next: EdgeRect | null;
+};
+
+// TODO(devxp-typescript-pending): replace these local payload types once the
+// ui-kit external drag-and-drop modifier exports its callback contracts.
+type ExternalDragLocation = {
+  /** Current drag frame. */
+  current: {
+    /** Pointer coordinates for the drag frame. */
+    input: PointerInput;
+  };
+};
+
+type ExternalFileSource = {
+  /** Returns the files carried by the external drag. */
+  getFiles: () => File[];
+};
+
+type InternalDropPayload = {
+  /** Normalized internal drag source. */
+  source: DragSource;
+};
+
+type ExternalDropGatePayload = {
+  /** Current external-drag pointer coordinates. */
+  input: PointerInput;
+};
+
+type ImageMenuState = {
+  /** Open image-edit menu instance. */
+  instance?: {
+    /** Closes the menu. */
+    close: () => void;
+  };
+};
 
 /**
  * Wraps every rendered block while the editor is active so the canvas can
@@ -158,21 +252,21 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   @service declare blocks: BlocksService;
   @service declare menu: MenuService;
   @service declare tooltip: TooltipService;
-  @service declare wireframeBlockMutations: WireframeBlockMutations;
-  @service declare wireframeBlockReveal: WireframeBlockReveal;
-  @service declare wireframeDragOverlay: WireframeDragOverlay;
-  @service declare wireframeDropAuthority: WireframeDropAuthority;
-  @service declare wireframeMutationEngine: WireframeMutationEngine;
-  @service declare wireframeForceExpand: WireframeForceExpand;
-  @service declare wireframeGridPlacement: WireframeGridPlacement;
-  @service declare wireframeInplaceIcon: WireframeInplaceIcon;
-  @service declare wireframeImageUpload: WireframeImageUpload;
-  @service declare wireframeInplaceText: WireframeInplaceText;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service declare wireframeInplaceLink: WireframeInplaceLink;
-  @service declare wireframeLayoutSignal: WireframeLayoutSignal;
-  @service declare wireframeSelection: WireframeSelection;
-  @service declare wireframeEditMode: WireframeEditMode;
+  @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+  @service declare wireframeBlockReveal: WireframeBlockRevealService;
+  @service declare wireframeDragOverlay: WireframeDragOverlayService;
+  @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+  @service declare wireframeMutationEngine: WireframeMutationEngineService;
+  @service declare wireframeForceExpand: WireframeForceExpandService;
+  @service declare wireframeGridPlacement: WireframeGridPlacementService;
+  @service declare wireframeInplaceIcon: WireframeInplaceIconService;
+  @service declare wireframeImageUpload: WireframeImageUploadService;
+  @service declare wireframeInplaceText: WireframeInplaceTextService;
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+  @service declare wireframeInplaceLink: WireframeInplaceLinkService;
+  @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+  @service declare wireframeSelection: WireframeSelectionService;
+  @service declare wireframeEditMode: WireframeEditModeService;
 
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -193,7 +287,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    */
   @tracked pendingBackgroundFile: File | null = null;
 
-  acceptedDragKinds = ["wf-block", "wf-palette-block"];
+  /** Internal block-drag kinds accepted by this chrome. */
+  acceptedDragKinds: string[] = ["wf-block", "wf-palette-block"];
 
   /**
    * Returns the chrome element ref for use as a drag image. Passed as a
@@ -223,6 +318,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const grid = this.getResizeGridElement();
     return grid?.querySelector<HTMLElement>(".wireframe-grid-ghost") ?? null;
   };
+
   /**
    * The set of grid cells occupied by SIBLING entries (this block excluded),
    * keyed `"row,col"`. Captured at the start of a span-resize so the gesture
@@ -230,9 +326,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * an overlapping placement. Reads through the service (opens a tracked dep
    * on `wireframeLayoutSignal.version`) so it reflects the live layout.
    *
-   * @returns {Set<string>}
    */
-  getResizeOccupied = () => {
+  getResizeOccupied = (): Set<string> => {
     void this.wireframeLayoutSignal.version;
     const grid = this.wireframeLayoutQuery.findEntryParent(this.args.blockKey);
     if (!grid) {
@@ -252,8 +347,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     const siblings = (grid.children ?? []).filter(
       (child) => entryKey(child) !== selfKey
     );
-    return computeOccupation(siblings, columns, rows) as Set<string>;
+    return computeOccupation(siblings, columns, rows);
   };
+
   /**
    * Finds the rendered image marker (`[data-block-arg="<argName>"]`)
    * inside the chrome. Used both as the resize-handle anchor (via
@@ -263,7 +359,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Returns `null` until the chrome's content has been laid out (the
    * marker is rendered by the wrapped block, not by the chrome).
    *
-   * @returns {Element|null}
    */
   getImageMarkerEl = (): HTMLElement | null => {
     const arg = this.resizableImageArg;
@@ -284,24 +379,22 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Stored each time the chrome claims the single overlay slot (background
    * fill or slot-insert) so a dragleave releases exactly that claim.
    */
-  #releaseDrop = null;
+  #releaseDrop: (() => void) | null = null;
 
   /**
    * The container drop resolver built on external-drag enter and reused for
    * the rest of that drag, so the drop preview tracks the cursor through the
    * same geometry the block-drag path uses. Cleared on leave / drop.
    */
-  #externalDropResolver = null;
+  #externalDropResolver: ContainerDropResolver | null = null;
 
   /**
    * Registered URL-edit tooltips for this block. Cleaned up in
    * `willDestroy`. Hover bridging between the link trigger and the
    * floating chip is handled by float-kit via `hoverGracePeriod`, so
    * the chrome doesn't own any extra listener teardown.
-   *
-   * @type {any[]}
    */
-  #urlTooltips = [];
+  #urlTooltips: DTooltipInstance[] = [];
 
   /**
    * The active span-resize session, or `null` when no resize is in progress.
@@ -310,16 +403,26 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * dimensions (so the math is stable across the drag), the ghost element, and
    * the latest computed placement to commit.
    *
-   * @type {?Object}
    */
-  #gridResize = null;
+  #gridResize: GridResizeSession | null = null;
 
-  willDestroy(...args: Parameters<Component["willDestroy"]>) {
+  /** Tears down FloatKit instances owned by this chrome. */
+  willDestroy(...args: Parameters<Component["willDestroy"]>): void {
     super.willDestroy(...args);
     for (const instance of this.#urlTooltips) {
       instance.destroy?.();
     }
     this.#urlTooltips.length = 0;
+  }
+
+  /** Mounted chrome element in the optional-argument form child components use. */
+  get optionalChromeEl(): HTMLElement | undefined {
+    return this.chromeEl ?? undefined;
+  }
+
+  /** Pending background upload in the optional-argument form the overlay uses. */
+  get optionalPendingBackgroundFile(): File | undefined {
+    return this.pendingBackgroundFile ?? undefined;
   }
 
   /**
@@ -338,12 +441,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     return index.get(this.args.blockName) ?? null;
   }
 
-  /** @returns {boolean} */
+  /** Whether this block is part of the current selection. */
   get isSelected() {
     return this.wireframeSelection.isBlockSelected(this.args.blockKey);
   }
 
-  /** @returns {boolean} */
+  /** Whether the registered block can contain children. */
   get isContainer() {
     return this.metadata?.isContainer ?? false;
   }
@@ -359,7 +462,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * `WrappedBlockLayout` from the same `containerArgs.grid` bag — the
    * chrome stays out of layout concerns.
    *
-   * @returns {boolean}
    */
   get isGridCell() {
     return this.gridPlacement != null;
@@ -372,14 +474,14 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * trigger re-evaluation; the curried `@blockArgs` snapshot taken at
    * chrome-curry time wouldn't pick up the change.
    *
-   * @returns {Object|null}
    */
-  get gridPlacement() {
+  get gridPlacement(): GridPlacement | null {
     void this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
-    return (entry?.containerArgs?.grid as GridPlacement | undefined) ?? null;
+    const placement = entry?.containerArgs?.grid;
+    return isGridPlacement(placement) ? placement : null;
   }
 
   /**
@@ -390,7 +492,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * fill the grid cell — its border traces the full cell rectangle —
    * so per-cell alignment lives one level deeper, on the content area.
    *
-   * @returns {ReturnType<typeof trustHTML>|null}
    */
   get contentStyle() {
     const grid = this.gridPlacement;
@@ -419,7 +520,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Opens a tracked dep on `wireframeLayoutSignal.version` so this re-evaluates
    * every time the layout changes.
    *
-   * @returns {boolean}
    */
   get isGridLayout() {
     if (this.args.blockName !== "layout") {
@@ -441,7 +541,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * author can edit the full multi-column structure even when the
    * canvas is narrow enough to trigger collapse on the live page.
    *
-   * @returns {boolean}
    */
   get isForceExpanded() {
     return (
@@ -461,7 +560,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * container blocks we default to `"stack"` since their children
    * stack vertically.
    *
-   * @returns {"stack"|"row"|"tiles"|"cell"|"grid"|"grid-cell-leaf"|null}
    */
   get containerDropMode() {
     if (this.isEmptyCell) {
@@ -506,7 +604,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * for every grid layout is consistent with how the editor surfaces
    * other block boundaries.
    *
-   * @returns {boolean}
    */
   get showsGridOverlay() {
     return this.isGridLayout && !this.args.isGhost;
@@ -516,7 +613,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Current placement (`{column, row}`) of this block when it sits in a
    * grid. Drives the resize modifier mounted on the chrome wrapper.
    *
-   * @returns {{column: string, row: string}}
    */
   get slotPlacement() {
     const placement = this.gridPlacement ?? {};
@@ -533,7 +629,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * declared `args.columns`, so the pointer-to-cell mapping matches the grid the
    * author sees and a span can't be dragged past the rightmost rendered column.
    *
-   * @returns {number}
    */
   get slotGridColumns() {
     void this.wireframeLayoutSignal.version;
@@ -547,7 +642,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     ).columns;
   }
 
-  /** @returns {number} */
+  /** Effective row count of the grid containing this slot. */
   get slotGridRows() {
     void this.wireframeLayoutSignal.version;
     const grid = this.wireframeLayoutQuery.findEntryParent(this.args.blockKey);
@@ -566,14 +661,13 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * grid boundary or blocked by a neighbouring cell — with no span to shrink on
    * that axis — is omitted; a corner needs both of its edges.
    *
-   * @returns {Array<string>}
    */
   get gridResizeDirections() {
     return resizableDirections({
       origin: parseSlotPlacement(this.slotPlacement),
       columns: this.slotGridColumns,
       rows: this.slotGridRows,
-      occupied: this.getResizeOccupied() as Set<string>,
+      occupied: this.getResizeOccupied(),
     });
   }
 
@@ -584,7 +678,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    *
    * Auto-placed cells are excluded (CSS auto-flow handles them).
    *
-   * @returns {boolean}
    */
   get hasGridOverlap() {
     if (!this.isGridCell) {
@@ -623,7 +716,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    *
    * Auto-placed cells are excluded.
    *
-   * @returns {boolean}
    */
   get isOutOfBounds() {
     if (!this.isGridCell) {
@@ -657,7 +749,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * "Drag a block here" / "Drop inside" label) would be redundant
    * for them.
    *
-   * @returns {boolean}
    */
   get showsInsideDropZone() {
     return this.isContainer && !this.isGridLayout && !this.args.isGhost;
@@ -669,7 +760,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * chrome drops their drop zones and the canvas styles them distinctly
    * (the `--part` modifier).
    *
-   * @returns {boolean}
    */
   get isPart() {
     return isPartKey(this.args.blockKey);
@@ -684,7 +774,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * misalign the chrome with the grid cell. Skip them. A synthesized part
    * can't be repositioned among siblings either, so skip them there too.
    *
-   * @returns {boolean}
    */
   get showsSiblingDropZones() {
     return !this.isGridCell && !this.args.isGhost && !this.isPart;
@@ -701,7 +790,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * "before / after" in a row layout would render as zones ABOVE / BELOW
    * the block, which doesn't match where its siblings actually are.
    *
-   * @returns {"horizontal"|"vertical"|null}
    */
   get parentLayoutAxis() {
     void this.wireframeLayoutSignal.version;
@@ -738,7 +826,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * `blockData.children?.length` curry was always `0`, marking every
    * container as empty.
    *
-   * @returns {boolean}
    */
   get isEmptyContainer() {
     if (!this.isContainer) {
@@ -780,8 +867,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * The `key` folds emptiness into the `{{#each}}` identity so an arg
    * flipping empty↔filled remounts its overlay, letting each mode wire
    * its own upload lifecycle cleanly instead of reconfiguring in place.
-   *
-   * @returns {Array<{name: string, def: Object, value: any, isEmpty: boolean, key: string}>}
    */
   get imageArgEntries() {
     void this.wireframeLayoutSignal.version;
@@ -800,7 +885,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * me in" prompt over the block. Reads live args the same way `imageArgEntries`
    * does, gated on the layout signal so a fill / clear re-evaluates.
    *
-   * @returns {Array<{name: string, def: Object, prompt: string}>}
    */
   get emptyPromptArgEntries() {
     void this.wireframeLayoutSignal.version;
@@ -818,7 +902,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * minimum height so a fully-broken image doesn't collapse to a
    * sliver.
    *
-   * @returns {boolean}
    */
   get hasUnresolvedImageArg() {
     return this.imageArgEntries.some(
@@ -831,7 +914,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * into drag-resize (`allowResize: true`) AND the block isn't sitting
    * in a grid cell (where the grid handle owns sizing already).
    *
-   * @returns {boolean}
    */
   get showsImageResizeHandle() {
     if (this.isGridCell || !this.isSelected) {
@@ -844,13 +926,18 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // positioning math produces invalid coordinates. Skip the
     // handles in that case; the chrome already shows the probe-fail
     // badge so the user has a clear signal.
-    return this.imageArgEntries.some(
-      (e) =>
+    return this.imageArgEntries.some((e) => {
+      const width = e.value?.width;
+      const height = e.value?.height;
+      return (
         e.def?.allowResize === true &&
         !e.isEmpty &&
-        e.value?.width > 0 &&
-        e.value?.height > 0
-    );
+        typeof width === "number" &&
+        width > 0 &&
+        typeof height === "number" &&
+        height > 0
+      );
+    });
   }
 
   /**
@@ -859,7 +946,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * back to the light variant's intrinsic ratio; otherwise `null`
    * (free drag).
    *
-   * @returns {number|null}
    */
   get imageResizeAspectRatio() {
     for (const { def, value } of this.imageArgEntries) {
@@ -881,8 +967,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * which arg the corner handle writes back to; multi-image blocks
    * (e.g. media-card avatar + cover) typically declare only one of
    * the two as `allowResize: true`.
-   *
-   * @returns {{name: string, def: Object, value: any}|null}
    */
   get resizableImageArg() {
     return (
@@ -895,7 +979,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * diverge from its natural dims — used to enable the toolbar
    * "Reset to natural" button.
    *
-   * @returns {boolean}
    */
   get imageIsResized() {
     const v = this.resizableImageArg?.value;
@@ -911,7 +994,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * image already fills the block (or exceeds it), the button is
    * uninformative and should be hidden.
    *
-   * @returns {boolean}
    */
   get imageCanFillBlock() {
     const arg = this.resizableImageArg;
@@ -932,7 +1014,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * outlet name) and suppresses block-level affordances — moving, duplicating
    * or deleting a page region makes no sense.
    *
-   * @returns {boolean}
    */
   get isOutletRoot() {
     return this.wireframeLayoutQuery.isOutletRoot(this.args.blockKey);
@@ -944,7 +1025,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * shows its position ("Tab 2" / "Slide 2") as a SEPARATE chip via
    * `childOrdinal` / the toolbar's `@displayChip`, not in this label.
    *
-   * @returns {string}
    */
   get displayName() {
     return this.#baseDisplayName;
@@ -953,7 +1033,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   /**
    * The block's own name, independent of any parent-aware ordinal override.
    *
-   * @returns {string}
    */
   get #baseDisplayName() {
     // The implicit root layout reads as the outlet itself, not "Layout" —
@@ -978,7 +1057,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * among the parent's children — the basis for parent-aware naming and the
    * reorder-axis decision. `null` when the block has no parent (outlet root).
    *
-   * @returns {{ parent: Object, parentName: string|null, index: number }|null}
    */
   get #parentContext() {
     void this.wireframeLayoutSignal.version;
@@ -1003,15 +1081,14 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * panel), its 1-based position ("Slide 2" / "Tab 2"); `null` otherwise. Shown
    * as a chip beside the block name in the toolbar badge.
    *
-   * @returns {string|null}
    */
   get childOrdinal() {
     const ctx = this.#parentContext;
     const numberKey = ctx?.parentName
       ? CHILD_NUMBER_KEY_BY_PARENT[ctx.parentName]
       : null;
-    if (!numberKey || ctx.index < 0) {
-      return null;
+    if (!numberKey || !ctx || ctx.index < 0) {
+      return undefined;
     }
     return i18n(numberKey, { number: ctx.index + 1 });
   }
@@ -1022,7 +1099,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * label (or isn't a labelled-container child), so the badge keeps its default
    * title — the block name is already visible in the badge itself.
    *
-   * @returns {string|null}
    */
   get childTooltip() {
     const ctx = this.#parentContext;
@@ -1030,18 +1106,18 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       ? CHILD_LABEL_NAMESPACE_BY_PARENT[ctx.parentName]
       : null;
     if (!namespace) {
-      return null;
+      return undefined;
     }
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     );
-    const rawLabel = (
-      located?.entry?.containerArgs?.[namespace] as
-        | { label?: unknown }
-        | undefined
-    )?.label;
+    const namespaceArgs = located?.entry?.containerArgs?.[namespace];
+    const rawLabel =
+      typeof namespaceArgs === "object" && namespaceArgs !== null
+        ? Reflect.get(namespaceArgs, "label")
+        : undefined;
     const label = richInlineToPlainText(rawLabel).trim();
-    return label || null;
+    return label || undefined;
   }
 
   /**
@@ -1052,7 +1128,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * from `parentLayoutAxis`, which drives drop-zone CSS for `layout` containers
    * only.
    *
-   * @returns {"horizontal"|"vertical"}
    */
   get siblingMoveAxis() {
     const ctx = this.#parentContext;
@@ -1061,10 +1136,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       return "horizontal";
     }
     if (
+      ctx &&
       name === "layout" &&
-      ["row", "tiles"].includes(
-        (ctx.parent.args?.mode as string | undefined) ?? "stack"
-      )
+      (ctx.parent.args?.mode === "row" || ctx.parent.args?.mode === "tiles")
     ) {
       return "horizontal";
     }
@@ -1077,7 +1151,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * "Add a slide to get started"; any other empty container keeps the generic
    * "Drag a block here".
    *
-   * @returns {string}
    */
   get emptyHint() {
     const nounKey = CHILD_NOUN_KEY_BY_PARENT[this.args.blockName];
@@ -1091,7 +1164,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * The persistence state of the outlet this block belongs to (one of
    * `OUTLET_STATE`). Drives the outlet-root badge and the read-only suppression.
    *
-   * @returns {string}
    */
   get outletState() {
     return this.wireframeLayoutQuery.outletState(this.args.outletName);
@@ -1103,13 +1175,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * and descendants share the outlet name) suppresses selection and the
    * toolbar, so the locked layout can't be edited.
    *
-   * @returns {boolean}
    */
   get isReadOnlyOutlet() {
     return this.outletState === OUTLET_STATE.LOCKED;
   }
 
-  /** @returns {boolean} */
+  /** Whether the block's outlet has an in-session edit. */
   get isOutletEditing() {
     return this.wireframeMutationEngine.isOutletEdited(this.args.outletName);
   }
@@ -1119,7 +1190,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * "start a layout from scratch" case (a freshly mounted or just-reset
    * outlet whose root `layout` block has no children).
    *
-   * @returns {boolean}
    */
   get isEmptyOutletRoot() {
     if (!this.isOutletRoot) {
@@ -1142,7 +1212,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * (an edit in progress, a published or locked outlet, or a default
    * outlet that actually has content) shows the chip.
    *
-   * @returns {boolean}
    */
   get showOutletStatus() {
     if (this.isOutletEditing) {
@@ -1161,7 +1230,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * through `placeBlockInCell` / `moveBlockIntoCell` so the cell is
    * filled by content rather than inserted-as-sibling.
    *
-   * @returns {boolean}
    */
   get isEmptyCell() {
     return this.args.blockName === LAYOUT_MERGED_CELL_BLOCK;
@@ -1173,7 +1241,6 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * reference flows into every empty-state placeholder this chrome
    * renders.
    *
-   * @returns {Array<{name: string, metadata: Object}>}
    */
   @cached
   get palette() {
@@ -1188,10 +1255,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * ResizeObserver sees the change and re-positions the 8 handles to
    * track the live preview.
    *
-   * @param {{width: number, height: number}} dims
+   * @param dims - Proposed image dimensions for the live preview.
    */
   @action
-  previewImageResize({ width, height }) {
+  previewImageResize({ width, height }: ImageDimensions): void {
     const marker = this.getImageMarkerEl();
     if (!marker) {
       return;
@@ -1211,10 +1278,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * value drives layout (otherwise the inline style would stick
    * around and shadow future adjustments).
    *
-   * @param {{width: number, height: number}} dims
+   * @param dims - Final image dimensions to persist.
    */
   @action
-  commitImageResize({ width, height }) {
+  commitImageResize({ width, height }: ImageDimensions): void {
     const marker = this.getImageMarkerEl();
     if (marker) {
       marker.style.width = "";
@@ -1255,7 +1322,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * natural" button.
    */
   @action
-  resetImageToNaturalSize() {
+  resetImageToNaturalSize(): void {
     const arg = this.resizableImageArg;
     if (!arg?.value?.naturalWidth || !arg?.value?.naturalHeight) {
       return;
@@ -1275,7 +1342,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * still works.
    */
   @action
-  fillImageToBlock() {
+  fillImageToBlock(): void {
     const arg = this.resizableImageArg;
     if (!arg?.value || !this.chromeEl) {
       return;
@@ -1319,10 +1386,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * so the cell entry is REPLACED by the new block rather than inserted
    * alongside it.
    *
-   * @param {{name: string}} blockEntry - Palette entry the user selected.
+   * @param blockEntry - Palette entry the user selected.
    */
   @action
-  pickBlockForCell(blockEntry) {
+  pickBlockForCell(blockEntry: BlockPaletteEntry): void {
     this.wireframeGridPlacement.placeInCell({
       cellKey: this.args.blockKey,
       blockName: blockEntry.name,
@@ -1334,10 +1401,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Wired to the palette placeholder rendered when the container has
    * no children.
    *
-   * @param {{name: string}} blockEntry - Palette entry the user selected.
+   * @param blockEntry - Palette entry the user selected.
    */
   @action
-  pickBlockForContainer(blockEntry) {
+  pickBlockForContainer(blockEntry: BlockPaletteEntry): void {
     this.wireframeBlockMutations.insertBlock({
       blockName: blockEntry.name,
       targetKey: this.args.blockKey,
@@ -1353,7 +1420,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * to keep the inspector pointed at the container / cell being filled.
    */
   @action
-  selectSelf() {
+  selectSelf(): void {
     this.#selectThisBlock();
   }
 
@@ -1367,10 +1434,10 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * element exists, so the service defers that treatment and we trigger it
    * here, the moment this block's chrome mounts.
    *
-   * @param {Element} element - The chrome's outer `<div>`.
+   * @param element - The chrome's outer `<div>`.
    */
   @action
-  captureChromeEl(element) {
+  captureChromeEl(element: HTMLElement): void {
     this.chromeEl = element;
     this.#setupUrlTooltips();
     this.wireframeBlockReveal.notifyChromeInserted(this.args.blockKey, element);
@@ -1384,12 +1451,14 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * origin placement, and the ghost element. An auto-placed cell has no concrete
    * origin, so its starting cell is taken from the pointer.
    *
-   * @param {string} direction - The handle's compass direction.
-   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
-   * @returns {void|false}
+   * @param direction - The handle's compass direction.
+   * @param dragInfo - The `DResizeHandles` drag payload.
    */
   @action
-  onGridResizeStart(direction, dragInfo) {
+  onGridResizeStart(
+    direction: ResizeDirection,
+    dragInfo: ResizeDragInfo
+  ): void | false {
     const gridEl = this.getResizeGridElement();
     if (!gridEl) {
       return false;
@@ -1430,12 +1499,11 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * the first occupied neighbour and at the rendered grid bounds), then paints
    * the ghost.
    *
-   * @param {string} direction - The handle's compass direction.
-   * @param {Object} dragInfo - The `DResizeHandles` drag payload.
-   * @returns {void}
+   * @param direction - The handle's compass direction.
+   * @param dragInfo - The `DResizeHandles` drag payload.
    */
   @action
-  onGridResize(direction, dragInfo) {
+  onGridResize(direction: ResizeDirection, dragInfo: ResizeDragInfo): void {
     const session = this.#gridResize;
     if (!session) {
       return;
@@ -1466,10 +1534,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * the inner content stays put). Resize never grows the declared grid — see
    * `GridManipulator#resizeSlot`.
    *
-   * @returns {void}
    */
   @action
-  onGridResizeEnd() {
+  onGridResizeEnd(): void {
     const next = this.#gridResize?.next;
     this.#endGridResize();
     if (next) {
@@ -1481,13 +1548,19 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     }
   }
 
-  /** @returns {void} */
+  /** Cancels the active grid resize without committing its preview. */
   @action
-  onGridResizeCancel() {
+  onGridResizeCancel(): void {
     this.#endGridResize();
   }
 
-  #applyGhostStyle(ghost, placement) {
+  /** Paints a proposed grid placement onto the resize ghost. */
+  #applyGhostStyle(
+    /** Ghost element to update. */
+    ghost: HTMLElement,
+    /** Resolved placement to preview. */
+    placement: EdgeRect
+  ): void {
     // Rewritten on every pointer-move as the resize preview follows the cursor —
     // too high-frequency for a template binding. The committed placement flows
     // through the layout model in onGridResizeEnd; this only paints the preview.
@@ -1495,7 +1568,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
   }
 
-  #endGridResize() {
+  /** Clears the current grid-resize preview session. */
+  #endGridResize(): void {
     this.#gridResize?.ghost?.classList.remove("--visible");
     this.#gridResize = null;
   }
@@ -1513,7 +1587,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    *     (re-selecting the already-selected block is a no-op).
    */
   @action
-  onClick(event) {
+  onClick(event: MouseEvent): void {
     if (!this.wireframeEditMode.active) {
       return;
     }
@@ -1534,7 +1608,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // button. Handled BEFORE the `detail === 0` bail below: activating the
     // button by keyboard (Space / Enter) is a legitimate "add" gesture, and
     // synthesized clicks (tests) carry `detail === 0` too.
-    if (event.target.closest?.("[data-wf-append-child]")) {
+    const target = event.target instanceof Element ? event.target : null;
+
+    if (target?.closest("[data-wf-append-child]")) {
       this.wireframeBlockMutations.appendImplicitChild(this.args.blockKey);
       return;
     }
@@ -1559,19 +1635,27 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // gesture) — the active tab carries the `data-wf-container-arg-*` markers,
     // and the DOM hasn't re-rendered yet so `aria-selected` still reflects the
     // pre-click active tab.
-    const tabEl = event.target.closest?.("[data-wf-tab-panel-key]");
+    const tabEl = target?.closest<HTMLElement>("[data-wf-tab-panel-key]");
     if (tabEl) {
       const panelKey = tabEl.dataset.wfTabPanelKey;
+      if (!panelKey) {
+        return;
+      }
       const isActive = tabEl.getAttribute("aria-selected") === "true";
+      const containerArgKey = tabEl.dataset.wfContainerArgKey;
+      const containerArgNamespace = tabEl.dataset.wfContainerArgNamespace;
+      const containerArgField = tabEl.dataset.wfContainerArgField;
       if (
         isActive &&
         this.wireframeSelection.selectedBlockKey === panelKey &&
-        tabEl.dataset.wfContainerArgKey
+        containerArgKey &&
+        containerArgNamespace &&
+        containerArgField
       ) {
         this.wireframeInplaceText.startContainerArg(
-          tabEl.dataset.wfContainerArgKey,
-          tabEl.dataset.wfContainerArgNamespace,
-          tabEl.dataset.wfContainerArgField,
+          containerArgKey,
+          containerArgNamespace,
+          containerArgField,
           { coords: { x: event.clientX, y: event.clientY } }
         );
         return;
@@ -1584,11 +1668,11 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // handler already paged the track during bubbling; swallow the chrome's
     // selection so paging a slide into view is never mistaken for selecting or
     // deselecting the block — it stays selectable by clicking its body.
-    if (event.target.closest?.("[data-wf-carousel-nav]")) {
+    if (target?.closest("[data-wf-carousel-nav]")) {
       return;
     }
 
-    const argEl = event.target.closest?.("[data-block-arg]");
+    const argEl = target?.closest<HTMLElement>("[data-block-arg]");
     const argName = argEl?.dataset?.blockArg;
     const kind = argName ? kindForArg(this.metadata, argName) : null;
 
@@ -1596,7 +1680,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // does, so a single click on the rendered image opens the replace
     // / remove menu directly. Selecting the block is a side effect so
     // the inspector tracks the change.
-    if (argEl && kind === "image") {
+    if (argEl && argName && kind === "image") {
       if (this.wireframeSelection.selectedBlockKey !== this.args.blockKey) {
         this.#selectThisBlock();
       }
@@ -1611,6 +1695,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
     // selection.
     if (
       argEl &&
+      argName &&
       this.wireframeSelection.selectedBlockKey === this.args.blockKey
     ) {
       switch (kind) {
@@ -1656,7 +1741,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * `canInsertBlockAt` against the source's `blockName`.
    */
   @action
-  canDropOnThisBlock({ source }) {
+  canDropOnThisBlock({ source }: InternalDropPayload): boolean {
     if (source?.type === "wf-palette-block") {
       return this.wireframeDropAuthority.canInsertBlockAt({
         blockName: source.data?.blockName,
@@ -1684,11 +1769,11 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Every other chrome stays inert (no indicator, no drop handling) so
    * PDND walks up to an ancestor that does accept.
    *
-   * @param {{input: Object}} payload
-   * @returns {boolean}
+   * @param payload - Current external-drag pointer input.
+   * @returns Whether this chrome accepts the external image.
    */
   @action
-  canDropExternalImageFile({ input }) {
+  canDropExternalImageFile({ input }: ExternalDropGatePayload): boolean {
     if (this.canDropBackgroundFile()) {
       return true;
     }
@@ -1704,10 +1789,9 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * Whether the block renders a passive ("background") image marker, gating
    * the background-fill drop path.
    *
-   * @returns {boolean}
    */
   @action
-  canDropBackgroundFile() {
+  canDropBackgroundFile(): boolean {
     return !!this.#passiveImageArgName();
   }
 
@@ -1716,9 +1800,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * a new image block (the slot-insert path). Grid surfaces are owned by
    * the grid overlay and leaves defer to their parent, so neither qualifies.
    *
-   * @returns {boolean}
    */
-  get #isImageDropSlot() {
+  get #isImageDropSlot(): boolean {
     const mode = this.containerDropMode;
     return (
       mode === "stack" || mode === "row" || mode === "tiles" || mode === "cell"
@@ -1730,13 +1813,16 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * to turn the cursor position into a drop descriptor — the same resolver
    * the `containerDropTarget` modifier uses for block drags.
    *
-   * @returns {Object}
    */
-  #ensureExternalDropResolver() {
+  #ensureExternalDropResolver(): ContainerDropResolver {
+    const chromeElement = this.chromeEl;
+    if (!chromeElement) {
+      throw new Error("Cannot resolve an external drop before chrome mounts");
+    }
     this.#externalDropResolver ||= createContainerDropResolver({
       layoutQuery: this.wireframeLayoutQuery,
       dropAuthority: this.wireframeDropAuthority,
-      chromeElement: this.chromeEl,
+      chromeElement,
       containerKey: this.args.blockKey,
       outletName: this.args.outletName,
       mode: this.containerDropMode,
@@ -1752,28 +1838,46 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * target, so its own claim lands over this one — that's what keeps a single
    * overlay showing, replacing the old foreground/background bookkeeping.
    *
-   * @param {{location: {current: {input: Object}}}} payload
+   * @param payload - Current external-drag location.
    */
   @action
-  onExternalImageDragEnter({ location }) {
+  onExternalImageDragEnter({
+    location,
+  }: {
+    /** Current external drag location. */
+    location: ExternalDragLocation;
+  }): void {
     this.#claimExternalOverlay(location.current.input);
   }
 
   /**
    * Re-claims as the cursor moves so the overlay tracks it.
    *
-   * @param {{location: {current: {input: Object}}}} payload
+   * @param payload - Updated external-drag location.
    */
   @action
-  onExternalImageDrag({ location }) {
+  onExternalImageDrag({
+    location,
+  }: {
+    /** Current external drag location. */
+    location: ExternalDragLocation;
+  }): void {
     this.#claimExternalOverlay(location.current.input);
   }
 
-  #claimExternalOverlay(input) {
+  /** Claims the relevant background or structural external-drop overlay. */
+  #claimExternalOverlay(
+    /** Current external-drag pointer coordinates. */
+    input: PointerInput
+  ): void {
     if (this.canDropBackgroundFile()) {
+      const argName = this.#passiveImageArgName();
+      if (!argName) {
+        return;
+      }
       this.#releaseDrop = this.wireframeDragOverlay.claimImageArg({
         blockKey: this.args.blockKey,
-        argName: this.#passiveImageArgName(),
+        argName,
         isPassive: true,
       });
       return;
@@ -1789,7 +1893,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
   }
 
   @action
-  onExternalImageDragLeave() {
+  onExternalImageDragLeave(): void {
     this.#externalDropResolver = null;
     this.#releaseDrop?.();
   }
@@ -1803,10 +1907,15 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * deeper external drop targets, so PDND routes drops over them there
    * instead — only body drops reach this handler.
    *
-   * @param {{source: {getFiles: () => File[]}}} payload
+   * @param payload - External source containing the dropped files.
    */
   @action
-  onExternalImageDrop({ source }) {
+  onExternalImageDrop({
+    source,
+  }: {
+    /** External source providing the dropped files. */
+    source: ExternalFileSource;
+  }): void {
     this.#externalDropResolver = null;
     if (this.canDropBackgroundFile()) {
       this.#releaseDrop?.();
@@ -1847,7 +1956,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * scaffolding — including hover-triggered affordances — lives in
    * admin code.
    */
-  #setupUrlTooltips() {
+  #setupUrlTooltips(): void {
     const meta = this.metadata;
     if (!meta?.args || !this.chromeEl) {
       return;
@@ -1856,7 +1965,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
       this.chromeEl.querySelectorAll<HTMLElement>(BLOCK_ARG_SELECTOR);
     for (const linkEl of linkEls) {
       const argName = linkEl.dataset.blockArg;
-      if (kindForArg(meta, argName) !== "url") {
+      if (!argName || kindForArg(meta, argName) !== "url") {
         continue;
       }
       const instance = this.tooltip.register(linkEl, {
@@ -1896,12 +2005,12 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * component also calls back `data.close()` after Replace / Remove
    * commits.
    *
-   * @param {Element} argEl - The clicked `[data-block-arg]` element.
-   * @param {string} argName - The image arg name on this block.
+   * @param argEl - The clicked `[data-block-arg]` element.
+   * @param argName - The image arg name on this block.
    */
-  async #openImageEditMenu(argEl, argName) {
+  async #openImageEditMenu(argEl: HTMLElement, argName: string): Promise<void> {
     this.wireframeImageUpload.markImageArgTouched(argName);
-    const menuState: { instance?: { close: () => void } } = {};
+    const menuState: ImageMenuState = {};
     const data = {
       blockKey: this.args.blockKey,
       argName,
@@ -1922,7 +2031,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * the per-kind dispatch in `onClick` so the image-arg single-click
    * path can re-use it without duplicating the data payload.
    */
-  #selectThisBlock() {
+  #selectThisBlock(): void {
     this.wireframeSelection.selectBlock({
       key: this.args.blockKey,
       name: this.args.blockName,
@@ -1943,9 +2052,8 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
    * the marker stays in the DOM even while collapsed, so this resolves in
    * every selection / fill state.
    *
-   * @returns {string|null}
    */
-  #passiveImageArgName() {
+  #passiveImageArgName(): string | null {
     return (
       this.chromeEl
         ?.querySelector("[data-drop-passive]")
@@ -2044,7 +2152,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               @outletState={{this.outletState}}
               @isOutletEditing={{this.isOutletEditing}}
               @showOutletStatus={{this.showOutletStatus}}
-              @chromeEl={{this.chromeEl}}
+              @chromeEl={{this.optionalChromeEl}}
               @isSelected={{this.isSelected}}
               @canFillImage={{this.imageCanFillBlock}}
               @canResetImage={{this.imageIsResized}}
@@ -2114,7 +2222,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           {{! Per-arg overlays painted on top of the rendered block —
             one per image arg, empty or filled. Each positions itself
             over its arg's marker via JS-computed bounding rects (see
-            `image-arg-overlay.gjs`): an in-place "add image" affordance
+            `image-arg-overlay.gts`): an in-place "add image" affordance
             when empty, an invisible drop-to-replace target when filled.
             Keyed on emptiness so a fill / clear remounts the overlay. }}
           {{#each this.imageArgEntries key="key" as |imageArg|}}
@@ -2124,7 +2232,7 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
               @argDef={{imageArg.def}}
               @isEmpty={{imageArg.isEmpty}}
               @getChromeEl={{this.getChromeEl}}
-              @pendingFile={{this.pendingBackgroundFile}}
+              @pendingFile={{this.optionalPendingBackgroundFile}}
             />
           {{/each}}
 
@@ -2160,15 +2268,19 @@ export default class BlockChrome extends Component<BlockChromeSignature> {
           {{/if}}
 
           {{#if this.showsImageResizeHandle}}
-            <ImageResizeOverlay
-              @blockKey={{@blockKey}}
-              @argName={{this.resizableImageArg.name}}
-              @getChromeEl={{this.getChromeEl}}
-              @getMarkerEl={{this.getImageMarkerEl}}
-              @aspectRatio={{this.imageResizeAspectRatio}}
-              @onPreview={{this.previewImageResize}}
-              @onCommit={{this.commitImageResize}}
-            />
+            {{#let this.resizableImageArg as |imageArg|}}
+              {{#if imageArg}}
+                <ImageResizeOverlay
+                  @blockKey={{@blockKey}}
+                  @argName={{imageArg.name}}
+                  @getChromeEl={{this.getChromeEl}}
+                  @getMarkerEl={{this.getImageMarkerEl}}
+                  @aspectRatio={{this.imageResizeAspectRatio}}
+                  @onPreview={{this.previewImageResize}}
+                  @onCommit={{this.commitImageResize}}
+                />
+              {{/if}}
+            {{/let}}
           {{/if}}
 
           {{#if this.isEmptyContainer}}

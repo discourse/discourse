@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type TrustedHTML, trustHTML } from "@ember/template";
@@ -9,37 +8,32 @@ import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ConditionsTree from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-tree";
-import type WireframeConditionsPanel from "../../../services/wireframe-conditions-panel";
-import type WireframeEditMode from "../../../services/wireframe-edit-mode";
+import WireframeConditionsPanelService, {
+  type ConditionsPanelRect,
+} from "../../../services/wireframe-conditions-panel";
+import type WireframeEditModeService from "../../../services/wireframe-edit-mode";
 
 const DEFAULT_WIDTH = 480;
 const DEFAULT_HEIGHT = 560;
 
 /**
- * The floating panel's on-screen position and size. The conditions-panel
- * service persists this to localStorage but seeds its tracked state with
- * `rect: null`, so it can only surface a degenerate `{} | null` type;
- * this is the real runtime shape, applied at the read boundary below.
- */
-interface PanelRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-/**
  * The pointer/frame anchor captured when a drag begins, used to
  * translate subsequent pointer moves into a new panel position.
  */
-interface PanelDragStart {
+type PanelDragStart = {
+  /** Initial horizontal pointer position. */
   pointerX: number;
+  /** Initial vertical pointer position. */
   pointerY: number;
+  /** Initial horizontal panel position. */
   originX: number;
+  /** Initial vertical panel position. */
   originY: number;
+  /** Panel width at drag start. */
   width: number;
+  /** Panel height at drag start. */
   height: number;
-}
+};
 
 /**
  * Detachable floating panel that hosts the conditions surface when
@@ -57,8 +51,11 @@ interface PanelDragStart {
  * but stays below DMenu's content layer.
  */
 export default class ConditionsFloatingPanel extends Component {
-  @service declare wireframeConditionsPanel: WireframeConditionsPanel;
-  @service declare wireframeEditMode: WireframeEditMode;
+  /** Stores floating-panel visibility and geometry. */
+  @service declare wireframeConditionsPanel: WireframeConditionsPanelService;
+
+  /** Reports whether the wireframe editor is active. */
+  @service declare wireframeEditMode: WireframeEditModeService;
 
   /**
    * Track resize via ResizeObserver — the `resize: both` corner grip
@@ -71,9 +68,8 @@ export default class ConditionsFloatingPanel extends Component {
       for (const entry of entries) {
         const w = Math.round(entry.contentRect.width);
         const h = Math.round(entry.contentRect.height);
-        const current = (this.wireframeConditionsPanel.rect ??
-          {}) as Partial<PanelRect>;
-        if (current.width === w && current.height === h) {
+        const current = this.wireframeConditionsPanel.rect;
+        if (current?.width === w && current.height === h) {
           continue;
         }
         const rect = element.getBoundingClientRect();
@@ -88,8 +84,21 @@ export default class ConditionsFloatingPanel extends Component {
     observer.observe(element);
     return () => observer.disconnect();
   });
+
+  /** Registers pointer handling without a template event suppression. */
+  dragHandle = modifier((element: HTMLElement) => {
+    element.addEventListener("pointerdown", this.startDrag);
+    return () => element.removeEventListener("pointerdown", this.startDrag);
+  });
+  /** Pointer and panel geometry captured at drag start. */
   #dragStart: PanelDragStart | null = null;
-  #onDragMove = (event: PointerEvent) => {
+
+  /**
+   * Moves the panel while a header drag is active.
+   *
+   * @param event - Document pointer-move event.
+   */
+  #onDragMove: (event: PointerEvent) => void = (event) => {
     const dragStart = this.#dragStart;
     if (!dragStart) {
       return;
@@ -116,19 +125,25 @@ export default class ConditionsFloatingPanel extends Component {
     };
     this.wireframeConditionsPanel.updateRect(next);
   };
-  #endDrag = () => {
+
+  /** Ends the active header drag. */
+  #endDrag: () => void = () => {
     this._dragging = false;
     this.#dragStart = null;
     document.removeEventListener("pointermove", this.#onDragMove);
   };
-  @tracked _dragging = false;
 
-  willDestroy() {
+  /** Whether the panel header is currently being dragged. */
+  @tracked _dragging: boolean = false;
+
+  /** Removes document listeners when the panel component is destroyed. */
+  willDestroy(): void {
     super.willDestroy();
     document.removeEventListener("pointermove", this.#onDragMove);
   }
 
-  get isOpen() {
+  /** Whether the detached panel should be rendered. */
+  get isOpen(): boolean {
     return (
       this.wireframeEditMode.active && this.wireframeConditionsPanel.detached
     );
@@ -140,7 +155,8 @@ export default class ConditionsFloatingPanel extends Component {
    * so drag updates flow through the tracking system.
    */
   get panelStyle(): TrustedHTML {
-    const rect = this.wireframeConditionsPanel.rect as PanelRect | null;
+    const rect: Readonly<ConditionsPanelRect> | null =
+      this.wireframeConditionsPanel.rect;
     const w = rect?.width ?? DEFAULT_WIDTH;
     const h = rect?.height ?? DEFAULT_HEIGHT;
     const x = rect?.x ?? Math.max(0, Math.floor((window.innerWidth - w) / 2));
@@ -150,17 +166,27 @@ export default class ConditionsFloatingPanel extends Component {
     );
   }
 
+  /**
+   * Begins dragging from the panel header.
+   *
+   * @param event - Header pointer-down event.
+   */
   @action
-  startDrag(event: PointerEvent) {
+  startDrag(event: PointerEvent): void {
     // Ignore drags initiated from the buttons inside the header —
     // those should fire their own click handlers instead.
-    if ((event.target as HTMLElement).closest("button")) {
+    if (event.target instanceof Element && event.target.closest("button")) {
       return;
     }
     event.preventDefault();
-    const rect = (event.currentTarget as HTMLElement)
-      .closest(".wireframe-conditions-floating")!
-      .getBoundingClientRect();
+    if (!(event.currentTarget instanceof HTMLElement)) {
+      return;
+    }
+    const panel = event.currentTarget.closest(".wireframe-conditions-floating");
+    if (!(panel instanceof HTMLElement)) {
+      return;
+    }
+    const rect = panel.getBoundingClientRect();
     this.#dragStart = {
       pointerX: event.clientX,
       pointerY: event.clientY,
@@ -174,8 +200,9 @@ export default class ConditionsFloatingPanel extends Component {
     document.addEventListener("pointerup", this.#endDrag, { once: true });
   }
 
+  /** Returns the condition builder to the inspector. */
   @action
-  redock() {
+  redock(): void {
     this.wireframeConditionsPanel.close();
   }
 
@@ -190,14 +217,7 @@ export default class ConditionsFloatingPanel extends Component {
         }}
         {{this.observeResize}}
       >
-        {{! eslint-disable ember/template-no-pointer-down-event-binding }}
-        <div
-          class="wireframe-conditions-floating__header"
-          {{! Drag-to-move needs pointerdown to capture the initial
-              cursor offset and start tracking pointermove. pointerup
-              is the wrong half of the drag interaction. }}
-          {{on "pointerdown" this.startDrag}}
-        >
+        <div class="wireframe-conditions-floating__header" {{this.dragHandle}}>
           <span class="wireframe-conditions-floating__title">
             {{dIcon "filter"}}
             <span>{{i18n

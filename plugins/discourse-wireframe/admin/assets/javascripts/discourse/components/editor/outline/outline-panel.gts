@@ -8,9 +8,9 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { type ModifierLike } from "@glint/template";
 import { TrackedAsyncData } from "ember-async-data";
-import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
-import type Menu from "discourse/float-kit/services/menu";
-import type Blocks from "discourse/services/blocks";
+import type { BlockMetadata } from "discourse/blocks/types";
+import type MenuService from "discourse/float-kit/services/menu";
+import type BlocksService from "discourse/services/blocks";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -22,101 +22,128 @@ import { i18n } from "discourse-i18n";
 import OutlineRowActions from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-row-actions";
 import {
   normalizeLayoutMode,
+  type OutletOutline,
+  type OutlineRow,
   walkAllOutlets,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/walk-layout";
-import type WireframeBlockMutations from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
-import type WireframeBlockReveal from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-reveal";
-import type WireframeDragSession from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
-import type WireframeEditMode from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
-import type WireframeLayoutSignal from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
-import type WireframeMutationEngine from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
-import type WireframeSelection from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
+import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
+import type WireframeBlockRevealService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-reveal";
+import WireframeDragSessionService, {
+  type BlockDragPayload,
+  type PaletteDragPayload,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
+import type WireframeEditModeService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-edit-mode";
+import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
+import WireframeSelectionService, {
+  type SelectedBlockData,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 type OutlineStatusFilter = "all" | "errors" | "conditions";
 type OutlineDragKind = "wf-block" | "wf-palette-block";
 
-interface OutlineRow {
-  depth: number;
-  blockName: string;
-  blockId?: string;
-  blockKey: string;
-  args: Record<string, unknown>;
-  conditions?: LayoutEntry["conditions"];
-  hasConditions: boolean;
-  isUnknown: boolean;
-  isPart: boolean;
-  validationFailure: string | null;
-  validationReason: string | null;
-  validationDetails: unknown;
-  slideOrdinal: number | null;
-  slideNumberKey: string | null;
-  childLabel: string | null;
-  hasChildren: boolean;
-  childCount: number;
-  path: Array<string | number>;
-}
-
-interface DecoratedOutlineRow extends OutlineRow {
+type DecoratedOutlineRow = OutlineRow & {
+  /** Whether the row's conditions pass under the active context. */
   conditionPassing: boolean;
+  /** Whether the row is hidden by its conditions. */
   conditionFailing: boolean;
+  /** Whether permissive layout validation reported a failure. */
   hasValidationError: boolean;
+  /** Whether the row represents an authoring error. */
   hasError: boolean;
+  /** Whether the row should use hidden-content presentation. */
   isMuted: boolean;
+  /** Normalized layout mode for a layout block. */
   layoutMode: string | null;
+  /** One-based accessibility tree level. */
   ariaLevel: number;
+  /** Icon describing the row's current status. */
   statusIcon: string | null;
+  /** Tooltip describing the row's current status. */
   statusTooltip: string | null;
+  /** Icon representing the row's block type. */
   typeIcon: string;
-}
+};
 
-interface OutlineGroup<Row = OutlineRow> {
-  outletName: string;
+type OutlineGroup<Row = OutlineRow> = Omit<OutletOutline, "rows"> & {
+  /** Flattened and optionally decorated rows for the outlet. */
   rows: Row[];
-  rootKey: string | null;
-  mode: string | null;
-}
+};
 
-interface BlockDragData {
-  blockKey: string;
-  outletName: string;
+type BlockDragData = BlockDragPayload & {
+  /** Whether the dragged row is a synthesized composite part. */
   isPart?: boolean;
-}
+};
 
-interface PaletteDragData {
-  blockName: string;
-  defaultArgs?: object;
-}
-
-interface DragSource<T extends object> {
+type DragSource<T extends object> = {
+  /** Drag kind supplied by the drag-and-drop modifier. */
   type: OutlineDragKind;
+  /** Kind-specific drag payload. */
   data: T;
+  /** Element carrying the drag source modifier. */
   element: HTMLElement;
-}
+};
 
-interface DragStartEvent<T extends object> {
+type DragStartEvent<T extends object> = {
+  /** Source whose drag lifecycle changed. */
   source: DragSource<T>;
-}
+};
 
 type OutlineDropEvent =
-  | { source: DragSource<PaletteDragData> & { type: "wf-palette-block" } }
-  | { source: DragSource<BlockDragData> & { type: "wf-block" } };
+  | {
+      /** Palette source dropped onto an outline target. */
+      source: DragSource<PaletteDragPayload> & {
+        /** Identifies a palette drag. */
+        type: "wf-palette-block";
+      };
+    }
+  | {
+      /** Existing outline row dropped onto an outline target. */
+      source: DragSource<BlockDragData> & {
+        /** Identifies an existing-block drag. */
+        type: "wf-block";
+      };
+    };
+
+type LocatedOutlineRow = {
+  /** Outlet containing the row. */
+  outletName: string;
+  /** Decorated row located by stable key. */
+  row: DecoratedOutlineRow;
+};
+
+type CollapsedAncestor = {
+  /** Depth of the collapsed ancestor. */
+  depth: number;
+  /** Composite key of the collapsed ancestor. */
+  key: string;
+};
 
 interface OutlinePanelSignature {
+  /** The panel accepts no named arguments. */
   Args: Record<string, never>;
 }
 
 // TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
 // with a real Signature, then import it directly.
 const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  /** Roving-focus modifier arguments. */
   Args: {
+    /** Named roving-focus options. */
     Named: {
+      /** Keyboard navigation orientation. */
       orientation: "horizontal" | "vertical" | "grid";
+      /** Selector matching focusable rows. */
       itemSelector: string;
+      /** Handles activation of the focused row. */
       onActivate: (element: HTMLElement, event: KeyboardEvent) => void;
-      itemsKey: string;
+      /** Value that reseeds the roving focus group. */
+      itemsKey: unknown;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
+  /** Element owning the roving focus group. */
   Element: HTMLElement;
 }>;
 
@@ -124,15 +151,23 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
 // in .ts with a real Signature, then import it directly.
 const dDragAndDropSource =
   dDragAndDropSourceUntyped as unknown as ModifierLike<{
+    /** Drag-source modifier arguments. */
     Args: {
+      /** Named drag-source options. */
       Named: {
+        /** Existing-block drag kind. */
         type: "wf-block";
+        /** Existing outline-row drag payload. */
         data: BlockDragData;
+        /** Handles drag start. */
         onDragStart: (event: DragStartEvent<BlockDragData>) => void;
+        /** Handles drag completion. */
         onDrop: (event: DragStartEvent<BlockDragData>) => void;
       };
+      /** This modifier accepts no positional arguments. */
       Positional: [];
     };
+    /** Element carrying the drag source. */
     Element: HTMLElement;
   }>;
 
@@ -140,25 +175,34 @@ const dDragAndDropSource =
 // in .ts with a real Signature, then import it directly.
 const dDragAndDropTarget =
   dDragAndDropTargetUntyped as unknown as ModifierLike<{
+    /** Drop-target modifier arguments. */
     Args: {
+      /** Named drop-target options. */
       Named: {
+        /** Drag kinds accepted by the outline. */
         accepts: OutlineDragKind[];
+        /** Relative insertion position. */
         position: "before" | "after" | "inside";
+        /** Handles a drop on the outline target. */
         onDrop: (event: OutlineDropEvent) => void;
       };
+      /** This modifier accepts no positional arguments. */
       Positional: [];
     };
+    /** Element carrying the drop target. */
     Element: HTMLElement;
   }>;
 
-// Inline `padding-left` driven by tree depth. We use `trustHTML` because
-// the value is a constant we compute (no user input), and Ember will
-// otherwise warn about dynamic style bindings.
-//
-// The base 1rem offset indents every row at least one level under the
-// outlet label, so the hierarchy (outlet → its blocks) reads as a
-// nested tree instead of a flat list flush with the outlet heading.
-function rowPadding(depth: number) {
+/**
+ * Builds the inline indentation for one tree depth.
+ *
+ * The base 1rem offset indents every row at least one level under the outlet
+ * label. The value is computed from a number rather than user-provided CSS.
+ *
+ * @param depth - Zero-based nesting depth.
+ * @returns Trusted inline padding style.
+ */
+function rowPadding(depth: number): ReturnType<typeof trustHTML> {
   return trustHTML(`padding-left: ${1 + depth * 0.75}rem;`);
 }
 
@@ -178,15 +222,24 @@ const ROW_ACTIONS_MENU = "wireframe-outline-row-actions";
  * inspector populates and the matching block on the canvas highlights.
  */
 export default class OutlinePanel extends Component<OutlinePanelSignature> {
-  @service declare blocks: Blocks;
-  @service declare menu: Menu;
-  @service declare wireframeBlockMutations: WireframeBlockMutations;
-  @service declare wireframeBlockReveal: WireframeBlockReveal;
-  @service declare wireframeDragSession: WireframeDragSession;
-  @service declare wireframeMutationEngine: WireframeMutationEngine;
-  @service declare wireframeLayoutSignal: WireframeLayoutSignal;
-  @service declare wireframeSelection: WireframeSelection;
-  @service declare wireframeEditMode: WireframeEditMode;
+  /** Resolves registered block metadata and conditions. */
+  @service declare blocks: BlocksService;
+  /** Opens the per-row action menu. */
+  @service declare menu: MenuService;
+  /** Applies structural mutations initiated from the outline. */
+  @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+  /** Scrolls and flashes selected blocks on the canvas. */
+  @service declare wireframeBlockReveal: WireframeBlockRevealService;
+  /** Owns active outline drag state. */
+  @service declare wireframeDragSession: WireframeDragSessionService;
+  /** Exposes layout snapshots used by the outline projection. */
+  @service declare wireframeMutationEngine: WireframeMutationEngineService;
+  /** Invalidates the outline after layout changes. */
+  @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+  /** Owns the current block selection. */
+  @service declare wireframeSelection: WireframeSelectionService;
+  /** Exposes whether the editor is active. */
+  @service declare wireframeEditMode: WireframeEditModeService;
 
   /**
    * Free-text query that filters tree rows by block name / id (case-
@@ -200,8 +253,14 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * `"conditions"` shows rows that have conditions at all. Single-select.
    */
   @tracked statusFilter: OutlineStatusFilter = "all";
+  /** Drag kinds accepted by outline drop targets. */
   acceptedDragKinds: OutlineDragKind[] = ["wf-block", "wf-palette-block"];
-  isStatusFilter = (filter: OutlineStatusFilter) =>
+  /**
+   * Checks whether a status-filter chip is selected.
+   *
+   * @param filter - Filter represented by the chip.
+   */
+  isStatusFilter: (filter: OutlineStatusFilter) => boolean = (filter) =>
     this.statusFilter === filter;
   /**
    * Whether a container row is collapsed. A row the user has explicitly toggled
@@ -210,17 +269,24 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    *
    * @param row - The outline row carrying the block key and child count.
    */
-  isRowCollapsed = (row: OutlineRow) =>
+  isRowCollapsed: (row: OutlineRow) => boolean = (row) =>
     this.#collapseOverrides.get(row.blockKey) ??
     row.childCount > CHILD_COUNT_THRESHOLD;
-  isOutletCollapsed = (outletName: string) =>
+  /**
+   * Checks whether an outlet group is collapsed.
+   *
+   * @param outletName - Registered outlet name.
+   */
+  isOutletCollapsed: (outletName: string) => boolean = (outletName) =>
     this.#collapsedOutlets.has(outletName);
 
   /**
    * Whether `rootKey` is the current selection — drives the outlet header's
    * selected styling.
+   *
+   * @param rootKey - Composite key of the outlet root.
    */
-  isOutletSelected = (rootKey: string | null) => {
+  isOutletSelected: (rootKey: string | null) => boolean = (rootKey) => {
     return rootKey != null && this.wireframeSelection.isBlockSelected(rootKey);
   };
   /**
@@ -329,9 +395,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    *
    * DButton stops propagation of its own click, so the surrounding
    * row's selection handler does not also fire.
+   *
+   * @param row - Container row whose collapse state should toggle.
    */
   @action
-  toggleCollapse(row: OutlineRow) {
+  toggleCollapse(row: OutlineRow): void {
     if (!row.hasChildren) {
       return;
     }
@@ -344,9 +412,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * Toggles the collapse state for an outlet group header. Hides the
    * outlet's rows in the tree view while keeping its label visible
    * so the user can re-expand.
+   *
+   * @param outletName - Outlet group to toggle.
    */
   @action
-  toggleOutlet(outletName: string) {
+  toggleOutlet(outletName: string): void {
     if (this.#collapsedOutlets.has(outletName)) {
       this.#collapsedOutlets.delete(outletName);
     } else {
@@ -369,7 +439,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     outletName: string,
     row: OutlineRow,
     event?: MouseEvent | KeyboardEvent
-  ) {
+  ): void {
     const data = this.#rowData(outletName, row);
 
     if (event?.metaKey || event?.ctrlKey) {
@@ -393,8 +463,12 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   /**
    * Builds the selection payload for a row (the shape `selectBlock` and the
    * multi-select gestures expect).
+   *
+   * @param outletName - Outlet containing the row.
+   * @param row - Outline row to project.
+   * @returns Selection payload for the row.
    */
-  #rowData(outletName: string, row: OutlineRow) {
+  #rowData(outletName: string, row: OutlineRow): SelectedBlockData {
     return {
       key: row.blockKey,
       name: row.blockName,
@@ -412,6 +486,10 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * when there's no anchor or either endpoint isn't a visible row (e.g. the
    * anchor is in another outlet or hidden under a collapsed container), so the
    * caller falls back to a plain single select.
+   *
+   * @param outletName - Outlet whose visible rows define the range.
+   * @param toRow - Row terminating the range.
+   * @returns Contiguous block keys, or `null` without a visible anchor.
    */
   #rangeKeys(outletName: string, toRow: OutlineRow): string[] | null {
     const anchorKey = this.wireframeSelection.selectedBlockKey;
@@ -433,9 +511,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   /**
    * Selects an outlet by selecting its implicit root layout — the outline
    * header acts as the outlet's selection target, surfacing the layout form.
+   *
+   * @param outletName - Outlet whose root should be selected.
    */
   @action
-  selectOutletRoot(outletName: string) {
+  selectOutletRoot(outletName: string): void {
     this.wireframeSelection.selectOutlet(outletName);
   }
 
@@ -451,7 +531,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * @param event - Forwarded so `selectRow` can honor modifier keys.
    */
   @action
-  activateTreeItem(element: HTMLElement, event: KeyboardEvent) {
+  activateTreeItem(element: HTMLElement, event: KeyboardEvent): void {
     if (element.classList.contains("outline-outlet__header")) {
       const { outletName } = element.dataset;
       if (outletName) {
@@ -471,14 +551,16 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * sibling handler: Right expands a collapsed container, Left collapses an
    * expanded one. Leaves and already-in-state containers are a no-op, so the
    * event stays un-prevented and can bubble.
+   *
+   * @param event - Tree keyboard event.
    */
   @action
-  onTreeKeydown(event: KeyboardEvent) {
+  onTreeKeydown(event: KeyboardEvent): void {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
       return;
     }
-    const element = document.activeElement as HTMLElement | null;
-    if (!element) {
+    const element = document.activeElement;
+    if (!(element instanceof HTMLElement)) {
       return;
     }
     const expand = event.key === "ArrowRight";
@@ -511,10 +593,16 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * @param event - Forwarded by DButton through `@forwardEvent`.
    */
   @action
-  openRowActions(row: DecoratedOutlineRow, event: MouseEvent) {
-    const trigger = (event.target as HTMLElement).closest<HTMLElement>(
+  openRowActions(row: DecoratedOutlineRow, event: MouseEvent): void {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    const trigger = event.target.closest<HTMLElement>(
       ".outline-block__actions"
-    ) as HTMLElement;
+    );
+    if (!trigger) {
+      return;
+    }
     // Select the row this menu acts on, exactly as a row click would, so the
     // acted-on item is clearly highlighted and the inspector reflects it while
     // the menu is open.
@@ -543,10 +631,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * Resolves a decorated row (and its owning outlet) from a block key by
    * scanning the current groups. Called only on a keyboard activation, so the
    * linear scan is cheap relative to a per-render index.
+   *
+   * @param blockKey - Composite row key to locate.
+   * @returns The row and owning outlet, or `null` when absent.
    */
-  #findRow(
-    blockKey: string | undefined
-  ): { outletName: string; row: DecoratedOutlineRow } | null {
+  #findRow(blockKey: string | undefined): LocatedOutlineRow | null {
     if (!blockKey) {
       return null;
     }
@@ -559,6 +648,12 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     return null;
   }
 
+  /**
+   * Resolves cached metadata for a registered block name.
+   *
+   * @param blockName - Registered block name.
+   * @returns The block metadata, or `null` when unregistered.
+   */
   lookupMetadataFor(blockName: string): BlockMetadata | null {
     if (!this.#metaIndex) {
       this.#metaIndex = new Map(
@@ -576,9 +671,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * The data was attached at the `dDragAndDropSource` call site as
    * `(hash blockKey=… outletName=…)` and exposed back under
    * `source.data`.
+   *
+   * @param event - Drag-start event supplied by the source modifier.
    */
   @action
-  handleRowDragStart({ source }: DragStartEvent<BlockDragData>) {
+  handleRowDragStart({ source }: DragStartEvent<BlockDragData>): void {
     // Synthesized composite parts aren't reorderable — never start a drag for
     // one. (The underlying move would no-op anyway, but this avoids the
     // misleading drag affordance.)
@@ -600,7 +697,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * @param target - The normalized drag source payload from the target modifier.
    */
   @action
-  applyRowDrop(outletName: string, row: OutlineRow, target: OutlineDropEvent) {
+  applyRowDrop(
+    outletName: string,
+    row: OutlineRow,
+    target: OutlineDropEvent
+  ): void {
     // A synthesized composite part isn't a real layout position — dropping
     // onto/around it can't move or insert anything, so ignore the drop.
     if (row.isPart) {
@@ -627,23 +728,47 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     this.wireframeDragSession.endDrag();
   }
 
+  /**
+   * Checks whether a row is the active drag source.
+   *
+   * @param blockKey - Composite row key.
+   * @returns Whether the row owns the active drag.
+   */
   @action
-  isRowDragSource(blockKey: string) {
+  isRowDragSource(blockKey: string): boolean {
     return this.wireframeDragSession.sourceKey === blockKey;
   }
 
+  /**
+   * Selects an outline status filter.
+   *
+   * @param filter - Filter to activate.
+   */
   @action
-  setStatusFilter(filter: OutlineStatusFilter) {
+  setStatusFilter(filter: OutlineStatusFilter): void {
     this.statusFilter = filter;
   }
 
+  /**
+   * Updates the free-text outline query.
+   *
+   * @param event - Search input event.
+   */
   @action
-  onQueryInput(event: Event) {
-    this.query = (event.target as HTMLInputElement).value;
+  onQueryInput(
+    event: Event & {
+      /** Search input that emitted the event. */
+      currentTarget: Element;
+    }
+  ): void {
+    if (event.currentTarget instanceof HTMLInputElement) {
+      this.query = event.currentTarget.value;
+    }
   }
 
+  /** Clears the free-text outline query. */
   @action
-  clearQuery() {
+  clearQuery(): void {
     this.query = "";
   }
 
@@ -658,7 +783,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
   #dropCollapsedDescendants(
     rows: DecoratedOutlineRow[]
   ): DecoratedOutlineRow[] {
-    const collapsedAncestors: Array<{ depth: number; key: string }> = [];
+    const collapsedAncestors: CollapsedAncestor[] = [];
     const result: DecoratedOutlineRow[] = [];
     for (const row of rows) {
       while (
@@ -698,7 +823,7 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     row: DecoratedOutlineRow,
     normalizedQuery: string,
     status: OutlineStatusFilter
-  ) {
+  ): boolean {
     if (normalizedQuery) {
       const name = row.blockName?.toLowerCase() ?? "";
       const id = row.blockId?.toLowerCase() ?? "";
@@ -725,6 +850,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    * the walker exposes the raw spec — same data, different surface);
    * treating a throw as "condition failed" keeps the outline readable
    * either way.
+   *
+   * @param row - Raw outline row to decorate.
+   * @returns The row plus status and accessibility presentation.
    */
   #decorateRow(row: OutlineRow): DecoratedOutlineRow {
     let conditionPassing = true;
@@ -756,8 +884,11 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     // the row so the structure reads at a glance — mirrors the mode chip
     // the outlet header shows for its root layout. Non-layout blocks get
     // `null` so the badge only renders where a mode is meaningful.
+    const mode = row.args?.mode;
     const layoutMode =
-      row.blockName === "layout" ? normalizeLayoutMode(row.args?.mode) : null;
+      row.blockName === "layout"
+        ? normalizeLayoutMode(typeof mode === "string" ? mode : undefined)
+        : null;
     // `aria-level` for the flattened tree: the outlet header is level 1, so a
     // top-level row (depth 0) is level 2, and so on. Computed here in the single
     // decoration pass rather than as a per-row template getter.
@@ -785,6 +916,9 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    *   - Otherwise the block's own declared icon; `cube` mirrors the core
    *     default for blocks that declare none (and for unknown blocks whose
    *     metadata can't be resolved).
+   *
+   * @param row - Outline row whose type icon should be selected.
+   * @returns The block-type icon name.
    */
   #typeIconFor(row: OutlineRow): string {
     if (row.isPart) {
@@ -799,6 +933,10 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
    *   - Conditions present and failing → eye-slash.
    *   - Conditions present and passing → lock.
    *   - Otherwise → null (no badge).
+   *
+   * @param row - Outline row whose status icon should be selected.
+   * @param conditionFailing - Whether the row's conditions currently fail.
+   * @returns The status icon name, or `null` without a status.
    */
   #statusIconFor(row: OutlineRow, conditionFailing: boolean): string | null {
     if (row.isUnknown) {
@@ -819,6 +957,13 @@ export default class OutlinePanel extends Component<OutlinePanelSignature> {
     return null;
   }
 
+  /**
+   * Resolves localized status copy for an outline row.
+   *
+   * @param row - Outline row being decorated.
+   * @param conditionFailing - Whether the row's conditions currently fail.
+   * @returns The localized tooltip, or `null` without a status.
+   */
   #statusTooltipFor(row: OutlineRow, conditionFailing: boolean): string | null {
     if (row.isUnknown) {
       return i18n("wireframe.outline.status.unknown_block");

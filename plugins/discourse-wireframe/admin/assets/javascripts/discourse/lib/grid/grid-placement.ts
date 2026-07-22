@@ -8,21 +8,13 @@ import type { LayoutEntry } from "discourse/blocks/types";
 import {
   decideGridDrop,
   GRID_DROP_GESTURES,
+  type GridDropDecision,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import {
   findEntry,
   replaceEntryContainerArgs,
   replaceEntryInPlace,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-
-/**
- * The decision produced by the grid-drop rule chokepoint, describing where a
- * single entry lands in a grid and how its neighbours cascade.
- */
-type GridDropDecision =
-  import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropDecision;
-type GridDropGesture =
-  import("discourse/plugins/discourse-wireframe/discourse/lib/grid-drop").GridDropGesture;
 
 /** The axis-directed sense of an enter-style BESIDE drop. */
 type GridDropDirection = "left" | "right" | "up" | "down";
@@ -34,10 +26,39 @@ type EnterPosition = "before" | "after" | "inside";
  * The normalized gesture a `classifyGridDrop` call resolves an enter-style
  * drop into, ready for `decideGridDrop` to consume.
  */
-interface ClassifiedGridDrop {
-  gesture: GridDropGesture;
-  anchorKey?: string;
-  direction?: GridDropDirection;
+type ClassifiedGridDrop =
+  | {
+      /** Generic drop without a neighbouring cell. */
+      gesture: typeof GRID_DROP_GESTURES.GENERIC;
+    }
+  | {
+      /** Drop beside an existing cell. */
+      gesture: typeof GRID_DROP_GESTURES.BESIDE;
+      /** Existing cell anchoring the beside gesture. */
+      anchorKey: string;
+      /** Axis-directed cascade direction. */
+      direction: GridDropDirection;
+    };
+
+type GridLayoutArgs = {
+  /** Declared number of grid columns. */
+  columns?: number;
+  /** Declared number of grid rows. */
+  rows?: number;
+  /** Relative width assigned to each grid column. */
+  columnFractions?: number[];
+};
+
+/**
+ * Reads the grid-specific argument bag from a layout entry.
+ *
+ * @param entry - Grid layout entry whose arguments should be read.
+ * @returns The grid-specific argument view.
+ */
+function gridLayoutArgs(entry: LayoutEntry): GridLayoutArgs {
+  // TODO(devxp-typescript-pending): remove this cast once core can refine a
+  // `LayoutEntry`'s generic args from the resolved block schema.
+  return (entry.args ?? {}) as GridLayoutArgs;
 }
 
 /**
@@ -55,9 +76,13 @@ interface ClassifiedGridDrop {
  * `decideGridDrop` rule chokepoint — the `fill` / `append` / `cascade` outcomes
  * of an enter-style drop. Returns the layout unchanged when the grid is gone.
  *
+ * @param layout - Layout containing the grid and entry.
+ * @param gridKey - Stable key of the destination grid.
  * @param entryKeyValue - The entry being (re)placed; counts as an in-grid
  *   source so its current cell is credited as free.
  * @param targetKey - The cell the drop landed before/after, or the grid itself.
+ * @param position - Relative drop position against the target.
+ * @returns The updated layout, or the original layout when no change applies.
  */
 export function positionEntering(
   layout: LayoutEntry[],
@@ -70,11 +95,12 @@ export function positionEntering(
   if (!grid) {
     return layout;
   }
+  const args = gridLayoutArgs(grid);
   const decision = decideGridDrop({
     children: grid.children ?? [],
     declared: {
-      columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
-      rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
+      columns: args.columns ?? DEFAULT_GRID_COLUMNS,
+      rows: args.rows ?? DEFAULT_GRID_ROWS,
     },
     // The entry is already a child of the grid at this point, so it counts
     // as an in-grid source (its auto cell is credited as free).
@@ -92,6 +118,10 @@ export function positionEntering(
  * dimension-field shrink below content is left alone so its warning still
  * surfaces. When columns grow, the stored `columnFractions` are renormalized to
  * the new count so the rendered track list can't desync.
+ *
+ * @param layout - Layout containing the grid to synchronize.
+ * @param gridKey - Stable key of the grid to synchronize.
+ * @returns The synchronized layout, or the original layout when already valid.
  */
 export function syncDeclaredToUsage(
   layout: LayoutEntry[],
@@ -101,9 +131,10 @@ export function syncDeclaredToUsage(
   if (!grid) {
     return layout;
   }
+  const args = gridLayoutArgs(grid);
   const declared = {
-    columns: grid.args?.columns ?? DEFAULT_GRID_COLUMNS,
-    rows: grid.args?.rows ?? DEFAULT_GRID_ROWS,
+    columns: args.columns ?? DEFAULT_GRID_COLUMNS,
+    rows: args.rows ?? DEFAULT_GRID_ROWS,
   };
   const effective = gridDimensions(declared, grid.children);
   if (
@@ -112,18 +143,18 @@ export function syncDeclaredToUsage(
   ) {
     return layout;
   }
-  const nextArgs = {
+  const nextArgs: GridLayoutArgs & Record<string, unknown> = {
     ...grid.args,
     columns: effective.columns,
     rows: effective.rows,
   };
   if (
     effective.columns !== declared.columns &&
-    Array.isArray(grid.args?.columnFractions) &&
-    grid.args.columnFractions.length > 0
+    Array.isArray(args.columnFractions) &&
+    args.columnFractions.length > 0
   ) {
     nextArgs.columnFractions = normalizeFractions(
-      grid.args.columnFractions,
+      args.columnFractions,
       effective.columns
     );
   }
@@ -140,6 +171,11 @@ export function syncDeclaredToUsage(
  * a specific cell is BESIDE, anchored on that cell (so a spanning anchor's full
  * rect drives the cascade); everything else — including a drop on the grid
  * container itself — is GENERIC.
+ *
+ * @param gridKey - Stable key of the destination grid.
+ * @param targetKey - Stable key of the target entry, or the grid itself.
+ * @param position - Relative position reported by the enter-style drop.
+ * @returns The normalized grid-drop gesture.
  */
 function classifyGridDrop(
   gridKey: string,
@@ -168,7 +204,11 @@ function classifyGridDrop(
  * the grid's declared size is synced to usage. `swap` / `replace` are two-entry
  * trades handled separately, so they don't pass through here.
  *
+ * @param layout - Layout containing the grid and entry.
+ * @param gridKey - Stable key of the destination grid.
  * @param entryKeyValue - The entry being placed.
+ * @param decision - Pure placement decision to apply.
+ * @returns The updated and dimension-synchronized layout.
  */
 function applyGridDecision(
   layout: LayoutEntry[],
@@ -189,6 +229,7 @@ function applyGridDecision(
     }
   }
   if (decision.placement) {
+    const placement = decision.placement;
     const placed = replaceEntryContainerArgs(
       next,
       entryKeyValue,
@@ -197,8 +238,8 @@ function applyGridDecision(
         align: "stretch",
         justify: "stretch",
         ...current,
-        column: decision.placement.column,
-        row: decision.placement.row,
+        column: placement.column,
+        row: placement.row,
       })
     );
     if (placed.changed) {

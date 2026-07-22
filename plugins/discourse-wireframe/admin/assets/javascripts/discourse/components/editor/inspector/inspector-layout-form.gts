@@ -23,6 +23,8 @@ import InspectorStepperField from "discourse/plugins/discourse-wireframe/discour
 import { friendlyErrorMessage } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 import {
   GRID_TEMPLATES,
+  type GridTemplate as BaseGridTemplate,
+  type ParsedGridAreas,
   parseGridAreas,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid/grid-templates";
 import { buildValidationRule } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
@@ -30,61 +32,59 @@ import type WireframeGridTemplateService from "discourse/plugins/discourse-wiref
 import type WireframeInspectorArgsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inspector-args";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
-/** The inspector field descriptor produced by `schemaToFields`. */
-type InspectorField =
-  import("discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields").InspectorField;
-
-/** The parsed frame of a grid template's `areas` string. */
-type ParsedGridAreas = NonNullable<ReturnType<typeof parseGridAreas>>;
-
-/**
- * The non-positional config a grid template carries — the layout args it
- * applies (mode / gap / alignment) plus the dimensions and track templates a
- * parsed template resolves to. Every field is optional because a template
- * declares only the subset it cares about.
- */
-interface GridTemplateArgs {
-  mode?: string;
-  gap?: number;
-  align?: string;
-  columns?: number;
-  rows?: number;
-  columnTemplate?: string;
-  rowTemplate?: string;
-}
-
 /**
  * A preset grid layout surfaced by the layout form's template dropdown. The
  * shape matches the entries in `GRID_TEMPLATES`; `__parsedAreas` is a lazily
  * populated cache the preview memoises on the template object.
  */
-interface GridTemplate {
-  id: string;
-  i18nKey: string;
-  areas?: string;
-  args: GridTemplateArgs;
-
+type GridTemplate = BaseGridTemplate & {
   /** Lazily-parsed `areas`, memoised on the template object. */
   __parsedAreas?: ParsedGridAreas | null;
-}
+};
+
+type GridDimensions = {
+  /** Effective grid column count. */
+  columns: number;
+  /** Effective grid row count. */
+  rows: number;
+};
 
 /**
  * FormKit's external-error API exposed via `<Form @onRegisterApi>`, used to
  * push structured validation errors into the matching field's error slot.
  */
-interface FormExternalErrorApi {
-  addError(field: string, error: { title?: string; message: string }): void;
+type FormExternalErrorApi = {
+  /** Adds an external validation error for a named field. */
+  addError(
+    /** Field receiving the error. */
+    field: string,
+    /** Error title and message rendered by FormKit. */
+    error: {
+      /** Optional error title. */
+      title?: string;
+      /** Validation error message. */
+      message: string;
+    }
+  ): void;
+  /** Removes all external validation errors. */
   removeErrors(): void;
-}
+};
 
 /**
  * The context object FormKit hands a `@onSet` handler: the field's `name`
  * plus a `set` callback that writes the value into FormKit's own draft data.
  */
-interface FormFieldSetContext {
+type FormFieldSetContext = {
+  /** Name of the field being updated. */
   name: string;
-  set: (name: string, value: unknown) => unknown;
-}
+  /** Writes a field into FormKit's draft data. */
+  set: (
+    /** Field name to update. */
+    name: string,
+    /** Replacement field value. */
+    value: unknown
+  ) => unknown;
+};
 
 /*
  * FloatKit's `DMenu` is an untyped `.gjs`, so Glint sees no arg/block/attr
@@ -95,14 +95,29 @@ interface FormFieldSetContext {
  * with a real Signature, then import it directly.
  */
 const DMenu = DMenuUntyped as unknown as ComponentLike<{
+  /** Menu identity, placement, and trigger presentation. */
   Args: {
+    /** Stable menu identifier. */
     identifier?: string;
+    /** Preferred floating placement. */
     placement?: string;
+    /** Trigger icon ID. */
     icon?: string;
+    /** Trigger label translation key. */
     label?: string;
   };
+  /** Root menu element. */
   Element: HTMLElement;
-  Blocks: { content: [{ close: () => void }] };
+  /** Blocks yielded by the menu. */
+  Blocks: {
+    /** Menu content and its close action. */
+    content: [
+      {
+        /** Closes the menu. */
+        close: () => void;
+      },
+    ];
+  };
 }>;
 
 /**
@@ -231,9 +246,7 @@ const GAP_STEP = 0.25;
  * channel the generic form uses — the canvas reflects changes
  * without remounting the form.
  */
-export default class InspectorLayoutForm extends Component<{
-  Args: Record<string, never>;
-}> {
+export default class InspectorLayoutForm extends Component {
   @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
   @service declare wireframeGridTemplate: WireframeGridTemplateService;
   @service declare wireframeSelection: WireframeSelectionService;
@@ -276,9 +289,7 @@ export default class InspectorLayoutForm extends Component<{
     if (!data?.key) {
       return null;
     }
-    return this.wireframeGridTemplate.activeGridTemplate(
-      data.key
-    ) as GridTemplate | null;
+    return this.wireframeGridTemplate.activeGridTemplate(data.key);
   }
 
   /**
@@ -393,7 +404,7 @@ export default class InspectorLayoutForm extends Component<{
     // Coerce the legacy `"free-grid"` mode value to `"grid"` so the
     // segmented control highlights the right segment and the rest of
     // the form behaves consistently with the new naming.
-    const raw = (this.#args.mode ?? "stack") as string;
+    const raw = typeof this.#args.mode === "string" ? this.#args.mode : "stack";
     return raw === "free-grid" ? "grid" : raw;
   }
 
@@ -445,15 +456,21 @@ export default class InspectorLayoutForm extends Component<{
   }
 
   get columnTemplate(): string {
-    return (this.#args.columnTemplate ?? "") as string;
+    return typeof this.#args.columnTemplate === "string"
+      ? this.#args.columnTemplate
+      : "";
   }
 
   get rowTemplate(): string {
-    return (this.#args.rowTemplate ?? "") as string;
+    return typeof this.#args.rowTemplate === "string"
+      ? this.#args.rowTemplate
+      : "";
   }
 
   get autoCollapse(): string {
-    return (this.#args.autoCollapse ?? "default") as string;
+    return typeof this.#args.autoCollapse === "string"
+      ? this.#args.autoCollapse
+      : "default";
   }
 
   /**
@@ -483,27 +500,25 @@ export default class InspectorLayoutForm extends Component<{
     // exactly the modes core declares — never a stale hardcoded subset. Fall
     // back to the presentation map's own keys only when metadata is absent
     // (e.g. an unregistered block), so the picker is never empty.
-    const ids = (this.#schema.mode?.enum ??
-      Object.keys(MODE_PRESENTATION)) as string[];
-    return ids
-      .map((id) => {
-        const presentation =
-          MODE_PRESENTATION[id as keyof typeof MODE_PRESENTATION];
-        if (!presentation) {
-          // The enum gained a mode this plugin has no icon/label for. Skip it
-          // rather than render a broken segment; the warn (dev-only) and the
-          // drift-guard test flag the missing entry.
-          warn(`No presentation for layout mode "${id}"`, {
-            id: "discourse-wireframe.layout-mode-presentation",
-          });
-          return null;
-        }
-        const label = i18n(
-          `wireframe.inspector.layout.${presentation.labelKey}`
-        );
-        return { value: id, label, title: label, icon: presentation.icon };
-      })
-      .filter(Boolean);
+    const ids = (
+      this.#schema.mode?.enum ?? Object.keys(MODE_PRESENTATION)
+    ).filter((id): id is string => typeof id === "string");
+    return ids.flatMap((id) => {
+      const presentation = Object.entries(MODE_PRESENTATION).find(
+        ([mode]) => mode === id
+      )?.[1];
+      if (!presentation) {
+        // The enum gained a mode this plugin has no icon/label for. Skip it
+        // rather than render a broken segment; the warn (dev-only) and the
+        // drift-guard test flag the missing entry.
+        warn(`No presentation for layout mode "${id}"`, {
+          id: "discourse-wireframe.layout-mode-presentation",
+        });
+        return [];
+      }
+      const label = i18n(`wireframe.inspector.layout.${presentation.labelKey}`);
+      return [{ value: id, label, title: label, icon: presentation.icon }];
+    });
   }
 
   get autoCollapseItems() {
@@ -622,13 +637,17 @@ export default class InspectorLayoutForm extends Component<{
   }
 
   @action
-  setColumnTemplate(event: Event) {
-    this.#set("columnTemplate", (event.target as HTMLInputElement).value);
+  setColumnTemplate(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.#set("columnTemplate", event.target.value);
+    }
   }
 
   @action
-  setRowTemplate(event: Event) {
-    this.#set("rowTemplate", (event.target as HTMLInputElement).value);
+  setRowTemplate(event: Event): void {
+    if (event.target instanceof HTMLInputElement) {
+      this.#set("rowTemplate", event.target.value);
+    }
   }
 
   @action
@@ -695,14 +714,15 @@ export default class InspectorLayoutForm extends Component<{
    */
   @action
   syncErrors() {
-    if (!this.#formApi) {
+    const formApi = this.#formApi;
+    if (!formApi) {
       return;
     }
-    this.#formApi.removeErrors();
+    formApi.removeErrors();
     for (const [field, details] of Object.entries(this.fieldErrors ?? {})) {
       const label = this.#schema?.[field]?.ui?.label ?? field;
       for (const detail of details) {
-        this.#formApi.addError(field, {
+        formApi.addError(field, {
           title: label,
           message: friendlyErrorMessage(detail),
         });
@@ -710,7 +730,7 @@ export default class InspectorLayoutForm extends Component<{
     }
     (this.wireframeSelection.selectedBlockNonFieldErrors ?? []).forEach(
       (detail, i) => {
-        this.#formApi.addError(`_block:${i}`, {
+        formApi.addError(`_block:${i}`, {
           message: friendlyErrorMessage(detail),
         });
       }
@@ -733,10 +753,10 @@ export default class InspectorLayoutForm extends Component<{
     return buildValidationRule({
       required: argDef.required,
       schema: argDef,
-    } as unknown as InspectorField);
+    });
   }
 
-  #set(name: string, value: unknown) {
+  #set(name: string, value: unknown): void {
     this.wireframeInspectorArgs.updateSelectedArg(name, value);
   }
 
@@ -747,13 +767,14 @@ export default class InspectorLayoutForm extends Component<{
    * undo entry), then write the new dimension arg (a second entry).
    * On cancel: do nothing.
    */
-  #applyDimensionChange({ columns, rows }: { columns: number; rows: number }) {
+  #applyDimensionChange({ columns, rows }: GridDimensions): void {
     const data = this.wireframeSelection.selectedBlockData;
     if (!data?.key) {
       return;
     }
+    const gridKey = data.key;
     const offenders = this.wireframeGridTemplate.outOfBoundsSlotsIn(
-      data.key,
+      gridKey,
       columns,
       rows
     );
@@ -769,7 +790,7 @@ export default class InspectorLayoutForm extends Component<{
         "wireframe.inspector.layout.clamp_slots_confirm_action",
       didConfirm: () => {
         this.wireframeGridTemplate.clampGridSlotPlacements({
-          gridKey: data.key,
+          gridKey,
           maxColumns: columns,
           maxRows: rows,
         });
@@ -778,7 +799,7 @@ export default class InspectorLayoutForm extends Component<{
     });
   }
 
-  #writeDimensions({ columns, rows }: { columns: number; rows: number }) {
+  #writeDimensions({ columns, rows }: GridDimensions): void {
     if (columns !== this.columns) {
       this.#set("columns", columns);
     }

@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
-import type WireframeBlockMutations from "../services/wireframe-block-mutations";
-import type WireframeClipboard from "../services/wireframe-clipboard";
-import type WireframeWorkspace from "../services/wireframe-workspace";
+import type WireframeBlockMutationsService from "../services/wireframe-block-mutations";
+import type WireframeClipboardService from "../services/wireframe-clipboard";
+import type WireframeWorkspaceService from "../services/wireframe-workspace";
 
 /**
  * Keyboard-shortcut bindings for the wireframe. Attaches a `keydown`
@@ -41,6 +41,12 @@ function isTypingFocus(): boolean {
   return false;
 }
 
+/**
+ * Checks whether a keyboard event carries the platform shortcut modifier.
+ *
+ * @param event - Keyboard event to inspect.
+ * @returns Whether Command or Control is pressed.
+ */
 function isModifier(event: KeyboardEvent): boolean {
   return event.metaKey || event.ctrlKey;
 }
@@ -50,9 +56,19 @@ function isModifier(event: KeyboardEvent): boolean {
  * thunk the caller can invoke to remove it. Designed for ergonomic use
  * from an effect-style observer that runs whenever the editor's
  * `wireframeEditMode.active` flips.
+ *
+ * @param editor - Workspace whose state and selection drive the shortcuts.
+ * @returns A callback that removes the installed listener.
  */
-export function attachEditorShortcuts(editor: WireframeWorkspace): () => void {
-  function onKeyDown(event: KeyboardEvent) {
+export function attachEditorShortcuts(
+  editor: WireframeWorkspaceService
+): () => void {
+  /**
+   * Handles one document-level keyboard event.
+   *
+   * @param event - Keyboard event to route to an editor action.
+   */
+  function onKeyDown(event: KeyboardEvent): void {
     // The listener lives at the document level for the editor's lifetime. If the
     // editor's owner has been torn down (e.g. between tests, where the listener
     // would otherwise leak), bail before reading anything off it — a destroyed
@@ -78,9 +94,11 @@ export function attachEditorShortcuts(editor: WireframeWorkspace): () => void {
       event.preventDefault();
       // Resolve the block-mutations service lazily — only after the
       // destroyed/active gate above has confirmed the owner is still alive.
+      // TODO(devxp-typescript-pending): remove this cast once Ember/core
+      // exposes a typed service registry for owner lookups.
       const mutations = getOwner(editor)!.lookup(
         "service:wireframe-block-mutations"
-      ) as WireframeBlockMutations;
+      ) as WireframeBlockMutationsService;
       // Under a multi-selection, remove the whole set in one undo step;
       // otherwise just the single selected block.
       if (editor.wireframeSelection.selectionCount > 1) {
@@ -100,9 +118,11 @@ export function attachEditorShortcuts(editor: WireframeWorkspace): () => void {
     // Resolve the clipboard service lazily — only on a modifier shortcut, and
     // only after the destroyed/active gate above has confirmed the owner is
     // still alive (a lookup on a torn-down owner would throw).
+    // TODO(devxp-typescript-pending): remove this cast once Ember/core exposes
+    // a typed service registry for owner lookups.
     const clipboard = getOwner(editor)!.lookup(
       "service:wireframe-clipboard"
-    ) as WireframeClipboard;
+    ) as WireframeClipboardService;
 
     const key = event.key.toLowerCase();
     if (key === "c") {

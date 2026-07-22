@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -11,6 +10,7 @@ import FKAlertUntyped from "discourse/form-kit/components/fk/alert";
 import DropdownSelectBoxUntyped from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import type WireframeSimulationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-simulation";
 
 type PersonaId =
   | "real"
@@ -24,49 +24,112 @@ type PersonaId =
 type ViewportId = "real" | "mobile" | "tablet" | "desktop";
 type SimulatedBreakpoint = "sm" | "md" | "xl";
 
-interface PersonaOption {
+type PersonaOption = {
+  /** Stable persona identifier. */
   id: PersonaId;
+  /** Translated persona name. */
   name: string;
+  /** Translated persona description. */
   description: string;
+  /** Icon representing the persona. */
   icon: string;
-}
+};
 
-interface ViewportItem {
+type ViewportItem = {
+  /** Stable viewport identifier. */
   value: ViewportId;
+  /** Optional device icon. */
   icon?: string;
+  /** Optional visible text label. */
   label?: string;
+  /** Translated tooltip and accessible name. */
   title: string;
+};
+
+type ViewportSimulation = {
+  /** Breakpoint represented by the simulated viewport. */
+  breakpoint: SimulatedBreakpoint;
+  /** Whether the simulated viewport has touch input. */
+  touch: boolean;
+};
+
+type SimulatedPersona = {
+  /** Whether the simulated user is an administrator. */
+  admin?: boolean;
+  /** Simulated trust level. */
+  trust_level?: number;
+};
+
+/**
+ * Narrows the condition framework's deliberately generic simulated user slot.
+ *
+ * @param user - Simulated user payload to inspect.
+ * @returns Whether the payload exposes the persona fields used by this control.
+ */
+function isSimulatedPersona(user: unknown): user is SimulatedPersona {
+  if (typeof user !== "object" || user === null) {
+    return false;
+  }
+  const admin = Reflect.get(user, "admin");
+  const trustLevel = Reflect.get(user, "trust_level");
+  return (
+    (admin === undefined || typeof admin === "boolean") &&
+    (trustLevel === undefined || typeof trustLevel === "number")
+  );
 }
 
 // TODO(devxp-typescript-pending): drop once FKAlert is authored in .gts with a
 // real Signature, then import it directly.
 const FKAlert = FKAlertUntyped as unknown as ComponentLike<{
-  Args: { type: string; icon?: string };
+  /** Arguments accepted by the alert component. */
+  Args: {
+    /** Visual alert type. */
+    type: string;
+    /** Optional leading icon. */
+    icon?: string;
+  };
+  /** Root alert element. */
   Element: HTMLElement;
-  Blocks: { default: [] };
+  /** Yielded alert content. */
+  Blocks: {
+    /** Default alert content block. */
+    default: [];
+  };
 }>;
 
 // TODO(devxp-typescript-pending): drop once DropdownSelectBox is authored in
 // .gts with a real Signature, then import it directly.
 const DropdownSelectBox = DropdownSelectBoxUntyped as unknown as ComponentLike<{
+  /** Arguments accepted by the persona select. */
   Args: {
+    /** Available persona rows. */
     content: PersonaOption[];
+    /** Currently selected persona. */
     value: PersonaId;
+    /** Handles selection changes. */
     onChange: (value: PersonaId) => void;
+    /** Optional select-kit presentation options. */
     options?: object;
   };
+  /** Root select-kit element. */
   Element: HTMLElement;
 }>;
 
 // TODO(devxp-typescript-pending): drop once DSegmentedControl is authored in
 // .gts with a real Signature, then import it directly.
 const DSegmentedControl = DSegmentedControlUntyped as unknown as ComponentLike<{
+  /** Arguments accepted by the viewport picker. */
   Args: {
+    /** Form-control name. */
     name: string;
+    /** Available viewport segments. */
     items: ViewportItem[];
+    /** Currently selected viewport. */
     value: ViewportId;
+    /** Handles viewport selection. */
     onSelect: (value: ViewportId) => void;
   };
+  /** Root segmented-control element. */
   Element: HTMLElement;
 }>;
 
@@ -123,10 +186,7 @@ const PERSONA_ICONS: Record<PersonaId, string> = {
   admin: "shield-halved",
 };
 
-const VIEWPORTS: Record<
-  ViewportId,
-  { breakpoint: SimulatedBreakpoint; touch: boolean } | null
-> = Object.freeze({
+const VIEWPORTS: Record<ViewportId, ViewportSimulation | null> = Object.freeze({
   real: null,
   mobile: { breakpoint: "sm", touch: true },
   tablet: { breakpoint: "md", touch: true },
@@ -138,7 +198,7 @@ const VIEWPORTS: Record<
  * FontAwesome device glyphs (the Lucide tablet/phone read too alike);
  * `real` stays a short text label since no device glyph fits it.
  */
-const VIEWPORT_ITEMS: Array<{ value: ViewportId; icon?: string }> = [
+const VIEWPORT_ITEMS: Array<Pick<ViewportItem, "value" | "icon">> = [
   { value: "real" },
   { value: "desktop", icon: "desktop" },
   { value: "tablet", icon: "tablet-screen-button" },
@@ -155,8 +215,10 @@ const VIEWPORT_ITEMS: Array<{ value: ViewportId; icon?: string }> = [
  * "condition-only" simulation scope; full preview ships in a later phase.
  */
 export default class SimulationControls extends Component {
-  @service wireframeSimulation;
+  /** Stores and updates the active simulated condition context. */
+  @service declare wireframeSimulation: WireframeSimulationService;
 
+  /** Persona currently represented by the simulation slot. */
   get currentPersona(): PersonaId {
     const sim = this.wireframeSimulation.value;
     if (!sim || !("user" in sim)) {
@@ -165,12 +227,27 @@ export default class SimulationControls extends Component {
     if (sim.user === null) {
       return "anonymous";
     }
+    if (!isSimulatedPersona(sim.user)) {
+      return "real";
+    }
     if (sim.user.admin) {
       return "admin";
     }
-    return `tl${sim.user.trust_level ?? 0}` as PersonaId;
+    switch (sim.user.trust_level) {
+      case 1:
+        return "tl1";
+      case 2:
+        return "tl2";
+      case 3:
+        return "tl3";
+      case 4:
+        return "tl4";
+      default:
+        return "tl0";
+    }
   }
 
+  /** Viewport currently represented by the simulation slot. */
   get currentViewport(): ViewportId {
     const sim = this.wireframeSimulation.value;
     if (!sim || !("viewport" in sim) || !sim.viewport) {
@@ -179,8 +256,9 @@ export default class SimulationControls extends Component {
     // `buildSimulatedViewport` marks every breakpoint at-or-below the chosen
     // size `true` (the "viewport is at least this wide" semantics), so the
     // chosen size is the LARGEST breakpoint still true — scan from the top.
+    const viewport = sim.viewport.viewport;
     const bp = ["2xl", "xl", "lg", "md", "sm"].find(
-      (b) => sim.viewport.viewport?.[b] === true
+      (b) => viewport?.[b] === true
     );
     if (bp === "sm") {
       return "mobile";
@@ -221,8 +299,13 @@ export default class SimulationControls extends Component {
     });
   }
 
+  /**
+   * Replaces or clears the simulated persona.
+   *
+   * @param value - Persona selected by the dropdown.
+   */
   @action
-  handlePersonaChange(value: PersonaId) {
+  handlePersonaChange(value: PersonaId): void {
     if (value === "real") {
       this.wireframeSimulation.setUser(undefined);
       return;
@@ -233,8 +316,13 @@ export default class SimulationControls extends Component {
     this.wireframeSimulation.setUser(PERSONAS[value]);
   }
 
+  /**
+   * Replaces or clears the simulated viewport.
+   *
+   * @param value - Viewport selected by the segmented control.
+   */
   @action
-  handleViewportChange(value: ViewportId) {
+  handleViewportChange(value: ViewportId): void {
     const pick = VIEWPORTS[value];
     if (!pick) {
       this.wireframeSimulation.setViewport(undefined);
@@ -243,8 +331,9 @@ export default class SimulationControls extends Component {
     this.wireframeSimulation.setViewport(buildSimulatedViewport(pick));
   }
 
+  /** Clears all active simulation state. */
   @action
-  clear() {
+  clear(): void {
     this.wireframeSimulation.clear();
   }
 

@@ -28,19 +28,38 @@ type InspectorFieldDescriptor =
  * FormKit's external-error API exposed via `<Form @onRegisterApi>`, used to
  * push structured validation errors into the matching field's error slot.
  */
-interface FormExternalErrorApi {
-  addError(field: string, error: { title?: string; message: string }): void;
+type FormExternalErrorApi = {
+  /** Adds an external validation error for a named field. */
+  addError(
+    /** Field receiving the error. */
+    field: string,
+    /** Error title and message rendered by FormKit. */
+    error: {
+      /** Optional error title. */
+      title?: string;
+      /** Validation error message. */
+      message: string;
+    }
+  ): void;
+  /** Removes all external validation errors. */
   removeErrors(): void;
-}
+};
 
 /**
  * The context object FormKit hands a `@onSet` handler: the field's `name`
  * plus a `set` callback that writes the value into FormKit's own draft data.
  */
-interface FormFieldSetContext {
+type FormFieldSetContext = {
+  /** Name of the field being updated. */
   name: string;
-  set: (name: string, value: unknown) => unknown;
-}
+  /** Writes a field into FormKit's draft data. */
+  set: (
+    /** Field name to update. */
+    name: string,
+    /** Replacement field value. */
+    value: unknown
+  ) => unknown;
+};
 
 /**
  * Coerces a control's raw input value back into the type its schema
@@ -127,9 +146,7 @@ export default class InspectorForm extends Component {
     if (declared && Object.keys(declared).length > 0) {
       return declared;
     }
-    // `inferSchemaFromValues` is untyped JS that returns a schema map as a
-    // bare `Object`; narrow it to the schema shape it actually produces.
-    return inferSchemaFromValues(this.values) as Record<string, ArgSchema>;
+    return inferSchemaFromValues(this.values);
   }
 
   @cached
@@ -263,7 +280,7 @@ export default class InspectorForm extends Component {
     // default keep the existing behaviour: clearing the field stores
     // `""` so the user's explicit empty overrides the default — matches
     // the inline-text editor's same convention in
-    // `wireframe-inplace-text.js`.
+    // `wireframe-inplace-text.ts`.
     const writeValue =
       coerced === "" && argDef?.default === undefined ? null : coerced;
 

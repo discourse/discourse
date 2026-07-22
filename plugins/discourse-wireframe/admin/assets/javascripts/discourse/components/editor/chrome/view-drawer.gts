@@ -14,7 +14,16 @@ import SimulationControls from "discourse/plugins/discourse-wireframe/discourse/
 // arg/attr types, so declaring its Element here lets the `{{on}}` modifier
 // attach to the switch (it spreads `...attributes` onto its inner button).
 const DToggleSwitch = DToggleSwitchUntyped as unknown as ComponentLike<{
-  Args: { state?: boolean; label?: string; translatedLabel?: string };
+  /** Toggle state and label configuration. */
+  Args: {
+    /** Whether the toggle is enabled. */
+    state?: boolean;
+    /** Translation key naming the toggle. */
+    label?: string;
+    /** Pre-translated toggle label. */
+    translatedLabel?: string;
+  };
+  /** Button element receiving splatted attributes. */
   Element: HTMLButtonElement;
 }>;
 
@@ -24,13 +33,21 @@ const DToggleSwitch = DToggleSwitchUntyped as unknown as ComponentLike<{
 // here.
 const dCloseOnClickOutside =
   dCloseOnClickOutsideUntyped as unknown as ModifierLike<{
+    /** Element monitored for outside clicks. */
     Element: HTMLElement;
+    /** Close callback and target-exclusion options. */
     Args: {
+      /** Positional outside-click configuration. */
       Positional: [
+        /** Callback invoked after an outside click. */
         close: () => void,
+        /** Optional elements excluded from outside-click handling. */
         options?: {
+          /** Primary excluded element selector. */
           targetSelector?: string;
+          /** Secondary excluded element selector. */
           secondaryTargetSelector?: string;
+          /** Explicit excluded element. */
           target?: Element;
         },
       ];
@@ -38,16 +55,18 @@ const dCloseOnClickOutside =
   }>;
 
 interface ViewDrawerSignature {
+  /** Drawer state and actions owned by the editor shell. */
   Args: {
-    // Whether the drawer is shown.
+    /** Whether the drawer is shown. */
     isOpen?: boolean;
-    // Current dim preference, reflected by the toggle.
+    /** Current dim preference reflected by the toggle. */
     dimNonEditable?: boolean;
-    // Flips the dim preference on the shell.
+    /** Flips the dim preference on the shell. */
     onToggleDim: () => void;
-    // Closes the drawer.
+    /** Closes the drawer. */
     onClose: () => void;
   };
+  /** Root drawer element. */
   Element: HTMLDivElement;
 }
 
@@ -56,7 +75,7 @@ interface ViewDrawerSignature {
  * how the canvas is shown — the dim-non-editable toggle plus the persona /
  * viewport simulation controls.
  *
- * Modeled on the publish review drawer (`publish-review-drawer.gjs`): a
+ * Modeled on the publish review drawer (`publish-review-drawer.gts`): a
  * `position: fixed` panel gated on `@isOpen`, so placement is exact rather than
  * fighting a floating overlay's collision padding. Clicking outside closes it —
  * the toolbar's View toggle is excluded so re-clicking it toggles rather than

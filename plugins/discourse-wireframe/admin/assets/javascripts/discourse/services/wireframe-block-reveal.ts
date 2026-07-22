@@ -1,5 +1,5 @@
 import type Owner from "@ember/owner";
-import { cancel, schedule, Timer } from "@ember/runloop";
+import { cancel, schedule, type Timer } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import { prefersReducedMotion } from "discourse/lib/utilities";
@@ -7,8 +7,8 @@ import {
   entryKey,
   findAncestryPath,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-import type WireframeLayoutQuery from "./wireframe-layout-query";
-import type WireframeSelection from "./wireframe-selection";
+import type WireframeLayoutQueryService from "./wireframe-layout-query";
+import type WireframeSelectionService from "./wireframe-selection";
 
 // Duration of the just-selected flash; mirror the CSS animation length in
 // `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).
@@ -29,8 +29,10 @@ const FLASH_DURATION_MS = 1100;
  * timer) and has side effects (DOM + timers).
  */
 export default class WireframeBlockRevealService extends Service {
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service declare wireframeSelection: WireframeSelection;
+  /** Resolves entries and ancestry in the current draft layouts. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+  /** Notifies this service when the primary block selection changes. */
+  @service declare wireframeSelection: WireframeSelectionService;
 
   /** A selected block awaiting its element to mount. */
   #pendingRevealKey: string | null = null;
@@ -38,11 +40,16 @@ export default class WireframeBlockRevealService extends Service {
   /** A block awaiting its element to mount, to flash it. */
   #pendingFlashKey: string | null = null;
 
-  // Tracks the in-flight just-selected flash so a new flash can cancel the
-  // previous one's pending class removal (see `flash`).
+  /** Timer that removes the current one-shot flash class. */
   #flashTimer: Timer | null = null;
+  /** Element carrying the current one-shot flash class. */
   #flashedEl: HTMLElement | null = null;
 
+  /**
+   * Creates the service and subscribes to primary selection changes.
+   *
+   * @param owner - Ember owner used to initialize the service.
+   */
   constructor(owner: Owner) {
     super(owner);
     // Own our reaction to selection changes: reveal the newly selected block.
@@ -53,7 +60,12 @@ export default class WireframeBlockRevealService extends Service {
     // across sessions. The composition root looks this service up at boot so
     // the subscription exists before the first selection change.
     this.wireframeSelection.registerAfterChange(
-      ({ key }: { key: string | null }) => this.revealSelection(key)
+      ({
+        key,
+      }: {
+        /** Newly selected composite block key. */
+        key: string | null;
+      }) => this.revealSelection(key)
     );
   }
 
@@ -66,7 +78,7 @@ export default class WireframeBlockRevealService extends Service {
    *
    * @param blockKey - The composite key of the selected block.
    */
-  revealSelection(blockKey: string | null) {
+  revealSelection(blockKey: string | null): void {
     // A new selection supersedes any reveal still waiting on a mount.
     this.#pendingRevealKey = null;
     if (!blockKey) {
@@ -104,7 +116,7 @@ export default class WireframeBlockRevealService extends Service {
    *
    * @param blockKey - The composite key of the block to flash.
    */
-  flash(blockKey: string | null) {
+  flash(blockKey: string | null): void {
     // A new flash request supersedes any flash still waiting on a mount.
     this.#pendingFlashKey = null;
     if (!blockKey) {
@@ -131,7 +143,7 @@ export default class WireframeBlockRevealService extends Service {
    * @param blockKey - The mounting block's composite key.
    * @param element - The block's chrome element.
    */
-  notifyChromeInserted(blockKey: string, element: HTMLElement) {
+  notifyChromeInserted(blockKey: string, element: HTMLElement): void {
     if (!blockKey) {
       return;
     }
@@ -152,7 +164,7 @@ export default class WireframeBlockRevealService extends Service {
    * and at service teardown, so a flash awaiting a mount can't replay against a
    * later session.
    */
-  reset() {
+  reset(): void {
     if (this.#flashTimer) {
       cancel(this.#flashTimer);
       this.#flashTimer = null;
@@ -178,7 +190,7 @@ export default class WireframeBlockRevealService extends Service {
    *
    * @param blockKey - The composite key of the block being revealed.
    */
-  #revealContainingTabs(blockKey: string) {
+  #revealContainingTabs(blockKey: string): void {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
     if (!located) {
       return;
@@ -216,7 +228,7 @@ export default class WireframeBlockRevealService extends Service {
    *
    * @param el - The element to reveal.
    */
-  #revealElement(el: HTMLElement) {
+  #revealElement(el: HTMLElement): void {
     schedule("afterRender", () => {
       if (!el.isConnected) {
         return;
@@ -304,7 +316,7 @@ export default class WireframeBlockRevealService extends Service {
    *
    * @param el - The element to flash.
    */
-  #flashElement(el: HTMLElement) {
+  #flashElement(el: HTMLElement): void {
     schedule("afterRender", () => {
       if (!el.isConnected) {
         return;

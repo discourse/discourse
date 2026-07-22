@@ -10,7 +10,9 @@ import MarkedText from "discourse/ui-kit/marked-text";
  * accepts `...attributes` (the minimal renderer emits no wrapper element).
  */
 interface ScaffoldedRichTextRendererSignature {
+  /** Rich-text runs, schema, and presentation state supplied by the renderer. */
   Args: MinimalRichTextRendererSignature["Args"];
+  /** Outer rich-text span rendered by the scaffolded implementation. */
   Element: HTMLSpanElement;
 }
 

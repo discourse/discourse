@@ -6,31 +6,76 @@ import { action } from "@ember/object";
 import type Owner from "@ember/owner";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
+import type { ArgSchema } from "discourse/blocks/types";
 import UppyImageUploaderUntyped from "discourse/components/uppy-image-uploader";
 import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import {
+  type ImageArgValue,
+  isImageArgValue,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
+import WireframeImageUploadService, {
+  type ImageUploadPayload,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
+import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
+import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 const URL_PROBE_TIMEOUT_MS = 4000;
 const ASPECT_RATIO_EPSILON = 0.02;
 
+type ImageEditorTab = "upload" | "url";
+
+type ImageFieldData = {
+  /** FormKit field identifier used by the uploader. */
+  id?: string;
+  /** FormKit field name identifying the block argument. */
+  name: string;
+};
+
+// TODO(devxp-typescript-pending): replace `ImageFieldData` once FormKit
+// exports the type of the field data yielded by a custom control.
+
+type UrlProbeResult = {
+  /** Loaded image width, when the probe succeeded. */
+  width?: number;
+  /** Loaded image height, when the probe succeeded. */
+  height?: number;
+  /** Whether loading failed or timed out. */
+  failed: boolean;
+};
+
 // TODO(devxp-typescript-pending): drop once UppyImageUploader is authored in
 // .gts with a real Signature, then import it directly.
 const UppyImageUploader = UppyImageUploaderUntyped as unknown as ComponentLike<{
+  /** Uppy image uploader arguments. */
   Args: {
+    /** Unique uploader identifier. */
     id: string;
+    /** Current image URL. */
     imageUrl?: string;
-    onUploadDone: (upload: unknown) => void;
+    /** Handles a completed image upload. */
+    onUploadDone: (
+      /** Successful upload payload. */
+      upload: ImageUploadPayload
+    ) => void;
+    /** Handles deletion of the uploaded image. */
     onUploadDeleted: () => void;
+    /** Core upload type. */
     type: string;
   };
+  /** Root uploader element. */
   Element: HTMLElement;
 }>;
 
 interface InspectorImageFieldSignature {
+  /** Image field identity and canonical argument schema. */
   Args: {
-    custom?: { id?: string; name?: string };
-    schema?: { allowDark?: boolean; aspectRatio?: number };
+    /** FormKit field data identifying the image argument. */
+    custom: ImageFieldData;
+    /** Canonical image argument schema. */
+    schema?: ArgSchema;
   };
 }
 
@@ -58,42 +103,42 @@ interface InspectorImageFieldSignature {
  *   - A non-blocking ratio-mismatch warning shows when both variants
  *     carry intrinsic dimensions and their aspect ratios diverge
  *     beyond a small epsilon.
- *
- * @typedef {Object} ImageValue
- * @property {"upload"|"url"} [source]
- * @property {string} url
- * @property {number} [width]
- * @property {number} [height]
- * @property {ImageValue} [dark]
  */
 export default class InspectorImageField extends Component<InspectorImageFieldSignature> {
-  @service wireframeImageUpload;
-  @service wireframeLayoutQuery;
-  @service wireframeLayoutSignal;
-  @service wireframeSelection;
+  /** Uploads and writes image argument values. */
+  @service declare wireframeImageUpload: WireframeImageUploadService;
+
+  /** Resolves the selected entry's live image value. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
+  /** Invalidates live reads after layout changes. */
+  @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+
+  /** Provides the selected block key. */
+  @service declare wireframeSelection: WireframeSelectionService;
 
   /**
    * URL-tab drafts per variant. Keep the field populated while the
    * user types so switching tabs and coming back doesn't blow away
    * their input. Committed to the saved value on blur.
    */
-  @tracked lightUrlDraft = "";
-  @tracked darkUrlDraft = "";
+  @tracked lightUrlDraft: string = "";
+  @tracked darkUrlDraft: string = "";
 
   /**
    * Tab state per variant. Defaults to the value's `source` when set;
    * falls back to `"upload"` for unset variants so the first
    * interaction is the file picker rather than a bare URL input.
    */
-  @tracked lightTab = null;
-  @tracked darkTab = null;
+  @tracked lightTab: ImageEditorTab = "upload";
+  @tracked darkTab: ImageEditorTab = "upload";
 
   /**
    * Soft warnings per variant (i18n keys). Cleared by the next
    * successful commit.
    */
-  @tracked lightWarning = null;
-  @tracked darkWarning = null;
+  @tracked lightWarning: string | null = null;
+  @tracked darkWarning: string | null = null;
 
   /**
    * In-flight URL probes (one per variant). Used internally to discard
@@ -103,6 +148,12 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   #lightProbeToken = 0;
   #darkProbeToken = 0;
 
+  /**
+   * Creates the image editor and seeds its variant tabs and URL drafts.
+   *
+   * @param owner - Ember owner for the component instance.
+   * @param args - Image field identity and argument schema.
+   */
   constructor(owner: Owner, args: InspectorImageFieldSignature["Args"]) {
     super(owner, args);
     const value = this.liveValue;
@@ -122,7 +173,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * current selection, so we always write to whatever's selected at
    * commit time.
    */
-  get blockKey() {
+  get blockKey(): string | null {
     return this.wireframeSelection.selectedBlockKey;
   }
 
@@ -131,8 +182,8 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * `@custom.name`. We don't read FormKit's draft value; we just use
    * its name as the arg key.
    */
-  get argName() {
-    return this.args.custom?.name;
+  get argName(): string {
+    return this.args.custom.name;
   }
 
   /**
@@ -142,29 +193,36 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * touches `wireframeLayoutSignal.version` so the entry lookup itself
    * re-evaluates after layout mutations (insert / move / replace).
    *
-   * @returns {ImageValue|null}
+   * @returns Live image value, or `null` when absent.
    */
-  get liveValue() {
+  get liveValue(): ImageArgValue | null {
     void this.wireframeLayoutSignal.version;
     const key = this.blockKey;
     if (!key) {
       return null;
     }
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(key)?.entry;
-    return entry?.args?.[this.argName] ?? null;
+    const value = entry?.args?.[this.argName];
+    return isImageArgValue(value) ? value : null;
   }
 
-  /** @returns {ImageValue|null} */
-  get lightVariant() {
+  /** Light image variant, or `null` when absent. */
+  get lightVariant(): ImageArgValue | null {
     return this.liveValue;
   }
 
-  /** @returns {ImageValue|null} */
-  get darkVariant() {
+  /** Dark image variant, or `null` when absent. */
+  get darkVariant(): ImageArgValue | null {
     return this.liveValue?.dark ?? null;
   }
 
-  get allowDark() {
+  /** Whether a dark image variant is currently stored. */
+  get hasDarkVariant(): boolean {
+    return this.darkVariant !== null;
+  }
+
+  /** Whether the schema permits a dark image variant. */
+  get allowDark(): boolean {
     return this.args.schema?.allowDark === true;
   }
 
@@ -175,7 +233,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * actually clipped in this case — the warning is accurate.
    */
   @cached
-  get ratioMismatchWarning() {
+  get ratioMismatchWarning(): string | null {
     const light = this.lightVariant;
     const dark = this.darkVariant;
     // Compare INTRINSIC (natural) ratios — the display width / height
@@ -207,9 +265,9 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * Returns `true` when the light variant's display dims differ from
    * its natural ones — indicating the image has been resized.
    *
-   * @returns {boolean}
+   * @returns Whether the light variant has resized display dimensions.
    */
-  get lightIsResized() {
+  get lightIsResized(): boolean {
     const v = this.lightVariant;
     if (!v?.naturalWidth || !v?.naturalHeight || !v?.width || !v?.height) {
       return false;
@@ -218,27 +276,27 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   }
 
   @action
-  onLightUploadDone(upload) {
+  onLightUploadDone(upload: ImageUploadPayload): void {
     this.lightTab = "upload";
     this.lightWarning = null;
     this.#commitLight(this.#uploadToVariant(upload));
   }
 
   @action
-  onLightUploadDeleted() {
+  onLightUploadDeleted(): void {
     this.lightWarning = null;
     this.#commitLight(null);
   }
 
   @action
-  onDarkUploadDone(upload) {
+  onDarkUploadDone(upload: ImageUploadPayload): void {
     this.darkTab = "upload";
     this.darkWarning = null;
     this.#commitDark(this.#uploadToVariant(upload));
   }
 
   @action
-  onDarkUploadDeleted() {
+  onDarkUploadDeleted(): void {
     this.darkWarning = null;
     this.#commitDark(null);
   }
@@ -246,27 +304,33 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   /* URL handlers (template-bound, so unprefixed) */
 
   @action
-  setLightTab(tab) {
+  setLightTab(tab: ImageEditorTab): void {
     this.lightTab = tab;
   }
 
   @action
-  setDarkTab(tab) {
+  setDarkTab(tab: ImageEditorTab): void {
     this.darkTab = tab;
   }
 
   @action
-  onLightUrlDraftInput(event: Event) {
-    this.lightUrlDraft = (event.target as HTMLInputElement).value;
+  onLightUrlDraftInput(event: Event): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    this.lightUrlDraft = event.currentTarget.value;
   }
 
   @action
-  onDarkUrlDraftInput(event: Event) {
-    this.darkUrlDraft = (event.target as HTMLInputElement).value;
+  onDarkUrlDraftInput(event: Event): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    this.darkUrlDraft = event.currentTarget.value;
   }
 
   @action
-  commitLightUrl() {
+  commitLightUrl(): void {
     const url = this.lightUrlDraft.trim();
     if (!url) {
       return;
@@ -294,7 +358,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
   }
 
   @action
-  commitDarkUrl() {
+  commitDarkUrl(): void {
     const url = this.darkUrlDraft.trim();
     if (!url) {
       return;
@@ -327,7 +391,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
    * shown when the user has resized via canvas drag handles.
    */
   @action
-  resetLightSize() {
+  resetLightSize(): void {
     const v = this.lightVariant;
     if (!v?.naturalWidth || !v?.naturalHeight) {
       return;
@@ -339,7 +403,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     });
   }
 
-  #commitLight(next) {
+  #commitLight(next: ImageArgValue | null): void {
     if (!this.blockKey) {
       return;
     }
@@ -355,7 +419,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, merged);
   }
 
-  #commitDark(next) {
+  #commitDark(next: ImageArgValue | null): void {
     if (!this.blockKey) {
       return;
     }
@@ -372,7 +436,7 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
     this.wireframeImageUpload.setImageArg(this.blockKey, this.argName, merged);
   }
 
-  #uploadToVariant(upload) {
+  #uploadToVariant(upload: ImageUploadPayload): ImageArgValue {
     // `upload_id` is what lets server-side cleanup create an
     // UploadReference for this image; without it the upload is
     // treated as orphaned and gets deleted by Jobs::CleanUpUploads
@@ -484,7 +548,10 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
       </div>
 
       {{#if this.allowDark}}
-        <details class="wireframe-image-field__dark" open={{this.darkVariant}}>
+        <details
+          class="wireframe-image-field__dark"
+          open={{this.hasDarkVariant}}
+        >
           <summary>{{i18n "wireframe.inspector.image.dark_label"}}</summary>
           <p class="wireframe-image-field__dark-help">
             {{i18n "wireframe.inspector.image.dark_help"}}
@@ -569,14 +636,14 @@ export default class InspectorImageField extends Component<InspectorImageFieldSi
  * `naturalHeight`. Resolves with `{ width, height, failed: false }` on
  * success, `{ failed: true }` on `error` or timeout. Never rejects.
  *
- * @param {string} url
- * @returns {Promise<{width?: number, height?: number, failed: boolean}>}
+ * @param url - Image URL to probe.
+ * @returns Probe result with optional intrinsic dimensions.
  */
-function probeUrl(url) {
+function probeUrl(url: string): Promise<UrlProbeResult> {
   return new Promise((resolve) => {
     const img = new Image();
     let settled = false;
-    const finish = (result) => {
+    const finish = (result: UrlProbeResult): void => {
       if (settled) {
         return;
       }

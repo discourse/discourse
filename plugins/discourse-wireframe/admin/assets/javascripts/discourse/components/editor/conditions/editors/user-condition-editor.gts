@@ -4,12 +4,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
-import type Site from "discourse/models/site";
+import type SiteService from "discourse/models/site";
 import GroupChooserUntyped from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import type { ConditionLeaf } from "discourse/plugins/discourse-wireframe/discourse/lib/conditions/condition-tree";
 
 /**
  * The shape of a `user` condition leaf. Every field is optional: an unset
@@ -17,22 +18,46 @@ import { i18n } from "discourse-i18n";
  * reads exactly these keys, and the editor omits any field the author clears
  * so the serialised JSON stays compact.
  */
-export interface UserConditionLeaf {
-  type?: string;
+export type UserConditionLeaf = ConditionLeaf & {
+  /** Whether the viewer must be logged in. */
   loggedIn?: boolean;
+  /** Whether the viewer must be an administrator. */
   admin?: boolean;
+  /** Whether the viewer must be a moderator. */
   moderator?: boolean;
+  /** Whether the viewer must be a staff member. */
   staff?: boolean;
+  /** Minimum required trust level. */
   minTrustLevel?: number;
+  /** Maximum permitted trust level. */
   maxTrustLevel?: number;
+  /** Required group memberships. */
   groups?: string[];
-}
+};
+
+type LoginMode = "any" | "logged-in" | "anonymous";
+type UserRole = "admin" | "moderator" | "staff";
+type TrustLevelField = "minTrustLevel" | "maxTrustLevel";
+
+type TrustLevelOption = {
+  /** Numeric trust level. */
+  value: number;
+  /** Short display label. */
+  label: string;
+};
 
 interface UserConditionEditorSignature {
+  /** User condition and update callback. */
   Args: {
+    /** User condition leaf being edited. */
     leaf: UserConditionLeaf;
-    onChange: (next: UserConditionLeaf) => void;
+    /** Replaces the edited condition leaf. */
+    onChange: (
+      /** Updated user condition leaf. */
+      next: UserConditionLeaf
+    ) => void;
   };
+  /** Root element containing the user condition controls. */
   Element: HTMLDivElement;
 }
 
@@ -40,14 +65,28 @@ interface UserConditionEditorSignature {
 // with a real Signature, then import it directly. It is an untyped select-kit
 // component today, so it exposes no arg/attr types.
 const GroupChooser = GroupChooserUntyped as unknown as ComponentLike<{
+  /** Select-kit arguments consumed by this editor. */
   Args: {
+    /** Groups available for selection. */
     content?: unknown[];
+    /** Selected group names. */
     value?: string[];
+    /** Property used as the option value. */
     valueProperty?: string;
+    /** Property used as the option label. */
     labelProperty?: string;
-    onChange?: (value: string[]) => void;
-    options?: object;
+    /** Called with the selected group names. */
+    onChange?: (
+      /** Selected group names. */
+      value: string[]
+    ) => void;
+    /** Select-kit behavior options. */
+    options?: {
+      /** Translation key for the filter placeholder. */
+      filterPlaceholder?: string;
+    };
   };
+  /** Root select-kit element. */
   Element: HTMLDivElement;
 }>;
 
@@ -68,7 +107,7 @@ const GroupChooser = GroupChooserUntyped as unknown as ComponentLike<{
  * Unset args are omitted entirely so the serialised JSON stays
  * compact.
  */
-const TRUST_LEVELS = [
+const TRUST_LEVELS: readonly TrustLevelOption[] = [
   { value: 0, label: "TL0" },
   { value: 1, label: "TL1" },
   { value: 2, label: "TL2" },
@@ -77,9 +116,11 @@ const TRUST_LEVELS = [
 ];
 
 export default class UserConditionEditor extends Component<UserConditionEditorSignature> {
-  @service declare site: Site;
+  /** Provides groups available on the current site. */
+  @service declare site: SiteService;
 
-  get loginMode() {
+  /** Login-state segment represented by the current condition. */
+  get loginMode(): LoginMode {
     if (this.args.leaf.loggedIn === true) {
       return "logged-in";
     }
@@ -96,37 +137,42 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
    * an explicit-membership check. Authors who genuinely need a TL
    * gate use the trust-level controls instead.
    */
-  get availableGroups() {
-    return (
-      this.site.groups?.filter((g: { automatic?: boolean }) => !g.automatic) ??
-      []
-    );
+  get availableGroups(): unknown[] {
+    const groups: unknown = this.site.groups;
+    return Array.isArray(groups)
+      ? groups.filter((group) => !isAutomaticGroup(group))
+      : [];
   }
 
-  get selectedGroupNames() {
+  /** Selected group names. */
+  get selectedGroupNames(): string[] {
     return Array.isArray(this.args.leaf.groups) ? this.args.leaf.groups : [];
   }
 
-  patch(patch: Partial<UserConditionLeaf>) {
-    const next: UserConditionLeaf = { ...this.args.leaf };
-    for (const [key, value] of Object.entries(patch) as [
-      keyof UserConditionLeaf,
-      UserConditionLeaf[keyof UserConditionLeaf],
-    ][]) {
+  /**
+   * Applies a partial user-condition update, deleting undefined fields.
+   *
+   * @param patch - Condition fields to replace or remove.
+   */
+  patch(patch: Partial<UserConditionLeaf>): void {
+    const next = { ...this.args.leaf };
+    for (const [key, value] of Object.entries(patch)) {
       if (value === undefined) {
         delete next[key];
       } else {
-        // `key` and `value` are a matched pair from the same partial, but TS
-        // widens `value` to the union of all field types across the loop, so
-        // the assignment goes through an index cast at this dynamic boundary.
-        (next as Record<string, unknown>)[key] = value;
+        next[key] = value;
       }
     }
     this.args.onChange(next);
   }
 
+  /**
+   * Updates the required login state.
+   *
+   * @param mode - Login mode selected by the author.
+   */
   @action
-  setLoginMode(mode: "any" | "logged-in" | "anonymous") {
+  setLoginMode(mode: LoginMode): void {
     if (mode === "any") {
       this.patch({ loggedIn: undefined });
     } else if (mode === "logged-in") {
@@ -136,15 +182,33 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
     }
   }
 
+  /**
+   * Toggles a required user role.
+   *
+   * @param name - Role field to update.
+   * @param event - Role-checkbox event.
+   */
   @action
-  toggleRole(name: "admin" | "moderator" | "staff", event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
+  toggleRole(name: UserRole, event: Event): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    const checked = event.currentTarget.checked;
     this.patch({ [name]: checked ? true : undefined });
   }
 
+  /**
+   * Updates one trust-level bound.
+   *
+   * @param which - Trust-level bound to update.
+   * @param event - Trust-level selector event.
+   */
   @action
-  setTrustLevel(which: "minTrustLevel" | "maxTrustLevel", event: Event) {
-    const raw = (event.target as HTMLSelectElement).value;
+  setTrustLevel(which: TrustLevelField, event: Event): void {
+    if (!(event.currentTarget instanceof HTMLSelectElement)) {
+      return;
+    }
+    const raw = event.currentTarget.value;
     if (raw === "") {
       this.patch({ [which]: undefined });
       return;
@@ -155,8 +219,13 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
     }
   }
 
+  /**
+   * Updates the required group names.
+   *
+   * @param names - Selected group names.
+   */
   @action
-  setGroups(names: string[]) {
+  setGroups(names: string[]): void {
     if (!names || names.length === 0) {
       this.patch({ groups: undefined });
       return;
@@ -296,4 +365,18 @@ export default class UserConditionEditor extends Component<UserConditionEditorSi
       </div>
     </div>
   </template>
+}
+
+/**
+ * Checks whether a site group is automatic.
+ *
+ * @param group - Runtime site-group value.
+ * @returns Whether the group is automatic.
+ */
+function isAutomaticGroup(group: unknown): boolean {
+  return (
+    typeof group === "object" &&
+    group !== null &&
+    Reflect.get(group, "automatic") === true
+  );
 }

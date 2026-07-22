@@ -10,19 +10,27 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 import ActivityEntryTooltip from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-entry-tooltip";
-import type WireframeRail from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
-import type WireframeValidation from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-validation";
+import WireframeRailService, {
+  type WireframeRailPanel,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-rail";
+import type WireframeValidationService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-validation";
 
 // TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .gts
 // with a real Signature. Its .d.ts declares a bare `DefaultSignature` (no named
 // args), so a direct call rejects the args this rail passes.
 const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  /** Element whose descendants participate in roving focus. */
   Element: HTMLElement;
+  /** Roving-focus configuration. */
   Args: {
+    /** Named roving-focus configuration. */
     Named: {
+      /** Direction in which focus moves. */
       orientation?: "vertical" | "horizontal";
+      /** Selector identifying focusable items. */
       itemSelector?: string;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }>;
@@ -31,21 +39,27 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
  * A static rail entry: its target panel plus the icon and i18n keys the button
  * and hover card render from.
  */
-interface ActivityBarEntry {
-  tab: string;
+type ActivityBarEntry = {
+  /** Rail panel opened by the entry. */
+  tab: WireframeRailPanel;
+  /** Icon ID rendered by the entry. */
   icon: string;
+  /** Translation key naming the entry. */
   label: string;
+  /** Translation key describing the entry. */
   description: string;
-}
+};
 
 /**
  * A rail entry decorated with its live badge count and (when non-zero) a
  * count-aware translated aria-label.
  */
-interface DecoratedActivityBarEntry extends ActivityBarEntry {
+type DecoratedActivityBarEntry = ActivityBarEntry & {
+  /** Validation badge count shown by the entry. */
   badgeCount: number;
-  translatedAriaLabel: string | null;
-}
+  /** Count-aware accessible label, or `undefined` without a badge. */
+  translatedAriaLabel: string | undefined;
+};
 
 /**
  * The editor's left activity bar: a persistent vertical strip of icon-only
@@ -63,6 +77,7 @@ interface DecoratedActivityBarEntry extends ActivityBarEntry {
  * reserved by extending `ENTRIES`, not by rendering disabled placeholders.
  */
 export default class ActivityBar extends Component {
+  /** Static activity entries rendered in rail order. */
   static ENTRIES: ActivityBarEntry[] = [
     {
       tab: "palette",
@@ -84,9 +99,12 @@ export default class ActivityBar extends Component {
     },
   ];
 
+  /** Registers activity-entry hover cards. */
   @service declare tooltip: TooltipService;
-  @service declare wireframeRail: WireframeRail;
-  @service declare wireframeValidation: WireframeValidation;
+  /** Owns the active and collapsed rail-panel state. */
+  @service declare wireframeRail: WireframeRailService;
+  /** Supplies the live issue count. */
+  @service declare wireframeValidation: WireframeValidationService;
 
   /**
    * Registers the entry's hover card (name + hint). Hover-only — focus moves
@@ -98,7 +116,7 @@ export default class ActivityBar extends Component {
   registerTooltip = modifier(
     (element: HTMLElement, [entry]: [DecoratedActivityBarEntry]) => {
       if (isTesting()) {
-        return;
+        return undefined;
       }
       const instance = this.tooltip.register(element, {
         component: ActivityEntryTooltip,
@@ -140,7 +158,7 @@ export default class ActivityBar extends Component {
           }),
         };
       }
-      return { ...entry, badgeCount: 0, translatedAriaLabel: null };
+      return { ...entry, badgeCount: 0, translatedAriaLabel: undefined };
     });
   }
 

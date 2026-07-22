@@ -13,63 +13,135 @@ import InspectorStepperField from "discourse/plugins/discourse-wireframe/discour
 import InspectorTagField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-tag-field";
 import InspectorTopicField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-topic-field";
 import InspectorUserField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-user-field";
-import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
+import {
+  isRichTextDoc,
+  toFlatMarkdown,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 
 type InspectorFieldDescriptor =
   import("discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields").InspectorField;
 
-interface FormFieldSetContext {
+type FormFieldSetContext = {
+  /** FormKit field name. */
   name: string;
-  set: (name: string, value: unknown) => unknown;
-}
+  /** Writes a named field value. */
+  set: (
+    /** FormKit field name. */
+    name: string,
+    /** Replacement field value. */
+    value: unknown
+  ) => unknown;
+};
 
-interface FormSelectContext {
+type FormSelectContext = {
+  /** Option component yielded by a FormKit select control. */
   Option: ComponentLike<{
-    Args: { value: unknown };
-    Blocks: { default: [] };
-  }>;
-}
-
-interface FormFieldContext {
-  Control: ComponentLike<{
-    Args: { placeholder?: string | null };
-    Element: HTMLElement;
-    Blocks: { default: [select: FormSelectContext] };
-  }>;
-  name: string;
-  set: (value: unknown) => void | Promise<void>;
-  value: unknown;
-}
-
-export interface InspectorFormContext {
-  Field: ComponentLike<{
+    /** Select option arguments. */
     Args: {
+      /** Persisted option value. */
+      value: unknown;
+    };
+    /** Select option blocks. */
+    Blocks: {
+      /** Visible option label. */
+      default: [];
+    };
+  }>;
+};
+
+type FormFieldContext = {
+  /** Control component yielded by a FormKit field. */
+  Control: ComponentLike<{
+    /** Control arguments. */
+    Args: {
+      /** Optional native input placeholder. */
+      placeholder?: string | null;
+    };
+    /** Native input element rendered by the default control. */
+    Element: HTMLInputElement;
+    /** Control blocks. */
+    Blocks: {
+      /** Select context yielded by select controls. */
+      default: [
+        /** Select state and actions exposed to the rendered control. */
+        select: FormSelectContext,
+      ];
+    };
+  }>;
+  /** FormKit field name. */
+  name: string;
+  /** Writes a replacement field value. */
+  set: (
+    /** Replacement field value. */
+    value: unknown
+  ) => void | Promise<void>;
+  /** Current field value. */
+  value: unknown;
+};
+
+export type InspectorFormContext = {
+  /** FormKit field component. */
+  Field: ComponentLike<{
+    /** FormKit field arguments. */
+    Args: {
+      /** Field name in the form data. */
       name: string;
+      /** Visible field title. */
       title: string;
+      /** Optional supporting help text. */
       helpText?: string | null;
+      /** Optional FormKit validation rule. */
       validation?: string;
+      /** FormKit control type identifier. */
       type: string;
+      /** Handles a committed field value. */
       onSet: (
+        /** Replacement field value. */
         value: unknown,
+        /** FormKit field update context. */
         context: FormFieldSetContext
       ) => void | Promise<void>;
+      /** Whether the control is read-only. */
       disabled?: boolean;
     };
+    /** Root element rendered by the FormKit field. */
     Element: HTMLElement;
-    Blocks: { default: [field: FormFieldContext] };
+    /** FormKit field blocks. */
+    Blocks: {
+      /** Field context yielded to the control renderer. */
+      default: [
+        /** Current field state and update callback. */
+        field: FormFieldContext,
+      ];
+    };
   }>;
-}
+};
+
+// TODO(devxp-typescript-pending): replace these local FormKit contexts once
+// FormKit exports the field, control, and onSet contracts it yields.
 
 interface InspectorFieldSignature {
+  /** Inspector field state and FormKit integration. */
   Args: {
+    /** FormKit form component surface. */
     form: InspectorFormContext;
+    /** Inspector field descriptor derived from the argument schema. */
     field: InspectorFieldDescriptor;
+    /** Current form values keyed by argument name. */
     values: Record<string, unknown>;
+    /** Handles a committed FormKit field value. */
     onFieldSet: (
+      /** Replacement field value. */
       value: unknown,
+      /** FormKit field update context. */
       context: FormFieldSetContext
     ) => void | Promise<void>;
-    validationRuleFor?: (field: InspectorFieldDescriptor) => string | undefined;
+    /** Resolves the optional validation rule for a field. */
+    validationRuleFor?: (
+      /** Inspector field to validate. */
+      field: InspectorFieldDescriptor
+    ) => string | undefined;
+    /** Whether the rendered field is read-only. */
     disabled?: boolean;
   };
 }
@@ -86,60 +158,85 @@ interface InspectorFieldSignature {
  * `custom` slot; the renderer below wires the matching select-kit
  * chooser inline.
  */
-export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
-  text: "input-text",
-  number: "input-number",
-  url: "input-url",
-  textarea: "textarea",
-  toggle: "toggle",
-  select: "select",
-  // `radio-group` and `segmented` are the same single-select enum picker — the
-  // unified InspectorSegmentedField (icon segments with a dropdown fallback) —
-  // so both ride the `custom` slot and render the same branch below.
-  "radio-group": "custom",
-  color: "color",
-  icon: "icon",
-  emoji: "emoji",
-  // `image` rides FormKit's `custom` slot; the per-control branch below
-  // renders the bespoke InspectorImageField that owns the full value
-  // shape (`{ source, url, width?, height?, dark? }`).
-  image: "custom",
-  "rich-text": "composer",
-  // `rich-inline` rides the `custom` slot: when the arg declares a schema
-  // variant (`ui.schema`) the branch below mounts the editable inline
-  // rich-text editor; otherwise it falls back to a read-only summary (the
-  // canvas inline editor remains the other edit surface either way).
-  "rich-inline": "custom",
-  code: "code",
-  "tag-chooser": "tag-chooser",
-  // Entity pickers ride FormKit's `custom` slot: the template's
-  // per-control branches render the matching select-kit chooser
-  // inline (CategoryChooser / MiniTagChooser / etc.) and route value
-  // changes through the consumer's `onFieldSet` just like every other
-  // control.
-  "category-select": "custom",
-  "tag-select": "custom",
-  "user-select": "custom",
-  "group-select": "custom",
-  "topic-select": "custom",
-  // An array of structured items (`itemType: "object"`). Rides the `custom`
-  // slot; the bespoke control renders one editable row per item.
-  repeatable: "custom",
-  // Numeric controls and the segmented enum picker also ride the `custom`
-  // slot; their per-control branches below mount the matching field component.
-  dimension: "custom",
-  stepper: "custom",
-  segmented: "custom",
-});
+export const FORM_KIT_TYPE_BY_CONTROL: Readonly<Record<string, string>> =
+  Object.freeze({
+    text: "input-text",
+    number: "input-number",
+    url: "input-url",
+    textarea: "textarea",
+    toggle: "toggle",
+    select: "select",
+    // `radio-group` and `segmented` are the same single-select enum picker — the
+    // unified InspectorSegmentedField (icon segments with a dropdown fallback) —
+    // so both ride the `custom` slot and render the same branch below.
+    "radio-group": "custom",
+    color: "color",
+    icon: "icon",
+    emoji: "emoji",
+    // `image` rides FormKit's `custom` slot; the per-control branch below
+    // renders the bespoke InspectorImageField that owns the full value
+    // shape (`{ source, url, width?, height?, dark? }`).
+    image: "custom",
+    "rich-text": "composer",
+    // `rich-inline` rides the `custom` slot: when the arg declares a schema
+    // variant (`ui.schema`) the branch below mounts the editable inline
+    // rich-text editor; otherwise it falls back to a read-only summary (the
+    // canvas inline editor remains the other edit surface either way).
+    "rich-inline": "custom",
+    code: "code",
+    "tag-chooser": "tag-chooser",
+    // Entity pickers ride FormKit's `custom` slot: the template's
+    // per-control branches render the matching select-kit chooser
+    // inline (CategoryChooser / MiniTagChooser / etc.) and route value
+    // changes through the consumer's `onFieldSet` just like every other
+    // control.
+    "category-select": "custom",
+    "tag-select": "custom",
+    "user-select": "custom",
+    "group-select": "custom",
+    "topic-select": "custom",
+    // An array of structured items (`itemType: "object"`). Rides the `custom`
+    // slot; the bespoke control renders one editable row per item.
+    repeatable: "custom",
+    // Numeric controls and the segmented enum picker also ride the `custom`
+    // slot; their per-control branches below mount the matching field component.
+    dimension: "custom",
+    stepper: "custom",
+    segmented: "custom",
+  });
+
+/**
+ * Formats an inspector value when it has a supported rich-text shape.
+ *
+ * @param value - Current field value.
+ * @returns A flat Markdown summary, or an empty string for another shape.
+ */
+function flatMarkdown(value: unknown): string {
+  return typeof value === "string" || isRichTextDoc(value)
+    ? toFlatMarkdown(value)
+    : "";
+}
+
+/**
+ * Resolves the rich-text schema variant declared by an inspector field.
+ *
+ * @param field - Inspector field whose schema should be read.
+ * @returns The schema variant, or an empty string when it is absent.
+ */
+function richTextSchema(field: InspectorFieldDescriptor): string {
+  return typeof field.schema.ui?.schema === "string"
+    ? field.schema.ui.schema
+    : "";
+}
 
 /**
  * Maps a `ui.control` to the FormKit field "type" value,
  * defaulting to `"input-text"` for anything not in the map.
  *
- * @param {string} control
- * @returns {string}
+ * @param control - Inspector control identifier.
+ * @returns The matching FormKit field type.
  */
-export function fieldTypeFor(control) {
+export function fieldTypeFor(control: string): string {
   return FORM_KIT_TYPE_BY_CONTROL[control] ?? "input-text";
 }
 
@@ -280,7 +377,7 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
           <formField.Control>
             <InspectorRichTextField
               @custom={{formField}}
-              @schema={{@field.schema.ui.schema}}
+              @schema={{richTextSchema @field}}
             />
           </formField.Control>
         {{else}}
@@ -290,7 +387,7 @@ const InspectorField: TemplateOnlyComponent<InspectorFieldSignature> =
           <div class="wireframe-inspector-rich-inline">
             <span
               class="wireframe-inspector-rich-inline__summary"
-            >{{toFlatMarkdown (get @values @field.name)}}</span>
+            >{{flatMarkdown (get @values @field.name)}}</span>
             <span class="wireframe-inspector-rich-inline__hint">Edit on the
               canvas</span>
           </div>

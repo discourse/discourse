@@ -6,15 +6,18 @@ import { registerDragAndDropSource } from "discourse/ui-kit/modifiers/d-drag-and
 import type WireframeDragSessionService from "../services/wireframe-drag-session";
 
 interface ProxyDragSourcesSignature {
+  /** Container chrome whose proxy children become drag sources. */
   Element: HTMLElement;
+  /** Modifier arguments. */
   Args: {
+    /** Named modifier arguments. */
     Named: {
-      // The outlet the children live in (for the drag payload).
+      /** The outlet the children live in, forwarded in the drag payload. */
       outletName: string;
-      // A value that changes on every structural edit; read only to re-run
-      // this modifier so the source set tracks the current children.
+      /** Structural version used to refresh the registered source set. */
       version: number;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }
@@ -38,20 +41,35 @@ interface ProxyDragSourcesSignature {
  * `data-wf-drop-child-key` marker.
  */
 export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesSignature> {
+  /** Tracks the active drag lifecycle. */
   @service declare wireframeDragSession: WireframeDragSessionService;
 
+  /** Cleanup callbacks for each registered proxy drag source. */
   #cleanups: Array<() => void> = [];
 
+  /**
+   * Creates the modifier and registers teardown.
+   *
+   * @param owner - Ember owner creating the modifier.
+   * @param args - Initial modifier arguments.
+   */
   constructor(owner: Owner, args: ArgsFor<ProxyDragSourcesSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.#teardown());
   }
 
+  /**
+   * Registers a drag source for each direct proxy child.
+   *
+   * @param element - Container chrome whose proxies should be scanned.
+   * @param _positional - Unused positional arguments.
+   * @param named - Outlet identity and structural refresh version.
+   */
   modify(
     element: HTMLElement,
     _positional: [],
     { outletName, version }: ProxyDragSourcesSignature["Args"]["Named"]
-  ) {
+  ): void {
     // `version` is read purely to re-run on every structural edit, so the
     // source set follows added / removed children.
     void version;
@@ -70,7 +88,16 @@ export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesS
           onDragStart: ({
             source,
           }: {
-            source: { data: { blockKey: string; outletName: string } };
+            /** Drag source payload provided by the ui-kit modifier. */
+            source: {
+              /** Existing block drag data. */
+              data: {
+                /** Composite key of the dragged block. */
+                blockKey: string;
+                /** Outlet containing the dragged block. */
+                outletName: string;
+              };
+            };
           }) => this.wireframeDragSession.startDrag(source.data),
           onDrop: () => this.wireframeDragSession.endDrag(),
         }))
@@ -78,7 +105,8 @@ export default class ProxyDragSourcesModifier extends Modifier<ProxyDragSourcesS
     }
   }
 
-  #teardown() {
+  /** Clears every proxy drag-source registration. */
+  #teardown(): void {
     this.#cleanups.forEach((cleanup) => cleanup());
     this.#cleanups = [];
   }

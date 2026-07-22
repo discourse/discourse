@@ -8,40 +8,18 @@ import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ConditionLeafArgsUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/condition-leaf-args";
-import OutletArgConditionEditorUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/outlet-arg-condition-editor";
-import RouteConditionEditorUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/route-condition-editor";
-import SettingConditionEditorUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/setting-condition-editor";
-import UserConditionEditorUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/user-condition-editor";
-import ViewportConditionEditorUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/viewport-condition-editor";
+import ConditionLeafArgs from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/condition-leaf-args";
+import OutletArgConditionEditor from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/outlet-arg-condition-editor";
+import RouteConditionEditor from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/route-condition-editor";
+import SettingConditionEditor from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/setting-condition-editor";
+import UserConditionEditor from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/user-condition-editor";
+import ViewportConditionEditor from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/editors/viewport-condition-editor";
 import { iconForConditionType } from "discourse/plugins/discourse-wireframe/discourse/lib/conditions/condition-icons";
 import { summarizeLeaf } from "discourse/plugins/discourse-wireframe/discourse/lib/conditions/condition-summary";
-
-/**
- * A single leaf condition node: a `type` discriminator plus any
- * type-specific args, keyed by arg name. The index signature keeps the
- * shape open because each condition type carries a different arg set.
- */
-export interface ConditionLeaf {
-  type?: string;
-  [arg: string]: unknown;
-}
-
-/**
- * Registry entry describing one condition type, as returned by the
- * blocks service's condition-type listing. Used to label rows and to
- * drive the type-switch dropdown; the per-type editors read `argsSchema`
- * to know which inputs to render.
- */
-export interface ConditionTypeMeta {
-  type: string;
-  displayName: string;
-  description?: string | null;
-  argsSchema?: Record<string, unknown>;
-  sourceType?: string;
-  constraints?: unknown;
-  namespaceType?: string;
-}
+import type {
+  ConditionLeaf,
+  ConditionTypeMeta,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/conditions/condition-tree";
 
 /**
  * The contract every per-type condition editor honors: it receives the
@@ -49,46 +27,41 @@ export interface ConditionTypeMeta {
  * replacement leaf on each edit.
  */
 interface ConditionEditorSignature {
+  /** Condition leaf and replacement callback. */
   Args: {
-    leaf: ConditionLeaf | undefined;
-    typeMeta: ConditionTypeMeta;
-    onChange: (nextLeaf: ConditionLeaf) => void;
+    /** Condition leaf being edited. */
+    leaf?: ConditionLeaf;
+    /** Replaces the edited condition leaf. */
+    onChange: (
+      /** Updated condition leaf. */
+      nextLeaf: ConditionLeaf
+    ) => void;
   };
 }
 type ConditionEditorComponent = ComponentLike<ConditionEditorSignature>;
 
-// TODO(devxp-typescript-pending): drop each cast once its target editor is
-// authored in .gts with a matching Signature and import it directly.
-// The per-type editors and the generic arg fallback do not (yet all)
-// declare a shared Glint Signature, so cast each to the common contract
-// this row relies on at the import boundary. This is a types-only shim
-// with no runtime effect.
-const UserConditionEditor =
-  UserConditionEditorUntyped as unknown as ConditionEditorComponent;
-const ViewportConditionEditor =
-  ViewportConditionEditorUntyped as unknown as ConditionEditorComponent;
-const RouteConditionEditor =
-  RouteConditionEditorUntyped as unknown as ConditionEditorComponent;
-const SettingConditionEditor =
-  SettingConditionEditorUntyped as unknown as ConditionEditorComponent;
-const OutletArgConditionEditor =
-  OutletArgConditionEditorUntyped as unknown as ConditionEditorComponent;
-const ConditionLeafArgs = ConditionLeafArgsUntyped as unknown as ComponentLike<{
-  Args: {
-    node: ConditionLeaf | undefined;
-    typeMeta: ConditionTypeMeta;
-    onChange: (name: string, value: unknown) => void;
-  };
-}>;
-
 interface ConditionRuleSignature {
+  /** Rule state and mutation callbacks. */
   Args: {
+    /** Condition leaf rendered by this row. */
     node?: ConditionLeaf;
+    /** Registry descriptor for the condition type. */
     typeMeta: ConditionTypeMeta;
+    /** Registered condition descriptors available for type changes. */
     conditionTypes: ConditionTypeMeta[];
-    onUpdate: (nextLeaf: ConditionLeaf) => void;
-    onChangeType: (typeId: string) => void;
+    /** Replaces the condition leaf. */
+    onUpdate: (
+      /** Updated condition leaf. */
+      nextLeaf: ConditionLeaf
+    ) => void;
+    /** Changes the condition type. */
+    onChangeType: (
+      /** Replacement condition type identifier. */
+      typeId: string
+    ) => void;
+    /** Removes the condition leaf. */
     onRemove: () => void;
+    /** Whether the rule starts expanded. */
     startExpanded?: boolean;
   };
 }
@@ -116,9 +89,24 @@ interface ConditionRuleSignature {
  *     author immediately sees the editor.
  */
 export default class ConditionRule extends Component<ConditionRuleSignature> {
+  /** Whether the rule's editor is visible. */
   @tracked expanded: boolean;
-  isTypeSelected = (typeId: string) => this.args.node?.type === typeId;
 
+  /**
+   * Checks whether a condition type is selected.
+   *
+   * @param typeId - Registered condition type identifier.
+   * @returns Whether the condition type is selected.
+   */
+  isTypeSelected: (typeId: string) => boolean = (typeId) =>
+    this.args.node?.type === typeId;
+
+  /**
+   * Creates a condition rule.
+   *
+   * @param owner - Ember owner for the component instance.
+   * @param args - Rule arguments supplied by the parent group.
+   */
   constructor(owner: Owner, args: ConditionRuleSignature["Args"]) {
     super(owner, args);
     this.expanded = this.args.startExpanded ?? false;
@@ -128,7 +116,7 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
    * Icon ID representing the rule's condition type. Drives the visual
    * anchor next to each rule row.
    */
-  get icon() {
+  get icon(): string {
     return iconForConditionType(this.args.node?.type);
   }
 
@@ -137,7 +125,7 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
    * (e.g. "Logged-in users in @staff"). Shown collapsed in the rule
    * header so authors can scan rules without expanding them.
    */
-  get summary() {
+  get summary(): string {
     return summarizeLeaf(this.args.node);
   }
 
@@ -164,13 +152,20 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
     }
   }
 
+  /** Toggles the inline condition editor. */
   @action
-  toggleExpanded() {
+  toggleExpanded(): void {
     this.expanded = !this.expanded;
   }
 
+  /**
+   * Replaces one generic condition argument.
+   *
+   * @param name - Argument name to update.
+   * @param value - Replacement argument value.
+   */
   @action
-  onArgChange(name: string, value: unknown) {
+  onArgChange(name: string, value: unknown): void {
     const next: ConditionLeaf = { ...this.args.node, [name]: value };
     if (value === undefined) {
       delete next[name];
@@ -178,19 +173,33 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
     this.args.onUpdate(next);
   }
 
+  /**
+   * Replaces the entire condition leaf.
+   *
+   * @param nextLeaf - Replacement condition leaf.
+   */
   @action
-  onLeafChange(nextLeaf: ConditionLeaf) {
+  onLeafChange(nextLeaf: ConditionLeaf): void {
     this.args.onUpdate(nextLeaf);
   }
 
+  /** Removes the condition leaf. */
   @action
-  remove() {
+  remove(): void {
     this.args.onRemove();
   }
 
+  /**
+   * Changes the condition type from the native selector.
+   *
+   * @param event - Condition-type selector event.
+   */
   @action
-  changeType(event: Event) {
-    const typeId = (event.target as HTMLSelectElement).value;
+  changeType(event: Event): void {
+    if (!(event.currentTarget instanceof HTMLSelectElement)) {
+      return;
+    }
+    const typeId = event.currentTarget.value;
     if (typeId) {
       this.args.onChangeType(typeId);
     }
@@ -253,7 +262,6 @@ export default class ConditionRule extends Component<ConditionRuleSignature> {
           {{#if this.editorComponent}}
             <this.editorComponent
               @leaf={{@node}}
-              @typeMeta={{@typeMeta}}
               @onChange={{this.onLeafChange}}
             />
           {{else}}

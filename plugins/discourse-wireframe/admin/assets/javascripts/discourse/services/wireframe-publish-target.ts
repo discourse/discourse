@@ -2,10 +2,10 @@ import { trackedObject } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
 import {
   LAYOUT_SOURCE,
-  ResolvedLayoutMeta,
+  type ResolvedLayoutMeta,
 } from "discourse/blocks/block-outlet";
 import PreloadStore from "discourse/lib/preload-store";
-import type Site from "discourse/models/site";
+import type SiteService from "discourse/models/site";
 import type BlocksService from "discourse/services/blocks";
 import type WireframeMutationEngineService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-mutation-engine";
 
@@ -19,21 +19,16 @@ type LayoutSourceValue = NonNullable<ResolvedLayoutMeta["source"]>;
  * Per-theme metadata from the boot preload (`themeBlockLayoutMeta`), keyed by
  * theme id. The preload is JSON, so its keys are strings.
  */
-interface ThemeBlockLayoutMetaEntry {
+type ThemeBlockLayoutMetaEntry = {
+  /** Human-readable theme name. */
   name: string;
+  /** Whether the theme is a component rather than a full theme. */
   component: boolean;
+  /** Whether the theme is managed from a Git repository. */
   is_git: boolean;
+  /** Theme position in the active stack. */
   stack_index: number;
-}
-
-/**
- * A user-selectable theme from the site's theme list, used as the fallback
- * source for the default target when the meta preload is unavailable.
- */
-interface UserTheme {
-  theme_id: number;
-  default?: boolean;
-}
+};
 
 /**
  * The pre-edit publish destination named by the toolbar target indicator. Shares
@@ -41,10 +36,15 @@ interface UserTheme {
  * the indicator can render either uniformly.
  */
 export interface ActiveThemeTarget {
+  /** Numeric ID of the destination theme. */
   themeId: number;
+  /** Human-readable theme name, or `null` when unavailable. */
   themeName: string | null;
+  /** Whether the destination is managed from Git. */
   isGit: boolean;
+  /** Whether the destination is a built-in system theme. */
   isSystem: boolean;
+  /** Whether changes can be written directly to the destination. */
   publishable: boolean;
 }
 
@@ -53,11 +53,17 @@ export interface ActiveThemeTarget {
  * plus whether that theme can be published to directly.
  */
 export interface PublishTarget {
+  /** Numeric ID of the destination theme, or `null` when unresolved. */
   themeId: number | null;
+  /** Human-readable theme name, or `null` when unavailable. */
   themeName: string | null;
+  /** Whether the destination is managed from Git. */
   isGit: boolean;
+  /** Whether the destination is a built-in system theme. */
   isSystem: boolean;
+  /** Whether changes can be written directly to the destination. */
   publishable: boolean;
+  /** Edited outlets owned by this destination. */
   outlets: string[];
 }
 
@@ -66,10 +72,15 @@ export interface PublishTarget {
  * metadata needed to badge and gate it.
  */
 export interface OutletOwner {
+  /** Numeric ID of the owning theme, or `null` when unresolved. */
   themeId: number | null;
+  /** Human-readable theme name, or `null` when unavailable. */
   themeName: string | null;
+  /** Whether the owning theme is managed from Git. */
   isGit: boolean;
+  /** Position of the owning theme in the active stack. */
   stackIndex: number | undefined;
+  /** Resolved layout source that established ownership. */
   layer: LayoutSourceValue | null;
 }
 
@@ -85,11 +96,18 @@ export interface OutletOwner {
  * companion after the async lookup, cleared on exit).
  */
 export default class WireframePublishTargetService extends Service {
+  /** Resolves outlet ownership metadata from active block layers. */
   @service declare blocks: BlocksService;
-  @service declare site: Site;
+  /** Supplies selectable themes when preload metadata is unavailable. */
+  @service declare site: SiteService;
+  /** Supplies the reactive set of edited outlets. */
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
 
-  #state = trackedObject<{ activeThemeId: number | null }>({
+  /** Reactive publish destination state for the current editor session. */
+  #state = trackedObject<{
+    /** Theme receiving edits in the current session. */
+    activeThemeId: number | null;
+  }>({
     activeThemeId: null,
   });
 
@@ -186,6 +204,8 @@ export default class WireframePublishTargetService extends Service {
    * per-theme metadata; the entry pill then auto-enters bound to it. Used after
    * duplicate / create-customization-component so the new owner takes effect and
    * Publish enables. Isolated here as a thin, stubbable seam.
+   *
+   * @param themeId - Theme that should become the active editing destination.
    */
   navigateToEditTheme(themeId: number): void {
     const url = new URL(window.location.href);
@@ -202,6 +222,8 @@ export default class WireframePublishTargetService extends Service {
    * entered against (an explicit `enter({ themeId })`) or, for the pill, the
    * current theme. `themeName` and `isGit` come from the per-theme metadata
    * preload.
+   *
+   * @param outletName - Outlet whose owning theme should be resolved.
    */
   outletOwner(outletName: string): OutletOwner {
     const meta = this.blocks.resolvedLayoutMeta(outletName, {
@@ -236,6 +258,8 @@ export default class WireframePublishTargetService extends Service {
    * Binds the session to a theme. A null / undefined id falls back to the
    * default target (the parent of the active stack), mirroring how an
    * `enter()` without an explicit theme resolves.
+   *
+   * @param themeId - Explicit destination, or a nullish value for the default.
    */
   setActiveTheme(themeId?: number | null): void {
     this.#state.activeThemeId = themeId ?? this.defaultThemeId;
@@ -259,10 +283,8 @@ export default class WireframePublishTargetService extends Service {
    * case the Save / Publish control stays disabled.
    */
   #defaultThemeId(): number | null {
-    const meta = PreloadStore.get("themeBlockLayoutMeta") as
-      | Record<string, ThemeBlockLayoutMetaEntry>
-      | undefined;
-    if (meta && typeof meta === "object") {
+    const meta = this.#themeMetaMap();
+    if (meta) {
       let parentId: number | null = null;
       let minRank = Infinity;
       for (const [id, info] of Object.entries(meta)) {
@@ -276,10 +298,20 @@ export default class WireframePublishTargetService extends Service {
         return parentId;
       }
     }
-    // `user_themes` is set dynamically on the Site model (a preloaded RestModel
-    // field), so it isn't part of the model's declared type.
+    // TODO(devxp-typescript-pending): use `Site` directly once its core type
+    // declares the preloaded `user_themes` RestModel field.
     const themes =
-      (this.site as unknown as { user_themes?: UserTheme[] }).user_themes ?? [];
+      (
+        this.site as unknown as {
+          /** User-selectable themes preloaded onto the core site model. */
+          user_themes?: Array<{
+            /** Whether this is the user's default theme. */
+            default?: boolean;
+            /** Numeric theme ID. */
+            theme_id: number;
+          }>;
+        }
+      ).user_themes ?? [];
     return (
       themes.find((t) => t.default)?.theme_id ?? themes[0]?.theme_id ?? null
     );
@@ -289,6 +321,8 @@ export default class WireframePublishTargetService extends Service {
    * Per-theme metadata from the boot preload (display name, git status, stack
    * rank), keyed by theme id. The preload is JSON, so its keys are strings;
    * coerce the lookup id to a string. Returns null when the theme is absent.
+   *
+   * @param themeId - Numeric or serialized theme ID to look up.
    */
   #themeMeta(
     themeId: number | string | null
@@ -296,12 +330,24 @@ export default class WireframePublishTargetService extends Service {
     if (themeId == null) {
       return null;
     }
-    const meta = PreloadStore.get("themeBlockLayoutMeta") as
-      | Record<string, ThemeBlockLayoutMetaEntry>
-      | undefined;
-    if (!meta || typeof meta !== "object") {
+    const meta = this.#themeMetaMap();
+    if (!meta) {
       return null;
     }
     return meta[String(themeId)] ?? null;
+  }
+
+  /**
+   * Reads the per-theme block-layout metadata preload.
+   *
+   * @returns Theme metadata keyed by serialized theme ID, or `null` when absent.
+   */
+  #themeMetaMap(): Record<string, ThemeBlockLayoutMetaEntry> | null {
+    // TODO(devxp-typescript-pending): remove this preload boundary cast once
+    // core exposes a typed registry for `PreloadStore` keys.
+    const meta = PreloadStore.get("themeBlockLayoutMeta") as
+      | Record<string, ThemeBlockLayoutMetaEntry>
+      | undefined;
+    return meta && typeof meta === "object" ? meta : null;
   }
 }

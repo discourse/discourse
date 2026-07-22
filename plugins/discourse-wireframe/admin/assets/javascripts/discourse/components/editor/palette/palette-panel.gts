@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -6,23 +5,66 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ModifierLike } from "@glint/template";
+import type A11yService from "discourse/services/a11y";
+import type BlocksService from "discourse/services/blocks";
 import dDragAndDropSourceUntyped from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dRovingFocusUntyped from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
-/** @type {import("./block-tile.gjs").default} */
 import BlockTile from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-tile";
-import { buildBlockPalette } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import {
+  type BlockPaletteEntry,
+  buildBlockPalette,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
+import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
+import WireframeDragSessionService, {
+  type PaletteDragPayload,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
+import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
+import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
+
+type PaletteCategorySection = {
+  /** Display category heading. */
+  category: string;
+  /** Palette entries in the category. */
+  rows: BlockPaletteEntry[];
+};
+
+type PaletteDragEvent = {
+  /** Drag source descriptor supplied by the drag-and-drop modifier. */
+  source: {
+    /** Palette data attached to the dragged tile. */
+    data: PaletteDragPayload;
+  };
+};
+
+type DragPreviewArgs = {
+  /** Offscreen host photographed by the browser. */
+  container: HTMLElement;
+  /** Palette tile being dragged. */
+  element: HTMLElement;
+};
 
 // TODO(devxp-typescript-pending): drop once d-roving-focus is authored in .ts
 // with a real Signature, then import it directly.
 const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  /** Roving-focus modifier arguments. */
   Args: {
+    /** Named modifier arguments. */
     Named: {
+      /** Selector matching focusable palette tiles. */
       itemSelector: string;
-      onActivate: (element: HTMLElement, event: KeyboardEvent) => void;
+      /** Handles keyboard activation of a focused tile. */
+      onActivate: (
+        /** Activated palette tile. */
+        element: HTMLElement,
+        /** Keyboard event that activated the tile. */
+        event: KeyboardEvent
+      ) => void;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
+  /** Element owning the roving-focus group. */
   Element: HTMLElement;
 }>;
 
@@ -30,40 +72,43 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
 // in .ts with a real Signature, then import it directly.
 const dDragAndDropSource =
   dDragAndDropSourceUntyped as unknown as ModifierLike<{
+    /** Drag-source modifier arguments. */
     Args: {
+      /** Named modifier arguments. */
       Named: {
+        /** Drag source type identifier. */
         type: string;
-        data: object;
-        dragPreview: (args: {
-          container: HTMLElement;
-          element: HTMLElement;
-        }) => () => void;
-        dragPreviewOffset: object;
-        onDragStart: (event: {
-          source: { data: Record<string, unknown> };
-        }) => void;
-        onDrop: (event: { source: { data: Record<string, unknown> } }) => void;
+        /** Data attached to the drag source. */
+        data: PaletteDragPayload;
+        /** Builds the native drag preview. */
+        dragPreview: (
+          /** Drag preview elements. */
+          args: DragPreviewArgs
+        ) => () => void;
+        /** Offset applied to the native drag preview. */
+        dragPreviewOffset: {
+          /** Horizontal preview offset. */
+          x: string;
+          /** Vertical preview offset. */
+          y: string;
+        };
+        /** Handles the start of a palette drag. */
+        onDragStart: (
+          /** Palette drag event. */
+          event: PaletteDragEvent
+        ) => void;
+        /** Handles completion or cancellation of the palette drag. */
+        onDrop: (
+          /** Palette drag event. */
+          event: PaletteDragEvent
+        ) => void;
       };
+      /** This modifier accepts no positional arguments. */
       Positional: [];
     };
+    /** Palette tile acting as the drag source. */
     Element: HTMLElement;
   }>;
-
-/**
- * Decorated palette entry — the raw `{name, component, metadata}` from
- * `services.blocks.listBlocksWithMetadata()` joined with the
- * default-filled display metadata so the template doesn't have to know
- * about fallbacks.
- *
- * @typedef {Object} PaletteRow
- * @property {string} name
- * @property {string} displayName
- * @property {string} icon
- * @property {string} category
- * @property {string} description
- * @property {string} namespaceType
- * @property {string|null} thumbnail
- */
 
 /**
  * Palette of registered blocks, shown in the left rail when the user
@@ -79,50 +124,60 @@ const dDragAndDropSource =
  * insertion and memoise the decorated rows via `@cached`.
  */
 export default class PalettePanel extends Component {
-  @service a11y;
-  @service blocks;
-  @service wireframeBlockMutations;
-  @service wireframeDragSession;
-  @service wireframeLayoutQuery;
-  @service wireframeSelection;
+  /** Announces insertion guidance to assistive technology. */
+  @service declare a11y: A11yService;
 
-  @tracked searchTerm = "";
+  /** Provides the registered blocks displayed by the palette. */
+  @service declare blocks: BlocksService;
+
+  /** Inserts blocks selected from the palette. */
+  @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+
+  /** Tracks palette drag lifecycle state. */
+  @service declare wireframeDragSession: WireframeDragSessionService;
+
+  /** Classifies the current insertion target. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
+  /** Provides the current insertion selection. */
+  @service declare wireframeSelection: WireframeSelectionService;
+
+  /** Current palette search query. */
+  @tracked searchTerm: string = "";
 
   /**
    * The selected block key at the moment the hint was shown. The hint is about
    * that selection, so once the selection changes the hint is stale (see
    * `insertHint`).
    *
-   * @type {string|null}
    */
-  #insertHintSelectionKey = null;
+  #insertHintSelectionKey: string | null = null;
 
   /**
    * The message backing `insertHint`, set when a keyboard/click insert can't
    * proceed. `null` when there's nothing to say.
    *
-   * @type {string|null}
    */
-  @tracked _insertHintMessage = null;
+  @tracked _insertHintMessage: string | null = null;
 
   /**
    * Decorated palette rows for every registered block, from the shared
    * `buildBlockPalette` source so the panel and the popovers stay in sync.
    * Read once — the block registry is immutable after boot.
    *
-   * @returns {PaletteRow[]}
+   * @returns Decorated entries for every pickable block.
    */
   @cached
-  get rows() {
+  get rows(): BlockPaletteEntry[] {
     return buildBlockPalette(this.blocks);
   }
 
   /**
    * Rows that match the current search term.
    *
-   * @returns {PaletteRow[]}
+   * @returns Palette entries matching the search query.
    */
-  get filteredRows() {
+  get filteredRows(): BlockPaletteEntry[] {
     const term = this.searchTerm.trim().toLowerCase();
     if (!term) {
       return this.rows;
@@ -142,10 +197,10 @@ export default class PalettePanel extends Component {
    * categories alphabetically. Within a section, rows keep their displayName
    * order (from the shared `buildBlockPalette` sort).
    *
-   * @returns {Array<{category: string, rows: PaletteRow[]}>}
+   * @returns Matching palette entries grouped by category.
    */
-  get filteredRowsByCategory() {
-    const groups = new Map();
+  get filteredRowsByCategory(): PaletteCategorySection[] {
+    const groups = new Map<string, BlockPaletteEntry[]>();
     for (const row of this.filteredRows) {
       // `buildBlockPalette` always fills `category` (falling back to "Misc").
       const key = row.category;
@@ -154,10 +209,11 @@ export default class PalettePanel extends Component {
       groups.set(key, bucket);
     }
     const order = ["Content", "Layout", "Navigation", "Data"];
-    const sorted = [];
+    const sorted: PaletteCategorySection[] = [];
     for (const cat of order) {
-      if (groups.has(cat)) {
-        sorted.push({ category: cat, rows: groups.get(cat) });
+      const rows = groups.get(cat);
+      if (rows) {
+        sorted.push({ category: cat, rows });
         groups.delete(cat);
       }
     }
@@ -174,9 +230,9 @@ export default class PalettePanel extends Component {
    * itself, so it never lingers. Reading `selectedBlockKey` here keeps that
    * reactive.
    *
-   * @returns {string|null}
+   * @returns Current insertion hint, or `null` when stale or absent.
    */
-  get insertHint() {
+  get insertHint(): string | null {
     if (this._insertHintMessage == null) {
       return null;
     }
@@ -188,9 +244,17 @@ export default class PalettePanel extends Component {
     return this._insertHintMessage;
   }
 
+  /**
+   * Updates the palette search query.
+   *
+   * @param event - Search-input event.
+   */
   @action
-  updateSearchTerm(event) {
-    this.searchTerm = event.target.value;
+  updateSearchTerm(event: Event): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    this.searchTerm = event.currentTarget.value;
     this._insertHintMessage = null;
   }
 
@@ -207,10 +271,10 @@ export default class PalettePanel extends Component {
    * coordinate-aware). With nothing selected there's likewise no target. Both
    * cases surface a hint instead of acting. Validity is enforced by `insertBlock`.
    *
-   * @param {PaletteRow} entry - The palette row the user activated.
+   * @param entry - The palette entry the user activated.
    */
   @action
-  insertFromPalette(entry) {
+  insertFromPalette(entry: BlockPaletteEntry): void {
     this._insertHintMessage = null;
     const selectedKey = this.wireframeSelection.selectedBlockKey;
     const selected = this.wireframeSelection.selectedBlockData;
@@ -221,8 +285,8 @@ export default class PalettePanel extends Component {
     const targetEntry =
       this.wireframeLayoutQuery.findEntryAndOutletSync(selectedKey)?.entry;
     if (
-      this.wireframeLayoutQuery.isGridContainer(targetEntry) ||
-      this.wireframeLayoutQuery.isGridCellEntry(targetEntry)
+      this.wireframeLayoutQuery.isGridContainer(targetEntry ?? null) ||
+      this.wireframeLayoutQuery.isGridCellEntry(targetEntry ?? null)
     ) {
       this.#showInsertHint("wireframe.palette.insert_hint.grid");
       return;
@@ -240,10 +304,10 @@ export default class PalettePanel extends Component {
    * element (not the row), so resolve the row by its `data-block-name` and
    * delegate. Click activation goes straight through `insertFromPalette`.
    *
-   * @param {HTMLElement} element - The activated tile.
+   * @param element - The activated tile.
    */
   @action
-  activateTile(element) {
+  activateTile(element: HTMLElement): void {
     const entry = this.rows.find(
       (row) => row.name === element.dataset.blockName
     );
@@ -258,7 +322,7 @@ export default class PalettePanel extends Component {
    * the drop fires.
    */
   @action
-  handleDragStart({ source }) {
+  handleDragStart({ source }: PaletteDragEvent): void {
     this.wireframeDragSession.startPaletteDrag(source.data);
   }
 
@@ -268,15 +332,18 @@ export default class PalettePanel extends Component {
    * neighboring tile bleeds into the drag image the way the browser's default
    * snapshot of the live tile does.
    *
-   * @param {Object} args
-   * @param {HTMLElement} args.container - The offscreen host the browser
+   * @param args - Drag preview elements.
+   * @param args.container - The offscreen host the browser
    *   photographs; appended to `document.body` and removed after cleanup.
-   * @param {HTMLElement} args.element - The dragged tile.
-   * @returns {() => void} Cleanup that removes the cloned preview.
+   * @param args.element - The dragged tile.
+   * @returns Cleanup that removes the cloned preview.
    */
   @action
-  renderDragPreview({ container, element }) {
-    const clone = /** @type {HTMLElement} */ (element.cloneNode(true));
+  renderDragPreview({ container, element }: DragPreviewArgs): () => void {
+    const clone = element.cloneNode(true);
+    if (!(clone instanceof HTMLElement)) {
+      return () => {};
+    }
     // Drop the source-only drag styling and the screen-reader-only description
     // span so the preview shows just the tile's thumbnail and label.
     clone.classList.remove("is-dragging");
@@ -294,9 +361,9 @@ export default class PalettePanel extends Component {
    * core live-region service for screen readers (the visible callout is
    * `aria-hidden` to avoid a double announcement).
    *
-   * @param {string} key - The i18n key for the hint message.
+   * @param key - The i18n key for the hint message.
    */
-  #showInsertHint(key) {
+  #showInsertHint(key: string): void {
     const message = i18n(key);
     this.#insertHintSelectionKey = this.wireframeSelection.selectedBlockKey;
     this._insertHintMessage = message;

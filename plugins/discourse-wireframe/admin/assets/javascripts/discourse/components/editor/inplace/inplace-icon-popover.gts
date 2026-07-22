@@ -9,7 +9,16 @@ import DIconGridPickerContentUntyped from "discourse/ui-kit/d-icon-grid-picker/c
 // two args consumed here.
 const DIconGridPickerContent =
   DIconGridPickerContentUntyped as unknown as ComponentLike<{
-    Args: { value?: string; onSelect?: (iconId: string) => void };
+    /** Current value and selection callback. */
+    Args: {
+      /** Currently selected icon ID. */
+      value?: string;
+      /** Handles icon selection. */
+      onSelect?: (
+        /** Selected icon ID. */
+        iconId: string
+      ) => void;
+    };
   }>;
 
 /**
@@ -17,15 +26,20 @@ const DIconGridPickerContent =
  * is opened via `menu.show(anchorEl, { component: this, data: { value,
  * onSelect } })`. See `WireframeInplaceIconService`.
  */
-interface InplaceIconPopoverData {
+type InplaceIconPopoverData = {
   /** The currently selected icon ID, used to preselect the grid. */
   value?: string;
   /** Called with the chosen icon ID when the user picks one. */
-  onSelect?: (iconId: string) => void;
-}
+  onSelect?: (
+    /** Selected icon ID. */
+    iconId: string
+  ) => void;
+};
 
 interface InplaceIconPopoverSignature {
+  /** FloatKit data supplied when the popover opens. */
   Args: {
+    /** Current icon value and selection callback. */
     data: InplaceIconPopoverData;
   };
 }

@@ -1,13 +1,16 @@
 import type { TemplateOnlyComponent } from "@ember/component/template-only";
 
 interface OutletBoundarySignature {
+  /** Outlet identity supplied by the debug wrapper. */
   Args: {
-    // The outlet's registered name, stamped as the `data-outlet-name` DOM
-    // anchor used to scroll / jump to a specific outlet.
+    /** Registered outlet name used by navigation anchors. */
     outletName?: string;
   };
+  /** Boundary element surrounding the yielded outlet. */
   Element: HTMLDivElement;
+  /** Content rendered inside the outlet boundary. */
   Blocks: {
+    /** Outlet content yielded by the debug wrapper. */
     default: [];
   };
 }

@@ -2,10 +2,12 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 interface DefaultBlockThumbnailSignature {
+  /** Placeholder thumbnail presentation data. */
   Args: {
     /** The block's icon ID, rendered in the frame's center. */
     icon: string;
   };
+  /** Outer placeholder thumbnail span. */
   Element: HTMLSpanElement;
 }
 

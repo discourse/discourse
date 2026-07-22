@@ -9,36 +9,17 @@ import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
 import { PART_KEY_SEGMENT } from "discourse/lib/blocks/-internals/composite";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { BlockRegistryEntry } from "discourse/lib/blocks/-internals/types";
-import type Blocks from "discourse/services/blocks";
+import type BlocksService from "discourse/services/blocks";
+import type {
+  GridEntry,
+  GridLayoutEntry,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import {
   entryKey,
-  findAncestryPath as findAncestryPathUntyped,
-  findEntry as findEntryUntyped,
-  findEntryByStableKey as findEntryByStableKeyUntyped,
+  findAncestryPath,
+  findEntry,
+  findEntryByStableKey,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
-
-/*
- * `mutate-layout` is authored in `@ts-check` JavaScript, whose JSDoc `{Object}`
- * return types surface to a TypeScript consumer as the near-useless `Object`.
- * Re-type its three entry lookups against their real `LayoutEntry` contract at
- * the import boundary so the call sites below read precise entries.
- * TODO(devxp-typescript-pending): drop these aliases once `mutate-layout` is
- * authored in TypeScript and exports precise signatures.
- */
-const findEntry = findEntryUntyped as unknown as (
-  layout: LayoutEntry[],
-  key: string
-) => LayoutEntry | null;
-
-const findEntryByStableKey = findEntryByStableKeyUntyped as unknown as (
-  layout: LayoutEntry[],
-  stableKey: string
-) => LayoutEntry | null;
-
-const findAncestryPath = findAncestryPathUntyped as unknown as (
-  layout: LayoutEntry[],
-  key: string
-) => LayoutEntry[] | null;
 
 /**
  * Per-outlet resolved-layout record: the synchronously-available layout plus
@@ -46,10 +27,12 @@ const findAncestryPath = findAncestryPathUntyped as unknown as (
  * view of the core layer record, whose internal entry shape this layer never
  * inspects.
  */
-interface ResolvedLayoutRecord {
+type ResolvedLayoutRecord = {
+  /** Synchronously available author-facing layout. */
   layout: LayoutEntry[];
+  /** Validated form of the author-facing layout. */
   validatedLayout: Promise<LayoutEntry[]>;
-}
+};
 
 /**
  * The persistence state of an outlet, derived from the source that owns it
@@ -81,7 +64,8 @@ export const OUTLET_STATE = Object.freeze({
  * would freeze on an untracked early read.
  */
 export default class WireframeLayoutQueryService extends Service {
-  @service declare blocks: Blocks;
+  /** Core block registry and resolved-layout access service. */
+  @service declare blocks: BlocksService;
 
   /**
    * Maps each drafted outlet to the composite key of its implicit root
@@ -123,11 +107,17 @@ export default class WireframeLayoutQueryService extends Service {
    * what is live now, apart from any unsaved edit. Reading both (with and without
    * the flag) yields the baseline and the edited layout for a change comparison.
    *
+   * @param outletName - Outlet whose resolved layout should be read.
    * @param options.ignoreSessionDraft - When true, skip the session-draft layer and resolve the underlying source.
    */
   readResolvedLayout(
     outletName: string,
-    { ignoreSessionDraft = false }: { ignoreSessionDraft?: boolean } = {}
+    {
+      ignoreSessionDraft = false,
+    }: {
+      /** Whether to resolve the underlying source instead of the session draft. */
+      ignoreSessionDraft?: boolean;
+    } = {}
   ): LayoutEntry[] | null {
     return this._resolvedLayout(outletName, { ignoreSessionDraft });
   }
@@ -139,10 +129,15 @@ export default class WireframeLayoutQueryService extends Service {
    * (already-resolved) instead of awaiting `record.validatedLayout`. Drag
    * handlers fire after validation has long since completed, so the sync
    * lookup is safe and avoids forcing every call site to be async.
+   *
+   * @param key - Composite key of the entry to locate.
    */
-  findEntryAndOutletSync(
-    key: string
-  ): { entry: LayoutEntry; outletName: string } | null {
+  findEntryAndOutletSync(key: string): {
+    /** Resolved layout entry matching the key. */
+    entry: LayoutEntry;
+    /** Outlet containing the entry. */
+    outletName: string;
+  } | null {
     const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       if (!record.layout) {
@@ -157,6 +152,7 @@ export default class WireframeLayoutQueryService extends Service {
   }
 
   /**
+   * @param key - Composite key of the entry to locate.
    * @returns The live entry, or `null` when no outlet resolves the key.
    */
   findEntryByKey(key: string): LayoutEntry | null {
@@ -168,10 +164,15 @@ export default class WireframeLayoutQueryService extends Service {
    * whose composite key matches. Returns the live entry plus its containing
    * outlet name so the caller can both mutate `entry.args` in place AND
    * tell persistence which outlet just got dirty.
+   *
+   * @param key - Composite key of the entry to locate.
    */
-  async findEntryAndOutlet(
-    key: string
-  ): Promise<{ entry: LayoutEntry; outletName: string } | null> {
+  async findEntryAndOutlet(key: string): Promise<{
+    /** Resolved layout entry matching the key. */
+    entry: LayoutEntry;
+    /** Outlet containing the entry. */
+    outletName: string;
+  } | null> {
     const layoutMap = this._resolvedLayouts();
     for (const [outletName, record] of layoutMap) {
       let layout;
@@ -195,6 +196,8 @@ export default class WireframeLayoutQueryService extends Service {
    *
    * Used by chrome decoration to determine context — e.g. showing a
    * resize handle only when the block sits inside a grid layout.
+   *
+   * @param blockKey - Composite key of the entry whose parent should be found.
    */
   findEntryParent(blockKey: string): LayoutEntry | null {
     const located = this.findEntryAndOutletSync(blockKey);
@@ -219,6 +222,9 @@ export default class WireframeLayoutQueryService extends Service {
    * (the layout itself stops being `selectedBlockKey` once the user
    * clicks into a cell, but the overlay should stay visible until they
    * navigate fully away).
+   *
+   * @param ancestorKey - Composite key of the possible ancestor.
+   * @param descendantKey - Composite key of the possible descendant.
    */
   isAncestorOf(ancestorKey: string, descendantKey: string): boolean {
     if (!ancestorKey || !descendantKey || ancestorKey === descendantKey) {
@@ -246,12 +252,19 @@ export default class WireframeLayoutQueryService extends Service {
    * `button-link:42::part::actions::part::primary`). Returns the composite
    * entry, its key, the outlet, and the override path, or null when the key
    * isn't a part key (or the composite can't be found).
+   *
+   * @param key - Synthesized part selection key to resolve.
    */
   resolvePartContext(key: string): {
+    /** Persisted composite entry that owns the synthesized part. */
     compositeEntry: LayoutEntry;
+    /** Composite key of the owning entry. */
     compositeKey: string;
+    /** Outlet containing the owning composite. */
     outletName: string;
+    /** Ordered part IDs beneath the composite. */
     idPath: string[];
+    /** Dot-delimited override path beneath the composite. */
     partPath: string;
   } | null {
     if (!key || !key.includes(PART_KEY_SEGMENT)) {
@@ -274,9 +287,13 @@ export default class WireframeLayoutQueryService extends Service {
         compositeStableKey
       );
       if (compositeEntry) {
+        const compositeKey = entryKey(compositeEntry);
+        if (!compositeKey) {
+          continue;
+        }
         return {
           compositeEntry,
-          compositeKey: entryKey(compositeEntry),
+          compositeKey,
           outletName,
           idPath,
           partPath: idPath.join("."),
@@ -292,6 +309,8 @@ export default class WireframeLayoutQueryService extends Service {
    * Resolves an entry's block name. `entry.block` is either a class
    * reference (decorated blocks) or a string-ref (api.renderBlocks
    * factories) — this helper smooths over the two shapes.
+   *
+   * @param entry - Layout entry whose registered block name is needed.
    */
   blockNameOf(entry: LayoutEntry | null): string | null {
     if (!entry?.block) {
@@ -303,6 +322,12 @@ export default class WireframeLayoutQueryService extends Service {
     return this.metadataFor(entry)?.blockName ?? null;
   }
 
+  /**
+   * Resolves metadata for a class-referenced layout entry.
+   *
+   * @param entry - Layout entry whose metadata should resolve.
+   * @returns Registered metadata, or `null` when unavailable.
+   */
   metadataFor(entry: LayoutEntry | null): BlockMetadata | null {
     if (!entry?.block) {
       return null;
@@ -321,6 +346,8 @@ export default class WireframeLayoutQueryService extends Service {
    * for unknown names or when the registry entry is a factory the block
    * service hasn't materialised yet — same permissive contract as
    * `metadataFor` for moves.
+   *
+   * @param blockName - Registered block name whose metadata should be resolved.
    */
   metadataForName(blockName: string): BlockMetadata | null {
     const klass = this._block(blockName);
@@ -335,6 +362,8 @@ export default class WireframeLayoutQueryService extends Service {
    * (string registry name or class). Convenience over picking
    * between `metadataForName` (string) and `getBlockMetadata`
    * (class) at the call site.
+   *
+   * @param blockRef - Registered block name or decorated block class.
    */
   lookupBlockMetadata(blockRef: LayoutEntry["block"]): BlockMetadata | null {
     if (typeof blockRef === "function") {
@@ -349,6 +378,8 @@ export default class WireframeLayoutQueryService extends Service {
    * the palette / outline vocabulary the author already sees
    * elsewhere. Falls back to the block name itself when no
    * display name is set.
+   *
+   * @param blockRef - Registered block name or decorated block class.
    */
   lookupBlockDisplayName(blockRef: LayoutEntry["block"]): string | null {
     const name = this.#blockNameFor(blockRef);
@@ -371,6 +402,7 @@ export default class WireframeLayoutQueryService extends Service {
    * template binding re-runs when the outlet's layers change. Kept a plain
    * method — never `@cached` — so it can't freeze on an untracked early read.
    *
+   * @param outletName - Outlet whose persistence state should be resolved.
    * @returns One of `OUTLET_STATE`.
    */
   outletState(outletName: string): string {
@@ -390,6 +422,8 @@ export default class WireframeLayoutQueryService extends Service {
   /**
    * Whether an outlet may be edited. A LOCKED outlet is read-only; everything
    * else is editable.
+   *
+   * @param outletName - Outlet whose editability should be checked.
    */
   isOutletEditable(outletName: string): boolean {
     return this.outletState(outletName) !== OUTLET_STATE.LOCKED;
@@ -401,8 +435,10 @@ export default class WireframeLayoutQueryService extends Service {
    * Whether the entry is a `wf:layout` in per-cell `grid` mode. Accepts
    * the legacy `"free-grid"` mode value as an alias so existing saved
    * layouts (pre-rename) keep working.
+   *
+   * @param entry - Layout entry to test as a grid container.
    */
-  isGridContainer(entry: LayoutEntry | null): boolean {
+  isGridContainer(entry: LayoutEntry | null): entry is GridLayoutEntry {
     if (this.blockNameOf(entry) !== "layout") {
       return false;
     }
@@ -415,8 +451,10 @@ export default class WireframeLayoutQueryService extends Service {
    * `wf:layout` in grid mode, carrying its own `containerArgs.grid`
    * placement. Used by the editor to decide whether a given entry can
    * be placement-mutated (set its column/row, swap with a sibling, etc.).
+   *
+   * @param entry - Layout entry to test as a grid-cell occupant.
    */
-  isGridCellEntry(entry: LayoutEntry | null): boolean {
+  isGridCellEntry(entry: LayoutEntry | null): entry is GridEntry {
     return entry?.containerArgs?.grid != null;
   }
 
@@ -424,13 +462,20 @@ export default class WireframeLayoutQueryService extends Service {
    * Whether `entry` is a grid-cell occupant whose direct parent is the
    * layout identified by `gridKey`. Used by the grid manipulator to tell a
    * same-grid source (re-placed in situ) from one arriving from elsewhere.
+   *
+   * @param entry - Possible grid-cell occupant.
+   * @param gridKey - Composite key of the expected direct parent grid.
    */
   isCellInGrid(entry: LayoutEntry, gridKey: string): boolean {
     if (!this.isGridCellEntry(entry)) {
       return false;
     }
-    const parent = this.findEntryParent(entryKey(entry));
-    return parent && entryKey(parent) === gridKey;
+    const key = entryKey(entry);
+    if (!key) {
+      return false;
+    }
+    const parent = this.findEntryParent(key);
+    return !!parent && entryKey(parent) === gridKey;
   }
 
   /* Composite predicates */
@@ -441,6 +486,8 @@ export default class WireframeLayoutQueryService extends Service {
    * Drives the "Detach" affordance: only composed composites can be detached.
    * A synthesized part (no persisted entry) and a detached composite (explicit
    * `children`) both return false.
+   *
+   * @param blockKey - Composite key of the block to inspect.
    */
   isComposedComposite(blockKey: string): boolean {
     const entry = this.findEntryAndOutletSync(blockKey)?.entry;
@@ -458,17 +505,22 @@ export default class WireframeLayoutQueryService extends Service {
    * Records the implicit root layout key for an outlet. Reads the just-
    * published draft's first entry — every drafted outlet is normalised to a
    * single root `layout` block, so `[0]` is always that root.
+   *
+   * @param outletName - Outlet whose implicit root key should be recorded.
    */
   recordOutletRoot(outletName: string): void {
     const root = this.readResolvedLayout(outletName)?.[0];
-    if (root) {
-      this.#outletRootKeys.set(outletName, entryKey(root));
+    const rootKey = root ? entryKey(root) : null;
+    if (rootKey) {
+      this.#outletRootKeys.set(outletName, rootKey);
     }
   }
 
   /**
    * The composite key of an outlet's implicit root `layout` block, or `null`
    * when the outlet hasn't been drafted yet.
+   *
+   * @param outletName - Outlet whose implicit root key should be returned.
    */
   outletRootKey(outletName: string): string | null {
     return this.#outletRootKeys.get(outletName) ?? null;
@@ -479,6 +531,8 @@ export default class WireframeLayoutQueryService extends Service {
    * chrome and inspector consult this to present the root AS the outlet —
    * suppressing block-level affordances (move / duplicate / delete) that
    * don't apply to a page region.
+   *
+   * @param key - Composite key to compare with recorded outlet roots.
    */
   isOutletRoot(key: string | null): boolean {
     if (key == null) {
@@ -506,6 +560,8 @@ export default class WireframeLayoutQueryService extends Service {
    * present (e.g. it's been moved out of every published layer). Used by
    * `resetAll` to decide which arg-snapshots to drop after a structural
    * rollback.
+   *
+   * @param entry - Live layout entry whose owning outlet is needed.
    */
   outletForEntry(entry: LayoutEntry): string | null {
     const layoutMap = this._resolvedLayouts();
@@ -524,6 +580,8 @@ export default class WireframeLayoutQueryService extends Service {
    * the decorated class itself, as it appears in layout entries)
    * to its canonical block name string. Returns `null` for
    * unresolvable references.
+   *
+   * @param blockRef - Registered block name or decorated block class.
    */
   #blockNameFor(blockRef: LayoutEntry["block"]): string | null {
     if (typeof blockRef === "string") {
@@ -532,6 +590,13 @@ export default class WireframeLayoutQueryService extends Service {
     return getBlockMetadata(blockRef)?.blockName ?? null;
   }
 
+  /**
+   * Checks whether a layout tree contains an entry by object identity.
+   *
+   * @param layout - Layout tree to search.
+   * @param target - Live entry reference to find.
+   * @returns Whether the exact entry reference occurs in the tree.
+   */
   #layoutContainsEntry(layout: LayoutEntry[], target: LayoutEntry): boolean {
     for (const entry of layout) {
       if (entry === target) {
@@ -552,13 +617,19 @@ export default class WireframeLayoutQueryService extends Service {
   /**
    * The draft-aware resolved layout for an outlet. A thin seam over the core
    * reader so tests can stub it with fixture layouts.
+   *
+   * @param outletName - Outlet whose resolved layout should be read.
+   * @param options - Core reader options controlling draft resolution.
    */
   _resolvedLayout(
     outletName: string,
-    options?: { ignoreSessionDraft?: boolean }
+    options?: {
+      /** Whether to resolve the underlying source instead of the session draft. */
+      ignoreSessionDraft?: boolean;
+    }
   ): LayoutEntry[] | null {
-    // The core reader hands back the internal entry shape; this layer only ever
-    // reads the author-facing `LayoutEntry` view of it.
+    // TODO(devxp-typescript-pending): remove this cast once the core block-outlet
+    // reader exports its resolved-layout return type.
     return _getResolvedLayout(outletName, options) as unknown as
       | LayoutEntry[]
       | null;
@@ -569,6 +640,8 @@ export default class WireframeLayoutQueryService extends Service {
    * so tests can stub it.
    */
   _resolvedLayouts(): Map<string, ResolvedLayoutRecord> {
+    // TODO(devxp-typescript-pending): remove this cast once the core block-outlet
+    // reader exports its resolved-layout record type.
     return _getResolvedLayouts() as unknown as Map<
       string,
       ResolvedLayoutRecord
@@ -578,10 +651,16 @@ export default class WireframeLayoutQueryService extends Service {
   /**
    * The provenance metadata for an outlet's resolved layout. A thin seam over
    * the blocks service so tests can stub it.
+   *
+   * @param outletName - Outlet whose provenance should be read.
+   * @param options - Core reader options controlling draft resolution.
    */
   _resolvedLayoutMeta(
     outletName: string,
-    options?: { ignoreSessionDraft?: boolean }
+    options?: {
+      /** Whether to resolve the underlying source instead of the session draft. */
+      ignoreSessionDraft?: boolean;
+    }
   ): ResolvedLayoutMeta | null {
     return this.blocks.resolvedLayoutMeta(outletName, options);
   }
@@ -589,6 +668,8 @@ export default class WireframeLayoutQueryService extends Service {
   /**
    * The registered block class for a name. A thin seam over the blocks service
    * so tests can stub it.
+   *
+   * @param name - Registered block name to resolve.
    */
   _block(name: string): BlockRegistryEntry | undefined {
     return this.blocks.getBlock(name);

@@ -375,6 +375,11 @@ module(
       assert.strictEqual(descriptor.kind, "inside");
       assert.strictEqual(descriptor.dispatch.args.targetKey, "GRID");
       assert.strictEqual(descriptor.dispatch.args.position, "inside");
+      assert.strictEqual(
+        descriptor.dispatch.args.targetOutletName,
+        "test-outlet",
+        "the command receives the outlet required to authorize and publish the insert"
+      );
     });
 
     /*

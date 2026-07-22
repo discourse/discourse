@@ -12,10 +12,12 @@ const REVEAL_DELAY_MS = 300;
  * A reveal target for the nav control under the cursor: `element` is the control
  * the dwell de-dupe keys on, `reveal` performs the block-appropriate navigation.
  */
-interface RevealTarget {
+type RevealTarget = {
+  /** Navigation control under the drag pointer. */
   element: HTMLElement;
+  /** Reveals the block destination represented by the control. */
   reveal: () => void;
-}
+};
 
 /**
  * Drag-time navigation of paged container blocks in the editor. While a block
@@ -54,6 +56,11 @@ export default class WireframeDragDwellService extends Service {
   /** Handle for the hover-intent dwell timer (`discourseLater`). */
   #revealTimer: Timer | null = null;
 
+  /**
+   * Creates the service and registers timer cleanup with Ember destruction.
+   *
+   * @param owner - Ember owner used to initialize the service.
+   */
   constructor(owner: Owner) {
     super(owner);
     registerDestructor(this, () => cancel(this.#revealTimer ?? undefined));
@@ -61,7 +68,7 @@ export default class WireframeDragDwellService extends Service {
 
   /** Drag started: clear any carry-over so the first dwell reveals cleanly. */
   @action
-  handleDragStart() {
+  handleDragStart(): void {
     this.#reset();
   }
 
@@ -69,16 +76,26 @@ export default class WireframeDragDwellService extends Service {
    * Drag moved (per frame): reveal the target of the nav control the cursor
    * dwells on.
    *
-   * @param event - PDND monitor event.
+   * @param event - Drag-monitor event containing the current pointer location.
    */
   @action
   handleDrag({
     location,
   }: {
+    /** Current drag-monitor location, when pointer data is available. */
     location?: {
-      current?: { input?: { clientX: number; clientY: number } };
+      /** Most recent pointer snapshot. */
+      current?: {
+        /** Pointer coordinates supplied by the drag monitor. */
+        input?: {
+          /** Horizontal viewport coordinate of the drag pointer. */
+          clientX: number;
+          /** Vertical viewport coordinate of the drag pointer. */
+          clientY: number;
+        };
+      };
     };
-  }) {
+  }): void {
     const input = location?.current?.input;
     if (!input) {
       return;
@@ -103,11 +120,12 @@ export default class WireframeDragDwellService extends Service {
 
   /** Drag ended: cancel any pending dwell. */
   @action
-  handleDrop() {
+  handleDrop(): void {
     this.#reset();
   }
 
-  #reset() {
+  /** Cancels the reveal timer and forgets the last hovered control. */
+  #reset(): void {
     cancel(this.#revealTimer ?? undefined);
     this.#revealTimer = null;
     this.#lastHoveredControl = null;
@@ -118,6 +136,9 @@ export default class WireframeDragDwellService extends Service {
    * coordinates, or `null`. Carousel dots are matched first, then tab buttons;
    * the two selectors are disjoint, so order only affects the (benign) nested
    * case.
+   *
+   * @param x - Horizontal viewport coordinate of the drag pointer.
+   * @param y - Vertical viewport coordinate of the drag pointer.
    */
   #revealTargetAt(x: number, y: number): RevealTarget | null {
     // Only carousel dots carry both the nav marker and a slide index, so the
@@ -145,6 +166,9 @@ export default class WireframeDragDwellService extends Service {
 
   /**
    * Whether `x` falls in the horizontal center third of `el`'s bounding rect.
+   *
+   * @param el - Navigation control being hit-tested.
+   * @param x - Horizontal viewport coordinate of the drag pointer.
    */
   #isInCenterThird(el: HTMLElement, x: number): boolean {
     const r = el.getBoundingClientRect();
@@ -157,6 +181,10 @@ export default class WireframeDragDwellService extends Service {
    * the given viewport coordinates, or `null`. Uses a rect hit-test (not
    * `elementFromPoint`) so the drag preview floating under the cursor doesn't
    * shadow the control.
+   *
+   * @param x - Horizontal viewport coordinate of the drag pointer.
+   * @param y - Vertical viewport coordinate of the drag pointer.
+   * @param selector - Selector for candidate navigation controls.
    */
   #elementAt(x: number, y: number, selector: string): HTMLElement | null {
     for (const el of document.querySelectorAll<HTMLElement>(selector)) {
@@ -172,8 +200,10 @@ export default class WireframeDragDwellService extends Service {
    * Scrolls the slide the given dot points at into view, so a drag can reach a
    * slide that's currently off-screen. Walks from the dot up to its carousel
    * root, then down to the marked viewport, whose Nth child is the Nth slide.
+   *
+   * @param dot - Carousel navigation dot identifying the target slide.
    */
-  #scrollCarouselToDot(dot: HTMLElement) {
+  #scrollCarouselToDot(dot: HTMLElement): void {
     const index = parseInt(dot.dataset.wfCarouselSlideIndex ?? "", 10);
     if (Number.isNaN(index)) {
       return;

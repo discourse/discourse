@@ -16,64 +16,77 @@ import {
   findEntry,
   findEntrySiblings,
   insertEntryAt,
+  type InsertPosition,
   moveEntry,
   removeEntry,
   replaceEntryInPlace,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { isReversedFlexLayout } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
-import type WireframeBlockReveal from "./wireframe-block-reveal";
-import type WireframeDropAuthority from "./wireframe-drop-authority";
-import type WireframeLayoutQuery from "./wireframe-layout-query";
-import type WireframeMutationEngine from "./wireframe-mutation-engine";
-import type WireframeSelection from "./wireframe-selection";
+import type WireframeBlockRevealService from "./wireframe-block-reveal";
+import type WireframeDropAuthorityService from "./wireframe-drop-authority";
+import type WireframeLayoutQueryService from "./wireframe-layout-query";
+import type WireframeMutationEngineService from "./wireframe-mutation-engine";
+import type WireframeSelectionService from "./wireframe-selection";
 
 /** The relative position of an enter-style drop against its target. */
-type EnterPosition = "before" | "after" | "inside";
-
-/**
- * A block-insertion position. Extends the enter-style positions with
- * `inside-end`, which appends after any existing children of the target
- * container (the path the implicit-child "add" affordance takes).
- */
-type InsertPosition = EnterPosition | "inside-end";
+type EnterPosition = Exclude<InsertPosition, "inside-end">;
 
 /** Arguments for a single-entry move to a new position in the layout. */
-interface MoveBlockArgs {
+export type MoveBlockArgs = {
+  /** Composite key of the entry being moved. */
   sourceKey: string;
+  /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
+  /** Position relative to the destination entry. */
   position: EnterPosition;
+  /** Outlet receiving the moved entry. */
   targetOutletName: string;
-}
+};
 
 /** Arguments for moving an entry between two outlets (or two grids). */
-interface MoveAcrossOutletsArgs {
+type MoveAcrossOutletsArgs = {
+  /** Outlet currently containing the source entry. */
   sourceOutletName: string;
+  /** Outlet receiving the source entry. */
   targetOutletName: string;
+  /** Composite key of the entry being moved. */
   sourceKey: string;
+  /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
+  /** Position relative to the destination entry. */
   position: EnterPosition;
+  /** Whether a grid destination should assign the next available cell. */
   autoPosition?: boolean;
-}
+};
 
 /** Arguments for inserting a freshly-synthesised entry. */
-interface InsertBlockArgs {
+export type InsertBlockArgs = {
+  /** Registered name of the block to insert. */
   blockName: string;
+  /** Initial arguments copied into the new entry. */
   defaultArgs?: Record<string, unknown>;
+  /** Composite key of the destination entry, or `null` for the outlet root. */
   targetKey: string | null;
+  /** Position relative to the destination entry. */
   position: InsertPosition;
+  /** Outlet receiving the new entry. */
   targetOutletName: string;
-}
+};
 
 /**
  * Describes where a transform-driven insert/move lands, so the grid-related
  * helpers can resolve the destination parent.
  */
-interface DestinationArgs {
+type DestinationArgs = {
+  /** Entry being transformed for its destination. */
   entry: LayoutEntry;
+  /** Layout containing the destination. */
   layout: LayoutEntry[];
+  /** Composite key of the destination entry. */
   targetKey: string | null;
+  /** Position relative to the destination entry. */
   position: InsertPosition;
-}
+};
 
 /**
  * Owns the block-structural commands — move, duplicate, remove, insert, and
@@ -94,16 +107,37 @@ interface DestinationArgs {
  * drop-dispatch, grid manipulator, and keyboard shortcuts) stay unchanged.
  */
 export default class WireframeBlockMutationsService extends Service {
-  @service declare wireframeBlockReveal: WireframeBlockReveal;
-  @service declare wireframeDropAuthority: WireframeDropAuthority;
-  @service declare wireframeMutationEngine: WireframeMutationEngine;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service declare wireframeSelection: WireframeSelection;
+  /** Reveals and flashes entries after insertion. */
+  @service declare wireframeBlockReveal: WireframeBlockRevealService;
 
+  /** Authorizes insertion and cross-outlet movement. */
+  @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+
+  /** Records, publishes, and reverses structural mutations. */
+  @service declare wireframeMutationEngine: WireframeMutationEngineService;
+
+  /** Resolves live entries, layouts, and parent relationships. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+
+  /** Tracks and restores the selected block. */
+  @service declare wireframeSelection: WireframeSelectionService;
+
+  /**
+   * Moves a block one visual position earlier among its siblings.
+   *
+   * @param blockKey - Composite key of the block to move.
+   * @returns Whether the block moved.
+   */
   moveBlockUp(blockKey: string): boolean {
     return this.#moveBlockSibling(blockKey, "up");
   }
 
+  /**
+   * Moves a block one visual position later among its siblings.
+   *
+   * @param blockKey - Composite key of the block to move.
+   * @returns Whether the block moved.
+   */
   moveBlockDown(blockKey: string): boolean {
     return this.#moveBlockSibling(blockKey, "down");
   }
@@ -124,6 +158,8 @@ export default class WireframeBlockMutationsService extends Service {
    * leaves layouts untouched) when the source/target can't be located, the
    * block isn't allowed in the target outlet, or the move would create a
    * self-nesting cycle (handled inside `moveEntry`).
+   *
+   * @param args - Source, destination, and relative placement for the move.
    */
   moveBlock({
     sourceKey,
@@ -189,6 +225,8 @@ export default class WireframeBlockMutationsService extends Service {
    * between two grids in the same outlet). Wraps / unwraps the entry for the
    * destination's parent (grid ↔ non-grid) and, on a grid landing, claims a
    * valid cell via the shared placement lib. Publishes both affected outlets.
+   *
+   * @param args - Source and destination outlet details for the move.
    */
   moveAcrossOutlets({
     sourceOutletName,
@@ -321,6 +359,7 @@ export default class WireframeBlockMutationsService extends Service {
    * transaction, so the whole batch is one undo step. The clones are identical,
    * so their relative order among themselves is irrelevant.
    *
+   * @param blockKey - Composite key of the block to duplicate.
    * @param count - How many clones to insert (clamped to >= 1).
    */
   duplicateBlock(blockKey: string, count: number = 1): boolean {
@@ -378,6 +417,8 @@ export default class WireframeBlockMutationsService extends Service {
    * Returns false (and leaves the layout untouched) when the target
    * outlet doesn't have a resolvable layout, the block isn't allowed in
    * that outlet, or the insert otherwise no-ops.
+   *
+   * @param args - Block definition and destination for the insert.
    */
   insertBlock({
     blockName,
@@ -437,15 +478,7 @@ export default class WireframeBlockMutationsService extends Service {
           targetKey,
           position,
         });
-        // `insertEntryAt` handles `inside-end` at runtime (appending as the
-        // last child); its declared position type omits it, so cast down to
-        // the enter-style positions it documents.
-        const insertion = insertEntryAt(
-          layout,
-          targetKey,
-          entry,
-          position as EnterPosition
-        );
+        const insertion = insertEntryAt(layout, targetKey, entry, position);
         if (!insertion.changed) {
           return false;
         }
@@ -501,6 +534,7 @@ export default class WireframeBlockMutationsService extends Service {
    * (edited-outlets, structural-version, isDirty signal) matches a drag-driven
    * move.
    *
+   * @param blockKey - Composite key of the block to remove.
    * @returns true on success
    */
   removeBlock(blockKey: string): boolean {
@@ -552,16 +586,16 @@ export default class WireframeBlockMutationsService extends Service {
    * container and one of its descendants both being selected is safe — once the
    * container is gone the descendant key simply no longer matches.
    *
+   * @param keys - Composite keys of the blocks to remove.
    * @returns Whether anything was removed.
    */
-  removeBlocks(keys: string[]): boolean {
-    const located = (keys ?? [])
+  removeBlocks(keys: readonly string[]): boolean {
+    const located = keys
       .filter((key) => !this.wireframeLayoutQuery.isOutletRoot(key))
-      .map((key) => ({
-        key,
-        ...this.wireframeLayoutQuery.findEntryAndOutletSync(key),
-      }))
-      .filter((entry) => entry.entry);
+      .flatMap((key) => {
+        const found = this.wireframeLayoutQuery.findEntryAndOutletSync(key);
+        return found ? [{ key, ...found }] : [];
+      });
     if (located.length === 0) {
       return false;
     }
@@ -632,6 +666,9 @@ export default class WireframeBlockMutationsService extends Service {
    *
    * Returns `false` (no-op) when the block is already first / last (visually)
    * in its parent, when no block is selected, or when the move is rejected.
+   *
+   * @param blockKey - Composite key of the block to move.
+   * @param visualDirection - Direction the author expects on screen.
    */
   #moveBlockSibling(blockKey: string, visualDirection: "up" | "down"): boolean {
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(blockKey);
@@ -677,6 +714,16 @@ export default class WireframeBlockMutationsService extends Service {
     });
   }
 
+  /**
+   * Moves an entry within one outlet and applies destination grid semantics.
+   *
+   * @param outletName - Outlet containing both source and destination.
+   * @param sourceKey - Composite key of the entry to move.
+   * @param targetKey - Destination key, or `null` for the outlet root.
+   * @param position - Placement relative to the destination.
+   * @param options - Grid-order synchronization options.
+   * @returns Whether the entry moved.
+   */
   #moveWithinOutlet(
     outletName: string,
     sourceKey: string,
@@ -685,7 +732,12 @@ export default class WireframeBlockMutationsService extends Service {
     {
       syncGridOrder = true,
       placeEntering = true,
-    }: { syncGridOrder?: boolean; placeEntering?: boolean } = {}
+    }: {
+      /** Whether same-grid children should follow persisted array order. */
+      syncGridOrder?: boolean;
+      /** Whether an entering entry should claim a destination grid cell. */
+      placeEntering?: boolean;
+    } = {}
   ): boolean {
     const layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
     if (!layout) {
@@ -804,6 +856,10 @@ export default class WireframeBlockMutationsService extends Service {
    * entry dropped at `(targetKey, position)`, or `null` when the
    * destination isn't a grid. "inside" targets the container itself;
    * "before" / "after" target a sibling, so the grid is its parent.
+   *
+   * @param layout - Layout containing the proposed destination.
+   * @param targetKey - Composite key anchoring the destination.
+   * @param position - Relative placement against the target.
    */
   #destinationGridKey(
     layout: LayoutEntry[],
@@ -828,8 +884,10 @@ export default class WireframeBlockMutationsService extends Service {
    * A no-op for stack / row destinations, where array order already IS
    * the visual order.
    *
+   * @param layout - Layout after the entry move.
    * @param targetKey - The move's target (sibling for before / after, the
    *   container itself for inside).
+   * @param position - Relative placement against the target.
    * @returns The layout, with the destination grid's content resynced when
    *   applicable.
    */
@@ -857,8 +915,14 @@ export default class WireframeBlockMutationsService extends Service {
   /**
    * The composite key of `key`'s parent entry, or `null` when `key` is
    * top-level (no enclosing container) or can't be found.
+   *
+   * @param layout - Layout tree to search.
+   * @param key - Composite key whose parent should be resolved.
    */
   #parentKeyOf(layout: LayoutEntry[], key: string | null): string | null {
+    if (!key) {
+      return null;
+    }
     const chain = findAncestryPath(layout, key);
     if (!chain || chain.length < 2) {
       return null;
@@ -874,6 +938,8 @@ export default class WireframeBlockMutationsService extends Service {
    *  - `targetKey === null` → outlet root (no block-level parent).
    *
    * Returns `null` for the outlet-root case.
+   *
+   * @param args - Layout and relative destination to resolve.
    */
   #destinationParentEntry({
     layout,
@@ -912,6 +978,8 @@ export default class WireframeBlockMutationsService extends Service {
    * `transformed !== sourceEntry` check routes through remove + insert
    * (which guarantees the source is removed). Same-grid reorders never
    * reach here — the movers handle those before transforming.
+   *
+   * @param args - Entry and destination against which it should be annotated.
    */
   #annotateForDestination({
     entry,
@@ -967,6 +1035,8 @@ export default class WireframeBlockMutationsService extends Service {
    * destination's parent. Returns the entry-to-insert; entry identity
    * is preserved when only the bag changes, so callers can rely on
    * `moveEntry` rather than a `remove + insert` round-trip.
+   *
+   * @param args - Entry and destination whose container metadata should change.
    */
   #transformForDestination({
     entry,
@@ -984,13 +1054,20 @@ export default class WireframeBlockMutationsService extends Service {
    * removed); single-cell entries are removed outright. Returns the
    * `{ layout, changed }` result without publishing.
    *
+   * @param layout - Layout tree containing the entry.
+   * @param key - Composite key of the entry to remove.
    * @param entry - The located entry (for its `containerArgs`).
    */
   #removeEntryFromLayout(
     layout: LayoutEntry[],
     key: string,
     entry: LayoutEntry
-  ): { layout: LayoutEntry[]; changed: boolean } {
+  ): {
+    /** Layout after the requested removal. */
+    layout: LayoutEntry[];
+    /** Whether the layout changed. */
+    changed: boolean;
+  } {
     return this.#shouldRestoreAsCell(layout, entry, key)
       ? replaceEntryInPlace(layout, key, {
           block: LAYOUT_MERGED_CELL_BLOCK,
@@ -1019,6 +1096,8 @@ export default class WireframeBlockMutationsService extends Service {
    *      Stacking two cells at the same rect is already a
    *      malformed state; we don't want to perpetuate it.
    *
+   * @param layout - Layout tree containing the entry and its parent grid.
+   * @param entry - Entry being removed from the layout.
    * @param entryKeyValue - The entry's composite key.
    */
   #shouldRestoreAsCell(

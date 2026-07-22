@@ -10,13 +10,18 @@ export interface ActivityEntry {
 }
 
 interface ActivityEntryTooltipSignature {
+  /** FloatKit tooltip payload. */
   Args: {
     /**
      * The activity-bar entry FloatKit injects via `tooltip.register`, holding
      * the i18n keys the card renders.
      */
-    data: { entry: ActivityEntry };
+    data: {
+      /** Activity entry described by the tooltip. */
+      entry: ActivityEntry;
+    };
   };
+  /** Root tooltip element. */
   Element: HTMLDivElement;
 }
 

@@ -29,22 +29,33 @@ import type WireframeWorkspaceService from "discourse/plugins/discourse-wirefram
 // here.
 const dCloseOnClickOutside =
   dCloseOnClickOutsideUntyped as unknown as ModifierLike<{
+    /** Drawer element monitored for outside clicks. */
     Element: HTMLElement;
+    /** Outside-click callback and exclusions. */
     Args: {
+      /** Positional outside-click configuration. */
       Positional: [
+        /** Callback invoked after an outside click. */
         close: () => void,
+        /** Optional elements excluded from outside-click handling. */
         options?: {
+          /** Primary excluded element selector. */
           targetSelector?: string;
+          /** Secondary excluded element selector. */
           secondaryTargetSelector?: string;
+          /** Explicit excluded element. */
           target?: Element;
         },
       ];
     };
   }>;
 
-interface PublishReviewDrawerSignature {
-  Args: Record<string, never>;
-}
+type ThemeActionResult = {
+  /** Newly created theme identifier, when the action succeeds. */
+  themeId?: number;
+  /** Error message returned when the action fails. */
+  error?: string;
+};
 
 /**
  * The save-and-publish review surface: a right-docked drawer that consolidates
@@ -61,7 +72,7 @@ interface PublishReviewDrawerSignature {
  * escape hatches all live here — the toolbar carries only the button that opens
  * the drawer.
  */
-export default class PublishReviewDrawer extends Component<PublishReviewDrawerSignature> {
+export default class PublishReviewDrawer extends Component {
   @service declare wireframeWorkspace: WireframeWorkspaceService;
   @service declare dialog: DialogService;
   @service declare wireframeMutationEngine: WireframeMutationEngineService;
@@ -270,8 +281,8 @@ export default class PublishReviewDrawer extends Component<PublishReviewDrawerSi
   // Runs a theme-producing escape-hatch action; on success reloads onto the new
   // theme so its layers load and Publish enables, otherwise surfaces the error.
   async #runThemeAction(
-    produce: () => Promise<{ themeId?: number; error?: string }>
-  ) {
+    produce: () => Promise<ThemeActionResult>
+  ): Promise<void> {
     this.isWorking = true;
     this.actionError = null;
     try {

@@ -11,6 +11,7 @@ import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/comp
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 interface BlockTileSignature {
+  /** Palette entry and activation behavior for the tile. */
   Args: {
     /** A palette row from `buildBlockPalette`. */
     entry: BlockPaletteEntry;
@@ -18,7 +19,10 @@ interface BlockTileSignature {
      * Called on the pointer activation gesture and on the roving Enter/Space
      * activation, with this tile's palette row.
      */
-    onActivate?: (entry: BlockPaletteEntry) => void;
+    onActivate?: (
+      /** Palette entry represented by the activated tile. */
+      entry: BlockPaletteEntry
+    ) => void;
     /**
      * The pointer event that activates the tile. The inserter popover uses the
      * default single click; the sidebar palette passes `"dblclick"`, since its
@@ -26,6 +30,7 @@ interface BlockTileSignature {
      */
     activateOn?: string;
   };
+  /** Root tile element. */
   Element: HTMLDivElement;
 }
 
@@ -46,6 +51,7 @@ interface BlockTileSignature {
  * keyboard users — the visual description lives only in the hover preview.
  */
 export default class BlockTile extends Component<BlockTileSignature> {
+  /** Registers the tile's read-only hover preview. */
   @service declare tooltip: TooltipService;
 
   /**
@@ -56,7 +62,7 @@ export default class BlockTile extends Component<BlockTileSignature> {
    */
   registerPreview = modifier((element: HTMLElement) => {
     if (isTesting()) {
-      return;
+      return undefined;
     }
     const instance = this.tooltip.register(element, {
       component: BlockPreviewCard,
@@ -87,7 +93,7 @@ export default class BlockTile extends Component<BlockTileSignature> {
   }
 
   @action
-  activate() {
+  activate(): void {
     this.args.onActivate?.(this.args.entry);
   }
 

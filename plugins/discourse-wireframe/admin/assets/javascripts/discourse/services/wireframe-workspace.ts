@@ -6,18 +6,18 @@ import {
   resetBlockArgRenderer,
 } from "discourse/blocks";
 import loadInlineRichEditor from "discourse/lib/load-inline-rich-editor";
-import type Blocks from "discourse/services/blocks";
+import type BlocksService from "discourse/services/blocks";
 import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-renderer";
-import type WireframeBlockReveal from "./wireframe-block-reveal";
-import type WireframeDragOverlay from "./wireframe-drag-overlay";
-import type WireframeDragSession from "./wireframe-drag-session";
-import type WireframeEditMode from "./wireframe-edit-mode";
-import type WireframeForceExpand from "./wireframe-force-expand";
-import type WireframeImageUpload from "./wireframe-image-upload";
-import type WireframeInspectorArgs from "./wireframe-inspector-args";
-import type WireframePublishTarget from "./wireframe-publish-target";
-import type WireframeSelection from "./wireframe-selection";
-import type WireframeStaging from "./wireframe-staging";
+import type WireframeBlockRevealService from "./wireframe-block-reveal";
+import type WireframeDragOverlayService from "./wireframe-drag-overlay";
+import type WireframeDragSessionService from "./wireframe-drag-session";
+import type WireframeEditModeService from "./wireframe-edit-mode";
+import type WireframeForceExpandService from "./wireframe-force-expand";
+import type WireframeImageUploadService from "./wireframe-image-upload";
+import type WireframeInspectorArgsService from "./wireframe-inspector-args";
+import type WireframePublishTargetService from "./wireframe-publish-target";
+import type WireframeSelectionService from "./wireframe-selection";
+import type WireframeStagingService from "./wireframe-staging";
 
 /**
  * The editor orchestrator. Opens and closes an editing session and sequences the
@@ -37,27 +37,49 @@ import type WireframeStaging from "./wireframe-staging";
  * is-open/can-edit signal everything else reads.
  */
 export default class WireframeWorkspaceService extends Service {
-  @service declare blocks: Blocks;
-  @service declare wireframeInspectorArgs: WireframeInspectorArgs;
-  @service declare wireframeBlockReveal: WireframeBlockReveal;
-  @service declare wireframeDragOverlay: WireframeDragOverlay;
-  @service declare wireframeDragSession: WireframeDragSession;
-  @service declare wireframeForceExpand: WireframeForceExpand;
-  @service declare wireframeImageUpload: WireframeImageUpload;
-  @service declare wireframeSelection: WireframeSelection;
-  @service declare wireframeEditMode: WireframeEditMode;
-  @service declare wireframeStaging: WireframeStaging;
-  @service declare wireframePublishTarget: WireframePublishTarget;
+  /** Core block registry and thumbnail preloader. */
+  @service declare blocks: BlocksService;
+  /** Clears inspector argument edits when a workspace closes. */
+  @service declare wireframeInspectorArgs: WireframeInspectorArgsService;
+  /** Resets reveal and flash state around workspace teardown. */
+  @service declare wireframeBlockReveal: WireframeBlockRevealService;
+  /** Owns the current visual drop preview. */
+  @service declare wireframeDragOverlay: WireframeDragOverlayService;
+  /** Owns the current drag source. */
+  @service declare wireframeDragSession: WireframeDragSessionService;
+  /** Owns layout blocks temporarily expanded for editing. */
+  @service declare wireframeForceExpand: WireframeForceExpandService;
+  /** Clears pending image uploads around workspace transitions. */
+  @service declare wireframeImageUpload: WireframeImageUploadService;
+  /** Owns the currently selected block. */
+  @service declare wireframeSelection: WireframeSelectionService;
+  /** Controls whether the editor session is active and allowed. */
+  @service declare wireframeEditMode: WireframeEditModeService;
+  /** Seeds and tears down editable layout drafts. */
+  @service declare wireframeStaging: WireframeStagingService;
+  /** Tracks the theme that receives published changes. */
+  @service declare wireframePublishTarget: WireframePublishTargetService;
 
-  willDestroy() {
+  /** Resets pending reveal work when Ember destroys the workspace service. */
+  willDestroy(): void {
     super.willDestroy();
     // Defensive: a session torn down without an explicit exit (e.g. the owner
     // being destroyed) should still drop any pending reveal/flash timer.
     this.wireframeBlockReveal.reset();
   }
 
+  /**
+   * Opens an editing session for the selected theme when the user is eligible.
+   *
+   * @param options - Optional theme that should receive published changes.
+   */
   @action
-  enter({ themeId }: { themeId?: number | null } = {}) {
+  enter({
+    themeId,
+  }: {
+    /** Theme that should receive published changes, or `null` for no target. */
+    themeId?: number | null;
+  } = {}): void {
     if (!this.wireframeEditMode.canEdit) {
       return;
     }
@@ -99,7 +121,7 @@ export default class WireframeWorkspaceService extends Service {
    * session are skipped, so it's cheap to call on every page change.
    */
   @action
-  rediscoverOutlets() {
+  rediscoverOutlets(): void {
     if (!this.wireframeEditMode.active) {
       return;
     }
@@ -113,8 +135,9 @@ export default class WireframeWorkspaceService extends Service {
     );
   }
 
+  /** Closes the editing session and resets every session-scoped peer service. */
   @action
-  exit() {
+  exit(): void {
     // Tear down the staging session: flush the engine, drop every session-draft
     // layer, and clear the draft baseline / review-drawer state. Runs before the
     // peer resets below so the drafts are gone before the selection that pointed
@@ -138,8 +161,9 @@ export default class WireframeWorkspaceService extends Service {
     this.wireframeForceExpand.reset();
   }
 
+  /** Opens or closes the workspace according to its current active state. */
   @action
-  toggle() {
+  toggle(): void {
     if (this.wireframeEditMode.active) {
       this.exit();
     } else {

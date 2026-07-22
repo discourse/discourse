@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -10,10 +9,37 @@ import {
   existingLinkHref,
   hasMark,
   insertHardBreak,
+  type RichTextDoc,
   SCHEMAS,
   toDoc,
   toStorage,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
+import type WireframeInplaceTextService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
+
+type InlineRichEditor = Awaited<ReturnType<typeof loadInlineRichEditor>>;
+type InlineRichEditorView = InstanceType<InlineRichEditor["EditorView"]>;
+type InlineRichEditorTransaction = Parameters<
+  InlineRichEditorView["dispatch"]
+>[0];
+type InlineRichEditorSchema = Parameters<typeof insertHardBreak>[0];
+type InlineRichEditorCommand = ReturnType<typeof insertHardBreak>;
+type RichTextSchemaName = keyof typeof SCHEMAS;
+
+type SavedLinkRange = {
+  /** Inclusive link range start. */
+  from: number;
+  /** Exclusive link range end. */
+  to: number;
+};
+
+type MarkState = {
+  /** Whether the strong mark is active. */
+  strong: boolean;
+  /** Whether the emphasis mark is active. */
+  em: boolean;
+  /** Whether the link mark is active. */
+  link: boolean;
+};
 
 /**
  * Mounts a ProseMirror editor over the currently-edited inline text region
@@ -27,7 +53,7 @@ import {
  * source of truth during the session — `args.text` is written once at
  * commit time, not per keystroke.
  *
- * The bold / italic / link UI lives in `block-toolbar.gjs` (shared with the
+ * The bold / italic / link UI lives in `block-toolbar.gts` (shared with the
  * block move/duplicate/delete buttons). The block-toolbar reaches this
  * controller via `wireframeInplaceText.controller` and calls its methods
  * (`toggleMark`, `enterLinkMode`, etc.); a tracked `_pmStateVersion`
@@ -38,12 +64,20 @@ import {
  * edit session — see `discourse/lib/load-inline-rich-editor`.
  */
 export default class InplaceTextController extends Component {
-  @service wireframeInplaceText;
+  /** Owns the active in-place rich-text edit session. */
+  @service declare wireframeInplaceText: WireframeInplaceTextService;
 
-  #view = null;
-  #pm = null;
-  #handleOutsideClick = null;
-  #savedLinkRange = null;
+  /** Mounted ProseMirror view. */
+  #view: InlineRichEditorView | null = null;
+
+  /** Lazily loaded ProseMirror surface. */
+  #pm: InlineRichEditor | null = null;
+
+  /** Document-level click handler installed during an edit session. */
+  #handleOutsideClick: ((event: MouseEvent) => void) | null = null;
+
+  /** Selection range preserved while the URL editor owns focus. */
+  #savedLinkRange: SavedLinkRange | null = null;
   /**
    * Tracked counter bumped on every PM transaction. Read by
    * `markState` / `selectionEmpty` getters to participate in Glimmer's
@@ -53,14 +87,24 @@ export default class InplaceTextController extends Component {
    * Underscored because nothing in a template binds to it directly;
    * consumers read the getters that depend on it.
    */
-  @tracked _pmStateVersion = 0;
+  @tracked _pmStateVersion: number = 0;
 
+  /**
+   * Creates the controller and registers its toolbar command surface.
+   *
+   * @param args - Standard Glimmer component constructor arguments.
+   */
   constructor(...args: ConstructorParameters<typeof Component>) {
     super(...args);
     this.wireframeInplaceText.registerController(this);
   }
 
-  willDestroy(...args: Parameters<Component["willDestroy"]>) {
+  /**
+   * Unregisters the command surface when the component is destroyed.
+   *
+   * @param args - Standard Glimmer destruction arguments.
+   */
+  willDestroy(...args: Parameters<Component["willDestroy"]>): void {
     super.willDestroy(...args);
     this.wireframeInplaceText.unregisterController(this);
   }
@@ -78,10 +122,10 @@ export default class InplaceTextController extends Component {
    * `wireframeInplaceText.start` on a non-text arg resolves to `null` and mounts
    * nothing.
    *
-   * @returns {HTMLElement | null}
+   * @returns Active renderer element, or `null` when unavailable.
    */
   @cached
-  get activeRendererEl() {
+  get activeRendererEl(): HTMLElement | null {
     // Read the tracked session identity FIRST so this `@cached` getter always
     // depends on it and recomputes on every session transition. The
     // container-arg branch below returns early; without these reads up here it
@@ -104,9 +148,9 @@ export default class InplaceTextController extends Component {
         `[data-wf-container-arg-key="${CSS.escape(childKey)}"]` +
         `[data-wf-container-arg-namespace="${CSS.escape(namespace)}"]` +
         `[data-wf-container-arg-field="${CSS.escape(field)}"]`;
-      return document.querySelector(
+      return document.querySelector<HTMLElement>(
         `${host} [data-wf-rich-text-arg]`
-      ) as HTMLElement | null;
+      );
     }
 
     if (!blockKey || !argName) {
@@ -114,9 +158,9 @@ export default class InplaceTextController extends Component {
     }
     const blockSelector = `[data-wf-block-key="${CSS.escape(blockKey)}"]`;
     const argSelector = `[data-wf-rich-text-arg="${CSS.escape(argName)}"]`;
-    return document.querySelector(
+    return document.querySelector<HTMLElement>(
       `${blockSelector} ${argSelector}`
-    ) as HTMLElement | null;
+    );
   }
 
   /**
@@ -124,16 +168,16 @@ export default class InplaceTextController extends Component {
    * Falls back to `plain` so the editor always mounts with *some* schema
    * even if the data-attr is missing.
    *
-   * @returns {"plain"|"heading"|"paragraph"}
+   * @returns Supported schema variant.
    */
-  get schemaName() {
+  get schemaName(): RichTextSchemaName {
     const el = this.activeRendererEl;
     const raw = el?.dataset?.blockArgSchema;
-    return raw && raw in SCHEMAS ? raw : "plain";
+    return raw && isRichTextSchemaName(raw) ? raw : "plain";
   }
 
   /**
-   * Public API consumed by `block-toolbar.gjs`. Returns the
+   * Public API consumed by `block-toolbar.gts`. Returns the
    * active-mark flags for the current PM selection, or `null` when the
    * inline-format buttons should be hidden (no view, empty selection,
    * or schema that doesn't allow marks). Reached via
@@ -142,10 +186,10 @@ export default class InplaceTextController extends Component {
    * `@cached` + reading `_pmStateVersion` makes this reactive to PM
    * transactions without making PM's state itself tracked.
    *
-   * @returns {{strong: boolean, em: boolean, link: boolean} | null}
+   * @returns Active formatting marks, or `null` when unavailable.
    */
   @cached
-  get markState() {
+  get markState(): MarkState | null {
     void this._pmStateVersion;
     const view = this.#view;
     if (!view) {
@@ -167,8 +211,13 @@ export default class InplaceTextController extends Component {
     };
   }
 
+  /**
+   * Mounts ProseMirror into the active renderer.
+   *
+   * @param container - Element that hosts the editor view.
+   */
   @action
-  async mountEditor(container) {
+  async mountEditor(container: HTMLElement): Promise<void> {
     const rendererEl = this.activeRendererEl;
     if (!rendererEl) {
       return;
@@ -186,7 +235,7 @@ export default class InplaceTextController extends Component {
     const schema = pm.createSchema(variant.extensions, false);
     const doc = pm.Node.fromJSON(
       schema,
-      toDoc(this.wireframeInplaceText.argValue)
+      toDoc(normalizeStoredValue(this.wireframeInplaceText.argValue))
     );
 
     const plugins = [
@@ -252,7 +301,7 @@ export default class InplaceTextController extends Component {
     this.#view = new pm.EditorView(container, {
       state: pm.EditorState.create({ schema, doc, plugins }),
       attributes: { class: "wf-rich-text-editor" },
-      dispatchTransaction: (tr) => {
+      dispatchTransaction: (tr: InlineRichEditorTransaction) => {
         const view = this.#view;
         if (!view) {
           return;
@@ -290,7 +339,7 @@ export default class InplaceTextController extends Component {
     const end = initialDoc.content.size;
     const hint = this.wireframeInplaceText.consumeInitialSelectionHint();
     let range;
-    if (hint && typeof hint === "object" && hint.coords) {
+    if (hint && typeof hint === "object" && "coords" in hint) {
       const coordResult = this.#view.posAtCoords({
         left: hint.coords.x,
         top: hint.coords.y,
@@ -300,6 +349,7 @@ export default class InplaceTextController extends Component {
     } else if (
       hint &&
       typeof hint === "object" &&
+      "pos" in hint &&
       typeof hint.pos === "number"
     ) {
       const pos = Math.max(0, Math.min(end, hint.pos));
@@ -314,15 +364,19 @@ export default class InplaceTextController extends Component {
     this.#view.dispatch(this.#view.state.tr.setSelection(range));
     this.#view.focus();
 
-    this.#handleOutsideClick = (event) => {
-      if (!this.#view || this.#view.dom.contains(event.target)) {
+    this.#handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element) || !this.#view) {
+        return;
+      }
+      if (this.#view.dom.contains(target)) {
         return;
       }
       // The block-toolbar (which now hosts the inline-format buttons) sits
       // outside view.dom but is functionally part of the editor. Treat
       // clicks inside any block-toolbar as inside the editor so the
       // session doesn't exit when applying a mark.
-      if (event.target.closest?.(".wireframe-block-toolbar")) {
+      if (target.closest(".wireframe-block-toolbar")) {
         return;
       }
       // A click on a rich-inline field region of THIS block stays in edit:
@@ -336,8 +390,8 @@ export default class InplaceTextController extends Component {
         "[data-wf-block-key]"
       );
       if (
-        editingBlock?.contains(event.target) &&
-        event.target.closest?.("[data-wf-rich-text-arg]")
+        editingBlock?.contains(target) &&
+        target.closest("[data-wf-rich-text-arg]")
       ) {
         return;
       }
@@ -353,8 +407,9 @@ export default class InplaceTextController extends Component {
     document.addEventListener("mousedown", this.#handleOutsideClick, true);
   }
 
+  /** Unmounts ProseMirror and clears document-level listeners. */
   @action
-  unmountEditor() {
+  unmountEditor(): void {
     this.wireframeInplaceText.registerCommit(null);
 
     const view = this.#view;
@@ -386,12 +441,13 @@ export default class InplaceTextController extends Component {
    * loss from clicking a button outside PM can leave the user with no
    * visible selection even though the model selection survived.
    *
-   * @param {"strong" | "em"} markName
+   * @param markName - Formatting mark to toggle.
    */
   @action
-  toggleMark(markName) {
+  toggleMark(markName: "strong" | "em"): void {
     const view = this.#view;
-    if (!view) {
+    const pm = this.#pm;
+    if (!view || !pm) {
       return;
     }
     const markType = view.state.schema.marks[markName];
@@ -408,7 +464,7 @@ export default class InplaceTextController extends Component {
     } else {
       tr.addMark(from, to, markType.create());
     }
-    tr.setSelection(this.#pm.TextSelection.create(tr.doc, from, to));
+    tr.setSelection(pm.TextSelection.create(tr.doc, from, to));
     view.dispatch(tr);
     view.focus();
   }
@@ -422,7 +478,7 @@ export default class InplaceTextController extends Component {
    * to the URL input.
    */
   @action
-  enterLinkMode() {
+  enterLinkMode(): void {
     const view = this.#view;
     if (!view) {
       return;
@@ -448,10 +504,11 @@ export default class InplaceTextController extends Component {
    * the toolbar. An empty URL falls through to a mark removal so an
    * author can clear a link by emptying the field and pressing Enter.
    */
-  #applyLink(newValue) {
+  #applyLink(newValue: string): void {
     const view = this.#view;
+    const pm = this.#pm;
     const range = this.#savedLinkRange;
-    if (!view || !range) {
+    if (!view || !pm || !range) {
       this.#exitLinkMode();
       return;
     }
@@ -462,37 +519,34 @@ export default class InplaceTextController extends Component {
     if (trimmed) {
       tr.addMark(range.from, range.to, markType.create({ href: trimmed }));
     }
-    tr.setSelection(
-      this.#pm.TextSelection.create(tr.doc, range.from, range.to)
-    );
+    tr.setSelection(pm.TextSelection.create(tr.doc, range.from, range.to));
     view.dispatch(tr);
     view.focus();
     this.#exitLinkMode();
   }
 
-  #removeLink() {
+  #removeLink(): void {
     const view = this.#view;
+    const pm = this.#pm;
     const range = this.#savedLinkRange;
-    if (!view || !range) {
+    if (!view || !pm || !range) {
       this.#exitLinkMode();
       return;
     }
     const markType = view.state.schema.marks.link;
     const tr = view.state.tr.removeMark(range.from, range.to, markType);
-    tr.setSelection(
-      this.#pm.TextSelection.create(tr.doc, range.from, range.to)
-    );
+    tr.setSelection(pm.TextSelection.create(tr.doc, range.from, range.to));
     view.dispatch(tr);
     view.focus();
     this.#exitLinkMode();
   }
 
-  #cancelLink() {
+  #cancelLink(): void {
     this.#view?.focus();
     this.#exitLinkMode();
   }
 
-  #exitLinkMode() {
+  #exitLinkMode(): void {
     this.#savedLinkRange = null;
     if (this.wireframeInplaceText.fieldEditor?.kind === "url") {
       this.wireframeInplaceText.setFieldEditor(null);
@@ -511,21 +565,21 @@ export default class InplaceTextController extends Component {
    * rich-text marker — so Tab never lands on image / URL / icon args
    * (which carry the generic `data-block-arg` but not this marker).
    */
-  #tabToSiblingArg(direction) {
+  #tabToSiblingArg(direction: -1 | 1): InlineRichEditorCommand {
     return () => {
       const view = this.#view;
       if (!view) {
         return false;
       }
-      const blockEl = view.dom.closest(
-        "[data-wf-block-key]"
-      ) as HTMLElement | null;
+      const blockEl = view.dom.closest<HTMLElement>("[data-wf-block-key]");
       if (!blockEl) {
         return false;
       }
       const argEls = Array.from(
         blockEl.querySelectorAll("[data-wf-rich-text-arg]")
-      ) as HTMLElement[];
+      ).filter(
+        (element): element is HTMLElement => element instanceof HTMLElement
+      );
       const currentArg = this.wireframeInplaceText.argName;
       const i = argEls.findIndex(
         (el) => el.dataset.wfRichTextArg === currentArg
@@ -542,10 +596,12 @@ export default class InplaceTextController extends Component {
         this.wireframeInplaceText.stop({ commit: true });
         return false;
       }
-      this.wireframeInplaceText.start(
-        blockEl.dataset.wfBlockKey,
-        next.dataset.wfRichTextArg
-      );
+      const blockKey = blockEl.dataset.wfBlockKey;
+      const argName = next.dataset.wfRichTextArg;
+      if (!blockKey || !argName) {
+        return false;
+      }
+      void this.wireframeInplaceText.start(blockKey, argName);
       return true;
     };
   }
@@ -566,9 +622,10 @@ export default class InplaceTextController extends Component {
    * schema editor (handled separately at the keymap site), so authors
    * can still soft-wrap inside a paragraph block.
    *
-   * @param {import("prosemirror-model").Schema} schema
+   * @param schema - Active ProseMirror schema.
+   * @returns Keymap command for the Enter key.
    */
-  #enterCommand(schema) {
+  #enterCommand(schema: InlineRichEditorSchema): InlineRichEditorCommand {
     if (this.schemaName !== "paragraph") {
       return () => {
         this.wireframeInplaceText.stop({ commit: true });
@@ -592,7 +649,7 @@ export default class InplaceTextController extends Component {
    * `false` when the session state is wrong so PM falls through to the
    * next command in the keymap.
    */
-  #splitParagraphAtCursor() {
+  #splitParagraphAtCursor(): InlineRichEditorCommand {
     return () => {
       const view = this.#view;
       if (!view) {
@@ -623,7 +680,7 @@ export default class InplaceTextController extends Component {
    * selection isn't a collapsed cursor at position 0, no prev sibling
    * in the same outlet, or the prev sibling isn't a `wf:paragraph`.
    */
-  #mergeWithPrevAtStart() {
+  #mergeWithPrevAtStart(): InlineRichEditorCommand {
     return () => {
       const view = this.#view;
       if (!view) {
@@ -637,7 +694,9 @@ export default class InplaceTextController extends Component {
       if (!prev || prev.block !== "paragraph") {
         return false;
       }
-      const prevDoc = schema.nodeFromJSON(toDoc(prev.value));
+      const prevDoc = schema.nodeFromJSON(
+        toDoc(normalizeStoredValue(prev.value))
+      );
       const joinPos = prevDoc.content.size;
       const mergedDoc = prevDoc.replace(joinPos, joinPos, doc.slice(0));
       return this.wireframeInplaceText.mergeWithPrev({
@@ -668,7 +727,10 @@ export default class InplaceTextController extends Component {
    * (prev) / `"start"` (next) initial-selection hint, and the cursor
    * lands at the matching edge of the sibling's doc.
    */
-  #walkToSibling(direction, axis) {
+  #walkToSibling(
+    direction: "prev" | "next",
+    axis: "horizontal" | "vertical"
+  ): InlineRichEditorCommand {
     return () => {
       const view = this.#view;
       if (!view) {
@@ -722,4 +784,47 @@ export default class InplaceTextController extends Component {
       {{/in-element}}
     {{/if}}
   </template>
+}
+
+/**
+ * Checks whether a string names a supported rich-text schema.
+ *
+ * @param value - Schema name emitted by the renderer.
+ * @returns Whether the schema is supported by this editor.
+ */
+function isRichTextSchemaName(value: string): value is RichTextSchemaName {
+  return Object.hasOwn(SCHEMAS, value);
+}
+
+/**
+ * Normalizes the service's untyped argument value for rich-text editing.
+ *
+ * @param value - Runtime block argument value.
+ * @returns Stored rich text, defaulting to an empty string.
+ */
+function normalizeStoredValue(value: unknown): string | RichTextDoc {
+  return typeof value === "string" || isRichTextDoc(value) ? value : "";
+}
+
+/**
+ * Checks whether a runtime value has a stored rich-text document shape.
+ *
+ * @param value - Runtime value to inspect.
+ * @returns Whether the value is a rich-text document node.
+ */
+function isRichTextDoc(value: unknown): value is RichTextDoc {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const type = Reflect.get(value, "type");
+  const text = Reflect.get(value, "text");
+  const content = Reflect.get(value, "content");
+  const marks = Reflect.get(value, "marks");
+  return (
+    (type === undefined || typeof type === "string") &&
+    (text === undefined || typeof text === "string") &&
+    (content === undefined ||
+      (Array.isArray(content) && content.every(isRichTextDoc))) &&
+    (marks === undefined || Array.isArray(marks))
+  );
 }

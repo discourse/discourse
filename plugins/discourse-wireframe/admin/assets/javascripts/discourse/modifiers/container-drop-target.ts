@@ -6,19 +6,20 @@ import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
 import { registerDragAndDropAutoScroll } from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
+import type { DropDispatch } from "discourse/plugins/discourse-wireframe/discourse/lib/drop-dispatch";
 import {
   flipPosition,
   isReversedFlexLayout,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
 import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
 import {
-  Indicator,
+  type Indicator,
   resolveWrappingFlowDrop,
-  WrappingFlowDropResult,
+  type WrappingFlowDropResult,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/wrapping-flow-drop";
-import type WireframeDragOverlay from "../services/wireframe-drag-overlay";
-import type WireframeDropAuthority from "../services/wireframe-drop-authority";
-import type WireframeLayoutQuery from "../services/wireframe-layout-query";
+import type WireframeDragOverlayService from "../services/wireframe-drag-overlay";
+import type WireframeDropAuthorityService from "../services/wireframe-drop-authority";
+import type WireframeLayoutQueryService from "../services/wireframe-layout-query";
 
 /**
  * The container drop modes the modifier understands. `null` marks a leaf block
@@ -35,7 +36,9 @@ export type ContainerMode =
 
 /** The cursor position, projected from a drag's pointer input. */
 export interface PointerInput {
+  /** Pointer x-coordinate in viewport pixels. */
   clientX: number;
+  /** Pointer y-coordinate in viewport pixels. */
   clientY: number;
 }
 
@@ -45,25 +48,41 @@ export interface PointerInput {
  * modifier declares the shape it actually reads off a source: a moved block
  * carries its own key, a palette entry carries the block name / default args to
  * insert.
+ *
+ * TODO(devxp-typescript-pending): replace this local boundary type once the
+ * ui-kit drop-target helper exports its source-payload contract.
  */
 export type DragSource =
-  | { type: "wf-block"; data: { blockKey: string | null } }
   | {
+      /** Identifies an existing rendered block. */
+      type: "wf-block";
+      /** Existing block drag payload. */
+      data: {
+        /** Composite key of the dragged block. */
+        blockKey: string | null;
+      };
+    }
+  | {
+      /** Identifies a new palette block. */
       type: "wf-palette-block";
-      data: { blockName: string; defaultArgs?: object };
+      /** Palette block drag payload. */
+      data: {
+        /** Registered block name. */
+        blockName: string;
+        /** Default arguments for the new entry. */
+        defaultArgs?: Record<string, unknown>;
+      };
     };
-
-/** A layout mutation the coordinator runs at drop time. */
-export interface DropDispatch {
-  action: string;
-  args: object;
-}
 
 /** Viewport-relative pixel rect for the slot-insert indicator. */
 export interface DropGeometry {
+  /** Top edge in viewport pixels. */
   top: number;
+  /** Left edge in viewport pixels. */
   left: number;
+  /** Indicator width in pixels. */
   width: number;
+  /** Indicator height in pixels. */
   height: number;
 }
 
@@ -73,10 +92,15 @@ export interface DropGeometry {
  * `SlotDropDescriptor`.
  */
 export interface DropDescriptor {
+  /** Viewport geometry for the overlay. */
   geometry: DropGeometry;
+  /** Semantic drop kind. */
   kind: string;
+  /** Whether the authority service accepted the drop. */
   validity: "valid" | "invalid";
+  /** Human-readable target label. */
   label: string;
+  /** Deferred mutation payload for a valid drop. */
   dispatch: DropDispatch | null;
 }
 
@@ -86,24 +110,37 @@ const ACCEPTED_KINDS = ["wf-block", "wf-palette-block"];
 const EDGE_BAND = 12;
 
 /** The PDND drop location the target callbacks receive. */
-interface DropLocation {
-  current: { input: PointerInput };
-}
+type DropLocation = {
+  /** Current pointer snapshot. */
+  current: {
+    /** Pointer coordinates for the drag frame. */
+    input: PointerInput;
+  };
+};
 
 /** The event object a drop-target enter / drag callback receives. */
-interface DragTargetEvent {
+type DragTargetEvent = {
+  /** Normalized drag source. */
   source: DragSource;
+  /** Current drag location. */
   location: DropLocation;
-}
+};
 
 interface ContainerDropTargetSignature {
+  /** Element registering the drop target. */
   Element: HTMLElement;
+  /** Modifier arguments. */
   Args: {
+    /** Named modifier arguments. */
     Named: {
+      /** Composite key of the target container. */
       containerKey?: string | null;
+      /** Outlet containing the target. */
       outletName: string;
+      /** Layout mode controlling drop geometry. */
       mode: ContainerMode;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }
@@ -144,19 +181,38 @@ interface ContainerDropTargetSignature {
  * so re-registration on rare arg changes is fine.
  */
 export default class ContainerDropTargetModifier extends Modifier<ContainerDropTargetSignature> {
-  @service declare wireframeDragOverlay: WireframeDragOverlay;
-  @service declare wireframeDropAuthority: WireframeDropAuthority;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
+  /** Owns the single drop-preview overlay claim. */
+  @service declare wireframeDragOverlay: WireframeDragOverlayService;
+  /** Validates proposed insertions and moves. */
+  @service declare wireframeDropAuthority: WireframeDropAuthorityService;
+  /** Resolves layout entries and metadata for labels and geometry. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
 
+  /** Cleanup for the active auto-scroll registration. */
   #autoScrollCleanup: (() => void) | null = null;
+  /** Cleanup for the active drop-target registration. */
   #cleanup: (() => void) | null = null;
+  /** Releases this modifier's current overlay claim. */
   #releaseDrop: (() => void) | null = null;
 
+  /**
+   * Creates the modifier and registers teardown.
+   *
+   * @param owner - Ember owner creating the modifier.
+   * @param args - Initial modifier arguments.
+   */
   constructor(owner: Owner, args: ArgsFor<ContainerDropTargetSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.#detach());
   }
 
+  /**
+   * Registers drop handling for the current container mode.
+   *
+   * @param chromeElement - Chrome element carrying the modifier.
+   * @param _positional - Unused positional arguments.
+   * @param named - Target identity and layout mode.
+   */
   modify(
     chromeElement: HTMLElement,
     _positional: [],
@@ -165,7 +221,7 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
       outletName,
       mode,
     }: ContainerDropTargetSignature["Args"]["Named"]
-  ) {
+  ): void {
     this.#detach();
 
     if (mode === "grid" || mode === "grid-cell-leaf" || mode == null) {
@@ -200,8 +256,12 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
     this.#cleanup = registerDragAndDropTarget(chromeElement, () => ({
       accepts: ACCEPTED_KINDS,
       indicator: false,
-      canDrop: ({ input }: { input: PointerInput }) =>
-        !shouldDeferToParent(input),
+      canDrop: ({
+        input,
+      }: {
+        /** Current pointer coordinates. */
+        input: PointerInput;
+      }) => !shouldDeferToParent(input),
       onDragEnter: ({ source, location }: DragTargetEvent) => {
         // A container that declares a scroll axis (e.g. a horizontal slide
         // track) auto-scrolls when the cursor nears its edge, so a drag can
@@ -214,7 +274,12 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
       onDrag: ({ source, location }: DragTargetEvent) =>
         claim(source, location.current.input),
       onDragLeave: () => this.#releaseDrop?.(),
-      onDrop: ({ location }: { location: DropLocation }) => {
+      onDrop: ({
+        location,
+      }: {
+        /** Final drag location. */
+        location: DropLocation;
+      }) => {
         // A release over an excluded region (e.g. the nav controls) is not a
         // drop — cleanup runs afterwards, so nothing stale dispatches.
         if (isOverExcludedRegion(chromeElement, location.current.input)) {
@@ -235,7 +300,7 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
    *
    * @param container - The resolved scroll element.
    */
-  #enableAutoScroll(container: HTMLElement | null) {
+  #enableAutoScroll(container: HTMLElement | null): void {
     if (this.#autoScrollCleanup || !container?.dataset?.wfDropAxis) {
       return;
     }
@@ -249,7 +314,8 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
     }));
   }
 
-  #detach() {
+  /** Clears drop-target, auto-scroll, and overlay registrations. */
+  #detach(): void {
     this.#cleanup?.();
     this.#cleanup = null;
     this.#autoScrollCleanup?.();
@@ -259,18 +325,27 @@ export default class ContainerDropTargetModifier extends Modifier<ContainerDropT
 
 /** Options accepted by {@link createContainerDropResolver}. */
 export interface ContainerDropResolverOptions {
-  layoutQuery: WireframeLayoutQuery;
-  dropAuthority: WireframeDropAuthority;
+  /** Read-only layout service used to inspect target entries. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Authority service used to validate candidate drops. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Chrome element carrying the modifier. */
   chromeElement: HTMLElement;
+  /** Composite key of the target container. */
   containerKey: string | null;
+  /** Outlet containing the target container. */
   outletName: string;
+  /** Layout mode controlling drop geometry. */
   mode: ContainerMode;
 }
 
 /** The geometry helpers a chrome's drop handling needs. */
 export interface ContainerDropResolver {
+  /** Resolves the inner element containing direct block children. */
   resolveContainer: () => HTMLElement;
+  /** Checks whether an edge-band drop belongs to the parent target. */
   shouldDeferToParent: (input: PointerInput) => boolean;
+  /** Resolves the preview and dispatch payload for a drag frame. */
   descriptorFor: (
     source: DragSource,
     input: PointerInput
@@ -291,6 +366,9 @@ export interface ContainerDropResolver {
  * the block chrome's external file-drop handling (OS image files) so both
  * resolve and place a drop the same way. Stateless across drags apart from
  * a per-resolver cache of the resolved container element.
+ *
+ * @param options - Services, target identity, element, and layout mode.
+ * @returns Geometry helpers bound to the target chrome.
  */
 export function createContainerDropResolver({
   layoutQuery,
@@ -408,6 +486,7 @@ export function createContainerDropResolver({
     if (!container) {
       return null;
     }
+    const declaredAxis = container.dataset?.wfDropAxis;
     return computeDescriptor({
       layoutQuery,
       dropAuthority,
@@ -418,7 +497,7 @@ export function createContainerDropResolver({
       outletName,
       // A marked drop container may pin its own axis (e.g. a horizontal
       // slide track) regardless of the chrome's `mode`-derived default.
-      axis: (container.dataset?.wfDropAxis || axis) as "x" | "y",
+      axis: declaredAxis === "x" || declaredAxis === "y" ? declaredAxis : axis,
       source,
     });
   };
@@ -429,23 +508,36 @@ export function createContainerDropResolver({
 // One candidate landing site inside a container: the layout-positioned wrapper
 // element plus the block key and name of the child it stands for. `key` /
 // `blockName` come off DOM attributes, so they may be absent.
-interface ChildCandidate {
+type ChildCandidate = {
+  /** Layout-positioned wrapper for the child. */
   wrapper: Element;
+  /** Composite child key read from DOM metadata. */
   key: string | null;
+  /** Registered child name read from DOM metadata. */
   blockName: string | null;
+  /** Whether the child is a composite-part proxy. */
   isProxy: boolean;
-}
+};
 
 /** Options accepted by {@link computeDescriptor}. */
 export interface ComputeDescriptorOptions {
-  layoutQuery: WireframeLayoutQuery;
-  dropAuthority: WireframeDropAuthority;
+  /** Read-only layout service used to inspect target entries. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Authority service used to validate candidate drops. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Inner element containing direct block children. */
   container: HTMLElement;
+  /** Chrome element carrying the modifier. */
   chromeElement?: HTMLElement | null;
+  /** Current pointer coordinates. */
   input: PointerInput;
+  /** Composite key of the target container. */
   containerKey: string | null;
+  /** Outlet containing the target container. */
   outletName: string;
+  /** Main axis used for flow geometry. */
   axis: "x" | "y";
+  /** Block or palette item being dropped. */
   source: DragSource;
 }
 
@@ -470,6 +562,9 @@ export interface ComputeDescriptorOptions {
  * Returns `null` when the source can't legally land (self-drop into
  * an adjacent boundary, cross-outlet rejection, etc.) so the overlay
  * disappears for invalid targets.
+ *
+ * @param options - Services, target geometry, drag input, and source.
+ * @returns The resolved drop descriptor, or `null` when no drop applies.
  */
 export function computeDescriptor({
   layoutQuery,
@@ -596,6 +691,7 @@ export function computeDescriptor({
       dropAuthority,
       rect,
       targetKey,
+      outletName,
       blockName,
       source,
       childNoun,
@@ -612,6 +708,11 @@ export function computeDescriptor({
  * `canDrop` returns `false` and the drop falls through to the parent
  * container — that's how a drop near a row's edge lands as a sibling
  * of the row in the enclosing stack.
+ *
+ * @param rect - Outer target bounds.
+ * @param input - Current pointer coordinates.
+ * @param band - Edge-band width in pixels.
+ * @returns Whether the pointer lies in any outer edge band.
  */
 export function isInEdgeBand(
   rect: DOMRect,
@@ -634,6 +735,10 @@ export function isInEdgeBand(
  *
  * Scoped to markers belonging to THIS chrome (`.closest(".wireframe-block-chrome")`
  * === `chromeElement`) so a nested container's exclusion isn't picked up.
+ *
+ * @param chromeElement - Chrome whose owned exclusions should be checked.
+ * @param input - Current pointer coordinates.
+ * @returns Whether the pointer is over an owned excluded region.
  */
 export function isOverExcludedRegion(
   chromeElement: HTMLElement,
@@ -656,9 +761,13 @@ export function isOverExcludedRegion(
  * Returns true when the entry at `key` is a container in the live
  * layout. Reads through the layout-query service so the check honours
  * soft-failures / draft state without DOM peeking.
+ *
+ * @param layoutQuery - Read-only layout service used to locate the entry.
+ * @param key - Composite entry key to inspect.
+ * @returns Whether the entry is a registered container.
  */
 function childIsContainer(
-  layoutQuery: WireframeLayoutQuery,
+  layoutQuery: WireframeLayoutQueryService,
   key: string | null
 ): boolean {
   if (!key) {
@@ -672,27 +781,43 @@ function childIsContainer(
   return metadata?.isContainer === true;
 }
 
-interface ValidationResult {
+type ValidationResult = {
+  /** Whether the candidate drop is authorized. */
   ok: boolean;
-}
+};
 
-interface BoundaryDescriptorOptions {
-  layoutQuery: WireframeLayoutQuery;
-  dropAuthority: WireframeDropAuthority;
+type BoundaryDescriptorOptions = {
+  /** Read-only layout service used to name target entries. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Authority service used to validate the insertion. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Inner element containing direct block children. */
   container: HTMLElement;
+  /** Visible empty-state geometry for an empty container. */
   emptyRect?: DOMRect | null;
+  /** Main axis used for boundary geometry. */
   axis: "x" | "y";
+  /** Wrapped-band boundary geometry, when present. */
   indicator?: Indicator | null;
+  /** Child immediately before the boundary. */
   before: ChildCandidate | null;
+  /** Child immediately after the boundary. */
   after: ChildCandidate | null;
+  /** Composite key of the target container. */
   containerKey: string | null;
+  /** Outlet containing the target container. */
   outletName: string;
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Singular noun used to describe a framed child. */
   childNoun?: string | null;
+  /** Plural noun used to describe a framed child list. */
   childNounPlural?: string | null;
+  /** One-based ordinal of the preceding child. */
   beforeOrdinal?: number | null;
+  /** One-based ordinal of the following child. */
   afterOrdinal?: number | null;
-}
+};
 
 /**
  * Builds the descriptor for a drop at a BOUNDARY between siblings, at
@@ -706,6 +831,9 @@ interface BoundaryDescriptorOptions {
  * one canonical anchor — they produce an identical final order, so the
  * choice is cosmetic for the mutation but lets the preview read
  * naturally.
+ *
+ * @param options - Boundary neighbours, geometry, source, and target context.
+ * @returns The validated boundary descriptor, or `null` for a no-op drop.
  */
 function buildBoundaryDescriptor({
   layoutQuery,
@@ -808,20 +936,29 @@ function buildBoundaryDescriptor({
   };
 }
 
-interface BoundaryGeometryOptions {
+type BoundaryGeometryOptions = {
+  /** Main axis used for boundary geometry. */
   axis: "x" | "y";
+  /** Viewport rectangle of the target container. */
   containerRect: DOMRect;
+  /** Visible empty-state rectangle, when present. */
   emptyRect: DOMRect | null;
+  /** Wrapped-band boundary geometry, when present. */
   indicator: Indicator | null;
+  /** Child immediately before the boundary. */
   before: ChildCandidate | null;
+  /** Child immediately after the boundary. */
   after: ChildCandidate | null;
-}
+};
 
 /**
  * Pixel geometry for a boundary indicator. A real boundary is a 4px
  * line centred in the gap; an empty container paints its whole rect so
  * the (otherwise easy-to-miss) landing is unmistakable — over `emptyRect`
  * (the visible empty-state area) when one is supplied, else the container.
+ *
+ * @param options - Axis, container bounds, optional indicator, and neighbours.
+ * @returns Pixel geometry for the drop preview.
  */
 function boundaryGeometry({
   axis,
@@ -879,6 +1016,9 @@ function boundaryGeometry({
  * tablist) sitting apart from the visible empty region, so the indicator lands
  * where the cursor and the prompt are. Returns `null` without a chrome (e.g. a
  * unit test driving `computeDescriptor` directly), leaving the container rect.
+ *
+ * @param chromeElement - Chrome containing the visible empty state.
+ * @returns The visible empty-state bounds, or `null` without a chrome.
  */
 function emptyContainerRect(chromeElement: HTMLElement | null): DOMRect | null {
   if (!chromeElement) {
@@ -894,6 +1034,11 @@ function emptyContainerRect(chromeElement: HTMLElement | null): DOMRect | null {
  * The axis coordinate at which to centre the boundary line: midway
  * through the gap when both neighbours exist, otherwise the lone
  * neighbour's facing edge.
+ *
+ * @param axis - Main axis used for the boundary.
+ * @param before - Child immediately before the boundary.
+ * @param after - Child immediately after the boundary.
+ * @returns The viewport coordinate at the boundary center.
  */
 function boundaryCenter(
   axis: "x" | "y",
@@ -911,27 +1056,47 @@ function boundaryCenter(
   if (before && after) {
     return (farOf(before) + nearOf(after)) / 2;
   }
+  if (after) {
+    return nearOf(after);
+  }
   // Reached only with exactly one neighbour (`boundaryGeometry` returns early
-  // when both are absent), so the non-`after` branch always has a `before`.
-  return after ? nearOf(after) : farOf(before as ChildCandidate);
+  // when both are absent), so this branch always has a `before`.
+  return farOf(before!);
 }
 
-interface InsideDescriptorOptions {
-  layoutQuery: WireframeLayoutQuery;
-  dropAuthority: WireframeDropAuthority;
+type InsideDescriptorOptions = {
+  /** Read-only layout service used to describe the target. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Drop authorization service used to validate the target. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Viewport rectangle used for the drop preview. */
   rect: DOMRect;
+  /** Composite key of the target container. */
   targetKey: string | null;
+  /** Outlet containing the target container. */
+  outletName: string;
+  /** Registered name of the target container. */
   blockName: string | null;
+  /** Block being dropped. */
   source: DragSource;
+  /** Human-readable name for one child. */
   childNoun?: string | null;
+  /** One-indexed child position used in the preview label. */
   ordinal?: number | null;
-}
+};
 
+/**
+ * Builds a descriptor for a drop inside a container child.
+ *
+ * @param options - Target geometry, identity, authorization, and source.
+ * @returns The inside-drop descriptor.
+ */
 function buildInsideDescriptor({
   layoutQuery,
   dropAuthority,
   rect,
   targetKey,
+  outletName,
   blockName,
   source,
   childNoun = null,
@@ -960,16 +1125,22 @@ function buildInsideDescriptor({
       childNoun,
       ordinal,
     }),
-    dispatch: validity.ok ? insideDispatch({ source, targetKey }) : null,
+    dispatch: validity.ok
+      ? insideDispatch({ source, targetKey, outletName })
+      : null,
   };
 }
 
-interface CellChromeDescriptorOptions {
-  layoutQuery: WireframeLayoutQuery;
+type CellChromeDescriptorOptions = {
+  /** Read-only layout service used to name the source. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Chrome element representing the merged cell. */
   chromeElement: HTMLElement;
+  /** Composite key of the merged-cell entry. */
   containerKey: string | null;
+  /** Block or palette item being dropped. */
   source: DragSource;
-}
+};
 
 /**
  * Builds the descriptor for a drop directly onto a merged-cell
@@ -980,6 +1151,9 @@ interface CellChromeDescriptorOptions {
  * Mirrors `buildReplaceCellDescriptor` (used when a sibling
  * dragover hits a cell child) but reads geometry off the chrome
  * itself, since the modifier is attached to the cell's chrome.
+ *
+ * @param options - Cell chrome, stable key, source, and naming service.
+ * @returns The replacement descriptor, or `null` for a self-drop.
  */
 function buildCellChromeDescriptor({
   layoutQuery,
@@ -1005,16 +1179,27 @@ function buildCellChromeDescriptor({
   };
 }
 
-interface ReplaceCellDescriptorOptions {
-  layoutQuery: WireframeLayoutQuery;
+type ReplaceCellDescriptorOptions = {
+  /** Read-only layout service used to name the source. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Viewport rectangle of the merged cell. */
   rect: DOMRect;
+  /** Composite key of the merged-cell entry. */
   targetKey: string | null;
   // Accepted for call-site symmetry with the INSIDE path; the cell replace
   // needs no block name.
+  /** Registered target name, accepted for call-site symmetry. */
   blockName?: string | null;
+  /** Block or palette item being dropped. */
   source: DragSource;
-}
+};
 
+/**
+ * Builds a descriptor for replacing a merged-cell child.
+ *
+ * @param options - Cell geometry, target identity, source, and naming service.
+ * @returns The replacement descriptor, or `null` for a self-drop.
+ */
 function buildReplaceCellDescriptor({
   layoutQuery,
   rect,
@@ -1044,15 +1229,26 @@ function buildReplaceCellDescriptor({
    `canInsertBlockAt` / `canDropAt` so the modifier doesn't reach
    into the layout itself. */
 
-interface ValidateInsertOptions {
-  dropAuthority: WireframeDropAuthority;
+type ValidateInsertOptions = {
+  /** Authority service used to validate the insertion. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Outlet receiving the insertion. */
   outletName?: string;
   // Accepted from the boundary call site for symmetry; not read here.
+  /** Composite key of the surrounding container. */
   containerKey?: string | null;
+  /** Composite key of the neighbouring target. */
   targetKey?: string | null;
-}
+};
 
+/**
+ * Checks whether a source can be inserted at a boundary.
+ *
+ * @param options - Authority, source, and destination context.
+ * @returns The authorization result.
+ */
 function validateInsert({
   dropAuthority,
   source,
@@ -1082,13 +1278,23 @@ function validateInsert({
   return { ok: false };
 }
 
-interface ValidateInsideDropOptions {
-  layoutQuery: WireframeLayoutQuery;
-  dropAuthority: WireframeDropAuthority;
+type ValidateInsideDropOptions = {
+  /** Read-only layout service used to locate the target outlet. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Authority service used to validate the insertion. */
+  dropAuthority: WireframeDropAuthorityService;
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Composite key of the destination container. */
   targetKey: string | null;
-}
+};
 
+/**
+ * Checks whether a source can be dropped inside a container.
+ *
+ * @param options - Layout, authority, source, and destination context.
+ * @returns The authorization result.
+ */
 function validateInsideDrop({
   layoutQuery,
   dropAuthority,
@@ -1109,17 +1315,31 @@ function validateInsideDrop({
 /* Label builders — `i18n` keys with interpolations the descriptor
    carries pre-resolved (the overlay just renders the string). */
 
-interface BoundaryLabelOptions {
-  layoutQuery: WireframeLayoutQuery;
+type BoundaryLabelOptions = {
+  /** Read-only layout service used to resolve display names. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Composite key of the preceding child. */
   beforeKey: string | null;
+  /** Composite key of the following child. */
   afterKey: string | null;
+  /** Singular noun used to describe a framed child. */
   childNoun?: string | null;
+  /** Plural noun used to describe a framed child list. */
   childNounPlural?: string | null;
+  /** One-based ordinal of the preceding child. */
   beforeOrdinal?: number | null;
+  /** One-based ordinal of the following child. */
   afterOrdinal?: number | null;
-}
+};
 
+/**
+ * Builds localized copy for a boundary drop.
+ *
+ * @param options - Source, neighbours, and optional framed-child terminology.
+ * @returns The localized drop-preview label.
+ */
 function boundaryLabel({
   layoutQuery,
   source,
@@ -1208,15 +1428,27 @@ function boundaryLabel({
     : translate("wireframe.canvas.drop_preview.move_here", { name });
 }
 
-interface InsideLabelOptions {
-  layoutQuery: WireframeLayoutQuery;
+type InsideLabelOptions = {
+  /** Read-only layout service used to resolve display names. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Registered destination block name. */
   blockName: string | null;
+  /** Composite key of the destination container. */
   targetKey: string | null;
+  /** Singular noun used to describe a framed child. */
   childNoun?: string | null;
+  /** One-based ordinal of the framed child. */
   ordinal?: number | null;
-}
+};
 
+/**
+ * Builds localized copy for an inside drop.
+ *
+ * @param options - Source and destination naming context.
+ * @returns The localized drop-preview label.
+ */
 function insideLabel({
   layoutQuery,
   source,
@@ -1254,11 +1486,19 @@ function insideLabel({
       });
 }
 
-interface CellDropLabelOptions {
-  layoutQuery: WireframeLayoutQuery;
+type CellDropLabelOptions = {
+  /** Read-only layout service used to resolve the source name. */
+  layoutQuery: WireframeLayoutQueryService;
+  /** Block or palette item being dropped. */
   source: DragSource;
-}
+};
 
+/**
+ * Builds localized copy for filling a merged cell.
+ *
+ * @param options - Source and naming service.
+ * @returns The localized drop-preview label.
+ */
 function cellDropLabel({ layoutQuery, source }: CellDropLabelOptions): string {
   const name = sourceDisplayName(layoutQuery, source);
   return source.type === "wf-palette-block"
@@ -1269,21 +1509,32 @@ function cellDropLabel({ layoutQuery, source }: CellDropLabelOptions): string {
 /* Dispatch payload builders — `wireframeDropDispatch.run` looks up
    `[action]` and calls it with `args` at drop time. */
 
-interface InsertDispatchOptions {
+type InsertDispatchOptions = {
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Composite key of the neighbouring target. */
   targetKey: string | null;
+  /** Position relative to the neighbouring target. */
   position: "before" | "after";
+  /** Composite key of the surrounding container. */
   containerKey: string | null;
+  /** Outlet receiving the insertion. */
   outletName: string;
-}
+};
 
+/**
+ * Builds the dispatch payload for a boundary insertion.
+ *
+ * @param options - Source and destination placement context.
+ * @returns The mutation dispatch payload.
+ */
 function insertDispatch({
   source,
   targetKey,
   position,
   containerKey,
   outletName,
-}: InsertDispatchOptions): DropDispatch {
+}: InsertDispatchOptions): DropDispatch | null {
   if (source.type === "wf-palette-block") {
     return {
       action: "insertBlock",
@@ -1296,6 +1547,9 @@ function insertDispatch({
       },
     };
   }
+  if (!source.data.blockKey) {
+    return null;
+  }
   return {
     action: "moveBlock",
     args: {
@@ -1307,15 +1561,33 @@ function insertDispatch({
   };
 }
 
-interface SimpleDispatchOptions {
+type SimpleDispatchOptions = {
+  /** Block or palette item being dropped. */
   source: DragSource;
+  /** Composite key of the destination entry. */
   targetKey: string | null;
-}
+};
 
+type InsideDispatchOptions = {
+  /** Block being inserted or moved. */
+  source: DragSource;
+  /** Composite key of the destination container. */
+  targetKey: string | null;
+  /** Outlet containing the destination container. */
+  outletName: string;
+};
+
+/**
+ * Builds the dispatch payload for an inside insertion.
+ *
+ * @param options - Source and destination context.
+ * @returns The mutation dispatch payload.
+ */
 function insideDispatch({
   source,
   targetKey,
-}: SimpleDispatchOptions): DropDispatch {
+  outletName,
+}: InsideDispatchOptions): DropDispatch | null {
   if (source.type === "wf-palette-block") {
     return {
       action: "insertBlock",
@@ -1324,8 +1596,12 @@ function insideDispatch({
         defaultArgs: source.data.defaultArgs,
         targetKey,
         position: "inside",
+        targetOutletName: outletName,
       },
     };
+  }
+  if (!source.data.blockKey) {
+    return null;
   }
   return {
     action: "moveBlock",
@@ -1333,14 +1609,24 @@ function insideDispatch({
       sourceKey: source.data.blockKey,
       targetKey,
       position: "inside",
+      targetOutletName: outletName,
     },
   };
 }
 
+/**
+ * Builds the dispatch payload for filling a merged cell.
+ *
+ * @param options - Source and merged-cell target.
+ * @returns The mutation dispatch payload.
+ */
 function cellDropDispatch({
   source,
   targetKey,
-}: SimpleDispatchOptions): DropDispatch {
+}: SimpleDispatchOptions): DropDispatch | null {
+  if (!targetKey) {
+    return null;
+  }
   if (source.type === "wf-palette-block") {
     return {
       action: "placeBlockInCell",
@@ -1350,6 +1636,9 @@ function cellDropDispatch({
         defaultArgs: source.data.defaultArgs,
       },
     };
+  }
+  if (!source.data.blockKey) {
+    return null;
   }
   return {
     action: "moveBlockIntoCell",
@@ -1364,8 +1653,15 @@ function cellDropDispatch({
    source / target so the overlay text matches what the palette and
    outline already show for the same blocks. */
 
+/**
+ * Resolves the display name of a dragged source.
+ *
+ * @param layoutQuery - Read-only layout service used for registered names.
+ * @param source - Block or palette item being dropped.
+ * @returns The human-readable source name.
+ */
 function sourceDisplayName(
-  layoutQuery: WireframeLayoutQuery,
+  layoutQuery: WireframeLayoutQueryService,
   source: DragSource
 ): string {
   if (source.type === "wf-palette-block") {
@@ -1389,8 +1685,15 @@ function sourceDisplayName(
   return "block";
 }
 
+/**
+ * Resolves the display name of an existing target entry.
+ *
+ * @param layoutQuery - Read-only layout service used to locate the entry.
+ * @param targetKey - Composite key of the target entry.
+ * @returns The decorated target name, or `null` when unavailable.
+ */
 function targetDisplayName(
-  layoutQuery: WireframeLayoutQuery,
+  layoutQuery: WireframeLayoutQueryService,
   targetKey: string | null
 ): string | null {
   if (targetKey == null) {
@@ -1409,10 +1712,21 @@ function targetDisplayName(
  * author-assigned ID. Matches the `#id` convention the outline
  * panel uses for the same purpose, so labels read consistently
  * across surfaces (e.g. "Heading #hero").
+ *
+ * @param name - Base display name.
+ * @param id - Optional author-assigned identifier.
+ * @returns The display name with its identifier when present.
  */
-function decorateWithId(name: string, id: string | undefined): string;
 function decorateWithId(
+  /** Base display name. */
+  name: string,
+  /** Optional author-assigned identifier. */
+  id: string | undefined
+): string;
+function decorateWithId(
+  /** Nullable base display name. */
   name: string | null,
+  /** Optional author-assigned identifier. */
   id: string | undefined
 ): string | null;
 function decorateWithId(
@@ -1428,6 +1742,13 @@ function decorateWithId(
   return `${name} #${id}`;
 }
 
+/**
+ * Resolves localized drop-preview copy.
+ *
+ * @param key - Translation key.
+ * @param vars - Optional interpolation values.
+ * @returns The localized string.
+ */
 function translate(key: string, vars?: object): string {
   return i18n(key, vars);
 }

@@ -3,12 +3,16 @@ import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/comp
 import type { BlockPaletteEntry } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 
 interface BlockPreviewCardSignature {
+  /** FloatKit tooltip payload for the preview card. */
   Args: {
     /**
      * The FloatKit tooltip payload. `entry` is the palette row this preview
      * describes, injected by the tile via `tooltip.register`'s `data` option.
      */
-    data: { entry: BlockPaletteEntry };
+    data: {
+      /** Palette entry described by the preview. */
+      entry: BlockPaletteEntry;
+    };
   };
 }
 

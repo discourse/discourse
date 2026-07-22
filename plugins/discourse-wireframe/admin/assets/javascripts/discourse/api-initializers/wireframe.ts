@@ -33,17 +33,18 @@ import EntryPill from "discourse/plugins/discourse-wireframe/discourse/component
 import OutletBoundary from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/outlet-boundary";
 import EditorShell from "../components/editor/shell";
 import { attachEditorShortcuts } from "../lib/editor-shortcuts";
-import type WireframeLayoutQuery from "../services/wireframe-layout-query";
-import type WireframeSimulation from "../services/wireframe-simulation";
-import type WireframeWorkspace from "../services/wireframe-workspace";
+import type WireframeLayoutQueryService from "../services/wireframe-layout-query";
+import type WireframeSimulationService from "../services/wireframe-simulation";
+import type WireframeWorkspaceService from "../services/wireframe-workspace";
 
 /**
  * The workspace session as the block-chrome installer reaches it: alongside the
  * edit-mode flag it reads the layout-query service off the same session
  * instance to identify outlet-root ghosts.
  */
-type ChromeEditor = WireframeWorkspace & {
-  wireframeLayoutQuery: WireframeLayoutQuery;
+type ChromeEditor = WireframeWorkspaceService & {
+  /** Read-only layout service exposed by the workspace session. */
+  wireframeLayoutQuery: WireframeLayoutQueryService;
 };
 
 /**
@@ -52,6 +53,7 @@ type ChromeEditor = WireframeWorkspace & {
  * from the display `outletName`.
  */
 interface WireframeDebugContext extends DebugGhostContext {
+  /** Registry-level outlet containing the debugged block. */
   rootOutletName?: string;
 }
 
@@ -60,8 +62,11 @@ interface WireframeDebugContext extends DebugGhostContext {
  * pre-registered callback layer on top before this callback runs.
  */
 interface BlockChromeData extends DebugGhostBlockData {
+  /** Render-ready block component supplied by the pipeline. */
   Component?: BlockComponent | null;
+  /** Whether the block's visibility conditions passed. */
   conditionsPassed?: boolean;
+  /** Whether a prior callback already rendered a ghost. */
   isGhost?: boolean;
 }
 
@@ -90,18 +95,26 @@ type ResolveBlockFn = (
  * chrome stops responding until dev-tools is disabled. A proper composition
  * pattern between the two consumers ships in a later phase.
  */
-export default apiInitializer((api: PluginApi) => {
+export default apiInitializer((api: PluginApi): void => {
   api.renderInOutlet("after-main-outlet", EntryPill);
   api.renderInOutlet("after-main-outlet", EditorShell);
 
-  const editor = api.container.lookup("service:wireframe-workspace");
+  // TODO(devxp-typescript-pending): remove this cast once core's PluginApi
+  // exposes a registry-aware generic type for `container.lookup`.
+  const editor = api.container.lookup(
+    "service:wireframe-workspace"
+  ) as ChromeEditor;
   installBlockChrome(editor);
   installGhostChildrenCreator();
   installOutletBoundary(editor);
   installGhostBlocksWhileEditing(editor);
   installEditPresentationWhileEditing(editor);
+  // TODO(devxp-typescript-pending): remove this cast once core's PluginApi
+  // exposes a registry-aware generic type for `container.lookup`.
   installSimulationContext(
-    api.container.lookup("service:wireframe-simulation")
+    api.container.lookup(
+      "service:wireframe-simulation"
+    ) as WireframeSimulationService
   );
   // Instantiate these services at boot so their constructors run before any
   // user interaction: block-reveal/in-place-text/inspector-args subscribe to the
@@ -117,7 +130,7 @@ export default apiInitializer((api: PluginApi) => {
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on
   // `editor.wireframeEditMode.active`, so this is a no-op while the editor is closed.
-  api.onPageChange(() => editor.rediscoverOutlets());
+  api.onPageChange((): void => editor.rediscoverOutlets());
   // The shortcut listener self-gates on `editor.wireframeEditMode.active`, so we install it
   // once rather than attach/detach on editor enter. Tie its removal to the
   // editor service's teardown: in production that's app shutdown, but in tests
@@ -141,11 +154,15 @@ export default apiInitializer((api: PluginApi) => {
  * Coexists with any pre-existing EVAL_CONTEXT callback by merging the
  * upstream payload with the simulation. Simulation wins on collisions
  * (the user explicitly enabled sim mode).
+ *
+ * @param simulation - Service that supplies the active simulation context.
  */
-function installSimulationContext(simulation: WireframeSimulation) {
+function installSimulationContext(
+  simulation: WireframeSimulationService
+): void {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EVAL_CONTEXT);
   debugHooks.setCallback(DEBUG_CALLBACK.EVAL_CONTEXT, () => {
-    const upstream = (previous?.() ?? null) as Record<string, unknown> | null;
+    const upstream = recordOrNull(previous?.());
     if (!simulation.isSimulating) {
       return upstream;
     }
@@ -165,8 +182,12 @@ function installSimulationContext(simulation: WireframeSimulation) {
  * pattern, so toggling dev-tools off doesn't kill ghost rendering for
  * editor users, and toggling the editor off doesn't kill it for dev-
  * tools users.
+ *
+ * @param editor - Workspace whose edit-mode state controls ghost rendering.
  */
-function installGhostBlocksWhileEditing(editor: WireframeWorkspace) {
+function installGhostBlocksWhileEditing(
+  editor: WireframeWorkspaceService
+): void {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
   debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => {
     if (editor.wireframeEditMode.active) {
@@ -182,8 +203,12 @@ function installGhostBlocksWhileEditing(editor: WireframeWorkspace) {
  * all of their content at once for direct editing instead of showing one part
  * at a time. Preserves any pre-existing callback via the same save-and-OR
  * pattern as the ghost-blocks installer.
+ *
+ * @param editor - Workspace whose edit-mode state controls presentation.
  */
-function installEditPresentationWhileEditing(editor: WireframeWorkspace) {
+function installEditPresentationWhileEditing(
+  editor: WireframeWorkspaceService
+): void {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EDIT_PRESENTATION);
   debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => {
     if (editor.wireframeEditMode.active) {
@@ -204,8 +229,14 @@ function installEditPresentationWhileEditing(editor: WireframeWorkspace) {
  * Hooks into `api.onPageChange` so navigation between routes (with the
  * param preserved) keeps the editor active. We rerun the read on every
  * page change because the SPA's URL changes don't reload the bundle.
+ *
+ * @param api - Plugin API used to observe page changes.
+ * @param editor - Workspace to enter for the requested theme.
  */
-function installVeThemeAutoEnter(api: PluginApi, editor: WireframeWorkspace) {
+function installVeThemeAutoEnter(
+  api: PluginApi,
+  editor: WireframeWorkspaceService
+): void {
   const tryEnter = (url: string) => {
     const themeId = readVeThemeParam(url);
     if (themeId == null) {
@@ -224,6 +255,12 @@ function installVeThemeAutoEnter(api: PluginApi, editor: WireframeWorkspace) {
   api.onPageChange(tryEnter);
 }
 
+/**
+ * Reads a theme identifier from a wireframe URL.
+ *
+ * @param url - Absolute or origin-relative URL to inspect.
+ * @returns The non-zero theme identifier, or `null` when absent or invalid.
+ */
 function readVeThemeParam(url: string): number | null {
   try {
     const parsed = new URL(url, window.location.origin);
@@ -255,9 +292,18 @@ function readVeThemeParam(url: string): number | null {
  * those, which is the exact case authors hit when a saved layout
  * references a renamed / removed block.
  */
-function installGhostChildrenCreator() {
+function installGhostChildrenCreator(): void {
   debugHooks.setCallback(
     DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR,
+    /**
+     * Recursively turns unresolved or invisible child entries into ghosts.
+     *
+     * @param childEntries - Child entries to render as ghosts.
+     * @param containerPath - Debug outlet path of the containing block.
+     * @param resolveBlockFn - Resolver supplied by the block pipeline.
+     * @param depth - Current recursion depth.
+     * @returns Renderable ghost results for the child entries.
+     */
     function wfCreateGhostChildren(
       childEntries: BlockEntry[],
       _owner: Owner,
@@ -265,7 +311,7 @@ function installGhostChildrenCreator() {
       _outletArgs: Record<string, unknown> | undefined,
       _isLoggingEnabled: boolean,
       resolveBlockFn: ResolveBlockFn,
-      depth = 0
+      depth: number = 0
     ): ChildBlockResult[] {
       // Defense-in-depth — `validateLayout` enforces a much tighter
       // bound at registration time, but if something slips past we'd
@@ -313,22 +359,24 @@ function installGhostChildrenCreator() {
               depth + 1
             );
           }
-          const ghostData = blockDebug(
-            {
-              name: blockName,
-              id: childEntry.id,
-              key: blockKey,
-              Component: null,
-              args: childEntry.args,
-              containerArgs: childEntry.containerArgs,
-              conditions: childEntry.conditions,
-              conditionsPassed: false,
-              failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
-              failureReason: `Block "${blockName}" is not registered.`,
-              children: nestedGhostChildren,
-            },
-            { outletName: containerPath }
-          ) as DebugGhostData | undefined;
+          const ghostData = debugGhostData(
+            blockDebug(
+              {
+                name: blockName,
+                id: childEntry.id,
+                key: blockKey,
+                Component: null,
+                args: childEntry.args,
+                containerArgs: childEntry.containerArgs,
+                conditions: childEntry.conditions,
+                conditionsPassed: false,
+                failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
+                failureReason: `Block "${blockName}" is not registered.`,
+                children: nestedGhostChildren,
+              },
+              { outletName: containerPath }
+            )
+          );
           if (ghostData?.Component) {
             result.push({
               ...ghostData,
@@ -384,22 +432,24 @@ function installGhostChildrenCreator() {
         }
 
         const blockKey = `${blockName}:${childEntry.__stableKey ?? "no-key"}`;
-        const ghostData = blockDebug(
-          {
-            name: blockName,
-            id: childEntry.id,
-            key: blockKey,
-            Component: null,
-            args: childEntry.args,
-            containerArgs: childEntry.containerArgs,
-            conditions: childEntry.conditions,
-            conditionsPassed: false,
-            failureType,
-            failureReason,
-            children: nestedGhostChildren,
-          },
-          { outletName: containerPath }
-        ) as DebugGhostData | undefined;
+        const ghostData = debugGhostData(
+          blockDebug(
+            {
+              name: blockName,
+              id: childEntry.id,
+              key: blockKey,
+              Component: null,
+              args: childEntry.args,
+              containerArgs: childEntry.containerArgs,
+              conditions: childEntry.conditions,
+              conditionsPassed: false,
+              failureType,
+              failureReason,
+              children: nestedGhostChildren,
+            },
+            { outletName: containerPath }
+          )
+        );
         if (ghostData?.Component) {
           result.push({
             ...ghostData,
@@ -414,14 +464,63 @@ function installGhostChildrenCreator() {
 }
 
 /**
+ * Narrows a generic debug-hook result to a mergeable context record.
+ *
+ * @param value - Result returned by an existing debug callback.
+ * @returns The object result, or `null` for another callback shape.
+ */
+function recordOrNull(value: unknown): Record<string, unknown> | null {
+  return isRecord(value) ? value : null;
+}
+
+/**
+ * Checks whether a value is a non-array object record.
+ *
+ * @param value - Value to check.
+ * @returns Whether the value is mergeable object data.
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Narrows a generic BLOCK_DEBUG result to ghost component data.
+ *
+ * @param value - Result returned by the BLOCK_DEBUG callback.
+ * @returns Ghost data when the callback supplied a component.
+ */
+function debugGhostData(value: unknown): DebugGhostData | undefined {
+  return isDebugGhostData(value) ? value : undefined;
+}
+
+/**
+ * Checks whether a debug-hook result contains renderable ghost data.
+ *
+ * @param value - Result returned by the BLOCK_DEBUG callback.
+ * @returns Whether the result supplies a component.
+ */
+function isDebugGhostData(value: unknown): value is DebugGhostData {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const Component = Reflect.get(value, "Component");
+  return (
+    typeof Component === "function" ||
+    (typeof Component === "object" && Component !== null)
+  );
+}
+
+/**
  * Wires `OUTLET_INFO_COMPONENT` so each `<BlockOutlet>` renders our boundary
  * chrome while the editor is active. Falls through to whatever was previously
  * registered (e.g. dev-tools' info component) when the editor is inactive,
  * so nothing breaks for other consumers.
+ *
+ * @param editor - Workspace whose edit-mode state selects the boundary.
  */
-function installOutletBoundary(editor: WireframeWorkspace) {
+function installOutletBoundary(editor: WireframeWorkspaceService): void {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
-  debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () => {
+  debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, (): unknown => {
     if (editor.wireframeEditMode.active) {
       return OutletBoundary;
     }
@@ -438,14 +537,19 @@ function installOutletBoundary(editor: WireframeWorkspace) {
  * The save-and-fall-through pattern (see `previous` below) lets us coexist
  * with any pre-registered callback (e.g. dev-tools' overlay): we run their
  * callback first and wrap whatever component they produced.
+ *
+ * @param editor - Workspace and layout-query services used by the chrome.
  */
-function installBlockChrome(editor: ChromeEditor) {
+function installBlockChrome(editor: ChromeEditor): void {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG);
   let fallbackKeyCounter = 0;
 
   debugHooks.setCallback(
     DEBUG_CALLBACK.BLOCK_DEBUG,
     (blockData: BlockChromeData, context?: WireframeDebugContext) => {
+      // TODO(devxp-typescript-pending): remove this cast once core types the
+      // BLOCK_DEBUG callback key with its `BlockChromeData | undefined`
+      // return contract instead of the registry-wide `unknown` return.
       const upstream = (previous ? previous(blockData, context) : blockData) as
         | BlockChromeData
         | undefined;

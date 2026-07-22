@@ -11,20 +11,35 @@ import { i18n } from "discourse-i18n";
 // boundary: the title and close-callback args, the body/footer blocks, and the
 // root element that carries the `class`.
 const DModal = DModalUntyped as unknown as ComponentLike<{
+  /** Modal title and close callback. */
   Args: {
+    /** Pre-translated modal title. */
     title?: string;
-    closeModal?: (result?: unknown) => void;
+    /** Closes the modal and optionally resolves it with a result. */
+    closeModal?: (
+      /** Optional modal result. */
+      result?: unknown
+    ) => void;
   };
+  /** Root modal element. */
   Element: HTMLDivElement;
-  Blocks: { body: []; footer: [] };
+  /** Blocks yielded by the modal. */
+  Blocks: {
+    /** Modal body content. */
+    body: [];
+    /** Modal footer actions. */
+    footer: [];
+  };
 }>;
 
 interface ConflictModalSignature {
+  /** Modal lifecycle callback. */
   Args: {
-    // Closes the modal, resolving the `modal.show` promise with the passed
-    // result. Invoked with `{ choice: "overwrite" }` to republish, or with
-    // nothing on cancel/dismiss. Supplied by the modal framework.
-    closeModal: (result?: unknown) => void;
+    /** Closes the modal and optionally resolves it with the chosen action. */
+    closeModal: (
+      /** Optional modal result. */
+      result?: unknown
+    ) => void;
   };
 }
 

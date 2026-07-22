@@ -5,6 +5,7 @@ import {
   type GridEntry,
   isMergedCell,
   nextFreeCellInReadingOrder,
+  type ShiftPlanArgs,
 } from "./grid-math";
 
 /**
@@ -93,71 +94,104 @@ import {
  */
 
 /** A grid cell coordinate, 1-indexed to match CSS Grid line numbering. */
-type GridCell = { column: number; row: number };
+type GridCell = {
+  /** One-based grid column. */
+  column: number;
+  /** One-based grid row. */
+  row: number;
+};
 
 /** A rectangular grid region, in CSS Grid line numbers with exclusive ends. */
 type CellRect = {
-  column: { start: number; end: number };
-  row: { start: number; end: number };
+  /** Resolved column lines. */
+  column: {
+    /** Inclusive starting column line. */
+    start: number;
+    /** Exclusive ending column line. */
+    end: number;
+  };
+  /** Resolved row lines. */
+  row: {
+    /** Inclusive starting row line. */
+    start: number;
+    /** Exclusive ending row line. */
+    end: number;
+  };
 };
 
 /** The declared / effective size of a grid. */
-type GridDimensions = { columns: number; rows: number };
+type GridDimensions = {
+  /** Grid column count. */
+  columns: number;
+  /** Grid row count. */
+  rows: number;
+};
 
 /** A CSS Grid line shorthand pair (e.g. `"2"`, `"1 / 4"`, `"auto"`). */
-type GridPlacementRef = { column: string; row: string };
-
-/**
- * The per-parent-mode placement hints a grid child carries under
- * `containerArgs.grid` (column / row lines plus alignment). Open-ended so
- * additional hints round-trip untouched.
- */
-interface GridPlacementArgs {
-  column?: string;
-  row?: string;
-  [key: string]: unknown;
-}
-
-/** A grid child's container args; the grid namespace holds its placement. */
-interface ContainerArgs {
-  grid?: GridPlacementArgs;
-  [key: string]: unknown;
-}
-
-/**
- * A grid child entry as it lives in a layout's `children` array. The
- * decision only reads its placement (`containerArgs.grid`) and identity
- * (`block` / `__stableKey`, via `entryKey`).
- */
-interface GridChildEntry extends GridEntry {
-  containerArgs?: ContainerArgs | null;
-}
+type GridPlacementRef = {
+  /** CSS Grid column-line shorthand. */
+  column: string;
+  /** CSS Grid row-line shorthand. */
+  row: string;
+};
 
 /** What is being dropped: a fresh palette block, or an existing entry. */
-type GridDropSource = { kind: "new" | "existing"; key: string | null };
+type GridDropSource = {
+  /** Whether the source is new or already in a layout. */
+  kind: "new" | "existing";
+  /** Stable key for an existing source. */
+  key: string | null;
+};
 
 /** The cascade axis a `BESIDE` drop runs along. */
 type GridDropDirection = "left" | "right" | "up" | "down";
 
-/** The classified drop gesture and its geometry. */
-interface GridDrop {
-  gesture: GridDropGesture;
-  cell?: GridCell | null;
-  anchorKey?: string | null;
-  direction?: GridDropDirection;
-  shift?: boolean;
-}
+/** The classified drop gesture and its gesture-specific geometry. */
+type GridDrop =
+  | {
+      /** Drop onto a specific grid cell. */
+      gesture: typeof GRID_DROP_GESTURES.INTO;
+      /** Cell under the pointer. */
+      cell: GridCell;
+      /** Whether an occupied cell should be replaced. */
+      shift?: boolean;
+    }
+  | {
+      /** Drop beside a neighbouring grid cell. */
+      gesture: typeof GRID_DROP_GESTURES.BESIDE;
+      /** Cell adjacent to the pointer edge, when geometry resolved one. */
+      cell?: GridCell | null;
+      /** Stable key of the neighbouring anchor. */
+      anchorKey: string | null;
+      /** Cascade direction for the beside gesture. */
+      direction: GridDropDirection;
+    }
+  | {
+      /** Drop into the grid without a specific neighbour. */
+      gesture: typeof GRID_DROP_GESTURES.GENERIC;
+    };
 
 /** The full input to {@link decideGridDrop}. */
 export interface GridDropInput {
-  children: GridChildEntry[];
+  /** Current target-grid entries. */
+  children: GridEntry[];
+  /** Persisted target-grid dimensions. */
   declared: GridDimensions;
+  /** Block or palette item being dropped. */
   source: GridDropSource;
+  /** Classified gesture and target geometry. */
   drop: GridDrop;
 }
 
 /** A displacement applied to an existing cell during a cascade. */
-type GridDropMove = { slotKey: string; column: string; row: string };
+type GridDropMove = {
+  /** Stable key of the displaced entry. */
+  slotKey: string;
+  /** Replacement column-line shorthand. */
+  column: string;
+  /** Replacement row-line shorthand. */
+  row: string;
+};
 
 /**
  * The decision `decideGridDrop` returns for a single drop.
@@ -172,10 +206,15 @@ type GridDropMove = { slotKey: string; column: string; row: string };
  *    size.
  */
 export interface GridDropDecision {
+  /** Operation the executor should perform. */
   action: GridDropAction;
+  /** Placement assigned to the source. */
   placement: GridPlacementRef | null;
+  /** Existing entries displaced by a cascade. */
   moves: GridDropMove[];
+  /** Existing entry exchanged with or removed by the source. */
   swapWith: string | null;
+  /** Persisted grid dimensions after the drop. */
   declared: GridDimensions;
 }
 
@@ -221,14 +260,20 @@ export type GridDropAction =
   (typeof GRID_DROP_ACTIONS)[keyof typeof GRID_DROP_ACTIONS];
 
 /** The context every gesture decider shares, derived once per drop. */
-interface DecideContext {
-  kids: GridChildEntry[];
+type DecideContext = {
+  /** Target children after excluding an in-grid source. */
+  kids: GridEntry[];
+  /** Persisted target dimensions before the drop. */
   declared: GridDimensions;
+  /** Effective dimensions used for placement. */
   dims: GridDimensions;
+  /** Block or palette item being dropped. */
   source: GridDropSource;
+  /** Stable key of an existing source. */
   sourceKey: string | null;
+  /** Whether the source already belongs to this grid. */
   inGrid: boolean;
-}
+};
 
 /**
  * Decides the action and resulting placement for a single drop into a
@@ -257,6 +302,9 @@ interface DecideContext {
  * in the layout); `drop` is the classified gesture. A `BESIDE` drop anchors
  * on either a `cell` coordinate or an `anchorKey` (an existing child whose
  * full rect — including any span — anchors the cascade).
+ *
+ * @param input - Target-grid state and classified drop to decide.
+ * @returns The validated operation and resulting placements.
  */
 export function decideGridDrop({
   children,
@@ -305,6 +353,11 @@ export function decideGridDrop({
  * INTO a cell: fill it when empty, swap / replace its occupant when
  * filled. Never shifts other cells; the only growth is a precise drop
  * into a cell beyond the current rows (declared tracks usage, R5).
+ *
+ * @param context - State shared by all gesture deciders.
+ * @param cell - Target cell for the drop.
+ * @param shift - Whether the occupant should be replaced instead of swapped.
+ * @returns The fill, swap, replace, or no-op decision.
  */
 function decideInto(
   { kids, declared, source, sourceKey, inGrid }: DecideContext,
@@ -366,22 +419,20 @@ function decideInto(
  * full rect when given (preserving a spanning anchor), otherwise on the
  * `cell` coordinate. Returns `null` when no cascade plan fits, so the
  * caller can fall back to a generic append.
+ *
+ * @param context - State shared by all gesture deciders.
+ * @param cell - Target cell when no anchor entry is available.
+ * @param anchorKey - Stable key of the entry anchoring the cascade.
+ * @param direction - Axis-directed cascade direction.
+ * @returns The cascade decision, or `null` when no plan fits.
  */
 function decideBeside(
   { kids, declared, dims, sourceKey, inGrid }: DecideContext,
-  cell?: GridCell | null,
-  anchorKey?: string | null,
-  direction?: GridDropDirection
+  cell: GridCell | null | undefined,
+  anchorKey: string | null,
+  direction: GridDropDirection
 ): GridDropDecision | null {
-  // `computeShiftPlan` accepts a `dropCell` fallback anchor (a virtual 1×1
-  // rect for empty-cell edge drops) that its published parameter type does
-  // not yet declare, so build the argument through a typed local whose
-  // intersection admits the extra key structurally.
-  // TODO(devxp-typescript-pending): drop the intersection once `grid-math`
-  // declares `dropCell` on `computeShiftPlan`'s parameter type.
-  const planArgs: Parameters<typeof computeShiftPlan>[0] & {
-    dropCell: GridCell | null;
-  } = {
+  const planArgs: ShiftPlanArgs = {
     slots: kids,
     sourceKey: inGrid ? sourceKey : null,
     dropSlotKey: anchorKey ?? null,
@@ -410,6 +461,9 @@ function decideBeside(
 /**
  * GENERIC drop: append at the next free cell in reading order, or the
  * first cell of a new row when the grid is full.
+ *
+ * @param context - State shared by all gesture deciders.
+ * @returns The append decision.
  */
 function decideGeneric({
   kids,
@@ -444,12 +498,17 @@ function decideGeneric({
  * The child entry whose placement covers `cell`, or `null` when the cell
  * is empty. Auto-placed children (no explicit column / row) never count as
  * covering a cell. `excludeKey` skips the source's own cell.
+ *
+ * @param kids - Grid children to search.
+ * @param cell - Cell whose occupant should be located.
+ * @param excludeKey - Stable key whose placement should be ignored.
+ * @returns The covering entry, or `null` when the cell is free.
  */
 function slotCoveringCell(
-  kids: GridChildEntry[],
+  kids: GridEntry[],
   cell: GridCell,
   excludeKey: string | null
-): GridChildEntry | null {
+): GridEntry | null {
   // A single cell is a 1×1 rect (end lines are exclusive).
   const rect: CellRect = {
     column: { start: cell.column, end: cell.column + 1 },
@@ -471,8 +530,12 @@ function slotCoveringCell(
  * children (no pinned column / row) never count as covering anything.
  * Both rects use CSS Grid line numbers with exclusive end lines, so two
  * rects overlap when each axis's intervals overlap.
+ *
+ * @param child - Grid entry whose placement should be checked.
+ * @param rect - Grid region to test for overlap.
+ * @returns Whether the entry explicitly overlaps the region.
  */
-function entryCoversRect(child: GridChildEntry, rect: CellRect): boolean {
+function entryCoversRect(child: GridEntry, rect: CellRect): boolean {
   const placement = parsePlacement(child.containerArgs);
   if (placement.column.start == null || placement.row.start == null) {
     return false;
@@ -491,9 +554,14 @@ function entryCoversRect(child: GridChildEntry, rect: CellRect): boolean {
  * (via `slotCoveringCell`) and the direct spanning insert (`mergeCells`), so
  * both agree on what "free" means. `excludeKey` skips one entry's own
  * placement — pass the entry being resized so it doesn't block itself.
+ *
+ * @param children - Grid children whose placements may occupy the region.
+ * @param rect - Grid region to test.
+ * @param excludeKey - Stable key whose placement should be ignored.
+ * @returns Whether no explicit placement overlaps the region.
  */
 export function rectIsFree(
-  children: GridChildEntry[],
+  children: GridEntry[],
   rect: CellRect,
   excludeKey: string | null = null
 ): boolean {
@@ -511,8 +579,11 @@ export function rectIsFree(
 /**
  * The CSS Grid line shorthand an entry currently occupies, defaulting to
  * `"auto"` for either axis it doesn't pin.
+ *
+ * @param entry - Grid entry whose placement should be read.
+ * @returns The normalized column and row shorthands.
  */
-function placementOf(entry: GridChildEntry): GridPlacementRef {
+function placementOf(entry: GridEntry): GridPlacementRef {
   const grid = entry.containerArgs?.grid;
   return { column: grid?.column ?? "auto", row: grid?.row ?? "auto" };
 }
@@ -523,9 +594,16 @@ function placementOf(entry: GridChildEntry): GridPlacementRef {
  * their moved rects, the source lands at `sourceLanding`. A same-grid
  * source is dropped from the untouched set (it's re-placed via
  * `sourceLanding`). Used only to derive the post-drop declared size.
+ *
+ * @param kids - Current target-grid children.
+ * @param sourceKey - Stable key of an existing source.
+ * @param inGrid - Whether the source currently belongs to this grid.
+ * @param moves - Cascade displacements to apply.
+ * @param sourceLanding - Placement assigned to the source.
+ * @returns The placements after applying the decision.
  */
 function finalRects(
-  kids: GridChildEntry[],
+  kids: GridEntry[],
   sourceKey: string | null,
   inGrid: boolean,
   moves: GridDropMove[],
@@ -538,7 +616,7 @@ function finalRects(
     if (inGrid && key === sourceKey) {
       continue;
     }
-    const moved = moveMap.get(key);
+    const moved = key == null ? undefined : moveMap.get(key);
     if (moved) {
       rects.push({ column: moved.column, row: moved.row });
     } else {
@@ -556,6 +634,10 @@ function finalRects(
  * The declared dimensions that fit `rects` — `gridDimensions` over the
  * resulting placements, so declared grows to match usage but never shrinks
  * below the input declared size.
+ *
+ * @param declared - Persisted dimensions before the drop.
+ * @param rects - Placements present after the drop.
+ * @returns Dimensions large enough to contain every placement.
  */
 function declaredFromRects(
   declared: GridDimensions,
@@ -567,7 +649,12 @@ function declaredFromRects(
   return gridDimensions(declared, pseudoChildren);
 }
 
-/** The no-op decision: nothing to place, dimensions unchanged. */
+/**
+ * Creates a no-op decision with unchanged dimensions.
+ *
+ * @param declared - Persisted dimensions to preserve.
+ * @returns A decision that performs no placement.
+ */
 function noop(declared: GridDimensions): GridDropDecision {
   return {
     action: GRID_DROP_ACTIONS.NOOP,

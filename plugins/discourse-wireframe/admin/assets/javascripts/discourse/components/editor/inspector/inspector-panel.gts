@@ -4,7 +4,6 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
-import type { BlockThumbnail as BlockThumbnailValue } from "discourse/blocks/types";
 import FKAlertUntyped from "discourse/form-kit/components/fk/alert";
 import { isPartKey } from "discourse/lib/blocks/-internals/composite";
 import type BlocksService from "discourse/services/blocks";
@@ -20,34 +19,32 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 import InspectorMetadataSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-metadata-section";
 import InspectorOutletSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-outlet-section";
 import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-raw-json";
-import BlockThumbnailUntyped from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
+import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
 import OutletThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/outlet-thumbnail";
 import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
 import type WireframeConditionsPanelService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-conditions-panel";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
-// TODO(devxp-typescript-pending): drop this cast once the palette block
-// thumbnail wrapper is authored in .gts with a real Signature, then import it
-// directly. As an untyped template-only .gjs it exposes no arg types today, so
-// its invocation is typed here at the boundary.
-const BlockThumbnail = BlockThumbnailUntyped as unknown as ComponentLike<{
-  Args: { thumbnail?: BlockThumbnailValue; icon: string };
-  Element: HTMLElement;
-}>;
-
 // TODO(devxp-typescript-pending): drop this cast once FormKit's `fk/alert` is
 // authored in .gts with a real Signature. As an untyped .gjs it exposes no arg
 // or element types today, so its invocation is typed here at the boundary.
 const FKAlert = FKAlertUntyped as unknown as ComponentLike<{
-  Args: { type?: string; icon?: string };
+  /** Alert tone and icon presentation. */
+  Args: {
+    /** Alert tone identifier. */
+    type?: string;
+    /** Alert icon ID. */
+    icon?: string;
+  };
+  /** Root alert element. */
   Element: HTMLDivElement;
-  Blocks: { default: [] };
+  /** Content yielded inside the alert. */
+  Blocks: {
+    /** Default alert content. */
+    default: [];
+  };
 }>;
-
-interface InspectorPanelSignature {
-  Args: Record<string, never>;
-}
 
 /**
  * Inspector for the selected block. Organises content into a tab strip
@@ -55,7 +52,7 @@ interface InspectorPanelSignature {
  * button next to the block name with a tooltip — it's reference info,
  * not edit info, and doesn't deserve its own pane.
  */
-export default class InspectorPanel extends Component<InspectorPanelSignature> {
+export default class InspectorPanel extends Component {
   @service declare blocks: BlocksService;
   @service declare wireframeBlockMutations: WireframeBlockMutationsService;
   @service declare wireframeConditionsPanel: WireframeConditionsPanelService;
@@ -175,6 +172,11 @@ export default class InspectorPanel extends Component<InspectorPanelSignature> {
     return this.wireframeSelection.selectedBlockData;
   }
 
+  /** Outlet name for the selected outlet-root row. */
+  get selectedOutletName(): string {
+    return this.data?.outletName ?? "";
+  }
+
   /**
    * Block metadata for the selected block (args schema, description,
    * etc.), or `null` when the registry has no entry.
@@ -284,18 +286,16 @@ export default class InspectorPanel extends Component<InspectorPanelSignature> {
   removeSelectedBlock() {
     // The only recovery for an unregistered block is to replace its name or
     // drop it; the notice surfaces the latter as a one-click action.
-    this.wireframeBlockMutations.removeBlock(
-      this.wireframeSelection.selectedBlockKey
-    );
+    const selectedKey = this.wireframeSelection.selectedBlockKey;
+    if (selectedKey) {
+      this.wireframeBlockMutations.removeBlock(selectedKey);
+    }
   }
 
   @action
   removeSelectedBlocks() {
-    // `selectedKeysSnapshot` hands back a frozen, read-only copy; `removeBlocks`
-    // only reads it (it filters into a fresh array), so treating it as a plain
-    // array here is safe.
     this.wireframeBlockMutations.removeBlocks(
-      this.wireframeSelection.selectedKeysSnapshot() as string[]
+      this.wireframeSelection.selectedKeysSnapshot()
     );
   }
 
@@ -378,7 +378,7 @@ export default class InspectorPanel extends Component<InspectorPanelSignature> {
       {{/if}}
 
       {{#if this.isOutletRoot}}
-        <InspectorOutletSection @outletName={{this.data.outletName}} />
+        <InspectorOutletSection @outletName={{this.selectedOutletName}} />
       {{else}}
         <InspectorMetadataSection />
       {{/if}}

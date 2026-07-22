@@ -11,10 +11,6 @@ import { i18n } from "discourse-i18n";
 import type WireframeEntryConfigService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-entry-config";
 import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
-interface InspectorMetadataSectionSignature {
-  Args: Record<string, never>;
-}
-
 /**
  * Collapsible "Metadata" section above the inspector tab strip. Holds
  * entry-level properties that aren't `args` — currently the block `id`,
@@ -25,7 +21,7 @@ interface InspectorMetadataSectionSignature {
  * when the value is malformed. Commits via the service action so the
  * edit rides the regular structural-undo stack.
  */
-export default class InspectorMetadataSection extends Component<InspectorMetadataSectionSignature> {
+export default class InspectorMetadataSection extends Component {
   @service declare wireframeEntryConfig: WireframeEntryConfigService;
   @service declare wireframeSelection: WireframeSelectionService;
 
@@ -39,7 +35,7 @@ export default class InspectorMetadataSection extends Component<InspectorMetadat
 
   @tracked error: string | null = null;
 
-  constructor(owner: Owner, args: InspectorMetadataSectionSignature["Args"]) {
+  constructor(owner: Owner, args: Component["args"]) {
     super(owner, args);
     this.expanded = !!this.wireframeSelection.selectedBlockData?.id;
   }
@@ -68,8 +64,11 @@ export default class InspectorMetadataSection extends Component<InspectorMetadat
   }
 
   @action
-  onIdInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value.trim();
+  onIdInput(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+      return;
+    }
+    const value = event.target.value.trim();
     if (value && !VALID_BLOCK_ID_PATTERN.test(value)) {
       this.error = i18n("wireframe.inspector.metadata.id_invalid_format");
       return;

@@ -3,34 +3,49 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import type Owner from "@ember/owner";
+import type { ArgSchema } from "discourse/blocks/types";
 import { eq } from "discourse/truth-helpers";
 import {
   formatDimension,
+  type ParsedDimension,
   parseDimension,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/css-dimension";
 
+type DimensionFieldData = {
+  /** Current FormKit field value. */
+  value: unknown;
+  /** Writes a replacement FormKit field value. */
+  set: (value: unknown) => void;
+};
+
+// TODO(devxp-typescript-pending): replace `DimensionFieldData` once FormKit
+// exports the type of the field data yielded by a custom control.
+
 interface InspectorDimensionFieldSignature {
+  /** Dimension value and control configuration. */
   Args: {
-    custom?: { value: string | number | null; set: (value: unknown) => void };
+    /** FormKit field data when rendered as a custom control. */
+    custom?: DimensionFieldData;
+    /** Standalone dimension value. */
     value?: string | number | null;
+    /** Handles standalone value changes. */
     onChange?: (value: unknown) => void;
+    /** CSS units the author can select. */
     units?: string[];
+    /** Default or display-only unit. */
     unit?: string;
+    /** Whether the persisted value omits its display unit. */
     unitless?: boolean;
+    /** Minimum permitted numeric value. */
     min?: number;
+    /** Maximum permitted numeric value. */
     max?: number;
+    /** Numeric input step. */
     step?: number | "any";
+    /** Whether to render the bounded slider. */
     slider?: boolean;
-    schema?: {
-      min?: number;
-      max?: number;
-      ui?: {
-        units?: string[];
-        unit?: string;
-        step?: number | "any";
-        slider?: boolean;
-      };
-    };
+    /** Canonical block argument schema supplying fallback configuration. */
+    schema?: ArgSchema;
   };
 }
 
@@ -63,27 +78,40 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
    * current value's unit, falling back to the default. Read from the template
    * (the unit `<select>`), so it stays unprefixed.
    */
-  @tracked selectedUnit;
+  @tracked selectedUnit: string;
 
+  /**
+   * Creates a dimension control and seeds its working unit.
+   *
+   * @param owner - Ember owner for the component instance.
+   * @param args - Dimension value and control configuration.
+   */
   constructor(owner: Owner, args: InspectorDimensionFieldSignature["Args"]) {
     super(owner, args);
     this.selectedUnit = this.#parsed?.unit || this.defaultUnit;
   }
 
-  get #currentValue() {
-    return this.args.custom ? this.args.custom.value : this.args.value;
+  /** Current dimension value normalized to the supported scalar shapes. */
+  get #currentValue(): string | number | null {
+    const value = this.args.custom ? this.args.custom.value : this.args.value;
+
+    return typeof value === "string" || typeof value === "number"
+      ? value
+      : null;
   }
 
-  get #parsed() {
+  /** Parsed numeric and unit portions of the current value. */
+  get #parsed(): ParsedDimension | null {
     return parseDimension(this.#currentValue);
   }
 
   /** Allowed units; absence means the control is unitless. */
-  get units() {
+  get units(): string[] | null {
     return this.args.units ?? this.args.schema?.ui?.units ?? null;
   }
 
-  get isUnitless() {
+  /** Whether the persisted value omits its display unit. */
+  get isUnitless(): boolean {
     if (this.args.unitless != null) {
       return this.args.unitless;
     }
@@ -91,32 +119,35 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
   }
 
   /** Default / suffix unit: explicit prop, schema hint, then first allowed unit. */
-  get defaultUnit() {
+  get defaultUnit(): string {
     return (
       this.args.unit ?? this.args.schema?.ui?.unit ?? this.units?.[0] ?? ""
     );
   }
 
-  get min() {
+  /** Minimum permitted numeric value. */
+  get min(): number | null {
     return this.args.min ?? this.args.schema?.min ?? null;
   }
 
-  get max() {
+  /** Maximum permitted numeric value. */
+  get max(): number | null {
     return this.args.max ?? this.args.schema?.max ?? null;
   }
 
-  get step() {
+  /** Numeric input and slider step. */
+  get step(): number | "any" {
     return this.args.step ?? this.args.schema?.ui?.step ?? "any";
   }
 
   /** The slider only makes sense with both bounds to map the track onto. */
-  get showSlider() {
+  get showSlider(): boolean {
     const enabled = this.args.slider ?? this.args.schema?.ui?.slider ?? false;
     return enabled && this.min != null && this.max != null;
   }
 
   /** The numeric part of the current value, or `null` for an empty field. */
-  get numberValue() {
+  get numberValue(): number | null {
     return this.#parsed?.value ?? null;
   }
 
@@ -125,13 +156,26 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
    * sticks for the next numeric edit even before the value round-trips), then
    * the stored value's unit, then the default.
    */
-  get displayUnit() {
+  get displayUnit(): string {
     return this.selectedUnit || this.#parsed?.unit || this.defaultUnit;
   }
 
+  /**
+   * Commits a manually entered number.
+   *
+   * @param event - Number-input change event.
+   */
   @action
-  setNumber(event) {
-    const raw = event.target.value;
+  setNumber(
+    event: Event & {
+      /** Number input that emitted the event. */
+      currentTarget: Element;
+    }
+  ): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    const raw = event.currentTarget.value;
     if (raw === "") {
       this.#commit(null);
       return;
@@ -142,17 +186,43 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
     }
   }
 
+  /**
+   * Commits the slider's live numeric value.
+   *
+   * @param event - Range-input event.
+   */
   @action
-  setSlider(event) {
-    const next = parseFloat(event.target.value);
+  setSlider(
+    event: Event & {
+      /** Range input that emitted the event. */
+      currentTarget: Element;
+    }
+  ): void {
+    if (!(event.currentTarget instanceof HTMLInputElement)) {
+      return;
+    }
+    const next = parseFloat(event.currentTarget.value);
     if (Number.isFinite(next)) {
       this.#commitNumber(next);
     }
   }
 
+  /**
+   * Re-serializes the current number under a selected unit.
+   *
+   * @param event - Unit-select change event.
+   */
   @action
-  setUnit(event) {
-    this.selectedUnit = event.target.value;
+  setUnit(
+    event: Event & {
+      /** Unit select that emitted the event. */
+      currentTarget: Element;
+    }
+  ): void {
+    if (!(event.currentTarget instanceof HTMLSelectElement)) {
+      return;
+    }
+    this.selectedUnit = event.currentTarget.value;
     // Reserialize the existing number under the new unit; nothing to write yet
     // when the field is empty.
     if (this.numberValue != null) {
@@ -160,13 +230,20 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
     }
   }
 
-  #commitNumber(value) {
+  /** @param value - Numeric value to clamp and serialize. */
+  #commitNumber(value: number): void {
     const clamped = this.#clamp(value);
     const unit = this.isUnitless ? "" : this.displayUnit;
     this.#commit(formatDimension(clamped, unit));
   }
 
-  #clamp(value) {
+  /**
+   * Clamps a number to the configured bounds.
+   *
+   * @param value - Number to clamp.
+   * @returns The bounded number.
+   */
+  #clamp(value: number): number {
     let next = value;
     if (this.min != null) {
       next = Math.max(this.min, next);
@@ -177,7 +254,8 @@ export default class InspectorDimensionField extends Component<InspectorDimensio
     return next;
   }
 
-  #commit(value) {
+  /** @param value - Dimension value to send to the active consumer. */
+  #commit(value: string | number | null): void {
     if (this.args.custom) {
       this.args.custom.set(value);
     } else {

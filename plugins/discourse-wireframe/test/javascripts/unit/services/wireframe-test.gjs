@@ -3660,6 +3660,9 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       logIn(getOwner(this));
       this.editor = getOwner(this).lookup("service:wireframe-workspace");
       this.editor.enter();
+      getOwner(this)
+        .lookup("service:wireframe-publish-target")
+        .setActiveTheme(1);
 
       // Edit the outlet's tile so the outlet counts as edited.
       const tile = outletChildren(this.editor)[0];

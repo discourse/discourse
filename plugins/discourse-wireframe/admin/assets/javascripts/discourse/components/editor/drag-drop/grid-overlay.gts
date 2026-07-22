@@ -12,8 +12,8 @@ import {
   parsePlacement,
 } from "discourse/blocks";
 import type { LayoutEntry } from "discourse/blocks/types";
-import type Blocks from "discourse/services/blocks";
-import type DragAndDrop from "discourse/services/drag-and-drop";
+import type BlocksService from "discourse/services/blocks";
+import type DragAndDropService from "discourse/services/drag-and-drop";
 import DResizeHandles from "discourse/ui-kit/d-resize-handles";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { registerDragAndDropExternalTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
@@ -33,31 +33,33 @@ import {
   GRID_DROP_GESTURES,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import {
-  Cell,
+  type Cell,
   cellAt,
   computeOccupation,
   computeSpanResize,
   computeZone,
   computeZoneCollapsed,
-  EdgeRect,
+  type EdgeRect,
   resizableDirections,
   resizeColumnFractions,
-  ResizeDirection,
+  type ResizeDirection,
   unoccupiedCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 // `grid-math` is the plugin's editor-only geometry; admin-only consumer,
 // so cross-bundle imports use absolute addon paths.
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import {
-  BlockPaletteEntry,
+  type BlockPaletteEntry,
   buildBlockPalette,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/palette";
 import type { DragSource } from "discourse/plugins/discourse-wireframe/discourse/modifiers/container-drop-target";
-import WireframeDragOverlay, {
-  DropDispatch,
-  OverlayGeometry,
+import WireframeDragOverlayService, {
+  type DropDispatch,
+  type OverlayGeometry,
 } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-overlay";
-import type WireframeGridPlacementService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
+import WireframeGridPlacementService, {
+  type GridDropSource,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-grid-placement";
 import type WireframeImageUploadService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-image-upload";
 import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
 import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
@@ -74,10 +76,12 @@ type GridZone = "center" | "left" | "right" | "up" | "down";
  * A grid line range, mirroring the block layout's `{ start, end }` track pair
  * (either bound may be `null` for an auto-placed track).
  */
-interface DropRange {
+type DropRange = {
+  /** Starting grid line. */
   start: number | null;
+  /** Ending grid line. */
   end: number | null;
-}
+};
 
 /**
  * The intermediate (logical) drop-preview descriptor the overlay builds from a
@@ -91,76 +95,157 @@ interface DropRange {
  *  - `_collapsedRect` / `_collapsedZone` stamp the collapsed-view hit-test
  *    result so the geometry step can paint against the actual element.
  */
-interface GridDropDescriptor {
-  kind: "rect" | "line-column" | "line-row";
+type GridDropDescriptorBase = {
+  /** Operation represented by the preview. */
   variant: "swap" | "replace" | "insert" | "move";
-  column?: DropRange;
-  row?: DropRange;
-  line?: number;
+  /** Whether the validity gate rejected the preview. */
   _invalid?: boolean;
+  /** Collapsed-layout geometry captured during hit testing. */
   _collapsedRect?: OverlayGeometry;
+  /** Collapsed-layout hit-test zone. */
   _collapsedZone?: string;
-}
+};
+
+/** Preview geometry for a cell rectangle or row/column insertion line. */
+type GridDropDescriptor = GridDropDescriptorBase &
+  (
+    | {
+        /** Paints a rectangular cell region. */
+        kind: "rect";
+        /** Previewed column range. */
+        column: DropRange;
+        /** Previewed row range. */
+        row: DropRange;
+      }
+    | {
+        /** Paints a vertical insertion line. */
+        kind: "line-column";
+        /** One-indexed column line. */
+        line: number;
+        /** Row range spanned by the line. */
+        row: DropRange;
+      }
+    | {
+        /** Paints a horizontal insertion line. */
+        kind: "line-row";
+        /** One-indexed row line. */
+        line: number;
+        /** Column range spanned by the line. */
+        column: DropRange;
+      }
+  );
 
 /** The cursor position projected from a drag's pointer input. */
-interface DragInput {
+type DragInput = {
+  /** Horizontal viewport coordinate. */
   clientX: number;
+  /** Vertical viewport coordinate. */
   clientY: number;
+  /** Whether shift was held during the drag. */
   shiftKey: boolean;
-}
+};
 
 /** The PDND drop location the target callbacks receive. */
-interface DragLocation {
-  current: { input: DragInput };
-}
+type DragLocation = {
+  /** Current drag location. */
+  current: {
+    /** Pointer input for the current location. */
+    input: DragInput;
+  };
+};
+
+type GridElementDragEvent = {
+  /** Normalized element drag source. */
+  source: DragSource;
+  /** Current pointer location. */
+  location: DragLocation;
+};
+
+type GridExternalDragEvent = {
+  /** Decorated external drag source. */
+  source: {
+    /** Returns files carried by the external drag. */
+    getFiles: () => File[];
+  };
+  /** Current pointer location. */
+  location: DragLocation;
+};
 
 /** The drag payload the `DResizeHandles` lifecycle callbacks receive. */
-interface ResizeDragInfo {
+type ResizeDragInfo = {
+  /** Pointer event driving the resize. */
   event: MouseEvent;
-  delta: { x: number; y: number };
-}
+  /** Pointer displacement from resize start. */
+  delta: {
+    /** Horizontal displacement. */
+    x: number;
+    /** Vertical displacement. */
+    y: number;
+  };
+};
 
 /** An empty grid cell, annotated for the template's placeholder rendering. */
 interface EmptyCell extends Cell {
+  /** Stable template key for the empty cell. */
   key: string;
+  /** Whether the empty cell is currently selected. */
   isSelected: boolean;
+  /** Merge directions currently available from the cell. */
   directions: ResizeDirection[];
 }
 
 /** Resolved track widths / heights / gaps read from the grid's computed style. */
-interface GridTracks {
+type GridTracks = {
+  /** Resolved column widths. */
   colWidths: number[];
+  /** Resolved row heights. */
   rowHeights: number[];
+  /** Resolved column gap. */
   colGap: number;
+  /** Resolved row gap. */
   rowGap: number;
-}
+};
 
 /** The active column-track resize session. */
-interface TrackResizeSession {
+type TrackResizeSession = {
+  /** Grid element being resized. */
   gridEl: HTMLElement;
+  /** Original column widths in pixels. */
   pxWidths: number[];
+  /** Previewed fractional column widths. */
   nextFractions: number[] | null;
-}
+};
 
 /** The active empty-cell merge session. */
-interface CellMergeSession {
+type CellMergeSession = {
+  /** Origin cell rectangle. */
   origin: EdgeRect;
+  /** Effective grid column count. */
   columns: number;
+  /** Effective grid row count. */
   rows: number;
+  /** Grid viewport rectangle. */
   gridRect: DOMRect;
+  /** Occupied cells that constrain the merge. */
   occupied: Set<string>;
+  /** Resize preview element. */
   ghost: HTMLElement | null;
+  /** Previewed merged rectangle. */
   next: EdgeRect | null;
-}
+};
 
 /** Per-drag geometry cache, keyed on the drag source's reference identity. */
-interface DragGeometryCache {
+type DragGeometryCache = {
+  /** Drag-source identity owning the cache. */
   source: unknown;
+  /** Cached grid viewport rectangle. */
   gridRect: DOMRect | null;
+  /** Whether the grid is rendered in collapsed mode. */
   isCollapsed: boolean;
-}
+};
 
 interface GridOverlaySignature {
+  /** Grid identity and owning outlet. */
   Args: {
     /** The layout block's composite key. */
     gridKey: string;
@@ -168,6 +253,24 @@ interface GridOverlaySignature {
     outletName: string;
   };
 }
+
+type LineNeighborNames = {
+  /** Display name of the slot before the insertion line. */
+  before: string;
+  /** Display name of the slot after the insertion line. */
+  after: string;
+};
+
+type SlotZoneDescriptorInput = {
+  /** Occupied slot under the drag pointer. */
+  slot: LayoutEntry;
+  /** Pointer zone within the occupied slot. */
+  zone: GridZone;
+  /** Whether the Shift modifier is active. */
+  shift: boolean;
+  /** Normalized block or palette drag source. */
+  source: DragSource;
+};
 
 /**
  * Shallow equivalence check for intermediate (logical) grid drop
@@ -196,7 +299,9 @@ function descriptorsEqual(
   if (a.variant !== b.variant) {
     return false;
   }
-  if (a.line !== b.line) {
+  const aLine = "line" in a ? a.line : undefined;
+  const bLine = "line" in b ? b.line : undefined;
+  if (aLine !== bLine) {
     return false;
   }
   if (!!a._invalid !== !!b._invalid) {
@@ -205,16 +310,20 @@ function descriptorsEqual(
   if (a._collapsedZone !== b._collapsedZone) {
     return false;
   }
-  if (a.column?.start !== b.column?.start) {
+  const aColumn = "column" in a ? a.column : undefined;
+  const bColumn = "column" in b ? b.column : undefined;
+  if (aColumn?.start !== bColumn?.start) {
     return false;
   }
-  if (a.column?.end !== b.column?.end) {
+  if (aColumn?.end !== bColumn?.end) {
     return false;
   }
-  if (a.row?.start !== b.row?.start) {
+  const aRow = "row" in a ? a.row : undefined;
+  const bRow = "row" in b ? b.row : undefined;
+  if (aRow?.start !== bRow?.start) {
     return false;
   }
-  if (a.row?.end !== b.row?.end) {
+  if (aRow?.end !== bRow?.end) {
     return false;
   }
   const ra = a._collapsedRect;
@@ -272,14 +381,14 @@ function descriptorsEqual(
  *  - `@outletName` — the outlet the layout lives in.
  */
 export default class GridOverlay extends Component<GridOverlaySignature> {
-  @service declare wireframeDragOverlay: WireframeDragOverlay;
+  @service declare wireframeDragOverlay: WireframeDragOverlayService;
   @service declare wireframeGridPlacement: WireframeGridPlacementService;
   @service declare wireframeImageUpload: WireframeImageUploadService;
   @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
   @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
   @service declare wireframeSelection: WireframeSelectionService;
-  @service declare blocks: Blocks;
-  @service declare dragAndDrop: DragAndDrop;
+  @service declare blocks: BlocksService;
+  @service declare dragAndDrop: DragAndDropService;
 
   /**
    * The layout's grid `<div>`, located on insert via the marker's
@@ -384,10 +493,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
 
   /** Resize ghost element ref, captured on its own insert. */
   #ghostElement: HTMLElement | null = null;
-
-  /** Drop-preview overlay element ref, captured on its own insert. */
-  // eslint-disable-next-line no-unused-private-class-members
-  #overlayElement: HTMLElement | null = null;
 
   /**
    * The active column-track resize session, or `null`. Captured on
@@ -527,7 +632,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * (returns `false`) if the gutter is out of range. `payload` is the left track.
    */
   @action
-  onTrackResizeStart(leftTrack: number) {
+  onTrackResizeStart(leftTrack: number): void | false {
     const gridEl = this.getGridElement();
     if (!gridEl) {
       return false;
@@ -539,6 +644,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     // Selecting on grab means the inspector tracks the layout being resized.
     this.selectGrid();
     this.#trackResize = { gridEl, pxWidths, nextFractions: null };
+    return undefined;
   }
 
   /**
@@ -737,9 +843,10 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     this.#gridDropTargetCleanup = registerDragAndDropTarget(gridEl, () => ({
       accepts: this.acceptedDropKinds,
       indicator: false,
-      onDragEnter: ({ source, location }) =>
+      onDragEnter: ({ source, location }: GridElementDragEvent) =>
         this.#publishFromDrag(source, location),
-      onDrag: ({ source, location }) => this.#publishFromDrag(source, location),
+      onDrag: ({ source, location }: GridElementDragEvent) =>
+        this.#publishFromDrag(source, location),
       onDragLeave: () => {
         this.#lastIntermediate = null;
         this.#releaseDrop?.();
@@ -756,15 +863,15 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
       () => ({
         accepts: "files",
         indicator: false,
-        onDragEnter: ({ location }) =>
+        onDragEnter: ({ location }: GridExternalDragEvent) =>
           this.#publishFromDrag(EXTERNAL_IMAGE_DROP_SOURCE, location),
-        onDrag: ({ location }) =>
+        onDrag: ({ location }: GridExternalDragEvent) =>
           this.#publishFromDrag(EXTERNAL_IMAGE_DROP_SOURCE, location),
         onDragLeave: () => {
           this.#lastIntermediate = null;
           this.#releaseDrop?.();
         },
-        onDrop: ({ source }) => {
+        onDrop: ({ source }: GridExternalDragEvent) => {
           this.#lastIntermediate = null;
           // Per-file MIME isn't readable mid-drag, so the preview shows for
           // any file; a non-image release is a clean no-op here.
@@ -794,11 +901,6 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
   @action
   captureGhost(element: HTMLElement) {
     this.#ghostElement = element;
-  }
-
-  @action
-  captureOverlay(element: HTMLElement) {
-    this.#overlayElement = element;
   }
 
   /**
@@ -864,7 +966,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     cell: Cell,
     direction: ResizeDirection,
     dragInfo: ResizeDragInfo
-  ) {
+  ): void | false {
     void direction;
     void dragInfo;
     const gridEl = this.getGridElement();
@@ -895,6 +997,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
       // duration of the drag and hidden again in #endCellMerge.
       this.#cellMerge.ghost.classList.add("--visible");
     }
+    return undefined;
   }
 
   /**
@@ -1158,6 +1261,9 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
       );
     }
     if (source.type === "wf-block") {
+      if (!source.data.blockKey) {
+        return "block";
+      }
       const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
         source.data.blockKey
       );
@@ -1192,7 +1298,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     if (!descriptor || !source) {
       return null;
     }
-    const gridSource =
+    const gridSource: GridDropSource =
       source.type === "wf-palette-block"
         ? {
             kind: "new",
@@ -1277,6 +1383,10 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     input: DragInput,
     source: DragSource
   ): GridDropDescriptor | null {
+    const gridElement = this.gridElement;
+    if (!gridElement) {
+      return null;
+    }
     // The source can never be dropped onto itself or into any of its
     // own descendants — that would create a cycle. Hide the overlay
     // entirely when the cursor is hovering THIS grid and the source
@@ -1387,11 +1497,15 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     source: DragSource,
     sourceKey: string | null
   ): GridDropDescriptor | null {
+    const gridElement = this.gridElement;
+    if (!gridElement) {
+      return null;
+    }
     // Topmost element under the cursor that belongs to this grid, skipping any
     // top-layer overlay (e.g. PDND's honey-pot popover) that isn't part of it.
     const el = document
       .elementsFromPoint(input.clientX, input.clientY)
-      .find((node) => this.gridElement.contains(node));
+      .find((node) => gridElement.contains(node));
     if (!el) {
       return null;
     }
@@ -1400,9 +1514,9 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     // teleported directly into the grid and never contain blocks
     // with `data-wf-block-key`, so a hit on one is unambiguous.
     const emptyEl = el.closest(".wireframe-grid-cell");
-    if (emptyEl && this.gridElement.contains(emptyEl)) {
-      const col = parseInt(emptyEl.getAttribute("data-col"), 10);
-      const row = parseInt(emptyEl.getAttribute("data-row"), 10);
+    if (emptyEl && gridElement.contains(emptyEl)) {
+      const col = parseInt(emptyEl.getAttribute("data-col") ?? "", 10);
+      const row = parseInt(emptyEl.getAttribute("data-row") ?? "", 10);
       if (Number.isNaN(col) || Number.isNaN(row)) {
         return null;
       }
@@ -1422,7 +1536,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     // `closest` returns the innermost chrome whose key isn't in
     // `this.slots`; we want the outer slot's chrome instead.
     let candidate = el.closest("[data-wf-block-key]");
-    while (candidate && this.gridElement.contains(candidate)) {
+    while (candidate && gridElement.contains(candidate)) {
       const blockKey = candidate.getAttribute("data-wf-block-key");
       const slot = this.slots.find((s) => entryKey(s) === blockKey);
       if (slot) {
@@ -1445,7 +1559,8 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
           source
         );
       }
-      candidate = candidate.parentElement?.closest("[data-wf-block-key]");
+      candidate =
+        candidate.parentElement?.closest("[data-wf-block-key]") ?? null;
     }
 
     return null;
@@ -1534,6 +1649,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
         drop: {
           gesture: GRID_DROP_GESTURES.BESIDE,
           cell,
+          anchorKey: null,
           direction: descriptor.kind === "line-column" ? "left" : "up",
         },
       });
@@ -1658,9 +1774,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * the grid's outer boundary) — the caller then keeps the generic
    * "neighbours shift" copy instead of naming a non-existent block.
    */
-  #lineNeighborNames(
-    descriptor: GridDropDescriptor
-  ): { before: string; after: string } | null {
+  #lineNeighborNames(descriptor: GridDropDescriptor): LineNeighborNames | null {
     let beforeCell: Cell, afterCell: Cell;
     if (descriptor.kind === "line-column") {
       const row = descriptor.row?.start;
@@ -1706,12 +1820,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
     zone,
     shift,
     source,
-  }: {
-    slot: LayoutEntry;
-    zone: GridZone;
-    shift: boolean;
-    source: DragSource;
-  }): GridDropDescriptor | null {
+  }: SlotZoneDescriptorInput): GridDropDescriptor | null {
     const placement = parsePlacement(slot.containerArgs);
     const slotKey = entryKey(slot);
     if (zone === "center") {
@@ -1959,7 +2068,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * computed style. Returns `null` if the grid element isn't ready
    * yet (overlay just rendered, hasn't captured the ref).
    */
-  #readGridTracks() {
+  #readGridTracks(): GridTracks | null {
     const gridEl = this.gridElement;
     if (!gridEl) {
       return null;
@@ -1987,7 +2096,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * (K-1) tracks and (K-1) gaps in the layout, so the item's left
    * edge falls after both. Line 1 is the grid's origin (0).
    */
-  #trackStart(line, sizes, gap) {
+  #trackStart(line: number, sizes: number[], gap: number): number {
     if (line <= 1) {
       return 0;
     }
@@ -2007,7 +2116,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * included — only the (line-2) gaps interspersed BETWEEN the spanned
    * tracks contribute.
    */
-  #trackEnd(line, sizes, gap) {
+  #trackEnd(line: number, sizes: number[], gap: number): number {
     if (line <= 1) {
       return 0;
     }
@@ -2032,7 +2141,7 @@ export default class GridOverlay extends Component<GridOverlaySignature> {
    * the adjacent tracks. The overlay's stroke is then drawn straddling
    * this position.
    */
-  #lineMidpoint(line, sizes, gap) {
+  #lineMidpoint(line: number, sizes: number[], gap: number): number {
     if (line <= 1) {
       return 0;
     }

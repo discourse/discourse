@@ -21,9 +21,18 @@ import {
   computeTier,
   FIT_TIERS,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/toolbar-fit-tier";
-import type WireframeBlockMutations from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
-import type WireframeLayoutQuery from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
-import type WireframeSelection from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
+import type WireframeBlockMutationsService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-block-mutations";
+import WireframeDragSessionService, {
+  type BlockDragPayload,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-drag-session";
+import type WireframeEntryConfigService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-entry-config";
+import type WireframeForceExpandService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-force-expand";
+import WireframeInplaceTextService, {
+  type InplaceTextController,
+} from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-inplace-text";
+import type WireframeLayoutQueryService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-query";
+import type WireframeLayoutSignalService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-layout-signal";
+import type WireframeSelectionService from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-selection";
 
 /**
  * One fit tier the toolbar can settle into (widest to narrowest). Mirrors the
@@ -36,39 +45,66 @@ type FitTier = "full" | "narrow" | "narrower";
  * action row and the overflow menu both render from these descriptors, so the
  * two can never drift.
  */
-interface ToolbarActionItem {
+type ToolbarActionItem = {
+  /** Stable action identifier. */
   id: string;
+  /** Visual group used to insert separators. */
   group: string;
+  /** Icon rendered for the action. */
   icon: string;
+  /** Translated action title. */
   title: string;
+  /** Callback invoked by the action. */
   action?: () => void;
+  /** Whether the action is unavailable. */
   disabled?: boolean;
+  /** Whether the action represents active state. */
   active?: boolean;
+  /** Whether the action uses destructive styling. */
   danger?: boolean;
   // Set from `group` transitions so the inline row and the menu reproduce the
   // same visual grouping.
+  /** Whether a visual separator precedes the action. */
   separatorBefore?: boolean;
-}
+};
 
 interface BlockToolbarSignature {
+  /** Arguments controlling toolbar identity, state, and optional actions. */
   Args: {
+    /** Composite key of the represented block. */
     blockKey: string;
+    /** Outlet containing the represented block. */
     outletName?: string;
+    /** Human-readable block name. */
     displayName?: string;
+    /** Full tooltip title for the represented block. */
     displayTitle?: string;
+    /** Optional compact identity chip. */
     displayChip?: string | number;
+    /** Visual axis used for sibling movement. */
     moveAxis?: "horizontal" | "vertical";
+    /** Whether the represented block is an outlet root. */
     isOutletRoot?: boolean;
+    /** Current outlet publication state. */
     outletState?: string;
+    /** Whether the represented outlet has staged edits. */
     isOutletEditing?: boolean;
+    /** Whether outlet publication status should render. */
     showOutletStatus?: boolean;
+    /** Chrome element measured by the fit coordinator. */
     chromeEl?: HTMLElement;
+    /** Whether the represented block is selected. */
     isSelected?: boolean;
+    /** Whether an image can be added to the represented block. */
     canFillImage?: boolean;
+    /** Whether the represented image can be reset. */
     canResetImage?: boolean;
+    /** Adds an image to the represented block. */
     onFillImage?: () => void;
+    /** Resets the represented image. */
     onResetImage?: () => void;
   };
+  /** Root toolbar element. */
   Element: HTMLDivElement;
 }
 
@@ -77,15 +113,31 @@ interface BlockToolbarSignature {
 // arg/block/attr types, so its Element (for `...attributes`) and the `content`
 // block's yielded value are declared here.
 const DMenu = DMenuUntyped as unknown as ComponentLike<{
+  /** Arguments accepted by the menu trigger. */
   Args: {
+    /** Stable menu identifier. */
     identifier?: string;
+    /** Trigger icon. */
     icon?: string;
+    /** FloatKit placement. */
     placement?: string;
+    /** Trigger tooltip. */
     title?: string;
+    /** Accessible trigger label. */
     ariaLabel?: string;
   };
+  /** Root menu element. */
   Element: HTMLElement;
-  Blocks: { content: [{ close: () => void }] };
+  /** Blocks yielded by the menu. */
+  Blocks: {
+    /** Menu content receiving a close callback. */
+    content: [
+      {
+        /** Closes the menu. */
+        close: () => void;
+      },
+    ];
+  };
 }>;
 
 // TODO(devxp-typescript-pending): drop once d-drag-and-drop-source is authored
@@ -93,15 +145,30 @@ const DMenu = DMenuUntyped as unknown as ComponentLike<{
 // named contract this bar uses is declared here.
 const dDragAndDropSource =
   dDragAndDropSourceUntyped as unknown as ModifierLike<{
+    /** Element carrying the drag source. */
     Element: HTMLElement;
+    /** Drag-source modifier arguments. */
     Args: {
+      /** Named drag-source options. */
       Named: {
+        /** Drag source type. */
         type?: string;
+        /** Data exposed by the drag source. */
         data?: object;
+        /** Element used for the drag preview. */
         dragPreview?: HTMLElement;
-        onDragStart?: (args: { source: { data: unknown } }) => void;
-        onDrop?: (args: { source: { data: unknown } }) => void;
+        /** Handles drag start. */
+        onDragStart?: (args: {
+          /** Drag source supplied by the modifier. */
+          source: {
+            /** Existing block drag payload. */
+            data: BlockDragPayload;
+          };
+        }) => void;
+        /** Handles drag completion. */
+        onDrop?: () => void;
       };
+      /** This modifier accepts no positional arguments. */
       Positional: [];
     };
   }>;
@@ -110,13 +177,20 @@ const dDragAndDropSource =
 // with a real Signature. Its DefaultSignature rejects named args, so the named
 // contract this bar uses is declared here.
 const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
+  /** Element owning the roving focus group. */
   Element: HTMLElement;
+  /** Roving-focus modifier arguments. */
   Args: {
+    /** Named roving-focus options. */
     Named: {
+      /** Keyboard navigation orientation. */
       orientation?: "horizontal" | "vertical";
+      /** Selector matching focusable items. */
       itemSelector?: string;
+      /** Value that reseeds the roving focus group. */
       itemsKey?: string;
     };
+    /** This modifier accepts no positional arguments. */
     Positional: [];
   };
 }>;
@@ -124,13 +198,21 @@ const dRovingFocus = dRovingFocusUntyped as unknown as ModifierLike<{
 // TODO(devxp-typescript-pending): drop once d-fit is authored in .ts with a
 // real Signature, then import it directly.
 const dFit = dFitUntyped as unknown as ModifierLike<{
+  /** Element receiving the computed fit attribute. */
   Element: HTMLElement;
+  /** Fit-modifier arguments. */
   Args: {
+    /** Callback that maps available width to a fit tier. */
     Positional: [(available: number, element: HTMLElement) => FitTier];
+    /** Named fit-coordinator options. */
     Named: {
+      /** Element whose available width is measured. */
       observedEl?: HTMLElement;
+      /** Attribute receiving the fit tier. */
       attribute?: string;
+      /** Whether fit measurement is active. */
       active?: boolean;
+      /** Values whose changes request a remeasurement. */
       remeasureOn?: unknown[];
     };
   };
@@ -181,14 +263,22 @@ const dFit = dFitUntyped as unknown as ModifierLike<{
  * they have no PM selection to preserve.
  */
 export default class BlockToolbar extends Component<BlockToolbarSignature> {
-  @service declare wireframeBlockMutations: WireframeBlockMutations;
-  @service wireframeDragSession;
-  @service wireframeEntryConfig;
-  @service wireframeForceExpand;
-  @service wireframeInplaceText;
-  @service declare wireframeLayoutQuery: WireframeLayoutQuery;
-  @service wireframeLayoutSignal;
-  @service declare wireframeSelection: WireframeSelection;
+  /** Applies structural mutations for toolbar actions. */
+  @service declare wireframeBlockMutations: WireframeBlockMutationsService;
+  /** Owns the active block drag payload. */
+  @service declare wireframeDragSession: WireframeDragSessionService;
+  /** Applies selected-entry configuration changes. */
+  @service declare wireframeEntryConfig: WireframeEntryConfigService;
+  /** Owns per-block edit-presentation overrides. */
+  @service declare wireframeForceExpand: WireframeForceExpandService;
+  /** Coordinates the active in-place text editor. */
+  @service declare wireframeInplaceText: WireframeInplaceTextService;
+  /** Reads metadata and layout placement for the represented block. */
+  @service declare wireframeLayoutQuery: WireframeLayoutQueryService;
+  /** Exposes the shared layout invalidation signal. */
+  @service declare wireframeLayoutSignal: WireframeLayoutSignalService;
+  /** Owns selection state and sibling-movement availability. */
+  @service declare wireframeSelection: WireframeSelectionService;
 
   /**
    * Working value of the URL input while a field-editor slot is
@@ -208,11 +298,13 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    */
   @tracked _fitTier: FitTier = FIT_TIERS.full;
 
-  get canMoveUp() {
+  /** Whether the selected block can move to its earlier sibling position. */
+  get canMoveUp(): boolean {
     return this.wireframeSelection.canMoveSelectedUp;
   }
 
-  get canMoveDown() {
+  /** Whether the selected block can move to its later sibling position. */
+  get canMoveDown(): boolean {
     return this.wireframeSelection.canMoveSelectedDown;
   }
 
@@ -221,32 +313,30 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * a `layout` in row mode), so the reorder arrows point left/right rather than
    * up/down. The underlying move is the same "earlier / later sibling" in both
    * orientations — only the icons and labels change.
-   *
-   * @returns {boolean}
    */
-  get isHorizontalMove() {
+  get isHorizontalMove(): boolean {
     return this.args.moveAxis === "horizontal";
   }
 
-  /** @returns {string} Icon for moving to the earlier sibling. */
-  get moveBackIcon() {
+  /** Icon for moving to the earlier sibling. */
+  get moveBackIcon(): string {
     return this.isHorizontalMove ? "arrow-left" : "arrow-up";
   }
 
-  /** @returns {string} Icon for moving to the later sibling. */
-  get moveForwardIcon() {
+  /** Icon for moving to the later sibling. */
+  get moveForwardIcon(): string {
     return this.isHorizontalMove ? "arrow-right" : "arrow-down";
   }
 
-  /** @returns {string} i18n key for the earlier-sibling move. */
-  get moveBackLabel() {
+  /** i18n key for the earlier-sibling move. */
+  get moveBackLabel(): string {
     return this.isHorizontalMove
       ? "wireframe.canvas.toolbar.move_left"
       : "wireframe.canvas.toolbar.move_up";
   }
 
-  /** @returns {string} i18n key for the later-sibling move. */
-  get moveForwardLabel() {
+  /** i18n key for the later-sibling move. */
+  get moveForwardLabel(): string {
     return this.isHorizontalMove
       ? "wireframe.canvas.toolbar.move_right"
       : "wireframe.canvas.toolbar.move_down";
@@ -257,10 +347,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * toggle. Shown for `wf:layout` blocks whose `autoCollapse` isn't
    * `"never"` — i.e. the layout could actually collapse at narrow
    * widths, so an override has something to override.
-   *
-   * @returns {boolean}
    */
-  get canForceExpand() {
+  get canForceExpand(): boolean {
     void this.wireframeLayoutSignal.version;
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
@@ -274,10 +362,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
 
   /**
    * Mirrors the editor service's force-expand state for this block.
-   *
-   * @returns {boolean}
    */
-  get isForceExpanded() {
+  get isForceExpanded(): boolean {
     return this.wireframeForceExpand.isForceExpanded(this.args.blockKey);
   }
 
@@ -285,7 +371,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * The active in-place text controller, or `null` when no inline
    * session is open.
    */
-  get inlineController() {
+  get inlineController(): InplaceTextController | null {
     return this.wireframeInplaceText.controller;
   }
 
@@ -293,10 +379,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * Whether the inline-format buttons should be visible. Requires:
    *   - an active in-place text session on THIS block,
    *   - a non-empty PM selection that the schema marks can apply to.
-   *
-   * @returns {boolean}
    */
-  get showInlineFormat() {
+  get showInlineFormat(): boolean {
     return (
       !!this.inlineController &&
       this.wireframeInplaceText.blockKey === this.args.blockKey &&
@@ -304,14 +388,15 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     );
   }
 
-  get markState() {
+  /** Active inline mark state exposed by the in-place text controller. */
+  get markState(): InplaceTextController["markState"] | undefined {
     return this.inlineController?.markState;
   }
 
   /**
    * `true` when the toolbar should render its URL-edit surface for
    * the rich text link mark — i.e. PM has entered link-mark
-   * mode (`enterLinkMode` in `inplace-text-controller.gjs`), which
+   * mode (`enterLinkMode` in `inplace-text-controller.gts`), which
    * populates `wireframeInplaceText.fieldEditor` with `kind === "url"`.
    *
    * Block-arg URL edits (e.g. a button's `href`) are no longer routed
@@ -319,7 +404,7 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * the link element instead. The rich-text link mark has no DOM
    * anchor of its own, so it stays on the toolbar.
    */
-  get isUrlFieldEditing() {
+  get isUrlFieldEditing(): boolean {
     return this.wireframeInplaceText.fieldEditor?.kind === "url";
   }
 
@@ -327,10 +412,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * `true` when this toolbar belongs to a synthesized composite part (which
    * has no persisted entry). Structural actions — move, duplicate, delete,
    * drag-to-reorder — are meaningless for a part, so the toolbar hides them.
-   *
-   * @returns {boolean}
    */
-  get isPart() {
+  get isPart(): boolean {
     return isPartKey(this.args.blockKey);
   }
 
@@ -338,10 +421,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * `true` for an ordinary movable block — neither the outlet root (a page
    * region) nor a composite part. Only movable blocks carry the structural
    * actions that fold into the hamburger, so only they collapse.
-   *
-   * @returns {boolean}
    */
-  get isCollapsible() {
+  get isCollapsible(): boolean {
     return !this.args.isOutletRoot && !this.isPart;
   }
 
@@ -350,12 +431,12 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * selected block, it's a movable block (the only kind with a foldable action
    * set), and it isn't in the URL-edit sub-mode (which renders its own inline
    * surface that doesn't collapse).
-   *
-   * @returns {boolean}
    */
-  get fitActive() {
+  get fitActive(): boolean {
     return (
-      this.args.isSelected && this.isCollapsible && !this.isUrlFieldEditing
+      this.args.isSelected === true &&
+      this.isCollapsible &&
+      !this.isUrlFieldEditing
     );
   }
 
@@ -370,10 +451,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    *     is `visibility:hidden`, which `dRovingFocus` now treats as unusable),
    *   - the action descriptors themselves change which buttons render and which
    *     are disabled (skipped as tab targets).
-   *
-   * @returns {string}
    */
-  get rovingKey() {
+  get rovingKey(): string {
     const actions = this.actionItems
       .map((item) => `${item.id}:${item.disabled ? 1 : 0}`)
       .join(",");
@@ -390,10 +469,8 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * `true` when this block is a composed composite (renders a code-defined
    * `parts` composition) and can therefore be detached into explicit,
    * freely-editable children.
-   *
-   * @returns {boolean}
    */
-  get canDetach() {
+  get canDetach(): boolean {
     void this.wireframeLayoutSignal.version;
     return this.wireframeLayoutQuery.isComposedComposite(this.args.blockKey);
   }
@@ -411,7 +488,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * actions (move/duplicate/detach/delete), leaving only whatever applies (e.g.
    * the force-expand toggle on a layout), and never collapse.
    *
-   * @returns {Array<Object>}
    */
   @cached
   get actionItems(): ToolbarActionItem[] {
@@ -554,38 +630,45 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
     return tier;
   }
 
+  /** Toggles edit-presentation expansion for the represented block. */
   @action
-  toggleForceExpand() {
+  toggleForceExpand(): void {
     this.wireframeForceExpand.toggleForceExpand(this.args.blockKey);
   }
 
+  /** Moves the represented block toward its earlier sibling. */
   @action
-  moveUp() {
+  moveUp(): void {
     this.wireframeBlockMutations.moveBlockUp(this.args.blockKey);
   }
 
+  /** Moves the represented block toward its later sibling. */
   @action
-  moveDown() {
+  moveDown(): void {
     this.wireframeBlockMutations.moveBlockDown(this.args.blockKey);
   }
 
+  /** Selects the represented block's parent. */
   @action
-  selectParent() {
+  selectParent(): void {
     this.wireframeSelection.selectParent();
   }
 
+  /** Duplicates the represented block. */
   @action
-  duplicate() {
+  duplicate(): void {
     this.wireframeBlockMutations.duplicateBlock(this.args.blockKey);
   }
 
+  /** Removes the represented block. */
   @action
-  remove() {
+  remove(): void {
     this.wireframeBlockMutations.removeBlock(this.args.blockKey);
   }
 
+  /** Detaches a composed block into freely editable child entries. */
   @action
-  detach() {
+  detach(): void {
     this.wireframeEntryConfig.detachSelectedComposite();
   }
 
@@ -598,48 +681,71 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * @param close - The menu's close callback.
    */
   @action
-  invokeFromMenu(actionFn?: () => void, close?: () => void) {
+  invokeFromMenu(actionFn?: () => void, close?: () => void): void {
     close?.();
     actionFn?.();
   }
 
+  /** Toggles bold on the active in-place selection. */
   @action
-  toggleBold() {
+  toggleBold(): void {
     this.inlineController?.toggleMark("strong");
   }
 
+  /** Toggles italic on the active in-place selection. */
   @action
-  toggleItalic() {
+  toggleItalic(): void {
     this.inlineController?.toggleMark("em");
   }
 
+  /** Opens the inline link field editor. */
   @action
-  startLinkEdit() {
+  startLinkEdit(): void {
     this.inlineController?.enterLinkMode();
   }
 
+  /** Applies the active inline field editor value. */
   @action
-  applyFieldEditor() {
+  applyFieldEditor(): void {
     this.wireframeInplaceText.fieldEditor?.apply?.(this.editorValue);
   }
 
+  /** Removes the value managed by the active inline field editor. */
   @action
-  removeFieldEditor() {
+  removeFieldEditor(): void {
     this.wireframeInplaceText.fieldEditor?.remove?.();
   }
 
+  /** Cancels the active inline field editor. */
   @action
-  cancelFieldEditor() {
+  cancelFieldEditor(): void {
     this.wireframeInplaceText.fieldEditor?.cancel?.();
   }
 
+  /**
+   * Updates the working URL value.
+   *
+   * @param event - URL input event.
+   */
   @action
-  onUrlInput(event: Event) {
-    this.editorValue = (event.target as HTMLInputElement).value;
+  onUrlInput(
+    event: Event & {
+      /** URL input that emitted the event. */
+      currentTarget: Element;
+    }
+  ): void {
+    if (event.currentTarget instanceof HTMLInputElement) {
+      this.editorValue = event.currentTarget.value;
+    }
   }
 
+  /**
+   * Applies or cancels the URL editor from the keyboard.
+   *
+   * @param event - Keyboard event from the URL input.
+   */
   @action
-  onUrlKeydown(event: KeyboardEvent) {
+  onUrlKeydown(event: KeyboardEvent): void {
     if (event.key === "Enter") {
       event.preventDefault();
       this.applyFieldEditor();
@@ -654,23 +760,38 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
    * the input mounts (a new slot opens). The slot's `value` is the
    * current arg / mark value at edit-start; `editorValue` is the
    * live in-progress edit. Auto-selects so typing replaces.
+   *
+   * @param element - Mounted URL input element.
    */
   @action
-  seedFieldEditorValue(element: HTMLInputElement) {
+  seedFieldEditorValue(element: HTMLInputElement): void {
     this.editorValue = this.wireframeInplaceText.fieldEditor?.value ?? "";
     element.focus();
     element.select();
   }
 
+  /**
+   * Starts an existing-block drag session.
+   *
+   * @param event - Drag-start event supplied by the source modifier.
+   */
   @action
-  startDrag({ source }: { source: { data: unknown } }) {
+  startDrag({
+    source,
+  }: {
+    /** Drag source supplied by the modifier. */
+    source: {
+      /** Existing block drag payload. */
+      data: BlockDragPayload;
+    };
+  }): void {
     this.wireframeDragSession.startDrag(source.data);
   }
 
   <template>
     <div
       class="wireframe-block-toolbar"
-      role="toolbar"
+      role={{unless this.isUrlFieldEditing "toolbar"}}
       aria-label={{i18n "wireframe.canvas.toolbar_label" name=@displayName}}
       {{! An idle toolbar sits at opacity:0 but stays in the a11y tree, so every
         unselected block would otherwise leak a phantom named toolbar to
@@ -769,7 +890,6 @@ export default class BlockToolbar extends Component<BlockToolbarSignature> {
 
       {{#if @isSelected}}
         {{#if this.isUrlFieldEditing}}
-          {{! eslint-disable-next-line ember/template-no-nested-interactive }}
           <input
             type="url"
             class="wireframe-block-toolbar__url-input"

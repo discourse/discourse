@@ -20,18 +20,29 @@ type InspectorFieldDescriptor =
  * The context object FormKit hands a `@onSet` handler: the field's `name`
  * plus a `set` callback that writes the value into FormKit's own draft data.
  */
-interface FormFieldSetContext {
+type FormFieldSetContext = {
+  /** Name of the field being updated. */
   name: string;
-  set: (name: string, value: unknown) => unknown;
-}
+  /** Writes a field into FormKit's draft data. */
+  set: (
+    /** Field name to update. */
+    name: string,
+    /** Replacement field value. */
+    value: unknown
+  ) => unknown;
+};
 
 /** One collapsible placement section, one per top-level parent namespace. */
-interface ContainerArgsSection {
+type ContainerArgsSection = {
+  /** Top-level container-argument namespace. */
   namespace: string;
+  /** Human-readable namespace label. */
   label: string;
+  /** Visible fields belonging to the namespace. */
   fields: InspectorFieldDescriptor[];
+  /** Current namespace values keyed by field name. */
   values: Record<string, unknown>;
-}
+};
 
 /**
  * Inspector form for the selected entry's `containerArgs` — placement
@@ -99,26 +110,24 @@ export default class InspectorContainerArgsForm extends Component {
       const conditional = def.ui?.conditional ?? null;
       // `isFieldVisible` only inspects `.conditional`; the namespace gate has
       // no full field descriptor, so pass the minimal shape it reads.
-      if (
-        conditional &&
-        !isFieldVisible(
-          { conditional } as unknown as InspectorFieldDescriptor,
-          this.parentArgs
-        )
-      ) {
+      if (conditional && !isFieldVisible({ conditional }, this.parentArgs)) {
         continue;
       }
       const fields = schemaToFields(def.properties ?? {});
       if (fields.length === 0) {
         continue;
       }
+      const values = this.containerArgsSnapshot[namespace] ?? def.default ?? {};
       sections.push({
         namespace,
         label: def.ui?.label ?? namespace,
         fields,
-        values: (this.containerArgsSnapshot[namespace] ??
-          def.default ??
-          {}) as Record<string, unknown>,
+        values:
+          typeof values === "object" &&
+          values !== null &&
+          !Array.isArray(values)
+            ? { ...values }
+            : {},
       });
     }
     return sections;
