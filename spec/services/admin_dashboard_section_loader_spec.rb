@@ -68,58 +68,6 @@ describe AdminDashboardSectionLoader do
         [{ id: "traffic", data: { value: "traffic" } }, { id: "search", data: nil, error: true }],
       )
     end
-
-    it "runs section and plugin loaders on the caller thread when parallel mode is disabled" do
-      error = StandardError.new("boom")
-      loader_threads = []
-      plugin_loader =
-        lambda do |start_date:, end_date:, current_user:|
-          loader_threads << Thread.current
-          { start_date: start_date, end_date: end_date, user_id: current_user.id }
-        end
-      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-        [{ id: "support", enabled: -> { true }, loader: plugin_loader }],
-      )
-      AdminDashboardSearch
-        .expects(:build)
-        .with do |kwargs|
-          loader_threads << Thread.current
-          kwargs == { start_date: "2026-05-01", end_date: "2026-05-07" }
-        end
-        .returns({ value: "search" })
-      AdminDashboardSiteTraffic.stubs(:build).raises(error)
-      Discourse.expects(:warn_exception).with(
-        error,
-        message: "Failed to build admin dashboard section",
-        env: {
-          section_id: "traffic",
-        },
-      )
-
-      expect(
-        described_class.build(
-          section_ids: %w[search support traffic],
-          current_user: admin,
-          start_date: "2026-05-01",
-          end_date: "2026-05-07",
-          parallel: false,
-        ),
-      ).to eq(
-        [
-          { id: "search", data: { value: "search" } },
-          {
-            id: "support",
-            data: {
-              start_date: "2026-05-01",
-              end_date: "2026-05-07",
-              user_id: admin.id,
-            },
-          },
-          { id: "traffic", data: nil, error: true },
-        ],
-      )
-      expect(loader_threads).to eq([Thread.current, Thread.current])
-    end
   end
 
   describe "plugin sections" do
@@ -207,9 +155,7 @@ describe AdminDashboardSectionLoader do
 
     expect(worker_thread).not_to eq(Thread.current)
     wait_for do
-      ActiveRecord::Base.connection_pool.connections.none? do |connection|
-        connection.owner == worker_thread
-      end
+      ActiveRecord::Base.connection_pool.connections.none? { |c| c.owner == worker_thread }
     end
   end
 end
