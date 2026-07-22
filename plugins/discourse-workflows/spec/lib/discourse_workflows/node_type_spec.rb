@@ -284,6 +284,120 @@ RSpec.describe DiscourseWorkflows::NodeType do
     end
   end
 
+  describe ".normalize_category_ids" do
+    it "coerces scalars, arrays, and mixed values to unique integer ids" do
+      expect(described_class.normalize_category_ids(nil)).to eq([])
+      expect(described_class.normalize_category_ids("")).to eq([])
+      expect(described_class.normalize_category_ids([])).to eq([])
+      expect(described_class.normalize_category_ids("12")).to eq([12])
+      expect(described_class.normalize_category_ids(12)).to eq([12])
+      expect(described_class.normalize_category_ids(["12", 3, " 12 "])).to eq([12, 3])
+      expect(described_class.normalize_category_ids([nil, ""])).to eq([])
+    end
+
+    it "coerces unresolved expression strings to a non-matching id" do
+      expect(described_class.normalize_category_ids(["=$json.category_id"])).to eq([0])
+    end
+  end
+
+  describe ".category_ids_parameter" do
+    def trigger_context(parameters)
+      DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
+    end
+
+    it "reads category_ids when present" do
+      expect(
+        described_class.category_ids_parameter(trigger_context("category_ids" => %w[1 2])),
+      ).to eq([1, 2])
+    end
+
+    it "falls back to the legacy category_id parameter" do
+      expect(described_class.category_ids_parameter(trigger_context("category_id" => "3"))).to eq(
+        [3],
+      )
+    end
+
+    it "prefers category_ids over a stale category_id" do
+      expect(
+        described_class.category_ids_parameter(
+          trigger_context("category_ids" => ["1"], "category_id" => "3"),
+        ),
+      ).to eq([1])
+    end
+
+    it "returns an empty list when neither parameter is set" do
+      expect(described_class.category_ids_parameter(trigger_context({}))).to eq([])
+    end
+  end
+
+  describe ".matches_category_ids?" do
+    fab!(:parent_category, :category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: parent_category) }
+    fab!(:other_category, :category)
+
+    it "matches everything when no categories are configured" do
+      expect(described_class.matches_category_ids?(subcategory.id, [])).to eq(true)
+      expect(described_class.matches_category_ids?(nil, [])).to eq(true)
+    end
+
+    it "expands subcategories by default" do
+      expect(described_class.matches_category_ids?(subcategory.id, [parent_category.id])).to eq(
+        true,
+      )
+      expect(described_class.matches_category_ids?(subcategory.id, [other_category.id])).to eq(
+        false,
+      )
+    end
+
+    it "matches exactly when include_subcategories is false" do
+      expect(
+        described_class.matches_category_ids?(
+          subcategory.id,
+          [parent_category.id],
+          include_subcategories: false,
+        ),
+      ).to eq(false)
+      expect(
+        described_class.matches_category_ids?(
+          parent_category.id,
+          [parent_category.id],
+          include_subcategories: false,
+        ),
+      ).to eq(true)
+    end
+
+    it "expands subcategories when include_subcategories is nil" do
+      expect(
+        described_class.matches_category_ids?(
+          subcategory.id,
+          [parent_category.id],
+          include_subcategories: nil,
+        ),
+      ).to eq(true)
+    end
+
+    it "matches against the union of all configured categories" do
+      expect(
+        described_class.matches_category_ids?(
+          subcategory.id,
+          [other_category.id, parent_category.id],
+        ),
+      ).to eq(true)
+    end
+  end
+
+  describe ".expand_subcategory_ids" do
+    fab!(:parent_category, :category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: parent_category) }
+    fab!(:other_category, :category)
+
+    it "returns the union of each category's subtree" do
+      expect(
+        described_class.expand_subcategory_ids([parent_category.id, other_category.id]),
+      ).to contain_exactly(parent_category.id, subcategory.id, other_category.id)
+    end
+  end
+
   describe "#with_paired_item" do
     it "adds normalized paired item metadata to an item" do
       node = described_class.new
