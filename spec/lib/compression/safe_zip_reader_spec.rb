@@ -77,6 +77,48 @@ RSpec.describe Compression::SafeZipReader do
     )
   end
 
+  describe "root prefix handling" do
+    it "resolves entries nested under a single root directory, ignoring macOS metadata entries" do
+      create_zip(
+        "cats/emojis.csv" => "csv",
+        "cats/smile.png" => "png",
+        "__MACOSX/._cats" => "junk",
+        "__MACOSX/cats/._emojis.csv" => "junk",
+        ".DS_Store" => "junk",
+      )
+
+      described_class.open(zip_path) do |zip|
+        expect(zip.read_entry("emojis.csv", max_bytes: 10)).to eq("csv")
+        expect(zip.read_entry("smile.png", max_bytes: 10)).to eq("png")
+      end
+    end
+
+    it "still resolves entries by their exact nested name" do
+      create_zip("cats/emojis.csv" => "csv")
+
+      described_class.open(zip_path) do |zip|
+        expect(zip.read_entry("cats/emojis.csv", max_bytes: 10)).to eq("csv")
+      end
+    end
+
+    it "does not apply a prefix when entries span multiple top-level names" do
+      create_zip("cats/emojis.csv" => "csv", "dogs/emojis.csv" => "csv")
+
+      described_class.open(zip_path) do |zip|
+        expect(zip.read_entry("emojis.csv", max_bytes: 10)).to be_nil
+      end
+    end
+
+    it "does not treat a lone root-level file as a prefix" do
+      create_zip("emojis.csv" => "csv")
+
+      described_class.open(zip_path) do |zip|
+        expect(zip.read_entry("emojis.csv", max_bytes: 10)).to eq("csv")
+        expect(zip.read_entry("missing.csv", max_bytes: 10)).to be_nil
+      end
+    end
+  end
+
   it "streams entries to files within the configured limits" do
     create_zip("document.xml" => "hello")
 
