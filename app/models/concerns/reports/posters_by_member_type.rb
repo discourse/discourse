@@ -27,7 +27,12 @@ module Reports::PostersByMemberType
       requested_ids =
         if filter_requested
           parsed_ids = Array(raw_ids.is_a?(String) ? raw_ids.split(",") : raw_ids).map(&:to_i)
-          Category.where(id: parsed_ids).limit(MAX_CATEGORY_IDS).pluck(:id)
+          if parsed_ids.present?
+            # in_order_of keeps the admin's requested order and drops nonexistent ids
+            Category.in_order_of(:id, parsed_ids).limit(MAX_CATEGORY_IDS).pluck(:id)
+          else
+            []
+          end
         else
           nil
         end

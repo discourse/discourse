@@ -217,6 +217,24 @@ describe AdminDashboardEngagement do
 
         expect(result[:posters][:category_ids]).to contain_exactly(visible.id)
       end
+
+      it "preserves the saved order of the persisted category selection" do
+        first = Fabricate(:category)
+        second = Fabricate(:category)
+        third = Fabricate(:category)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [third.id, first.id, second.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        expect(result[:posters][:category_ids]).to eq([third.id, first.id, second.id])
+      end
     end
 
     describe "activity_by_category" do

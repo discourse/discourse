@@ -47,6 +47,10 @@ module PageObjects
         self
       end
 
+      def has_rendered_report?(type)
+        page.has_css?(".admin-report.#{type.tr("_", "-")}")
+      end
+
       def has_category_filter?
         page.has_css?(CATEGORY_FILTER)
       end

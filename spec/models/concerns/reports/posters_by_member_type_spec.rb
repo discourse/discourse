@@ -197,6 +197,18 @@ describe Reports::PostersByMemberType do
     expect(row(report, :returning)[:count]).to eq(1)
   end
 
+  it "preserves the requested order of the category ids" do
+    first = Fabricate(:category)
+    second = Fabricate(:category)
+    third = Fabricate(:category)
+
+    report = build(filters: { category_ids: [third.id, first.id, second.id] })
+
+    expect(report.available_filters["category_ids"][:default]).to eq(
+      [third.id, first.id, second.id],
+    )
+  end
+
   it "caps the requested ids at MAX_CATEGORY_IDS" do
     cats = Array.new(60) { Fabricate(:category) }
 
