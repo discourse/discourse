@@ -7,8 +7,7 @@ class AdminDashboardSectionLoader
       current_user: current_user,
       start_date: start_date,
       end_date: end_date,
-      parallel: parallel,
-    ).build
+    ).build(parallel: parallel)
   end
 
   def self.pool_size
@@ -25,15 +24,14 @@ class AdminDashboardSectionLoader
       Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
   end
 
-  def initialize(section_ids:, current_user:, start_date:, end_date:, parallel: true)
+  def initialize(section_ids:, current_user:, start_date:, end_date:)
     @section_ids = section_ids
     @current_user = current_user
     @start_date = start_date
     @end_date = end_date
-    @parallel = parallel
   end
 
-  def build
+  def build(parallel: true)
     if parallel
       build_in_parallel
     else
@@ -43,7 +41,7 @@ class AdminDashboardSectionLoader
 
   private
 
-  attr_reader :section_ids, :current_user, :start_date, :end_date, :parallel
+  attr_reader :section_ids, :current_user, :start_date, :end_date
 
   def build_in_parallel
     results = Queue.new
