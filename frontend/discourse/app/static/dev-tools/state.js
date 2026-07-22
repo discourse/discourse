@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedMap } from "@ember/reactive/collections";
 
 /**
  * Singleton class that manages the state of developer tools.
@@ -9,6 +10,20 @@ import { tracked } from "@glimmer/tracking";
  */
 class DevToolsState {
   static #SESSION_STORAGE_KEY = "discourse__dev_tools_state";
+
+  /**
+   * State belonging to registered tools, keyed by tool identifier.
+   *
+   * The singleton is sealed with `Object.preventExtensions` once created, so a
+   * tool cannot store state by assigning a new property to it. This map gives
+   * them somewhere to write instead, reached through `getFlag` and `setFlag`
+   * rather than being exposed directly.
+   *
+   * A map rather than an object because tool identifiers come from callers: an
+   * object would treat `__proto__` as a reserved name, silently discarding that
+   * tool's state instead of storing it.
+   */
+  #flags = trackedMap();
 
   // Private backing fields for tracked properties.
   // These are @tracked so that Glimmer re-renders when values change.
@@ -29,6 +44,35 @@ class DevToolsState {
     this._blockVisualOverlay = persisted.blockVisualOverlay ?? false;
     this._blockGhostBlocks = persisted.blockGhostBlocks ?? false;
     this._blockOutletBoundaries = persisted.blockOutletBoundaries ?? false;
+
+    for (const [toolId, values] of Object.entries(persisted.flags ?? {})) {
+      this.#flags.set(toolId, values);
+    }
+  }
+
+  /**
+   * Reads a value stored by a registered tool.
+   *
+   * @param {string} toolId - The identifier the tool was registered under.
+   * @param {string} key - The name of the value within that tool's state.
+   * @returns {any} The stored value, or undefined when it has never been set.
+   */
+  getFlag(toolId, key) {
+    return this.#flags.get(toolId)?.[key];
+  }
+
+  /**
+   * Stores a value for a registered tool and persists it.
+   *
+   * @param {string} toolId - The identifier the tool was registered under.
+   * @param {string} key - The name of the value within that tool's state.
+   * @param {any} value - The value to store. Must survive `JSON.stringify`.
+   */
+  setFlag(toolId, key, value) {
+    // Replace rather than mutate, so that reading a tool's whole state object
+    // is enough to be notified of a change to any single value in it.
+    this.#flags.set(toolId, { ...this.#flags.get(toolId), [key]: value });
+    this.#persistState();
   }
 
   /**
@@ -66,6 +110,7 @@ class DevToolsState {
           blockVisualOverlay: this._blockVisualOverlay,
           blockGhostBlocks: this._blockGhostBlocks,
           blockOutletBoundaries: this._blockOutletBoundaries,
+          flags: Object.fromEntries(this.#flags),
         })
       );
     } catch {

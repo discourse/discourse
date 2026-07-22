@@ -671,3 +671,55 @@ pre.outlet-info__error-message {
 .outlet-args-table__deprecation-version {
   opacity: 0.7;
 }
+
+/* MessageBus inspector */
+.dev-tools-message-bus__summary {
+  margin: 0 0 var(--space-2);
+  color: var(--primary-high);
+}
+
+.dev-tools-message-bus__subscriptions {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--dev-tools-badge-font-size);
+
+  th,
+  td {
+    text-align: start;
+    padding: 2px 4px;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  /* A channel subscribed more than once: legal, but the shape a leak takes. */
+  tr.--duplicated td {
+    background: rgb(217 119 6 / 15%);
+  }
+
+  tr.--failing td {
+    background: rgb(220 38 38 / 15%);
+  }
+}
+
+.dev-tools-message-bus__error td {
+  color: var(--danger);
+}
+
+.dev-tools-message-bus__messages {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--dev-tools-mono-font);
+  font-size: var(--dev-tools-badge-font-size);
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 2px 0;
+  }
+}
+
+.dev-tools-message-bus__empty {
+  color: var(--primary-medium);
+}

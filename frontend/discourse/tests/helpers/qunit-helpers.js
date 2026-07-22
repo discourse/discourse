@@ -47,6 +47,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { clearDevTools } from "discourse/lib/dev-tools/registry";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -256,6 +257,7 @@ export function testCleanup(container, app) {
   resetSidebarPanels();
   clearExtraGlimmerHeaderIcons();
   clearExtraGlimmerHeaderButtons();
+  clearDevTools();
   resetOnKeyUpCallbacks();
   resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();

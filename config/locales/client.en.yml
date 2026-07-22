@@ -464,6 +464,18 @@ en:
       toggle_verbose_localization: "Toggle verbose localization"
       disable_dev_tools: "Disable dev tools"
       toggle_upcoming_changes_debug: "Toggle upcoming changes debug"
+      toggle_message_bus: "Toggle MessageBus inspector"
+      message_bus:
+        title: "MessageBus"
+        close: "Close"
+        summary: "%{channels} subscriptions, %{duplicates} on duplicated channels, %{polls} polls"
+        subscriptions: "Subscriptions"
+        messages: "Recent messages"
+        no_messages: "No messages received yet"
+        channel: "Channel"
+        position: "Position"
+        calls: "Calls"
+        slowest: "Slowest (ms)"
 
     s3:
       regions:
@@ -3266,6 +3278,9 @@ en:
 
     filter_input:
       clear: "Clear filter"
+
+    dock_panel:
+      resize: "Resize panel"
 
     filter_controls:
       reset: "Reset filter"
