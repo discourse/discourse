@@ -1251,8 +1251,15 @@ body.has-sidebar-page {
 }
 
 .uc-enable-composer-redesign {
-  .composer-actions-trigger {
-    background: var(--secondary);
+  // flat to match the rest of the bar, aligned to the content gutter
+  #reply-control .reply-to .composer-actions-trigger {
+    padding-inline-start: 0;
+    background: transparent;
+    border-color: transparent;
+
+    .d-button-label {
+      font-weight: 600;
+    }
   }
 
   #reply-control {
@@ -1418,6 +1425,7 @@ body.has-sidebar-page {
 
   #reply-control.has-composer-fields .d-editor-textarea-wrapper {
     &:focus,
+    &:focus-within,
     &.in-focus {
       @include viewport.until(sm) {
         margin-top: calc(

@@ -437,6 +437,8 @@ en:
     email_xor_domain: "Email and domain fields are not allowed at the same time"
     admin_invite_requires_email: "Admin invites must be sent to an email address"
     admin_invite_requires_admin_inviter: "Only admins can create admin invites"
+    moderator_invite_requires_email: "Moderator invites must be sent to an email address"
+    moderator_invite_requires_staff_inviter: "Only staff can create moderator invites"
     existing_user_success: "Invite redeemed successfully"
     email_invites_disabled: "Sending invite emails is disabled"
 
