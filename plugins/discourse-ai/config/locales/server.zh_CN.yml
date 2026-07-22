@@ -382,6 +382,8 @@ zh_CN:
         cannot_delete_system_agent: "系统智能体无法删除，请改为将其禁用。"
         cannot_edit_system_agent: "系统智能体只能重命名，无法编辑工具或系统提示，只能禁用并复制。"
         cannot_have_duplicate_tools: "不能有重复的工具"
+        admin_dashboard_highlights:
+          description: "写下显示在管理员信息中心顶部的简要总结，解释此期间的变化和值得关注的事情"
         github_helper:
           name: "GitHub 助手"
           description: "专门协助处理 GitHub 相关任务和问题的 AI 机器人"
