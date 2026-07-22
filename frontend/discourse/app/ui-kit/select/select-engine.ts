@@ -163,6 +163,20 @@ export interface SelectEngineOptions {
    */
   getValue?: () => SelectValue;
 
+  /**
+   * Live readers for the reactive inputs. When supplied they are read on every access, so a
+   * runtime change to the underlying `@arg` propagates (the plain static option beside each is
+   * a construction-time snapshot for direct, non-reactive consumers). A component wires these
+   * to its live args; the engine re-applies each default on read. See {@link getValue}.
+   */
+  getMultiple?: () => boolean | undefined;
+  getMinChars?: () => number | undefined;
+  getSelected?: () => SelectItem | SelectItem[] | undefined;
+  getAllowCreate?: () =>
+    | boolean
+    | ((filter: string, items: SelectItem[]) => boolean)
+    | undefined;
+
   /** Keys plugin `select-content` transformers match on. */
   identifiers?: string | string[];
 
@@ -379,9 +393,12 @@ export default class SelectEngine {
   // Fallback items that were actually produced by `createUnresolvedItem`.
   #customUnresolvedItems = new WeakSet<SelectItem>();
 
-  #multiple: boolean;
+  // Fires the `@items`+`@load` misconfiguration warning at most once per engine.
+  #dualSourceWarned = false;
+
+  #readMultiple: () => boolean | undefined;
   #identifiers: string[];
-  #minChars: number;
+  #readMinChars: () => number | undefined;
   #valueField: string;
   #labelField: string;
   #filterBy?: string | ((item: SelectItem, term: string) => boolean);
@@ -390,7 +407,7 @@ export default class SelectEngine {
     filter: string,
     opts: SelectLoadOptions
   ) => SelectLoadResult | Promise<SelectLoadResult>;
-  #selected?: SelectItem | SelectItem[];
+  #readSelected: () => SelectItem | SelectItem[] | undefined;
   #resolveValue?: (
     value: SelectItemId,
     opts: SelectLoadOptions
@@ -399,11 +416,14 @@ export default class SelectEngine {
     values: SelectItemId[],
     opts: SelectLoadOptions
   ) => SelectItem[] | Promise<SelectItem[]>;
-  #allowCreate?: boolean | ((filter: string, items: SelectItem[]) => boolean);
+  #readAllowCreate: () =>
+    | boolean
+    | ((filter: string, items: SelectItem[]) => boolean)
+    | undefined;
   #createItem?: (filter: string) => SelectItem;
   #createUnresolvedItem?: (value: SelectItemId) => SelectItem;
   #specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
-  #closeOnSelect: boolean;
+  #readCloseOnSelect: boolean | undefined;
   #onChange?: (
     nextValue: SelectValue,
     item: SelectItem | SelectItem[] | null
@@ -457,22 +477,24 @@ export default class SelectEngine {
    *   carries identifiers that legacy extensions may target.
    */
   constructor(opts: SelectEngineOptions = {}) {
-    this.#multiple = opts.multiple ?? false;
+    this.#readMultiple = opts.getMultiple ?? (() => opts.multiple);
     this.#identifiers = makeArray(opts.identifiers) as string[];
-    this.#minChars = opts.minChars ?? 0;
+    this.#readMinChars = opts.getMinChars ?? (() => opts.minChars);
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     this.#filterBy = opts.filterBy;
     this.#items = opts.items;
     this.#load = opts.load;
-    this.#selected = opts.selected;
+    this.#readSelected = opts.getSelected ?? (() => opts.selected);
     this.#resolveValue = opts.resolveValue;
     this.#resolveValues = opts.resolveValues;
-    this.#allowCreate = opts.allowCreate;
+    this.#readAllowCreate = opts.getAllowCreate ?? (() => opts.allowCreate);
     this.#createItem = opts.createItem;
     this.#createUnresolvedItem = opts.createUnresolvedItem;
     this.#specialItems = opts.specialItems;
-    this.#closeOnSelect = opts.closeOnSelect ?? !this.#multiple;
+    // Kept raw (not defaulted here): `#closeOnSelect` re-derives `!multiple` live, so a
+    // runtime `multiple` flip flips the default close behavior with it.
+    this.#readCloseOnSelect = opts.closeOnSelect;
     this.#onChange = opts.onChange;
     this.#requestClose = opts.requestClose;
     this.#legacy = opts.legacy ?? null;
@@ -480,6 +502,9 @@ export default class SelectEngine {
     // parent's `@value` without storing any selection of its own.
     this.#readValue = opts.getValue ?? (() => null);
     this.#isAsync = typeof opts.load === "function";
+    // Catch a both-sources misconfiguration up front (before any menu opens); the same
+    // check also runs per load for a live `items` source that turns non-empty later.
+    this.#assertSingleSource();
   }
 
   /** The current filter term. */
@@ -577,16 +602,27 @@ export default class SelectEngine {
   }
 
   /**
-   * A stable-until-invalidated context object for the list `DAsyncContent`. Its
-   * identity changes when the filter, reload nonce, or reveal cursor changes, which is
-   * what makes the list re-fetch.
+   * A stable-until-invalidated context object for the list `DAsyncContent`. Its identity
+   * changes when the filter, reload nonce, reveal cursor, or the effective local items
+   * change, which is what makes the list re-fetch.
+   *
+   * `items` is read synchronously here on purpose: a client source that changes must restart
+   * the list even on the debounced path, where the async function runs outside the cached
+   * computation and so cannot autotrack the source itself. Reading it in this `@cached` getter
+   * folds the items dependency into the context identity. Empty (and cheap) for a server source.
    */
   @cached
-  get loadContext(): { filter: string; nonce: number; reveal: number } {
+  get loadContext(): {
+    filter: string;
+    nonce: number;
+    reveal: number;
+    items: readonly SelectItem[];
+  } {
     return {
       filter: this.#state.filter,
       nonce: this.#state.nonce,
       reveal: this.#state.reveal,
+      items: this.#localItems(),
     };
   }
 
@@ -724,6 +760,8 @@ export default class SelectEngine {
     _context: unknown,
     opts: SelectLoadOptions = {}
   ): SelectItem[] | Promise<SelectItem[]> {
+    this.#assertSingleSource();
+
     if (this.#load) {
       return this.#loadServerItems(this.#state.filter, opts);
     }
@@ -1101,6 +1139,36 @@ export default class SelectEngine {
   }
 
   /**
+   * Live-resolved reactive inputs. Each reads its thunk on every access (so a runtime change
+   * to the wired `@arg` propagates) and re-applies the default the constructor used to bake in.
+   * Read-site code uses `this.#multiple` etc. unchanged — these getters stand in for the former
+   * plain fields.
+   */
+  get #multiple(): boolean {
+    return this.#readMultiple() ?? false;
+  }
+
+  get #minChars(): number {
+    return this.#readMinChars() ?? 0;
+  }
+
+  get #selected(): SelectItem | SelectItem[] | undefined {
+    return this.#readSelected();
+  }
+
+  get #allowCreate():
+    | boolean
+    | ((filter: string, items: SelectItem[]) => boolean)
+    | undefined {
+    return this.#readAllowCreate();
+  }
+
+  // Defaults to `!multiple`, re-derived live so a runtime `multiple` flip flips it too.
+  get #closeOnSelect(): boolean {
+    return this.#readCloseOnSelect ?? !this.#multiple;
+  }
+
+  /**
    * The current value coerced to its multi-select array form. Only meaningful when
    * `#multiple` (the single-select value is never read through here); it centralizes
    * the one place the union `value` is treated as an array so the multi-only call sites
@@ -1318,9 +1386,29 @@ export default class SelectEngine {
     if (this.#load) {
       return [];
     }
-    return typeof this.#items === "function"
-      ? (this.#items() ?? [])
-      : (makeArray(this.#items) as SelectItem[]);
+    // `makeArray` normalizes whatever the source yields — a thunk that returns null, or a
+    // non-array value — into a real array, so downstream array reads never see a non-array.
+    const resolved =
+      typeof this.#items === "function" ? this.#items() : this.#items;
+    return makeArray(resolved) as SelectItem[];
+  }
+
+  // `items` and `load` are mutually exclusive; `load` wins (the source branches on `#load`
+  // throughout). Warns once when both are supplied — checked here rather than only in the
+  // constructor because a live `items` source can turn non-empty after construction.
+  #assertSingleSource(): void {
+    if (this.#dualSourceWarned || !this.#load) {
+      return;
+    }
+    const local =
+      typeof this.#items === "function" ? this.#items() : this.#items;
+    if (local != null && (makeArray(local) as SelectItem[]).length > 0) {
+      this.#dualSourceWarned = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        "DSelect: `@items` and `@load` are mutually exclusive; `@load` takes precedence and `@items` is ignored."
+      );
+    }
   }
 
   #matchesFilter(item: SelectItem, term: string): boolean {
