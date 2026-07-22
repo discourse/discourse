@@ -62,31 +62,115 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
-    server.get("/admin/themes.json", () => {
+    server.get("/admin/config/design-wizard.json", () => {
       return helper.response(200, {
         themes: [
           {
             id: -1,
             name: "Foundation",
             default: true,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
+            color_scheme_id: null,
+            dark_color_scheme_id: null,
+            palette_pairs: [
+              {
+                key: "default",
+                name: "Default",
+                dark_only: false,
+                user_selectable: false,
+                light: {
+                  id: -1,
+                  name: "Light",
+                  colors: {
+                    primary: "222222",
+                    secondary: "ffffff",
+                    tertiary: "0088cc",
+                  },
+                },
+                dark: {
+                  id: -2,
+                  name: "Dark",
+                  colors: {
+                    primary: "dddddd",
+                    secondary: "222222",
+                    tertiary: "099dd7",
+                  },
+                },
+              },
+            ],
           },
           {
             id: -2,
             name: "Horizon",
             default: false,
-            screenshot_light_url: null,
-            screenshot_dark_url: null,
+            color_scheme_id: 23,
+            dark_color_scheme_id: 24,
+            palette_pairs: [
+              {
+                key: "horizon",
+                name: "Horizon",
+                dark_only: false,
+                user_selectable: false,
+                light: {
+                  id: 23,
+                  name: "Horizon",
+                  colors: {
+                    primary: "222222",
+                    secondary: "ffffff",
+                    tertiary: "563fe3",
+                  },
+                },
+                dark: {
+                  id: 24,
+                  name: "Horizon Dark",
+                  colors: {
+                    primary: "e7e5f2",
+                    secondary: "1b1533",
+                    tertiary: "7965f0",
+                  },
+                },
+              },
+              {
+                key: "marigold",
+                name: "Marigold",
+                dark_only: false,
+                user_selectable: false,
+                light: {
+                  id: 25,
+                  name: "Marigold",
+                  colors: {
+                    primary: "222222",
+                    secondary: "ffffff",
+                    tertiary: "b78d12",
+                  },
+                },
+                dark: {
+                  id: 26,
+                  name: "Marigold Dark",
+                  colors: {
+                    primary: "efe7d4",
+                    secondary: "201808",
+                    tertiary: "d9a616",
+                  },
+                },
+              },
+            ],
           },
         ],
-        extras: { color_schemes: [] },
-      });
-    });
-
-    server.put("/admin/themes/-2.json", () => {
-      return helper.response(200, {
-        theme: { id: -2, name: "Horizon", default: true },
+        current_theme: null,
+        base_font: "inter",
+        heading_font: "inter",
+        homepage: "latest",
+        category_page_styles: [
+          {
+            name: "category_page_style.categories_only",
+            value: "categories_only",
+          },
+          {
+            name: "category_page_style.categories_boxes",
+            value: "categories_boxes",
+          },
+        ],
+        palettes_user_selectable: false,
       });
     });
   });
@@ -244,7 +328,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can open `select_theme` step", async function (assert) {
+  test("it can open the design wizard from the `select_theme` step", async function (assert) {
     const step = withStep("select_theme", assert);
 
     await visit("/");
@@ -253,10 +337,41 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await step.clickAction();
     await settled();
 
-    assert.dom(".theme-picker-modal").exists("theme picker modal is shown");
+    assert.dom(".design-wizard-modal").exists("design wizard modal is shown");
     assert
-      .dom(".theme-picker-modal__card")
+      .dom(".design-wizard-modal__theme-card")
       .exists({ count: 2 }, "shows Foundation and Horizon");
+    assert
+      .dom(".design-wizard-modal__theme-card.--selected")
+      .hasAttribute("data-theme-id", "-1", "preselects the default theme");
+
+    await click(".design-wizard-modal__theme-card[data-theme-id='-2']");
+    assert
+      .dom(".design-wizard-modal__preview")
+      .hasStyle(
+        { "--dw-accent": "#563fe3" },
+        "preview uses the selected theme's palette"
+      );
+
+    await click(
+      ".design-wizard-modal__section[data-section-id='colors'] .design-wizard-modal__section-toggle"
+    );
+    assert
+      .dom(
+        ".design-wizard-modal__section[data-section-id='theme'] .design-wizard-modal__section-body"
+      )
+      .doesNotExist("accordion collapses the previous section");
+    assert
+      .dom(".design-wizard-modal__swatch")
+      .exists({ count: 2 }, "shows the theme's palette pairs");
+
+    await click(".design-wizard-modal__swatch[data-pair-key='marigold']");
+    assert
+      .dom(".design-wizard-modal__preview")
+      .hasStyle(
+        { "--dw-accent": "#b78d12" },
+        "preview updates when picking a palette"
+      );
   });
 });
 

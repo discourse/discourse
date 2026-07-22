@@ -5974,6 +5974,14 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  design_wizard:
+    errors:
+      palette_unavailable: "One of the selected color palettes is not available for the selected theme."
+    palette_pairs:
+      default: "Default"
+      wcag: "WCAG"
+      solarized: "Solarized"
+      dracula: "Dracula"
   wizard:
     title: "Discourse Setup"
     step:

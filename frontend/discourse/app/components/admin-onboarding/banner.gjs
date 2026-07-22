@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
+import DesignWizardModal from "discourse/components/admin-onboarding/modal/design-wizard";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
-import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import { logOnboardingEvent } from "discourse/lib/admin-onboarding";
@@ -27,7 +27,7 @@ const STEPS = [
 
     @action
     performAction() {
-      this.modal.show(ThemePickerModal, {
+      this.modal.show(DesignWizardModal, {
         model: { onThemeSelected: () => this.markAsCompleted() },
       });
     }

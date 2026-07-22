@@ -5,7 +5,7 @@ describe "Admin Onboarding Banner" do
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
-  let(:theme_picker_modal) { PageObjects::Modals::AdminOnboardingThemePicker.new }
+  let(:design_wizard_modal) { PageObjects::Modals::DesignWizard.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -112,25 +112,37 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "select theme step" do
-    it "opens the theme picker modal" do
+    it "opens the design wizard modal" do
       visit("/")
       expect(banner.step_not_completed?("select_theme")).to eq(true)
 
       banner.click_step_action("select_theme")
 
-      expect(theme_picker_modal).to be_open
-      expect(theme_picker_modal).to have_theme_cards(minimum: 1)
+      expect(design_wizard_modal).to be_open
+      expect(design_wizard_modal).to have_theme_cards(count: 2)
     end
 
-    it "sets a theme as default and marks step complete" do
+    it "applies the design choices and marks step complete" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(theme_picker_modal).to be_open
+      expect(design_wizard_modal).to be_open
 
-      selected_name = theme_picker_modal.select_first_selectable_theme
+      design_wizard_modal.select_theme(Theme.horizon_theme.id)
 
-      # Page reloads after theme selection; wait for it to complete
+      design_wizard_modal.open_section("colors")
+      design_wizard_modal.select_palette("royal")
+      design_wizard_modal.toggle_user_selectable_palettes
+
+      design_wizard_modal.open_section("fonts")
+      design_wizard_modal.select_body_font("lato")
+
+      design_wizard_modal.open_section("homepage")
+      design_wizard_modal.select_homepage("categories")
+
+      design_wizard_modal.save
+
+      # Page reloads after saving; wait for it to complete
       expect(page).to have_css(".admin-onboarding-banner")
       expect(banner.step_completed?("select_theme")).to eq(true)
       expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
@@ -142,6 +154,25 @@ describe "Admin Onboarding Banner" do
           acting_user_id: admin.id,
         ).pluck(:subject),
       ).to eq(["select_theme"])
+
+      expect(SiteSetting.default_theme_id).to eq(Theme.horizon_theme.id)
+      horizon = Theme.horizon_theme
+      expect(horizon.color_scheme.name).to eq("Royal")
+      expect(horizon.color_scheme.user_selectable).to eq(true)
+      expect(SiteSetting.base_font).to eq("lato")
+      expect(SiteSetting.default_homepage).to eq("categories")
+    end
+
+    it "does not mark the step complete when skipped" do
+      visit("/")
+      banner.click_step_action("select_theme")
+
+      expect(design_wizard_modal).to be_open
+
+      design_wizard_modal.skip
+
+      expect(design_wizard_modal).to be_closed
+      expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
   end
 
@@ -164,10 +195,10 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(theme_picker_modal).to be_open
-      theme_picker_modal.select_first_selectable_theme
+      expect(design_wizard_modal).to be_open
+      design_wizard_modal.save
 
-      # Page reloads after theme selection; banner disappears when all steps complete
+      # Page reloads after saving; banner disappears when all steps complete
       expect(banner).to be_not_visible
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
 
