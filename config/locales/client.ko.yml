@@ -1673,7 +1673,9 @@ ko:
         invite_roles:
           member_title: "회원 초대"
           member_tab: "회원"
-          admin_tab: "관리자"
+          admin_tab: "스태프"
+          staff_role_admin: "관리자"
+          staff_role_moderator: "운영자"
           email_placeholder: "이메일 주소"
           invite_by_email: "이메일"
           restrict_domain: "도메인으로 제한"
@@ -1683,6 +1685,7 @@ ko:
           summary:
             role_member: "회원"
             role_admin: "관리자"
+            role_moderator: "운영자"
             method_email: "이메일"
             uses: "최대 사용"
             expires: "만료"
@@ -3698,6 +3701,9 @@ ko:
         custom:
           save: "저장"
           delete: "삭제하기"
+          localizations:
+            title: "번역"
+            locale: "언어"
           links:
             reset: "기본값으로 재설정"
             icon:

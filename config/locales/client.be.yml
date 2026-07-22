@@ -1157,12 +1157,15 @@ be:
           cancel: "Скасаваць"
         invite_roles:
           member_tab: "Члены"
-          admin_tab: "Адміністратары"
+          admin_tab: "Персанал"
+          staff_role_admin: "адміністратар"
+          staff_role_moderator: "запавольнік"
           email_placeholder: "name@example.com"
           invite_by_email: "Электронная пошта"
           summary:
             role_member: "Член"
             role_admin: "адміністратар"
+            role_moderator: "запавольнік"
             method_email: "Электронная пошта"
             topic: "Тэма"
             groups: "Груп"

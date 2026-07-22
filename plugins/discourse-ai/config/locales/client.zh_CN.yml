@@ -897,6 +897,7 @@ zh_CN:
           hours: "小时"
           max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大词元（单词和字符）数。词元是 AI 模型处理文本时使用的单位，1 个词元约等于 4 个字符或 3/4 个单词。"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
+          max_cost_required: "如果未设置最大词元数和最大使用次数，则必须设置"
         credit_allocation:
           credits_remaining: "剩余 %{remaining}/%{total} 点数 (%{percentage}%)"
           soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 点数"
@@ -1264,12 +1265,10 @@ zh_CN:
           bulk_regen_description: "选择要为所选话题重新生成的 AI 摘要类型。"
           regenerate_gists_option: "简短摘要（要点）"
           regenerate_summaries_option: "话题摘要"
-          regenerate_gists_success:
-            other: "%{count} 条简短摘要已成功重新生成"
+          regenerate_gists_started: "正在重新生成简短摘要…"
           regenerate_gists_error:
             other: "无法重新生成 %{count} 条简短摘要"
-          regenerate_topic_summary_success:
-            other: "%{count} 个话题摘要已成功重新生成"
+          regenerate_topic_summaries_started: "正在重新生成话题摘要…"
           regenerate_topic_summary_error:
             other: "未能重新生成 %{count} 个话题摘要"
         topic_list_layout:

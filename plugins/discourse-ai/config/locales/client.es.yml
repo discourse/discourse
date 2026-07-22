@@ -1213,15 +1213,9 @@ es:
           bulk_regen_description: "Selecciona qué tipo de resumen de IA quieres regenerar para los temas seleccionados."
           regenerate_gists_option: "Resúmenes breves (gists)"
           regenerate_summaries_option: "Resúmenes de temas"
-          regenerate_gists_success:
-            one: "El resumen breve se ha regenerado correctamente"
-            other: "%{count} resúmenes breves se han regenerado correctamente"
           regenerate_gists_error:
             one: "Error al regenerar el resumen breve"
             other: "Error al regenerar %{count} resúmenes breves"
-          regenerate_topic_summary_success:
-            one: "El resumen del tema se ha regenerado correctamente"
-            other: "%{count} resúmenes de temas se han regenerado correctamente"
           regenerate_topic_summary_error:
             one: "Error al regenerar el resumen del tema"
             other: "Error al regenerar %{count} resúmenes de temas"

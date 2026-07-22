@@ -140,7 +140,6 @@ pl_PL:
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
-    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można to pominąć, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
@@ -467,6 +466,9 @@ pl_PL:
         discourse_helper:
           name: "Pomocnik Discourse"
           description: "Bot AI specjalizujący się w pomocy w zadaniach związanych z Discourse"
+        discourse_admin_assistant:
+          name: "Asystent administratora Discourse"
+          description: "Bot AI, który odpowiada na pytania Discourse i pomaga administratorom zarządzać ustawieniami witryny"
         web_artifact_creator:
           name: "Twórca artefaktów internetowych"
           description: "Bot AI specjalizuje się w tworzeniu interaktywnych artefaktów internetowych"

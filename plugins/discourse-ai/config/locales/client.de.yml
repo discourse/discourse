@@ -1222,15 +1222,9 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
-          regenerate_gists_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
-          regenerate_topic_summary_success:
-            one: "Themenzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"

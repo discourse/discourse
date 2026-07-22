@@ -1553,13 +1553,16 @@ sr:
         invite_roles:
           member_title: "Pozovi članove"
           member_tab: "Članovi"
-          admin_tab: "Admini"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "ime@primer.com"
           invite_by_email: "E-mail"
           more_options: "Više opcija"
           summary:
             role_member: "Član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-mail"
             topic: "Tema"
             groups: "Grupe"

@@ -1369,12 +1369,15 @@ bs_BA:
           cancel: "Odustani"
         invite_roles:
           member_tab: "Članovi"
-          admin_tab: "Admins"
+          admin_tab: "Staff"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
           summary:
             role_member: "Član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             expires: "Ističe"
             topic: "Topic"
@@ -3076,6 +3079,8 @@ bs_BA:
         custom:
           save: "Save"
           delete: "Delete"
+          localizations:
+            title: "Prevodi"
           links:
             icon:
               label: "Icon"

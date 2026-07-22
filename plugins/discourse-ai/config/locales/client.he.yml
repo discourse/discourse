@@ -923,11 +923,6 @@ he:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
           regenerate_summaries_option: "תקצירי נושאים."
-          regenerate_gists_success:
-            one: "התקציר הקצר נוצר מחדש בהצלחה"
-            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
-            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"

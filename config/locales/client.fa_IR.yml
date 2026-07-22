@@ -1975,7 +1975,9 @@ fa_IR:
         invite_roles:
           member_title: "دعوت‌نامه عضوها"
           member_tab: "اعضاء"
-          admin_tab: "مدیران ارشد"
+          admin_tab: "همکاران"
+          staff_role_admin: "مدیر کل"
+          staff_role_moderator: "ناظر"
           admin_email_label: "آدرس ایمیل"
           email_placeholder: "name@example.com"
           invite_by_email: "ایمیل"
@@ -1985,6 +1987,7 @@ fa_IR:
           summary:
             role_member: "عضو"
             role_admin: "مدیر کل"
+            role_moderator: "ناظر"
             method_email: "ایمیل"
             uses: "حداکثر استفاده"
             expires: "انقضاء"
@@ -4603,6 +4606,11 @@ fa_IR:
           public: "قابل مشاهده برای همه"
           always_public: "محتوای این بخش همیشه عمومی است"
           more_menu: "فهرست انتخاب بیشتر"
+          localizations:
+            title: "ترجمه‌ها"
+            locale: "زبان"
+            title_label: "عنوان بخش"
+            link_label: "نام پیوند"
           links:
             add: "پیوند دیگری اضافه کنید"
             delete: "حذف پیوند"

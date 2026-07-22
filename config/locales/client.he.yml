@@ -2459,7 +2459,9 @@ he:
           member_title: "הזמנת חברים"
           sent_title: "נשלחה הזמנה"
           member_tab: "חברים"
-          admin_tab: "מנהלים ראשיים"
+          admin_tab: "סגל"
+          staff_role_admin: "הנהלה"
+          staff_role_moderator: "מפקח"
           admin_email_label: "כתובת דוא״ל"
           email_placeholder: "name@example.com"
           invite_by_email: "דוא״ל"
@@ -2469,6 +2471,7 @@ he:
           summary:
             role_member: "חברים"
             role_admin: "הנהלה"
+            role_moderator: "מפקח"
             method: "שיתוף"
             method_email: "דוא״ל"
             restriction: "מוגבלת לכדי"
@@ -5773,6 +5776,10 @@ he:
           public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
+          localizations:
+            title: "תרגומים"
+            locale: "שפה"
+            title_label: "כותרת מקטע"
           links:
             add: "הוספת קישור נוסף"
             delete: "מחיקת קישור"

@@ -1390,10 +1390,14 @@ id:
           cancel: "Batal"
         invite_roles:
           member_tab: "Anggota"
+          admin_tab: "Staf"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           invite_by_email: "Email"
           summary:
             role_member: "Anggota"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             topic: "Topik"
             groups: "Grup"

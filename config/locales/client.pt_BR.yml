@@ -2318,7 +2318,9 @@ pt_BR:
           member_title: "Convidar membros(as)"
           sent_title: "Convite enviado"
           member_tab: "Membros"
-          admin_tab: "Administradores(as):"
+          admin_tab: "Equipe"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador(a)"
           admin_email_label: "Endereço de e-mail"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "E-mail"
@@ -2329,6 +2331,7 @@ pt_BR:
           summary:
             role_member: "Membro"
             role_admin: "Administração"
+            role_moderator: "Moderador(a)"
             method: "Compartilhamento"
             method_email: "E-mail"
             restriction: "Restrito a"
@@ -5330,6 +5333,10 @@ pt_BR:
           public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
+          localizations:
+            title: "Traduções"
+            locale: "Idioma"
+            title_label: "Título da seção"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
