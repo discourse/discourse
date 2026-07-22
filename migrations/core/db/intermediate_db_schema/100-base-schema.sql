@@ -511,6 +511,7 @@ CREATE TABLE user_options
     notification_level_when_replying               INTEGER,
     notify_on_linked_posts                         BOOLEAN,
     oldest_search_log_date                         DATETIME,
+    push_notification_level                        INTEGER,
     seen_popups                                    INTEGER,
     show_original_content                          BOOLEAN,
     sidebar_link_to_filtered_list                  BOOLEAN,

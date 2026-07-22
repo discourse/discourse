@@ -337,6 +337,36 @@ RSpec.describe Migrations::Reporting::Tui do
         renderer.repaint
         expect(screen.content_rows).to include("Run starting")
       end
+
+      it "splits a multi-line notice so it can't fuse with or strand the live rows" do
+        renderer.apply([:start, "Posts", "Posts"])
+        renderer.apply([:progress_begin, "Posts", 1000])
+        renderer.apply([:start, "Tags", "Tags"])
+        renderer.apply([:progress_begin, "Tags", 200])
+        at(1.0)
+        renderer.apply([:progress, "Posts", 100, 0, 0, 0])
+        renderer.apply([:progress, "Tags", 20, 0, 0, 0])
+        renderer.repaint
+
+        renderer.apply([:notice, "Posts", "RuntimeError: boom\n  from a.rb:1\n  from b.rb:2"])
+        at(2.0)
+        renderer.apply([:progress, "Posts", 300, 0, 0, 0])
+        renderer.repaint
+        at(3.0)
+        renderer.apply([:progress, "Posts", 500, 0, 0, 0])
+        renderer.repaint
+
+        rows = screen.content_rows
+        # Each notice line landed as its own permanent row.
+        expect(rows).to include(a_string_matching(/RuntimeError: boom/))
+        expect(rows).to include(a_string_matching(/from a\.rb:1/))
+        expect(rows).to include(a_string_matching(/from b\.rb:2/))
+        # No permanent notice text is fused onto a live row's percent.
+        expect(rows).to(be_none { |r| r.include?("from ") && r.match?(/%/) })
+        # The two live rows appear exactly once each — nothing stranded above.
+        expect(rows.count { |r| r.match?(/Posts.*%/) }).to eq(1)
+        expect(rows.count { |r| r.match?(/Tags.*%/) }).to eq(1)
+      end
     end
 
     describe "count and time column alignment" do
@@ -417,6 +447,46 @@ RSpec.describe Migrations::Reporting::Tui do
       end
     end
 
+    describe "repaint leftover accounting" do
+      def two_live_steps
+        renderer.apply([:start, "Posts", "Posts"])
+        renderer.apply([:progress_begin, "Posts", 1000])
+        renderer.apply([:start, "Tags", "Tags"])
+        renderer.apply([:progress_begin, "Tags", 200])
+        at(2.0)
+        renderer.apply([:progress, "Posts", 400, 0, 0, 0])
+        renderer.apply([:progress, "Tags", 50, 0, 0, 0])
+      end
+
+      it "emits no extra newlines when a frame both prints permanents and shrinks the live region" do
+        two_live_steps
+        renderer.repaint
+
+        mark = io.string.length
+        renderer.apply([:finish, "Posts", :done])
+        renderer.apply([:finish, "Tags", :done])
+        renderer.repaint
+
+        frame = io.string[mark..]
+        # Two permanent lines replace the two live rows: only their two newlines,
+        # not extra leftover erase pairs for a region that didn't actually shrink.
+        expect(frame.scan("\r\n").size).to eq(2)
+      end
+
+      it "leaves no stray blank rows below the interrupted lines on finalize" do
+        two_live_steps
+        renderer.repaint
+        renderer.finalize
+
+        rows = screen.rows
+        interrupted = rows.select { |r| r.include?("interrupted") }
+        expect(interrupted.size).to eq(2)
+        # Only the cursor's resting line sits below them, not a blank per shrunk row.
+        expect(rows[(rows.index(interrupted.last) + 1)..].reject(&:empty?)).to be_empty
+        expect(rows.count(&:empty?)).to eq(1)
+      end
+    end
+
     describe "out-of-order updates" do
       it "ignores progress for a step that already finished" do
         renderer.apply([:start, "Users", "Users"])
@@ -451,6 +521,25 @@ RSpec.describe Migrations::Reporting::Tui do
         renderer.repaint
 
         expect(io.string).not_to match(/\e\[[0-9;]*m/)
+      end
+    end
+
+    describe "NO_COLOR set to an empty string" do
+      around do |example|
+        original = ENV["NO_COLOR"]
+        ENV["NO_COLOR"] = ""
+        example.run
+        original.nil? ? ENV.delete("NO_COLOR") : ENV["NO_COLOR"] = original
+      end
+
+      it "still emits color, since NO_COLOR only disables it when non-empty" do
+        renderer = described_class.new(output: io, width: 120, clock: -> { time[0] })
+        renderer.apply([:start, "Users", "Users"])
+        renderer.apply([:progress_begin, "Users", 100])
+        renderer.apply([:progress, "Users", 40, 0, 0, 0])
+        renderer.repaint
+
+        expect(io.string).to match(/\e\[[0-9;]*m/)
       end
     end
 
@@ -600,6 +689,36 @@ RSpec.describe Migrations::Reporting::Tui do
       reporter.close
       expect { reporter.close }.not_to raise_error
       expect(io.string).to end_with(Migrations::Reporting::Tui::Ansi::SHOW_CURSOR)
+    end
+
+    it "does not raise, and warns, when the render thread's output breaks" do
+      broken = Object.new
+      def broken.write(*)
+        raise Errno::EPIPE
+      end
+
+      def broken.flush
+      end
+
+      reporter = described_class.new(fps: 60, output: broken)
+      reporter.start_step("Users").finish
+
+      expect { reporter.close }.to output(/TUI reporter crashed/).to_stderr
+    end
+
+    it "drops a coalesced progress report that lands after its step finished" do
+      reporter = described_class.new(fps: 60, output: io)
+      reporter.start_step("Users").finish
+      reporter.close # drains the finish and joins the render thread
+
+      # A worker races the finish and reports progress for the now-finished step.
+      reporter.report_progress(1, 50, 0, 0, 0)
+      expect(reporter.instance_variable_get(:@progress)).not_to be_empty
+
+      # The next frame swaps the map out, so the stale entry can't linger and be
+      # re-applied as a no-op on every frame for the rest of the run.
+      reporter.send(:apply_coalesced_progress)
+      expect(reporter.instance_variable_get(:@progress)).to be_empty
     end
   end
 end

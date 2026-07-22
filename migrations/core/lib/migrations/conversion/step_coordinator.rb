@@ -103,18 +103,31 @@ module Migrations
         @scheduler.release_forks(@step_class, @fork_count - worker_count)
         @step_handle.report_concurrency(worker_count) if worker_count > 1
 
-        chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
-        pipes = Array.new(worker_count) { IO.pipe }
+        # Shards are just file copies; they hold no open descriptor, so creating
+        # them outside the fork mutex is safe.
         worker_count.times { shards << @shard_manager.create_shard }
 
-        pids =
-          fork_workers(worker_count) do |index|
-            run_in_fork(pipes, index, shards[index], boundaries, chunk_queue)
+        pids = readers = nil
+        # No pipe writer FD may exist outside this mutex: coordinators fork
+        # concurrently, and a child forked by a sibling step inherits any open
+        # writer end and holds the pipe open — `drain` then never sees EOF (and a
+        # leaked chunk-queue writer keeps `claim` from ever returning nil) until
+        # that other step's child exits.
+        @fork_mutex.synchronize do
+          chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
+          pipes = Array.new(worker_count) { IO.pipe }
+          ForkManager.with_batched_forks do
+            pids =
+              worker_count.times.map do |index|
+                ForkManager.fork do
+                  run_in_fork(pipes, index, shards[index], boundaries, chunk_queue)
+                end
+              end
           end
-
-        chunk_queue&.close # only the workers claim from it now
-        pipes.each { |(_reader, writer)| writer.close }
-        readers = pipes.map(&:first)
+          chunk_queue&.close # only the workers claim from it now
+          pipes.each { |(_reader, writer)| writer.close }
+          readers = pipes.map(&:first)
+        end
 
         begin
           @step_handle.with_progress(max_progress: total) do |progress|
@@ -158,16 +171,6 @@ module Migrations
         end
       end
 
-      def fork_workers(count)
-        pids = nil
-        @fork_mutex.synchronize do
-          ForkManager.with_batched_forks do
-            pids = count.times.map { |index| ForkManager.fork { yield index } }
-          end
-        end
-        pids
-      end
-
       def chunk_for(boundaries, index)
         [boundaries[index], boundaries[index + 1]]
       end
@@ -203,15 +206,19 @@ module Migrations
         end
       end
 
+      # Reap every worker before raising, so a crash in one doesn't leave the
+      # others as zombies for the rest of the long-lived run.
       def await(pids)
+        failed = []
         pids.each do |pid|
           _, status = Process.waitpid2(pid)
-          next if status.success?
-
-          raise WorkerCrashedError,
-                "A worker for #{@step_class.title} exited unexpectedly (#{status}). " \
-                  "Check the error output above for the cause."
+          failed << status unless status.success?
         end
+        return if failed.empty?
+
+        raise WorkerCrashedError,
+              "#{failed.size} worker(s) for #{@step_class.title} exited unexpectedly " \
+                "(#{failed.join("; ")}). Check the error output above for the cause."
       end
 
       # Reads the workers' progress from their pipes into `progress` until they all
