@@ -184,6 +184,19 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe ".after_fork" do
+    it "refreshes the site settings" do
+      settings.setting(:hello, 1)
+      settings.hello = 100
+
+      settings.provider.save(:hello, 200, SiteSetting.types[:integer])
+
+      settings.after_fork
+
+      expect(settings.hello).to eq(200)
+    end
+  end
+
   describe "DiscourseEvent" do
     before do
       settings.setting(:test_setting, 1)

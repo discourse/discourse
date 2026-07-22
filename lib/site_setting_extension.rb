@@ -594,7 +594,7 @@ module SiteSettingExtension
   # Merges the provider values of site settings (whether it be from the DB or wherever)
   # and theme site settings with the default values of those settings, also taking into
   # account shadowed site settings and upcoming change behaviour.
-  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true)
+  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true, clear_caches: true)
     mutex.synchronize do
       ensure_listen_for_changes
 
@@ -669,10 +669,12 @@ module SiteSettingExtension
 
       refresh_theme_site_settings! if refresh_theme_site_settings
 
-      clear_cache!(
-        expire_theme_site_setting_cache:
-          ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
-      )
+      if clear_caches
+        clear_cache!(
+          expire_theme_site_setting_cache:
+            ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
+        )
+      end
     end
   end
 
@@ -736,6 +738,7 @@ module SiteSettingExtension
   def after_fork
     @process_id = nil
     ensure_listen_for_changes
+    RailsMultisite::ConnectionManagement.safe_each_connection { refresh!(clear_caches: false) }
   end
 
   def raise_invalid_setting_access(setting_name)
