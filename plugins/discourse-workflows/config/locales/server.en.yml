@@ -41,6 +41,11 @@ en:
         summarizing: "Preparing workflow authoring response"
     errors:
       approval_timed_out: "Approval timed out"
+      step_execution:
+        not_executable: "This node cannot be executed as a single step."
+        waiting_not_supported: "Nodes that wait for a response cannot run during a step execution. Run the workflow or pin data past them first."
+        missing_input_data: "No data can reach this node. Run the workflow or pin data on an upstream node first."
+        wait_requested: "This node requested to wait, which is not supported when executing a single step."
       webhook_timed_out: "Webhook timed out"
       schedule_rules_required: "At least one schedule rule is required."
       invalid_schedule_rule: "One or more schedule rules are invalid."

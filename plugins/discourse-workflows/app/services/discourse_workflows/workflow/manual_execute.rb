@@ -46,28 +46,8 @@ module DiscourseWorkflows
     def trigger_data(workflow:, trigger_node:, params:, user:)
       return params.trigger_data if params.trigger_data.present?
       return {} if workflow.node_pinned?(trigger_node["name"])
-      return {} if trigger_node["type"] == "trigger:manual"
 
-      node_type_class = node_type_for(trigger_node)
-
-      if node_type_class.respond_to?(:trigger_data_for)
-        return(
-          node_type_class.trigger_data_for(DiscourseWorkflows::TriggerNodeContext.new(trigger_node))
-        )
-      end
-
-      if node_type_class&.capability_enabled?(:synthesizes_manual_data)
-        return TriggerRuntime.manual_trigger_data(workflow:, trigger_node:, user:)
-      end
-
-      {}
-    end
-
-    def node_type_for(trigger_node)
-      DiscourseWorkflows::Registry.find_node_type(
-        trigger_node["type"],
-        version: trigger_node["typeVersion"],
-      )
+      DiscourseWorkflows::TriggerRuntime.manual_payload_for(workflow:, trigger_node:, user:)
     end
   end
 end
