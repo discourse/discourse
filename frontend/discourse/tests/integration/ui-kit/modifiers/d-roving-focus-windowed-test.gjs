@@ -3,6 +3,11 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 
+// A mounted window of ten rows deep in a 5000-row logical list: data-index 100..109.
+const WINDOW_ROWS = Array.from({ length: 10 }, (_, i) => 100 + i);
+// A fully-mounted small list: data-index 0..9, logicalCount 10 (nothing off-window).
+const SMALL_ROWS = Array.from({ length: 10 }, (_, i) => i);
+
 module(
   "Integration | ui-kit | Modifier | dRovingFocus | windowed",
   function (hooks) {
@@ -319,6 +324,349 @@ module(
         ["forward", "backward"],
         "horizontal edge keys remain onExit's domain"
       );
+    });
+  }
+);
+
+// Oracle for U-D change A: logical (windowed) keyboard navigation (4b).
+//
+// Home/End/PageUp/PageDown must target the LOGICAL row (0 / `logicalCount-1` / ±one
+// page) over the ABSOLUTE `data-index` set, not the mounted slice. An in-window target
+// lands locally; an off-window target fires `onJump(target, direction)` so the consumer
+// scrolls it in and refocuses. `logicalCount` absent ⇒ today's positional behavior, no
+// `onJump`. Direction: Home/PageUp → "backward", End/PageDown → "forward". Page size =
+// the mounted navigable count. In ACTIVE mode PageUp/PageDown always navigate the
+// listbox; Home/End navigate it only when the controller is NON-editable (select-only
+// combobox) and are left for the caret when it is editable (editable combobox).
+module(
+  "Integration | ui-kit | Modifier | dRovingFocus | logical jumps",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("focus mode: End jumps to the last logical row when it is off-window", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+      const prevented = {};
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".list")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "End");
+
+      assert.deepEqual(
+        jumps,
+        [[4999, "forward"]],
+        "End fires onJump for the last logical row (5000-1)"
+      );
+      assert.true(
+        prevented.End,
+        "End is prevented (the consumer owns the scroll)"
+      );
+      assert
+        .dom('[data-index="105"]')
+        .isFocused(
+          "focus stays on the current row until the consumer refocuses post-scroll"
+        );
+    });
+
+    test("focus mode: Home jumps to logical row 0 when it is off-window", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+      const prevented = {};
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".list")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "Home");
+
+      assert.deepEqual(
+        jumps,
+        [[0, "backward"]],
+        "Home fires onJump for logical row 0"
+      );
+      assert.true(prevented.Home, "Home is prevented");
+    });
+
+    test("focus mode: PageDown pages down by the mounted count and clamps to the last logical row", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "PageDown");
+
+      assert.deepEqual(
+        jumps,
+        [[115, "forward"]],
+        "PageDown targets current (105) + page size (10 mounted rows)"
+      );
+    });
+
+    test("focus mode: PageUp pages up by the mounted count", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus('[data-index="105"]');
+      await triggerKeyEvent('[data-index="105"]', "keydown", "PageUp");
+
+      assert.deepEqual(
+        jumps,
+        [[95, "backward"]],
+        "PageUp targets current (105) - page size (10)"
+      );
+    });
+
+    test("focus mode: an in-window logical End lands locally without firing onJump", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              logicalCount=10
+              onJump=onJump
+            }}
+          >
+            {{#each SMALL_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+
+      await focus('[data-index="3"]');
+      await triggerKeyEvent('[data-index="3"]', "keydown", "End");
+
+      assert.deepEqual(jumps, [], "an in-window target does not fire onJump");
+      assert
+        .dom('[data-index="9"]')
+        .isFocused("End moves the cursor to the mounted last logical row");
+    });
+
+    test("without logicalCount: Home/End stay positional over the mounted rows and never fire onJump", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+
+      await render(
+        <template>
+          <div
+            role="listbox"
+            {{dRovingFocus
+              orientation="vertical"
+              itemSelector="[role=option]"
+              onJump=onJump
+            }}
+          >
+            <button class="a" role="option">A</button>
+            <button class="b" role="option">B</button>
+            <button class="c" role="option">C</button>
+          </div>
+        </template>
+      );
+
+      await focus(".b");
+      await triggerKeyEvent(".b", "keydown", "End");
+      assert.dom(".c").isFocused("End goes to the last mounted item");
+
+      await triggerKeyEvent(".c", "keydown", "Home");
+      assert.dom(".a").isFocused("Home goes to the first mounted item");
+
+      assert.deepEqual(
+        jumps,
+        [],
+        "no logicalCount ⇒ no windowing ⇒ onJump never fires"
+      );
+    });
+
+    test("active mode, non-editable controller: Home navigates the listbox (select-only combobox)", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+      const prevented = {};
+
+      await render(
+        <template>
+          <div class="ctrl" role="combobox" tabindex="0"></div>
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              selectionMode="active"
+              controllerElement=".ctrl"
+              itemSelector="[role=option]"
+              activeClass="--active"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".ctrl")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus(".ctrl");
+      await triggerKeyEvent(".ctrl", "keydown", "ArrowDown"); // seed the cursor on 100
+
+      await triggerKeyEvent(".ctrl", "keydown", "Home");
+      assert.deepEqual(
+        jumps,
+        [[0, "backward"]],
+        "Home navigates the listbox when the controller has no caret"
+      );
+      assert.true(
+        prevented.Home,
+        "Home is prevented for a select-only combobox"
+      );
+    });
+
+    test("active mode, editable controller: Home/End are left for the caret; PageDown still navigates the listbox", async function (assert) {
+      const jumps = [];
+      const onJump = (target, direction) => jumps.push([target, direction]);
+      const prevented = {};
+
+      await render(
+        <template>
+          <input class="search" role="combobox" />
+          <div
+            class="list"
+            role="listbox"
+            {{dRovingFocus
+              selectionMode="active"
+              controllerElement=".search"
+              itemSelector="[role=option]"
+              activeClass="--active"
+              logicalCount=5000
+              onJump=onJump
+            }}
+          >
+            {{#each WINDOW_ROWS as |n|}}
+              <button role="option" data-index={{n}}>{{n}}</button>
+            {{/each}}
+          </div>
+        </template>
+      );
+      document
+        .querySelector(".search")
+        .addEventListener(
+          "keydown",
+          (e) => (prevented[e.key] = e.defaultPrevented)
+        );
+
+      await focus(".search");
+      await triggerKeyEvent(".search", "keydown", "ArrowDown"); // seed the cursor on 100
+
+      await triggerKeyEvent(".search", "keydown", "Home");
+      await triggerKeyEvent(".search", "keydown", "End");
+      assert.deepEqual(
+        jumps,
+        [],
+        "Home/End do not navigate the listbox on an editable combobox"
+      );
+      assert.false(prevented.Home, "Home is left for the input caret");
+      assert.false(prevented.End, "End is left for the input caret");
+
+      await triggerKeyEvent(".search", "keydown", "PageDown");
+      assert.deepEqual(
+        jumps,
+        [[110, "forward"]],
+        "PageDown pages the listbox even on an editable combobox (100 + 10)"
+      );
+      assert.true(prevented.PageDown, "PageDown is prevented");
     });
   }
 );
