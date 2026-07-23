@@ -9,6 +9,7 @@ import Modifier, { type ArgsFor } from "ember-modifier";
 import type { DVirtualListApi } from "discourse/ui-kit/d-virtual-list";
 import {
   createElementVirtualizer,
+  isVirtualizationEnabled,
   keyFor,
   rangeExtractorWithPinned,
   updateElementVirtualizer,
@@ -217,6 +218,21 @@ export default class DVirtualizer<T> extends Modifier<
   ) {
     this.#element = element;
     this.#named = named;
+
+    // When virtualization is globally disabled (the test render-all fallback), the
+    // modifier is fully inert: the component renders every row in normal flow, so there
+    // is no window to drive. Building the engine anyway would still fire edge/range
+    // callbacks off a zero-height container — e.g. trip onReachEnd on mount — driving a
+    // consumer's edge fetch against a list that is fully mounted. Tear down any engine a
+    // prior enabled run built, so "disabled ⇒ no live virtualizer" holds and a stale
+    // engine cannot keep scheduling flushes after the flag flips (a fresh mount has none).
+    if (!isVirtualizationEnabled()) {
+      if (this.#virtualizer) {
+        this.#teardown();
+      }
+      return;
+    }
+
     // Consume the threshold here (not just at flush time) so a change to it
     // re-runs modify() and schedules the flush that re-arms the latches.
     this.#edgeThreshold = named.edgeThreshold ?? DEFAULT_EDGE_THRESHOLD;
