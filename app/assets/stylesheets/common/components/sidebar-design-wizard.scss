@@ -1,0 +1,35 @@
+.sidebar-design-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  height: 100%;
+  padding: var(--space-3);
+  overflow-y: auto;
+
+  &__title {
+    display: block;
+    font-size: var(--font-up-1);
+    font-weight: var(--token-font-weight-bold);
+  }
+
+  &__subtitle {
+    display: block;
+    font-size: var(--font-down-1);
+    color: var(--token-color-text-subtle);
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-3);
+  }
+}

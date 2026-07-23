@@ -62,6 +62,13 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
+    server.get("/color-scheme-stylesheet/:id/:themeId", () =>
+      helper.response(200, {
+        color_scheme_id: -1,
+        new_href: "/stylesheets/color_definitions_preview.css",
+      })
+    );
+
     server.get("/admin/config/design-wizard.json", () => {
       return helper.response(200, {
         themes: [
@@ -328,7 +335,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can open the design wizard from the `select_theme` step", async function (assert) {
+  test("it can open the design wizard in the sidebar from the `select_theme` step", async function (assert) {
     const step = withStep("select_theme", assert);
 
     await visit("/");
@@ -337,30 +344,18 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await step.clickAction();
     await settled();
 
-    assert.dom(".design-wizard-modal").exists("design wizard modal is shown");
+    assert
+      .dom(".sidebar-design-wizard")
+      .exists("design wizard takes over the sidebar");
+    assert
+      .dom(".sidebar-sections")
+      .doesNotExist("regular sidebar sections are replaced");
     assert
       .dom(".design-wizard-modal__theme-card")
       .exists({ count: 2 }, "shows Foundation and Horizon");
     assert
       .dom(".design-wizard-modal__theme-card.--selected")
       .hasAttribute("data-theme-id", "-1", "preselects the default theme");
-
-    assert
-      .dom(".design-wizard-modal__preview iframe")
-      .hasAttribute(
-        "data-preview-url",
-        "/?preview_theme_id=-1",
-        "preview points at the default theme"
-      );
-
-    await click(".design-wizard-modal__theme-card[data-theme-id='-2']");
-    assert
-      .dom(".design-wizard-modal__preview iframe")
-      .hasAttribute(
-        "data-preview-url",
-        "/?preview_theme_id=-2",
-        "preview reloads with the selected theme"
-      );
 
     await click(
       ".design-wizard-modal__section[data-section-id='colors'] .design-wizard-modal__section-toggle"
@@ -372,24 +367,22 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .doesNotExist("accordion collapses the previous section");
     assert
       .dom(".design-wizard-modal__swatch")
-      .exists({ count: 2 }, "shows the theme's palette pairs");
+      .exists({ count: 1 }, "shows the theme's palette pairs");
 
-    await click(".design-wizard-modal__swatch[data-pair-key='marigold']");
+    await click(".design-wizard-modal__swatch[data-pair-key='default']");
     assert
-      .dom(".design-wizard-modal__swatch[data-pair-key='marigold']")
-      .hasClass("--selected", "palette selection updates");
+      .dom("link#design-wizard-preview-scheme", document.body)
+      .exists("palette preview stylesheet is attached to the page");
 
-    await click(
-      ".design-wizard-modal__section[data-section-id='homepage'] .design-wizard-modal__section-toggle"
-    );
-    await click(".design-wizard-modal__homepage-card:nth-child(2)");
+    await click(".sidebar-design-wizard__skip");
     assert
-      .dom(".design-wizard-modal__preview iframe")
-      .hasAttribute(
-        "data-preview-url",
-        "/categories?preview_theme_id=-2",
-        "preview shows the categories page for a categories homepage"
-      );
+      .dom(".sidebar-design-wizard")
+      .doesNotExist("skipping restores the sidebar");
+    assert.dom(".sidebar-sections").exists("regular sidebar sections return");
+    assert
+      .dom("link#design-wizard-preview-scheme", document.body)
+      .doesNotExist("palette preview is removed");
+    step.isNotChecked();
   });
 });
 

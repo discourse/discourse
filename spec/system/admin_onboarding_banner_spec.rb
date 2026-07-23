@@ -5,7 +5,7 @@ describe "Admin Onboarding Banner" do
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
-  let(:design_wizard_modal) { PageObjects::Modals::DesignWizard.new }
+  let(:design_wizard_sidebar) { PageObjects::Components::DesignWizardSidebar.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -112,39 +112,42 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "select theme step" do
-    it "opens the design wizard modal" do
+    it "opens the design wizard in the sidebar" do
       visit("/")
       expect(banner.step_not_completed?("select_theme")).to eq(true)
 
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_modal).to be_open
-      expect(design_wizard_modal).to have_theme_cards(count: 2)
-      expect(design_wizard_modal).to have_preview_frame_for_theme(Theme.foundation_theme.id)
+      expect(design_wizard_sidebar).to be_visible
     end
 
-    it "applies the design choices and marks step complete" do
+    it "previews and applies the design choices and marks step complete" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_modal).to be_open
+      expect(design_wizard_sidebar).to be_visible
 
-      design_wizard_modal.select_theme(Theme.horizon_theme.id)
+      # picking another theme reloads the page with a theme preview and the
+      # wizard resumes in the sidebar
+      design_wizard_sidebar.select_theme(Theme.horizon_theme.id)
+      expect(page).to have_current_path(/preview_theme_id=#{Theme.horizon_theme.id}/, url: true)
+      expect(design_wizard_sidebar).to be_visible
 
-      design_wizard_modal.open_section("colors")
-      design_wizard_modal.select_palette("royal")
-      design_wizard_modal.toggle_user_selectable_palettes
+      design_wizard_sidebar.open_section("colors")
+      design_wizard_sidebar.select_palette("royal")
+      expect(design_wizard_sidebar).to have_palette_preview
+      design_wizard_sidebar.toggle_user_selectable_palettes
 
-      design_wizard_modal.open_section("fonts")
-      design_wizard_modal.select_body_font("lato")
+      design_wizard_sidebar.open_section("fonts")
+      design_wizard_sidebar.select_body_font("lato")
 
-      design_wizard_modal.open_section("homepage")
-      design_wizard_modal.select_homepage("categories")
+      expect(SiteSetting.default_theme_id).not_to eq(Theme.horizon_theme.id)
 
-      design_wizard_modal.save
+      design_wizard_sidebar.save
 
       # Page reloads after saving; wait for it to complete
       expect(page).to have_css(".admin-onboarding-banner")
+      expect(design_wizard_sidebar).to be_hidden
       expect(banner.step_completed?("select_theme")).to eq(true)
       expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
 
@@ -161,18 +164,22 @@ describe "Admin Onboarding Banner" do
       expect(horizon.color_scheme.name).to eq("Royal")
       expect(horizon.color_scheme.user_selectable).to eq(true)
       expect(SiteSetting.base_font).to eq("lato")
-      expect(SiteSetting.default_homepage).to eq("categories")
     end
 
     it "does not mark the step complete when skipped" do
       visit("/")
       banner.click_step_action("select_theme")
 
-      expect(design_wizard_modal).to be_open
+      expect(design_wizard_sidebar).to be_visible
 
-      design_wizard_modal.skip
+      design_wizard_sidebar.open_section("colors")
+      design_wizard_sidebar.select_palette("default")
+      expect(design_wizard_sidebar).to have_palette_preview
 
-      expect(design_wizard_modal).to be_closed
+      design_wizard_sidebar.skip
+
+      expect(design_wizard_sidebar).to be_hidden
+      expect(design_wizard_sidebar).to have_no_palette_preview
       expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
   end
@@ -196,8 +203,8 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("select_theme")
-      expect(design_wizard_modal).to be_open
-      design_wizard_modal.save
+      expect(design_wizard_sidebar).to be_visible
+      design_wizard_sidebar.save
 
       # Page reloads after saving; banner disappears when all steps complete
       expect(banner).to be_not_visible

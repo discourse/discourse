@@ -1,4 +1,7 @@
 import { trustHTML } from "@ember/template";
+import { ajax } from "discourse/lib/ajax";
+
+const SCHEME_LINK_ID = "design-wizard-preview-scheme";
 
 function hex(colors, name, fallback) {
   const value = colors?.[name] ?? fallback;
@@ -52,4 +55,69 @@ export function fontStack(fontKey) {
   }
 
   return fontStacks.get(fontKey);
+}
+
+/**
+ * Previews a palette in the given document by loading its compiled
+ * stylesheet and appending it after every other stylesheet.
+ *
+ * @param {Document} doc - target document (the app's own, or an iframe's)
+ * @param {Object} options
+ * @param {number} options.paletteId
+ * @param {number} options.themeId
+ */
+export async function applyPreviewPalette(doc, { paletteId, themeId }) {
+  if (!doc?.body || !paletteId) {
+    return;
+  }
+
+  // built-in palettes that were never materialized have negative ids; the
+  // endpoint then falls back to the base light palette, which is the right
+  // rendering for the only pair that ships unmaterialized
+  const result = await ajax(
+    `/color-scheme-stylesheet/${paletteId}/${themeId}.json`
+  );
+  if (!result?.new_href || !doc.body) {
+    return;
+  }
+
+  let link = doc.getElementById(SCHEME_LINK_ID);
+  if (!link) {
+    link = doc.createElement("link");
+    link.id = SCHEME_LINK_ID;
+    link.rel = "stylesheet";
+    link.media = "all";
+    doc.body.appendChild(link);
+  }
+  link.href = result.new_href;
+}
+
+/**
+ * Previews fonts in the given document by overriding the font custom
+ * properties every stylesheet resolves against.
+ *
+ * @param {Document} doc - target document
+ * @param {Object} options
+ * @param {string} options.bodyFont - font key
+ * @param {string} options.headingFont - font key
+ */
+export function applyPreviewFonts(doc, { bodyFont, headingFont }) {
+  const root = doc?.documentElement;
+  if (!root) {
+    return;
+  }
+
+  root.style.setProperty("--font-family", fontStack(bodyFont));
+  root.style.setProperty("--heading-font-family", fontStack(headingFont));
+}
+
+/**
+ * Removes any palette and font previews applied to the given document.
+ *
+ * @param {Document} doc - target document
+ */
+export function clearPreview(doc) {
+  doc?.getElementById(SCHEME_LINK_ID)?.remove();
+  doc?.documentElement?.style.removeProperty("--font-family");
+  doc?.documentElement?.style.removeProperty("--heading-font-family");
 }

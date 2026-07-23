@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ApiPanels from "discourse/components/sidebar/api-panels";
+import DesignWizardPanel from "discourse/components/sidebar/design-wizard-panel";
 import Footer from "discourse/components/sidebar/footer";
 import Sections from "discourse/components/sidebar/sections";
 import SwitchPanelButtons from "discourse/components/sidebar/switch-panel-buttons";
@@ -10,6 +11,7 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class Sidebar extends Component {
+  @service designWizard;
   @service site;
   @service siteSettings;
   @service currentUser;
@@ -77,32 +79,36 @@ export default class Sidebar extends Component {
       class="sidebar-container"
       aria-label={{i18n "sidebar.title"}}
     >
-      {{#if this.showSwitchPanelButtonsOnTop}}
-        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
-      {{/if}}
-
-      <PluginOutlet @name="before-sidebar-sections" />
-
-      {{#if this.sidebarState.showMainPanel}}
-        <Sections
-          @currentUser={{this.currentUser}}
-          @collapsableSections={{true}}
-          @panel={{this.sidebarState.currentPanel}}
-        />
+      {{#if this.designWizard.active}}
+        <DesignWizardPanel />
       {{else}}
-        <ApiPanels
-          @currentUser={{this.currentUser}}
-          @collapsableSections={{true}}
-        />
+        {{#if this.showSwitchPanelButtonsOnTop}}
+          <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+        {{/if}}
+
+        <PluginOutlet @name="before-sidebar-sections" />
+
+        {{#if this.sidebarState.showMainPanel}}
+          <Sections
+            @currentUser={{this.currentUser}}
+            @collapsableSections={{true}}
+            @panel={{this.sidebarState.currentPanel}}
+          />
+        {{else}}
+          <ApiPanels
+            @currentUser={{this.currentUser}}
+            @collapsableSections={{true}}
+          />
+        {{/if}}
+
+        <PluginOutlet @name="after-sidebar-sections" />
+
+        {{#unless this.showSwitchPanelButtonsOnTop}}
+          <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+        {{/unless}}
+
+        <Footer />
       {{/if}}
-
-      <PluginOutlet @name="after-sidebar-sections" />
-
-      {{#unless this.showSwitchPanelButtonsOnTop}}
-        <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
-      {{/unless}}
-
-      <Footer />
     </nav>
   </template>
 }

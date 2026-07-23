@@ -4,14 +4,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { ajax } from "discourse/lib/ajax";
-import { fontStack } from "discourse/lib/design-wizard-preview";
+import {
+  applyPreviewFonts,
+  applyPreviewPalette,
+} from "discourse/lib/design-wizard-preview";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-const SCHEME_LINK_ID = "design-wizard-preview-scheme";
 const FONT_FACES_LINK_ID = "design-wizard-preview-fonts";
 const DECORATIONS_STYLE_ID = "design-wizard-preview-decorations";
 
@@ -65,45 +66,18 @@ export default class DesignWizardPreview extends Component {
 
   @action
   applyFonts() {
-    const root = this.frameDocument?.documentElement;
-    if (!root) {
-      return;
-    }
-
-    root.style.setProperty("--font-family", fontStack(this.args.bodyFont));
-    root.style.setProperty(
-      "--heading-font-family",
-      fontStack(this.args.headingFont)
-    );
+    applyPreviewFonts(this.frameDocument, {
+      bodyFont: this.args.bodyFont,
+      headingFont: this.args.headingFont,
+    });
   }
 
   @action
   async applyPalette() {
-    const doc = this.frameDocument;
-    const paletteId = this.args.palette?.id;
-    if (!doc || !paletteId) {
-      return;
-    }
-
-    // built-in palettes that were never materialized have negative ids; the
-    // endpoint then falls back to the base light palette, which is the right
-    // rendering for the only pair that ships unmaterialized
-    const result = await ajax(
-      `/color-scheme-stylesheet/${paletteId}/${this.args.themeId}.json`
-    );
-    if (!result?.new_href || !this.frameDocument) {
-      return;
-    }
-
-    let link = doc.getElementById(SCHEME_LINK_ID);
-    if (!link) {
-      link = doc.createElement("link");
-      link.id = SCHEME_LINK_ID;
-      link.rel = "stylesheet";
-      link.media = "all";
-      doc.body.appendChild(link);
-    }
-    link.href = result.new_href;
+    await applyPreviewPalette(this.frameDocument, {
+      paletteId: this.args.palette?.id,
+      themeId: this.args.themeId,
+    });
   }
 
   decorateFrame(doc) {
