@@ -24,6 +24,7 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import {
   dampenedOverdrag,
   shouldDeferSwipeToContent,
@@ -124,9 +125,16 @@ export default class ComposerContainer extends Component {
       ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
     );
 
+    // dragging a selection handle emits the same touch moves as a swipe
+    const active = document.activeElement;
+    const hasTextSelection =
+      !window.getSelection().isCollapsed ||
+      (active?.selectionStart ?? 0) !== (active?.selectionEnd ?? 0);
+
     if (
       !editor ||
       !state.goingDown() ||
+      hasTextSelection ||
       shouldDeferSwipeToContent(state, state.element)
     ) {
       event.preventDefault();
@@ -159,17 +167,56 @@ export default class ComposerContainer extends Component {
       return;
     }
     this.#swipeEditor = null;
-    editor.style.transition = "";
 
     const dismissed =
       state.deltaY > SWIPE_DISTANCE_THRESHOLD ||
       state.velocityY > SWIPE_VELOCITY_THRESHOLD;
 
     if (dismissed && editor.contains(document.activeElement)) {
-      document.activeElement.blur();
+      this.#settleDismissedEditor(editor);
+      return;
     }
 
+    editor.style.transition = "";
     editor.style.marginTop = "";
+  }
+
+  // the reflow on blur shifts the layout under the released editor, so the
+  // margin transition would settle it toward its pre-reflow spot; glide it
+  // into the new layout from where the drag left it instead
+  #settleDismissedEditor(editor) {
+    const draggedTop = editor.getBoundingClientRect().top;
+
+    editor.style.marginTop = "";
+    document.activeElement.blur();
+    this.appEvents.trigger("keyboard:will-hide");
+
+    const delta = draggedTop - editor.getBoundingClientRect().top;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (!delta || reduceMotion) {
+      editor.style.transition = "";
+      return;
+    }
+
+    editor.style.transform = `translateY(${delta}px)`;
+    editor.getBoundingClientRect();
+    editor.style.transition = "transform 250ms var(--composer-slide-easing)";
+    editor.style.transform = "";
+
+    let settled = false;
+    const cleanup = (event) => {
+      if (settled || (event && event.target !== editor)) {
+        return;
+      }
+      settled = true;
+      editor.removeEventListener("transitionend", cleanup);
+      editor.style.transition = "";
+    };
+    editor.addEventListener("transitionend", cleanup);
+    discourseLater(cleanup, 300);
   }
 
   @action
