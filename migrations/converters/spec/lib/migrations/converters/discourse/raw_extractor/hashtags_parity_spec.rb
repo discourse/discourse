@@ -47,16 +47,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     }.merge(ascii_punctuation)
   end
 
-  # Cases where the detector intentionally differs from core, keyed by
-  # "direction char". A lone backtick before the `#` is the one: our scanner treats
-  # an unpaired backtick as opening an inline-code span (conservative, so it never
-  # extracts from inside code) and skips the rest of the line, while core treats
-  # the backtick as literal and cooks the hashtag after it. That is a scanner-wide
-  # inline-code behavior, not part of the hashtag boundary.
-  def allowed_divergence?(direction, char)
-    direction == :before && char == "`"
-  end
-
   def detector_extracts?(raw)
     buffer =
       Migrations::Converters::EmbedBuffer.new(
@@ -81,7 +71,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       extracted = detector_extracts?(raw)
       cooked = core_cooks?(raw)
       next if extracted == cooked
-      next if allowed_divergence?(direction, char)
 
       "#{direction} #{label} #{describe_char(char)}: detector=#{extracted} core=#{cooked}"
     end

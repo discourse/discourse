@@ -63,7 +63,7 @@ module Migrations
             @dispatch.freeze
 
             # Everything the walk must stop at: the trigger characters, a backtick
-            # (possible inline-code delimiter) and the newline that re-arms the
+            # (possible inline-code-span opener) and the newline that re-arms the
             # line-start code checks. Runs of anything else are skipped in one
             # regex jump and appended as one slice.
             chars = (detectors.flat_map(&:triggers) + ["`", "\n"]).uniq
@@ -89,9 +89,11 @@ module Migrations
 
           private
 
-          # Inside code only a backtick (a possible inline-code closer) or a newline
-          # (which re-arms the line-start checks) can change anything.
-          CODE_STOP_PATTERN = /[`\n]/
+          # Inside a fenced or indented block every character is literal content
+          # until a line start, so only a newline (which re-arms the line-start
+          # checks that can close the block) can change anything. Backticks there
+          # are content — a block closes on its own line, not on an inline run.
+          CODE_STOP_PATTERN = /\n/
           private_constant :CODE_STOP_PATTERN
 
           def scan_input
@@ -125,14 +127,16 @@ module Migrations
 
               byte = @input.getbyte(@pos)
 
+              # Only reachable outside a block code context: inside one the walk
+              # stops at newlines only (see {CODE_STOP_PATTERN}), so a backtick here
+              # opens an inline span or a literal run. Either way the tracker returns
+              # where to resume, and the run through there is appended verbatim.
               if byte == 0x60 # 0x60 = backtick
-                new_pos = @code_tracker.check_inline_boundary(@input, @pos)
-                if new_pos
-                  @result << @input.byteslice(@pos...new_pos)
-                  @pos = new_pos
-                  @line_start = false
-                  next
-                end
+                new_pos = @code_tracker.inline_span_end(@input, @pos)
+                @result << @input.byteslice(@pos...new_pos)
+                @pos = new_pos
+                @line_start = false
+                next
               end
 
               if !@code_tracker.in_code? && (candidates = @dispatch[byte])
@@ -143,9 +147,10 @@ module Migrations
                 end
               end
 
-              # The byte is a trigger that matched nothing, a backtick, or a newline.
-              # Every byte we stop at is ASCII, so appending the byte as a codepoint
-              # reproduces the one character without allocating a slice for it.
+              # The byte is a trigger that matched nothing or a newline (a backtick
+              # was handled above). Every byte we stop at is ASCII, so appending it
+              # as a codepoint reproduces the one character without allocating a
+              # slice for it.
               @result << byte
               @line_start = byte == 0x0a # 0x0a = newline
               @pos += 1

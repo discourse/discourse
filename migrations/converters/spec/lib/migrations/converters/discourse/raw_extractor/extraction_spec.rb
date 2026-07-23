@@ -42,6 +42,72 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  # An unpaired backtick is literal text in CommonMark, so it must not open a code
+  # span that swallows the rest of the post. A span exists only when a matching
+  # closer follows within the same paragraph. Every expectation here was checked
+  # against PrettyText.
+  describe "inline code spans" do
+    let(:hashtag_names) do
+      Migrations::SortedStringSet.new([Migrations::NameNormalizer.normalize("general")])
+    end
+    let(:hashtag_extractor) { described_class.new(embeds: buffer, hashtag_names:) }
+    let(:emoji_extractor) { described_class.new(embeds: buffer, custom_emoji_names: %w[parrot]) }
+
+    it "extracts a mention after an unpaired backtick" do
+      extract("a`@alice here")
+
+      expect(buffer.mentions.map { |m| m[:name] }).to eq(%w[alice])
+    end
+
+    it "extracts a hashtag after an unpaired backtick" do
+      hashtag_extractor.extract("a`#general here")
+
+      expect(buffer.hashtags.map { |h| h[:name] }).to eq(%w[general])
+    end
+
+    it "extracts a custom emoji after an unpaired backtick" do
+      emoji_extractor.extract("a`:parrot: here")
+
+      expect(buffer.emojis.map { |e| e[:name] }).to eq(%w[parrot])
+    end
+
+    it "suppresses a mention inside a paired span" do
+      result = extract("`@alice` here")
+
+      expect(buffer.mentions).to be_empty
+      expect(result).to eq("`@alice` here")
+    end
+
+    it "suppresses a mention in a span that crosses a single newline" do
+      result = extract("`a\n@alice` here")
+
+      expect(buffer.mentions).to be_empty
+      expect(result).to eq("`a\n@alice` here")
+    end
+
+    it "treats both halves as literal when a blank line splits the backticks" do
+      result = extract("`@alice\n\n@bob` here")
+
+      expect(buffer.mentions.map { |m| m[:name] }).to eq(%w[alice bob])
+      expect(result).to include("`", "`")
+    end
+
+    it "keeps an embedded single backtick inside a double-backtick span as code" do
+      result = extract("``a`@alice`` here")
+
+      expect(buffer.mentions).to be_empty
+      expect(result).to eq("``a`@alice`` here")
+    end
+
+    it "keeps detecting after a double run that finds no matching closer" do
+      # ``@alice` — the `` opens no span (no `` closer follows), so it is literal
+      # and the mention after it is extracted.
+      extract("``@alice`")
+
+      expect(buffer.mentions.map { |m| m[:name] }).to eq(%w[alice])
+    end
+  end
+
   it "raises on a node type it has no defer handler for" do
     # `extract` builds its detectors internally and never produces an unknown
     # node, so this guard is unreachable through the public API; open up the
