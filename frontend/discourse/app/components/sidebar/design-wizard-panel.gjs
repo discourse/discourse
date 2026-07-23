@@ -114,11 +114,6 @@ export default class SidebarDesignWizardPanel extends Component {
           @isLoading={{this.designWizard.saving}}
           class="btn-primary sidebar-design-wizard__save"
         />
-        <DButton
-          @action={{this.skip}}
-          @label="admin_onboarding_banner.design_wizard.skip"
-          class="btn-flat sidebar-design-wizard__skip"
-        />
       </div>
     </div>
   </template>
