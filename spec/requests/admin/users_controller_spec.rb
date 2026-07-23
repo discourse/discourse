@@ -1270,6 +1270,33 @@ RSpec.describe Admin::UsersController do
         before { SiteSetting.moderators_change_trust_levels = true }
 
         include_examples "trust level updates possible"
+
+        it "prevents changing or locking a staff user's trust level" do
+          another_admin.update!(trust_level: TrustLevel[4], manual_locked_trust_level: nil)
+
+          put "/admin/users/#{another_admin.id}/trust_level.json", params: { level: TrustLevel[0] }
+
+          trust_level_status = response.status
+          trust_level_errors = response.parsed_body["errors"]
+          trust_level = another_admin.reload.trust_level
+
+          another_admin.update!(trust_level: TrustLevel[4], manual_locked_trust_level: nil)
+
+          put "/admin/users/#{another_admin.id}/trust_level_lock.json", params: { locked: "true" }
+
+          trust_level_lock_status = response.status
+          trust_level_lock_errors = response.parsed_body["errors"] if response.body.present?
+          manual_locked_trust_level = another_admin.reload.manual_locked_trust_level
+
+          aggregate_failures do
+            expect(trust_level_status).to eq(422)
+            expect(trust_level_errors).to be_present
+            expect(trust_level).to eq(TrustLevel[4])
+            expect(trust_level_lock_status).to eq(403)
+            expect(trust_level_lock_errors).to be_present
+            expect(manual_locked_trust_level).to eq(nil)
+          end
+        end
       end
 
       context "when moderators_change_trust_levels setting is disabled" do
