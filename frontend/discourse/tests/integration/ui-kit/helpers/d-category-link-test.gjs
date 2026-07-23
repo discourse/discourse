@@ -13,14 +13,14 @@ module("Integration | ui-kit | Helper | dCategoryLink", function (hooks) {
     assert.dom(".badge-category__name").hasText("foo");
   });
 
-  test("description_text", async function (assert) {
+  test("description_text is not rendered as a tooltip", async function (assert) {
     await render(
       <template>
         {{dCategoryLink (hash name="foo" description_text="bar")}}
       </template>
     );
 
-    assert.dom(".badge-category").hasAttribute("title", "bar");
+    assert.dom(".badge-category").doesNotHaveAttribute("title");
   });
 
   test("styleType option", async function (assert) {
