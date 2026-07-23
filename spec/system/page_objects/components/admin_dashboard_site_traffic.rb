@@ -7,6 +7,10 @@ module PageObjects
         has_css?(".db-section__subintro h3", text: text)
       end
 
+      def has_no_headline?(text)
+        has_no_css?(".db-section__subintro h3", text: text)
+      end
+
       def has_trend?(text)
         has_css?(".db-section__subintro h3", text: text)
       end
