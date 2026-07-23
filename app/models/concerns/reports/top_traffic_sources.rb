@@ -29,6 +29,7 @@ module Reports::TopTrafficSources
         limit: report.limit || 8,
         category_id: category_id,
         include_subcategories: include_subcategories,
+        current_user: report.current_user,
       }
 
       result = IncomingLinksReport.find(:top_traffic_sources, options)
