@@ -263,21 +263,16 @@ export default class DAccessControl extends Component {
    * where the grantee went.
    */
   get disabledGrantees() {
-    const disabledGrantees = new Set();
+    return this.availableGroups
+      .filter((group) => {
+        const availablePermissions = this.excludeBannedPermissions(
+          this.permissionOptions.filter((opt) => opt.id !== REMOVE_ACTION.id),
+          { type: "group", id: group.id }
+        );
 
-    this.availableGroups.forEach((group) => {
-      const availablePermissions = this.excludeBannedPermissions(
-        this.permissionOptions.filter((opt) => opt.id !== REMOVE_ACTION.id),
-        { type: "group", id: group.id }
-      );
-
-      if (availablePermissions.length === 0) {
-        disabledGrantees.add(granteeValue("group", group.id));
-      }
-    });
-
-    // group:4
-    return [...disabledGrantees];
+        return availablePermissions.length === 0;
+      })
+      .map((group) => granteeValue("group", group.id));
   }
 
   /**
