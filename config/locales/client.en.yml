@@ -8371,6 +8371,8 @@ en:
           default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
+          maximize_editor: "Maximize editor"
+          minimize_editor: "Minimize editor"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
