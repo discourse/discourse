@@ -308,7 +308,7 @@ en:
       exclusion: is reserved
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "has already been used"
+      topic_title_already_used: "This title has already been used by <a href='%{url}'>another topic</a>."
       in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
@@ -1913,6 +1913,7 @@ en:
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     remove_and_replace_uncategorized: "Replaces the special Uncategorized category with a standard category of the same name, and migrates all topics over to it."
+    duplicate_topic_titles: "Whether a topic can be created with a title already used by another topic. When allowed across categories, a title can be reused as long as the topics are in different categories. Topics the author cannot see are never counted as duplicates."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. {{setting:allow_duplicate_topic_titles}} must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"

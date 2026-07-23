@@ -268,10 +268,10 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
-  def deprecated_setting_alias(setting_name)
+  def deprecated_setting_aliases(setting_name)
     SiteSettings::DeprecatedSettings::SETTINGS
-      .find { |setting| setting.second.to_s == setting_name.to_s }
-      &.first
+      .select { |setting| setting.second.to_s == setting_name.to_s }
+      .map(&:first)
   end
 
   def theme_site_settings_json(theme_id)
@@ -1133,6 +1133,12 @@ module SiteSettingExtension
         end
       end
     else
+      enum_wrapper =
+        if type_supervisor.get_type(name) == :enum
+          klass = type_supervisor.get_enum_class(name)
+          klass if klass.respond_to?(:wrap)
+        end
+
       define_singleton_method clean_name do |scoped_to = nil|
         if themeable[clean_name]
           if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
@@ -1145,7 +1151,8 @@ module SiteSettingExtension
           # then we will just fall back further down bellow to the current site setting value.
           settings_overridden_for_theme = theme_site_settings[scoped_to[:theme_id]]
           if settings_overridden_for_theme && settings_overridden_for_theme.key?(clean_name)
-            return settings_overridden_for_theme[clean_name]
+            value = settings_overridden_for_theme[clean_name]
+            return enum_wrapper ? enum_wrapper.wrap(value.to_s) : value
           end
         end
 
@@ -1169,6 +1176,8 @@ module SiteSettingExtension
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+
+        return enum_wrapper.wrap(value.to_s) if enum_wrapper
 
         value
       end

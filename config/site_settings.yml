@@ -1420,12 +1420,17 @@ posting:
         - allow_uncategorized_topics
         - suppress_uncategorized_badge
       learn_more_url: "https://meta.discourse.org/t/-/406373"
+  duplicate_topic_titles:
+    default: "disallowed"
+    type: enum
+    enum: "DuplicateTopicTitlesSiteSetting"
+    area: "posts_and_topics"
   allow_duplicate_topic_titles:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   allow_duplicate_topic_titles_category:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   min_title_similar_length:
     client: true
     default: 10
