@@ -819,11 +819,11 @@ ar:
       moderators: "المشرفون"
       staff: "فريق العمل"
       anonymous_users: "المستخدمون المجهولون"
-      logged_in_users: "المستخدمون الذين سجَّلوا الدخول"
+      logged_in_users: "المستخدمون المُسجَّلين الدخول"
     default_descriptions:
       everyone: "مجموعة تلقائية تضم جميع الأعضاء"
       staff: "مجموعة تلقائية تضم المسؤولين والمشرفين"
-      anonymous_users: "مجموعة افتراضية تلقائية تمثل المستخدمين غير المسجّلين"
+      anonymous_users: "مجموعة افتراضية تلقائية تمثِّل الزوَّار غير المُسجَّل دخولهم"
       logged_in_users: "مجموعة افتراضية تلقائية تشمل جميع المستخدمين المسجّلين"
       admins: "مسؤول عن تكوين هذا الموقع وصيانته، مع الوصول إلى جميع بيانات الأعضاء والنشاط"
       moderators: "مسؤول عن الرد على البلاغات، والإشراف على المناقشات، ومساعدة الأعضاء فيما يتعلَّق بحساباتهم"
@@ -1609,7 +1609,7 @@ ar:
     posters_by_member_type:
       labels:
         count: "المنشورات"
-        share: "مشاركة"
+        share: "المشاركة"
       types:
         staff: "فريق العمل"
     trust_level_pipeline:
@@ -1617,12 +1617,12 @@ ar:
       labels:
         level: "مستوى الثقة"
         count: "الأعضاء"
-        share: "مشاركة"
+        share: "المشاركة"
       levels:
-        "0": "جديدة"
+        "0": "جديد"
         "1": "أولي"
         "2": "عضو"
-        "3": "منتظمة"
+        "3": "منتظم"
         "4": "قائد"
     trust_level_growth:
       title: "زيادة مستوى الثقة"
@@ -3482,11 +3482,11 @@ ar:
       إصدارك الحالي: %{installed_version}
       الإصدار الجديد: **%{new_version}**
 
-      - حدّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
+      - حدِّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
 
-      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
+      - تعرَّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
 
-      - تفضل بزيارة [meta.discourse.org](https://meta.discourse.org) للاطلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
+      - انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
   new_version_mailer_with_notes:
     title: "رسالة الإصدار الجديد مع الملاحظات"
     subject_template: "يتوفَّر تحديث [%{email_prefix}]"
@@ -3497,11 +3497,11 @@ ar:
       إصدارك الحالي: %{installed_version}
       الإصدار الجديد: **%{new_version}**
 
-      - حدّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
+      - حدِّث بسهولة باستخدام **[التحديث بنقرة واحدة عبر المتصفح](%{base_url}/admin/update)**
 
-      - تعرّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
+      - تعرَّف على الجديد في [ملاحظات الإصدار](https://releases.discourse.org/changelog/v%{new_version})
 
-      - تفضل بزيارة [meta.discourse.org](https://meta.discourse.org) للاطلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
+      - انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات والدعم الفني لمنصة Discourse
 
       ### ملاحظات الإصدار
 

@@ -312,7 +312,7 @@ ar:
             related_topics: "الموضوعات ذات الصلة"
             semantic_search: "البحث الدلالي"
         admin_dashboard:
-          highlights: "التمييزات"
+          highlights: "أبرز الأحداث"
           setting_groups:
             settings: "الإعدادات الأساسية"
         discord:
@@ -1288,7 +1288,7 @@ ar:
             many: "يجب أن يبلغ طول الرسالة %{count} حرفًا أو أكثر"
             other: "يجب أن يبلغ طول الرسالة %{count} حرف أو أكثر"
           messages_sidebar_title: "المحادثات"
-          starred: "مميز بنجمة"
+          starred: "مميَّز بنجمة"
           today: "اليوم"
           last_7_days: "آخر 7 أيام"
           last_30_days: "آخر 30 يومًا"
