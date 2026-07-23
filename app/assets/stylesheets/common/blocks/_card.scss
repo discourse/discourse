@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  /* Fill the wrapper when a grid cell stretches it (Align vertical: stretch);
+     resolves to a no-op against an auto-height parent in stacked/row layouts. */
+  min-height: 100%;
   background-color: var(--d-block-card-bg-color, var(--secondary));
   border: 1px solid var(--primary-low);
   border-radius: var(--d-border-radius, 0.5rem);

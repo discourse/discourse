@@ -55,3 +55,30 @@ img[data-block-arg="image"] {
   aspect-ratio: var(--aspect-ratio, auto);
   object-fit: cover;
 }
+
+/* Inside a grid cell the cell owns the image's size. Fill the stretched wrapper
+   and crop (object-fit: cover) instead of sitting at the intrinsic aspect ratio,
+   so "Align (vertical): stretch" fills the cell. With start / center / end the
+   cell shrink-wraps the wrapper, so `height: 100%` resolves to the natural height
+   and the image keeps its ratio. Scoped to grid cells (`.d-block-layout__cell`)
+   so stacked / row layouts keep natural image sizing.
+
+   A captioned image is a `figure` wrapper, left at auto height so the caption
+   still has room; the wrapper rules below deliberately skip the figure, and
+   `picture { height: 100% }` stays a no-op there because the figure never
+   becomes definite-height. */
+
+.d-block-layout__cell {
+  a.d-block-image,
+  picture {
+    display: block;
+    height: 100%;
+  }
+
+  img[data-block-arg="image"] {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+}
