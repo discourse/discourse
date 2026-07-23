@@ -76,6 +76,11 @@ class FileHelper
 
     tmp = nil
 
+    # Set Referer to the site's own domain so external hosts (e.g. Gravatar)
+    # can identify where requests originate from. Also prevents object storage
+    # anti-leech configurations from rejecting requests with an empty Referer.
+    extra_headers["Referer"] ||= Discourse.base_url
+
     fd =
       FinalDestination.new(
         url,
