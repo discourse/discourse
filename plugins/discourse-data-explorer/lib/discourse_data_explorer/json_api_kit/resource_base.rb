@@ -29,6 +29,7 @@ module DiscourseDataExplorer
             @sort_definitions
             @stat_definitions
             @default_sort
+            @deprecated_actions
             @description
             @includes
             @page_sizes
@@ -90,6 +91,15 @@ module DiscourseDataExplorer
         def sort(name, column: nil, nulls: nil, description: nil, &block)
           sort_definitions[name.to_sym] = { column:, nulls:, description:, block: }
         end
+
+        # Advisory and reversible (docs/versioning-design.md §3): callers of a
+        # deprecated action get the RFC 9745 headers; the docs mark the
+        # operation. Removal is a separate, dated `VersionChange` concern.
+        def deprecate(action, on:, link: nil)
+          deprecated_actions[action.to_sym] = { on:, link: }
+        end
+
+        def deprecated_actions = @deprecated_actions ||= {}
 
         def default_sort(value) = @default_sort = value
         def includes(*names) = @includes = names

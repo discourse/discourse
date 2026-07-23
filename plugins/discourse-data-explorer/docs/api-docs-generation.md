@@ -175,7 +175,15 @@ document's intro prose would confuse both audiences.
   its installed plugins); open design question inside it: versioned docs for own-timeline
   extensions (likely: each base-version document shows them at their latest, override
   mechanics staying prose — one document per override combination is combinatorial); the
-  changelog from change descriptions; `deprecated: true` (needs the `deprecate` keyword).
+- **Changelog + deprecations built (2026-07-23):** the document carries a machine-readable
+  `x-changelog` (registry changes grouped by version, newest first — future food for the
+  docs-site assistant) and a `# Changelog` markdown section appended to
+  `info.description`, both derived from the mandatory change descriptions. The
+  **`deprecate` keyword** exists (`deprecate :index, on:, link:` on the resource —
+  advisory, reversible, per the endpoint-lifecycle design): callers receive RFC 9745
+  `Deprecation: @<epoch>` + `Link rel="deprecation"` headers, and the operation gets
+  `deprecated: true` in the docs. `removed_endpoint` (pin-gating, teaching 404, metering)
+  remains unbuilt.
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
 - ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see

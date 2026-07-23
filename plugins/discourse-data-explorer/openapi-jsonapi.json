@@ -3,8 +3,30 @@
   "info": {
     "title": "Discourse JSON:API",
     "version": "2026-07-08",
-    "description": "This is the documentation for Discourse's JSON:API — currently an experiment scoped to\nthe Data Explorer plugin. Responses follow the [JSON:API specification](https://jsonapi.org/format/)\nwith the `application/vnd.api+json` media type.\n\n# Authentication\n\nCreate an API key in the admin panel and pass it with every request:\n\n```\nApi-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19\nApi-Username: system\n```\n\n# Versioning\n\nEvery request must carry a pinned API version — a date:\n\n```\nApi-Version: 2026-07-08\n```\n\nThe date snaps down to the nearest version at or before it, and the **resolved** version is\nechoed back in the response's `Api-Version` header. The integration ritual: send today's\ndate once, store the echoed value verbatim, and send it from then on — your responses will\nnever change shape, no matter what the API ships later.\n\nPlugins that release independently from Discourse have their own timelines. To opt into a\nnewer version of one, add an override: `Api-Version: 2026-07-08; some-plugin=2026-07-15`.\nThe echo resolves each date against its own timeline; store it as-is.\n\n# Pagination\n\nCollections use cursor pagination (the JSON:API\n[cursor pagination profile](https://jsonapi.org/profiles/ethanresnick/cursor-pagination)):\n`page[size]`, `page[after]`, `page[before]`. Follow the `links.prev` / `links.next` URLs —\nthey are null when there is no page in that direction. There is no offset pagination.\n\n# Errors\n\nErrors are JSON:API error objects. Unknown filters, sorts, includes, or page parameters\nare rejected with a `400` naming the offender; validation failures answer `422` with a\nJSON Pointer (`source.pointer`) per invalid attribute, expressed in your pinned version's\nvocabulary.\n"
+    "description": "This is the documentation for Discourse's JSON:API — currently an experiment scoped to\nthe Data Explorer plugin. Responses follow the [JSON:API specification](https://jsonapi.org/format/)\nwith the `application/vnd.api+json` media type.\n\n# Authentication\n\nCreate an API key in the admin panel and pass it with every request:\n\n```\nApi-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19\nApi-Username: system\n```\n\n# Versioning\n\nEvery request must carry a pinned API version — a date:\n\n```\nApi-Version: 2026-07-08\n```\n\nThe date snaps down to the nearest version at or before it, and the **resolved** version is\nechoed back in the response's `Api-Version` header. The integration ritual: send today's\ndate once, store the echoed value verbatim, and send it from then on — your responses will\nnever change shape, no matter what the API ships later.\n\nPlugins that release independently from Discourse have their own timelines. To opt into a\nnewer version of one, add an override: `Api-Version: 2026-07-08; some-plugin=2026-07-15`.\nThe echo resolves each date against its own timeline; store it as-is.\n\n# Pagination\n\nCollections use cursor pagination (the JSON:API\n[cursor pagination profile](https://jsonapi.org/profiles/ethanresnick/cursor-pagination)):\n`page[size]`, `page[after]`, `page[before]`. Follow the `links.prev` / `links.next` URLs —\nthey are null when there is no page in that direction. There is no offset pagination.\n\n# Errors\n\nErrors are JSON:API error objects. Unknown filters, sorts, includes, or page parameters\nare rejected with a `400` naming the offender; validation failures answer `422` with a\nJSON Pointer (`source.pointer`) per invalid attribute, expressed in your pinned version's\nvocabulary.\n\n\n# Changelog\n\n## 2026-07-08\n\n- The `last_run_at` attribute of the queries resource is renamed to `ran_at`.\n- The `search` filter of the queries resource is renamed to `q`.\n- The `username` sort of the queries resource is renamed to `user.username`.\n\n## 2026-07-01\n\n- The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames.\n\n## 2026-06-15\n\n- The `sql` attribute of the queries resource is renamed to `query`."
   },
+  "x-changelog": [
+    {
+      "version": "2026-07-08",
+      "changes": [
+        "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
+        "The `search` filter of the queries resource is renamed to `q`.",
+        "The `username` sort of the queries resource is renamed to `user.username`."
+      ]
+    },
+    {
+      "version": "2026-07-01",
+      "changes": [
+        "The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames."
+      ]
+    },
+    {
+      "version": "2026-06-15",
+      "changes": [
+        "The `sql` attribute of the queries resource is renamed to `query`."
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "Queries",

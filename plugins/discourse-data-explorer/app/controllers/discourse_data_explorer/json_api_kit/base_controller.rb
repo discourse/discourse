@@ -37,6 +37,7 @@ module DiscourseDataExplorer
       before_action :resolve_api_version
       before_action :upgrade_request
       before_action :reject_unknown_query_params!, only: :index
+      before_action :announce_deprecation
 
       class_attribute :_jsonapi_config, instance_writer: false
 
@@ -125,6 +126,19 @@ module DiscourseDataExplorer
           ["#{error.message}. The current version is #{JsonApiKit.api_versions.current_version}."],
           status: :bad_request,
         )
+      end
+
+      # RFC 9745: advisory deprecation announcement — the deprecation date as an
+      # epoch plus a documentation link. Reversible resource config; behavior is
+      # unchanged (removal is the separate, dated pin-gating concern).
+      def announce_deprecation
+        resource = cfg.serializer_class
+        return if !resource.respond_to?(:deprecated_actions)
+        entry = resource.deprecated_actions[action_name.to_sym]
+        return if !entry
+
+        response.headers["Deprecation"] = "@#{Date.iso8601(entry[:on]).to_time(:utc).to_i}"
+        response.headers["Link"] = "<#{entry[:link]}>; rel=\"deprecation\"" if entry[:link]
       end
 
       # `"2026-06-01; run-stats=2026-06-25"` → ["2026-06-01", [["run-stats", "2026-06-25"]]].

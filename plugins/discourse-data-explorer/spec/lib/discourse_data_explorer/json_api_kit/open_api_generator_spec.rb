@@ -28,8 +28,8 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(document.dig("info", "version")).to eq("2026-07-08")
     end
 
-    it "embeds the intro as the document description" do
-      expect(intro_document.dig("info", "description")).to eq("# Welcome")
+    it "opens the document description with the intro" do
+      expect(intro_document.dig("info", "description")).to start_with("# Welcome")
     end
 
     it "lists the tags with the resource descriptions" do
@@ -252,6 +252,44 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
 
     it "declares the not-found response" do
       expect(show_operation["responses"]).to have_key("404")
+    end
+  end
+
+  describe "the changelog" do
+    it "derives the machine-readable changelog from the registry, newest first" do
+      expect(document["x-changelog"].first).to eq(
+        "version" => "2026-07-08",
+        "changes" => [
+          "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
+          "The `search` filter of the queries resource is renamed to `q`.",
+          "The `username` sort of the queries resource is renamed to `user.username`.",
+        ],
+      )
+    end
+
+    it "appends the changelog to the document description" do
+      expect(document.dig("info", "description")).to include("# Changelog", "## 2026-06-15")
+    end
+  end
+
+  describe "deprecated operations" do
+    around do |example|
+      DiscourseDataExplorer::JsonApiKit::QueryResource.deprecate(
+        :index,
+        on: "2026-07-01",
+        link: "https://example.com/dep",
+      )
+      example.run
+    ensure
+      DiscourseDataExplorer::JsonApiKit::QueryResource.deprecated_actions.delete(:index)
+    end
+
+    it "marks the operation as deprecated" do
+      expect(index_operation["deprecated"]).to be(true)
+    end
+
+    it "leaves other operations alone" do
+      expect(show_operation).not_to have_key("deprecated")
     end
   end
 
