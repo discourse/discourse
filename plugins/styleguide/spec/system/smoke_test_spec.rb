@@ -78,6 +78,22 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
+  it "shows the large virtualized list at the top and scrolled deep into the list" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    large_list =
+      PageObjects::Components::UiKit::DSelect.new(
+        ".select-examples__large-list .d-combobox__trigger",
+      )
+    large_list.open
+    expect(page).to have_css("[role='listbox'] [role='option']")
+    screenshot_marker(label: "styleguide-select-large-window", only: :desktop)
+
+    large_list.reveal_to_index(999)
+    screenshot_marker(label: "styleguide-select-large-deep", only: :desktop)
+  end
+
   it "places the caret in the typeahead on click instead of selecting the whole value" do
     visit "/styleguide/molecules/select"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")

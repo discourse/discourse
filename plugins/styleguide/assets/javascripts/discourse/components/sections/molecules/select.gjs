@@ -73,7 +73,7 @@ export default class Select extends Component {
 // A source that paginates MUST report total or hasMore. Say nothing and the
 // engine takes the first response as complete.`;
 
-  largeListCode = `{{! 5000 items; the window, sentinel and cap are automatic }}
+  largeListCode = `{{! 5000 items rendered in full; only the rows in view are mounted }}
 <DSelect
   @items={{this.hugeList}}
   @value={{this.value}}
@@ -249,8 +249,8 @@ export default class Select extends Component {
     return this.args.dummy.options;
   }
 
-  // Far past the render cap, so the sentinel, the hard cap, and the keep-filtering hint are
-  // all reachable by hand and by a system spec.
+  // Far more than a single virtualized window, so scrolling to the true last row is
+  // exercised both by hand and by a system spec.
   get largeListItems() {
     return Array.from({ length: 5000 }, (_, index) => ({
       id: index + 1,
