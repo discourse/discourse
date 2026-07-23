@@ -19,7 +19,7 @@ module TestSetup
     UpcomingChanges.clear_caches!
 
     SiteSetting.provider.clear
-    SiteSetting.refresh!(refresh_theme_site_settings: false)
+    SiteSetting.refresh!
 
     # Set some standard overrides for tests. Some for performance, some to make the tests easier,
     # and some because their default was changed, and we didn't want to refactor all the relevant specs.
@@ -33,9 +33,6 @@ module TestSetup
       max_consecutive_replies: 0,
       allow_uncategorized_topics: true,
     }.each { |k, v| SiteSetting.set(k, v) }
-
-    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
-    SiteSetting.refresh_site_setting_group_ids!
 
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
