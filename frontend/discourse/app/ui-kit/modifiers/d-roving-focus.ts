@@ -51,6 +51,16 @@ interface DRovingFocusArgs {
    * reaches the true end.
    */
   onEdgeReach?: (direction: "forward" | "backward") => void;
+  /**
+   * The total number of navigable logical rows. When omitted, jump keys use the
+   * mounted items' positions and {@link onJump} is never called.
+   */
+  logicalCount?: number;
+  /**
+   * Called when a logical jump target is outside the currently-mounted item
+   * window, so the consumer can mount and focus that row.
+   */
+  onJump?: (target: number, direction: "forward" | "backward") => void;
   /** Registers stable controls for moving the cursor, and receives `null` on teardown. */
   onRegisterApi?: (api: DRovingFocusApi | null) => void;
   /** Whether navigation wraps at the ends (default `false` = clamp). */
@@ -128,6 +138,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   onActiveChange?: (item: HTMLElement) => void;
   onExit?: (direction: "forward" | "backward") => void;
   onEdgeReach?: (direction: "forward" | "backward") => void;
+  logicalCount?: number;
+  onJump?: (target: number, direction: "forward" | "backward") => void;
   wrap = false;
   tabStop = true;
   activeClass: string | null = null;
@@ -224,6 +236,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.onActiveChange = named.onActiveChange;
     this.onExit = named.onExit;
     this.onEdgeReach = named.onEdgeReach;
+    this.logicalCount = named.logicalCount;
+    this.onJump = named.onJump;
     this.wrap = named.wrap ?? false;
     this.tabStop = named.tabStop ?? true;
     this.activeClass = named.activeClass ?? null;
@@ -268,16 +282,20 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       return;
     }
 
-    // Active mode drives a text-input combobox: the controller (a text input) keeps
-    // focus and its caret, so only vertical navigation and Enter activation are ours.
-    // Every other key — printable characters, Space, Home/End, Left/Right — must reach
-    // the input so typing and caret movement keep working (the WAI-ARIA editable
-    // combobox behavior). Escape is owned by the overlay, not this modifier.
+    // Active mode keeps focus on the controller. Vertical navigation and paging
+    // belong to the listbox; Home/End do too for a non-editable controller, while
+    // an editable controller keeps them for its caret.
     if (
       this.#mode === "active" &&
       event.key !== "ArrowDown" &&
       event.key !== "ArrowUp" &&
-      event.key !== "Enter"
+      event.key !== "Enter" &&
+      event.key !== "PageUp" &&
+      event.key !== "PageDown" &&
+      !(
+        (event.key === "Home" || event.key === "End") &&
+        !this.#isEditableController()
+      )
     ) {
       return;
     }
@@ -340,9 +358,41 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
         }
         break;
       case "Home":
+        if (this.logicalCount != null) {
+          this.#jumpToLogicalIndex(0, "backward", event);
+          return;
+        }
         next = 0;
         break;
       case "End":
+        if (this.logicalCount != null) {
+          this.#jumpToLogicalIndex(this.logicalCount - 1, "forward", event);
+          return;
+        }
+        next = last;
+        break;
+      case "PageUp":
+        if (this.logicalCount != null) {
+          const currentLogical = this.#currentLogicalIndex(items, current);
+          this.#jumpToLogicalIndex(
+            Math.max(currentLogical - items.length, 0),
+            "backward",
+            event
+          );
+          return;
+        }
+        next = 0;
+        break;
+      case "PageDown":
+        if (this.logicalCount != null) {
+          const currentLogical = this.#currentLogicalIndex(items, current);
+          this.#jumpToLogicalIndex(
+            Math.min(currentLogical + items.length, this.logicalCount - 1),
+            "forward",
+            event
+          );
+          return;
+        }
         next = last;
         break;
       case "Enter":
@@ -394,6 +444,10 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     return Array.from(
       this.element.querySelectorAll<HTMLElement>(this.itemSelector)
     ).filter((el) => this.#isUsable(el));
+  }
+
+  #isEditableController(): boolean {
+    return this.#isEditableTarget(this.#listenElement);
   }
 
   /**
@@ -498,6 +552,22 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       return focused;
     }
     return items.findIndex((el) => el.tabIndex === 0);
+  }
+
+  #currentLogicalIndex(items: HTMLElement[], current: number): number {
+    const dataIndex = items[current]?.dataset.index;
+    return dataIndex === undefined ? current : Number(dataIndex);
+  }
+
+  #jumpToLogicalIndex(
+    target: number,
+    direction: "forward" | "backward",
+    event: KeyboardEvent
+  ): void {
+    event.preventDefault();
+    if (!this.#api.focusLogicalIndex(target)) {
+      this.onJump?.(target, direction);
+    }
   }
 
   /**
