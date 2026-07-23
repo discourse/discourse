@@ -219,6 +219,37 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionChange do
     end
   end
 
+  describe "removed endpoints" do
+    subject(:change) do
+      Class.new(described_class) do
+        version "2026-07-08"
+        description "The single-query endpoint is removed."
+
+        removed_endpoint controller: "discourse_data_explorer/json_api_kit/queries",
+                         action: :show,
+                         replacement: {
+                           controller: "discourse_data_explorer/json_api_kit/queries",
+                           action: :index,
+                         }
+      end
+    end
+
+    it "records the removal" do
+      expect(change.removed_endpoints).to eq(
+        [
+          {
+            controller: "discourse_data_explorer/json_api_kit/queries",
+            action: :show,
+            replacement: {
+              controller: "discourse_data_explorer/json_api_kit/queries",
+              action: :index,
+            },
+          },
+        ],
+      )
+    end
+  end
+
   describe "declared sort and filter renames" do
     subject(:change) do
       Class.new(described_class) do

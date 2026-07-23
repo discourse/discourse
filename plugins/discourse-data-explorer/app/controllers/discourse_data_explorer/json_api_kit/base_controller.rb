@@ -35,6 +35,7 @@ module DiscourseDataExplorer
       # how the whole request is interpreted, and an old client's input must be
       # up-migrated before validation/deserialization see it. See docs/versioning-design.md.
       before_action :resolve_api_version
+      before_action :enforce_endpoint_removal
       before_action :upgrade_request
       before_action :reject_unknown_query_params!, only: :index
       before_action :announce_deprecation
@@ -126,6 +127,35 @@ module DiscourseDataExplorer
           ["#{error.message}. The current version is #{JsonApiKit.api_versions.current_version}."],
           status: :bad_request,
         )
+      end
+
+      # The removal gate (docs/versioning-design.md §3): "removal" is a timeline
+      # fact, decided by one comparison after version resolution — routes never
+      # change. Pins from before the removal keep being served, warned via the
+      # RFC 9745 header carrying the removal date; newer pins get a teaching 404
+      # naming the replacement's real path. This gate is also the metering point
+      # for the eventual evidence-based deletion.
+      def enforce_endpoint_removal
+        removal = JsonApiKit.api_versions.endpoint_removal(self.class.controller_path, action_name)
+        return if !removal
+
+        if api_version_gap.include?(removal[:change])
+          response.headers["Deprecation"] = "@#{removal[:change].version.date.to_time(:utc).to_i}"
+        else
+          detail =
+            "This endpoint was removed as of #{removal[:change].version}. " \
+              "Versions pinned earlier still serve it."
+          detail += " Replacement: #{replacement_path(removal[:replacement])}." if removal[
+            :replacement
+          ]
+          render_errors([detail], status: :not_found)
+        end
+      end
+
+      # Rails routing is the resolver AND the validator: an unroutable pair
+      # raises instead of shipping a dead reference.
+      def replacement_path(replacement)
+        Rails.application.routes.url_helpers.url_for(**replacement, only_path: true)
       end
 
       # RFC 9745: advisory deprecation announcement — the deprecation date as an

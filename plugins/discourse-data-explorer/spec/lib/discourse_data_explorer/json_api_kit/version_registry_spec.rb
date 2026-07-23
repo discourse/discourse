@@ -88,6 +88,30 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
     end
   end
 
+  describe "#endpoint_removal" do
+    let(:removing_change) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-06-15"
+        description "Removes an endpoint."
+
+        removed_endpoint controller: "things", action: :show
+      end
+    end
+
+    before { registry.register(removing_change) }
+
+    it "finds the removal with its change" do
+      expect(registry.endpoint_removal("things", :show)).to include(
+        change: removing_change,
+        action: :show,
+      )
+    end
+
+    it "answers nil for endpoints nothing removed" do
+      expect(registry.endpoint_removal("things", :index)).to be_nil
+    end
+  end
+
   describe "#unregister" do
     let(:registered_change) { change_class("2026-06-15") }
 
