@@ -87,12 +87,6 @@ async function loadPluginFromModulePreload(link) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
-      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      String(error)
-    );
-
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
         throw new Error(error, { cause: error });
@@ -101,6 +95,12 @@ async function loadPluginFromModulePreload(link) {
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }
+
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      String(error)
+    );
   }
 }
 
