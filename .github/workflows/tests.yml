@@ -37,8 +37,10 @@ jobs:
     container: discourse/discourse_test:release
     timeout-minutes: >-
       ${{
-        matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
-        && 30
+        (
+          matrix.build_type == 'backend' && matrix.target == 'core'
+          || matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'core')
+        ) && 30
         || 20
       }}
 
