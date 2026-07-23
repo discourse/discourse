@@ -103,6 +103,14 @@ en:
         invalid_unit: "Invalid wait unit: %{unit}."
         invalid_timeout_unit: "Invalid timeout unit: %{unit}."
         timeout_amount_must_be_positive: "Timeout amount must be greater than 0."
+      time_window:
+        invalid_day_mode: "Unknown day mode: %{mode}."
+        days_required: "At least one day must be selected."
+        invalid_days: "Days must be values between 0 (Sunday) and 6 (Saturday)."
+        invalid_time_range: "Start and end times must use the HH:MM format."
+        start_end_equal: "Start and end times cannot be the same."
+        invalid_time: "'%{field}' is not a valid HH:MM time: '%{value}'."
+        invalid_timezone: "Invalid timezone: %{timezone}."
       modal:
         no_target_user: "No target user is available for the modal."
         user_not_found: "User '%{username}' not found."
