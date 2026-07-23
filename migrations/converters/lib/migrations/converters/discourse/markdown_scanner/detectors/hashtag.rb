@@ -97,13 +97,6 @@ module Migrations
 
             private
 
-            # markdown-it's `isPunctChar` accepts both Unicode punctuation and
-            # symbols, and the engine lets either open a hashtag. `\p{Z}` covers the
-            # wide spaces (NBSP, ideographic space) markdown-it counts as whitespace
-            # that Ruby's `\s` misses.
-            PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}\p{Z}]/
-            private_constant :PUNCTUATION_OR_SYMBOL
-
             # A hashtag opens a token only on a boundary: the `#` must start the input,
             # or follow whitespace or a punctuation/symbol character. A leading letter
             # or digit rejects, which drops a mid-word `word#tag`, and a markdown

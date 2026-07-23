@@ -47,6 +47,32 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.first[:name]).to eq("some-user")
     end
 
+    # Boundary parity with core, verified against PrettyText (the exhaustive battery
+    # lives in the `:rails` mentions_parity_spec). The engine that applies core's
+    # mentions rule opens a mention only when the characters on both sides of the
+    # whole `@name` are whitespace or a punctuation/symbol character.
+    it "opens a mention after a punctuation character such as `_`" do
+      extract("a_@alice x")
+
+      expect(buffer.mentions.first[:name]).to eq("alice")
+    end
+
+    it "treats a preceding backslash as an escape and skips the mention" do
+      raw = "say \\@alice now"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "rejects a trailing character that is neither whitespace nor punctuation" do
+      # `²` (superscript two) is category No — not a word character, so the name
+      # ends before it, but not a boundary either, so core leaves `@alice²` literal.
+      raw = "hi @alice² there"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+    end
+
     it "classifies mention types via the injected classifier" do
       classifier =
         Migrations::Converters::Discourse::MentionClassifier.new(

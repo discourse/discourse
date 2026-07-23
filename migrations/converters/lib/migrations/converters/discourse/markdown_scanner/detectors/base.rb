@@ -72,8 +72,15 @@ module Migrations
             WORD_PATTERN = /\G#{WORD_SOURCE}/
             private_constant :WORD_PATTERN
 
-            WORD_CHAR = /[\p{Alnum}\p{M}_]/
-            private_constant :WORD_CHAR
+            # The boundary markdown-it's text-post-process engine enforces around a
+            # whole match: whitespace or, per markdown-it's `isPunctChar`, a Unicode
+            # punctuation or symbol character. `\p{Z}` covers the wide spaces (NBSP,
+            # ideographic space) markdown-it counts as whitespace that Ruby's `\s`
+            # misses. Shared by the detectors whose construct only fires on such a
+            # boundary (mentions, hashtags). Verified against PrettyText — this
+            # boundary is imposed by the engine, not shown by the rule's own regex.
+            PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}\p{Z}]/
+            private_constant :PUNCTUATION_OR_SYMBOL
 
             # A record id: at most 18 digits. Ids are stored as SQLite signed 64-bit
             # integers, and a 19-digit run overflows that range (binding the bignum
@@ -91,20 +98,46 @@ module Migrations
             # (`[^/#{URL_TERMINATORS}]`) to match a single path segment.
             URL_TERMINATORS = "\\s)\"'<>"
 
-            # `pos` is a byte offset, so `getbyte(pos - 1)` is always the last byte of
-            # the previous character. An ASCII byte (< 0x80) is that whole character,
-            # tested directly. A byte >= 0x80 is the trailing byte of a multibyte
-            # character, and the boundary test is Unicode-aware (`WORD_CHAR`
-            # matches marks and non-ASCII alphanumerics), so we recover the actual
-            # character with {#previous_char} and test it.
-            def word_boundary_before?(input, pos)
+            # A mention (`@name`) opens only when the `@` sits on a boundary: the
+            # start of input, whitespace, or a punctuation/symbol character. Verified
+            # against PrettyText: the engine's boundary is punctuation-or-space, not
+            # "not a word character", so a `_` before the `@` (`a_@name`) opens a
+            # mention (core cooks it) while `@` glued to a letter or digit does not.
+            #
+            # `pos` is a byte offset, so `getbyte(pos - 1)` is the last byte of the
+            # previous character. An ASCII byte (< 0x80) is that whole character; a
+            # byte >= 0x80 is the trailing byte of a multibyte character, so we recover
+            # the actual character with {#previous_char} and test it Unicode-aware.
+            def mention_boundary_before?(input, pos)
               return true if pos.zero?
 
               byte = input.getbyte(pos - 1)
+              # A `\` escapes the `@` into a literal (`\@name`), so it never opens a
+              # mention even though `\` is itself punctuation.
+              return false if byte == 0x5c # `\`
+
               if byte < 0x80
-                !(ascii_alnum_byte?(byte) || byte == 0x5f) # 0x5f = `_`
+                whitespace_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
               else
-                !previous_char(input, pos).match?(WORD_CHAR)
+                PUNCTUATION_OR_SYMBOL.match?(previous_char(input, pos))
+              end
+            end
+
+            # The forward half of the same boundary: `pos` is the byte right after the
+            # name, and the mention opens only when that is the end of input,
+            # whitespace, or a punctuation/symbol character. Verified against
+            # PrettyText: `@name²` (a `²`, category No, right after the name) is not a
+            # boundary, so core leaves it literal. The name match already stops on a
+            # non-word character, so this only rejects the few that are neither a
+            # boundary nor a word character (numbers like `²`, format characters).
+            def mention_boundary_after?(input, pos)
+              return true if pos >= input.bytesize
+
+              byte = input.getbyte(pos)
+              if byte < 0x80
+                whitespace_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
+              else
+                PUNCTUATION_OR_SYMBOL.match?(char_at(input, pos))
               end
             end
 
@@ -189,6 +222,16 @@ module Migrations
                 (byte >= 0x61 && byte <= 0x7a)
             end
 
+            # Every printable ASCII punctuation or symbol character — the four ranges
+            # around the digits and letters (`!`..`/`, `:`..`@`, `[`..`` ` ``,
+            # `{`..`~`). These are exactly the ASCII characters markdown-it's
+            # `isPunctChar` accepts, so they mirror {PUNCTUATION_OR_SYMBOL} on the
+            # ASCII fast path. Space (0x20) is whitespace, tested separately.
+            def ascii_punct_or_symbol_byte?(byte)
+              (byte >= 0x21 && byte <= 0x2f) || (byte >= 0x3a && byte <= 0x40) ||
+                (byte >= 0x5b && byte <= 0x60) || (byte >= 0x7b && byte <= 0x7e)
+            end
+
             # The character ending just before `pos`, for the Unicode-aware
             # look-backs. `pos` sits on a character boundary, so when the previous
             # character is multibyte its bytes are the continuation bytes
@@ -198,6 +241,16 @@ module Migrations
               start = pos - 1
               start -= 1 while (input.getbyte(start) & 0xC0) == 0x80
               input.byteslice(start, pos - start)
+            end
+
+            # The character starting at the byte offset `pos`, for the Unicode-aware
+            # forward look-aheads. `pos` sits on a character boundary, so walk forward
+            # over that character's continuation bytes (`10xxxxxx`) and byteslice the
+            # one character. Caller must ensure `pos < input.bytesize`.
+            def char_at(input, pos)
+              stop = pos + 1
+              stop += 1 while stop < input.bytesize && (input.getbyte(stop) & 0xC0) == 0x80
+              input.byteslice(pos, stop - pos)
             end
 
             # Extract a word starting at the byte offset, or `""` when nothing there
