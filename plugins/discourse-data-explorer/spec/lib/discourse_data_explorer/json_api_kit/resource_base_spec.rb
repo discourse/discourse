@@ -6,8 +6,9 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::ResourceBase do
     tag = tag_resource
     Class.new(described_class) do
       type :things
+      description "A thing under test."
 
-      attribute :name, :string, writable: true
+      attribute :name, :string, writable: true, example: "Widget"
       attribute :label, :string, description: "Uppercased name." do |thing|
         thing.name.upcase
       end
@@ -62,6 +63,10 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::ResourceBase do
       expect(resource_class.writable_attribute_names).to eq([:name])
     end
 
+    it "records the example" do
+      expect(resource_class.attribute_definitions[:name][:example]).to eq("Widget")
+    end
+
     it "rejects an unknown type at declaration" do
       expect {
         Class.new(described_class) do
@@ -69,6 +74,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::ResourceBase do
           attribute :field, :nonsense
         end
       }.to raise_error(ArgumentError, /nonsense/)
+    end
+  end
+
+  describe ".description" do
+    it "records the resource description" do
+      expect(resource_class.description).to eq("A thing under test.")
     end
   end
 

@@ -18,12 +18,26 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
   let(:create_operation) { document.dig("paths", "/data-explorer/api/queries", "post") }
 
   describe "the document" do
+    let(:intro_document) { described_class.new(endpoints:, intro: "# Welcome").document }
+
     it "targets OpenAPI 3.1" do
       expect(document["openapi"]).to eq("3.1.0")
     end
 
     it "stamps the advertised API version" do
       expect(document.dig("info", "version")).to eq("2026-07-08")
+    end
+
+    it "embeds the intro as the document description" do
+      expect(intro_document.dig("info", "description")).to eq("# Welcome")
+    end
+
+    it "lists the tags with the resource descriptions" do
+      expect(document["tags"]).to include(
+        "name" => "Queries",
+        "description" =>
+          "A saved Data Explorer SQL query: its source, sharing groups, and last-run information.",
+      )
     end
   end
 
@@ -55,6 +69,18 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(
         schemas.dig("users", "properties", "attributes", "properties", "usernames", "type"),
       ).to eq(%w[array null])
+    end
+
+    it "describes the resource" do
+      expect(schemas.dig("queries", "description")).to eq(
+        "A saved Data Explorer SQL query: its source, sharing groups, and last-run information.",
+      )
+    end
+
+    it "carries attribute examples" do
+      expect(
+        schemas.dig("queries", "properties", "attributes", "properties", "query", "examples"),
+      ).to eq(["SELECT id, username FROM users LIMIT 10"])
     end
 
     it "carries attribute descriptions" do
@@ -113,6 +139,18 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(parameters).to include(
         hash_including("name" => "Api-Version", "in" => "header", "required" => true),
       )
+    end
+
+    it "is tagged with the resource" do
+      expect(index_operation["tags"]).to eq(["Queries"])
+    end
+
+    it "carries a summary" do
+      expect(index_operation["summary"]).to eq("List queries")
+    end
+
+    it "carries an operation id" do
+      expect(index_operation["operationId"]).to eq("listQueries")
     end
 
     it "declares the filter with its value type and description" do
@@ -185,6 +223,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
   end
 
   describe "the show operation" do
+    it "carries a summary and operation id" do
+      expect(show_operation.values_at("summary", "operationId")).to eq(
+        ["Fetch a query", "getQuery"],
+      )
+    end
+
     it "requires the id path parameter" do
       expect(show_operation["parameters"]).to include(
         hash_including("name" => "id", "in" => "path", "required" => true),
@@ -211,6 +255,59 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     end
   end
 
+  describe "captured examples" do
+    let(:documented) do
+      described_class.new(
+        endpoints:,
+        examples: {
+          "listQueries" => {
+            "200" => {
+              "data" => [],
+            },
+          },
+          "createQuery" => {
+            "request" => {
+              "data" => {
+                "type" => "queries",
+              },
+            },
+            "201" => {
+              "data" => {
+                "id" => "1",
+              },
+            },
+          },
+        },
+      ).document
+    end
+    let(:documented_collection) { documented.dig("paths", "/data-explorer/api/queries", "get") }
+    let(:documented_create) { documented.dig("paths", "/data-explorer/api/queries", "post") }
+
+    it "embeds response examples on their operations" do
+      expect(
+        documented_collection.dig(
+          "responses",
+          "200",
+          "content",
+          "application/vnd.api+json",
+          "example",
+        ),
+      ).to eq("data" => [])
+    end
+
+    it "embeds request examples on the request body" do
+      expect(
+        documented_create.dig("requestBody", "content", "application/vnd.api+json", "example"),
+      ).to eq("data" => { "type" => "queries" })
+    end
+
+    it "embeds examples per response status" do
+      expect(
+        documented_create.dig("responses", "201", "content", "application/vnd.api+json", "example"),
+      ).to eq("data" => { "id" => "1" })
+    end
+  end
+
   describe "the create operation" do
     let(:request_attributes) do
       create_operation.dig(
@@ -222,6 +319,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
         "data",
         "properties",
         "attributes",
+      )
+    end
+
+    it "carries a summary and operation id" do
+      expect(create_operation.values_at("summary", "operationId")).to eq(
+        ["Create a query", "createQuery"],
       )
     end
 
@@ -239,6 +342,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
 
     it "derives length limits from length validators" do
       expect(request_attributes.dig("properties", "query", "maxLength")).to eq(10_000)
+    end
+
+    it "carries the resource's attribute examples" do
+      expect(request_attributes.dig("properties", "name", "examples")).to eq(
+        ["Top referred topics"],
+      )
     end
 
     it "answers with the created resource" do

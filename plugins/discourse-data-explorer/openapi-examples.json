@@ -1,0 +1,243 @@
+{
+  "listQueries": {
+    "200": {
+      "data": [
+        {
+          "id": "1",
+          "type": "queries",
+          "attributes": {
+            "name": "Top referred topics",
+            "description": "Topics most often linked from other topics.",
+            "created_at": "2026-06-20T09:00:00.000Z",
+            "updated_at": "2026-06-20T09:00:00.000Z",
+            "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
+            "ran_at": "2026-07-01T10:00:00.000Z",
+            "hidden": false
+          },
+          "relationships": {
+            "user": {
+              "data": {
+                "id": "1",
+                "type": "users"
+              }
+            },
+            "groups": {
+              "data": [
+                {
+                  "id": "1",
+                  "type": "groups"
+                }
+              ]
+            }
+          },
+          "meta": {
+            "page": {
+              "cursor": "opaque-cursor-1"
+            }
+          }
+        },
+        {
+          "id": "2",
+          "type": "queries",
+          "attributes": {
+            "name": "Inactive staff",
+            "description": "description 0",
+            "created_at": "2026-06-21T09:00:00.000Z",
+            "updated_at": "2026-06-21T09:00:00.000Z",
+            "query": "SELECT id, username FROM users WHERE admin",
+            "ran_at": null,
+            "hidden": false
+          },
+          "relationships": {
+            "user": {
+              "data": {
+                "id": "1",
+                "type": "users"
+              }
+            },
+            "groups": {
+              "data": []
+            }
+          },
+          "meta": {
+            "page": {
+              "cursor": "opaque-cursor-2"
+            }
+          }
+        }
+      ],
+      "included": [
+        {
+          "id": "2",
+          "type": "groups",
+          "attributes": {
+            "name": "trust_level_0"
+          }
+        },
+        {
+          "id": "3",
+          "type": "groups",
+          "attributes": {
+            "name": "trust_level_1"
+          }
+        },
+        {
+          "id": "4",
+          "type": "groups",
+          "attributes": {
+            "name": "trust_level_2"
+          }
+        },
+        {
+          "id": "5",
+          "type": "groups",
+          "attributes": {
+            "name": "trust_level_3"
+          }
+        },
+        {
+          "id": "6",
+          "type": "groups",
+          "attributes": {
+            "name": "trust_level_4"
+          }
+        },
+        {
+          "id": "7",
+          "type": "groups",
+          "attributes": {
+            "name": "admins"
+          }
+        },
+        {
+          "id": "8",
+          "type": "groups",
+          "attributes": {
+            "name": "moderators"
+          }
+        },
+        {
+          "id": "9",
+          "type": "groups",
+          "attributes": {
+            "name": "staff"
+          }
+        },
+        {
+          "id": "1",
+          "type": "users",
+          "attributes": {
+            "usernames": [
+              "query_master"
+            ]
+          },
+          "relationships": {
+            "groups": {
+              "data": [
+                {
+                  "id": "2",
+                  "type": "groups"
+                },
+                {
+                  "id": "3",
+                  "type": "groups"
+                },
+                {
+                  "id": "4",
+                  "type": "groups"
+                },
+                {
+                  "id": "5",
+                  "type": "groups"
+                },
+                {
+                  "id": "6",
+                  "type": "groups"
+                },
+                {
+                  "id": "7",
+                  "type": "groups"
+                },
+                {
+                  "id": "8",
+                  "type": "groups"
+                },
+                {
+                  "id": "9",
+                  "type": "groups"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "1",
+          "type": "groups",
+          "attributes": {
+            "name": "sql_writers"
+          }
+        }
+      ],
+      "links": {
+        "prev": null,
+        "next": null
+      }
+    }
+  },
+  "getQuery": {
+    "200": {
+      "data": {
+        "id": "1",
+        "type": "queries",
+        "attributes": {
+          "name": "Top referred topics",
+          "description": "Topics most often linked from other topics.",
+          "created_at": "2026-06-20T09:00:00.000Z",
+          "updated_at": "2026-06-20T09:00:00.000Z",
+          "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
+          "ran_at": "2026-07-01T10:00:00.000Z",
+          "hidden": false
+        }
+      }
+    }
+  },
+  "createQuery": {
+    "request": {
+      "data": {
+        "type": "queries",
+        "attributes": {
+          "name": "Category health",
+          "description": "Topics per category over the last 30 days.",
+          "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1"
+        }
+      }
+    },
+    "201": {
+      "data": {
+        "id": "1",
+        "type": "queries",
+        "attributes": {
+          "name": "Category health",
+          "description": "Topics per category over the last 30 days.",
+          "created_at": "2026-07-08T12:00:00.000Z",
+          "updated_at": "2026-07-08T12:00:00.000Z",
+          "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1",
+          "ran_at": "2026-07-08T12:00:00.000Z",
+          "hidden": false
+        }
+      }
+    },
+    "422": {
+      "errors": [
+        {
+          "status": "422",
+          "title": "Invalid attribute",
+          "detail": "Name can't be blank",
+          "source": {
+            "pointer": "/data/attributes/name"
+          }
+        }
+      ]
+    }
+  }
+}

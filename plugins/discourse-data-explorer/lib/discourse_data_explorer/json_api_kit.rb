@@ -73,6 +73,31 @@ module DiscourseDataExplorer
 
       def core_plugin?(namespace) = CORE_PLUGINS.include?(namespace.to_s)
 
+      # Captured live exchanges (see open_api_examples_spec.rb); absent until
+      # the first capture run.
+      def openapi_examples
+        path = File.expand_path("../../openapi-examples.json", __dir__)
+        File.exist?(path) ? JSON.parse(File.read(path)) : {}
+      end
+
+      # The canonical OpenAPI document (docs/api-docs-generation.md) — single
+      # source for the rake task and the freshness guard. Recomputed per call:
+      # the document reflects live registry/extension state. The explicit
+      # endpoint map is the spike seam (see the generator's generalization path).
+      def openapi_document
+        OpenApiGenerator.new(
+          endpoints: [
+            {
+              path: "/data-explorer/api/queries",
+              controller: QueriesController,
+              create: DiscourseDataExplorer::Query::Create,
+            },
+          ],
+          intro: File.read(File.expand_path("../../docs/api-intro.md", __dir__)),
+          examples: openapi_examples,
+        ).document
+      end
+
       # Spike stand-in for a real resource registry — the resource-level home is a
       # design follow-up (docs/versioning-design.md §3).
       def serializer_for(type)

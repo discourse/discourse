@@ -95,17 +95,24 @@ module DiscourseDataExplorer
         "additionalProperties" => false,
       }.freeze
 
-      def initialize(endpoints:)
+      # `examples` are captured live exchanges keyed by operationId → status
+      # (plus "request" for the request body); see open_api_examples_spec.rb.
+      def initialize(endpoints:, intro: nil, examples: {})
         @endpoints = endpoints
+        @intro = intro
+        @examples = examples
       end
 
       def document
+        info = {
+          "title" => "Discourse JSON:API",
+          "version" => JsonApiKit.api_versions.current_version.to_s,
+        }
+        info["description"] = @intro if @intro
         {
           "openapi" => "3.1.0",
-          "info" => {
-            "title" => "Discourse JSON:API",
-            "version" => JsonApiKit.api_versions.current_version.to_s,
-          },
+          "info" => info,
+          "tags" => tags,
           "paths" => paths,
           "components" => {
             "schemas" => schemas,
@@ -144,12 +151,29 @@ module DiscourseDataExplorer
         resource.respond_to?(:attribute_definitions) ? resource.attribute_definitions : {}
       end
 
+      # One tag per endpoint primary, described by the resource itself.
+      def tags
+        @endpoints
+          .map do |endpoint|
+            resource = primary_resource(endpoint)
+            tag = { "name" => tag_name(resource) }
+            tag["description"] = resource.description if resource.respond_to?(:description) &&
+              resource.description
+            tag
+          end
+          .uniq
+      end
+
+      def tag_name(resource) = resource.record_type.to_s.humanize
+
+      def singular(resource) = resource.record_type.to_s.singularize
+
       def schemas
         resources.transform_values { resource_schema(it) }.merge("errors" => ERRORS_SCHEMA)
       end
 
       def resource_schema(resource)
-        {
+        schema = {
           "type" => "object",
           "properties" => {
             "id" => {
@@ -181,12 +205,17 @@ module DiscourseDataExplorer
           "required" => %w[id type],
           "additionalProperties" => false,
         }
+        if resource.respond_to?(:description) && resource.description
+          schema["description"] = resource.description
+        end
+        schema
       end
 
       def attribute_schema(definition)
         base = TYPE_SCHEMAS.fetch(definition[:type]) { {} }
         schema = base.merge("type" => [base["type"], "null"].compact)
         schema["description"] = definition[:description] if definition[:description]
+        schema["examples"] = [definition[:example]] if definition[:example]
         schema
       end
 
@@ -219,17 +248,34 @@ module DiscourseDataExplorer
 
       def paths
         @endpoints.each_with_object({}) do |endpoint, result|
-          collection = { "get" => index_operation(endpoint) }
-          collection["post"] = create_operation(endpoint) if endpoint[:create]
+          collection = { "get" => with_examples(index_operation(endpoint)) }
+          collection["post"] = with_examples(create_operation(endpoint)) if endpoint[:create]
           result[endpoint[:path]] = collection
-          result["#{endpoint[:path]}/{id}"] = { "get" => show_operation(endpoint) }
+          result["#{endpoint[:path]}/{id}"] = { "get" => with_examples(show_operation(endpoint)) }
         end
+      end
+
+      def with_examples(operation)
+        captured = @examples[operation["operationId"]] || {}
+        captured.each do |status, example|
+          target =
+            if status == "request"
+              operation.dig("requestBody", "content", CONTENT_TYPE)
+            else
+              operation.dig("responses", status, "content", CONTENT_TYPE)
+            end
+          target["example"] = example if target
+        end
+        operation
       end
 
       def index_operation(endpoint)
         resource = primary_resource(endpoint)
         config = endpoint[:controller]._jsonapi_config
         {
+          "tags" => [tag_name(resource)],
+          "summary" => "List #{resource.record_type.to_s.humanize.downcase}",
+          "operationId" => "list#{resource.record_type.to_s.camelize}",
           "parameters" => [
             version_header_parameter,
             *filter_parameters(resource),
@@ -250,6 +296,9 @@ module DiscourseDataExplorer
       def show_operation(endpoint)
         resource = primary_resource(endpoint)
         {
+          "tags" => [tag_name(resource)],
+          "summary" => "Fetch a #{singular(resource).humanize.downcase}",
+          "operationId" => "get#{singular(resource).camelize}",
           "parameters" => [
             version_header_parameter,
             {
@@ -274,6 +323,9 @@ module DiscourseDataExplorer
       def create_operation(endpoint)
         resource = primary_resource(endpoint)
         {
+          "tags" => [tag_name(resource)],
+          "summary" => "Create a #{singular(resource).humanize.downcase}",
+          "operationId" => "create#{singular(resource).camelize}",
           "parameters" => [version_header_parameter],
           "requestBody" => {
             "required" => true,
@@ -318,6 +370,8 @@ module DiscourseDataExplorer
                 property["maxLength"] = validator.options[:maximum] if validator.options[:maximum]
               end
             end
+          example = attribute_definitions(resource).dig(name.to_sym, :example)
+          property["examples"] = [example] if example
           properties[name] = property
         end
 
