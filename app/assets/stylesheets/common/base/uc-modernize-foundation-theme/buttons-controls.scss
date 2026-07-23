@@ -1,4 +1,4 @@
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
   --d-button-default-border--hover: 1px solid var(--primary-300);
