@@ -18,8 +18,10 @@ module TestSetup
     WordWatcher.disable_cache
     UpcomingChanges.clear_caches!
 
+    previous_default_theme_id = SiteSetting.default_theme_id
     SiteSetting.provider.clear
     SiteSetting.refresh!
+    Theme.expire_site_cache! if SiteSetting.default_theme_id != previous_default_theme_id
 
     # Set some standard overrides for tests. Some for performance, some to make the tests easier,
     # and some because their default was changed, and we didn't want to refactor all the relevant specs.
