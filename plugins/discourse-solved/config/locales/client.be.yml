@@ -10,8 +10,6 @@ be:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Усе катэгорыі"
             answerers:
               staff: "Персанал"
               member: "Члены"

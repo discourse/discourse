@@ -1856,7 +1856,6 @@ tr_TR:
     suppress_secured_categories_from_admin: "Yöneticiler için kullanıcı arayüzünün bazı bölümlerinde özel konuları ve kişisel mesajları bastırın. İçerik bazı yerlerde hâlâ görünür olur. Bu bir güvenlik özelliği değildir: Yöneticiler sitedeki tüm içeriğe her zaman erişebilir."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
-    top_menu: "Ana sayfa navigasyonunda hangi ögelerin hangi sırayla görüneceğini belirleyin."
     post_menu: "Varsayılan gönderi menüsü ögelerinin görünürlüğünü ve sırasını yapılandırın. Eklentiler veya temalar tarafından eklenen ek ögeler ayrı olarak yönetilir ve bu listede görünmez."
     post_menu_hidden_items: "Bir genişletme üçgenine tıklanmadığı sürece yazı menüsünde varsayılan olarak gizlenecek menü ögeleri. Eklentiler veya temalar tarafından eklenen ek ögeler ayrı olarak yönetilir ve bu listede görünmez."
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."

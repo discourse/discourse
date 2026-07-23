@@ -1947,7 +1947,6 @@ sk:
     suppress_secured_categories_from_admin: "Potlačenie súkromných tém a PM v niektorých častiach používateľského rozhrania pre administrátorov. Obsah bude na niektorých miestach stále viditeľný. Toto nie je bezpečnostná funkcia: administrátori majú vždy prístup ku všetkému obsahu na stránke."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
-    top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
     post_menu: "Konfigurácia viditeľnosti a poradia predvolených položiek ponuky príspevku. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     post_menu_hidden_items: "Položky ponuky, ktoré sa majú predvolene skryť v ponuke príspevku, pokiaľ sa neklikne na rozbaľovaciu elipsu. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."

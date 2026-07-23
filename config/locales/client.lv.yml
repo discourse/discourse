@@ -1242,7 +1242,7 @@ lv:
         default: "(noklusējums)"
         any: "jebkura"
       homepage:
-        default: "(noklusējums)"
+        default: "Noklusējums"
       password_confirmation:
         title: "Parole vēlreiz"
       invite_code:
@@ -3095,7 +3095,6 @@ lv:
               posts: "Ieraksti"
               share: "Dalīties"
             whos_posting:
-              all_categories: "Visas sadaļas"
               staff: "Personāls"
             trust_level_pipeline:
               trust_levels:

@@ -2202,7 +2202,7 @@ cs:
         default: "(výchozí)"
         any: "jakýkoliv"
       homepage:
-        default: "(výchozí)"
+        default: "Výchozí"
       password_confirmation:
         title: "Heslo znovu"
       invite_code:
@@ -6613,7 +6613,6 @@ cs:
               posts: "Příspěvky"
               share: "Sdílet"
             whos_posting:
-              all_categories: "Všechny kategorie"
               staff: "Redakce"
             trust_level_pipeline:
               trust_levels:

@@ -2250,7 +2250,7 @@ he:
         default: "(ברירת מחדל)"
         any: "כלשהו"
       homepage:
-        default: "(ברירת מחדל)"
+        default: "ברירת מחדל"
       password_confirmation:
         title: "סיסמה שוב"
       invite_code:
@@ -6730,7 +6730,6 @@ he:
               posts: "פרסומים"
               share: "שיתוף"
             whos_posting:
-              all_categories: "כל הקטגוריות"
               new_members: "חברים חדשים"
               staff: "סגל"
             trust_level_pipeline:

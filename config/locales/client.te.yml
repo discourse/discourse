@@ -1540,7 +1540,7 @@ te:
         default: "(అప్రమేయ)"
         any: "ఏదైనా"
       homepage:
-        default: "(అప్రమేయ)"
+        default: "అప్రమేయ"
       password_confirmation:
         title: "సంకేతపదం మరలా"
       invite_code:
@@ -4584,7 +4584,6 @@ te:
               posts: "పోస్ట్‌లు"
               share: "షేర్ చేయండి"
             whos_posting:
-              all_categories: "అన్ని వర్గాలు"
               staff: "సిబ్బంది"
             trust_level_pipeline:
               trust_levels:

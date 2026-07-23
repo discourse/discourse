@@ -893,7 +893,7 @@ sw:
         default: "(chaguo-msingi)"
         any: "yoyote"
       homepage:
-        default: "(chaguo-msingi)"
+        default: "Halisi"
       password_confirmation:
         title: "nywila upya"
       auth_tokens:
@@ -2628,7 +2628,6 @@ sw:
               posts: "Machapisho"
               share: "Shirikisha"
             whos_posting:
-              all_categories: "Kategoria Zote"
               staff: "Wasaidizi"
             trust_level_pipeline:
               trust_levels:

@@ -1477,7 +1477,7 @@ bg:
         default: "(по подразбиране)"
         any: "всеки"
       homepage:
-        default: "(по подразбиране)"
+        default: "По подразбиране"
       password_confirmation:
         title: "Паролата отново"
       invite_code:
@@ -3665,7 +3665,6 @@ bg:
               posts: "Публикации"
               share: "Споделяне"
             whos_posting:
-              all_categories: "Всички категории"
               staff: "Персонал"
             trust_level_pipeline:
               trust_levels:

@@ -2094,7 +2094,7 @@ es:
         default: "(por defecto)"
         any: "cualquiera"
       homepage:
-        default: "(por defecto)"
+        default: "Por defecto"
       password_confirmation:
         title: "Vuelve a introducir la contraseña"
       invite_code:
@@ -6316,7 +6316,6 @@ es:
               posts: "Publicaciones"
               share: "Compartir"
             whos_posting:
-              all_categories: "Todas las categorías"
               staff: "Personal"
             trust_level_pipeline:
               trust_levels:
