@@ -87,11 +87,14 @@ export default class RestModel extends EmberObject {
     mergeSaveProperties(modelName, this, props);
 
     this.beforeUpdate(props);
-    applyModelCallbacks(modelName, "beforeUpdate", this, props);
 
     this.set("isSaving", true);
-    return this.store
-      .update(this.__type, this.get(this.primaryKey), props)
+    return Promise.resolve(
+      applyModelCallbacks(modelName, "beforeUpdate", this, props)
+    )
+      .then(() =>
+        this.store.update(this.__type, this.get(this.primaryKey), props)
+      )
       .then((res) => {
         const payload = this.__munge(res.payload || res.responseJson);
 
@@ -104,9 +107,12 @@ export default class RestModel extends EmberObject {
 
         this.setProperties(payload);
         this.afterUpdate(res);
-        applyModelCallbacks(modelName, "afterUpdate", this, res);
-        res.target = this;
-        return res;
+        return Promise.resolve(
+          applyModelCallbacks(modelName, "afterUpdate", this, res)
+        ).then(() => {
+          res.target = this;
+          return res;
+        });
       })
       .finally(() => this.set("isSaving", false));
   }
@@ -122,13 +128,14 @@ export default class RestModel extends EmberObject {
     mergeSaveProperties(modelName, this, props);
 
     this.beforeCreate(props);
-    applyModelCallbacks(modelName, "beforeCreate", this, props);
 
     const adapter = this.store.adapterFor(this.__type);
 
     this.set("isSaving", true);
-    return adapter
-      .createRecord(this.store, this.__type, props)
+    return Promise.resolve(
+      applyModelCallbacks(modelName, "beforeCreate", this, props)
+    )
+      .then(() => adapter.createRecord(this.store, this.__type, props))
       .then((res) => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
@@ -142,9 +149,12 @@ export default class RestModel extends EmberObject {
         }
 
         this.afterCreate(res);
-        applyModelCallbacks(modelName, "afterCreate", this, res);
-        res.target = this;
-        return res;
+        return Promise.resolve(
+          applyModelCallbacks(modelName, "afterCreate", this, res)
+        ).then(() => {
+          res.target = this;
+          return res;
+        });
       })
       .finally(() => this.set("isSaving", false));
   }

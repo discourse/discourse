@@ -31,12 +31,14 @@ class TestExtensionModel extends RestModel {
 
 class TestExtensionAdapter extends RestAdapter {
   createRecord(store, type, props) {
-    capturedCreateProps = props;
+    // Snapshot so a callback that mutates `props` after the request fires
+    // can't retroactively change what we captured.
+    capturedCreateProps = { ...props };
     return Promise.resolve({ payload: { id: 1, ...props } });
   }
 
   update(store, type, id, props) {
-    capturedUpdateProps = props;
+    capturedUpdateProps = { ...props };
     return Promise.resolve({ payload: { id, ...props } });
   }
 }
@@ -375,6 +377,45 @@ module("Unit | Lib | model-extensions", function (hooks) {
     await record.save();
     assert.verifySteps(["update"], "afterUpdate fires on a subsequent save");
     assert.strictEqual(capturedUpdateProps.name, "a");
+  });
+
+  test("an async before callback settles before the request fires", async function (assert) {
+    withPluginApi((api) => {
+      api.addModelCallback(
+        "test-extension-model",
+        "beforeCreate",
+        async function (props) {
+          await Promise.resolve();
+          props.stamped = "create";
+        }
+      );
+      api.addModelCallback(
+        "test-extension-model",
+        "beforeUpdate",
+        async function (props) {
+          await Promise.resolve();
+          props.stamped = "update";
+        }
+      );
+    });
+
+    const record = this.store.createRecord("test-extension-model", {
+      name: "a",
+    });
+
+    await record.save();
+    assert.strictEqual(
+      capturedCreateProps.stamped,
+      "create",
+      "the create request waits for the async beforeCreate hook"
+    );
+
+    await record.save();
+    assert.strictEqual(
+      capturedUpdateProps.stamped,
+      "update",
+      "the update request waits for the async beforeUpdate hook"
+    );
   });
 
   test("addModelCallback init fires after the create args are applied", function (assert) {

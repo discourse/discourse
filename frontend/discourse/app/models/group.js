@@ -414,7 +414,7 @@ export default class Group extends RestModel {
   }
 
   async create() {
-    applyModelCallbacks("group", "beforeCreate", this);
+    await applyModelCallbacks("group", "beforeCreate", this);
 
     const response = await ajax("/admin/groups", {
       type: "POST",
@@ -432,7 +432,7 @@ export default class Group extends RestModel {
   }
 
   async save(opts = {}) {
-    applyModelCallbacks("group", "beforeUpdate", this, opts);
+    await applyModelCallbacks("group", "beforeUpdate", this, opts);
 
     const result = await ajax(`/groups/${this.id}`, {
       type: "PUT",
@@ -448,7 +448,7 @@ export default class Group extends RestModel {
       return;
     }
 
-    applyModelCallbacks("group", "beforeDestroy", this);
+    await applyModelCallbacks("group", "beforeDestroy", this);
     const result = await ajax(`/admin/groups/${this.id}`, { type: "DELETE" });
     await applyModelCallbacks("group", "afterDestroy", this, result);
     return result;
