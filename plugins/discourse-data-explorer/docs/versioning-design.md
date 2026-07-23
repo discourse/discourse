@@ -440,7 +440,17 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   review, 2026-07-13; all contract-visible — the guard fires on each — but not reproducible by a document
   transform). Per kind:
   - *Endpoint removal — designed via pin-gating (2026-07-16, from a discussion with David); no Rails
-    routing involvement.* Following Stripe, sunset shouldn't happen — pinned versions are supported
+    routing involvement. **BUILT 2026-07-23** with one refinement: removals target the
+    endpoint in the **Rails route dialect** — `removed_endpoint controller:
+    "…/queries", action: :show, replacement: { controller: "…/queries", action: :index }`
+    — the exact pair `url_for` resolves (yielding the real replacement path for the
+    teaching 404) and validates (unroutable pairs raise; the replacement hash IS
+    `url_for`'s arguments). Trade-off, stated honestly: a controller *constant* would have
+    made "implementation must stay while pins are owed service" a boot-time alarm; the
+    string form validates at use instead — registration-time `url_for` validation can
+    restore the early alarm later. Docs integration included: removed operations vanish
+    from the latest document and stay, marked deprecated, in documents for earlier pins.
+    Metering remains unbuilt.* Following Stripe, sunset shouldn't happen — pinned versions are supported
     effectively forever (Stripe reference §10: no documented force-retirement since 2011). Under
     no-sunset, the endpoint code must live forever anyway, so "removal" was never about the routing
     table — it's a fact about the *timeline*: which pins can see the endpoint. Routes never leave

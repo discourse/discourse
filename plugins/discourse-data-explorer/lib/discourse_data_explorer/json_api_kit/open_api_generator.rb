@@ -103,7 +103,37 @@ module DiscourseDataExplorer
         @examples = examples
       end
 
-      def document
+      # Removed operations are absent from the latest document — new integrators
+      # never see them.
+      def document = apply_removals(raw_document, gap: [])
+
+      # The document as a client pinned at `version` experiences it: schemas,
+      # query-surface parameters, and examples down-migrated through the gap —
+      # the same transform philosophy as responses, applied to the docs. Purely
+      # additive changes rightly remain visible at every pin (they are not
+      # version-gated).
+      def document_at(version)
+        parsed = ApiVersion.parse(version)
+        gap = JsonApiKit.api_versions.gap_for(parsed)
+        versioned = raw_document.deep_dup
+        versioned["info"]["version"] = parsed.to_s
+        return apply_removals(versioned, gap:) if gap.empty?
+
+        resources.each_key do |type|
+          downgrade_attributes!(
+            versioned.dig("components", "schemas", type, "properties", "attributes"),
+            type,
+            gap,
+          )
+        end
+        @endpoints.each { downgrade_endpoint!(versioned, it, gap) }
+        downgrade_examples!(versioned, gap)
+        apply_removals(versioned, gap:)
+      end
+
+      private
+
+      def raw_document
         info = {
           "title" => "Discourse JSON:API",
           "version" => JsonApiKit.api_versions.current_version.to_s,
@@ -122,31 +152,42 @@ module DiscourseDataExplorer
         }
       end
 
-      # The document as a client pinned at `version` experiences it: schemas,
-      # query-surface parameters, and examples down-migrated through the gap —
-      # the same transform philosophy as responses, applied to the docs. Purely
-      # additive changes rightly remain visible at every pin (they are not
-      # version-gated).
-      def document_at(version)
-        parsed = ApiVersion.parse(version)
-        gap = JsonApiKit.api_versions.gap_for(parsed)
-        versioned = document.deep_dup
-        versioned["info"]["version"] = parsed.to_s
-        return versioned if gap.empty?
+      # Removal is a timeline fact: an operation whose removal sits in the
+      # caller's gap (pinned before it) stays, marked deprecated; otherwise it
+      # disappears from the document — mirroring the runtime gate exactly.
+      def apply_removals(document, gap:)
+        @endpoints.each do |endpoint|
+          {
+            endpoint[:path] => {
+              "get" => :index,
+              "post" => :create,
+            },
+            "#{endpoint[:path]}/{id}" => {
+              "get" => :show,
+            },
+          }.each do |path, actions|
+            operations = document["paths"][path]
+            next if operations.nil?
 
-        resources.each_key do |type|
-          downgrade_attributes!(
-            versioned.dig("components", "schemas", type, "properties", "attributes"),
-            type,
-            gap,
-          )
+            actions.each do |method, action|
+              removal =
+                JsonApiKit.api_versions.endpoint_removal(
+                  endpoint[:controller].controller_path,
+                  action,
+                )
+              next if removal.nil? || operations[method].nil?
+
+              if gap.include?(removal[:change])
+                operations[method]["deprecated"] = true
+              else
+                operations.delete(method)
+              end
+            end
+            document["paths"].delete(path) if operations.empty?
+          end
         end
-        @endpoints.each { downgrade_endpoint!(versioned, it, gap) }
-        downgrade_examples!(versioned, gap)
-        versioned
+        document
       end
-
-      private
 
       # Every resource reachable from the endpoints' primaries through declared
       # relationships, keyed by JSON:API type.

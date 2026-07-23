@@ -74,6 +74,19 @@ module DiscourseDataExplorer
         changes.select { it.version > (overrides[@changes[it]] || version) }.reverse
       end
 
+      # The newest removal wins if an endpoint were ever removed twice.
+      # `controller` is the route-dialect path string (Controller#controller_path).
+      def endpoint_removal(controller, action)
+        changes.reverse_each do |change|
+          entry =
+            change.removed_endpoints.find do
+              it[:controller] == controller.to_s && it[:action] == action.to_sym
+            end
+          return entry.merge(change:) if entry
+        end
+        nil
+      end
+
       private
 
       def snap(snap_set, requested, today:)

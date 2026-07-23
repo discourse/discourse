@@ -293,6 +293,40 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     end
   end
 
+  describe "removed operations" do
+    let(:removal_change) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-07-08"
+        description "The single-query endpoint is removed."
+
+        removed_endpoint controller: "discourse_data_explorer/json_api_kit/queries", action: :show
+      end
+    end
+    let(:generator) { described_class.new(endpoints:) }
+
+    around do |example|
+      DiscourseDataExplorer::JsonApiKit.api_versions.register(removal_change)
+      example.run
+    ensure
+      DiscourseDataExplorer::JsonApiKit.api_versions.unregister(removal_change)
+    end
+
+    it "drops the operation from the latest document" do
+      expect(generator.document.dig("paths", "/data-explorer/api/queries/{id}")).to be_nil
+    end
+
+    it "keeps the operation, marked deprecated, for pins from before the removal" do
+      expect(
+        generator.document_at("2026-06-15").dig(
+          "paths",
+          "/data-explorer/api/queries/{id}",
+          "get",
+          "deprecated",
+        ),
+      ).to be(true)
+    end
+  end
+
   describe "#document_at" do
     subject(:versioned) { generator.document_at(version) }
 

@@ -120,6 +120,16 @@ module DiscourseDataExplorer
           @document_changes.instance_eval(&block)
         end
 
+        # Targeted in the Rails route dialect — `controller:` path string +
+        # `action:` — the exact pair `url_for` resolves (yielding the real path
+        # for docs and teaching bodies) and validates (unroutable pairs raise at
+        # use). `replacement:` takes the same shape.
+        def removed_endpoint(controller:, action:, replacement: nil)
+          removed_endpoints << { controller: controller.to_s, action: action.to_sym, replacement: }
+        end
+
+        def removed_endpoints = @removed_endpoints ||= []
+
         def transform_for(direction, type:) = resource_transforms[type.to_s]&.transform(direction)
         def document_transform(direction) = @document_changes&.transform(direction)
         def field_renames_for(type) = resource_transforms[type.to_s]&.field_renames || {}
