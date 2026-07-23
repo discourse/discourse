@@ -1587,12 +1587,15 @@ sl:
           cancel: "Prekliči"
         invite_roles:
           member_tab: "Člani"
-          admin_tab: "Administratorji"
+          admin_tab: "Osebje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "E-naslov"
           summary:
             role_member: "Polnopraven član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-naslov"
             expires: "Poteče"
             topic: "Tema"
@@ -2065,6 +2068,7 @@ sl:
       edit_shared_draft: "Uredi skupni osnutek"
       discard: "Zavrzi"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
+      title_placeholder_redesign: "Naziv"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "Zakaj spreminjate prispevek?"
       topic_featured_link_placeholder: "Vnesite povezavo prikazano z naslovom."
@@ -3023,7 +3027,7 @@ sl:
     category:
       none: "(brez kategorije)"
       all: "Vse kategorije"
-      choose: "kategorija&hellip;"
+      choose: "Kategorija&hellip;"
       edit: "Uredi"
       edit_dialog_title: "Uredi: %{categoryName}"
       view: "Poglej teme v kategoriji"
@@ -3465,7 +3469,6 @@ sl:
       selector_no_tags: "brez oznak"
       selector_remove_filter: "odstrani filter"
       tags: "Oznake"
-      choose_for_topic: "neobvezne oznake"
       default_info: "Ta oznaka ni omejena na nobeno kategorijo in nima sopomenk."
       category_restricted: "Ta oznaka je omejena na kategorije, do katerih nimate dovoljenja za dostop."
       synonyms: "Sopomenke"
@@ -3622,6 +3625,8 @@ sl:
           save: "Shrani"
           delete: "Izbriši"
           public: "Vidno vsem"
+          localizations:
+            locale: "Jezik"
           links:
             reset: "Ponastavi na privzeto"
             icon:
@@ -4951,6 +4956,10 @@ sl:
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
         settings: "Nastavitve"
+        export: "Izvozi"
+        import: "Uvozi"
+        import_category:
+          new: "Novi"
       embedding:
         delete: "Izbriši"
         title: "Vdelovanje"

@@ -23,23 +23,25 @@ module Migrations
       #
       # @param step [Step] the step to run; its source and processor are built here
       # @param shard_path [String] the SQLite shard this worker writes its rows to
-      # @param reporter [#report_progress] the worker's end of the progress channel
-      #   ({PipeProgressSink} in a fork, {InlineProgressSink} inline)
+      # @param channel [#report_progress] the worker's end of the progress channel
+      #   ({PipeProgressChannel} in a fork, {InlineProgressChannel} inline)
       # @param chunks [#each] the chunks to read, one at a time: each a `[lower,
       #   upper]` key range, where a nil bound is open — so `[nil, nil]` is the whole
       #   source. Defaults to the whole source; a work-stealing worker passes a lazy
       #   enumerator that hands back the next chunk off the shared queue each time
       #   round.
-      def initialize(step:, shard_path:, reporter:, chunks: WHOLE_SOURCE)
+      def initialize(step:, shard_path:, channel:, chunks: WHOLE_SOURCE)
         @step = step
         @shard_path = shard_path
-        @reporter = reporter
+        @channel = channel
         @chunks = chunks
       end
 
       def run
         source = @step.source
-        connection = Database::Connection.new(path: @shard_path)
+        # A shard is single-writer, thrown away on failure, and read only once (in
+        # full) at merge, so it skips WAL entirely.
+        connection = Database::Connection.new(path: @shard_path, journal_mode: "off")
 
         begin
           # Point IntermediateDB at this worker's shard for the block.
@@ -55,6 +57,8 @@ module Migrations
               source.chunk = chunk
               process_items(source, processor)
             end
+
+            report_result(processor)
           end
         ensure
           connection.close
@@ -83,12 +87,20 @@ module Migrations
           errors += stats.error_count
 
           next if progress < REPORT_INTERVAL
-          @reporter.report_progress(progress:, warnings:, errors:)
+          @channel.report_progress(progress:, warnings:, errors:)
           progress = warnings = errors = 0
         end
 
         return if progress.zero? && warnings.zero? && errors.zero?
-        @reporter.report_progress(progress:, warnings:, errors:)
+        @channel.report_progress(progress:, warnings:, errors:)
+      end
+
+      # The worker's one map/reduce message: the processor's accumulated result,
+      # sent to the parent over the same channel as progress. For nil, nothing
+      # is sent.
+      def report_result(processor)
+        result = processor.result
+        @channel.report_result(result) unless result.nil?
       end
     end
   end

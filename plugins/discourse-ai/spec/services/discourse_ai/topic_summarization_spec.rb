@@ -12,13 +12,14 @@ describe DiscourseAi::TopicSummarization do
     SiteSetting.ai_summarization_enabled = true
   end
 
-  def create_cached_summary(topic)
-    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+  def create_cached_summary(topic, locale: SiteSetting.default_locale)
+    strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: locale)
     content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
 
     Fabricate(
       :ai_summary,
       target: topic,
+      locale: locale,
       original_content_sha: content_sha,
       highest_target_number: topic.highest_post_number,
     )
@@ -27,6 +28,27 @@ describe DiscourseAi::TopicSummarization do
   let(:strategy) { DiscourseAi::Summarization.topic_summary(topic) }
 
   let(:summary) { "This is the final summary" }
+
+  describe ".for" do
+    it "selects the displayed locale and respects the show-original preference" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_supported_locales = "he"
+      topic.update!(locale: "en")
+      english_summary = create_cached_summary(topic, locale: "en")
+      english_summary.update!(summarized_text: "English summary")
+      hebrew_summary = create_cached_summary(topic, locale: "he")
+      hebrew_summary.update!(summarized_text: "סיכום בעברית")
+
+      localized_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(localized_service.cached_summary).to eq(hebrew_summary)
+
+      user.user_option.update!(show_original_content: true)
+      original_service =
+        I18n.with_locale(:he) { described_class.for(topic, user, scope: user.guardian) }
+      expect(original_service.cached_summary).to eq(english_summary)
+    end
+  end
 
   describe "#summarize" do
     subject(:summarization) { described_class.new(strategy, user) }
@@ -141,6 +163,31 @@ describe DiscourseAi::TopicSummarization do
           end
         end
       end
+    end
+
+    it "regenerates a fresh cached summary when forced" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([summary]) do
+        result = summarization.summarize(force_regenerate: true)
+
+        expect(result).to have_attributes(id: cached_summary.id, summarized_text: summary)
+      end
+    end
+
+    it "preserves a fresh cached summary when forced generation fails" do
+      cached_summary = create_cached_summary(topic)
+      cached_summary.update!(summarized_text: "Cached summary")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([RuntimeError.new("LLM failed")]) do
+        expect { summarization.summarize(force_regenerate: true) }.to raise_error(
+          RuntimeError,
+          "LLM failed",
+        )
+      end
+
+      expect(cached_summary.reload.summarized_text).to eq("Cached summary")
     end
 
     context "when the user is anonymous" do

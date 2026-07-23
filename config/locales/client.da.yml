@@ -1888,7 +1888,9 @@ da:
           member_title: "Inviter medlemmer"
           sent_title: "Invitation sendt"
           member_tab: "Brugere"
-          admin_tab: "Admins"
+          admin_tab: "Personale"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mail adresse"
           email_placeholder: "navn@eksempel.dk"
           invite_by_email: "E-mail"
@@ -1898,6 +1900,7 @@ da:
           summary:
             role_member: "Bruger"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method: "Deling"
             method_email: "E-mail"
             uses: "Maks. anvendelser"
@@ -2439,6 +2442,7 @@ da:
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -3513,7 +3517,7 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -3980,7 +3984,6 @@ da:
       selector_no_tags: "ingen tags"
       selector_remove_filter: "fjern filter"
       tags: "Tags"
-      choose_for_topic: "valgfri tags"
       choose_for_topic_required:
         one: "vælg mindst %{count} mærke…"
         other: "vælg mindst %{count} tags…"
@@ -4175,6 +4178,10 @@ da:
           delete: "Slet"
           public: "Synlig for alle"
           more_menu: "Mere menu"
+          localizations:
+            title: "Oversættelser"
+            locale: "Sprog"
+            title_label: "Sektionens titel"
           links:
             add: "Tilføj endnu et link"
             delete: "Slet link"
@@ -6387,6 +6394,10 @@ da:
         alt: "brugerdefineret humøikons forhåndsvisning"
         delete_confirm: "Er du sikker på du vil slette emojien: %{name} ?"
         settings: "Indstillinger"
+        export: "Eksporter"
+        import: "Importer"
+        import_category:
+          new: "Nye"
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
         delete: "Slet"

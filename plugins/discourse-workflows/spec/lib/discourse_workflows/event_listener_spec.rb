@@ -52,7 +52,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "matching-trigger",
       "trigger:topic_closed",
       configuration: {
-        "category_id" => category.id.to_s,
+        "category_ids" => [category.id.to_s],
         "tag_names" => [tag.name],
       },
     )
@@ -60,7 +60,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "category-mismatch",
       "trigger:topic_closed",
       configuration: {
-        "category_id" => other_category.id.to_s,
+        "category_ids" => [other_category.id.to_s],
       },
     )
     create_published_workflow(
@@ -84,7 +84,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "matching-trigger",
       "trigger:topic_created",
       configuration: {
-        "category_id" => category.id.to_s,
+        "category_ids" => [category.id.to_s],
         "tag_names" => [tag.name],
       },
     )
@@ -92,7 +92,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "category-mismatch",
       "trigger:topic_created",
       configuration: {
-        "category_id" => other_category.id.to_s,
+        "category_ids" => [other_category.id.to_s],
       },
     )
     create_published_workflow(
@@ -115,7 +115,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "matching-trigger",
       "trigger:post_created",
       configuration: {
-        "category_id" => category.id.to_s,
+        "category_ids" => [category.id.to_s],
         "tag_names" => [tag.name],
       },
     )
@@ -123,7 +123,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "category-mismatch",
       "trigger:post_created",
       configuration: {
-        "category_id" => other_category.id.to_s,
+        "category_ids" => [other_category.id.to_s],
       },
     )
     create_published_workflow(
@@ -147,7 +147,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       "matching-trigger",
       "trigger:post_edited",
       configuration: {
-        "category_id" => category.id.to_s,
+        "category_ids" => [category.id.to_s],
         "tag_names" => [tag.name],
         "trust_levels" => ["1"],
       },

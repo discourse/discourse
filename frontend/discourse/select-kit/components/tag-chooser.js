@@ -93,7 +93,11 @@ export default class TagChooser extends MultiSelectComponent {
           // numeric ID - use as both id and name until we can look up the actual name
           return this.defaultItem(t, t);
         }
-        return this.defaultItem(t.id, t.name);
+        const item = this.defaultItem(t.id, t.name);
+        if (t.isNew) {
+          item.isNew = true;
+        }
+        return item;
       })
     );
   }

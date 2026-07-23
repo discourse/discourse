@@ -989,12 +989,15 @@ sw:
           cancel: "Ghairi"
         invite_roles:
           member_tab: "Wanachama"
-          admin_tab: "Viongozi"
+          admin_tab: "Wasaidizi"
+          staff_role_admin: "Kiongozi"
+          staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
+            role_moderator: "Msimamizi"
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"
@@ -1304,6 +1307,7 @@ sw:
       create_shared_draft: "Unda mgawanyo wa mswadajaribio"
       edit_shared_draft: "Hariri mgawanyo wa mswadajaribio"
       title_placeholder: "Kwa kifupi majadiliano haya yanahusu nini?"
+      title_placeholder_redesign: "Kichwa cha Habari"
       title_or_link_placeholder: "Andika kichwa cha habari, au bandika kiungo hapa"
       edit_reason_placeholder: "Kwa nini unahariri?"
       topic_featured_link_placeholder: "Ingiza linki inayoonyeshwa na kichwa"
@@ -2258,7 +2262,6 @@ sw:
       selector_no_tags: "hakuna lebo"
       selector_remove_filter: "ondoa uchujaji"
       tags: "Lebo"
-      choose_for_topic: "lebo zisizo muhimu"
       add_synonyms: "Ongeza"
       delete_tag: "futa lebo"
       delete_confirm_no_topics: "Una uhakika unataka kufuta lebo hii?"
@@ -3621,6 +3624,10 @@ sw:
         image: "Picha"
         delete_confirm: "Una uhakika unataka kufuta emoji ya :%{name}: ?"
         settings: "Mipangilio"
+        export: "Hamisha"
+        import: "Imeingizwa kutoka sehemu nyingine"
+        import_category:
+          new: "Mpya"
       embedding:
         get_started: "Kama ungependa kuambatanisha Discourse kwenye tovuti nyingine, anza kwa kuandika taarifa zake."
         delete: "Futa"

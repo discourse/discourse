@@ -1839,7 +1839,9 @@ nb_NO:
           cancel: "Avbryt"
         invite_roles:
           member_tab: "Medlemmer"
-          admin_tab: "Adminer"
+          admin_tab: "Stab"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "navn@example.com"
           invite_by_email: "E-post"
           restrict_domain: "Begrens til domene"
@@ -1848,6 +1850,7 @@ nb_NO:
           summary:
             role_member: "Medlem"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-post"
             uses: "Maks antall bruk"
             expires: "Utløper"
@@ -2453,6 +2456,7 @@ nb_NO:
       discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
+      title_placeholder_redesign: "Tittel"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
       edit_reason_placeholder: "Hvorfor endrer du?"
       topic_featured_link_placeholder: "Skriv inn lenke vist med tittel."
@@ -3631,7 +3635,7 @@ nb_NO:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategorien"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -4085,7 +4089,6 @@ nb_NO:
       selector_no_tags: "ingen stikkord"
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"
-      choose_for_topic: "valgfrie stikkord"
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
       add_synonyms_label: "Legg til synonymer:"
@@ -4237,6 +4240,8 @@ nb_NO:
         custom:
           save: "Lagre"
           delete: "Slett"
+          localizations:
+            title: "Oversettelser"
           links:
             reset: "Tilbakestill til standard"
             icon:
@@ -5775,6 +5780,10 @@ nb_NO:
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
         settings: "Instillinger"
+        export: "Eksporter"
+        import: "Importer"
+        import_category:
+          new: "Ny"
       embedding:
         get_started: "Hvis du vil bygge inn Discourse på en annen nettside, begynn med å legge til dens vert."
         delete: "Slett"

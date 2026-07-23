@@ -4,6 +4,7 @@ const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
 require("./patch-testem-output")();
+require("./patch-testem-browser-watchdog")();
 
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
@@ -269,7 +270,10 @@ module.exports = {
   socket_server_options: {
     maxHttpBufferSize: 1e8, // 100MB
   },
-  browser_start_timeout: 120,
+  browser_start_timeout:
+    process.env.QUNIT_BROWSER_WATCHDOG === "1"
+      ? parseInt(process.env.QUNIT_BROWSER_START_TIMEOUT, 10)
+      : 120,
   browser_disconnect_timeout: 30,
   browser_args: {
     Chromium: [

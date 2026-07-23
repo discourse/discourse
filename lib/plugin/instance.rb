@@ -1275,11 +1275,24 @@ class Plugin::Instance
   #   Return false to omit the section (and hide it from the configure menu)
   #   without disabling the plugin entirely — e.g. only when relevant data
   #   exists.
+  # @param settings [Hash<String, Class>] optional map of setting key to a
+  #   class responding to `.permit` (a strong-params shape) and `.validate`
+  #   (raises `Discourse::InvalidParameters` or returns the sanitized value to
+  #   persist). Lets the section's own filter selections be saved via
+  #   `PUT /admin/dashboard/sections/:id/settings/:key`, the same mechanism
+  #   core sections use. A setting inherits the section's own `enabled` gate
+  #   rather than declaring its own.
   # @yield [start_date:, end_date:, current_user:] block returning the section's
   #   data hash, run inside the dashboard's parallel section loader.
-  def register_admin_dashboard_section(id:, enabled: nil, &loader)
+  def register_admin_dashboard_section(id:, enabled: nil, settings: nil, &loader)
+    settings&.each_value do |setting|
+      if !setting.respond_to?(:permit) || !setting.respond_to?(:validate)
+        raise ArgumentError, "#{setting} must respond to .permit and .validate"
+      end
+    end
+
     DiscoursePluginRegistry.register_admin_dashboard_section(
-      { id: id.to_s, enabled: enabled, loader: loader },
+      { id: id.to_s, enabled: enabled, settings: settings&.transform_keys(&:to_s), loader: loader },
       self,
     )
   end

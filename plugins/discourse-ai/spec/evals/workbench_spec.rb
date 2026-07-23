@@ -169,6 +169,60 @@ RSpec.describe DiscourseAi::Evals::Workbench do
       expect(results[:classified].first[:result]).to eq(:pass)
     end
 
+    it "generates topic gists using the summary tool" do
+      eval_case =
+        OpenStruct.new(
+          id: "topic-gist",
+          feature: "summarization:gists",
+          args: {
+            input: "First post\nSecond post",
+          },
+          expected_output: "Concise gist",
+          expected_output_regex: nil,
+          expected_tool_call: nil,
+          judge: nil,
+        )
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "gist_call",
+          name: "set_topic_summary",
+          parameters: {
+            summary: "Concise gist",
+          },
+        )
+
+      results =
+        DiscourseAi::Completions::Llm.with_prepared_responses([tool_call]) do
+          workbench.execute_eval(eval_case, llm)
+        end
+
+      expect(results[:classified].first[:result]).to eq(:pass)
+    end
+
+    it "reports a missing topic-summary tool call" do
+      eval_case =
+        OpenStruct.new(
+          id: "missing-topic-gist",
+          feature: "summarization:gists",
+          args: {
+            input: "First post\nSecond post",
+          },
+          expected_output: nil,
+          expected_output_regex: nil,
+          expected_tool_call: nil,
+          judge: nil,
+        )
+
+      expect do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Plain response"]) do
+          workbench.execute_eval(eval_case, llm)
+        end
+      end.to raise_error(
+        DiscourseAi::Summarization::FoldContent::MissingToolOutput,
+        "The model did not set a topic summary",
+      )
+    end
+
     it "always provides an execution_context to runners even when caller omits it" do
       eval_case =
         OpenStruct.new(

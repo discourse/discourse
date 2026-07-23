@@ -113,20 +113,20 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
   end
 
   context "with an exempt table" do
-    let(:exempt_tables) { ["PostQuote"] }
+    let(:exempt_tables) { ["EmbedQuote"] }
 
     it "passes when the reference converter is missing only an exempt table" do
       stub_coverage(
         { "discourse" => analysis(written: { "User" => %i[id name] }) },
         schema: {
           "User" => model("User", required: [:id], optional: [:name]),
-          "PostQuote" => model("PostQuote", required: %i[post_id placeholder]),
+          "EmbedQuote" => model("EmbedQuote", required: %i[owner_id placeholder]),
         },
       )
 
       passed = nil
       expect { passed = check.run }.to output(
-        /covers all 2 .* across 1 tables.*held out.*post_quotes/m,
+        /covers all 2 .* across 1 tables.*held out.*embed_quotes/m,
       ).to_stdout
       expect(passed).to be true
     end
@@ -136,7 +136,7 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
         { "discourse" => analysis(written: { "User" => [:id] }) },
         schema: {
           "User" => model("User", required: [:id], optional: [:name]),
-          "PostQuote" => model("PostQuote", required: %i[post_id placeholder]),
+          "EmbedQuote" => model("EmbedQuote", required: %i[owner_id placeholder]),
         },
       )
 
@@ -147,9 +147,9 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
 
     it "still rejects unknown columns written to an exempt table" do
       stub_coverage(
-        { "discourse" => analysis(written: { "PostQuote" => %i[post_id placeholder bogus] }) },
+        { "discourse" => analysis(written: { "EmbedQuote" => %i[owner_id placeholder bogus] }) },
         schema: {
-          "PostQuote" => model("PostQuote", required: %i[post_id placeholder]),
+          "EmbedQuote" => model("EmbedQuote", required: %i[owner_id placeholder]),
         },
       )
 
@@ -160,15 +160,15 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
 
     it "fails as stale when the reference already covers an exempt table in full" do
       stub_coverage(
-        { "discourse" => analysis(written: { "PostQuote" => %i[post_id placeholder] }) },
+        { "discourse" => analysis(written: { "EmbedQuote" => %i[owner_id placeholder] }) },
         schema: {
-          "PostQuote" => model("PostQuote", required: %i[post_id placeholder]),
+          "EmbedQuote" => model("EmbedQuote", required: %i[owner_id placeholder]),
         },
       )
 
       passed = nil
       expect { passed = check.run }.to output(
-        /held out by EMBED_BUFFER_TABLES.*post_quotes/m,
+        /held out by EMBED_BUFFER_TABLES.*embed_quotes/m,
       ).to_stdout
       expect(passed).to be false
     end
@@ -184,21 +184,21 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
       # No schema entry, so the report falls back to the model name.
       passed = nil
       expect { passed = check.run }.to output(
-        /held out by EMBED_BUFFER_TABLES.*PostQuote/m,
+        /held out by EMBED_BUFFER_TABLES.*EmbedQuote/m,
       ).to_stdout
       expect(passed).to be false
     end
 
     it "stays exempt when the reference covers an exempt table only partially" do
       stub_coverage(
-        { "discourse" => analysis(written: { "PostQuote" => [:post_id] }) },
+        { "discourse" => analysis(written: { "EmbedQuote" => [:owner_id] }) },
         schema: {
-          "PostQuote" => model("PostQuote", required: %i[post_id placeholder]),
+          "EmbedQuote" => model("EmbedQuote", required: %i[owner_id placeholder]),
         },
       )
 
       passed = nil
-      expect { passed = check.run }.to output(/covers all.*held out.*post_quotes/m).to_stdout
+      expect { passed = check.run }.to output(/covers all.*held out.*embed_quotes/m).to_stdout
       expect(passed).to be true
     end
   end

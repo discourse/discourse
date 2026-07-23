@@ -1896,7 +1896,9 @@ sq:
           member_title: "Ftoni anëtarë"
           sent_title: "Ftesa u dërgua"
           member_tab: "Anëtarë"
-          admin_tab: "Administratorët"
+          admin_tab: "Stafi"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "emri@adresa.com"
           invite_by_email: "Email"
           restrict_domain: "Kufizoni në domein"
@@ -1905,6 +1907,7 @@ sq:
           summary:
             role_member: "Anëtar"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             uses: "Përdorimet maksimale"
             expires: "Skadon"
@@ -2523,6 +2526,7 @@ sq:
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
+      title_placeholder_redesign: "Titulli"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
@@ -5039,6 +5043,10 @@ sq:
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"
+        export: "Eksporto"
+        import: "Importo"
+        import_category:
+          new: "I Ri"
       embedding:
         delete: "Fshij"
         title: "Embedding"

@@ -28,6 +28,7 @@ module DiscourseAi
         def decode(response_raw)
           parsed = JSON.parse(response_raw, symbolize_names: true)
           result = processor.process_message(parsed)
+          attach_tool_batch(result, parsed[:id])
 
           if output_thinking
             reasoning = parsed.dig(:choices, 0, :message, :reasoning).presence
@@ -43,6 +44,8 @@ module DiscourseAi
 
           elements = []
           (@decoder << chunk).each do |parsed_json|
+            @tool_batch_id = parsed_json[:id] if parsed_json[:id].present?
+
             if output_thinking
               reasoning = parsed_json.dig(:choices, 0, :delta, :reasoning).presence
               reasoning ||= parsed_json.dig(:choices, 0, :delta, :reasoning_content)
@@ -61,6 +64,7 @@ module DiscourseAi
             end
 
             result = processor.process_streamed_message(parsed_json)
+            attach_tool_batch(result, parsed_json[:id].presence || @tool_batch_id)
             elements << result if result
           end
 
@@ -78,6 +82,9 @@ module DiscourseAi
             @thinking = nil
           end
           result.concat(processor.finish)
+          attach_tool_batch(result, @tool_batch_id)
+          @tool_batch_id = nil
+          result
         end
 
         def resolve_thinking_config(model_params)
@@ -110,6 +117,16 @@ module DiscourseAi
         end
 
         private
+
+        def attach_tool_batch(result, response_id)
+          return if response_id.blank?
+
+          Array(result).each do |item|
+            next unless item.is_a?(ToolCall)
+
+            item.provider_data = item.provider_data.deep_merge(vllm: { tool_batch_id: response_id })
+          end
+        end
 
         def prepare_payload(prompt, model_params, dialect)
           payload = super

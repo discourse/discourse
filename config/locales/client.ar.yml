@@ -2754,7 +2754,9 @@ ar:
           member_title: "دعوة أعضاء"
           sent_title: "تم إرسال الدعوة"
           member_tab: "الأعضاء"
-          admin_tab: "المسؤولون"
+          admin_tab: "فريق العمل"
+          staff_role_admin: "مسؤول"
+          staff_role_moderator: "مشرف"
           admin_email_label: "عنوان البريد الإلكتروني"
           email_placeholder: "name@example.com"
           invite_by_email: "البريد الإلكتروني"
@@ -2765,6 +2767,7 @@ ar:
           summary:
             role_member: "عضو"
             role_admin: "مسؤول"
+            role_moderator: "مشرف"
             method: "مشاركة"
             method_email: "البريد الإلكتروني"
             restriction: "مقيد إلى"
@@ -3652,6 +3655,7 @@ ar:
       draft_saved: "حُفظت المسودة!"
       users_placeholder: "إضافة مستخدمين أو مجموعات"
       title_placeholder: "ما موضوع هذه المناقشة في جملة واحدة مختصرة؟"
+      title_placeholder_redesign: "العنوان"
       title_or_link_placeholder: "اكتب عنوانًا أو الصق رابطًا هنا"
       edit_reason_placeholder: "ما سبب التعديل؟"
       topic_featured_link_placeholder: "أدخِل الرابط الموضَّح مع العنوان."
@@ -4592,6 +4596,7 @@ ar:
       sort:
         label: "الترتيب حسب"
         top: "الأكثر نشاطًا"
+        hot: "رائج"
         new: "جديدة"
         old: "الأقدم"
       load_more_children:
@@ -6313,7 +6318,6 @@ ar:
       selector_no_tags: "لا توجد وسوم"
       selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
-      choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:
         zero: "تحديد %{count} وسم على الأقل…"
         one: "تحديد وسم واحد (%{count}) على الأقل…"
@@ -6615,6 +6619,10 @@ ar:
           public: "مرئي للجميع"
           always_public: "دائمًا ما يكون المحتوى في هذا القسم عامًا"
           more_menu: "قائمة \"المزيد\""
+          localizations:
+            title: "الترجمات"
+            locale: "اللغة"
+            title_label: "عنوان القسم"
           links:
             add: "إضافة رابط آخر"
             delete: "حذف الرابط"
@@ -10159,6 +10167,10 @@ ar:
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"
         settings: "الإعدادات"
+        export: "تصدير"
+        import: "استيراد"
+        import_category:
+          new: "جديدة"
       embedding:
         get_started: "إذا كنت تريد تضمين Discourse في موقع آخر، فابدأ بإضافة مضيفه."
         delete: "حذف"

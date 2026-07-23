@@ -16,6 +16,12 @@ zh_CN:
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> 需要注意。在过去的 %{count} 小时，它在 %{total_calls} 次请求中有 %{failed_calls} 次没有响应。"
       ai_credit_soft_limit: "%{model_name} 仅剩余 %{percentage_remaining}% 的点数。点数将在 %{reset_date} 重置。<a href='%{url}'>查看 AI 模型</a>"
       ai_credit_hard_limit: "您的 %{model_name} AI 点数已用完。AI 功能将在 %{reset_date} 之前不可用。<a href='%{url}'>查看 AI 模型</a>"
+      ai_image_caption_agent: "AI图片摘要功能已启用，但所选的图片摘要智能体尚未准备就绪： %{reason}。 <a href='%{url}'>点击检查图片描述智能体</a>。"
+      ai_image_caption_agent_reasons:
+        agent_missing: "所选智能体不存在"
+        agent_vision_disabled: "该智能体不支持图片上传"
+        llm_missing: "该智能体没有指定 LLM"
+        llm_vision_disabled: "该智能体指定的 LLM 不支持图片输入"
   discourse_automation:
     ai:
       flag_types:
@@ -103,6 +109,9 @@ zh_CN:
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天消息串标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据消息串内容自动设置聊天消息串标题。"
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
+    ai_image_caption_agent: "用于 AI 图片摘要功能的智能体。自定义智能体必须启用图片上传功能，并使用具备视觉功能的 LLM。"
+    ai_post_image_captions_enabled: "为帖子图片启用 AI 摘要。生成缺失的图片摘要需要配置 {{setting:ai_image_caption_agent}}。"
+    ai_post_image_captions_per_post_limit: "每篇帖子可添加图片摘要的数量上限。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_post_illustrator_agent: "用于 AI 助手插图帖子功能的智能体。注意：您还必须创建一个图像生成工具（管理 > 插件 > Discourse AI > 工具），此功能才能正常工作。"
     ai_helper_chat_thread_title_agent: "用于生成聊天消息串标题的智能体。"
@@ -124,7 +133,8 @@ zh_CN:
     ai_summarization_agent: "用于总结功能的智能体"
     ai_pm_summarization_allowed_groups: "能够创建摘要并在私信中查看的群组。"
     ai_summary_gists_enabled: "自动生成话题中最新回复的简要总结"
-    ai_summary_backfill_maximum_topics_per_hour: "每小时回填的话题摘要数。"
+    ai_summary_gists_agent: "该 Agent 用于生成简短的话题摘要。摘要生成始终使用内置的最终摘要工具；Agent 上配置的其他工具和结构化响应格式将被忽略。"
+    ai_summary_backfill_maximum_topics_per_hour: "每小时需要回填的话题摘要数量。每个本地化摘要都计入此限制。"
     ai_bot_enabled: "启用 AI 机器人模块。"
     ai_bot_enabled_llms: "用于选择 AI 机器人对话的 LLM"
     ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
@@ -376,12 +386,17 @@ zh_CN:
       thinking: "正在思考"
       tool_pending_approval: "此操作需要版主批准，然后才能执行。"
       chat_tool_approval:
+        approved: "由 @%{username} 批准。"
+        rejected: "由 @%{username} 拒绝。"
+        failed: "无法完成该操作： %{error}"
         unexpected_error: "发生意外错误"
       agents:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_agent: "系统智能体无法删除，请改为将其禁用。"
         cannot_edit_system_agent: "系统智能体只能重命名，无法编辑工具或系统提示，只能禁用并复制。"
         cannot_have_duplicate_tools: "不能有重复的工具"
+        admin_dashboard_highlights:
+          description: "写下显示在管理员信息中心顶部的简要总结，解释此期间的变化和值得关注的事情"
         github_helper:
           name: "GitHub 助手"
           description: "专门协助处理 GitHub 相关任务和问题的 AI 机器人"
@@ -582,12 +597,15 @@ zh_CN:
         tags: "列出标签"
         time: "时间"
         summarize: "总结"
+        set_topic_summary: "设置话题摘要"
         image: "生成图片"
         google: "搜索 Google"
         read: "阅读话题"
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "正在搜索站点设置"
+        read_site_setting: "阅读网站设置"
+        change_site_setting: "更改网站设置"
         dall_e: "生成图片"
         search_meta_discourse: "搜索元 Discourse"
         javascript_evaluator: "评估 JavaScript"
@@ -609,6 +627,8 @@ zh_CN:
         categories: "列出论坛上所有公开可见的类别"
         flag_post: "标记当前帖子供管理人员审核"
         close_topic: "关闭或打开话题"
+        suspend_user: "封禁用户，禁止其登录和发帖。"
+        silence_user: "禁言用户，禁止其发帖，但允许其阅读。"
         unlist_topic: "公开或取消公开话题"
         lock_post: "锁定或解锁帖子"
         delete_topic: "删除话题"
@@ -627,6 +647,7 @@ zh_CN:
         tags: "列出论坛上的所有标签"
         time: "查找不同时区的时间"
         summary: "总结话题"
+        set_topic_summary: "设定最终的简短话题概要"
         image: "使用 Stable Diffusion 生成图片"
         create_image: "使用 Open AI GPT 图片模型生成图片"
         edit_image: "使用 Open AI GPT 图片模型编辑图片"
@@ -635,6 +656,8 @@ zh_CN:
         setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
         search_settings: "搜索站点设置"
+        read_site_setting: "读取站点设置的当前值"
+        change_site_setting: "更改站点设置的值"
         dall_e: "使用 DALL-E 3 生成图片"
         search_meta_discourse: "搜索元 Discourse"
         javascript_evaluator: "评估 JavaScript"
@@ -653,6 +676,8 @@ zh_CN:
         random_picker: "正在从 %{options} 中选择，已选：%{result}"
         flag_post: "标记帖子 %{post_id}（flag_post：%{flag_post}）"
         close_topic: "关闭话题 %{topic_id}（已关闭：%{closed}）"
+        suspend_user: "将 %{username} 封禁 %{duration_days} 天"
+        silence_user: "将 %{username} 禁言 %{duration_days} 天"
         unlist_topic: "取消公开话题 %{topic_id}（已取消公开：%{unlisted}）"
         lock_post: "锁定帖子 %{post_id}（已锁定：%{locked}）"
         delete_topic: "删除话题 %{topic_id}（已删除：%{deleted}）"
@@ -670,6 +695,7 @@ zh_CN:
         read: "正在阅读：<a href='%{url}'>%{title}</a>"
         time: "%{timezone} 的时间为 %{time}"
         summarize: "已总结 <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "设定最终的简短话题概要"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
@@ -692,6 +718,8 @@ zh_CN:
           other: "正在研究：%{goals}\n\n找到 %{count} 个与“%{filter}”相符的帖子"
         search_settings:
           other: "找到 '%{query}' 的 %{count} 个结果"
+        read_site_setting: "阅读站点设置 %{setting_name}"
+        change_site_setting: "将站点设置 %{setting_name} 更改为 '%{value}'"
       discoveries:
         continue_conversation:
           title: "发现对话：搜索 %{query}"
@@ -715,9 +743,19 @@ zh_CN:
       suspend_user:
         errors:
           not_found: "找不到用户。"
+          not_allowed: "您无权封禁该用户。"
+          no_reason: "封禁用户需要提供理由。"
+          invalid_duration: "时长必须为正整数天，上限为 %{max} 天。"
+          failed: "用户封禁失败。"
+        success: "用户 %{username} 已被封禁。"
       silence_user:
         errors:
           not_found: "找不到用户。"
+          not_allowed: "您无权禁言该用户。"
+          no_reason: "禁言用户需要提供理由。"
+          invalid_duration: "时长必须为正整数天，上限为 %{max} 天。"
+          failed: "用户禁言失败。"
+        success: "用户 %{username} 已被禁言。"
       unlist_topic:
         errors:
           not_found: "找不到话题。"
@@ -826,6 +864,28 @@ zh_CN:
         errors:
           not_allowed: "您无权访问审核队列"
           not_found: "找不到审核队列条目"
+      change_site_setting:
+        errors:
+          no_reason: "更改站点设置需要提供理由。"
+          not_found: "站点设置“ %{setting_name} ”不存在。"
+          not_allowed: "您无权更改站点设置。"
+          hidden: "站点设置“%{setting_name}”已隐藏，无法在此处更改。"
+          secret: "站点设置“%{setting_name}”包含密钥，无法在此处更改。"
+          themeable: "站点设置“%{setting_name}”需要特定主题，无法在此处更改。"
+          deprecated: "站点设置“%{setting_name}”已弃用；请改用“%{new_name}”。"
+          shadowed: "站点设置“%{setting_name}”已被全局覆盖，无法更改。"
+          unconfigurable: "站点设置“%{setting_name}”属于无法配置的插件。"
+          unsupported_type: "AI机器人无法更改类型为“%{type}”的站点设置。"
+          invalid_value: "无效值： %{error}"
+          failed: "更改站点设置失败。"
+        success: "站点设置 %{setting_name} 已更改为 '%{value}'。"
+      read_site_setting:
+        errors:
+          not_allowed: "您无权查看站点设置。"
+          not_found: "站点设置“%{setting_name}”不存在。"
+          hidden: "站点设置“%{setting_name}”已隐藏，无法在此处读取。"
+          secret: "站点设置“%{setting_name}”包含密钥，无法在此处读取。"
+          themeable: "站点设置“%{setting_name}”需要特定主题，无法在此处读取。"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -836,6 +896,8 @@ zh_CN:
         target_missing: "工具操作目标不再存在。"
         tool_not_found: "工具 '%{tool_name}' 不再可用。"
         bot_user_missing: "机器人用户不再存在。"
+        performer_not_human: "此操作必须由真人（而非机器人）批准或拒绝。"
+        post_mismatch: "该批准卡片不属于这个帖子。"
         execution_error: "工具执行失败：%{error}"
         execution_error_unknown: "发生意外错误"
     summarization:
@@ -891,6 +953,8 @@ zh_CN:
       delete_failed_in_use: "此凭据目前正被一个或多个 LLM 或嵌入向量使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
+      invalid_provider_param: "%{param} 格式无效"
+      reasoning_mode_requirements: "专业推理模式需要使用 Responses API"
       secret_required: "必须选择一个凭据"
       secret_not_found: "所选凭据不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"

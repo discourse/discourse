@@ -899,8 +899,6 @@ es:
           anthropic-claude-haiku-4-5: "Rápido y rentable"
           google-gemini-3-1-pro: "El modelo de Google más inteligente"
           google-gemini-3-flash: "Rápido y rentable con razonamiento multimodal"
-          open_ai-gpt-5-4: "El modelo estrella de OpenAI. Es ideal para la resolución de problemas en todos los dominios."
-          open_ai-gpt-5-4-nano: "El modelo GPT-5 más rápido y rentable"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal de Moonshot con capacidades de visión"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
@@ -1215,15 +1213,9 @@ es:
           bulk_regen_description: "Selecciona qué tipo de resumen de IA quieres regenerar para los temas seleccionados."
           regenerate_gists_option: "Resúmenes breves (gists)"
           regenerate_summaries_option: "Resúmenes de temas"
-          regenerate_gists_success:
-            one: "El resumen breve se ha regenerado correctamente"
-            other: "%{count} resúmenes breves se han regenerado correctamente"
           regenerate_gists_error:
             one: "Error al regenerar el resumen breve"
             other: "Error al regenerar %{count} resúmenes breves"
-          regenerate_topic_summary_success:
-            one: "El resumen del tema se ha regenerado correctamente"
-            other: "%{count} resúmenes de temas se han regenerado correctamente"
           regenerate_topic_summary_error:
             one: "Error al regenerar el resumen del tema"
             other: "Error al regenerar %{count} resúmenes de temas"

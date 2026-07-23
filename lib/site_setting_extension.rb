@@ -594,7 +594,7 @@ module SiteSettingExtension
   # Merges the provider values of site settings (whether it be from the DB or wherever)
   # and theme site settings with the default values of those settings, also taking into
   # account shadowed site settings and upcoming change behaviour.
-  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true)
+  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true, clear_caches: true)
     mutex.synchronize do
       ensure_listen_for_changes
 
@@ -669,10 +669,12 @@ module SiteSettingExtension
 
       refresh_theme_site_settings! if refresh_theme_site_settings
 
-      clear_cache!(
-        expire_theme_site_setting_cache:
-          ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
-      )
+      if clear_caches
+        clear_cache!(
+          expire_theme_site_setting_cache:
+            ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
+        )
+      end
     end
   end
 
@@ -736,6 +738,7 @@ module SiteSettingExtension
   def after_fork
     @process_id = nil
     ensure_listen_for_changes
+    RailsMultisite::ConnectionManagement.safe_each_connection { refresh!(clear_caches: false) }
   end
 
   def raise_invalid_setting_access(setting_name)
@@ -1189,8 +1192,8 @@ module SiteSettingExtension
     elsif setting_type == :group_list
       define_singleton_method("#{clean_name}_map") do
         ids = public_send(clean_name).to_s.split("|").map(&:to_i)
-        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-             ids.include?(Group::AUTO_GROUPS[:everyone])
+        if ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+             SiteSetting.granular_anonymous_and_logged_in_groups_permissions
           ids =
             ids
               .map do |id|

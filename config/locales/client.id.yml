@@ -1390,10 +1390,14 @@ id:
           cancel: "Batal"
         invite_roles:
           member_tab: "Anggota"
+          admin_tab: "Staf"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           invite_by_email: "Email"
           summary:
             role_member: "Anggota"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             topic: "Topik"
             groups: "Grup"
@@ -1671,6 +1675,7 @@ id:
       edit_shared_draft: "Sunting Konsep Bersama"
       discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
+      title_placeholder_redesign: "Judul"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "Mengapa Anda menyunting?"
       topic_featured_link_placeholder: "Masukkan tautan yang terlihat dengan judul."
@@ -3064,6 +3069,9 @@ id:
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"
+        export: "Ekspor"
+        import_category:
+          new: "Baru"
       embedding:
         delete: "Hapus"
         edit: "Ubah"

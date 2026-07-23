@@ -315,6 +315,13 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: ""
+    enum: "HomepageSiteSetting"
+    area: "interface"
   custom_homepage_crawler_route:
     type: enum
     default: "latest"
@@ -1695,6 +1702,15 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  emoji_picker_pinned_groups:
+    type: list
+    list_type: simple
+    allow_any: true
+    default: ""
+    client: true
+    refresh: true
+    validator: "EmojiPickerPinnedGroupsValidator"
+    area: "emojis"
   enable_gifs:
     default: false
     client: true
@@ -2118,6 +2134,9 @@ nested_replies:
     type: integer
     min: 1
     max: 10000
+    hidden: true
+  nested_replies_stats_maintenance_enabled:
+    default: false
     hidden: true
 
 email:
@@ -4668,7 +4687,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:

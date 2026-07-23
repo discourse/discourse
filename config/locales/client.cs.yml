@@ -2413,7 +2413,9 @@ cs:
           member_title: "Pozvat členy"
           sent_title: "Pozvánka odeslána"
           member_tab: "Členové"
-          admin_tab: "Administrátoři"
+          admin_tab: "Redakce"
+          staff_role_admin: "Administrace"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mailová adresa"
           email_placeholder: "jmeno@example.com"
           invite_by_email: "Email"
@@ -2424,6 +2426,7 @@ cs:
           summary:
             role_member: "Člen"
             role_admin: "Administrace"
+            role_moderator: "Moderátor"
             method: "Sdílení"
             method_email: "Email"
             uses: "Max. použití"
@@ -3204,6 +3207,7 @@ cs:
       draft_saved: "Koncept uložen!"
       users_placeholder: "Přidejte uživatele nebo skupiny"
       title_placeholder: "O čem je tato diskuse v jedné stručné větě?"
+      title_placeholder_redesign: "Název"
       title_or_link_placeholder: "Zadejte název nebo sem vložte odkaz"
       edit_reason_placeholder: "Proč byla nutná úprava?"
       topic_featured_link_placeholder: "Zadejte odkaz s titulkem"
@@ -3886,6 +3890,7 @@ cs:
       sort:
         label: "Řadit podle"
         top: "Nejlepší"
+        hot: "Žhavé"
         new: "Nový"
       load_more_children:
         one: "%{count} další odpověď"
@@ -4729,7 +4734,7 @@ cs:
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
-      choose: "kategorie&hellip;"
+      choose: "Kategorie&hellip;"
       edit: "Upravit"
       edit_title: "Upravit tuto kategorii"
       edit_dialog_title: "Upravit: %{categoryName}"
@@ -5390,7 +5395,6 @@ cs:
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
       tags: "Štítky"
-      choose_for_topic: "volitelné štítky"
       choose_for_topic_required:
         one: "vyberte alespoň %{count} štítek..."
         few: "vyberte alespoň %{count} štítky..."
@@ -5654,6 +5658,10 @@ cs:
           public: "Viditelné pro všechny"
           always_public: "Obsah v této sekci je vždy veřejný"
           more_menu: "Další menu"
+          localizations:
+            title: "Překlady"
+            locale: "Jazyk"
+            title_label: "Název sekce"
           links:
             add: "Přidat další odkaz"
             delete: "Odstranit odkaz"
@@ -9001,6 +9009,10 @@ cs:
         alt: "náhled vlastních emoji"
         delete_confirm: "Určitě chcete smazat :%{name}: emoji?"
         settings: "Nastavení"
+        export: "Export"
+        import: "Import"
+        import_category:
+          new: "Nový"
       embedding:
         get_started: "Pokud chcete zabudovat Discourse do jiných webových stránek, začněte přidáním názvu hostitele."
         delete: "Smazat"

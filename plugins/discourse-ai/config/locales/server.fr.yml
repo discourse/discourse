@@ -75,7 +75,6 @@ fr:
     ai_summarization_enabled: "Activer la fonction de synthèse"
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
-    ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
     ai_bot_enabled: "Activez le module du robot IA."
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"

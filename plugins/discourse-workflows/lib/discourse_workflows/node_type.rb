@@ -221,6 +221,29 @@ module DiscourseWorkflows
         .filter_map { |name| name.strip.presence }
     end
 
+    def self.normalize_category_ids(value)
+      Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
+    end
+
+    # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
+    # stripping the legacy key has been promoted.
+    def self.category_ids_parameter(trigger_ctx)
+      value = trigger_ctx.get_node_parameter("category_ids")
+      value = trigger_ctx.get_node_parameter("category_id") if value.nil?
+      normalize_category_ids(value)
+    end
+
+    def self.expand_subcategory_ids(category_ids)
+      category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
+    end
+
+    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      return true if category_ids.empty?
+
+      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
+      category_ids.include?(topic_category_id)
+    end
+
     def self.trust_level_options
       TrustLevel.levels.map do |name, level|
         { value: level.to_s, label_key: "trust_levels.names.#{name}" }
@@ -258,6 +281,18 @@ module DiscourseWorkflows
 
     def normalize_tag_names(value)
       self.class.normalize_tag_names(value)
+    end
+
+    def category_ids_parameter(trigger_ctx)
+      self.class.category_ids_parameter(trigger_ctx)
+    end
+
+    def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      self.class.matches_category_ids?(
+        topic_category_id,
+        category_ids,
+        include_subcategories: include_subcategories,
+      )
     end
 
     def wrap(data, paired_item: nil)

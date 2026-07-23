@@ -127,7 +127,7 @@ module DiscourseAi::Completions
       return if !usage
 
       token_details = usage[:prompt_tokens_details] || {}
-      cached_tokens = token_details[:cached_tokens].to_i
+      cached_tokens = (token_details[:cached_tokens] || usage[:prompt_cache_hit_tokens]).to_i
       cache_write_tokens = token_details[:cache_write_tokens].to_i
 
       prompt_tokens = usage[:prompt_tokens].to_i

@@ -17,45 +17,93 @@ describe TopicsBulkAction do
   before { add_to_assign_allowed_group(user) }
 
   describe "assign_topics" do
-    it "assigns multiple topics to user" do
-      TopicsBulkAction.new(
-        user,
-        [post.topic.id, post1.topic.id],
-        { type: "assign", username: user.username, note: "foobar" },
-      ).perform!
+    it "assigns multiple topics to a user" do
+      changed_ids =
+        TopicsBulkAction.new(
+          user,
+          [post.topic.id, post1.topic.id],
+          { type: "assign", username: user.username, note: "foobar" },
+        ).perform!
 
-      assigned_topics = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
-
-      expect(assigned_topics.length).to eq(2)
-
-      expect(assigned_topics).to contain_exactly(post.topic, post1.topic)
-
-      expect(post.topic.assignment.note).to eq "foobar"
-      expect(post1.topic.assignment.note).to eq "foobar"
+      expect(changed_ids).to contain_exactly(post.topic.id, post1.topic.id)
+      expect(post.topic.reload.assignment).to have_attributes(
+        assigned_to: user,
+        assigned_to_type: "User",
+        note: "foobar",
+      )
+      expect(post1.topic.reload.assignment.assigned_to).to eq(user)
     end
 
-    it "doesn't allows to assign to user not in assign_allowed_group" do
-      TopicsBulkAction.new(
-        user,
-        [post.topic.id, post1.topic.id],
-        { type: "assign", username: user2.username },
-      ).perform!
+    it "reports a user who does not belong to an assign allowed group" do
+      action =
+        TopicsBulkAction.new(
+          user,
+          [post.topic.id, post1.topic.id],
+          { type: "assign", username: user2.username },
+        )
 
-      assigned_topics = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user2).topics
-
-      expect(assigned_topics.length).to eq(0)
+      expect(action.perform!).to be_empty
+      expect(action.errors).to eq(
+        I18n.t("discourse_assign.forbidden_assign_to", username: user2.username) => 2,
+      )
     end
 
-    it "user who is not in assign_allowed_group can't assign topics" do
-      TopicsBulkAction.new(
-        user2,
-        [post.topic.id, post1.topic.id, post2.topic.id],
-        { type: "assign", username: user.username },
-      ).perform!
+    it "refuses a user who is not allowed to assign" do
+      expect {
+        TopicsBulkAction.new(
+          user2,
+          [post.topic.id, post1.topic.id, post2.topic.id],
+          { type: "assign", username: user.username },
+        ).perform!
+      }.to raise_error(Discourse::InvalidAccess)
 
-      assigned_topics = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
+      expect(Assignment.count).to eq(0)
+    end
 
-      expect(assigned_topics.length).to eq(0)
+    it "reports a group that cannot be assigned" do
+      unassignable_group = Fabricate(:group)
+
+      action =
+        TopicsBulkAction.new(
+          user,
+          [post.topic.id, post1.topic.id],
+          { type: "assign", group_name: unassignable_group.name },
+        )
+
+      expect(action.perform!).to be_empty
+      expect(action.errors).to eq(
+        I18n.t("discourse_assign.forbidden_group_assign_to", group: unassignable_group.name) => 2,
+      )
+    end
+
+    it "does not report topics already assigned to the same assignee" do
+      Assigner.new(post.topic, user).assign(user)
+
+      action =
+        TopicsBulkAction.new(
+          user,
+          [post.topic.id, post1.topic.id],
+          { type: "assign", username: user.username },
+        )
+
+      expect(action.perform!).to contain_exactly(post.topic.id, post1.topic.id)
+      expect(action.errors).to be_empty
+    end
+
+    it "skips topics the acting user cannot see" do
+      secret_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      action =
+        TopicsBulkAction.new(
+          user,
+          [secret_topic.id, post.topic.id],
+          { type: "assign", group_name: assign_allowed_group.name },
+        )
+
+      expect(action.perform!).to contain_exactly(post.topic.id)
+      expect(action.errors).to be_empty
+      expect(secret_topic.reload.assignment).to be_blank
     end
   end
 

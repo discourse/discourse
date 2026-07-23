@@ -50,10 +50,9 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   }
 
   const update = (height) => {
-    target.style.setProperty(
-      "--composer-fields-height",
-      `${Math.round(height)}px`
-    );
+    const rounded = Math.round(height);
+    target.style.setProperty("--composer-fields-height", `${rounded}px`);
+    target.classList.toggle("has-composer-fields", rounded > 0);
   };
 
   update(element.offsetHeight);
@@ -66,6 +65,7 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   return () => {
     observer.disconnect();
     target.style.removeProperty("--composer-fields-height");
+    target.classList.remove("has-composer-fields");
   };
 });
 
@@ -174,14 +174,14 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
-    this.composer.set("composerHeight", `${size}px`);
-    this.keyValueStore.set({
-      key: "composerHeight",
-      value: this.composer.composerHeight,
-    });
+
+    const height = `${size}px`;
+    // resuming from minimized restores the height from the model
+    this.composer.model?.set("composerHeight", height);
+    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
-      size ? `${size}px` : ""
+      size ? height : ""
     );
 
     this._triggerComposerResized();
@@ -717,28 +717,6 @@ export default class ComposerContainer extends Component {
                     >
                       {{dIcon this.composer.uploadIcon}}
                     </a>
-                  {{/if}}
-
-                  {{#if this.composer.allowPreview}}
-                    <a
-                      href
-                      class="btn btn-default no-text mobile-preview"
-                      title={{i18n "composer.show_preview"}}
-                      {{on "click" this.composer.togglePreview}}
-                      aria-label={{i18n "composer.show_preview"}}
-                    >
-                      {{dIcon "desktop"}}
-                    </a>
-                  {{/if}}
-
-                  {{#if this.composer.isPreviewVisible}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @title="composer.hide_preview"
-                      @ariaLabel="composer.hide_preview"
-                      @icon="pencil"
-                      class="hide-preview"
-                    />
                   {{/if}}
                 {{/if}}
 

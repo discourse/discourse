@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-.uc-floating-dismiss-topics-on-mobile {
+:where(.uc-floating-dismiss-topics-on-mobile) {
   @include viewport.until(sm) {
     .dismiss-container-top {
       position: fixed;

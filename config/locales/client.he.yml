@@ -2459,7 +2459,9 @@ he:
           member_title: "הזמנת חברים"
           sent_title: "נשלחה הזמנה"
           member_tab: "חברים"
-          admin_tab: "מנהלים ראשיים"
+          admin_tab: "סגל"
+          staff_role_admin: "הנהלה"
+          staff_role_moderator: "מפקח"
           admin_email_label: "כתובת דוא״ל"
           email_placeholder: "name@example.com"
           invite_by_email: "דוא״ל"
@@ -2469,6 +2471,7 @@ he:
           summary:
             role_member: "חברים"
             role_admin: "הנהלה"
+            role_moderator: "מפקח"
             method: "שיתוף"
             method_email: "דוא״ל"
             restriction: "מוגבלת לכדי"
@@ -3253,6 +3256,7 @@ he:
       draft_saved: "הטיוטה נשמרה!"
       users_placeholder: "הוספת משתמשים או קבוצות"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_placeholder_redesign: "כותרת"
       title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -3971,6 +3975,7 @@ he:
       sort:
         label: "מיון לפי"
         top: "מובילים"
+        hot: "חמים"
         new: "חדשות"
         old: "ישן"
       load_more_children:
@@ -5496,7 +5501,6 @@ he:
       selector_no_tags: "ללא תגיות"
       selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
-      choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
         one: "נא לבחור תגית %{count} לפחות…"
         two: "נא לבחור %{count} תגיות לפחות…"
@@ -5772,6 +5776,10 @@ he:
           public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
+          localizations:
+            title: "תרגומים"
+            locale: "שפה"
+            title_label: "כותרת מקטע"
           links:
             add: "הוספת קישור נוסף"
             delete: "מחיקת קישור"
@@ -9104,6 +9112,10 @@ he:
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"
         settings: "הגדרות"
+        export: "ייצוא"
+        import: "ייבוא"
+        import_category:
+          new: "חדשות"
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         delete: "מחיקה"
