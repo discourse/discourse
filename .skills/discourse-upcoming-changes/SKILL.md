@@ -83,7 +83,7 @@ upcoming_change:
 | `[specific_groups]` | No one, Specific group(s) |
 | `[staff, specific_groups]` | No one, Staff, Specific group(s) |
 
-**Optional:** Add `include_css: true` if you need to scope CSS to this change. When enabled for a user, a `uc-<dasherized-setting-name>` class is added to `<body>` so stylesheets can gate visuals on the change (e.g. `enable_your_feature_name` → `body.uc-enable-your-feature-name`). Omit it (the default) when the change has no CSS keyed on the body class — body classes are opt-in, not emitted for every change. Always scope this CSS as `:where(.uc-<dasherized-setting-name>)`, never a bare `.uc-<name>`, so the transitional class adds zero specificity and stays safe to remove later — enforced by the `discourse/uc-classes-in-where` stylelint rule.
+**Optional:** Add `include_css: true` if you need to scope CSS to this change. When enabled for a user, a `uc-<dasherized-setting-name>` class is added to `<body>` so stylesheets can gate visuals on the change (e.g. `enable_your_feature_name` → `body.uc-enable-your-feature-name`). Omit it (the default) when the change has no CSS keyed on the body class — body classes are opt-in, not emitted for every change. Always scope this CSS as `:where(.uc-<dasherized-setting-name>)`, never a bare `.uc-<name>`, so the transitional class adds zero specificity and stays safe to remove later — enforced by the `discourse/uc-classes-in-where` stylelint rule. Put the styles in dedicated files imported from `app/assets/stylesheets/common/upcoming-changes/_index.scss`.
 
 ```yaml
 upcoming_change:
