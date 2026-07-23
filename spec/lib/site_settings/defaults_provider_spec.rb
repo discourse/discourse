@@ -231,6 +231,32 @@ RSpec.describe SiteSettings::DefaultsProvider do
       end
     end
 
+    describe ".get" do
+      context "when the upcoming change override is active" do
+        before do
+          settings.defaults.activate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "returns the upcoming change default override" do
+          expect(settings.defaults.get(:suggested_topics_max_days_old)).to eq(1000)
+        end
+      end
+
+      context "when the upcoming change override is not active" do
+        before do
+          settings.defaults.deactivate_upcoming_change_override(
+            :increase_suggested_topics_max_days_old_default,
+          )
+        end
+
+        it "returns the original default" do
+          expect(settings.defaults.get(:suggested_topics_max_days_old)).to eq(365)
+        end
+      end
+    end
+
     describe ".upcoming_change_override_metadata" do
       before do
         settings.defaults.activate_upcoming_change_override(
