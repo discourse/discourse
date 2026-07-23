@@ -168,7 +168,13 @@ document's intro prose would confuse both audiences.
   picker. All committed and freshness-guarded — deliberately, since **old-version
   documents change over time** (every new change deepens their gap).
 - Generator tail still open: publication wiring (second document through the
-  `discourse_api_docs` nightly action); the extensions section (per-site docs); the
+  `discourse_api_docs` nightly action); **plugin extensions in the documents** — the
+  generator consulting the extension registry so registered relationships, namespaced
+  filters (`filter[run-stats.stale]`), include namespaces, and extension resource schemas
+  are documented, enabling per-site docs (a site's own `GET /api/openapi.json` covering
+  its installed plugins); open design question inside it: versioned docs for own-timeline
+  extensions (likely: each base-version document shows them at their latest, override
+  mechanics staying prose — one document per override combination is combinatorial); the
   changelog from change descriptions; `deprecated: true` (needs the `deprecate` keyword).
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
