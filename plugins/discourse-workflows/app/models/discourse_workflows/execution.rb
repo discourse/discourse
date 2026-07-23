@@ -188,7 +188,11 @@ module DiscourseWorkflows
         )
       end
 
-      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(reload) if claimed
+      if claimed
+        reload
+        DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
+        DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)
+      end
 
       claimed
     end

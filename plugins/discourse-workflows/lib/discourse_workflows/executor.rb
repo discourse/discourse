@@ -173,6 +173,7 @@ module DiscourseWorkflows
           step&.add_metadata("handled_error", error_metadata(error))
           step&.succeed!(output: all_items)
           step&.apply_updates!("error" => nil)
+          @store.publish_progress(step: step) if step
           @context.store_node_output(waiting_node, all_items)
           @context.store_node_run(
             waiting_node,
@@ -184,6 +185,7 @@ module DiscourseWorkflows
           route_downstream(waiting_node, handled_outputs)
         else
           step&.fail!(error.message)
+          @store.publish_progress(step: step) if step
           raise error
         end
       end
@@ -221,6 +223,7 @@ module DiscourseWorkflows
       step = record_step(node, [])
       step.succeed!(output: output_groups.flatten(1))
       step.add_metadata("cached", true)
+      @store.publish_progress(step: step)
       route_downstream(node, output_groups)
     end
 
@@ -431,6 +434,7 @@ module DiscourseWorkflows
         js_elapsed = (sandbox_budget_tracker.current_elapsed_ms - js_elapsed_before).round(1)
         step.add_metadata("js_elapsed_ms", js_elapsed) if js_elapsed > 0
         runtime_state.step_metadata.each { |key, value| step.add_metadata(key, value) }
+        @store.publish_progress(step: step)
       end
     end
 
@@ -474,6 +478,7 @@ module DiscourseWorkflows
       )
       step = record_step(node, input_items)
       step.skip!(output: input_items, reason: reason)
+      @store.publish_progress(step: step)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -483,6 +488,7 @@ module DiscourseWorkflows
       reason = issues.map { |i| "#{i[:path]}: #{i[:message]}" }.join(", ")
       step = record_step(node, input_items)
       step.skip!(output: input_items, reason: reason)
+      @store.publish_progress(step: step)
       @context.store_node_output(node, input_items)
       @context.store_node_run(node, inputs: [input_items], outputs: [input_items])
       enqueue_downstream(node, 0, input_items)
@@ -492,6 +498,7 @@ module DiscourseWorkflows
       step = record_step(node, input_items)
       step.succeed!(output: pinned_items)
       step.add_metadata("pinned", true)
+      @store.publish_progress(step: step)
       @context.store_node_output(node, pinned_items)
       @context.store_node_run(
         node,
@@ -901,6 +908,7 @@ module DiscourseWorkflows
           error: error,
         )
       @steps << step
+      @store.publish_progress(step: step)
       step
     end
 
@@ -918,6 +926,7 @@ module DiscourseWorkflows
         "output" => response_items,
         "finished_at" => Time.current.iso8601,
       )
+      @store.publish_progress(step: step)
     end
 
     def begin_wait!(wait_request)

@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import AdminTable from "../admin-table";
 import EmptyState from "../empty-state";
@@ -14,7 +15,6 @@ import EmptyState from "../empty-state";
 const STATUS_ICONS = {
   success: "circle-check",
   error: "circle-xmark",
-  running: "spinner",
   waiting: "clock",
 };
 
@@ -29,7 +29,20 @@ function formatTime(timestamp) {
   return new Date(timestamp).toLocaleString();
 }
 
-function runTime(execution) {
+function isRunning(execution) {
+  return ["pending", "running"].includes(execution.status);
+}
+
+function isLive(execution) {
+  return isRunning(execution) || execution.status === "waiting";
+}
+
+function runTime(execution, currentTime) {
+  if (isRunning(execution) && execution.started_at) {
+    const ms = Math.max(0, currentTime - new Date(execution.started_at));
+    return `${Math.floor(ms / 1000).toFixed(1)}s`;
+  }
+
   const ms = execution.run_time_ms;
   if (ms == null) {
     return "—";
@@ -40,16 +53,30 @@ function runTime(execution) {
 export default class ExecutionsManager extends Component {
   @service currentUser;
   @service dialog;
+  @service messageBus;
   @service router;
 
   @tracked executions = null;
   @tracked loadMoreUrl = null;
   @tracked loadingMore = false;
   @tracked bulkMode = false;
+  @tracked currentTime = Date.now();
+
+  #subscriptions = new Map();
+  #timer;
 
   constructor() {
     super(...arguments);
     this.loadExecutions();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    for (const { channel, handler } of this.#subscriptions.values()) {
+      this.messageBus.unsubscribe(channel, handler);
+    }
+    this.#subscriptions.clear();
+    this.#stopTimer();
   }
 
   async loadExecutions() {
@@ -58,10 +85,89 @@ export default class ExecutionsManager extends Component {
         ? `/admin/plugins/discourse-workflows/workflows/${this.args.workflowId}/executions.json`
         : "/admin/plugins/discourse-workflows/executions.json";
       const result = await ajax(url);
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.executions = result.executions;
       this.loadMoreUrl = result.meta?.load_more_executions;
+      this.#syncLiveExecutions();
     } catch (e) {
-      popupAjaxError(e);
+      if (!this.isDestroying && !this.isDestroyed) {
+        popupAjaxError(e);
+      }
+    }
+  }
+
+  #syncLiveExecutions() {
+    const liveIds = new Set(
+      (this.executions || []).filter(isLive).map((execution) => execution.id)
+    );
+
+    for (const [executionId, subscription] of this.#subscriptions) {
+      if (!liveIds.has(executionId)) {
+        this.messageBus.unsubscribe(subscription.channel, subscription.handler);
+        this.#subscriptions.delete(executionId);
+      }
+    }
+
+    for (const executionId of liveIds) {
+      if (this.#subscriptions.has(executionId)) {
+        continue;
+      }
+
+      const channel = `/discourse-workflows/execution/${executionId}`;
+      const handler = (message) => this.#handleProgress(executionId, message);
+      this.#subscriptions.set(executionId, { channel, handler });
+      this.messageBus.subscribe(channel, handler, 0);
+    }
+
+    if ((this.executions || []).some(isRunning)) {
+      this.#startTimer();
+    } else {
+      this.#stopTimer();
+    }
+  }
+
+  #handleProgress(executionId, message) {
+    if (
+      message.type !== "execution_progress" ||
+      message.execution?.id !== executionId
+    ) {
+      return;
+    }
+
+    const current = this.executions.find(
+      (execution) => execution.id === executionId
+    );
+    if (
+      !current ||
+      !Object.entries(message.execution).some(
+        ([key, value]) => (current[key] ?? null) !== (value ?? null)
+      )
+    ) {
+      return;
+    }
+
+    this.executions = this.executions.map((execution) =>
+      execution.id === executionId
+        ? { ...execution, ...message.execution }
+        : execution
+    );
+    this.#syncLiveExecutions();
+  }
+
+  #startTimer() {
+    this.currentTime = Date.now();
+    this.#timer ||= window.setInterval(() => {
+      this.currentTime = Date.now();
+    }, 1000);
+  }
+
+  #stopTimer() {
+    if (this.#timer) {
+      window.clearInterval(this.#timer);
+      this.#timer = null;
     }
   }
 
@@ -78,12 +184,21 @@ export default class ExecutionsManager extends Component {
     this.loadingMore = true;
     try {
       const result = await ajax(this.loadMoreUrl);
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
       this.executions = [...this.executions, ...result.executions];
       this.loadMoreUrl = result.meta?.load_more_executions;
+      this.#syncLiveExecutions();
     } catch (e) {
-      popupAjaxError(e);
+      if (!this.isDestroying && !this.isDestroyed) {
+        popupAjaxError(e);
+      }
     } finally {
-      this.loadingMore = false;
+      if (!this.isDestroying && !this.isDestroyed) {
+        this.loadingMore = false;
+      }
     }
   }
 
@@ -217,7 +332,11 @@ export default class ExecutionsManager extends Component {
             <span
               class="workflows-executions-manager__status --{{execution.status}}"
             >
-              {{dIcon (statusIcon execution.status)}}
+              {{#if (isRunning execution)}}
+                {{dLoadingSpinner size="small"}}
+              {{else}}
+                {{dIcon (statusIcon execution.status)}}
+              {{/if}}
               {{i18n
                 (concat
                   "discourse_workflows.executions.statuses." execution.status
@@ -238,7 +357,11 @@ export default class ExecutionsManager extends Component {
             <span
               class="workflows-executions-manager__status --{{execution.status}}"
             >
-              {{dIcon (statusIcon execution.status)}}
+              {{#if (isRunning execution)}}
+                {{dLoadingSpinner size="small"}}
+              {{else}}
+                {{dIcon (statusIcon execution.status)}}
+              {{/if}}
               {{i18n
                 (concat
                   "discourse_workflows.executions.statuses." execution.status
@@ -253,11 +376,13 @@ export default class ExecutionsManager extends Component {
             {{formatTime execution.started_at}}
           </td>
         {{/if}}
-        <td class="d-table__cell --detail">
+        <td
+          class="d-table__cell --detail workflows-executions-manager__run-time"
+        >
           <div class="d-table__mobile-label">
             {{i18n "discourse_workflows.executions.run_time"}}
           </div>
-          {{runTime execution}}
+          {{runTime execution this.currentTime}}
         </td>
         <td class="d-table__cell --controls">
           <div class="d-table__cell-actions">

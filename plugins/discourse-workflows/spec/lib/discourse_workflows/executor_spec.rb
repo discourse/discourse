@@ -36,6 +36,22 @@ RSpec.describe DiscourseWorkflows::Executor do
         expect(topic.reload.tags).to include(tag)
       end
 
+      it "publishes step and terminal progress" do
+        messages =
+          MessageBus.track_publish { described_class.new(workflow, "trigger-1", trigger_data).run }
+        progress_messages =
+          messages.select do |message|
+            message.channel.start_with?("/discourse-workflows/execution/")
+          end
+
+        expect(progress_messages.map { |message| message.data.dig(:step, "status") }.compact).to eq(
+          %w[success running success],
+        )
+        expect(progress_messages.last.data).to include(type: "execution_progress", refresh: true)
+        expect(progress_messages.last.data[:execution]).to include(status: "success")
+        expect(progress_messages.map(&:group_ids).uniq).to eq([[Group::AUTO_GROUPS[:admins]]])
+      end
+
       it "creates an execution record" do
         expect { described_class.new(workflow, "trigger-1", trigger_data).run }.to change {
           DiscourseWorkflows::Execution.count
