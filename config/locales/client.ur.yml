@@ -2118,7 +2118,7 @@ ur:
         default: "(ڈِیفالٹ)"
         any: "کوئی"
       homepage:
-        default: "(ڈِیفالٹ)"
+        default: "ڈِیفالٹ"
       password_confirmation:
         title: "پاس ورڈ دوبارہ"
       invite_code:
@@ -6260,8 +6260,6 @@ ur:
               vs_prior: "گزشتہ"
             whos_posting:
               title: "کون فعال ہے؟"
-              all_categories: "تمام زُمرَہ جات"
-              include_subcategories: "ذیلی زمروں کو شامل کریں"
               new_members: "نئے اراکین"
               returning: "دوبارہ جڑنے والے"
               staff: "عملہ"

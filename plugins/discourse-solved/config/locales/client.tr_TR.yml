@@ -18,8 +18,6 @@ tr_TR:
         sections:
           support:
             title: "Destek"
-            filter:
-              all_categories: "Tüm kategoriler"
             answerers:
               staff: "Personel"
               member: "Üyeler"

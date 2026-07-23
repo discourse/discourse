@@ -19,8 +19,10 @@ zh_CN:
     chat_integration_slack_transcript_quote: 将 Slack 语音稿包含到“[quote]”标签中？
     errors:
       chat_integration_slack_api_configs_are_empty: "您必须输入出站网络钩子 URL 或访问令牌"
+      chat_integration_telegram_api_base_url_invalid: "Telegram API 基本 URL 必须是有效的 HTTPS URL，且不包含凭据、查询字符串或片段。"
     chat_integration_telegram_enabled: "启用 Telegram 聊天集成提供程序"
     chat_integration_telegram_access_token: "来自 Telegram botfather 的机器人访问令牌"
+    chat_integration_telegram_api_base_url: "用于 Telegram Bot API 请求的基本 URL。仅当通过受信任的 HTTPS 代理路由请求时才可更改此设置。私有网络上的主机也必须添加到允许的内部主机站点设置中。"
     chat_integration_telegram_excerpt_length: "Telegram 帖子摘要长度"
     chat_integration_telegram_enable_slash_commands: "允许使用“斜杠命令”管理 Telegram 订阅"
     chat_integration_discord_enabled: "启用 Discord 聊天集成提供程序"

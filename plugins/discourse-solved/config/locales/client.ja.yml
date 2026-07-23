@@ -18,8 +18,6 @@ ja:
         sections:
           support:
             title: "支援する"
-            filter:
-              all_categories: "すべてのカテゴリ"
             answerers:
               staff: "スタッフ"
               member: "メンバー"

@@ -388,6 +388,7 @@ zh_CN:
         send_bulk_invites: "发送邀请"
         group_selector_placeholder: "选择群组…"
         user_selector_placeholder: "选择用户…"
+        attendance_label: "出席"
         inline_title: "内嵌批量邀请"
         csv_title: "CSV 批量邀请"
       upcoming_events:
@@ -456,6 +457,8 @@ zh_CN:
         create_event_button: "创建活动"
         action_title: "创建新活动"
         all_day: "全天"
+        livestream: "直播"
+        livestream_chat_disabled: "启用聊天功能以创建直播频道。"
         reminder:
           units:
             minutes:
@@ -526,6 +529,7 @@ zh_CN:
           none: "不重复"
           every_day: "每天"
           every_weekday: "每个工作日"
+          every_week: "每个%{weekday}"
           every_two_weeks: "每隔一个 %{weekday}"
           every_four_weeks: "每 4 周在 %{weekday}"
           every_month: "每个月的 %{ordinal} %{weekday}"
@@ -546,7 +550,11 @@ zh_CN:
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"
+        livestream:
+          label: "直播"
+          checkbox_label: "将 URL 嵌入为视频，并开启直播聊天功能供与会者使用"
         location:
+          label: "位置或 URL"
           placeholder: "添加地点、链接或其他内容。"
         description:
           label: "描述"

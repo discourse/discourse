@@ -1836,7 +1836,6 @@ hu:
     suppress_secured_categories_from_admin: "Az adminisztrátorok számára bizonyos felhasználói felületeken elrejti a privát témákat és üzeneteket. A tartalom azonban továbbra is látható lesz néhány helyen. Ez nem biztonsági funkció: az adminisztrátorok mindig hozzáférhetnek az oldal összes tartalmához."
     include_secure_categories_in_tag_counts: "Ha engedélyezve van, a címkék témáinak száma tartalmazni fogja azokat a témákat is, amelyek az összes felhasználó számára korlátozott olvasási kategóriába tartoznak. Ha le van tiltva, a normál felhasználóknak csak a témakörök száma jelenik meg egy olyan címkénél, ahol az összes téma nyilvános kategóriába tartozik."
     display_personal_messages_tag_counts: "Ha engedélyezve van, megjelenik az adott címkével ellátott személyes üzenetek száma."
-    top_menu: "Határozza meg, mely elemek jelenjenek meg a kezdőoldal navigációjában, és milyen sorrendben."
     post_menu: "Állítsa be az alapértelmezett bejegyzés menüelemek láthatóságát és sorrendjét. A bővítmények vagy témák által hozzáadott további elemeket külön kezelik, és nem jelennek meg ebben a listában."
     post_menu_hidden_items: "Azok a menüelemek, amelyek alapértelmezetten rejtve vannak a bejegyzés menüben, hacsak nem kattintanak a kibontási pontra. A bővítmények vagy témák által hozzáadott további elemeket külön kezelik, és nem jelennek meg ebben a listában."
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."

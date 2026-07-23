@@ -1892,7 +1892,7 @@ ja:
         default: "(デフォルト)"
         any: "すべて"
       homepage:
-        default: "(デフォルト)"
+        default: "デフォルト"
       password_confirmation:
         title: "パスワードを再入力"
       invite_code:
@@ -5762,7 +5762,6 @@ ja:
               posts: "投稿"
               share: "共有"
             whos_posting:
-              all_categories: "すべてのカテゴリ"
               staff: "スタッフ"
             trust_level_pipeline:
               trust_levels:

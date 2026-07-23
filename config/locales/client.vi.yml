@@ -1880,7 +1880,7 @@ vi:
         default: "(mặc định)"
         any: "Bất kỳ"
       homepage:
-        default: "(mặc định)"
+        default: "Mặc định"
       password_confirmation:
         title: "Nhập lại Password"
       invite_code:
@@ -5752,7 +5752,6 @@ vi:
               posts: "Số lượng tút"
               share: "Chia sẻ"
             whos_posting:
-              all_categories: "Tất cả danh mục"
               staff: "Nhân viên"
             trust_level_pipeline:
               trust_levels:

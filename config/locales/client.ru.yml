@@ -2289,7 +2289,7 @@ ru:
         default: "(по умолчанию)"
         any: "любые"
       homepage:
-        default: "(по умолчанию)"
+        default: "Домашнюю страницу"
       password_confirmation:
         title: "Пароль ещё раз"
       invite_code:
@@ -6758,7 +6758,6 @@ ru:
               posts: "Записи"
               share: "Поделиться"
             whos_posting:
-              all_categories: "Все разделы"
               staff: "Персонал"
             trust_level_pipeline:
               trust_levels:
