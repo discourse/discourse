@@ -7,13 +7,19 @@ import DButton from "discourse/ui-kit/d-button";
 export default class DesignWizardFloat extends Component {
   @service designWizard;
 
+  // the theme step is handled by the theme picker modal; the floating
+  // panel takes over from the second step on
+  get visible() {
+    return this.designWizard.active && this.designWizard.stepIndex > 0;
+  }
+
   @action
   close() {
     this.designWizard.stop();
   }
 
   <template>
-    {{#if this.designWizard.active}}
+    {{#if this.visible}}
       <div class="design-wizard-float">
         <DButton
           @action={{this.close}}

@@ -13,10 +13,20 @@ module PageObjects
         has_no_css?(WIZARD_SELECTOR)
       end
 
-      def select_theme(theme_id)
-        find(
-          "#{WIZARD_SELECTOR} .design-wizard-modal__theme-card[data-theme-id='#{theme_id}']",
-        ).click
+      def has_theme_modal?
+        has_css?(".theme-picker-modal")
+      end
+
+      def has_no_theme_modal?
+        has_no_css?(".theme-picker-modal")
+      end
+
+      def choose_theme(name)
+        find(".theme-picker-modal__card", text: name).click
+      end
+
+      def continue_from_theme_modal
+        find(".theme-picker-modal__footer .btn-primary").click
       end
 
       def select_palette(pair_key)

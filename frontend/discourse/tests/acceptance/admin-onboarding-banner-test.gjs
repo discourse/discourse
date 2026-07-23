@@ -62,6 +62,28 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
+    server.get("/admin/themes.json", () => {
+      return helper.response(200, {
+        themes: [
+          {
+            id: -1,
+            name: "Foundation",
+            default: true,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
+          },
+          {
+            id: -2,
+            name: "Horizon",
+            default: false,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
+          },
+        ],
+        extras: { color_schemes: [] },
+      });
+    });
+
     server.get("/color-scheme-stylesheet/:id/:themeId", () =>
       helper.response(200, {
         color_scheme_id: -1,
@@ -339,7 +361,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     );
   });
 
-  test("it can open the design wizard as a floating panel from the `select_theme` step", async function (assert) {
+  test("it can walk the design wizard from the `select_theme` step", async function (assert) {
     const step = withStep("select_theme", assert);
 
     await visit("/");
@@ -349,28 +371,25 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await settled();
 
     assert
+      .dom(".theme-picker-modal")
+      .exists("the theme step uses the original theme picker modal");
+    assert
+      .dom(".theme-picker-modal__card")
+      .exists({ count: 2 }, "shows Foundation and Horizon");
+    assert
+      .dom(".theme-picker-modal__card.--selected .theme-card-preview__name")
+      .hasText("Foundation", "preselects the default theme");
+    assert
       .dom(".design-wizard-float")
-      .exists("design wizard floats over the page");
-    assert
-      .dom(".sidebar-sections")
-      .exists("regular sidebar sections stay in place");
-    assert
-      .dom(".design-wizard-modal__theme-card")
-      .exists({ count: 2 }, "the first step shows Foundation and Horizon");
-    assert
-      .dom(".design-wizard-modal__theme-card.--selected")
-      .hasAttribute("data-theme-id", "-1", "preselects the default theme");
-    assert
-      .dom(".sidebar-design-wizard__back")
-      .isDisabled("cannot go back from the first step");
-    assert
-      .dom(".design-wizard-modal__swatch")
-      .doesNotExist("palettes are not shown on the theme step");
+      .doesNotExist("the floating panel waits for the theme choice");
 
-    await click(".sidebar-design-wizard__next");
+    await click(".theme-picker-modal__footer .btn-primary");
     assert
-      .dom(".design-wizard-modal__theme-card")
-      .doesNotExist("theme cards are left behind on the colors step");
+      .dom(".theme-picker-modal")
+      .doesNotExist("next closes the theme modal");
+    assert
+      .dom(".design-wizard-float")
+      .exists("the floating panel takes over from the colors step");
     assert
       .dom(".design-wizard-modal__swatch")
       .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
@@ -380,6 +399,15 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom("link#design-wizard-preview-scheme", document.body)
       .exists("palette preview stylesheet is attached to the page");
 
+    await click(".sidebar-design-wizard__back");
+    assert
+      .dom(".design-wizard-float")
+      .doesNotExist("back from colors hides the floating panel");
+    assert
+      .dom(".theme-picker-modal")
+      .exists("back from colors reopens the theme modal");
+
+    await click(".theme-picker-modal__footer .btn-primary");
     await click(".sidebar-design-wizard__next");
     assert
       .dom(".design-wizard-modal__font-card")
@@ -390,11 +418,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom(".sidebar-design-wizard__save")
       .exists("the last step offers save");
-
-    await click(".sidebar-design-wizard__back");
-    assert
-      .dom(".design-wizard-modal__swatch")
-      .exists({ count: 1 }, "back returns to the colors step");
 
     await click(".design-wizard-float__close");
     assert
