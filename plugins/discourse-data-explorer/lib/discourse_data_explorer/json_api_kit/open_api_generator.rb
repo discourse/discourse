@@ -120,6 +120,30 @@ module DiscourseDataExplorer
         }
       end
 
+      # The document as a client pinned at `version` experiences it: schemas,
+      # query-surface parameters, and examples down-migrated through the gap —
+      # the same transform philosophy as responses, applied to the docs. Purely
+      # additive changes rightly remain visible at every pin (they are not
+      # version-gated).
+      def document_at(version)
+        parsed = ApiVersion.parse(version)
+        gap = JsonApiKit.api_versions.gap_for(parsed)
+        versioned = document.deep_dup
+        versioned["info"]["version"] = parsed.to_s
+        return versioned if gap.empty?
+
+        resources.each_key do |type|
+          downgrade_attributes!(
+            versioned.dig("components", "schemas", type, "properties", "attributes"),
+            type,
+            gap,
+          )
+        end
+        @endpoints.each { downgrade_endpoint!(versioned, it, gap) }
+        downgrade_examples!(versioned, gap)
+        versioned
+      end
+
       private
 
       # Every resource reachable from the endpoints' primaries through declared
@@ -515,6 +539,128 @@ module DiscourseDataExplorer
 
       def cursor_parameter(name)
         { "name" => name, "in" => "query", "schema" => { "type" => "string" } }
+      end
+
+      def downgrade_endpoint!(versioned, endpoint, gap)
+        resource = primary_resource(endpoint)
+        config = endpoint[:controller]._jsonapi_config
+        type = resource.record_type.to_s
+        collection = versioned.dig("paths", endpoint[:path])
+        downgrade_parameters!(collection["get"]["parameters"], type, config, gap)
+        return if (post = collection["post"]).nil?
+
+        attributes =
+          post.dig(
+            "requestBody",
+            "content",
+            CONTENT_TYPE,
+            "schema",
+            "properties",
+            "data",
+            "properties",
+            "attributes",
+          )
+        downgrade_attributes!(attributes, type, gap)
+        if attributes["required"]
+          attributes["required"] = VersionPipeline.down_field_names(
+            attributes["required"],
+            type:,
+            changes: gap,
+          ).map(&:to_s)
+        end
+      end
+
+      def downgrade_attributes!(attributes_schema, type, gap)
+        return if attributes_schema&.dig("properties").nil?
+
+        attributes_schema["properties"] = attributes_schema["properties"].to_h do |name, property|
+          downgrade_attribute(name, property, type, gap)
+        end
+      end
+
+      # Walks the gap newest→oldest: renames the key, down-converts declared
+      # example values (safe — declared examples are well-formed latest values),
+      # and applies the declared `old_type:` so schema and example agree.
+      def downgrade_attribute(name, property, type, gap)
+        current = name.to_sym
+        property = property.dup
+        gap.each do |change|
+          rename = change.attribute_renames_for(type).find { it[:to] == current }
+          next if !rename
+
+          current = rename[:from]
+          if rename[:down] && property["examples"]
+            property["examples"] = property["examples"].map { rename[:down].call(it) }
+          end
+          if rename[:old_type]
+            base = TYPE_SCHEMAS.fetch(rename[:old_type]) { {} }
+            property =
+              base.merge("type" => [base["type"], "null"].compact).merge(
+                property.slice("description", "examples"),
+              )
+          end
+        end
+        [current.to_s, property]
+      end
+
+      def downgrade_parameters!(parameters, type, config, gap)
+        parameters.each do |parameter|
+          case parameter["name"]
+          when "sort"
+            enum = parameter.dig("schema", "items", "enum")
+            parameter["schema"]["items"]["enum"] = enum.map do |entry|
+              sign = entry.start_with?("-") ? "-" : ""
+              key =
+                VersionPipeline.down_sort_keys(
+                  [entry.delete_prefix("-")],
+                  type:,
+                  changes: gap,
+                  virtual: config.virtual_sort_keys,
+                ).first
+              "#{sign}#{key}"
+            end
+          when /\Afilter\[(.+)\]\z/
+            key =
+              VersionPipeline.down_filter_keys(
+                [Regexp.last_match(1)],
+                type:,
+                changes: gap,
+                virtual: config.virtual_filter_keys,
+              ).first
+            parameter["name"] = "filter[#{key}]"
+          when /\Afields\[(.+)\]\z/
+            enum = parameter.dig("schema", "items", "enum")
+            parameter["schema"]["items"]["enum"] = VersionPipeline.down_field_names(
+              enum,
+              type: Regexp.last_match(1),
+              changes: gap,
+            ).map(&:to_s)
+          end
+        end
+      end
+
+      # Captured examples are real JSON:API documents — the response pipeline
+      # down-migrates them as it would any response (converters included).
+      def downgrade_examples!(versioned, gap)
+        versioned["paths"].each_value do |operations|
+          operations.each_value do |operation|
+            media_targets(operation).each do |media|
+              media["example"] = downgrade_example(media["example"], gap) if media["example"]
+            end
+          end
+        end
+      end
+
+      def media_targets(operation)
+        targets = [operation.dig("requestBody", "content", CONTENT_TYPE)]
+        operation["responses"]&.each_value { targets << it.dig("content", CONTENT_TYPE) }
+        targets.compact
+      end
+
+      def downgrade_example(example, gap)
+        document = example.deep_symbolize_keys
+        VersionPipeline.down(document, gap)
+        document.deep_stringify_keys
       end
 
       def json_response(description, schema)

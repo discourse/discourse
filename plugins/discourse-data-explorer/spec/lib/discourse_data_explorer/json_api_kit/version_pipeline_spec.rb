@@ -319,6 +319,98 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
     end
   end
 
+  describe ".down_field_names" do
+    subject(:downgraded) { described_class.down_field_names(names, type: :things, changes: gap) }
+
+    let(:names) { %w[c untouched] }
+
+    it "maps the latest names back through the rename chain" do
+      expect(downgraded).to eq(%i[a untouched])
+    end
+
+    context "with an untargeted type" do
+      subject(:downgraded) { described_class.down_field_names(%w[c], type: :others, changes: gap) }
+
+      it "leaves the names alone" do
+        expect(downgraded).to eq(%i[c])
+      end
+    end
+  end
+
+  describe ".down_sort_keys" do
+    let(:rename_speed_sort) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-07-01"
+        description "Renames the speed sort of things to velocity."
+
+        resource :things do
+          renamed_sort from: :speed, to: :velocity
+        end
+      end
+    end
+
+    context "when a virtual sort key was explicitly renamed" do
+      subject(:downgraded) do
+        described_class.down_sort_keys(
+          %w[velocity],
+          type: :things,
+          changes: [rename_speed_sort],
+          virtual: %w[velocity],
+        )
+      end
+
+      it "maps the latest key back to the old one" do
+        expect(downgraded).to eq(%i[speed])
+      end
+    end
+
+    context "when a derived sort key follows attribute renames" do
+      subject(:downgraded) { described_class.down_sort_keys(%w[c], type: :things, changes: gap) }
+
+      it "maps the key back through the attribute renames" do
+        expect(downgraded).to eq(%i[a])
+      end
+    end
+
+    context "when a virtual key collides with an attribute rename" do
+      subject(:downgraded) do
+        described_class.down_sort_keys(%w[c], type: :things, changes: gap, virtual: %w[c])
+      end
+
+      it "keeps the virtual key unchanged" do
+        expect(downgraded).to eq(%i[c])
+      end
+    end
+  end
+
+  describe ".down_filter_keys" do
+    let(:rename_lookup_filter) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-07-01"
+        description "Renames the lookup filter of things to q."
+
+        resource :things do
+          renamed_filter from: :lookup, to: :q
+        end
+      end
+    end
+
+    context "when a virtual filter key was explicitly renamed" do
+      subject(:downgraded) do
+        described_class.down_filter_keys(
+          %w[q],
+          type: :things,
+          changes: [rename_lookup_filter],
+          virtual: %w[q],
+        )
+      end
+
+      it "maps the latest key back to the old one" do
+        expect(downgraded).to eq(%i[lookup])
+      end
+    end
+  end
+
   describe ".down_errors" do
     subject(:downgraded) { described_class.down_errors(document, type: :things, changes: gap) }
 

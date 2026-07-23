@@ -201,7 +201,10 @@ the rescue-fallback machinery are GONE, replaced by exact lookups over declared 
 
 ### The declarative tier (built 2026-07-09)
 
-The core keyword — `renamed_attribute from:, to:, up:, down:` — states the **key-level fact as data**,
+The core keyword — `renamed_attribute from:, to:, up:, down:, old_type:` (the last added
+2026-07-23: a shape-changing rename declares its pre-rename wire type, consumed by the
+versioned docs generator so old-version schemas and down-converted examples agree) —
+states the **key-level fact as data**,
 with optional **pure value→value converters** for shape changes:
 
 ```ruby
