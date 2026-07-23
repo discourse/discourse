@@ -197,8 +197,20 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       response_items = [{ "json" => { "approved" => true } }]
       claimed = DiscourseWorkflows::Execution.claim_for_resume(execution)
-      resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
+      resumed = nil
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          resumed = DiscourseWorkflows::Executor.resume(claimed, response_items)
+        end
 
+      resumed_wait_step = messages.find { |message| message.data.dig(:step, "node_id") == "wait-1" }
+      expect(resumed_wait_step.data.dig(:step, "status")).to eq("success")
+      expect(resumed_wait_step.data.dig(:step, "error")).to be_nil
+      resumed_status =
+        messages.find do |message|
+          message.data[:step].nil? && message.data.dig(:execution, :status) == "running"
+        end
+      expect(resumed_status.data[:refresh]).to eq(false)
       expect(resumed).to have_attributes(
         status: "success",
         finished_at: be_present,

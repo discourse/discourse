@@ -4,8 +4,13 @@
     align-items: center;
     gap: var(--space-2);
 
-    .d-icon {
+    .d-icon,
+    .spinner {
       font-size: var(--font-up-1);
+    }
+
+    .spinner {
+      margin: 0;
     }
 
     &.--success .d-icon {

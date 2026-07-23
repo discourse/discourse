@@ -90,7 +90,10 @@ RSpec.describe DiscourseWorkflows::Execution do
     end
 
     it "transitions a waiting execution to error and clears waiting fields" do
-      expect(execution.fail_with_timeout!).to eq(true)
+      messages =
+        MessageBus.track_publish("/discourse-workflows/execution/#{execution.id}") do
+          expect(execution.fail_with_timeout!).to eq(true)
+        end
 
       execution.reload
       expect(execution).to have_attributes(
@@ -100,6 +103,10 @@ RSpec.describe DiscourseWorkflows::Execution do
         resume_token: nil,
         timeout_action: nil,
       )
+      expect(messages.length).to eq(1)
+      expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+      expect(messages.first.data).to include(type: "execution_progress", refresh: true)
+      expect(messages.first.data[:execution]).to include(id: execution.id, status: "error")
     end
 
     it "returns false and does not transition when the execution is no longer waiting" do
