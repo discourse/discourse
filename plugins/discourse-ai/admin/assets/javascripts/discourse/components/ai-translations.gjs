@@ -18,6 +18,7 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AiTranslationModelProgressDetailCard from "./ai-translation-model-progress-detail-card";
 import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card";
 import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton";
 
@@ -30,6 +31,10 @@ export default class AiTranslations extends Component {
   @tracked loadingProgress = false;
   @tracked progressCachedAt = null;
   @tracked expandedTargetType = null;
+  @tracked targetDetails = {};
+  @tracked loadingTargetDetails = {};
+  @tracked targetDetailErrors = {};
+  @tracked displayedTargetDetails = null;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -53,6 +58,8 @@ export default class AiTranslations extends Component {
   @tracked categories = [];
   @tracked originalCategoryIds = this.args.model?.category_ids || [];
   hourlyRate = this.args.model?.hourly_rate || 0;
+  targetDetailRequests = new Map();
+  targetDetailGeneration = 0;
 
   constructor() {
     super(...arguments);
@@ -70,8 +77,11 @@ export default class AiTranslations extends Component {
     }
   }
 
-  async _loadProgress() {
-    this.loadingProgress = true;
+  async _loadProgress({ showLoading = true } = {}) {
+    if (showLoading) {
+      this.loadingProgress = true;
+    }
+
     try {
       const response = await ajax(
         "/admin/plugins/discourse-ai/ai-translations/progress.json"
@@ -81,7 +91,9 @@ export default class AiTranslations extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
-      this.loadingProgress = false;
+      if (showLoading) {
+        this.loadingProgress = false;
+      }
     }
   }
 
@@ -264,6 +276,17 @@ export default class AiTranslations extends Component {
       });
       this.originalCategoryScope = this.categoryScope;
       this.originalCategoryIds = ids;
+
+      const expandedTargetType = this.expandedTargetType;
+      this._invalidateTargetDetails({ keepDisplayed: true });
+
+      const refreshes = [this._loadProgress({ showLoading: false })];
+      if (expandedTargetType) {
+        refreshes.push(
+          this._loadTargetDetails(expandedTargetType, { retry: true })
+        );
+      }
+      await Promise.all(refreshes);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -316,6 +339,7 @@ export default class AiTranslations extends Component {
         this.targets = null;
         this.progressCachedAt = null;
         this.expandedTargetType = null;
+        this._invalidateTargetDetails();
       }
     } catch (e) {
       popupAjaxError(e);
@@ -377,8 +401,111 @@ export default class AiTranslations extends Component {
 
   @action
   toggleTarget(targetType) {
-    this.expandedTargetType =
-      this.expandedTargetType === targetType ? null : targetType;
+    if (this.expandedTargetType === targetType) {
+      this.expandedTargetType = null;
+      this.displayedTargetDetails = null;
+      return;
+    }
+
+    this.expandedTargetType = targetType;
+    this._loadTargetDetails(targetType);
+  }
+
+  async _loadTargetDetails(targetType, { retry = false } = {}) {
+    if (this.targetDetails[targetType] && !retry) {
+      this.displayedTargetDetails = this.targetDetails[targetType];
+      return;
+    }
+
+    const generation = this.targetDetailGeneration;
+    let request = this.targetDetailRequests.get(targetType);
+    if (!request || retry) {
+      request = ajax(
+        `/admin/plugins/discourse-ai/ai-translations/progress/${targetType}.json`
+      );
+      this.targetDetailRequests.set(targetType, request);
+    }
+
+    this.loadingTargetDetails = {
+      ...this.loadingTargetDetails,
+      [targetType]: true,
+    };
+    this.targetDetailErrors = {
+      ...this.targetDetailErrors,
+      [targetType]: false,
+    };
+
+    try {
+      const response = await request;
+      if (generation === this.targetDetailGeneration && this.enabled) {
+        this.targetDetails = {
+          ...this.targetDetails,
+          [targetType]: response,
+        };
+        if (this.expandedTargetType === targetType) {
+          this.displayedTargetDetails = response;
+        }
+      }
+    } catch {
+      if (generation === this.targetDetailGeneration && this.enabled) {
+        this.targetDetailErrors = {
+          ...this.targetDetailErrors,
+          [targetType]: true,
+        };
+      }
+    } finally {
+      if (generation === this.targetDetailGeneration) {
+        if (this.targetDetailRequests.get(targetType) === request) {
+          this.targetDetailRequests.delete(targetType);
+        }
+        this.loadingTargetDetails = {
+          ...this.loadingTargetDetails,
+          [targetType]: false,
+        };
+      }
+    }
+  }
+
+  _invalidateTargetDetails({ keepDisplayed = false } = {}) {
+    this.targetDetailGeneration += 1;
+    this.targetDetails = {};
+    this.loadingTargetDetails = {};
+    this.targetDetailErrors = {};
+    this.targetDetailRequests.clear();
+
+    if (!keepDisplayed) {
+      this.displayedTargetDetails = null;
+    }
+  }
+
+  get isLoadingExpandedTargetDetails() {
+    return this.loadingTargetDetails[this.expandedTargetType];
+  }
+
+  get hasExpandedTargetDetailError() {
+    return this.targetDetailErrors[this.expandedTargetType];
+  }
+
+  get isDetailStateOverlay() {
+    return Boolean(
+      this.displayedTargetDetails &&
+      (this.isLoadingExpandedTargetDetails || this.hasExpandedTargetDetailError)
+    );
+  }
+
+  get expandedTargetTitle() {
+    if (!this.expandedTargetType) {
+      return null;
+    }
+
+    return i18n(
+      `discourse_ai.translations.model_progress.targets.${this.expandedTargetType}.title`
+    );
+  }
+
+  @action
+  retryTargetDetails() {
+    this._loadTargetDetails(this.expandedTargetType, { retry: true });
   }
 
   <template>
@@ -583,6 +710,48 @@ export default class AiTranslations extends Component {
                 />
               {{/each}}
             </div>
+            {{#if this.expandedTargetType}}
+              <div class="ai-translation-model-progress-detail-region">
+                {{#if this.displayedTargetDetails}}
+                  <div aria-hidden={{this.isDetailStateOverlay}}>
+                    <AiTranslationModelProgressDetailCard
+                      @data={{this.displayedTargetDetails}}
+                    />
+                  </div>
+                {{/if}}
+                {{#if this.isLoadingExpandedTargetDetails}}
+                  <div
+                    class="ai-translation-model-progress-detail-state
+                      {{if this.isDetailStateOverlay '--overlay'}}"
+                    role="status"
+                  >
+                    {{i18n
+                      "discourse_ai.translations.model_progress.detail.loading"
+                      target=this.expandedTargetTitle
+                    }}
+                  </div>
+                {{else if this.hasExpandedTargetDetailError}}
+                  <div
+                    class="ai-translation-model-progress-detail-state --error
+                      {{if this.isDetailStateOverlay '--overlay'}}"
+                    role="alert"
+                  >
+                    <span>
+                      {{i18n
+                        "discourse_ai.translations.model_progress.detail.load_error"
+                        target=this.expandedTargetTitle
+                      }}
+                    </span>
+                    <DButton
+                      @action={{this.retryTargetDetails}}
+                      @icon="rotate"
+                      @label="discourse_ai.translations.model_progress.detail.retry"
+                      class="btn-default"
+                    />
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
           {{/if}}
         </div>
       {{/if}}

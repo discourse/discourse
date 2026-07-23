@@ -244,4 +244,34 @@ describe DiscourseAi::Translation::PostCandidates do
       )
     end
   end
+
+  describe ".progress_details" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns translated, pending, and eligible counts per configured locale" do
+      translated_post =
+        Fabricate(:post, locale: "EN-US", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: translated_post, locale: "FR-fr")
+      Fabricate(:post, locale: "en-US", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "post",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, eligible_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, eligible_count: 3 },
+          ],
+        },
+      )
+    end
+  end
 end

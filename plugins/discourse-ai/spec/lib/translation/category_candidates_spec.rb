@@ -155,4 +155,34 @@ describe DiscourseAi::Translation::CategoryCandidates do
       )
     end
   end
+
+  describe ".progress_details" do
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_category_scope = "include_strict"
+    end
+
+    it "returns translated, pending, and eligible counts per configured locale" do
+      translated_category = Fabricate(:category, locale: "EN-US")
+      untranslated_category = Fabricate(:category, locale: "en-US")
+      undetected_category = Fabricate(:category, locale: nil)
+      SiteSetting.ai_translation_categories = [
+        translated_category.id,
+        untranslated_category.id,
+        undetected_category.id,
+      ].join("|")
+      localization = Fabricate(:category_localization, category: translated_category, locale: "fr")
+      localization.update_column(:locale, "FR-fr")
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "category",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, eligible_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, eligible_count: 3 },
+          ],
+        },
+      )
+    end
+  end
 end

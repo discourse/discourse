@@ -20,6 +20,7 @@
 
   &__overview {
     margin-block-start: var(--space-4);
+    margin-block-end: calc(var(--space-10) * 2);
   }
 
   &__overview-grid {
@@ -280,6 +281,111 @@
   }
 }
 
+.ai-translation-model-progress-detail {
+  &__empty {
+    margin: 0;
+    padding-block: var(--space-4);
+    color: var(--primary-medium);
+  }
+}
+
+.ai-translation-model-progress-detail-region {
+  position: relative;
+  min-height: calc(var(--space-12) * 2);
+  margin-block-start: var(--space-4);
+}
+
+.ai-translation-locale-progress {
+  width: 100%;
+  table-layout: fixed;
+
+  th,
+  td {
+    vertical-align: middle;
+  }
+
+  &__locale-header,
+  &__locale {
+    width: 12rem;
+  }
+
+  &__translated-header,
+  &__translated,
+  &__pending-header,
+  &__pending,
+  &__denominator-header,
+  &__denominator {
+    width: 7rem;
+    text-align: end;
+  }
+
+  &__progress-header,
+  &__progress {
+    width: auto;
+  }
+
+  &__pending-header,
+  &__denominator-header {
+    > span {
+      vertical-align: middle;
+    }
+  }
+
+  &__help {
+    display: inline-flex;
+    align-items: center;
+    margin-inline-end: var(--space-1);
+    color: var(--primary-medium);
+    cursor: help;
+    vertical-align: middle;
+  }
+
+  &__locale-name {
+    display: block;
+    font-weight: 600;
+  }
+
+  &__locale-code {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+}
+
+.ai-translation-progress-bar {
+  overflow: hidden;
+  width: 100%;
+  height: 0.5rem;
+  border-radius: 1rem;
+  background: var(--primary-very-low);
+
+  &__fill {
+    display: block;
+    height: 100%;
+    background: var(--tertiary);
+  }
+}
+
+.ai-translation-model-progress-detail-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: calc(var(--space-12) * 2);
+  color: var(--primary-medium);
+
+  &.--error {
+    color: var(--primary);
+  }
+
+  &.--overlay {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    min-height: 0;
+    background: var(--secondary);
+  }
+}
+
 @keyframes ai-translation-progress-skeleton {
   from {
     background-position: 200% 0;
@@ -287,6 +393,52 @@
 
   to {
     background-position: -200% 0;
+  }
+}
+
+@media screen and (width <= 700px) {
+  .ai-translation-locale-progress {
+    display: block;
+
+    .d-table__header {
+      display: none;
+    }
+
+    .d-table__body,
+    .d-table__row,
+    .d-table__cell {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .d-table__row {
+      padding-block: var(--space-3);
+    }
+
+    .d-table__cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding-block: var(--space-1);
+      text-align: end;
+    }
+
+    &__locale {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+      text-align: start;
+    }
+
+    &__progress {
+      align-items: center;
+    }
+
+    .ai-translation-progress-bar {
+      max-width: 65%;
+    }
   }
 }
 

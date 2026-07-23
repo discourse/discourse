@@ -125,4 +125,28 @@ describe DiscourseAi::Translation::TagCandidates do
       )
     end
   end
+
+  describe ".progress_details" do
+    before do
+      Tag.destroy_all
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+    end
+
+    it "returns translated, pending, and total counts per configured locale" do
+      translated_tag = Fabricate(:tag, locale: "EN-US")
+      Fabricate(:tag_localization, tag: translated_tag, locale: "FR-fr")
+      Fabricate(:tag, locale: "en-US")
+      Fabricate(:tag, locale: nil)
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "tag",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, total_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, total_count: 3 },
+          ],
+        },
+      )
+    end
+  end
 end

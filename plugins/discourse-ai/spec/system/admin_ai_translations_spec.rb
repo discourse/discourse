@@ -40,6 +40,16 @@ describe "Admin AI translations" do
         cached_at: Time.now.utc.iso8601,
       },
     )
+    allow(DiscourseAi::Translation::Progress).to receive(:fetch_detail) do |target_type|
+      denominator_key = target_type == "tag" ? :total_count : :eligible_count
+      {
+        target_type:,
+        cached_at: Time.now.utc.iso8601,
+        locales: [
+          { :locale => "en", :translated_count => 30, :pending_count => 20, denominator_key => 50 },
+        ],
+      }
+    end
 
     sign_in(admin)
   end
@@ -117,6 +127,37 @@ describe "Admin AI translations" do
 
       translations_page.toggle_target("post")
       expect(translations_page).to have_no_expanded_target
+    end
+
+    it "loads and reuses per-target locale details when a card is expanded" do
+      translations_page.toggle_target("post")
+
+      expect(translations_page).to have_detail_table
+      expect(translations_page).to have_detail_row(
+        locale: "en",
+        translated: 30,
+        pending: 20,
+        denominator: 50,
+      )
+
+      translations_page.toggle_target("post")
+      expect(translations_page).to have_no_detail_table
+
+      translations_page.toggle_target("post")
+      expect(translations_page).to have_detail_table
+      expect(DiscourseAi::Translation::Progress).to have_received(:fetch_detail).with("post").once
+    end
+
+    it "reloads expanded details after category settings change" do
+      translations_page.toggle_target("post")
+      expect(translations_page).to have_detail_table
+
+      find(".ai-translations__category-scope-row .combo-box").click
+      find(".select-kit-row[data-value='all']").click
+      within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
+
+      expect(translations_page).to have_detail_table
+      expect(DiscourseAi::Translation::Progress).to have_received(:fetch_detail).with("post").twice
     end
   end
 

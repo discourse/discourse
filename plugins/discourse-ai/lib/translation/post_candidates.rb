@@ -61,6 +61,145 @@ module DiscourseAi
         }
       end
 
+      def self.progress_details
+        main_posts =
+          Post
+            .where(
+              "posts.created_at > ?",
+              SiteSetting.ai_translation_backfill_max_age_days.days.ago,
+            )
+            .where(deleted_at: nil)
+            .where.not(raw: [nil, ""])
+            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
+
+        main_posts =
+          main_posts.where(
+            "posts.user_id > 0",
+          ) unless SiteSetting.ai_translation_include_bot_content
+
+        main_posts = main_posts.joins(:topic)
+        category_condition, category_params =
+          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
+        main_posts =
+          main_posts.where(
+            "topics.archetype = :pm OR (#{category_condition})",
+            category_params.merge(pm: Archetype.private_message),
+          )
+
+        case SiteSetting.ai_translation_personal_messages
+        when "group"
+          main_posts =
+            main_posts.where(
+              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+              pm: Archetype.private_message,
+            )
+        when "none", nil
+          main_posts = main_posts.where.not(topics: { archetype: Archetype.private_message })
+        end
+
+        banner_posts =
+          Post
+            .where(deleted_at: nil)
+            .where.not(raw: [nil, ""])
+            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
+            .joins(:topic)
+            .where(topics: { archetype: Archetype.banner, deleted_at: nil })
+        banner_posts =
+          banner_posts.where(
+            "posts.user_id > 0",
+          ) unless SiteSetting.ai_translation_include_bot_content
+
+        eligible_posts_sql =
+          "(#{main_posts.select("posts.id, posts.locale").to_sql}) UNION " \
+            "(#{banner_posts.select("posts.id, posts.locale").to_sql})"
+        supported_locales =
+          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+
+        sql = <<~SQL
+          WITH supported AS MATERIALIZED (
+            SELECT DISTINCT ON (
+                     split_part(lower(replace(locale, '-', '_')), '_', 1)
+                   )
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM unnest(string_to_array(#{supported_locales}, '|'))
+              WITH ORDINALITY configured(locale, position)
+            ORDER BY split_part(
+                       lower(replace(locale, '-', '_')), '_', 1
+                     ),
+                     position
+          ),
+          eligible_posts AS MATERIALIZED (
+            SELECT posts.id,
+                   posts.locale,
+                   split_part(
+                     lower(replace(posts.locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM (#{eligible_posts_sql}) posts
+          ),
+          totals AS (
+            SELECT COUNT(*)::bigint AS total
+            FROM eligible_posts
+          ),
+          source_locale_counts AS (
+            SELECT base,
+                   COUNT(*)::bigint AS count
+            FROM eligible_posts
+            WHERE locale IS NOT NULL
+            GROUP BY base
+          ),
+          translated_counts AS (
+            SELECT supported.base,
+                   COUNT(DISTINCT posts.id)::bigint AS count
+            FROM eligible_posts posts
+            JOIN post_localizations localization
+              ON localization.post_id = posts.id
+            JOIN supported
+              ON supported.base = split_part(
+                lower(replace(localization.locale, '-', '_')), '_', 1
+              )
+            WHERE posts.locale IS NOT NULL
+              AND posts.base <> supported.base
+            GROUP BY supported.base
+          )
+          SELECT supported.locale,
+                 COALESCE(translated.count, 0)::bigint AS translated_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0) -
+                   COALESCE(translated.count, 0)
+                 )::bigint AS pending_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0)
+                 )::bigint AS eligible_count
+          FROM supported
+          CROSS JOIN totals
+          LEFT JOIN translated_counts translated
+            ON translated.base = supported.base
+          LEFT JOIN source_locale_counts source_locales
+            ON source_locales.base = supported.base
+          ORDER BY supported.locale
+        SQL
+
+        {
+          target_type: "post",
+          locales:
+            DB
+              .query(sql)
+              .map do |row|
+                {
+                  locale: row.locale,
+                  translated_count: row.translated_count,
+                  pending_count: row.pending_count,
+                  eligible_count: row.eligible_count,
+                }
+              end,
+        }
+      end
+
       def self.needs_localization(limit:)
         locales = DiscourseAi::Translation.locales
         return [] if locales.blank?

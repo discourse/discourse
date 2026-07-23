@@ -281,4 +281,70 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
     end
   end
+
+  describe "#progress_detail" do
+    let(:detail) do
+      {
+        target_type: "post",
+        cached_at: "2026-07-23T09:00:00Z",
+        locales: [{ locale: "en", translated_count: 215, pending_count: 93, eligible_count: 474 }],
+      }
+    end
+
+    context "when logged in as admin" do
+      before do
+        sign_in(admin)
+        SiteSetting.discourse_ai_enabled = true
+        SiteSetting.ai_translation_enabled = true
+        SiteSetting.content_localization_supported_locales = "en|fr"
+        allow(DiscourseAi::Translation::Progress).to receive(:fetch_detail).and_return(detail)
+      end
+
+      it "returns cached details for an allowed target" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress/post.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(detail.deep_stringify_keys)
+        expect(DiscourseAi::Translation::Progress).to have_received(:fetch_detail).with("post")
+      end
+
+      it "returns 404 for an unsupported target" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress/user.json"
+
+        expect(response.status).to eq(404)
+        expect(DiscourseAi::Translation::Progress).not_to have_received(:fetch_detail)
+      end
+    end
+
+    context "when translation is not fully enabled" do
+      before do
+        sign_in(admin)
+        SiteSetting.discourse_ai_enabled = true
+        SiteSetting.ai_translation_enabled = false
+        SiteSetting.content_localization_supported_locales = "en|fr"
+      end
+
+      it "returns an empty detail response" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress/post.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          { "target_type" => "post", "cached_at" => nil, "locales" => [] },
+        )
+      end
+    end
+
+    context "when not logged in as admin" do
+      it "returns 404 for anonymous users" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress/post.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 for regular users" do
+        sign_in(user)
+        get "/admin/plugins/discourse-ai/ai-translations/progress/post.json"
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

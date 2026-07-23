@@ -56,6 +56,95 @@ module DiscourseAi
         }
       end
 
+      def self.progress_details
+        supported_locales =
+          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+
+        sql = <<~SQL
+          WITH supported AS MATERIALIZED (
+            SELECT DISTINCT ON (
+                     split_part(lower(replace(locale, '-', '_')), '_', 1)
+                   )
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM unnest(string_to_array(#{supported_locales}, '|'))
+              WITH ORDINALITY configured(locale, position)
+            ORDER BY split_part(
+                       lower(replace(locale, '-', '_')), '_', 1
+                     ),
+                     position
+          ),
+          tags AS MATERIALIZED (
+            SELECT tags.id,
+                   tags.locale,
+                   split_part(
+                     lower(replace(tags.locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM tags
+          ),
+          totals AS (
+            SELECT COUNT(*)::bigint AS total
+            FROM tags
+          ),
+          source_locale_counts AS (
+            SELECT base,
+                   COUNT(*)::bigint AS count
+            FROM tags
+            WHERE locale IS NOT NULL
+            GROUP BY base
+          ),
+          translated_counts AS (
+            SELECT supported.base,
+                   COUNT(DISTINCT tags.id)::bigint AS count
+            FROM tags
+            JOIN tag_localizations localization
+              ON localization.tag_id = tags.id
+            JOIN supported
+              ON supported.base = split_part(
+                lower(replace(localization.locale, '-', '_')), '_', 1
+              )
+            WHERE tags.locale IS NOT NULL
+              AND tags.base <> supported.base
+            GROUP BY supported.base
+          )
+          SELECT supported.locale,
+                 COALESCE(translated.count, 0)::bigint AS translated_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0) -
+                   COALESCE(translated.count, 0)
+                 )::bigint AS pending_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0)
+                 )::bigint AS total_count
+          FROM supported
+          CROSS JOIN totals
+          LEFT JOIN translated_counts translated
+            ON translated.base = supported.base
+          LEFT JOIN source_locale_counts source_locales
+            ON source_locales.base = supported.base
+          ORDER BY supported.locale
+        SQL
+
+        {
+          target_type: "tag",
+          locales:
+            DB
+              .query(sql)
+              .map do |row|
+                {
+                  locale: row.locale,
+                  translated_count: row.translated_count,
+                  pending_count: row.pending_count,
+                  total_count: row.total_count,
+                }
+              end,
+        }
+      end
+
       private
 
       # all tags that are eligible for translation based on site settings,

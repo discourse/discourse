@@ -44,6 +44,21 @@ module PageObjects
         page.has_no_css?(".ai-translation-model-progress-overview-card[aria-expanded='true']")
       end
 
+      def has_detail_table?
+        page.has_css?(".ai-translation-model-progress-detail .d-table")
+      end
+
+      def has_no_detail_table?
+        page.has_no_css?(".ai-translation-model-progress-detail .d-table")
+      end
+
+      def has_detail_row?(locale:, translated:, pending:, denominator:)
+        page.has_css?(
+          ".ai-translation-locale-progress__row",
+          text: /#{locale}.*#{translated}.*#{pending}.*#{denominator}/m,
+        )
+      end
+
       def has_locale_selector?
         page.has_css?(".ai-translations__settings-panel .multi-select")
       end

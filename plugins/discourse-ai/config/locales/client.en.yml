@@ -440,6 +440,28 @@ en:
         model_progress:
           loading: "Loading translation progress"
           overview_label: "Translation progress by content type"
+          detail:
+            loading: "Loading %{target} details..."
+            load_error: "%{target} details could not be loaded."
+            retry: "Retry"
+            empty: "No language progress is available."
+            progress_label: "%{translated} of %{total} translated into %{language}"
+            columns:
+              locale: "Locale"
+              translated: "Translated"
+              pending: "Pending"
+              eligible: "Eligible"
+              total: "Total"
+              progress: "Progress"
+            eligible_help:
+              post: "If a post is already in the language, it is excluded."
+              topic: "If a topic is already in the language, it is excluded."
+              category: "If a category is already in the language, it is excluded."
+            pending_help:
+              post: "Includes eligible posts that do not have language detected yet."
+              topic: "Includes eligible topics that do not have language detected yet."
+              category: "Includes eligible categories that do not have language detected yet."
+              tag: "Includes tags that do not have language detected yet."
           targets:
             post:
               title: "Posts"

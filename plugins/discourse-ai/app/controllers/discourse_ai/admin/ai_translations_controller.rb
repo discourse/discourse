@@ -21,6 +21,19 @@ module DiscourseAi
         render json: DiscourseAi::Translation::Progress.fetch
       end
 
+      def progress_detail
+        target_type = params[:target_type]
+        unless DiscourseAi::Translation::Progress.supported_target?(target_type)
+          return head :not_found
+        end
+
+        unless DiscourseAi::Translation.enabled?
+          return render json: { target_type:, cached_at: nil, locales: [] }
+        end
+
+        render json: DiscourseAi::Translation::Progress.fetch_detail(target_type)
+      end
+
       private
 
       def base_result
