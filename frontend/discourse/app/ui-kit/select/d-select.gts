@@ -18,12 +18,12 @@ import booleanString from "discourse/helpers/boolean-string";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
-import { and, or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
-import DLoadMore from "discourse/ui-kit/d-load-more";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
+import DVirtualList from "discourse/ui-kit/d-virtual-list";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus, {
@@ -58,6 +58,25 @@ export type SelectVariant =
 interface SelectListContent {
   rawItems: SelectItemModel[];
 }
+
+// A row's estimated height before measurement (~2.4em option). Windowing refines it from
+// the real DOM; a reasonable estimate only reduces the initial scroll jump.
+const ROW_HEIGHT_ESTIMATE = 38;
+// Placeholder rows appended at the loading frontier while a server page is in flight, so a
+// pending fetch reads as "more coming" in the list rather than a silent stop.
+const FRONTIER_SKELETON_COUNT = 3;
+
+/** A pending-fetch placeholder row mixed into the windowed list at the loading frontier. */
+interface SkeletonRow {
+  key: string;
+  isSkeleton: true;
+}
+
+/**
+ * A rendered list row: an engine descriptor or a frontier skeleton. The `isSkeleton?: false`
+ * on the descriptor arm is the discriminant that lets the template narrow one from the other.
+ */
+type ListRow = (SelectDescriptor & { isSkeleton?: false }) | SkeletonRow;
 
 interface DSelectSignature {
   Args: {
@@ -169,11 +188,16 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @tracked filterInput: HTMLElement | null = null;
 
-  /** The listbox element, which is the reveal sentinel's intersection root. */
-  @tracked listboxElement: HTMLElement | null = null;
-
   /** Whether a server load has run long enough to deserve a visible placeholder. */
   @tracked loadFeedbackDue = false;
+
+  /**
+   * The `key` of the currently roving-highlighted option, tracked so the `--active` class is
+   * rendered from state by each option (see {@link SelectItem}) instead of relying on the
+   * modifier's imperative `classList` toggle — which the windowed list wipes when it
+   * re-renders a row. The modifier still owns `aria-activedescendant` and navigation.
+   */
+  @tracked activeOptionKey: string | null = null;
 
   @tracked queryActive = false;
 
@@ -235,6 +259,25 @@ export default class DSelect extends Component<DSelectSignature> {
     },
   });
 
+  /**
+   * The rows handed to the windowed list: the engine's descriptors, plus frontier skeleton
+   * placeholders appended while a server source is fetching MORE rows at the tail (a reveal),
+   * so the pending page reads as "more coming" in the list. Gated on `showRevealPlaceholder`,
+   * which also carries the fast-source delay (no flash) and excludes a re-query (which
+   * replaces the set rather than extending it). `buildItems` is recomputed per render on
+   * purpose — its output reflects live selection/create/special state, not just `rawItems`.
+   */
+  buildListItems = (rawItems: SelectItemModel[]): readonly ListRow[] => {
+    const items = this.engine.buildItems(rawItems);
+    if (this.showRevealPlaceholder) {
+      return [...items, ...this.#frontierSkeletons];
+    }
+    return items;
+  };
+
+  /** Estimated row height for the windowing engine before a row is measured. */
+  estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
+
   // The DMenu instance, captured on register so the engine can close the overlay and
   // the compat bridge can reach the trigger element.
   #menu: DMenuInstance | null = null;
@@ -270,6 +313,13 @@ export default class DSelect extends Component<DSelectSignature> {
   // an open-driven programmatic focus (which must NOT select the label) from a genuine
   // keyboard focus (Tab-in, which selects the label for replacement).
   #focusingFromOpen = false;
+
+  // Stable placeholder rows for the loading frontier — a fixed identity so a persisting
+  // pending state does not remount them each render.
+  #frontierSkeletons: readonly SkeletonRow[] = Array.from(
+    { length: FRONTIER_SKELETON_COUNT },
+    (_, i) => ({ key: `__skeleton:${i}`, isSkeleton: true })
+  );
 
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
   get listboxId(): string {
@@ -900,6 +950,16 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
+   * `dRovingFocus` reports the highlighted option element on every cursor move (and the
+   * initial auto-seed); we record its `key` so each option renders its own `--active` from
+   * state. The element carries the key via `data-option-key` (stamped in the template).
+   */
+  @action
+  trackActiveOption(element: HTMLElement): void {
+    this.activeOptionKey = element.dataset.optionKey ?? null;
+  }
+
+  /**
    * Politely announces the result count to screen readers via the shared `a11y`
    * service (never a per-component live region, never assertive), skipping repeats.
    *
@@ -952,21 +1012,13 @@ export default class DSelect extends Component<DSelectSignature> {
     this.announceCount(element, args);
   }
 
-  /** Placeholders stand in for a pending page, appended after the rows already shown. */
+  /**
+   * Whether to append frontier skeleton placeholders for a pending reveal (a server page
+   * fetched at the tail). Gated on the load-feedback delay so a fast source shows none, and
+   * on `serverRevealPending` so a re-query — which replaces the set — does not.
+   */
   get showRevealPlaceholder(): boolean {
     return this.loadFeedbackDue && this.engine.serverRevealPending;
-  }
-
-  /**
-   * Placeholders replace the list outright, because a re-query's retained rows are answers to
-   * the previous query and the new ones arrive at the top, where the user is looking.
-   */
-  get showQueryPlaceholder(): boolean {
-    return (
-      this.loadFeedbackDue &&
-      this.engine.serverPending &&
-      !this.engine.serverRevealPending
-    );
   }
 
   /**
@@ -987,21 +1039,19 @@ export default class DSelect extends Component<DSelectSignature> {
     );
   }
 
-  /** Captures the listbox so the reveal sentinel can be rooted at its scroll container. */
-  @action
-  captureListbox(element: HTMLElement): void {
-    this.listboxElement = element;
-  }
-
   /**
-   * Drops the listbox ref on unmount. Kept stale, it would root a reopened list's observer at
-   * a detached node, which never intersects, and the list could never be revealed again.
+   * Cancels the pending load-feedback timer and drops the roving highlight key when the list
+   * unmounts, so a closed menu's timer cannot flip `loadFeedbackDue` on a torn-down instance
+   * and a reopened list does not render a stale `--active`.
    */
   @action
   releaseListbox(): void {
-    this.listboxElement = null;
     cancel(this.#loadFeedbackTimer);
     this.loadFeedbackDue = false;
+    // Drop the roving highlight key on close so a reopened list does not render a stale
+    // `--active` (the modifier reports the active option only while it moves the cursor, so
+    // it never reports the clearing on teardown).
+    this.activeOptionKey = null;
   }
 
   /**
@@ -1549,7 +1599,10 @@ export default class DSelect extends Component<DSelectSignature> {
               @retainWhileReloading={{true}}
             >
               <:loading>
-                <ul class="d-combobox__listbox" aria-busy="true">
+                <ul
+                  class="d-combobox__listbox d-combobox__listbox--loading"
+                  aria-busy="true"
+                >
                   {{#each this.skeletonRows key="key" as |row|}}
                     <li class="d-combobox__skeleton" data-key={{row.key}}>
                       <DSkeleton @variant="text" />
@@ -1559,21 +1612,26 @@ export default class DSelect extends Component<DSelectSignature> {
               </:loading>
 
               <:content as |content|>
-                {{#let (this.engine.buildItems content.rawItems) as |items|}}
+                {{#let (this.buildListItems content.rawItems) as |items|}}
                   {{#if items.length}}
-                    <ul
+                    <DVirtualList
+                      @as="ul"
+                      @role="listbox"
+                      @ownedRow={{true}}
+                      @key="key"
+                      @items={{items}}
+                      @estimateSize={{this.estimateRowSize}}
+                      @onReachEnd={{this.engine.revealMore}}
                       class="d-combobox__listbox"
-                      role="listbox"
                       id={{this.listboxId}}
                       aria-label={{or @label (i18n "d_select.label")}}
                       aria-multiselectable={{booleanString @multiple}}
-                      {{! A reveal or re-query keeps its rows mounted, so there is no skeleton
-                    to show for it and the listbox reports the fetch itself. }}
+                      {{! A reveal or re-query keeps its rows mounted, so aria-busy reports the
+                    fetch itself; the frontier skeleton is the sighted counterpart. }}
                       aria-busy={{booleanString
                         this.engine.serverPending
                         omitFalse=false
                       }}
-                      {{didInsert this.captureListbox}}
                       {{willDestroy this.releaseListbox}}
                       {{didInsert
                         this.announceCountOnEntry
@@ -1600,10 +1658,10 @@ export default class DSelect extends Component<DSelectSignature> {
                       {{! Static in the mobile modal moves DOM focus into the listbox; every other
                     surface keeps focus on its controller (no-op there). }}
                       {{didInsert this.focusListboxIfSimple}}
-                      {{! `active` mode: the controller (query input, or the desktop-static trigger
+                      {{! active mode: the controller (query input, or the desktop-static trigger
                     div) keeps focus and drives the highlight via aria-activedescendant. Static
-                    in the mobile modal uses `focus` mode (roving tabindex through the options),
-                    since its out-of-modal trigger can't be the controller. Typeahead and
+                    in the mobile modal uses focus mode (roving tabindex through the options),
+                    since its out-of-modal trigger cannot be the controller. Typeahead and
                     desktop static auto-highlight the first option; re-seed when async lands. }}
                       {{dRovingFocus
                         selectionMode=(if
@@ -1614,90 +1672,53 @@ export default class DSelect extends Component<DSelectSignature> {
                         )
                         itemSelector="[role=option]"
                         itemsKey=(if this.isTypeahead items this.engine.filter)
-                        activeClass="--active"
                         onActivate=this.activateElement
+                        onActiveChange=this.trackActiveOption
                         autoActivateFirst=this.shouldAutoActivateFirst
                         autoActivateSelected=this.shouldActivateSelected
                       }}
+                      as |descriptor row|
                     >
-                      {{#if this.showQueryPlaceholder}}
-                        {{#each this.skeletonRows key="key" as |row|}}
-                          <li
-                            class="d-combobox__skeleton"
-                            role="presentation"
-                            aria-hidden="true"
-                            data-key={{row.key}}
-                          >
-                            <DSkeleton @variant="text" />
-                          </li>
-                        {{/each}}
+                      {{#if descriptor.isSkeleton}}
+                        {{! Frontier placeholder for an in-flight reveal: presentation, no
+                      posinset, so pending rows never enter the option set. }}
+                        <li
+                          class="d-combobox__skeleton"
+                          role="presentation"
+                          aria-hidden="true"
+                          {{row.place row.start row.index}}
+                          {{row.measure}}
+                        >
+                          <DSkeleton @variant="text" />
+                        </li>
                       {{else}}
-                        {{#each items key="key" as |descriptor|}}
-                          <SelectItem
-                            @descriptor={{descriptor}}
-                            @engine={{this.engine}}
-                            @multiple={{@multiple}}
-                            @selectedIcon={{@selectedIcon}}
-                            @locked={{this.isLocked}}
-                            aria-posinset={{descriptor.posInSet}}
-                            aria-setsize={{descriptor.setSize}}
-                            {{! Keep focus in the trigger input on pointer-select so the input
-                        doesn't blur-close the menu before the click resolves (needed for
-                        action rows, which keep the menu open). mousedown is required —
+                        <SelectItem
+                          @descriptor={{descriptor}}
+                          @engine={{this.engine}}
+                          @multiple={{@multiple}}
+                          @selectedIcon={{@selectedIcon}}
+                          @locked={{this.isLocked}}
+                          @active={{eq descriptor.key this.activeOptionKey}}
+                          aria-posinset={{descriptor.posInSet}}
+                          aria-setsize={{descriptor.setSize}}
+                          data-option-key={{descriptor.key}}
+                          {{row.place row.start row.index}}
+                          {{row.measure}}
+                          {{! Keep focus in the trigger input on pointer-select so the input
+                        does not blur-close the menu before the click resolves (needed for
+                        action rows, which keep the menu open). mousedown is required:
                         blur fires before click; the handler no-ops for non-typeahead. }}
-                            {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                            {{on "mousedown" this.preventPointerBlur}}
-                          >
-                            {{#if (has-block "item")}}
-                              {{yield descriptor.item to="item"}}
-                            {{else}}
-                              {{selectItemLabel
-                                descriptor.item
-                                this.labelField
-                              }}
-                            {{/if}}
-                          </SelectItem>
-                        {{/each}}
-
-                        {{#if this.showRevealPlaceholder}}
-                          {{! The rows are retained across a fetch, so without a placeholder the
-                      list simply stops with no sighted feedback; aria-busy covers only
-                      assistive tech. Hidden and role-free so the option set is unchanged. }}
-                          {{#each this.skeletonRows key="key" as |row|}}
-                            <li
-                              class="d-combobox__skeleton"
-                              role="presentation"
-                              aria-hidden="true"
-                              data-key={{row.key}}
-                            >
-                              <DSkeleton @variant="text" />
-                            </li>
-                          {{/each}}
-                        {{else if
-                          (and this.listboxElement this.engine.canRevealMore)
-                        }}
-                          {{! The list-item wrapper is structural: DLoadMore renders a plain
-                      div, which is invalid as a direct child of a list, and the presentation
-                      role keeps it out of the option set dRovingFocus queries.
-
-                      Gated on the captured listbox because the observer roots at the scroll
-                      container; mounting before that ref lands would root it at the viewport,
-                      which the sentinel already intersects, firing an unasked-for reveal. }}
-                          <li
-                            class="d-combobox__sentinel"
-                            role="presentation"
-                            aria-hidden="true"
-                          >
-                            <DLoadMore
-                              @action={{this.engine.revealMore}}
-                              @enabled={{this.engine.canRevealMore}}
-                              @root={{this.listboxElement}}
-                              @rootMargin="200px"
-                            />
-                          </li>
-                        {{/if}}
+                          {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+                          {{on "mousedown" this.preventPointerBlur}}
+                        >
+                          {{#if (has-block "item")}}
+                            {{yield descriptor.item to="item"}}
+                          {{else}}
+                            {{selectItemLabel descriptor.item this.labelField}}
+                          {{/if}}
+                        </SelectItem>
                       {{/if}}
-                    </ul>
+                    </DVirtualList>
 
                     {{#if this.engine.atCapWithMore}}
                       {{! Sits outside the listbox, which admits only list items. The text also
