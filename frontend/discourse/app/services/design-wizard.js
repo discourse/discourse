@@ -34,6 +34,7 @@ export default class DesignWizardService extends Service {
   @tracked headingFont;
   @tracked saving = false;
   @tracked selectedPairKeys = new Map();
+  @tracked stepIndex = 0;
 
   #onComplete;
 
@@ -133,6 +134,11 @@ export default class DesignWizardService extends Service {
     this.#persistState();
   }
 
+  setStepIndex(stepIndex) {
+    this.stepIndex = stepIndex;
+    this.#persistState();
+  }
+
   selectBodyFont(fontKey) {
     this.bodyFont = fontKey;
     this.#persistState();
@@ -221,6 +227,7 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = this.data.palettes_user_selectable;
     this.bodyFont = this.data.base_font;
     this.headingFont = this.data.heading_font;
+    this.stepIndex = 0;
   }
 
   #restore(stored) {
@@ -230,6 +237,7 @@ export default class DesignWizardService extends Service {
     this.palettesUserSelectable = stored.palettesUserSelectable;
     this.bodyFont = stored.bodyFont;
     this.headingFont = stored.headingFont;
+    this.stepIndex = stored.stepIndex ?? 0;
   }
 
   #persistState() {
@@ -242,6 +250,7 @@ export default class DesignWizardService extends Service {
         palettesUserSelectable: this.palettesUserSelectable,
         bodyFont: this.bodyFont,
         headingFont: this.headingFont,
+        stepIndex: this.stepIndex,
       }),
     });
   }

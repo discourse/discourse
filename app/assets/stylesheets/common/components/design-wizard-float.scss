@@ -1,13 +1,14 @@
 .design-wizard-float {
   position: fixed;
   z-index: z("usercard");
-  top: calc(var(--header-offset, 60px) + var(--space-3));
-  right: var(--space-3);
   bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  width: 21em;
+  width: 40em;
   max-width: calc(100vw - var(--space-6));
+  max-height: min(60vh, 34em);
   overflow: hidden;
   background: var(--token-color-surface);
   border: 1px solid var(--content-border-color);

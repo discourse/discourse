@@ -40,6 +40,14 @@ module PageObjects
         has_no_css?("link#design-wizard-preview-scheme", visible: :all)
       end
 
+      def next_step
+        find("#{WIZARD_SELECTOR}__next").click
+      end
+
+      def back
+        find("#{WIZARD_SELECTOR}__back").click
+      end
+
       def save
         find("#{WIZARD_SELECTOR}__save").click
       end

@@ -129,6 +129,7 @@ describe "Admin Onboarding Banner" do
 
       expect(design_wizard_sidebar).to be_visible
 
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.select_palette("default")
       expect(design_wizard_sidebar).to have_palette_preview
 
@@ -151,10 +152,12 @@ describe "Admin Onboarding Banner" do
       expect(page).to have_current_path(/preview_theme_id=#{Theme.horizon_theme.id}/, url: true)
       expect(design_wizard_sidebar).to be_visible
 
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.select_palette("royal")
       expect(design_wizard_sidebar).to have_palette_preview
       design_wizard_sidebar.toggle_user_selectable_palettes
 
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.select_body_font("lato")
 
       expect(SiteSetting.default_theme_id).not_to eq(Theme.horizon_theme.id)
@@ -203,6 +206,8 @@ describe "Admin Onboarding Banner" do
 
       banner.click_step_action("select_theme")
       expect(design_wizard_sidebar).to be_visible
+      design_wizard_sidebar.next_step
+      design_wizard_sidebar.next_step
       design_wizard_sidebar.save
 
       # Page reloads after saving; banner disappears when all steps complete

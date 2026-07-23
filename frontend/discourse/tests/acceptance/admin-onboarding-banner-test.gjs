@@ -352,19 +352,45 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .exists("regular sidebar sections stay in place");
     assert
       .dom(".design-wizard-modal__theme-card")
-      .exists({ count: 2 }, "shows Foundation and Horizon");
+      .exists({ count: 2 }, "the first step shows Foundation and Horizon");
     assert
       .dom(".design-wizard-modal__theme-card.--selected")
       .hasAttribute("data-theme-id", "-1", "preselects the default theme");
-
+    assert
+      .dom(".sidebar-design-wizard__back")
+      .isDisabled("cannot go back from the first step");
     assert
       .dom(".design-wizard-modal__swatch")
-      .exists({ count: 1 }, "shows the theme's palette pairs");
+      .doesNotExist("palettes are not shown on the theme step");
+
+    await click(".sidebar-design-wizard__next");
+    assert
+      .dom(".design-wizard-modal__theme-card")
+      .doesNotExist("theme cards are left behind on the colors step");
+    assert
+      .dom(".design-wizard-modal__swatch")
+      .exists({ count: 1 }, "the colors step shows the theme's palette pairs");
 
     await click(".design-wizard-modal__swatch[data-pair-key='default']");
     assert
       .dom("link#design-wizard-preview-scheme", document.body)
       .exists("palette preview stylesheet is attached to the page");
+
+    await click(".sidebar-design-wizard__next");
+    assert
+      .dom(".design-wizard-modal__font-card")
+      .exists("the fonts step shows font cards");
+    assert
+      .dom(".sidebar-design-wizard__next")
+      .doesNotExist("no next on the last step");
+    assert
+      .dom(".sidebar-design-wizard__save")
+      .exists("the last step offers save");
+
+    await click(".sidebar-design-wizard__back");
+    assert
+      .dom(".design-wizard-modal__swatch")
+      .exists({ count: 1 }, "back returns to the colors step");
 
     await click(".design-wizard-float__close");
     assert

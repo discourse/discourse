@@ -32,8 +32,27 @@
   &__actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--space-2);
     margin-top: auto;
     padding-top: var(--space-3);
+  }
+
+  &__step-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-right: auto;
+  }
+
+  &__step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--token-radius-full);
+    background: var(--token-color-border-default);
+
+    &.--active {
+      background: var(--token-color-background-accent-bolder);
+    }
   }
 }

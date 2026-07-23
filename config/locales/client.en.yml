@@ -573,6 +573,8 @@ en:
         subtitle: "You can change all of this later in your admin settings"
         skip: "Skip for now"
         save: "Save and finish"
+        back: "Back"
+        next: "Next"
         sections:
           theme: "Theme"
           colors: "Default color"
