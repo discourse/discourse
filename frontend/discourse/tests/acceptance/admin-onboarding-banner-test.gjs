@@ -84,7 +84,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
-    server.get("/color-scheme-stylesheet/:id/:themeId", () =>
+    server.get("/color-scheme-stylesheet/:id", () =>
       helper.response(200, {
         color_scheme_id: -1,
         new_href: "/stylesheets/color_definitions_preview.css",
@@ -396,8 +396,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard-modal__swatch[data-pair-key='default']");
     assert
-      .dom("link#design-wizard-preview-scheme", document.body)
-      .exists("palette preview stylesheet is attached to the page");
+      .dom("link[data-scheme-id]", document.documentElement)
+      .exists("the page's color scheme stylesheet is swapped for the preview");
 
     await click(".sidebar-design-wizard__back");
     assert
@@ -424,8 +424,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-float")
       .doesNotExist("closing removes the floating panel");
     assert
-      .dom("link#design-wizard-preview-scheme", document.body)
-      .doesNotExist("palette preview is removed");
+      .dom("link[data-scheme-id]", document.documentElement)
+      .doesNotExist("the palette preview is reverted");
     step.isNotChecked();
   });
 });

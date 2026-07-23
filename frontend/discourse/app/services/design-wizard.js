@@ -1,17 +1,20 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { applyColorScheme } from "discourse/admin/lib/color-scheme-manager";
 import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   applyPreviewFonts,
-  applyPreviewPalette,
   clearPreview,
 } from "discourse/lib/design-wizard-preview";
 import getURL from "discourse/lib/get-url";
 import { HORIZON_THEME_ID, setLocalTheme } from "discourse/lib/theme-selector";
 
 const STATE_KEY = "design_wizard_sidebar_state";
+// the stylesheet endpoint falls back to the base light palette for unknown
+// ids, which is exactly what a theme without an assigned palette renders
+const BASE_LIGHT_PALETTE_ID = -1;
 // mirrors the onboarding step's own completion key so a wizard finished
 // after a theme-preview reload (where the step's callback is gone) still
 // marks the step complete
@@ -178,7 +181,10 @@ export default class DesignWizardService extends Service {
 
     if (this.#currentPreviewThemeId !== null) {
       window.location.assign(getURL("/"));
+      return;
     }
+
+    this.#revertPalette();
   }
 
   async save() {
@@ -298,9 +304,32 @@ export default class DesignWizardService extends Service {
       bodyFont: this.bodyFont,
       headingFont: this.headingFont,
     });
-    await applyPreviewPalette(document, {
-      paletteId: this.previewPalette?.id,
-      themeId: this.themeId,
-    });
+
+    const paletteId = this.previewPalette?.id;
+    if (paletteId) {
+      try {
+        await applyColorScheme({ id: paletteId }, { replace: true });
+      } catch {
+        // the manager already reports failures; a failed preview should not
+        // break the wizard
+      }
+    }
+  }
+
+  async #revertPalette() {
+    const renderedTheme = this.data?.themes.find((theme) => theme.default);
+
+    try {
+      await applyColorScheme(
+        { id: renderedTheme?.color_scheme_id ?? BASE_LIGHT_PALETTE_ID },
+        { replace: true }
+      );
+    } catch {
+      // a failed revert only leaves the previewed colors in place
+    }
+
+    document
+      .querySelectorAll("link[data-scheme-id]")
+      .forEach((link) => link.removeAttribute("data-scheme-id"));
   }
 }

@@ -43,11 +43,11 @@ module PageObjects
       end
 
       def has_palette_preview?
-        has_css?("link#design-wizard-preview-scheme", visible: :all)
+        has_css?("link[data-scheme-id]", visible: :all)
       end
 
       def has_no_palette_preview?
-        has_no_css?("link#design-wizard-preview-scheme", visible: :all)
+        has_no_css?("link[data-scheme-id]", visible: :all)
       end
 
       def next_step
