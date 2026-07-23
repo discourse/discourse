@@ -638,13 +638,56 @@ RSpec.describe Tag do
   end
 
   describe "description" do
-    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
+    it "preserves the raw markdown source and cooks it into a safe description_cooked" do
+      tag.description = "Topics about **markdown** and a < b"
+      tag.save!
+
+      expect(tag.description).to eq("Topics about **markdown** and a < b")
+      expect(tag.description_cooked).to include("<strong>markdown</strong>")
+      expect(tag.description_cooked).to include("a &lt; b")
+    end
+
+    it "sanitizes unsafe markup when cooking, without mutating the raw source" do
       tag.description =
         "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
       tag.save!
-      expect(tag.description.strip).to eq(
-        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
-      )
+
+      expect(tag.description).to include("<script>")
+      expect(tag.description_cooked).not_to include("<script>")
+      expect(tag.description_cooked).not_to include("onclick")
+      expect(tag.description_cooked).to include('href="https://www.discourse.org"')
+    end
+
+    it "clears description_cooked when the description is blank" do
+      tag.update!(description: "something")
+      expect(tag.description_cooked).to be_present
+
+      tag.update!(description: "")
+      expect(tag.description_cooked).to be_nil
+    end
+
+    it "stamps the baked version on save" do
+      tag.update!(description: "**hi**")
+      expect(tag.description_cooked_version).to eq(HasCookedTagDescription::BAKED_VERSION)
+    end
+
+    describe ".rebake_old" do
+      it "reconciles rows with missing or stale cooked HTML and leaves current ones alone" do
+        tag.update!(description: "**current**")
+        stale = Fabricate(:tag, description: "**stale**")
+        stale.update_columns(description_cooked: nil, description_cooked_version: nil)
+
+        expect(Tag.rebake_old(100)).to eq([])
+
+        expect(stale.reload.description_cooked).to include("<strong>stale</strong>")
+        expect(stale.description_cooked_version).to eq(HasCookedTagDescription::BAKED_VERSION)
+        expect(
+          Tag.where(
+            "description_cooked_version IS NULL OR description_cooked_version < ?",
+            HasCookedTagDescription::BAKED_VERSION,
+          ),
+        ).to be_empty
+      end
     end
   end
 
