@@ -448,7 +448,9 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
     different natures:
     - `deprecate :destroy, link: "…"` — **resource config**: advisory and reversible, not a timeline
       event; warns every caller regardless of pin via the RFC 9745 `Deprecation` header +
-      `Link rel="deprecation"`.
+      `Link rel="deprecation"`. **BUILT 2026-07-23** (`deprecate action, on:, link:` on the
+      resource class; headers emitted by the base controller; `deprecated: true` in the
+      generated docs).
     - `removed_endpoint :destroy` — **a dated `VersionChange` keyword**: an immutable timeline event,
       like any breaking change. Pins resolved before its date are served normally plus
       `Deprecation: @<removal-date>` (a past date — exactly what RFC 9745 anticipates) and the doc

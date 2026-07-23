@@ -83,6 +83,17 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::ResourceBase do
     end
   end
 
+  describe ".deprecate" do
+    before { resource_class.deprecate(:index, on: "2026-07-01", link: "https://example.com/dep") }
+
+    it "records the deprecation" do
+      expect(resource_class.deprecated_actions[:index]).to eq(
+        on: "2026-07-01",
+        link: "https://example.com/dep",
+      )
+    end
+  end
+
   describe "rendering" do
     it "serializes declared attributes through the underlying serializer" do
       expect(resource_class.new(record).serializable_hash.dig(:data, :attributes)).to eq(

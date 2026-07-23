@@ -108,10 +108,12 @@ module DiscourseDataExplorer
           "title" => "Discourse JSON:API",
           "version" => JsonApiKit.api_versions.current_version.to_s,
         }
-        info["description"] = @intro if @intro
+        description = [@intro, changelog_markdown].compact.join("\n\n")
+        info["description"] = description if description.present?
         {
           "openapi" => "3.1.0",
           "info" => info,
+          "x-changelog" => changelog_entries,
           "tags" => tags,
           "paths" => paths,
           "components" => {
@@ -191,6 +193,35 @@ module DiscourseDataExplorer
       def tag_name(resource) = resource.record_type.to_s.humanize
 
       def singular(resource) = resource.record_type.to_s.singularize
+
+      # The registry is a dated changelog — descriptions are mandatory on every
+      # change. Newest first. (At generation time the registry holds the core
+      # timeline; extension changelogs arrive with the extensions-docs work.)
+      def changelog_entries
+        @changelog_entries ||=
+          JsonApiKit
+            .api_versions
+            .changes
+            .group_by { it.version.to_s }
+            .map do |version, changes|
+              { "version" => version, "changes" => changes.map(&:description) }
+            end
+            .reverse
+      end
+
+      def changelog_markdown
+        return if changelog_entries.empty?
+
+        sections =
+          changelog_entries.map do |entry|
+            "## #{entry["version"]}\n\n#{entry["changes"].map { "- #{it}" }.join("\n")}"
+          end
+        "# Changelog\n\n#{sections.join("\n\n")}"
+      end
+
+      def deprecated?(resource, action)
+        resource.respond_to?(:deprecated_actions) && resource.deprecated_actions.key?(action)
+      end
 
       def schemas
         resources.transform_values { resource_schema(it) }.merge("errors" => ERRORS_SCHEMA)
@@ -272,11 +303,21 @@ module DiscourseDataExplorer
 
       def paths
         @endpoints.each_with_object({}) do |endpoint, result|
-          collection = { "get" => with_examples(index_operation(endpoint)) }
-          collection["post"] = with_examples(create_operation(endpoint)) if endpoint[:create]
+          resource = primary_resource(endpoint)
+          collection = { "get" => finalize(index_operation(endpoint), resource, :index) }
+          if endpoint[:create]
+            collection["post"] = finalize(create_operation(endpoint), resource, :create)
+          end
           result[endpoint[:path]] = collection
-          result["#{endpoint[:path]}/{id}"] = { "get" => with_examples(show_operation(endpoint)) }
+          result["#{endpoint[:path]}/{id}"] = {
+            "get" => finalize(show_operation(endpoint), resource, :show),
+          }
         end
+      end
+
+      def finalize(operation, resource, action)
+        operation["deprecated"] = true if deprecated?(resource, action)
+        with_examples(operation)
       end
 
       def with_examples(operation)
