@@ -56,4 +56,45 @@ acceptance("Composer - swipe to collapse", function (needs) {
 
     assert.dom(".d-editor-input").isFocused();
   });
+
+  test("a swipe is deferred while text is selected", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await focus(".d-editor-input");
+
+    window
+      .getSelection()
+      .selectAllChildren(
+        document.querySelector(".topic-post[data-post-number='1'] .cooked p")
+      );
+
+    try {
+      await swipeDown(".composer-footer");
+      assert.dom(".d-editor-input").isFocused();
+    } finally {
+      window.getSelection().removeAllRanges();
+    }
+  });
+
+  test("a dismissing swipe reflows the composer without waiting for the viewport", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await focus(".d-editor-input");
+
+    const docEl = document.documentElement;
+    docEl.classList.add("keyboard-visible");
+
+    try {
+      await swipeDown(".composer-footer", { to: 20 });
+      assert
+        .dom(docEl)
+        .hasClass("keyboard-visible", "snap-back keeps the keyboard state");
+
+      await swipeDown(".composer-footer");
+      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+    } finally {
+      docEl.classList.remove("keyboard-visible");
+      docEl.style.removeProperty("--composer-vh");
+    }
+  });
 });
