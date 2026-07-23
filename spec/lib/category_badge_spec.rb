@@ -3,22 +3,22 @@
 require "category_badge"
 
 RSpec.describe CategoryBadge do
-  it "escapes HTML in category names / descriptions" do
-    c = Fabricate(:category, name: "<b>name</b>", description: "<b>title</b>")
+  it "escapes HTML in category names" do
+    c = Fabricate(:category, name: "<b>name</b>")
 
     html = CategoryBadge.html_for(c)
 
-    expect(html).not_to include("<b>title</b>")
     expect(html).not_to include("<b>name</b>")
     expect(html).to include("&lt;b&gt;name&lt;/b&gt;")
-    expect(html).to include("title='title'")
   end
 
-  it "escapes code block contents" do
-    c = Fabricate(:category, description: '<code>\' &lt;b id="x"&gt;</code>')
+  it "does not expose the category description as a tooltip" do
+    c = Fabricate(:category, description: "a description")
+
     html = CategoryBadge.html_for(c)
 
-    expect(html).to include("title='&#39; &lt;b id=&quot;x&quot;&gt;'")
+    expect(html).not_to include("title=")
+    expect(html).not_to include("a description")
   end
 
   it "includes color vars" do

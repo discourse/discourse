@@ -636,10 +636,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       );
   });
 
-  test("category section link has the right title", async function (assert) {
+  test("category section link does not have a title", async function (assert) {
     const categories = Site.current().categories;
-
-    // Category with link HTML tag in description
     const category = categories.find((c) => c.id === 28);
 
     updateCurrentUser({
@@ -650,10 +648,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-category-id="${category.id}"] a`)
-      .hasAttribute(
+      .doesNotHaveAttribute(
         "title",
-        category.descriptionText,
-        "category description without HTML entity is used as the link's title"
+        "does not expose the category description as a tooltip"
       );
   });
 
