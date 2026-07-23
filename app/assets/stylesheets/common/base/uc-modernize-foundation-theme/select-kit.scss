@@ -1,16 +1,6 @@
 :where(.uc-modernize-foundation-theme) {
-  .select-kit .select-kit-header:not(.composer-actions-btn),
-  .d-date-input .date-picker {
-    height: var(--d-control-height);
-  }
-
   .select-kit.is-expanded .select-kit-filter.is-expanded {
     border: none;
-  }
-
-  .select-kit.is-expanded .select-kit-filter.is-expanded {
-    height: var(--d-control-height);
-    padding-block: 0;
   }
 
   .select-kit .caret-icon {
@@ -18,8 +8,6 @@
   }
 
   .list-controls .combo-box .combo-box-header {
-    height: var(--d-control-height);
-
     &:hover {
       background-color: var(--primary-100);
     }
