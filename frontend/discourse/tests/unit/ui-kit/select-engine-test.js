@@ -732,8 +732,8 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
 // Oracle for U-D change B2 (F1): aria-setsize is indeterminate (-1) while a source still
 // has unloaded rows. A server that declares more than it has loaded cannot honestly say
 // "option N of TOTAL", so setSize is -1 while each loaded row keeps its known position. A
-// COMPLETE server, and a CLIENT source (all rows in memory, merely windowed for render),
-// both keep their true, knowable size.
+// COMPLETE server, and a CLIENT source (all rows in memory), both keep their true, knowable
+// size.
 module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
   setupTest(hooks);
 
@@ -787,22 +787,21 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
     );
   });
 
-  test("a client source keeps its true setSize even while windowed", async function (assert) {
-    // 300 exceeds the client render chunk, so only a prefix is rendered — but every row is
-    // in memory, so the size is known and must NOT collapse to the unloaded encoding.
+  test("a client source reports its full, known setSize", async function (assert) {
     const engine = new SelectEngine({ items: rows(300) });
 
     const loaded = engine.loadItems(engine.loadContext);
     const [first] = engine.buildItems(loaded);
 
-    assert.true(
-      loaded.length < 300,
-      "the client render window is only a prefix of the full list"
+    assert.strictEqual(
+      loaded.length,
+      300,
+      "the whole client list renders — no engine-side render window"
     );
     assert.strictEqual(
       first.setSize,
       300,
-      "a client source reports its full, known size while windowed"
+      "a client source reports its full, known size"
     );
   });
 });

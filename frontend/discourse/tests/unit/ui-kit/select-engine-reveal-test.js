@@ -1,10 +1,12 @@
+import { trackedObject } from "@ember/reactive/collections";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
-// Mirrors the module-private constants in select-engine.ts. They are deliberately not
-// exported (not public API), so the tests pin the behaviour they produce instead.
-const CLIENT_CHUNK = 50;
+// Mirrors the module-private SERVER cap in select-engine.ts. It is deliberately not
+// exported (not public API), so the tests pin the behaviour it produces instead. The
+// former client chunk/cap is gone: a client source now renders its whole filtered list
+// and `DVirtualList` owns the render window.
 const MAX_RENDERED = 200;
 
 function clientItems(count) {
@@ -33,13 +35,13 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
   setupTest(hooks);
 
   module("client source", function () {
-    test("renders only the first chunk of a large list", function (assert) {
+    test("renders the whole filtered list, not a bounded window", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
       assert.strictEqual(
         engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK,
-        "the initial window is one chunk, not the whole list"
+        5000,
+        "the full client list renders — DVirtualList owns the render window now"
       );
     });
 
@@ -75,127 +77,122 @@ module("Unit | ui-kit | SelectEngine | reveal", function (hooks) {
       assert.false(engine.atCapWithMore, "not pinned at the cap");
     });
 
-    test("revealMore grows the window by one chunk and reports that it grew", function (assert) {
+    test("a large client list never reveals and never caps", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
-      assert.true(engine.revealMore(), "reports the window grew");
-      assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK * 2,
-        "the window is two chunks wide"
-      );
-    });
-
-    test("the window is a prefix — revealing never drops earlier rows", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
-
-      const first = engine.loadItems(engine.loadContext);
-      engine.revealMore();
-      const second = engine.loadItems(engine.loadContext);
-
-      assert.deepEqual(
-        second.slice(0, CLIENT_CHUNK).map((i) => i.id),
-        first.map((i) => i.id),
-        "the revealed window extends the previous one in place"
-      );
-    });
-
-    test("the window stops at the hard cap and revealMore then refuses", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(5000) });
-
-      for (let i = 0; i < 50; i++) {
-        engine.revealMore();
-      }
-
-      assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
-        MAX_RENDERED,
-        "never renders more than the cap"
-      );
       assert.false(
         engine.canRevealMore,
-        "the sentinel is gated off at the cap"
+        "a fully-rendered client list has nothing left to reveal"
       );
-      assert.false(engine.revealMore(), "revealMore refuses past the cap");
-      assert.true(
-        engine.atCapWithMore,
-        "pinned at the cap with more available drives the narrow hint"
+      assert.false(
+        engine.revealMore(),
+        "revealMore is an inert no-op for a client source"
       );
-    });
-
-    test("a list that exactly fits the cap is not reported as having more", function (assert) {
-      const engine = new SelectEngine({ items: clientItems(MAX_RENDERED) });
-
-      for (let i = 0; i < 50; i++) {
-        engine.revealMore();
-      }
-
       assert.strictEqual(
         engine.loadItems(engine.loadContext).length,
-        MAX_RENDERED
+        5000,
+        "the rendered set is unchanged by the no-op reveal"
       );
       assert.false(
         engine.atCapWithMore,
-        "no hint when the cap is exactly the whole list"
+        "no client cap means the narrow hint never fires for a client source"
       );
     });
 
-    test("gating getters stay reactive to the filter (no stale untracked snapshot)", function (assert) {
+    test("total is the full filtered length and stays reactive to the filter", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
-      for (let i = 0; i < 50; i++) {
-        engine.revealMore();
-      }
-      assert.true(engine.atCapWithMore, "capped on the unfiltered list");
+      assert.strictEqual(engine.total, 5000, "the whole client list");
 
       // Narrowing to a single match must re-derive from the live filter. An implementation
-      // that stashed the total in an untracked field during loadItems would still say true.
+      // that stashed the count in an untracked field during loadItems would still say 5000.
       engine.setFilter("Item 4242");
 
+      assert.strictEqual(
+        engine.total,
+        1,
+        "re-derived live from the filter, not a stale snapshot"
+      );
       assert.false(
         engine.atCapWithMore,
-        "the hint clears once the filtered list fits"
+        "a single match is never the narrow hint"
       );
       assert.false(engine.canRevealMore, "nothing left to reveal");
+      assert.strictEqual(
+        engine.loadItems(engine.loadContext).length,
+        1,
+        "the rendered set narrows with the filter"
+      );
     });
 
-    test("changing the filter resets the window to the first chunk", function (assert) {
+    test("changing the filter re-renders the full filtered list", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
-      engine.revealMore();
-      engine.revealMore();
       engine.setFilter("Item");
 
       assert.strictEqual(
         engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK,
-        "a new search starts from the first chunk"
+        5000,
+        "every row matches the term, so the whole filtered list renders"
       );
     });
 
-    test("reload resets the window", function (assert) {
+    test("reload re-renders the full list", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
-      engine.revealMore();
       engine.reload();
 
       assert.strictEqual(
         engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK,
-        "a retry re-renders from the first chunk"
+        5000,
+        "a retry re-renders the whole list, not a bounded prefix"
       );
     });
 
-    test("revealing changes loadContext identity so the list re-renders", function (assert) {
+    test("a client reveal leaves loadContext identity intact; a new filter invalidates it", function (assert) {
       const engine = new SelectEngine({ items: clientItems(5000) });
 
       const before = engine.loadContext;
       engine.revealMore();
 
+      assert.strictEqual(
+        before,
+        engine.loadContext,
+        "a client source has no reveal cursor, so the inert reveal cannot re-key the context"
+      );
+
+      engine.setFilter("Item 1");
       assert.notStrictEqual(
         before,
         engine.loadContext,
-        "a reveal invalidates the context DAsyncContent watches"
+        "a new filter still invalidates the context DAsyncContent watches"
+      );
+    });
+
+    test("loadItems and loadContext follow the live items thunk, never a buffered copy", function (assert) {
+      // A tracked source, so replacing the array actually invalidates the @cached reads — a
+      // plain variable reassignment would not, which is the point of the reactivity net.
+      const source = trackedObject({ items: clientItems(3) });
+      const engine = new SelectEngine({ items: () => source.items });
+
+      const before = engine.loadContext;
+      assert.strictEqual(
+        engine.loadItems(before).length,
+        3,
+        "the initial live corpus"
+      );
+
+      source.items = clientItems(7);
+
+      assert.notStrictEqual(
+        before,
+        engine.loadContext,
+        "a changed source invalidates the context so the list re-fetches"
+      );
+      assert.strictEqual(
+        engine.loadItems(engine.loadContext).length,
+        7,
+        "loadItems reflects the live thunk — a buffered LocalSource would still report 3"
       );
     });
   });
