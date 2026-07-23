@@ -113,11 +113,10 @@ end
 task "s3:upload_assets" => [:environment, "s3:ensure_cors_rules"] do
   logger = Logger.new(STDOUT)
 
-  # Pre-warm the S3 helper and credentials before spawning threads
-  helper
+  # Initialize S3 client state before spawning threads
+  existing_assets
 
-  thread_count = ENV["DISCOURSE_S3_UPLOAD_ASSETS_THREADS"]&.to_i || Concurrent.processor_count
-  pool = Concurrent::FixedThreadPool.new(thread_count)
+  pool = Concurrent::FixedThreadPool.new(8)
 
   # Use promises so we can detect failures
   promises =
