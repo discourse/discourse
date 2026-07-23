@@ -6,6 +6,7 @@ import { i18n } from "discourse-i18n";
 export default class Rule extends RestModel {
   @tracked type = "normal";
   @tracked category_id = null;
+  @tracked exclude_category_ids = null;
   @tracked tags = null;
   @tracked channel_id = null;
   @tracked filter = "watch";
@@ -76,6 +77,7 @@ export default class Rule extends RestModel {
     return this.getProperties([
       "type",
       "category_id",
+      "exclude_category_ids",
       "group_id",
       "tags",
       "filter",
@@ -87,6 +89,7 @@ export default class Rule extends RestModel {
       "type",
       "channel_id",
       "category_id",
+      "exclude_category_ids",
       "group_id",
       "tags",
       "filter",

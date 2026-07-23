@@ -89,6 +89,32 @@ RSpec.describe DiscourseChatIntegration::Manager do
       expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id, chan2.id)
     end
 
+    describe "with exclude_category_ids" do
+      let(:excluded_category) { Fabricate(:category) }
+      let(:excluded_topic) { Fabricate(:topic, category_id: excluded_category.id) }
+      let(:excluded_topic_post) { Fabricate(:post, topic: excluded_topic) }
+
+      before do
+        DiscourseChatIntegration::Rule.create!(
+          channel: chan1,
+          filter: "watch",
+          exclude_category_ids: [excluded_category.id],
+        )
+      end
+
+      it "should not notify for a topic in an excluded category" do
+        manager.trigger_notifications(excluded_topic_post.id)
+
+        expect(provider.sent_to_channel_ids).to contain_exactly
+      end
+
+      it "should notify for topics in other categories" do
+        manager.trigger_notifications(first_post.id)
+
+        expect(provider.sent_to_channel_ids).to contain_exactly(chan1.id)
+      end
+    end
+
     it "should send a notification only to watched for reply" do
       DiscourseChatIntegration::Rule.create!(
         channel: chan1,
