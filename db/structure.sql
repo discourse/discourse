@@ -9384,7 +9384,9 @@ CREATE TABLE public.tag_localizations (
     name character varying NOT NULL,
     description character varying(1000),
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description_cooked character varying(2000),
+    description_cooked_version integer
 );
 
 
@@ -9489,7 +9491,9 @@ CREATE TABLE public.tags (
     public_topic_count integer DEFAULT 0 NOT NULL,
     staff_topic_count integer DEFAULT 0 NOT NULL,
     locale character varying(20),
-    slug character varying DEFAULT ''::character varying NOT NULL
+    slug character varying DEFAULT ''::character varying NOT NULL,
+    description_cooked character varying(2000),
+    description_cooked_version integer
 );
 
 
@@ -21154,6 +21158,13 @@ CREATE UNIQUE INDEX index_tag_groups_on_lower_name ON public.tag_groups USING bt
 
 
 --
+-- Name: index_tag_localizations_on_description_cooked_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tag_localizations_on_description_cooked_version ON public.tag_localizations USING btree (description_cooked_version);
+
+
+--
 -- Name: index_tag_localizations_on_tag_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21186,6 +21197,13 @@ CREATE UNIQUE INDEX index_tag_users_on_user_id_and_tag_id ON public.tag_users US
 --
 
 CREATE INDEX index_tag_users_on_user_id_and_tag_id_and_notification_level ON public.tag_users USING btree (user_id, tag_id, notification_level);
+
+
+--
+-- Name: index_tags_on_description_cooked_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tags_on_description_cooked_version ON public.tags USING btree (description_cooked_version);
 
 
 --
@@ -22828,6 +22846,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260723183001'),
 ('20260722140539'),
 ('20260722140536'),
 ('20260721080424'),

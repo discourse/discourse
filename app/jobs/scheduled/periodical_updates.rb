@@ -49,6 +49,19 @@ module Jobs
         )
       end
 
+      # rebake out of date tag descriptions
+      [Tag, TagLocalization].each do |klass|
+        klass
+          .rebake_old(250)
+          .each do |hash|
+            record = hash[:record]
+            Discourse.handle_job_exception(
+              hash[:ex],
+              error_context(args, "Rebaking #{klass.name} id #{record.id}", record_id: record.id),
+            )
+          end
+      end
+
       offset = SiteSetting.max_new_topics.to_i
       last_new_topic = Topic.order("created_at desc").offset(offset).select(:created_at).first
       SiteSetting.min_new_topics_time = last_new_topic.created_at.to_i if last_new_topic
