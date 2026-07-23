@@ -11,7 +11,7 @@
     "@glint/tsserver-plugin": "^2.5.17",
     "@rdil/parallel-prettier": "^3.0.0",
     "concurrently": "^9.2.1",
-    "eslint": "10.6.0",
+    "eslint": "10.7.0",
     "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.9",
@@ -21,7 +21,7 @@
     "playwright": "1.59.1",
     "postcss-selector-parser": "^7.1.4",
     "prettier": "3.8.1",
-    "stylelint": "17.5.0",
+    "stylelint": "17.14.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
