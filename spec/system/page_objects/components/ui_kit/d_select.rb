@@ -103,41 +103,115 @@ module PageObjects
           options.size
         end
 
-        # Whether the reveal sentinel is mounted. It disappears once the source stops offering
-        # more — which a source does by saying so, or by saying nothing — or the cap is reached.
-        def sentinel?
-          page.has_css?("[role='listbox'] .d-combobox__sentinel", wait: 0)
-        end
-
         # Whether the "keep filtering" hint is showing, i.e. the list is pinned at the cap
         # with more results behind it.
         def narrow_hint?
           page.has_css?(".d-combobox__narrow", wait: 0)
         end
 
-        # Scrolls the listbox itself, which is the reveal sentinel's intersection root — the
-        # page never scrolls for this control.
+        # The listbox is windowed: only a slice of the loaded rows is mounted, so counting
+        # `[role='option']` elements measures the window, not how many rows have loaded. The
+        # loaded extent is instead the highest absolute `data-index` currently reachable — the
+        # bottom of the window includes the last loaded row.
+        def max_loaded_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const indices = [...document.querySelectorAll("[role='listbox'] [role='option']")]
+                .map((el) => Number(el.dataset.index))
+                .filter((index) => Number.isInteger(index));
+              return indices.length ? Math.max(...indices) : -1;
+            })()
+          JS
+        end
+
+        # Scrolls the listbox itself (never the page): reaching the end band is what trips the
+        # windowed reveal.
         def scroll_listbox_to_bottom
           page.execute_script(<<~JS)
             (function () {
-              const list = document.querySelector("[role='listbox']");
+              const list = document.querySelector(".d-virtual-list");
               list.scrollTop = list.scrollHeight;
             })()
           JS
         end
 
-        # Scrolls until `target` options are rendered. The reveal observer is debounced, so
-        # each step waits for the count to grow rather than sleeping a fixed amount. Waiting
-        # toward a known target keeps every wait a positive one, which resolves as soon as the
-        # chunk lands instead of burning the full Capybara timeout.
-        def reveal_until(target, max_scrolls: 12)
+        # Scrolls toward the end until the loaded extent reaches `target` (an absolute index)
+        # or stops growing. Each scroll to the bottom advances the window onto the loaded
+        # frontier and trips the reveal; the window then jumps to the new bottom, so the wait
+        # is for the reachable frontier to advance past where it was — not for a specific index
+        # (that low index is above the new window). A step that fails to advance the frontier
+        # ends the loop (the source is exhausted or capped).
+        def reveal_to_index(target, max_scrolls: 25)
           max_scrolls.times do
-            break if option_count >= target
-            before = option_count
+            before = max_loaded_index
+            break if before >= target
             scroll_listbox_to_bottom
-            break unless page.has_css?("[role='listbox'] [role='option']", minimum: before + 1)
+            advanced = false
+            20.times do
+              if max_loaded_index > before
+                advanced = true
+                break
+              end
+              sleep 0.1
+            end
+            break unless advanced
           end
-          option_count
+          max_loaded_index
+        end
+
+        # The absolute `data-index` of the option the combobox controller currently points at
+        # via `aria-activedescendant`, or nil when the descendant is absent or not a mounted
+        # option — the browser-truthful way to assert where a windowed keyboard jump landed.
+        def active_option_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const root = "#{@root}";
+              const controller =
+                document.querySelector(root + " [role='combobox']") ||
+                document.querySelector(root + "[role='combobox']");
+              const id = controller && controller.getAttribute("aria-activedescendant");
+              const active = id && document.getElementById(id);
+              if (!active || active.getAttribute("role") !== "option") {
+                return null;
+              }
+              const index = Number(active.dataset.index);
+              return Number.isInteger(index) ? index : null;
+            })()
+          JS
+        end
+
+        # Whether DOM focus rests on a mounted listbox option (focus-mode surfaces move real
+        # focus into the list). Distinguishes a landed jump from focus dropped to `<body>`.
+        def focused_option_index
+          page.evaluate_script(<<~JS)
+            (function () {
+              const el = document.activeElement;
+              if (!el || el.getAttribute("role") !== "option") {
+                return null;
+              }
+              const index = Number(el.dataset.index);
+              return Number.isInteger(index) ? index : null;
+            })()
+          JS
+        end
+
+        # Sends keys to the combobox controller (the trigger input, or the trigger div for a
+        # select-only combobox).
+        def press_in_controller(*keys)
+          find("#{@root} [role='combobox']").send_keys(*keys)
+        end
+
+        # A windowed keyboard jump reconciles asynchronously (scroll, then refocus on the next
+        # runloop), so the active option moves a beat after the keystroke. Polls until the
+        # active index changes away from `previous` and returns it, failing if it never moves.
+        def active_index_after_change(previous, timeout: 5)
+          deadline = Time.now + timeout
+          loop do
+            current = active_option_index
+            return current if current && current != previous
+            raise "the active option never moved from #{previous.inspect}" if Time.now > deadline
+            sleep 0.05
+          end
         end
       end
     end

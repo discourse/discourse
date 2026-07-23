@@ -27,15 +27,15 @@ describe "UiKit | DSelect cursor source" do
   it "reports an unknown set size while pages remain, and the real count once complete" do
     combobox.open
 
-    expect(page).to have_css("[role='listbox'] [role='option']", count: 50, wait: 10)
+    # A cursor source still paging cannot honestly size its set: the window is bounded and
+    # more rows exist behind it, so every mounted option reports an indeterminate size.
+    expect(page).to have_css("[role='listbox'] [role='option']", wait: 10)
     expect(combobox.options.first[:"aria-setsize"]).to eq("-1")
-    expect(combobox.sentinel?).to eq(true)
 
     # Narrow enough that the source exhausts within a single page and declares completeness.
     combobox.input.send_keys("Option 4242")
 
     expect(page).to have_css("[role='listbox'] [role='option']", count: 1, wait: 10)
     expect(combobox.options.first[:"aria-setsize"]).to eq("1")
-    expect(combobox.sentinel?).to eq(false)
   end
 end
