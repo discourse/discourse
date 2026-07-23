@@ -23,7 +23,9 @@ import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
-import DVirtualList from "discourse/ui-kit/d-virtual-list";
+import DVirtualList, {
+  type DVirtualListApi,
+} from "discourse/ui-kit/d-virtual-list";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dRovingFocus, {
@@ -72,11 +74,13 @@ interface SkeletonRow {
   isSkeleton: true;
 }
 
-/**
- * A rendered list row: an engine descriptor or a frontier skeleton. The `isSkeleton?: false`
- * on the descriptor arm is the discriminant that lets the template narrow one from the other.
- */
-type ListRow = (SelectDescriptor & { isSkeleton?: false }) | SkeletonRow;
+/** An engine descriptor stamped as a navigable option row. */
+interface OptionRow extends SelectDescriptor {
+  isSkeleton: false;
+}
+
+/** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
+type ListRow = OptionRow | SkeletonRow;
 
 interface DSelectSignature {
   Args: {
@@ -199,6 +203,8 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @tracked activeOptionKey: string | null = null;
 
+  @tracked activeLogicalIndex: number | undefined = undefined;
+
   @tracked queryActive = false;
 
   @tracked isExpanded = false;
@@ -268,12 +274,27 @@ export default class DSelect extends Component<DSelectSignature> {
    * purpose — its output reflects live selection/create/special state, not just `rawItems`.
    */
   buildListItems = (rawItems: SelectItemModel[]): readonly ListRow[] => {
-    const items = this.engine.buildItems(rawItems);
+    const items: OptionRow[] = this.engine
+      .buildItems(rawItems)
+      .map((item) => ({ ...item, isSkeleton: false }));
     if (this.showRevealPlaceholder) {
       return [...items, ...this.#frontierSkeletons];
     }
     return items;
   };
+
+  /**
+   * Frontier skeletons are always a suffix, so navigable logical indices are contiguous
+   * from zero through this count minus one.
+   */
+  navigableCount = (rows: readonly ListRow[]): number => {
+    const count = rows.filter((row) => !row.isSkeleton).length;
+    this.#logicalNavCount = count;
+    return count;
+  };
+
+  optionRow = (row: ListRow): OptionRow | undefined =>
+    row.isSkeleton === true ? undefined : row;
 
   /** Estimated row height for the windowing engine before a row is measured. */
   estimateRowSize = (): number => ROW_HEIGHT_ESTIMATE;
@@ -286,6 +307,15 @@ export default class DSelect extends Component<DSelectSignature> {
   // chips' `dRovingFocus` (desktop only). Read imperatively from the keyboard handlers,
   // so a plain field rather than tracked; `null` while unregistered (mobile / single).
   #chipRoving: DRovingFocusApi | null = null;
+
+  #listboxApi: DVirtualListApi | null = null;
+  #listboxRoving: DRovingFocusApi | null = null;
+  #jumpTimer?: ReturnType<typeof nextRunloop>;
+
+  // The navigable option count, written by `navigableCount` as the list renders and read by
+  // the jump handler to clamp a target. Kept off the template so a jump never clamps against a
+  // stale window.
+  #logicalNavCount = 0;
 
   #listboxId = `d-combobox-listbox-${guidFor(this)}`;
 
@@ -660,12 +690,24 @@ export default class DSelect extends Component<DSelectSignature> {
     if (!(this.isStatic && this.overlayIsModal)) {
       return;
     }
-    const target =
-      element.querySelector<HTMLElement>('[role="option"][tabindex="0"]') ??
-      element.querySelector<HTMLElement>('[role="option"]');
     schedule("afterRender", () => {
+      // Resolve the target inside the flush: `dRovingFocus` stamps `tabindex="0"` on the
+      // selected (or first) option during this same afterRender, so reading it earlier could
+      // capture the fallback first option before roving has chosen the real tab stop.
+      const target =
+        element.querySelector<HTMLElement>('[role="option"][tabindex="0"]') ??
+        element.querySelector<HTMLElement>('[role="option"]');
       if (target?.isConnected) {
         target.focus({ preventScroll: true });
+        // Focus is placed directly here, not through the roving modifier's `#setActive`, so
+        // `onActiveChange` never fires to seed the pin. Seed it now: a Home/End/Page jump
+        // before the first arrow keypress would otherwise scroll with nothing pinned, unmount
+        // the focused row, and drop focus to `<body>`.
+        this.activeOptionKey = target.dataset.optionKey ?? null;
+        this.activeLogicalIndex =
+          target.dataset.index == null
+            ? undefined
+            : Number(target.dataset.index);
       }
     });
   }
@@ -957,6 +999,70 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   trackActiveOption(element: HTMLElement): void {
     this.activeOptionKey = element.dataset.optionKey ?? null;
+    this.activeLogicalIndex =
+      element.dataset.index == null ? undefined : Number(element.dataset.index);
+  }
+
+  @action
+  registerListboxApi(api: DVirtualListApi): void {
+    this.#listboxApi = api;
+  }
+
+  @action
+  registerListboxRoving(api: DRovingFocusApi | null): void {
+    this.#listboxRoving = api;
+  }
+
+  @action
+  handleJump(target: number, direction: "forward" | "backward"): void {
+    cancel(this.#jumpTimer);
+    if (this.#logicalNavCount === 0) {
+      return;
+    }
+
+    target = this.#clampJumpTarget(target);
+    this.#scrollToJumpTarget(target, direction);
+    this.#jumpTimer = nextRunloop(() =>
+      this.#reconcileJump(target, direction, 0)
+    );
+  }
+
+  #clampJumpTarget(target: number): number {
+    return Math.max(0, Math.min(target, this.#logicalNavCount - 1));
+  }
+
+  #scrollToJumpTarget(target: number, direction: "forward" | "backward"): void {
+    this.#listboxApi?.scrollToIndex(target, {
+      align: direction === "forward" ? "end" : "start",
+      behavior: "auto",
+    });
+  }
+
+  #reconcileJump(
+    target: number,
+    direction: "forward" | "backward",
+    attempt: number
+  ): void {
+    if (this.#listboxRoving?.focusLogicalIndex(target)) {
+      this.#jumpTimer = undefined;
+      return;
+    }
+
+    if (attempt < 1 && this.#logicalNavCount > 0) {
+      target = this.#clampJumpTarget(target);
+      this.#scrollToJumpTarget(target, direction);
+      this.#jumpTimer = nextRunloop(() =>
+        this.#reconcileJump(target, direction, attempt + 1)
+      );
+      return;
+    }
+
+    this.#jumpTimer = undefined;
+    if (direction === "forward") {
+      this.#listboxRoving?.focusLast();
+    } else {
+      this.#listboxRoving?.focusFirst();
+    }
   }
 
   /**
@@ -1047,11 +1153,16 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   releaseListbox(): void {
     cancel(this.#loadFeedbackTimer);
+    cancel(this.#jumpTimer);
     this.loadFeedbackDue = false;
     // Drop the roving highlight key on close so a reopened list does not render a stale
     // `--active` (the modifier reports the active option only while it moves the cursor, so
     // it never reports the clearing on teardown).
     this.activeOptionKey = null;
+    this.activeLogicalIndex = undefined;
+    this.#listboxApi = null;
+    this.#listboxRoving = null;
+    this.#jumpTimer = undefined;
   }
 
   /**
@@ -1622,6 +1733,8 @@ export default class DSelect extends Component<DSelectSignature> {
                       @items={{items}}
                       @estimateSize={{this.estimateRowSize}}
                       @onReachEnd={{this.engine.revealMore}}
+                      @onRegisterApi={{this.registerListboxApi}}
+                      @pinnedIndex={{this.activeLogicalIndex}}
                       class="d-combobox__listbox"
                       id={{this.listboxId}}
                       aria-label={{or @label (i18n "d_select.label")}}
@@ -1672,51 +1785,63 @@ export default class DSelect extends Component<DSelectSignature> {
                         )
                         itemSelector="[role=option]"
                         itemsKey=(if this.isTypeahead items this.engine.filter)
+                        logicalCount=(this.navigableCount items)
                         onActivate=this.activateElement
                         onActiveChange=this.trackActiveOption
+                        onJump=this.handleJump
+                        onRegisterApi=this.registerListboxRoving
                         autoActivateFirst=this.shouldAutoActivateFirst
                         autoActivateSelected=this.shouldActivateSelected
                       }}
                       as |descriptor row|
                     >
-                      {{#if descriptor.isSkeleton}}
-                        {{! Frontier placeholder for an in-flight reveal: presentation, no
-                      posinset, so pending rows never enter the option set. }}
-                        <li
-                          class="d-combobox__skeleton"
-                          role="presentation"
-                          aria-hidden="true"
-                          {{row.place row.start row.index}}
-                          {{row.measure}}
-                        >
-                          <DSkeleton @variant="text" />
-                        </li>
-                      {{else}}
-                        <SelectItem
-                          @descriptor={{descriptor}}
-                          @engine={{this.engine}}
-                          @multiple={{@multiple}}
-                          @selectedIcon={{@selectedIcon}}
-                          @locked={{this.isLocked}}
-                          @active={{eq descriptor.key this.activeOptionKey}}
-                          aria-posinset={{descriptor.posInSet}}
-                          aria-setsize={{descriptor.setSize}}
-                          data-option-key={{descriptor.key}}
-                          {{row.place row.start row.index}}
-                          {{row.measure}}
-                          {{! Keep focus in the trigger input on pointer-select so the input
-                        does not blur-close the menu before the click resolves (needed for
-                        action rows, which keep the menu open). mousedown is required:
-                        blur fires before click; the handler no-ops for non-typeahead. }}
-                          {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                          {{on "mousedown" this.preventPointerBlur}}
-                        >
-                          {{#if (has-block "item")}}
-                            {{yield descriptor.item to="item"}}
+                      {{! A windowed list can yield a row whose backing item briefly does not
+                      exist: when the items array shrinks, the virtualizer's last published
+                      window still references the old indices until it re-flushes. Render
+                      nothing for that transient slot rather than dereferencing an absent
+                      descriptor. }}
+                      {{#if descriptor}}
+                        {{#let (this.optionRow descriptor) as |option|}}
+                          {{#if option}}
+                            <SelectItem
+                              @descriptor={{option}}
+                              @engine={{this.engine}}
+                              @multiple={{@multiple}}
+                              @selectedIcon={{@selectedIcon}}
+                              @locked={{this.isLocked}}
+                              @active={{eq option.key this.activeOptionKey}}
+                              aria-posinset={{option.posInSet}}
+                              aria-setsize={{option.setSize}}
+                              data-option-key={{option.key}}
+                              {{row.place row.start row.index}}
+                              {{row.measure}}
+                              {{! Keep focus in the trigger input on pointer-select so the input
+                          does not blur-close the menu before the click resolves (needed for
+                          action rows, which keep the menu open). mousedown is required:
+                          blur fires before click; the handler no-ops for non-typeahead. }}
+                              {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+                              {{on "mousedown" this.preventPointerBlur}}
+                            >
+                              {{#if (has-block "item")}}
+                                {{yield option.item to="item"}}
+                              {{else}}
+                                {{selectItemLabel option.item this.labelField}}
+                              {{/if}}
+                            </SelectItem>
                           {{else}}
-                            {{selectItemLabel descriptor.item this.labelField}}
+                            {{! Frontier placeholder for an in-flight reveal: presentation, no
+                        posinset, so pending rows never enter the option set. }}
+                            <li
+                              class="d-combobox__skeleton"
+                              role="presentation"
+                              aria-hidden="true"
+                              {{row.place row.start row.index}}
+                              {{row.measure}}
+                            >
+                              <DSkeleton @variant="text" />
+                            </li>
                           {{/if}}
-                        </SelectItem>
+                        {{/let}}
                       {{/if}}
                     </DVirtualList>
 
