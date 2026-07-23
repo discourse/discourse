@@ -434,17 +434,17 @@ en:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
-        supported_locales_description: "This site setting also allows visitors to contribute post translations."
         category_scope: "Categories"
-        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
+        category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
+        cached_results_notice: "Showing cached results from %{relative_time}."
         admin_actions:
-          translation_settings: "Translation settings"
-          localization_settings: "Localization settings"
+          translation_settings: "AI settings"
+          localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date}."
           eta_minutes:
             one: "%{count} minute"
             other: "%{count} minutes"
