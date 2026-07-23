@@ -53,11 +53,17 @@ export default class FKControlInput extends FKBaseControl {
   }
 
   get displayValue() {
-    if (this.type === "number" && this.inputValue !== undefined) {
+    const fieldValue = this.args.field.value;
+
+    if (
+      this.type === "number" &&
+      this.inputValue !== undefined &&
+      Object.is(parseFloat(this.inputValue), parseFloat(fieldValue))
+    ) {
       return this.inputValue;
     }
 
-    return this.args.field.value ?? "";
+    return fieldValue ?? "";
   }
 
   @action

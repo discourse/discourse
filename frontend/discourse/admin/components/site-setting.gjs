@@ -1,27 +1,33 @@
 /* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { isNone } from "@ember/utils";
+import { isEmpty, isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
 import SiteSetting, {
   isSettingValueTrue,
 } from "discourse/admin/models/site-setting";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
+import Form from "discourse/components/form";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
+import { resolveSettingFieldType } from "discourse/lib/setting-field-registry";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { and, not } from "discourse/truth-helpers";
@@ -75,10 +81,20 @@ export default class SiteSettingComponent extends Component {
   @tracked progress = null;
   updateExistingUsers = null;
   trackChanges = true;
+  formApi = null;
+  formKitData = null;
 
   constructor() {
     super(...arguments);
     this.isSecret = this.setting?.secret;
+
+    if (this.useFormKit) {
+      this.formKitData = {
+        [this.setting.setting]: this.fromWire(
+          this.setting.buffered.get("value")
+        ),
+      };
+    }
 
     if (this.canSubscribeToSettingsJobs) {
       this.messageBus.subscribe(
@@ -96,6 +112,19 @@ export default class SiteSettingComponent extends Component {
         `/site_setting/${this.setting.setting}/process`,
         this.onMessage
       );
+    }
+  }
+
+  @action
+  syncFormValue(_element, [wireValue]) {
+    scheduleOnce("afterRender", this, this.applyFormValue, wireValue);
+  }
+
+  applyFormValue(wireValue) {
+    const name = this.setting.setting;
+
+    if (this.toWire(this.formApi.get(name)) !== wireValue) {
+      this.formApi.set(name, this.fromWire(wireValue));
     }
   }
 
@@ -342,6 +371,19 @@ export default class SiteSettingComponent extends Component {
     return setting.type;
   }
 
+  @cached
+  get definition() {
+    return this.setting.definition;
+  }
+
+  get settingFieldEntry() {
+    return resolveSettingFieldType(this.setting);
+  }
+
+  get useFormKit() {
+    return this.trackChanges && this.settingFieldEntry.adminReady;
+  }
+
   get allowAny() {
     const anyValue = this.setting?.anyValue;
     return anyValue !== false;
@@ -524,6 +566,32 @@ export default class SiteSettingComponent extends Component {
   }
 
   @action
+  registerFormApi(api) {
+    this.formApi = api;
+  }
+
+  @action
+  onFormSet(name, value) {
+    this.changeValueCallback(this.toWire(value));
+  }
+
+  toWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value) ? "true" : "false";
+    }
+
+    return isEmpty(value) ? "" : String(value);
+  }
+
+  fromWire(value) {
+    if (this.setting.type === "bool") {
+      return isSettingValueTrue(value);
+    }
+
+    return isEmpty(value) ? null : parseInt(value, 10);
+  }
+
+  @action
   setValidationMessage(message) {
     this.setting.validationMessage = message;
   }
@@ -649,17 +717,38 @@ export default class SiteSettingComponent extends Component {
           <Description @description={{this.setting.description}} />
           <JobStatus @status={{this.status}} @progress={{this.progress}} />
         {{else}}
-          <this.resolvedComponent
-            {{on "keydown" this._handleKeydown}}
-            @disabled={{this.isDisabled}}
-            @setting={{this.setting}}
-            @value={{this.buffered.value}}
-            @preview={{this.preview}}
-            @isSecret={{this.isSecret}}
-            @allowAny={{this.allowAny}}
-            @changeValueCallback={{this.changeValueCallback}}
-            @setValidationMessage={{this.setValidationMessage}}
-          />
+          {{#if this.useFormKit}}
+            <Form
+              @data={{this.formKitData}}
+              @onSet={{this.onFormSet}}
+              @onSubmit={{this.update}}
+              @onRegisterApi={{this.registerFormApi}}
+              {{didUpdate this.syncFormValue this.buffered.value}}
+              {{linkifySettingLinks this.setting.description}}
+              as |form|
+            >
+              <SettingDefinitionField
+                @definition={{this.definition}}
+                @form={{form}}
+                @showTitle={{false}}
+                @showControlTitle={{false}}
+                @showDescription={{false}}
+                @disabled={{this.isDisabled}}
+              />
+            </Form>
+          {{else}}
+            <this.resolvedComponent
+              {{on "keydown" this._handleKeydown}}
+              @disabled={{this.isDisabled}}
+              @setting={{this.setting}}
+              @value={{this.buffered.value}}
+              @preview={{this.preview}}
+              @isSecret={{this.isSecret}}
+              @allowAny={{this.allowAny}}
+              @changeValueCallback={{this.changeValueCallback}}
+              @setValidationMessage={{this.setValidationMessage}}
+            />
+          {{/if}}
           <SettingValidationMessage
             @message={{this.setting.validationMessage}}
           />

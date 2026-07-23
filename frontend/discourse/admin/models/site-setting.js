@@ -157,7 +157,7 @@ export default class SiteSetting extends EmberObject {
   get definition() {
     return {
       key: this.setting,
-      label: this.humanized_name,
+      label: this.humanized_name || this.setting,
       description: trustHTML(this.description),
       type: this.type,
       list_type: this.list_type,
