@@ -12,8 +12,6 @@ RSpec.describe "s3:upload_assets rake task" do
 
   let(:task) { Rake::Task["s3:upload_assets"] }
   let(:logger) { instance_double(Logger) }
-  let(:s3_helper) { instance_double(S3Helper) }
-
   before do
     allow(Logger).to receive(:new).and_return(logger)
     allow(logger).to receive(:<<)
@@ -26,8 +24,6 @@ RSpec.describe "s3:upload_assets rake task" do
     SiteSetting.s3_upload_bucket = "test-bucket"
     SiteSetting.s3_region = "us-east-1"
 
-    # Stub the task's helper method via the task's scope
-    allow_any_instance_of(Object).to receive(:helper).and_return(s3_helper)
     allow_any_instance_of(Object).to receive(:assets).and_return([])
     allow_any_instance_of(Object).to receive(:existing_assets).and_return(Set.new)
 
@@ -101,24 +97,16 @@ RSpec.describe "s3:upload_assets rake task" do
       expect(pool).to have_received(:wait_for_termination)
     end
 
-    it "respects DISCOURSE_S3_UPLOAD_ASSETS_THREADS env var" do
-      allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with("DISCOURSE_S3_UPLOAD_ASSETS_THREADS").and_return("4")
-      allow(Concurrent::FixedThreadPool).to receive(:new).with(4).and_call_original
-      task.invoke
-      expect(Concurrent::FixedThreadPool).to have_received(:new).with(4)
-    end
+    it "uses eight upload threads" do
+      allow(Concurrent::FixedThreadPool).to receive(:new).with(8).and_call_original
 
-    it "defaults to processor count when env var not set" do
-      allow(Concurrent::FixedThreadPool).to receive(:new).with(
-        Concurrent.processor_count,
-      ).and_call_original
       task.invoke
-      expect(Concurrent::FixedThreadPool).to have_received(:new).with(Concurrent.processor_count)
+
+      expect(Concurrent::FixedThreadPool).to have_received(:new).with(8)
     end
   end
 
-  describe "credential pre-warming" do
+  describe "S3 pre-warming" do
     let(:test_assets) { [%w[/tmp/asset1.js assets/asset1-abc.js application/javascript]] }
 
     before do
@@ -126,20 +114,20 @@ RSpec.describe "s3:upload_assets rake task" do
       allow_any_instance_of(Object).to receive(:upload)
     end
 
-    it "calls helper before spawning threads to pre-warm credentials" do
-      helper_called = false
+    it "loads existing assets before spawning threads" do
+      existing_assets_loaded = false
       threads_spawned = false
 
-      allow_any_instance_of(Object).to receive(:helper) do
-        helper_called = true
-        expect(threads_spawned).to be_falsey # helper should be called before threads spawn
-        s3_helper
+      allow_any_instance_of(Object).to receive(:existing_assets) do
+        existing_assets_loaded = true
+        expect(threads_spawned).to be_falsey
+        Set.new
       end
 
       original_new = Concurrent::FixedThreadPool.method(:new)
       allow(Concurrent::FixedThreadPool).to receive(:new) do |*args|
         threads_spawned = true
-        expect(helper_called).to be_truthy # helper should be called before thread pool is created
+        expect(existing_assets_loaded).to be_truthy
         original_new.call(*args)
       end
 
