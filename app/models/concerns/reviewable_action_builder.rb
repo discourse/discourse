@@ -68,17 +68,23 @@ module ReviewableActionBuilder
     create_result(:success, :rejected)
   end
 
-  def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+  def perform_delete_user(performed_by, args)
+    deleted_user = delete_user(target_user, delete_opts, performed_by) if target_user
+
+    create_result(:success, :rejected, [], false) do |result|
+      yield(result, deleted_user) if block_given?
+    end
   end
 
-  def perform_delete_and_block_user(performed_by, args, &)
+  def perform_delete_and_block_user(performed_by, args)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    deleted_user = delete_user(target_user, delete_options, performed_by) if target_user
+
+    create_result(:success, :rejected, [], false) do |result|
+      yield(result, deleted_user) if block_given?
+    end
   end
 
   def perform_delete_post(performed_by, _args)
@@ -149,10 +155,14 @@ module ReviewableActionBuilder
   def delete_user(user, delete_options, performed_by)
     email = user.email
 
-    UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
+    deleted_user =
+      UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
+    return if deleted_user.blank?
 
     message = UserNotifications.account_deleted(email, self)
     Email::Sender.new(message, :account_deleted).send
+
+    deleted_user
   end
 
   def map_reviewable_status_to_flag_status(status)
