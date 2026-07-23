@@ -2096,7 +2096,7 @@ nl:
         default: "(standaard)"
         any: "alle"
       homepage:
-        default: "(standaard)"
+        default: "Standaard"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -2301,7 +2301,9 @@ nl:
           member_title: "Leden uitnodigen"
           sent_title: "Uitnodiging gestuurd"
           member_tab: "Leden"
-          admin_tab: "Beheerders"
+          admin_tab: "Medewerker"
+          staff_role_admin: "Beheerder"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mailadres"
           email_placeholder: "naam@voorbeeld.com"
           invite_by_email: "E-mailadres"
@@ -2311,6 +2313,7 @@ nl:
           summary:
             role_member: "Lid"
             role_admin: "Beheerder"
+            role_moderator: "Moderator"
             method: "Delen"
             method_email: "E-mailadres"
             restriction: "Beperkt tot"
@@ -3032,6 +3035,7 @@ nl:
       draft_saved: "Concept opgeslagen!"
       users_placeholder: "Voeg gebruikers of groepen toe"
       title_placeholder: "Waar gaat deze discussie over in één korte zin?"
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Typ de titel of plak hier een link"
       edit_reason_placeholder: "Waarom bewerk je?"
       topic_featured_link_placeholder: "Voer de weergegeven link in met titel."
@@ -3735,6 +3739,7 @@ nl:
       sort:
         label: "Sorteren op"
         top: "Top"
+        hot: "Populair"
         new: "Nieuw"
         old: "Oud"
       load_more_children:
@@ -4529,7 +4534,7 @@ nl:
     category:
       none: "(geen categorie)"
       all: "Alle categorieën"
-      choose: "categorie&hellip;"
+      choose: "Categorie&hellip;"
       edit: "Bewerken"
       edit_title: "Bewerk deze categorie"
       edit_dialog_title: "Bewerken: %{categoryName}"
@@ -5162,7 +5167,6 @@ nl:
       selector_no_tags: "geen tags"
       selector_remove_filter: "filter verwijderen"
       tags: "Tags"
-      choose_for_topic: "optionele tags"
       choose_for_topic_required:
         one: "selecteer minimaal %{count} tag…"
         other: "selecteer minimaal %{count} tags…"
@@ -5420,6 +5424,10 @@ nl:
           public: "Zichtbaar voor iedereen"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
+          localizations:
+            title: "Vertalingen"
+            locale: "Taal"
+            title_label: "Sectietitel"
           links:
             add: "Nog een link toevoegen"
             delete: "Link verwijderen"
@@ -6378,7 +6386,6 @@ nl:
               posts: "Berichten"
               share: "Delen"
             whos_posting:
-              all_categories: "Alle categorieën"
               staff: "Medewerker"
             trust_level_pipeline:
               trust_levels:
@@ -8719,6 +8726,10 @@ nl:
         alt: "voorbeeld van aangepaste emoji"
         delete_confirm: "Weet je zeker dat je de emoji :%{name}: wilt verwijderen?"
         settings: "Instellingen"
+        export: "Exporteren"
+        import: "Importeren"
+        import_category:
+          new: "Nieuw"
       embedding:
         get_started: "Als je Discourse wilt insluiren op een andere website, begin dan door de host ervan toe te voegen."
         delete: "Verwijderen"

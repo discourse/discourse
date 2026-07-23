@@ -4520,6 +4520,22 @@ RSpec.describe UsersController do
       expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
+    it "prevents a moderator from destroying another user's secondary email" do
+      SiteSetting.email_editable = true
+      admin_secondary_email = Fabricate(:secondary_email, user: admin)
+      sign_in(moderator)
+
+      expect {
+        delete "/u/#{admin.username}/preferences/email.json",
+               params: {
+                 email: admin_secondary_email.email,
+               }
+      }.not_to change { UserEmail.exists?(admin_secondary_email.id) }
+
+      expect(response).to be_forbidden
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+    end
+
     context "when logged in" do
       before do
         SiteSetting.email_editable = true
@@ -5443,6 +5459,54 @@ RSpec.describe UsersController do
           expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
           expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(false)
         end
+      end
+    end
+  end
+
+  describe "staged user email visibility" do
+    fab!(:staged_user) { Fabricate(:staged, email: "staged-primary@example.com") }
+    fab!(:secondary_email) do
+      Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+    end
+    fab!(:email_change_request) do
+      Fabricate(
+        :email_change_request,
+        user: staged_user,
+        new_email: "staged-unconfirmed@example.com",
+      )
+    end
+
+    before do
+      SiteSetting.moderators_view_emails = false
+      sign_in(moderator)
+    end
+
+    it "respects email visibility for staged users" do
+      paths = ["/u/#{staged_user.username}.json", "/u/#{staged_user.username}/card.json"]
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(nil)
+        expect(user_json["secondary_emails"]).to eq(nil)
+        expect(user_json["unconfirmed_emails"]).to eq(nil)
+        expect(response.body).not_to include(staged_user.email)
+        expect(response.body).not_to include(secondary_email.email)
+        expect(response.body).not_to include(email_change_request.new_email)
+      end
+
+      SiteSetting.moderators_view_emails = true
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(staged_user.email)
+        expect(user_json["secondary_emails"]).to contain_exactly(secondary_email.email)
+        expect(user_json["unconfirmed_emails"]).to contain_exactly(email_change_request.new_email)
       end
     end
   end

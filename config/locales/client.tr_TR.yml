@@ -2109,7 +2109,7 @@ tr_TR:
         default: "(varsayılan)"
         any: "herhangi"
       homepage:
-        default: "(varsayılan)"
+        default: "Varsayılan"
       password_confirmation:
         title: "Şifreyi Tekrarlayın"
       invite_code:
@@ -2314,7 +2314,9 @@ tr_TR:
           member_title: "Üye davet edin"
           sent_title: "Davet gönderildi"
           member_tab: "Üyeler"
-          admin_tab: "Yöneticiler"
+          admin_tab: "Personel"
+          staff_role_admin: "Yönetici"
+          staff_role_moderator: "Moderatör"
           admin_email_label: "E-posta adresi"
           email_placeholder: "ad@ornek.com"
           invite_by_email: "E-posta"
@@ -2325,6 +2327,7 @@ tr_TR:
           summary:
             role_member: "Üye"
             role_admin: "Yönetici"
+            role_moderator: "Moderatör"
             method: "Paylaşma"
             method_email: "E-posta"
             restriction: "Sınırlı"
@@ -3055,6 +3058,7 @@ tr_TR:
       draft_saved: "Taslak kaydedildi!"
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
+      title_placeholder_redesign: "Başlık"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
       edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
@@ -3761,6 +3765,7 @@ tr_TR:
       sort:
         label: "Sıralama ölçütü"
         top: "En iyi"
+        hot: "Popüler"
         new: "Yeni"
         old: "Eski"
       load_more_children:
@@ -4555,7 +4560,7 @@ tr_TR:
     category:
       none: "(kategori yok)"
       all: "Tüm kategoriler"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Düzenle"
       edit_title: "Bu kategoriyi düzenle"
       edit_dialog_title: "Düzenle: %{categoryName}"
@@ -5188,7 +5193,6 @@ tr_TR:
       selector_no_tags: "etiket yok"
       selector_remove_filter: "filtreyi kaldır"
       tags: "Etiketler"
-      choose_for_topic: "isteğe bağlı etiketler"
       choose_for_topic_required:
         one: "en az %{count} etiket seç…"
         other: "en az %{count} etiket seç…"
@@ -5446,6 +5450,10 @@ tr_TR:
           public: "Herkese görünür"
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
+          localizations:
+            title: "Çeviriler"
+            locale: "Dil"
+            title_label: "Bölüm başlığı"
           links:
             add: "Başka bir bağlantı ekle"
             delete: "Bağlantıyı sil"
@@ -6404,7 +6412,6 @@ tr_TR:
               posts: "Gönderi"
               share: "Paylaş"
             whos_posting:
-              all_categories: "Tüm kategoriler"
               staff: "Personel"
             trust_level_pipeline:
               trust_levels:
@@ -8745,6 +8752,10 @@ tr_TR:
         alt: "özel emoji ön izlemesi"
         delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
         settings: "Ayarlar"
+        export: "Dışarı Aktar"
+        import: "İçe Aktar"
+        import_category:
+          new: "Yeni"
       embedding:
         get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
         delete: "Sil"

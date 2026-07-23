@@ -277,6 +277,13 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(post.topic.reload.assignment).to be_nil
     end
 
+    it "returns a 400 when neither a username nor a group name is given" do
+      put "/assign/assign.json", params: { target_id: post.topic_id, target_type: "Topic" }
+
+      expect(response.status).to eq(400)
+      expect(post.topic.reload.assignment).to be_nil
+    end
+
     it "assigns topic with note to a user" do
       put "/assign/assign.json",
           params: {

@@ -32,6 +32,23 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
   end
 
   describe "after_create stats increment" do
+    it "maintains stats during preparation while nested replies are disabled" do
+      SiteSetting.nested_replies_enabled = false
+      SiteSetting.nested_replies_stats_maintenance_enabled = true
+
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+
+      expect(NestedViewPostStat.find_by(post_id: op.id)).to have_attributes(
+        direct_reply_count: 1,
+        total_descendant_count: 2,
+      )
+      expect(NestedViewPostStat.find_by(post_id: parent.id)).to have_attributes(
+        direct_reply_count: 1,
+        total_descendant_count: 1,
+      )
+    end
+
     it "uses constant queries regardless of chain depth" do
       chain_3 = create_reply_chain(depth: 3)
       queries_3 =

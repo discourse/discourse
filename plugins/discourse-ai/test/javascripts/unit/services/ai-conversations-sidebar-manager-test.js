@@ -26,7 +26,6 @@ module("Unit | Service | ai-conversations-sidebar-manager", function (hooks) {
       setPanelCount += 1;
       assert.strictEqual(panel, AI_CONVERSATIONS_PANEL);
     };
-    service.siteSettings.enable_ai_bot_starred_conversations = true;
     service.capabilities.isIpadOS = false;
 
     const lastPostedAt = new Date(Date.now() - 3 * 86400000).toISOString();

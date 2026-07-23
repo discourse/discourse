@@ -1242,7 +1242,7 @@ lv:
         default: "(noklusējums)"
         any: "jebkura"
       homepage:
-        default: "(noklusējums)"
+        default: "Noklusējums"
       password_confirmation:
         title: "Parole vēlreiz"
       invite_code:
@@ -1368,12 +1368,15 @@ lv:
           cancel: "Atcelt"
         invite_roles:
           member_tab: "Dalībnieki"
-          admin_tab: "Administratori"
+          admin_tab: "Personāls"
+          staff_role_admin: "Administrators"
+          staff_role_moderator: "Moderātors"
           email_placeholder: "vards@piemers.com"
           invite_by_email: "E-pasts"
           summary:
             role_member: "Biedrs"
             role_admin: "Administrators"
+            role_moderator: "Moderātors"
             method_email: "E-pasts"
             uses: "Maksimāli izmantojams"
             expires: "Derīguma termiņš beidzas"
@@ -1719,6 +1722,7 @@ lv:
       create_topic: "Izveidot tēmu"
       discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
+      title_placeholder_redesign: "Virsraksts"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
@@ -3091,7 +3095,6 @@ lv:
               posts: "Ieraksti"
               share: "Dalīties"
             whos_posting:
-              all_categories: "Visas sadaļas"
               staff: "Personāls"
             trust_level_pipeline:
               trust_levels:
@@ -4003,6 +4006,10 @@ lv:
         image: "Attēls"
         delete_confirm: "Vai tiešām vēlies dzēst šo :%{name}: smaidiņu?"
         settings: "Iestatījumi"
+        export: "Eksportēt"
+        import: "Importēt"
+        import_category:
+          new: "Jauns"
       embedding:
         get_started: "Ja tu vēlies ieguldīt Discourse citā mājas lapā, sāc ar \"hosta\" pievienošanu.\n\nIf you'd like to embed Discourse on another website, begin by adding its host."
         delete: "Dzēst"

@@ -1742,7 +1742,7 @@ lt:
         default: "(numatyta)"
         any: "bet kuris"
       homepage:
-        default: "(numatyta)"
+        default: "Numatytasis"
       password_confirmation:
         title: "Pakartokite slaptažodį"
       invite_code:
@@ -1918,7 +1918,9 @@ lt:
         invite_roles:
           member_title: "Pakviesti narius"
           member_tab: "Nariai"
-          admin_tab: "Administratoriai"
+          admin_tab: "Personalas"
+          staff_role_admin: "Administratorius"
+          staff_role_moderator: "Moderatorius"
           email_placeholder: "vardas@example.com"
           invite_by_email: "Epaštas"
           domain_placeholder: "example.com"
@@ -1927,6 +1929,7 @@ lt:
           summary:
             role_member: "Narys"
             role_admin: "Administratorius"
+            role_moderator: "Moderatorius"
             method_email: "Epaštas"
             uses: "Maksimaliai naudoja"
             expires: "Galiojimo laikas baigiasi"
@@ -2468,6 +2471,7 @@ lt:
       title: "Arba paspauskite %{modifier}Enter"
       discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
+      title_placeholder_redesign: "Antraštė"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "Kodėl jūs redaguojate?"
       topic_featured_link_placeholder: "Įveskite nuorodą, rodomą su pavadinimu."
@@ -2858,6 +2862,7 @@ lt:
       sort:
         label: "Rūšiuoti pagal"
         top: "Populiarios"
+        hot: "Karšta"
         new: "Naujas"
       load_more_children:
         one: "dar %{count} atsakymas"
@@ -3458,7 +3463,7 @@ lt:
     category:
       none: "(jokia kategorija)"
       all: "Visos kategorijos"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Redaguoti"
       edit_dialog_title: "Redaguoti: %{categoryName}"
       view: "Peržiūrėti temas kategorijoje"
@@ -3922,7 +3927,6 @@ lt:
       selector_no_tags: "nėra žymų"
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
-      choose_for_topic: "pasirenkamos žymos"
       default_info: "Ši žyma neapsiriboja jokiomis kategorijomis ir neturi sinonimų."
       staff_info: "Norėdami pridėti apribojimų, įtraukite šią žymą į <a href=%{basePath}/tag_groups>žymų grupę</a>."
       category_restricted: "Ši žyma skirta tik kategorijoms, prie kurių neturite prieigos teisės."
@@ -4081,6 +4085,9 @@ lt:
         custom:
           save: "Išsaugoti"
           delete: "Pašalinti"
+          localizations:
+            title: "Vertimai"
+            locale: "Kalba"
           links:
             reset: "Atstatyti numatytuosius nustatymus"
             icon:
@@ -4427,7 +4434,6 @@ lt:
               posts: "Pranešimai"
               share: "Dalintis"
             whos_posting:
-              all_categories: "Visos kategorijos"
               staff: "Personalas"
             trust_level_pipeline:
               trust_levels:
@@ -5755,6 +5761,10 @@ lt:
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
         settings: "Nustatymai"
+        export: "Eksportuoti"
+        import: "Importuoti"
+        import_category:
+          new: "Naujas"
       embedding:
         get_started: "Norėčiau pridėti Discourse prie kito puslapio. Pradėk tiesiog pridėdamas valdytoją."
         delete: "Pašalinti"

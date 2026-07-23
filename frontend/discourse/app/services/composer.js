@@ -137,8 +137,6 @@ export default class ComposerService extends Service {
   topic = null;
   linkLookup = null;
 
-  composerHeight = null;
-
   @tracked _showPreview;
 
   @tracked _isStaffUserOverride;

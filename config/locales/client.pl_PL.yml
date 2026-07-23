@@ -62,6 +62,7 @@ pl_PL:
         add_group: "Dodaj użytkownika lub grupę"
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
+        disallowed: "Niedozwolone"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -2381,7 +2382,7 @@ pl_PL:
         default: "(domyślny)"
         any: "każdy"
       homepage:
-        default: "(domyślny)"
+        default: "Domyślna"
       password_confirmation:
         title: "Powtórz hasło"
       invite_code:
@@ -2593,14 +2594,18 @@ pl_PL:
           invite_saved_with_sending_email: "Wiadomość z zaproszeniem została wysłana. Możesz również skopiować poniższy link i udostępnić go, aby natychmiast przyznać dostęp do tej strony."
         invite_roles:
           member_title: "Zaproś członków"
-          admin_title: "Zaproś administratorów"
+          admin_title: "Zaproś personel"
           edit_title: "Edycja zaproszenia"
           created_title: "Zaproszenie utworzone"
           sent_title: "Zaproszenie wysłane"
           member_tab: "Członkowie"
-          admin_tab: "Administratorzy"
+          admin_tab: "Zespół"
           member_description: "Zaproś innych do dołączenia do tej witryny. Udostępnij link lub wyślij zaproszenie e-mailem."
-          admin_description: "Zaproś osoby do dołączenia do Twojego zespołu jako administratorzy. Administratorzy mają pełny dostęp do tej witryny."
+          admin_description: "Zaproś ludzi do dołączenia do Twojego zespołu. Administratorzy mają pełny dostęp do tej witryny."
+          moderator_description: "Zaproś ludzi do swojego zespołu. Moderatorzy mogą pomóc w zarządzaniu treścią i członkami."
+          staff_role_label: "Zaproś jako"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
           admin_email_label: "Adres e-mail"
           member_email_label: "Wyślij do"
           member_email_help: "Link z zaproszeniem wyślemy na ten adres e-mail."
@@ -2625,6 +2630,7 @@ pl_PL:
             role: "Rola"
             role_member: "Uczestnik"
             role_admin: "Administrator"
+            role_moderator: "Moderator"
             method: "Udostępnianie"
             method_link: "Link do udostępniania"
             method_email: "E-mail"
@@ -3545,6 +3551,7 @@ pl_PL:
       draft_saved: "Szkic zapisany!"
       users_placeholder: "Dodaj użytkowników lub grupy"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
+      title_placeholder_redesign: "Tytuł"
       title_or_link_placeholder: "Tutaj wpisz tytuł lub wklej link"
       edit_reason_placeholder: "Powód edycji?"
       topic_featured_link_placeholder: "Wstaw link pod nazwą "
@@ -4405,6 +4412,7 @@ pl_PL:
       sort:
         label: "Sortuj po"
         top: "Popularne"
+        hot: "Gorące"
         new: "Nowe"
         old: "Stare"
       load_more_children:
@@ -5373,7 +5381,7 @@ pl_PL:
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
-      choose: "kategoria&hellip;"
+      choose: "Kategoria&hellip;"
       edit: "Edytuj"
       edit_title: "Edytuj tę kategorię"
       edit_dialog_title: "Edytuj: %{categoryName}"
@@ -6117,7 +6125,7 @@ pl_PL:
       selector_no_tags: "brak tagów"
       selector_remove_filter: "usuń filtr"
       tags: "Tagi"
-      choose_for_topic: "tagi opcjonalne"
+      choose_for_topic: "Opcjonalne tagi…"
       choose_for_topic_required:
         one: "wybierz co najmniej %{count} tag…"
         few: "wybierz co najmniej %{count} tagi…"
@@ -6419,7 +6427,16 @@ pl_PL:
           public: "Widoczne dla każdego"
           always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
+          localizations:
+            title: "Tłumaczenia"
+            locale: "Język"
+            title_label: "Tytuł sekcji"
+            link_label: "Nazwa linku"
+            add_section: "Dodaj tłumaczenie tytułu sekcji"
+            add_link: "Dodaj tłumaczenie nazwy linku"
+            remove: "Usuń tłumaczenie"
           links:
+            title: "Linki do sekcji"
             add: "Dodaj kolejny link"
             delete: "Usuń link"
             reset: "Przywróć ustawienia domyślne"
@@ -7468,12 +7485,11 @@ pl_PL:
               save_error: "Nie udało się zapisać wyboru na następny raz."
             whos_posting:
               title: "Kto publikuje?"
-              all_categories: "Wszystkie kategorie"
-              include_subcategories: "Uwzględnij podkategorie"
               new_members: "Nowi członkowie"
               returning: "Powracający"
               staff: "Zespół"
               empty: "Brak wpisów w wybranym okresie."
+              save_error: "Nie udało się zapisać wyboru na następny raz."
             trust_level_pipeline:
               title: "Potok poziomu zaufania"
               trust_levels:
@@ -8429,6 +8445,8 @@ pl_PL:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
         legacy: "Przestarzały"
+      homepage:
+        top_menu_default: "Pierwsza pozycja w górnym menu"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"
@@ -10155,6 +10173,31 @@ pl_PL:
         alt: "podgląd niestandardowego emoji"
         delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}:?"
         settings: "Ustawienia"
+        export: "Eksport"
+        export_count: "Eksportuj (wybrano%{count})"
+        export_failed: "Eksport nie powiódł się. Spróbuj ponownie."
+        select_to_export: "Wybierz, aby wyeksportować"
+        import: "Import"
+        import_heading: "Importuj emoji"
+        import_description: "Prześlij plik ZIP zawierający manifest emojis.csv i pliki obrazów."
+        import_download_sample: "Pobierz przykładowy szablon."
+        import_preview_heading: "Przegląd importu"
+        import_summary: "Nowe: %{new} · Konflikty: %{conflicts} · Niezmienione: %{unchanged} · Błędy %{invalid}"
+        import_confirm: "Potwierdź import"
+        import_unchanged_count: "Niezmienione: %{count}"
+        import_will_skip: "Bez zmian — pominięto"
+        import_excluded: "Wykluczone z importu"
+        import_incoming_alt: "Przychodzące: %{name}"
+        import_existing_alt: "Istniejące: %{name}"
+        import_existing_group_alt: "Istniejąca grupa"
+        import_use_incoming: "Użyj nowego"
+        import_keep_existing: "Zachowaj istniejące"
+        import_category:
+          new: "Nowe"
+          conflict: "Konflikty"
+          invalid: "Błędy"
+        select_all: "Zaznacz wszystkie emotikony"
+        select: "Wybierz %{name}"
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         delete: "Usuń"

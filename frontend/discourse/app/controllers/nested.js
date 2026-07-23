@@ -893,7 +893,13 @@ export default class NestedController extends Controller {
         (p) => p.id === data.id
       );
       if (existing) {
-        existing.setProperties(postData);
+        // Route through the store so Post.munge runs — it rebuilds
+        // actions_summary as ActionSummary instances and repopulates
+        // actionByName. Without this, flagsAvailable (reads actionByName)
+        // and postActionFor (reads actions_summary) drift apart after an
+        // "acted" event, which crashes the flag modal on the next submit.
+        const updated = this.store.createRecord("post", postData);
+        existing.updateFromPost(updated);
         if (!postData.deleted_at) {
           existing.set("deleted_post_placeholder", false);
         }

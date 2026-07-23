@@ -5,15 +5,11 @@ import WorkflowsEditor, {
   isNodeUnavailable,
 } from "discourse/plugins/discourse-workflows/admin/components/workflows/editor";
 
-function buildEditor(workflow, dialog = {}) {
+function buildEditor(workflow) {
   const editor = Object.create(WorkflowsEditor.prototype);
-  editor.allowUnpublishedDraftTransition = false;
 
   Object.defineProperty(editor, "args", {
     value: { workflow },
-  });
-  Object.defineProperty(editor, "dialog", {
-    value: dialog,
   });
 
   return editor;
@@ -158,131 +154,12 @@ module("Unit | Component | workflows editor", function () {
     );
   });
 
-  test("route changes ask for confirmation when the workflow has an unpublished draft", function (assert) {
-    const transition = {
-      isAborted: false,
-      queryParamsOnly: false,
-      from: { name: "adminPlugins.show.discourse-workflows.show.index" },
-      to: { name: "adminPlugins.show.discourse-workflows" },
-      abort() {
-        assert.step("aborted");
-      },
-      retry() {
-        assert.step("retried");
-      },
-    };
-    const dialog = {
-      dialog({ class: dialogClass, message, buttons }) {
-        assert.strictEqual(dialogClass, "workflows-unpublished-draft-dialog");
-        assert.strictEqual(
-          message,
-          i18n("discourse_workflows.unpublished_changes_confirmation")
-        );
-        assert.deepEqual(
-          buttons.map((button) => button.label),
-          [
-            i18n("discourse_workflows.leave_without_publishing"),
-            i18n("discourse_workflows.keep_editing"),
-            i18n("discourse_workflows.discard_changes"),
-          ]
-        );
-        assert.true(
-          buttons[2].class.includes(
-            "workflows-unpublished-draft-dialog__discard-btn"
-          ),
-          "discard button is aligned separately"
-        );
-        buttons[0].action();
-      },
-    };
-    const editor = buildEditor(
-      {
-        activeVersionId: "published-version",
-        hasUnpublishedChanges: true,
-      },
-      dialog
-    );
-
-    editor.confirmUnpublishedDraftTransition(transition);
-
-    assert.true(editor.allowUnpublishedDraftTransition);
-    assert.verifySteps(["aborted", "retried"]);
-  });
-
-  test("route changes can discard changes before retrying", async function (assert) {
-    const transition = {
-      isAborted: false,
-      queryParamsOnly: false,
-      from: { name: "adminPlugins.show.discourse-workflows.show.index" },
-      to: { name: "adminPlugins.show.discourse-workflows" },
-      abort() {
-        assert.step("aborted");
-      },
-      retry() {
-        assert.step("retried");
-      },
-    };
-    let discardAction;
-    const dialog = {
-      dialog({ buttons }) {
-        discardAction = buttons[2].action;
-      },
-      confirm({ message, confirmButtonLabel, cancelButtonLabel }) {
-        assert.strictEqual(
-          message,
-          i18n("discourse_workflows.discard_changes_confirmation")
-        );
-        assert.strictEqual(
-          confirmButtonLabel,
-          "discourse_workflows.discard_changes"
-        );
-        assert.strictEqual(
-          cancelButtonLabel,
-          "discourse_workflows.keep_editing"
-        );
-        assert.step("confirmed discard");
-        return true;
-      },
-    };
-    const editor = buildEditor(
-      {
-        activeVersionId: "published-version",
-        hasUnpublishedChanges: true,
-      },
-      dialog
-    );
-    editor.discardWorkflowDraft = async () => assert.step("discarded");
-
-    editor.confirmUnpublishedDraftTransition(transition);
-    await discardAction();
-
-    assert.true(editor.allowUnpublishedDraftTransition);
-    assert.verifySteps([
-      "aborted",
-      "confirmed discard",
-      "discarded",
-      "retried",
-    ]);
-  });
-
-  test("browseTemplates skips draft confirmation for an empty workflow", function (assert) {
-    const editor = buildEditor({ id: 12, hasUnpublishedChanges: true });
-    setFormApi(editor, { nodes: [], stickyNotes: [] });
-    setRouter(editor, assert);
-
-    editor.browseTemplates();
-
-    assert.true(editor.allowUnpublishedDraftTransition);
-  });
-
-  test("browseTemplates keeps draft confirmation for non-empty workflows", function (assert) {
+  test("browseTemplates navigates to the templates route", function (assert) {
     const editor = buildEditor({ id: 12, hasUnpublishedChanges: true });
     setFormApi(editor, { nodes: [{ id: "n1" }], stickyNotes: [] });
     setRouter(editor, assert);
 
     editor.browseTemplates();
-
-    assert.false(editor.allowUnpublishedDraftTransition);
   });
 
   test("node panel hides triggers when adding after a trigger", function (assert) {

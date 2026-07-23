@@ -62,6 +62,7 @@ uk:
         add_group: "Додати користувача або групу"
         mandatory_acl_tooltip: "Цей дозвіл обов'язковий для %{name} і його не можна видалити"
         mandatory: "Обов’язкове"
+        disallowed: "Заборонено"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -2386,7 +2387,7 @@ uk:
         default: "(типово)"
         any: "будь-який"
       homepage:
-        default: "(типово)"
+        default: "Стандартна"
       password_confirmation:
         title: "Пароль ще раз"
       invite_code:
@@ -2598,14 +2599,15 @@ uk:
           invite_saved_with_sending_email: "Лист із запрошенням надіслано. Ви також можете скопіювати посилання нижче і поділитися ним, щоб миттєво надати доступ до цього сайту."
         invite_roles:
           member_title: "Запросити учасників"
-          admin_title: "Запросити адміністраторів"
           edit_title: "Редагування запрошення"
           created_title: "Запрошення створено"
           sent_title: "Запрошення надіслано"
           member_tab: "Учасники"
-          admin_tab: "Адміни"
+          admin_tab: "Команда обслуговування"
           member_description: "Запросіть людей приєднатися до цього сайту. Поділіться посиланням або надішліть запрошення електронною поштою."
-          admin_description: "Запрошуйте людей долучитися до вашої команди в якості адміністраторів. Адміністратори мають повний доступ до цього сайту."
+          staff_role_label: "Запросити як"
+          staff_role_admin: "Адміністратор"
+          staff_role_moderator: "Модератор"
           admin_email_label: "Адреса електронної пошти"
           member_email_label: "Надіслати"
           member_email_help: "Ми надішлемо листа про запрошення на цю адресу."
@@ -2630,6 +2632,7 @@ uk:
             role: "Роль"
             role_member: "Учасник"
             role_admin: "Адміністратор"
+            role_moderator: "Модератор"
             method: "Спільний доступ"
             method_link: "Посилання для поширення"
             method_email: "E-mail"
@@ -3550,6 +3553,7 @@ uk:
       draft_saved: "Чернетку збережено!"
       users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, в одному короткому реченні?"
+      title_placeholder_redesign: "Назва"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "Чому ви редагуєте допис?"
       topic_featured_link_placeholder: "Введіть посилання, що показується з заголовком."
@@ -4410,6 +4414,7 @@ uk:
       sort:
         label: "Сортувати за"
         top: "Топ"
+        hot: "Гаряче"
         new: "Новий"
         old: "Старий"
       load_more_children:
@@ -5378,7 +5383,7 @@ uk:
     category:
       none: "(без розділу)"
       all: "Всі розділи"
-      choose: "розділ &hellip;"
+      choose: "Розділ &hellip;"
       edit: "Редагувати"
       edit_title: "Редагувати цей розділ"
       edit_dialog_title: "Редагувати:%{categoryName}"
@@ -6124,7 +6129,6 @@ uk:
       selector_no_tags: "без теґів"
       selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"
-      choose_for_topic: "додаткові теґи"
       choose_for_topic_required:
         one: "виберіть принаймні %{count} тег…"
         few: "виберіть принаймні %{count} теги…"
@@ -6426,6 +6430,10 @@ uk:
           public: "Видно для всіх"
           always_public: "Вміст цього розділу завжди відкритий для всіх"
           more_menu: "Більше меню"
+          localizations:
+            title: "Переклади"
+            locale: "Мова"
+            title_label: "Назва розділу"
           links:
             add: "Додати ще одне посилання"
             delete: "Видалити посилання"
@@ -7475,12 +7483,11 @@ uk:
               save_error: "Не вдалося зберегти ваш вибір на наступний раз."
             whos_posting:
               title: "Хто публікує?"
-              all_categories: "Всі розділи"
-              include_subcategories: "Включити підкатегорії"
               new_members: "Нові учасники"
               returning: "Повернення"
               staff: "Команда обслуговування"
               empty: "Немає публікацій за вибраний період."
+              save_error: "Не вдалося зберегти ваш вибір на наступний раз."
             trust_level_pipeline:
               title: "Конвеєр рівня довіри"
               trust_levels:
@@ -10162,6 +10169,10 @@ uk:
         alt: "попередній перегляд смайлів"
         delete_confirm: "Ви впевнені, що хочете видалити іконку :%{name}:?"
         settings: "Налаштування"
+        export: "Експорт"
+        import: "Імпорт"
+        import_category:
+          new: "Новий"
       embedding:
         get_started: "Для вбудовування на Інший сайт необхідно додати відповідний хост."
         delete: "Видалити"

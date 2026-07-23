@@ -14,8 +14,6 @@ ro:
               label: "Soluții acceptate"
         sections:
           support:
-            filter:
-              all_categories: "Toate categoriile"
             answerers:
               staff: "Echipa"
               member: "Membri"

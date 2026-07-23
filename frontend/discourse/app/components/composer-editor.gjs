@@ -323,7 +323,9 @@ export default class ComposerEditor extends Component {
       this.textManipulation.putCursorAtEnd();
     }
 
-    const destroyComposerPosition = setupComposerPosition(input);
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
 
     return () => {
       destroyComposerPosition();

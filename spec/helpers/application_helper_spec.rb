@@ -224,13 +224,13 @@ RSpec.describe ApplicationHelper do
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
       helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)

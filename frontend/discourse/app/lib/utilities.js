@@ -8,6 +8,7 @@ import discourseLater from "discourse/lib/later";
 import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
+import Site from "discourse/models/site";
 import { capabilities } from "discourse/services/capabilities";
 import { i18n } from "discourse-i18n";
 
@@ -279,11 +280,21 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
+export function siteDefaultHomepage(siteSettings) {
+  const configured = siteSettings.default_homepage;
+
+  const choices = Site.current()?.homepage_choices;
+  if (configured && (!choices || choices.includes(configured))) {
+    return configured;
+  }
+
+  return siteSettings.top_menu.split("|")[0].split(",")[0];
+}
+
 export function initializeDefaultHomepage(siteSettings) {
   const sel = document.querySelector("meta[name='discourse_current_homepage']");
   const homepage =
-    sel?.getAttribute("content") ||
-    siteSettings.top_menu.split("|")[0].split(",")[0];
+    sel?.getAttribute("content") || siteDefaultHomepage(siteSettings);
   setDefaultHomepage(homepage);
 }
 

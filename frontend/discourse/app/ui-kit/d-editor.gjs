@@ -16,7 +16,6 @@ import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import ToolbarScrollContainer from "discourse/components/composer/toolbar-scroll-container";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
@@ -45,6 +44,7 @@ import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import {
@@ -792,11 +792,15 @@ export default class DEditor extends Component {
             @append={{true}}
           >
             {{#if this.replacedToolbarInstance}}
-              <ToolbarScrollContainer
+              <DOverflowControls
+                @wrapperClass="d-editor-button-bar__wrap"
                 @class={{dConcatClass
+                  "d-editor-button-bar"
                   "--replaced-toolbar"
                   (if this.disabled "--disabled")
                 }}
+                @buttonClass="d-editor-button-bar__scroll-btn"
+                role="toolbar"
               >
                 <DButton
                   @action={{this.resetToolbar}}
@@ -810,9 +814,17 @@ export default class DEditor extends Component {
                   @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{false}}
                 />
-              </ToolbarScrollContainer>
+              </DOverflowControls>
             {{else}}
-              <ToolbarScrollContainer @class={{if this.disabled "--disabled"}}>
+              <DOverflowControls
+                @wrapperClass="d-editor-button-bar__wrap"
+                @class={{dConcatClass
+                  "d-editor-button-bar"
+                  (if this.disabled "--disabled")
+                }}
+                @buttonClass="d-editor-button-bar__scroll-btn"
+                role="toolbar"
+              >
                 {{#if this.showEditorModeToggle}}
                   <ToggleSwitch
                     @preventFocus={{true}}
@@ -822,13 +834,12 @@ export default class DEditor extends Component {
                     {{on "keydown" this.rovingButtonBar}}
                   />
                 {{/if}}
-
                 <ToolbarButtons
                   @data={{this.toolbar}}
                   @rovingButtonBar={{this.rovingButtonBar}}
                   @isFirst={{not this.showEditorModeToggle}}
                 />
-              </ToolbarScrollContainer>
+              </DOverflowControls>
             {{/if}}
           </DConditionalInElement>
 

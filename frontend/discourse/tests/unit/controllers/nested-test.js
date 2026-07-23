@@ -353,6 +353,66 @@ module("Unit | Controller | nested", function (hooks) {
     }
   });
 
+  test("acted event refreshes actionByName so the flag modal stays in sync", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const postId = 3001;
+
+    const post = this.store.createRecord("post", {
+      id: postId,
+      post_number: 2,
+      topic,
+      actions_summary: [
+        { id: 3, can_act: true }, // off_topic
+        { id: 4, can_act: true }, // inappropriate
+        { id: 6, can_act: true }, // notify_user
+        { id: 7, can_act: true }, // notify_moderators
+        { id: 8, can_act: true }, // spam
+      ],
+    });
+    post.topic = topic;
+
+    this.controller.topic = topic;
+    this.controller.subscribe();
+    this.controller.postRegistry.set(post.post_number, post);
+
+    pretender.get(`/posts/${postId}.json`, () =>
+      response({
+        id: postId,
+        post_number: 2,
+        topic_id: topic.id,
+        actions_summary: [{ id: 6, acted: true, count: 1 }],
+      })
+    );
+
+    this.controller._onMessage(
+      { type: "acted", id: postId, updated_at: "2026-01-02T00:00:00.000Z" },
+      null,
+      200
+    );
+    await settled();
+
+    assert.strictEqual(
+      typeof post.actions_summary[0].act,
+      "function",
+      "rebuilds actions_summary as ActionSummary instances so postActionFor().act() works"
+    );
+
+    assert.strictEqual(
+      post.actionByName.spam,
+      undefined,
+      "refreshes actionByName so flagsAvailable no longer offers types the server dropped"
+    );
+    assert.strictEqual(
+      post.actionByName.off_topic,
+      undefined,
+      "clears every trimmed flag type, not just notify_user"
+    );
+    assert.true(
+      post.actionByName.notify_user.acted,
+      "reflects the newly-recorded flag on actionByName"
+    );
+  });
+
   test("scroll position persistence avoids full cache snapshots", function (assert) {
     const topic = buildTopic(this.store, 725);
     const anchor = { postNumber: 2, offsetFromTop: 80, scrollY: 1600 };

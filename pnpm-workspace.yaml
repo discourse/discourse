@@ -31,7 +31,7 @@ packages:
 - "plugins/discourse-gamification"
 - "plugins/discourse-github"
 - "plugins/discourse-graphviz"
-- "plugins/discourse-hcaptcha"
+- "plugins/discourse-captcha"
 - "plugins/discourse-lazy-videos"
 - "plugins/discourse-local-dates"
 - "plugins/discourse-login-with-amazon"
@@ -58,6 +58,30 @@ packages:
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
 - "themes/horizon"
+patchedDependencies:
+  "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch"
+  "babel-plugin-debug-macros@0.3.4": "patches/babel-plugin-debug-macros@0.3.4.patch"
+  "licensee@11.1.1": "patches/licensee@11.1.1.patch"
+  "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch"
+  "ember-source@6.10.1": "patches/ember-source@6.10.1.patch"
+  "http-proxy@1.18.1": "patches/http-proxy@1.18.1.patch"
+  "ember-exam@10.1.0": "patches/ember-exam@10.1.0.patch"
+  "message-bus-client": "patches/message-bus-client.patch"
+  "ember-buffered-proxy": "patches/ember-buffered-proxy.patch"
+  "pikaday": "patches/pikaday.patch"
+peerDependencyRules:
+  allowedVersions:
+    "@mixer/parallel-prettier>prettier": "*"
+    "ember-this-fallback>ember-source": "*"
+    "ember-this-fallback>ember-cli-htmlbars": "*"
+    "@fullcalendar/moment-timezone>moment-timezone": "*"
+  ignoreMissing:
+    - "webpack"
+    - "@types/react"
+overrides:
+  "@ember/test-waiters": "4.1.1"
+  "babel-plugin-ember-template-compilation@~2.3.0": "2.4.1"
+  "broccoli-babel-transpiler@8.0.0": "^8.0.2"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"

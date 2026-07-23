@@ -2113,7 +2113,7 @@ pt_BR:
         default: "(padrão)"
         any: "qualquer"
       homepage:
-        default: "(padrão)"
+        default: "Padrão"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -2318,7 +2318,9 @@ pt_BR:
           member_title: "Convidar membros(as)"
           sent_title: "Convite enviado"
           member_tab: "Membros"
-          admin_tab: "Administradores(as):"
+          admin_tab: "Equipe"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador(a)"
           admin_email_label: "Endereço de e-mail"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "E-mail"
@@ -2329,6 +2331,7 @@ pt_BR:
           summary:
             role_member: "Membro"
             role_admin: "Administração"
+            role_moderator: "Moderador(a)"
             method: "Compartilhamento"
             method_email: "E-mail"
             restriction: "Restrito a"
@@ -3068,6 +3071,7 @@ pt_BR:
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -3694,6 +3698,7 @@ pt_BR:
       sort:
         label: "Ordenar por"
         top: "Melhores"
+        hot: "Em alta"
         new: "Nova"
         old: "Antigo"
       load_more_children:
@@ -4456,7 +4461,7 @@ pt_BR:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -5071,7 +5076,6 @@ pt_BR:
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas opcionais"
       choose_for_topic_required:
         one: "selecione pelo menos %{count} etiqueta…"
         other: "selecione pelo menos %{count} etiquetas…"
@@ -5329,6 +5333,10 @@ pt_BR:
           public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
+          localizations:
+            title: "Traduções"
+            locale: "Idioma"
+            title_label: "Título da seção"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
@@ -6270,7 +6278,6 @@ pt_BR:
               posts: "Postagens"
               share: "Compartilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Equipe"
             trust_level_pipeline:
               trust_levels:
@@ -8609,6 +8616,10 @@ pt_BR:
         alt: "pré-visualização do emoji personalizado"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}:?"
         settings: "Configurações"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Nova"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         delete: "Excluir"

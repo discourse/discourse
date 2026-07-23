@@ -2067,7 +2067,7 @@ hu:
         default: "(alapértelmezett)"
         any: "bármely"
       homepage:
-        default: "(alapértelmezett)"
+        default: "Alapértelmezett"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -2272,7 +2272,9 @@ hu:
           member_title: "Tagok meghívása"
           sent_title: "Meghívó elküldve"
           member_tab: "Tagok"
-          admin_tab: "Adminisztrátorok"
+          admin_tab: "Stáb"
+          staff_role_admin: "Adminisztrátor"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mail-cím"
           email_placeholder: "név@example.com"
           invite_by_email: "E-mail:"
@@ -2283,6 +2285,7 @@ hu:
           summary:
             role_member: "Tag"
             role_admin: "Adminisztrátor"
+            role_moderator: "Moderátor"
             method: "Megosztás"
             method_email: "E-mail:"
             restriction: "Korlátozva a következőre:"
@@ -2989,6 +2992,7 @@ hu:
       draft_saved: "Vázlat mentve!"
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
+      title_placeholder_redesign: "Cím"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
       edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
@@ -3617,6 +3621,7 @@ hu:
       sort:
         label: "Rendezés"
         top: "Népszerű"
+        hot: "Felkapott"
         new: "Új"
       load_more_children:
         one: "és %{count} további válasz"
@@ -4369,7 +4374,7 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "kategória&hellip;"
+      choose: "Kategória&hellip;"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"
@@ -4992,7 +4997,6 @@ hu:
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
-      choose_for_topic: "Megadható címke"
       choose_for_topic_required:
         one: "válasszon legalább %{count} címkét"
         other: "válasszon legalább %{count} címkét"
@@ -5250,6 +5254,10 @@ hu:
           public: "Mindenki számára látható"
           always_public: "Az ebben a részben található tartalom mindig nyilvános"
           more_menu: "További menü"
+          localizations:
+            title: "Fordítások"
+            locale: "Nyelv"
+            title_label: "A szakasz címe"
           links:
             add: "Újabb link hozzáadása"
             delete: "Link törlése"
@@ -6187,7 +6195,6 @@ hu:
               posts: "Bejegyzések"
               share: "Megosztás"
             whos_posting:
-              all_categories: "Minden kategória"
               staff: "Stáb"
             trust_level_pipeline:
               trust_levels:
@@ -8512,6 +8519,10 @@ hu:
         alt: "egyéni emodzsi előnézete"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
         settings: "Beállítások"
+        export: "Exportálás"
+        import: "Importálás"
+        import_category:
+          new: "Új"
       embedding:
         get_started: "Ha a Discourse-ot egy másik weboldalba akarja ágyazni, akkor kezdje a gépnév megadásával."
         delete: "Törlés"

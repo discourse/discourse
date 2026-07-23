@@ -12,7 +12,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
   describe "#inject_into" do
     describe "hot topics gist summarization" do
-      fab!(:topic_ai_gist)
+      fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, locale: SiteSetting.default_locale) }
 
       before { TopicHotScore.create!(topic_id: topic_ai_gist.target_id, score: 1.0) }
 
@@ -82,6 +82,45 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             expect(serialized[:ai_topic_gist]).to be_present
           end
 
+          it "selects the localized gist and respects the show-original preference" do
+            topic_ai_gist.target.update!(locale: "en")
+            english_gist =
+              topic_ai_gist.tap { |gist| gist.update!(summarized_text: "English gist") }
+            japanese_gist =
+              Fabricate(
+                :topic_ai_gist,
+                target: topic_ai_gist.target,
+                locale: "ja",
+                summarized_text: "日本語の要約",
+              )
+            SiteSetting.content_localization_enabled = true
+            SiteSetting.content_localization_supported_locales = "ja"
+            I18n.locale = :ja
+
+            gist_topic =
+              topic_query.list_hot.topics.find { |topic| topic.id == topic_ai_gist.target_id }
+            serialized =
+              TopicListItemSerializer.new(
+                gist_topic,
+                scope: Guardian.new(user),
+                root: false,
+                filter: :hot,
+              ).as_json
+
+            expect(serialized[:ai_topic_gist]).to eq(japanese_gist.summarized_text)
+
+            user.user_option.update!(show_original_content: true)
+            original_serialized =
+              TopicListItemSerializer.new(
+                gist_topic,
+                scope: Guardian.new(user),
+                root: false,
+                filter: :hot,
+              ).as_json
+
+            expect(original_serialized[:ai_topic_gist]).to eq(english_gist.summarized_text)
+          end
+
           it "doesn't include the summary when the user is not a member of the opt-in group" do
             non_member_user = Fabricate(:user)
 
@@ -113,7 +152,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
                 raw: "this is a whispered reply",
               )
 
-            Fabricate(:topic_ai_gist, target: first.topic)
+            Fabricate(:topic_ai_gist, target: first.topic, locale: SiteSetting.default_locale)
             topic_id = first.topic.id
             TopicUser.update_last_read(admin, topic_id, first.post_number, 1, 1)
             TopicUser.change(
@@ -161,8 +200,8 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
             skip "suggested topic not found in results" if suggested_topic.nil?
 
-            # Verify that ai_gist_summary association is preloaded
-            expect(suggested_topic.association(:ai_gist_summary).loaded?).to eq(true)
+            # Verify that ai_gist_summaries association is preloaded
+            expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
 
             serialized =
               TopicListItemSerializer.new(
@@ -184,8 +223,8 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
 
             skip "suggested topic not found in results" if suggested_topic.nil?
 
-            # Verify that ai_gist_summary association is preloaded
-            expect(suggested_topic.association(:ai_gist_summary).loaded?).to eq(true)
+            # Verify that ai_gist_summaries association is preloaded
+            expect(suggested_topic.association(:ai_gist_summaries).loaded?).to eq(true)
 
             serialized =
               SuggestedTopicSerializer.new(
@@ -197,6 +236,101 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             expect(serialized[:ai_topic_gist]).to eq(topic_ai_gist.summarized_text)
           end
         end
+      end
+    end
+
+    describe "topic view summary serialization" do
+      fab!(:topic) { Fabricate(:topic, locale: "en") }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      def serialize_topic_view(topic, user)
+        topic_view = TopicView.new(topic.id, user)
+        TopicViewSerializer.new(topic_view, scope: user.guardian, root: false).as_json
+      end
+
+      it "reports a cached summary only when its locale matches the displayed language" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "he"
+        Fabricate(:ai_summary, target: topic, locale: "en")
+
+        english_only = I18n.with_locale(:he) { serialize_topic_view(topic, user) }
+        expect(english_only[:has_cached_summary]).to eq(false)
+
+        Fabricate(:ai_summary, target: topic, locale: "he")
+        localized = I18n.with_locale(:he) { serialize_topic_view(topic, user) }
+        expect(localized[:has_cached_summary]).to eq(true)
+      end
+    end
+
+    describe "post_created event" do
+      fab!(:post)
+
+      it "does not enqueue a job for an up-to-date gist" do
+        Fabricate(
+          :topic_ai_gist,
+          target: post.topic,
+          locale: SiteSetting.default_locale,
+          highest_target_number: post.topic.highest_post_number,
+          created_at: 10.minutes.ago,
+        )
+
+        DiscourseEvent.trigger(:post_created, post, {}, post.user)
+
+        expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+      end
+
+      it "uses the created post number when the in-memory topic is stale" do
+        stale_target_number = post.post_number - 1
+        Fabricate(
+          :topic_ai_gist,
+          target: post.topic,
+          locale: SiteSetting.default_locale,
+          highest_target_number: stale_target_number,
+          created_at: 10.minutes.ago,
+        )
+        post.topic.highest_post_number = stale_target_number
+
+        expect_enqueued_with(
+          job: :fast_track_topic_gist,
+          args: {
+            topic_id: post.topic.id,
+            locale: SiteSetting.default_locale,
+            force_regenerate: false,
+          },
+        ) { DiscourseEvent.trigger(:post_created, post, {}, post.user) }
+      end
+
+      it "does not enqueue a job for a recently generated gist" do
+        Fabricate(
+          :topic_ai_gist,
+          target: post.topic,
+          locale: SiteSetting.default_locale,
+          highest_target_number: 0,
+          created_at: 2.minutes.ago,
+        )
+
+        DiscourseEvent.trigger(:post_created, post, {}, post.user)
+
+        expect(Jobs::FastTrackTopicGist.jobs).to be_empty
+      end
+
+      it "enqueues an outdated gist after the throttle period" do
+        Fabricate(
+          :topic_ai_gist,
+          target: post.topic,
+          locale: SiteSetting.default_locale,
+          highest_target_number: 0,
+          created_at: 10.minutes.ago,
+        )
+
+        expect_enqueued_with(
+          job: :fast_track_topic_gist,
+          args: {
+            topic_id: post.topic.id,
+            locale: SiteSetting.default_locale,
+            force_regenerate: false,
+          },
+        ) { DiscourseEvent.trigger(:post_created, post, {}, post.user) }
       end
     end
 
@@ -228,6 +362,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
             job: :fast_track_topic_gist,
             args: {
               topic_id: original_topic.id,
+              locale: SiteSetting.default_locale,
               force_regenerate: true,
             },
           ) do
@@ -235,6 +370,7 @@ RSpec.describe DiscourseAi::Summarization::EntryPoint do
               job: :fast_track_topic_gist,
               args: {
                 topic_id: destination_topic.id,
+                locale: SiteSetting.default_locale,
                 force_regenerate: true,
               },
             ) do

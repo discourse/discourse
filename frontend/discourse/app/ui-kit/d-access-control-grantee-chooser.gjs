@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 
@@ -8,7 +9,7 @@ export function granteeValue(type, id) {
   return `${type}:${id}`;
 }
 
-export function groupGranteeResult(group) {
+export function groupGranteeResult(group, isDisabled = false) {
   return {
     value: granteeValue("group", group.id),
     id: group.name,
@@ -19,10 +20,13 @@ export function groupGranteeResult(group) {
     display_name: group.display_name,
     automatic: group.automatic,
     isGroup: true,
+    disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
-function userGranteeResult(user) {
+function userGranteeResult(user, isDisabled = false) {
   const sortName = user.name || user.display_name || user.username;
 
   return {
@@ -36,6 +40,9 @@ function userGranteeResult(user) {
     showUserStatus: false,
     avatar_template: user.avatar_template,
     isUser: true,
+    disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
@@ -43,16 +50,17 @@ function userGranteeResult(user) {
  * excludedGrantees: an array of grantee values (in format type:id) that should be excluded from the search results,
  * since they have already been selected. These are passed from DAccessControl.
  *
- * onlyShowGroupFullName: for DAccessControl, it's ugly/unnecessary to show the group short_name_with_underscores, we only
- * want to show the group full name.
- *
  * prioritizeUserNameOrdering: for DAccessControl, we want to respect the prioritize_username_in_ux site setting and
  * show the name before the username in the search results depending on the setting.
+ *
+ * prioritizeGroupFullNameOrdering: for DAccessControl, we want to show the full
+ * name before the group name in the search results.
  */
 @selectKitOptions({
   excludedGrantees: undefined,
-  onlyShowGroupFullName: true,
   prioritizeUserNameOrdering: true,
+  prioritizeGroupFullNameOrdering: true,
+  excludeGroupNameWhenMatchingFullName: true,
 })
 export default class DAccessControlGranteeChooser extends EmailGroupUserChooser {
   valueProperty = "value";
@@ -71,8 +79,9 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
           acl_target: this.selectKit.options.aclTarget,
         },
       });
-      const results_2 = this.normalizeGranteeResults(results);
-      return this.excludeSelectedGrantees(results_2);
+      return this.excludeSelectedGrantees(
+        this.normalizeGranteeResults(results)
+      );
     } catch {
       return [];
     }
@@ -84,8 +93,12 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return [
-      ...(results.groups || []).map(groupGranteeResult),
-      ...(results.users || []).map(userGranteeResult),
+      ...(results.groups || []).map((group) =>
+        groupGranteeResult(group, this.isGranteeDisabled(group))
+      ),
+      ...(results.users || []).map((user) =>
+        userGranteeResult(user, this.isGranteeDisabled(user))
+      ),
     ];
   }
 
@@ -97,5 +110,11 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return results.filter((result) => !excludedGrantees.includes(result.value));
+  }
+
+  isGranteeDisabled(grantee) {
+    const disabledGrantees = this.selectKit.options.disabledGrantees || [];
+
+    return disabledGrantees.includes(granteeValue(grantee.type, grantee.id));
   }
 }

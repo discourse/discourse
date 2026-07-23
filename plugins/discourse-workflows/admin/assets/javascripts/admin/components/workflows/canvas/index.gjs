@@ -25,6 +25,7 @@ import {
   serializeCanvasClipboardPayload,
 } from "./canvas-clipboard";
 import CanvasContextMenu from "./canvas-context-menu";
+import { runExecuteStep } from "./canvas-execute-step";
 import { exportWorkflowToFile, parseWorkflowImport } from "./canvas-file-io";
 import { setupCanvasKeyboard } from "./canvas-keyboard";
 import { runManualTrigger } from "./canvas-manual-trigger";
@@ -65,7 +66,10 @@ export default class WorkflowCanvas extends Component {
   #hasSetupStarted = false;
   #pendingSync = false;
   #syncTask = null;
+  #pendingInsertHighlights = new Set();
+  #syncedNodeClientIds = null;
   #outsideClickAbort = null;
+  #pendingDragPositions = new Map();
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -274,9 +278,26 @@ export default class WorkflowCanvas extends Component {
     }
   }
 
+  async #handleExecuteStep(clientId) {
+    try {
+      await runExecuteStep({
+        clientId,
+        workflowId: this.args.workflowId,
+        toasts: this.toasts,
+        router: this.router,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   #reteCallbacks() {
     return {
-      onNodeDragged: (...a) => this.args.onUpdateNodePosition?.(...a),
+      onNodeDragged: (clientId, position) =>
+        this.#pendingDragPositions.set(clientId, {
+          x: position.x,
+          y: position.y,
+        }),
       onNodePicked: () => this.selectionVersion++,
       onCanvasPointerDown: () => {
         this.selectionVersion++;
@@ -286,13 +307,27 @@ export default class WorkflowCanvas extends Component {
       },
       onSelectionDragFinished: (selectionRect) =>
         this.#selectStickyNotesInRect(selectionRect),
-      onNodeDragEnd: () => this.args.onNodeDragEnd?.(),
+      onNodeDragEnd: () => {
+        this.#flushPendingDragPositions();
+        this.args.onNodeDragEnd?.();
+      },
       onConnectionCreated: (...a) => this.args.onCreateConnection?.(...a),
       onNodeDelete: (clientId) => this.args.onRemoveNodes?.([clientId]),
       onManualTrigger: (clientId) => this.#handleManualTrigger(clientId),
+      onExecuteStep: (clientId) => this.#handleExecuteStep(clientId),
       onNodeDoubleClick: (clientId) => this.args.onEditNode?.(clientId),
       onTransformChanged: (t) => (this.areaTransform = t),
     };
+  }
+
+  #flushPendingDragPositions() {
+    if (this.#pendingDragPositions.size === 0) {
+      return;
+    }
+
+    const positions = this.#pendingDragPositions;
+    this.#pendingDragPositions = new Map();
+    this.args.onUpdateNodePositions?.(positions);
   }
 
   #nodes() {
@@ -365,6 +400,28 @@ export default class WorkflowCanvas extends Component {
     }
   }
 
+  // Rete re-renders node views on selection and config changes, remounting
+  // their components, so the insert pulse is keyed off client ids appearing
+  // in the synced data rather than DOM insertion.
+  #trackInsertedNodes(nodes) {
+    const clientIds = new Set(nodes.map((node) => node.clientId));
+
+    if (this.#syncedNodeClientIds) {
+      for (const clientId of clientIds) {
+        if (!this.#syncedNodeClientIds.has(clientId)) {
+          this.#pendingInsertHighlights.add(clientId);
+        }
+      }
+    }
+
+    this.#syncedNodeClientIds = clientIds;
+  }
+
+  @action
+  consumeInsertHighlight(clientId) {
+    return this.#pendingInsertHighlights.delete(clientId);
+  }
+
   async #performSync() {
     const snapshot = {
       nodes: this.#nodes(),
@@ -374,6 +431,7 @@ export default class WorkflowCanvas extends Component {
     };
     const prevNodeCount = this.rete.nodeCount;
 
+    this.#trackInsertedNodes(snapshot.nodes);
     await this.rete.syncState(snapshot.nodes, snapshot.connections);
 
     if (this.#shouldHydrateInitialAutoLayout(snapshot.nodes)) {
@@ -950,8 +1008,10 @@ export default class WorkflowCanvas extends Component {
           {{#in-element entry.element insertBefore=null}}
             <WorkflowNode
               @node={{entry.node}}
+              @consumeInsertHighlight={{this.consumeInsertHighlight}}
               @onDelete={{this.rete.renderer.onNodeDelete}}
               @onManualTrigger={{this.rete.renderer.onManualTrigger}}
+              @onExecuteStep={{this.rete.renderer.onExecuteStep}}
               @onSocketRendered={{this.rete.renderer.onSocketRendered}}
               @onEditNode={{@onEditNode}}
               @workflowPublished={{this.workflowPublished}}

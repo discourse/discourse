@@ -1100,7 +1100,7 @@ et:
         default: "(vaikimisi)"
         any: "iga"
       homepage:
-        default: "(vaikimisi)"
+        default: "Vaikimisi"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -1206,12 +1206,15 @@ et:
           cancel: "Tühista"
         invite_roles:
           member_tab: "Liikmed"
-          admin_tab: "Adminnid"
+          admin_tab: "Meeskond"
+          staff_role_admin: "Adminn"
+          staff_role_moderator: "Moderaator"
           email_placeholder: "nimi@näide.ee"
           invite_by_email: "E-post"
           summary:
             role_member: "Liige"
             role_admin: "Adminn"
+            role_moderator: "Moderaator"
             method_email: "E-post"
             topic: "Teema"
             groups: "Rühmad"
@@ -1506,6 +1509,7 @@ et:
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
+      title_placeholder_redesign: "Pealkiri"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
@@ -2219,7 +2223,7 @@ et:
     category:
       none: "(kategooria puudub)"
       all: "Kõik kategooriad"
-      choose: "kategooria&hellip;"
+      choose: "Kategooria&hellip;"
       edit: "Muuda"
       edit_dialog_title: "Muuda: %{categoryName}"
       view: "Vaata teemasid kategoorias"
@@ -2578,7 +2582,6 @@ et:
       selector_no_tags: "sildid puuduvad"
       selector_remove_filter: "eemalda filter"
       tags: "Sildid"
-      choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
       description: "Kirjeldus"
@@ -2964,7 +2967,6 @@ et:
               posts: "Postitust"
               share: "Jaga"
             whos_posting:
-              all_categories: "Kõik foorumid"
               staff: "Meeskond"
             trust_level_pipeline:
               trust_levels:
@@ -3973,6 +3975,10 @@ et:
         image: "Pilt"
         delete_confirm: "Kas oled kindel, et soovid kustutada emotikoni :%{name}:?"
         settings: "Sätted"
+        export: "Ekspordi"
+        import: "Impordi"
+        import_category:
+          new: "Uus"
       embedding:
         get_started: "Kui soovid lisada Discourse'i teise veebisaidi sisse, alusta lisades oma teenusepakkuja"
         delete: "Kustuta"

@@ -59,6 +59,8 @@ describe "Edit AI post image captions" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
+  let(:translation_preview) { PageObjects::Components::DEditorOriginalTranslationPreview.new }
   let(:captions) { PageObjects::Components::AiPostImageCaptions.new }
 
   let(:first_cat_caption) { "An old caption for the first cat" }
@@ -140,6 +142,54 @@ describe "Edit AI post image captions" do
       image: 2,
       description: japanese_second_cat_caption,
     )
+
+    admin.user_option.update!(show_original_content: true)
+    topic_page.visit_topic(cat_topic)
+
+    expect(captions).to have_image_caption(second_post, image: 2, description: second_cat_caption)
+  end
+
+  it "lets the user edit a translated image caption", :aggregate_failures do
+    SiteSetting.allow_user_locale = true
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:admins]
+    SiteSetting.content_localization_supported_locales = "en|ja"
+    admin.update!(locale: "ja")
+    admin.user_option.update!(show_original_content: false)
+    Fabricate(:topic_localization, topic: cat_topic, locale: "ja", fancy_title: "猫についての話題")
+    create_japanese_localization(second_post)
+    seed_english_descriptions
+    seed_image_caption(second_post, first_cat_upload, japanese_first_cat_caption, locale: "ja")
+    seed_image_caption(second_post, second_cat_upload, japanese_second_cat_caption, locale: "ja")
+    process_description_cooked(post_id: second_post.id, locale: "ja")
+
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+
+    expect(captions).to have_image_caption(
+      second_post,
+      image: 2,
+      description: japanese_second_cat_caption,
+    )
+
+    topic_page.expand_post_actions(second_post)
+    topic_page.click_post_action_button(second_post, :edit)
+    expect(edit_localized_post_dialog).to be_open
+    edit_localized_post_dialog.click_no
+    expect(composer).to be_opened
+
+    translation_preview.click_translation_tab
+    expect(translation_preview).to have_rendered_preview_image(alt: "二匹目の猫")
+    expect(captions).to have_editor_button_count(count: 2)
+
+    captions.edit_preview_image_caption(image: 2, description: "翻訳された二匹目の猫だけの新しい説明")
+    process_description_cooked(post_id: second_post.id, locale: "ja")
+    composer.close
+    expect(composer).to be_closed
+
+    topic_page.visit_topic(cat_topic)
+
+    expect(captions).to have_image_caption(second_post, image: 2, description: "翻訳された二匹目の猫だけの新しい説明")
 
     admin.user_option.update!(show_original_content: true)
     topic_page.visit_topic(cat_topic)

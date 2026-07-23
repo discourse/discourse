@@ -343,7 +343,7 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id],
           )
         end.count
@@ -357,7 +357,7 @@ RSpec.describe CurrentUserSerializer do
 
           expect(serialized[:sidebar_sections].count).to eq(2)
 
-          expect(serialized[:sidebar_sections].last[:links].map { |link| link.id }).to eq(
+          expect(serialized[:sidebar_sections].last[:links].map { |link| link[:id] }).to eq(
             [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
           )
         end.count

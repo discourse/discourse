@@ -18,7 +18,6 @@ import {
   nodeTypeInputLabel,
   nodeTypeIsManuallyTriggerable,
   nodeTypePortLabel,
-  nodeTypeRunScopeLabelKey,
   nodeTypeStyle,
   resolveNodeTypeVersion,
   typeVersionForNode,
@@ -35,7 +34,11 @@ function resolveType(workflowsNodeTypes, node) {
   return resolveNodeTypeVersion(nodeType, typeVersionForNode(node));
 }
 
-const highlightOnInsert = modifier((element) => {
+const highlightOnInsert = modifier((element, [shouldHighlight]) => {
+  if (!shouldHighlight()) {
+    return;
+  }
+
   if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
@@ -55,6 +58,10 @@ export function shouldShowManualTrigger(node) {
   return Boolean(node?.type?.startsWith("trigger:"));
 }
 
+export function shouldShowExecuteStep(node) {
+  return Boolean(node?.type) && !node.type.startsWith("trigger:");
+}
+
 export function shouldEnableManualTrigger(node, nodeType, session) {
   if (!node?.type?.startsWith("trigger:")) {
     return false;
@@ -72,6 +79,9 @@ export default class WorkflowNode extends Component {
 
   stopPropagation = (e) => e.stopPropagation();
 
+  consumeInsertHighlight = () =>
+    Boolean(this.args.consumeInsertHighlight?.(this.data.clientId));
+
   handleDelete = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -81,6 +91,11 @@ export default class WorkflowNode extends Component {
   handleManualTrigger = (e) => {
     e.stopPropagation();
     this.args.onManualTrigger?.(this.data.clientId);
+  };
+
+  handleExecuteStep = (e) => {
+    e.stopPropagation();
+    this.args.onExecuteStep?.(this.data.clientId);
   };
 
   handleOpenIssues = (e) => {
@@ -119,11 +134,6 @@ export default class WorkflowNode extends Component {
 
   get description() {
     return nodeDescription(this.data);
-  }
-
-  get runScopeLabel() {
-    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, this.data);
-    return labelKey ? i18n(labelKey) : null;
   }
 
   get outputKeys() {
@@ -180,6 +190,14 @@ export default class WorkflowNode extends Component {
       : i18n("discourse_workflows.manual_trigger.needs_pin_data");
   }
 
+  get showExecuteStep() {
+    return shouldShowExecuteStep(this.data);
+  }
+
+  get executeStepLabel() {
+    return i18n("discourse_workflows.execute_step.run");
+  }
+
   get dataTableId() {
     if (this.data.type !== "action:data_table") {
       return null;
@@ -202,8 +220,9 @@ export default class WorkflowNode extends Component {
   }
 
   get dimensionsStyle() {
+    const { width, height } = this.args.node;
     return trustHTML(
-      `width: ${this.args.node.width}px; height: ${this.args.node.height}px;`
+      `width: ${width}px; height: ${height}px; --node-width: ${width}px; --node-height: ${height}px;`
     );
   }
 
@@ -228,16 +247,8 @@ export default class WorkflowNode extends Component {
       style={{this.dimensionsStyle}}
       data-client-id={{this.data.clientId}}
       data-unavailable={{if this.isUnavailable "true" "false"}}
-      {{highlightOnInsert}}
+      {{highlightOnInsert this.consumeInsertHighlight}}
     >
-      {{#if @node.selected}}
-        {{#if this.runScopeLabel}}
-          <div class="workflow-rete-node__run-scope-tooltip">
-            {{this.runScopeLabel}}
-          </div>
-        {{/if}}
-      {{/if}}
-
       <div class="workflow-rete-node__icon-row">
         <div
           class={{dConcatClass
@@ -290,6 +301,28 @@ export default class WorkflowNode extends Component {
                     aria-label={{this.manualTriggerLabel}}
                     {{on "pointerdown" this.stopPropagation}}
                     {{on "click" this.handleManualTrigger}}
+                  >
+                    {{dIcon "play"}}
+                  </button>
+                </:trigger>
+              </DTooltip>
+            {{/if}}
+            {{#if this.showExecuteStep}}
+              <DTooltip
+                @identifier="workflow-node-execute-step"
+                @content={{this.executeStepLabel}}
+              >
+                <:trigger>
+                  <button
+                    type="button"
+                    class={{dConcatClass
+                      "workflow-canvas-toolbar__btn --success"
+                      (if this.isUnavailable "is-disabled")
+                    }}
+                    disabled={{if this.isUnavailable true false}}
+                    aria-label={{this.executeStepLabel}}
+                    {{on "pointerdown" this.stopPropagation}}
+                    {{on "click" this.handleExecuteStep}}
                   >
                     {{dIcon "play"}}
                   </button>

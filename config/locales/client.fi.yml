@@ -1908,7 +1908,7 @@ fi:
         default: "(oletus)"
         any: "mikä tahansa"
       homepage:
-        default: "(oletus)"
+        default: "Oletus"
       password_confirmation:
         title: "Salasana uudelleen"
       invite_code:
@@ -2111,7 +2111,9 @@ fi:
           member_title: "Kutsu jäseniä"
           sent_title: "Kutsu lähetetty"
           member_tab: "Jäsenet"
-          admin_tab: "Ylläpitäjät"
+          admin_tab: "Henkilökunta"
+          staff_role_admin: "Ylläpitäjä"
+          staff_role_moderator: "Valvoja"
           admin_email_label: "Sähköpostiosoite"
           email_placeholder: "nimi@esimerkki.fi"
           invite_by_email: "Sähköpostiosoite"
@@ -2122,6 +2124,7 @@ fi:
           summary:
             role_member: "Konkari"
             role_admin: "Ylläpitäjä"
+            role_moderator: "Valvoja"
             method: "Jakaminen"
             method_email: "Sähköpostiosoite"
             uses: "Käyttökertoja enintään"
@@ -2797,6 +2800,7 @@ fi:
       discard: "Hylkää"
       users_placeholder: "Lisää käyttäjiä tai ryhmiä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä keskustelussa on kyse?"
+      title_placeholder_redesign: "Otsikko"
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "Miksi muokkaat viestiä?"
       topic_featured_link_placeholder: "Kirjoita otsikossa näkyvä linkki."
@@ -3363,6 +3367,7 @@ fi:
       sort:
         label: "Järjestys"
         top: "Suositut"
+        hot: "Liekeissä"
         new: "Uudet"
       load_more_children:
         one: "%{count} muu kommentti"
@@ -4081,7 +4086,7 @@ fi:
     category:
       none: "(ei aluetta)"
       all: "Kaikki alueet"
-      choose: "alue&hellip;"
+      choose: "Alue&hellip;"
       edit: "Muokkaa"
       edit_title: "Muokkaa tätä aluetta"
       edit_dialog_title: "Muokkaa: %{categoryName}"
@@ -4636,7 +4641,6 @@ fi:
       selector_no_tags: "ei tunnisteita"
       selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"
-      choose_for_topic: "valinnaiset tunnisteet"
       choose_for_topic_required:
         one: "valitse ainakin %{count} tunniste…"
         other: "valitse ainakin %{count} tunnistetta…"
@@ -4861,6 +4865,10 @@ fi:
           public: "Näkyy kaikille"
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
+          localizations:
+            title: "Käännökset"
+            locale: "Kieli"
+            title_label: "Osion otsikko"
           links:
             add: "Lisää toinen linkki"
             delete: "Poista linkki"
@@ -5681,7 +5689,6 @@ fi:
               posts: "Viestejä"
               share: "Jaa"
             whos_posting:
-              all_categories: "Kaikki alueet"
               staff: "Henkilökunta"
             trust_level_pipeline:
               trust_levels:
@@ -7915,6 +7922,10 @@ fi:
         alt: "mukautetun emojin esikatselu"
         delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
         settings: "Asetukset"
+        export: "Vie"
+        import: "Tuo"
+        import_category:
+          new: "Uudet"
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         delete: "Poista"

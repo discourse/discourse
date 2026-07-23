@@ -140,7 +140,8 @@ pl_PL:
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
-    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę."
+    ai_summary_gists_agent: "Agent służy do generowania krótkich podsumowań tematów. Generowanie Gist zawsze korzysta z wbudowanego narzędzia do generowania podsumowań końcowych; inne narzędzia i formaty odpowiedzi strukturalnych skonfigurowane w agencie są ignorowane."
+    ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę. Każde zlokalizowane streszczenie wlicza się do tego limitu."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"
     ai_bot_enable_chat_warning: "Wyświetl ostrzeżenie po zainicjowaniu czatu PW. Można to pominąć, edytując ciąg tłumaczenia: discourse_ai.ai_bot.pm_warning"
@@ -467,6 +468,9 @@ pl_PL:
         discourse_helper:
           name: "Pomocnik Discourse"
           description: "Bot AI specjalizujący się w pomocy w zadaniach związanych z Discourse"
+        discourse_admin_assistant:
+          name: "Asystent administratora Discourse"
+          description: "Bot AI, który odpowiada na pytania Discourse i pomaga administratorom zarządzać ustawieniami witryny"
         web_artifact_creator:
           name: "Twórca artefaktów internetowych"
           description: "Bot AI specjalizuje się w tworzeniu interaktywnych artefaktów internetowych"
@@ -643,6 +647,7 @@ pl_PL:
         tags: "Wymień tagi"
         time: "Czas"
         summarize: "Podsumuj"
+        set_topic_summary: "Ustaw podsumowanie tematu"
         image: "Wygeneruj obraz"
         google: "Szukaj w Google"
         read: "Przeczytaj temat"
@@ -693,6 +698,7 @@ pl_PL:
         tags: "Wymień wszystkie tagi na forum"
         time: "Znajdź czas w różnych strefach czasowych"
         summary: "Podsumuj temat"
+        set_topic_summary: "Ustaw ostateczne krótkie podsumowanie tematu"
         image: "Wygeneruj obraz przy użyciu Stable Diffusion"
         create_image: "Generuj obraz przy użyciu modelu obrazu GPT Open AI"
         edit_image: "Edytuj obraz za pomocą modelu obrazu GPT Open AI"
@@ -744,6 +750,7 @@ pl_PL:
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
         time: "Czas w %{timezone} wynosi %{time}"
         summarize: "Podsumowano <a href='%{url}'>%{title}</a>"
+        set_topic_summary: "Ustaw ostateczne krótkie podsumowanie tematu"
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
         edit_image: "%{prompt}"
@@ -1044,6 +1051,7 @@ pl_PL:
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
       invalid_provider_param: "%{param} ma nieprawidłowy format"
+      reasoning_mode_requirements: "Tryb rozumowania w wersji Pro wymaga interfejsu API Responses"
       secret_required: "Należy wybrać poświadczenie"
       secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."

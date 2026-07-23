@@ -902,8 +902,6 @@ de:
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-1-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-4: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-4-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
           open_router-moonshotai-kimi-k2-6: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
@@ -1224,15 +1222,9 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
-          regenerate_gists_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
-          regenerate_topic_summary_success:
-            one: "Themenzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"

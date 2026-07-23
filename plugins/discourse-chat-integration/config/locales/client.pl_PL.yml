@@ -136,6 +136,8 @@ pl_PL:
             webhook_setup_failed: "Nie udało się zarejestrować webhooka w Telegramie. Sprawdź token i spróbuj ponownie."
             channel_not_found: "Określony kanał nie istnieje w Telegramie"
             forbidden: "Bot nie ma uprawnień do publikowania na tym kanale"
+            invalid_api_base_url: "Ustawienie strony z podstawowym adresem URL interfejsu API serwisu Telegram nie jest prawidłowym adresem HTTPS."
+            api_base_url_blocked: "Zablokowano żądania kierowane na podstawowy adres URL interfejsu API serwisu Telegram. Hosty w sieciach prywatnych trzeba dodać do ustawienia „Dozwolone hosty wewnętrzne”."
         discord:
           title: "Discord"
           param:

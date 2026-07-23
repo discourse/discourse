@@ -14,8 +14,6 @@ ur:
               label: "قبول شدہ حل"
         sections:
           support:
-            filter:
-              all_categories: "تمام زمرہ جات"
             answerers:
               staff: "عملہ"
               member: "ممبران"

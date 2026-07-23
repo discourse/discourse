@@ -102,7 +102,6 @@ ja:
     ai_summarization_enabled: "要約機能を有効にする"
     ai_pm_summarization_allowed_groups: "PM での要約の作成と表示が許可されたグループ。"
     ai_summary_gists_enabled: "トピック内の最新の返信の簡単な要約を自動的に生成する"
-    ai_summary_backfill_maximum_topics_per_hour: "1 時間あたりにバックフィルするトピック要約の数。"
     ai_bot_enabled: "AI ボットモジュールを有効にします。"
     ai_bot_enabled_llms: "AI ボット会話に選択できる LLM"
     ai_bot_allowed_groups: "GPT ボットが PM にアクセスできる場合、これらのグループのメンバーに返信します。"

@@ -2,7 +2,7 @@
 
 describe "Admin dashboard Support section" do
   fab!(:admin)
-  fab!(:support_category, :category)
+  fab!(:support_category)
   fab!(:author) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:staff_replier, :moderator)
   fab!(:member_replier) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -13,8 +13,6 @@ describe "Admin dashboard Support section" do
   before do
     SiteSetting.solved_enabled = true
     SiteSetting.dashboard_improvements = true
-    support_category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
-    support_category.save!
 
     # Resolved: staff makes the first reply, which is accepted as the solution.
     resolved = Fabricate(:topic, category: support_category, user: author)
@@ -53,5 +51,40 @@ describe "Admin dashboard Support section" do
 
     # With a single support category there is nothing to filter between.
     expect(support).to have_no_category_filter
+  end
+
+  context "with multiple support categories" do
+    fab!(:other_support_category, :support_category)
+    fab!(:moderator)
+
+    it "saves an admin's category selection when the picker closes, and persists it across a refresh" do
+      dashboard.visit
+      expect(support).to have_category_filter
+      expect(support).to have_no_selected_category(support_category)
+
+      support.select_category(support_category)
+      support.close_category_filter
+
+      support.expand_category_filter
+      expect(support).to have_selected_category(support_category)
+
+      dashboard.visit
+
+      support.expand_category_filter
+      expect(support).to have_selected_category(support_category)
+    end
+
+    it "does not persist a moderator's category selection" do
+      sign_in(moderator)
+
+      dashboard.visit
+      support.select_category(support_category)
+      support.close_category_filter
+
+      dashboard.visit
+      support.expand_category_filter
+
+      expect(support).to have_no_selected_category(support_category)
+    end
   end
 end

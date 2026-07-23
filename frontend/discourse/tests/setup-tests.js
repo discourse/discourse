@@ -213,16 +213,6 @@ export default async function setupTests(config) {
   QUnit.config.hidepassed = true;
   QUnit.config.testTimeout = 60_000;
 
-  window.onunhandledrejection = (event) => {
-    // reports test boot failures to testem, so the browser doesn't hang forever
-    window.Testem?.emit(
-      "top-level-error",
-      String(event.reason),
-      window.location.href,
-      "0"
-    );
-  };
-
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();
 

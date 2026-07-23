@@ -2097,7 +2097,7 @@ de:
         default: "(Standard)"
         any: "(keine Einschränkung)"
       homepage:
-        default: "(Standard)"
+        default: "Standard"
       password_confirmation:
         title: "Wiederholung des Passworts"
       invite_code:
@@ -2302,7 +2302,9 @@ de:
           member_title: "Mitglieder einladen"
           sent_title: "Einladung gesendet"
           member_tab: "Mitglieder"
-          admin_tab: "Administratoren"
+          admin_tab: "Team"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-Mail-Adresse"
           email_placeholder: "name@example.com"
           invite_by_email: "E-Mail"
@@ -2313,6 +2315,7 @@ de:
           summary:
             role_member: "Mitglied"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method: "Teilen"
             method_email: "E-Mail"
             restriction: "Beschränkt auf"
@@ -3034,6 +3037,7 @@ de:
       draft_saved: "Entwurf gespeichert!"
       users_placeholder: "Benutzer oder Gruppen hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Welchen Grund gibt es für die Bearbeitung?"
       topic_featured_link_placeholder: "Link zum Titel eingeben."
@@ -3738,6 +3742,7 @@ de:
       sort:
         label: "Sortieren nach"
         top: "Angesagte"
+        hot: "Angesagt"
         new: "Neue"
         old: "Alt"
       load_more_children:
@@ -5165,7 +5170,6 @@ de:
       selector_no_tags: "keine Schlagwörter"
       selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"
-      choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
         one: "mindestens %{count} Schlagwort auswählen …"
         other: "mindestens %{count} Schlagwörter auswählen …"
@@ -5423,6 +5427,10 @@ de:
           public: "Für alle sichtbar"
           always_public: "Die Inhalte in diesem Abschnitt sind immer öffentlich"
           more_menu: "Menü „Mehr“"
+          localizations:
+            title: "Übersetzungen"
+            locale: "Sprache"
+            title_label: "Titel des Abschnitts"
           links:
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"
@@ -6381,7 +6389,6 @@ de:
               posts: "Beiträge"
               share: "Teilen"
             whos_posting:
-              all_categories: "Alle Kategorien"
               staff: "Team"
             trust_level_pipeline:
               trust_levels:
@@ -8722,6 +8729,10 @@ de:
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"
         settings: "Einstellungen"
+        export: "Exportieren"
+        import: "Importieren"
+        import_category:
+          new: "Neue"
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         delete: "Löschen"

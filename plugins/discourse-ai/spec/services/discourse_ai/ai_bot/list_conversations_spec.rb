@@ -54,7 +54,6 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
 
     before do
       enable_current_plugin
-      SiteSetting.enable_ai_bot_starred_conversations = true
       [conversation, starred_conversation, other_conversation].each do |topic|
         mark_ai_bot_pm(topic)
       end
@@ -109,15 +108,6 @@ RSpec.describe DiscourseAi::AiBot::ListConversations do
       expect(result[:conversations].records.length).to eq(2)
       expect(result[:conversations].records).to include(starred_conversation)
       expect(result[:meta]).to eq(page: 0, per_page: 1, has_more: true)
-    end
-
-    context "when the upcoming change is disabled" do
-      before { SiteSetting.enable_ai_bot_starred_conversations = false }
-
-      it "returns the legacy conversation list" do
-        expect(conversations).to include(starred_conversation)
-        expect(conversations).to include(conversation)
-      end
     end
   end
 

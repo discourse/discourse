@@ -24,6 +24,12 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import {
+  dampenedOverdrag,
+  shouldDeferSwipeToContent,
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY_THRESHOLD,
+} from "discourse/lib/swipe-events";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -37,6 +43,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
 
 const trackFieldsHeight = modifier((element, [enabled]) => {
@@ -50,10 +57,9 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   }
 
   const update = (height) => {
-    target.style.setProperty(
-      "--composer-fields-height",
-      `${Math.round(height)}px`
-    );
+    const rounded = Math.round(height);
+    target.style.setProperty("--composer-fields-height", `${rounded}px`);
+    target.classList.toggle("has-composer-fields", rounded > 0);
   };
 
   update(element.offsetHeight);
@@ -66,6 +72,7 @@ const trackFieldsHeight = modifier((element, [enabled]) => {
   return () => {
     observer.disconnect();
     target.style.removeProperty("--composer-fields-height");
+    target.classList.remove("has-composer-fields");
   };
 });
 
@@ -97,6 +104,9 @@ export default class ComposerContainer extends Component {
 
   @tracked toolbarPortalTarget;
 
+  #swipeEditor = null;
+  #swipeSlide = 0;
+
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
@@ -104,6 +114,73 @@ export default class ComposerContainer extends Component {
 
   get composerRedesign() {
     return this.siteSettings.enable_composer_redesign;
+  }
+
+  @action
+  onSwipeStart(state, event) {
+    // :focus-within keeps the match when a NodeView input inside the editor
+    // is focused (which doesn't set .in-focus)
+    const editor = state.element.querySelector(
+      ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
+    );
+
+    if (
+      !editor ||
+      !state.goingDown() ||
+      shouldDeferSwipeToContent(state, state.element)
+    ) {
+      event.preventDefault();
+      return;
+    }
+
+    this.#swipeEditor = editor;
+    this.#swipeSlide = -parseFloat(getComputedStyle(editor).marginTop) || 0;
+    editor.style.transition = "none";
+  }
+
+  @action
+  onSwipe(state) {
+    if (!this.#swipeEditor) {
+      return;
+    }
+
+    const pulled = Math.max(0, state.deltaY);
+    const margin =
+      pulled <= this.#swipeSlide
+        ? pulled - this.#swipeSlide
+        : dampenedOverdrag(pulled - this.#swipeSlide);
+    this.#swipeEditor.style.marginTop = `${margin}px`;
+  }
+
+  @action
+  onSwipeEnd(state) {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+
+    const dismissed =
+      state.deltaY > SWIPE_DISTANCE_THRESHOLD ||
+      state.velocityY > SWIPE_VELOCITY_THRESHOLD;
+
+    if (dismissed && editor.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+
+    editor.style.marginTop = "";
+  }
+
+  @action
+  onSwipeCancel() {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+    editor.style.marginTop = "";
   }
 
   @action
@@ -174,14 +251,14 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
-    this.composer.set("composerHeight", `${size}px`);
-    this.keyValueStore.set({
-      key: "composerHeight",
-      value: this.composer.composerHeight,
-    });
+
+    const height = `${size}px`;
+    // resuming from minimized restores the height from the model
+    this.composer.model?.set("composerHeight", height);
+    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
-      size ? `${size}px` : ""
+      size ? height : ""
     );
 
     this._triggerComposerResized();
@@ -258,6 +335,14 @@ export default class ComposerContainer extends Component {
                 'with-category'
                 'without-category'
               }}"
+            {{dSwipe
+              onDidStartSwipe=this.onSwipeStart
+              onDidSwipe=this.onSwipe
+              onDidEndSwipe=this.onSwipeEnd
+              onDidCancelSwipe=this.onSwipeCancel
+              enabled=(if this.composerRedesign true false)
+              lockBody=false
+            }}
           >
             <span class="composer-open-plugin-outlet-container">
               <PluginOutlet
@@ -717,28 +802,6 @@ export default class ComposerContainer extends Component {
                     >
                       {{dIcon this.composer.uploadIcon}}
                     </a>
-                  {{/if}}
-
-                  {{#if this.composer.allowPreview}}
-                    <a
-                      href
-                      class="btn btn-default no-text mobile-preview"
-                      title={{i18n "composer.show_preview"}}
-                      {{on "click" this.composer.togglePreview}}
-                      aria-label={{i18n "composer.show_preview"}}
-                    >
-                      {{dIcon "desktop"}}
-                    </a>
-                  {{/if}}
-
-                  {{#if this.composer.isPreviewVisible}}
-                    <DButton
-                      @action={{this.composer.togglePreview}}
-                      @title="composer.hide_preview"
-                      @ariaLabel="composer.hide_preview"
-                      @icon="pencil"
-                      class="hide-preview"
-                    />
                   {{/if}}
                 {{/if}}
 
