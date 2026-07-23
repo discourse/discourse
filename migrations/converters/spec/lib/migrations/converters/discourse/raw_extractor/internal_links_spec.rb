@@ -44,7 +44,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       end
 
       it "degrades a quote with an oversized post: number to username-only" do
-        extract(%([quote="bob, post:99999999999999999999, topic:5"]x[/quote]))
+        extract(%([quote="bob, post:99999999999999999999, topic:5"]\nx\n[/quote]))
 
         expect(buffer.quotes.first).to include(
           quoted_username: "bob",

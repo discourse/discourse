@@ -122,8 +122,8 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   it "keeps placeholders and linkage rows one-to-one" do
     result =
       extract(
-        "intro @carol see ![pic](upload://h45h.png) and " \
-          "[quote=\"dan, post:9, topic:3\"]q[/quote] done",
+        "intro @carol see ![pic](upload://h45h.png) and\n" \
+          "[quote=\"dan, post:9, topic:3\"]\nq\n[/quote] done",
       )
 
     expect(Migrations::Placeholder.scan(result)).to match_array(buffer.placeholders)
