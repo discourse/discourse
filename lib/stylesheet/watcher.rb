@@ -4,7 +4,7 @@ require "listen"
 
 module Stylesheet
   class Watcher
-    CORE_TARGETS = %w[admin desktop mobile publish wizard wcag]
+    CORE_TARGETS = %w[admin publish wizard wcag]
     SPECIAL_CORE_TARGETS = %w[color_definitions]
 
     def self.watch(paths = nil)
@@ -115,7 +115,7 @@ module Stylesheet
         return
       end
 
-      targets = target ? [target] : %w[admin common desktop mobile]
+      targets = target ? [target] : %w[admin common]
       Stylesheet::Manager.clear_core_cache!(targets)
       message =
         targets.map! { |name| Stylesheet::Manager.new.stylesheet_data(name.to_sym) }.flatten!

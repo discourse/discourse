@@ -4,23 +4,23 @@ RSpec.describe StylesheetsController do
   it "can survive cache miss" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)
-    builder = Stylesheet::Manager::Builder.new(target: "desktop_rtl", manager: manager, theme: nil)
+    builder = Stylesheet::Manager::Builder.new(target: "common_rtl", manager: manager, theme: nil)
     builder.compile
 
     digest = StylesheetCache.first.digest
     StylesheetCache.destroy_all
 
-    get "/stylesheets/desktop_rtl_#{digest}.css"
+    get "/stylesheets/common_rtl_#{digest}.css"
     expect(response.status).to eq(200)
 
     cached = StylesheetCache.first
-    expect(cached.target).to eq "desktop_rtl"
+    expect(cached.target).to eq "common_rtl"
     expect(cached.digest).to eq digest
 
     # tmp folder destruction and cached
     Stylesheet::Manager.rm_cache_folder
 
-    get "/stylesheets/desktop_rtl_#{digest}.css"
+    get "/stylesheets/common_rtl_#{digest}.css"
     expect(response.status).to eq(200)
 
     # there is an edge case which is ... disk and db cache is nuked, very unlikely to happen
@@ -32,7 +32,7 @@ RSpec.describe StylesheetsController do
 
     manager = Stylesheet::Manager.new(theme_id: theme.id)
 
-    builder = Stylesheet::Manager::Builder.new(target: :desktop, theme: theme, manager: manager)
+    builder = Stylesheet::Manager::Builder.new(target: :common, theme: theme, manager: manager)
     builder.compile
 
     Stylesheet::Manager.rm_cache_folder
@@ -174,22 +174,22 @@ RSpec.describe StylesheetsController do
   it "ignores Accept header and does not include Vary header" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)
-    builder = Stylesheet::Manager::Builder.new(target: "desktop", manager: manager, theme: nil)
+    builder = Stylesheet::Manager::Builder.new(target: "common", manager: manager, theme: nil)
     builder.compile
 
     digest = StylesheetCache.first.digest
 
-    get "/stylesheets/desktop_#{digest}.css"
+    get "/stylesheets/common_#{digest}.css"
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)
 
-    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "text/html" }
+    get "/stylesheets/common_#{digest}.css", headers: { "Accept" => "text/html" }
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)
 
-    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "invalidcontenttype" }
+    get "/stylesheets/common_#{digest}.css", headers: { "Accept" => "invalidcontenttype" }
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)
