@@ -845,9 +845,13 @@ export default class SelectEngine {
     createCount: number
   ): readonly SelectDescriptor[] {
     const total = this.total;
+    const knownComplete =
+      !this.#load ||
+      (this.#state.serverComplete && !this.#state.serverTruncated);
     // A transformer or the legacy bridge can add rows absent from a reported or derived
     // total, so trusting that total blindly could emit a position past the set.
-    const sourceTotal = total == null ? null : Math.max(total, sourceCount);
+    const sourceTotal =
+      total == null || !knownComplete ? null : Math.max(total, sourceCount);
     const setSize =
       sourceTotal == null ? -1 : specialCount + sourceTotal + createCount;
 

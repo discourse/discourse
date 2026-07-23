@@ -728,3 +728,81 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
     });
   });
 });
+
+// Oracle for U-D change B2 (F1): aria-setsize is indeterminate (-1) while a source still
+// has unloaded rows. A server that declares more than it has loaded cannot honestly say
+// "option N of TOTAL", so setSize is -1 while each loaded row keeps its known position. A
+// COMPLETE server, and a CLIENT source (all rows in memory, merely windowed for render),
+// both keep their true, knowable size.
+module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
+  setupTest(hooks);
+
+  function rows(count) {
+    return Array.from({ length: count }, (_, i) => ({
+      id: i + 1,
+      name: `Item ${i + 1}`,
+    }));
+  }
+
+  test("a partially-loaded server source reports an indeterminate setSize", async function (assert) {
+    const load = () => ({ items: rows(10), total: 900 });
+    const engine = new SelectEngine({ load });
+
+    const loaded = await engine.loadItems(engine.loadContext);
+    const [first] = engine.buildItems(loaded);
+
+    assert.strictEqual(
+      engine.total,
+      900,
+      "the declared total is still exposed for the result-count announcement"
+    );
+    assert.strictEqual(
+      first.setSize,
+      -1,
+      "size is indeterminate while the source has rows it has not loaded"
+    );
+    assert.strictEqual(
+      first.posInSet,
+      1,
+      "each loaded row still carries its own known position"
+    );
+  });
+
+  test("a complete server source reports its true setSize", async function (assert) {
+    const load = () => ({ items: rows(10), hasMore: false });
+    const engine = new SelectEngine({ load });
+
+    const loaded = await engine.loadItems(engine.loadContext);
+    const [first] = engine.buildItems(loaded);
+
+    assert.strictEqual(
+      first.setSize,
+      10,
+      "a source that declares it is complete sizes the set to what it holds"
+    );
+    assert.strictEqual(
+      first.posInSet,
+      1,
+      "positions are stamped from the start"
+    );
+  });
+
+  test("a client source keeps its true setSize even while windowed", async function (assert) {
+    // 300 exceeds the client render chunk, so only a prefix is rendered — but every row is
+    // in memory, so the size is known and must NOT collapse to the unloaded encoding.
+    const engine = new SelectEngine({ items: rows(300) });
+
+    const loaded = engine.loadItems(engine.loadContext);
+    const [first] = engine.buildItems(loaded);
+
+    assert.true(
+      loaded.length < 300,
+      "the client render window is only a prefix of the full list"
+    );
+    assert.strictEqual(
+      first.setSize,
+      300,
+      "a client source reports its full, known size while windowed"
+    );
+  });
+});
