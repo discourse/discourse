@@ -3563,6 +3563,7 @@ en:
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
       show_toolbar: "Show composer toolbar"
       hide_toolbar: "Hide composer toolbar"
+      dismiss_keyboard: "Dismiss keyboard"
       peek_mode_toggle: "Toggle peek mode"
       modal_ok: "OK"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
