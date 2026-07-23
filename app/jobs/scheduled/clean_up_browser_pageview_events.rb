@@ -13,10 +13,7 @@ module Jobs
 
       BrowserPageviewEvent
         .where("created_at < ?", cutoff)
-        .in_batches(of: BATCH_SIZE) do |browser_pageview_events|
-          BrowserPageviewEventScore.where(event_id: browser_pageview_events.select(:id)).delete_all
-          browser_pageview_events.delete_all
-        end
+        .in_batches(of: BATCH_SIZE) { |browser_pageview_events| browser_pageview_events.delete_all }
 
       BrowserPageviewSessionEngagement
         .where("created_at < ?", cutoff)

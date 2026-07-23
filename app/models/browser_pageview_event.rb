@@ -153,7 +153,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
-        asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
@@ -174,7 +173,6 @@ class BrowserPageviewEvent < ActiveRecord::Base
         url: payload[:url]&.slice(0, MAX_URL_LENGTH),
         ip_address: payload[:ip_address],
         country_code: payload[:country_code]&.slice(0, 2),
-        asn: payload[:asn],
         referrer: payload[:referrer]&.slice(0, MAX_REFERRER_LENGTH),
         normalized_referrer: normalized_referrer&.slice(0, MAX_NORMALIZED_REFERRER_LENGTH),
         normalized_referrer_version: BrowserPageviewReferrerInspector::VERSION,
@@ -206,7 +204,8 @@ class BrowserPageviewEvent < ActiveRecord::Base
     end
   end
 
-  has_one :browser_pageview_event_score, foreign_key: :event_id, dependent: :delete
+  self.ignored_columns += %i[score asn]
+  # TODO(2027-01): Remove the ignored_columns line above
 
   def self.retention_cutoff
     RETENTION_PERIOD.ago.beginning_of_day
@@ -240,13 +239,12 @@ end
 # Table name: browser_pageview_events
 #
 #  id                          :bigint           not null, primary key
-#  asn                         :integer
 #  country_code                :string(2)
+#  crawler                     :boolean          default(FALSE), not null
 #  ip_address                  :inet             not null
 #  normalized_referrer         :string(2000)
 #  normalized_referrer_version :integer
 #  referrer                    :string(2000)
-#  score                       :integer
 #  source                      :integer          default("piggyback"), not null
 #  url                         :string(2000)     not null
 #  user_agent                  :string(1000)     not null
@@ -259,9 +257,7 @@ end
 #
 #  idx_bpe_created_at_country_code              (created_at,country_code)
 #  idx_bpe_created_at_normalized_referrer       (created_at,normalized_referrer)
-#  idx_bpe_ip_ua_created_at                     (ip_address,user_agent,created_at)
 #  idx_bpe_normalized_referrer_version          (normalized_referrer_version) WHERE (referrer IS NOT NULL)
-#  idx_bpe_session_created_at                   (session_id,created_at)
 #  index_browser_pageview_events_on_created_at  (created_at) USING brin
 #  index_browser_pageview_events_on_topic_id    (topic_id)
 #  index_browser_pageview_events_on_user_id     (user_id)
