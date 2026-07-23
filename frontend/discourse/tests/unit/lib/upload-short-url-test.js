@@ -1,12 +1,12 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { ajax } from "discourse/lib/ajax";
 import {
   lookupCachedUploadUrl,
   resetCache,
   resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
-import { module, test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
+} from "discourse/lib/upload-short-url";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
@@ -85,7 +85,7 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
       .join("");
 }
 
-module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
+module("Unit | Utility | discourse/lib/upload-short-url", function (hooks) {
   setupTest(hooks);
 
   hooks.afterEach(function () {

@@ -7,9 +7,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { cook } from "discourse/lib/text";
+import { resolveAllShortUrls } from "discourse/lib/upload-short-url";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DDecoratedHtml, {
   applyHtmlDecorators,

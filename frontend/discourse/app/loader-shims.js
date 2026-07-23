@@ -138,7 +138,9 @@ loaderShim("pretty-text/inline-oneboxer", () =>
   importSync("pretty-text/inline-oneboxer")
 );
 loaderShim("pretty-text/mentions", () => importSync("pretty-text/mentions"));
-loaderShim("pretty-text/oneboxer", () => importSync("pretty-text/oneboxer"));
+loaderShim("discourse/lib/oneboxer", () =>
+  importSync("discourse/lib/oneboxer")
+);
 loaderShim("pretty-text/oneboxer-cache", () =>
   importSync("pretty-text/oneboxer-cache")
 );
@@ -149,8 +151,8 @@ loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
 loaderShim("pretty-text/text-replace", () =>
   importSync("pretty-text/text-replace")
 );
-loaderShim("pretty-text/upload-short-url", () =>
-  importSync("pretty-text/upload-short-url")
+loaderShim("discourse/lib/upload-short-url", () =>
+  importSync("discourse/lib/upload-short-url")
 );
 loaderShim("@ember-decorators/component", () =>
   importSync("@ember-decorators/component")

@@ -11,7 +11,6 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
-import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";
@@ -59,6 +58,7 @@ import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { cloneJSON, deepMerge } from "discourse/lib/object";
 import { resetOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
+import { resetCache as resetOneboxCache } from "discourse/lib/oneboxer";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,

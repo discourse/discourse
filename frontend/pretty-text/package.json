@@ -4,6 +4,10 @@
   "description": "Discourse's text rendering utilities",
   "author": "Discourse",
   "license": "GPL-2.0-only",
+  "exports": {
+    "./package.json": "./package.json",
+    "./*": "./addon/*.js"
+  },
   "scripts": {
     "build": "ember build",
     "lint:js": "eslint .",

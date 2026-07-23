@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
-import { resetCache } from "pretty-text/upload-short-url";
 import { module, test } from "qunit";
+import { resetCache } from "discourse/lib/upload-short-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DCookText from "discourse/ui-kit/d-cook-text";
