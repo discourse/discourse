@@ -407,7 +407,7 @@ export default class DVirtualizer<T> extends Modifier<
     // Sweep disconnected rows out of the engine's ResizeObserver. ResizeObserver
     // does not fire on removal, and the engine only self-heals opportunistically,
     // so without this the element cache grows with every row ever scrolled past.
-    // NOTE: not covered by a test — see the sweep note in the PR description.
+    // The sweep contract is pinned in the virtualizer unit suite.
     this.#virtualizer.measureElement(null);
 
     const virtualItems = this.#virtualizer.getVirtualItems();

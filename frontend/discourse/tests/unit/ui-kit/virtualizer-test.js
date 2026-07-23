@@ -61,6 +61,54 @@ module("Unit | ui-kit | virtualizer", function () {
     cleanup();
   });
 
+  test("measureElement(null) sweeps disconnected rows from the element cache", function (assert) {
+    // The modifier calls measureElement(null) on every flush to evict rows the DOM
+    // has removed: a ResizeObserver never fires on removal, so without the sweep the
+    // cache — and the observer — would retain every row ever scrolled past. The
+    // dependency is version-pinned because this sweep semantics could shift between
+    // releases, so pin it here.
+    const { virtualizer, cleanup } = buildVirtualizer();
+
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const rows = [0, 1, 2].map((index) => {
+      const row = document.createElement("div");
+      row.setAttribute("data-index", String(index));
+      container.appendChild(row);
+      virtualizer.measureElement(row);
+      return row;
+    });
+
+    assert.strictEqual(
+      virtualizer.elementsCache.size,
+      3,
+      "every measured row is cached"
+    );
+
+    // Detach one row as an unmount would, then run the sweep.
+    rows[1].remove();
+    virtualizer.measureElement(null);
+
+    const cached = [...virtualizer.elementsCache.values()];
+    assert.strictEqual(
+      virtualizer.elementsCache.size,
+      2,
+      "the sweep evicts the disconnected row"
+    );
+    assert.false(cached.includes(rows[1]), "the detached node is gone");
+    assert.true(
+      cached.includes(rows[0]),
+      "the first connected row stays cached"
+    );
+    assert.true(
+      cached.includes(rows[2]),
+      "the last connected row stays cached"
+    );
+
+    container.remove();
+    cleanup();
+  });
+
   test("stableKeyFor is stable across an in-place id mutation", function (assert) {
     // Reproduces the chat send-confirm case: a row object created with a temporary
     // string id, then reconciled to a numeric server id on the SAME object. Keying
