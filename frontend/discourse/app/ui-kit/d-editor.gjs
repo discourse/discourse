@@ -126,31 +126,11 @@ export default class DEditor extends Component {
       return;
     }
 
-    // TODO (martin) Remove this once we are sure all users have migrated
-    // to the new rich editor preference, or a few months after the 3.5 release.
-    await this.handleOldRichEditorPreference();
-
     if (this.currentUser.useRichEditor) {
       this.editorComponent = await loadRichEditor();
     }
 
     this.editorComponent ??= TextareaEditor;
-  }
-
-  async handleOldRichEditorPreference() {
-    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
-
-    if (!oldValue) {
-      return;
-    }
-
-    await this.#saveRichEditorPreference(
-      oldValue === "true"
-        ? USER_OPTION_COMPOSITION_MODES.rich
-        : USER_OPTION_COMPOSITION_MODES.markdown
-    ).finally(() => {
-      this.keyValueStore.remove("d-editor-prefers-rich-editor");
-    });
   }
 
   @computed("forceEditorMode")
