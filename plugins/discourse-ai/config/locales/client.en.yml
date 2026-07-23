@@ -453,15 +453,8 @@ en:
               eligible: "Eligible"
               total: "Total"
               progress: "Progress"
-            eligible_help:
-              post: "If a post is already in the language, it is excluded."
-              topic: "If a topic is already in the language, it is excluded."
-              category: "If a category is already in the language, it is excluded."
-            pending_help:
-              post: "Includes eligible posts that do not have language detected yet."
-              topic: "Includes eligible topics that do not have language detected yet."
-              category: "Includes eligible categories that do not have language detected yet."
-              tag: "Includes tags that do not have language detected yet."
+            eligible_help: "Content already in this language is excluded."
+            pending_help: "Includes content that still needs language detection."
           targets:
             post:
               title: "Posts"

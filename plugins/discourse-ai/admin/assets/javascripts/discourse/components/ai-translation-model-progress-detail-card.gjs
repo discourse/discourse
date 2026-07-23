@@ -53,14 +53,12 @@ export default class AiTranslationModelProgressDetailCard extends Component {
 
   get eligibleHelp() {
     return i18n(
-      `discourse_ai.translations.model_progress.detail.eligible_help.${this.targetType}`
+      "discourse_ai.translations.model_progress.detail.eligible_help"
     );
   }
 
   get pendingHelp() {
-    return i18n(
-      `discourse_ai.translations.model_progress.detail.pending_help.${this.targetType}`
-    );
+    return i18n("discourse_ai.translations.model_progress.detail.pending_help");
   }
 
   progressLabel(row) {

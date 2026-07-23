@@ -69,9 +69,19 @@ module(
       );
       assert
         .dom(".fk-d-tooltip__content")
-        .includesText(
-          "Includes eligible posts that do not have language detected yet."
-        );
+        .includesText("Includes content that still needs language detection.");
+
+      await triggerEvent(
+        ".ai-translation-locale-progress__pending-header .fk-d-tooltip__trigger",
+        "pointerleave"
+      );
+      await triggerEvent(
+        ".ai-translation-locale-progress__denominator-header .fk-d-tooltip__trigger",
+        "pointermove"
+      );
+      assert
+        .dom(".fk-d-tooltip__content")
+        .includesText("Content already in this language is excluded.");
     });
 
     test("uses total for tags without eligibility help", async function (assert) {
