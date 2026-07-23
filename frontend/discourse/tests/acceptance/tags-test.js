@@ -1,6 +1,8 @@
 import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Category from "discourse/models/category";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
@@ -119,6 +121,19 @@ acceptance("Tags", function (needs) {
   test("hide tag notifications menu", async function (assert) {
     await visit("/tags/c/faq/4/test/42");
     assert.dom(".tag-notifications-tracking").doesNotExist();
+  });
+
+  test("resolves the full category when lazy loading categories", async function (assert) {
+    this.owner.lookup("service:site").set("lazy_load_categories", true);
+    pretender.get("/categories/find", () =>
+      response({
+        categories: [{ id: 4, slug: "faq", allowed_tag_groups: ["support"] }],
+      })
+    );
+
+    await visit("/tags/c/faq/4/test/42");
+
+    assert.deepEqual(Category.findById(4).allowed_tag_groups, ["support"]);
   });
 });
 

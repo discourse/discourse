@@ -23,6 +23,7 @@ const ALL = "all";
 export default class TagShowRoute extends DiscourseRoute {
   @service router;
   @service currentUser;
+  @service site;
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
@@ -113,9 +114,14 @@ export default class TagShowRoute extends DiscourseRoute {
       tagNotification = await this.store.find("tagNotification", id);
     }
 
-    let category = params.category_slug_path_with_id
-      ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
-      : null;
+    let category = null;
+    if (params.category_slug_path_with_id) {
+      category = this.site.lazy_load_categories
+        ? await Category.asyncFindBySlugPathWithID(
+            params.category_slug_path_with_id
+          )
+        : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    }
     const filteredQueryParams = filterQueryParams(
       transition.to.queryParams,
       {}
@@ -143,9 +149,13 @@ export default class TagShowRoute extends DiscourseRoute {
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
-        category = Category.findBySlugPathWithID(
-          transition.to.queryParams["category"]
-        );
+        category = this.site.lazy_load_categories
+          ? await Category.asyncFindBySlugPathWithID(
+              transition.to.queryParams["category"]
+            )
+          : Category.findBySlugPathWithID(
+              transition.to.queryParams["category"]
+            );
       }
     } else if (slug === NONE) {
       filter = `tag/${NONE}/l/${topicFilter}`;
