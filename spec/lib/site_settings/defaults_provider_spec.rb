@@ -58,6 +58,35 @@ RSpec.describe SiteSettings::DefaultsProvider do
       it "returns the correct locale_default for boolean site settings" do
         expect(settings.defaults.get(:test_boolean_override, :zh_CN)).to eq false
       end
+
+      it "does not merge with locale default if locale matches default locale" do
+        Hash.any_instance.expects(:merge).never
+        expect(settings.defaults.get(:test_default, :en)).to eq "test"
+      end
+    end
+
+    describe ".all_clean" do
+      it "returns all values according to locale" do
+        expect(settings.defaults.all_clean).to eq(
+          test_override: "default",
+          test_default: "test",
+          test_boolean_override: true,
+        )
+        expect(settings.defaults.all_clean("zh_CN")).to eq(
+          test_override: "cn",
+          test_default: "test",
+          test_boolean_override: false,
+        )
+      end
+
+      it "does not merge with DEFAULT_LOCALE if locale matches default locale" do
+        Hash.any_instance.expects(:merge).never
+        expect(settings.defaults.all_clean("en")).to eq(
+          test_override: "default",
+          test_default: "test",
+          test_boolean_override: true,
+        )
+      end
     end
 
     describe ".set_regardless_of_locale" do
