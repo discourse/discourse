@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import { cacheShortUploadUrl } from "discourse/lib/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { cacheShortUploadUrl } from "discourse/lib/upload-short-url";
 import {
   bindFileInputChangeListener,
   displayErrorForBulkUpload,

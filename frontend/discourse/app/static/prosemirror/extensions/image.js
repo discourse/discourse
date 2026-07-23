@@ -1,10 +1,10 @@
+import { ajax } from "discourse/lib/ajax";
+import discourseDebounce from "discourse/lib/debounce";
 import {
   lookupCachedUploadUrl,
   lookupUncachedUploadUrls,
   MISSING,
 } from "discourse/lib/upload-short-url";
-import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse/lib/debounce";
 import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";

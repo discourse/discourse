@@ -3,8 +3,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-// @ts-ignore — pretty-text has no type declarations
-import { lookupCachedUploadUrl } from "discourse/lib/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import {
@@ -15,6 +13,8 @@ import {
 import { NodeSelection, Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
+// @ts-ignore — pretty-text has no type declarations
+import { lookupCachedUploadUrl } from "discourse/lib/upload-short-url";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import { hasMark, inNode, isNodeActive } from "./plugin-utils";

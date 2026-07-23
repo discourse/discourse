@@ -13,7 +13,10 @@ const bundle = await rolldown({
       entries: [
         { find: "discourse-i18n", replacement: SHIM("i18n.js") },
         { find: "discourse/lib/helpers", replacement: SHIM("helpers.js") },
-        { find: "discourse/lib/deprecated", replacement: SHIM("deprecated.js") },
+        {
+          find: "discourse/lib/deprecated",
+          replacement: SHIM("deprecated.js"),
+        },
         { find: /^discourse\//, replacement: `${FRONTEND}discourse/app/` },
       ],
     }),

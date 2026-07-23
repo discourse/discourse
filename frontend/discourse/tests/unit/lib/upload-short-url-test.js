@@ -1,12 +1,12 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { ajax } from "discourse/lib/ajax";
 import {
   lookupCachedUploadUrl,
   resetCache,
   resolveAllShortUrls,
 } from "discourse/lib/upload-short-url";
-import { module, test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
