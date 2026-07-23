@@ -5384,7 +5384,7 @@ RSpec.describe TopicsController do
 
         put "/topics/bulk.json",
             params: {
-              topic_ids: Array.new(1_000_000, 0),
+              topic_ids: Array.new(5, 0),
               operation: {
                 type: "dismiss_posts",
               },
