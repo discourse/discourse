@@ -80,12 +80,12 @@ export default class TagSettingsLocalizations extends Component {
           <row.Col @size={{6}}>
             <collection.Field
               @name="description"
-              @type="textarea"
+              @type="composer"
               @title={{i18n "tagging.localization.description"}}
               @validation="length:0,1000"
               as |field|
             >
-              <field.Control @height={{80}} />
+              <field.Control @height={{120}} />
             </collection.Field>
           </row.Col>
 

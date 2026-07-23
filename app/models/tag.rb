@@ -3,7 +3,7 @@
 class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
-  include HasSanitizableFields
+  include HasCookedTagDescription
   include Localizable
 
   RESERVED_TAGS = [
@@ -60,7 +60,7 @@ class Tag < ActiveRecord::Base
   has_many :embeddable_host_tags
   has_many :embeddable_hosts, through: :embeddable_host_tags
 
-  before_save :sanitize_description
+  before_save :cook_description
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -337,10 +337,6 @@ class Tag < ActiveRecord::Base
     scope.exists?
   end
 
-  def sanitize_description
-    self.description = sanitize_field(description) if description_changed?
-  end
-
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(name.strip.downcase)
   end
@@ -350,22 +346,25 @@ end
 #
 # Table name: tags
 #
-#  id                 :integer          not null, primary key
-#  description        :string(1000)
-#  locale             :string(20)
-#  name               :string           not null
-#  pm_topic_count     :integer          default(0), not null
-#  public_topic_count :integer          default(0), not null
-#  slug               :string           default(""), not null
-#  staff_topic_count  :integer          default(0), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  target_tag_id      :integer
+#  id                         :integer          not null, primary key
+#  description                :string(1000)
+#  description_cooked         :string(2000)
+#  description_cooked_version :integer
+#  locale                     :string(20)
+#  name                       :string           not null
+#  pm_topic_count             :integer          default(0), not null
+#  public_topic_count         :integer          default(0), not null
+#  slug                       :string           default(""), not null
+#  staff_topic_count          :integer          default(0), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  target_tag_id              :integer
 #
 # Indexes
 #
-#  index_tags_on_lower_name     (lower((name)::text)) UNIQUE
-#  index_tags_on_name           (name) UNIQUE
-#  index_tags_on_slug           (slug) WHERE ((slug)::text <> ''::text)
-#  index_tags_on_target_tag_id  (target_tag_id) WHERE (target_tag_id IS NOT NULL)
+#  index_tags_on_description_cooked_version  (description_cooked_version)
+#  index_tags_on_lower_name                  (lower((name)::text)) UNIQUE
+#  index_tags_on_name                        (name) UNIQUE
+#  index_tags_on_slug                        (slug) WHERE ((slug)::text <> ''::text)
+#  index_tags_on_target_tag_id               (target_tag_id) WHERE (target_tag_id IS NOT NULL)
 #
