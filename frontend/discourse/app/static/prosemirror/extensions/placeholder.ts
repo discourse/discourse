@@ -1,11 +1,10 @@
-// @ts-check
+import type { Node } from "prosemirror-model";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 /**
  * This extension is considered a "core" extension, it's autoloaded by ProsemirrorEditor
- *
- * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
  */
-const extension = {
+const extension: RichEditorExtension = {
   plugins({
     pmState: { Plugin, PluginKey },
     pmView: { Decoration, DecorationSet },
@@ -52,7 +51,7 @@ const extension = {
   },
 };
 
-function isEmptyParagraph(node) {
+function isEmptyParagraph(node: Node): boolean {
   return node.type.name === "paragraph" && node.nodeSize === 2;
 }
 

@@ -1,10 +1,23 @@
-// @ts-check
-import { getOwner, setOwner } from "@ember/owner";
+import { type default as Owner, getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { caretCoordinates } from "discourse/lib/caret-position";
+import type {
+  AddTextOptions,
+  AutocompleteHandler,
+  AutocompleteOptions,
+  PlaceholderHandler,
+  ReplaceTextOptions,
+  SelectedText,
+  SelectionOptions,
+  SelectTextOptions,
+  SurroundOptions,
+  TextManipulation,
+  ToolbarState,
+  UppyFile,
+} from "discourse/lib/composer/text-manipulation";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
@@ -19,14 +32,49 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import type AppEventsService from "discourse/services/app-events";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import type ComposerService from "discourse/services/composer";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
- * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
- * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
- */
+type SiteSettings = {
+  enable_rich_text_paste: boolean;
+  code_formatting_style: string;
+};
+
+type ComposerServiceWithModel = ComposerService & {
+  model: {
+    reply: string;
+  };
+};
+
+interface TextareaTextManipulationOptions {
+  markdownOptions?: Record<string, unknown>;
+  textarea: HTMLTextAreaElement;
+  eventPrefix?: string;
+}
+
+interface InsertAtOptions {
+  skipFocus?: boolean;
+}
+
+interface PlaceholderData {
+  uploadPlaceholder: string;
+  processingPlaceholder?: string;
+}
+
+interface LinkifyMatch {
+  index: number;
+  lastIndex: number;
+  raw: string;
+  url: string;
+}
+
+interface Linkify {
+  test(text: string): boolean;
+  match(text: string): LinkifyMatch[] | null;
+}
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
@@ -45,10 +93,11 @@ const FOUR_SPACES_INDENT = "4-spaces-indent";
 /**
  * Our head can be a static string or a function that returns a string
  * based on input (like for numbered lists).
- *
- * @returns {[string, number]}
  */
-function getHead(head, prev) {
+function getHead(
+  head: string | ((previous?: string) => string),
+  prev?: string
+): [string, number] {
   if (typeof head === "string") {
     return [head, head.length];
   } else {
@@ -56,24 +105,35 @@ function getHead(head, prev) {
   }
 }
 
-/** @implements {TextManipulation} */
-export default class TextareaTextManipulation {
-  @service appEvents;
-  @service siteSettings;
-  @service capabilities;
+export default class TextareaTextManipulation implements TextManipulation {
+  @service declare appEvents: AppEventsService;
+
+  // TODO(devxp-typescript-pending): use the canonical typed site-settings
+  // registry once dynamic client settings are represented in core.
+  @service declare siteSettings: SiteSettings;
+
+  @service declare capabilities: CapabilitiesService;
 
   allowPreview = true;
 
-  eventPrefix;
-  textarea;
+  eventPrefix: string;
+  textarea: HTMLTextAreaElement;
 
-  autocompleteHandler;
-  placeholder;
+  autocompleteHandler: TextareaAutocompleteHandler;
+  placeholder: PlaceholderHandler;
 
-  /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
-  state = trackedObject();
+  state = trackedObject<ToolbarState & Record<string, unknown>>({});
 
-  constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
+  _cachedLinkify?: Linkify;
+
+  constructor(
+    owner: Owner,
+    {
+      markdownOptions,
+      textarea,
+      eventPrefix = "composer",
+    }: TextareaTextManipulationOptions
+  ) {
     setOwner(this, owner);
     this.placeholder = new TextareaPlaceholderHandler(owner, this);
 
@@ -88,29 +148,32 @@ export default class TextareaTextManipulation {
     });
   }
 
-  get value() {
+  get value(): string {
     return this.textarea.value;
   }
 
   // ensures textarea scroll position is correct
-  blurAndFocus() {
+  blurAndFocus(): void {
     this.textarea?.blur();
     this.textarea?.focus({ preventScroll: true });
   }
 
-  focus() {
+  focus(): void {
     this.textarea.focus({ preventScroll: true });
   }
 
-  insertBlock(text) {
+  insertBlock(text: string): void {
     this._addBlock(this.getSelected(), text);
   }
 
-  insertText(text, options) {
+  insertText(text: string, options?: AddTextOptions): void {
     this.addText(this.getSelected(), text, options);
   }
 
-  getSelected(trimLeading, opts) {
+  getSelected(
+    trimLeading?: boolean | null | "",
+    opts?: SelectionOptions
+  ): SelectedText {
     const value = this.value;
     let start = this.textarea.selectionStart;
     let end = this.textarea.selectionEnd;
@@ -142,7 +205,11 @@ export default class TextareaTextManipulation {
     }
   }
 
-  selectText(from, length, opts = { scroll: true }) {
+  selectText(
+    from: number,
+    length: number,
+    opts: SelectTextOptions = { scroll: true }
+  ): void {
     this.textarea.selectionStart = from;
     this.textarea.selectionEnd = from + length;
     if (opts.scroll === true || typeof opts.scroll === "number") {
@@ -155,7 +222,11 @@ export default class TextareaTextManipulation {
     }
   }
 
-  replaceText(oldVal, newVal, opts = {}) {
+  replaceText(
+    oldVal: string,
+    newVal: string,
+    opts: ReplaceTextOptions = {}
+  ): void {
     const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
@@ -209,11 +280,22 @@ export default class TextareaTextManipulation {
     }
   }
 
-  applySurroundSelection(head, tail, exampleKey, opts) {
+  applySurroundSelection(
+    head: string | ((previous?: string) => string),
+    tail: string,
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
     this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
   }
 
-  applySurround(sel, head, tail, exampleKey, opts) {
+  applySurround(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    tail: string,
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -247,7 +329,7 @@ export default class TextareaTextManipulation {
     } else {
       const lines = sel.value.split("\n");
 
-      let [hval, hlen] = getHead(head);
+      const [hval, hlen] = getHead(head);
       if (
         lines.length === 1 &&
         pre.slice(-tlen) === tail &&
@@ -278,7 +360,15 @@ export default class TextareaTextManipulation {
   }
 
   // perform the same operation over many lines of text
-  _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
+  _getMultilineContents(
+    lines: string[],
+    head: string | ((previous?: string) => string),
+    hval: string,
+    hlen: number,
+    tail: string,
+    tlen: number,
+    opts?: SurroundOptions
+  ): string {
     let operation = OP.NONE;
 
     const applyEmptyLines = opts && opts.applyEmptyLines;
@@ -317,7 +407,7 @@ export default class TextareaTextManipulation {
       .join("\n");
   }
 
-  _addBlock(sel, text) {
+  _addBlock(sel: SelectedText, text: string): void {
     text = (text || "").trim();
     if (text.length === 0) {
       return;
@@ -351,7 +441,7 @@ export default class TextareaTextManipulation {
     schedule("afterRender", this, this.blurAndFocus);
   }
 
-  applyLink(url) {
+  applyLink(url: string): void {
     const sel = this.getSelected();
     if (sel.start === sel.end) {
       return;
@@ -360,7 +450,7 @@ export default class TextareaTextManipulation {
     this.blurAndFocus();
   }
 
-  addText(sel, text, options) {
+  addText(sel: SelectedText, text: string, options?: AddTextOptions): void {
     if (options && options.ensureSpace) {
       if ((sel.pre + "").length > 0) {
         if (!sel.pre.match(/\s$/)) {
@@ -378,33 +468,43 @@ export default class TextareaTextManipulation {
     this.blurAndFocus();
   }
 
-  _insertAt(start, end, text, opts = {}) {
+  _insertAt(
+    start: number,
+    end: number,
+    text: string,
+    opts: InsertAtOptions = {}
+  ): void {
     insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
-  extractTable(text) {
+  extractTable(text: string): string | null;
+  extractTable(text: string): string | null {
     if (text.endsWith("\n")) {
       text = text.substring(0, text.length - 1);
     }
 
-    text = text.split("");
+    const characters = text.split("");
     let cell = false;
-    text.forEach((char, index) => {
+    characters.forEach((char, index) => {
       if (char === "\n" && cell) {
-        text[index] = "\r";
+        characters[index] = "\r";
       }
       if (char === '"') {
-        text[index] = "";
+        characters[index] = "";
         cell = !cell;
       }
     });
 
-    let rows = text.join("").replace(/\r/g, "<br>").split("\n");
+    const rows = characters.join("").replace(/\r/g, "<br>").split("\n");
 
     if (rows.length > 1) {
       const columns = rows.map((r) => r.split("\t").length);
       const isTable =
-        columns.reduce((a, b) => a && columns[0] === b && b > 1) &&
+        columns
+          .slice(1)
+          .reduce<
+            number | boolean
+          >((a, b) => a && columns[0] === b && b > 1, columns[0]) &&
         !(columns[0] === 2 && rows[0].split("\t")[0].match(/^•$|^\d+.$/)); // to skip tab delimited lists
 
       if (isTable) {
@@ -419,25 +519,27 @@ export default class TextareaTextManipulation {
     return null;
   }
 
-  isInside(text, regex) {
+  isInside(text: string, regex: RegExp): number | null {
     const matches = text.match(regex);
     return matches && matches.length % 2;
   }
 
   @bind
-  async paste(e) {
+  async paste(e: ClipboardEvent): Promise<void> {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
       return;
     }
 
+    // eslint-disable-next-line prefer-const
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
       siteSettings: this.siteSettings,
       canUpload: isComposer,
     });
 
     let plainText = clipboard.getData("text/plain");
+    // eslint-disable-next-line prefer-const
     let html = clipboard.getData("text/html");
     let handled = false;
 
@@ -455,6 +557,7 @@ export default class TextareaTextManipulation {
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, table)
           : this.insertText(table);
@@ -511,6 +614,7 @@ export default class TextareaTextManipulation {
         }
 
         if (isComposer) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           this.eventPrefix
             ? this.appEvents.trigger(
                 `${this.eventPrefix}:insert-text`,
@@ -520,6 +624,7 @@ export default class TextareaTextManipulation {
           handled = true;
         }
       } else if (plainText && isComposer) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         this.eventPrefix
           ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
           : this.insertText(plainText);
@@ -537,7 +642,7 @@ export default class TextareaTextManipulation {
    * until the limit, or until a character that is _not_
    * the provided one is encountered.
    */
-  _deindentLine(str, char, limit) {
+  _deindentLine(str: string, char: string, limit: number): string {
     let eaten = 0;
     for (let i = 0; i < str.length; i++) {
       if (eaten < limit && str[i] === char) {
@@ -549,7 +654,7 @@ export default class TextareaTextManipulation {
     return str;
   }
 
-  _updateListNumbers(text, currentNumber) {
+  _updateListNumbers(text: string, currentNumber: number): string {
     return text
       .split("\n")
       .map((line) => {
@@ -566,11 +671,11 @@ export default class TextareaTextManipulation {
       .join("\n");
   }
 
-  #isAfterStartedCodeFence(beforeText) {
+  #isAfterStartedCodeFence(beforeText: string): number | null {
     return this.isInside(beforeText, /(^|\n)```/g);
   }
 
-  maybeContinueList() {
+  maybeContinueList(): void {
     const offset = caretPosition(this.textarea);
     const text = this.value;
     const lines = text.substring(0, offset).split("\n");
@@ -678,7 +783,7 @@ export default class TextareaTextManipulation {
     }
   }
 
-  indentSelection(direction) {
+  indentSelection(direction: "left" | "right"): boolean | void {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
       return;
     }
@@ -694,8 +799,8 @@ export default class TextareaTextManipulation {
       spaces, and for the cases with no tabs it's safer to use spaces
     */
     let indentationSteps, indentationChar;
-    let linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
-    let linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
+    const linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
+    const linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
     if (linesStartingWithTabCount > linesStartingWithSpaceCount) {
       indentationSteps = 1;
       indentationChar = "\t";
@@ -755,8 +860,8 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  emojiSelected(code) {
-    let selected = this.getSelected();
+  emojiSelected(code: string): void {
+    const selected = this.getSelected();
     const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
 
     if (isEmpty(captures)) {
@@ -766,7 +871,7 @@ export default class TextareaTextManipulation {
         this.addText(selected, `:${code}:`);
       }
     } else {
-      let numOfRemovedChars = captures[1].length;
+      const numOfRemovedChars = captures[1].length;
       this._insertAt(
         selected.start - numOfRemovedChars,
         selected.end,
@@ -775,12 +880,12 @@ export default class TextareaTextManipulation {
     }
   }
 
-  async inCodeBlock() {
+  async inCodeBlock(): Promise<boolean> {
     return await this.autocompleteHandler.inCodeBlock();
   }
 
   @bind
-  toggleDirection() {
+  toggleDirection(): void {
     const currentDir = this.textarea.getAttribute("dir") || siteDir();
     const newDir = currentDir === "ltr" ? "rtl" : "ltr";
 
@@ -789,7 +894,12 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  applyList(sel, head, exampleKey, opts) {
+  applyList(
+    sel: SelectedText,
+    head: string | ((previous?: string) => string),
+    exampleKey: string,
+    opts?: SurroundOptions
+  ): void {
     if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
@@ -856,14 +966,14 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  applyHeading(sel, level) {
+  applyHeading(sel: SelectedText, level: number): void {
     if (level > 0) {
       this.applyList(sel, "#".repeat(level) + " ", "heading_text", {
         excludeHeadInSelection: true,
       });
     } else {
       // Remove heading when the Paragraph level (0) is selected.
-      const currentHeadingLevel = sel.lineVal.search(/[^#]/);
+      const currentHeadingLevel = sel.lineVal!.search(/[^#]/);
       if (currentHeadingLevel >= 0) {
         // When you apply the list with the same head chars, then they
         // are removed, so we can use the same function.
@@ -877,7 +987,7 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  formatCode() {
+  formatCode(): void {
     const sel = this.getSelected("", { lineVal: true });
     const selValue = sel.value;
     const hasNewLine = selValue.includes("\n");
@@ -911,7 +1021,7 @@ export default class TextareaTextManipulation {
     }
   }
 
-  putCursorAtEnd() {
+  putCursorAtEnd(): void {
     if (this.capabilities.isIOS) {
       putCursorAtEnd(this.textarea);
     } else {
@@ -923,9 +1033,10 @@ export default class TextareaTextManipulation {
 
   /**
    * Wraps consecutive upload placeholders in grid tags.
-   * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
+   *
+   * @param consecutiveImages - Consecutive image filenames to wrap.
    */
-  autoGridImages(consecutiveImages) {
+  autoGridImages(consecutiveImages: string[]): void {
     if (isEmpty(consecutiveImages)) {
       return;
     }
@@ -951,8 +1062,8 @@ export default class TextareaTextManipulation {
       "g"
     );
 
-    const matches = reply.match(uploadingImagePattern) || [];
-    const foundImages = [];
+    const matches: string[] = reply.match(uploadingImagePattern) || [];
+    const foundImages: string[] = [];
 
     const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
     const gridMatches = reply.match(existingGridPattern);
@@ -1006,7 +1117,7 @@ export default class TextareaTextManipulation {
     }
   }
 
-  autocomplete(options) {
+  autocomplete(options: AutocompleteOptions): unknown {
     return dAutocomplete.setupAutocomplete(
       getOwner(this),
       this.textarea,
@@ -1017,12 +1128,12 @@ export default class TextareaTextManipulation {
 }
 
 function insertAtTextarea(
-  textarea,
-  start,
-  end,
-  text,
-  { skipFocus = false } = {}
-) {
+  textarea: HTMLTextAreaElement,
+  start: number,
+  end: number,
+  text: string,
+  { skipFocus = false }: InsertAtOptions = {}
+): void {
   if (skipFocus && document.activeElement !== textarea) {
     textarea.setRangeText(text, start, end, "preserve");
     textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -1038,54 +1149,53 @@ function insertAtTextarea(
   }
 }
 
-/** @implements {AutocompleteHandler} */
-export class TextareaAutocompleteHandler {
-  textarea;
+export class TextareaAutocompleteHandler implements AutocompleteHandler {
+  textarea: HTMLTextAreaElement;
 
-  constructor(textarea) {
+  constructor(textarea: HTMLTextAreaElement) {
     this.textarea = textarea;
   }
 
-  getValue() {
+  getValue(): string {
     return this.textarea.value;
   }
 
-  replaceTerm(start, end, term) {
+  replaceTerm(start: number, end: number, term: string): void {
     const space =
       this.getValue().substring(end + 1, end + 2) === " " ? "" : " ";
     insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
 
-  getCaretPosition() {
+  getCaretPosition(): number {
     return caretPosition(this.textarea);
   }
 
-  getCaretCoords(start) {
+  getCaretCoords(start: number): { left: number; top: number } {
     return caretCoordinates(this.textarea, { pos: start + 1 });
   }
 
-  async inCodeBlock() {
+  async inCodeBlock(): Promise<boolean> {
     return await inCodeBlock(this.textarea.value, caretPosition(this.textarea));
   }
 }
 
-/** @implements {PlaceholderHandler} */
-class TextareaPlaceholderHandler {
-  @service composer;
+class TextareaPlaceholderHandler implements PlaceholderHandler {
+  // TODO(devxp-typescript-pending): remove the local model refinement once the
+  // composer service exposes its current model type.
+  @service declare composer: ComposerServiceWithModel;
 
-  /** @type {TextareaTextManipulation} */
-  textManipulation;
+  textManipulation: TextareaTextManipulation;
 
-  #placeholders = {};
+  #placeholders: Record<string, PlaceholderData> = {};
 
-  constructor(owner, textManipulation) {
+  constructor(owner: Owner, textManipulation: TextareaTextManipulation) {
     setOwner(this, owner);
 
     this.textManipulation = textManipulation;
   }
 
-  #uploadPlaceholder(file, currentMarkdown) {
+  #uploadPlaceholder(file: UppyFile, currentMarkdown: string): string {
     const clipboard = i18n("clipboard");
     const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(
       file,
@@ -1103,7 +1213,7 @@ class TextareaPlaceholderHandler {
     return placeholder;
   }
 
-  #cursorIsOnEmptyLine() {
+  #cursorIsOnEmptyLine(): boolean {
     const selectionStart = this.textManipulation.textarea.selectionStart;
     return (
       selectionStart === 0 ||
@@ -1111,7 +1221,7 @@ class TextareaPlaceholderHandler {
     );
   }
 
-  #uploadFilenamePlaceholder(file, currentMarkdown) {
+  #uploadFilenamePlaceholder(file: UppyFile, currentMarkdown: string): string {
     const filename = this.#filenamePlaceholder(file);
 
     // when adding two separate files with the same filename search for matching
@@ -1128,8 +1238,8 @@ class TextareaPlaceholderHandler {
       // capturing group and apply +1 to the placeholder
       const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
       const regex = new RegExp(regexString);
-      const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
+      const orderNr = regex.exec(lastMatch)![1]
+        ? parseInt(regex.exec(lastMatch)![1]!, 10) + 1
         : 1;
       return `${filename}(${orderNr})`;
     }
@@ -1137,11 +1247,11 @@ class TextareaPlaceholderHandler {
     return filename;
   }
 
-  #filenamePlaceholder(data) {
+  #filenamePlaceholder(data: UppyFile): string {
     return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
   }
 
-  insert(file) {
+  insert(file: UppyFile): void {
     const placeholder = this.#uploadPlaceholder(
       file,
       this.composer.model.reply
@@ -1152,8 +1262,8 @@ class TextareaPlaceholderHandler {
     this.#placeholders[file.id] = { uploadPlaceholder: placeholder };
   }
 
-  progress(file) {
-    let placeholderData = this.#placeholders[file.id];
+  progress(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
     placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
       filename: file.name,
     })}]()\n`;
@@ -1172,21 +1282,21 @@ class TextareaPlaceholderHandler {
     );
   }
 
-  progressComplete(file) {
-    let placeholderData = this.#placeholders[file.id];
+  progressComplete(file: UppyFile): void {
+    const placeholderData = this.#placeholders[file.id]!;
     this.textManipulation.replaceText(
       placeholderData.processingPlaceholder,
       placeholderData.uploadPlaceholder
     );
   }
 
-  cancelAll() {
+  cancelAll(): void {
     Object.values(this.#placeholders).forEach((data) => {
       this.textManipulation.replaceText(data.uploadPlaceholder, "");
     });
   }
 
-  cancel(file) {
+  cancel(file: UppyFile): void {
     if (this.#placeholders[file.id]) {
       this.textManipulation.replaceText(
         this.#placeholders[file.id].uploadPlaceholder,
@@ -1195,7 +1305,7 @@ class TextareaPlaceholderHandler {
     }
   }
 
-  success(file, markdown) {
+  success(file: UppyFile, markdown: string): void {
     this.textManipulation.replaceText(
       this.#placeholders[file.id].uploadPlaceholder.trim(),
       markdown

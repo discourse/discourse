@@ -1,7 +1,6 @@
-// @ts-check
-
 import { Fragment, Slice } from "prosemirror-model";
 import { NodeSelection, Plugin } from "prosemirror-state";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 // A 1px transparent image to use as drag image
 // This prevents the default drag image from appearing, the image gets in the way and make it harder
@@ -42,11 +41,8 @@ const dropSelectionPlugin = new Plugin({
 
 /**
  * Overrides the default drag image with an empty image, giving room for the drop cursor.
- *
- * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
- *
- **/
-const extension = {
+ */
+const extension: RichEditorExtension = {
   plugins: [
     dropSelectionPlugin,
     {

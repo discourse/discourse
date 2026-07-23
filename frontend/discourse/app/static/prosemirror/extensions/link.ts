@@ -1,13 +1,11 @@
-// @ts-check
-
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   markSpec: {
     link: {
       attrs: {
