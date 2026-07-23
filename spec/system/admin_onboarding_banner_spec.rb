@@ -112,13 +112,31 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "select theme step" do
-    it "opens the design wizard in the sidebar" do
+    it "opens the design wizard as a floating panel" do
       visit("/")
       expect(banner.step_not_completed?("select_theme")).to eq(true)
 
       banner.click_step_action("select_theme")
 
       expect(design_wizard_sidebar).to be_visible
+      expect(page).to have_css(".design-wizard-float")
+      expect(page).to have_css(".sidebar-sections")
+    end
+
+    it "does not mark the step complete when closed without saving" do
+      visit("/")
+      banner.click_step_action("select_theme")
+
+      expect(design_wizard_sidebar).to be_visible
+
+      design_wizard_sidebar.select_palette("default")
+      expect(design_wizard_sidebar).to have_palette_preview
+
+      design_wizard_sidebar.close
+
+      expect(design_wizard_sidebar).to be_hidden
+      expect(design_wizard_sidebar).to have_no_palette_preview
+      expect(banner.step_not_completed?("select_theme")).to eq(true)
     end
 
     it "previews and applies the design choices and marks step complete" do

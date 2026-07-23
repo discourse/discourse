@@ -1,0 +1,29 @@
+.design-wizard-float {
+  position: fixed;
+  z-index: z("usercard");
+  top: calc(var(--header-offset, 60px) + var(--space-3));
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  width: 21em;
+  max-width: calc(100vw - var(--space-6));
+  overflow: hidden;
+  background: var(--token-color-surface);
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius-large, 12px);
+  box-shadow: var(--shadow-modal);
+
+  &__close {
+    position: absolute;
+    z-index: 1;
+    top: var(--space-2);
+    right: var(--space-2);
+  }
+
+  .sidebar-design-wizard {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+}

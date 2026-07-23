@@ -8,6 +8,7 @@ import ComposerContainer from "discourse/components/composer-container";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
+import DesignWizardFloat from "discourse/components/design-wizard-float";
 import DiscourseRoot from "discourse/components/discourse-root";
 import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
@@ -174,6 +175,7 @@ export default <template>
     />
 
     <ModalContainer />
+    <DesignWizardFloat />
     <DialogHolder />
     <ComposerContainer />
     <RenderGlimmerContainer />

@@ -44,8 +44,8 @@ module PageObjects
         find("#{WIZARD_SELECTOR}__save").click
       end
 
-      def skip
-        find("#{WIZARD_SELECTOR}__skip").click
+      def close
+        find(".design-wizard-float__close").click
       end
     end
   end
