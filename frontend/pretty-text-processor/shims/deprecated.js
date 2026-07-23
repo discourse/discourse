@@ -1,7 +1,5 @@
-// Server-side stand-in for discourse/lib/deprecated. The real module pulls a
-// source-identifier -> preload-store -> rsvp chain and reads `document`, none of
-// which apply server-side. This reproduces its console.warn message format (the
-// non-fatal path — server cook never raises on deprecation) and no-ops the rest.
+// Server-side stand-in for discourse/lib/deprecated; the real one pulls a
+// browser-only dependency chain. Reproduces its console.warn message format.
 export default function deprecated(msg, options = {}) {
   const { id, since, url } = options;
   const parts = ["DEPRECATION NOTICE:", msg];

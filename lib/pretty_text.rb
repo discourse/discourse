@@ -34,51 +34,37 @@ module PrettyText
     ctx.eval(transpiled, filename: module_name)
   end
 
-  PRETTY_TEXT_PROCESSOR_DIR = "tmp/pretty-text-processor"
-
-  def self.core_bundle_cache_globs
-    %w[
-      frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
-      frontend/pretty-text/addon/**/*.js
-      frontend/discourse-markdown-it/src/**/*.js
-    ]
-  end
-
-  def self.core_bundle_digest
-    digest = Digest::MD5.new
-    core_bundle_cache_globs.each do |pattern|
-      Dir
-        .glob(pattern, base: Rails.root)
-        .sort
-        .each do |file|
-          digest.update(file)
-          digest.update(File.read(Rails.root.join(file)))
-        end
+  CORE_BUNDLE =
+    PrecompiledBundle.new(
+      dir: "tmp/pretty-text-processor",
+      filename_prefix: "pretty-text",
+      dependency_globs: %w[
+        frontend/pretty-text-processor/**/*.{js,mjs,cjs,json}
+        frontend/pretty-text/addon/**/*.js
+        frontend/discourse-markdown-it/src/**/*.js
+      ],
+    ) do
+      Discourse::Utils.execute_command(
+        "pnpm",
+        "-C=frontend/pretty-text-processor",
+        "node",
+        "build.mjs",
+        chdir: Rails.root.to_s,
+      )
     end
-    digest.hexdigest
+
+  def self.load_or_build_core_bundle
+    CORE_BUNDLE.load_or_build
   end
 
   def self.core_bundle_source
-    @core_bundle_source ||=
-      begin
-        cache_path =
-          Rails.root.join("#{PRETTY_TEXT_PROCESSOR_DIR}/pretty-text-#{core_bundle_digest}.js")
-        if File.exist?(cache_path)
-          File.read(cache_path)
-        else
-          built =
-            Discourse::Utils.execute_command(
-              "pnpm",
-              "-C=frontend/pretty-text-processor",
-              "node",
-              "build.mjs",
-              chdir: Rails.root.to_s,
-            )
-          FileUtils.mkdir_p(File.dirname(cache_path))
-          File.write(cache_path, built)
-          built
-        end
-      end
+    # Never JIT-build in production; the toolchain may be absent and it would block the request.
+    raise <<~MSG.squish if Rails.env.production? && !CORE_BUNDLE.precompiled?
+        PrettyText core bundle has not been precompiled (#{CORE_BUNDLE.path}).
+        Run `bin/rake assets:precompile` before booting.
+      MSG
+
+    CORE_BUNDLE.load_or_build
   end
 
   def self.create_es6_context
@@ -118,16 +104,11 @@ module PrettyText
 
     ctx.eval("__PRETTY_TEXT = true")
 
-    # Attach the JS->Ruby helper bridge as `__Ruby` before evaluating the bundle:
-    # the bundle captures `globalThis.__Ruby` at init, so it must already exist.
+    # `__Ruby` must exist before the bundle runs — it captures it at init.
     PrettyText::Helpers.instance_methods.each do |method|
       ctx.attach("__Ruby.#{method}", PrettyText::Helpers.method(method))
     end
 
-    # Rolldown-built bundle of the PrettyText core: loader.js + markdown-it +
-    # pretty-text + discourse-markdown-it, registered into loader.js (so plugins
-    # keep working) plus the __PrettyText interface. Replaces the old per-module
-    # AMD loading (and the separate ctx.load of loader.js).
     ctx.eval(core_bundle_source, filename: "pretty-text.js")
     ctx.call("__PrettyText.setUnicode", JSON.parse(Emoji.unicode_replacements_json))
 
@@ -213,9 +194,7 @@ module PrettyText
 
     opts[:hashtag_context] ||= "topic-composer"
 
-    # Data-only options passed to __PrettyText.cook. The helper functions
-    # (getURL, lookupAvatar, …) are wired in on the JS side. Any addition here
-    # must also be added to the buildOptions function in discourse-markdown-it.
+    # Any addition here must also be added to buildOptions in discourse-markdown-it.
     opt_input = {
       siteSettings: JSON.parse(SiteSetting.client_settings_json),
       allowedIframes: allowed_iframes,

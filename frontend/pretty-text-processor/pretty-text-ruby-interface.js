@@ -11,8 +11,7 @@ import DiscourseMarkdownIt from "discourse-markdown-it";
 import { resetTranslationTree } from "discourse-markdown-it/features/emoji";
 import { runtime } from "./runtime-state.js";
 
-// Module-private helpers. These are handed to the markdown pipeline (and to
-// avatarImg) as plain callbacks, so they are functions rather than class methods.
+// Passed to the markdown pipeline as plain callbacks, so functions not methods.
 const ruby = globalThis.__Ruby;
 
 function getURLNoCDN(url) {
@@ -86,7 +85,6 @@ function buildEmojiUnicodeReplacer(replacements) {
   };
 }
 
-// The interface Ruby drives via `v8.call("__PrettyText.<method>", …)`.
 export class PrettyTextRubyInterface {
   static cook(text, optInput) {
     runtime.paths = optInput.paths || {};

@@ -24,9 +24,7 @@ function register(prefix, base, mods) {
   }
 }
 
-// Registers the core module surface into loader.js so plugins keep working
-// (`require("pretty-text/…")`, `require("discourse-markdown-it/…")`), plus the
-// small I18n / helpers shims that back a few core imports server-side.
+// Registers the core module surface into loader.js so plugins can require() it.
 export function registerCoreModules() {
   register("pretty-text", "../pretty-text/addon/", ptModules);
   register("discourse-markdown-it", "../discourse-markdown-it/src/", mdModules);
