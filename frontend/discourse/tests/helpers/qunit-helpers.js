@@ -11,7 +11,7 @@ import {
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
 import $ from "jquery";
-import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
+import { resetCache as resetOneboxCache } from "discourse/lib/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardReportRenderers } from "discourse/admin/lib/admin-dashboard-report-renderers";

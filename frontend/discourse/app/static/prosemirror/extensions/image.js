@@ -2,7 +2,7 @@ import {
   lookupCachedUploadUrl,
   lookupUncachedUploadUrls,
   MISSING,
-} from "pretty-text/upload-short-url";
+} from "discourse/lib/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";

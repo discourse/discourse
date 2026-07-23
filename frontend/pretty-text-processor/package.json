@@ -1,0 +1,26 @@
+{
+  "name": "pretty-text-processor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Uses rolldown to bundle the PrettyText core for loading into mini-racer",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [],
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "discourse": "workspace:0.0.0",
+    "discourse-markdown-it": "workspace:*",
+    "markdown-it": "^14.1.1",
+    "pretty-text": "workspace:*",
+    "rolldown": "1.1.2",
+    "xss": "^1.0.15"
+  },
+  "engines": {
+    "node": ">= 20",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^10"
+  }
+}

@@ -2,7 +2,7 @@ import {
   applyInlineOneboxes,
   cachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
-import { load } from "pretty-text/oneboxer";
+import { load } from "discourse/lib/oneboxer";
 import { PluginKey, Selection } from "prosemirror-state";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";

@@ -4,7 +4,7 @@ import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 // @ts-ignore — pretty-text has no type declarations
-import { lookupCachedUploadUrl } from "pretty-text/upload-short-url";
+import { lookupCachedUploadUrl } from "discourse/lib/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import {

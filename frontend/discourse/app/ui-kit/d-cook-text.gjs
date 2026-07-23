@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { resolveAllShortUrls } from "discourse/lib/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { cook } from "discourse/lib/text";

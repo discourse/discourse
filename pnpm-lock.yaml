@@ -687,6 +687,27 @@ importers:
         specifier: ~6.10.0
         version: 6.10.1(patch_hash=85ff9a16d08431e3bdc9aea8d55280e14f437f1c2a7d8e461de56c614ad48926)(@glimmer/component@2.0.0)(rsvp@4.8.5)
 
+  frontend/pretty-text-processor:
+    dependencies:
+      discourse:
+        specifier: workspace:0.0.0
+        version: link:../discourse
+      discourse-markdown-it:
+        specifier: workspace:*
+        version: link:../discourse-markdown-it
+      markdown-it:
+        specifier: ^14.1.1
+        version: 14.2.0
+      pretty-text:
+        specifier: workspace:*
+        version: link:../pretty-text
+      rolldown:
+        specifier: 1.1.2
+        version: 1.1.2
+      xss:
+        specifier: ^1.0.15
+        version: 1.0.15
+
   plugins/automation:
     dependencies:
       discourse:

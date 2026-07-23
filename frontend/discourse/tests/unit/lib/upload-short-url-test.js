@@ -4,7 +4,7 @@ import {
   lookupCachedUploadUrl,
   resetCache,
   resolveAllShortUrls,
-} from "pretty-text/upload-short-url";
+} from "discourse/lib/upload-short-url";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -85,7 +85,7 @@ function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
       .join("");
 }
 
-module("Unit | Utility | pretty-text/upload-short-url", function (hooks) {
+module("Unit | Utility | discourse/lib/upload-short-url", function (hooks) {
   setupTest(hooks);
 
   hooks.afterEach(function () {

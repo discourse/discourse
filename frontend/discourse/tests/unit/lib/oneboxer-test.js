@@ -1,5 +1,5 @@
 import { setupTest } from "ember-qunit";
-import { load } from "pretty-text/oneboxer";
+import { load } from "discourse/lib/oneboxer";
 import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";

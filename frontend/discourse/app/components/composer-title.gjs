@@ -4,7 +4,7 @@ import EmberObject, { computed, set } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
-import { load } from "pretty-text/oneboxer";
+import { load } from "discourse/lib/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";

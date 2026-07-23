@@ -11,7 +11,7 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
-import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { resolveAllShortUrls } from "discourse/lib/upload-short-url";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
