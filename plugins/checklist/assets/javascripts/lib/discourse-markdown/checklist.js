@@ -1,94 +1,158 @@
-const REGEX = /\[( |x)?\]/gi;
+const CONTENT_REGEX = /(?<![!\\])\[([ xX]?)\]/g;
+const SRC_FALLBACK_REGEX = new RegExp(CONTENT_REGEX.source, "g");
 
-function getClasses(str) {
-  switch (str) {
-    case "x":
-      return "checked fa fa-square-check-o";
-    case "X":
-      return "checked permanent fa fa-square-check";
-    default:
-      return "fa fa-square-o";
+function getClasses(char) {
+  if (char === "x") {
+    return "checked fa fa-square-check-o";
   }
-}
-
-function addCheckbox(result, content, match, state) {
-  const classes = getClasses(match[1]);
-
-  const checkOpenToken = new state.Token("check_open", "span", 1);
-  checkOpenToken.attrs = [["class", `chcklst-box ${classes}`]];
-  result.push(checkOpenToken);
-
-  const checkCloseToken = new state.Token("check_close", "span", -1);
-  result.push(checkCloseToken);
-}
-
-function applyCheckboxes(content, state) {
-  let match;
-  let result = null;
-  let pos = 0;
-
-  while ((match = REGEX.exec(content))) {
-    if (match.index > pos) {
-      result = result || [];
-      const token = new state.Token("text", "", 0);
-      token.content = content.slice(pos, match.index);
-      result.push(token);
-    }
-
-    pos = match.index + match[0].length;
-
-    result = result || [];
-    addCheckbox(result, content, match, state);
+  if (char === "X") {
+    return "checked permanent fa fa-square-check";
   }
-
-  if (result && pos < content.length) {
-    const token = new state.Token("text", "", 0);
-    token.content = content.slice(pos);
-    result.push(token);
-  }
-
-  return result;
+  return "fa fa-square-o";
 }
 
 function processChecklist(state) {
-  let i,
-    j,
-    l,
-    tokens,
-    token,
-    blockTokens = state.tokens,
-    nesting = 0;
+  const src = state.src;
 
-  for (j = 0, l = blockTokens.length; j < l; j++) {
-    if (blockTokens[j].type !== "inline") {
+  if (!src.includes("[")) {
+    return;
+  }
+
+  const lineOffsets = [0];
+  for (let i = 0; i < src.length; i++) {
+    if (src[i] === "\n") {
+      lineOffsets.push(i + 1);
+    }
+  }
+
+  let convU16 = 0;
+  let convCp = 0;
+  const toCodepoint = (u16) => {
+    if (u16 < convU16) {
+      convU16 = 0;
+      convCp = 0;
+    }
+    while (convU16 < u16) {
+      const c = src.codePointAt(convU16);
+      convU16 += c > 0xffff ? 2 : 1;
+      convCp++;
+    }
+    return convCp;
+  };
+
+  let globalCursor = 0;
+
+  for (const block of state.tokens) {
+    if (block.type !== "inline") {
       continue;
     }
-    tokens = blockTokens[j].children;
 
-    // We scan from the end, to keep position when new tags are added.
-    // Use reversed logic in links start/end match
-    for (i = tokens.length - 1; i >= 0; i--) {
-      token = tokens[i];
+    let cursor, blockEnd;
+    if (block.map) {
+      cursor = lineOffsets[block.map[0]] ?? 0;
+      blockEnd = lineOffsets[block.map[1]] ?? src.length;
+    } else {
+      cursor = globalCursor;
+      blockEnd = src.length;
+    }
 
-      nesting += token.nesting;
+    const replacements = [];
+    let nesting = 0;
 
-      if (token.type === "text" && nesting === 0) {
-        const processed = applyCheckboxes(token.content, state);
-        if (processed) {
-          blockTokens[j].children = tokens = state.md.utils.arrayReplaceAt(
-            tokens,
-            i,
-            processed
-          );
+    const advance = (needle) => {
+      if (!needle) {
+        return;
+      }
+      const idx = src.indexOf(needle, cursor);
+      if (idx !== -1 && idx < blockEnd) {
+        cursor = idx + needle.length;
+      }
+    };
+
+    for (let i = 0; i < block.children.length; i++) {
+      const token = block.children[i];
+      const renderable =
+        token.type === "text" && nesting === 0 && token.content.includes("[");
+
+      if (token.type === "text_special") {
+        advance(token.markup);
+      } else if (
+        token.type === "code_inline" ||
+        token.type === "html_inline" ||
+        (token.type === "text" && !renderable)
+      ) {
+        advance(token.content);
+      } else if (renderable) {
+        let anchor = src.indexOf(token.content, cursor);
+        if (anchor >= blockEnd) {
+          anchor = -1;
+        }
+
+        const newTokens = [];
+        let lastIdx = 0;
+        let match;
+        CONTENT_REGEX.lastIndex = 0;
+        while ((match = CONTENT_REGEX.exec(token.content)) !== null) {
+          let offset;
+          if (anchor !== -1) {
+            offset = anchor + match.index;
+          } else {
+            SRC_FALLBACK_REGEX.lastIndex = cursor;
+            const srcMatch = SRC_FALLBACK_REGEX.exec(src);
+            if (srcMatch && srcMatch.index < blockEnd) {
+              offset = srcMatch.index;
+              cursor = srcMatch.index + srcMatch[0].length;
+            }
+          }
+
+          if (match.index > lastIdx) {
+            const text = new state.Token("text", "", 0);
+            text.content = token.content.slice(lastIdx, match.index);
+            newTokens.push(text);
+          }
+
+          const checkbox = new state.Token("check_open", "span", 1);
+          const isPermanent = match[1] === "X";
+          checkbox.attrs = [["class", `chcklst-box ${getClasses(match[1])}`]];
+          if (!isPermanent && offset !== undefined) {
+            checkbox.attrs.push(["data-chk-off", String(toCodepoint(offset))]);
+          }
+          newTokens.push(checkbox);
+          newTokens.push(new state.Token("check_close", "span", -1));
+
+          lastIdx = match.index + match[0].length;
+        }
+
+        if (newTokens.length) {
+          if (lastIdx < token.content.length) {
+            const text = new state.Token("text", "", 0);
+            text.content = token.content.slice(lastIdx);
+            newTokens.push(text);
+          }
+          replacements.push({ index: i, newTokens });
+        }
+        if (anchor !== -1) {
+          cursor = anchor + token.content.length;
         }
       }
+
+      nesting += token.nesting;
     }
+
+    for (let j = replacements.length - 1; j >= 0; j--) {
+      block.children = state.md.utils.arrayReplaceAt(
+        block.children,
+        replacements[j].index,
+        replacements[j].newTokens
+      );
+    }
+    globalCursor = Math.max(globalCursor, cursor);
   }
 }
 
 export function setup(helper) {
-  helper.registerOptions((opts, siteSettings) => {
-    opts.features["checklist"] = !!siteSettings.checklist_enabled;
+  helper.registerOptions((opts, { checklist_enabled }) => {
+    opts.features["checklist"] = !!checklist_enabled;
   });
 
   helper.allowList([
@@ -96,6 +160,7 @@ export function setup(helper) {
     "span.chcklst-box fa fa-square-o",
     "span.chcklst-box checked fa fa-square-check-o",
     "span.chcklst-box checked permanent fa fa-square-check",
+    "span[data-chk-off]",
   ]);
 
   helper.registerPlugin((md) =>

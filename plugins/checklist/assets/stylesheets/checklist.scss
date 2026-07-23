@@ -47,8 +47,13 @@ span.chcklst-box {
     }
   }
 
+  &.permanent {
+    cursor: default;
+  }
+
   &.readonly {
     pointer-events: none;
+    opacity: 0.5;
   }
 
   &.hidden {

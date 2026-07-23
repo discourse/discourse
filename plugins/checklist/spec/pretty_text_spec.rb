@@ -8,12 +8,20 @@ describe PrettyText do
         `[ ]` [x](hello) *[ ]* **[ ]** _[ ]_ __[ ]__ ~~[ ]~~ are not checkboxes
       MD
 
-      html = <<~HTML
-      <p><span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box checked fa fa-square-check-o"></span>,<span class="chcklst-box checked permanent fa fa-square-check"></span> are all checkboxes<br>
-      <code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes</p>
-      HTML
       cooked = PrettyText.cook(md)
-      expect(cooked).to eq(html.strip)
+
+      expect(cooked.scan("chcklst-box").count).to eq(4)
+      expect(cooked).to include('<span class="chcklst-box fa fa-square-o" data-chk-off="0">')
+      expect(cooked).to include('<span class="chcklst-box fa fa-square-o" data-chk-off="3">')
+      expect(cooked).to include(
+        '<span class="chcklst-box checked fa fa-square-check-o" data-chk-off="7">',
+      )
+      expect(cooked).to include('<span class="chcklst-box checked permanent fa fa-square-check">')
+      expect(cooked.scan("data-chk-off").count).to eq(3)
+
+      expect(cooked).to include(
+        "<code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes",
+      )
     end
 
     it "does not treat escaped brackets as checkboxes" do
@@ -32,8 +40,8 @@ describe PrettyText do
       expect(cooked).to include("[x] escaped closing bracket")
       expect(cooked).to include("[x] both brackets escaped")
       expect(cooked).to include("[ ] escaped empty checkbox")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> real checkbox',
+      expect(cooked).to match(
+        %r{<span class="chcklst-box checked fa fa-square-check-o" data-chk-off="\d+"></span> real checkbox},
       )
     end
 
@@ -46,8 +54,8 @@ describe PrettyText do
 
       expect(cooked.scan("chcklst-box").count).to eq(1)
       expect(cooked).to include("[x] hello")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> world',
+      expect(cooked).to match(
+        %r{<span class="chcklst-box checked fa fa-square-check-o" data-chk-off="\d+"></span> world},
       )
     end
   end
