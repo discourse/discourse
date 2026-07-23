@@ -114,6 +114,7 @@ const extension = {
   plugins({
     pmState: { Plugin },
     pmView: { Decoration, DecorationSet },
+    pmHistory: { isHistoryTransaction },
     getContext,
   }) {
     const failedUrls = { full: new Set(), inline: new Set() };
@@ -251,6 +252,13 @@ const extension = {
             if (!meta?.forceOneboxUrl) {
               return set;
             }
+          }
+
+          // Don't re-onebox a link an undo just peeled back from a preview, or
+          // the promotion re-runs and undo can never move past it. Redo replays
+          // the recorded preview, so skip history transactions entirely.
+          if (!meta?.forceOneboxUrl && isHistoryTransaction(tr)) {
+            return set;
           }
 
           const decorations = scanForOneboxLinks(

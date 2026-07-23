@@ -1,5 +1,6 @@
 import { settled } from "@ember/test-helpers";
 import { setLocalCache } from "pretty-text/oneboxer-cache";
+import { undo } from "prosemirror-history";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import { module, test } from "qunit";
 import { buildEngine } from "discourse/static/markdown-it";
@@ -170,6 +171,63 @@ module(
       assert.false(
         view.state.selection instanceof NodeSelection,
         "the cursor lands after the onebox, not selecting the block"
+      );
+    });
+
+    // Undo peels a full onebox back to its link; the scan must not immediately
+    // re-onebox it, or the promotion re-runs and undo can never move past it.
+    // Deleting the source last keeps the drop's recorded range away from the
+    // target, so the onebox lands in its own undo group, as a real drag does.
+    test("undo works after a dragged link becomes a full onebox", async function (assert) {
+      this.siteSettings.rich_editor = true;
+
+      const topLevelUrl = "http://www.example.com";
+      pretender.get("/onebox", () => [
+        200,
+        { "Content-Type": "text/html" },
+        '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com">Example</a></h3></article></aside>',
+      ]);
+
+      const [editor] = await setupRichEditor(assert, "aaaaa\n\nx");
+      const { view } = editor;
+      const { schema } = view.state;
+      const original = editor.value;
+
+      const linkMark = schema.marks.link.create({
+        href: topLevelUrl,
+        markup: "linkify",
+      });
+      const lastStart = lastParagraphStart(view.state.doc);
+      const tr = view.state.tr
+        .replaceWith(
+          lastStart,
+          lastStart + 1,
+          schema.text(topLevelUrl, [linkMark])
+        )
+        .delete(1, 3);
+      tr.setSelection(TextSelection.create(tr.doc, 1));
+      view.dispatch(tr);
+      await settled();
+
+      assert
+        .dom(".onebox-wrapper")
+        .exists("the dropped link becomes a full onebox");
+
+      undo(view.state, view.dispatch);
+      await settled();
+
+      assert
+        .dom(".onebox-wrapper")
+        .doesNotExist("undo removes the onebox instead of regenerating it");
+      assert.dom(".ProseMirror a").exists("the link is restored");
+
+      undo(view.state, view.dispatch);
+      await settled();
+
+      assert.strictEqual(
+        editor.value,
+        original,
+        "a second undo restores the pre-drop document"
       );
     });
   }
