@@ -217,7 +217,7 @@ module(
         );
     });
 
-    test("an object server response exposes its reported total", async function (assert) {
+    test("a partially-loaded server response reports an unknown set size", async function (assert) {
       const allItems = buildItems(500);
       const load = (_filter, { offset = 0 }) => ({
         items: allItems.slice(offset, offset + 50),
@@ -236,8 +236,8 @@ module(
         .hasAttribute("aria-posinset", "50", "the page tail has position 50")
         .hasAttribute(
           "aria-setsize",
-          "500",
-          "the response total, not the page length, sizes the set"
+          "-1",
+          "a source that declares 500 but has loaded 50 cannot honestly size its set — the reader can only reach loaded rows, so the size stays unknown until it completes"
         );
     });
 
