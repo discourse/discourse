@@ -8,51 +8,30 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("renders a plain-text location", async function (assert) {
-      await render(
-        <template><Location @location="Conference Room A" /></template>
-      );
-
-      assert
-        .dom(".event-location")
-        .includesText("Conference Room A", "shows the location text");
-    });
-
-    test("renders a URL location as a plain link, never a onebox", async function (assert) {
+    test("renders server-rendered links and opens them in a new tab", async function (assert) {
       await render(
         <template>
-          <Location @location="https://youtube.com/watch?v=123" />
+          <Location
+            @locationHtml='<a href="https://zoom.us/j/123" rel="nofollow ugc">RSVP</a> (room 2)'
+          />
         </template>
       );
 
       assert
         .dom(".event-location a")
-        .hasAttribute("href", "https://youtube.com/watch?v=123")
-        .hasText("https://youtube.com/watch?v=123", "shows the raw url");
+        .hasAttribute("href", "https://zoom.us/j/123")
+        .hasAttribute("target", "_blank")
+        .hasAttribute("rel", "nofollow ugc noopener")
+        .hasText("RSVP", "shows the link label");
       assert
-        .dom(".event-location a")
-        .doesNotHaveClass(
-          "onebox",
-          "leaves no onebox markup for the composer's onebox pass to hydrate"
-        );
+        .dom(".event-location")
+        .includesText("(room 2)", "keeps the text around the link");
     });
 
-    test("links urls inside surrounding text", async function (assert) {
-      await render(
-        <template>
-          <Location @location="Zoom: https://zoom.us/j/123 (room 2)" />
-        </template>
-      );
+    test("renders nothing without a location", async function (assert) {
+      await render(<template><Location /></template>);
 
-      assert
-        .dom(".event-location a")
-        .hasText("https://zoom.us/j/123", "links only the url part");
-      assert
-        .dom(".event-location")
-        .includesText("Zoom:", "keeps the text before the url");
-      assert
-        .dom(".event-location")
-        .includesText("(room 2)", "keeps the text after the url");
+      assert.dom(".event-location").doesNotExist();
     });
   }
 );

@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { generateLinkifyFunction } from "discourse/lib/text";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -51,6 +52,7 @@ export default class CompactEventEditor extends Component {
   @tracked allowedGroups;
   @tracked closed;
   @tracked customFields;
+  @tracked linkify;
   #previousRsvpStatus = "public";
   #lastInitialStateRef;
   @tracked _maxAttendeesOverride;
@@ -58,6 +60,9 @@ export default class CompactEventEditor extends Component {
   constructor() {
     super(...arguments);
     this.#syncFromInitialState();
+    generateLinkifyFunction({ siteSettings: this.siteSettings }).then(
+      (linkify) => (this.linkify = linkify)
+    );
   }
 
   @action
@@ -198,10 +203,7 @@ export default class CompactEventEditor extends Component {
   }
 
   get isLocationUrl() {
-    if (!this.hasLocation) {
-      return false;
-    }
-    return this.args.urlTester?.(this.location) ?? false;
+    return !!(this.hasLocation && this.linkify?.test(this.location));
   }
 
   get isLivestreamUrl() {
@@ -216,13 +218,7 @@ export default class CompactEventEditor extends Component {
     if (!this.hasLocation) {
       return null;
     }
-    if (this.isLocationUrl) {
-      const location = this.location.trim();
-      return location.includes("://") || location.includes("mailto:")
-        ? location
-        : `https://${location}`;
-    }
-    return this.location;
+    return this.linkify?.match(this.location)?.[0]?.url ?? this.location;
   }
 
   get statusText() {

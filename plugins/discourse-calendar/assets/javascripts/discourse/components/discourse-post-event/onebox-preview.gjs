@@ -61,7 +61,7 @@ export default class DiscoursePostEventOneboxPreview extends Component {
             </div>
           </header>
           <Dates @event={{this.event}} />
-          <Location @location={{this.event.location}} />
+          <Location @locationHtml={{this.event.locationHtml}} />
         </div>
       </div>
     {{else}}

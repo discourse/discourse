@@ -1,3 +1,5 @@
+import { buildBBCodeAttrs, parseBBCodeTag } from "discourse/lib/text";
+
 // `([\w-]+\.)*` allows any subdomain, since livestream hosts routinely use them
 // (us06web.zoom.us, www.youtube.com). It cannot match a host that merely ends in
 // one of these names, because each captured label must be followed by a dot:
@@ -232,9 +234,7 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
   return params;
 }
 
-const EVENT_BBCODE_REGEX = /\[event (.*?)\](.*?)\[\/event\]/s;
-const EVENT_BLOCK_REGEX = /\[event\b([^\]]*)\](.*?)\[\/event\]/s;
-const ATTR_REGEX = /([-\w]+)=(?:"([^"]*)"|'([^']*)'|([^\s\]]+))/g;
+const EVENT_CLOSE_TAG = "[/event]";
 
 function dashedToCamel(key) {
   return key.replace(/-([a-zA-Z0-9])/g, (_, c) => c.toUpperCase());
@@ -244,26 +244,52 @@ export function parseEventBlock(raw) {
   if (!raw) {
     return null;
   }
-  const match = raw.match(EVENT_BLOCK_REGEX);
-  if (!match) {
-    return null;
+
+  let start = raw.indexOf("[event");
+  while (start !== -1) {
+    const parsed = parseBBCodeTag(raw, start, raw.length);
+
+    if (parsed?.tag === "event" && !parsed.closing) {
+      const bodyStart = start + parsed.length;
+      const close = raw.indexOf(EVENT_CLOSE_TAG, bodyStart);
+      if (close === -1) {
+        return null;
+      }
+
+      const attrs = {};
+      for (const [key, value] of Object.entries(parsed.attrs || {})) {
+        if (key !== "_default") {
+          attrs[dashedToCamel(key)] = value;
+        }
+      }
+
+      const description = raw
+        .slice(bodyStart, close)
+        .replace(/^\n/, "")
+        .replace(/\n$/, "");
+
+      return {
+        full: raw.slice(start, close + EVENT_CLOSE_TAG.length),
+        attrs,
+        description,
+      };
+    }
+
+    start = raw.indexOf("[event", start + 1);
   }
-  const attrs = {};
-  for (const m of match[1].matchAll(ATTR_REGEX)) {
-    const [, key, dq, sq, unq] = m;
-    const value = dq ?? sq ?? unq ?? "";
-    attrs[dashedToCamel(key)] = value;
-  }
-  const description = (match[2] || "").replace(/^\n/, "").replace(/\n$/, "");
-  return { full: match[0], attrs, description };
+
+  return null;
 }
 
 export function buildEventBlock(params, description) {
-  const parts = Object.entries(params)
-    .filter(([, v]) => v != null && v !== "" && String(v).trim() !== "")
-    .map(([k, v]) => `${k}="${String(v).replace(/"/g, "")}"`);
+  const attrs = Object.fromEntries(
+    Object.entries(params).filter(
+      ([key, value]) =>
+        key !== "description" && value != null && String(value).trim() !== ""
+    )
+  );
   const desc = description ? `${description}\n` : "";
-  return `[event ${parts.join(" ")}]\n${desc}[/event]`;
+  return `[event ${buildBBCodeAttrs(attrs)}]\n${desc}[/event]`;
 }
 
 export function getCustomFieldNames(siteSettings) {
@@ -384,11 +410,13 @@ export function parseReminders(reminders) {
 }
 
 export function replaceRaw(params, raw) {
-  if (!EVENT_BBCODE_REGEX.test(raw)) {
+  const parsed = parseEventBlock(raw);
+  if (!parsed) {
     return false;
   }
-  const { description, ...attrs } = params;
-  return raw.replace(EVENT_BBCODE_REGEX, buildEventBlock(attrs, description));
+  return raw.replace(parsed.full, () =>
+    buildEventBlock(params, params.description)
+  );
 }
 
 export function camelCase(input) {
@@ -401,7 +429,8 @@ export function camelCase(input) {
 }
 
 export function removeEvent(raw) {
-  return raw.replace(/\[event (.*?)\](.*?)\[\/event\]/s, "");
+  const parsed = parseEventBlock(raw);
+  return parsed ? raw.replace(parsed.full, "") : raw;
 }
 
 export function buildEventSkeleton(currentUser) {
