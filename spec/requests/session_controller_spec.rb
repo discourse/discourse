@@ -846,7 +846,7 @@ RSpec.describe SessionController do
 
         new_user = User.find_by_email("newuser@example.com")
         expect(new_user.username).not_to include("newuser")
-        expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d*\z/)
+        expect(new_user.username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
       end
 
       it "derives the username from the email when email-based suggestions are on" do
@@ -876,7 +876,7 @@ RSpec.describe SessionController do
 
           expect(response.parsed_body["account_created"]).to eq(true)
           expect(User.find_by_email("----@example.com").username).to match(
-            /\A[A-Z][a-z]+[A-Z][a-z]+\d*\z/,
+            /\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/,
           )
         end
       end

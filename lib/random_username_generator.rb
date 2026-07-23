@@ -131,7 +131,9 @@ module RandomUsernameGenerator
   ].freeze
 
   def self.generate
-    candidate = "#{ADJECTIVES.sample.capitalize}#{NOUNS.sample.capitalize}"
+    # A numeric suffix widens the namespace well beyond the word-pair count,
+    # so very large sites don't exhaust it.
+    candidate = "#{ADJECTIVES.sample.capitalize}#{NOUNS.sample.capitalize}#{rand(10..99)}"
     UserNameSuggester.find_available_username_based_on(
       UserNameSuggester.rightsize_username(candidate),
     )

@@ -2,20 +2,21 @@
 
 RSpec.describe RandomUsernameGenerator do
   describe ".generate" do
-    it "returns a valid, available username built from the word lists" do
+    it "returns a valid, available username built from the word lists and a number" do
       username = described_class.generate
 
-      expect(username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\z/)
+      expect(username).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d{2}\z/)
       expect(UsernameValidator.new(username).valid_format?).to eq(true)
       expect(User.username_available?(username)).to eq(true)
     end
 
-    it "appends a numeric suffix when the generated name is taken" do
+    it "finds an available variant when the generated name is taken" do
       stub_const(described_class, "ADJECTIVES", ["quiet"]) do
         stub_const(described_class, "NOUNS", ["falcon"]) do
-          Fabricate(:user, username: "QuietFalcon")
+          allow(described_class).to receive(:rand).and_return(42)
+          Fabricate(:user, username: "QuietFalcon42")
 
-          expect(described_class.generate).to eq("QuietFalcon1")
+          expect(described_class.generate).to eq("QuietFalcon421")
         end
       end
     end
