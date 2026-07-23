@@ -135,7 +135,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["enabled"]).to eq(false)
+        expect(response.parsed_body["enabled"]).to eq(true)
       end
     end
 
@@ -182,171 +182,61 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
   describe "#progress" do
     context "when logged in as admin" do
-      fab!(:target_category, :category)
+      let(:progress) do
+        {
+          cached_at: "2026-07-23T09:00:00Z",
+          targets: [
+            {
+              target_type: "post",
+              total_count: 474,
+              translated_count: 215,
+              needs_language_detection_count: 93,
+            },
+            {
+              target_type: "topic",
+              total_count: 86,
+              translated_count: 51,
+              needs_language_detection_count: 12,
+            },
+            {
+              target_type: "category",
+              total_count: 18,
+              translated_count: 18,
+              needs_language_detection_count: 0,
+            },
+            {
+              target_type: "tag",
+              total_count: 142,
+              translated_count: 64,
+              needs_language_detection_count: 7,
+            },
+          ],
+        }
+      end
 
       before do
-        Discourse.cache.clear
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
-        SiteSetting.ai_translation_category_scope = "all"
-        SiteSetting.ai_translation_categories = ""
+        allow(DiscourseAi::Translation::Progress).to receive(:fetch).and_return(progress)
       end
 
-      it "returns translation progress data" do
-        cached_at = Time.zone.parse("2026-07-23 09:00:00 UTC")
-        SiteSetting.ai_translation_backfill_max_age_days = 30
-        SiteSetting.ai_translation_personal_messages = "group"
-        SiteSetting.ai_translation_backfill_hourly_rate = 100
-
-        english_posts =
-          Fabricate.times(
-            14,
-            :post,
-            locale: "en",
-            topic: Fabricate(:topic, category: target_category),
-          )
-        french_post =
-          Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: target_category))
-        Fabricate.times(4, :post, topic: Fabricate(:topic, category: target_category))
-
-        PostLocalization.create!(
-          post: french_post,
-          locale: "en",
-          raw: "Translated to English",
-          cooked: "<p>Translated to English</p>",
-          post_version: french_post.version,
-          localizer_user_id: admin.id,
-        )
-
-        freeze_time(cached_at) { get "/admin/plugins/discourse-ai/ai-translations/progress.json" }
+      it "returns all overview targets from the shared cache" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["translation_progress"]).to be_an(Array)
-        expect(json["translation_progress"].length).to eq(3)
-        expect(json["total"]).to eq(19)
-        expect(json["posts_with_detected_locale"]).to eq(15)
-        expect(json["cached_at"]).to eq(cached_at.utc.iso8601)
-
-        locale_data = json["translation_progress"].first
-        expect(locale_data["locale"]).to eq("en")
-        expect(locale_data["total"]).to eq(1)
-        expect(locale_data["done"]).to eq(1)
+        expect(response.parsed_body).to eq(progress.deep_stringify_keys)
+        expect(DiscourseAi::Translation::Progress).to have_received(:fetch)
       end
 
-      it "shows only posts requiring translation for all locales (consistent behavior)" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
-        SiteSetting.ai_translation_personal_messages = "group"
-        SiteSetting.default_locale = "en"
-
-        english_posts =
-          Fabricate.times(
-            100,
-            :post,
-            locale: "en",
-            topic: Fabricate(:topic, category: target_category),
-          )
-        french_posts =
-          Fabricate.times(
-            10,
-            :post,
-            locale: "fr",
-            topic: Fabricate(:topic, category: target_category),
-          )
-        spanish_posts =
-          Fabricate.times(
-            5,
-            :post,
-            locale: "es",
-            topic: Fabricate(:topic, category: target_category),
-          )
-
-        french_posts
-          .take(8)
-          .each do |post|
-            PostLocalization.create!(
-              post: post,
-              locale: "en",
-              raw: "Translated to English",
-              cooked: "<p>Translated to English</p>",
-              post_version: post.version,
-              localizer_user_id: admin.id,
-            )
-          end
-        spanish_posts
-          .take(3)
-          .each do |post|
-            PostLocalization.create!(
-              post: post,
-              locale: "en",
-              raw: "Translated to English",
-              cooked: "<p>Translated to English</p>",
-              post_version: post.version,
-              localizer_user_id: admin.id,
-            )
-          end
-
-        english_posts
-          .take(50)
-          .each do |post|
-            PostLocalization.create!(
-              post: post,
-              locale: "fr",
-              raw: "Translated to French",
-              cooked: "<p>Translated to French</p>",
-              post_version: post.version,
-              localizer_user_id: admin.id,
-            )
-          end
-
-        english_posts
-          .drop(50)
-          .take(30)
-          .each do |post|
-            PostLocalization.create!(
-              post: post,
-              locale: "es",
-              raw: "Translated to Spanish",
-              cooked: "<p>Translated to Spanish</p>",
-              post_version: post.version,
-              localizer_user_id: admin.id,
-            )
-          end
+      it "returns progress when the post backfill age is zero" do
+        SiteSetting.ai_translation_backfill_max_age_days = 0
 
         get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
-        json = response.parsed_body
-        progress = json["translation_progress"]
-
-        en_data = progress.find { |p| p["locale"] == "en" }
-        fr_data = progress.find { |p| p["locale"] == "fr" }
-        es_data = progress.find { |p| p["locale"] == "es" }
-
-        expect(en_data["total"]).to eq(15)
-        expect(en_data["done"]).to eq(11)
-
-        expect(fr_data["total"]).to eq(105)
-        expect(fr_data["done"]).to eq(50)
-
-        expect(es_data["total"]).to eq(110)
-        expect(es_data["done"]).to eq(30)
-      end
-
-      it "returns empty when no locales are supported" do
-        SiteSetting.content_localization_supported_locales = ""
-
-        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["translation_progress"]).to eq([])
-        expect(json["total"]).to eq(0)
-        expect(json["posts_with_detected_locale"]).to eq(0)
+        expect(response.parsed_body).to eq(progress.deep_stringify_keys)
       end
     end
 
@@ -387,11 +277,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["translation_progress"]).to eq([])
-        expect(json["total"]).to eq(0)
-        expect(json["posts_with_detected_locale"]).to eq(0)
+        expect(response.parsed_body).to eq({ "cached_at" => nil, "targets" => [] })
       end
     end
   end

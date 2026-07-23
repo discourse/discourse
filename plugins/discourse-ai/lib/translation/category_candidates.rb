@@ -3,6 +3,64 @@
 module DiscourseAi
   module Translation
     class CategoryCandidates < BaseCandidates
+      def self.progress_summary
+        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+        eligible_categories_sql = get.select(:id, :locale).to_sql
+
+        sql = <<~SQL
+          WITH supported AS MATERIALIZED (
+            SELECT COALESCE(
+              array_agg(
+                DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
+              ) FILTER (WHERE locale IS NOT NULL),
+              ARRAY[]::text[]
+            ) AS bases
+            FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
+          ),
+          eligible_categories AS (
+            SELECT id,
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS source_base
+            FROM (#{eligible_categories_sql}) candidates
+          ),
+          localization_coverage AS (
+            SELECT cl.category_id,
+                   array_agg(
+                     split_part(
+                       lower(replace(cl.locale, '-', '_')), '_', 1
+                     )
+                   ) AS bases
+            FROM category_localizations cl
+            GROUP BY cl.category_id
+          )
+          SELECT
+            COUNT(*)::bigint AS total_count,
+            COUNT(*) FILTER (
+              WHERE ec.locale IS NOT NULL
+                AND supported.bases <@ (
+                  COALESCE(lc.bases, ARRAY[]::text[]) || ec.source_base
+                )
+            )::bigint AS translated_count,
+            COUNT(*) FILTER (
+              WHERE ec.locale IS NULL
+            )::bigint AS needs_language_detection_count
+          FROM eligible_categories ec
+          CROSS JOIN supported
+          LEFT JOIN localization_coverage lc ON lc.category_id = ec.id
+        SQL
+
+        result = DB.query(sql, supported_locales:).first
+
+        {
+          target_type: "category",
+          total_count: result.total_count,
+          translated_count: result.translated_count,
+          needs_language_detection_count: result.needs_language_detection_count,
+        }
+      end
+
       private
 
       # all categories that are eligible for translation based on site settings,

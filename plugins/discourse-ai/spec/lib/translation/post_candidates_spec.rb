@@ -216,136 +216,32 @@ describe DiscourseAi::Translation::PostCandidates do
     end
   end
 
-  describe ".get_completion_all_locales" do
+  describe ".progress_summary" do
     fab!(:target_category, :category)
 
     before do
-      Discourse.cache.clear
-      SiteSetting.content_localization_supported_locales = "en_GB|pt|es"
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
       SiteSetting.ai_translation_backfill_max_age_days = 30
-      SiteSetting.ai_translation_category_scope = "all"
-      SiteSetting.ai_translation_categories = ""
-      SiteSetting.ai_translation_personal_messages = "group"
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "returns empty state when no posts exist" do
-      Post.delete_all
+    it "counts eligible, fully translated, and undetected posts" do
+      fully_translated_post =
+        Fabricate(:post, locale: "en_US", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post_localization, post: fully_translated_post, locale: "fr")
+      Fabricate(:post, locale: "en_US", topic: Fabricate(:topic, category: target_category))
+      Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
 
-      result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-      expect(result).to be_a(Hash)
-      expect(result[:translation_progress].length).to eq(3)
-      expect(result[:translation_progress]).to all(include(done: 0, total: 0))
-      expect(result[:total]).to eq(0)
-      expect(result[:posts_with_detected_locale]).to eq(0)
-    end
-
-    it "returns the time when the progress result was cached" do
-      Post.delete_all
-      cached_at = Time.zone.parse("2026-07-23 09:00:00 UTC")
-
-      freeze_time(cached_at) { described_class.get_completion_all_locales }
-
-      freeze_time(cached_at + 5.minutes) do
-        expect(described_class.get_completion_all_locales[:cached_at]).to eq(cached_at.utc.iso8601)
-      end
-    end
-
-    it "uses category scope in the cache key" do
-      Post.delete_all
-      scoped_category = Fabricate(:category)
-      Fabricate(:post, locale: "en_GB", topic: Fabricate(:topic, category: target_category))
-      Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: scoped_category))
-
-      SiteSetting.ai_translation_category_scope = "all"
-      SiteSetting.ai_translation_categories = ""
-      expect(described_class.get_completion_all_locales[:total]).to eq(2)
-
-      SiteSetting.ai_translation_category_scope = "include"
-      SiteSetting.ai_translation_categories = scoped_category.id.to_s
-      expect(described_class.get_completion_all_locales[:total]).to eq(1)
-    end
-
-    it "uses expanded subcategory ids in the cache key" do
-      Post.delete_all
-      parent_category = Fabricate(:category)
-      Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: parent_category))
-      SiteSetting.ai_translation_category_scope = "include"
-      SiteSetting.ai_translation_categories = parent_category.id.to_s
-
-      expect(described_class.get_completion_all_locales[:total]).to eq(1)
-
-      subcategory = Fabricate(:category, parent_category:)
-      Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: subcategory))
-
-      expect(described_class.get_completion_all_locales[:total]).to eq(2)
-    end
-
-    it "returns progress grouped by base locale (of en_GB) and correct totals" do
-      post1 = Fabricate(:post, locale: "en_GB", topic: Fabricate(:topic, category: target_category))
-      post2 = Fabricate(:post, locale: "fr", topic: Fabricate(:topic, category: target_category))
-      post3 = Fabricate(:post, locale: "es", topic: Fabricate(:topic, category: target_category))
-      post_without_locale =
-        Fabricate(:post, locale: nil, topic: Fabricate(:topic, category: target_category))
-
-      # add an en_GB localization to a non-en base post
-      PostLocalization.create!(
-        post: post2,
-        locale: "en",
-        raw: "Translated to English",
-        cooked: "<p>Translated to English</p>",
-        post_version: post2.version,
-        localizer_user_id: Discourse.system_user.id,
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "post",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
       )
-
-      result = DiscourseAi::Translation::PostCandidates.completion_all_locales
-      expect(result).to be_a(Hash)
-      expect(result[:translation_progress].length).to eq(3)
-      expect(result[:total]).to eq(4) # all eligible posts (including one without locale)
-      expect(result[:posts_with_detected_locale]).to eq(3) # only posts with locale
-
-      progress = result[:translation_progress]
-      expect(progress).to all(include(:locale, :done, :total))
-
-      expect(progress.first[:locale]).to eq("en_GB")
-
-      en_entry = progress.find { |r| r[:locale] == "en_GB" }
-      expect(en_entry).to be_present
-      # total is non-English posts (post2 + post3)
-      expect(en_entry[:done]).to eq(1)
-      expect(en_entry[:total]).to eq(2)
-
-      pt_entry = progress.find { |r| r[:locale] == "pt" }
-      expect(pt_entry).to be_present
-      expect(pt_entry[:done]).to eq(0)
-      expect(pt_entry[:total]).to eq(3)
-      es_entry = progress.find { |r| r[:locale] == "es" }
-      expect(es_entry).to be_present
-      expect(es_entry[:done]).to eq(0)
-      expect(es_entry[:total]).to eq(2)
-      fr_entry = progress.find { |r| r[:locale] == "fr" }
-      expect(fr_entry).to be_nil
-    end
-
-    it "excludes posts longer than ai_translation_max_post_length from totals" do
-      SiteSetting.ai_translation_max_post_length = 100
-      short_post =
-        Fabricate(
-          :post,
-          locale: "en_GB",
-          raw: "This is a short post that fits.",
-          topic: Fabricate(:topic, category: target_category),
-        )
-      long_post =
-        Fabricate(
-          :post,
-          locale: "fr",
-          raw: "a" * 50 + " This is a long post. " + "b" * 50,
-          topic: Fabricate(:topic, category: target_category),
-        )
-
-      result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-      expect(result[:total]).to eq(1)
-      expect(result[:posts_with_detected_locale]).to eq(1)
     end
   end
 end

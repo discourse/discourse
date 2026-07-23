@@ -3,6 +3,64 @@
 module DiscourseAi
   module Translation
     class TopicCandidates < BaseCandidates
+      def self.progress_summary
+        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+        eligible_topics_sql = get.select(:id, :locale).to_sql
+
+        sql = <<~SQL
+          WITH supported AS MATERIALIZED (
+            SELECT COALESCE(
+              array_agg(
+                DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
+              ) FILTER (WHERE locale IS NOT NULL),
+              ARRAY[]::text[]
+            ) AS bases
+            FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
+          ),
+          eligible_topics AS (
+            SELECT id,
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS source_base
+            FROM (#{eligible_topics_sql}) candidates
+          ),
+          localization_coverage AS (
+            SELECT tl.topic_id,
+                   array_agg(
+                     split_part(
+                       lower(replace(tl.locale, '-', '_')), '_', 1
+                     )
+                   ) AS bases
+            FROM topic_localizations tl
+            GROUP BY tl.topic_id
+          )
+          SELECT
+            COUNT(*)::bigint AS total_count,
+            COUNT(*) FILTER (
+              WHERE et.locale IS NOT NULL
+                AND supported.bases <@ (
+                  COALESCE(lc.bases, ARRAY[]::text[]) || et.source_base
+                )
+            )::bigint AS translated_count,
+            COUNT(*) FILTER (
+              WHERE et.locale IS NULL
+            )::bigint AS needs_language_detection_count
+          FROM eligible_topics et
+          CROSS JOIN supported
+          LEFT JOIN localization_coverage lc ON lc.topic_id = et.id
+        SQL
+
+        result = DB.query(sql, supported_locales:).first
+
+        {
+          target_type: "topic",
+          total_count: result.total_count,
+          translated_count: result.translated_count,
+          needs_language_detection_count: result.needs_language_detection_count,
+        }
+      end
+
       def self.needs_localization(limit:)
         locales = DiscourseAi::Translation.locales
         return [] if locales.blank?

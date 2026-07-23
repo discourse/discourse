@@ -1,13 +1,4 @@
 .ai-translations {
-  --chart-progress-color: var(--tertiary);
-  --chart-remaining-color: var(--tertiary-low);
-  --chart-text-color: var(--primary);
-  --chart-label-color: var(--secondary);
-
-  &__charts {
-    margin-top: 2em;
-  }
-
   &__settings-panel {
     background: var(--primary-very-low);
     margin-block: var(--space-4);
@@ -25,6 +16,16 @@
     flex-wrap: wrap;
     gap: var(--space-2);
     margin-block-end: var(--space-4);
+  }
+
+  &__overview {
+    margin-block-start: var(--space-4);
+  }
+
+  &__overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-4);
   }
 
   &__cached-results {
@@ -110,6 +111,193 @@
       .select-kit {
         max-width: 100%;
       }
+    }
+  }
+}
+
+.ai-translation-model-progress-overview-card {
+  display: grid;
+  grid-template-rows:
+    auto
+    minmax(3.5rem, auto)
+    minmax(2.75rem, auto)
+    minmax(2.75rem, auto)
+    auto;
+  gap: var(--space-3);
+  align-content: start;
+  width: 100%;
+  min-width: 0;
+  min-height: 11.5rem;
+  padding: var(--space-4);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  color: var(--primary);
+  background: var(--secondary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--tertiary);
+  }
+
+  &:focus-visible {
+    border-color: var(--tertiary);
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  &[aria-expanded="true"] {
+    border-color: var(--tertiary);
+    box-shadow: inset 0 3px 0 var(--tertiary);
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__title,
+  &__percentage {
+    font-size: var(--font-0);
+    font-weight: 700;
+  }
+
+  &__headline,
+  &__subheader {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__subheader {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    &[aria-hidden="true"] {
+      visibility: hidden;
+    }
+  }
+
+  &__meter {
+    display: flex;
+    overflow: hidden;
+    height: 0.5rem;
+    margin-block-start: var(--space-1);
+    border-radius: 1rem;
+    background: var(--primary-very-low);
+  }
+
+  &__meter-translated {
+    background: var(--tertiary);
+  }
+
+  &__meter-needs-detection {
+    background: var(--tertiary-low);
+  }
+}
+
+.ai-translation-model-progress-overview-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-4);
+
+  &__card {
+    display: grid;
+    grid-template-rows:
+      auto
+      minmax(3.5rem, auto)
+      minmax(2.75rem, auto)
+      minmax(2.75rem, auto)
+      auto;
+    gap: var(--space-3);
+    min-height: 11.5rem;
+    padding: var(--space-4);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__title,
+  &__percentage,
+  &__headline,
+  &__subheader,
+  &__meter {
+    display: block;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-low);
+  }
+
+  &__title {
+    width: 5rem;
+    height: 1.25rem;
+  }
+
+  &__percentage {
+    width: 2.5rem;
+    height: 1.25rem;
+  }
+
+  &__headline {
+    width: 90%;
+    height: 2.5rem;
+  }
+
+  &__subheader {
+    width: 80%;
+    height: 1rem;
+  }
+
+  &__meter {
+    width: 100%;
+    height: 0.5rem;
+    margin-block-start: var(--space-1);
+    border-radius: 1rem;
+  }
+
+  &.--animation {
+    .ai-translation-model-progress-overview-skeleton__title,
+    .ai-translation-model-progress-overview-skeleton__percentage,
+    .ai-translation-model-progress-overview-skeleton__headline,
+    .ai-translation-model-progress-overview-skeleton__subheader,
+    .ai-translation-model-progress-overview-skeleton__meter {
+      background-image: linear-gradient(
+        90deg,
+        var(--primary-low) 25%,
+        var(--primary-very-low) 50%,
+        var(--primary-low) 75%
+      );
+      background-size: 200% 100%;
+      animation: ai-translation-progress-skeleton 1.4s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes ai-translation-progress-skeleton {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-translation-model-progress-overview-skeleton.--animation {
+    .ai-translation-model-progress-overview-skeleton__title,
+    .ai-translation-model-progress-overview-skeleton__percentage,
+    .ai-translation-model-progress-overview-skeleton__headline,
+    .ai-translation-model-progress-overview-skeleton__subheader,
+    .ai-translation-model-progress-overview-skeleton__meter {
+      animation: none;
     }
   }
 }

@@ -6,33 +6,30 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import moment from "moment";
-import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import Chart from "discourse/admin/components/chart";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AiTranslationModelProgressOverviewCard from "./ai-translation-model-progress-overview-card";
+import AiTranslationModelProgressOverviewSkeleton from "./ai-translation-model-progress-overview-skeleton";
 
 export default class AiTranslations extends Component {
   @service aiCredits;
   @service router;
-  @service languageNameLookup;
-  @service site;
   @service siteSettings;
 
-  @tracked data = null;
-  @tracked done = null;
-  @tracked total = null;
+  @tracked targets = null;
   @tracked loadingProgress = false;
   @tracked progressCachedAt = null;
+  @tracked expandedTargetType = null;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -79,9 +76,7 @@ export default class AiTranslations extends Component {
       const response = await ajax(
         "/admin/plugins/discourse-ai/ai-translations/progress.json"
       );
-      this.data = response.translation_progress;
-      this.total = response.total;
-      this.done = response.posts_with_detected_locale;
+      this.targets = response.targets;
       this.progressCachedAt = response.cached_at;
     } catch (e) {
       popupAjaxError(e);
@@ -318,25 +313,14 @@ export default class AiTranslations extends Component {
         this._loadProgress();
       } else {
         this.enabled = false;
+        this.targets = null;
+        this.progressCachedAt = null;
+        this.expandedTargetType = null;
       }
     } catch (e) {
       popupAjaxError(e);
     } finally {
       this.isTogglingTranslation = false;
-    }
-  }
-
-  get chartRightPadding() {
-    const max = Math.max(...this.data.map(({ total }) => total));
-    switch (true) {
-      case max >= 100000:
-        return 90;
-      case max >= 10000:
-        return 80;
-      case max >= 20:
-        return 70;
-      default:
-        return 50;
     }
   }
 
@@ -346,10 +330,12 @@ export default class AiTranslations extends Component {
       this.args.model?.backfill_max_age_days &&
       this.hourlyRate > 0
     ) {
-      const totalRemaining = this.data?.reduce(
-        (sum, { total, done }) => sum + (total - done),
-        0
+      const posts = this.targets?.find(
+        ({ target_type }) => target_type === "post"
       );
+      const totalRemaining = posts
+        ? posts.total_count - posts.translated_count
+        : 0;
 
       if (totalRemaining && totalRemaining > 0) {
         const cutoffDate = new Date();
@@ -389,131 +375,10 @@ export default class AiTranslations extends Component {
     });
   }
 
-  get chartColors() {
-    const styles = getComputedStyle(document.querySelector(".ai-translations"));
-    return {
-      progress: styles.getPropertyValue("--chart-progress-color").trim(),
-      remaining: styles.getPropertyValue("--chart-remaining-color").trim(),
-      text: styles.getPropertyValue("--chart-text-color").trim(),
-      label: styles.getPropertyValue("--chart-label-color").trim(),
-    };
-  }
-
-  get chartConfig() {
-    if (!this.data?.length) {
-      return {};
-    }
-
-    const colors = this.chartColors;
-    const processedData = this.data.map(({ locale, total, done }) => {
-      const rawPercentage = total > 0 ? (done / total) * 100 : 0;
-      const donePercentage = Math.trunc(rawPercentage).toString();
-      const localeName = this.languageNameLookup.getLanguageName(locale);
-      const languageNameForTooltip = localeName.split(" (")[0];
-
-      return {
-        locale: localeName,
-        done,
-        total,
-        donePercentage,
-        tooltip: [
-          i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
-            done,
-            total,
-            language: languageNameForTooltip,
-          }),
-        ],
-      };
-    });
-    const chartData = {
-      labels: processedData.map(({ locale }) => locale),
-      datasets: [
-        {
-          tooltip: processedData.map(({ tooltip }) => tooltip),
-          data: processedData.map(({ donePercentage }) => donePercentage),
-          totalItems: processedData.map(({ total }) => total),
-          backgroundColor: colors.progress,
-          barThickness: 30,
-          borderRadius: 4,
-        },
-      ],
-    };
-
-    return {
-      type: "bar",
-      data: chartData,
-      plugins: [
-        {
-          id: "barTotalText",
-          afterDraw: ({ ctx, data, scales }) => {
-            ctx.save();
-            ctx.textBaseline = "middle";
-            ctx.fillStyle = colors.text;
-            const items = data.datasets[0].totalItems;
-            items.forEach((count, i) => {
-              ctx.fillText(
-                i18n("discourse_ai.translations.progress_chart.bar_done", {
-                  count,
-                }),
-                scales.x.getPixelForValue(100) + 10,
-                scales.y.getPixelForValue(i)
-              );
-            });
-            ctx.canvas.parentElement.style.height = `${items.length * 50 + 40}px`;
-            ctx.restore();
-          },
-        },
-      ],
-      options: {
-        indexAxis: "y",
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { right: this.chartRightPadding } },
-        scales: {
-          x: {
-            beginAtZero: true,
-            max: 100,
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: colors.text,
-              callback: (percentage) =>
-                i18n("discourse_ai.translations.progress_chart.data_label", {
-                  percentage,
-                }),
-            },
-          },
-          y: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: colors.text,
-            },
-          },
-        },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            displayColors: false,
-            callbacks: {
-              label: ({ dataset: { tooltip }, dataIndex }) =>
-                tooltip[dataIndex],
-            },
-          },
-          datalabels: {
-            formatter: (percentage) =>
-              this.site.mobileView && percentage < 20
-                ? ""
-                : i18n("discourse_ai.translations.progress_chart.data_label", {
-                    percentage,
-                  }),
-            color: colors.label,
-          },
-        },
-      },
-    };
+  @action
+  toggleTarget(targetType) {
+    this.expandedTargetType =
+      this.expandedTargetType === targetType ? null : targetType;
   }
 
   <template>
@@ -684,36 +549,42 @@ export default class AiTranslations extends Component {
       </div>
 
       {{#if this.enabled}}
-        <DConditionalLoadingSpinner @condition={{this.loadingProgress}}>
-          {{#if this.data}}
-            <AdminConfigAreaCard class="ai-translations__charts">
-              <:content>
-                <div class="ai-translations__progress-meta">
-                  {{#if this.backfillStatusMessage}}
-                    <div class="ai-translations__stat-item">
-                      <span class="ai-translations__stat-label">
-                        {{this.backfillStatusMessage}}
-                      </span>
-                    </div>
-                  {{/if}}
-                  {{#if this.cachedResultsNotice}}
-                    <div class="ai-translations__cached-results">
-                      {{dIcon "clock-rotate-left"}}
-                      <span>{{this.cachedResultsNotice}}</span>
-                    </div>
-                  {{/if}}
-                </div>
-                <div class="ai-translations__chart-container">
-                  <Chart
-                    @chartConfig={{this.chartConfig}}
-                    @loadChartDataLabelsPlugin={{true}}
-                    class="ai-translations__chart"
-                  />
-                </div>
-              </:content>
-            </AdminConfigAreaCard>
+        <div class="ai-translations__overview">
+          <div class="ai-translations__progress-meta">
+            {{#if this.backfillStatusMessage}}
+              <div class="ai-translations__stat-item">
+                <span class="ai-translations__stat-label">
+                  {{this.backfillStatusMessage}}
+                </span>
+              </div>
+            {{/if}}
+            {{#if this.cachedResultsNotice}}
+              <div class="ai-translations__cached-results">
+                {{dIcon "clock-rotate-left"}}
+                <span>{{this.cachedResultsNotice}}</span>
+              </div>
+            {{/if}}
+          </div>
+
+          {{#if this.loadingProgress}}
+            <AiTranslationModelProgressOverviewSkeleton />
+          {{else if this.targets}}
+            <div
+              class="ai-translations__overview-grid"
+              aria-label={{i18n
+                "discourse_ai.translations.model_progress.overview_label"
+              }}
+            >
+              {{#each this.targets as |target|}}
+                <AiTranslationModelProgressOverviewCard
+                  @target={{target}}
+                  @expanded={{eq this.expandedTargetType target.target_type}}
+                  @onToggle={{this.toggleTarget}}
+                />
+              {{/each}}
+            </div>
           {{/if}}
-        </DConditionalLoadingSpinner>
+        </div>
       {{/if}}
 
     </div>

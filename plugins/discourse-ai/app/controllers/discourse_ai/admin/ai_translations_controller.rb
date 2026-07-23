@@ -16,14 +16,9 @@ module DiscourseAi
       end
 
       def progress
-        unless DiscourseAi::Translation.enabled? &&
-                 SiteSetting.ai_translation_backfill_max_age_days > 0
-          return(render json: { translation_progress: [], total: 0, posts_with_detected_locale: 0 })
-        end
+        return render json: { cached_at: nil, targets: [] } unless DiscourseAi::Translation.enabled?
 
-        data = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-
-        render json: data
+        render json: DiscourseAi::Translation::Progress.fetch
       end
 
       private
@@ -31,10 +26,7 @@ module DiscourseAi
       def base_result
         {
           translation_id: DiscourseAi::Configuration::Module::TRANSLATION_ID,
-          # the progress chart will be empty if max_age_days is 0
-          enabled:
-            DiscourseAi::Translation.enabled? &&
-              SiteSetting.ai_translation_backfill_max_age_days > 0,
+          enabled: DiscourseAi::Translation.enabled?,
           backfill_enabled: DiscourseAi::Translation.backfill_enabled?,
           translation_enabled: SiteSetting.ai_translation_enabled,
           hourly_rate: SiteSetting.ai_translation_backfill_hourly_rate,

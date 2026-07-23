@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Admin AI translations" do
+describe "Admin AI translations" do
   fab!(:admin)
   let(:translations_page) { PageObjects::Pages::AdminAiTranslations.new }
 
@@ -9,17 +9,34 @@ RSpec.describe "Admin AI translations" do
     assign_fake_provider_to(:ai_default_llm_model)
 
     allow(DiscourseAi::Translation).to receive(:has_llm_model?).and_return(true)
-    allow(DiscourseAi::Translation::PostCandidates).to receive(
-      :get_completion_all_locales,
-    ).and_return(
+    allow(DiscourseAi::Translation::Progress).to receive(:fetch).and_return(
       {
-        translation_progress: [
-          { done: 50, locale: "en", total: 100 },
-          { done: 50, locale: "fr", total: 100 },
-          { done: 50, locale: "es", total: 100 },
+        targets: [
+          {
+            target_type: "post",
+            total_count: 474,
+            translated_count: 215,
+            needs_language_detection_count: 93,
+          },
+          {
+            target_type: "topic",
+            total_count: 86,
+            translated_count: 51,
+            needs_language_detection_count: 12,
+          },
+          {
+            target_type: "category",
+            total_count: 18,
+            translated_count: 18,
+            needs_language_detection_count: 0,
+          },
+          {
+            target_type: "tag",
+            total_count: 142,
+            translated_count: 64,
+            needs_language_detection_count: 7,
+          },
         ],
-        total: 300,
-        posts_with_detected_locale: 150,
         cached_at: Time.now.utc.iso8601,
       },
     )
@@ -38,7 +55,7 @@ RSpec.describe "Admin AI translations" do
       translations_page.visit
     end
 
-    it "displays the translations page with chart" do
+    it "displays the translations page with model progress cards" do
       expect(translations_page).to have_translations_page
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.title"))
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.description"))
@@ -60,17 +77,21 @@ RSpec.describe "Admin AI translations" do
       )
       expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
 
-      expect(translations_page).to have_charts_section
-      expect(translations_page).to have_chart
-      expect(page).to have_no_css(
-        ".admin-config-area-card__title",
-        text: I18n.t("js.discourse_ai.translations.progress_chart.title"),
-      )
+      expect(translations_page).to have_overview_cards
+      expect(page).to have_no_css(".ai-translations__overview .admin-config-area-card")
       expect(page).to have_css(
         ".ai-translations__cached-results",
         text: "Showing cached results from",
       )
       expect(page).to have_no_content("estimated to take")
+      expect(page).to have_css(
+        ".ai-translation-model-progress-overview-card__headline",
+        text: "All 18 eligible categories are fully translated.",
+      )
+      expect(page).to have_css(
+        ".ai-translation-model-progress-overview-card__headline",
+        text: "There are 142 tags for translation.",
+      )
 
       screenshot_marker(label: "ai-admin-translations", only: "desktop")
     end
@@ -89,6 +110,14 @@ RSpec.describe "Admin AI translations" do
 
       expect(page).to have_current_path("/admin/config/localization")
     end
+
+    it "toggles the selected target for the upcoming details panel" do
+      translations_page.toggle_target("post")
+      expect(translations_page).to have_expanded_target("post")
+
+      translations_page.toggle_target("post")
+      expect(translations_page).to have_no_expanded_target
+    end
   end
 
   describe "when translations are disabled" do
@@ -105,10 +134,10 @@ RSpec.describe "Admin AI translations" do
       translations_page.visit
     end
 
-    it "shows the toggle in off state and no chart" do
+    it "shows the toggle in off state and no progress cards" do
       expect(translations_page).to have_toggle
 
-      expect(translations_page).to have_no_chart
+      expect(translations_page).to have_no_overview_cards
     end
 
     it "shows localization settings button" do
@@ -192,20 +221,6 @@ RSpec.describe "Admin AI translations" do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.content_localization_supported_locales = "en|fr"
       SiteSetting.ai_translation_backfill_max_age_days = 30
-
-      allow(DiscourseAi::Translation::PostCandidates).to receive(
-        :get_completion_all_locales,
-      ).and_return(
-        {
-          translation_progress: [
-            { done: 50, locale: "en", total: 100 },
-            { done: 50, locale: "fr", total: 100 },
-          ],
-          total: 200,
-          posts_with_detected_locale: 100,
-          cached_at: Time.now.utc.iso8601,
-        },
-      )
     end
 
     it "displays the translation toggle" do
@@ -216,23 +231,23 @@ RSpec.describe "Admin AI translations" do
       expect(translations_page).to have_toggle
     end
 
-    it "shows charts when translations are enabled" do
+    it "shows progress cards when translations are enabled" do
       SiteSetting.ai_translation_enabled = true
       SiteSetting.ai_translation_backfill_hourly_rate = 10
 
       translations_page.visit
 
       expect(translations_page).to have_toggle
-      expect(translations_page).to have_charts_section
+      expect(translations_page).to have_overview_cards
     end
 
-    it "hides charts when translations are disabled" do
+    it "hides progress cards when translations are disabled" do
       SiteSetting.ai_translation_enabled = false
 
       translations_page.visit
 
       expect(translations_page).to have_toggle
-      expect(translations_page).to have_no_chart
+      expect(translations_page).to have_no_overview_cards
     end
 
     it "keeps toggle disabled when no locales are configured" do

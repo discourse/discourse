@@ -127,4 +127,32 @@ describe DiscourseAi::Translation::CategoryCandidates do
       expect(completion).to eq({ done: 0, total: 0 })
     end
   end
+
+  describe ".progress_summary" do
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_category_scope = "include_strict"
+    end
+
+    it "counts eligible, fully translated, and undetected categories" do
+      fully_translated_category = Fabricate(:category, locale: "en_US")
+      partially_translated_category = Fabricate(:category, locale: "en_US")
+      undetected_category = Fabricate(:category, locale: nil)
+      SiteSetting.ai_translation_categories = [
+        fully_translated_category.id,
+        partially_translated_category.id,
+        undetected_category.id,
+      ].join("|")
+      Fabricate(:category_localization, category: fully_translated_category, locale: "fr")
+
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "category",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
+      )
+    end
+  end
 end

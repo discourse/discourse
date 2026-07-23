@@ -437,6 +437,66 @@ en:
         category_scope: "Categories"
         category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
         cached_results_notice: "Showing cached results from %{relative_time}."
+        model_progress:
+          loading: "Loading translation progress"
+          overview_label: "Translation progress by content type"
+          targets:
+            post:
+              title: "Posts"
+              eligible_total:
+                one: "There is %{count} eligible post for translation."
+                other: "There are %{count} eligible posts for translation."
+              translated:
+                one: "%{count} post has been fully translated."
+                other: "%{count} posts have been fully translated."
+              needs_language_detection:
+                one: "%{count} post still needs language detection."
+                other: "%{count} posts still need language detection."
+              all_translated:
+                one: "The eligible post is fully translated."
+                other: "All %{count} eligible posts are fully translated."
+            topic:
+              title: "Topics"
+              eligible_total:
+                one: "There is %{count} eligible topic for translation."
+                other: "There are %{count} eligible topics for translation."
+              translated:
+                one: "%{count} topic has been fully translated."
+                other: "%{count} topics have been fully translated."
+              needs_language_detection:
+                one: "%{count} topic still needs language detection."
+                other: "%{count} topics still need language detection."
+              all_translated:
+                one: "The eligible topic is fully translated."
+                other: "All %{count} eligible topics are fully translated."
+            category:
+              title: "Categories"
+              eligible_total:
+                one: "There is %{count} eligible category for translation."
+                other: "There are %{count} eligible categories for translation."
+              translated:
+                one: "%{count} category has been fully translated."
+                other: "%{count} categories have been fully translated."
+              needs_language_detection:
+                one: "%{count} category still needs language detection."
+                other: "%{count} categories still need language detection."
+              all_translated:
+                one: "The eligible category is fully translated."
+                other: "All %{count} eligible categories are fully translated."
+            tag:
+              title: "Tags"
+              total:
+                one: "There is %{count} tag for translation."
+                other: "There are %{count} tags for translation."
+              translated:
+                one: "%{count} tag has been fully translated."
+                other: "%{count} tags have been fully translated."
+              needs_language_detection:
+                one: "%{count} tag still needs language detection."
+                other: "%{count} tags still need language detection."
+              all_translated:
+                one: "The tag is fully translated."
+                other: "All %{count} tags are fully translated."
         admin_actions:
           translation_settings: "AI settings"
           localization_settings: "App language settings"
