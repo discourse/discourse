@@ -2089,6 +2089,10 @@ export default class ComposerService extends Service {
     this.composerActionState.clear();
   }
 
+  dismissKeyboard() {
+    document.activeElement?.blur();
+  }
+
   @computed("model.action")
   get canEdit() {
     return this.model?.action === "edit" && this.currentUser.can_edit;

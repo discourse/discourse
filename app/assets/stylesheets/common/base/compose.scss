@@ -1564,3 +1564,13 @@ body.has-sidebar-page {
     }
   }
 }
+
+// to be merged with new composer-footer styles once the redesign is fully rolled out
+.composer-footer__dismiss-keyboard {
+  display: none;
+  margin-right: var(--space-2);
+
+  .keyboard-visible & {
+    display: block;
+  }
+}

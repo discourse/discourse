@@ -94,6 +94,7 @@ export default class ComposerContainer extends Component {
   @service siteSettings;
   @service appEvents;
   @service keyValueStore;
+  @service capabilities;
 
   @tracked toolbarPortalTarget;
 
@@ -104,6 +105,13 @@ export default class ComposerContainer extends Component {
 
   get composerRedesign() {
     return this.siteSettings.enable_composer_redesign;
+  }
+
+  get showDismissKeyboardButton() {
+    const { capabilities } = this;
+    return (
+      capabilities.isAppWebview && capabilities.isIOS && !capabilities.isIpadOS
+    );
   }
 
   @action
@@ -707,6 +715,15 @@ export default class ComposerContainer extends Component {
                       @outletArgs={{lazyHash model=this.composer.model}}
                     />
                   </span>
+
+                  {{#if this.showDismissKeyboardButton}}
+                    <DButton
+                      @action={{this.composer.dismissKeyboard}}
+                      @title="composer.dismiss_keyboard"
+                      @icon="keyboard"
+                      class="btn-default btn-small composer-footer__dismiss-keyboard"
+                    />
+                  {{/if}}
 
                   {{#if this.composer.allowUpload}}
                     <a
