@@ -398,7 +398,7 @@ zh_CN:
   topic_converter:
     too_many_recipients: "无法转换：此话题的参与者人数超过了允许的最大人数 (%{max})。"
   topic_og_image:
-    preview_not_eligible: "无法为私有类别中的个人信息或主题生成 OG 图像。"
+    preview_not_eligible: "无法为私有类别中的个人信息或话题生成 OG 图像。"
     preview_generation_failed: "无法生成预览图像。"
   authenticator_not_found: "身份验证方法不存在或已被禁用。"
   authenticator_no_connect: "此身份验证服务提供商不允许连接到现有论坛帐户。"
@@ -1255,6 +1255,7 @@ zh_CN:
         returning: "回流成员"
         staff: "管理人员"
     trust_level_pipeline:
+      title: "信任级别变化"
       description: "所选期间内各信任级别之间的成员变动情况。统计当前处于各信任级别的成员数量及其占总成员数的比例，以及该期间内迁入或迁出各信任级别的成员数量。"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
@@ -1955,7 +1956,7 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
-    google_oauth2_hd_groups: '在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 <a target="_blank" href="https://meta.discourse.org/t/226850">此 Meta 话题</a>。'
+    google_oauth2_hd_groups: '在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅<a target="_blank" href="https://meta.discourse.org/t/226850">此 Meta 话题</a>。'
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -2387,7 +2388,7 @@ zh_CN:
     klipy_country: "GIF 搜索结果中的双字母国家/地区代码。"
     klipy_locale: "GIF 搜索结果中的语言代码，格式为 xx_YY（语言加上可选的国家/地区）。"
     klipy_limit_infinite_search_results: "限制用户滚动时返回的 GIF 结果数量，以避免达到 API 速率限制。"
-    klipy_max_results_limit: "启用“限制无限搜索结果”后，在结果达到一定数量后停止加载。每次 API 调用会检索 24 个 GIF。"
+    klipy_max_results_limit: "启用 'limit infinite search results' 后，在结果达到一定数量后停止加载。每次 API 调用会检索 24 个 GIF。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
     approve_unless_allowed_groups: "不属于这些群组的用户所发布的帖子必须经过批准。管理员和版主发布的帖子始终会被批准。"
     approve_new_topics_unless_allowed_groups: "不属于这些群组的用户所发布的话题必须经过批准。管理员和版主发布的话题始终会被批准。"
@@ -2573,6 +2574,7 @@ zh_CN:
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
     enable_horizon_high_context_topic_cards: "在 Horizon 主题中显示更丰富的话题卡，包括话题摘要、标签和插件扩展信息。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
+    granular_anonymous_and_logged_in_groups_permissions: "设置基于群组的站点设置权限会将 'everyone' 视为 'all logged-in users'，并启用新的 'anonymous_users' 和 'logged_in_users' 伪群组，以便管理员能够明确针对匿名访客和经过身份验证的用户。"
     dashboard_improvements: "启用重新设计的管理仪表板，可让您固定自定义报告，并包含改进的网站流量、参与度和其他与社区成功和价值相关的分析。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
@@ -2621,6 +2623,7 @@ zh_CN:
       discourse_connect_secret_is_too_short: "在启用此设置之前，您必须设置一个至少包含 10 个字符的“Discourse Connect 密钥”。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
       enable_local_logins_via_email_disabled: "在启用此设置之前，必须先启用 'enable local logins via email'。"
+      discourse_connect_enabled: "在启用此设置之前，必须先设置 'enable discourse connect'。"
       min_username_length_exists: "'min username length' 不能大于最短用户名 (%{username})。"
       min_group_name_length_exists: "'min username length' 不能大于最短群组名称 (%{group_name})。"
       min_username_length_range: "'min username length' 不能大于 'max username length'。"
@@ -2695,11 +2698,13 @@ zh_CN:
       keywords: "显示包含指定关键词的帖子"
       topic_keywords: "显示包含指定关键词的主题中的帖子"
       post_type: "按类型或位置筛选帖子"
-      post_type_regular: "仅限普通帖子"
+      post_type_regular: "仅普通帖子"
       post_type_all: "所有可见的帖子类型"
       post_type_first: "仅第一个帖子"
       post_type_reply: "仅回复"
-      post_type_whisper: "仅限密语"
+      post_type_moderator_action: "仅版主采取行动的帖子"
+      post_type_small_action: "仅采取细微行动的帖子"
+      post_type_whisper: "仅密语"
       status: "按主题状态筛选帖子"
       status_open: "打开话题"
       status_closed: "关闭话题"

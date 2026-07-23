@@ -476,31 +476,31 @@ ar:
               many: "دقائق"
               other: "دقائق"
             hours:
-              zero: "الساعات"
+              zero: "ساعة"
               one: "ساعة واحدة"
-              two: "الساعات"
-              few: "الساعات"
-              many: "الساعات"
-              other: "الساعات"
+              two: "ساعتان"
+              few: "ساعات"
+              many: "ساعة"
+              other: "ساعة"
             days:
-              zero: "أيام"
+              zero: "يوم"
               one: "يوم واحد"
-              two: "أيام"
+              two: "يومان"
               few: "أيام"
-              many: "أيام"
-              other: "أيام"
+              many: "يومًا"
+              other: "يوم"
             weeks:
-              zero: "أسابيع"
-              one: "أسبوع"
-              two: "أسابيع"
+              zero: "أسبوع"
+              one: "أسبوع واحد"
+              two: "أسبوعان"
               few: "أسابيع"
-              many: "أسابيع"
-              other: "أسابيع"
+              many: "أسبوعًا"
+              other: "أسبوع"
       composer_actions:
         create_event:
           label: "إنشاء حدث"
         create_topic:
-          label: "أنشئ موضوع"
+          label: "إنشاء موضوع"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -542,7 +542,7 @@ ar:
           every_day: "كل يوم"
           every_weekday: "كل أيام الأسبوع"
           ordinals:
-            last: "اخر"
+            last: "آخر"
         max_attendees:
           label: "الحد الأقصى للحضور"
           placeholder: "لا يوجد حد"

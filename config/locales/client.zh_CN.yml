@@ -2905,8 +2905,8 @@ zh_CN:
             getFullYear: "返回四位数的年份。"
             getMonth: "返回月份 (0-11)。"
             getDate: "返回月份中的日期 (1-31)。"
-            getHours: "返回小时时间 (0-23)。"
-            getMinutes: "返回分钟数 (0-59)。"
+            getHours: "返回小时 (0-23)。"
+            getMinutes: "返回分钟 (0-59)。"
             toLocaleString: "返回特定于区域设置的日期和时间字符串。"
         globals:
           Math: "数学常数和函数（Math.round、Math.random 等）"
@@ -2915,7 +2915,7 @@ zh_CN:
           Array: "数组实用程序（Array.isArray、Array.from）。"
           String: "字符串构造函数和实用程序。"
           Number: "数字实用程序（Number.isInteger、Number.parseFloat）。"
-          Date: "日期构造函数。使用 new Date() 来创建日期。"
+          Date: "日期构造函数。请使用 new Date() 来创建日期。"
           parseInt: "解析字符串并返回整数。"
           parseFloat: "解析字符串并返回浮点数。"
           encodeURIComponent: "通过替换特殊字符对 URI 组件进行编码。"
@@ -4565,7 +4565,7 @@ zh_CN:
         title: "选择类别类型"
         requires_plugin: "需要 %{plugin_name} 插件"
         unavailable: "不可用"
-        ask_admin_to_enable_plugin: "请管理员启用 %{plugin_name} 插件"
+        ask_admin_to_enable_plugin: "请联系管理员以启用 %{plugin_name} 插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -6530,7 +6530,7 @@ zh_CN:
           reorder_up: "上移 %{label}"
           reorder_down: "下移 %{label}"
           drag_handle: "拖动以重新排序 %{label}"
-          toggle_visibility: "在信息中心上显示 %{label}"
+          toggle_visibility: "在信息中心显示 %{label}"
           empty_state_admin: "没有可显示的版块。请打开“配置”以启用版块。"
           empty_state_moderator: "未启用任何版块。请联系管理员以启用版块。"
         highlights:
@@ -8232,7 +8232,7 @@ zh_CN:
           title: "批量操作"
           select_all: "全选"
           clear_all: "全部清除"
-          staff_cant_be_actioned: "此用户无法删除或封禁，因为他们是管理人员"
+          staff_cant_be_actioned: "无法删除或封禁此用户，因为他们是管理人员"
           no_users_can_be_deleted: "所有选定用户均无法删除。"
           no_users_can_be_suspended: "所有选定用户均无法封禁。"
           too_many_selected_users:
@@ -8241,7 +8241,7 @@ zh_CN:
             label: "封禁用户…"
             confirmation_modal:
               prompt_text:
-                other: "您即将封禁 %{count} 名用户。请在下面设置持续时间和原因："
+                other: "您即将封禁 %{count} 名用户。请在下面设置时长和原因："
               close: "关闭"
               confirm: "封禁"
               title:

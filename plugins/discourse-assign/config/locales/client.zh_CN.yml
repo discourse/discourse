@@ -206,6 +206,7 @@ zh_CN:
         "trigger:assigned": "已指定"
       node_descriptions:
         "action:assign_topic": "分配或取消分配主题"
+        "trigger:assigned": "分配话题或帖子时触发"
       assign_topic:
         operation: "操作"
         operations:
@@ -214,3 +215,6 @@ zh_CN:
         topic_id: "话题 ID"
         assignee: "受理人"
         replace_existing: "替换现有任务"
+      assigned:
+        topic_assignments_only: "仅当分配目标是话题而非单个帖子时才会触发"
+        topic_assignments_only_description: "仅限话题分配"
