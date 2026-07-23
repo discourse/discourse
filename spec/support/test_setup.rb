@@ -18,10 +18,8 @@ module TestSetup
     WordWatcher.disable_cache
     UpcomingChanges.clear_caches!
 
-    %i[discourse_id_client_id discourse_id_client_secret].each do |setting_name|
-      SiteSetting.remove_override!(setting_name)
-    end
-    SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+    SiteSetting.provider.clear
+    SiteSetting.refresh!(refresh_theme_site_settings: false)
 
     # Set some standard overrides for tests. Some for performance, some to make the tests easier,
     # and some because their default was changed, and we didn't want to refactor all the relevant specs.
