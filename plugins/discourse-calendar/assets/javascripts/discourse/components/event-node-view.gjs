@@ -41,11 +41,6 @@ export default class EventNodeView extends Component {
     this.args.onSetup?.(this);
   }
 
-  @action
-  testLocationUrl(value) {
-    return this.args.pluginParams.utils.getLinkify().test(value);
-  }
-
   get eventDescription() {
     return this.args.view.state.doc.textBetween(
       this.args.getPos() + 1,
@@ -162,7 +157,6 @@ export default class EventNodeView extends Component {
   <template>
     <CompactEventEditor
       @initialState={{this.initialState}}
-      @urlTester={{this.testLocationUrl}}
       @onChange={{this.onChange}}
       @onDelete={{this.onDelete}}
     />

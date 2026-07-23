@@ -70,19 +70,13 @@ module("Unit | Lib | raw-event-helper", function () {
 
     assert.strictEqual(
       replaceRaw(params, raw),
-      'Some text \n[event param1="newValue1" param2="value2"]\n[/event]\n more text',
+      "Some text \n[event param1=newValue1 param2=value2]\n[/event]\n more text",
       "updates existing parameters and adds new ones"
     );
 
     assert.false(
       replaceRaw(params, "No event tag here"),
       "returns false when no event tag is found"
-    );
-
-    assert.strictEqual(
-      replaceRaw({ foo: 'bar"quoted' }, '[event original="value"]\n[/event]'),
-      '[event foo="barquoted"]\n[/event]',
-      "escapes double quotes in parameter values"
     );
 
     assert.strictEqual(
@@ -96,7 +90,7 @@ module("Unit | Lib | raw-event-helper", function () {
         { name: "", location: "Paris" },
         '[event original="value"]\n[/event]'
       ),
-      '[event location="Paris"]\n[/event]',
+      "[event location=Paris]\n[/event]",
       "omits empty name parameter"
     );
 
@@ -105,7 +99,7 @@ module("Unit | Lib | raw-event-helper", function () {
         { name: "   ", location: "Berlin" },
         '[event original="value"]\n[/event]'
       ),
-      '[event location="Berlin"]\n[/event]',
+      "[event location=Berlin]\n[/event]",
       "omits whitespace-only name parameter"
     );
   });
@@ -122,10 +116,44 @@ module("Unit | Lib | raw-event-helper", function () {
       '[event start="2024-06-15 10:00" name="Demo"]\nbody line\n[/event]'
     );
 
-    assert.strictEqual(
-      buildEventBlock(parsed.attrs, parsed.description),
-      parsed.full,
+    const rebuilt = buildEventBlock(parsed.attrs, parsed.description);
+    assert.deepEqual(
+      parseEventBlock(rebuilt).attrs,
+      parsed.attrs,
       "buildEventBlock round-trips parsed values"
+    );
+  });
+
+  test("parseEventBlock keeps brackets inside quoted attr values", function (assert) {
+    const parsed = parseEventBlock(
+      '[event start="2024-06-15" location="[RSVP](https://zoom.example.com/j/123)"]\n[/event]'
+    );
+
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15",
+      location: "[RSVP](https://zoom.example.com/j/123)",
+    });
+  });
+
+  test("parseEventBlock reads the quote pairs the rich editor emits", function (assert) {
+    const parsed = parseEventBlock(
+      '[event start=«2024-06-15 10:00» location=“Sam\'s "Release"”]\n[/event]'
+    );
+
+    assert.deepEqual(parsed.attrs, {
+      start: "2024-06-15 10:00",
+      location: 'Sam\'s "Release"',
+    });
+  });
+
+  test("buildEventBlock preserves values containing quotes", function (assert) {
+    const attrs = { location: 'Sam\'s "Release" party' };
+    const rebuilt = buildEventBlock(attrs, "");
+
+    assert.deepEqual(
+      parseEventBlock(rebuilt).attrs,
+      attrs,
+      "quotes survive the serialize/parse round-trip"
     );
   });
 
