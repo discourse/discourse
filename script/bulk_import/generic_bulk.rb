@@ -598,8 +598,10 @@ class BulkImport::Generic < BulkImport::Base
         original_username: row["original_username"],
         name: row["name"],
         email: row["email"],
+        locale: row["locale"],
         external_id: sso_record&.fetch("external_id", nil),
         created_at: to_datetime(row["created_at"]),
+        staged: row["staged"],
         last_seen_at: to_datetime(row["last_seen_at"]),
         admin: row["admin"],
         moderator: row["moderator"],
@@ -675,13 +677,24 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_options
     puts "", "Importing user options..."
 
+    users_columns = table_column_names("users")
+    hide_profile_columns = %w[hide_profile_and_presence hide_profile hide_presence]
+    available_hide_profile_columns =
+      hide_profile_columns.select { |column| users_columns.include?(column) }
+    select_hide_profile_columns =
+      hide_profile_columns.map do |column|
+        available_hide_profile_columns.include?(column) ? column : "NULL AS #{column}"
+      end
+
     users = query(<<~SQL)
-      SELECT id, timezone, email_level, email_messages_level, email_digests
+      SELECT id, timezone, email_level, email_messages_level, email_digests,
+             #{select_hide_profile_columns.join(", ")}
         FROM users
        WHERE timezone IS NOT NULL
           OR email_level IS NOT NULL
           OR email_messages_level IS NOT NULL
           OR email_digests IS NOT NULL
+          #{available_hide_profile_columns.map { |column| "OR #{column} IS NOT NULL" }.join("\n          ")}
        ORDER BY id
     SQL
 
@@ -691,14 +704,19 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
-      {
+      options = {
         user_id: user_id,
         timezone: row["timezone"],
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
-        hide_profile_and_presence: row["hide_profile_and_presence"],
+        hide_profile: row["hide_profile"],
+        hide_presence: row["hide_presence"],
       }
+      options[:hide_profile_and_presence] = row["hide_profile_and_presence"] if !row[
+        "hide_profile_and_presence"
+      ].nil?
+      options
     end
 
     users.close
@@ -3619,6 +3637,14 @@ class BulkImport::Generic < BulkImport::Base
     else
       result_set
     end
+  end
+
+  def table_column_names(table_name, db: @source_db)
+    @table_column_names ||= {}
+    @table_column_names[[db.object_id, table_name]] ||= query(
+      "PRAGMA table_info(#{table_name})",
+      db:,
+    ) { |rows| rows.map { |row| row["name"] }.to_set }
   end
 
   def to_date(text)
