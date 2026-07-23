@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -9,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
+import type { ComponentLike } from "@glint/template";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { baseKeymap } from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -16,17 +16,39 @@ import { gapCursor } from "prosemirror-gapcursor";
 import * as ProsemirrorHistory from "prosemirror-history";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
+import type {
+  Fragment,
+  Node,
+  NodeType,
+  Schema,
+  Slice,
+} from "prosemirror-model";
 import * as ProsemirrorModel from "prosemirror-model";
 import * as ProsemirrorSchemaList from "prosemirror-schema-list";
 import * as ProsemirrorState from "prosemirror-state";
-import { EditorState } from "prosemirror-state";
+import { type Command, EditorState, type Plugin } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
 import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
-import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import type DialogService from "discourse/dialog-holder/services/dialog";
+import type MenuService from "discourse/float-kit/services/menu";
+import type ToastsService from "discourse/float-kit/services/toasts";
+import {
+  getExtensions,
+  type PluginParams,
+  type RichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
+import type { TextManipulation as TextManipulationInterface } from "discourse/lib/composer/text-manipulation";
+import type { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { bind } from "discourse/lib/decorators";
+import type Session from "discourse/models/session";
+import type Site from "discourse/models/site";
+import type User from "discourse/models/user";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
+import type AppEventsService from "discourse/services/app-events";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import type ModalService from "discourse/services/modal";
 import { i18n } from "discourse-i18n";
 import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
@@ -37,63 +59,103 @@ import { extractNodeViews, extractPlugins } from "../core/plugin";
 import { createSchema } from "../core/schema";
 import Serializer from "../core/serializer";
 import placeholder from "../extensions/placeholder";
+import type GlimmerNodeView from "../lib/glimmer-node-view";
 import * as utils from "../lib/plugin-utils";
-import TextManipulation from "../lib/text-manipulation";
+import TextManipulation, {
+  type CustomState,
+  type EditorCommands,
+} from "../lib/text-manipulation";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
-/**
- * @typedef ProsemirrorEditorArgs
- * @property {string} [value] The markdown content to be rendered in the editor
- * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
- * @property {boolean} [disabled] Whether the editor should be disabled
- * @property {Record<string, () => void>} [keymap] A mapping of keybindings to commands
- * @property {(value: { target: { value: string } }) => void} [change] A callback called when the editor content changes
- * @property {() => void} [focusIn] A callback called when the editor gains focus
- * @property {() => void} [focusOut] A callback called when the editor loses focus
- * @property {(textManipulation: TextManipulation) => undefined | (() => void)} [onSetup] A callback called when the editor is set up, may return a destructor
- * @property {number} [topicId] The ID of the topic being edited, if any
- * @property {number} [categoryId] The ID of the category of the topic being edited, if any
- * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
- * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
- * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
- * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
- * @property {() => void} [toggleRichEditor] A callback to toggle the rich editor on and off if in such a context
- */
+interface ProsemirrorEditorSignature {
+  Args: {
+    /** Markdown content displayed in the editor. */
+    value?: string;
+    /** Placeholder displayed when the editor is empty. */
+    placeholder?: string;
+    /** Whether the editor is read-only. */
+    disabled?: boolean;
+    /** Additional keyboard shortcuts keyed by shortcut expression. */
+    keymap?: Record<string, () => boolean | void>;
+    /** Called when the serialized markdown changes. */
+    change?: (value: { target: { value: string } }) => void;
+    /** Called when the editor receives focus. */
+    focusIn?: () => void;
+    /** Called when the editor loses focus. */
+    focusOut?: () => void;
+    /** Called with the editor's text operations after setup. */
+    onSetup?: (
+      textManipulation: TextManipulationInterface
+    ) => undefined | (() => void);
+    /** ID of the topic being edited. */
+    topicId?: number;
+    /** ID of the category being edited. */
+    categoryId?: number;
+    /** Class added to the editable element. */
+    class?: string;
+    /** Whether the default schema and editor behavior are included. */
+    includeDefault?: boolean;
+    /** Extensions used instead of the globally registered extensions. */
+    extensions?: RichEditorExtension[];
+    /** Replaces or restores the toolbar displayed by the editor container. */
+    replaceToolbar?: (toolbar: ToolbarBase | null, owner?: ToolbarBase) => void;
+    /** Toggles between the rich and plain-text editors. */
+    toggleRichEditor?: () => void;
+  };
+}
 
-/**
- * @typedef ProsemirrorEditorSignature
- * @property {ProsemirrorEditorArgs} Args
- */
+type SiteSettings = Record<string, unknown>;
 
-/** @typedef {import("../lib/glimmer-node-view").default} GlimmerNodeView */
+type NodeViewComponent = ComponentLike<{
+  Args: {
+    node: Node;
+    view: EditorView;
+    getPos: () => number | undefined;
+    dom: HTMLElement;
+    pluginParams: PluginParams;
+    onSetup: (instance: unknown) => void;
+  };
+}>;
 
-/**
- * @extends {Component<ProsemirrorEditorSignature>}
- */
-export default class ProsemirrorEditor extends Component {
-  @service session;
-  @service dialog;
-  @service menu;
-  @service capabilities;
-  @service modal;
-  @service toasts;
-  @service site;
-  @service siteSettings;
-  @service appEvents;
-  @service currentUser;
+type RenderableGlimmerNodeView = Omit<
+  GlimmerNodeView,
+  "component" | "dom" | "getPos" | "pluginParams" | "setComponentInstance"
+> & {
+  component: NodeViewComponent;
+  dom: HTMLElement;
+  getPos: () => number | undefined;
+  pluginParams: PluginParams;
+  setComponentInstance: (instance: unknown) => void;
+};
 
-  schema = createSchema(this.extensions, this.args.includeDefault);
-  view;
+export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignature> {
+  @service declare session: Session;
+  @service declare dialog: DialogService;
+  @service declare menu: MenuService;
+  @service declare capabilities: CapabilitiesService;
+  @service declare modal: ModalService;
+  @service declare toasts: ToastsService;
+  @service declare site: Site;
 
-  /** @type {Array<GlimmerNodeView>} */
-  glimmerNodeViews = trackedArray();
-  #lastSerialized;
-  /** @type {undefined | (() => void)} */
-  #destructor;
+  // TODO(devxp-typescript-pending): use the canonical typed site-settings
+  // registry once dynamic client settings are represented in core.
+  @service declare siteSettings: SiteSettings;
 
-  /** @type {import("discourse/lib/composer/rich-editor-extensions").PluginParams} */
-  get pluginParams() {
+  @service declare appEvents: AppEventsService;
+  @service declare currentUser: User;
+
+  schema: Schema = createSchema(this.extensions, this.args.includeDefault);
+  view: EditorView;
+  declare parser: Parser;
+  declare serializer: Serializer;
+  declare textManipulation: TextManipulation;
+
+  glimmerNodeViews = trackedArray<RenderableGlimmerNodeView>();
+  #lastSerialized?: string;
+  #destructor?: () => void;
+
+  get pluginParams(): PluginParams {
     return {
       utils: {
         ...utils,
@@ -125,17 +187,22 @@ export default class ProsemirrorEditor extends Component {
         appEvents: this.appEvents,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
-        addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
+        // TODO(devxp-typescript-pending): remove the cast once GlimmerNodeView's
+        // component field has a typed invocation signature.
+        addGlimmerNodeView: (nodeView) =>
+          this.glimmerNodeViews.push(nodeView as RenderableGlimmerNodeView),
         removeGlimmerNodeView: (nodeView) =>
           this.glimmerNodeViews.splice(
-            this.glimmerNodeViews.indexOf(nodeView),
+            this.glimmerNodeViews.indexOf(
+              nodeView as RenderableGlimmerNodeView
+            ),
             1
           ),
       }),
     };
   }
 
-  get extensions() {
+  get extensions(): RichEditorExtension[] {
     const extensions = this.args.extensions ?? getExtensions();
 
     // enforcing core extensions
@@ -144,9 +211,9 @@ export default class ProsemirrorEditor extends Component {
       : [placeholder, ...extensions];
   }
 
-  get keymapFromArgs() {
-    const replacements = { tab: "Tab" };
-    const result = {};
+  get keymapFromArgs(): Record<string, Command> {
+    const replacements: Record<string, string> = { tab: "Tab" };
+    const result: Record<string, Command> = {};
     for (const [key, value] of Object.entries(this.args.keymap ?? {})) {
       const pmKey = key
         .split("+")
@@ -158,7 +225,7 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @action
-  handleAsyncPlugin(plugin) {
+  handleAsyncPlugin(plugin: Plugin): void {
     const state = this.view.state.reconfigure({
       plugins: [...this.view.state.plugins, plugin],
     });
@@ -167,7 +234,7 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @action
-  setup(container) {
+  setup(container: HTMLElement): void {
     const params = this.pluginParams;
 
     const plugins = [
@@ -266,8 +333,14 @@ export default class ProsemirrorEditor extends Component {
       convertToMarkdown: this.convertToMarkdown,
       splitNonEmptyLines: this.splitNonEmptyLines,
       buildListNode: this.buildListNode,
-      commands: buildCommands(this.extensions, params, this.view),
-      customState: buildCustomState(this.extensions, params),
+      // TODO(devxp-typescript-pending): remove these casts when the command
+      // builders are converted and export their return types.
+      commands: buildCommands(
+        this.extensions,
+        params,
+        this.view
+      ) as EditorCommands,
+      customState: buildCustomState(this.extensions, params) as CustomState,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
@@ -278,7 +351,7 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @bind
-  convertFromMarkdown(markdown) {
+  convertFromMarkdown(markdown: string): Node {
     try {
       return this.parser.convert(this.schema, markdown);
     } catch (e) {
@@ -308,12 +381,16 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @bind
-  splitNonEmptyLines(text) {
+  splitNonEmptyLines(text: string): string[] {
     return text.split(/\r?\n/).filter((line) => line.trim().length > 0);
   }
 
   @bind
-  buildListNode(schema, listType, lines) {
+  buildListNode(
+    schema: Schema,
+    listType: NodeType | string,
+    lines: string[]
+  ): Node {
     const listItems = lines.map((line) =>
       schema.nodes.list_item.create(null, [
         schema.nodes.paragraph.create(
@@ -331,7 +408,7 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @bind
-  convertFromValue() {
+  convertFromValue(): void {
     const value = this.args.value ?? "";
 
     // Ignore the markdown we just serialized
@@ -363,18 +440,18 @@ export default class ProsemirrorEditor extends Component {
   }
 
   @bind
-  convertToMarkdown(doc) {
+  convertToMarkdown(doc: Node | Fragment | Slice): string {
     return this.serializer.convert(doc);
   }
 
   @action
-  teardown() {
+  teardown(): void {
     this.#destructor?.();
     this.view.destroy();
   }
 
   @action
-  updateContext(element, [key, value]) {
+  updateContext(element: HTMLElement, [key, value]: [string, unknown]): void {
     this.view.dispatch(
       this.view.state.tr
         .setMeta("addToHistory", false)
