@@ -8,11 +8,13 @@ import { ajax } from "discourse/lib/ajax";
  * @param {Object} options
  * @param {boolean} options.replace - replace existing tags? (default: false)
  * @param {boolean} options.save - save changes to the server? (default: false)
+ * @param {number} options.themeId - compile against this theme's color
+ *   definitions instead of the default theme's (default: none)
  * @returns {Promise}
  */
 
 export async function applyColorScheme(scheme, options = {}) {
-  const { replace = false, save = false } = options;
+  const { replace = false, save = false, themeId = null } = options;
 
   try {
     if (save && scheme?.save) {
@@ -69,7 +71,10 @@ export async function applyColorScheme(scheme, options = {}) {
       return;
     }
 
-    const data = await ajax(`/color-scheme-stylesheet/${id}.json`);
+    const themeSegment = themeId === null ? "" : `/${themeId}`;
+    const data = await ajax(
+      `/color-scheme-stylesheet/${id}${themeSegment}.json`
+    );
 
     if (data?.new_href && lightTag) {
       lightTag.href = data.new_href;

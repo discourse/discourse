@@ -91,6 +91,13 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       })
     );
 
+    server.get("/color-scheme-stylesheet/:id/:themeId", () =>
+      helper.response(200, {
+        color_scheme_id: -1,
+        new_href: "/stylesheets/color_definitions_preview.css",
+      })
+    );
+
     server.get("/admin/config/design-wizard.json", () => {
       return helper.response(200, {
         themes: [

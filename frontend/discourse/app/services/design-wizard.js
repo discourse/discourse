@@ -308,7 +308,10 @@ export default class DesignWizardService extends Service {
     const paletteId = this.previewPalette?.id;
     if (paletteId) {
       try {
-        await applyColorScheme({ id: paletteId }, { replace: true });
+        await applyColorScheme(
+          { id: paletteId },
+          { replace: true, themeId: this.themeId }
+        );
       } catch {
         // the manager already reports failures; a failed preview should not
         // break the wizard
