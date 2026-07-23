@@ -585,7 +585,7 @@ export default class AiTranslations extends Component {
                     @action={{this.resetLocales}}
                     @icon="arrow-rotate-left"
                     @label="admin.settings.reset"
-                    class="undo setting-controls__undo"
+                    class="btn-default undo setting-controls__undo"
                   />
                 {{/if}}
               </div>
@@ -628,7 +628,7 @@ export default class AiTranslations extends Component {
                         @action={{this.resetCategories}}
                         @icon="arrow-rotate-left"
                         @label="admin.settings.reset"
-                        class="undo setting-controls__undo"
+                        class="btn-default undo setting-controls__undo"
                       />
                     {{/if}}
                   {{/unless}}
@@ -661,7 +661,7 @@ export default class AiTranslations extends Component {
                         @action={{this.resetCategories}}
                         @icon="arrow-rotate-left"
                         @label="admin.settings.reset"
-                        class="undo setting-controls__undo"
+                        class="btn-default undo setting-controls__undo"
                       />
                     {{/if}}
                   </div>

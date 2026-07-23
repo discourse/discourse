@@ -3,6 +3,7 @@
     background: var(--primary-very-low);
     margin-block: var(--space-4);
     padding: var(--space-2);
+    border-radius: var(--d-border-radius);
   }
 
   &__toggle-container {
@@ -150,7 +151,7 @@
 
   &[aria-expanded="true"] {
     border-color: var(--tertiary);
-    box-shadow: inset 0 3px 0 var(--tertiary);
+    box-shadow: inset 3px 0 0 var(--tertiary);
   }
 
   &__header {
