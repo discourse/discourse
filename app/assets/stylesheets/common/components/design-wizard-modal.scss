@@ -57,7 +57,6 @@
     gap: var(--space-2);
   }
 
-  &__theme-card,
   &__homepage-card,
   &__swatch,
   &__font-card {
@@ -78,7 +77,6 @@
     }
   }
 
-  &__theme-card,
   &__homepage-card {
     display: flex;
     flex-direction: column;
@@ -88,34 +86,63 @@
     font-size: var(--font-down-1);
   }
 
-  &__theme-thumbnail,
+  &__theme-card {
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2);
+    font-size: var(--font-down-1);
+
+    .theme-card-preview__image-wrapper {
+      overflow: hidden;
+      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-border-radius);
+    }
+
+    .theme-card-preview__image {
+      display: block;
+      width: 100%;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+
+    .theme-card-preview__name {
+      font-weight: 600;
+    }
+
+    &:hover,
+    &.--selected {
+      .theme-card-preview__image-wrapper {
+        border-color: var(--tertiary);
+      }
+    }
+  }
+
+  &__theme-enabled-badge {
+    position: absolute;
+    z-index: 1;
+    top: var(--space-2);
+    right: var(--space-2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    color: var(--secondary);
+    background: var(--tertiary);
+    border-radius: var(--d-border-radius);
+
+    .d-icon {
+      color: currentcolor;
+    }
+  }
+
   &__homepage-thumbnail {
     height: 44px;
     border: 1px solid var(--content-border-color);
     background: var(--secondary);
-  }
-
-  &__theme-thumbnail {
-    &.--horizon {
-      border-radius: 8px;
-      background: linear-gradient(
-        180deg,
-        var(--tertiary-low) 40%,
-        var(--secondary) 40%
-      );
-    }
-
-    &.--foundation {
-      border-radius: 2px;
-      background: repeating-linear-gradient(
-        180deg,
-        var(--secondary) 0 9px,
-        var(--primary-low) 9px 10px
-      );
-    }
-  }
-
-  &__homepage-thumbnail {
     border-radius: 3px;
 
     &.--topic-list {
@@ -137,10 +164,6 @@
           center / 100% 60% no-repeat,
         var(--secondary);
     }
-  }
-
-  &__theme-name {
-    font-weight: 600;
   }
 
   &__theme-description,

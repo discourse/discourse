@@ -78,6 +78,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
             default: true,
             color_scheme_id: null,
             dark_color_scheme_id: null,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
             palette_pairs: [
               {
                 key: "default",
@@ -111,6 +113,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
             default: false,
             color_scheme_id: 23,
             dark_color_scheme_id: 24,
+            screenshot_light_url: null,
+            screenshot_dark_url: null,
             palette_pairs: [
               {
                 key: "horizon",

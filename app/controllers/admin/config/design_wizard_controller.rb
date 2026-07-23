@@ -2,7 +2,8 @@
 
 class Admin::Config::DesignWizardController < Admin::AdminController
   def index
-    core_themes = Theme.where(id: Theme::CORE_THEMES.values).order(:id)
+    core_themes =
+      Theme.where(id: Theme::CORE_THEMES.values).includes(theme_fields: :upload).order(:id)
     default_theme = Theme.find_default
 
     render json: {
@@ -14,6 +15,8 @@ class Admin::Config::DesignWizardController < Admin::AdminController
                    default: theme.id == default_theme&.id,
                    color_scheme_id: theme.color_scheme_id,
                    dark_color_scheme_id: theme.dark_color_scheme_id,
+                   screenshot_light_url: theme.screenshot_light_url,
+                   screenshot_dark_url: theme.screenshot_dark_url,
                    palette_pairs: DesignWizard::PalettePairs.for_theme(theme),
                  }
                end,
