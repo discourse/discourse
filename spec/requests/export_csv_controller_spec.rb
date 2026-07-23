@@ -35,6 +35,19 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
       end
 
+      it "rate limits repeated archive requests while the export job is pending" do
+        post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+
+        post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("csv_export.rate_limit_error"),
+        )
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
+      end
+
       it "returns 404 when normal user tries to export admin entity" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
         expect(response.status).to eq(422)
