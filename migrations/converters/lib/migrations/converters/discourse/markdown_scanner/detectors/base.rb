@@ -114,7 +114,12 @@ module Migrations
             def whitespace_before?(input, pos)
               return true if pos.zero?
 
-              byte = input.getbyte(pos - 1)
+              whitespace_byte?(input.getbyte(pos - 1))
+            end
+
+            # `/\s/` as a byte test: space plus `\t\n\v\f\r`. ASCII-only, so a byte
+            # >= 0x80 (part of a multibyte character) is never whitespace here.
+            def whitespace_byte?(byte)
               byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
             end
 

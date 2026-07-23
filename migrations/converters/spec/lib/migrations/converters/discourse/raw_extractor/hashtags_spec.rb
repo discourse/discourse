@@ -41,6 +41,29 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("(#{buffer.hashtags.first[:placeholder]})")
     end
 
+    it "defers a hashtag right after prose punctuation" do
+      ["a comma,#news", 'a quote "#news"', "end of sentence.#news"].each do |raw|
+        buffer.clear
+        extract(raw)
+        expect(buffer.hashtags.first).to include(name: "news"), "expected #{raw.inspect} to extract"
+      end
+    end
+
+    it "treats a symbol before the hash as a boundary, the way core does" do
+      # markdown-it's `isPunctChar` accepts Unicode symbols too, so core renders a
+      # hashtag after `€` — extraction has to match.
+      extract("price€#news")
+
+      expect(buffer.hashtags.first).to include(name: "news")
+    end
+
+    it "keeps a trailing sentence dot outside the name" do
+      result = extract("see #news.")
+
+      expect(buffer.hashtags.first[:name]).to eq("news")
+      expect(result).to eq("see #{buffer.hashtags.first[:placeholder]}.")
+    end
+
     it "does not treat a markdown heading as a hashtag" do
       raw = "# Heading\n\nbody"
 
@@ -126,6 +149,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
         name: "announcements",
         hashtag_type: hashtag_type::CATEGORY,
       )
+    end
+
+    it "matches a dotted name whole instead of stopping at the dot" do
+      dotted =
+        described_class.new(
+          embeds: buffer,
+          hashtag_names: Migrations::SortedStringSet.new(%w[v2.0]),
+        )
+      dotted.extract("ship #v2.0 today")
+
+      expect(buffer.hashtags.first[:name]).to eq("v2.0")
+    end
+
+    it "does not truncate a dotted name to a shorter prefix that is in the set" do
+      dotted =
+        described_class.new(embeds: buffer, hashtag_names: Migrations::SortedStringSet.new(%w[v2]))
+      raw = "ship #v2.0 today"
+
+      expect(dotted.extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
     end
   end
 end
