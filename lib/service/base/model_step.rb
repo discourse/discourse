@@ -18,7 +18,7 @@ module Service
         model = context[name] = super
         raise NotFound if !optional && (!model || model.try(:empty?))
 
-        if model.try(:errors).present? || (model.try(:has_changes_to_save?) && model.try(:invalid?))
+        if model.try(:has_changes_to_save?) && (model.errors.present? || model.invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end
