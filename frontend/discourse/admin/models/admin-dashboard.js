@@ -33,6 +33,21 @@ export default class AdminDashboard extends EmberObject {
     return model;
   }
 
+  static async fetchSection(id, { startDate, endDate, version } = {}) {
+    const data = {};
+    if (startDate) {
+      data.start_date = moment(startDate).format("YYYY-MM-DD");
+    }
+    if (endDate) {
+      data.end_date = moment(endDate).format("YYYY-MM-DD");
+    }
+    if (version) {
+      data.version = version;
+    }
+
+    return await ajax(`/admin/dashboard/sections/${id}.json`, { data });
+  }
+
   static async fetchGeneral() {
     const json = await ajax("/admin/dashboard/general.json");
     const model = AdminDashboard.create();
