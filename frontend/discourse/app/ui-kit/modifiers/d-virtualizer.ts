@@ -80,6 +80,11 @@ interface VirtualizerOptions {
 interface VirtualizerApi {
   range: VisibleRange | null;
   isScrolling: boolean;
+  // The engine's cached scroll offset (px). Null until the first measure. The
+  // element's real `scrollTop` is the source of truth; this can drift from it
+  // when the browser clamps a scroll the engine never observed (see
+  // `#resyncScrollOffset`).
+  scrollOffset: number | null;
   _didMount(): () => void;
   _willUpdate(): void;
   getTotalSize(): number;
@@ -256,9 +261,41 @@ export default class DVirtualizer<T> extends Modifier<
     } else {
       updateElementVirtualizer(this.#virtualizer, options);
       this.#virtualizer._willUpdate();
+      this.#resyncScrollOffset();
     }
 
     this.#scheduleFlush();
+  }
+
+  // After an `@items` change the engine can hold a scroll offset the element no
+  // longer has: shrinking the list makes the browser clamp `scrollTop`, but that
+  // clamp does not reach the engine's offset observer, so it keeps computing the
+  // window from a stale, now out-of-range offset. On its own that only mis-scrolls
+  // the window; combined with `pinnedIndex` it surfaces as a visible gap — the
+  // pinned row renders at its true offset while the window sits far below it, and
+  // the rows between are absent. Re-read the element's real `scrollTop` whenever
+  // the two disagree so the window tracks the actual position. A no-op when they
+  // already match (the common case: a tail reveal leaves the offset valid).
+  #resyncScrollOffset() {
+    const element = this.#element;
+    if (
+      this.#syncingScroll ||
+      !element?.isConnected ||
+      isDestroying(this) ||
+      isDestroyed(this)
+    ) {
+      return;
+    }
+    const engineOffset = this.#virtualizer?.scrollOffset ?? null;
+    if (engineOffset === null || engineOffset === element.scrollTop) {
+      return;
+    }
+    this.#syncingScroll = true;
+    try {
+      element.dispatchEvent(new Event("scroll"));
+    } finally {
+      this.#syncingScroll = false;
+    }
   }
 
   #buildApi(): DVirtualListApi {
