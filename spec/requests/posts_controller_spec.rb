@@ -3948,11 +3948,39 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
-      it "can view raw email if the user is in the allowed group" do
+      it "blocks raw email for unseen private messages" do
+        raw_email = "From: sender@example.com\nTo: recipient@example.com\n\nsecret body"
+        private_message_post =
+          Fabricate(
+            :private_message_post,
+            user: user,
+            recipient: Fabricate(:user),
+            raw_email: raw_email,
+          )
+        sign_in(moderator)
+
+        get "/posts/#{private_message_post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(raw_email)
+      end
+
+      it "blocks deleted raw email for allowed non-staff users" do
         sign_in(user)
         SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
 
         get "/posts/#{post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(post.raw_email)
+      end
+
+      it "can view raw email if the user is in the allowed group" do
+        allowed_post = Fabricate(:post, user: Fabricate(:user), raw_email: "email_content")
+        sign_in(user)
+        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+
+        get "/posts/#{allowed_post.id}/raw-email.json"
         expect(response.status).to eq(200)
 
         json = response.parsed_body
