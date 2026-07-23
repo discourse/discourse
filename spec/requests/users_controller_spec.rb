@@ -2302,12 +2302,12 @@ RSpec.describe UsersController do
     end
   end
 
-  describe "#random_username" do
+  describe "#generate_random_username" do
     it "returns a generated username" do
       get "/u/random-username.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\z/)
+      expect(response.parsed_body["username"]).to match(/\A[A-Z][a-z]+[A-Z][a-z]+\d+\z/)
     end
 
     it "rate limits requests per IP" do
