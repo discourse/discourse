@@ -67,6 +67,9 @@ en:
     added: "Added %{added}"
     removed: "Removed %{removed}"
 
+  topics_bulk_action:
+    too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
