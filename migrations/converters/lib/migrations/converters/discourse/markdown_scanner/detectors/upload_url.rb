@@ -89,6 +89,7 @@ module Migrations
 
               match = match_at(BARE, input, pos)
               return nil unless match
+              return nil if inadmissible_protocol_relative?(input, pos, match[0])
               return nil if relative_url?(match[0]) && !link_target_boundary_before?(input, pos)
 
               build_match(pos, match)

@@ -254,6 +254,44 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("look at #{link[:placeholder]} please")
     end
 
+    # Core linkifies a bare absolute URL after anything but an ASCII letter, digit
+    # or `+` (see `internal_links_parity_spec.rb`), so a URL glued right after
+    # prose punctuation is a link once cooked — the detector rewrites it too.
+    it "rewrites a bare URL glued to preceding punctuation" do
+      link, result = link_for("see,https://forum.example.com/t/slug/5 ok")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+      expect(result).to eq("see,#{link[:placeholder]} ok")
+    end
+
+    # `_` is admitted too: markdown-it's inline linkify boundary rejects only
+    # `[A-Za-z0-9.+-]`, and its core-ruler pass excludes `_` but the inline one
+    # does not, so the union linkifies after `_`.
+    it "rewrites a bare URL glued to a preceding underscore" do
+      link, = link_for("x_https://forum.example.com/t/slug/5 ok")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+    end
+
+    # A URL glued right after an ASCII letter isn't linkified by core, and neither
+    # is the `//host` inside it a standalone protocol-relative link (linkify-it's
+    # `//` schema rejects the `://` tail), so the whole run stays literal.
+    it "leaves a bare URL glued to a preceding word character literal" do
+      raw = "sitehttps://forum.example.com/t/slug/5"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    # A `\` escapes the following character in markdown, so core forms no link;
+    # the detector leaves the URL literal to match.
+    it "leaves a backslash-escaped bare URL literal" do
+      raw = "see \\https://forum.example.com/t/slug/5 ok"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
     it "defers the inner image and rewrites the outer topic URL of a linked image" do
       sha1 = "0123456789abcdef0123456789abcdef01234567"
       inner = "https://forum.example.com/uploads/default/original/1X/#{sha1}.png"

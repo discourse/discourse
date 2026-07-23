@@ -184,6 +184,7 @@ module Migrations
 
               match = match_at(BARE, input, pos)
               return nil unless match
+              return nil if inadmissible_protocol_relative?(input, pos, match[:url])
 
               build(
                 pos,

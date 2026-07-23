@@ -197,56 +197,120 @@ module Migrations
               byte == 0x20 || byte == 0x09 || byte == 0x0a
             end
 
-            # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d). These are
-            # pure ASCII, so a byte >= 0x80 (a multibyte character) is never
-            # whitespace and falls through to false — no character-wise fallback.
-            def whitespace_before?(input, pos)
-              return true if pos.zero?
-
-              whitespace_byte?(input.getbyte(pos - 1))
-            end
-
             # `/\s/` as a byte test: space plus `\t\n\v\f\r`. ASCII-only, so a byte
             # >= 0x80 (part of a multibyte character) is never whitespace here.
             def whitespace_byte?(byte)
               byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
             end
 
-            # Where a bare URL may start: at the line start, after whitespace, or
-            # right after a `(`. This is only the cheap first gate — the URL detectors
-            # narrow it further once a match tells them whether the URL is relative or
-            # absolute, because the boundary alone doesn't separate the two:
+            # Where a bare URL may start. This is only the cheap first gate — the URL
+            # detectors narrow it further once a match tells them whether the URL is
+            # relative or absolute, because the boundary alone doesn't separate the
+            # two:
             #
-            #   * After whitespace or a bare `(` (prose punctuation, `(/t/5)`), only
-            #     an absolute URL is rewritten. A schemed or `//host` URL in prose
-            #     becomes a link once the post is cooked, so rewriting it keeps a
-            #     link a link. A relative path like `/t/5` stays plain text when
-            #     cooked, so rewriting it would turn prose into a link that wasn't
-            #     there — the detectors leave a relative prose URL alone. (A URL
-            #     deeper inside the parens, `(see /t/5)`, is admitted by the
-            #     whitespace rule instead.)
-            #   * A `](…)` whose bracket wrapped an already-consumed construct — a
-            #     `)` sits right before the `]`, as in `[![img](upload)](/t/5)` or an
-            #     old lightbox — is an outer link target we want. The URL there is a
-            #     real link whether it is relative or absolute, so both are rewritten;
-            #     see {#link_target_boundary_before?}.
-            #   * A `](…)` after plain bracket text — `[pic](…)`, `![alt](…)`,
-            #     `[text](foreign)` — is the image's or link's own target. That
-            #     target was already handled at its own trigger (an image src is not
-            #     ours; a foreign link is already signalled once), so leave it alone.
-            #     Firing here would rewrite an image's source or double-report a
-            #     foreign host.
+            #   * A `](…)` is a link's or image's target. Admit only the `)](` shape,
+            #     where a `)` closes right before the `]` — the bracket wrapped an
+            #     already-consumed construct, so the URL is the outer target of a
+            #     nested image `[![img](upload)](/t/5)` or an old lightbox, and a
+            #     relative or absolute URL there is a real link we rewrite (see
+            #     {#link_target_boundary_before?}). A `](…)` after plain bracket text —
+            #     `[pic](…)`, `![alt](…)`, `[text](foreign)` — is the image's or
+            #     link's own target, handled at its own trigger (an image src is not
+            #     ours; a foreign link is signalled once), so firing here would rewrite
+            #     an image's source or double-report a foreign host.
+            #   * Anywhere else, an absolute (schemed or `//host`) URL is admitted on
+            #     core's linkify boundary — every character except an ASCII letter,
+            #     digit or `+` (see {#linkify_boundary_before?}). A schemed or `//host`
+            #     URL in prose becomes a link once the post is cooked, so rewriting it
+            #     keeps a link a link. A relative path like `/t/5` stays plain text
+            #     when cooked, so the detectors leave a relative prose URL alone — it
+            #     passes this gate but is rejected as relative unless it sits at the
+            #     `)](` target above.
             #
-            # All the bytes tested (`(`, `]`, `)`) are ASCII, so a multibyte previous
+            # The bytes tested here (`(`, `]`) are ASCII, so a multibyte previous
             # character can never equal them.
             def bare_url_boundary_before?(input, pos)
-              return true if whitespace_before?(input, pos)
-              return false unless input.getbyte(pos - 1) == 0x28 # 0x28 = `(`
+              return true if pos.zero?
 
-              paren_pos = pos - 1
-              return true if paren_pos.zero? || input.getbyte(paren_pos - 1) != 0x5d # 0x5d = `]`
+              # A `(` right after a `]` is a link/image target; only the `)](` shape
+              # is admitted, so branch off before the general linkify boundary (a bare
+              # `(` is itself a linkify boundary and would otherwise admit any `](`).
+              if input.getbyte(pos - 1) == 0x28 && pos >= 2 && input.getbyte(pos - 2) == 0x5d
+                # 0x28 = `(`, 0x5d = `]`
+                return link_target_boundary_before?(input, pos)
+              end
 
-              link_target_boundary_before?(input, pos)
+              linkify_boundary_before?(input, pos)
+            end
+
+            # markdown-it linkifies a bare absolute schemed URL (`https://…`) in prose
+            # unless the character right before its scheme is an ASCII letter, digit,
+            # `+` or `\`. Two of core's engines feed this and their admissions are
+            # unioned: the inline rule (`markdown-it/rules_inline/linkify.mjs`, whose
+            # `SCHEME_RE` accepts a scheme after anything outside `[A-Za-z0-9.+-]`) and
+            # the core ruler (`rules_core/linkify.mjs` via linkify-it, which also admits
+            # `.` and `-` as Unicode punctuation). What's left non-admitting is only
+            # `[A-Za-z0-9+]`, plus `\`, which markdown escapes into the following
+            # character so no link forms. Every other character — the rest of ASCII
+            # punctuation and symbols, `_`, and any non-ASCII character (a letter, a
+            # mark, a space, a symbol) — opens a linkified URL. Verified against
+            # PrettyText.
+            #
+            # `pos` is a byte offset, so `getbyte(pos - 1)` is the previous character's
+            # last byte. A byte >= 0x80 is the tail of a multibyte character, which is
+            # therefore outside ASCII `[A-Za-z0-9+\]` and always a boundary; only the
+            # ASCII letters, digits, `+` and `\` are not.
+            def linkify_boundary_before?(input, pos)
+              return true if pos.zero?
+
+              byte = input.getbyte(pos - 1)
+              byte >= 0x80 || !linkify_non_boundary_ascii_byte?(byte)
+            end
+
+            # The ASCII characters that do NOT open a bare linkified URL when they sit
+            # right before the scheme: letters, digits, `+`, and `\` (a markdown
+            # escape).
+            def linkify_non_boundary_ascii_byte?(byte)
+              (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||
+                (byte >= 0x61 && byte <= 0x7a) || byte == 0x2b || byte == 0x5c # `+` `\`
+            end
+
+            # The character set markdown-it's core-ruler linkify (linkify-it) admits
+            # right before a bare protocol-relative `//host` URL: a Unicode separator,
+            # punctuation or control character, or one of the three separators it lists
+            # explicitly (`<`, `>`, `｜`). This is narrower than the schemed-URL
+            # boundary above: the inline rule that widens that one only fires on
+            # `scheme://`, so a bare `//host` rides on this core-ruler set alone (a
+            # symbol like `²` or `€` before it does not open a link). Verified against
+            # PrettyText.
+            CORE_RULER_BOUNDARY = /[\p{Z}\p{P}\p{Cc}<>｜]/
+            private_constant :CORE_RULER_BOUNDARY
+
+            # Whether a bare protocol-relative `//host` URL may open at `pos`.
+            # linkify-it's `//` schema rejects a `//` that sits right after `:` or `/`
+            # (the `://` tail of a scheme we already declined, or a `///` typo) and
+            # excludes `_` like every linkify boundary; otherwise it admits its
+            # {CORE_RULER_BOUNDARY} set. `pos` is a byte offset; an ASCII byte is the
+            # whole previous character, a byte >= 0x80 its trailing byte, recovered with
+            # {#previous_char}.
+            def protocol_relative_boundary_before?(input, pos)
+              return true if pos.zero?
+
+              byte = input.getbyte(pos - 1)
+              return false if byte == 0x3a || byte == 0x2f || byte == 0x5f # `:` `/` `_`
+
+              char = byte < 0x80 ? byte.chr : previous_char(input, pos)
+              CORE_RULER_BOUNDARY.match?(char)
+            end
+
+            # A bare match that begins `//host` is protocol-relative and rides on the
+            # narrower {#protocol_relative_boundary_before?} set. The `/` trigger fires
+            # on every `/` the walk passes, including the `//` inside a `https://…` the
+            # `h` trigger already declined, so this rejects that scheme tail (and any
+            # other `//` on a boundary core wouldn't linkify a protocol-relative URL
+            # at). A schemed or relative match doesn't start `//`, so it's unaffected.
+            def inadmissible_protocol_relative?(input, pos, url)
+              url.start_with?("//") && !protocol_relative_boundary_before?(input, pos)
             end
 
             # The `](…)` outer-link-target boundary: the URL sits right after a `](`

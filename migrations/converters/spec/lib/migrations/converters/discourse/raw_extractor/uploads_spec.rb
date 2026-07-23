@@ -103,6 +103,28 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(result).to eq("see #{buffer.uploads.first[:placeholder]} thanks")
     end
 
+    # Core linkifies a bare absolute URL after anything but an ASCII letter, digit
+    # or `+` (see `uploads_parity_spec.rb`), so a URL glued right after prose
+    # punctuation is a link once cooked — the detector defers it too.
+    it "defers a bare upload URL glued to preceding punctuation" do
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+      result = extract("here,#{url} thanks")
+
+      expect(buffer.uploads.first).to include(upload_id: sha1, original_markdown: url)
+      expect(result).to eq("here,#{buffer.uploads.first[:placeholder]} thanks")
+    end
+
+    # A URL glued right after an ASCII letter isn't linkified by core, and the
+    # `//host` inside it isn't a standalone protocol-relative link either
+    # (linkify-it's `//` schema rejects the `://` tail), so it stays literal.
+    it "leaves a bare upload URL glued to a preceding word character literal" do
+      url = "https://cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+      raw = "here#{url}"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
     it "ignores a non-upload URL" do
       raw = "![photo](https://example.com/images/photo.png) and https://example.com/page"
 
