@@ -16,7 +16,8 @@ module DiscourseDataExplorer
           renamed_attribute from: :username,
                             to: :usernames,
                             up: ->(username) { [username] },
-                            down: ->(usernames) { usernames.first }
+                            down: ->(usernames) { usernames.first },
+                            old_type: :string
         end
       end
     end

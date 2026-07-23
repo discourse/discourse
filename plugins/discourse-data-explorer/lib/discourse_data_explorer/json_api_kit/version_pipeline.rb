@@ -57,6 +57,26 @@ module DiscourseDataExplorer
           end
         end
 
+        # Latest→old key mappings — the inverse of the `up_*` family, applied in
+        # the gap's own order (newest→oldest), same per-change precedence
+        # mirrored: explicit inverse → virtual pin → attribute inverse. Used by
+        # the versioned docs generator.
+        def down_field_names(names, type:, changes:)
+          down_keys(names, changes, virtual: []) { |change| [change.field_renames_for(type), {}] }
+        end
+
+        def down_sort_keys(keys, type:, changes:, virtual: [])
+          down_keys(keys, changes, virtual:) do |change|
+            [change.field_renames_for(type), change.sort_renames_for(type)]
+          end
+        end
+
+        def down_filter_keys(keys, type:, changes:, virtual: [])
+          down_keys(keys, changes, virtual:) do |change|
+            [change.field_renames_for(type), change.filter_renames_for(type)]
+          end
+        end
+
         def down_errors(document, type:, changes:)
           return document if changes.blank?
 
@@ -105,6 +125,19 @@ module DiscourseDataExplorer
                 explicit_map[key] || (pinned.include?(key) ? key : attribute_map[key] || key)
               end
             end
+        end
+
+        def down_keys(names, changes, virtual:)
+          symbols = names.map(&:to_sym)
+          return symbols if changes.blank?
+
+          pinned = virtual.map(&:to_sym)
+          changes.reduce(symbols) do |current, change|
+            attribute_map, explicit_map = yield(change)
+            current.map do |key|
+              explicit_map.key(key) || (pinned.include?(key) ? key : attribute_map.key(key) || key)
+            end
+          end
         end
 
         # Inverse lookup over each change's declared renames, newest→oldest.

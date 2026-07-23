@@ -37,8 +37,12 @@ module DiscourseDataExplorer
           @blocks = { up: [], down: [] }
         end
 
-        def renamed_attribute(from:, to:, up: nil, down: nil)
-          @renames << { from: from.to_sym, to: to.to_sym, up:, down: }
+        # `old_type:` declares the pre-rename wire type for shape-changing
+        # renames (a converter that changes shape implies a type change) — the
+        # versioned docs generator applies it to schemas so old-version schemas
+        # and down-converted examples agree.
+        def renamed_attribute(from:, to:, up: nil, down: nil, old_type: nil)
+          @renames << { from: from.to_sym, to: to.to_sym, up:, down:, old_type: }
         end
 
         # Virtual sort/filter keys are their own contract surface: attribute renames
@@ -50,6 +54,7 @@ module DiscourseDataExplorer
         def down(&block) = @blocks[:down] << block
 
         def field_renames = @renames.to_h { [it[:from], it[:to]] }
+        def attribute_renames = @renames
 
         attr_reader :sort_renames, :filter_renames
 
@@ -118,6 +123,7 @@ module DiscourseDataExplorer
         def transform_for(direction, type:) = resource_transforms[type.to_s]&.transform(direction)
         def document_transform(direction) = @document_changes&.transform(direction)
         def field_renames_for(type) = resource_transforms[type.to_s]&.field_renames || {}
+        def attribute_renames_for(type) = resource_transforms[type.to_s]&.attribute_renames || []
         def sort_renames_for(type) = resource_transforms[type.to_s]&.sort_renames || {}
         def filter_renames_for(type) = resource_transforms[type.to_s]&.filter_renames || {}
         def resource_types = resource_transforms.keys

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Discourse JSON:API",
-    "version": "2026-07-08",
+    "version": "2026-05-01",
     "description": "This is the documentation for Discourse's JSON:API — currently an experiment scoped to\nthe Data Explorer plugin. Responses follow the [JSON:API specification](https://jsonapi.org/format/)\nwith the `application/vnd.api+json` media type.\n\n# Authentication\n\nCreate an API key in the admin panel and pass it with every request:\n\n```\nApi-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19\nApi-Username: system\n```\n\n# Versioning\n\nEvery request must carry a pinned API version — a date:\n\n```\nApi-Version: 2026-07-08\n```\n\nThe date snaps down to the nearest version at or before it, and the **resolved** version is\nechoed back in the response's `Api-Version` header. The integration ritual: send today's\ndate once, store the echoed value verbatim, and send it from then on — your responses will\nnever change shape, no matter what the API ships later.\n\nPlugins that release independently from Discourse have their own timelines. To opt into a\nnewer version of one, add an override: `Api-Version: 2026-07-08; some-plugin=2026-07-15`.\nThe echo resolves each date against its own timeline; store it as-is.\n\n# Pagination\n\nCollections use cursor pagination (the JSON:API\n[cursor pagination profile](https://jsonapi.org/profiles/ethanresnick/cursor-pagination)):\n`page[size]`, `page[after]`, `page[before]`. Follow the `links.prev` / `links.next` URLs —\nthey are null when there is no page in that direction. There is no offset pagination.\n\n# Errors\n\nErrors are JSON:API error objects. Unknown filters, sorts, includes, or page parameters\nare rejected with a `400` naming the offender; validation failures answer `422` with a\nJSON Pointer (`source.pointer`) per invalid attribute, expressed in your pinned version's\nvocabulary.\n"
   },
   "tags": [
@@ -31,7 +31,7 @@
             }
           },
           {
-            "name": "filter[q]",
+            "name": "filter[search]",
             "in": "query",
             "schema": {
               "type": "string"
@@ -48,10 +48,10 @@
                 "enum": [
                   "name",
                   "-name",
-                  "ran_at",
-                  "-ran_at",
-                  "user.username",
-                  "-user.username"
+                  "last_run_at",
+                  "-last_run_at",
+                  "username",
+                  "-username"
                 ]
               }
             }
@@ -83,8 +83,8 @@
                   "description",
                   "created_at",
                   "updated_at",
-                  "query",
-                  "ran_at",
+                  "sql",
+                  "last_run_at",
                   "hidden"
                 ]
               }
@@ -98,7 +98,7 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "usernames"
+                  "username"
                 ]
               }
             }
@@ -204,9 +204,9 @@
                         "description": "Topics most often linked from other topics.",
                         "created_at": "2026-06-20T09:00:00.000Z",
                         "updated_at": "2026-06-20T09:00:00.000Z",
-                        "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
-                        "ran_at": "2026-07-01T10:00:00.000Z",
-                        "hidden": false
+                        "hidden": false,
+                        "last_run_at": "2026-07-01T10:00:00.000Z",
+                        "sql": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10"
                       },
                       "relationships": {
                         "user": {
@@ -238,9 +238,9 @@
                         "description": "description 0",
                         "created_at": "2026-06-21T09:00:00.000Z",
                         "updated_at": "2026-06-21T09:00:00.000Z",
-                        "query": "SELECT id, username FROM users WHERE admin",
-                        "ran_at": null,
-                        "hidden": false
+                        "hidden": false,
+                        "last_run_at": null,
+                        "sql": "SELECT id, username FROM users WHERE admin"
                       },
                       "relationships": {
                         "user": {
@@ -321,9 +321,7 @@
                       "id": "1",
                       "type": "users",
                       "attributes": {
-                        "usernames": [
-                          "query_master"
-                        ]
+                        "username": "query_master"
                       },
                       "relationships": {
                         "groups": {
@@ -435,7 +433,7 @@
                           "description": {
                             "type": "string"
                           },
-                          "query": {
+                          "sql": {
                             "type": "string",
                             "maxLength": 10000,
                             "examples": [
@@ -460,7 +458,7 @@
                   "attributes": {
                     "name": "Category health",
                     "description": "Topics per category over the last 30 days.",
-                    "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1"
+                    "sql": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1"
                   }
                 }
               }
@@ -509,9 +507,9 @@
                       "description": "Topics per category over the last 30 days.",
                       "created_at": "2026-07-08T12:00:00.000Z",
                       "updated_at": "2026-07-08T12:00:00.000Z",
-                      "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1",
-                      "ran_at": "2026-07-08T12:00:00.000Z",
-                      "hidden": false
+                      "hidden": false,
+                      "last_run_at": "2026-07-08T12:00:00.000Z",
+                      "sql": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1"
                     }
                   }
                 }
@@ -622,9 +620,9 @@
                       "description": "Topics most often linked from other topics.",
                       "created_at": "2026-06-20T09:00:00.000Z",
                       "updated_at": "2026-06-20T09:00:00.000Z",
-                      "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
-                      "ran_at": "2026-07-01T10:00:00.000Z",
-                      "hidden": false
+                      "hidden": false,
+                      "last_run_at": "2026-07-01T10:00:00.000Z",
+                      "sql": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10"
                     }
                   }
                 }
@@ -691,7 +689,7 @@
                 ],
                 "format": "date-time"
               },
-              "query": {
+              "sql": {
                 "type": [
                   "string",
                   "null"
@@ -701,7 +699,7 @@
                   "SELECT id, username FROM users LIMIT 10"
                 ]
               },
-              "ran_at": {
+              "last_run_at": {
                 "type": [
                   "string",
                   "null"
@@ -793,15 +791,13 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "usernames": {
+              "username": {
                 "type": [
-                  "array",
+                  "string",
                   "null"
                 ],
                 "examples": [
-                  [
-                    "query_master"
-                  ]
+                  "query_master"
                 ]
               }
             },

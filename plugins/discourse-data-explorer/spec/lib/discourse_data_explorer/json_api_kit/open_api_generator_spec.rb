@@ -255,6 +255,133 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     end
   end
 
+  describe "#document_at" do
+    subject(:versioned) { generator.document_at(version) }
+
+    let(:generator) do
+      described_class.new(
+        endpoints:,
+        examples: {
+          "listQueries" => {
+            "200" => {
+              "data" => [
+                { "type" => "queries", "id" => "1", "attributes" => { "query" => "SELECT 1" } },
+              ],
+              "included" => [
+                {
+                  "type" => "users",
+                  "id" => "1",
+                  "attributes" => {
+                    "usernames" => ["query_master"],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      )
+    end
+    let(:versioned_attributes) do
+      versioned.dig("components", "schemas", "queries", "properties", "attributes", "properties")
+    end
+    let(:versioned_parameters) do
+      versioned.dig("paths", "/data-explorer/api/queries", "get", "parameters")
+    end
+    let(:versioned_example) do
+      versioned.dig(
+        "paths",
+        "/data-explorer/api/queries",
+        "get",
+        "responses",
+        "200",
+        "content",
+        "application/vnd.api+json",
+        "example",
+      )
+    end
+
+    context "when pinned before every change" do
+      let(:version) { "2026-05-01" }
+
+      it "stamps the pinned version" do
+        expect(versioned.dig("info", "version")).to eq("2026-05-01")
+      end
+
+      it "renames attribute schemas back" do
+        expect(versioned_attributes).to have_key("sql")
+      end
+
+      it "applies the declared old type and down-converts the example" do
+        expect(
+          versioned.dig(
+            "components",
+            "schemas",
+            "users",
+            "properties",
+            "attributes",
+            "properties",
+            "username",
+          ),
+        ).to eq("type" => %w[string null], "examples" => ["query_master"])
+      end
+
+      it "renames the fieldset enums back" do
+        expect(
+          versioned_parameters
+            .find { it["name"] == "fields[queries]" }
+            .dig("schema", "items", "enum"),
+        ).to include("sql")
+      end
+
+      it "renames the filter parameter back" do
+        expect(versioned_parameters.map { it["name"] }).to include("filter[search]")
+      end
+
+      it "renames the sort keys back" do
+        expect(
+          versioned_parameters.find { it["name"] == "sort" }.dig("schema", "items", "enum"),
+        ).to include("-last_run_at", "username")
+      end
+
+      it "renames the request-body attributes back" do
+        expect(
+          versioned.dig(
+            "paths",
+            "/data-explorer/api/queries",
+            "post",
+            "requestBody",
+            "content",
+            "application/vnd.api+json",
+            "schema",
+            "properties",
+            "data",
+            "properties",
+            "attributes",
+            "properties",
+          ),
+        ).to have_key("sql")
+      end
+
+      it "down-migrates the captured examples" do
+        expect(versioned_example.dig("data", 0, "attributes")).to eq("sql" => "SELECT 1")
+      end
+
+      it "down-converts included resources in captured examples" do
+        expect(versioned_example.dig("included", 0, "attributes")).to eq(
+          "username" => "query_master",
+        )
+      end
+    end
+
+    context "when pinned at the current version" do
+      let(:version) { "2026-07-08" }
+
+      it "matches the latest document apart from nothing" do
+        expect(versioned).to eq(generator.document)
+      end
+    end
+  end
+
   describe "captured examples" do
     let(:documented) do
       described_class.new(

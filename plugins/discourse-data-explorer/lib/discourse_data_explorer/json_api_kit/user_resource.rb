@@ -10,7 +10,7 @@ module DiscourseDataExplorer
 
       # Wire attribute replaced `username` (2026-07-01 breaking change): an array of
       # the user's known usernames — currently just the one. Representation-only.
-      attribute :usernames, :array do |user|
+      attribute :usernames, :array, example: ["query_master"] do |user|
         [user.username]
       end
 

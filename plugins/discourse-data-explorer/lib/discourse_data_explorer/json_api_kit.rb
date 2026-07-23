@@ -84,19 +84,14 @@ module DiscourseDataExplorer
       # source for the rake task and the freshness guard. Recomputed per call:
       # the document reflects live registry/extension state. The explicit
       # endpoint map is the spike seam (see the generator's generalization path).
-      def openapi_document
-        OpenApiGenerator.new(
-          endpoints: [
-            {
-              path: "/data-explorer/api/queries",
-              controller: QueriesController,
-              create: DiscourseDataExplorer::Query::Create,
-            },
-          ],
-          intro: File.read(File.expand_path("../../docs/api-intro.md", __dir__)),
-          examples: openapi_examples,
-        ).document
-      end
+      def openapi_document = openapi_generator.document
+
+      # One document per registered version (newest first) — old-version
+      # documents legitimately change over time: every new change deepens their
+      # gap, so they regenerate alongside the latest one.
+      def openapi_versions = api_versions.versions.map(&:to_s).reverse
+
+      def openapi_document_at(version) = openapi_generator.document_at(version)
 
       # Spike stand-in for a real resource registry — the resource-level home is a
       # design follow-up (docs/versioning-design.md §3).
@@ -107,6 +102,20 @@ module DiscourseDataExplorer
       end
 
       private
+
+      def openapi_generator
+        OpenApiGenerator.new(
+          endpoints: [
+            {
+              path: "/data-explorer/api/queries",
+              controller: QueriesController,
+              create: DiscourseDataExplorer::Query::Create,
+            },
+          ],
+          intro: File.read(File.expand_path("../../docs/api-intro.md", __dir__)),
+          examples: openapi_examples,
+        )
+      end
 
       def validate_extension!(extension)
         if extensions.key?(extension.namespace)

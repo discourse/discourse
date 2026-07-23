@@ -151,10 +151,25 @@ document's intro prose would confuse both audiences.
   freshness guard (`spec/integration/json_api_kit_openapi_examples_spec.rb`) keeps
   committed examples schema-valid forever: values may age, shapes cannot lie. Declared
   `example:` values additionally flow into the request-body property schemas.
+- **Per-version documents + version picker built (2026-07-23):** `document_at(version)`
+  down-migrates the latest document through the gap — the same transform philosophy as
+  responses, applied to the docs. Schemas rename attribute keys back (`sql`,
+  `last_run_at`), query-surface parameters follow (`filter[search]`, sort enums,
+  `fields[…]` enums, request-body properties + `required`), and captured examples run
+  through `VersionPipeline.down` verbatim — converters included, so the 2026-05-01 doc
+  shows `"username": "query_master"` where latest shows the array. Two supporting pieces:
+  the `down_field_names`/`down_sort_keys`/`down_filter_keys` pipeline family (inverses of
+  `up_*`, same precedence mirrored), and the **`old_type:`** option on
+  `renamed_attribute` — a shape-changing rename declares its pre-rename wire type, so
+  old-version schemas and down-converted examples agree (declared `example:` values are
+  down-converted through the rename's own converter — safe because declared examples are
+  well-formed latest values). The rake task emits one document per registered version plus
+  an `openapi-versions.json` manifest; `openapi-docs.html` gained a Stripe-style version
+  picker. All committed and freshness-guarded — deliberately, since **old-version
+  documents change over time** (every new change deepens their gap).
 - Generator tail still open: publication wiring (second document through the
-  `discourse_api_docs` nightly action); per-version documents (down-applied renames); the
-  extensions section (per-site docs); the changelog from change descriptions;
-  `deprecated: true` (needs the `deprecate` keyword).
+  `discourse_api_docs` nightly action); the extensions section (per-site docs); the
+  changelog from change descriptions; `deprecated: true` (needs the `deprecate` keyword).
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
 - ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see

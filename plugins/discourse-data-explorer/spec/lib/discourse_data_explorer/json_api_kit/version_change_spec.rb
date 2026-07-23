@@ -103,8 +103,37 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionChange do
       expect(change.field_renames_for("things")).to eq(foo: :bar)
     end
 
+    it "exposes the full rename data" do
+      expect(change.attribute_renames_for("things")).to include(
+        a_hash_including(from: :foo, to: :bar),
+      )
+    end
+
     it "exposes an empty field map for an untargeted type" do
       expect(change.field_renames_for("users")).to eq({})
+    end
+
+    context "with a shape-changing rename declaring its old type" do
+      subject(:change) do
+        Class.new(described_class) do
+          version "2026-07-01"
+          description "The `foo` string becomes the `foos` list."
+
+          resource :things do
+            renamed_attribute from: :foo,
+                              to: :foos,
+                              old_type: :string,
+                              up: ->(foo) { [foo] },
+                              down: ->(foos) { foos.first }
+          end
+        end
+      end
+
+      it "records the old type in the rename data" do
+        expect(change.attribute_renames_for("things")).to include(
+          a_hash_including(to: :foos, old_type: :string),
+        )
+      end
     end
 
     context "when the resource carries the attribute" do
