@@ -138,6 +138,14 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+// The scroll viewport is capped and contains its own overscroll. In the content state the
+// list renders through DVirtualList, whose OUTER element is the scroller (the inner sizer ul
+// also carries d-combobox__listbox but must not scroll); the first-load skeleton renders in
+// a plain ul that scrolls itself.
+.d-combobox__panel .d-virtual-list,
+.d-combobox__listbox--loading {
   max-height: 20em;
   overflow-y: auto;
   overscroll-behavior: contain;

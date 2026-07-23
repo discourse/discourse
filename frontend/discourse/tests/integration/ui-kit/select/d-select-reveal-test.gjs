@@ -73,55 +73,7 @@ module(
         );
     });
 
-    test("the reveal sentinel is a non-option final list child rooted to its listbox", async function (assert) {
-      let observerOptions;
-      const observerStub = sinon.stub(window, "IntersectionObserver").value(
-        class {
-          constructor(_callback, options) {
-            observerOptions = options;
-          }
-
-          observe() {}
-          disconnect() {}
-        }
-      );
-
-      try {
-        const items = buildItems(5000);
-        await render(<template><DSelect @items={{items}} /></template>);
-        await openSelect();
-
-        assert
-          .dom("ul[role='listbox'] > li.d-combobox__sentinel:last-child")
-          .exists("the sentinel wrapper is the listbox's final child")
-          .hasAttribute("role", "presentation", "the wrapper is presentational")
-          .hasAttribute("aria-hidden", "true", "the wrapper is hidden from AT");
-
-        const listbox = find("ul[role='listbox']");
-        const sentinel = find(".d-combobox__sentinel");
-        assert.false(
-          sentinel?.matches("[role='option']"),
-          "the sentinel cannot enter the roving-focus option set"
-        );
-        assert
-          .dom(".d-combobox__sentinel > .load-more-sentinel")
-          .exists("DLoadMore renders inside the valid li wrapper");
-        assert.strictEqual(
-          observerOptions?.root,
-          listbox,
-          "DLoadMore resolves @root to the actual listbox element"
-        );
-        assert.strictEqual(
-          observerOptions?.rootMargin,
-          "200px",
-          "the reveal observer starts before the list edge"
-        );
-      } finally {
-        observerStub.restore();
-      }
-    });
-
-    test("a fully rendered small client list has no sentinel and keeps set metadata", async function (assert) {
+    test("a fully rendered small client list keeps its set metadata", async function (assert) {
       const items = buildItems(3);
 
       await render(<template><DSelect @items={{items}} /></template>);
@@ -130,9 +82,6 @@ module(
       assert
         .dom(OPTION_SELECTOR)
         .exists({ count: 3 }, "all small-list rows render");
-      assert
-        .dom(".d-combobox__sentinel")
-        .doesNotExist("an exhausted client list has no reveal sentinel");
       assert
         .dom(`${OPTION_SELECTOR}:last-child`)
         .hasAttribute(
@@ -160,12 +109,9 @@ module(
       assert
         .dom(OPTION_SELECTOR)
         .exists({ count: 100 }, "tracked reveal growth reaches the real DOM");
-      assert
-        .dom(".d-combobox__sentinel")
-        .exists("more client rows remain after the second chunk");
     });
 
-    test("client reveal is pinned at 200 and replaces the sentinel with the narrow hint", async function (assert) {
+    test("client reveal is pinned at 200 and shows the narrow hint", async function (assert) {
       let engine;
       const items = buildItems(5000, (value) => (engine = value));
 
@@ -182,11 +128,8 @@ module(
         .dom(OPTION_SELECTOR)
         .exists({ count: 200 }, "rendered source rows never exceed the cap");
       assert
-        .dom(".d-combobox__sentinel")
-        .doesNotExist("the sentinel is removed at the cap");
-      assert
-        .dom("ul[role='listbox'] + .d-combobox__narrow[role='status']")
-        .exists("the filter-to-narrow hint follows the capped listbox");
+        .dom(".d-virtual-list + .d-combobox__narrow[role='status']")
+        .exists("the filter-to-narrow hint follows the capped list viewport");
       assert
         .dom("ul[role='listbox'] .d-combobox__narrow")
         .doesNotExist("the hint is never an invalid listbox child");
@@ -217,9 +160,6 @@ module(
           { count: 50 },
           "filtering resets the rendered window to one chunk"
         );
-      assert
-        .dom(".d-combobox__sentinel")
-        .exists("the reset window can reveal more matching rows");
       assert
         .dom(".d-combobox__narrow")
         .doesNotExist("the reset window is no longer at the cap");
@@ -264,8 +204,6 @@ module(
       );
       await fillIn("[role='combobox']", "Something new");
 
-      // Addressed through findAll rather than `:last-child`, which is the sentinel whenever
-      // the source still has more to give.
       const createRow = findAll(OPTION_SELECTOR).at(-1);
       assert.dom(createRow).hasText(/Something new/, "the create row is last");
       // It is appended after an unknown number of source rows, so unlike a prefix row its
@@ -293,9 +231,6 @@ module(
 
       const options = findAll(OPTION_SELECTOR);
       assert.strictEqual(options.length, 50, "the first server page renders");
-      assert
-        .dom(".d-combobox__sentinel")
-        .exists("the reported total leaves another server page to reveal");
       assert
         .dom(options[49])
         .hasAttribute("aria-posinset", "50", "the page tail has position 50")
@@ -635,9 +570,6 @@ module(
           skeletons.some((el) => el.matches("[role='option']")),
           "placeholders never enter the roving-focus option set"
         );
-        assert
-          .dom(".d-combobox__sentinel")
-          .doesNotExist("the sentinel yields to the placeholder while pending");
       } finally {
         releaseReveal({
           items: allItems.slice(50, 100),
@@ -705,48 +637,6 @@ module(
         2,
         "reopening announces the count again"
       );
-    });
-
-    test("reopening the list roots the sentinel at the new listbox", async function (assert) {
-      const roots = [];
-      const observerStub = sinon.stub(window, "IntersectionObserver").value(
-        class {
-          constructor(_callback, options) {
-            roots.push(options.root);
-          }
-
-          observe() {}
-          disconnect() {}
-        }
-      );
-
-      try {
-        const items = buildItems(5000);
-        await render(<template><DSelect @items={{items}} /></template>);
-
-        await openSelect();
-        const firstListbox = find("ul[role='listbox']");
-        await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
-        assert.dom("ul[role='listbox']").doesNotExist("the overlay closed");
-
-        await openSelect();
-        const secondListbox = find("ul[role='listbox']");
-
-        assert.notStrictEqual(
-          secondListbox,
-          firstListbox,
-          "reopening mounts a fresh listbox element"
-        );
-        // The first listbox is detached now, so an observer still rooted at it can never
-        // intersect and the list could never be revealed again.
-        assert.strictEqual(
-          roots.at(-1),
-          secondListbox,
-          "the live observer is rooted at the listbox now on screen"
-        );
-      } finally {
-        observerStub.restore();
-      }
     });
 
     test("a new query is not announced as loading more results", async function (assert) {

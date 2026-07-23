@@ -2839,12 +2839,12 @@ module(
           "the cursor is restored to the user's choice, not the first row"
         );
       assert.true(
-        find("[role='listbox']").scrollTop > 0,
-        "and the listbox is scrolled to it"
+        find(".d-virtual-list").scrollTop > 0,
+        "and the list viewport is scrolled to it"
       );
       assert.false(
         spy.called,
-        "scrolled within the listbox, never via scrollIntoView"
+        "scrolled within the list viewport, never via scrollIntoView"
       );
     });
 
@@ -2884,11 +2884,13 @@ module(
       );
 
       await click("[role='combobox']");
-      const listbox = find("[role='listbox']");
+      // The scroll viewport is the DVirtualList wrapper around the listbox; the listbox ul
+      // itself is the (non-scrolling) sizer.
+      const viewport = find(".d-virtual-list");
       assert.strictEqual(
-        listbox.scrollTop,
+        viewport.scrollTop,
         0,
-        "the listbox starts at the top with the first option highlighted"
+        "the list starts at the top with the first option highlighted"
       );
 
       for (let i = 0; i < 20; i++) {
@@ -2896,8 +2898,8 @@ module(
       }
 
       assert.true(
-        listbox.scrollTop > 0,
-        "arrowing down scrolls the active option into view inside the listbox"
+        viewport.scrollTop > 0,
+        "arrowing down scrolls the active option into view inside the list viewport"
       );
     });
   }
@@ -2907,6 +2909,32 @@ module(
   "Integration | ui-kit | select | DSelect (review fixes)",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    test("reopening a select clears a previous roving highlight", async function (assert) {
+      // A button select does not auto-highlight on open, so the roving highlight is only ever
+      // seeded by navigation. The highlight is rendered from tracked state (`activeOptionKey`);
+      // if it were not cleared on close, a reopened list would render a stale `--active` with
+      // no matching aria-activedescendant.
+      await render(
+        <template><DSelect @items={{ITEMS}} @variant="button" /></template>
+      );
+
+      await click(".d-combobox__trigger");
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("a button select opens with no highlight");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "ArrowDown");
+      assert
+        .dom("[role='option'].--active")
+        .exists("arrowing down seeds the highlight");
+
+      await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+      await click(".d-combobox__trigger");
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("reopening does not restore the stale highlight");
+    });
 
     test("the static and button control roots carry the accessible name from @label", async function (assert) {
       await render(

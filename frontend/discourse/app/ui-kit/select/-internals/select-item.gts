@@ -17,6 +17,12 @@ interface SelectItemSignature {
     multiple?: boolean;
     selectedIcon?: string;
     /**
+     * The roving highlight, driven from `DSelect` tracked state rather than the modifier's
+     * imperative class, so it is rendered by the template and survives a re-render (the
+     * windowed list re-renders rows out from under an out-of-band `classList` mutation).
+     */
+    active?: boolean;
+    /**
      * When true, the whole control is disabled/read-only and no option may be activated,
      * regardless of the row's own flag. Closing the overlay on lock is asynchronous (it
      * awaits the exit animation), so an option can stay clickable for that window — the
@@ -57,6 +63,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
       role="option"
       class={{dConcatClass
         "d-combobox__option"
+        (if @active "--active")
         (if @descriptor.flags.selected "--selected")
         (if @descriptor.flags.__create "--create")
       }}
