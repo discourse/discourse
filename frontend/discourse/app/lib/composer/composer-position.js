@@ -36,7 +36,14 @@ export function setupComposerPosition(
   }
 
   function selectionTouchmoveGuard(event) {
-    if (editor.selectionStart !== editor.selectionEnd) {
+    // the rich editor is a contenteditable, without selectionStart/End
+    const selection = window.getSelection();
+    const hasSelection =
+      editor.selectionStart !== undefined
+        ? editor.selectionStart !== editor.selectionEnd
+        : !selection.isCollapsed && editor.contains(selection.anchorNode);
+
+    if (hasSelection) {
       event.stopImmediatePropagation();
     }
   }
