@@ -2111,7 +2111,9 @@ fi:
           member_title: "Kutsu jäseniä"
           sent_title: "Kutsu lähetetty"
           member_tab: "Jäsenet"
-          admin_tab: "Ylläpitäjät"
+          admin_tab: "Henkilökunta"
+          staff_role_admin: "Ylläpitäjä"
+          staff_role_moderator: "Valvoja"
           admin_email_label: "Sähköpostiosoite"
           email_placeholder: "nimi@esimerkki.fi"
           invite_by_email: "Sähköpostiosoite"
@@ -2122,6 +2124,7 @@ fi:
           summary:
             role_member: "Konkari"
             role_admin: "Ylläpitäjä"
+            role_moderator: "Valvoja"
             method: "Jakaminen"
             method_email: "Sähköpostiosoite"
             uses: "Käyttökertoja enintään"
@@ -4862,6 +4865,10 @@ fi:
           public: "Näkyy kaikille"
           always_public: "Tämän osion sisältö on aina julkista"
           more_menu: "Lisää-valikko"
+          localizations:
+            title: "Käännökset"
+            locale: "Kieli"
+            title_label: "Osion otsikko"
           links:
             add: "Lisää toinen linkki"
             delete: "Poista linkki"

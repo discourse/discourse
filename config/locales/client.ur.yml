@@ -2323,7 +2323,9 @@ ur:
           member_title: "ممبران کو مدعو کریں"
           sent_title: "دعوت نامہ بھیج دیا گیا"
           member_tab: "ممبران"
-          admin_tab: "منتظمین"
+          admin_tab: "عملہ"
+          staff_role_admin: "منتظم"
+          staff_role_moderator: "نگران"
           email_placeholder: "name@example.com"
           invite_by_email: "ای میل"
           restrict_domain: "ڈومین تک محدود"
@@ -2332,6 +2334,7 @@ ur:
           summary:
             role_member: "معتمد"
             role_admin: "منتظم"
+            role_moderator: "نگران"
             method: "شیئرنگ"
             method_email: "ای میل"
             uses: "زیادہ سے زیادہ استعمال"
@@ -5408,6 +5411,10 @@ ur:
           public: "ہر کسی کو نظر آتا ہے"
           always_public: "اس شعبہ میں مواد ہمیشہ عوامی ہوتا ہے"
           more_menu: "مزید مینو"
+          localizations:
+            title: "ترجمہ"
+            locale: "زبان"
+            title_label: "سیکشن کا عنوان"
           links:
             add: "ایک اور رابطہ شامل کریں"
             delete: "رابطہ حذف"

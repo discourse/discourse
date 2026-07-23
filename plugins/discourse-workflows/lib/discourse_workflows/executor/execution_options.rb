@@ -15,6 +15,7 @@ module DiscourseWorkflows
         :workflow_call_caller,
         :workflow_call_run_id,
         :workflow_call_child,
+        :step_node_id,
       ) do
         def initialize(
           user: nil,
@@ -27,7 +28,8 @@ module DiscourseWorkflows
           workflow_call_stack: [],
           workflow_call_caller: nil,
           workflow_call_run_id: nil,
-          workflow_call_child: false
+          workflow_call_child: false,
+          step_node_id: nil
         )
           super
         end

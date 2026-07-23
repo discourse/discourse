@@ -222,6 +222,7 @@ enable_your_feature_name:
 #### Key Behaviors
 
 - **Opt-in only**: Omitting `body_class` (or setting it `false`) means no body class — the default. Add it only when you actually have CSS keyed on `uc-{name}`.
+- **Always wrap in `:where()`**: Style the class as `:where(.uc-{name})`, never a bare `.uc-{name}`, so the transitional class adds zero specificity and stays safe to unwrap and delete later — the `discourse/uc-classes-in-where` stylelint rule enforces this.
 - **Enabled-for-user gated**: The class only appears for users the change is enabled for (via `currentUserUpcomingChanges`), not globally. Anonymous/ineligible users won't get it.
 - **Integrity-checked**: `body_class` is in the integrity spec's `allowed_keys` and must be a boolean — see [Mocking Metadata](#mocking-metadata) for how to set it in tests.
 

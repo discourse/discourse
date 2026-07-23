@@ -45,6 +45,7 @@ DiscourseWorkflows::Engine.routes.draw do
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"
       post "/executions" => "executions#create"
+      post "/step-executions" => "step_executions#create"
       get "/executions" => "executions#index"
       get "/workflows/:workflow_id/executions" => "executions#index"
       get "/workflows/:workflow_id/versions" => "workflow_versions#index"

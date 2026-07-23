@@ -2754,7 +2754,9 @@ ar:
           member_title: "دعوة أعضاء"
           sent_title: "تم إرسال الدعوة"
           member_tab: "الأعضاء"
-          admin_tab: "المسؤولون"
+          admin_tab: "فريق العمل"
+          staff_role_admin: "مسؤول"
+          staff_role_moderator: "مشرف"
           admin_email_label: "عنوان البريد الإلكتروني"
           email_placeholder: "name@example.com"
           invite_by_email: "البريد الإلكتروني"
@@ -2765,6 +2767,7 @@ ar:
           summary:
             role_member: "عضو"
             role_admin: "مسؤول"
+            role_moderator: "مشرف"
             method: "مشاركة"
             method_email: "البريد الإلكتروني"
             restriction: "مقيد إلى"
@@ -6616,6 +6619,10 @@ ar:
           public: "مرئي للجميع"
           always_public: "دائمًا ما يكون المحتوى في هذا القسم عامًا"
           more_menu: "قائمة \"المزيد\""
+          localizations:
+            title: "الترجمات"
+            locale: "اللغة"
+            title_label: "عنوان القسم"
           links:
             add: "إضافة رابط آخر"
             delete: "حذف الرابط"

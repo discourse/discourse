@@ -2314,7 +2314,9 @@ tr_TR:
           member_title: "Üye davet edin"
           sent_title: "Davet gönderildi"
           member_tab: "Üyeler"
-          admin_tab: "Yöneticiler"
+          admin_tab: "Personel"
+          staff_role_admin: "Yönetici"
+          staff_role_moderator: "Moderatör"
           admin_email_label: "E-posta adresi"
           email_placeholder: "ad@ornek.com"
           invite_by_email: "E-posta"
@@ -2325,6 +2327,7 @@ tr_TR:
           summary:
             role_member: "Üye"
             role_admin: "Yönetici"
+            role_moderator: "Moderatör"
             method: "Paylaşma"
             method_email: "E-posta"
             restriction: "Sınırlı"
@@ -5447,6 +5450,10 @@ tr_TR:
           public: "Herkese görünür"
           always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
+          localizations:
+            title: "Çeviriler"
+            locale: "Dil"
+            title_label: "Bölüm başlığı"
           links:
             add: "Başka bir bağlantı ekle"
             delete: "Bağlantıyı sil"

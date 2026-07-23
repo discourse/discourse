@@ -2478,7 +2478,6 @@ tr_TR:
     nested_replies_default: "Tüm konular için varsayılan görünüm olarak iç içe geçmiş yanıtları kullan."
     nested_replies_default_sort: "İç içe geçmiş yanıtlar görünümü için varsayılan sıralama algoritması."
     nested_replies_max_depth: "İzleme dizisi içindeki yanıtlar için maksimum görüntüleme derinliği. Bu derinliği aşan gönderilerde \"Bu izleme dizisine devam et\" bağlantısı görüntülenir."
-    nested_replies_backfill_batch_size: "Zamanlanmış her çalıştırma için iç içe geçmiş yanıt istatistiklerini doldurmak üzere kullanılacak konu sayısı."
     nested_replies_cap_nesting_depth: "Yanıtların iç içe geçmesini maksimum görsel derinlikte sınırla. Bu özellik etkinleştirildiğinde, en alt düzeydeki yanıtlar alt öğeler yerine eş düzey öğeler olarak yeniden sınıflandırılır."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."

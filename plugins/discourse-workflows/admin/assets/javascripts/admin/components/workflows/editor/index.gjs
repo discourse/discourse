@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -127,7 +126,6 @@ export function buildPastedGraph({
 
 export default class WorkflowsEditor extends Component {
   @service router;
-  @service dialog;
   @service modal;
   @service toasts;
   @service workflowsNodeTypes;
@@ -142,7 +140,6 @@ export default class WorkflowsEditor extends Component {
   formApi = null;
   ignoreDirty = () => false;
   undoManager = new UndoManager();
-  allowUnpublishedDraftTransition = false;
   currentSavePromise = null;
   pendingGraphSnapshot = null;
   pendingSaveOptions = null;
@@ -165,7 +162,6 @@ export default class WorkflowsEditor extends Component {
   constructor() {
     super(...arguments);
     this.#subscribeToExecutions();
-    this.router.on("routeWillChange", this.confirmUnpublishedDraftTransition);
     window.addEventListener("beforeunload", this.handleBeforeUnload);
   }
 
@@ -173,7 +169,6 @@ export default class WorkflowsEditor extends Component {
     super.willDestroy(...arguments);
     this.undoManager.destroy();
     this.#unsubscribeFromExecutions();
-    this.router.off("routeWillChange", this.confirmUnpublishedDraftTransition);
     window.removeEventListener("beforeunload", this.handleBeforeUnload);
   }
 
@@ -198,70 +193,6 @@ export default class WorkflowsEditor extends Component {
     event.preventDefault();
     event.returnValue = message;
     return message;
-  }
-
-  @bind
-  confirmUnpublishedDraftTransition(transition) {
-    const routeChanging = transition.to?.name !== transition.from?.name;
-    const shouldCheck =
-      this.hasUnpublishedDraft &&
-      !this.allowUnpublishedDraftTransition &&
-      !transition.isAborted &&
-      (!transition.queryParamsOnly || routeChanging);
-
-    if (!shouldCheck) {
-      return;
-    }
-
-    transition.abort();
-
-    this.dialog.dialog({
-      class: "workflows-unpublished-draft-dialog",
-      message: i18n("discourse_workflows.unpublished_changes_confirmation"),
-      type: "confirm",
-      buttons: [
-        {
-          label: i18n("discourse_workflows.leave_without_publishing"),
-          class: "btn-primary",
-          action: () => this.leaveWithoutPublishing(transition),
-        },
-        {
-          label: i18n("discourse_workflows.keep_editing"),
-          class: "btn-default",
-        },
-        {
-          label: i18n("discourse_workflows.discard_changes"),
-          class: "btn-default workflows-unpublished-draft-dialog__discard-btn",
-          action: () => this.discardDraftAndRetryTransition(transition),
-        },
-      ],
-    });
-  }
-
-  @action
-  leaveWithoutPublishing(transition) {
-    this.allowUnpublishedDraftTransition = true;
-    transition.retry();
-  }
-
-  @action
-  async discardDraftAndRetryTransition(transition) {
-    const confirmed = await this.confirmDiscardChanges();
-
-    if (!confirmed) {
-      return;
-    }
-
-    await this.discardWorkflowDraft();
-    this.leaveWithoutPublishing(transition);
-  }
-
-  confirmDiscardChanges() {
-    return this.dialog.confirm({
-      message: i18n("discourse_workflows.discard_changes_confirmation"),
-      confirmButtonLabel: "discourse_workflows.discard_changes",
-      cancelButtonLabel: "discourse_workflows.keep_editing",
-    });
   }
 
   #subscribeToExecutions() {
@@ -446,13 +377,6 @@ export default class WorkflowsEditor extends Component {
 
   @action
   browseTemplates() {
-    const nodes = this.formApi.get("nodes") || [];
-    const stickyNotes = this.formApi.get("stickyNotes") || [];
-
-    if (nodes.length === 0 && stickyNotes.length === 0) {
-      this.allowUnpublishedDraftTransition = true;
-    }
-
     this.router.transitionTo(
       "adminPlugins.show.discourse-workflows-templates",
       {
@@ -1452,22 +1376,6 @@ export default class WorkflowsEditor extends Component {
     this.#refreshUndoState();
   }
 
-  async discardWorkflowDraft() {
-    try {
-      const response = await ajax(
-        `/admin/plugins/discourse-workflows/workflows/${this.args.workflow.id}/discard-draft.json`,
-        {
-          type: "POST",
-        }
-      );
-
-      this.replaceWorkflow(response.workflow);
-    } catch (e) {
-      popupAjaxError(e);
-      throw e;
-    }
-  }
-
   async #saveWorkflow(options = {}) {
     this.saving = true;
     try {
@@ -1509,7 +1417,6 @@ export default class WorkflowsEditor extends Component {
       this.#refreshUndoState();
 
       if (this.args.isNew) {
-        this.allowUnpublishedDraftTransition = true;
         this.router.transitionTo(
           "adminPlugins.show.discourse-workflows.show",
           this.args.workflow.id

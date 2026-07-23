@@ -1017,15 +1017,9 @@ pt_BR:
           bulk_regen_description: "Escolha o tipo de resumo de IA a ser regerado para os tópicos selecionados."
           regenerate_gists_option: "Resumos breves (gists)"
           regenerate_summaries_option: "Resumos de tópicos"
-          regenerate_gists_success:
-            one: "Resumo curto regerado com sucesso"
-            other: "%{count} resumos curtos regerados com sucesso"
           regenerate_gists_error:
             one: "Não foi possível regerar resumos curtos"
             other: "Não foi possível regerar %{count} resumos curtos"
-          regenerate_topic_summary_success:
-            one: "Resumo do tópico regerado com sucesso"
-            other: "%{count} resumos de tópicos regerados com sucesso"
           regenerate_topic_summary_error:
             one: "Não foi possível regerar o resumo do tópico"
             other: "Não foi possível regerar %{count} resumos de tópico"

@@ -59,6 +59,7 @@ en:
         add_group: "Add user or group"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
+        disallowed: "Disallowed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -2298,7 +2299,7 @@ en:
         any: "any"
 
       homepage:
-        default: "(default)"
+        default: "Default"
 
       password_confirmation:
         title: "Password Again"
@@ -7269,12 +7270,11 @@ en:
               save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
-              all_categories: "All categories"
-              include_subcategories: "Include subcategories"
               new_members: "New members"
               returning: "Returning"
               staff: "Staff"
               empty: "No posts in the selected period."
+              save_error: "Couldn't save your selection for next time."
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -8197,6 +8197,9 @@ en:
         sidebar: "Sidebar"
         header_dropdown: "Header Dropdown"
         legacy: "Legacy"
+
+      homepage:
+        top_menu_default: "First item in top menu"
 
       backups:
         title: "Backups"

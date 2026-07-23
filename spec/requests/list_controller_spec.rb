@@ -436,6 +436,57 @@ RSpec.describe ListController do
     end
   end
 
+  describe "rss feed discovery" do
+    it "advertises the feed for anonymous filters with a feed route" do
+      topic
+      get "/latest", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("latest.rss")
+    end
+
+    it "omits the feed for anonymous filters without a feed route" do
+      topic
+      sign_in(user)
+
+      SiteSetting.anonymous_menu_items
+      anonymous_filters = Discourse.anonymous_filters
+      Discourse.stubs(:anonymous_filters).returns(anonymous_filters + [:new])
+
+      get "/new", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("application/rss+xml")
+    end
+  end
+
+  describe "crawler homepage rendering" do
+    fab!(:homepage_topic) { Fabricate(:post).topic }
+
+    before do
+      SiteSetting.has_login_hint = false
+      SiteSetting.top_menu = "latest|new|bookmarks|categories"
+    end
+
+    it "renders the crawler homepage without error for each reachable filter" do
+      %w[latest categories top hot new bookmarks].each do |filter|
+        SiteSetting.default_homepage = filter
+        get "/", params: { _escaped_fragment_: "true" }
+
+        expect(response.status).to eq(200), "expected 200 for default_homepage=#{filter}"
+        expect(response.body).not_to include("finish-installation")
+      end
+    end
+
+    it "falls back to an anon-visible list when the homepage is a user-scoped filter" do
+      SiteSetting.default_homepage = "bookmarks"
+      get "/", params: { _escaped_fragment_: "true" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include(homepage_topic.title)
+    end
+  end
+
   describe "filter private messages by tag" do
     fab!(:user)
     fab!(:moderator)

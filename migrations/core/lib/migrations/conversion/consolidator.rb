@@ -35,6 +35,15 @@ module Migrations
         @queue << shards
       end
 
+      # Runs a block as the run DB's single writer: takes the same `fork_mutex` a
+      # merge does (so it can't overlap a background merge or a worker fork) and
+      # points IntermediateDB at the run DB connection for the block. A coordinator
+      # uses this to write a step's reduced log entries once its workers finish.
+      # @return the block's value
+      def with_writer(&block)
+        @fork_mutex.synchronize { Database::IntermediateDB.with_connection(@connection, &block) }
+      end
+
       # Waits for every enqueued shard to be merged, then returns the merge errors.
       # @return [Array<StandardError>] the errors from any merge that failed (empty
       #   when all merged cleanly)

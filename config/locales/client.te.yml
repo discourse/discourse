@@ -1707,6 +1707,9 @@ te:
           cancel: "రద్దుచేయండి"
         invite_roles:
           member_tab: "సభ్యులు"
+          admin_tab: "సిబ్బంది"
+          staff_role_admin: "నిర్వాహకుడు"
+          staff_role_moderator: "నిర్వాహకుడు"
           email_placeholder: "name@example.com"
           invite_by_email: "ఈమెయిల్"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
@@ -1715,6 +1718,7 @@ te:
           summary:
             role_member: "సభ్యుడు"
             role_admin: "నిర్వాహకుడు"
+            role_moderator: "నిర్వాహకుడు"
             method_email: "ఈమెయిల్"
             uses: "గరిష్ట ఉపయోగాలు"
             expires: "గడువు ముగుస్తుంది"
@@ -4113,6 +4117,10 @@ te:
           public: "అందరికీ కనిపిస్తుంది"
           always_public: "ఈ విభాగంలోని కంటెంట్ ఎల్లప్పుడూ బహిరంగంగా ఉంటుంది"
           more_menu: "మరిన్ని మెను"
+          localizations:
+            title: "అనువాదాలు"
+            locale: "భాష"
+            title_label: "విభాగం శీర్షిక"
           links:
             add: "మరొక లింక్‌ని జోడించండి"
             delete: "లింక్‌ని తొలగించండి"

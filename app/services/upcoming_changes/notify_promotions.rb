@@ -81,6 +81,14 @@ class UpcomingChanges::NotifyPromotions
         end
       end
 
+      if !status_hash[:success] && (!status_hash[:error_key] || !status_hash[:error])
+        status_hash[
+          :error
+        ] = "An unexpected error in UpcomingChanges::NotifyPromotion occurred while notifying about promotion of #{setting_name}"
+        status_hash[:error_key] = :unexpected_error
+        status_hash[:result_inspect_steps] = result.inspect_steps
+      end
+
       status_hash
     end
   end

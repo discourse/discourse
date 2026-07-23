@@ -399,6 +399,9 @@ zh_CN:
   invalid_access: "您没有权限查看请求的资源。"
   topic_converter:
     too_many_recipients: "无法转换：此话题的参与者人数超过了允许的最大人数 (%{max})。"
+  topic_og_image:
+    preview_not_eligible: "无法为私有类别中的个人信息或主题生成 OG 图像。"
+    preview_generation_failed: "无法生成预览图像。"
   authenticator_not_found: "身份验证方法不存在或已被禁用。"
   authenticator_no_connect: "此身份验证服务提供商不允许连接到现有论坛帐户。"
   invalid_api_credentials: "您没有权限查看请求的资源。API 用户名或者密钥无效。"
@@ -465,6 +468,8 @@ zh_CN:
   links_require_trust: "抱歉，您的帖子中不能包含链接。"
   too_many_links:
     other: "抱歉，新用户在一个帖子中仅能发布 %{count} 个链接。"
+  too_many_quotes:
+    other: "抱歉，您在一篇帖子中只能包含 %{count} 条引用。"
   contains_blocked_word: "抱歉，您不能使用 '%{word}'；这是不被允许的。"
   contains_blocked_words: "抱歉，您不能发帖。不允许的字词：%{words}。"
   spamming_host: "抱歉，您不能发布指向该主机的链接。"
@@ -570,6 +575,7 @@ zh_CN:
       admins: "管理员"
       moderators: "版主"
       staff: "管理人员"
+      anonymous_users: "anonymous_users"
       logged_in_users: "已登录用户"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
@@ -583,6 +589,11 @@ zh_CN:
       staff: "管理人员"
       anonymous_users: "匿名用户"
       logged_in_users: "登录用户"
+      trust_level_0: "信任级别 0"
+      trust_level_1: "信任级别 1"
+      trust_level_2: "信任级别 2"
+      trust_level_3: "信任级别 3"
+      trust_level_4: "信任级别 4"
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
@@ -788,6 +799,7 @@ zh_CN:
     uncategorized_description: "不需要类别或不适合任何其他现有类别的话题。"
   category_types:
     not_available: "类别类型 '%{type_name}' 不可用"
+    requires_plugin: "要使用类别类型 '%{type_name}'，需要启用 '%{plugin_name}' 插件。请联系管理员启用该插件或创建此类别。"
     discussion:
       name: "讨论"
       title: "讨论"
@@ -1109,6 +1121,7 @@ zh_CN:
     logged_in_as: "登录身份"
     permissions_header: '这将允许“%{application_name}”：'
     redirect_warning: "授权会将您重定向到"
+    expiry_notice: '“%{application_name}”的此密钥将于 %{expires_at}到期。'
     write_scope_warning: "请求完全写入权限 — 此应用程序将能够发布、编辑和删除内容。只有在你完全信任的情况下才能继续。"
     instructions: '我们刚刚生成了一个新的用户 API 密钥供您与“%{application_name}”搭配使用，请将以下密钥粘贴到您的应用程序中：'
     copy_key: "复制密钥"
@@ -1131,9 +1144,21 @@ zh_CN:
       bookmarks_calendar: "读取书签提醒"
       user_status: "读取和更新用户状态"
     device:
+      title: "授权应用程序"
+      enter_code: "请输入您的应用程序中显示的代码。"
+      enter_full_code: "请输入完整代码以授权此应用程序。"
       code: "代码"
+      code_character: "代码字符 %{position}"
       continue: "继续"
+      invalid_code: "抱歉，该代码无效。请检查代码并重试。"
+      expired_code: "抱歉，该代码已过期或已被使用。请在应用程序中申请新代码，然后重试。"
       authorize_title: '授权“%{application_name}”'
+      expiry_notice: '“%{application_name}”的此密钥将于 %{expires_at}到期。'
+      no_expiry_warning: "此密钥不会自动过期。请仅在完全信任该应用程序的情况下才对其进行授权。"
+      unregistered_app_warning: "此应用程序未经本网站注册或验证。请仅在完全信任代码来源的情况下才继续操作。"
+      complete: "授权完成"
+      denied: "授权被拒绝"
+      return_to_cli: "现在可以返回终端或应用程序。"
     invalid_public_key: "抱歉，该公钥无效。"
     invalid_auth_redirect: "抱歉，此 auth_redirect 主机不被允许。"
     invalid_token: "令牌缺失、无效或已过期。"
@@ -1211,16 +1236,25 @@ zh_CN:
       yaxis: "新贡献者数量"
       description: "此期间首次发帖的用户数。"
     activity_by_category:
+      title: "按类别显示的活动"
+      description: "所选期间内每个类别的话题数、帖子数及成员参与情况。“占比”是指每个类别占所列类别的总活动量百分比；“与之前相比”是指与同等时长的上一期间相比的占比变化。"
       labels:
         category: "类别"
         topics: "话题"
         posts: "帖子"
+        page_views: "页面浏览量"
         share: "分享"
+        vs_prior: "与之前相比"
     posters_by_member_type:
+      title: "谁在发帖？"
+      description: '所选期间内发布的帖子数，按成员类型统计。“新成员”是指在此期间内注册的用户，“回流成员”是指在此之前注册的用户，“管理人员”是指管理员或版主。'
       labels:
+        member_type: "成员类型"
         count: "帖子"
         share: "分享"
       types:
+        new_members: "新成员"
+        returning: "回流成员"
         staff: "管理人员"
     trust_level_pipeline:
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
@@ -1281,6 +1315,7 @@ zh_CN:
       title: "网站流量"
       xaxis:
         page_view_anon_browser: "匿名"
+        page_view_logged_in_browser: "登录成员"
         page_view_crawler: "抓取工具"
         page_view_embed: "嵌入式页面浏览量"
         page_view_other: "其他流量"
@@ -1400,10 +1435,16 @@ zh_CN:
         num_topics: "话题"
       description: "用户按他们分享的链接的点击次数列出。"
     top_countries_by_browser_pageviews:
+      title: "热门国家/地区"
+      description: "在所选期间内，为您的论坛带来最多浏览器页面浏览量的国家/地区。"
       labels:
+        country_code: "国家/地区代码"
         count: "访问天数"
     top_referrers_by_browser_pageviews:
+      title: "热门推荐人"
+      description: "在所选期间内，为您的论坛带来最多浏览器页面浏览量的外部网站。"
       labels:
+        normalized_referrer: "推荐人"
         count: "访问天数"
     top_traffic_sources:
       title: "热门流量来源"
@@ -1596,6 +1637,7 @@ zh_CN:
       twitter_login: 'X 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
       group_email_credentials: '群组“<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>”的电子邮件凭据存在问题。在解决此问题之前，不会从群组收件箱发送任何电子邮件。%{error}'
       upcoming_change_stable_opted_out: '您的网站已选择退出即将推出的更改“%{upcoming_change}”。此更改现已进入“稳定”状态，可能很快就会被移除或设为永久。请访问<a href="%{base_path}/admin/config/upcoming-changes">"即将推出的更改页面</a>，查看有关此更改的详细信息。'
+      content_security_policy_disabled: "内容安全策略功能已被禁用。这是一项重要的安全功能，不应该在生产环境下禁用。<a href='%{base_path}/admin/site_settings/category/all_results?filter=content_security_policy'>请点击此处重新启用</a>。"
       rails_env: "您的服务器正在以%{env}模式运行。"
       host_names: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请将其更新为您的网站的主机名。"
       sidekiq_check: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1732,6 +1774,7 @@ zh_CN:
     manifest_icon: "在 Android 上用作徽标/初始屏幕图片的图片。将自动调整为 512 × 512。如果留空，将使用 large_icon。"
     manifest_screenshots: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
     favicon: "您的网站的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
+    generate_topic_og_image: "自动为没有图像的话题生成 OpenGraph 预览图像。使用话题标题、类别和站点颜色。"
     apple_touch_icon: "用于 Apple 触控设备的图标。不要使用SVG图像。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 {{setting:large_icon}} 。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
@@ -1818,6 +1861,7 @@ zh_CN:
     slow_down_crawler_user_agents: "网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。"
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
     llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。有关详情，请参阅 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a>。"
+    content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。只有在需要调试/测试时才应暂时将其禁用。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_report_uri: "通过 CSP <code>report-uri</code> 指令将 CSP 违规报告发送至此 URL。若留空，则禁用报告功能。"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此网站嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
@@ -1828,6 +1872,7 @@ zh_CN:
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
     top_menu: "确定首页导航中显示的条目，以及显示顺序。"
+    custom_homepage_crawler_route: "启用自定义主页后向网络抓取工具显示的路径。"
     post_menu: "配置默认帖子菜单项的公开范围和顺序。由插件或主题添加的其他菜单项将单独管理，不会出现在此列表中。"
     post_menu_hidden_items: "除非点击了扩展省略号否则默认在帖子菜单中隐藏的菜单项。由插件或主题添加的附加菜单项将单独管理，不会出现在此列表中。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
@@ -1914,6 +1959,7 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
+    google_oauth2_hd_groups: '在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 <a target="_blank" href="https://meta.discourse.org/t/226850">此 Meta 话题</a>。'
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1943,6 +1989,7 @@ zh_CN:
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
     s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
+    enable_direct_s3_uploads: '允许直接向 Amazon S3 进行分段上传，有关详细信息，请参阅<a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">此 Meta 话题</a>。'
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
     backup_location: "存储备份的位置。重要：S3 要求在<a href='%{base_path}/admin/site_settings/category/files'>文件设置</a>中输入有效的 S3 凭据。从本地更改为 S3 时，必须运行 `s3:ensure_cors_rules` rake 任务。"
@@ -2017,6 +2064,8 @@ zh_CN:
     composer_media_optimization_image_resize_dimensions_threshold: "触发客户端大小调整的最小图片宽度"
     composer_media_optimization_image_resize_width_target: "宽度大于 `composer_media_optimization_image_dimensions_resize_threshold` 的图片将调整为此宽度。必须 >= `composer_media_optimization_image_dimensions_resize_threshold`。"
     composer_media_optimization_image_encode_quality: "重新编码过程中使用的 JPG 编码质量。"
+    composer_media_optimization_image_convert_enabled: "在上传前，启用 JXL、HEIC 和动画 GIF 图像的客户端转换。JXL 和 HEIC 会转换为 JPEG，大于阈值的动画 GIF 会转换为动画 WEBP。"
+    composer_media_optimization_gif_conversion_threshold: "触发客户端转换为动画 WEBP 的最小 GIF 文件大小（以字节为单位）。"
     video_conversion_enabled: "为上传的视频文件启用视频转换。这可以将视频转换为与网页兼容的格式。"
     video_conversion_service: "用于处理所上传视频的视频转换服务。"
     mediaconvert_role_arn: "用于 MediaConvert 服务的 AWS IAM 角色 ARN。使用 AWS MediaConvert 进行视频转换时需要此角色。"
@@ -2053,6 +2102,7 @@ zh_CN:
     edit_all_topic_groups: "允许此群组中的用户编辑其他用户的主题标题、标签和类别"
     edit_all_post_groups: "允许此群组中的用户编辑其他用户的帖子"
     create_topic_allowed_groups: "能够创建新话题的群组。管理员和版主始终可以创建话题。"
+    topic_timers_allowed_groups: "能够设置话题计时器的群组。管理员和版主始终可以设置话题计时器。"
     allow_flagging_staff: "如果启用，用户可以举报来自管理人员帐户的帖子。"
     edit_wiki_post_allowed_groups: "能够编辑标记为 wiki 的帖子的群组。管理员和版主始终可以编辑标记为 wiki 的帖子。"
     edit_post_allowed_groups: "能够编辑帖子的群组。管理员和版主始终可以编辑帖子。"
@@ -2073,6 +2123,7 @@ zh_CN:
     newuser_max_mentions_per_post: "新用户可以在帖子中使用的提及通知的最大数量。"
     newuser_max_replies_per_topic: "在有人回复他们之前，新用户可以在单个话题中做出的最大回复数。"
     max_mentions_per_post: "任何人可以在帖子中使用的提及通知的最大数量。"
+    max_quotes_per_post: "单个帖子中允许的最大引用数。设置为 0 可禁用此检查。"
     max_users_notified_per_group_mention: "当群组被提及时可能会收到通知的最大用户数（超过阈值后将不发送通知）"
     enable_mentions: "允许用户使用 '@' 符号在他们的帖子中标记或引用彼此。"
     here_mention: "用于 @ 提及的名称，允许特权用户通知参与话题的 'max_here_mentioned' 人。必须不是一个现有的用户名。"
@@ -2138,6 +2189,7 @@ zh_CN:
     fast_typing_threshold: "用户在第一次发帖时必须输入的最短时间。如果未达到阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
+    auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用<a href='%{base_path}/admin/customize/watched_words/action/silence'>禁言关注词</a>。"
     moderator_guide_topic: "概述您如何管理您的社区的话题。链接将在审核队列中显示，供版主和管理员使用。"
     reviewable_claiming: "可审核的内容是否需要先声明然后再对其采取行动？"
     reviewable_default_topics: "默认显示按话题分组的可审核内容"
@@ -2206,6 +2258,7 @@ zh_CN:
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "允许用户通过电子邮件发布新话题。启用此设置后，您将能够为群组和类别配置传入电子邮件地址。"
     email_in_allowed_groups: "能够通过电子邮件发布新话题的组。管理员和版主始终可以通过电子邮件发布新话题。"
+    email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。有关详细信息，请参阅<a target=\"_blank\" href=\"https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469\">此 Meta 话题</a>。"
     email_in_spam_header: "选择用于识别垃圾邮件的特定电子邮件头。此选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则此头值设置为 YES 的电子邮件将被归类为垃圾邮件。"
     enable_smtp: "启用 SMTP 以发送群组消息通知。"
     email_prefix: "电子邮件主题中使用的[标签]。如果不设置，将默认为 'title'。"
@@ -2331,7 +2384,14 @@ zh_CN:
     emoji_autocomplete_min_chars: "触发自动填充表情符号弹出窗口所需的最少字符数"
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
+    enable_gifs: "添加一个按钮，以在帖子中轻松搜索和插入 GIF。"
     klipy_api_key: "Klipy API 密钥。用于 GIF 搜索功能。"
+    klipy_file_detail: "可使用的图像格式。WebP 的文件较小，加载速度更快，而 GIF 则与旧版浏览器兼容。"
+    klipy_content_filter: "GIF 搜索结果的内容安全级别。"
+    klipy_country: "GIF 搜索结果中的双字母国家/地区代码。"
+    klipy_locale: "GIF 搜索结果中的语言代码，格式为 xx_YY（语言加上可选的国家/地区）。"
+    klipy_limit_infinite_search_results: "限制用户滚动时返回的 GIF 结果数量，以避免达到 API 速率限制。"
+    klipy_max_results_limit: "启用“限制无限搜索结果”后，在结果达到一定数量后停止加载。每次 API 调用会检索 24 个 GIF。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
     approve_unless_allowed_groups: "不属于这些群组的用户所发布的帖子必须经过批准。管理员和版主发布的帖子始终会被批准。"
     approve_new_topics_unless_allowed_groups: "不属于这些群组的用户所发布的话题必须经过批准。管理员和版主发布的话题始终会被批准。"
@@ -2409,6 +2469,8 @@ zh_CN:
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
     revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销前的天数（0 表示永不撤销）"
     revoke_user_api_keys_maxlife_days: "用户 API 密钥被自动撤销前的天数（0 表示永不撤销）"
+    max_user_api_key_expiry_days: "客户端可以申请的用户 API 密钥的最长有效期（以天为单位）"
+    verbose_user_api_key_device_auth_logging: "记录用户 API 密钥设备授权流程的详细诊断"
     tagging_enabled: "启用话题标签？有关详情，请参阅 <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta 上的标签管理员指南</a>。"
     create_tag_allowed_groups: "能够创建标签的群组。管理员和版主始终可以创建标签。"
     edit_tags_allowed_groups: "能够编辑标签、标签描述和标签同义词的群组。"
@@ -2505,7 +2567,6 @@ zh_CN:
     nested_replies_default: "将嵌套回复设置为所有话题的默认视图。"
     nested_replies_default_sort: "嵌套回复视图的默认排序算法。"
     nested_replies_max_depth: "消息串回复的最大视觉嵌套深度。超过此深度的帖子会显示“继续此消息串”链接。"
-    nested_replies_backfill_batch_size: "每次定时运行要回填嵌套回复统计信息的话题数量。"
     nested_replies_cap_nesting_depth: "将回复嵌套层级限制在最大视觉深度。启用此功能后，最深层的回复将被重新设置为同级回复，而不是子回复。"
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
@@ -2513,6 +2574,7 @@ zh_CN:
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
+    enable_horizon_high_context_topic_cards: "在 Horizon 主题中显示更丰富的话题卡，包括话题摘要、标签和插件扩展信息。"
     dashboard_improvements: "启用重新设计的管理仪表板，可让您固定自定义报告，并包含改进的网站流量、参与度和其他与社区成功和价值相关的分析。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
@@ -2561,6 +2623,7 @@ zh_CN:
       discourse_connect_url_is_empty: "在启用此设置之前，您必须先设置 'discourse connect url'。"
       discourse_connect_secret_is_too_short: "在启用此设置之前，您必须设置一个至少包含 10 个字符的“Discourse Connect 密钥”。"
       enable_local_logins_disabled: "在启用此设置之前，您必须先启用 'enable local logins'。"
+      enable_local_logins_via_email_disabled: "在启用此设置之前，必须先启用 'enable local logins via email'。"
       min_username_length_exists: "'min username length' 不能大于最短用户名 (%{username})。"
       min_group_name_length_exists: "'min username length' 不能大于最短群组名称 (%{group_name})。"
       min_username_length_range: "'min username length' 不能大于 'max username length'。"
@@ -2627,18 +2690,27 @@ zh_CN:
       group: "显示群组成员发布的帖子"
       groups_any: "显示指定群组成员发布的帖子（以逗号分隔）"
       topic: "显示特定主题的帖子"
+      exclude_topic: "排除特定话题中的帖子"
       after: "显示特定日期（YYYY-MM-DD 或天数前）之后发布的帖子"
       before: "显示指定日期（YYYY-MM-DD 或天数前）之前发布的帖子"
       topic_after: "显示日期（YYYY-MM-DD 或天数）之后创建的主题中的帖子"
       topic_before: "显示日期（YYYY-MM-DD 或天数前）之前创建的主题中的帖子"
       keywords: "显示包含指定关键词的帖子"
       topic_keywords: "显示包含指定关键词的主题中的帖子"
+      post_type: "按类型或位置筛选帖子"
+      post_type_regular: "仅限普通帖子"
+      post_type_all: "所有可见的帖子类型"
       post_type_first: "仅第一个帖子"
       post_type_reply: "仅回复"
+      post_type_whisper: "仅限密语"
       status: "按主题状态筛选帖子"
       status_open: "打开话题"
       status_closed: "关闭话题"
       status_archived: "归档话题"
+      status_listed: "公开的话题"
+      status_unlisted: "取消公开的话题"
+      status_deleted: "删除的话题"
+      status_public: "公开类别的话题"
       status_noreplies: "没有回应的话题"
       status_single_user: "单个用户的话题"
       order: "排序帖子"
@@ -2942,6 +3014,7 @@ zh_CN:
       unused_staged_user: "未使用的暂存用户"
       fixed_primary_email: "修复了暂存用户的常用电子邮件"
       same_ip_address: "与其他用户相同的 IP 地址 (%{ip_address})"
+      same_ip_address_user: "与 %{username} 相同的 IP 地址"
       inactive_user: "停用用户"
       reviewable_reject_auto: "自动处理排队的可审核条目"
       reviewable_reject: "可审核用户被拒绝"
@@ -2952,6 +3025,7 @@ zh_CN:
     cannot_delete_has_posts:
       other: "用户 %{username} 在公开话题或个人消息中有 %{count} 个帖子，因此无法被删除。"
     cannot_bulk_delete: "无法删除一个或多个用户，因为他们是管理员、有太多帖子或有很早之前的帖子。"
+    cannot_bulk_suspend: "有一名或多名所选用户无法封禁。"
     cannot_remove_all_auth: "您必须设置至少一个关联帐户、通行密钥或密码。"
   unsubscribe_mailer:
     title: "退订邮件"
@@ -2964,6 +3038,15 @@ zh_CN:
 
 
       如果您想继续接收电子邮件动态，您可以忽略此电子邮件。
+  email_login_code_mailer:
+    title: "电子邮件登录码邮件程序"
+    subject_template: "%{code} 是您的登录码"
+    text_body_template: |
+      使用以下登录码可完成 %{site_name} 登录：
+
+      ## %{code}
+
+      此登录码将在 %{minutes} 分钟后到期。如果您没有申请该登录码，则可以放心地忽略这封电子邮件。
   invite_mailer:
     title: "邀请邮件"
     subject_template: "%{inviter_name} 邀请您加入 %{site_domain_name} 上的 '%{topic_title}'"
@@ -4900,6 +4983,8 @@ zh_CN:
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
+      tag_not_allowed_in_category:
+        other: '不允许在“%{category}”类别中使用以下标签：%{tags}。'
       in_this_category: "不能用于此类别"
       not_allowed: "无法使用"
       restricted_to:
@@ -4908,6 +4993,7 @@ zh_CN:
       synonym: '请使用“%{tag_name}”代替'
       has_synonyms: '无法使用“%{tag_name}”，因为有同义词。'
       one_tag_per_topic_group: '与“%{tag_names}”冲突（每个主题只允许一个）'
+      one_tag_per_topic_group_without_names: "与所选标签冲突（每个话题仅允许一个标签）"
       missing_parent_tag: '添加“%{parent_tag_name}”标签后即可使用'
       restricted_tags_cannot_be_used_in_category:
         other: '“%{tags}”标签不能在“%{category}”类别中使用。请将其移除。'
@@ -4995,7 +5081,10 @@ zh_CN:
     discourse:
       user_joined_community: "%{date}加入"
     google_meet:
+      title: "Google Meet 会议"
+      description: "请打开此 Google Meet 链接以加入通话。"
       meeting_code: "代码:"
+      join: "加入会议"
     gitlab:
       truncated_file: "此文件已被截断。"
       show_original: "显示原始文件"
@@ -5357,7 +5446,6 @@ zh_CN:
       validation:
         missing_name: "emoji名称为必填项。"
         missing_filename: "图像的文件名为必填项。"
-        invalid_name: "名称包含无效字符。"
         group_too_long: "群组名称必须少于或等于 20 个字符。"
         unsupported_extension: "不支持文件扩展名 .%{ext} （请使用 png、gif 或 svg）。"
         duplicate_filename: "该文件名在 CSV 文件中出现了多次。"

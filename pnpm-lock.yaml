@@ -90,6 +90,9 @@ importers:
       playwright:
         specifier: 1.59.1
         version: 1.59.1
+      postcss-selector-parser:
+        specifier: ^7.1.4
+        version: 7.1.4
       prettier:
         specifier: 3.8.1
         version: 3.8.1

@@ -1460,13 +1460,16 @@ gl:
           cancel: "Cancelar"
         invite_roles:
           member_tab: "Membros"
-          admin_tab: "Administradores"
+          admin_tab: "Equipo"
+          staff_role_admin: "Administrador"
+          staff_role_moderator: "Moderador"
           email_placeholder: "nome@exemplo.com"
           invite_by_email: "Enderezo de correo"
           update: "Actualizar"
           summary:
             role_member: "Membro"
             role_admin: "Administrador"
+            role_moderator: "Moderador"
             method_email: "Enderezo de correo"
             expires: "Caduca"
             topic: "Tema"
@@ -3328,6 +3331,9 @@ gl:
         custom:
           save: "Gardar"
           delete: "Eliminar"
+          localizations:
+            title: "Traducións"
+            locale: "Idioma"
           links:
             reset: "Restabelecer cos valores predeterminados"
             icon:

@@ -19,6 +19,7 @@
     "lint-to-the-future": "^3.2.0",
     "lint-to-the-future-eslint": "^4.0.0",
     "playwright": "1.59.1",
+    "postcss-selector-parser": "^7.1.4",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
     "typescript": "^5.9.3"

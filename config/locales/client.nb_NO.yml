@@ -1839,7 +1839,9 @@ nb_NO:
           cancel: "Avbryt"
         invite_roles:
           member_tab: "Medlemmer"
-          admin_tab: "Adminer"
+          admin_tab: "Stab"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "navn@example.com"
           invite_by_email: "E-post"
           restrict_domain: "Begrens til domene"
@@ -1848,6 +1850,7 @@ nb_NO:
           summary:
             role_member: "Medlem"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-post"
             uses: "Maks antall bruk"
             expires: "Utløper"
@@ -4237,6 +4240,8 @@ nb_NO:
         custom:
           save: "Lagre"
           delete: "Slett"
+          localizations:
+            title: "Oversettelser"
           links:
             reset: "Tilbakestill til standard"
             icon:

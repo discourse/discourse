@@ -989,12 +989,15 @@ sw:
           cancel: "Ghairi"
         invite_roles:
           member_tab: "Wanachama"
-          admin_tab: "Viongozi"
+          admin_tab: "Wasaidizi"
+          staff_role_admin: "Kiongozi"
+          staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
+            role_moderator: "Msimamizi"
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"

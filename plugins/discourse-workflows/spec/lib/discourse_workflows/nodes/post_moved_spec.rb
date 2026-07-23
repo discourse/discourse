@@ -75,16 +75,67 @@ RSpec.describe DiscourseWorkflows::Nodes::PostMoved::V1 do
 
       expect(
         trigger.matches?(
-          trigger_context("category_id" => destination_category.id.to_s, "tag_names" => [tag.name]),
+          trigger_context(
+            "category_ids" => [destination_category.id.to_s],
+            "tag_names" => [tag.name],
+          ),
         ),
       ).to eq(true)
+    end
+
+    it "matches any of the configured destination categories" do
+      trigger = described_class.new(moved_post, source_topic.id)
+
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [Fabricate(:category).id.to_s, destination_category.id.to_s],
+          ),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches destination subcategories by default but not when excluded" do
+      parent_category = Fabricate(:category)
+      destination_category.update!(parent_category: parent_category)
+      trigger = described_class.new(moved_post, source_topic.id)
+
+      expect(trigger.matches?(trigger_context("category_ids" => [parent_category.id.to_s]))).to eq(
+        true,
+      )
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [parent_category.id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      trigger = described_class.new(moved_post, source_topic.id)
+
+      expect(
+        trigger.matches?(trigger_context("category_id" => destination_category.id.to_s)),
+      ).to eq(true)
+    end
+
+    it "matches subcategories by default for legacy category_id-only nodes" do
+      parent_category = Fabricate(:category)
+      destination_category.update!(parent_category: parent_category)
+      trigger = described_class.new(moved_post, source_topic.id)
+
+      expect(trigger.matches?(trigger_context("category_id" => parent_category.id.to_s))).to eq(
+        true,
+      )
     end
 
     it "returns false when the destination topic does not match category or tags" do
       other_category = Fabricate(:category)
       trigger = described_class.new(moved_post, source_topic.id)
 
-      expect(trigger.matches?(trigger_context("category_id" => other_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
         false,
       )
       expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)

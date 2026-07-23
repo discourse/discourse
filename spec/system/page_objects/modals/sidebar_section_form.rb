@@ -16,10 +16,30 @@ module PageObjects
         icon_picker.select_icon(icon)
       end
 
+      def fill_last_link(name, url, icon = "link")
+        primary_links_wrapper
+          .all(".sidebar-section-form-link")
+          .last
+          .then do |link_row|
+            link_row.fill_in("link-name", with: name)
+            link_row.fill_in("link-url", with: url)
+
+            icon_picker = PageObjects::Components::DIconGridPicker.new(link_row)
+            icon_picker.expand
+            icon_picker.filter(icon)
+            icon_picker.select_icon(icon)
+          end
+      end
+
       def first_link_icon_picker
         PageObjects::Components::DIconGridPicker.new(
           find(".sidebar-section-form-link", match: :first),
         )
+      end
+
+      def add_link
+        all(".sidebar-section-form-modal .add-link").first.click
+        self
       end
 
       def mark_as_public
@@ -47,6 +67,21 @@ module PageObjects
 
       def add_first_link_localization(name)
         find(".add-link-localization", match: :first).click
+        all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
+          .last
+          .find("option[value='ja']")
+          .select_option
+        all(
+          "input[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.link_label")}']",
+        ).last.fill_in(with: name)
+      end
+
+      def add_last_link_localization(name)
+        primary_links_wrapper
+          .all(".sidebar-section-form-link-wrapper")
+          .last
+          .find(".add-link-localization")
+          .click
         all("select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']")
           .last
           .find("option[value='ja']")
@@ -161,6 +196,10 @@ module PageObjects
 
       def section_title_translation_locale_selector
         ".sidebar-section-form > .sidebar-section-form__localizations select[aria-label='#{I18n.t("js.sidebar.sections.custom.localizations.locale")}']"
+      end
+
+      def primary_links_wrapper
+        find(".sidebar-section-form__links-wrapper")
       end
     end
   end

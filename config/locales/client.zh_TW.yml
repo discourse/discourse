@@ -1939,6 +1939,9 @@ zh_TW:
         invite_roles:
           member_title: "邀請成員"
           member_tab: "成員"
+          admin_tab: "管理員"
+          staff_role_admin: "管理員"
+          staff_role_moderator: "板主"
           admin_email_label: "電子郵件地址"
           email_placeholder: "name@example.com"
           invite_by_email: "電子信箱"
@@ -1948,6 +1951,7 @@ zh_TW:
           summary:
             role_member: "成員"
             role_admin: "管理員"
+            role_moderator: "板主"
             method_email: "電子信箱"
             uses: "最大使用次數"
             expires: "過期時間"
@@ -4416,6 +4420,10 @@ zh_TW:
           public: "所有人都可以看到"
           always_public: "本節中的內容始終是公開"
           more_menu: "更多選單"
+          localizations:
+            title: "翻譯"
+            locale: "語言"
+            title_label: "章節標題"
           links:
             add: "新增另一個連結"
             delete: "刪除連結"

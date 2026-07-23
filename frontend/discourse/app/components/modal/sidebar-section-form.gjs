@@ -70,6 +70,10 @@ class Section {
     return !this.sectionType;
   }
 
+  get communitySection() {
+    return this.sectionType === "community";
+  }
+
   get validTitle() {
     return !this.#blankTitle && !this.#tooLongTitle;
   }
@@ -185,6 +189,7 @@ class SectionLink {
     objectId,
     segment,
     localizations,
+    canLocalize = true,
   }) {
     this.router = router;
     this.icon = iconName || "link";
@@ -196,6 +201,7 @@ class SectionLink {
     this.objectId = objectId;
     this.segment = segment;
     this.localizations = localizations || [];
+    this.canLocalize = canLocalize;
   }
 
   get path() {
@@ -388,6 +394,7 @@ export default class SidebarSectionForm extends Component {
         link.localizations,
         LinkLocalization
       ),
+      canLocalize: link.can_localize ?? link.canLocalize,
     });
   }
 
@@ -538,6 +545,16 @@ export default class SidebarSectionForm extends Component {
       this.siteSettings.content_localization_enabled &&
       this.transformedModel.public &&
       this.transformedModel.customSection
+    );
+  }
+
+  get showLinkLocalizations() {
+    return (
+      this.currentUser?.admin &&
+      this.siteSettings.content_localization_enabled &&
+      this.transformedModel.public &&
+      (this.transformedModel.customSection ||
+        this.transformedModel.communitySection)
     );
   }
 
@@ -729,7 +746,7 @@ export default class SidebarSectionForm extends Component {
   }
 
   serializeLinkLocalizations(link) {
-    if (!this.showLocalizations) {
+    if (!this.showLinkLocalizations || !link.canLocalize) {
       return [];
     }
 
@@ -749,6 +766,7 @@ export default class SidebarSectionForm extends Component {
         router: this.router,
         objectId: this.nextObjectId,
         segment: "primary",
+        canLocalize: true,
       })
     );
 
@@ -763,6 +781,7 @@ export default class SidebarSectionForm extends Component {
         router: this.router,
         objectId: this.nextObjectId,
         segment: "secondary",
+        canLocalize: true,
       })
     );
 
@@ -993,7 +1012,10 @@ export default class SidebarSectionForm extends Component {
                 @deleteLink={{this.deleteLink}}
                 @reorderCallback={{this.reorder}}
                 @setDraggedLinkCallback={{this.setDraggedLink}}
-                @showLocalizations={{this.showLocalizations}}
+                @showLocalizations={{and
+                  this.showLinkLocalizations
+                  link.canLocalize
+                }}
                 @localeOptions={{this.localeOptions}}
                 @deleteLocalization={{this.deleteLinkLocalization}}
                 @addLocalization={{this.addLinkLocalization}}
@@ -1021,7 +1043,10 @@ export default class SidebarSectionForm extends Component {
                 @deleteLink={{this.deleteLink}}
                 @reorderCallback={{this.reorder}}
                 @setDraggedLinkCallback={{this.setDraggedLink}}
-                @showLocalizations={{this.showLocalizations}}
+                @showLocalizations={{and
+                  this.showLinkLocalizations
+                  link.canLocalize
+                }}
                 @localeOptions={{this.localeOptions}}
                 @deleteLocalization={{this.deleteLinkLocalization}}
                 @addLocalization={{this.addLinkLocalization}}
