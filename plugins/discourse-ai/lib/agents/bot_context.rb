@@ -104,6 +104,7 @@ module DiscourseAi
         site_title
         site_description
         participants
+        username
         resource_url
         inferred_concepts
         user_language
@@ -137,6 +138,10 @@ module DiscourseAi
 
       def private_message?
         @private_message
+      end
+
+      def username
+        @user&.username
       end
 
       def top_categories
