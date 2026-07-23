@@ -36,6 +36,38 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.emojis).to be_empty
     end
 
+    # Core's emoji boundary (`isValidEmojiPrecedingChar`) is narrower than a plain
+    # "not a word character" one: it counts only tab/space (markdown-it `isSpace`),
+    # a Unicode punctuation/symbol (`isPunctChar`), and a zero-width space. The
+    # cases below are verified against PrettyText in `emoji_parity_spec.rb`; kept
+    # here as fixtures so the fast suite pins each one.
+    [
+      ["no-break space", "a :parrot: b"],
+      ["ideographic space", "a　:parrot: b"],
+      ["superscript two", "²:parrot: b"],
+      ["vulgar half", "½:parrot: b"],
+      ["soft hyphen", "a­:parrot: b"],
+      ["escaping backslash", "a\\:parrot: b"],
+    ].each do |label, raw|
+      it "leaves a shortcode after a #{label} literal, like core" do
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.emojis).to be_empty
+      end
+    end
+
+    it "defers a shortcode after a zero-width space, like core" do
+      extract("a​:parrot: b")
+
+      expect(buffer.emojis.first[:name]).to eq("parrot")
+    end
+
+    it "defers a shortcode at the start of a line, like core" do
+      result = extract("first line\n:parrot: still here")
+
+      expect(buffer.emojis.first[:name]).to eq("parrot")
+      expect(result).to include("first line\n#{buffer.emojis.first[:placeholder]} still here")
+    end
+
     it "defers a shortcode right after an opening paren" do
       extract("(:parrot:)")
 

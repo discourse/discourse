@@ -82,6 +82,23 @@ module Migrations
             PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}\p{Z}]/
             private_constant :PUNCTUATION_OR_SYMBOL
 
+            # The character set core's emoji rule (`discourse-markdown-it/src/
+            # features/emoji.js`) accepts before a shortcode's opening `:`, per
+            # markdown-it's `isPunctChar`: a Unicode punctuation or symbol. Unlike
+            # {PUNCTUATION_OR_SYMBOL} (the text-post-process boundary shared by
+            # mentions and hashtags) this leaves out `\p{Z}`: the emoji rule's
+            # `isSpace`/`isPunctChar` both reject the wide spaces (NBSP, ideographic
+            # space, category Zs), so a shortcode glued right after one stays
+            # literal. Verified against PrettyText.
+            EMOJI_PUNCTUATION_OR_SYMBOL = /[\p{P}\p{S}]/
+            private_constant :EMOJI_PUNCTUATION_OR_SYMBOL
+
+            # The zero-width space the emoji rule special-cases as a valid character
+            # before the opening `:`, alongside whitespace and punctuation. It is
+            # category Cf, so neither `isSpace` nor `isPunctChar` covers it.
+            ZERO_WIDTH_SPACE = "\u200B"
+            private_constant :ZERO_WIDTH_SPACE
+
             # A record id: at most 18 digits. Ids are stored as SQLite signed 64-bit
             # integers, and a 19-digit run overflows that range (binding the bignum
             # raises). No real record has more than 18 digits anyway — a longer run is
@@ -139,6 +156,45 @@ module Migrations
               else
                 PUNCTUATION_OR_SYMBOL.match?(char_at(input, pos))
               end
+            end
+
+            # A custom-emoji shortcode opens only when its `:` sits on core's emoji
+            # boundary (`emoji.js`'s `isValidEmojiPrecedingChar`): the start of
+            # input, a tab or space (markdown-it's narrow `isSpace`) or a newline (a
+            # line break splits the text into separate tokens before the emoji rule
+            # runs, so a shortcode after one opens at the start of its own fragment),
+            # a Unicode punctuation or symbol (`isPunctChar` — which includes the
+            # closing `:` of an adjacent shortcode, so `:a::b:` defers both), or the
+            # zero-width space the rule special-cases. Verified against PrettyText:
+            # NBSP and ideographic space (both Zs), a soft hyphen (Cf), and `²`/`½`
+            # (No) are none of these, so core leaves a shortcode after one literal.
+            #
+            # `pos` is a byte offset, so `getbyte(pos - 1)` is the previous
+            # character's last byte: an ASCII byte is that whole character, a byte
+            # >= 0x80 its trailing byte, recovered with {#previous_char} and tested
+            # Unicode-aware.
+            def emoji_boundary_before?(input, pos)
+              return true if pos.zero?
+
+              byte = input.getbyte(pos - 1)
+              # A `\` escapes the `:` into a literal `:` (core drops the shortcode),
+              # so nothing opens after it even though `\` is itself punctuation.
+              return false if byte == 0x5c # `\`
+
+              if byte < 0x80
+                emoji_space_byte?(byte) || ascii_punct_or_symbol_byte?(byte)
+              else
+                char = previous_char(input, pos)
+                char == ZERO_WIDTH_SPACE || EMOJI_PUNCTUATION_OR_SYMBOL.match?(char)
+              end
+            end
+
+            # markdown-it's `isSpace` (tab and space) widened by the newline that a
+            # line break leaves in front of a shortcode's own text fragment. ASCII-
+            # only, so a byte >= 0x80 (part of a multibyte character) is never one of
+            # these.
+            def emoji_space_byte?(byte)
+              byte == 0x20 || byte == 0x09 || byte == 0x0a
             end
 
             # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d). These are
@@ -215,11 +271,6 @@ module Migrations
               return false if pos.zero?
 
               input.getbyte(pos - 1) == 0x21 # `!`
-            end
-
-            def ascii_alnum_byte?(byte)
-              (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||
-                (byte >= 0x61 && byte <= 0x7a)
             end
 
             # Every printable ASCII punctuation or symbol character — the four ranges
