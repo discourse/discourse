@@ -45,6 +45,7 @@ import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-he
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import { resetComposerPickerTabs } from "discourse/lib/composer-picker";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
@@ -268,6 +269,7 @@ export function testCleanup(container, app) {
   cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
+  resetComposerPickerTabs();
   clearAdditionalAdminSidebarSectionLinks();
   resetAdminPluginConfigNav();
   resetTransformers();

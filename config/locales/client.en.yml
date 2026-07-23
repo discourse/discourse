@@ -3302,6 +3302,12 @@ en:
       error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
       error_search_too_long: "Please shorten your search query to under 50 characters and try again."
 
+    composer_picker:
+      label: "Emoji and GIF picker"
+      tabs:
+        emoji: "Emojis"
+        gifs: "GIFs"
+
     codemirror:
       expression:
         sections:

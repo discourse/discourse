@@ -61,6 +61,7 @@ import classPrepend, {
 } from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import { registerComposerPickerTab } from "discourse/lib/composer-picker";
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -1210,6 +1211,28 @@ class _PluginApi {
    **/
   registerTopicFooterButton(buttonOptions) {
     registerTopicFooterButton(buttonOptions);
+  }
+
+  /**
+   * Register a tab in the composer picker (the tabbed emoji/GIF popover used
+   * by the post and chat composers). Use this to add media tabs such as
+   * stickers or animated images alongside the built-in emoji and GIF tabs.
+   *
+   * ```javascript
+   * api.registerComposerPickerTab({
+   *   id: "stickers",
+   *   icon: "sticker",
+   *   title: "my_plugin.stickers.tab",
+   *   // Panel receives @onSelect, @close, @context, @term. Call @onSelect(value)
+   *   // when the user picks something; the host inserts/sends it like the GIF tab.
+   *   component: MyStickerPanel,
+   *   priority: 80,
+   *   enabled: ({ siteSettings }) => siteSettings.my_plugin_stickers_enabled,
+   * });
+   * ```
+   **/
+  registerComposerPickerTab(tab) {
+    registerComposerPickerTab(tab);
   }
 
   /**

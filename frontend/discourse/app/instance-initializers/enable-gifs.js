@@ -11,6 +11,12 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
+        // GIFs move into the unified composer-picker tab when its upcoming
+        // change is on, so the standalone modal button only shows when off.
+        if (siteSettings.enable_unified_composer_picker) {
+          return;
+        }
+
         if (!toolbar.context?.composerEvents) {
           return;
         }

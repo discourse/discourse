@@ -1,68 +1,63 @@
-import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
-import GifsResultList from "discourse/components/gifs/result-list";
+import { cancel } from "@ember/runloop";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { or } from "discourse/truth-helpers";
-import DModal from "discourse/ui-kit/d-modal";
-import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const GIFS_SEARCH_URL = "/gifs/search.json";
 const GIFS_CATEGORIES_URL = "/gifs/categories.json";
+const SEARCH_DEBOUNCE = 700;
+
 const MIN_QUERY_LENGTH = 3;
 
-export default class GifsModal extends Component {
-  @service appEvents;
-  @service dialog;
-  @service interfaceColor;
-  @service siteSettings;
-
+export default class GifSearch {
   @tracked categories = [];
   @tracked loading = false;
   @tracked loadingCategories = false;
-  @tracked searchPending = false;
   @tracked offset = 0;
   @tracked query = "";
   @tracked hasMore = true;
   @autoTrackedArray currentGifs = [];
 
-  constructor() {
-    super(...arguments);
-    this.fetchCategories();
+  isDestroyed = false;
+
+  constructor({ siteSettings, dialog }) {
+    this.siteSettings = siteSettings;
+    this.dialog = dialog;
+  }
+
+  destroy() {
+    this.isDestroyed = true;
+    cancel(this.debouncedSearch);
   }
 
   get showingCategories() {
     return this.query.length < MIN_QUERY_LENGTH && this.categories.length > 0;
   }
 
-  get darkMediaQuery() {
-    if (this.interfaceColor.darkModeForced) {
-      return "all";
-    } else if (this.interfaceColor.lightModeForced) {
-      return "none";
-    } else {
-      return "(prefers-color-scheme: dark)";
-    }
+  @action
+  refresh(value) {
+    this.query = value;
+    this.debouncedSearch = discourseDebounce(
+      this,
+      this.search,
+      SEARCH_DEBOUNCE
+    );
   }
 
   @action
-  pick(content) {
-    const markup = `\n![${content.title}|${content.width}x${content.height}](${content.original})\n`;
+  clearQuery() {
+    this.query = "";
+    this.search();
+  }
 
-    if (this.args.model?.customPickHandler) {
-      this.args.model.customPickHandler(markup);
-    } else {
-      this.appEvents.trigger("composer:insert-text", markup);
-    }
-
-    this.args.closeModal();
+  @action
+  selectCategory(category) {
+    this.query = category.searchterm;
+    this.search(true, true);
   }
 
   @action
@@ -73,36 +68,19 @@ export default class GifsModal extends Component {
     await this.search(false);
   }
 
-  @action
-  refresh(event) {
-    this.query = event.target.value;
-    this.searchPending = this.query.length >= MIN_QUERY_LENGTH;
-    discourseDebounce(this, this.search, 700);
-  }
-
-  @action
-  selectCategory(category) {
-    this.query = category.searchterm;
-    this.search(true, true);
-  }
-
   async fetchCategories() {
     this.loadingCategories = true;
 
     try {
       const response = await fetch(getURL(GIFS_CATEGORIES_URL));
 
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      if (!response.ok) {
+      if (this.isDestroyed || !response.ok) {
         return;
       }
 
       const data = await response.json();
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroyed) {
         return;
       }
 
@@ -140,8 +118,6 @@ export default class GifsModal extends Component {
   }
 
   async search(clearResults = true, skipLengthCheck = false) {
-    this.searchPending = false;
-
     if (clearResults) {
       this.currentGifs = [];
       this.offset = 0;
@@ -169,7 +145,7 @@ export default class GifsModal extends Component {
     try {
       const response = await fetch(this.getEndpoint(this.query, this.offset));
 
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroyed) {
         return;
       }
 
@@ -178,7 +154,7 @@ export default class GifsModal extends Component {
       }
 
       const data = await response.json();
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.isDestroyed) {
         return;
       }
 
@@ -201,6 +177,9 @@ export default class GifsModal extends Component {
       }
       addUniqueValuesToArray(this.currentGifs, images);
     } catch (error) {
+      if (this.isDestroyed) {
+        return;
+      }
       this.dialog.alert({ message: error.message ?? error });
     } finally {
       this.loading = false;
@@ -261,80 +240,4 @@ export default class GifsModal extends Component {
     };
     return getURL(`${GIFS_SEARCH_URL}?${new URLSearchParams(params)}`);
   }
-
-  <template>
-    <DModal
-      @title={{i18n "gifs.modal_title"}}
-      @closeModal={{@closeModal}}
-      id="gifs-modal"
-      class="gifs-modal"
-    >
-      <:body>
-        <div class="gifs-modal__input">
-          <Input
-            {{on "input" this.refresh}}
-            @type="text"
-            @value={{this.query}}
-            name="query"
-            placeholder={{i18n "gifs.placeholder"}}
-            autofocus
-          />
-
-          {{#if this.loading}}
-            <div class="gifs-modal__input-spinner">
-              {{dLoadingSpinner size="small"}}
-            </div>
-          {{/if}}
-        </div>
-
-        {{#if this.currentGifs.length}}
-          <div class="gifs-modal__content">
-            <div class="gifs-modal__box">
-              <GifsResultList
-                @content={{this.currentGifs}}
-                @pick={{this.pick}}
-                @loading={{this.loading}}
-                @loadMore={{this.loadMore}}
-                @canLoadMore={{this.hasMore}}
-                @root=".gifs-modal__content"
-              />
-            </div>
-          </div>
-        {{else if this.showingCategories}}
-          <div class="gifs-modal__content">
-            <h3 class="gifs-modal__categories-header">{{i18n
-                "gifs.browse_categories"
-              }}</h3>
-            <div class="gifs-modal__box">
-              <GifsResultList
-                @content={{this.categories}}
-                @pick={{this.selectCategory}}
-                @loading={{false}}
-              />
-            </div>
-          </div>
-        {{else if (or this.loading this.searchPending this.loadingCategories)}}
-          <div class="gifs-modal__loading">
-            {{dLoadingSpinner size="medium"}}
-          </div>
-        {{else}}
-          <div class="gifs-modal__no-results">{{i18n "gifs.no_results"}}</div>
-        {{/if}}
-      </:body>
-
-      <:footer>
-        <picture>
-          <source
-            srcset={{getURL "/images/klipy-logo-dark.png"}}
-            media={{this.darkMediaQuery}}
-          />
-          <img
-            class="gifs-modal__branding"
-            src={{getURL "/images/klipy-logo.png"}}
-            alt={{i18n "gifs.powered_by"}}
-          />
-        </picture>
-      </:footer>
-    </DModal>
-  </template>
 }

@@ -13,6 +13,13 @@ export default {
 
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
+        // The unified composer-picker initializer hosts emoji as a tab when
+        // its upcoming change is on, so only add the standalone button here
+        // when it is off.
+        if (siteSettings.enable_unified_composer_picker) {
+          return;
+        }
+
         toolbar.addButton({
           id: "emoji",
           group: "extras",
