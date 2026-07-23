@@ -29,6 +29,7 @@ module DiscourseDataExplorer
             @sort_definitions
             @stat_definitions
             @default_sort
+            @description
             @includes
             @page_sizes
             @base_scope_block
@@ -40,12 +41,32 @@ module DiscourseDataExplorer
 
         def type(name) = set_type(name)
 
+        # Getter/setter (the VersionChange pattern): prose about the resource,
+        # rendered on its docs schema and tag.
+        def description(text = nil)
+          @description = text if text
+          @description
+        end
+
         # Types come from the ActiveModel::Type registry — the same vocabulary
         # Service::Base contracts use, so `from_resource` imports need no
         # translation. Unknown types fail here, at declaration.
-        def attribute(name, value_type, writable: false, description: nil, **options, &block)
+        def attribute(
+          name,
+          value_type,
+          writable: false,
+          description: nil,
+          example: nil,
+          **options,
+          &block
+        )
           ActiveModel::Type.lookup(value_type)
-          attribute_definitions[name.to_sym] = { type: value_type, writable:, description: }
+          attribute_definitions[name.to_sym] = {
+            type: value_type,
+            writable:,
+            description:,
+            example:,
+          }
           super(name, options, &block)
         end
 

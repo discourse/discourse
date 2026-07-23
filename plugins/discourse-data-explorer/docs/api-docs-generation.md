@@ -125,9 +125,36 @@ document's intro prose would confuse both audiences.
 
   End state: the generator **self-assembles** — `BaseController` descendants + routes, no
   arguments. Everything else it reads is already declarations.
-- Generator tail still open: YAML emission + rake task + publication wiring; per-version
-  documents (down-applied renames); the extensions section (per-site docs); the changelog
-  from change descriptions; `deprecated: true` (needs the `deprecate` keyword).
+- **Emission built (2026-07-22):** `bin/rake data_explorer:json_api_docs` writes
+  `openapi-jsonapi.json` (JSON directly — Redoc consumes it; core's YAML→`tojson.js` step
+  exists only because rswag emits YAML). The file is **committed** as a contract artifact:
+  a freshness spec (`spec/integration/json_api_kit_openapi_document_spec.rb`) fails when
+  declarations change without regenerating, so the diff of the document is the review
+  surface for every docs change. `openapi-docs.html` next to it renders via Redoc (the
+  docs.discourse.org setup) — serve the plugin directory statically to view.
+- **Document richness — "Layer 1" built (2026-07-22):** operations carry derived `tags`
+  (= humanized type, grouping the sidebar), `summary` ("List queries"), and `operationId`
+  (`listQueries`, core's convention); the document embeds `docs/api-intro.md` as
+  `info.description` (authentication, the pinning ritual, pagination, errors — API-wide
+  *narrative* is the one legitimately authored piece); resources gained a `description`
+  keyword (→ schema + tag descriptions) and attributes an `example:` option (→ JSON Schema
+  `examples`, which Redoc composes into realistic samples).
+- **Live-captured examples built (2026-07-23):** `open_api_examples_spec.rb` performs
+  every documented operation against fabricated data and always validates each exchange
+  against its generated schema (this also brought show/create responses into the
+  validation loop); with `CAPTURE_API_EXAMPLES=1` it records the exchanges into the
+  committed `openapi-examples.json`, which the generator embeds as OpenAPI media-type
+  `example`s — the right column of the docs shows *real documents*, ids and cursors
+  included. Captures are **deterministic** (verified: consecutive runs byte-identical):
+  frozen time, explicit fabricated values and timestamps, ids remapped per type in
+  first-seen order, cursors replaced by stable placeholders (opaque by contract). A
+  freshness guard (`spec/integration/json_api_kit_openapi_examples_spec.rb`) keeps
+  committed examples schema-valid forever: values may age, shapes cannot lie. Declared
+  `example:` values additionally flow into the request-body property schemas.
+- Generator tail still open: publication wiring (second document through the
+  `discourse_api_docs` nightly action); per-version documents (down-applied renames); the
+  extensions section (per-site docs); the changelog from change descriptions;
+  `deprecated: true` (needs the `deprecate` keyword).
 - Bruno collection / `tojson` compatibility — the tail tooling consumes plain OpenAPI, so
   this should be free; verify when a real document exists.
 - ~~The **resource class** design~~ — RESOLVED: designed 2026-07-21, see

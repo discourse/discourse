@@ -7,14 +7,20 @@ module DiscourseDataExplorer
     # (Service::Base, per endpoint).
     class QueryResource < ApplicationResource
       type :queries
+      description "A saved Data Explorer SQL query: its source, sharing groups, and last-run information."
 
-      attribute :name, :string, writable: true
+      attribute :name, :string, writable: true, example: "Top referred topics"
       attribute :description, :string, writable: true
       attribute :created_at, :datetime
       attribute :updated_at, :datetime
       # Wire attribute renamed from `sql` (2026-06-15 breaking change); the DB
       # column keeps its name — versioning is representation-only.
-      attribute :query, :string, writable: true, description: "The SQL source of the query.", &:sql
+      attribute :query,
+                :string,
+                writable: true,
+                description: "The SQL source of the query.",
+                example: "SELECT id, username FROM users LIMIT 10",
+                &:sql
       # Wire attribute renamed from `last_run_at` (2026-07-08) — same rule.
       attribute :ran_at, :datetime, &:last_run_at
       # Admin-only field. The guardian is passed in via the serializer `params`

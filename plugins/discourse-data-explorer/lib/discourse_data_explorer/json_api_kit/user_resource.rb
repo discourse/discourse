@@ -6,6 +6,7 @@ module DiscourseDataExplorer
     # nested `user.groups` include.
     class UserResource < ApplicationResource
       type :users
+      description "The author of a query."
 
       # Wire attribute replaced `username` (2026-07-01 breaking change): an array of
       # the user's known usernames — currently just the one. Representation-only.

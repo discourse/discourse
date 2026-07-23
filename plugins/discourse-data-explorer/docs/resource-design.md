@@ -98,7 +98,8 @@ Keyword inventory:
 | Keyword                                                 | Origin                                       | New metadata                                             |
 | ------------------------------------------------------- | -------------------------------------------- | -------------------------------------------------------- |
 | `type`                                                   | serializer (`set_type`)                      | —                                                         |
-| `attribute name, type, …, &block`                        | serializer                                   | **type (mandatory, positional)**, `writable:` (default false), `description:` |
+| `description "…"`                                        | new (docs)                                   | resource prose → docs schema + tag description            |
+| `attribute name, type, …, &block`                        | serializer                                   | **type (mandatory, positional)**, `writable:` (default false), `description:`, `example:` |
 | `has_one` / `has_many name, resource:`                   | serializer (`belongs_to`/`has_one`/`has_many`) | `resource:` names the Kit resource; `description:`      |
 | `filter name, type, &block`                              | controller block                             | **value type** (docs + later coercion), `description:`   |
 | `sort name, column:, nulls:, &block`                     | controller block                             | `description:` (no value type — direction only)          |

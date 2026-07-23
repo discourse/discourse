@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Discourse JSON:API documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Same rendering setup as docs.discourse.org: Redoc standalone over the
+         generated document. Serve this directory statically to view, e.g.
+         `ruby -run -e httpd plugins/discourse-data-explorer -p 8080` -->
+    <redoc spec-url="openapi-jsonapi.json"></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
+  </body>
+</html>
