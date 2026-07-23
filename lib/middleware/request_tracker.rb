@@ -120,10 +120,11 @@ class Middleware::RequestTracker
     end
 
     if tracks_browser_page_view?(data)
-      if data[:is_beacon]
-        if data[:is_embed]
-          ApplicationRequest.increment!(:page_view_embed)
-        elsif data[:has_auth_cookie]
+      if data[:is_embed]
+        count_embed = beacon_pageviews_enabled? ? data[:is_beacon] : !data[:is_beacon]
+        ApplicationRequest.increment!(:page_view_embed) if count_embed
+      elsif data[:is_beacon]
+        if data[:has_auth_cookie]
           ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
           if data[:is_mobile]
             ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
@@ -133,9 +134,7 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
         end
       else
-        if data[:is_embed]
-          ApplicationRequest.increment!(:page_view_embed)
-        elsif data[:has_auth_cookie]
+        if data[:has_auth_cookie]
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
         else
@@ -667,11 +666,13 @@ class Middleware::RequestTracker
     true
   end
 
-  def self.is_beacon_tracking_request?(request)
+  def self.beacon_pageviews_enabled?
     UpcomingChanges.enabled?(:dashboard_improvements) &&
-      (
-        SiteSetting.persist_browser_pageview_events || SiteSetting.trigger_browser_pageview_events
-      ) && request.post? && request.path == Discourse.beacon_pv_tracking_path
+      (SiteSetting.persist_browser_pageview_events || SiteSetting.trigger_browser_pageview_events)
+  end
+
+  def self.is_beacon_tracking_request?(request)
+    beacon_pageviews_enabled? && request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
   def self.same_origin_request?(request)

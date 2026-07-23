@@ -331,7 +331,7 @@ RSpec.describe Middleware::RequestTracker do
         Middleware::RequestTracker.log_request(data)
       end
 
-      it "counts beacon pageview with embed flag as page_view_embed" do
+      it "counts embed views from the beacon instead of the piggyback when beacons are enabled" do
         SiteSetting.dashboard_improvements = true
         SiteSetting.trigger_browser_pageview_events = true
         body = {
@@ -352,10 +352,19 @@ RSpec.describe Middleware::RequestTracker do
             0.1,
           )
         Middleware::RequestTracker.log_request(data)
+
+        piggyback_data =
+          Middleware::RequestTracker.get_data(
+            env("HTTP_DISCOURSE_TRACK_VIEW" => "1", "HTTP_DISCOURSE_TRACK_VIEW_EMBED" => "true"),
+            ["200", {}],
+            0.1,
+          )
+        Middleware::RequestTracker.log_request(piggyback_data)
         CachedCounting.flush
 
         expect(data[:is_embed]).to eq(true)
-        expect(ApplicationRequest.page_view_embed.first.count).to eq(1)
+        expect(piggyback_data[:is_embed]).to eq(true)
+        expect(ApplicationRequest.page_view_embed.sum(:count)).to eq(1)
         expect(ApplicationRequest.page_view_anon_browser_beacon.sum(:count)).to eq(0)
       end
 
