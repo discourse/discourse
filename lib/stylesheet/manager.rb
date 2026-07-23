@@ -49,7 +49,7 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    targets = %i[common desktop mobile admin wizard]
+    targets = %i[common admin wizard]
     targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
@@ -267,11 +267,11 @@ class Stylesheet::Manager
     themes
   end
 
-  def stylesheet_data(target = :desktop)
+  def stylesheet_data(target)
     stylesheet_details(target, "all")
   end
 
-  def stylesheet_preload_tag(target = :desktop, media = "all")
+  def stylesheet_preload_tag(target, media = "all")
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -282,7 +282,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = "all", preload_callback = nil)
+  def stylesheet_link_tag(target, media = "all", preload_callback = nil)
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -298,7 +298,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_details(target = :desktop, media = "all")
+  def stylesheet_details(target, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
     relative_url_root = GlobalSetting.relative_url_root
