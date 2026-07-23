@@ -85,8 +85,6 @@ RSpec.describe "AI Composer Proofreading Features" do
     end
 
     context "when using rich text editor" do
-      before { SiteSetting.rich_editor = true }
-
       it "proofreads selected text and replaces it" do
         visit "/new-topic"
         expect(composer).to be_opened

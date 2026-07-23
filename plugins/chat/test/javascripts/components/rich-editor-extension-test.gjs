@@ -14,7 +14,6 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
       this.siteSettings.chat_enabled = true;
 
       // This is necessary for the chat transcripts to work in JS, because this

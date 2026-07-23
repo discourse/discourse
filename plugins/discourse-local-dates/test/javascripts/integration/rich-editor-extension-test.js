@@ -7,10 +7,6 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    hooks.beforeEach(function () {
-      this.siteSettings.rich_editor = true;
-    });
-
     function findDate() {
       return document.querySelector(".ProseMirror .discourse-local-date");
     }

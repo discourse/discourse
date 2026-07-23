@@ -1918,11 +1918,6 @@ posting:
     type: integer
     min: 1
     hidden: true
-  rich_editor:
-    client: true
-    default: true
-    hidden: true
-    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
