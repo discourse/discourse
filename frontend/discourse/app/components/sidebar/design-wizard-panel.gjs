@@ -1,42 +1,15 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ColorsSection from "discourse/components/admin-onboarding/modal/design-wizard/colors-section";
 import FontsSection from "discourse/components/admin-onboarding/modal/design-wizard/fonts-section";
 import Section from "discourse/components/admin-onboarding/modal/design-wizard/section";
 import ThemeSection from "discourse/components/admin-onboarding/modal/design-wizard/theme-section";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarDesignWizardPanel extends Component {
   @service designWizard;
-
-  @tracked openSection = "theme";
-
-  get colorsSummary() {
-    const mode = i18n(
-      `admin_onboarding_banner.design_wizard.colors.${this.designWizard.effectiveColorMode}`
-    );
-    return `${this.designWizard.selectedPair?.name} · ${mode}`;
-  }
-
-  get fontsSummary() {
-    const fontName = (key) =>
-      key?.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase());
-    if (this.designWizard.bodyFont === this.designWizard.headingFont) {
-      return fontName(this.designWizard.bodyFont);
-    }
-    return `${fontName(this.designWizard.bodyFont)} / ${fontName(
-      this.designWizard.headingFont
-    )}`;
-  }
-
-  @action
-  toggleSection(sectionId) {
-    this.openSection = this.openSection === sectionId ? null : sectionId;
-  }
 
   @action
   selectTheme(themeId) {
@@ -93,9 +66,6 @@ export default class SidebarDesignWizardPanel extends Component {
         <Section
           @id="theme"
           @title={{i18n "admin_onboarding_banner.design_wizard.sections.theme"}}
-          @summary={{this.designWizard.selectedTheme.name}}
-          @open={{eq this.openSection "theme"}}
-          @onToggle={{this.toggleSection}}
         >
           <ThemeSection
             @themes={{this.designWizard.data.themes}}
@@ -110,9 +80,6 @@ export default class SidebarDesignWizardPanel extends Component {
           @title={{i18n
             "admin_onboarding_banner.design_wizard.sections.colors"
           }}
-          @summary={{this.colorsSummary}}
-          @open={{eq this.openSection "colors"}}
-          @onToggle={{this.toggleSection}}
         >
           <ColorsSection
             @pairs={{this.designWizard.pairs}}
@@ -130,9 +97,6 @@ export default class SidebarDesignWizardPanel extends Component {
         <Section
           @id="fonts"
           @title={{i18n "admin_onboarding_banner.design_wizard.sections.fonts"}}
-          @summary={{this.fontsSummary}}
-          @open={{eq this.openSection "fonts"}}
-          @onToggle={{this.toggleSection}}
         >
           <FontsSection
             @bodyFont={{this.designWizard.bodyFont}}

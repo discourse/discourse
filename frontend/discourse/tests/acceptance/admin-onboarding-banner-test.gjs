@@ -357,14 +357,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard-modal__theme-card.--selected")
       .hasAttribute("data-theme-id", "-1", "preselects the default theme");
 
-    await click(
-      ".design-wizard-modal__section[data-section-id='colors'] .design-wizard-modal__section-toggle"
-    );
-    assert
-      .dom(
-        ".design-wizard-modal__section[data-section-id='theme'] .design-wizard-modal__section-body"
-      )
-      .doesNotExist("accordion collapses the previous section");
     assert
       .dom(".design-wizard-modal__swatch")
       .exists({ count: 1 }, "shows the theme's palette pairs");

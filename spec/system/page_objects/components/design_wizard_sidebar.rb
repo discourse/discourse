@@ -19,12 +19,6 @@ module PageObjects
         ).click
       end
 
-      def open_section(section_id)
-        toggle = "#{WIZARD_SELECTOR} .design-wizard-modal__section[data-section-id='#{section_id}']"
-        return if has_css?("#{toggle}.--open", wait: 0)
-        find("#{toggle} .design-wizard-modal__section-toggle").click
-      end
-
       def select_palette(pair_key)
         find("#{WIZARD_SELECTOR} .design-wizard-modal__swatch[data-pair-key='#{pair_key}']").click
       end
