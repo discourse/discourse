@@ -46,6 +46,11 @@ class UpcomingChanges::NotifyPromotions
           status_hash[:error_key] = :setting_not_available
         end
 
+        on_failed_policy(:should_notify_admins) do |policy|
+          status_hash[:error] = "Setting #{setting_name} should not notify admins about promotion"
+          status_hash[:error_key] = :should_not_notify_admins
+        end
+
         on_failed_policy(:change_should_be_displayed) do |policy|
           status_hash[
             :error
@@ -79,14 +84,14 @@ class UpcomingChanges::NotifyPromotions
           status_hash[:error_key] = :unexpected_error
           status_hash[:backtrace] = exception.backtrace
         end
-      end
 
-      if !status_hash[:success] && (!status_hash[:error_key] || !status_hash[:error])
-        status_hash[
-          :error
-        ] = "An unexpected error in UpcomingChanges::NotifyPromotion occurred while notifying about promotion of #{setting_name}"
-        status_hash[:error_key] = :unexpected_error
-        status_hash[:result_inspect_steps] = result.inspect_steps
+        if !status_hash[:success] && (!status_hash[:error_key] || !status_hash[:error])
+          status_hash[
+            :error
+          ] = "An unexpected error in UpcomingChanges::NotifyPromotion occurred while notifying about promotion of #{setting_name}"
+          status_hash[:error_key] = :unexpected_error
+          status_hash[:result_inspect_steps] = result.inspect_steps
+        end
       end
 
       status_hash
