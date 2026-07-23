@@ -3,7 +3,6 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import SelectEngine from "discourse/ui-kit/select/select-engine";
 
-const CLIENT_CHUNK = 50;
 const MAX_RENDERED = 200;
 
 function items(count, { start = 1, prefix = "Item" } = {}) {
@@ -75,10 +74,10 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("filtering honors labelField and both filterBy forms before windowing", function (assert) {
+    test("filtering honors labelField and both filterBy forms", function (assert) {
       const labelEngine = new SelectEngine({
         items: [
-          ...items(CLIENT_CHUNK, { prefix: "Hidden" }),
+          ...items(50, { prefix: "Hidden" }),
           { id: 51, title: "Visible result" },
         ],
         labelField: "title",
@@ -87,7 +86,7 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       assert.deepEqual(
         labelEngine.loadItems(labelEngine.loadContext).map((item) => item.id),
         [51],
-        "labelField filtering occurs before the first window is sliced"
+        "labelField filtering selects the single visible row out of the corpus"
       );
 
       const fieldEngine = new SelectEngine({
@@ -138,48 +137,30 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       );
     });
 
-    test("reveal state grows by chunks and stops at the client cap", function (assert) {
+    test("a large client list renders in full with no reveal or cap", function (assert) {
       const engine = new SelectEngine({ items: items(MAX_RENDERED + 1) });
 
       assert.strictEqual(
         engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK,
-        "the initial window is one client chunk"
-      );
-      assert.true(
-        engine.canRevealMore,
-        "another chunk can initially be revealed"
-      );
-      assert.false(engine.atCapWithMore, "the initial window is below the cap");
-
-      assert.true(engine.revealMore(), "the second chunk can be revealed");
-      assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
-        CLIENT_CHUNK * 2,
-        "revealMore grows the prefix by one chunk"
-      );
-
-      assert.true(engine.revealMore(), "the third chunk can be revealed");
-      assert.true(engine.revealMore(), "the fourth chunk can be revealed");
-      assert.strictEqual(
-        engine.loadItems(engine.loadContext).length,
-        MAX_RENDERED,
-        "the client window stops at the render cap"
+        MAX_RENDERED + 1,
+        "the whole client list renders, past the retired 200-row client cap"
       );
       assert.false(
         engine.canRevealMore,
-        "nothing can be revealed past the cap"
+        "a client source has no page to reveal"
       );
-      assert.true(engine.atCapWithMore, "the extra filtered row is reported");
-      assert.false(engine.revealMore(), "revealMore refuses to pass the cap");
-
-      const exactFit = new SelectEngine({ items: items(MAX_RENDERED) });
-      exactFit.revealMore();
-      exactFit.revealMore();
-      exactFit.revealMore();
       assert.false(
-        exactFit.atCapWithMore,
-        "an exact-cap result does not claim hidden rows"
+        engine.revealMore(),
+        "revealMore is an inert no-op for a client source"
+      );
+      assert.false(
+        engine.atCapWithMore,
+        "no client cap means the narrow hint never fires"
+      );
+      assert.strictEqual(
+        engine.loadItems(engine.loadContext).length,
+        MAX_RENDERED + 1,
+        "the inert reveal left the rendered set whole"
       );
     });
 

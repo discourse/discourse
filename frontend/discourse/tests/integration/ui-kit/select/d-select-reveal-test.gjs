@@ -32,12 +32,14 @@ async function openSelect() {
 }
 
 module(
-  "Integration | ui-kit | select | DSelect bounded reveal",
+  "Integration | ui-kit | select | DSelect reveal and set metadata",
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("a large client list mounts one bounded window with true set metadata", async function (assert) {
-      const items = buildItems(5000);
+    test("a client list renders every row with its true set metadata", async function (assert) {
+      // 210 exceeds the retired 200-row client cap, so a rendered count of 210 proves the
+      // engine no longer bounds the client list (DVirtualList windows the DOM elsewhere).
+      const items = buildItems(210);
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();
@@ -45,32 +47,28 @@ module(
       const options = findAll(OPTION_SELECTOR);
       assert.strictEqual(
         options.length,
-        50,
-        "only the first client chunk renders"
+        210,
+        "every client row renders, past the retired cap"
       );
       assert
         .dom(".d-combobox__narrow")
-        .doesNotExist("the first window is not yet pinned at the cap");
+        .doesNotExist("a fully rendered client list never pins a cap");
       assert
         .dom(options[0])
         .hasAttribute("aria-posinset", "1", "the first row occupies position 1")
         .hasAttribute(
           "aria-setsize",
-          "5000",
+          "210",
           "the first row exposes the true client total"
         );
       assert
-        .dom(options[49])
+        .dom(options[209])
         .hasAttribute(
           "aria-posinset",
-          "50",
-          "the last mounted row occupies position 50"
+          "210",
+          "the last row occupies the final position"
         )
-        .hasAttribute(
-          "aria-setsize",
-          "5000",
-          "the mounted window never masquerades as the whole set"
-        );
+        .hasAttribute("aria-setsize", "210", "the set size is the whole list");
     });
 
     test("a fully rendered small client list keeps its set metadata", async function (assert) {
@@ -92,30 +90,22 @@ module(
         .hasAttribute("aria-setsize", "3", "the small-list total is exposed");
     });
 
-    test("revealMore invalidates the rendered client window from 50 to 100", async function (assert) {
+    test("a capped server list shows and announces the keep-filtering hint", async function (assert) {
+      // The cap survives for a SERVER source only: its accumulator stops at MAX_RENDERED while
+      // the source still holds more, which is the one path that raises the narrow hint. (A
+      // client source renders in full and never caps — see the client tests above.)
       let engine;
-      const items = buildItems(5000, (value) => (engine = value));
+      const a11y = getOwner(this).lookup("service:a11y");
+      const announce = sinon.spy(a11y, "announce");
+      const allItems = buildItems(500, (value) => (engine = value));
+      const load = (_filter, { offset = 0 }) => ({
+        items: allItems.slice(offset, offset + 50),
+        total: allItems.length,
+      });
 
-      await render(<template><DSelect @items={{items}} /></template>);
-      await openSelect();
-      assert
-        .dom(OPTION_SELECTOR)
-        .exists({ count: 50 }, "the initial render is one chunk");
-
-      await click(findAll(OPTION_SELECTOR)[0]);
-      assert.true(engine.revealMore(), "the engine accepts the next reveal");
-      await settled();
-
-      assert
-        .dom(OPTION_SELECTOR)
-        .exists({ count: 100 }, "tracked reveal growth reaches the real DOM");
-    });
-
-    test("client reveal is pinned at 200 and shows the narrow hint", async function (assert) {
-      let engine;
-      const items = buildItems(5000, (value) => (engine = value));
-
-      await render(<template><DSelect @items={{items}} /></template>);
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
       await openSelect();
       await click(findAll(OPTION_SELECTOR)[0]);
 
@@ -126,43 +116,46 @@ module(
 
       assert
         .dom(OPTION_SELECTOR)
-        .exists({ count: 200 }, "rendered source rows never exceed the cap");
+        .exists({ count: 200 }, "the server accumulator fills the cap");
       assert
         .dom(".d-virtual-list + .d-combobox__narrow[role='status']")
         .exists("the filter-to-narrow hint follows the capped list viewport");
       assert
         .dom("ul[role='listbox'] .d-combobox__narrow")
         .doesNotExist("the hint is never an invalid listbox child");
+      assert.true(
+        announce
+          .getCalls()
+          .some(
+            ({ args }) =>
+              args[0] === i18n("d_select.filter_to_narrow") &&
+              args[1] === "polite"
+          ),
+        "the hint is announced through the a11y service"
+      );
     });
 
-    test("a filter change resets the rendered window and reveal affordances", async function (assert) {
-      let engine;
-      const items = buildItems(5000, (value) => (engine = value));
+    test("a filter change re-renders a client list without pinning a cap", async function (assert) {
+      const items = buildItems(210);
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
-
-      for (let index = 0; index < 3; index++) {
-        engine.revealMore();
-        await settled();
-      }
-
+      assert
+        .dom(OPTION_SELECTOR)
+        .exists({ count: 210 }, "the whole client list renders");
       assert
         .dom(".d-combobox__narrow")
-        .exists("the unfiltered list reaches the narrow-at-cap state");
+        .doesNotExist("a full client list never shows the narrow hint");
 
-      await fillIn("[role='combobox']", "Item");
+      // "Item 42" is a unique substring in a 1..210 list (Item 420-429 do not exist).
+      await fillIn("[role='combobox']", "Item 42");
 
       assert
         .dom(OPTION_SELECTOR)
-        .exists(
-          { count: 50 },
-          "filtering resets the rendered window to one chunk"
-        );
+        .exists({ count: 1 }, "the filter narrows the rendered list");
       assert
         .dom(".d-combobox__narrow")
-        .doesNotExist("the reset window is no longer at the cap");
+        .doesNotExist("filtering a client list never pins a cap");
     });
 
     // A source that declares no paging is taken to have returned the whole set, so its row
@@ -392,15 +385,10 @@ module(
       );
     });
 
-    test("special and create rows stay outside the source cap with flat positions", async function (assert) {
-      let engine;
-      const items = buildItems(5000);
+    test("special and create rows keep flat positions around the source rows", async function (assert) {
+      const items = buildItems(5);
       const specialItems = () => [
-        {
-          id: "all",
-          name: "All items",
-          onSelect: (value) => (engine = value),
-        },
+        { id: "all", name: "All items" },
         { id: "none", name: "No item" },
       ];
       const createItem = (filter) => ({
@@ -420,28 +408,19 @@ module(
         </template>
       );
       await fillIn("[role='combobox']", "Item");
-      await click(findAll(OPTION_SELECTOR)[0]);
 
-      for (let index = 0; index < 3; index++) {
-        engine.revealMore();
-        await settled();
-      }
-
+      // Two specials, all five source rows, then the create row: 8 rows, all rendered.
       const options = findAll(OPTION_SELECTOR);
       assert.strictEqual(
         options.length,
-        203,
-        "two specials and one create row remain visible around 200 source rows"
+        8,
+        "specials, every source row, and the create row all render"
       );
       assert
         .dom(options[0])
         .hasText("All items", "special rows remain prepended")
         .hasAttribute("aria-posinset", "1", "the first special owns slot 1")
-        .hasAttribute(
-          "aria-setsize",
-          "5003",
-          "synthetic rows join the true set"
-        );
+        .hasAttribute("aria-setsize", "8", "synthetic rows join the true set");
       assert
         .dom(options[2])
         .hasText("Item 1", "source rows follow the specials")
@@ -451,32 +430,28 @@ module(
           "the source offset includes specials"
         );
       assert
-        .dom(options[202])
-        .hasClass(
-          "--create",
-          "the create row remains appended beyond the source cap"
-        )
+        .dom(options[7])
+        .hasClass("--create", "the create row is appended last")
         .hasAttribute(
           "aria-posinset",
-          "5003",
+          "8",
           "the create row owns the true final slot"
         )
         .hasAttribute(
           "aria-setsize",
-          "5003",
+          "8",
           "the create row shares the true set size"
         );
     });
 
-    test("result-count announcements use the true total and ignore reveal growth", async function (assert) {
+    test("the result count announces the true total and a client reveal never re-announces", async function (assert) {
       let engine;
       const announce = sinon.spy(
         getOwner(this).lookup("service:a11y"),
         "announce"
       );
-      const items = buildItems(5000, (value) => (engine = value));
-      const trueCountMessage = i18n("d_select.results_count", { count: 5000 });
-      const windowCountMessage = i18n("d_select.results_count", { count: 100 });
+      const items = buildItems(60, (value) => (engine = value));
+      const trueCountMessage = i18n("d_select.results_count", { count: 60 });
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();
@@ -488,18 +463,13 @@ module(
         "opening announces the true client total"
       );
 
-      engine.revealMore();
+      assert.false(engine.revealMore(), "a client reveal is an inert no-op");
       await settled();
 
       assert.strictEqual(
         announce.withArgs(trueCountMessage, "polite").callCount,
         1,
-        "reveal growth does not re-announce an unchanged total"
-      );
-      assert.strictEqual(
-        announce.withArgs(windowCountMessage, "polite").callCount,
-        0,
-        "the rendered window size is never announced as the result count"
+        "the inert reveal does not re-announce the unchanged total"
       );
     });
 
@@ -584,39 +554,11 @@ module(
       assert.dom(OPTION_SELECTOR).exists({ count: 100 }, "the page appended");
     });
 
-    test("reaching the cap announces the keep-filtering hint", async function (assert) {
-      let engine;
-      const a11y = getOwner(this).lookup("service:a11y");
-      const announce = sinon.spy(a11y, "announce");
-      const items = buildItems(5000, (value) => (engine = value));
-
-      await render(<template><DSelect @items={{items}} /></template>);
-      await openSelect();
-      await click(findAll(OPTION_SELECTOR)[0]);
-
-      for (let index = 0; index < 6; index++) {
-        engine.revealMore();
-        await settled();
-      }
-
-      assert.dom(".d-combobox__narrow").exists("the list is pinned at the cap");
-      assert.true(
-        announce
-          .getCalls()
-          .some(
-            ({ args }) =>
-              args[0] === i18n("d_select.filter_to_narrow") &&
-              args[1] === "polite"
-          ),
-        "the hint is announced through the a11y service"
-      );
-    });
-
     test("reopening the list announces the result count again", async function (assert) {
       const a11y = getOwner(this).lookup("service:a11y");
       const announce = sinon.spy(a11y, "announce");
-      const items = buildItems(5000);
-      const message = i18n("d_select.results_count", { count: 5000 });
+      const items = buildItems(60);
+      const message = i18n("d_select.results_count", { count: 60 });
 
       await render(<template><DSelect @items={{items}} /></template>);
       await openSelect();

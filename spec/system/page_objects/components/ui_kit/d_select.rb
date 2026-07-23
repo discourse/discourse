@@ -103,16 +103,16 @@ module PageObjects
           options.size
         end
 
-        # Whether the "keep filtering" hint is showing, i.e. the list is pinned at the cap
-        # with more results behind it.
+        # Whether the "keep filtering" hint is showing, i.e. a paginated source stopped at its
+        # cap with more results behind it. A client source renders in full and never shows it.
         def narrow_hint?
           page.has_css?(".d-combobox__narrow", wait: 0)
         end
 
-        # The listbox is windowed: only a slice of the loaded rows is mounted, so counting
-        # `[role='option']` elements measures the window, not how many rows have loaded. The
-        # loaded extent is instead the highest absolute `data-index` currently reachable — the
-        # bottom of the window includes the last loaded row.
+        # The listbox is windowed by `DVirtualList`: only a slice of rows is mounted, so
+        # counting `[role='option']` elements measures the window, not the list. The extent
+        # reached is instead the highest absolute `data-index` currently mounted — scrolling
+        # the window toward the end advances it.
         def max_loaded_index
           page.evaluate_script(<<~JS)
             (function () {
@@ -124,8 +124,9 @@ module PageObjects
           JS
         end
 
-        # Scrolls the listbox itself (never the page): reaching the end band is what trips the
-        # windowed reveal.
+        # Scrolls the listbox itself (never the page): scrolling the virtualized window toward
+        # the end mounts the rows there. For a paginated source, reaching the end band also
+        # trips the next fetch.
         def scroll_listbox_to_bottom
           page.execute_script(<<~JS)
             (function () {
@@ -135,12 +136,12 @@ module PageObjects
           JS
         end
 
-        # Scrolls toward the end until the loaded extent reaches `target` (an absolute index)
-        # or stops growing. Each scroll to the bottom advances the window onto the loaded
-        # frontier and trips the reveal; the window then jumps to the new bottom, so the wait
-        # is for the reachable frontier to advance past where it was — not for a specific index
-        # (that low index is above the new window). A step that fails to advance the frontier
-        # ends the loop (the source is exhausted or capped).
+        # Scrolls toward the end until the mounted extent reaches `target` (an absolute index)
+        # or stops growing. Each scroll to the bottom advances the window onto deeper rows (for
+        # a paginated source it also trips the next fetch); the window then jumps to the new
+        # bottom, so the wait is for the reachable frontier to advance past where it was — not
+        # for a specific index (that low index is above the new window). A step that fails to
+        # advance the frontier ends the loop (the list end, or a source cap, was reached).
         def reveal_to_index(target, max_scrolls: 25)
           max_scrolls.times do
             before = max_loaded_index

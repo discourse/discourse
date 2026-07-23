@@ -1014,6 +1014,15 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   @action
+  resetListScroll(): void {
+    cancel(this.#jumpTimer);
+    this.#listboxApi?.scrollToIndex(0, {
+      align: "start",
+      behavior: "auto",
+    });
+  }
+
+  @action
   handleJump(target: number, direction: "forward" | "backward"): void {
     cancel(this.#jumpTimer);
     if (this.#logicalNavCount === 0) {
@@ -1745,6 +1754,7 @@ export default class DSelect extends Component<DSelectSignature> {
                         this.engine.serverPending
                         omitFalse=false
                       }}
+                      {{didUpdate this.resetListScroll this.engine.filter}}
                       {{willDestroy this.releaseListbox}}
                       {{didInsert
                         this.announceCountOnEntry

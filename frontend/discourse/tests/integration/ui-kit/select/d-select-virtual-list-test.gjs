@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import {
   click,
+  fillIn,
   find,
   findAll,
   render,
@@ -32,11 +33,9 @@ const CLIENT_ITEMS = Array.from({ length: 4 }, (_, index) => ({
   id: index + 1,
   name: `Item ${index + 1}`,
 }));
-// A client list SMALLER than the engine's client chunk (CLIENT_CHUNK=50) so every option is
-// loaded and navigable — U-D lands before U-C, so the engine still caps the client render
-// window and a larger list would never make its tail navigable. Still far larger than the
-// bounded viewport's mounted window, so the last option is off-window and only a logical jump
-// (End) reaches it.
+// A client list large enough that its tail sits off the bounded viewport's mounted window, so
+// the last option is unmounted and only a logical jump (End) reaches it. The whole list is
+// navigable — the engine renders a client source in full and DVirtualList windows the DOM.
 const LOADED_ITEMS = Array.from({ length: 40 }, (_, index) => ({
   id: index,
   name: `Item ${index}`,
@@ -430,5 +429,39 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
         `mounted options stay in ascending DOM order (${indices[i - 1]} < ${indices[i]}), pin included`
       );
     }
+  });
+
+  test("a new query scrolls the windowed list back to the top", async function (assert) {
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect @items={{LOADED_ITEMS}} />
+      </template>
+    );
+    await openSelect();
+
+    const viewport = find(".d-virtual-list");
+    viewport.scrollTop = viewport.scrollHeight;
+    await triggerEvent(viewport, "scroll");
+    assert.true(
+      viewport.scrollTop > 0,
+      "the window is scrolled away from the top"
+    );
+
+    // A new query must return the windowed list to the top so results read from the first
+    // row, not from wherever the previous scroll left the window.
+    await fillIn("[role='combobox']", "Item 1");
+
+    assert.strictEqual(
+      find(".d-virtual-list").scrollTop,
+      0,
+      "the new query reset the windowed scroll to the top"
+    );
   });
 });
