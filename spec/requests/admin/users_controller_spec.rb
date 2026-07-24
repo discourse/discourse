@@ -298,6 +298,15 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["similar_users_count"]).to eq(1)
       end
+
+      it "does not include DiscourseConnect SSO details" do
+        Fabricate(:single_sign_on_record, user: user)
+
+        get "/admin/users/#{user.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).not_to have_key("single_sign_on_record")
+      end
     end
 
     context "when logged in as a non-staff user" do
