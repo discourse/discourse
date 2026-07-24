@@ -8,11 +8,13 @@ import { trustHTML } from "@ember/template";
 import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -27,9 +29,7 @@ export default class AiTranslations extends Component {
   @service router;
   @service siteSettings;
 
-  @tracked targets = null;
-  @tracked loadingProgress = false;
-  @tracked progressCachedAt = null;
+  @tracked overviewGeneration = 0;
   @tracked expandedTargetType = null;
   @tracked targetDetails = {};
   @tracked loadingTargetDetails = {};
@@ -65,9 +65,6 @@ export default class AiTranslations extends Component {
     super(...arguments);
     this._checkCredits();
     this._loadCategories();
-    if (this.enabled) {
-      this._loadProgress();
-    }
   }
 
   async _loadCategories() {
@@ -77,24 +74,9 @@ export default class AiTranslations extends Component {
     }
   }
 
-  async _loadProgress({ showLoading = true } = {}) {
-    if (showLoading) {
-      this.loadingProgress = true;
-    }
-
-    try {
-      const response = await ajax(
-        "/admin/plugins/discourse-ai/ai-translations/progress.json"
-      );
-      this.targets = response.targets;
-      this.progressCachedAt = response.cached_at;
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      if (showLoading) {
-        this.loadingProgress = false;
-      }
-    }
+  @bind
+  loadProgress() {
+    return ajax("/admin/plugins/discourse-ai/ai-translations/progress.json");
   }
 
   async _checkCredits() {
@@ -279,14 +261,11 @@ export default class AiTranslations extends Component {
 
       const expandedTargetType = this.expandedTargetType;
       this._invalidateTargetDetails({ keepDisplayed: true });
+      this.overviewGeneration += 1;
 
-      const refreshes = [this._loadProgress({ showLoading: false })];
       if (expandedTargetType) {
-        refreshes.push(
-          this._loadTargetDetails(expandedTargetType, { retry: true })
-        );
+        await this._loadTargetDetails(expandedTargetType, { retry: true });
       }
-      await Promise.all(refreshes);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -333,11 +312,8 @@ export default class AiTranslations extends Component {
 
       if (this.translationEnabled && !this.args.model.no_locales_configured) {
         this.enabled = true;
-        this._loadProgress();
       } else {
         this.enabled = false;
-        this.targets = null;
-        this.progressCachedAt = null;
         this.expandedTargetType = null;
         this._invalidateTargetDetails();
       }
@@ -348,15 +324,14 @@ export default class AiTranslations extends Component {
     }
   }
 
-  get backfillStatusMessage() {
+  @bind
+  backfillStatusMessage(targets) {
     if (
       this.args.model?.backfill_enabled &&
       this.args.model?.backfill_max_age_days &&
       this.hourlyRate > 0
     ) {
-      const posts = this.targets?.find(
-        ({ target_type }) => target_type === "post"
-      );
+      const posts = targets?.find(({ target_type }) => target_type === "post");
       const totalRemaining = posts
         ? posts.total_count - posts.translated_count
         : 0;
@@ -389,13 +364,14 @@ export default class AiTranslations extends Component {
     return null;
   }
 
-  get cachedResultsNotice() {
-    if (!this.progressCachedAt) {
+  @bind
+  cachedResultsNotice(cachedAt) {
+    if (!cachedAt) {
       return null;
     }
 
     return i18n("discourse_ai.translations.cached_results_notice", {
-      relative_time: moment(this.progressCachedAt).fromNow(),
+      relative_time: moment(cachedAt).fromNow(),
     });
   }
 
@@ -677,82 +653,100 @@ export default class AiTranslations extends Component {
 
       {{#if this.enabled}}
         <div class="ai-translations__overview">
-          <div class="ai-translations__progress-meta">
-            {{#if this.backfillStatusMessage}}
-              <div class="ai-translations__stat-item">
-                <span class="ai-translations__stat-label">
-                  {{this.backfillStatusMessage}}
-                </span>
+          <DAsyncContent
+            @asyncData={{this.loadProgress}}
+            @context={{this.overviewGeneration}}
+            @retainWhileReloading={{true}}
+            @errorMode="popup"
+          >
+            <:loading>
+              <AiTranslationModelProgressOverviewSkeleton />
+            </:loading>
+            <:content as |progress|>
+              <div class="ai-translations__progress-meta">
+                {{#let
+                  (this.backfillStatusMessage progress.targets)
+                  as |backfillStatusMessage|
+                }}
+                  {{#if backfillStatusMessage}}
+                    <div class="ai-translations__stat-item">
+                      <span class="ai-translations__stat-label">
+                        {{backfillStatusMessage}}
+                      </span>
+                    </div>
+                  {{/if}}
+                {{/let}}
+                {{#let
+                  (this.cachedResultsNotice progress.cached_at)
+                  as |cachedResultsNotice|
+                }}
+                  {{#if cachedResultsNotice}}
+                    <div class="ai-translations__cached-results">
+                      {{dIcon "clock-rotate-left"}}
+                      <span>{{cachedResultsNotice}}</span>
+                    </div>
+                  {{/if}}
+                {{/let}}
               </div>
-            {{/if}}
-            {{#if this.cachedResultsNotice}}
-              <div class="ai-translations__cached-results">
-                {{dIcon "clock-rotate-left"}}
-                <span>{{this.cachedResultsNotice}}</span>
-              </div>
-            {{/if}}
-          </div>
 
-          {{#if this.loadingProgress}}
-            <AiTranslationModelProgressOverviewSkeleton />
-          {{else if this.targets}}
-            <div
-              class="ai-translations__overview-grid"
-              aria-label={{i18n
-                "discourse_ai.translations.model_progress.overview_label"
-              }}
-            >
-              {{#each this.targets as |target|}}
-                <AiTranslationModelProgressOverviewCard
-                  @target={{target}}
-                  @expanded={{eq this.expandedTargetType target.target_type}}
-                  @onToggle={{this.toggleTarget}}
-                />
-              {{/each}}
-            </div>
-            {{#if this.expandedTargetType}}
-              <div class="ai-translation-model-progress-detail-region">
-                {{#if this.displayedTargetDetails}}
-                  <div aria-hidden={{this.isDetailStateOverlay}}>
-                    <AiTranslationModelProgressDetailCard
-                      @data={{this.displayedTargetDetails}}
-                    />
-                  </div>
-                {{/if}}
-                {{#if this.isLoadingExpandedTargetDetails}}
-                  <div
-                    class="ai-translation-model-progress-detail-state
-                      {{if this.isDetailStateOverlay '--overlay'}}"
-                    role="status"
-                  >
-                    {{i18n
-                      "discourse_ai.translations.model_progress.detail.loading"
-                      target=this.expandedTargetTitle
-                    }}
-                  </div>
-                {{else if this.hasExpandedTargetDetailError}}
-                  <div
-                    class="ai-translation-model-progress-detail-state --error
-                      {{if this.isDetailStateOverlay '--overlay'}}"
-                    role="alert"
-                  >
-                    <span>
+              <div
+                class="ai-translations__overview-grid"
+                aria-label={{i18n
+                  "discourse_ai.translations.model_progress.overview_label"
+                }}
+              >
+                {{#each progress.targets as |target|}}
+                  <AiTranslationModelProgressOverviewCard
+                    @target={{target}}
+                    @expanded={{eq this.expandedTargetType target.target_type}}
+                    @onToggle={{this.toggleTarget}}
+                  />
+                {{/each}}
+              </div>
+              {{#if this.expandedTargetType}}
+                <div class="ai-translation-model-progress-detail-region">
+                  {{#if this.displayedTargetDetails}}
+                    <div aria-hidden={{this.isDetailStateOverlay}}>
+                      <AiTranslationModelProgressDetailCard
+                        @data={{this.displayedTargetDetails}}
+                      />
+                    </div>
+                  {{/if}}
+                  {{#if this.isLoadingExpandedTargetDetails}}
+                    <div
+                      class="ai-translation-model-progress-detail-state
+                        {{if this.isDetailStateOverlay '--overlay'}}"
+                      role="status"
+                    >
                       {{i18n
-                        "discourse_ai.translations.model_progress.detail.load_error"
+                        "discourse_ai.translations.model_progress.detail.loading"
                         target=this.expandedTargetTitle
                       }}
-                    </span>
-                    <DButton
-                      @action={{this.retryTargetDetails}}
-                      @icon="rotate"
-                      @label="discourse_ai.translations.model_progress.detail.retry"
-                      class="btn-default"
-                    />
-                  </div>
-                {{/if}}
-              </div>
-            {{/if}}
-          {{/if}}
+                    </div>
+                  {{else if this.hasExpandedTargetDetailError}}
+                    <div
+                      class="ai-translation-model-progress-detail-state --error
+                        {{if this.isDetailStateOverlay '--overlay'}}"
+                      role="alert"
+                    >
+                      <span>
+                        {{i18n
+                          "discourse_ai.translations.model_progress.detail.load_error"
+                          target=this.expandedTargetTitle
+                        }}
+                      </span>
+                      <DButton
+                        @action={{this.retryTargetDetails}}
+                        @icon="rotate"
+                        @label="discourse_ai.translations.model_progress.detail.retry"
+                        class="btn-default"
+                      />
+                    </div>
+                  {{/if}}
+                </div>
+              {{/if}}
+            </:content>
+          </DAsyncContent>
         </div>
       {{/if}}
 

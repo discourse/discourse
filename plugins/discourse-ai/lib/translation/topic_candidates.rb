@@ -8,15 +8,7 @@ module DiscourseAi
         eligible_topics_sql = get.select(:id, :locale).to_sql
 
         sql = <<~SQL
-          WITH supported AS MATERIALIZED (
-            SELECT COALESCE(
-              array_agg(
-                DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
-              ) FILTER (WHERE locale IS NOT NULL),
-              ARRAY[]::text[]
-            ) AS bases
-            FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
-          ),
+          WITH #{DiscourseAi::Translation.supported_locale_bases_cte},
           eligible_topics AS (
             SELECT id,
                    locale,
