@@ -3003,22 +3003,24 @@ class _PluginApi {
    * match the one registered there, and the loader block registered there
    * produces the `@data` this component receives.
    *
-   * The component is rendered once for each visible section with a matching id.
+   * The component is rendered after its dedicated section request succeeds.
    * The render site also stamps a `--<id>` class and a `data-section-id="<id>"`
    * attribute on it, so forward `...attributes` onto your root element (wrapping
-   * the shared `<DashboardSection>` component does this for you).
+   * the shared `<DashboardSection>` component does this for you). Define the
+   * `admin.dashboard.sections.<id>.title` translation used by the loading and
+   * error states.
    *
    * The component receives these args:
    * - `@data` {Object} — the section payload: the hash returned by the
    *   server-side loader block passed to `register_admin_dashboard_section`.
    * - `@startDate` {Date} — start of the selected dashboard period.
    * - `@endDate` {Date} — end of the selected dashboard period.
-   * - `@fetchError` {boolean} — true when the dashboard sections request failed.
+   * - `@fetchError` {boolean} — false; the dashboard renders section request
+   *   failures before invoking the component.
    * - `@period` {string} — the selected period preset (e.g. "monthly"), or
    *   "custom" for a custom range.
-   * - `@loading` {boolean} — true while the dashboard is (re)loading sections.
-   *   Provided for convenience; a section that refetches on its own (as Solved's
-   *   "support" section does) may track its own loading state instead.
+   * - `@loading` {boolean} — false; the dashboard owns section loading state. A
+   *   section that fetches additional data may track that loading state itself.
    *
    * ```
    * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";

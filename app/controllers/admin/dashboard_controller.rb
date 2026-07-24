@@ -32,19 +32,10 @@ class Admin::DashboardController < Admin::StaffController
       raise Discourse::NotFound
     end
 
-    result =
-      AdminDashboardSectionLoader.build(
-        section_ids: [section_id],
-        current_user: current_user,
-        start_date: params[:start_date],
-        end_date: params[:end_date],
-        parallel: false,
-      ).first
-
-    if result[:error]
-      render json: { id: section_id, error: true }, status: :internal_server_error
+    if section_id == "reports"
+      hijack { render_dashboard_section(section_id) }
     else
-      render json: result
+      render_dashboard_section(section_id)
     end
   end
 
@@ -172,6 +163,22 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   private
+
+  def render_dashboard_section(section_id)
+    result =
+      AdminDashboardSectionLoader.build(
+        section_ids: [section_id],
+        current_user: current_user,
+        start_date: params[:start_date],
+        end_date: params[:end_date],
+      ).first
+
+    if result[:error]
+      render_json_dump({ id: section_id, error: true }, status: :internal_server_error)
+    else
+      render_json_dump(result)
+    end
+  end
 
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)

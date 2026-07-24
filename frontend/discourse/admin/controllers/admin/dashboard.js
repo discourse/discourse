@@ -40,7 +40,8 @@ export default class AdminDashboardController extends Controller {
   _sectionsLoadId = 0;
   _sectionsLoadingCount = 0;
   _configSaveId = 0;
-  _sectionDataCache = new Map();
+  _sectionCache = new Map();
+  _sectionRequestIds = new Map();
 
   get safePeriod() {
     if (!VALID_PERIODS.includes(this.range)) {
@@ -93,15 +94,12 @@ export default class AdminDashboardController extends Controller {
   toggleSection(id) {
     const previous = this.loadedSections;
     const current = previous?.configuration?.sections ?? [];
-    const wasVisible = current.find((s) => s.id === id)?.visible;
     const nextConfig = current.map((s) =>
       s.id === id ? { ...s, visible: !s.visible } : s
     );
 
     this.#applyConfigOptimistically(nextConfig);
-
-    const needsRefetch = !wasVisible && !this._sectionDataCache.has(id);
-    this.#persistConfiguration(nextConfig, previous, { needsRefetch });
+    this.#persistConfiguration(nextConfig, previous);
   }
 
   @action
@@ -112,7 +110,7 @@ export default class AdminDashboardController extends Controller {
     nextConfig.splice(toIndex, 0, moved);
 
     this.#applyConfigOptimistically(nextConfig);
-    this.#persistConfiguration(nextConfig, previous, { needsRefetch: false });
+    this.#persistConfiguration(nextConfig, previous);
   }
 
   #applyConfigOptimistically(nextConfig) {
@@ -122,7 +120,7 @@ export default class AdminDashboardController extends Controller {
 
     for (const section of currentSections.values()) {
       if (section.loaded) {
-        this._sectionDataCache.set(section.id, section.data);
+        this._sectionCache.set(section.id, section);
       }
     }
 
@@ -136,21 +134,23 @@ export default class AdminDashboardController extends Controller {
             return currentSection;
           }
 
-          const cachedData = this._sectionDataCache.get(section.id);
-          return {
-            id: section.id,
-            data: cachedData,
-            loaded: cachedData !== undefined,
-            loading: false,
-            error: false,
-            stale: false,
-          };
+          const cachedSection = this._sectionCache.get(section.id);
+          return (
+            cachedSection ?? {
+              id: section.id,
+              data: null,
+              loaded: false,
+              loading: false,
+              error: false,
+              stale: false,
+            }
+          );
         }),
       configuration: { sections: nextConfig },
     };
   }
 
-  async #persistConfiguration(sections, revertTo, { needsRefetch } = {}) {
+  async #persistConfiguration(sections, revertTo) {
     const saveId = ++this._configSaveId;
 
     try {
@@ -159,10 +159,6 @@ export default class AdminDashboardController extends Controller {
         contentType: "application/json",
         data: JSON.stringify({ sections }),
       });
-
-      if (needsRefetch && saveId === this._configSaveId) {
-        await this.fetchSections();
-      }
     } catch (e) {
       if (saveId === this._configSaveId) {
         this.loadedSections = revertTo;
@@ -178,7 +174,7 @@ export default class AdminDashboardController extends Controller {
     const startDate = this.startDate;
     const endDate = this.endDate;
 
-    this._sectionDataCache.clear();
+    this._sectionCache.clear();
     this.loadingSections = true;
     this.sectionsFetchError = false;
 
@@ -277,6 +273,8 @@ export default class AdminDashboardController extends Controller {
     }
 
     const loadId = this._sectionsLoadId;
+    const requestId = (this._sectionRequestIds.get(sectionId) ?? 0) + 1;
+    this._sectionRequestIds.set(sectionId, requestId);
     this.#updateSection(sectionId, { loading: true, error: false });
 
     try {
@@ -286,12 +284,15 @@ export default class AdminDashboardController extends Controller {
         version: this.version,
       });
 
-      if (loadId !== this._sectionsLoadId) {
+      if (
+        loadId !== this._sectionsLoadId ||
+        requestId !== this._sectionRequestIds.get(sectionId)
+      ) {
         return;
       }
 
-      this._sectionDataCache.set(sectionId, result.data);
-      this.#updateSection(sectionId, {
+      const loadedSection = {
+        ...section,
         data: result.data,
         loaded: true,
         loading: false,
@@ -300,9 +301,14 @@ export default class AdminDashboardController extends Controller {
         period: this.loadedSections.period,
         startDate: this.loadedSections.startDate,
         endDate: this.loadedSections.endDate,
-      });
+      };
+      this._sectionCache.set(sectionId, loadedSection);
+      this.#updateSection(sectionId, loadedSection);
     } catch {
-      if (loadId === this._sectionsLoadId) {
+      if (
+        loadId === this._sectionsLoadId &&
+        requestId === this._sectionRequestIds.get(sectionId)
+      ) {
         this.#updateSection(sectionId, {
           loaded: section.loaded,
           loading: false,
@@ -315,7 +321,11 @@ export default class AdminDashboardController extends Controller {
 
   @action
   async refreshSection(sectionId) {
-    this.#updateSection(sectionId, { error: false, stale: true });
+    this.#updateSection(sectionId, {
+      loading: false,
+      error: false,
+      stale: true,
+    });
     await this.loadSection(sectionId);
   }
 
