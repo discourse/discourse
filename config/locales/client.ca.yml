@@ -1265,7 +1265,7 @@ ca:
         default: "(per defecte)"
         any: "qualsevol"
       homepage:
-        default: "(per defecte)"
+        default: "Per defecte"
       password_confirmation:
         title: "Contrasenya una altra vegada"
       auth_tokens:
@@ -1386,12 +1386,15 @@ ca:
           cancel: "Cancel·la"
         invite_roles:
           member_tab: "Membres"
-          admin_tab: "Administradors"
+          admin_tab: "Equip responsable"
+          staff_role_admin: "Administració"
+          staff_role_moderator: "Moderador"
           email_placeholder: "name@example.com"
           invite_by_email: "Correu electrònic"
           summary:
             role_member: "Membre"
             role_admin: "Administració"
+            role_moderator: "Moderador"
             method_email: "Correu electrònic"
             topic: "Tema"
             groups: "Grups"
@@ -3012,6 +3015,8 @@ ca:
         custom:
           save: "Desa"
           delete: "Suprimeix"
+          localizations:
+            title: "Traduccions"
           links:
             reset: "Restableix el valor predeterminat"
             icon:
@@ -3342,7 +3347,6 @@ ca:
               posts: "Publicacions"
               share: "Comparteix"
             whos_posting:
-              all_categories: "Totes les categories"
               staff: "Equip responsable"
             trust_level_pipeline:
               trust_levels:

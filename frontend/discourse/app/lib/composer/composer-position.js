@@ -2,7 +2,10 @@ import { later } from "@ember/runloop";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 
-export function setupComposerPosition(editor) {
+export function setupComposerPosition(
+  editor,
+  { swipeToCollapse = false } = {}
+) {
   // This component contains two composer positioning adjustments
   // for Safari iOS/iPad and Firefox on Android
   // The fixes here go together with styling in base/compose.css
@@ -33,7 +36,14 @@ export function setupComposerPosition(editor) {
   }
 
   function selectionTouchmoveGuard(event) {
-    if (editor.selectionStart !== editor.selectionEnd) {
+    // the rich editor is a contenteditable, without selectionStart/End
+    const selection = window.getSelection();
+    const hasSelection =
+      editor.selectionStart !== undefined
+        ? editor.selectionStart !== editor.selectionEnd
+        : !selection.isCollapsed && editor.contains(selection.anchorNode);
+
+    if (hasSelection) {
       event.stopImmediatePropagation();
     }
   }
@@ -76,7 +86,12 @@ export function setupComposerPosition(editor) {
       const selection = window.getSelection();
       if (notScrollable && selection.toString() === "") {
         event.preventDefault();
-        event.stopPropagation();
+
+        // stopPropagation would swallow the composer's swipe-to-dismiss gesture
+        // on an ancestor; preventDefault alone still blocks the body scroll
+        if (!swipeToCollapse) {
+          event.stopPropagation();
+        }
       }
     });
   }

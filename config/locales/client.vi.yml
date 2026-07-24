@@ -1880,7 +1880,7 @@ vi:
         default: "(mặc định)"
         any: "Bất kỳ"
       homepage:
-        default: "(mặc định)"
+        default: "Mặc định"
       password_confirmation:
         title: "Nhập lại Password"
       invite_code:
@@ -2081,7 +2081,9 @@ vi:
         invite_roles:
           member_title: "Mời thành viên"
           member_tab: "Thành viên kênh"
-          admin_tab: "Quản trị"
+          admin_tab: "Nhân viên"
+          staff_role_admin: "Quản trị viên"
+          staff_role_moderator: "Điều hành"
           admin_email_label: "Địa chỉ email"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
@@ -2091,6 +2093,7 @@ vi:
           summary:
             role_member: "Nâng Cao"
             role_admin: "Quản trị viên"
+            role_moderator: "Điều hành"
             method: "Chia sẻ"
             method_email: "Email"
             uses: "Sử dụng tối đa"
@@ -4838,6 +4841,10 @@ vi:
           public: "Hiển thị cho mọi người"
           always_public: "Nội dung trong phần này luôn công khai"
           more_menu: "Thêm menu"
+          localizations:
+            title: "Bản dịch"
+            locale: "Ngôn ngữ"
+            title_label: "Tên phần"
           links:
             add: "Thêm một link khác"
             delete: "Xóa link"
@@ -5745,7 +5752,6 @@ vi:
               posts: "Số lượng tút"
               share: "Chia sẻ"
             whos_posting:
-              all_categories: "Tất cả danh mục"
               staff: "Nhân viên"
             trust_level_pipeline:
               trust_levels:

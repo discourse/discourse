@@ -1912,7 +1912,7 @@ pt:
         default: "(predefinição)"
         any: "qualquer"
       homepage:
-        default: "(predefinição)"
+        default: "Predefinição"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -2114,7 +2114,9 @@ pt:
         invite_roles:
           member_title: "Convidar membros"
           member_tab: "Membros"
-          admin_tab: "Administradores"
+          admin_tab: "Pessoal"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador"
           email_placeholder: "name@example.com"
           invite_by_email: "E-mail"
           restrict_domain: "Restringir ao domínio"
@@ -2123,6 +2125,7 @@ pt:
           summary:
             role_member: "Membro"
             role_admin: "Administração"
+            role_moderator: "Moderador"
             method_email: "E-mail"
             uses: "Máximo de utilizações"
             expires: "Expira"
@@ -4478,6 +4481,8 @@ pt:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          localizations:
+            title: "Traduções"
           links:
             reset: "Restaurar ao padrão"
             icon:
@@ -4865,7 +4870,6 @@ pt:
               posts: "Mensagens"
               share: "Partilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Pessoal"
             trust_level_pipeline:
               trust_levels:

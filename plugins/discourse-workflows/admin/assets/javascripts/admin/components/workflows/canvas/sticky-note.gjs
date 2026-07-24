@@ -13,6 +13,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import CanvasHoverToolbar from "./hover-toolbar";
+import { DRAG_LENIENCE_PX } from "./rete-editor";
 
 const COLORS = ["yellow", "blue", "green", "pink", "purple", "orange"].map(
   (name) => ({
@@ -103,8 +104,17 @@ export default class StickyNote extends Component {
     const zoom = this.args.zoom ?? 1;
     const startX = event.clientX;
     const startY = event.clientY;
+    let withinLenience = true;
 
     const moveHandler = (e) => {
+      if (withinLenience) {
+        if (
+          Math.hypot(e.clientX - startX, e.clientY - startY) < DRAG_LENIENCE_PX
+        ) {
+          return;
+        }
+        withinLenience = false;
+      }
       const dx = (e.clientX - startX) / zoom;
       const dy = (e.clientY - startY) / zoom;
       onMove(dx, dy);
@@ -246,6 +256,7 @@ export default class StickyNote extends Component {
       class={{dConcatClass
         "workflow-sticky-note"
         (if @isSelected "is-selected")
+        (if this.isEditing "is-editing")
       }}
       style={{this.style}}
       {{registerStickyNoteElement this}}

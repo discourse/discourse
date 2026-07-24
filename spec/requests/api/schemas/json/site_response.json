@@ -329,6 +329,10 @@
       "type": "array",
       "items": {}
     },
+    "homepage_choices": {
+      "type": "array",
+      "items": {}
+    },
     "periods": {
       "type": "array",
       "items": {}
@@ -1039,6 +1043,7 @@
     "trust_levels",
     "groups",
     "filters",
+    "homepage_choices",
     "periods",
     "top_menu_items",
     "anonymous_top_menu_items",

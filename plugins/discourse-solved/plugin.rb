@@ -23,6 +23,7 @@ module ::DiscourseSolved
   EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
   SHARED_ISSUES_ENABLED_CUSTOM_FIELD = "enable_shared_issues"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+  MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS = 50
 
   def self.accept_answer!(post, acting_user, topic: nil)
     DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian: acting_user.guardian)
@@ -165,17 +166,17 @@ after_initialize do
         .joins(:topic)
         .where.not(topics: { archetype: Archetype.private_message })
 
-    category_id, include_subcategories = report.add_category_filter
-    if category_id
-      if include_subcategories
-        accepted_solutions =
-          accepted_solutions.where(
-            "topics.category_id IN (?)",
-            Category.subcategory_ids(category_id),
-          )
-      else
-        accepted_solutions = accepted_solutions.where("topics.category_id = ?", category_id)
-      end
+    raw_ids = report.filters[:category_ids]
+    if raw_ids.present?
+      parsed_ids = Array(raw_ids.is_a?(String) ? raw_ids.split(",") : raw_ids).map(&:to_i)
+      requested_ids =
+        Category
+          .where(id: parsed_ids)
+          .limit(DiscourseSolved::MAX_ACCEPTED_SOLUTIONS_CATEGORY_IDS)
+          .pluck(:id)
+      report.add_filter("category_ids", type: "category_list", default: requested_ids)
+
+      accepted_solutions = accepted_solutions.where("topics.category_id" => requested_ids)
     end
 
     accepted_solutions
@@ -228,11 +229,19 @@ after_initialize do
   register_admin_dashboard_section(
     id: "support",
     enabled: -> { DiscourseSolved::AdminDashboardSupport.available? },
+    settings: {
+      "categories" => DiscourseSolved::AdminDashboardSupportCategoriesSetting,
+    },
   ) do |start_date:, end_date:, current_user:|
     DiscourseSolved::AdminDashboardSupport.build(
       start_date: start_date,
       end_date: end_date,
       current_user: current_user,
+      category_ids:
+        AdminDashboardSectionConfiguration.settings_for("support").dig(
+          "categories",
+          "category_ids",
+        ),
     )
   end
 

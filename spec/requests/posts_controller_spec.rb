@@ -1356,6 +1356,34 @@ RSpec.describe PostsController do
         expect(new_topic.external_id).to eq("external_id")
       end
 
+      it "blocks email private message recipients that disabled private messages" do
+        SiteSetting.enable_staged_users = true
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        SiteSetting.send_email_messages_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        sender = Fabricate(:trust_level_4, refresh_auto_groups: true)
+        recipient = Fabricate(:user)
+        recipient.user_option.update!(allow_private_messages: false)
+        api_key = ApiKey.create!(user: sender).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is the test content",
+               title: "this is some post",
+               archetype: Archetype.private_message,
+               target_recipients: recipient.email,
+             },
+             headers: {
+               HTTP_API_USERNAME: sender.username,
+               HTTP_API_KEY: api_key,
+             }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("activerecord.errors.models.topic.attributes.base.cant_send_pm"),
+        )
+        expect(TopicAllowedUser.exists?(user: recipient)).to eq(false)
+      end
+
       it "prevents whispers for regular users" do
         post_1 = Fabricate(:post)
         user_key = ApiKey.create!(user: user).key
@@ -4081,11 +4109,39 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
-      it "can view raw email if the user is in the allowed group" do
+      it "blocks raw email for unseen private messages" do
+        raw_email = "From: sender@example.com\nTo: recipient@example.com\n\nsecret body"
+        private_message_post =
+          Fabricate(
+            :private_message_post,
+            user: user,
+            recipient: Fabricate(:user),
+            raw_email: raw_email,
+          )
+        sign_in(moderator)
+
+        get "/posts/#{private_message_post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(raw_email)
+      end
+
+      it "blocks deleted raw email for allowed non-staff users" do
         sign_in(user)
         SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
 
         get "/posts/#{post.id}/raw-email.json"
+
+        expect(response.status).to eq(403)
+        expect(response.body).not_to include(post.raw_email)
+      end
+
+      it "can view raw email if the user is in the allowed group" do
+        allowed_post = Fabricate(:post, user: Fabricate(:user), raw_email: "email_content")
+        sign_in(user)
+        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+
+        get "/posts/#{allowed_post.id}/raw-email.json"
         expect(response.status).to eq(200)
 
         json = response.parsed_body

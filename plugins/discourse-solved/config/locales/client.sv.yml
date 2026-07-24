@@ -15,8 +15,6 @@ sv:
         sections:
           support:
             title: "Stöd"
-            filter:
-              all_categories: "Alla kategorier"
             answerers:
               staff: "Personal"
               member: "Medlemmar"

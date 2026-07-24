@@ -62,7 +62,7 @@ RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
           "type" => "trigger:stale_topic",
           "parameters" => {
             "hours" => 24,
-            "category_id" => category.id.to_s,
+            "category_ids" => [category.id.to_s],
           },
         }
       end
@@ -84,6 +84,32 @@ RSpec.describe DiscourseWorkflows::Nodes::StaleTopic::V1 do
 
         topic_ids = items.map { |item| item[:topic][:id] }
         expect(topic_ids).to contain_exactly(stale_topic_in_category.id)
+      end
+
+      it "returns topics across all configured categories and their subcategories" do
+        trigger_node["parameters"]["category_ids"] = [category.id.to_s, other_category.id.to_s]
+
+        items = described_class.trigger_data_for(trigger_context)
+
+        topic_ids = items.map { |item| item[:topic][:id] }
+        expect(topic_ids).to contain_exactly(
+          stale_topic_in_category.id,
+          stale_topic_in_subcategory.id,
+          stale_topic_in_other_category.id,
+        )
+      end
+
+      it "supports the legacy scalar category_id parameter" do
+        trigger_node["parameters"].delete("category_ids")
+        trigger_node["parameters"]["category_id"] = category.id.to_s
+
+        items = described_class.trigger_data_for(trigger_context)
+
+        topic_ids = items.map { |item| item[:topic][:id] }
+        expect(topic_ids).to contain_exactly(
+          stale_topic_in_category.id,
+          stale_topic_in_subcategory.id,
+        )
       end
     end
 

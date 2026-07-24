@@ -42,7 +42,7 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       {{dAvatar this.item imageSize="tiny"}}
       <div
         class={{dConcatClass
-          "email-group-user-chooser--user"
+          "email-group-user-chooser__user"
           (if
             (eq this.userNameOrdering "usernameFirst")
             "--username-first"
@@ -73,7 +73,7 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       {{dIcon "users"}}
       <div
         class={{dConcatClass
-          "email-group-user-chooser--group"
+          "email-group-user-chooser__group"
           (if
             (eq this.groupNameOrdering "groupNameFirst")
             "--group-name-first"
@@ -96,6 +96,15 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
     {{else}}
       {{dIcon "envelope"}}
       <span class="identifier">{{this.item.id}}</span>
+    {{/if}}
+
+    {{#if this.item.badgeText}}
+      <span class="email-group-user-chooser__badge">
+        {{#if this.item.badgeIcon}}
+          {{dIcon this.item.badgeIcon}}
+        {{/if}}
+        {{this.item.badgeText}}
+      </span>
     {{/if}}
   </template>
 }

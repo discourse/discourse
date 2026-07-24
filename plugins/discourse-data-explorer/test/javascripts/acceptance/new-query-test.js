@@ -156,6 +156,7 @@ acceptance("New Query - AI", function (needs) {
   needs.settings({
     data_explorer_enabled: true,
     data_explorer_ai_queries_enabled: true,
+    discourse_ai_enabled: true,
   });
 
   const GENERATION_ID = "test-generation";
@@ -268,6 +269,22 @@ acceptance("New Query - AI", function (needs) {
     );
     await settled();
   }
+
+  test("renders the manual form when Discourse AI is disabled", async function (assert) {
+    this.siteSettings.discourse_ai_enabled = false;
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-mode-switch")
+      .doesNotExist("the AI/manual mode switch is hidden");
+    assert
+      .dom(".query-new__manual-form")
+      .exists("the manual query form renders");
+    assert
+      .dom(".query-new__ai-section")
+      .doesNotExist("the AI generation form is hidden");
+  });
 
   test("save query is the primary action and the result is shown first", async function (assert) {
     await generate("show me a value");

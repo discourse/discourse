@@ -520,8 +520,6 @@ RSpec.describe Theme do
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
       :common,
       :admin,
-      :desktop,
-      :mobile,
       :common_theme,
     )
   end

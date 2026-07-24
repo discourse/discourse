@@ -10,8 +10,6 @@ te:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "అన్ని వర్గాలు"
             answerers:
               staff: "సిబ్బంది"
               member: "సభ్యులు"

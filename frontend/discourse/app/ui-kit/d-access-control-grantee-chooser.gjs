@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 
@@ -8,7 +9,7 @@ export function granteeValue(type, id) {
   return `${type}:${id}`;
 }
 
-export function groupGranteeResult(group) {
+export function groupGranteeResult(group, isDisabled = false) {
   return {
     value: granteeValue("group", group.id),
     id: group.name,
@@ -19,10 +20,13 @@ export function groupGranteeResult(group) {
     display_name: group.display_name,
     automatic: group.automatic,
     isGroup: true,
+    disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
-function userGranteeResult(user) {
+function userGranteeResult(user, isDisabled = false) {
   const sortName = user.name || user.display_name || user.username;
 
   return {
@@ -36,6 +40,9 @@ function userGranteeResult(user) {
     showUserStatus: false,
     avatar_template: user.avatar_template,
     isUser: true,
+    disabled: isDisabled,
+    badgeText: isDisabled ? i18n("access_control.manage.disallowed") : null,
+    badgeIcon: isDisabled ? "ban" : null,
   };
 }
 
@@ -86,8 +93,12 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return [
-      ...(results.groups || []).map(groupGranteeResult),
-      ...(results.users || []).map(userGranteeResult),
+      ...(results.groups || []).map((group) =>
+        groupGranteeResult(group, this.isGranteeDisabled(group))
+      ),
+      ...(results.users || []).map((user) =>
+        userGranteeResult(user, this.isGranteeDisabled(user))
+      ),
     ];
   }
 
@@ -99,5 +110,11 @@ export default class DAccessControlGranteeChooser extends EmailGroupUserChooser 
     }
 
     return results.filter((result) => !excludedGrantees.includes(result.value));
+  }
+
+  isGranteeDisabled(grantee) {
+    const disabledGrantees = this.selectKit.options.disabledGrantees || [];
+
+    return disabledGrantees.includes(granteeValue(grantee.type, grantee.id));
   }
 }

@@ -1667,7 +1667,7 @@ hy:
         default: "(լռելյայն)"
         any: "ցանկացած"
       homepage:
-        default: "(լռելյայն)"
+        default: "Լռելյայն"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -1844,6 +1844,9 @@ hy:
         invite_roles:
           member_title: "Հրավիրեք մասնակիցներին"
           member_tab: "Անդամներ"
+          admin_tab: "Անձնակազմ"
+          staff_role_admin: "Ադմին"
+          staff_role_moderator: "Մոդերատոր"
           email_placeholder: "name@example.com"
           invite_by_email: "Էլ. հասցե"
           restrict_domain: "Սահմանափակել դոմենով"
@@ -1852,6 +1855,7 @@ hy:
           summary:
             role_member: "Անդամ"
             role_admin: "Ադմին"
+            role_moderator: "Մոդերատոր"
             method_email: "Էլ. հասցե"
             uses: "Առավելագույն օգտագործման քանակը"
             expires: "Ժամկետը լրանում է"
@@ -3728,6 +3732,8 @@ hy:
         custom:
           save: "Պահպանել"
           delete: "Ջնջել"
+          localizations:
+            title: "Թարգմանություններ"
           links:
             reset: "Վերականգնել լռելյայն"
             icon:
@@ -4054,7 +4060,6 @@ hy:
               posts: "Գրառումներ"
               share: "Կիսվել"
             whos_posting:
-              all_categories: "Բոլոր կատեգորիաները"
               staff: "Անձնակազմ"
             trust_level_pipeline:
               trust_levels:

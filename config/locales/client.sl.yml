@@ -1439,7 +1439,7 @@ sl:
         default: "(privzeto)"
         any: "katerokoli"
       homepage:
-        default: "(privzeto)"
+        default: "Privzeto"
       password_confirmation:
         title: "Geslo - ponovno"
       invite_code:
@@ -1587,12 +1587,15 @@ sl:
           cancel: "Prekliči"
         invite_roles:
           member_tab: "Člani"
-          admin_tab: "Administratorji"
+          admin_tab: "Osebje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "E-naslov"
           summary:
             role_member: "Polnopraven član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-naslov"
             expires: "Poteče"
             topic: "Tema"
@@ -3622,6 +3625,8 @@ sl:
           save: "Shrani"
           delete: "Izbriši"
           public: "Vidno vsem"
+          localizations:
+            locale: "Jezik"
           links:
             reset: "Ponastavi na privzeto"
             icon:
@@ -3974,7 +3979,6 @@ sl:
               posts: "Prispevki"
               share: "Deli"
             whos_posting:
-              all_categories: "Vse kategorije"
               staff: "Osebje"
             trust_level_pipeline:
               trust_levels:

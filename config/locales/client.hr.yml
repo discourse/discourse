@@ -2013,7 +2013,7 @@ hr:
         default: "(zadano)"
         any: "bilo koji"
       homepage:
-        default: "(zadano)"
+        default: "Zadano"
       password_confirmation:
         title: "Ponoviti zaporku"
       invite_code:
@@ -2217,7 +2217,9 @@ hr:
         invite_roles:
           member_title: "Pozovite članove"
           member_tab: "Članovi"
-          admin_tab: "Admini"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mail adresa"
           email_placeholder: "ime@primjer.com"
           invite_by_email: "Email"
@@ -2227,6 +2229,7 @@ hr:
           summary:
             role_member: "Član"
             role_admin: "Administrator"
+            role_moderator: "Moderator"
             method_email: "Email"
             uses: "Maks. korisnika"
             expires: "Istječe"
@@ -5113,6 +5116,10 @@ hr:
           public: "Vidljivo svima"
           always_public: "Sadržaj u ovom odjeljku je uvijek javan"
           more_menu: "Više izbornika"
+          localizations:
+            title: "Prijevodi"
+            locale: "Jezik"
+            title_label: "Naslov odjeljka"
           links:
             add: "Dodajte još jednu poveznicu"
             delete: "Izbrišite poveznicu"
@@ -5871,7 +5878,6 @@ hr:
               posts: "Postovi"
               share: "Podijeli"
             whos_posting:
-              all_categories: "Sve kategorije"
               staff: "Osoblje"
             trust_level_pipeline:
               trust_levels:

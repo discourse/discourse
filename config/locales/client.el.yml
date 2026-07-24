@@ -2088,7 +2088,7 @@ el:
         default: "(προεπιλογή)"
         any: "καθένα"
       homepage:
-        default: "(προεπιλογή)"
+        default: "Προεπιλογή"
       password_confirmation:
         title: "Επανάληψη του κωδικού πρόσβασης"
       invite_code:
@@ -2295,7 +2295,9 @@ el:
           member_title: "Πρόσκληση μελών"
           sent_title: "Η πρόσκληση στάλθηκε"
           member_tab: "Μέλη"
-          admin_tab: "Διαχειριστές"
+          admin_tab: "Προσωπικό"
+          staff_role_admin: "Διαχειριστής"
+          staff_role_moderator: "Συντονιστής"
           admin_email_label: "Διεύθυνση email"
           email_placeholder: "name@example.com"
           invite_by_email: "Διεύθυνση Email"
@@ -2305,6 +2307,7 @@ el:
           summary:
             role_member: "Μέλος"
             role_admin: "Διαχειριστής"
+            role_moderator: "Συντονιστής"
             method: "Κοινοποίηση"
             method_email: "Διεύθυνση Email"
             restriction: "Περιορίζεται σε"
@@ -5443,6 +5446,10 @@ el:
           public: "Ορατή σε όλους"
           always_public: "Το περιεχόμενο αυτής της ενότητας είναι πάντα δημόσιο"
           more_menu: "Περισσότερο μενού"
+          localizations:
+            title: "Μεταφράσεις"
+            locale: "Γλώσσα"
+            title_label: "Τίτλος ενότητας"
           links:
             add: "Προσθήκη άλλου συνδέσμου"
             delete: "Διαγραφή συνδέσμου"
@@ -6304,8 +6311,6 @@ el:
               empty: "Δεν υπάρχει δραστηριότητα στην επιλεγμένη περίοδο."
             whos_posting:
               title: "Ποιός δημοσιεύει;"
-              all_categories: "Όλες οι κατηγορίες"
-              include_subcategories: "Συμπερίληψη υποκατηγοριών"
               new_members: "Νέα μέλη"
               returning: "Επιστρέφοντες"
               staff: "Προσωπικό"

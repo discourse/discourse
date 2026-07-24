@@ -195,6 +195,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns translation progress data" do
+        cached_at = Time.zone.parse("2026-07-23 09:00:00 UTC")
         SiteSetting.ai_translation_backfill_max_age_days = 30
         SiteSetting.ai_translation_personal_messages = "group"
         SiteSetting.ai_translation_backfill_hourly_rate = 100
@@ -219,7 +220,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
           localizer_user_id: admin.id,
         )
 
-        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
+        freeze_time(cached_at) { get "/admin/plugins/discourse-ai/ai-translations/progress.json" }
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -228,6 +229,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["translation_progress"].length).to eq(3)
         expect(json["total"]).to eq(19)
         expect(json["posts_with_detected_locale"]).to eq(15)
+        expect(json["cached_at"]).to eq(cached_at.utc.iso8601)
 
         locale_data = json["translation_progress"].first
         expect(locale_data["locale"]).to eq("en")

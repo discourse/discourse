@@ -109,7 +109,6 @@ de:
     ai_summarization_agent: "Der Agent, der für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
-    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"

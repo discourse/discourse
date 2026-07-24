@@ -138,6 +138,8 @@ en:
             webhook_setup_failed: "Could not register the webhook with Telegram. Check the token and try again."
             channel_not_found: "The specified channel does not exist on Telegram"
             forbidden: "The bot does not have permission to post to this channel"
+            invalid_api_base_url: "The Telegram API base URL site setting is not a valid HTTPS URL."
+            api_base_url_blocked: "Requests to the Telegram API base URL were blocked. Hosts on private networks must be added to the allowed internal hosts site setting."
 
         #######################################
         ########### DISCORD STRINGS ###########

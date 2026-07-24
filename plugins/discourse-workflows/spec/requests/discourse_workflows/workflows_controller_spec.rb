@@ -405,6 +405,42 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(response).to have_http_status(:no_content)
       expect(workflow.reload.pin_data).not_to have_key("Trigger-1")
     end
+
+    it "does not expose pin metadata to anonymous MessageBus clients" do
+      channel = "/discourse-workflows/workflows/#{workflow.id}/pin_data"
+      last_message_id = MessageBus.last_id(channel)
+      node_name = workflow.nodes.first["name"]
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}/pin-data.json",
+          params: {
+            node_name: node_name,
+            items: [{ json: { private_sample: true } }],
+          },
+          as: :json
+
+      expect(response).to have_http_status(:no_content)
+
+      delete "/session/#{admin.username}.json", xhr: true
+      expect(response).to have_http_status(:ok)
+
+      get "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json"
+      expect(response).to have_http_status(:not_found)
+
+      post "/message-bus/#{SecureRandom.hex}/poll",
+           params: {
+             channel => last_message_id,
+           },
+           headers: {
+             "HTTP_DONT_CHUNK" => "true",
+           },
+           as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to contain_exactly(
+        include("channel" => "/__status", "data" => { channel => MessageBus.last_id(channel) }),
+      )
+      expect(response.body).not_to include(node_name)
+    end
   end
 
   describe "POST /admin/plugins/discourse-workflows/workflows/:id/discard-draft" do

@@ -34,7 +34,6 @@ import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
-const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
 const DEFAULT_LAST_SECTION = "favorites";
 
 const tonableEmojiTitle = (emoji, diversity) => {
@@ -57,12 +56,13 @@ export default class EmojiPicker extends Component {
   @service emojiStore;
   @service capabilities;
   @service site;
+  @service siteSettings;
 
   @tracked isFiltering = false;
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
+  @tracked visibleSections = this.initialVisibleSections;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
@@ -99,6 +99,14 @@ export default class EmojiPicker extends Component {
       }
     };
   });
+
+  get initialVisibleSections() {
+    const pinned =
+      this.siteSettings.emoji_picker_pinned_groups
+        ?.split("|")
+        .filter(Boolean) ?? [];
+    return ["favorites", ...[...pinned, "smileys_&_emotion"].slice(0, 3)];
+  }
 
   addVisibleSections(sections) {
     this.visibleSections = uniqueItemsFromArray(
@@ -163,7 +171,7 @@ export default class EmojiPicker extends Component {
 
     if (!value?.length) {
       cancel(this.debouncedFilterHandler);
-      this.visibleSections = DEFAULT_VISIBLE_SECTIONS;
+      this.visibleSections = this.initialVisibleSections;
       this.filteredEmojis = null;
       this.isFiltering = false;
       return;

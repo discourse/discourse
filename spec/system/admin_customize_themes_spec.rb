@@ -106,6 +106,16 @@ describe "Admin Customize Themes" do
 
       expect(find(".ace_content")).to have_content("console.log('second test')")
     end
+
+    it "shows the description of the field the admin switches to" do
+      theme_page.visit_editor(theme)
+
+      expect(theme_page).to have_editor_field_description("scss")
+
+      theme_page.click_editor_field("head_tag")
+
+      expect(theme_page).to have_editor_field_description("head_tag")
+    end
   end
 
   it "cannot edit js, upload files or delete system themes" do

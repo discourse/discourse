@@ -1466,7 +1466,7 @@ sr:
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
       homepage:
-        default: "(zadano)"
+        default: "Подразумевано"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -1553,13 +1553,16 @@ sr:
         invite_roles:
           member_title: "Pozovi članove"
           member_tab: "Članovi"
-          admin_tab: "Admini"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "ime@primer.com"
           invite_by_email: "E-mail"
           more_options: "Više opcija"
           summary:
             role_member: "Član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "E-mail"
             topic: "Tema"
             groups: "Grupe"
@@ -2988,8 +2991,6 @@ sr:
               empty: "Nema aktivnosti u izabranom periodu."
             whos_posting:
               title: "Ko objavljuje?"
-              all_categories: "Sve kategorije"
-              include_subcategories: "Uključi potkategorije"
               new_members: "Novi članovi"
               returning: "Vraćajući"
               staff: "Osoblje"

@@ -66,25 +66,29 @@ RSpec.describe SidebarSectionsController do
       ).to eq("タグ")
     end
 
-    it "does not return localization rows for admins editing a built-in section" do
+    it "returns localization rows only for manually created built-in section links" do
       SiteSetting.content_localization_enabled = true
       sign_in(admin)
       community_section =
         SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
       topics_link = community_section.sidebar_urls.find_by(name: "Topics")
+      manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
       Fabricate(:sidebar_section_localization, sidebar_section: community_section, locale: "ja")
       Fabricate(:sidebar_url_localization, sidebar_url: topics_link, locale: "ja")
+      Fabricate(:sidebar_url_localization, sidebar_url: manual_link, locale: "ja", name: "解決策")
 
       get "/sidebar_sections/#{community_section.id}.json"
 
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("sidebar_section", "localizations")).to eq(nil)
+      links = response.parsed_body.dig("sidebar_section", "links")
+      expect(links.find { |link| link["id"] == topics_link.id }["localizations"]).to eq(nil)
+      expect(links.find { |link| link["id"] == topics_link.id }["can_localize"]).to eq(false)
       expect(
-        response
-          .parsed_body
-          .dig("sidebar_section", "links")
-          .filter_map { |link| link["localizations"] },
-      ).to be_empty
+        links.find { |link| link["id"] == manual_link.id }["localizations"].first["name"],
+      ).to eq("解決策")
+      expect(links.find { |link| link["id"] == manual_link.id }["can_localize"]).to eq(true)
     end
 
     it "does not allow regular users to load a public section for editing" do
@@ -519,6 +523,32 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(403)
       expect(community_section.reload.localizations).to be_blank
       expect(topics_link.reload.localizations).to be_blank
+    end
+
+    it "allows admin to update manually created Community section link localizations" do
+      SiteSetting.content_localization_enabled = true
+      sign_in(admin)
+      manual_link = Fabricate(:sidebar_url, name: "Solutions", value: "/solutions", locale: "en")
+      Fabricate(:sidebar_section_link, sidebar_section: community_section, linkable: manual_link)
+
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "community section edited",
+            links: [
+              {
+                icon: "link",
+                id: manual_link.id,
+                name: "Solutions",
+                value: "/solutions",
+                localizations: [{ locale: "ja", name: "解決策" }],
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+      expect(manual_link.reload.localizations.order(:locale).pluck(:locale, :name)).to eq(
+        [%w[ja 解決策]],
+      )
     end
 
     it "allows admin to remove public section localizations" do

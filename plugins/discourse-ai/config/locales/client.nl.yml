@@ -1222,15 +1222,9 @@ nl:
           bulk_regen_description: "Kies welk type AI-samenvatting je opnieuw wilt genereren voor de geselecteerde topics."
           regenerate_gists_option: "Korte samenvattingen (gists)"
           regenerate_summaries_option: "Topicsamenvattingen"
-          regenerate_gists_success:
-            one: "Korte samenvatting opnieuw gegenereerd"
-            other: "%{count} korte samenvattingen opnieuw gegenereerd"
           regenerate_gists_error:
             one: "Korte samenvatting opnieuw genereren mislukt"
             other: "%{count} korte samenvattingen opnieuw genereren mislukt"
-          regenerate_topic_summary_success:
-            one: "Topicsamenvatting opnieuw gegenereerd"
-            other: "%{count} topicsamenvattingen opnieuw gegenereerd"
           regenerate_topic_summary_error:
             one: "Topicsamenvatting opnieuw genereren mislukt"
             other: "%{count} topicsamenvattingen opnieuw genereren mislukt"

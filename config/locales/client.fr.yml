@@ -1919,7 +1919,7 @@ fr:
         default: "(par défaut)"
         any: "tous"
       homepage:
-        default: "(par défaut)"
+        default: "Par défaut"
       password_confirmation:
         title: "Confirmation du mot de passe"
       invite_code:
@@ -2122,7 +2122,9 @@ fr:
           member_title: "Inviter des membres"
           sent_title: "Invitation envoyée"
           member_tab: "Membres"
-          admin_tab: "Administrateurs "
+          admin_tab: "Responsable"
+          staff_role_admin: "Administrateur"
+          staff_role_moderator: "Modérateur"
           admin_email_label: "Adresse e-mail"
           email_placeholder: "nom@exemple.com"
           invite_by_email: "E-mail"
@@ -2132,6 +2134,7 @@ fr:
           summary:
             role_member: "Membre"
             role_admin: "Administrateur"
+            role_moderator: "Modérateur"
             method: "Partage"
             method_email: "E-mail"
             uses: "Nombre max. d'utilisations"
@@ -4887,6 +4890,10 @@ fr:
           public: "Visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
           more_menu: "Plus de menus"
+          localizations:
+            title: "Traductions"
+            locale: "Langue "
+            title_label: "Titre de la section"
           links:
             add: "Ajouter un autre lien"
             delete: "Supprimer le lien"
@@ -5707,7 +5714,6 @@ fr:
               posts: "Publications"
               share: "Partager"
             whos_posting:
-              all_categories: "Toutes les catégories"
               staff: "Responsable"
             trust_level_pipeline:
               trust_levels:

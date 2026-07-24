@@ -1742,7 +1742,7 @@ lt:
         default: "(numatyta)"
         any: "bet kuris"
       homepage:
-        default: "(numatyta)"
+        default: "Numatytasis"
       password_confirmation:
         title: "Pakartokite slaptažodį"
       invite_code:
@@ -1918,7 +1918,9 @@ lt:
         invite_roles:
           member_title: "Pakviesti narius"
           member_tab: "Nariai"
-          admin_tab: "Administratoriai"
+          admin_tab: "Personalas"
+          staff_role_admin: "Administratorius"
+          staff_role_moderator: "Moderatorius"
           email_placeholder: "vardas@example.com"
           invite_by_email: "Epaštas"
           domain_placeholder: "example.com"
@@ -1927,6 +1929,7 @@ lt:
           summary:
             role_member: "Narys"
             role_admin: "Administratorius"
+            role_moderator: "Moderatorius"
             method_email: "Epaštas"
             uses: "Maksimaliai naudoja"
             expires: "Galiojimo laikas baigiasi"
@@ -4082,6 +4085,9 @@ lt:
         custom:
           save: "Išsaugoti"
           delete: "Pašalinti"
+          localizations:
+            title: "Vertimai"
+            locale: "Kalba"
           links:
             reset: "Atstatyti numatytuosius nustatymus"
             icon:
@@ -4428,7 +4434,6 @@ lt:
               posts: "Pranešimai"
               share: "Dalintis"
             whos_posting:
-              all_categories: "Visos kategorijos"
               staff: "Personalas"
             trust_level_pipeline:
               trust_levels:

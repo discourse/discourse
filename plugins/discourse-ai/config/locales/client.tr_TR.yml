@@ -1222,15 +1222,9 @@ tr_TR:
           bulk_regen_description: "Seçilen konular için hangi tür AI özetinin yeniden oluşturulacağını seçin."
           regenerate_gists_option: "Kısa açıklamalar (özetler)"
           regenerate_summaries_option: "Konu özetleri"
-          regenerate_gists_success:
-            one: "Kısa özet başarıyla yeniden oluşturuldu"
-            other: "%{count} Kısa özet başarıyla yeniden oluşturuldu"
           regenerate_gists_error:
             one: "Kısa özet yeniden oluşturulamadı"
             other: "%{count} kısa özetin yeniden oluşturulması başarısız oldu"
-          regenerate_topic_summary_success:
-            one: "Konu özeti başarıyla yeniden oluşturuldu"
-            other: "%{count} konu özeti başarıyla yeniden oluşturuldu"
           regenerate_topic_summary_error:
             one: "Konu özetini yeniden oluşturulamadı"
             other: "%{count} konu özetini yeniden oluşturulamadı"

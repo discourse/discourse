@@ -564,8 +564,8 @@ class User < ActiveRecord::Base
     # including anon" and is gated behind the granular pseudogroups upcoming
     # change.
     everyone_shortcut =
-      !SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-        group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      group_ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
 
     logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
 

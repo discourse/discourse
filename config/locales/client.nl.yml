@@ -2096,7 +2096,7 @@ nl:
         default: "(standaard)"
         any: "alle"
       homepage:
-        default: "(standaard)"
+        default: "Standaard"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -2301,7 +2301,9 @@ nl:
           member_title: "Leden uitnodigen"
           sent_title: "Uitnodiging gestuurd"
           member_tab: "Leden"
-          admin_tab: "Beheerders"
+          admin_tab: "Medewerker"
+          staff_role_admin: "Beheerder"
+          staff_role_moderator: "Moderator"
           admin_email_label: "E-mailadres"
           email_placeholder: "naam@voorbeeld.com"
           invite_by_email: "E-mailadres"
@@ -2311,6 +2313,7 @@ nl:
           summary:
             role_member: "Lid"
             role_admin: "Beheerder"
+            role_moderator: "Moderator"
             method: "Delen"
             method_email: "E-mailadres"
             restriction: "Beperkt tot"
@@ -5421,6 +5424,10 @@ nl:
           public: "Zichtbaar voor iedereen"
           always_public: "Content in deze sectie is altijd openbaar"
           more_menu: "Menu Meer"
+          localizations:
+            title: "Vertalingen"
+            locale: "Taal"
+            title_label: "Sectietitel"
           links:
             add: "Nog een link toevoegen"
             delete: "Link verwijderen"
@@ -6379,7 +6386,6 @@ nl:
               posts: "Berichten"
               share: "Delen"
             whos_posting:
-              all_categories: "Alle categorieën"
               staff: "Medewerker"
             trust_level_pipeline:
               trust_levels:

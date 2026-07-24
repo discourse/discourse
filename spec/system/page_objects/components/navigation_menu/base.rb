@@ -36,6 +36,13 @@ module PageObjects
           ).click
         end
 
+        def has_community_section_link?(text, href: nil)
+          selector = ".#{SIDEBAR_SECTION_LINK_SELECTOR}"
+          selector += "[href='#{href}']" if href.present?
+
+          community_section.has_css?(selector, text:)
+        end
+
         def has_one_active_section_link?
           has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
         end

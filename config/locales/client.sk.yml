@@ -2007,7 +2007,7 @@ sk:
         default: "(predvolené)"
         any: "hocijaký"
       homepage:
-        default: "(predvolené)"
+        default: "Predvolené"
       password_confirmation:
         title: "Heslo znova"
       invite_code:
@@ -2216,7 +2216,9 @@ sk:
           member_title: "Pozvať členov"
           sent_title: "Pozvánka bola odoslaná"
           member_tab: "Členovia"
-          admin_tab: "Administrátori"
+          admin_tab: "Personál"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderátor"
           admin_email_label: "E-mailová adresa"
           email_placeholder: "meno@príklad.com"
           invite_by_email: "Email"
@@ -2226,6 +2228,7 @@ sk:
           summary:
             role_member: "Člen"
             role_admin: "Admin"
+            role_moderator: "Moderátor"
             method: "Zdieľanie"
             method_email: "Email"
             uses: "Maximálne využitie"
@@ -5246,6 +5249,10 @@ sk:
           public: "Viditeľné pre každého"
           always_public: "Obsah v tejto časti je vždy verejný"
           more_menu: "Ďalšie menu"
+          localizations:
+            title: "Preklady"
+            locale: "Jazyk"
+            title_label: "Názov sekcie"
           links:
             add: "Pridať ďalší odkaz"
             delete: "Odstrániť odkaz"
@@ -6088,7 +6095,6 @@ sk:
               posts: "Príspevky"
               share: "Zdieľať"
             whos_posting:
-              all_categories: "Všetky kategórie"
               staff: "Personál"
             trust_level_pipeline:
               trust_levels:

@@ -1239,7 +1239,7 @@ bs_BA:
         default: "(default)"
         any: "bilo koje"
       homepage:
-        default: "(default)"
+        default: "Uobičajen"
       password_confirmation:
         title: "Ponovite šifru"
       invite_code:
@@ -1369,12 +1369,15 @@ bs_BA:
           cancel: "Odustani"
         invite_roles:
           member_tab: "Članovi"
-          admin_tab: "Admins"
+          admin_tab: "Staff"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
           summary:
             role_member: "Član"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method_email: "Email"
             expires: "Ističe"
             topic: "Topic"
@@ -3076,6 +3079,8 @@ bs_BA:
         custom:
           save: "Save"
           delete: "Delete"
+          localizations:
+            title: "Prevodi"
           links:
             icon:
               label: "Icon"
@@ -3397,7 +3402,6 @@ bs_BA:
               posts: "Objave"
               share: "Dijeli"
             whos_posting:
-              all_categories: "Sve kategorije"
               staff: "Staff"
             trust_level_pipeline:
               trust_levels:

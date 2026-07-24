@@ -20,8 +20,7 @@ zh_CN:
           support:
             title: "支持"
             fetch_error: "无法加载支持数据。"
-            filter:
-              all_categories: "所有类别"
+            save_error: "无法保存此设置。"
             headline:
               healthy:
                 title: "社区正在自行解决问题。"

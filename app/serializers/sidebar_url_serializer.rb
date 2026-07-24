@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SidebarUrlSerializer < ApplicationSerializer
-  attributes :id, :name, :value, :icon, :external, :segment, :locale
+  attributes :id, :name, :value, :icon, :external, :segment, :locale, :can_localize
 
   has_many :localizations, embed: :objects, serializer: SidebarUrlLocalizationSerializer
 
@@ -20,5 +20,13 @@ class SidebarUrlSerializer < ApplicationSerializer
 
   def include_localizations?
     @options[:include_localizations]
+  end
+
+  def can_localize
+    @options[:can_localize]
+  end
+
+  def include_can_localize?
+    @options.key?(:can_localize)
   end
 end

@@ -893,7 +893,7 @@ sw:
         default: "(chaguo-msingi)"
         any: "yoyote"
       homepage:
-        default: "(chaguo-msingi)"
+        default: "Halisi"
       password_confirmation:
         title: "nywila upya"
       auth_tokens:
@@ -989,12 +989,15 @@ sw:
           cancel: "Ghairi"
         invite_roles:
           member_tab: "Wanachama"
-          admin_tab: "Viongozi"
+          admin_tab: "Wasaidizi"
+          staff_role_admin: "Kiongozi"
+          staff_role_moderator: "Msimamizi"
           email_placeholder: "jina@mfano.com"
           invite_by_email: "Barua Pepe"
           summary:
             role_member: "Mwanachama"
             role_admin: "Kiongozi"
+            role_moderator: "Msimamizi"
             method_email: "Barua Pepe"
             topic: "Mada"
             groups: "Makundi"
@@ -2625,7 +2628,6 @@ sw:
               posts: "Machapisho"
               share: "Shirikisha"
             whos_posting:
-              all_categories: "Kategoria Zote"
               staff: "Wasaidizi"
             trust_level_pipeline:
               trust_levels:

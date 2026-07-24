@@ -2054,7 +2054,7 @@ zh_CN:
         default: "（默认）"
         any: "任意"
       homepage:
-        default: "（默认）"
+        default: "默认"
       password_confirmation:
         title: "再次输入密码"
       invite_code:
@@ -2257,12 +2257,13 @@ zh_CN:
           invite_saved_with_sending_email: "邀请电子邮件已发送。您也可以复制下面的链接并分享，立即授予此网站的访问权限。"
         invite_roles:
           member_title: "邀请成员"
-          admin_title: "邀请管理员"
           edit_title: "编辑邀请"
           created_title: "邀请已创建"
           sent_title: "邀请已发送"
           member_tab: "成员"
-          admin_tab: "管理员"
+          admin_tab: "管理人员"
+          staff_role_admin: "管理员"
+          staff_role_moderator: "版主"
           admin_email_label: "电子邮件地址"
           member_email_help: "我们将向该邮箱地址发送邀请链接。"
           email_placeholder: "name@example.com"
@@ -2282,6 +2283,7 @@ zh_CN:
             sent_to: "已向 %{email} 发送邀请邮件。您也可以直接分享此链接："
             role_member: "成员"
             role_admin: "管理员"
+            role_moderator: "版主"
             method: "分享"
             method_link: "分享链接"
             method_email: "电子邮件"
@@ -2934,6 +2936,41 @@ zh_CN:
             toString: "将 true 转换为 'true'，将 false 转换为 'false'。"
           array:
             length: "数组中元素的数量。"
+            map: "创建一个新数组，其中包含对每个元素调用一个函数所产生的结果。"
+            filter: "创建一个新数组，其中包含通过测试的元素。"
+            find: "返回满足测试函数的第一个元素。"
+            includes: "如果数组包含指定的值，则返回 true。"
+            join: "将所有元素连接成一个字符串。"
+            slice: "返回数组的某一部分的浅拷贝。"
+            sort: "按位置对数组元素进行排序。"
+            reverse: "反转元素顺序。"
+            reduce: "将数组缩减为单个值。"
+            indexOf: "返回值的第一个索引，如果找不到，则返回 -1。"
+            concat: "将数组和/或值合并到一个新数组中。"
+          date:
+            toISOString: "以 ISO 8601 字符串形式返回日期。"
+            toLocaleDateString: "返回特定于区域设置的日期字符串。"
+            getTime: "返回自 Unix 纪元以来的毫秒数。"
+            getFullYear: "返回四位数的年份。"
+            getMonth: "返回月份 (0-11)。"
+            getDate: "返回月份中的日期 (1-31)。"
+            getHours: "返回小时 (0-23)。"
+            getMinutes: "返回分钟 (0-59)。"
+            toLocaleString: "返回特定于区域设置的日期和时间字符串。"
+        globals:
+          Math: "数学常数和函数（Math.round、Math.random 等）"
+          JSON: "JSON 解析和序列化（JSON.parse、JSON.stringify）。"
+          Object: "对象实用程序（Object.keys、Object.values、Object.entries）。"
+          Array: "数组实用程序（Array.isArray、Array.from）。"
+          String: "字符串构造函数和实用程序。"
+          Number: "数字实用程序（Number.isInteger、Number.parseFloat）。"
+          Date: "日期构造函数。请使用 new Date() 来创建日期。"
+          parseInt: "解析字符串并返回整数。"
+          parseFloat: "解析字符串并返回浮点数。"
+          encodeURIComponent: "通过替换特殊字符对 URI 组件进行编码。"
+          decodeURIComponent: "解码已编码的 URI 组件。"
+          isNaN: "如果值为 NaN，则返回 true。"
+          isFinite: "如果该值为有限数，则返回 true。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -3625,6 +3662,8 @@ zh_CN:
           other: "<b>%{count}</b> 个话题已更新完毕。"
         error_topic_count:
           other: "%{count} 个话题"
+        tag_not_allowed_in_category:
+          other: "不允许在 %{category} 类别中使用以下标签：%{tags}。"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -3763,8 +3802,12 @@ zh_CN:
         view_full_topic: "查看完整话题"
         view_parent_context: "查看父上下文"
     share_target:
+      title: "共享内容"
+      description: "您想如何处理共享内容？"
       new_topic: "新建话题"
       new_message: "新建消息"
+      add_to_reply: "添加到回复中"
+      added_to_reply: "已保存。下次打开回复时，将自动添加该内容。"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
@@ -3816,6 +3859,35 @@ zh_CN:
       unread_indicator: "还没有成员读过此话题的最新帖子。"
       sr_read: "阅读时间"
       participant_groups: "参与者群组"
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+              other {有 <a href="{unreadUrl}"># 个未读</a>话题}
+            }
+            { NEW, plural,
+                 =0 {}
+              other {和<a href="{newUrl}"># 个新</a>话题，}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+              other {还有 <a href="{unreadUrl}"># 个未读</a>话题，}
+            }
+            { NEW, plural,
+                 =0 {}
+              other {还有 <a href="{newUrl}"># 个新</a>话题，}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true {或浏览 {categoryLink} 中的其他话题}
+          false {或<a href="{basePath}/latest">查看最新话题</a>}
+          other {}
+        }
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
       created_at: "创建日期：%{date}"
@@ -4485,7 +4557,10 @@ zh_CN:
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
       originally_written_in: "原始语言：%{language}"
+      click_to_show_original: "点击显示原文"
       tap_to_show_original: "点击此处查看原文"
+      click_to_show_translation: "点击显示翻译"
+      tap_to_show_translation: "点按此处显示翻译"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
@@ -4548,6 +4623,9 @@ zh_CN:
         site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
+        requires_plugin: "需要 %{plugin_name} 插件"
+        unavailable: "不可用"
+        ask_admin_to_enable_plugin: "请联系管理员以启用 %{plugin_name} 插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
@@ -5427,7 +5505,16 @@ zh_CN:
           public: "对所有人可见"
           always_public: "此版块中的内容始终公开"
           more_menu: "“更多”菜单"
+          localizations:
+            title: "翻译"
+            locale: "语言"
+            title_label: "版块标题"
+            link_label: "链接名称"
+            add_section: "添加版块标题翻译"
+            add_link: "添加链接名称翻译"
+            remove: "移除翻译"
           links:
+            title: "版块链接"
             add: "添加另一个链接"
             delete: "删除链接"
             reset: "重置为默认值"
@@ -5971,13 +6058,21 @@ zh_CN:
               title: "OpenGraph 图像源"
               description: "选择如何为没有自己图像的话题提供OpenGraph预览图像。"
               uploaded: "使用上传的图片"
+              generated: "每个话题生成一张图像"
             opengraph_image:
               title: "OpenGraph 图片"
               description: "默认 opengraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
+            generate_topic_og_image:
+              title: "生成话题 OG 图像"
+              description: "自动为没有图像的话题生成 OpenGraph 预览图像。使用话题标题、类别和站点颜色。"
             og_image_preview:
+              title: "生成的 OG 图像预览"
+              description: "无图像话题的自动生成 OpenGraph 图像预览。输入话题 ID 进行测试。"
               generate: "生成"
               topic_id_label: "话题 ID"
               topic_id_placeholder: "例如 123"
+              placeholder: "输入话题 ID，然后点击“生成”进行预览。"
+              error: "无法生成预览。请检查话题 ID 并重试。"
             x_summary_large_image:
               title: "X 摘要大图"
               description: "X 卡摘要大图。如果留空，则使用 OpenGraph_image（只要它不是 .svg）生成常规卡片元数据。"
@@ -6064,6 +6159,9 @@ zh_CN:
         notifications:
           title: "通知"
           header_description: "配置如何为用户管理和递送通知，包括电子邮件偏好设置、推送通知、提及限制和通知合并"
+        gifs:
+          title: "GIF"
+          header_description: "配置 GIF 选择器，用户可以搜索 GIF 并将其插入帖子和聊天消息中。模态的站点文本可以在 customize/site_texts 中进行自定义。"
         onebox:
           title: "Onebox"
           header_description: "配置如何为您的网站生成和显示 Onebox 预览"
@@ -6314,6 +6412,8 @@ zh_CN:
         discourse_last_updated: "Discourse 更新："
         version: "版本"
         up_to_date: "您已经是最新版本！"
+        up_to_date_newer_commits:
+          other: "您当前使用的是最新版本，但有 %{count} 条可用的新更改。"
         critical_available: "有一个可用的关键更新。"
         updates_available: "有可用的更新。"
         please_update: "请更新！"
@@ -6321,9 +6421,17 @@ zh_CN:
         stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
         version_check_pending: "看起来您最近更新了。太棒了！"
         installed_version: "已安装"
+        latest_version: "可用"
         github: "GitHub"
+        commit_on_github: "在 GitHub 上查看提交 %{sha}"
+        changelog: "更改日志"
+        commits_ahead:
+          other: "正在运行自本版本系列开始以来的 %{count} 条其他更改"
         problems_found: "基于您当前网站设置的一些建议"
         dismiss_notice: "忽略"
+        site_advice:
+          title:
+            other: "根据您的站点配置，有 %{count} 个问题需要您注意"
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
@@ -6393,12 +6501,11 @@ zh_CN:
               empty: "所选时间段内无任何活动。"
             whos_posting:
               title: "谁在发帖？"
-              all_categories: "所有类别"
-              include_subcategories: "包括子类别"
               new_members: "新成员"
               returning: "返回"
               staff: "管理人员"
               empty: "所选时间段内没有帖子。"
+              save_error: "无法保存此设置。"
             trust_level_pipeline:
               title: "信任级别变化"
               trust_levels:
@@ -6428,35 +6535,139 @@ zh_CN:
                 summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所下降。"
               engaged_but_shrinking:
                 title: "社区成员保持活跃，但社区规模正在缩小。"
+                summary: "用户粘性保持稳定，但日活跃用户或新注册用户数均有所下滑。"
+              growing_but_distracted:
+                title: "虽然有新成员注册，但他们并没有留下来。"
+                summary: "注册用户数量有所上升，但用户粘性有所下降。"
+              mixed:
+                title: "此期间的用户参与度趋势喜忧参半。"
+                summary: "部分指标上升，部分指标下降 — 打开下方图块查看详细信息。"
+              no_signal:
+                title: "活动量不足，无法总结参与情况。"
+                summary: "请选择更长的日期范围，或者等您的社区有更多活动后再回来。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
                 daily_engaged_users: "每日参与"
           search:
             title: "搜索"
+            fetch_error: "无法加载搜索数据。请尝试刷新页面。"
+            logging_disabled: '搜索日志记录已禁用，因此不会收集搜索数据。请启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">日志搜索查询</a>以开始收集。'
+            logging_disabled_moderator: "搜索日志记录已禁用，因此不会收集搜索数据。请联系管理员启用日志搜索查询以开始收集。"
+            count_headline:
+              last_7_days:
+                other: "成员在过去 7 天内进行了 %{formatted_count} 次站内搜索"
+              last_30_days:
+                other: "成员在过去 30 天内进行了 %{formatted_count} 次站内搜索"
+              last_3_months:
+                other: "成员在过去 3 个月内进行了 %{formatted_count} 次站内搜索"
+              selected_period:
+                other: "成员在所选时间段内进行了 %{formatted_count} 次站内搜索"
+            headline:
+              no_signal_title: "搜索活动量不足，暂时无法总结。"
+              no_signal: "请选择更长的日期范围，或者等成员搜索更多内容后再回来。"
+              content_gaps: "此期间内有超过 10% 的成员搜索最终没有点击。请查看以下内容差距，看看缺少什么。"
+              rate_climbing: "与上一期间相比，无结果率有所上升。请密切关注以下内容差距。"
+              shrinking: "与上一期间相比，搜索量有所下降，但大多数搜索仍能找到相关内容。"
+              healthy: "成员总能找到他们搜索的内容，搜索量保持稳定或有所增长。"
+            kpi:
+              total_searches:
+                label: "总搜索次数"
+                tooltip: "社区成员进行的搜索次数。"
+              no_result_rate:
+                label: "无结果率"
+                tooltip: "成员未点击任何结果的搜索百分比 (0% CTR)。这表示成员可能正在搜索您的社区中没有的内容。"
             table:
+              term: "搜索词"
               searches: "搜索"
               status: "状态"
+            trending:
+              title: "热门搜索"
+              tooltip: "成员中最热门的搜索词。"
+              empty: "此期间内没有任何搜索。"
+            content_gaps:
+              title: "内容差距"
+              empty: "此期间内没有内容差距。"
+              badge:
+                no_match: "不匹配"
+                no_match_tooltip: "点击率 (CTR) 为 0% 的搜索词。"
+                poor_match: "匹配不佳"
+                poor_match_tooltip: "点击率 (CTR) 在 1-20% 之间的搜索词。"
         reports_section:
           header_action: "管理"
+          description: "固定标准报告或数据浏览器查询，以跟踪对您的社区至关重要的内容。"
+          add: "添加报告"
+          remove: "移除报告"
+          no_data: "没有可显示的数据"
           modal:
+            title: "管理报告"
+            search_placeholder: "搜索报告"
+            counter: "已添加 %{count} / %{max} 个报告"
             enabled_heading: "已启用"
             all_heading: "所有报告"
             apply: "应用"
+            enable: "启用 %{title}"
+            disable: "禁用 %{title}"
+            move_up: "上移 %{title}"
+            move_down: "下移 %{title}"
+            footer_note: "这些更改将适用于所有用户。"
         configure:
           button: "配置"
+          tooltip: "配置此信息中心在此站点对所有人的显示方式。"
+          menu_title: "配置信息中心"
+          reorder_up: "上移 %{label}"
+          reorder_down: "下移 %{label}"
+          drag_handle: "拖动以重新排序 %{label}"
+          toggle_visibility: "在信息中心显示 %{label}"
+          empty_state_admin: "没有可显示的版块。请打开“配置”以启用版块。"
+          empty_state_moderator: "未启用任何版块。请联系管理员以启用版块。"
         highlights:
+          fetch_error: "无法加载高亮显示内容。请尝试刷新页面。"
           kpi:
             new_signups:
+              label: "新注册用户"
               tooltip: "已创建的帐户，包括未激活帐户和暂存帐户。"
             dau_mau:
+              label: "DAU / MAU 粘性"
               tooltip: '月活跃用户中回访用户的比例。这可以反映社区的“粘性”，即用户回访的频率。'
             new_contributors:
+              label: "新贡献者"
               tooltip: "首次发帖的成员人数。"
             daily_engaged_users:
+              label: "每日参与"
               tooltip: "社区每天平均点赞或发帖的成员人数。"
+          comparison:
+            last_7_days: "对比过去 7 天"
+            last_30_days: "对比过去 30 天"
+            last_3_months: "对比过去 3 个月"
+            previous_period: "对比上一期间"
         site_traffic:
+          fetch_error: "无法加载网站流量。请尝试刷新页面。"
+          headline:
+            last_7_days:
+              other: "%{formatted_count} 的过去 7 天内页面浏览量"
+            last_30_days:
+              other: "%{formatted_count} 的过去 30 天内页面浏览量"
+            last_3_months:
+              other: "%{formatted_count} 的过去 3 个月内页面浏览量"
+            selected_period:
+              other: "%{formatted_count} 的所选期间内页面浏览量"
+          trend:
+            up: "上升 %{percent}"
+            down: "下降 %{percent}"
+          comparison_tooltip:
+            previous_7_days: "与前 7 天相比 (%{start} – %{end})"
+            previous_30_days: "与前 30 天相比 (%{start} – %{end})"
+            previous_3_months: "与前 3 个月相比 (%{start} – %{end})"
+            previous_days:
+              other: "与前 %{count} 天相比 (%{start} – %{end})"
           kpi:
+            logged_in_share:
+              label: "登录成员占比"
+              tooltip: "登录成员的页面浏览量占比。"
+            direct_traffic:
+              label: "直接流量"
+              tooltip: "直接访问您的社区的页面浏览量占比，例如通过输入您的 URL 或使用浏览器书签进行访问。"
             bounce_rate:
               label: "跳出率"
               tooltip: "单次页面浏览且停留时间少于 10 秒的会话占比。"
@@ -6465,7 +6676,16 @@ zh_CN:
               tooltip: "在选定时间段内，访客在您的社区停留的平均时间。"
             session_metrics:
               empty_tooltip: "本周期有访问记录后显示访问量。"
+          top_countries:
+            title: "热门国家/地区"
+            empty: "此时期内没有国家/地区数据。"
+            error: "无法加载热门国家/地区。请尝试刷新页面。"
+          top_referrers:
+            title: "热门推荐人"
+            empty: "此时期内没有推荐人数据。"
+            error: "无法加载热门推荐人。请尝试刷新页面。"
           series:
+            logged_in: "登录成员"
             anonymous: "匿名"
             embedded: "嵌入式页面浏览量"
             crawlers: "抓取工具"
@@ -6475,6 +6695,7 @@ zh_CN:
           last_30_days: "过去 30 天"
           last_3_months: "过去 3 个月"
           custom: "自定义"
+          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           percent_change_tooltip: "%{percent} 变化。"
@@ -6999,6 +7220,7 @@ zh_CN:
             show_description: "包括描述"
           locale_selector:
             title: "语言"
+            description: "仅显示可翻译的“关于”页面字段。"
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -7441,6 +7663,7 @@ zh_CN:
           updating: "正在更新…"
           update_success: "%{theme} 更新完成"
           up_to_date: "主题已经是最新版本，上次检查日期："
+          up_to_date_branch: "主题已更新至 %{branch}，上次检查时间为："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           change_source:
             button: "更改源"
@@ -7463,6 +7686,8 @@ zh_CN:
           empty: "无条目"
           commits_behind:
             other: "主题落后了 %{count} 次提交！"
+          commits_behind_branch:
+            other: "主题落后 %{branch} 分支 %{count} 个提交"
           compare_commits: "（查看新提交）"
           remote_theme_edits: "如果您想要编辑此主题，您必须<a href='%{repoURL}' target='_blank'>在其仓库上提交变更</a>"
           repo_unreachable: "无法联系此主题的 Git 仓库。错误消息："
@@ -7788,6 +8013,7 @@ zh_CN:
             delete_topic: "删除话题"
             recover_topic: "取消删除话题"
             delete_post: "删除帖子"
+            recover_post: "取消删除帖子"
             impersonate: "模拟"
             anonymize_user: "对用户进行匿名化处理"
             roll_up: "汇总 IP 地址段"
@@ -7893,6 +8119,7 @@ zh_CN:
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
             configure_category_type: "配置类别类型"
             unconfigure_category_type: "未配置类别类型"
+            change_access_control_list_permissions: "更改访问控制列表权限"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -8097,14 +8324,30 @@ zh_CN:
         show_emails: "显示电子邮件地址"
         hide_emails: "隐藏电子邮件地址"
         silence_reason: "禁言原因"
+        suspend_reason: "封禁原因"
         bulk_actions:
           title: "批量操作"
           select_all: "全选"
           clear_all: "全部清除"
+          staff_cant_be_actioned: "无法删除或封禁此用户，因为他们是管理人员"
+          no_users_can_be_deleted: "所有选定用户均无法删除。"
+          no_users_can_be_suspended: "所有选定用户均无法封禁。"
+          too_many_selected_users:
+            other: "您已达到批量操作的用户数量上限 %{count}"
           suspend:
+            label: "封禁用户…"
             confirmation_modal:
+              prompt_text:
+                other: "您即将封禁 %{count} 名用户。请在下面设置时长和原因："
               close: "关闭"
               confirm: "封禁"
+              title:
+                other: "封禁 %{count} 名用户"
+              bulk_suspend_starting: "正在开始批量封禁…"
+              user_suspend_succeeded: "[%{position}/%{total}] 成功封禁 @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] @%{username} 封禁失败 - %{error}"
+              bulk_suspend_finished: "批量封禁操作已完成。"
+              failed_to_suspend_users: "以下用户无法封禁："
           delete:
             label: "删除用户…"
             confirmation_modal:
@@ -8130,8 +8373,10 @@ zh_CN:
           silenced: "被禁言"
           staged: "暂存"
         activation_filter:
+          label: "激活状态"
           all: "所有用户"
           activated: "已激活"
+          not_activated: "未激活"
         approved: "已批准？"
         titles:
           active: "活跃用户"
@@ -8255,6 +8500,7 @@ zh_CN:
         post_edits_count: "帖子编辑"
         upcoming_changes:
           title: "用户即将推出的更改"
+          view_modal: "查看已启用的更改"
           description: "要修改群组或者启用或禁用即将推出的更改，请访问<a href='%{basePath}/admin/config/upcoming-changes'>即将推出的更改配置页面</a>。"
           filter_placeholder: "按名称或描述筛选即将推出的更改"
           filter_no_results: "找不到即将推出的更改"
@@ -8634,6 +8880,9 @@ zh_CN:
           can_permanently_delete:
             prompt: "启用此功能后，管理员可以永久删除帖子、话题和帖子修订。永久删除的数据无法恢复。这也可能影响数据完整性并导致现有链接失效。"
             confirm: "我明白"
+          content_security_policy:
+            prompt: "禁用内容安全策略会失去一道重要的安全屏障，使您遭受跨站脚本攻击 (XSS) 和其他内容注入攻击。这将导致您的网站面临安全风险，因此此操作只能用于调试/测试目的。禁用 CSP 并不能解决 CORS 问题。确定要继续吗？"
+            confirm: "是，禁用内容安全策略"
         job_status:
           completed: "更新完成"
           enqueued: "正在更新"

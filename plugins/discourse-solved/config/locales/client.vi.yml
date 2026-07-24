@@ -13,8 +13,6 @@ vi:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Tất cả chuyên mục"
             answerers:
               staff: "Nhân viên"
               member: "Thành viên kênh"

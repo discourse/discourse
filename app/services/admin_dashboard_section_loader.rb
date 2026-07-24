@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  def self.build(section_ids:, current_user:, start_date:, end_date:)
+  def self.build(section_ids:, current_user:, start_date:, end_date:, parallel: true)
     new(
       section_ids: section_ids,
       current_user: current_user,
       start_date: start_date,
       end_date: end_date,
-    ).build
+    ).build(parallel: parallel)
   end
 
   def self.pool_size
@@ -31,7 +31,19 @@ class AdminDashboardSectionLoader
     @end_date = end_date
   end
 
-  def build
+  def build(parallel: true)
+    if parallel
+      build_in_parallel
+    else
+      section_ids.map { |id| build_section(id) }
+    end
+  end
+
+  private
+
+  attr_reader :section_ids, :current_user, :start_date, :end_date
+
+  def build_in_parallel
     results = Queue.new
 
     section_ids.each do |id|
@@ -49,16 +61,7 @@ class AdminDashboardSectionLoader
     section_ids.size.times do
       result = results.pop
 
-      if result[:error]
-        Discourse.warn_exception(
-          result[:error],
-          message: "Failed to build admin dashboard section",
-          env: {
-            section_id: result[:id],
-          },
-        )
-        result = { id: result[:id], data: nil, error: true }
-      end
+      result = failed_result(result) if result[:error]
 
       results_by_id[result[:id]] = result
     end
@@ -66,9 +69,23 @@ class AdminDashboardSectionLoader
     section_ids.map { |id| results_by_id.fetch(id) }
   end
 
-  private
+  def build_section(id)
+    { id: id, data: section_data(id, current_user) }
+  rescue StandardError => e
+    failed_result(id: id, error: e)
+  end
 
-  attr_reader :section_ids, :current_user, :start_date, :end_date
+  def failed_result(result)
+    Discourse.warn_exception(
+      result[:error],
+      message: "Failed to build admin dashboard section",
+      env: {
+        section_id: result[:id],
+      },
+    )
+
+    { id: result[:id], data: nil, error: true }
+  end
 
   def section_data(id, user)
     case id

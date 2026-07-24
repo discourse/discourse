@@ -67,6 +67,9 @@ en:
     added: "Added %{added}"
     removed: "Removed %{removed}"
 
+  topics_bulk_action:
+    too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -2079,7 +2082,8 @@ en:
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    default_homepage: "The page people land on when they visit the site. When not set, the first item in {{setting:top_menu}} is used. Individuals can override this in their preferences."
+    top_menu: "Determine which navigation items appear on the discovery pages, and in what order."
     custom_homepage_crawler_route: "Route shown to web crawlers when a custom homepage is enabled."
     post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
@@ -2720,6 +2724,7 @@ en:
     emoji_autocomplete_min_chars: "Minimum number of characters required to trigger autocomplete emoji popup"
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
+    emoji_picker_pinned_groups: "Emoji groups to pin to the top of the emoji picker. All other groups follow after any pinned groups."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
     klipy_api_key: "Klipy API key. Required to power GIF search."
     klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
@@ -2920,7 +2925,6 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in {{setting:content_localization_supported_locales}}."
@@ -2982,6 +2986,9 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
+      emoji_picker_pinned_groups_invalid:
+        one: "Unknown emoji group: %{groups}."
+        other: "Unknown emoji groups: %{groups}."
       must_include_latest: "Top menu must include the 'latest' tab."
       top_menu_unread_not_allowed_with_unified_new: "The 'unread' menu item cannot be used when unified new is enabled."
       invalid_string: "Invalid value."
