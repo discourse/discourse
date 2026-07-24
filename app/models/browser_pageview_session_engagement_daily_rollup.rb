@@ -5,12 +5,13 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
   MIN_SESSION_AGE = 10.minutes
   private_constant :BOUNCE_ENGAGED_SECONDS_THRESHOLD, :MIN_SESSION_AGE
 
-  def self.aggregate(start_date:, end_date:, source: BrowserPageviewEvent.rollup_source)
+  def self.aggregate(start_date:, end_date:)
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
+    source_condition = BrowserPageviewEvent.rollup_source_condition
 
     transaction do
-      DB.exec(<<~SQL, start_date:, end_date:, source:)
+      DB.exec(<<~SQL, start_date:, end_date:)
         DELETE FROM browser_pageview_session_engagement_daily_rollups rollup
         WHERE rollup.date >= :start_date
           AND rollup.date < :end_date
@@ -19,7 +20,7 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             FROM browser_pageview_events
             WHERE created_at >= rollup.date
               AND created_at < rollup.date + 1
-              AND source = :source
+              AND #{source_condition}
           )
       SQL
 
@@ -30,7 +31,7 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
           FROM browser_pageview_events
           WHERE created_at >= :start_date
             AND created_at < LEAST(:end_date::timestamp, :session_started_before::timestamp)
-            AND source = :source
+            AND #{source_condition}
         ),
         session_pageviews AS (
           SELECT
@@ -40,7 +41,7 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
             bool_or(bpe.user_id IS NOT NULL) AS logged_in
           FROM browser_pageview_events bpe
           JOIN active_sessions ON active_sessions.session_id = bpe.session_id
-          WHERE bpe.source = :source
+          WHERE #{BrowserPageviewEvent.rollup_source_condition(table: "bpe")}
           GROUP BY bpe.session_id
           HAVING MIN(bpe.created_at) >= :start_date
         )
@@ -64,7 +65,6 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
         end_date:,
         session_started_before: MIN_SESSION_AGE.ago,
         bounce_threshold: BOUNCE_ENGAGED_SECONDS_THRESHOLD,
-        source:,
       )
     end
   end

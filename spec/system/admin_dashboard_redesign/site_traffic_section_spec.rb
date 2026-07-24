@@ -158,6 +158,11 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
     before do
       SiteSetting.persist_browser_pageview_events = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.zone.local(2026, 4, 30, 9),
+      )
       Discourse.stubs(:current_hostname).returns("test.localhost")
       Discourse.cache.clear
     end

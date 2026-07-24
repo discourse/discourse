@@ -212,12 +212,19 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
-  def self.rollup_source
-    if UpcomingChanges.enabled?(:dashboard_improvements)
-      SOURCE_BEACON
-    else
-      SOURCE_PIGGYBACK
-    end
+  def self.rollup_source_condition(table: nil)
+    prefix = table ? "#{table}." : ""
+    cutover_date = beacon_cutover_date
+    return "#{prefix}source = #{SOURCE_PIGGYBACK}" if cutover_date.nil?
+
+    sanitize_sql_array(
+      [
+        "(#{prefix}created_at < ? AND #{prefix}source = #{SOURCE_PIGGYBACK} " \
+          "OR #{prefix}created_at >= ? AND #{prefix}source = #{SOURCE_BEACON})",
+        cutover_date,
+        cutover_date,
+      ],
+    )
   end
 
   before_save :truncate_fields
