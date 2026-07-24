@@ -4770,7 +4770,7 @@ experimental:
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
-      status: "beta"
+      status: "stable"
       learn_more_url: "https://meta.discourse.org/t/-/395331"
       body_class: true
   enable_horizon_high_context_topic_cards:
