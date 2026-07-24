@@ -100,7 +100,7 @@ export default class AdminDashboardController extends Controller {
     );
 
     this.#applyConfigOptimistically(nextConfig);
-    if (wasVisible === false && !this._sectionCache.has(id)) {
+    if (wasVisible === false) {
       this.#updateSection(id, { configurationPending: true });
     }
     this.#persistConfiguration(nextConfig, previous);
