@@ -139,6 +139,13 @@ export default class CategoryCalendar extends Component {
     );
   }
 
+  get initialView() {
+    return (
+      this.categorySetting?.defaultView ||
+      this.siteSettings.calendar_category_default_view
+    );
+  }
+
   @action
   formattedEvents(events = []) {
     const timezone = this.currentUser?.user_option?.timezone;
@@ -157,7 +164,7 @@ export default class CategoryCalendar extends Component {
         @onLoadEvents={{this.loadEvents}}
         @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @height="650px"
-        @initialView={{this.categorySetting.defaultView}}
+        @initialView={{this.initialView}}
         @weekends={{this.renderWeekends}}
         @refreshKey={{this.refreshKey}}
       />
