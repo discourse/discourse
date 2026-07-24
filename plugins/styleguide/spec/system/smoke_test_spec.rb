@@ -145,6 +145,33 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-maximum", only: :desktop)
   end
 
+  it "shows a first-class none row in the single-select list" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    none =
+      PageObjects::Components::UiKit::DSelect.new(".select-examples__none .d-combobox__trigger")
+    none.open
+    # The listbox renders in a portal, not inside the example wrapper.
+    expect(page).to have_css(".d-combobox__panel [role='option'].--none")
+    screenshot_marker(label: "styleguide-select-none", only: :desktop)
+  end
+
+  it "shows an icon-only trigger whose icon reflects the selection" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    expect(page).to have_css(
+      ".select-examples__icon-only .d-combobox__trigger.--icon-only .d-combobox__leading-icon",
+    )
+    page.scroll_to(find(".select-examples__icon-only"), align: :center)
+    # Open it: the dropdown must size to its own options, not the compact trigger, so labels
+    # are not clipped.
+    find(".select-examples__icon-only .d-combobox__trigger").click
+    expect(page).to have_css(".d-combobox__panel [role='option']", text: "Watching")
+    screenshot_marker(label: "styleguide-select-icon-only", only: :desktop)
+  end
+
   it "places the caret in the typeahead on click instead of selecting the whole value" do
     visit "/styleguide/molecules/select"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")

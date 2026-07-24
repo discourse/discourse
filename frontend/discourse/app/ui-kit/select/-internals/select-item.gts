@@ -66,6 +66,7 @@ export default class SelectItem extends Component<SelectItemSignature> {
         (if @active "--active")
         (if @descriptor.flags.selected "--selected")
         (if @descriptor.flags.__create "--create")
+        (if @descriptor.flags.__none "--none")
       }}
       aria-selected={{booleanString @descriptor.flags.selected omitFalse=false}}
       aria-disabled={{booleanString @descriptor.flags.disabled}}

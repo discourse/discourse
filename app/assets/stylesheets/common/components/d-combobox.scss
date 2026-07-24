@@ -57,6 +57,17 @@
   }
 }
 
+// Icon-only: with no value text there is nothing to grow, so the trigger shrinks to its icon(s)
+// plus caret, and the leading icon is the primary content rather than a muted adornment.
+.d-combobox__trigger.--icon-only {
+  width: auto;
+  justify-content: center;
+
+  .d-combobox__leading-icon {
+    color: inherit;
+  }
+}
+
 // Disabled dims the whole trigger and blocks the pointer; readonly stays visually active
 // (it is focusable and readable, just not editable — the aria/native state carries that).
 .d-combobox__trigger.--disabled {
@@ -117,6 +128,14 @@
 .d-combobox__caret {
   color: var(--primary-medium);
   flex-shrink: 0;
+}
+
+// Floor every dropdown's width so it is never uselessly narrow. `matchTriggerWidth` pins the
+// overlay to the trigger, which is unusably tight for a compact icon-only trigger; the min-width
+// overrides that smaller matched width (and gives the windowed option list a real width to lay its
+// absolutely-positioned rows against). A token so a consumer or theme can tune it.
+.d-combobox__content {
+  min-width: var(--d-combobox-menu-min-width, 12em);
 }
 
 .d-combobox__content > .fk-d-menu__inner-content {

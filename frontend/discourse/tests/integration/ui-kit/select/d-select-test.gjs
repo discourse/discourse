@@ -11,7 +11,9 @@ import {
   findAll,
   focus,
   render,
+  resetOnerror,
   settled,
+  setupOnerror,
   triggerEvent,
   triggerKeyEvent,
   waitFor,
@@ -1034,6 +1036,27 @@ class MultiHost extends Component {
   </template>
 }
 
+class MultiValueCoercionHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value, payload) {
+    this.args.onChange?.(value, payload, this.value);
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @multiple={{true}}
+      @items={{ITEMS}}
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @placeholder="Pick some"
+      @identifier="test-multi-value-coercion"
+    />
+  </template>
+}
+
 module(
   "Integration | ui-kit | select | DSelect (multi typeahead)",
   function (hooks) {
@@ -1195,6 +1218,302 @@ module(
           "[role='option'][aria-selected='true'] .d-combobox__option-selected-icon.d-icon-star"
         )
         .exists("the selected row uses the custom icon, not the default check");
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | DSelect (multi value coercion)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.afterEach(function () {
+      clearCallbacks();
+      resetLegacyBridge();
+    });
+
+    test("coerces held string ids when adding a native-id item", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(onChange.callCount, 1, "the selection emits once");
+      const emittedValue = onChange.firstCall.args[0];
+      assert.deepEqual(
+        emittedValue,
+        [1, 2],
+        "the held string id and native picked id are emitted as native ids"
+      );
+      assert.deepEqual(
+        emittedValue.map((id) => typeof id),
+        ["number", "number"],
+        "every emitted id has the source item's runtime type"
+      );
+      assert.true(
+        emittedValue.every(Number.isInteger),
+        "every emitted numeric id remains an integer"
+      );
+    });
+
+    test("coerces the remaining ids when deselecting", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiValueCoercionHost
+            @value={{array "1" "2"}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+
+      await click(".d-combobox__chip .d-combobox__chip-remove");
+
+      assert.strictEqual(onChange.callCount, 1, "the deselection emits once");
+      const emittedValue = onChange.firstCall.args[0];
+      assert.deepEqual(
+        emittedValue,
+        [2],
+        "deselecting emits the remaining resolved id in its native form"
+      );
+      assert.strictEqual(
+        typeof emittedValue[0],
+        "number",
+        "the remaining id has the source item's runtime type"
+      );
+      assert.true(
+        Number.isInteger(emittedValue[0]),
+        "the remaining numeric id is an integer"
+      );
+    });
+
+    test("preserves unresolved ids unchanged and in order", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiValueCoercionHost
+            @value={{array "999" "1"}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(onChange.callCount, 1, "the selection emits once");
+      const emittedValue = onChange.firstCall.args[0];
+      assert.deepEqual(
+        emittedValue,
+        ["999", 1, 2],
+        "the unresolved id stays first while resolved ids use native values"
+      );
+      assert.deepEqual(
+        emittedValue.map((id) => typeof id),
+        ["string", "number", "number"],
+        "only ids resolved from source items are coerced"
+      );
+      assert.true(
+        emittedValue.slice(1).every(Number.isInteger),
+        "the resolved numeric ids remain integers"
+      );
+    });
+
+    test("aligns payload items with the coerced value", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(onChange.callCount, 1, "the selection emits once");
+      const [emittedValue, payloadItems] = onChange.firstCall.args;
+      assert.deepEqual(
+        emittedValue,
+        [1, 2],
+        "the emitted value contains native source ids"
+      );
+      assert.deepEqual(
+        payloadItems,
+        [ITEMS[0], ITEMS[1]],
+        "the payload contains the items resolved for the emitted value"
+      );
+      assert.deepEqual(
+        payloadItems.map((item) => item.id),
+        emittedValue,
+        "payload item ids line up positionally with the coerced value"
+      );
+      assert.true(
+        payloadItems.every((item) => Number.isInteger(item.id)),
+        "payload ids retain their native numeric type"
+      );
+    });
+
+    test("keeps value coercion scoped to multi-select", async function (assert) {
+      const singleOnChange = sinon.spy();
+      const multiOnChange = sinon.spy();
+      await render(
+        <template>
+          <DSelect
+            @items={{ITEMS}}
+            @value="1"
+            @onChange={{singleOnChange}}
+            @placeholder="Pick one"
+          />
+          <MultiValueCoercionHost
+            @value={{array "1"}}
+            @onChange={{multiOnChange}}
+          />
+        </template>
+      );
+
+      const [singleController, multiController] = findAll("[role='combobox']");
+      await click(singleController);
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(
+        singleOnChange.callCount,
+        1,
+        "the single selection emits once"
+      );
+      const singleValue = singleOnChange.firstCall.args[0];
+      assert.strictEqual(
+        singleValue,
+        2,
+        "single-select continues to emit the picked item's native id"
+      );
+      assert.strictEqual(
+        typeof singleValue,
+        "number",
+        "single-select emits a scalar with the native runtime type"
+      );
+      assert.true(
+        Number.isInteger(singleValue),
+        "the emitted single-select id remains an integer"
+      );
+
+      await click(multiController);
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(
+        multiOnChange.callCount,
+        1,
+        "the multi selection emits once"
+      );
+      const multiValue = multiOnChange.firstCall.args[0];
+      assert.deepEqual(
+        multiValue,
+        [1, 2],
+        "multi-select applies native-id coercion to its emitted array"
+      );
+      assert.deepEqual(
+        multiValue.map((id) => typeof id),
+        ["number", "number"],
+        "multi-select emits native runtime types without changing single-select shape"
+      );
+    });
+
+    test("communicates a coerced change without mutating the bound value", async function (assert) {
+      const boundValue = ["1"];
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiValueCoercionHost
+            @value={{boundValue}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      await click(optionWithText("Banana"));
+
+      assert.strictEqual(onChange.callCount, 1, "the selection emits once");
+      const [emittedValue, , valueAtOnChange] = onChange.firstCall.args;
+      assert.deepEqual(
+        emittedValue,
+        [1, 2],
+        "onChange communicates the coerced next value"
+      );
+      assert.deepEqual(
+        valueAtOnChange,
+        ["1"],
+        "the host still owns the original bound value when onChange begins"
+      );
+      assert.deepEqual(
+        boundValue,
+        ["1"],
+        "the engine never mutates the array supplied as @value"
+      );
+      assert.strictEqual(
+        typeof boundValue[0],
+        "string",
+        "the original bound id retains its runtime type"
+      );
+      assert
+        .dom(".d-combobox__chip")
+        .exists(
+          { count: 2 },
+          "the host displays the next value only after accepting onChange"
+        );
+    });
+
+    test("coerces values emitted through the modifySelectKit bridge", async function (assert) {
+      let selectKit;
+      const onChange = sinon.spy();
+      withPluginApi((api) => {
+        api.modifySelectKit("test-multi-value-coercion").prependContent(() => ({
+          id: "capture",
+          name: "Capture facade",
+          onSelect: (facade) => (selectKit = facade),
+        }));
+      });
+
+      await render(
+        <template>
+          <MultiValueCoercionHost @value={{array "1"}} @onChange={{onChange}} />
+        </template>
+      );
+      await click(".d-combobox__input");
+      await click(optionWithText("Capture facade"));
+
+      assert.notStrictEqual(
+        selectKit,
+        undefined,
+        "the legacy action row exposes the compat facade"
+      );
+      selectKit.select(2, ITEMS[1]);
+      await settled();
+
+      assert.strictEqual(
+        onChange.callCount,
+        1,
+        "the bridge selection emits once"
+      );
+      const emittedValue = onChange.firstCall.args[0];
+      assert.deepEqual(
+        emittedValue,
+        [1, 2],
+        "the bridge emits held and picked ids in their native source types"
+      );
+      assert.deepEqual(
+        emittedValue.map((id) => typeof id),
+        ["number", "number"],
+        "the bridge emission contains only native-typed resolved ids"
+      );
+      assert.true(
+        emittedValue.every(Number.isInteger),
+        "the bridge emission retains integer ids"
+      );
     });
   }
 );
@@ -4902,3 +5221,480 @@ module(
     });
   }
 );
+
+class NoneRowHost extends Component {
+  @tracked value = this.args.value ?? null;
+
+  @action
+  onChange(value, payload) {
+    this.args.onChange?.(value, payload);
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @variant={{@variant}}
+      @items={{ITEMS}}
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @noneLabel="None"
+      @placeholder="Pick one"
+    />
+  </template>
+}
+
+class NoneRowMultiHost extends Component {
+  @tracked value = this.args.value ?? [];
+
+  @action
+  onChange(value, payload) {
+    this.args.onChange?.(value, payload);
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @multiple={{true}}
+      @items={{ITEMS}}
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @noneLabel="None"
+      @placeholder="Pick some"
+    />
+  </template>
+}
+
+module("Integration | ui-kit | DSelect (none row)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("renders the none row first with its public DOM contract", async function (assert) {
+    await render(<template><NoneRowHost /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom("li.d-combobox__option.--none[role='option']")
+      .exists({ count: 1 }, "the none row uses the option DOM contract")
+      .hasText("None", "the none row renders the literal label");
+    assert.deepEqual(
+      findAll("[role='option']").map((option) => option.textContent.trim()),
+      ["None", "Apple", "Banana", "Cherry pie"],
+      "the none row precedes every source option"
+    );
+  });
+
+  test("pointer selection emits null, closes, and restores the placeholder", async function (assert) {
+    const onChange = sinon.spy();
+    await render(
+      <template><NoneRowHost @value={{2}} @onChange={{onChange}} /></template>
+    );
+    await click("[role='combobox']");
+
+    await click("li.d-combobox__option.--none");
+
+    assert.strictEqual(onChange.callCount, 1, "the pointer pick emits once");
+    assert.strictEqual(
+      onChange.firstCall.args[0],
+      null,
+      "the none row emits null"
+    );
+    assert.dom("[role='listbox']").doesNotExist("the pointer pick closes");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("", "the trigger no longer displays the old selection")
+      .hasAttribute(
+        "placeholder",
+        "Pick one",
+        "the empty trigger shows its placeholder"
+      );
+    assert
+      .dom(".d-combobox__presentation")
+      .doesNotExist("no selection presentation encodes the none label");
+  });
+
+  test("keyboard Enter on the none row emits null and closes", async function (assert) {
+    const onChange = sinon.spy();
+    await render(
+      <template><NoneRowHost @value={{1}} @onChange={{onChange}} /></template>
+    );
+    await click("[role='combobox']");
+    await triggerKeyEvent("[role='combobox']", "keydown", "ArrowUp");
+
+    assert
+      .dom("[role='option'].--active")
+      .hasText("None", "keyboard navigation highlights the none row");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+    assert.strictEqual(onChange.callCount, 1, "Enter emits once");
+    assert.strictEqual(
+      onChange.firstCall.args[0],
+      null,
+      "Enter on the none row emits null"
+    );
+    assert.dom("[role='listbox']").doesNotExist("Enter closes the overlay");
+  });
+
+  test("none and real options have mutually exclusive aria-selected state", async function (assert) {
+    await render(<template><NoneRowHost /></template>);
+    await click("[role='combobox']");
+
+    assert
+      .dom("li.d-combobox__option.--none")
+      .hasAttribute(
+        "aria-selected",
+        "true",
+        "none is selected for a null value"
+      );
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .exists({ count: 1 }, "only none is selected for a null value");
+
+    await click(optionWithText("Banana"));
+    await click("[role='combobox']");
+
+    assert
+      .dom("li.d-combobox__option.--none")
+      .hasAttribute(
+        "aria-selected",
+        "false",
+        "none is not selected for a real value"
+      );
+    assert
+      .dom("[role='option'][aria-selected='true']")
+      .exists({ count: 1 }, "exactly one option remains selected")
+      .hasText("Banana", "the real value's row is selected");
+  });
+
+  test("re-picking none closes without a redundant change", async function (assert) {
+    const onChange = sinon.spy();
+    await render(<template><NoneRowHost @onChange={{onChange}} /></template>);
+    await click("[role='combobox']");
+
+    await click("li.d-combobox__option.--none");
+
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "re-picking none emits no redundant change"
+    );
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("re-picking none still closes the overlay");
+  });
+
+  test("includes none in the ARIA option positions", async function (assert) {
+    await render(<template><NoneRowHost /></template>);
+    await click("[role='combobox']");
+
+    const options = findAll("[role='option']");
+    assert.deepEqual(
+      options.map((option) => option.getAttribute("aria-setsize")),
+      ["4", "4", "4", "4"],
+      "none and all source rows report the combined set size"
+    );
+    assert.deepEqual(
+      options.map((option) => option.getAttribute("aria-posinset")),
+      ["1", "2", "3", "4"],
+      "none occupies position one and source rows follow it"
+    );
+  });
+
+  test("Home lands on none as logical option zero", async function (assert) {
+    // A non-editable (static) controller is required: on an editable typeahead input Home/End
+    // stay with the text caret rather than navigating the list (d-roving-focus keeps them for an
+    // editable controller). The none row is still the first logical option in either variant.
+    await render(
+      <template><NoneRowHost @variant="static" @value={{3}} /></template>
+    );
+    await click("[role='combobox']");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Home");
+
+    const noneOption = find("li.d-combobox__option.--none");
+    assert
+      .dom(noneOption)
+      .hasClass("--active", "Home highlights the none row")
+      .hasAttribute(
+        "data-logical-index",
+        "0",
+        "none is the first logical option"
+      );
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-activedescendant",
+        noneOption.id,
+        "the controller points at none after Home"
+      );
+  });
+
+  test("a non-empty unmatched query excludes none and cannot clear the value", async function (assert) {
+    const onChange = sinon.spy();
+    await render(
+      <template><NoneRowHost @value={{2}} @onChange={{onChange}} /></template>
+    );
+    await click("[role='combobox']");
+
+    assert
+      .dom("li.d-combobox__option.--none")
+      .exists("none is available before a query is entered");
+
+    await fillIn("[role='combobox']", "zzzz");
+
+    assert
+      .dom("li.d-combobox__option.--none")
+      .doesNotExist("none is filtered out for a non-empty query");
+    assert
+      .dom("[role='option']")
+      .doesNotExist("the unmatched query has no activatable option");
+    assert
+      .dom(".d-combobox__empty[role='status']")
+      .hasText(
+        "No results found",
+        "the ordinary no-results state remains visible"
+      );
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
+
+    assert.strictEqual(
+      onChange.callCount,
+      0,
+      "Enter with no match does not clear or otherwise change the value"
+    );
+    // A desktop typeahead restores the selected label into the input on close (see the "closing
+    // restores the selected label" test); the presentation node is not this variant's display
+    // surface. Value preservation itself is pinned by the callCount assertion above.
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the selected value survives an unmatched query");
+  });
+
+  test("noneLabel is inert for multi-select emissions", async function (assert) {
+    const onChange = sinon.spy();
+    await render(
+      <template>
+        <NoneRowHost />
+        <NoneRowMultiHost @onChange={{onChange}} />
+      </template>
+    );
+
+    const [singleController, multiController] = findAll("[role='combobox']");
+    await click(singleController);
+    assert
+      .dom("li.d-combobox__option.--none")
+      .exists("noneLabel is active for the single-select control");
+    await triggerKeyEvent(singleController, "keydown", "Escape");
+
+    await click(multiController);
+
+    assert
+      .dom("li.d-combobox__option.--none")
+      .doesNotExist("multi-select renders no none row");
+    assert
+      .dom("[role='option']")
+      .exists(
+        { count: ITEMS.length },
+        "multi-select renders only source options"
+      );
+
+    await click(optionWithText("Apple"));
+    await click(optionWithText("Banana"));
+
+    assert.strictEqual(onChange.callCount, 2, "both selections emit a change");
+    assert.deepEqual(
+      onChange.args.map(([value]) => value),
+      [[1], [1, 2]],
+      "multi-select emissions contain source ids and never inject null"
+    );
+  });
+});
+
+module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    resetOnerror();
+  });
+
+  test("@iconOnly suppresses the label on a static single-select", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="static"
+          @value={{2}}
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Settings"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__trigger.--icon-only")
+      .exists("the trigger opts into the icon-only layout");
+    assert
+      .dom(".d-combobox__leading-icon.d-icon-gear")
+      .exists("the leading icon renders");
+    assert
+      .dom(".d-combobox__caret")
+      .exists("the caret still renders by default");
+    assert
+      .dom(".d-combobox__value")
+      .doesNotExist("the selected value text is suppressed");
+    assert
+      .dom(".d-combobox__placeholder")
+      .doesNotExist("no placeholder text renders either");
+  });
+
+  test("@iconOnly also applies to the button variant", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="button"
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Settings"
+        />
+      </template>
+    );
+
+    assert.dom(".d-combobox__trigger.--icon-only").exists();
+    assert.dom(".d-combobox__leading-icon.d-icon-gear").exists();
+    assert.dom(".d-combobox__value").doesNotExist();
+    assert.dom(".d-combobox__placeholder").doesNotExist();
+  });
+
+  test("the icon-only trigger's accessible name comes from @label", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="static"
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Settings"
+        />
+      </template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-label",
+        "Settings",
+        "the label-less trigger is named by @label for assistive tech"
+      );
+  });
+
+  test("@iconOnly is inert on the typeahead variant (editable input keeps its label)", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="typeahead"
+          @value={{2}}
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Fruit"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__trigger.--icon-only")
+      .doesNotExist("an editable typeahead cannot be icon-only");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the selected value still shows in the input");
+  });
+
+  test("@iconOnly is inert on a multi-select (chips are the display)", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @multiple={{true}}
+          @value={{array 2}}
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Fruits"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__trigger.--icon-only")
+      .doesNotExist("a multi-select shows chips, so it is never icon-only");
+    assert
+      .dom(".d-combobox__chip")
+      .exists({ count: 1 }, "the selection chip still renders");
+  });
+
+  test("a single string @icon still renders one leading icon alongside the label", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="static"
+          @value={{2}}
+          @icon="gear"
+          @label="Fruit"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-combobox__leading-icon")
+      .exists({ count: 1 }, "a scalar @icon renders a single leading icon");
+    assert
+      .dom(".d-combobox__value")
+      .hasText("Banana", "the label still renders when not icon-only");
+  });
+
+  test("@iconOnly without @label fires a debug assertion", async function (assert) {
+    let fired = false;
+    setupOnerror((error) => {
+      fired = true;
+      assert.true(
+        error.message.includes("`@iconOnly` requires `@label`"),
+        "the assertion names the missing @label requirement"
+      );
+    });
+
+    await render(
+      <template>
+        <DSelect @items={{ITEMS}} @variant="static" @iconOnly={{true}} />
+      </template>
+    );
+
+    assert.true(fired, "the debug assertion fired during render");
+  });
+
+  test("an icon-only dropdown is not constrained to the narrow trigger width", async function (assert) {
+    await render(
+      <template>
+        <DSelect
+          @items={{ITEMS}}
+          @variant="static"
+          @icon="gear"
+          @iconOnly={{true}}
+          @label="Pick"
+        />
+      </template>
+    );
+
+    const trigger = find(".d-combobox__trigger.--icon-only");
+    await click("[role='combobox']");
+
+    assert
+      .dom(".d-combobox__panel [role='option']")
+      .exists("the dropdown renders its options");
+    assert.true(
+      find(".d-combobox__panel").offsetWidth > trigger.offsetWidth,
+      "the option panel is wider than the compact icon-only trigger, so labels are not clipped"
+    );
+  });
+});

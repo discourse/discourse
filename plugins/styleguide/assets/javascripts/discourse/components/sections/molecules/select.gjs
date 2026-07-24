@@ -38,6 +38,8 @@ export default class Select extends Component {
   @tracked clearableMultiValue = [1, 2];
   @tracked iconValue = null;
   @tracked caretValue = null;
+  @tracked noneValue = 2;
+  @tracked iconOnlyValue = "watching";
   @tracked disabledValue = 1;
   @tracked readonlyValue = 1;
   @tracked minCharsValue = null;
@@ -52,6 +54,13 @@ export default class Select extends Component {
   @tracked closeCount = 0;
 
   errorRequestCount = 0;
+
+  notificationLevels = [
+    { id: "watching", name: "Watching", icon: "eye" },
+    { id: "tracking", name: "Tracking", icon: "circle" },
+    { id: "regular", name: "Normal", icon: "bell" },
+    { id: "muted", name: "Muted", icon: "bell-slash" },
+  ];
 
   defaultCode = `<DSelect
   @items={{this.items}}
@@ -121,6 +130,24 @@ export default class Select extends Component {
   <:selection as |item|>{{item.name}}</:selection>
   <:item as |item|>{{item.name}}</:item>
 </DSelect>`;
+
+  noneCode = `<DSelect
+  @items={{this.items}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @noneLabel="None"
+/>`;
+
+  iconOnlyCode = `{{! The consumer owns @value, so it drives @icon from the selection }}
+<DSelect
+  @items={{this.levels}}
+  @variant="static"
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @icon={{this.iconForValue}}
+  @iconOnly={{true}}
+  @label="Notification level"
+/>`;
 
   emptyCode = `<DSelect
   @load={{this.loadEmpty}}
@@ -261,6 +288,13 @@ export default class Select extends Component {
     return this.args.dummy.options;
   }
 
+  get iconOnlyIcon() {
+    return (
+      this.notificationLevels.find((level) => level.id === this.iconOnlyValue)
+        ?.icon ?? "bell"
+    );
+  }
+
   // Far more than a single virtualized window, so scrolling to the true last row is
   // exercised both by hand and by a system spec.
   get largeListItems() {
@@ -367,6 +401,16 @@ export default class Select extends Component {
   @action
   updateMaximum(value) {
     this.maximumValue = value;
+  }
+
+  @action
+  updateNone(value) {
+    this.noneValue = value;
+  }
+
+  @action
+  updateIconOnly(value) {
+    this.iconOnlyValue = value;
   }
 
   @action
@@ -531,6 +575,38 @@ export default class Select extends Component {
           <:selection as |item|>{{item.name}}</:selection>
           <:item as |item|>{{item.name}}</:item>
         </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.none_example"}}
+      @code={{this.noneCode}}
+    >
+      <div class="select-examples__control select-examples__none">
+        <DSelect
+          @items={{this.items}}
+          @value={{this.noneValue}}
+          @onChange={{this.updateNone}}
+          @noneLabel={{i18n "styleguide.sections.select.none_label"}}
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        />
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.icon_only_example"}}
+      @code={{this.iconOnlyCode}}
+    >
+      <div class="select-examples__control select-examples__icon-only">
+        <DSelect
+          @items={{this.notificationLevels}}
+          @variant="static"
+          @value={{this.iconOnlyValue}}
+          @onChange={{this.updateIconOnly}}
+          @icon={{this.iconOnlyIcon}}
+          @iconOnly={{true}}
+          @label={{i18n "styleguide.sections.select.icon_only_label"}}
+        />
       </div>
     </StyleguideExample>
 

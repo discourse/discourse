@@ -19,18 +19,26 @@ by mechanism.
 ### Covered
 
 - Single and multiple selection, with chips and per-chip removal (`@multiple`).
+- A first-class "none" row on single-select (`@noneLabel`): a selectable list row that clears the
+  value to `null` and reads as selected while nothing is chosen. Always present while browsing, and
+  filtered out under an active query so a non-matching search still reaches the empty state.
 - Client (`@items`) and server (`@load`) sources; true pagination with tail reveal and a render
   cap; `@filterBy` field or predicate; `@minChars` gate; `@debounce`.
 - Create-on-the-fly (`@allowCreate` + `@createItem`); prepended special rows (`@specialItems`).
 - Async value resolution for held-but-unfetched ids (`@resolveValue` / `@resolveValues`) with a
   named unresolved fallback (`@createUnresolvedItem`); the `@selected` sync escape hatch.
+- Multi-select value-type coercion: each emitted id is normalized to its source item's native type
+  (so a URL-typed `"5"` and a freshly-picked `3` never emit as a mixed `["5", 3]`); an unresolved id
+  passes through unchanged, and `@value` is never mutated (the engine only emits via `@onChange`).
 - Per-item `disabled`; per-item action rows (`onSelect`, which run instead of selecting and keep
   the overlay open).
 - Selected-row indicator (`@selectedIcon`): shown always in multi-select (default check) and, in
   single-select, when the arg is set.
-- Trigger variants (`@variant`: typeahead / button / static); `@icon`; caret swap (`@caretIcon`)
-  and caret suppression (`@showCaret={{false}}`); `@clearable`; `@disabled` / `@readonly`; overlay
-  placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
+- Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
+  icon-only trigger on the button/static variants (`@iconOnly`, which requires `@label` for the
+  accessible name — drive `@icon` from `@value` for a selection-reactive glyph); caret swap
+  (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); `@clearable`; `@disabled` /
+  `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
 - Custom row and selection markup (`:item` / `:selection` blocks); empty state (`@noResultsLabel`
   / `:empty`); loading skeleton (`@skeletonCount`); a muted source-error state with an optional
   retry (`@retryable`) and an `:error` consumer block.
@@ -57,15 +65,6 @@ by mechanism.
   `aria-describedby` association is the sanctioned flat fallback — nested groups are a follow-up.)
   **Invariant:** structural rows are engine-injected — never put `__header`/`__divider` markers in
   `@items`, `@load`, or `@specialItems`; those inputs must be selectable options.
-
-### Partial
-
-- **None / clear row** — no first-class "none" row; approximated by `@placeholder` +
-  `@clearable` + `@specialItems`.
-- **Trigger display** — no icon-only trigger mode (`@showCaret` hides the caret, but the label
-  can't yet be dropped) and no multi-icon leading slot.
-- **Value coercion** — ids match by string form (`"5"` selects `5`), but the emitted value type
-  is never coerced back.
 
 ### Missing (scheduled)
 

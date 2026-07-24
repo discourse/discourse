@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -138,6 +139,15 @@ interface DSelectSignature {
     /** A leading (decorative) icon in the trigger. */
     icon?: string;
     /**
+     * Renders a label-less, icon-only trigger: the value / placeholder text is suppressed, leaving
+     * the leading `@icon` and the caret. Only takes effect on the `button` and `static`
+     * single-select variants — a `typeahead` trigger is an editable input and a multi-select shows
+     * chips, so neither can be icon-only. Requires `@label`: with no visible text, `@label` is the
+     * trigger's accessible name (enforced by a debug assertion). Drive `@icon` from `@value` for a
+     * selection-reactive glyph.
+     */
+    iconOnly?: boolean;
+    /**
      * The caret icon. A bare string is used in both states; a `{ open, closed }` hash swaps on
      * open (keyed off the overlay's expanded state). Defaults to `angle-up` / `angle-down`.
      */
@@ -190,6 +200,15 @@ interface DSelectSignature {
      * empty selection. Submit-time enforcement belongs to the consuming form.
      */
     minimum?: number;
+    /**
+     * Single-select only: adds a first-class "none" row to the top of the list, labeled with this
+     * string. Selecting it clears the value to `null`, and the row reads as selected whenever
+     * nothing else is. It is a list affordance shown only while browsing (an active filter query
+     * hides it, so a non-matching search still reaches the empty state), and after choosing it the
+     * trigger shows the placeholder — `null` cannot encode "None" in the trigger. Ignored on
+     * multi-select, where the empty state is the placeholder rather than a row.
+     */
+    noneLabel?: string;
     /** The overlay's preferred placement relative to the trigger (forwarded to the menu). */
     placement?: MenuOptions["placement"];
     /** The overlay's offset from the trigger, in pixels (forwarded to the menu). */
@@ -317,6 +336,7 @@ export default class DSelect extends Component<DSelectSignature> {
     getMinChars: () => this.args.minChars,
     getMaximum: () => this.args.maximum,
     getMinimum: () => this.args.minimum,
+    getNoneLabel: () => this.args.noneLabel,
     items: () =>
       typeof this.args.items === "function"
         ? this.args.items()
@@ -555,6 +575,9 @@ export default class DSelect extends Component<DSelectSignature> {
     if (this.triggerIsControl) {
       classes.push("--control");
     }
+    if (this.iconOnly) {
+      classes.push("--icon-only");
+    }
     if (this.isDisabled) {
       classes.push("--disabled");
     } else if (this.isReadonly) {
@@ -662,6 +685,21 @@ export default class DSelect extends Component<DSelectSignature> {
   /** The caret shows unless a consumer explicitly opts out (icon-only triggers). */
   get showCaret(): boolean {
     return this.args.showCaret ?? true;
+  }
+
+  /**
+   * Whether to render a label-less trigger. Effective only on the `button`/`static` single-select
+   * variants; on a `typeahead` (editable input) or `multiple` (chips are the display) the arg is
+   * inert. Asserts `@label` is present, since a suppressed label leaves the accessible name with no
+   * visible text to fall back on.
+   */
+  get iconOnly(): boolean {
+    const requested = this.args.iconOnly ?? false;
+    assert(
+      "DSelect: `@iconOnly` requires `@label` — the trigger's visible text is suppressed, so `@label` provides its accessible name.",
+      !requested || !!this.args.label
+    );
+    return requested && this.triggerIsControl && !this.args.multiple;
   }
 
   /** A source error offers a retry action unless a consumer opts out. */
@@ -1616,6 +1654,9 @@ export default class DSelect extends Component<DSelectSignature> {
       @matchTriggerWidth={{true}}
       @placement={{@placement}}
       @offset={{@offset}}
+      {{! The d-combobox__content class floors the overlay min-width in CSS: matchTriggerWidth pins
+        it to the trigger, which is unusably narrow for a compact icon-only trigger, and the
+        min-width floor overrides that (it also gives the windowed option list a real width). }}
       @contentClass="d-combobox__content"
       @trapTab={{false}}
       {{! Typeahead: keep DMenu's default click-to-open (the whole trigger root opens the
@@ -1869,6 +1910,9 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{on "keydown" this.handleInputKeydown}}
               />
             {{/if}}
+          {{else if this.iconOnly}}
+            {{! Icon-only trigger: the leading icon and caret (from TriggerFrame) are the whole
+            control; the selected value and placeholder text are intentionally suppressed. }}
           {{else}}
             <DAsyncContent
               @asyncData={{this.resolveSingle}}

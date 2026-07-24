@@ -57,6 +57,13 @@ export interface SelectItem {
   /** Marks a synthetic divider row. Structural, like a header, but with no label. */
   __divider?: boolean;
 
+  /**
+   * Marks the synthetic single-select "none" row (engine-injected from `noneLabel`). Selectable
+   * and navigable like any option, but its value field is `null`, so selecting it clears the
+   * selection.
+   */
+  __none?: boolean;
+
   /** Arbitrary domain fields, addressed dynamically by `valueField` / `labelField`. */
   [key: string]: unknown;
 }
@@ -91,6 +98,8 @@ export interface SelectDescriptor {
     __create: boolean;
     /** True for an unresolved held value; false on list rows. */
     __unresolved: boolean;
+    /** True for the injected single-select "none" row (a selectable row that clears the value). */
+    __none: boolean;
   };
   /**
    * 1-based position in the whole result set, independent of how many rows are mounted.
@@ -186,6 +195,7 @@ export interface SelectEngineOptions {
   getMinChars?: () => number | undefined;
   getMaximum?: () => number | undefined;
   getMinimum?: () => number | undefined;
+  getNoneLabel?: () => string | undefined;
   getSelected?: () => SelectItem | SelectItem[] | undefined;
   getAllowCreate?: () =>
     | boolean
@@ -255,6 +265,14 @@ export interface SelectEngineOptions {
    * down to an empty selection — so enforcement stays with the consuming form.
    */
   minimum?: number;
+
+  /**
+   * Single-select only: the label for a first-class "none" row prepended to the list. Selecting it
+   * clears the value to `null`. Shown only while the filter is empty (so a non-matching search can
+   * still reach the empty state); omitted entirely on multi-select, where the "none" concept is the
+   * placeholder rather than a row.
+   */
+  noneLabel?: string;
 
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
@@ -783,6 +801,7 @@ export default class SelectEngine {
   #readMinChars: () => number | undefined;
   #readMaximum: () => number | undefined;
   #readMinimum: () => number | undefined;
+  #readNoneLabel: () => string | undefined;
   #valueField: string;
   #labelField: string;
   #filterBy?: string | ((item: SelectItem, term: string) => boolean);
@@ -868,6 +887,7 @@ export default class SelectEngine {
     this.#readMinChars = opts.getMinChars ?? (() => opts.minChars);
     this.#readMaximum = opts.getMaximum ?? (() => opts.maximum);
     this.#readMinimum = opts.getMinimum ?? (() => opts.minimum);
+    this.#readNoneLabel = opts.getNoneLabel ?? (() => opts.noneLabel);
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     this.#filterBy = opts.filterBy;
@@ -1135,6 +1155,12 @@ export default class SelectEngine {
    */
   @bind
   isSelected(item: SelectItem): boolean {
+    // The "none" row stands in for the empty selection, so it reads as selected exactly when
+    // nothing else is. Single-select only, and resolved before the key lookup — its value is
+    // `null`, which the comparison below would otherwise reject as unselectable.
+    if (item.__none && !this.#multiple) {
+      return !this.hasValue;
+    }
     const key = this.#valueKey(this.#itemValue(item));
     if (key == null) {
       return false;
@@ -1208,8 +1234,16 @@ export default class SelectEngine {
     // and headers never enter the option count.
     const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
 
-    const special = this.#specialItems?.(this.#snapshot()) ?? [];
-    const specialItems = makeArray(special) as SelectItem[];
+    const noneRow = this.#noneRow();
+    const consumerSpecial = makeArray(
+      this.#specialItems?.(this.#snapshot()) ?? []
+    ) as SelectItem[];
+    // The none row leads the specials so it is the first option (Home lands on it) and flows
+    // through the same counting path below, keeping its `posInSet`/`setSize`/`logicalIndex` in
+    // lockstep with the rest of the set.
+    const specialItems = noneRow
+      ? [noneRow, ...consumerSpecial]
+      : consumerSpecial;
     const finalItems = createItem
       ? [...specialItems, ...grouped, createItem]
       : [...specialItems, ...grouped];
@@ -1574,6 +1608,17 @@ export default class SelectEngine {
     return this.#readMinChars() ?? 0;
   }
 
+  // Single-select only: the label for the prepended "none" row, or `null` when unset/empty or on a
+  // multi-select (there "none" is the placeholder, not a row). Gating multi here keeps every
+  // downstream consumer — injection and the `isSelected` special-case — inert on multi.
+  get #noneLabel(): string | null {
+    if (this.#multiple) {
+      return null;
+    }
+    const label = this.#readNoneLabel();
+    return label ? label : null;
+  }
+
   // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
   // `NaN`, all of which mean "no cap" rather than "cap of nothing".
   get #maximum(): number | null {
@@ -1635,7 +1680,12 @@ export default class SelectEngine {
 
   // Emits the next value plus the best-effort resolved item(s) for it. Controlled: the
   // engine never stores the value — the parent applies `nextValue` to `@value`.
-  #emitChange(nextValue: SelectValue): void {
+  #emitChange(rawNextValue: SelectValue): void {
+    // Coerce ids to their source item's native type up front, so the payload, the
+    // `select-on-change` transformer context, and the legacy bridge all emit one consistent,
+    // single-typed value rather than a parent/URL-typed held id mixed with a freshly-picked
+    // native one.
+    const nextValue = this.#coerceValue(rawNextValue);
     const items = this.#itemsFor(nextValue);
     const payload = this.#multiple ? items : (items[0] ?? null);
 
@@ -1665,6 +1715,22 @@ export default class SelectEngine {
     return values
       .map((v) => this.#resolveOneSync(v))
       .filter((item): item is SelectItem => item != null);
+  }
+
+  // Multi-select only: re-emit each id in its resolved source item's native type, so a held
+  // parent/URL-typed id (a string `"5"`) and a freshly-picked native id (`3`) never leave as a
+  // mixed-type array. An id that resolves to no known item passes through unchanged — its type is
+  // unknowable — and order is preserved. Single-select already emits the native id, so its value
+  // is returned untouched. Matching is by string form, so coercion never changes which option is
+  // selected, only the emitted type.
+  #coerceValue(value: SelectValue): SelectValue {
+    if (!this.#multiple || value == null) {
+      return value;
+    }
+    return (makeArray(value) as SelectItemId[]).map((id) => {
+      const item = this.#resolveOneSync(id);
+      return item ? this.#itemValue(item) : id;
+    });
   }
 
   #filterLocal(filter: string): SelectItem[] {
@@ -1944,6 +2010,7 @@ export default class SelectEngine {
         divider: !!item.__divider,
         __create: !!item.__create,
         __unresolved: !!item.__unresolved,
+        __none: !!item.__none,
       },
     };
   }
@@ -1954,6 +2021,22 @@ export default class SelectEngine {
 
   #isStructural(item: SelectItem): boolean {
     return !!item.__header || !!item.__divider;
+  }
+
+  // The synthetic single-select "none" row: a selectable option carrying a `null` value. Shown only
+  // while the filter is empty — a "none" row that survived filtering would sit at the top of a
+  // non-matching result and, being auto-highlighted, turn "type a non-match, press Enter" into a
+  // silent clear (and would suppress the empty state). Selecting it routes through the normal
+  // `select()` path, which emits `null` because the row's value field is `null`.
+  #noneRow(): SelectItem | null {
+    if (this.#noneLabel == null || this.#state.filter !== "") {
+      return null;
+    }
+    return {
+      [this.#valueField]: null,
+      [this.#labelField]: this.#noneLabel,
+      __none: true,
+    };
   }
 
   // Client sources only: a paginating source can split a group across pages, so grouping a
