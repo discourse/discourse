@@ -40,7 +40,14 @@ export default async function openEventComposer({
   let end;
   if (info.endStr) {
     end = moment.parseZone(info.endStr);
+    if (info.allDay) {
+      end.subtract(1, "day");
+    }
   } else {
+    end = start.clone().add(1, "hour");
+  }
+
+  if (end.isSameOrBefore(start)) {
     end = start.clone().add(1, "hour");
   }
 

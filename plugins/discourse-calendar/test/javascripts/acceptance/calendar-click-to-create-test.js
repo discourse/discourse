@@ -86,7 +86,6 @@ acceptance(
       await waitFor(".fc-day-today");
 
       const date = todayCellDate();
-      const nextDate = moment(date).add(1, "day").format("YYYY-MM-DD");
 
       await click(".fc-day-today");
       await waitFor(".d-editor-input");
@@ -99,7 +98,7 @@ acceptance(
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
-            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${nextDate} 00:00" allDay=true\\]\\n\\[/event\\]\\n$`
+            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${date} 10:00" allDay=true\\]\\n\\[/event\\]\\n$`
           ),
           "composer opens with an all-day event defaulting to 9am for the clicked day"
         );
@@ -111,8 +110,6 @@ acceptance(
 
       const startDate = todayCellDate();
       const lastDate = moment(startDate).add(2, "days").format("YYYY-MM-DD");
-      // the selection end is exclusive, so a 3-day selection ends on the 4th day
-      const endDate = moment(startDate).add(3, "days").format("YYYY-MM-DD");
 
       await dragSelect(cellFor(startDate), cellFor(lastDate));
       await waitFor(".d-editor-input");
@@ -121,7 +118,7 @@ acceptance(
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
-            `^\\[event start="${startDate} 09:00" status="public" timezone="[^"]+" end="${endDate} 00:00" allDay=true\\]\\n\\[/event\\]\\n$`
+            `^\\[event start="${startDate} 09:00" status="public" timezone="[^"]+" end="${lastDate} 00:00" allDay=true\\]\\n\\[/event\\]\\n$`
           ),
           "composer opens with an all-day event spanning the dragged range"
         );
@@ -170,7 +167,6 @@ acceptance(
       await waitFor(".fc-day-today");
 
       const date = todayCellDate();
-      const nextDate = moment(date).add(1, "day").format("YYYY-MM-DD");
 
       await click(".fc-day-today");
       await waitFor(".d-editor-input");
@@ -183,7 +179,7 @@ acceptance(
         .dom(".d-editor-input")
         .hasValue(
           new RegExp(
-            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${nextDate} 00:00" allDay=true\\]\\n\\[/event\\]\\n$`
+            `^\\[event start="${date} 09:00" status="public" timezone="[^"]+" end="${date} 10:00" allDay=true\\]\\n\\[/event\\]\\n$`
           ),
           "composer opens with an all-day event for the clicked day"
         );
