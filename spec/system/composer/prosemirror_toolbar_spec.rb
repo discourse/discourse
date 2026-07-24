@@ -327,6 +327,14 @@ describe "Composer - ProseMirror - Toolbar" do
 
       heading_menu.expand
       expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
+      heading_menu.collapse
+
+      composer.select_all
+      expect(page).to have_css(".toolbar__button.heading.--active")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
     end
 
     it "removes small text when switching to a paragraph" do

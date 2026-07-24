@@ -634,11 +634,47 @@ export default class ProsemirrorTextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
-      inSmall: isNodeActive(this.view.state, this.schema.nodes.html_inline, {
-        tag: "small",
-      }),
+      inSmall: this.#inSmall(),
       ...this.customState(this.view.state),
     });
+  }
+
+  // isNodeActive can't reliably detect an inline node nested in a block when the
+  // whole block is selected, so check the selected inline content directly.
+  #inSmall() {
+    const { state } = this.view;
+    const { from, to, empty, $from } = state.selection;
+    const isSmall = (node) =>
+      node.type === this.schema.nodes.html_inline && node.attrs.tag === "small";
+
+    if (empty) {
+      for (let depth = $from.depth; depth > 0; depth--) {
+        if (isSmall($from.node(depth))) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let hasContent = false;
+    let allSmall = true;
+    state.doc.nodesBetween(from, to, (node) => {
+      if (node.isBlock) {
+        return true;
+      }
+      if (isSmall(node)) {
+        hasContent = true;
+        return false;
+      }
+      if (node.isText && !node.text.trim()) {
+        return false;
+      }
+      hasContent = true;
+      allSmall = false;
+      return false;
+    });
+
+    return hasContent && allSmall;
   }
 }
 
