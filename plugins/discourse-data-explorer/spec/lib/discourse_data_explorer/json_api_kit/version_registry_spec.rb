@@ -74,6 +74,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
       end
     end
 
+    describe "#versions_for" do
+      it "lists the owner's own snap set, anchored on the initial version" do
+        expect(registry.versions_for("solved").map(&:to_s)).to eq(%w[2026-05-01 2026-07-05])
+      end
+    end
+
     describe "#gap_for with overrides" do
       it "governs an overridden owner's changes by its own date" do
         expect(

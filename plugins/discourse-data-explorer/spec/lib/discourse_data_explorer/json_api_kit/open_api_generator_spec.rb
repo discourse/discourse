@@ -175,11 +175,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       )
     end
 
-    it "enumerates the allowed include paths" do
+    it "enumerates the allowed include paths, extension namespaces included" do
       expect(include_parameter.dig("schema", "items", "enum")).to contain_exactly(
         "user",
         "groups",
         "user.groups",
+        "run-stats",
       )
     end
 
@@ -222,6 +223,60 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     end
   end
 
+  # The run-stats extension is registered for real at boot (docs/plugins-design.md,
+  # docs/api-docs-generation.md §8) — the generator documents extension contributions
+  # from the same live registry state the runtime serves.
+  describe "extension contributions" do
+    let(:parameters) { index_operation["parameters"] }
+    let(:run_stats_attribute) do
+      schemas.dig("run-stats", "properties", "attributes", "properties", "stale")
+    end
+    let(:run_stats_relationship) do
+      schemas.dig("queries", "properties", "relationships", "properties", "run-stats")
+    end
+
+    it "declares the extension resource schema with its typed attribute" do
+      expect(run_stats_attribute).to eq(
+        "type" => %w[boolean null],
+        "description" => "Whether the query has never been run.",
+        "examples" => [false],
+      )
+    end
+
+    it "links the extended resource to the extension type" do
+      expect(run_stats_relationship.dig("properties", "data", "properties", "type", "const")).to eq(
+        "run-stats",
+      )
+    end
+
+    it "describes the contributed relationship" do
+      expect(run_stats_relationship["description"]).to eq(
+        "Run statistics the run-stats plugin attaches to the query.",
+      )
+    end
+
+    it "declares the namespaced filter with its value type and description" do
+      expect(parameters).to include(
+        hash_including(
+          "name" => "filter[run-stats.stale]",
+          "in" => "query",
+          "description" => "Whether the query has never been run.",
+          "schema" => hash_including("type" => "boolean"),
+        ),
+      )
+    end
+
+    it "offers the namespace as an include path" do
+      include_parameter = parameters.find { it["name"] == "include" }
+      expect(include_parameter.dig("schema", "items", "enum")).to include("run-stats")
+    end
+
+    it "offers a sparse fieldset for the extension type" do
+      fields_parameter = parameters.find { it["name"] == "fields[run-stats]" }
+      expect(fields_parameter.dig("schema", "items", "enum")).to eq(["stale"])
+    end
+  end
+
   describe "the show operation" do
     it "carries a summary and operation id" do
       expect(show_operation.values_at("summary", "operationId")).to eq(
@@ -260,15 +315,41 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(document["x-changelog"].first).to eq(
         "version" => "2026-07-08",
         "changes" => [
-          "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
-          "The `search` filter of the queries resource is renamed to `q`.",
-          "The `username` sort of the queries resource is renamed to `user.username`.",
+          {
+            "description" =>
+              "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
+          },
+          { "description" => "The `search` filter of the queries resource is renamed to `q`." },
+          {
+            "description" =>
+              "The `username` sort of the queries resource is renamed to `user.username`.",
+          },
+        ],
+      )
+    end
+
+    # One chronological list — defaults resolve one date against every timeline —
+    # with foreign entries labeled by their owning component.
+    it "labels extension-owned changes with their component" do
+      run_stats_entry = document["x-changelog"].find { it["version"] == "2026-06-20" }
+      expect(run_stats_entry["changes"]).to eq(
+        [
+          {
+            "description" => "Renames the run-stats `outdated` attribute to `stale`.",
+            "component" => "run-stats",
+          },
         ],
       )
     end
 
     it "appends the changelog to the document description" do
       expect(document.dig("info", "description")).to include("# Changelog", "## 2026-06-15")
+    end
+
+    it "prefixes extension entries with their namespace in the markdown changelog" do
+      expect(document.dig("info", "description")).to include(
+        "- `run-stats`: Renames the run-stats `outdated` attribute to `stale`.",
+      )
     end
   end
 
@@ -451,6 +532,173 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       it "matches the latest document apart from nothing" do
         expect(versioned).to eq(generator.document)
       end
+    end
+
+    # The versioned document is the no-override contract: every component
+    # resolved at the pin against its own timeline — exactly what a client
+    # sending only `Api-Version: <pin>` receives (docs/api-docs-generation.md §8).
+    context "when pinned before the extension's change" do
+      let(:version) { "2026-05-01" }
+      let(:versioned_extension_attributes) do
+        versioned.dig(
+          "components",
+          "schemas",
+          "run-stats",
+          "properties",
+          "attributes",
+          "properties",
+        )
+      end
+
+      it "renames the extension attribute schema back" do
+        expect(versioned_extension_attributes).to have_key("outdated")
+      end
+
+      it "renames the namespaced filter parameter back" do
+        expect(versioned_parameters.map { it["name"] }).to include("filter[run-stats.outdated]")
+      end
+
+      it "renames the extension fieldset enum back" do
+        expect(
+          versioned_parameters
+            .find { it["name"] == "fields[run-stats]" }
+            .dig("schema", "items", "enum"),
+        ).to eq(["outdated"])
+      end
+    end
+
+    context "when pinned past the extension's change" do
+      let(:version) { "2026-07-01" }
+
+      it "keeps the extension's latest shape" do
+        expect(
+          versioned.dig(
+            "components",
+            "schemas",
+            "run-stats",
+            "properties",
+            "attributes",
+            "properties",
+          ),
+        ).to have_key("stale")
+      end
+    end
+  end
+
+  # The global docs structure (docs/api-docs-generation.md §8): the core
+  # document carries only what every site serves; each plugin gets its own
+  # document — an ownership projection over the same declarations.
+  describe "the core-scoped document" do
+    subject(:core_document) { described_class.new(endpoints:, scope: :core).document }
+
+    let(:core_index_parameters) do
+      core_document.dig("paths", "/data-explorer/api/queries", "get", "parameters")
+    end
+
+    it "excludes extension resource schemas" do
+      expect(core_document.dig("components", "schemas").keys).not_to include("run-stats")
+    end
+
+    it "excludes the contributed relationship" do
+      expect(
+        core_document.dig(
+          "components",
+          "schemas",
+          "queries",
+          "properties",
+          "relationships",
+          "properties",
+        ),
+      ).not_to have_key("run-stats")
+    end
+
+    it "excludes the namespaced filter" do
+      expect(core_index_parameters.map { it["name"] }).not_to include("filter[run-stats.stale]")
+    end
+
+    it "excludes the namespace from the include enum" do
+      include_parameter = core_index_parameters.find { it["name"] == "include" }
+      expect(include_parameter.dig("schema", "items", "enum")).not_to include("run-stats")
+    end
+
+    it "keeps the changelog core-only" do
+      expect(core_document["x-changelog"].map { it["version"] }).not_to include("2026-06-20")
+    end
+  end
+
+  describe "#document_for" do
+    subject(:plugin_document) { described_class.new(endpoints:).document_for("run-stats") }
+
+    let(:fragment) { plugin_document.dig("paths", "/data-explorer/api/queries", "get") }
+    let(:parameter_names) { fragment["parameters"].map { it["name"] } }
+
+    it "titles the document after the plugin" do
+      expect(plugin_document.dig("info", "title")).to eq("Discourse JSON:API — run-stats plugin")
+    end
+
+    it "advertises the plugin's own current version" do
+      expect(plugin_document.dig("info", "version")).to eq("2026-06-20")
+    end
+
+    it "explains the override pinning ritual" do
+      expect(plugin_document.dig("info", "description")).to include("run-stats=2026-06-20")
+    end
+
+    it "carries only the plugin's changelog" do
+      expect(plugin_document["x-changelog"]).to eq(
+        [
+          {
+            "version" => "2026-06-20",
+            "changes" => [
+              { "description" => "Renames the run-stats `outdated` attribute to `stale`." },
+            ],
+          },
+        ],
+      )
+    end
+
+    it "declares only the plugin's resource schemas" do
+      expect(plugin_document.dig("components", "schemas").keys).to eq(["run-stats"])
+    end
+
+    it "documents the touched endpoint as a contributions fragment" do
+      expect(fragment["summary"]).to eq("List queries — run-stats contributions")
+    end
+
+    it "lists only the plugin's contributed parameters" do
+      expect(parameter_names).to contain_exactly(
+        "Api-Version",
+        "filter[run-stats.stale]",
+        "include",
+        "fields[run-stats]",
+      )
+    end
+
+    it "offers only the plugin's namespace in the include enum" do
+      include_parameter = fragment["parameters"].find { it["name"] == "include" }
+      expect(include_parameter.dig("schema", "items", "enum")).to eq(["run-stats"])
+    end
+
+    it "shows what the plugin adds to the response document" do
+      expect(
+        fragment.dig(
+          "responses",
+          "200",
+          "content",
+          "application/vnd.api+json",
+          "schema",
+          "properties",
+          "included",
+          "items",
+          "$ref",
+        ),
+      ).to eq("#/components/schemas/run-stats")
+    end
+
+    it "describes the contributed relationship" do
+      expect(fragment["description"]).to include(
+        "Run statistics the run-stats plugin attaches to the query.",
+      )
     end
   end
 

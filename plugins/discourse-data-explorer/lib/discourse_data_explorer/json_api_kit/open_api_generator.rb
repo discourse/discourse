@@ -97,10 +97,16 @@ module DiscourseDataExplorer
 
       # `examples` are captured live exchanges keyed by operationId → status
       # (plus "request" for the request body); see open_api_examples_spec.rb.
-      def initialize(endpoints:, intro: nil, examples: {})
+      #
+      # `scope` is the ownership projection (docs/api-docs-generation.md §8):
+      # `:site` composes everything registered — what this installation serves;
+      # `:core` keeps only core-owned surfaces — true for every Discourse.
+      # Plugin documents are the third projection, via #document_for.
+      def initialize(endpoints:, intro: nil, examples: {}, scope: :site)
         @endpoints = endpoints
         @intro = intro
         @examples = examples
+        @scope = scope
       end
 
       # Removed operations are absent from the latest document — new integrators
@@ -129,6 +135,30 @@ module DiscourseDataExplorer
         @endpoints.each { downgrade_endpoint!(versioned, it, gap) }
         downgrade_examples!(versioned, gap)
         apply_removals(versioned, gap:)
+      end
+
+      # One plugin's document — the third ownership projection
+      # (docs/api-docs-generation.md §8): its resource schemas, the core
+      # endpoints it touches shown with only its contributions, and its own
+      # changelog on its own timeline.
+      def document_for(namespace)
+        extension = JsonApiKit.extensions.fetch(namespace)
+        entries = plugin_changelog_entries(extension)
+        description = [plugin_intro(extension), changelog_markdown(entries)].compact.join("\n\n")
+        {
+          "openapi" => "3.1.0",
+          "info" => {
+            "title" => "Discourse JSON:API — #{namespace} plugin",
+            "version" => JsonApiKit.api_versions.versions_for(namespace).last.to_s,
+            "description" => description,
+          },
+          "x-changelog" => entries,
+          "tags" => plugin_tags(extension),
+          "paths" => plugin_paths(extension),
+          "components" => {
+            "schemas" => plugin_schemas(extension),
+          },
+        }
       end
 
       private
@@ -208,10 +238,14 @@ module DiscourseDataExplorer
 
       def primary_resource(endpoint) = endpoint[:controller]._jsonapi_config.serializer_class
 
-      # Extensions may register plain serializers as related resources; they
-      # carry no Kit definitions.
+      # A relationship named after a registered namespace is that extension's
+      # contribution (the name IS the namespace, by design) — excluded from the
+      # core projection.
       def relationship_definitions(resource)
-        resource.respond_to?(:relationship_definitions) ? resource.relationship_definitions : {}
+        definitions =
+          resource.respond_to?(:relationship_definitions) ? resource.relationship_definitions : {}
+        return definitions if @scope == :site
+        definitions.reject { |name, _| JsonApiKit.extensions.key?(name.to_s) }
       end
 
       def attribute_definitions(resource)
@@ -236,32 +270,153 @@ module DiscourseDataExplorer
       def singular(resource) = resource.record_type.to_s.singularize
 
       # The registry is a dated changelog — descriptions are mandatory on every
-      # change. Newest first. (At generation time the registry holds the core
-      # timeline; extension changelogs arrive with the extensions-docs work.)
+      # change. Newest first, one chronological list across owners (defaults
+      # resolve one date against every timeline); extension-owned entries carry
+      # their component so readers and machines can tell the clocks apart.
       def changelog_entries
         @changelog_entries ||=
-          JsonApiKit
-            .api_versions
-            .changes
-            .group_by { it.version.to_s }
-            .map do |version, changes|
-              { "version" => version, "changes" => changes.map(&:description) }
-            end
-            .reverse
+          begin
+            changes = JsonApiKit.api_versions.changes
+            changes = changes.select { JsonApiKit.api_versions.owner_of(it).nil? } if @scope ==
+              :core
+            build_changelog(changes)
+          end
       end
 
-      def changelog_markdown
-        return if changelog_entries.empty?
+      def build_changelog(changes)
+        changes
+          .group_by { it.version.to_s }
+          .map do |version, grouped|
+            { "version" => version, "changes" => grouped.map { changelog_change(it) } }
+          end
+          .reverse
+      end
+
+      def changelog_change(change)
+        entry = { "description" => change.description }
+        owner = JsonApiKit.api_versions.owner_of(change)
+        entry["component"] = owner if owner
+        entry
+      end
+
+      def changelog_markdown(entries = changelog_entries)
+        return if entries.empty?
 
         sections =
-          changelog_entries.map do |entry|
-            "## #{entry["version"]}\n\n#{entry["changes"].map { "- #{it}" }.join("\n")}"
+          entries.map do |entry|
+            lines =
+              entry["changes"].map do |change|
+                prefix = change["component"] ? "`#{change["component"]}`: " : ""
+                "- #{prefix}#{change["description"]}"
+              end
+            "## #{entry["version"]}\n\n#{lines.join("\n")}"
           end
         "# Changelog\n\n#{sections.join("\n\n")}"
       end
 
       def deprecated?(resource, action)
         resource.respond_to?(:deprecated_actions) && resource.deprecated_actions.key?(action)
+      end
+
+      # ── The plugin projection (#document_for) ──
+
+      # Its own changes only — the component label is redundant inside its own
+      # document.
+      def plugin_changelog_entries(extension)
+        changes =
+          JsonApiKit.api_versions.changes.select do
+            JsonApiKit.api_versions.owner_of(it) == extension.namespace
+          end
+        build_changelog(changes).each { |entry| entry["changes"].each { it.delete("component") } }
+      end
+
+      def plugin_intro(extension)
+        namespace = extension.namespace
+        current = JsonApiKit.api_versions.versions_for(namespace).last
+        <<~MD
+          What the `#{namespace}` plugin adds to the Discourse JSON:API. This document
+          covers only the plugin's contributions — the core document describes the full
+          endpoints.
+
+          The plugin rides its own timeline: it stays frozen at your base pin unless an
+          override names it — `Api-Version: #{JsonApiKit.api_versions.current_version}; #{namespace}=#{current}`.
+        MD
+      end
+
+      def plugin_tags(extension)
+        @endpoints
+          .filter_map do |endpoint|
+            resource = primary_resource(endpoint)
+            next if !extension.attached_types.include?(resource.record_type.to_s)
+            { "name" => tag_name(resource) }
+          end
+          .uniq
+      end
+
+      def plugin_paths(extension)
+        @endpoints.each_with_object({}) do |endpoint, result|
+          resource = primary_resource(endpoint)
+          next if !extension.attached_types.include?(resource.record_type.to_s)
+          result[endpoint[:path]] = { "get" => contribution_operation(endpoint, extension) }
+        end
+      end
+
+      # A valid-but-partial operation: only what the plugin adds to the core
+      # endpoint, with prose pointing at the core document for the rest.
+      def contribution_operation(endpoint, extension)
+        resource = primary_resource(endpoint)
+        type = resource.record_type.to_s
+        related = extension.relationships[type][:resource]
+        {
+          "tags" => [tag_name(resource)],
+          "summary" => "List #{type.humanize.downcase} — #{extension.namespace} contributions",
+          "operationId" => "list#{type.camelize}",
+          "description" => contribution_description(extension, type),
+          "parameters" => [
+            version_header_parameter,
+            *extension.filters_for(type).map { |name, defn| filter_parameter(name, defn) },
+            list_parameter("include", [extension.namespace]),
+            list_parameter(
+              "fields[#{related.record_type}]",
+              attribute_definitions(related).keys.map(&:to_s),
+            ),
+          ],
+          "responses" => {
+            "200" =>
+              json_response(
+                "With `include=#{extension.namespace}`, the plugin's resources appear in " \
+                  "the collection document's `included`.",
+                {
+                  "type" => "object",
+                  "properties" => {
+                    "included" => {
+                      "type" => "array",
+                      "items" => resource_ref(related),
+                    },
+                  },
+                },
+              ),
+          },
+        }
+      end
+
+      def contribution_description(extension, type)
+        relationship = extension.relationships[type]
+        description =
+          "Query-surface parameters the `#{extension.namespace}` plugin adds to this " \
+            "endpoint. Each #{type.singularize} gains an include-gated " \
+            "`#{extension.namespace}` relationship"
+        return "#{description}." if relationship[:description].blank?
+        "#{description} — #{relationship[:description]}"
+      end
+
+      def plugin_schemas(extension)
+        extension
+          .relationships
+          .values
+          .map { it[:resource] }
+          .uniq
+          .to_h { [it.record_type.to_s, resource_schema(it)] }
       end
 
       def schemas
@@ -311,7 +466,8 @@ module DiscourseDataExplorer
         base = TYPE_SCHEMAS.fetch(definition[:type]) { {} }
         schema = base.merge("type" => [base["type"], "null"].compact)
         schema["description"] = definition[:description] if definition[:description]
-        schema["examples"] = [definition[:example]] if definition[:example]
+        # nil? not truthiness: `false` is a legitimate example for a boolean.
+        schema["examples"] = [definition[:example]] if !definition[:example].nil?
         schema
       end
 
@@ -386,7 +542,7 @@ module DiscourseDataExplorer
             version_header_parameter,
             *filter_parameters(resource),
             list_parameter("sort", config.sorts.keys.flat_map { [it, "-#{it}"] }),
-            list_parameter("include", config.allowed_includes),
+            list_parameter("include", config.allowed_includes + extension_includes(resource)),
             *fieldset_parameters,
             page_size_parameter(config),
             cursor_parameter("page[after]"),
@@ -573,16 +729,25 @@ module DiscourseDataExplorer
         }
       end
 
+      # Extension filters (auto-namespaced keys) document from the same typed,
+      # described declarations as the resource's own — merged from the registry,
+      # mirroring the runtime's filter lookup.
       def filter_parameters(resource)
-        resource.filter_definitions.map do |name, definition|
-          parameter = {
-            "name" => "filter[#{name}]",
-            "in" => "query",
-            "schema" => TYPE_SCHEMAS.fetch(definition[:type]) { {} },
-          }
-          parameter["description"] = definition[:description] if definition[:description]
-          parameter
+        definitions = resource.filter_definitions
+        if @scope == :site
+          definitions = definitions.merge(JsonApiKit.extension_filters_for(resource.record_type))
         end
+        definitions.map { |name, definition| filter_parameter(name, definition) }
+      end
+
+      def filter_parameter(name, definition)
+        parameter = {
+          "name" => "filter[#{name}]",
+          "in" => "query",
+          "schema" => TYPE_SCHEMAS.fetch(definition[:type]) { {} },
+        }
+        parameter["description"] = definition[:description] if definition[:description]
+        parameter
       end
 
       # Comma-separated multi-value params (sort, include, fields) — OpenAPI's
@@ -599,6 +764,11 @@ module DiscourseDataExplorer
             },
           },
         }
+      end
+
+      def extension_includes(resource)
+        return [] if @scope != :site
+        JsonApiKit.extension_namespaces_for(resource.record_type)
       end
 
       def fieldset_parameters

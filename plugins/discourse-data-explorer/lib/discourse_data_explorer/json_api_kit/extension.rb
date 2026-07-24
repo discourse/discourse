@@ -20,14 +20,23 @@ module DiscourseDataExplorer
         @version_changes = []
       end
 
-      def register_relationship(type, serializer:, &block)
-        @relationships[type.to_s] = { serializer:, block: }
+      # `resource:` must be a Kit resource class (validated at registration):
+      # extension types are documented from the same declarations as core ones,
+      # and a plain serializer has none to offer.
+      def register_relationship(type, resource:, description: nil, &block)
+        @relationships[type.to_s] = { resource:, description:, block: }
       end
 
       # Keys are declared local and wired prefixed — the extension never writes
-      # (and cannot write) a foreign prefix.
-      def register_filter(type, key, &block)
-        (@filters[type.to_s] ||= {})["#{namespace}.#{key}"] = block
+      # (and cannot write) a foreign prefix. Same typed, described declaration
+      # as the resource `filter` keyword; the docs derive from it.
+      def register_filter(type, key, value_type, description:, &block)
+        ActiveModel::Type.lookup(value_type)
+        (@filters[type.to_s] ||= {})["#{namespace}.#{key}"] = {
+          type: value_type,
+          description:,
+          block:,
+        }
       end
 
       def register_version_change(change)
@@ -36,9 +45,9 @@ module DiscourseDataExplorer
 
       def filters_for(type) = @filters.fetch(type.to_s, {})
 
-      # The types this extension introduces (through its relationship serializers) —
+      # The types this extension introduces (through its relationship resources) —
       # the only types its version changes may target.
-      def owned_types = relationships.values.map { it[:serializer].record_type.to_s }
+      def owned_types = relationships.values.map { it[:resource].record_type.to_s }
 
       def attached_types = relationships.keys
 

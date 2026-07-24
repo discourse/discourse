@@ -73,7 +73,10 @@ module DiscourseDataExplorer
 
         def down_filter_keys(keys, type:, changes:, virtual: [])
           down_keys(keys, changes, virtual:) do |change|
-            [change.field_renames_for(type), change.filter_renames_for(type)]
+            [
+              change.field_renames_for(type),
+              change.filter_renames_for(type).merge(extension_filter_renames(change, type)),
+            ]
           end
         end
 

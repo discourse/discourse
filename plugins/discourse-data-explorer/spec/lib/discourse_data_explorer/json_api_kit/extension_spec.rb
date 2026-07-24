@@ -1,43 +1,59 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseDataExplorer::JsonApiKit::Extension do
-  subject(:extension) { described_class.new(namespace: "run-stats") }
+  subject(:extension) { described_class.new(namespace: "stats") }
 
-  let(:stats_serializer) do
-    Class.new do
-      include JSONAPI::Serializer
-      set_type :"run-stats"
-      attributes :stale
+  let(:stats_resource) do
+    Class.new(DiscourseDataExplorer::JsonApiKit::ResourceBase) do
+      type :stats
+      attribute :stale, :boolean
     end
   end
   let(:stats_change) do
     Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
       version "2026-07-08"
-      description "Renames a run-stats attribute."
+      description "Renames a stats attribute."
 
-      resource :"run-stats" do
+      resource :stats do
         renamed_attribute from: :outdated, to: :stale
       end
     end
   end
 
   describe "#register_filter" do
-    before { extension.register_filter(:queries, :stale) { |scope, _value| scope } }
+    before do
+      extension.register_filter(:queries, :stale, :boolean, description: "Never run?") do |scope|
+        scope
+      end
+    end
 
     it "namespaces the key automatically" do
-      expect(extension.filters_for("queries").keys).to eq(["run-stats.stale"])
+      expect(extension.filters_for("queries").keys).to eq(["stats.stale"])
+    end
+
+    it "records the typed, described declaration" do
+      expect(extension.filters_for("queries")["stats.stale"]).to include(
+        type: :boolean,
+        description: "Never run?",
+      )
     end
 
     it "exposes no filters for other types" do
       expect(extension.filters_for("users")).to be_empty
     end
+
+    it "rejects an unknown value type" do
+      expect {
+        extension.register_filter(:queries, :fresh, :nonsense, description: "?") { |scope| scope }
+      }.to raise_error(ArgumentError)
+    end
   end
 
   describe "#register_relationship" do
-    before { extension.register_relationship(:queries, serializer: stats_serializer) { nil } }
+    before { extension.register_relationship(:queries, resource: stats_resource) { nil } }
 
-    it "owns the type introduced by the serializer" do
-      expect(extension.owned_types).to eq(["run-stats"])
+    it "owns the type introduced by the resource" do
+      expect(extension.owned_types).to eq(["stats"])
     end
 
     it "attaches to the target type" do
@@ -57,22 +73,22 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::Extension do
     let(:renaming_change) do
       Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
         version "2026-06-20"
-        description "Renames a run-stats filter."
+        description "Renames a stats filter."
 
-        resource :"run-stats" do
+        resource :stats do
           renamed_filter from: :outdated, to: :stale
         end
       end
     end
 
     before do
-      extension.register_relationship(:queries, serializer: stats_serializer) { nil }
+      extension.register_relationship(:queries, resource: stats_resource) { nil }
       extension.register_version_change(renaming_change)
     end
 
     it "projects the rename onto the attached surface with both sides prefixed" do
       expect(extension.filter_renames_on("queries", change: renaming_change)).to eq(
-        "run-stats.outdated": :"run-stats.stale",
+        "stats.outdated": :"stats.stale",
       )
     end
 

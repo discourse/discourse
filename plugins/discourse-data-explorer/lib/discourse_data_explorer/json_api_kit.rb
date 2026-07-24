@@ -80,18 +80,24 @@ module DiscourseDataExplorer
         File.exist?(path) ? JSON.parse(File.read(path)) : {}
       end
 
-      # The canonical OpenAPI document (docs/api-docs-generation.md) — single
-      # source for the rake task and the freshness guard. Recomputed per call:
-      # the document reflects live registry/extension state. The explicit
+      # The OpenAPI document (docs/api-docs-generation.md) — recomputed per
+      # call, so it reflects live registry/extension state. `scope: :site`
+      # (default) composes everything registered here — what this installation
+      # serves; `scope: :core` is the global core document (§8). The explicit
       # endpoint map is the spike seam (see the generator's generalization path).
-      def openapi_document = openapi_generator.document
+      def openapi_document(scope: :site) = openapi_generator(scope:).document
 
       # One document per registered version (newest first) — old-version
       # documents legitimately change over time: every new change deepens their
       # gap, so they regenerate alongside the latest one.
       def openapi_versions = api_versions.versions.map(&:to_s).reverse
 
-      def openapi_document_at(version) = openapi_generator.document_at(version)
+      def openapi_document_at(version, scope: :site)
+        openapi_generator(scope:).document_at(version)
+      end
+
+      # One plugin's own document — the ownership projection (§8).
+      def openapi_document_for(namespace) = openapi_generator.document_for(namespace)
 
       # Spike stand-in for a real resource registry — the resource-level home is a
       # design follow-up (docs/versioning-design.md §3).
@@ -103,7 +109,7 @@ module DiscourseDataExplorer
 
       private
 
-      def openapi_generator
+      def openapi_generator(scope: :site)
         OpenApiGenerator.new(
           endpoints: [
             {
@@ -114,6 +120,7 @@ module DiscourseDataExplorer
           ],
           intro: File.read(File.expand_path("../../docs/api-intro.md", __dir__)),
           examples: openapi_examples,
+          scope:,
         )
       end
 
@@ -121,6 +128,13 @@ module DiscourseDataExplorer
         if extensions.key?(extension.namespace)
           raise Extension::NamespaceError,
                 "The `#{extension.namespace}` namespace is already registered"
+        end
+
+        extension.relationships.each_value do |relationship|
+          resource = relationship[:resource]
+          next if resource.is_a?(Class) && resource < ResourceBase
+          raise Extension::Error,
+                "Extension resources must be Kit resource classes (got `#{resource.inspect}`)"
         end
 
         extension.attached_types.each do |type|
@@ -146,7 +160,8 @@ module DiscourseDataExplorer
           related = relationship[:block]
           serializer_for(type).has_one(
             extension.namespace.to_sym,
-            resource: relationship[:serializer],
+            resource: relationship[:resource],
+            description: relationship[:description],
           ) { |record, _params| related.call(record) }
         end
         # One union registry per site: the extension's changes join the timeline

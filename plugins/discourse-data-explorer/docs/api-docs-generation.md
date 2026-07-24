@@ -1,6 +1,7 @@
 # JSON:API Kit — API Docs Generation (research findings)
 
-**Status:** research notes (2026-07-17) + decisions from the 2026-07-21 discussion (§7).
+**Status:** research notes (2026-07-17) + decisions from the 2026-07-21 discussion (§7) +
+plugin-docs structure decisions (2026-07-24, §8).
 Facts were verified in-repo and against the live site/repos/gem sources on those dates.
 **References:** [versioning design](./versioning-design.md) · [plugins design](./plugins-design.md).
 
@@ -168,13 +169,31 @@ document's intro prose would confuse both audiences.
   picker. All committed and freshness-guarded — deliberately, since **old-version
   documents change over time** (every new change deepens their gap).
 - Generator tail still open: publication wiring (second document through the
-  `discourse_api_docs` nightly action); **plugin extensions in the documents** — the
-  generator consulting the extension registry so registered relationships, namespaced
-  filters (`filter[run-stats.stale]`), include namespaces, and extension resource schemas
-  are documented, enabling per-site docs (a site's own `GET /api/openapi.json` covering
-  its installed plugins); open design question inside it: versioned docs for own-timeline
-  extensions (likely: each base-version document shows them at their latest, override
-  mechanics staying prose — one document per override combination is combinatorial); the
+  `discourse_api_docs` nightly action).
+- **Plugin extensions in the documents built (2026-07-24):** design in §8
+  (presence/timeline separation, N+1 documents, ownership projection, versioned docs =
+  the no-override contract), proven against a **real registered extension** — run-stats
+  was promoted from spec fixture to a boot-registered stand-in plugin
+  (`lib/discourse_data_explorer/run_stats.rb`: typed resource class, typed+described
+  filter, own-timeline version change, one self-contained file shaped like a plugin's
+  `jsonapi` block). The extension declaration surface grew what docs require:
+  `register_relationship(type, resource:, description:)` **requires a Kit resource
+  class** (a plain serializer has no declarations to document — and would generate a
+  lying `additionalProperties: false` schema), `register_filter(type, key, value_type,
+  description:)` mirrors the resource `filter` keyword. The generator carries the
+  **`scope` projection** (`:site` composes everything registered — the per-site
+  document; `:core` keeps core-owned surfaces only) plus `document_for(namespace)` (the
+  plugin document: its schemas, contribution fragments on touched core endpoints, its
+  own changelog/version on its own timeline, override-pinning prose). Changelogs are
+  ownership-labeled (`x-changelog` entries carry `component`; markdown prefixes the
+  namespace). Versioned documents downgrade extension surfaces through the same gap
+  machinery (`down_filter_keys` gained the extension projection `up_filter_keys` had).
+  The committed set now mirrors §8's global structure: core document + dated versions +
+  `openapi-jsonapi-plugin-run-stats.json`, with `openapi-versions.json` as a
+  `{versions, plugins}` manifest and a document picker next to the version picker in
+  `openapi-docs.html` (the version picker hides on plugin documents — their versions
+  live in their own changelog). All freshness-guarded, contract guard untouched (the
+  extension relationship is additive; the committed core baseline stays extension-free).
 - **Changelog + deprecations built (2026-07-23):** the document carries a machine-readable
   `x-changelog` (registry changes grouped by version, newest first — future food for the
   docs-site assistant) and a `# Changelog` markdown section appended to
@@ -270,3 +289,83 @@ proposing type declarations for existing block-backed attributes from live seria
 values — human-reviewed, then committed as declarations, never a runtime source); (b) the
 **validation loop** as a generic spec validating a live response against the *generated*
 schema, with failure messages pointing at the declaration to fix rather than a JSON file.
+
+## 8. Plugin documentation structure (decided 2026-07-24)
+
+### The merged mega-document fails for the Kit
+
+Today's global document merges plugin operations into core's, distinguished only by tags
+(§1). That is *tolerable* for endpoint-adding plugins — a plugin path 404s where the
+plugin is absent, and the tag name signals it — but it cannot carry Kit extensions: an
+extension **modifies core resource schemas** (a relationship on `queries`,
+`filter[run-stats.stale]`), and a merged schema is wrong for every site — sites without
+the plugin see members that don't exist, and the strict `additionalProperties: false`
+schemas the drift-proof loop requires cannot be honest for two populations at once.
+Schema-grade docs and a merged document are incompatible.
+
+### Presence and timeline are orthogonal axes
+
+`CORE_PLUGINS` membership is a *versioning* fact: shipping atomically with core puts a
+plugin's changes on the core timeline (no overrides). It is **not** a *presence* fact — an
+admin can disable a bundled plugin, and its endpoints and extensions disappear from that
+site. Docs placement follows presence; the clock follows the timeline:
+
+| Owner                  | Timeline             | Docs placement                  |
+| ---------------------- | -------------------- | ------------------------------- |
+| Core                   | core                 | the core document               |
+| Core plugins           | core (no overrides)  | own section — disable-able      |
+| Other official plugins | own (overrides)      | own section, own version picker |
+
+### The global structure: N+1 documents
+
+- **The core document**: only what every Discourse serves — core endpoints, core
+  resources, core changelog, core version picker. Canonical.
+- **One document per official plugin — core plugins included**: its own endpoints
+  (calendar-style), its resource schemas, the core endpoints it touches shown with *its*
+  contributed parameters and relationships, and its own changelog. An own-timeline
+  plugin's section carries its own version picker plus the override syntax as the bridge
+  to core dates; a core plugin's section carries core-timeline dates and no separate
+  picker.
+- **Honesty condition per section**: *true for any site where that plugin is enabled* —
+  the strongest promise a global reference can make.
+- **Per-site docs are the same derivation, not a second system**: the generator is a pure
+  function of registry state, so a site's live document is core ⊕ its registered
+  extensions, and the global site is the same function run once per composition.
+
+### Versioned documents show the no-override contract
+
+`document_at(V)` renders every component resolved at `V` with **no overrides** — exactly
+what a client sending `Api-Version: V` receives (the frozen-at-pin default). This
+supersedes the earlier lean ("show extensions at latest"); the registry already computes
+it — `gap_for` selects every owner's changes past the pin. Override mechanics stay prose
+in the intro: one document per override combination is combinatorial and serves nobody.
+
+### Per-plugin emission = ownership projection
+
+The registry and `Extension` objects already know who owns every change, filter, and
+relationship, so "the document of namespace X" is a **projection over declarations** —
+consistent with everything else. Rejected: diffing two generated artifacts (fragile,
+artifact-driven). Named but not built: **OpenAPI Overlays**, the standards-track format
+for "modifications to a base document" — conceptually exact, renderer support too thin to
+lean on today; could become the emission format later without changing the derivation.
+
+### Real-phase notes (recorded 2026-07-24, deliberately unbuilt)
+
+- **Per-site docs must reflect *enabled*, not *installed*.** The extension registry is
+  process-lifetime state while enablement is a site setting that changes at runtime —
+  registration (or at least extension activity, generation included) has to follow the
+  owning plugin's enabled state. The register/unregister pair is the right primitive; the
+  wiring is real-phase work.
+- **Snap-set uniformity for disabled core plugins.** If a disabled core plugin's changes
+  never register, its core-timeline dates vanish from that site's snap set, and two sites
+  can echo different resolved dates for the same requested pin. Harmless under snap-down
+  plus store-what's-echoed (any stored date resolves everywhere), but it deserves an
+  explicit decision. Mild preference: core-timeline dates always register — the changes
+  only transform types that are absent anyway — keeping echoes uniform across sites.
+- **The contract guard needs the same ownership projection.** The guard auto-records
+  additive changes, so registering the run-stats extension wrote `"run-stats": "to_one"`
+  into the committed *core* baseline (2026-07-24) — presence leaking into a core
+  artifact, exactly the axis §8 separates for docs. Right shape: a core-scoped contract
+  baseline plus per-extension contract descriptors, riding the same `scope` projection
+  the generator grew. Tolerated in the spike (the guard still catches accidental
+  breakage; it observed the composed site truthfully).

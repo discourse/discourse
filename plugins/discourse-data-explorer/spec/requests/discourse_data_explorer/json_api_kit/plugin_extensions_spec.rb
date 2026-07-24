@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-# Executable acceptance script for docs/plugins-design.md — a foreign owner (a fake
-# "plugin", namespace `run-stats`) attaches to the `queries` resource. Proves B
-# (include-gated relationship), D (auto-namespaced filter keys), E1 (unregistered ⇒
-# strict 400s), and the atomic ownership enforcement claimed in A/B. Written AHEAD
-# of the extension registry; the "without the extension" examples pin today's
-# contract and pass from day one.
+# Executable acceptance script for docs/plugins-design.md — a foreign owner (the
+# run-stats stand-in plugin, registered for real at boot; see
+# lib/discourse_data_explorer/run_stats.rb) attaches to the `queries` resource.
+# Proves B (include-gated relationship), D (auto-namespaced filter keys), E1
+# (unregistered ⇒ strict 400s), the atomic ownership enforcement claimed in A/B,
+# and C's timeline semantics (own timeline frozen at the pin, overrides,
+# CORE_PLUGINS riding the core timeline).
 RSpec.describe "JSON:API Kit plugin extensions" do
   fab!(:admin)
   fab!(:ran_query) { Fabricate(:query, hidden: false, last_run_at: Time.utc(2026, 7, 1, 10, 0)) }
@@ -13,27 +14,6 @@ RSpec.describe "JSON:API Kit plugin extensions" do
 
   let(:current_version) { "2026-07-08" }
   let(:parsed_document) { JSON.parse(response.body) }
-  # Data, not Struct: the serializer wraps related objects in `Array()`, which
-  # would splat a Struct (it responds to `to_a`) into its members.
-  let(:run_stats_class) { Data.define(:id, :stale) }
-  let(:run_stats_serializer) do
-    Class.new do
-      include JSONAPI::Serializer
-      set_type :"run-stats"
-      attributes :stale
-    end
-  end
-  let(:rename_change) do
-    Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
-      version "2026-06-20"
-      description "Renames the run-stats `outdated` attribute to `stale`."
-
-      resource :"run-stats" do
-        renamed_attribute from: :outdated, to: :stale
-        renamed_filter from: :outdated, to: :stale
-      end
-    end
-  end
   let(:included_attributes) { parsed_document["included"].map { it["attributes"] } }
 
   before do
@@ -51,97 +31,71 @@ RSpec.describe "JSON:API Kit plugin extensions" do
         }
   end
 
-  def register_run_stats_extension(version_change: nil)
-    stats = run_stats_class
-    serializer = run_stats_serializer
-    DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "run-stats") do
-      register_relationship(:queries, serializer:) do |query|
-        stats.new(query.id, query.last_run_at.nil?)
-      end
-      register_filter(:queries, :stale) do |scope, value|
-        value == "true" ? scope.where(last_run_at: nil) : scope.where.not(last_run_at: nil)
-      end
-      register_version_change(version_change) if version_change
+  context "when the namespace is included" do
+    let(:linkages) { parsed_document["data"].map { it.dig("relationships", "run-stats", "data") } }
+
+    before { get_queries(params: { include: "run-stats" }) }
+
+    it "responds successfully" do
+      expect(response.status).to eq(200)
+    end
+
+    it "links each query to its plugin resource" do
+      expect(linkages).to eq(
+        [
+          { "id" => ran_query.id.to_s, "type" => "run-stats" },
+          { "id" => never_run_query.id.to_s, "type" => "run-stats" },
+        ],
+      )
+    end
+
+    it "serves the plugin resources with their attributes" do
+      expect(parsed_document["included"]).to contain_exactly(
+        hash_including(
+          "type" => "run-stats",
+          "id" => ran_query.id.to_s,
+          "attributes" => {
+            "stale" => false,
+          },
+        ),
+        hash_including(
+          "type" => "run-stats",
+          "id" => never_run_query.id.to_s,
+          "attributes" => {
+            "stale" => true,
+          },
+        ),
+      )
     end
   end
 
-  context "with the extension registered" do
-    before { register_run_stats_extension }
-
-    after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
-
-    context "when the namespace is included" do
-      let(:linkages) do
-        parsed_document["data"].map { it.dig("relationships", "run-stats", "data") }
-      end
-
-      before { get_queries(params: { include: "run-stats" }) }
-
-      it "responds successfully" do
-        expect(response.status).to eq(200)
-      end
-
-      it "links each query to its plugin resource" do
-        expect(linkages).to eq(
-          [
-            { "id" => ran_query.id.to_s, "type" => "run-stats" },
-            { "id" => never_run_query.id.to_s, "type" => "run-stats" },
-          ],
-        )
-      end
-
-      it "serves the plugin resources with their attributes" do
-        expect(parsed_document["included"]).to contain_exactly(
-          hash_including(
-            "type" => "run-stats",
-            "id" => ran_query.id.to_s,
-            "attributes" => {
-              "stale" => false,
-            },
-          ),
-          hash_including(
-            "type" => "run-stats",
-            "id" => never_run_query.id.to_s,
-            "attributes" => {
-              "stale" => true,
-            },
-          ),
-        )
-      end
+  context "without the include" do
+    let(:relationship_keys) do
+      parsed_document["data"].flat_map { (it["relationships"] || {}).keys }
     end
 
-    context "without the include" do
-      let(:relationship_keys) do
-        parsed_document["data"].flat_map { (it["relationships"] || {}).keys }
-      end
+    before { get_queries }
 
-      before { get_queries }
-
-      it "omits the plugin resources" do
-        expect(parsed_document).not_to have_key("included")
-      end
-
-      it "omits the relationship linkage" do
-        expect(relationship_keys).not_to include("run-stats")
-      end
+    it "omits the plugin resources" do
+      expect(parsed_document).not_to have_key("included")
     end
 
-    context "when filtering through the auto-namespaced key" do
-      let(:returned_ids) { parsed_document["data"].map { it["id"] } }
-
-      before { get_queries(params: { filter: { "run-stats.stale" => "true" } }) }
-
-      it "returns only the matching queries" do
-        expect(returned_ids).to eq([never_run_query.id.to_s])
-      end
+    it "omits the relationship linkage" do
+      expect(relationship_keys).not_to include("run-stats")
     end
   end
 
-  context "with the extension shipping a version change" do
-    before { register_run_stats_extension(version_change: rename_change) }
+  context "when filtering through the auto-namespaced key" do
+    let(:returned_ids) { parsed_document["data"].map { it["id"] } }
 
-    after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
+    before { get_queries(params: { filter: { "run-stats.stale" => "true" } }) }
 
+    it "returns only the matching queries" do
+      expect(returned_ids).to eq([never_run_query.id.to_s])
+    end
+  end
+
+  describe "the extension's own timeline" do
     context "when an old-pinned client includes the namespace" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-01") }
 
@@ -253,14 +207,17 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     end
   end
 
-  context "with a core-plugin extension shipping a version change" do
+  context "with the extension granted core-timeline membership" do
     around do |example|
-      stub_const(DiscourseDataExplorer::JsonApiKit, :CORE_PLUGINS, ["run-stats"]) { example.run }
+      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      stub_const(DiscourseDataExplorer::JsonApiKit, :CORE_PLUGINS, ["run-stats"]) do
+        DiscourseDataExplorer::RunStats.register!
+        example.run
+      end
+    ensure
+      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      DiscourseDataExplorer::RunStats.register!
     end
-
-    before { register_run_stats_extension(version_change: rename_change) }
-
-    after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
 
     context "when the pinned date falls between the change and the next core version" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-25") }
@@ -295,6 +252,13 @@ RSpec.describe "JSON:API Kit plugin extensions" do
   end
 
   context "without the extension" do
+    around do |example|
+      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      example.run
+    ensure
+      DiscourseDataExplorer::RunStats.register!
+    end
+
     context "when the namespace is included" do
       before { get_queries(params: { include: "run-stats" }) }
 
@@ -326,16 +290,35 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     let(:foreign_type_registration) do
       version_change = foreign_type_change
       -> do
-        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "run-stats") do
+        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "query-health") do
           register_version_change version_change
         end
       end
     end
+    let(:user_stats_resource) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::ResourceBase) do
+        type :"user-stats"
+        attribute :count, :integer
+      end
+    end
     let(:colliding_registration) do
-      serializer = run_stats_serializer
+      resource = user_stats_resource
       -> do
         DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "user") do
-          register_relationship(:queries, serializer:) { nil }
+          register_relationship(:queries, resource:) { nil }
+        end
+      end
+    end
+    let(:plain_serializer_registration) do
+      serializer =
+        Class.new do
+          include JSONAPI::Serializer
+          set_type :"plain-stats"
+          attributes :stale
+        end
+      -> do
+        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "plain-stats") do
+          register_relationship(:queries, resource: serializer) { nil }
         end
       end
     end
@@ -352,16 +335,17 @@ RSpec.describe "JSON:API Kit plugin extensions" do
       )
     end
 
-    context "when the namespace is already registered" do
-      before { register_run_stats_extension }
+    it "rejects a related resource that is not a Kit resource class" do
+      expect { plain_serializer_registration.call }.to raise_error(
+        DiscourseDataExplorer::JsonApiKit::Extension::Error,
+        /Kit resource classes/,
+      )
+    end
 
-      after { DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats") }
-
-      it "rejects the second registration" do
-        expect { register_run_stats_extension }.to raise_error(
-          DiscourseDataExplorer::JsonApiKit::Extension::NamespaceError,
-        )
-      end
+    it "rejects a second registration of an already-registered namespace" do
+      expect {
+        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "run-stats") {}
+      }.to raise_error(DiscourseDataExplorer::JsonApiKit::Extension::NamespaceError)
     end
   end
 end

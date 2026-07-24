@@ -12,7 +12,8 @@
     ],
     "relationships": {
       "user": "to_one",
-      "groups": "to_many"
+      "groups": "to_many",
+      "run-stats": "to_one"
     },
     "filters": [
       "q"

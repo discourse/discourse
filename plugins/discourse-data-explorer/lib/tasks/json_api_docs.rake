@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc "Generate the JSON:API Kit OpenAPI documents (latest + one per version)"
+desc "Generate the JSON:API Kit OpenAPI documents (core latest + one per version + one per plugin)"
 task "data_explorer:json_api_docs" => :environment do
   plugin_root = File.expand_path("../..", __dir__)
   write = ->(name, payload) do
@@ -9,15 +9,30 @@ task "data_explorer:json_api_docs" => :environment do
     puts "Wrote #{path}"
   end
 
-  write.call("openapi-jsonapi.json", DiscourseDataExplorer::JsonApiKit.openapi_document)
+  # The committed set mirrors the global docs structure (docs/
+  # api-docs-generation.md §8): the core document (with its core-timeline
+  # versions) plus one document per plugin. The site-composed document
+  # (scope: :site) stays spec-proven, not emitted — it is what a live
+  # installation would serve.
+  write.call(
+    "openapi-jsonapi.json",
+    DiscourseDataExplorer::JsonApiKit.openapi_document(scope: :core),
+  )
   versions = DiscourseDataExplorer::JsonApiKit.openapi_versions
   versions.each do |version|
     write.call(
       "openapi-jsonapi-#{version}.json",
-      DiscourseDataExplorer::JsonApiKit.openapi_document_at(version),
+      DiscourseDataExplorer::JsonApiKit.openapi_document_at(version, scope: :core),
     )
   end
-  write.call("openapi-versions.json", versions)
+  plugins = DiscourseDataExplorer::JsonApiKit.extensions.keys.sort
+  plugins.each do |namespace|
+    write.call(
+      "openapi-jsonapi-plugin-#{namespace}.json",
+      DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace),
+    )
+  end
+  write.call("openapi-versions.json", { "versions" => versions, "plugins" => plugins })
 
   puts "Preview: serve the plugin directory and open openapi-docs.html, e.g."
   puts "  ruby -run -e httpd plugins/discourse-data-explorer -p 8080"

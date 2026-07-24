@@ -409,6 +409,20 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
         expect(downgraded).to eq(%i[lookup])
       end
     end
+
+    context "when an extension's own change renamed a projected filter" do
+      subject(:downgraded) do
+        described_class.down_filter_keys(
+          %w[run-stats.stale],
+          type: :queries,
+          changes: [DiscourseDataExplorer::RunStats::RenameOutdatedToStale],
+        )
+      end
+
+      it "maps the namespaced key back with both sides prefixed" do
+        expect(downgraded).to eq(%i[run-stats.outdated])
+      end
+    end
   end
 
   describe ".down_errors" do

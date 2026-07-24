@@ -9,21 +9,31 @@
     {
       "version": "2026-07-08",
       "changes": [
-        "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
-        "The `search` filter of the queries resource is renamed to `q`.",
-        "The `username` sort of the queries resource is renamed to `user.username`."
+        {
+          "description": "The `last_run_at` attribute of the queries resource is renamed to `ran_at`."
+        },
+        {
+          "description": "The `search` filter of the queries resource is renamed to `q`."
+        },
+        {
+          "description": "The `username` sort of the queries resource is renamed to `user.username`."
+        }
       ]
     },
     {
       "version": "2026-07-01",
       "changes": [
-        "The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames."
+        {
+          "description": "The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames."
+        }
       ]
     },
     {
       "version": "2026-06-15",
       "changes": [
-        "The `sql` attribute of the queries resource is renamed to `query`."
+        {
+          "description": "The `sql` attribute of the queries resource is renamed to `query`."
+        }
       ]
     }
   ],

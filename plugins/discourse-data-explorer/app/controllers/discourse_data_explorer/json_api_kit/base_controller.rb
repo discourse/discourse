@@ -268,7 +268,7 @@ module DiscourseDataExplorer
 
       def apply_filters(scope)
         (params[:filter] || {}).each do |name, value|
-          block = cfg.filters[name.to_s] || extension_filters[name.to_s] or next
+          block = cfg.filters[name.to_s] || extension_filters.dig(name.to_s, :block) or next
           scope = instance_exec(scope, value, &block)
         end
         scope

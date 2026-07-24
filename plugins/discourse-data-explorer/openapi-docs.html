@@ -9,42 +9,77 @@
         margin: 0;
         padding: 0;
       }
-      #version-picker {
+      #pickers {
         position: fixed;
         top: 12px;
         right: 16px;
         z-index: 100;
         font: 14px sans-serif;
+        display: flex;
+        gap: 12px;
       }
     </style>
   </head>
   <body>
-    <!-- Same rendering setup as docs.discourse.org (Redoc standalone), plus a
-         Stripe-style version picker over the per-version generated documents.
-         Serve this directory statically to view, e.g.
+    <!-- Same rendering setup as docs.discourse.org (Redoc standalone), plus the
+         global docs structure (docs/api-docs-generation.md §8): the core
+         document with a Stripe-style version picker over its core-timeline
+         versions, and one document per plugin (own timeline — its versions live
+         in its own changelog, so the version picker hides). Serve this
+         directory statically to view, e.g.
          `ruby -run -e httpd plugins/discourse-data-explorer -p 8080` -->
-    <label id="version-picker">
-      API version
-      <select></select>
-    </label>
+    <div id="pickers">
+      <label id="document-picker">
+        Document
+        <select></select>
+      </label>
+      <label id="version-picker">
+        API version
+        <select></select>
+      </label>
+    </div>
     <div id="redoc"></div>
     <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
     <script>
-      const select = document.querySelector("#version-picker select");
-      const render = (version) =>
-        Redoc.init(`openapi-jsonapi-${version}.json`, {}, document.getElementById("redoc"));
+      const documentSelect = document.querySelector("#document-picker select");
+      const versionPicker = document.querySelector("#version-picker");
+      const versionSelect = versionPicker.querySelector("select");
+      const render = (file) => Redoc.init(file, {}, document.getElementById("redoc"));
+
+      const renderSelection = () => {
+        const plugin = documentSelect.value !== "core";
+        versionPicker.hidden = plugin;
+        render(
+          plugin
+            ? `openapi-jsonapi-plugin-${documentSelect.value}.json`
+            : `openapi-jsonapi-${versionSelect.value}.json`,
+        );
+      };
 
       fetch("openapi-versions.json")
         .then((response) => response.json())
-        .then((versions) => {
+        .then(({ versions, plugins }) => {
+          const coreOption = document.createElement("option");
+          coreOption.value = "core";
+          coreOption.textContent = "Core API";
+          documentSelect.append(coreOption);
+          plugins.forEach((namespace) => {
+            const option = document.createElement("option");
+            option.value = namespace;
+            option.textContent = `${namespace} plugin`;
+            documentSelect.append(option);
+          });
+
           versions.forEach((version, index) => {
             const option = document.createElement("option");
             option.value = version;
             option.textContent = index === 0 ? `${version} (latest)` : version;
-            select.append(option);
+            versionSelect.append(option);
           });
-          select.addEventListener("change", () => render(select.value));
-          render(versions[0]);
+
+          documentSelect.addEventListener("change", renderSelection);
+          versionSelect.addEventListener("change", renderSelection);
+          renderSelection();
         });
     </script>
   </body>

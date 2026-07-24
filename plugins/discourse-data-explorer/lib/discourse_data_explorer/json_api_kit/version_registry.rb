@@ -43,6 +43,9 @@ module DiscourseDataExplorer
       # Oldest→newest; same-date changes keep registration order.
       def changes = @changes.keys.sort_by.with_index { |change, index| [change.version, index] }
 
+      # nil for core-owned changes, the extension's namespace otherwise.
+      def owner_of(change) = @changes[change]
+
       # The base snap set is CORE's timeline only: a resolved base date always
       # reads against one public changelog, and one owner's movement can never
       # push a pin past another owner's future changes.
@@ -58,12 +61,16 @@ module DiscourseDataExplorer
         snap(versions, ApiVersion.parse(value), today:)
       end
 
-      # Override resolution: snap against one owner's own timeline (anchored on
-      # the initial version, mirroring the base).
-      def resolve_for(owner, value, today: Date.current)
+      # One owner's own snap set, anchored on the initial version like the base.
+      def versions_for(owner)
         owned =
           @changes.filter_map { |change, change_owner| change.version if change_owner == owner }
-        snap(([initial_version] + owned).uniq.sort, ApiVersion.parse(value), today:)
+        ([initial_version] + owned).uniq.sort
+      end
+
+      # Override resolution: snap against one owner's own timeline.
+      def resolve_for(owner, value, today: Date.current)
+        snap(versions_for(owner), ApiVersion.parse(value), today:)
       end
 
       # The changes separating each owner's effective date from latest,
