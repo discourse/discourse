@@ -22,7 +22,10 @@ import { importSync } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { populatePreloadStore } from "discourse/lib/preload-store";
+import {
+  populatePreloadStore,
+  readPreloadedData,
+} from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
 
 populatePreloadStore();
@@ -106,8 +109,7 @@ async function loadPluginFromModulePreload(link) {
 
 function registerPreloadedThemeSettings() {
   try {
-    const element = document.getElementById("data-preloaded");
-    const preloaded = JSON.parse(element.dataset.preloaded);
+    const preloaded = readPreloadedData();
     const activatedThemes = JSON.parse(preloaded.activatedThemes);
     for (const [themeId, info] of Object.entries(activatedThemes)) {
       registerSettings(parseInt(themeId, 10), info.settings);

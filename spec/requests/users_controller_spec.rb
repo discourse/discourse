@@ -375,8 +375,8 @@ RSpec.describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
             '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
           )
@@ -532,8 +532,8 @@ RSpec.describe UsersController do
 
           get "/u/password-reset/#{email_token.token}"
 
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
               '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
             )
@@ -589,8 +589,8 @@ RSpec.describe UsersController do
         end
 
         it "preloads with a security key challenge and allowed credential ids" do
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             password_reset = JSON.parse(json["password_reset"])
             expect(password_reset["challenge"]).not_to eq(nil)
             expect(password_reset["allowed_credential_ids"]).to eq(
@@ -5560,8 +5560,8 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["accountCreated"]).to include(
             "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
           )
