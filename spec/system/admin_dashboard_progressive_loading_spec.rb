@@ -42,6 +42,7 @@ describe "Admin dashboard progressive loading" do
     dashboard.scroll_to_section("search").wait_for_section_request("search")
 
     expect(dashboard).to have_no_section_loading("search")
+    expect(dashboard.reports_bulk_request_count).to eq(0)
   end
 
   it "shows shaped skeletons for date changes and ignores an older response that finishes last",
