@@ -338,24 +338,26 @@ RSpec.describe Middleware::AnonymousCache do
   end
 
   describe "cacheability request env" do
-    def cacheability_seen_by_app(request_env)
-      cacheability = nil
-      app =
+    let(:cacheability) { [] }
+    let(:cacheability_middleware) do
+      described_class.new(
         lambda do |inner_env|
-          cacheability = inner_env[Middleware::AnonymousCache::CACHEABLE_ENV]
+          cacheability << inner_env[Middleware::AnonymousCache::CACHEABLE_ENV]
           [200, {}, []]
-        end
-
-      described_class.new(app).call(request_env)
-      cacheability
+        end,
+      )
     end
 
     it "is true when the request can use the anonymous cache" do
-      expect(cacheability_seen_by_app(env)).to eq(true)
+      cacheability_middleware.call(env)
+
+      expect(cacheability).to eq([true])
     end
 
     it "is false when the request cannot use the anonymous cache" do
-      expect(cacheability_seen_by_app(env("REQUEST_METHOD" => "POST"))).to eq(false)
+      cacheability_middleware.call(env("REQUEST_METHOD" => "POST"))
+
+      expect(cacheability).to eq([false])
     end
   end
 
