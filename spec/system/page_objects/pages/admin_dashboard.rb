@@ -219,12 +219,16 @@ module PageObjects
 
       def track_section_requests
         @section_requests = []
+        @reports_bulk_request_count = 0
         page.driver.with_playwright_page do |playwright_page|
           playwright_page.on(
             "request",
             lambda do |request|
               match = request.url.match(%r{/admin/dashboard/sections/([^/?]+)\.json})
               @section_requests << match[1] if match
+              if request.url.match?(%r{/admin/dashboard/reports/bulk(?:\.json)?})
+                @reports_bulk_request_count += 1
+              end
             end,
           )
         end
@@ -233,6 +237,10 @@ module PageObjects
 
       def requested_section_ids
         Array(@section_requests).dup
+      end
+
+      def reports_bulk_request_count
+        @reports_bulk_request_count || 0
       end
 
       def section_request_count(id)

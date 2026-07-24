@@ -89,6 +89,38 @@ RSpec.describe Admin::DashboardController do
       )
     end
 
+    it "returns report card payloads in the reports section response" do
+      AdminDashboardReport.delete_all
+      AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+      sign_in(admin)
+
+      get "/admin/dashboard/sections/reports.json",
+          params: {
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to match(
+        "id" => "reports",
+        "data" => {
+          "items" => [
+            a_hash_including(
+              "source" => "core_report",
+              "identifier" => "signups",
+              "key" => "core_report:signups",
+              "payload" =>
+                a_hash_including(
+                  "type" => "signups",
+                  "start_date" => "2026-04-01T00:00:00Z",
+                  "end_date" => "2026-04-28T23:59:59Z",
+                ),
+            ),
+          ],
+        },
+      )
+    end
+
     it "returns a registered plugin section through the same staff endpoint" do
       plugin = Plugin::Instance.new
       plugin.register_admin_dashboard_section(
