@@ -45,7 +45,7 @@ describe "Admin dashboard progressive loading" do
     expect(dashboard.reports_bulk_request_count).to eq(0)
   end
 
-  it "shows shaped skeletons for date changes and ignores an older response that finishes last",
+  it "keeps loaded content stable through date changes and ignores an older response that finishes last",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     AdminDashboardSectionConfiguration.update(
       [
@@ -65,8 +65,8 @@ describe "Admin dashboard progressive loading" do
 
     dashboard.hold_next_section_request("traffic").select_preset("last_7_days")
 
-    expect(dashboard).to have_section_loading("traffic")
-    expect(dashboard.site_traffic).to have_no_headline("30 pageviews in the last 30 days")
+    expect(dashboard).to have_no_section_loading("traffic")
+    expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 30 days")
 
     dashboard.select_preset("last_3_months")
 
@@ -103,6 +103,18 @@ describe "Admin dashboard progressive loading" do
     expect(dashboard.section_request_count("highlights")).to eq(1)
 
     dashboard.retry_section("highlights").wait_for_section_request_count("highlights", 2)
+
+    expect(dashboard).to have_no_section_error("highlights")
+    expect(dashboard).to have_highlights_content
+
+    dashboard.fail_next_section_request("highlights").select_preset("last_7_days")
+
+    expect(dashboard).to have_section_error("highlights")
+    expect(dashboard).to have_highlights_content
+    expect(dashboard).to have_no_section_loading("highlights")
+    expect(dashboard.section_request_count("highlights")).to eq(3)
+
+    dashboard.retry_section("highlights").wait_for_section_request_count("highlights", 4)
 
     expect(dashboard).to have_no_section_error("highlights")
     expect(dashboard).to have_highlights_content
