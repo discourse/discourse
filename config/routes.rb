@@ -112,6 +112,8 @@ Discourse::Application.routes.draw do
 
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
+      get "browser-traffic/data" => "browser_traffic#show", :constraints => AdminConstraint.new
+      get "browser-traffic" => "admin#index", :constraints => AdminConstraint.new
       get "reports/:type" => "reports#show"
 
       resources :groups, only: [:create] do
