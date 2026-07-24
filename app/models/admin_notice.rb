@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AdminNotice < ActiveRecord::Base
+  TRANSLATION_KEY_DETAIL = "_translation_key"
   MESSAGE_ALLOWED_TAGS = %w[a pre ul li].freeze
   MESSAGE_ALLOWED_ATTRIBUTES =
     (%w[href target rel] + SiteSettings::LabelFormatter::LINK_ATTRIBUTES).freeze
@@ -12,11 +13,11 @@ class AdminNotice < ActiveRecord::Base
   enum :subject, %i[problem].freeze
 
   def message
-    translated =
-      I18n.t(
-        "dashboard.#{subject}.#{identifier}",
-        **details.symbolize_keys.merge(base_path: Discourse.base_path),
-      )
+    translation_data = details.symbolize_keys
+    translation_key =
+      translation_data.delete(TRANSLATION_KEY_DETAIL.to_sym) || "dashboard.#{subject}.#{identifier}"
+
+    translated = I18n.t(translation_key, **translation_data.merge(base_path: Discourse.base_path))
 
     MESSAGE_SANITIZER.sanitize(
       SiteSettings::LabelFormatter.expand_setting_links(translated),
