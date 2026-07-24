@@ -113,7 +113,7 @@ Current examples:
 
 - Core table and empty list: `frontend/discourse/admin/templates/admin-permalinks/index.gjs`
 - Plugin table: `plugins/discourse-data-explorer/admin/assets/javascripts/admin/templates/admin-plugins/show/explorer/index.gjs`
-- Toggle rows: `plugins/discourse-calendar/assets/javascripts/discourse/components/admin-holidays-list-item.gjs`
+- Toggle rows: `plugins/discourse-events/assets/javascripts/discourse/components/admin-holidays-list-item.gjs`
 
 ## Empty lists
 
