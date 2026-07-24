@@ -14,8 +14,6 @@ sl:
               label: "Sprejete rešitve"
         sections:
           support:
-            filter:
-              all_categories: "Vse kategorije"
             answerers:
               staff: "Osebje"
               member: "Člani"

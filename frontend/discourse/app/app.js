@@ -22,7 +22,10 @@ import { importSync } from "@embroider/macros";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { populatePreloadStore } from "discourse/lib/preload-store";
+import {
+  populatePreloadStore,
+  readPreloadedData,
+} from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
 
 populatePreloadStore();
@@ -87,12 +90,6 @@ async function loadPluginFromModulePreload(link) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
-      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      String(error)
-    );
-
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
         throw new Error(error, { cause: error });
@@ -101,13 +98,18 @@ async function loadPluginFromModulePreload(link) {
       let { addError } = importSync("discourse/static/development-error");
       addError(error, link.dataset.pluginName, link.href);
     }
+
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      String(error)
+    );
   }
 }
 
 function registerPreloadedThemeSettings() {
   try {
-    const element = document.getElementById("data-preloaded");
-    const preloaded = JSON.parse(element.dataset.preloaded);
+    const preloaded = readPreloadedData();
     const activatedThemes = JSON.parse(preloaded.activatedThemes);
     for (const [themeId, info] of Object.entries(activatedThemes)) {
       registerSettings(parseInt(themeId, 10), info.settings);

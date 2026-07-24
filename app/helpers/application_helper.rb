@@ -68,7 +68,7 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    ContentSecurityPolicy.nonce_placeholder(response.headers)
+    ContentSecurityPolicy.nonce_placeholder(response.headers, request_env: request.env)
   end
 
   def track_view_session_id_placeholder

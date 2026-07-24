@@ -1672,7 +1672,7 @@ nb_NO:
         default: "(forvalg)"
         any: "alle"
       homepage:
-        default: "(forvalg)"
+        default: "Forvalg"
       password_confirmation:
         title: "Passord igjen"
       invite_code:
@@ -4570,7 +4570,6 @@ nb_NO:
               posts: "Innlegg"
               share: "Del"
             whos_posting:
-              all_categories: "Alle kategorier"
               staff: "Stab"
             trust_level_pipeline:
               trust_levels:

@@ -16,8 +16,6 @@ el:
         sections:
           support:
             title: "Υποστήριξη"
-            filter:
-              all_categories: "Όλες οι κατηγορίες"
             answerers:
               staff: "Προσωπικό"
               member: "Μέλη"

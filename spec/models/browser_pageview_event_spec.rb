@@ -93,6 +93,46 @@ RSpec.describe BrowserPageviewEvent do
     end
   end
 
+  describe ".rollup_source_condition" do
+    it "matches only piggyback events when there is no cutover date" do
+      SiteSetting.dashboard_improvements = false
+      piggyback = Fabricate(:browser_pageview_event, source: :piggyback)
+      Fabricate(:browser_pageview_event, source: :beacon)
+
+      expect(described_class.where(described_class.rollup_source_condition)).to contain_exactly(
+        piggyback,
+      )
+    end
+
+    it "matches piggyback events before the cutover date and beacon events from it onwards" do
+      SiteSetting.dashboard_improvements = true
+      UpcomingChangeEvent.create!(
+        upcoming_change_name: "dashboard_improvements",
+        event_type: :manual_opt_in,
+        created_at: Time.utc(2026, 6, 10, 9),
+      )
+
+      pre_piggyback =
+        Fabricate(:browser_pageview_event, source: :piggyback, created_at: Time.utc(2026, 6, 9))
+      Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 9))
+      Fabricate(:browser_pageview_event, source: :piggyback, created_at: Time.utc(2026, 6, 15))
+      post_beacon =
+        Fabricate(:browser_pageview_event, source: :beacon, created_at: Time.utc(2026, 6, 15))
+
+      expect(described_class.where(described_class.rollup_source_condition)).to contain_exactly(
+        pre_piggyback,
+        post_beacon,
+      )
+    end
+
+    it "qualifies columns with the given table alias" do
+      SiteSetting.dashboard_improvements = false
+      condition = described_class.rollup_source_condition(table: "e")
+
+      expect(condition).to eq("e.source = #{described_class::SOURCE_PIGGYBACK}")
+    end
+  end
+
   it "truncates string fields before saving" do
     event =
       described_class.create!(

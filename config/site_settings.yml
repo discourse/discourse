@@ -718,6 +718,7 @@ login:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_passkeys:
@@ -1918,11 +1919,6 @@ posting:
     type: integer
     min: 1
     hidden: true
-  rich_editor:
-    client: true
-    default: true
-    hidden: true
-    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:

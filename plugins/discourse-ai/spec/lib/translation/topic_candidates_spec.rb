@@ -322,4 +322,61 @@ describe DiscourseAi::Translation::TopicCandidates do
       expect(completion).to eq({ done: 0, total: 0 })
     end
   end
+
+  describe ".progress_summary" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "counts eligible, fully translated, and undetected topics" do
+      fully_translated_topic = Fabricate(:topic, category: target_category, locale: "en_US")
+      Fabricate(:topic_localization, topic: fully_translated_topic, locale: "fr")
+      Fabricate(:topic, category: target_category, locale: "en_US")
+      Fabricate(:topic, category: target_category, locale: nil)
+
+      expect(described_class.progress_summary).to eq(
+        {
+          target_type: "topic",
+          total_count: 3,
+          translated_count: 1,
+          needs_language_detection_count: 1,
+        },
+      )
+    end
+  end
+
+  describe ".progress_details" do
+    fab!(:target_category, :category)
+
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|fr"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_category_scope = "include_strict"
+      SiteSetting.ai_translation_categories = target_category.id.to_s
+      SiteSetting.ai_translation_personal_messages = "none"
+    end
+
+    it "returns translated, pending, and eligible counts per configured locale" do
+      translated_topic = Fabricate(:topic, category: target_category, locale: "EN-US")
+      Fabricate(:topic_localization, topic: translated_topic, locale: "FR-fr")
+      Fabricate(:topic, category: target_category, locale: "en-US")
+      Fabricate(:topic, category: target_category, locale: nil)
+
+      expect(described_class.progress_details).to eq(
+        {
+          target_type: "topic",
+          locales: [
+            { locale: "en_GB", translated_count: 0, pending_count: 1, eligible_count: 1 },
+            { locale: "fr", translated_count: 1, pending_count: 2, eligible_count: 3 },
+          ],
+        },
+      )
+    end
+  end
 end

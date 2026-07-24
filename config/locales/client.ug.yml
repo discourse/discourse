@@ -2029,7 +2029,7 @@ ug:
         default: "(كۆڭۈلدىكى)"
         any: "خالىغان"
       homepage:
-        default: "(كۆڭۈلدىكى)"
+        default: "كۆڭۈلدىكى"
       password_confirmation:
         title: "ئىم تەكرار"
       invite_code:
@@ -6001,7 +6001,6 @@ ug:
               posts: "يازما"
               share: "ھەمبەھىر"
             whos_posting:
-              all_categories: "ھەممە سەھىپە"
               staff: "باشقۇرغۇچى خادىم"
             trust_level_pipeline:
               trust_levels:

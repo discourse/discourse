@@ -1566,7 +1566,6 @@ sv:
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
-    top_menu: "Bestäm vilka objekt som visas på startsidans navigering och i vilken ordning."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."

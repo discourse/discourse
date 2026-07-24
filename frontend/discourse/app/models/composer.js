@@ -479,7 +479,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+    if (this.currentUser.useRichEditor) {
       return 2;
     }
 

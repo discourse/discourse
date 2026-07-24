@@ -10,8 +10,6 @@ da:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Alle kategorier"
             answerers:
               staff: "Personale"
               member: "Brugere"

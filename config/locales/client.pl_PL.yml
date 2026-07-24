@@ -62,6 +62,7 @@ pl_PL:
         add_group: "Dodaj użytkownika lub grupę"
         mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
         mandatory: "Obowiązkowe"
+        disallowed: "Niedozwolone"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -2381,7 +2382,7 @@ pl_PL:
         default: "(domyślny)"
         any: "każdy"
       homepage:
-        default: "(domyślny)"
+        default: "Domyślna"
       password_confirmation:
         title: "Powtórz hasło"
       invite_code:
@@ -7484,12 +7485,11 @@ pl_PL:
               save_error: "Nie udało się zapisać wyboru na następny raz."
             whos_posting:
               title: "Kto publikuje?"
-              all_categories: "Wszystkie kategorie"
-              include_subcategories: "Uwzględnij podkategorie"
               new_members: "Nowi członkowie"
               returning: "Powracający"
               staff: "Zespół"
               empty: "Brak wpisów w wybranym okresie."
+              save_error: "Nie udało się zapisać wyboru na następny raz."
             trust_level_pipeline:
               title: "Potok poziomu zaufania"
               trust_levels:
@@ -8445,6 +8445,8 @@ pl_PL:
         sidebar: "Pasek boczny"
         header_dropdown: "Lista rozwijana nagłówka"
         legacy: "Przestarzały"
+      homepage:
+        top_menu_default: "Pierwsza pozycja w górnym menu"
       backups:
         title: "Kopie zapasowe"
         files_title: "Pliki kopii zapasowej"

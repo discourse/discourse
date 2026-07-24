@@ -23,7 +23,7 @@ RSpec.describe Admin::BackupsController do
 
   def map_preloaded
     JSON
-      .parse(Nokogiri.HTML5(response.body).at_css("[data-preloaded]")["data-preloaded"])
+      .parse(Nokogiri.HTML5(response.body).at_css("#data-preloaded").text)
       .map { |key, value| [key, JSON.parse(value)] }
       .to_h
   end

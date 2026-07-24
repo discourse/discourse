@@ -136,6 +136,8 @@ zh_CN:
             webhook_setup_failed: "无法在 Telegram 上注册网络钩子。请检查令牌并重试。"
             channel_not_found: "指定的频道在 Telegram 上不存在"
             forbidden: "机器人没有权限在此频道发帖"
+            invalid_api_base_url: "Telegram API 基本 URL 站点设置不是有效的 HTTPS URL。"
+            api_base_url_blocked: "对 Telegram API 基本 URL 的请求已被阻止。私有网络上的主机必须添加到允许的内部主机站点设置中。"
         discord:
           title: "Discord"
           param:

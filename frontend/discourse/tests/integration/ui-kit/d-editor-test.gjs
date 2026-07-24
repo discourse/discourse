@@ -14,6 +14,7 @@ import {
 import { module, test } from "qunit";
 import DMenus from "discourse/float-kit/components/d-menus";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -890,10 +891,12 @@ third line`
   });
 
   testCase(
-    "toolbar buttons tabindex when not using rich_editor",
+    "toolbar buttons tabindex without the editor mode toggle",
     async function (assert) {
-      this.siteSettings.rich_editor = false;
-      await render(<template><DEditor /></template>);
+      const forceEditorMode = USER_OPTION_COMPOSITION_MODES.markdown;
+      await render(
+        <template><DEditor @forceEditorMode={{forceEditorMode}} /></template>
+      );
       const buttons = findAll(".d-editor-button-bar .btn");
 
       assert
@@ -904,9 +907,8 @@ third line`
   );
 
   testCase(
-    "toolbar buttons tabindex when using rich_editor",
+    "toolbar buttons tabindex with the editor mode toggle",
     async function (assert) {
-      this.siteSettings.rich_editor = true;
       await render(<template><DEditor /></template>);
       const buttons = findAll(".d-editor-button-bar .btn");
 
@@ -1482,8 +1484,6 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("hides preview when rich editor is enabled", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     await render(<template><DEditor /></template>);
     await click(".composer-toggle-switch");
 
@@ -1496,8 +1496,6 @@ module("Integration | ui-kit | DEditor | Rich Editor", function (hooks) {
   });
 
   test("replaceText escapes markdown symbols that could be regexp symbols", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const initialValue = "Hello\n\n* world\n* am am here $";
 
     withPluginApi((api) => {
