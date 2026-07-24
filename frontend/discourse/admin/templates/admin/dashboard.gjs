@@ -9,6 +9,8 @@ import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.showRedesign}}
+    <PluginOutlet @name="admin-dashboard-top" @connectorTagName="div" />
+
     <RedesignedAdminDashboard
       @requestedPeriod={{@controller.safePeriod}}
       @requestedStartDate={{@controller.startDate}}

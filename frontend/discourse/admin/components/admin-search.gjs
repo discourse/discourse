@@ -5,6 +5,8 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -143,14 +145,34 @@ export default class AdminSearch extends Component {
         />
       </div>
     </div>
-    <div class="sr-only" aria-live="polite" role="status">
-      {{#if this.searchResults}}
-        {{i18n
-          "admin.search.result_count"
-          count=this.searchResults.length
+    <div class="admin-search__dropdown">
+      <PluginOutlet
+        @name="admin-search-palette"
+        @outletArgs={{lazyHash
           filter=this.filter
+          hasResults=this.searchResults.length
+          context=@context
+          closeModal=@closeModal
         }}
-      {{/if}}
+      />
+      <div class="sr-only" aria-live="polite" role="status">
+        {{#if this.searchResults}}
+          {{i18n
+            "admin.search.result_count"
+            count=this.searchResults.length
+            filter=this.filter
+          }}
+        {{/if}}
+        {{#if
+          (and
+            this.filter
+            (not this.searchResults.length)
+            (not this.showLoadingSpinner)
+          )
+        }}
+          {{this.noResultsDescription}}
+        {{/if}}
+      </div>
       {{#if
         (and
           this.filter
@@ -158,49 +180,40 @@ export default class AdminSearch extends Component {
           (not this.showLoadingSpinner)
         )
       }}
-        {{this.noResultsDescription}}
+        <p class="admin-search__no-results" aria-live="polite" role="status">
+          {{this.noResultsDescription}}
+        </p>
       {{/if}}
-    </div>
-    {{#if
-      (and
-        this.filter
-        (not this.searchResults.length)
-        (not this.showLoadingSpinner)
-      )
-    }}
-      <p class="admin-search__no-results" aria-live="polite" role="status">
-        {{this.noResultsDescription}}
-      </p>
-    {{/if}}
-    <div
-      class="admin-search__results {{if this.searchResults '--has-results'}}"
-    >
-      <DConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
-        {{#each this.searchResults as |result|}}
-          <div class="admin-search__result" data-result-type={{result.type}}>
-            <a
-              href={{result.url}}
-              {{on "keydown" this.handleResultKeyDown}}
-              class="admin-search__result-link"
-              tabindex="0"
-            >
-              <div class="admin-search__result-name">
-                {{#if result.icon}}
-                  {{dIcon result.icon}}
+      <div
+        class="admin-search__results {{if this.searchResults '--has-results'}}"
+      >
+        <DConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
+          {{#each this.searchResults as |result|}}
+            <div class="admin-search__result" data-result-type={{result.type}}>
+              <a
+                href={{result.url}}
+                {{on "keydown" this.handleResultKeyDown}}
+                class="admin-search__result-link"
+                tabindex="0"
+              >
+                <div class="admin-search__result-name">
+                  {{#if result.icon}}
+                    {{dIcon result.icon}}
+                  {{/if}}
+                  <span
+                    class="admin-search__result-name-label"
+                  >{{result.label}}</span>
+                </div>
+                {{#if result.description}}
+                  <div class="admin-search__result-description">{{trustHTML
+                      result.description
+                    }}</div>
                 {{/if}}
-                <span
-                  class="admin-search__result-name-label"
-                >{{result.label}}</span>
-              </div>
-              {{#if result.description}}
-                <div class="admin-search__result-description">{{trustHTML
-                    result.description
-                  }}</div>
-              {{/if}}
-            </a>
-          </div>
-        {{/each}}
-      </DConditionalLoadingSpinner>
+              </a>
+            </div>
+          {{/each}}
+        </DConditionalLoadingSpinner>
+      </div>
     </div>
   </template>
 }
