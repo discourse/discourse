@@ -16,7 +16,7 @@ import { lookupAdminDashboardSection } from "discourse/admin/lib/admin-dashboard
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { eq } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -25,8 +25,11 @@ import { i18n } from "discourse-i18n";
 
 const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
 const sectionTitleFor = (id) => i18n(`admin.dashboard.sections.${id}.title`);
-const sectionObservationPaused = (section) =>
-  section.loading || section.loaded || section.error;
+const sectionObservationPaused = (section, loadingSections) =>
+  loadingSections ||
+  section.loading ||
+  section.error ||
+  (section.loaded && !section.stale);
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
@@ -104,10 +107,10 @@ export default class RedesignedAdminDashboard extends Component {
               (fn @loadSection section.id)
               threshold=0
               rootMargin="0px 0px 600px 0px"
-              isLoading=(sectionObservationPaused section)
+              isLoading=(sectionObservationPaused section @loadingSections)
             }}
           >
-            {{#if section.error}}
+            {{#if (and section.error (not section.loaded))}}
               <DashboardSection @title={{sectionTitleFor section.id}}>
                 <div class="db-section__error" role="alert">
                   <p>{{i18n "admin.dashboard.section_fetch_error"}}</p>
@@ -119,45 +122,60 @@ export default class RedesignedAdminDashboard extends Component {
                 </div>
               </DashboardSection>
             {{else if section.loaded}}
+              {{#if section.error}}
+                <div
+                  class="alert alert-error db-section-container__refresh-error"
+                  role="alert"
+                >
+                  <p class="db-section-container__refresh-error-message">
+                    {{i18n "admin.dashboard.section_refresh_error"}}
+                  </p>
+                  <DButton
+                    @action={{fn @retrySection section.id}}
+                    @label="admin.dashboard.retry_section"
+                    class="btn-default btn-small"
+                  />
+                </div>
+              {{/if}}
               {{#if (eq section.id "highlights")}}
                 <DashboardHighlights
                   class={{concat "--" section.id}}
                   @highlights={{section.data}}
-                  @period={{@loadedSections.period}}
-                  @startDate={{@loadedSections.startDate}}
-                  @endDate={{@loadedSections.endDate}}
+                  @period={{or section.period @loadedSections.period}}
+                  @startDate={{or section.startDate @loadedSections.startDate}}
+                  @endDate={{or section.endDate @loadedSections.endDate}}
                 />
               {{else if (eq section.id "reports")}}
                 <DashboardReports
                   class={{concat "--" section.id}}
                   @data={{section.data}}
-                  @startDate={{@loadedSections.startDate}}
-                  @endDate={{@loadedSections.endDate}}
+                  @startDate={{or section.startDate @loadedSections.startDate}}
+                  @endDate={{or section.endDate @loadedSections.endDate}}
                   @refreshSections={{@refreshSections}}
                 />
               {{else if (eq section.id "traffic")}}
                 <DashboardTraffic
                   class={{concat "--" section.id}}
                   @traffic={{section.data}}
-                  @period={{@loadedSections.period}}
-                  @startDate={{@loadedSections.startDate}}
-                  @endDate={{@loadedSections.endDate}}
+                  @period={{or section.period @loadedSections.period}}
+                  @startDate={{or section.startDate @loadedSections.startDate}}
+                  @endDate={{or section.endDate @loadedSections.endDate}}
                 />
               {{else if (eq section.id "engagement")}}
                 <DashboardEngagement
                   class={{concat "--" section.id}}
                   @engagement={{section.data}}
-                  @period={{@loadedSections.period}}
-                  @startDate={{@loadedSections.startDate}}
-                  @endDate={{@loadedSections.endDate}}
+                  @period={{or section.period @loadedSections.period}}
+                  @startDate={{or section.startDate @loadedSections.startDate}}
+                  @endDate={{or section.endDate @loadedSections.endDate}}
                 />
               {{else if (eq section.id "search")}}
                 <DashboardSearch
                   class={{concat "--" section.id}}
                   @search={{section.data}}
-                  @period={{@loadedSections.period}}
-                  @startDate={{@loadedSections.startDate}}
-                  @endDate={{@loadedSections.endDate}}
+                  @period={{or section.period @loadedSections.period}}
+                  @startDate={{or section.startDate @loadedSections.startDate}}
+                  @endDate={{or section.endDate @loadedSections.endDate}}
                 />
               {{else}}
                 {{#let (sectionComponentFor section.id) as |PluginSection|}}
@@ -166,11 +184,14 @@ export default class RedesignedAdminDashboard extends Component {
                       class={{concat "--" section.id}}
                       data-section-id={{section.id}}
                       @data={{section.data}}
-                      @period={{@loadedSections.period}}
+                      @period={{or section.period @loadedSections.period}}
                       @loading={{false}}
                       @fetchError={{false}}
-                      @startDate={{@loadedSections.startDate}}
-                      @endDate={{@loadedSections.endDate}}
+                      @startDate={{or
+                        section.startDate
+                        @loadedSections.startDate
+                      }}
+                      @endDate={{or section.endDate @loadedSections.endDate}}
                     />
                   {{/if}}
                 {{/let}}
