@@ -718,6 +718,7 @@ login:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_passkeys:
