@@ -16,6 +16,7 @@ module PageObjects
 
       def has_incomplete_installation?
         has_button?(I18n.t("admin_js.admin.customize.theme.finish_install"))
+      end
 
       def visit_editor(theme, target: "common", field: "scss")
         page.visit("/admin/customize/themes/#{theme.id}/#{target}/#{field}/edit")
