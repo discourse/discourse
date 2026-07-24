@@ -139,10 +139,16 @@ class Tag < ActiveRecord::Base
     # we add 1 to max_tags_in_filter_list to efficiently know we have more tags
     # than the limit. Frontend is responsible to enforce limit.
     limit = limit_arg || (SiteSetting.max_tags_in_filter_list + 1)
-    scope_category_ids = guardian.allowed_category_ids
-    scope_category_ids &= ([category.id] + category.subcategories.pluck(:id)) if category
+    scope_category_ids = guardian.allowed_category_ids if !guardian.is_staff?
+    if category
+      category_ids = [category.id] + category.subcategories.pluck(:id)
+      scope_category_ids = scope_category_ids ? scope_category_ids & category_ids : category_ids
+    end
 
-    return [] if scope_category_ids.empty?
+    return [] if scope_category_ids&.empty?
+
+    category_filter_sql =
+      "WHERE stats.category_id in (#{scope_category_ids.join(",")})" if scope_category_ids
 
     filter_sql =
       (
@@ -157,7 +163,7 @@ class Tag < ActiveRecord::Base
       SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
-       WHERE stats.category_id in (#{scope_category_ids.join(",")})
+       #{category_filter_sql}
        #{filter_sql}
       GROUP BY tags.id
       ORDER BY sum_topic_count DESC, tag_name ASC
