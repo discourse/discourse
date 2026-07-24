@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Concurrent structure loads exhaust PostgreSQL's shared lock table when each holds all locks until commit.
 if !Discourse.is_parallel_test?
   ActiveRecord::Tasks::DatabaseTasks.structure_load_flags = { postgresql: "--single-transaction" }
 end
