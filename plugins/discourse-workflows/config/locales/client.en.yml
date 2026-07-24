@@ -819,7 +819,7 @@ en:
         use_time_range: "Limit to a time range"
         start_time: "Start time"
         end_time: "End time"
-        end_time_description: "The window ends just before this time. Choose an end earlier than the start to span midnight (e.g. 22:00 to 06:00)."
+        end_time_description: "The window ends just before this time. Choose an end earlier than the start to span midnight (e.g. 22:00 to 06:00), or 00:00 to run until the end of the day."
         timezone: "Timezone"
         timezone_description: "Defaults to the workflow timezone."
         timezone_none: "Workflow default"
