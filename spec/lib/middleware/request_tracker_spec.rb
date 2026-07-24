@@ -1394,6 +1394,61 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
+    describe "health check rate limits" do
+      def health_check_env(ip)
+        env(:path => "/srv/status", "REMOTE_ADDR" => ip)
+      end
+
+      before do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, "block"
+      end
+
+      it "rate limits health checks under their own key, not the per-IP budget" do
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(200)
+
+        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+      end
+
+      it "gives each backend hostname its own budget" do
+        # Load balancers health check every backend, so check volume scales
+        # with backend count while a per-IP budget does not. Keying on the
+        # backend hostname keeps the per-key rate constant at any scale.
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-2")
+        status, _ = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(200)
+
+        Discourse.stubs(:os_hostname).returns("backend-1")
+        status, headers = middleware.call(health_check_env("1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("health_check_10_secs_limit")
+      end
+
+      it "does not affect health checks from private IPs, which skip rate limiting" do
+        status, _ = middleware.call(health_check_env("10.0.1.2"))
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(health_check_env("10.0.1.2"))
+        expect(status).to eq(200)
+      end
+
+      it "does not affect rate limiting for other paths" do
+        status, _ = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
+        expect(status).to eq(200)
+
+        status, headers = middleware.call(env("REMOTE_ADDR" => "1.2.3.4"))
+        expect(status).to eq(429)
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+      end
+    end
+
     describe "crawler rate limits" do
       context "when there are multiple matching crawlers" do
         before { SiteSetting.slow_down_crawler_user_agents = "badcrawler2|badcrawler22" }
