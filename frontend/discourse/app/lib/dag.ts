@@ -73,12 +73,6 @@ interface DAGVertex<T> {
 const sortCache = new Map<string, string[]>();
 const SORT_CACHE_MAX = 50;
 
-// Benchmark hook (see tests/unit/lib/dag-benchmark-test.ts). Not for production use.
-let cacheDisabled = false;
-export function __setDagCacheDisabled(value: boolean): void {
-  cacheDisabled = value;
-}
-
 const WAITING = 0;
 const READY_QUEUE = 1;
 const READY_STACK = 2;
@@ -254,7 +248,7 @@ export default class DAG<T = unknown> {
    */
   @bind
   resolve(): DAGResolvedEntry<T>[] {
-    if (!cacheDisabled && !this.#dirty && this.#cachedResolve) {
+    if (!this.#dirty && this.#cachedResolve) {
       return this.#cachedResolve;
     }
 
@@ -548,9 +542,6 @@ export default class DAG<T = unknown> {
    * graph (values are excluded since they don't affect sort order).
    */
   #resolveKeyOrder(): string[] {
-    if (cacheDisabled) {
-      return this.#sort();
-    }
     const fingerprint = this.#contentFingerprint();
     const cached = sortCache.get(fingerprint);
     if (cached) {
