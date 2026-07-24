@@ -149,10 +149,17 @@ export default class DAG<T = unknown> {
 
     position ||= this.#defaultPositionForKey(key);
     const { before, after } = position;
+
+    try {
+      this.#addToGraph(key, value, before, after);
+    } catch (e) {
+      // Roll the graph back to the current items so a failed add leaves nothing behind.
+      this.#rebuildGraph();
+      throw e;
+    }
+
     this.#items.set(key, { value, before, after });
     this.#dirty = true;
-
-    this.#addToGraph(key, value, before, after);
     this.#onAddItem?.(key, value, position);
 
     return true;

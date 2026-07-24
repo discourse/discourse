@@ -295,6 +295,27 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
+  test("add() that throws on a cycle does not leave the item behind", function (assert) {
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2, { after: "a" });
+
+    // Closes a cycle (a -> b -> c -> a), so the add throws. A caller that
+    // catches the throw expects "c" to be absent, not silently present and
+    // mispositioned in resolve().
+    assert.throws(
+      () => dag.add("c", 3, { before: "a", after: "b" }),
+      /cycle detected/
+    );
+
+    assert.false(dag.has("c"), "the item is not present after a failed add");
+    assert.deepEqual(
+      resolveKeys(dag),
+      ["a", "b"],
+      "resolve() does not include the item whose add threw"
+    );
+  });
+
   test("throwErrorOnCycle false: stale edges cleaned up on array constraint cycle", function (assert) {
     // When a before/after array partially applies (some edges succeed,
     // then a later one cycles), the successful edges must be rolled
