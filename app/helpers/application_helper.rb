@@ -241,14 +241,12 @@ module ApplicationHelper
   end
 
   def escape_unicode(javascript)
-    if javascript
-      javascript = javascript.scrub
-      javascript.gsub!(/\342\200\250/u, "&#x2028;")
-      javascript.gsub!(%r{(</)}u, '\u003C/')
-      javascript
-    else
-      ""
-    end
+    return "" if !javascript
+
+    javascript = javascript.scrub if !javascript.valid_encoding?
+    return javascript if !javascript.include?("\u2028") && !javascript.include?("</")
+
+    javascript.gsub(/\342\200\250/u, "&#x2028;").gsub(%r{(</)}u, '\u003C/')
   end
 
   def format_topic_title(title)
