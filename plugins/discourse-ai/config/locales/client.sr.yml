@@ -72,6 +72,20 @@ sr:
         select_option: "Izaberi jednu od opcija..."
       translations:
         category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              pending: "U toku"
+              total: "Ukupno"
+          targets:
+            post:
+              title: "Poruka"
+            topic:
+              title: "Teme"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Tagovi"
         stats:
           eta_hours:
             one: "%{count} сат"

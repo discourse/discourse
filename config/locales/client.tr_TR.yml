@@ -8747,6 +8747,7 @@ tr_TR:
         uploading: "Yükleniyor…"
         name: "Ad"
         group: "Grup"
+        all_groups: "Tüm gruplar"
         created_by: "Oluşturan:"
         image: "Görüntü"
         alt: "özel emoji ön izlemesi"

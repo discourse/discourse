@@ -9003,6 +9003,7 @@ cs:
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"
+        all_groups: "Všechny skupiny"
         created_by: "Vytvořil/a"
         image: "Obrázek"
         alt: "náhled vlastních emoji"

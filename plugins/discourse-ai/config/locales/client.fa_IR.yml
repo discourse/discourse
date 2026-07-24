@@ -100,6 +100,21 @@ fa_IR:
       translations:
         title: "ترجمه‌ها"
         category_scope: "دسته‌بندی‌ها"
+        model_progress:
+          detail:
+            columns:
+              locale: "زبان"
+              pending: "در انتظار"
+              total: "مجموع"
+          targets:
+            post:
+              title: "فرسته‌ها"
+            topic:
+              title: "موضوعات"
+            category:
+              title: "دسته‌بندی‌ها"
+            tag:
+              title: "برچسب‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"

@@ -231,6 +231,21 @@ lt:
       translations:
         title: "Vertimai"
         category_scope: "Kategorijos"
+        model_progress:
+          detail:
+            retry: "Bandykite dar kartą"
+            columns:
+              pending: "Laukiama"
+              total: "Viso"
+          targets:
+            post:
+              title: "Pranešimai"
+            topic:
+              title: "Temos"
+            category:
+              title: "Kategorijos"
+            tag:
+              title: "Žymos"
         stats:
           eta_minutes:
             one: "%{count} minutė"

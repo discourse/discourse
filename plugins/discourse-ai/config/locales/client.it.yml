@@ -258,6 +258,22 @@ it:
       translations:
         title: "Traduzioni"
         category_scope: "Categorie"
+        model_progress:
+          detail:
+            retry: "Riprova"
+            columns:
+              locale: "Localizzazione"
+              pending: "In attesa"
+              total: "Totale"
+          targets:
+            post:
+              title: "Messaggi"
+            topic:
+              title: "Argomenti"
+            category:
+              title: "Categorie"
+            tag:
+              title: "Etichette"
         stats:
           eta_minutes:
             one: "%{count} minuto"

@@ -57,6 +57,8 @@ pl_PL:
     added_and_removed: "Dodano %{added} i usunięto %{removed}"
     added: "Dodano %{added}"
     removed: "Usunięto %{removed}"
+  topics_bulk_action:
+    too_many_topic_ids: "Można wykonać akcję zbiorczą maksymalnie dla %{limit} tematów naraz."
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} przez %{username}"
@@ -2812,7 +2814,6 @@ pl_PL:
     about_page_extra_groups_order: "Kolejność dodatkowych grup na stronie „O nas”."
     adobe_analytics_tags_url: "Adres URL znaczników Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
-    rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną treść dla użytkowników na podstawie ich przeglądarki lub preferencji językowych. Taka treść może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w {{setting:content_localization_supported_locales}}."

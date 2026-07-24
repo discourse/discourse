@@ -63,6 +63,20 @@ th:
         select_option: "เลือกตัวเลือก..."
       translations:
         category_scope: "หมวดหมู่"
+        model_progress:
+          detail:
+            columns:
+              pending: "กำลังรอ"
+              total: "ทั้งหมด"
+          targets:
+            post:
+              title: "โพส"
+            topic:
+              title: "หัวข้อ"
+            category:
+              title: "หมวดหมู่"
+            tag:
+              title: "ป้าย"
         stats:
           eta_hours:
             other: "%{count} ชั่วโมง"

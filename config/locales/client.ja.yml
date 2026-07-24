@@ -8028,6 +8028,7 @@ ja:
         uploading: "アップロード中…"
         name: "名前"
         group: "グループ"
+        all_groups: "すべてのグループ"
         created_by: "作成者"
         image: "画像"
         alt: "カスタム絵文字のプレビュー"

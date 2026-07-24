@@ -81,6 +81,20 @@ da:
       translations:
         title: "Oversættelser"
         category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Afventende"
+              total: "Total"
+          targets:
+            post:
+              title: "Indlæg"
+            topic:
+              title: "Emner"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Mærker"
         stats:
           eta_minutes:
             one: "%{count} minut"

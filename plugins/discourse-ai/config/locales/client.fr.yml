@@ -258,6 +258,22 @@ fr:
       translations:
         title: "Traductions"
         category_scope: "Catégories"
+        model_progress:
+          detail:
+            retry: "Réessayer"
+            columns:
+              locale: "Paramètre régional"
+              pending: "En attente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publications"
+            topic:
+              title: "Sujets"
+            category:
+              title: "Catégories"
+            tag:
+              title: "Étiquettes"
         stats:
           eta_minutes:
             one: "%{count} minute"

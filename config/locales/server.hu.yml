@@ -2437,7 +2437,6 @@ hu:
     about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    rich_editor: "Engedélyezze a gazdag szerkesztőt a szerző számára, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új gazdag szövegszerkesztő között az intuitívabb és felhasználóbarátabb komponálás érdekében."
     default_composition_mode: "Állítsd be a közösséged szövegszerkesztőjének alapértelmezett módját. A Rich Text mód modernebb, ismerősebb írási élményt nyújt a legtöbb felhasználó számára, míg a Markdown mód a technikaibb közönség számára lehet alkalmasabb. A tagok a szövegszerkesztő eszköztárán található kapcsolóval válthatnak a módok között."
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."

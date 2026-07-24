@@ -5047,6 +5047,7 @@ gl:
         delete: "Eliminar"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imaxe"
         alt: "visualización do emoji personalizado"
         delete_confirm: "Confirma a eliminación do emoji :%{name}:?"

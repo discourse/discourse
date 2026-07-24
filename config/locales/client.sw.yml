@@ -3620,6 +3620,7 @@ sw:
         delete: "Futa"
         name: "Jina"
         group: "Kikundi"
+        all_groups: "Vikundi vyote"
         image: "Picha"
         delete_confirm: "Una uhakika unataka kufuta emoji ya :%{name}: ?"
         settings: "Mipangilio"

@@ -4559,6 +4559,7 @@ ca:
         delete: "Suprimeix"
         name: "Nom"
         group: "Grup"
+        all_groups: "Tots els grups"
         image: "Imatge"
         delete_confirm: "Esteu segur que voleu suprimir l'emoji :%{name}:?"
         settings: "Configuració"

@@ -68,6 +68,20 @@ hy:
       translations:
         title: "Թարգմանություններ"
         category_scope: "Կատեգորիաներ"
+        model_progress:
+          detail:
+            columns:
+              pending: "Սպասող"
+              total: "Ամբողջ"
+          targets:
+            post:
+              title: "Գրառումներ"
+            topic:
+              title: "Թեմաներ"
+            category:
+              title: "Կատեգորիաներ"
+            tag:
+              title: "Պիտակներ"
         stats:
           eta_minutes:
             one: "%{count} րոպե"

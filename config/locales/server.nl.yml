@@ -2468,7 +2468,6 @@ nl:
     about_page_extra_groups_order: "Volgorde van de extra groepen op de Over-pagina."
     adobe_analytics_tags_url: "URL Adobe Analytics-tags ('https://assets.adobedtm.com/...')"
     view_raw_email_allowed_groups: "Groepen die de ruwe e-mailinhoud van een bericht kunnen bekijken als het is gemaakt door een inkomende e-mail. Dit omvat e-mailheaders en andere technische gegevens."
-    rich_editor: "Schakel de rich text editor in, zodat alle gebruikers kunnen schakelen tussen de huidige Markdown-modus en de nieuwe rich text editor voor intuïtiever en gebruiksvriendelijker schrijven."
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_use_default_locale_when_unsupported: "Bied gelokaliseerde content in de standaardtaal van de site aan gebruikers aan van wie de voorkeurstaal niet is opgenomen in 'content localization supported locales'."

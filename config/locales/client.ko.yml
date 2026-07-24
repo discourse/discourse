@@ -5536,6 +5536,7 @@ ko:
         delete: "삭제하기"
         name: "이름"
         group: "그룹"
+        all_groups: "모든 그룹"
         image: "이미지"
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"

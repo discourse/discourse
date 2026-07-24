@@ -92,6 +92,21 @@ ko:
       translations:
         title: "번역"
         category_scope: "카테고리"
+        model_progress:
+          detail:
+            retry: "재시도"
+            columns:
+              pending: "보류 중"
+              total: "합계"
+          targets:
+            post:
+              title: "글"
+            topic:
+              title: "글"
+            category:
+              title: "카테고리"
+            tag:
+              title: "태그"
         stats:
           eta_minutes:
             other: "%{count}분"

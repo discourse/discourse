@@ -7617,6 +7617,7 @@ hr:
         uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"
+        all_groups: "Sve grupe"
         created_by: "Izradio/la"
         image: "Slika"
         alt: "prilagođeni pregled emotikona"

@@ -6057,6 +6057,7 @@ pt:
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         image: "Imagem"
         delete_confirm: "Tem a certeza que deseja eliminar o emoji :%{name}:?"
         settings: "Configurações"

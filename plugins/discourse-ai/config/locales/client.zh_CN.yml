@@ -415,17 +415,38 @@ zh_CN:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
-        supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
         category_scope: "类别"
-        category_scope_description: "选择自动翻译时使用所有类别、公开类别还是选定的类别。"
+        category_scope_description: "选择自动翻译是否适用于所有分类、公开分类或选定分类中的内容。"
+        cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
+        model_progress:
+          loading: "正在加载翻译进度"
+          overview_label: "按内容类型划分的翻译进度"
+          detail:
+            loading: "正在加载 %{target} 详情..."
+            load_error: "%{target} 详细信息无法加载。"
+            retry: "重试"
+            empty: "没有可用的语言进度。"
+            columns:
+              locale: "语言区域"
+              pending: "待处理"
+              total: "总计"
+          targets:
+            post:
+              title: "帖子"
+            topic:
+              title: "话题"
+            category:
+              title: "类别"
+            tag:
+              title: "标签"
         admin_actions:
-          translation_settings: "翻译设置"
-          localization_settings: "本地化设置"
+          translation_settings: "AI 设置"
+          localization_settings: "应用语言设置"
           enable_translations: "启用自动翻译"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
-          backfill_message: "<a href='%{settingsUrl}'>回填设置</a>配置为翻译 %{date} 后的所有帖子 – 预计需要 %{eta}。"
+          backfill_message: "<a href='%{settingsUrl}'>回填设置</a> 配置为翻译 %{date} 之后的所有帖子。"
           eta_minutes:
             other: "%{count} 分钟"
           eta_hours:

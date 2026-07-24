@@ -8611,6 +8611,7 @@ pt_BR:
         uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
+        all_groups: "Todos os grupos"
         created_by: "Criador(a):"
         image: "Imagem"
         alt: "pré-visualização do emoji personalizado"

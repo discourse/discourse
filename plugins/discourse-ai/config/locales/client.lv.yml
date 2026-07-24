@@ -69,6 +69,20 @@ lv:
         select_option: "Izvēlieties opciju..."
       translations:
         category_scope: "Sadaļas"
+        model_progress:
+          detail:
+            columns:
+              pending: "Gaida apstiprinājumu"
+              total: "Kopā"
+          targets:
+            post:
+              title: "Ieraksti"
+            topic:
+              title: "Tēmas"
+            category:
+              title: "Sadaļas"
+            tag:
+              title: "Birkas"
         stats:
           eta_hours:
             zero: "%{count} stundas"

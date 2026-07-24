@@ -8641,6 +8641,7 @@ es:
         uploading: "Subiendo…"
         name: "Nombre"
         group: "Grupo"
+        all_groups: "Todos los grupos"
         created_by: "Creado por"
         image: "Imagen"
         alt: "vista previa de emoji personalizado"

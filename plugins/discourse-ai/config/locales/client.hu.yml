@@ -80,6 +80,22 @@ hu:
       translations:
         title: "Fordítások"
         category_scope: "Kategóriák"
+        model_progress:
+          detail:
+            retry: "Újra"
+            columns:
+              locale: "Nyelv"
+              pending: "Függőben"
+              total: "Összesen"
+          targets:
+            post:
+              title: "Bejegyzések:"
+            topic:
+              title: "Témák"
+            category:
+              title: "Kategóriák"
+            tag:
+              title: "Címkék"
         stats:
           eta_minutes:
             one: "%{count} perc"

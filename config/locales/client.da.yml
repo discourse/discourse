@@ -6388,6 +6388,7 @@ da:
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
+        all_groups: "Alle grupper"
         created_by: "Oprettet Af"
         image: "Billede"
         alt: "brugerdefineret humøikons forhåndsvisning"

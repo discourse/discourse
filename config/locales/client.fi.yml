@@ -7917,6 +7917,7 @@ fi:
         uploading: "Ladataan…"
         name: "Nimi"
         group: "Ryhmä"
+        all_groups: "Kaikki ryhmät"
         created_by: "Luonut"
         image: "Kuva"
         alt: "mukautetun emojin esikatselu"

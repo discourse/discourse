@@ -74,6 +74,20 @@ sl:
         table: "Tabela"
       translations:
         category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              pending: "V teku"
+              total: "Skupaj"
+          targets:
+            post:
+              title: "Prispevki"
+            topic:
+              title: "Tem"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_minutes:
             one: "%{count} minuta"

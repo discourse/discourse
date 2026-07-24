@@ -386,16 +386,29 @@ es:
         title: "Traducciones"
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
         supported_locales: "Idiomas compatibles"
-        supported_locales_description: "Este ajuste del sitio también permite a los visitantes contribuir con traducciones de las publicaciones."
         category_scope: "Categorías"
+        cached_results_notice: "Mostrando resultados en caché de %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Reintentar"
+            columns:
+              locale: "Idioma local"
+              pending: "Pendiente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicaciones"
+            topic:
+              title: "Temas"
+            category:
+              title: "Categorías"
+            tag:
+              title: "Etiquetas"
         admin_actions:
-          translation_settings: "Ajustes de traducción"
-          localization_settings: "Ajustes de localización"
           enable_translations: "Activar traducciones automáticas"
         stats:
           title: "Estadísticas de traducción"
           backfill_disabled: "El relleno está desactivado, solo se traducirán las publicaciones nuevas."
-          backfill_message: "Los <a href='%{settingsUrl}'>ajustes de relleno</a> están configurados para traducir todas las publicaciones posteriores a %{date}. Se estima que tardará %{eta}."
           eta_minutes:
             one: "%{count} minuto"
             other: "%{count} minutos"

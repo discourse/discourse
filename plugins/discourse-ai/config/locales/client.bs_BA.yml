@@ -70,6 +70,20 @@ bs_BA:
       translations:
         title: "Prevodi"
         category_scope: "Kategorije"
+        model_progress:
+          detail:
+            columns:
+              pending: "Na čekanju."
+              total: "Suma"
+          targets:
+            post:
+              title: "Objave"
+            topic:
+              title: "Topics"
+            category:
+              title: "Kategorije"
+            tag:
+              title: "Oznake"
         stats:
           eta_hours:
             one: "%{count} sat"

@@ -145,8 +145,21 @@ el:
       translations:
         title: "Μεταφράσεις"
         category_scope: "Κατηγορίες"
-        admin_actions:
-          localization_settings: "Ρυθμίσεις τοπικοποίησης"
+        model_progress:
+          detail:
+            retry: "Επανάληψη"
+            columns:
+              pending: "Εκρεμείς"
+              total: "Σύνολο"
+          targets:
+            post:
+              title: "Αναρτήσεις"
+            topic:
+              title: "Θέματα"
+            category:
+              title: "Κατηγορίες"
+            tag:
+              title: "Ετικέτες"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"

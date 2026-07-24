@@ -336,16 +336,28 @@ ja:
         title: "翻訳"
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
         supported_locales: "サポートされている言語"
-        supported_locales_description: "このサイト設定では、訪問者も投稿の翻訳に貢献できます。"
         category_scope: "カテゴリ"
+        model_progress:
+          detail:
+            retry: "再試行"
+            columns:
+              locale: "ロケール"
+              pending: "保留中"
+              total: "総合"
+          targets:
+            post:
+              title: "投稿"
+            topic:
+              title: "トピック"
+            category:
+              title: "カテゴリ"
+            tag:
+              title: "タグ"
         admin_actions:
-          translation_settings: "翻訳の設定"
-          localization_settings: "ローカリゼーションの設定"
           enable_translations: "自動翻訳を有効にする"
         stats:
           title: "翻訳の統計"
           backfill_disabled: "バックフィルは無効です。新しい投稿のみが翻訳されます。"
-          backfill_message: "%{date} 以降のすべての投稿を翻訳するように<a href='%{settingsUrl}'>バックフィル設定</a>が構成されています。これには %{eta} かかることが予測されます。"
           eta_minutes:
             other: "%{count} 分"
           eta_hours:

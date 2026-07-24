@@ -78,6 +78,21 @@ vi:
       translations:
         title: "Bản dịch"
         category_scope: "Danh mục"
+        model_progress:
+          detail:
+            columns:
+              locale: "Ngôn ngữ"
+              pending: "Đang chờ xử lý"
+              total: "Tổng số"
+          targets:
+            post:
+              title: "Số lượng tút"
+            topic:
+              title: "Các chủ đề"
+            category:
+              title: "Chuyên mục"
+            tag:
+              title: "Thẻ"
         stats:
           eta_minutes:
             other: "%{count} phút"
