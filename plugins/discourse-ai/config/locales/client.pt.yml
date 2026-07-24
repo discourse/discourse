@@ -143,6 +143,22 @@ pt:
       translations:
         title: "Traduções"
         category_scope: "Categorias"
+        model_progress:
+          detail:
+            retry: "Tentar novamente"
+            columns:
+              locale: "Idioma"
+              pending: "Pendente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicações"
+            topic:
+              title: "Tópicos"
+            category:
+              title: "Categorias"
+            tag:
+              title: "Etiquetas"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:

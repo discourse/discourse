@@ -403,16 +403,28 @@ ar:
         title: "الترجمات"
         description: "تمكين الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
-        supported_locales_description: "يتيح هذا الإعداد أيضًا للزوار المساهمة بترجمة المنشورات."
         category_scope: "الفئات"
+        cached_results_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
+        model_progress:
+          detail:
+            columns:
+              locale: "اللغة"
+              pending: "قيد الانتظار"
+              total: "الإجمالي"
+          targets:
+            post:
+              title: "المنشورات"
+            topic:
+              title: "الموضوعات"
+            category:
+              title: "الفئات"
+            tag:
+              title: "الوسوم"
         admin_actions:
-          translation_settings: "إعدادات الترجمة"
-          localization_settings: "إعدادات التوطين"
           enable_translations: "تمكين الترجمات الآلية"
         stats:
           title: "إحصائيات الترجمة"
           backfill_disabled: "تم تعطيل ميزة الترجمة الرجعية، ولن تتم ترجمة سوى المنشورات الجديدة."
-          backfill_message: "تم تكوين <a href='%{settingsUrl}'>إعدادات الترجمة الرجعية</a> بحيث تتم ترجمة جميع المنشورات التي نُشرت بعد %{date} — من المتوقع أن يستغرق ذلك %{eta}."
           eta_minutes:
             zero: "%{count} من الدقائق"
             one: "دقيقة واحدة (%{count})"

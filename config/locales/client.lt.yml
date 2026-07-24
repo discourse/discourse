@@ -5758,6 +5758,7 @@ lt:
         delete: "Pašalinti"
         name: "Vardas"
         group: "Grupė"
+        all_groups: "Visos grupės"
         image: "Paveiksliukas"
         delete_confirm: "Ar tikrai nori ištrinti :%{name}: šypsenėlę?"
         settings: "Nustatymai"

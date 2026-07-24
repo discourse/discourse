@@ -47,8 +47,8 @@ zh_CN:
         description_title: "使用 AI 生成"
         description_hint: "请用简洁明了的语言描述您的需求。我们将为您生成 SQL 代码、名称和描述。"
         description_placeholder: "例如，显示不同时间段的注册情况"
-        regenerate_placeholder: "例如，更新查询以限制结果数为 50 条。"
-        prompt_label: "Prompt"
+        regenerate_placeholder: "例如，更新查询以将结果数限制为 50 条。"
+        prompt_label: "提示"
         generate: "生成"
         generating: "正在使用 AI 生成查询…"
         generation_timeout: "AI 查询生成超时。您可以手动编写 SQL 语句。"
@@ -95,24 +95,24 @@ zh_CN:
       chart:
         form:
           label: "图表类型"
-          line: "折线"
+          line: "折线图"
           bar: "条形图"
-          stacked: "堆叠"
-          dual_axis: "双轴"
+          stacked: "堆叠图"
+          dual_axis: "双轴图"
         tooltip:
-          total: "总计： %{count}"
+          total: "总计：%{count}"
       chart_empty:
-        no_rows: "没有要绘制的行。"
+        no_rows: "没有要绘制图表的行。"
         no_numeric: "此查询没有要绘制图表的数值列。"
-        no_numeric_with_columns: "此查询没有要绘制图表的数值列（已忽略： %{columns}）。"
-        view_as_table: "以表格形式查看"
+        no_numeric_with_columns: "此查询没有要绘制图表的数值列（已忽略：%{columns}）。"
+        view_as_table: "以表形式查看"
       chart_footnote:
-        ignored: "未绘制图表的列： %{columns}"
+        ignored: "未绘制图表的列：%{columns}"
       export_as:
         label: "导出为…"
-        results_json: "结果（JSON）"
-        results_csv: "结果（CSV）"
-        query_json: "查询定义（JSON）"
+        results_json: "结果 (JSON)"
+        results_csv: "结果 (CSV)"
+        query_json: "查询定义 (JSON)"
       others_dirty: "查询具有未保存的更改，如果您离开，这些更改将丢失。"
       run_time: "查询在 %{value} 毫秒内完成。"
       cached_result_notice: "正在显示自 %{relative_time} 起的缓存结果。"
@@ -149,7 +149,7 @@ zh_CN:
               run_queries: "运行数据资源管理器查询。通过指定查询 ID 将 API 密钥限制为一组查询。"
     discourse_workflows:
       node_unavailable:
-        requires_data_explorer: "需要启用数据浏览器插件"
+        requires_data_explorer: "需要启用数据资源管理器插件"
       nodes:
         "action:sql": "数据资源管理器"
       node_descriptions:
@@ -160,15 +160,15 @@ zh_CN:
         queries: "查询"
         raw: "原始 SQL"
         query_id: "查询"
-        query_id_description: "选择已保存的查询进行运行"
+        query_id_description: "选择一个已保存的查询以运行"
         query_params: "查询参数"
         query_params_description: "填写所选查询的参数"
         query: "SQL 查询"
-        query_description: "编写只读 SQL 查询。使用数据浏览器语法声明参数，并在下方映射其值。"
+        query_description: "编写只读 SQL 查询。使用数据资源管理器语法声明参数，并在下方映射其值。"
         params: "查询参数"
         params_description: "参数可以用作 SQL 查询中的 :my_param。"
         add_param: "添加参数"
-        param_name: "Param"
+        param_name: "参数"
         param_value: "值"
         output:
           results: "结果"

@@ -7134,6 +7134,7 @@ zh_TW:
         uploading: "上傳中..."
         name: "名稱"
         group: "群組"
+        all_groups: "所有群組"
         created_by: "建立者"
         image: "圖片"
         alt: "自訂表情符號預覽"

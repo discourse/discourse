@@ -8721,6 +8721,7 @@ nl:
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
+        all_groups: "Alle groepen"
         created_by: "Gemaakt door"
         image: "Afbeelding"
         alt: "voorbeeld van aangepaste emoji"

@@ -2517,7 +2517,6 @@ sk:
     about_page_extra_groups_order: "Usporiadanie ďalších skupín na stránke o používateľovi."
     adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
-    rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     errors:

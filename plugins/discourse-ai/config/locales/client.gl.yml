@@ -71,6 +71,20 @@ gl:
       translations:
         title: "Traducións"
         category_scope: "Categorías"
+        model_progress:
+          detail:
+            columns:
+              pending: "Pendente"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicacións"
+            topic:
+              title: "Temas"
+            category:
+              title: "Categorías"
+            tag:
+              title: "Etiquetas"
         stats:
           eta_minutes:
             one: "%{count} minuto"

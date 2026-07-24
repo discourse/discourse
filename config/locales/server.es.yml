@@ -2457,7 +2457,6 @@ es:
     about_page_extra_groups_order: "Ordenación de los grupos adicionales en la página Acerca de."
     adobe_analytics_tags_url: "URL de las etiquetas de Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
-    rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
     default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_use_default_locale_when_unsupported: "Ofrece contenido traducido en la configuración regional por defecto del sitio a los usuarios cuyo idioma preferido no figure en «content localization supported locales»."

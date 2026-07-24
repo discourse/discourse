@@ -3580,6 +3580,7 @@ th:
         delete: "ลบ"
         name: "ชื่อ"
         group: "กลุ่ม"
+        all_groups: "กลุ่มทั้งหมด"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"

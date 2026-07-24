@@ -8022,6 +8022,7 @@ vi:
         uploading: "Đang tải lên…"
         name: "Tên"
         group: "Nhóm"
+        all_groups: "Các nhóm"
         created_by: "Tạo bởi"
         image: "Hình ảnh"
         alt: "xem trước biểu tượng cảm xúc tùy chỉnh"

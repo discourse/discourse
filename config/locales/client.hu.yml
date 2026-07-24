@@ -8514,6 +8514,7 @@ hu:
         uploading: "Feltöltés…"
         name: "Név"
         group: "Csoport"
+        all_groups: "Összes csoport"
         created_by: "Készítette:"
         image: "Kép"
         alt: "egyéni emodzsi előnézete"

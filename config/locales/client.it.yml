@@ -7908,6 +7908,7 @@ it:
         uploading: "Caricamento…"
         name: "Nome"
         group: "Gruppo"
+        all_groups: "Tutti i gruppi"
         created_by: "Creato da"
         image: "Immagine"
         alt: "anteprima emoji personalizzata"

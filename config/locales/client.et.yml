@@ -3972,6 +3972,7 @@ et:
         uploading: "Laadin üles..."
         name: "Nimi"
         group: "Rühm"
+        all_groups: "Kõik rühmad"
         image: "Pilt"
         delete_confirm: "Kas oled kindel, et soovid kustutada emotikoni :%{name}:?"
         settings: "Sätted"

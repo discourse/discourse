@@ -68,6 +68,20 @@ te:
       translations:
         title: "అనువాదాలు"
         category_scope: "వర్గాలు"
+        model_progress:
+          detail:
+            columns:
+              pending: "పెండింగు"
+              total: "మొత్తం"
+          targets:
+            post:
+              title: "పోస్ట్‌లు"
+            topic:
+              title: "విషయాలు"
+            category:
+              title: "వర్గాలు"
+            tag:
+              title: "ట్యాగులు"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"

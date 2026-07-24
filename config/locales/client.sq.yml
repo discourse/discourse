@@ -5039,6 +5039,7 @@ sq:
         delete: "Fshij"
         name: "Emri"
         group: "Grupi"
+        all_groups: "Të gjitha grupet"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"

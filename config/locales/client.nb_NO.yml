@@ -5776,6 +5776,7 @@ nb_NO:
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
+        all_groups: "Alle grupper"
         image: "Bilde"
         delete_confirm: "Sikker på at du vil slette: %{name}: emoji?"
         settings: "Instillinger"

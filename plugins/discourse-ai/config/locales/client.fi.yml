@@ -258,6 +258,22 @@ fi:
       translations:
         title: "Käännökset"
         category_scope: "Kategoriat"
+        model_progress:
+          detail:
+            retry: "Yritä uudelleen"
+            columns:
+              locale: "Kielialue"
+              pending: "Odottaa"
+              total: "Yhteensä"
+          targets:
+            post:
+              title: "Viestit"
+            topic:
+              title: "Aiheet"
+            category:
+              title: "Alueet"
+            tag:
+              title: "Tunnisteet"
         stats:
           eta_minutes:
             one: "%{count} minuutti"

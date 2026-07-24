@@ -386,16 +386,29 @@ de:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
-        supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
         category_scope: "Kategorien"
+        cached_results_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
+        model_progress:
+          detail:
+            retry: "Erneut versuchen"
+            columns:
+              locale: "Gebietsschema"
+              pending: "Ausstehend"
+              total: "Gesamt"
+          targets:
+            post:
+              title: "Beiträge"
+            topic:
+              title: "Themen"
+            category:
+              title: "Kategorien"
+            tag:
+              title: "Schlagwörter"
         admin_actions:
-          translation_settings: "Übersetzungseinstellungen"
-          localization_settings: "Lokalisierungseinstellungen"
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
-          backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"

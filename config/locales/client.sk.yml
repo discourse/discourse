@@ -8383,6 +8383,7 @@ sk:
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        all_groups: "Všetky skupiny"
         created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"

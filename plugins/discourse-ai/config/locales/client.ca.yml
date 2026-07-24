@@ -69,6 +69,20 @@ ca:
       translations:
         title: "Traduccions"
         category_scope: "Categories"
+        model_progress:
+          detail:
+            columns:
+              pending: "Pendents"
+              total: "Total"
+          targets:
+            post:
+              title: "Publicacions"
+            topic:
+              title: "Temes"
+            category:
+              title: "Categories"
+            tag:
+              title: "Etiquetes"
         stats:
           eta_minutes:
             one: "%{count} minut"

@@ -19,7 +19,7 @@ zh_CN:
         submit_query: "提交最终生成的查询"
       tool_summary:
         run_sql: "正在运行 SQL 查询"
-        submit_query: "提交生成的查询"
+        submit_query: "正在提交生成的查询"
       tool_description:
         run_sql: "已运行 SQL 查询"
         submit_query: "提交的生成查询 %{name}"
@@ -31,8 +31,8 @@ zh_CN:
       tool_not_allowed: "您无权使用此工具"
     discourse_workflows:
       sql_action:
-        no_query_selected: "未选择查询语句。"
-        no_sql_provided: "未提供 SQL 查询语句。"
+        no_query_selected: "未选择查询。"
+        no_sql_provided: "未提供 SQL 查询。"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

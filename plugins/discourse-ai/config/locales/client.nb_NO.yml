@@ -71,6 +71,20 @@ nb_NO:
       translations:
         title: "Oversettelser"
         category_scope: "Kategorier"
+        model_progress:
+          detail:
+            columns:
+              pending: "Venter"
+              total: "Totalt"
+          targets:
+            post:
+              title: "Innlegg"
+            topic:
+              title: "Emner"
+            category:
+              title: "Kategorier"
+            tag:
+              title: "Stikkord"
         stats:
           eta_minutes:
             one: "%{count} minutt"

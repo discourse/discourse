@@ -4952,6 +4952,7 @@ sl:
         uploading: "Nalagam..."
         name: "Ime"
         group: "Skupina"
+        all_groups: "Vse skupine"
         image: "Slika"
         delete_confirm: "Ali ste prepričani, da hočete izbrisati emoji :%{name}:?"
         settings: "Nastavitve"

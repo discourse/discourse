@@ -140,7 +140,7 @@ pl_PL:
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
     ai_summary_gists_enabled: "Automatycznie generuj krótkie podsumowania najnowszych odpowiedzi w tematach"
-    ai_summary_gists_agent: "Agent służy do generowania krótkich podsumowań tematów. Generowanie Gist zawsze korzysta z wbudowanego narzędzia do generowania podsumowań końcowych; inne narzędzia i formaty odpowiedzi strukturalnych skonfigurowane w agencie są ignorowane."
+    ai_summary_gists_agent: "Agent służący do generowania krótkich podsumowań tematów. Podczas ich generowania zawsze wykorzystywane jest wbudowane narzędzie „final-summary”; inne narzędzia oraz skonfigurowane w agencie formaty odpowiedzi strukturalnych są ignorowane."
     ai_summary_backfill_maximum_topics_per_hour: "Liczba podsumowań tematów do uzupełnienia na godzinę. Każde zlokalizowane streszczenie wlicza się do tego limitu."
     ai_bot_enabled: "Włącz moduł bota AI."
     ai_bot_enabled_llms: "Dostępne do wyboru LLM-y do rozmów z botami AI"

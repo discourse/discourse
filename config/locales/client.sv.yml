@@ -6351,6 +6351,7 @@ sv:
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
+        all_groups: "Alla grupper"
         image: "Bild"
         alt: "anpassa förhandsgranskning av emoji"
         delete_confirm: "Är du säker på att du vill radera emojin :%{name}:?"

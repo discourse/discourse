@@ -3845,6 +3845,7 @@ sr:
         delete: "Obriši"
         name: "Ime"
         group: "Grupa"
+        all_groups: "Sve grupe"
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"

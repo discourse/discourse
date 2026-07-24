@@ -2437,7 +2437,6 @@ pt_BR:
     about_page_extra_groups_order: "Ordenação dos grupos extras na página Sobre."
     adobe_analytics_tags_url: "URLs de etiquetas do Adobe Analytics (\"https://assets.adobedtm.com/...\")"
     view_raw_email_allowed_groups: "Grupos que podem visualizar o conteúdo do e-mail não processado de uma postagem se tiver sido criada por um e-mail recebido. Inclui cabeçalhos de e-mail e outras informações técnicas."
-    rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_use_default_locale_when_unsupported: "Servir conteúdo traduzido no idioma padrão do site para usuários cujo idioma preferido não esteja listado em 'content localization supported locales'."

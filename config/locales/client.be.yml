@@ -2964,6 +2964,7 @@ be:
         delete: "выдаляць"
         name: "Імя"
         group: "Група"
+        all_groups: "Усе групы"
         image: "Выява"
         settings: "Налады"
         export: "Экспарт"

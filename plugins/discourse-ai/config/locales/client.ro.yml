@@ -98,11 +98,23 @@ ro:
         title: "Traduceri"
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
         supported_locales: "Limbi acceptate"
-        supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
         category_scope: "Categorii"
+        model_progress:
+          detail:
+            columns:
+              locale: "Locală"
+              pending: "În așteptare"
+              total: "Total"
+          targets:
+            post:
+              title: "Articole"
+            topic:
+              title: "Subiecte"
+            category:
+              title: "Categorii"
+            tag:
+              title: "Etichete"
         admin_actions:
-          translation_settings: "Setări traducere"
-          localization_settings: "Setări localizare"
           enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"

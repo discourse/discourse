@@ -2375,7 +2375,6 @@ fr:
     about_page_extra_groups_order: "Classement des groupes supplémentaires sur la page À propos."
     adobe_analytics_tags_url: "URL des balises Adobe Analytics (https://assets.adobedtm.com/...)"
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
-    rich_editor: "Activer l'éditeur enrichi pour l'éditeur de rédaction afin que tous les utilisateurs puissent basculer entre le mode Markdown actuel et le nouvel éditeur de texte enrichi, pour une composition plus intuitive et conviviale."
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     errors:
