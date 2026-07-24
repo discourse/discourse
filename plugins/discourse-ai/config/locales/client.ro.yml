@@ -51,6 +51,14 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      ai_tool_approval:
+        loading: "Se încarcă..."
+        tool: "Acțiune"
+        user: "Utilizator"
+        approve: "Aprobare"
+        reject: "Respingere"
+        approved: "Aprobat"
+        rejected: "Respins"
       default_llm:
         title: "Model LLM implicit"
       llm_selector:
@@ -72,6 +80,9 @@ ro:
           reset: "Resetare"
         search:
           name: "Caută"
+        image_caption:
+          setting_groups:
+            settings: "Setări"
         translation:
           schedule_untranslated: "Programează traduceri"
           schedule_topic_success:
@@ -88,6 +99,7 @@ ro:
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
         supported_locales: "Limbi acceptate"
         supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
+        category_scope: "Categorii"
         admin_actions:
           translation_settings: "Setări traducere"
           localization_settings: "Setări localizare"
@@ -143,6 +155,12 @@ ro:
           select_all: "Selectează tot"
           clear_all: "Șterge tot"
         delete: "Șterge"
+        thinking_effort_options:
+          none: "Nimic"
+          low: "Scăzut"
+          medium: "Medie"
+          high: "Ridicată"
+          max: "Maxim"
         response_format:
           open_modal: "Editează"
         filters:
@@ -209,7 +227,6 @@ ro:
           ai_spam: "Spam"
         model_description:
           anthropic-claude-opus-4-7: "Cel mai inteligent model de la Anthropic"
-          open_ai-gpt-5-4-nano: "Cel mai rapid și mai rentabil model GPT-5"
         next:
           title: "Următorul"
         tests:
@@ -233,8 +250,6 @@ ro:
           cancel: "Anulează"
         thumbnail_suggestions:
           try_again: "Încearcă din nou"
-        image_caption:
-          save_caption: "Salvează"
       embeddings:
         save: "Salvează"
         delete: "Șterge"

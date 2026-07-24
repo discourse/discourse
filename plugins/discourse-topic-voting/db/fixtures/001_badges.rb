@@ -15,7 +15,7 @@
     badge.listable = true
     badge.target_posts = true
     badge.multiple_grant = true
-    badge.default_enabled = false
+    badge.default_enabled = true
     badge.default_allow_title = allow_title
     badge.trigger = Badge::Trigger::None
     badge.auto_revoke = true

@@ -18,6 +18,10 @@ te:
         status: "స్థితి"
         in_location: "లో"
         failed: "విఫలం"
+    access_control:
+      manage:
+        access_permission_editor: "ఎడిటరు"
+        access_permission_remove: "తొలగించు"
     number:
       format:
         separator: "."
@@ -1134,6 +1138,9 @@ te:
       notifications: "నోటిఫికేషన్‌లు"
       statistics: "గణాంకాలు"
       desktop_notifications:
+        push_level:
+          none: "నిలిపివేయబడింది"
+          all: "ప్రారంభించబడింది"
         not_supported: "ఈ బ్రౌజర్‌లో నోటిఫికేషన్‌లకు మద్దతు లేదు. క్షమించండి."
         perm_denied_expl: "మీరు నోటిఫికేషన్‌ల కోసం అనుమతిని నిరాకరించారు. మీ బ్రౌజర్ సెట్టింగ్‌ల ద్వారా నోటిఫికేషన్‌లను అనుమతించండి."
         each_browser_note: "గమనిక: మీరు ఉపయోగించే ప్రతి బ్రౌజర్‌లో మీరు ఈ సెట్టింగ్‌ని మార్చాలి. మీరు ఈ సెట్టింగ్‌తో సంబంధం లేకుండా మెను నుండి నోటిఫికేషన్‌లను పాజ్ చేస్తే అన్ని నోటిఫికేషన్‌లు నిలిపివేయబడతాయి."
@@ -1533,7 +1540,7 @@ te:
         default: "(అప్రమేయ)"
         any: "ఏదైనా"
       homepage:
-        default: "(అప్రమేయ)"
+        default: "అప్రమేయ"
       password_confirmation:
         title: "సంకేతపదం మరలా"
       invite_code:
@@ -1698,6 +1705,25 @@ te:
           send_invite_email_instructions: "ఆహ్వాన ఇమెయిల్‌ను పంపడానికి ఇమెయిల్‌కి ఆహ్వానాన్ని పరిమితం చేయండి"
           update_invite: "నవీకరించండి"
           cancel: "రద్దుచేయండి"
+        invite_roles:
+          member_tab: "సభ్యులు"
+          admin_tab: "సిబ్బంది"
+          staff_role_admin: "నిర్వాహకుడు"
+          staff_role_moderator: "నిర్వాహకుడు"
+          email_placeholder: "name@example.com"
+          invite_by_email: "ఈమెయిల్"
+          restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
+          domain_placeholder: "example.com"
+          update: "నవీకరించండి"
+          summary:
+            role_member: "సభ్యుడు"
+            role_admin: "నిర్వాహకుడు"
+            role_moderator: "నిర్వాహకుడు"
+            method_email: "ఈమెయిల్"
+            uses: "గరిష్ట ఉపయోగాలు"
+            expires: "గడువు ముగుస్తుంది"
+            topic: "విషయం"
+            groups: "సమూహాలు"
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
           text: "చాలా మొత్తం ఆహ్వానాలు"
@@ -1944,7 +1970,6 @@ te:
     created: "సృష్టించిన"
     created_lowercase: "సృష్టించిన"
     trust_level: "నమ్మకపు స్థాయి"
-    search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
       header_title: "స్వాగతం!"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
@@ -1990,6 +2015,9 @@ te:
       email_label: "ఈమెయిల్"
       continue_button: "కొనసాగించండి"
       verify_button: "కొనసాగించండి"
+      signup_title: "మీ ఖాతాను సృష్టించండి"
+      account_ready_continue: "కొనసాగించండి"
+      username_label: "సభ్యనామం"
     login:
       header_title: "తిరిగి స్వాగతం"
       title: "లాగిన్"
@@ -2237,6 +2265,7 @@ te:
       discard: "విస్మరించండి"
       users_placeholder: "సభ్యులను లేదా సమూహాలను జోడించండి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
+      title_placeholder_redesign: "శీర్షిక"
       title_or_link_placeholder: "శీర్షికను టైప్ చేయండి లేదా లింక్‌ను ఇక్కడ అతికించండి"
       edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
       topic_featured_link_placeholder: "శీర్షికతో చూపబడిన లింక్‌ని నమోదు చేయండి."
@@ -2732,6 +2761,7 @@ te:
       sort:
         label: "క్రమబద్ధీకరించండి"
         top: "అగ్ర"
+        hot: "హాట్"
         new: "కొత్త"
       load_more_children:
         one: "మరో జవాబు ఉంది"
@@ -2791,40 +2821,8 @@ te:
       read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{categoryLink} లో ఇతర విషయాలను బ్రౌజ్ చేయండి లేదా <a href='%{latestLink}'>తాజా విషయాలను వీక్షించండి</a>."
       read_more: "మరింత చదవాలనుకుంటున్నారా? <a href='%{categoryLink}'>అన్ని వర్గాలను బ్రౌజ్ చేయండి</a> లేదా <a href='%{latestLink}'>తాజా విషయాలను వీక్షించండి</a>."
       unread_indicator: "ఈ విషయం యొక్క చివరి పోస్ట్‌ను సభ్యులు ఎవరూ ఇంకా చదవలేదు."
+      sr_read: "చదివిన"
       participant_groups: "పాల్గొనే సమూహాలు"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># చదవనిది</a> ఉంది}
-              other {<a href="{basePath}/unread"># చదవనివి</a> ఉన్నాయి}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { మరియు <a href="{basePath}/new"># కొత్త</a> విషయం మిగిలి ఉంది,}
-              other { మరియు <a href="{basePath}/new"># కొత్త</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># చదవని</a> విషయం మిగిలి ఉంది,}
-              other { <a href="{basePath}/unread"># చదవని</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># కొత్త</a> విషయం మిగిలి ఉంది,}
-              other {<a href="{basePath}/new"># కొత్త</a> విషయాలు మిగిలి ఉన్నాయి,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { లేదా {categoryLink} లో ఇతర విషయాలను బ్రౌజ్ చేయండి}
-          false { లేదా <a href="{basePath}/latest">తాజా విషయాలను వీక్షించండి</a>}
-          other {}
-        }
       created_at: "సృష్టించబడింది: %{date}"
       bumped_at: "తాజాది: %{date}"
       suggest_create_topic: <a href>కొత్త సంభాషణను ప్రారంభించడానికి</a> సిద్ధంగా ఉన్నారా?
@@ -3238,6 +3236,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        modal:
+          title: "అనువాదాలు"
         post_language_selector:
           none: "సెట్ చేయబడలేదు"
       errors:
@@ -3453,7 +3453,6 @@ te:
         placeholder: "ట్యాగ్ సమూహాన్ని ఎంచుకోండి…"
       topic_featured_link_allowed: "ఈ వర్గంలో ఫీచర్ చేసిన లింక్లను అనుమతించండి"
       create_long: "కొత్త వర్గాన్ని సృష్టించండి"
-      slug_placeholder: "(ఐచ్చికం) వెబ్ చిరునామాలో పేరు డాష్ లతో"
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
       description: "వివరణ"
@@ -3905,7 +3904,6 @@ te:
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"
-      choose_for_topic: "ఐచ్ఛిక ట్యాగ్‌లు"
       choose_for_topic_required:
         one: "కనీసం %{count} ట్యాగ్ ని ఎంచుకోండి…"
         other: "కనీసం %{count} ట్యాగ్‌లను ఎంచుకోండి…"
@@ -4119,6 +4117,10 @@ te:
           public: "అందరికీ కనిపిస్తుంది"
           always_public: "ఈ విభాగంలోని కంటెంట్ ఎల్లప్పుడూ బహిరంగంగా ఉంటుంది"
           more_menu: "మరిన్ని మెను"
+          localizations:
+            title: "అనువాదాలు"
+            locale: "భాష"
+            title_label: "విభాగం శీర్షిక"
           links:
             add: "మరొక లింక్‌ని జోడించండి"
             delete: "లింక్‌ని తొలగించండి"
@@ -4343,6 +4345,7 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
+        all_groups: "అన్ని సమూహాలు"
         group_traffic: "ట్రాఫిక్"
         group_members: "సభ్యులు"
         group_other: "ఇతర"
@@ -4409,6 +4412,9 @@ te:
             email: "మెయిల్"
             manifest_screenshots:
               description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+            og_image_preview:
+              generate: "ఉత్పత్తించు"
+              topic_id_label: "విషయపు ఐడీ"
         fonts:
           form:
             heading_font:
@@ -4458,6 +4464,21 @@ te:
               title: "అమరికలు"
         badges:
           title: "బ్యాడ్జీలు"
+        category_management:
+          tabs:
+            settings: "అమరికలు"
+          types:
+            all:
+              title: "అన్ని వర్గాలు"
+          filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
+          table:
+            category: "వర్గం"
+            visibility: "దృశ్యమానత"
+            topics: "విషయాలు"
+          visibility:
+            public: "బహిరంగం"
+          visibility_filter:
+            all: "అన్ని వర్గాలు"
         permalinks:
           title: "శాశ్వత లింక్‌లు"
         emoji:
@@ -4509,7 +4530,7 @@ te:
         no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
         installed_version: "ప్రతిష్టించబడింది"
-        latest_version: "తాజా"
+        github: "గిట్ హబ్"
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
         dismiss_notice: "విస్మరించండి"
         new_features:
@@ -4563,7 +4584,6 @@ te:
               posts: "పోస్ట్‌లు"
               share: "షేర్ చేయండి"
             whos_posting:
-              all_categories: "అన్ని వర్గాలు"
               staff: "సిబ్బంది"
             trust_level_pipeline:
               trust_levels:
@@ -4578,6 +4598,7 @@ te:
               searches: "శోధనలు"
               status: "స్థితి"
         reports_section:
+          header_action: "నిర్వహించండి"
           modal:
             enabled_heading: "ప్రారంభించబడింది"
             all_heading: "అన్ని నివేదికలు"
@@ -4986,6 +5007,8 @@ te:
           city_for_disputes: "వివాదాలకు నగరం"
           extra_groups:
             groups: "సమూహాలు"
+          locale_selector:
+            title: "భాష"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
@@ -5771,6 +5794,10 @@ te:
         active: "యాక్టివేట్ చేయబడిన వారు"
         status: "స్థితి"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "మూసివేయండి"
+              confirm: "సస్పెండు"
           delete:
             confirmation_modal:
               close: "మూసివేయండి"
@@ -5782,6 +5809,8 @@ te:
           suspended: "సస్పెడయ్యాడు"
           silenced: "మౌనం వహించినవాళ్ళు"
           staged: "తాత్కాలిక"
+        activation_filter:
+          activated: "యాక్టివేట్ చేయబడిన వారు"
         approved: "అంగీకరించు"
         titles:
           active: "క్రియాశీల సభ్యులు"
@@ -6267,6 +6296,9 @@ te:
         alt: "అనుకూల ఎమోజి ప్రివ్యూ"
         delete_confirm: "మీరు నిజంగా %{name}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
         settings: "అమరికలు"
+        export: "ఎగుమతి"
+        import_category:
+          new: "కొత్త"
       embedding:
         get_started: "మీరు మరొక వెబ్సైట్లో డిస్కోర్స్ పొందుపరచాలనుకుంటే, దాని హోస్ట్ను జోడించడం ద్వారా ప్రారంభించండి."
         delete: "తొలగించు"

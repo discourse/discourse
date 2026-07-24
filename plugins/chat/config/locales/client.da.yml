@@ -127,8 +127,6 @@ da:
       select: "Vælg"
       sounds:
         none: "Ingen"
-        bell: "Klokke"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Vedhæft en fil"
@@ -150,6 +148,8 @@ da:
         filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
+        filter_joined_all: "Alle"
+        filter_joined_joined: "Tilmeldt"
       chat_message_separator:
         today: I dag
         yesterday: I går
@@ -180,6 +180,9 @@ da:
         title: Ny Besked
         prefix: "Til:"
         no_results: Ingen resultater
+      channel:
+        preview_card:
+          log_in: "Log ind"
       create_channel:
         choose_category:
           label: "Vælg en kategori"

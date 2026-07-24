@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 te:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "సిబ్బంది"
+              member: "సభ్యులు"
+              basic: "ప్రాథమిక"
+            response_time:
+              buckets:
+                lt_1h: "< 1 గంట"
   js:
     notifications:
       alt:

@@ -3,6 +3,14 @@
 require_relative "endpoint_compliance"
 
 class VllmMock < EndpointMock
+  def response_id
+    "cmpl-6sZfAb30Rnv9Q7ufzFwvQsMpjZh8S"
+  end
+
+  def invocation_response
+    super.tap { |tool_call| tool_call.provider_data = { vllm: { tool_batch_id: response_id } } }
+  end
+
   def response(content, tool_call: false)
     message_content =
       if tool_call
@@ -12,7 +20,7 @@ class VllmMock < EndpointMock
       end
 
     {
-      id: "cmpl-6sZfAb30Rnv9Q7ufzFwvQsMpjZh8S",
+      id: response_id,
       object: "chat.completion",
       created: 1_678_464_820,
       model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -43,7 +51,7 @@ class VllmMock < EndpointMock
       end
 
     +"data: " << {
-      id: "cmpl-#{SecureRandom.hex}",
+      id: response_id,
       object: "chat.completion.chunk",
       created: 1_681_283_881,
       model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -662,6 +670,42 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(result[1]).to eq("The answer is 4.")
     end
 
+    it "assigns one provider batch to parallel tool calls" do
+      body = {
+        id: "chatcmpl-tool-batch",
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: nil,
+              reasoning_content: "I need both results.",
+              tool_calls: [
+                { id: "tool-1", function: { name: "echo", arguments: '{"text":"one"}' } },
+                { id: "tool-2", function: { name: "echo", arguments: '{"text":"two"}' } },
+              ],
+            },
+          },
+        ],
+        usage: {
+          prompt_tokens: 10,
+          completion_tokens: 20,
+        },
+      }
+
+      stub_request(:post, "https://test.dev/v1/chat/completions").to_return(
+        status: 200,
+        body: body.to_json,
+      )
+
+      result = llm.generate("use both tools", user: Discourse.system_user, output_thinking: true)
+      tool_calls = result.grep(DiscourseAi::Completions::ToolCall)
+
+      expect(tool_calls.map(&:id)).to eq(%w[tool-1 tool-2])
+      expect(tool_calls.map(&:provider_data)).to all(
+        eq(vllm: { tool_batch_id: "chatcmpl-tool-batch" }),
+      )
+    end
+
     it "omits Thinking when output_thinking is false" do
       body = {
         choices: [
@@ -748,6 +792,84 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
           compliance.streaming_mode_tools(vllm_mock)
         end
       end
+    end
+  end
+
+  describe "request header providers" do
+    after { described_class.reset_request_headers_providers! }
+
+    def capture_headers(feature_name: nil)
+      captured = nil
+      stub =
+        stub_request(:post, "https://test.dev/v1/chat/completions")
+          .with do |request|
+            captured = request.headers
+            true
+          end
+          .to_return(status: 200, body: completion_response_body)
+
+      llm.generate("say hello", user: Discourse.system_user, feature_name: feature_name)
+
+      expect(stub).to have_been_requested
+      captured
+    end
+
+    it "merges headers contributed by a registered provider" do
+      described_class.register_request_headers_provider do |context|
+        { "X-Test-Feature" => context.feature_name || "default" }
+      end
+
+      headers = capture_headers(feature_name: "summarize")
+
+      expect(headers["X-Test-Feature"]).to eq("summarize")
+    end
+
+    it "passes request context (llm_model, streaming, vision) to the provider" do
+      captured_context = nil
+      described_class.register_request_headers_provider do |context|
+        captured_context = context
+        {}
+      end
+
+      capture_headers(feature_name: "ai_helper")
+
+      expect(captured_context.llm_model).to eq(llm_model)
+      expect(captured_context.feature_name).to eq("ai_helper")
+      expect(captured_context.streaming).to eq(false)
+      expect(captured_context.has_images).to eq(false)
+    end
+
+    it "isolates provider failures so the completion still succeeds" do
+      described_class.register_request_headers_provider { |_context| raise "boom" }
+      described_class.register_request_headers_provider { |_context| { "X-Test-Survivor" => "1" } }
+
+      headers = nil
+      expect { headers = capture_headers }.not_to raise_error
+      expect(headers["X-Test-Survivor"]).to eq("1")
+    end
+
+    it "sends no extra headers when nothing is registered" do
+      headers = capture_headers
+      expect(headers.keys).not_to include("X-Test-Feature")
+    end
+  end
+
+  describe "#prompt_has_images?" do
+    it "is true when a message carries an image_url content part" do
+      prompt = [
+        { role: "user", content: [{ type: "text", text: "hi" }] },
+        {
+          role: "user",
+          content: [{ type: "image_url", image_url: { url: "data:image/png;base64,abc" } }],
+        },
+      ]
+
+      expect(endpoint.send(:prompt_has_images?, prompt)).to eq(true)
+    end
+
+    it "is false for text-only or non-array prompts" do
+      expect(endpoint.send(:prompt_has_images?, [{ role: "user", content: "hi" }])).to eq(false)
+      expect(endpoint.send(:prompt_has_images?, nil)).to eq(false)
     end
   end
 end

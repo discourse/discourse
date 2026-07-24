@@ -4,7 +4,12 @@ class Admin::DashboardController < Admin::StaffController
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
   before_action :ensure_admin,
-                only: %i[available_reports update_reports_section update_configuration]
+                only: %i[
+                  available_reports
+                  update_reports_section
+                  update_configuration
+                  update_section_settings
+                ]
 
   def index
     if dashboard_improvements?
@@ -26,6 +31,20 @@ class Admin::DashboardController < Admin::StaffController
     head :no_content
   end
 
+  def update_section_settings
+    section_id = params.require(:section_id)
+    key = params.require(:setting_key)
+
+    definition = AdminDashboardSectionConfiguration.setting_definition(section_id, key)
+
+    AdminDashboardSectionConfiguration.update_setting(
+      section_id:,
+      key:,
+      attrs: params.permit(*(definition&.dig(:permit) || [])),
+    )
+    head :no_content
+  end
+
   def moderation
   end
 
@@ -42,7 +61,7 @@ class Admin::DashboardController < Admin::StaffController
   def problems
     ProblemCheck.realtime.run_all
 
-    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
+    render json: { problems: serialized_problems }
   end
 
   def new_features
@@ -131,6 +150,10 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def serialized_problems
+    serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
+  end
+
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
     data = {
@@ -140,7 +163,9 @@ class Admin::DashboardController < Admin::StaffController
           current_user: current_user,
           start_date: params[:start_date],
           end_date: params[:end_date],
+          parallel: !mini_profiler_flamegraph_request?,
         ),
+      problems: serialized_problems,
     }
     if current_user.admin?
       data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }

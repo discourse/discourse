@@ -20,6 +20,7 @@ module DiscourseWorkflows
       max_nodes: nil,
       capabilities: {
       },
+      output_contracts: [],
       palette_visible: true,
       available: true,
     }.freeze
@@ -37,8 +38,13 @@ module DiscourseWorkflows
       registered_nodes.select(&:waits_for_resume?).map(&:identifier)
     end
 
+    def self.find_in(nodes)
+      Array(nodes).find { |node| node["type"] == identifier }
+    end
+
     def self.description(value = nil)
       if value
+        @output_contracts = nil
         @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
       else
         @description || DESCRIPTION_DEFAULTS
@@ -109,6 +115,49 @@ module DiscourseWorkflows
       properties
     end
 
+    def self.output_schemas(configuration = {}, input_schemas: [])
+      input_schema = Schema.union(*input_schemas.compact)
+
+      active_output_contracts(configuration).map do |contract|
+        Schema.resolve(
+          contract.fetch(:schema),
+          mode: contract.fetch(:mode),
+          input_schema: input_schema,
+        )
+      end
+    end
+
+    def self.output_contracts
+      @output_contracts ||=
+        begin
+          declarations = Array(description.fetch(:output_contracts))
+          declarations = Array.new(ports.length) { {} } if declarations.empty?
+
+          if declarations.length != ports.length
+            raise ArgumentError,
+                  "#{identifier} declares #{declarations.length} output contracts for #{ports.length} outputs"
+          end
+
+          declarations.map { |contract| normalize_output_contract(contract) }
+        end
+    end
+
+    EMPTY_OUTPUT_CONTRACT = { schema: {}, mode: :replace, display_options: {} }.freeze
+
+    def self.active_output_contracts(configuration = {})
+      output_contracts.map do |contract|
+        active =
+          contract
+            .fetch(:variants)
+            .find { |variant| Schema.visible?(variant.fetch(:display_options), configuration) }
+        active ||= contract.except(:variants) if Schema.visible?(
+          contract.fetch(:display_options),
+          configuration,
+        )
+        active || EMPTY_OUTPUT_CONTRACT
+      end
+    end
+
     def self.event_name
       Array(description[:events]).first
     end
@@ -140,11 +189,65 @@ module DiscourseWorkflows
       description.dig(:capabilities, key) == true
     end
 
+    def self.normalize_output_contract(contract)
+      contract = contract.deep_symbolize_keys
+      normalize_contract_fields(contract).merge(
+        variants:
+          Array(contract[:variants]).map do |variant|
+            normalize_contract_fields(variant.deep_symbolize_keys)
+          end,
+      )
+    end
+    private_class_method :normalize_output_contract
+
+    def self.normalize_contract_fields(contract)
+      mode = contract.fetch(:mode, :replace).to_sym
+      if Schema::MODES.exclude?(mode)
+        raise ArgumentError, "Unknown output schema mode: #{mode.inspect}"
+      end
+
+      {
+        schema: Schema.normalize(contract.fetch(:schema, {})),
+        mode: mode,
+        display_options: contract.fetch(:display_options, {}),
+      }
+    end
+    private_class_method :normalize_contract_fields
+
     def self.normalize_tag_names(value)
       Array
         .wrap(value)
         .flat_map { |name| name.to_s.split(",") }
         .filter_map { |name| name.strip.presence }
+    end
+
+    def self.normalize_category_ids(value)
+      Array.wrap(value).filter_map { |entry| entry.to_s.strip.presence&.to_i }.uniq
+    end
+
+    # TODO JOFFREY (01-2027): drop the category_id fallback once the post_migrate
+    # stripping the legacy key has been promoted.
+    def self.category_ids_parameter(trigger_ctx)
+      value = trigger_ctx.get_node_parameter("category_ids")
+      value = trigger_ctx.get_node_parameter("category_id") if value.nil?
+      normalize_category_ids(value)
+    end
+
+    def self.expand_subcategory_ids(category_ids)
+      category_ids.flat_map { |id| ::Category.subcategory_ids(id) }.uniq
+    end
+
+    def self.matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      return true if category_ids.empty?
+
+      category_ids = expand_subcategory_ids(category_ids) if include_subcategories != false
+      category_ids.include?(topic_category_id)
+    end
+
+    def self.trust_level_options
+      TrustLevel.levels.map do |name, level|
+        { value: level.to_s, label_key: "trust_levels.names.#{name}" }
+      end
     end
 
     def initialize(**)
@@ -178,6 +281,18 @@ module DiscourseWorkflows
 
     def normalize_tag_names(value)
       self.class.normalize_tag_names(value)
+    end
+
+    def category_ids_parameter(trigger_ctx)
+      self.class.category_ids_parameter(trigger_ctx)
+    end
+
+    def matches_category_ids?(topic_category_id, category_ids, include_subcategories: true)
+      self.class.matches_category_ids?(
+        topic_category_id,
+        category_ids,
+        include_subcategories: include_subcategories,
+      )
     end
 
     def wrap(data, paired_item: nil)

@@ -3,7 +3,7 @@
 class Stylesheet::Manager::Builder
   attr_reader :theme
 
-  def initialize(target: :desktop, theme: nil, color_scheme: nil, manager:)
+  def initialize(target:, theme: nil, color_scheme: nil, manager:)
     @target = target
     @theme = theme
     @color_scheme = color_scheme
@@ -72,6 +72,15 @@ class Stylesheet::Manager::Builder
       Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
     end
     css
+  end
+
+  def hydrate_from_cache!
+    relation = StylesheetCache.where(target: qualified_target, digest: digest)
+    return false if !relation.exists?
+
+    StylesheetCache.write_to_disk(relation, stylesheet_fullpath)
+    StylesheetCache.write_to_disk(relation, source_map_fullpath, source_map: true)
+    true
   end
 
   def current_hostname

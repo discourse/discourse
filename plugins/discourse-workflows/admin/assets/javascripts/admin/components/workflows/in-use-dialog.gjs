@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 
-<template>
+export default <template>
   <p>{{@model.description}}</p>
 
   <ul>

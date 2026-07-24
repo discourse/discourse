@@ -69,6 +69,34 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     expect(again).to eq("Cached highlight.")
   end
 
+  it "uses category settings in the cache key" do
+    category = Fabricate(:category)
+    responses = [
+      { highlight: "Highlight before category ids." }.to_json,
+      { highlight: "Highlight after category ids." }.to_json,
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        described_class.generate(
+          start_date: "2026-05-01",
+          end_date: "2026-06-01",
+          period: "last_30_days",
+        )
+
+        SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
+        SiteSetting.ai_admin_dashboard_highlights_categories = category.id.to_s
+
+        described_class.generate(
+          start_date: "2026-05-01",
+          end_date: "2026-06-01",
+          period: "last_30_days",
+        )
+      end
+
+    expect(result).to eq("Highlight after category ids.")
+  end
+
   it "returns an empty string when there are no metrics" do
     allow(AdminDashboardHighlights).to receive(:build).and_return({ kpis: [] })
 
@@ -141,11 +169,38 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     end
 
     it "surfaces a real signal as a fact the agent can cite" do
-      Fabricate.times(5, :post) # 5 topics with no replies
+      user = Fabricate(:user)
+      now = Time.zone.now
+      DB.exec(
+        <<~SQL,
+          INSERT INTO topics (
+            title, fancy_title, created_at, updated_at, bumped_at, last_posted_at, posts_count,
+            user_id, last_post_user_id, category_id, visible, archetype, highest_post_number
+          )
+          SELECT
+            'Unanswered topic ' || topic_number,
+            'Unanswered topic ' || topic_number,
+            :now,
+            :now,
+            :now,
+            :now,
+            1,
+            :user_id,
+            :user_id,
+            :category_id,
+            true,
+            'regular',
+            1
+          FROM generate_series(1, 5) AS topic_number
+        SQL
+        now: now,
+        user_id: user.id,
+        category_id: SiteSetting.uncategorized_category_id,
+      )
 
       message = message_for(1.day.ago.to_date.to_s, Date.current.to_s)
 
-      expect(message).to match(/new topics received no reply/)
+      expect(message).to match(/new member-created topics received no reply/)
     end
 
     it "asks the agent to write in the requesting user's language" do

@@ -179,6 +179,12 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
                             },
                           }
 
+                          ssl_opts = mtls_ssl_options
+                          if ssl_opts.present?
+                            opts[:client_options][:auth_scheme] = :tls_client_auth
+                            opts[:client_options][:connection_opts][:ssl] = ssl_opts
+                          end
+
                           opts[:client_options][:connection_build] = lambda do |builder|
                             if SiteSetting.openid_connect_verbose_logging
                               builder.response :logger,
@@ -198,6 +204,22 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
   def generate_code_challenge(code_verifier)
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).tr("+/", "-_").tr("=", "")
+  end
+
+  def mtls_ssl_options
+    cert_pem = SiteSetting.openid_connect_mtls_client_cert
+    key_pem = SiteSetting.openid_connect_mtls_client_key
+    return {} if cert_pem.blank? || key_pem.blank?
+
+    key_passcode = SiteSetting.openid_connect_mtls_client_key_passcode.presence
+
+    {
+      client_cert: OpenSSL::X509::Certificate.new(cert_pem),
+      client_key: OpenSSL::PKey.read(key_pem, key_passcode),
+    }
+  rescue OpenSSL::OpenSSLError => e
+    oidc_log("Failed to parse mTLS certificate or key: #{e.message}", error: true)
+    raise
   end
 
   def request_timeout_seconds

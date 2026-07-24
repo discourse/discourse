@@ -27,6 +27,9 @@ hu:
             topic_id:
               label: Témaazonosító
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Csevegés"
       invite_user_notification: "%{username} meghívta erre: %{description}"
       on_holiday: "Szabadságon"
       disable_holiday: "Letiltás"
@@ -460,7 +463,6 @@ hu:
         create_event_title: "Esemény létrehozása"
         update_event_title: "Esemény szerkesztése"
         advanced_settings_title: "Speciális beállítások"
-        advanced_settings: "Speciális beállítások"
         confirm_delete: "Biztos, hogy törli ezt az eseményt?"
         confirm_close: "Biztos, hogy lezárja ezt az eseményt?"
         confirm_open: "Biztosan meg szeretnéd nyitni ezt az eseményt?"
@@ -499,11 +501,7 @@ hu:
         allow_chat:
           label: "Csevegés integráció"
           checkbox_label: "Eseményspecifikus csevegőcsatorna létrehozása és kezelése"
-        url:
-          label: "Webcím"
-          placeholder: "Nem kötelező"
         location:
-          label: "Hely"
           placeholder: "Adj hozzá egy helyszínt, linket vagy valami hasonlót."
         description:
           label: "Leírás"

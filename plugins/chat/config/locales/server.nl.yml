@@ -10,7 +10,6 @@ nl:
     chat_enabled: "Chat inschakelen."
     chat_pinned_messages: "Schakel vastgemaakte berichten in chatkanalen in."
     enable_public_channels: "Openbare kanalen inschakelen op basis van categorieën"
-    chat_allowed_groups: "Gebruikers in deze groepen kunnen chatten. Houd er rekening mee dat beheerders en moderators altijd toegang hebben tot de chat."
     chat_channel_retention_days: "Chatberichten in reguliere kanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
     chat_dm_retention_days: "Chatberichten in privéchatkanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
     chat_auto_silence_duration: "Het aantal minuten dat gebruikers worden gedempt wanneer ze de limiet voor het maken van chatberichten overschrijden. Stel dit in op '0' om automatisch dempen uit te schakelen."

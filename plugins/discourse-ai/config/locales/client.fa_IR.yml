@@ -60,6 +60,14 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      ai_tool_approval:
+        loading: "بارگذاری..."
+        tool: "عمل"
+        user: "کاربر"
+        approve: "تایید"
+        reject: "رد کردن"
+        approved: "پذیرفته شده"
+        rejected: "رد شده"
       llm_selector:
         none: "هیچ‌کدام"
       features:
@@ -82,12 +90,16 @@ fa_IR:
         embeddings:
           setting_groups:
             related_topics: "موضوعات مرتبط"
+        image_caption:
+          setting_groups:
+            settings: "تنظیم"
         spam:
           name: "هرز‌نامه"
       modals:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        category_scope: "دسته‌بندی‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"
@@ -132,6 +144,12 @@ fa_IR:
         mcp_tools_modal:
           clear_all: "پاکسازی همه"
         delete: "حذف"
+        thinking_effort_options:
+          none: "هیچ‌کدام"
+          low: "کم"
+          medium: "متوسط"
+          high: "بالا"
+          max: "بیشترین"
         response_format:
           open_modal: "ویرایش"
           modal:
@@ -208,6 +226,8 @@ fa_IR:
         providers:
           google: "گوگل"
           fake: "سفارشی"
+        provider_fields:
+          region: "منطقه"
       ai_helper:
         title: "پیشنهاد تغییرات با استفاده از هوش مصنوعی"
         description: "یکی از گزینه‌های زیر را انتخاب کنید و هوش مصنوعی نسخه جدیدی از متن را به شما پیشنهاد می‌کند."
@@ -228,8 +248,6 @@ fa_IR:
           select: "انتخاب"
           selected: "انتخاب شده"
           try_again: "تلاش دوباره"
-        image_caption:
-          save_caption: "ذخیره"
       reviewables:
         model_used: "مدل مورد استفاده:"
         accuracy: "دقت:"
@@ -252,7 +270,7 @@ fa_IR:
           model_name: "نام مدل"
         semantic_search: "موضوعات (معنایی)"
       ai_bot:
-        llm: "مدل"
+        llm: "مدل:"
         cancel_streaming: "توقف پاسخ"
         try_again: "دوباره امتحان کنید"
         conversation_shared: "گفتگو کپی شد"

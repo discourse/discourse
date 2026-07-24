@@ -11,9 +11,16 @@ module DiscourseWorkflows
             foreign_key: "execution_id",
             dependent: :destroy
 
+    has_many :initiated_workflow_call_runs,
+             class_name: "DiscourseWorkflows::WorkflowCallRun",
+             foreign_key: "parent_execution_id",
+             dependent: :delete_all
+
     enum :status,
          { pending: 0, running: 1, success: 2, error: 3, waiting: 4, rate_limited: 5, skipped: 6 }
     enum :execution_mode, { normal: 0, error_mode: 1, manual: 2 }
+
+    after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
 
     scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id: workflow_id) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
@@ -25,6 +32,11 @@ module DiscourseWorkflows
 
     TERMINAL_STATUSES_FOR_PURGE = %i[success error rate_limited skipped].freeze
     PURGE_BATCH_SIZE = 5_000
+
+    def self.admin_execution_url(workflow_id, execution_id)
+      "#{Discourse.base_url}/admin/plugins/discourse-workflows/workflows/" \
+        "#{workflow_id}/executions/#{execution_id}"
+    end
 
     def self.create_pending_manual!(workflow:, trigger_node_id:, trigger_data:)
       transaction do
@@ -39,6 +51,33 @@ module DiscourseWorkflows
           ExecutionData.create!(
             execution: execution,
             workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+          )
+        end
+      end
+    end
+
+    def self.create_pending_step!(workflow:, node_id:, trigger_data: {}, run_data: {})
+      transaction do
+        create!(
+          workflow: workflow,
+          workflow_version_id: workflow.version_id,
+          trigger_node_id: node_id,
+          trigger_data: trigger_data,
+          status: :pending,
+          execution_mode: :manual,
+        ).tap do |execution|
+          ExecutionData.create!(
+            execution: execution,
+            workflow_data: WorkflowSnapshot.from_workflow(workflow, published: false).to_h,
+            data: {
+              "entries" => {
+              },
+              "context" => {
+              },
+              "node_contexts" => {
+              },
+              "run_data" => run_data,
+            },
           )
         end
       end
@@ -60,6 +99,7 @@ module DiscourseWorkflows
         break if ids.empty?
 
         ExecutionData.where(execution_id: ids).delete_all
+        WorkflowCallRun.remove_execution_references(ids)
         where(id: ids).delete_all
       end
     end
@@ -147,6 +187,8 @@ module DiscourseWorkflows
           message,
         )
       end
+
+      DiscourseWorkflows::WorkflowCallContinuation.child_failed!(reload) if claimed
 
       claimed
     end

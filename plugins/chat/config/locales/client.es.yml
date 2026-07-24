@@ -261,14 +261,16 @@ es:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
         channels_list: "Lista de canales de chat"
+      screen_reader:
+        new_messages:
+          one: "%{count} mensaje nuevo"
+          other: "%{count} mensajes nuevos"
       no_direct_message_channels: "¡No te has unido a ningún mensaje directo todavía!"
       no_direct_message_channels_cta: "Inicia una conversación"
       no_public_channels: "¡No te has unido a ningún canal todavía!"
       no_public_channels_cta: "Examinar canales"
       kicked_from_channel: "Ya no puedes acceder a este canal."
       chat_notifications_title: "Notificaciones de chat"
-      only_chat_push_notifications:
-        title: "Enviar solo notificaciones de chat"
       personalization_title: "Personalización"
       ignore_channel_wide_mention:
         title: "Ignorar las menciones de todo el canal"
@@ -320,8 +322,6 @@ es:
         title: "Sonido de notificación de chat de escritorio"
       sounds:
         none: "Ninguno"
-        bell: "Campana"
-        ding: "Timbre"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Adjuntar un archivo"
@@ -352,6 +352,8 @@ es:
         filter_closed: Cerrado
         filter_archived: Archivado
         filter_input_placeholder: Buscar canal por nombre
+        filter_joined_all: "Todo"
+        filter_joined_joined: "Se unió"
       chat_message_separator:
         today: Hoy
         yesterday: Ayer
@@ -423,6 +425,9 @@ es:
         memberships_count:
           one: "%{count} miembro"
           other: "%{count} miembros"
+        preview_card:
+          log_in: "Iniciar sesión"
+          sign_up: "Registrarse"
       create_channel:
         threading:
           label: "Activar el hilado"
@@ -480,6 +485,10 @@ es:
           other: "<span>Tú, %{commaSeparatedUsernames} y %{count} otros reaccionasteis con </span>:%{emoji}:"
         single_user: "<span>%{username} reaccionó con </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} y %{username} reaccionaron con </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reacción"
+            other: "%{count} reacciones"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} y otro reaccionaron con </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} y %{count} otros reaccionaron con </span>:%{emoji}:"

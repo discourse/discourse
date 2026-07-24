@@ -2,6 +2,8 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-posting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
   setupRenderingTest(hooks);
@@ -55,7 +57,40 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       .dom("a.db-section__row-block-title.--label")
       .hasText("Who's posting?")
       .hasAttribute("href", /\/admin\/reports\/posters_by_member_type/);
-    assert.dom(".category-chooser").exists();
+    assert.dom(".category-selector").exists();
+  });
+
+  test("shows an 'All categories' placeholder when nothing is selected", async function (assert) {
+    await render(
+      <template>
+        <WhosPosting
+          @posters={{posters}}
+          @startDate={{start}}
+          @endDate={{end}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(
+      selectKit(".category-selector").header().label(),
+      i18n("category.all")
+    );
+  });
+
+  test("prefills the selector with the persisted category selection", async function (assert) {
+    const withSelection = { ...posters, category_ids: [1, 2] };
+
+    await render(
+      <template>
+        <WhosPosting
+          @posters={{withSelection}}
+          @startDate={{start}}
+          @endDate={{end}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(selectKit(".category-selector").header().value(), "1,2");
   });
 
   test("falls back to an empty-state message when there are no posts", async function (assert) {

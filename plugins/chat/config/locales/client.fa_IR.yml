@@ -189,8 +189,6 @@ fa_IR:
         title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
       sounds:
         none: "هیچ کدام"
-        bell: "زنگ"
-        ding: "دینگ"
       title: "گفتگو"
       title_capitalized: "گفتگو"
       upload: "پیوست کردن یک پرونده"
@@ -213,6 +211,8 @@ fa_IR:
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
+        filter_joined_all: "همه"
+        filter_joined_joined: "ملحق شده"
       chat_message_separator:
         today: امروز
         yesterday: دیروز
@@ -255,6 +255,8 @@ fa_IR:
         memberships_count:
           one: "%{count} عضو"
           other: "%{count} عضو"
+        preview_card:
+          log_in: "ورود"
       create_channel:
         choose_category:
           label: "انتخاب دسته‌بندی"

@@ -79,6 +79,8 @@ module DiscourseDataExplorer
           rows: rows,
           row_count: total_rows,
           params_used: query_params,
+          next_action:
+            "Call submit_query with the exact same sql value after choosing a name and description. Do not call run_sql again with identical SQL.",
         }
       end
 

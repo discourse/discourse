@@ -26,10 +26,14 @@ RSpec.describe DiscourseWorkflows::JsSandbox do
 
   describe "memory limit" do
     it "raises when JS allocates too much memory" do
-      expect { sandbox.eval(<<~JS) }.to raise_error(DiscourseWorkflows::JsSandbox::SandboxError)
+      # a generous timeout keeps the memory cap as the only limit that can
+      # fire, even on a slow CI box
+      stub_const(DiscourseWorkflows::JsSandbox, :EVAL_TIMEOUT_MS, 5_000) do
+        expect { sandbox.eval(<<~JS) }.to raise_error(DiscourseWorkflows::JsSandbox::SandboxError)
           var a = [];
-          while(true) { a.push(new Array(10000).fill('x')); }
+          while(true) { a.push(new Array(100000).fill(1.5)); }
         JS
+      end
     end
   end
 

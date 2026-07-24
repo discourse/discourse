@@ -19,6 +19,10 @@ sq:
         in_location: "në"
         hidden: "fshehur"
         failed: "dështoi"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktor"
+        access_permission_remove: "Hiq"
     number:
       format:
         separator: "."
@@ -1229,6 +1233,9 @@ sq:
       notifications: "Njoftimet"
       statistics: "Statistikat"
       desktop_notifications:
+        push_level:
+          none: "E çaktivizuar"
+          all: "Aktivizuar"
         not_supported: "Ky shfletues nuk është i aftë të ruajë njoftimet. "
         perm_denied_expl: "Ju nuk na dhatë të drejtën t'ju dërgojmë njoftime. Njoftimet mund t'i lejoni në rregullimet e shfletuesit tuaj. "
         each_browser_note: "Shënim: Ju duhet ta ndryshoni këtë cilësim në çdo shfletues që përdorni. Të gjitha njoftimet do të çaktivizohen nëse i ndaloni njoftimet nga menyja e përdoruesit, pavarësisht nga ky cilësim."
@@ -1694,7 +1701,7 @@ sq:
         default: "(paracaktuar)"
         any: "ndonjë"
       homepage:
-        default: "(paracaktuar)"
+        default: "Paracaktuar"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       invite_code:
@@ -1885,6 +1892,28 @@ sq:
           create_link_and_send_email: "Krijoni lidhje dhe dërgo email"
           invite_saved_without_sending_email: "Ftesa e ruajtur. Kopjoni lidhjen më poshtë dhe ndani atë për të dhënë menjëherë akses në këtë faqe."
           invite_saved_with_sending_email: "Emaili i ftesës është dërguar. Ju gjithashtu mund të kopjoni lidhjen më poshtë dhe ta ndani atë për të dhënë menjëherë akses në këtë faqe."
+        invite_roles:
+          member_title: "Ftoni anëtarë"
+          sent_title: "Ftesa u dërgua"
+          member_tab: "Anëtarë"
+          admin_tab: "Stafi"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          email_placeholder: "emri@adresa.com"
+          invite_by_email: "Email"
+          restrict_domain: "Kufizoni në domein"
+          more_options: "Më shumë mundësi"
+          update: "Përditëso"
+          summary:
+            role_member: "Anëtar"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method_email: "Email"
+            uses: "Përdorimet maksimale"
+            expires: "Skadon"
+            topic: "Topic"
+            groups: "Grupet"
+            edit: "Redaktoni ftesën"
         bulk_invite:
           none: "Nuk ka ftesë për t'u shfaqur në këtë faqe."
           text: "Ftesë me shumicë"
@@ -2193,7 +2222,6 @@ sq:
     created: "Krijuar"
     created_lowercase: "krijuar"
     trust_level: "Niveli i besimit"
-    search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
       disclaimer: "Duke u regjistruar, ju pranoni <a href='%{privacy_link}' target='blank'>politikën e privatësisë</a> dhe <a href='%{tos_link}' target='blank'>kushtet e shërbimit</a>."
@@ -2241,6 +2269,8 @@ sq:
       email_label: "Email"
       continue_button: "Vazhdoni"
       verify_button: "Vazhdoni"
+      account_ready_continue: "Vazhdoni"
+      username_label: "Emri i përdoruesit"
     login:
       header_title: "Mirë se vini përsëri"
       title: "Identifikohu"
@@ -2496,6 +2526,7 @@ sq:
       discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
+      title_placeholder_redesign: "Titulli"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
@@ -3076,6 +3107,7 @@ sq:
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfletoni tema të tjera në %{categoryLink} ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       read_more: "Dëshironi të lexoni më shumë? <a href='%{categoryLink}'>Shfletoni të gjitha kategoritë</a> ose <a href='%{latestLink}'>shikoni temat më të fundit</a>."
       unread_indicator: "Asnjë anëtar nuk e ka lexuar ende postimin e fundit të kësaj teme."
+      sr_read: "lexuar"
       participant_groups: "Grupet e pjesëmarrësve"
       created_at: "Krijuar: %{date}"
       bumped_at: "E fundit: %{date}"
@@ -3495,7 +3527,6 @@ sq:
       required_tag_group:
         delete: "Fshij"
       create_long: "Krijo një kategori të re"
-      slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       validations:
@@ -3973,6 +4004,7 @@ sq:
           always: "gjithmonë"
           never: "asnjëherë"
       reports:
+        all_groups: "Të gjitha grupet"
         group_traffic: "Trafik"
         group_members: "Anëtarë"
         group_other: "Të tjerë"
@@ -4026,6 +4058,9 @@ sq:
           form:
             mobile: "Mobile"
             email: "Email"
+            og_image_preview:
+              generate: "Gjenero"
+              topic_id_label: "ID e temës"
         fonts:
           backfill_modal:
             modal_yes: "Po"
@@ -4073,6 +4108,19 @@ sq:
               title: "Rregullimet"
         badges:
           title: "Stemat"
+        category_management:
+          tabs:
+            settings: "Rregullimet"
+          types:
+            all:
+              title: "Të gjitha kategoritë"
+          table:
+            category: "Kategori"
+            topics: "Topics"
+          visibility:
+            public: "Publike"
+          visibility_filter:
+            all: "Të gjitha kategoritë"
         permalinks:
           title: "Permalinks"
         emoji:
@@ -4119,7 +4167,7 @@ sq:
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
-        latest_version: "Të fundit"
+        github: "Github"
         dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
@@ -4147,7 +4195,6 @@ sq:
               posts: "Postime"
               share: "Shpërndaje"
             whos_posting:
-              all_categories: "Të gjitha kategoritë"
               staff: "Stafi"
             trust_level_pipeline:
               trust_levels:
@@ -4161,6 +4208,7 @@ sq:
             table:
               status: "Status"
         reports_section:
+          header_action: "Menaxhoni"
           modal:
             enabled_heading: "Aktivizuar"
             apply: "Apliko"
@@ -4686,6 +4734,10 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Mbyll"
+              confirm: "Pezullo"
           delete:
             confirmation_modal:
               close: "Mbyll"
@@ -4990,6 +5042,10 @@ sq:
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Rregullimet"
+        export: "Eksporto"
+        import: "Importo"
+        import_category:
+          new: "I Ri"
       embedding:
         delete: "Fshij"
         title: "Embedding"

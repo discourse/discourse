@@ -277,17 +277,47 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nowa wiadomość"
+          few: "%{count} nowe wiadomości"
+          many: "%{count} nowych wiadomości"
+          other: "%{count} nowych wiadomości"
+        new_image:
+          one: "%{username} wysłał obraz"
+          few: "%{username} wysłał %{count} obrazy"
+          many: "%{username} wysłał %{count} obrazów"
+          other: "%{username} wysłał %{count} obrazów"
+        new_attachment:
+          one: "%{username} wysłał załącznik"
+          few: "%{username} wysłał %{count} załączniki"
+          many: "%{username} wysłał %{count} załączników"
+          other: "%{username} wysłał %{count} załączników"
+        new_message_with_image:
+          one: "%{username}: %{message} (z obrazkiem)"
+          few: "%{username}: %{message} (z %{count} obrazkami)"
+          many: "%{username}: %{message} (z %{count} obrazkami)"
+          other: "%{username}: %{message} (z %{count} obrazkami)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (z załącznikiem)"
+          few: "%{username}: %{message} (z %{count} załącznikami)"
+          many: "%{username}: %{message} (z %{count} załącznikami)"
+          other: "%{username}: %{message} (z %{count} załącznikami)"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
       no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       chat_notifications_title: "Powiadomienia czatu"
-      only_chat_push_notifications:
-        title: "Wysyłaj tylko powiadomienia push czatu"
       personalization_title: "Personalizacja"
+      accessibility_title: "Dostępność"
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
+      announce_new_messages:
+        title: "Ogłaszaj nowe wiadomości czytnikom ekranu"
+      new_message_sound:
+        title: "Odtwarzaj dźwięki nowych wiadomości, gdy czat jest na pierwszym planie"
       show_thread_title_prompts:
         title: "Pokaż podpowiedzi tytułu wątku"
         description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."
@@ -340,10 +370,17 @@ pl_PL:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:
         none: "Brak"
-        bell: "Dzwonek"
-        ding: "Ding"
+        classic: "Klasyczny i czysty"
+        soft: "Miękka marimba"
+        retro: "Retro 8-bitowy"
+        bubble: "Zabawna bańka"
+        ethereal: "Eteryczne szkło"
       title: "czat"
       title_capitalized: "Czat"
+      disabled:
+        title: "Wyłączyłeś czat"
+        body: "Włącz go ponownie, aby przeglądać kanały i wiadomości."
+        cta: "Moje preferencje czatu"
       upload: "Dołącz plik"
       upload_to_channel: "Prześlij do %{title}"
       upload_to_thread: "Prześlij do wątku"
@@ -374,6 +411,9 @@ pl_PL:
         filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy
+        filter_joined_all: "Wszystkie"
+        filter_joined_joined: "Dołączono"
+        filter_joined_not_joined: "Nie dołączono"
       chat_message_separator:
         today: Dzisiaj
         yesterday: Wczoraj
@@ -451,6 +491,25 @@ pl_PL:
           few: "%{count} członków"
           many: "%{count} członków"
           other: "%{count} członków"
+        empty_state:
+          title: "To jest początek %{channelName}"
+          joined_title: "Jesteś pierwszy w %{channelName}"
+          guest_tip: "Czytasz jako gość. Rozmowa zaczyna się w momencie, gdy użytkownicy coś napiszą — dołącz do nich i bądź jednym z nich."
+          joined_tip: "Bądź pierwszy, który opublikuje wpis i rozpocznie dyskusję."
+          members_here:
+            one: "<strong>%{count} członek</strong> tutaj"
+            few: "<strong>%{count} członków</strong> tutaj"
+            many: "<strong>%{count} członków</strong> tutaj"
+            other: "<strong>%{count} członków</strong> tutaj"
+          no_other_members: "Jeszcze nie ma innych członków"
+        preview_card:
+          guest_title: "Dołącz do %{channelName} , aby rozpocząć czat"
+          guest_body: "Czytanie jest darmowe dla każdego. Zarejestruj się, aby publikować, reagować i odpowiadać — zajmie to około 30 sekund."
+          join_body: "Będziesz mieć możliwość publikowania wpisów i odpowiadania na nie, a wpisy będą wyświetlane na liście kanałów."
+          no_access_title: "Nie możesz dołączyć do %{channelName}"
+          no_access_body: "Ten kanał nie jest obecnie otwarty dla nowych członków."
+          log_in: "Zaloguj się"
+          sign_up: "Zarejestruj się"
       create_channel:
         threading:
           label: "Włącz wątki"
@@ -522,6 +581,12 @@ pl_PL:
           other: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
         single_user: "<span>%{username} zareagował za pomocą </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} i %{username} zareagowali za pomocą </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reakcja"
+            few: "%{count} reakcje"
+            many: "%{count} reakcji"
+            other: "%{count} reakcje"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"

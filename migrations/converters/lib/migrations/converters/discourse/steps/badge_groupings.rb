@@ -3,26 +3,10 @@
 module Migrations
   module Converters
     module Discourse
-      class BadgeGroupings < Conversion::ProgressStep
+      class BadgeGroupings < Conversion::Step
         source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*)
-              FROM badge_groupings
-              WHERE id NOT IN (1, 2, 3, 4, 5) -- Exclude system groupings
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM badge_groupings
-              WHERE id NOT IN (1, 2, 3, 4, 5) -- Exclude system groupings
-              ORDER BY id
-            SQL
-          end
+          # Skip the system badge groupings.
+          reads_table "badge_groupings", where: "id NOT IN (1, 2, 3, 4, 5)"
         end
 
         processor do

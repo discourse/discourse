@@ -38,7 +38,6 @@ export default class UpcomingEventsList extends Component {
   timeFormat = this.args.params?.timeFormat ?? DEFAULT_TIME_FORMAT;
   count = this.args.params?.count ?? DEFAULT_COUNT;
   upcomingDays = this.args.params?.upcomingDays ?? DEFAULT_UPCOMING_DAYS;
-  includeSubcategories = this.args.params?.includeSubcategories ?? false;
 
   emptyMessage = i18n("discourse_post_event.upcoming_events_list.empty");
   allDayLabel = i18n("discourse_post_event.upcoming_events_list.all_day");
@@ -57,6 +56,16 @@ export default class UpcomingEventsList extends Component {
 
   get categoryId() {
     return this.router.currentRoute.attributes?.category?.id;
+  }
+
+  get includeSubcategories() {
+    const { attributes } = this.router.currentRoute;
+
+    if (attributes?.category) {
+      return !attributes.noSubcategories;
+    }
+
+    return this.args.params?.includeSubcategories ?? false;
   }
 
   get hasEmptyResponse() {

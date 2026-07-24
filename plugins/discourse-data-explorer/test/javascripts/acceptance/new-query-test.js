@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import KeyValueStore from "discourse/lib/key-value-store";
 import {
   acceptance,
   publishToMessageBus,
@@ -7,7 +8,16 @@ import {
 
 acceptance("New Query", function (needs) {
   needs.user();
-  needs.settings({ data_explorer_enabled: true });
+  needs.settings({
+    data_explorer_enabled: true,
+    data_explorer_ai_queries_enabled: false,
+  });
+
+  const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+
+  needs.hooks.afterEach(() => {
+    dataExplorerStore.remove("hide_schema");
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/discourse-data-explorer.json", () => {
@@ -101,6 +111,12 @@ acceptance("New Query", function (needs) {
       .dom(".query-new__manual-form .editor-panel .ace-wrapper")
       .exists("SQL editor renders alongside the schema sidebar");
 
+    await click(".query-new__manual-form .schema__toggle.--collapse");
+
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema sidebar can be hidden");
+
     await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
     await fillIn(
       ".query-new__manual-form [data-name='description'] textarea",
@@ -112,6 +128,26 @@ acceptance("New Query", function (needs) {
       currentURL(),
       "/admin/plugins/discourse-data-explorer/queries/-15"
     );
+
+    assert
+      .dom(".query-editor.no-schema .schema__toggle.--expand")
+      .exists("schema hidden state persists across Data Explorer pages");
+  });
+
+  test("starts with the schema hidden when the preference is stored", async function (assert) {
+    dataExplorerStore.set({ key: "hide_schema", value: "true" });
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-new__manual-form .query-editor.no-schema")
+      .exists("stored hidden state is applied");
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema search is hidden");
+    assert
+      .dom(".query-new__manual-form .schema__toggle.--expand")
+      .exists("schema can still be shown again");
   });
 });
 
@@ -120,6 +156,7 @@ acceptance("New Query - AI", function (needs) {
   needs.settings({
     data_explorer_enabled: true,
     data_explorer_ai_queries_enabled: true,
+    discourse_ai_enabled: true,
   });
 
   const GENERATION_ID = "test-generation";
@@ -232,6 +269,22 @@ acceptance("New Query - AI", function (needs) {
     );
     await settled();
   }
+
+  test("renders the manual form when Discourse AI is disabled", async function (assert) {
+    this.siteSettings.discourse_ai_enabled = false;
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-mode-switch")
+      .doesNotExist("the AI/manual mode switch is hidden");
+    assert
+      .dom(".query-new__manual-form")
+      .exists("the manual query form renders");
+    assert
+      .dom(".query-new__ai-section")
+      .doesNotExist("the AI generation form is hidden");
+  });
 
   test("save query is the primary action and the result is shown first", async function (assert) {
     await generate("show me a value");

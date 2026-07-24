@@ -188,7 +188,9 @@ whitelisted_fruits:
 
 And now you have support for 3 languages: English, Arabic and French.
 
-## :arrow_up_down: Min and max attributes
+## Additional setting attributes and options
+
+### Min and max attributes
 
 Sometimes you may need to specify limits that a setting value can't exceed to prevent your users from accidentally breaking the theme or possibly the whole site.
 
@@ -205,7 +207,7 @@ You can specify limits to `integer`, `float` and `string` type settings. For `in
 
 If your user tries to enter a value that's not within the allowed range, they'll see an error telling them what the min and max values are.
 
-<h3 id='heading--settings-js-css'>Access to settings in your JS/CSS/Handlebars</h3>
+### Access to settings in your JS/CSS/Handlebars
 
 Theme settings are made available globally as a `settings` variable in theme JavaScript files. For example:
 
@@ -220,6 +222,8 @@ export default apiInitializer((api) => {
 
 This `settings` object is also usable as normal within `.gjs` `<template>` tags.
 
+### Setting CSS variables
+
 In CSS, you'll get a variable created for every setting of your theme and each variable will have the same name as the setting it represents.
 
 So if you had a float setting called `global_font_size` and a string setting called `site_background`, you could do something like this in your theme CSS:
@@ -230,6 +234,37 @@ html {
   background: $site-background;
 }
 ```
+
+### Resolving group membership
+
+Theme components sometimes need to show or hide a feature based on whether the current user is in a configured group. Avoid checking `currentUser.groups` for this because it only includes groups that are visible to the user, and it can miss hidden groups.
+
+For group-backed list settings, add `resolve_group_membership: true` to resolve the check server-side:
+
+```yaml
+copy_button_allowed_groups:
+  default: "1|3"
+  type: list
+  list_type: group
+  resolve_group_membership: true
+```
+
+This option is only valid when the setting has `type: list` and `list_type: group`. When it is enabled, the frontend `settings` object does not include the original group list. Instead, Discourse adds a boolean with the same setting name prefixed by `user_in_`:
+
+```gjs
+// {theme}/javascripts/discourse/api-initializers/init-theme.gjs
+import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  if (!settings.user_in_copy_button_allowed_groups) {
+    return;
+  }
+
+  // User is in at least one selected group.
+});
+```
+
+The generated boolean also works with automatic groups such as `logged_in_users` and `anonymous_users`. Object theme settings can use the same option on `type: groups` properties. See [objects type for theme settings](./10-objects-for-theme-settings.md#resolving-group-membership) for details.
 
 ## :link: Related Topics
 

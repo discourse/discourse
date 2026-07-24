@@ -46,6 +46,11 @@ class UpcomingChanges::NotifyPromotions
           status_hash[:error_key] = :setting_not_available
         end
 
+        on_failed_policy(:should_notify_admins) do |policy|
+          status_hash[:error] = "Setting #{setting_name} should not notify admins about promotion"
+          status_hash[:error_key] = :should_not_notify_admins
+        end
+
         on_failed_policy(:change_should_be_displayed) do |policy|
           status_hash[
             :error

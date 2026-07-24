@@ -15,6 +15,17 @@ he:
           kpi:
             accepted_solutions:
               label: "פתרונות מקובלים"
+        sections:
+          support:
+            title: "תמיכה"
+            answerers:
+              staff: "סגל"
+              member: "חברים"
+              basic: "בסיסיים"
+            response_time:
+              buckets:
+                lt_1h: "< שעה"
+                gt_24h: "> 24 שעות"
   js:
     notifications:
       alt:

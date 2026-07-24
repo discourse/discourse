@@ -34,6 +34,14 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Nalagam..."
+        tool: "Dejanje"
+        user: "Uporabnik"
+        approve: "Odobri"
+        reject: "Zavrni"
+        approved: "Potrjeno"
+        rejected: "Zavrnjeno"
       llm_selector:
         none: "Brez"
       features:
@@ -55,6 +63,9 @@ sl:
           reset: "Ponastavi"
         search:
           name: "Išči"
+        image_caption:
+          setting_groups:
+            settings: "Nastavitve"
         spam:
           name: "Neželeno"
       modals:
@@ -62,6 +73,7 @@ sl:
       layout:
         table: "Tabela"
       translations:
+        category_scope: "Kategorije"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -108,6 +120,12 @@ sl:
         enabled: "Vključeno?"
         allowed_groups: "Dovoljene skupine"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Brez"
+          low: "Nizka"
+          medium: "Srednja"
+          high: "Visoka"
+          max: "Največ"
         response_format:
           open_modal: "Uredi"
         filters:
@@ -171,6 +189,8 @@ sl:
         providers:
           google: "Google"
           fake: "Po meri"
+        provider_fields:
+          region: "Regija"
       ai_helper:
         context_menu:
           cancel: "Prekliči"
@@ -183,8 +203,6 @@ sl:
           cancel: "Prekliči"
         thumbnail_suggestions:
           try_again: "Poskusi ponovno"
-        image_caption:
-          save_caption: "Shrani"
       embeddings:
         save: "Shrani"
         delete: "Izbriši"

@@ -18,6 +18,9 @@ et:
         status: "Staatus"
         hidden: "peidetud"
         failed: "ebaõnnestunud"
+    access_control:
+      manage:
+        access_permission_remove: "Eemalda"
     number:
       format:
         separator: "."
@@ -857,6 +860,9 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Välja lülitatud"
+          all: "Sisse lülitatud"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
         consent_prompt: "Kas soovid reaalajas teavitusi, kui inimesed su postitustele vastavad?"
@@ -1094,7 +1100,7 @@ et:
         default: "(vaikimisi)"
         any: "iga"
       homepage:
-        default: "(vaikimisi)"
+        default: "Vaikimisi"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -1198,6 +1204,20 @@ et:
         invite:
           description: "Kirjeldus"
           cancel: "Tühista"
+        invite_roles:
+          member_tab: "Liikmed"
+          admin_tab: "Meeskond"
+          staff_role_admin: "Adminn"
+          staff_role_moderator: "Moderaator"
+          email_placeholder: "nimi@näide.ee"
+          invite_by_email: "E-post"
+          summary:
+            role_member: "Liige"
+            role_admin: "Adminn"
+            role_moderator: "Moderaator"
+            method_email: "E-post"
+            topic: "Teema"
+            groups: "Rühmad"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
       password:
@@ -1347,7 +1367,6 @@ et:
     created: "Loodud"
     created_lowercase: "loodud"
     trust_level: "Usaldustase"
-    search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       header_title: "Tere tulemast!"
       title: "Liitu"
@@ -1378,6 +1397,8 @@ et:
       email_label: "E-post"
       continue_button: "Jätka"
       verify_button: "Jätka"
+      account_ready_continue: "Jätka"
+      username_label: "Kasutajanimi"
     login:
       title: "Logi sisse"
       username: "Kasutaja"
@@ -1488,6 +1509,7 @@ et:
       create_shared_draft: "Loo jagatud mustand"
       edit_shared_draft: "Muuda jagatud mustandit"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
+      title_placeholder_redesign: "Pealkiri"
       title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "Miks sa seda muudad?"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
@@ -1787,6 +1809,7 @@ et:
       options: "Teema suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
+      sr_read: "lugemine"
       deleted: "See teema on kustutatud"
       slow_mode_update:
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"
@@ -2200,7 +2223,7 @@ et:
     category:
       none: "(kategooria puudub)"
       all: "Kõik kategooriad"
-      choose: "kategooria&hellip;"
+      choose: "Kategooria&hellip;"
       edit: "Muuda"
       edit_dialog_title: "Muuda: %{categoryName}"
       view: "Vaata teemasid kategoorias"
@@ -2219,7 +2242,6 @@ et:
         delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles kategoorias esiletõstetud linke "
       create_long: "Loo uus kategooria"
-      slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
       validations:
@@ -2560,7 +2582,6 @@ et:
       selector_no_tags: "sildid puuduvad"
       selector_remove_filter: "eemalda filter"
       tags: "Sildid"
-      choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
       delete_tag: "Kustuta silt"
       description: "Kirjeldus"
@@ -2741,6 +2762,7 @@ et:
           always: "alati"
           never: "mitte kunagi"
       reports:
+        all_groups: "Kõik rühmad"
         group_traffic: "Liiklus"
         group_members: "Liikmed"
         group_other: "Muu"
@@ -2796,6 +2818,9 @@ et:
           form:
             mobile: "Mobiil"
             email: "Meiliaadress"
+            og_image_preview:
+              generate: "Genereeri"
+              topic_id_label: "Teema ID"
         fonts:
           backfill_modal:
             modal_yes: "Jah"
@@ -2839,6 +2864,20 @@ et:
               title: "Seaded"
         badges:
           title: "Märgised"
+        category_management:
+          tabs:
+            settings: "Seaded"
+          types:
+            all:
+              title: "Kõik foorumid"
+          table:
+            category: "Kategooriad"
+            visibility: "Nähtavus"
+            topics: "Teemasid"
+          visibility:
+            public: "Avalik"
+          visibility_filter:
+            all: "Kõik foorumid"
         permalinks:
           title: "Püsiviited"
         emoji:
@@ -2892,7 +2931,7 @@ et:
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."
         installed_version: "Paigaldatud"
-        latest_version: "Viimased"
+        github: "GitHub"
         dismiss_notice: "Ignoreeri"
         new_features:
           learn_more: "Uuri veel..."
@@ -2928,7 +2967,6 @@ et:
               posts: "Postitust"
               share: "Jaga"
             whos_posting:
-              all_categories: "Kõik foorumid"
               staff: "Meeskond"
             trust_level_pipeline:
               trust_levels:
@@ -2943,6 +2981,7 @@ et:
               searches: "Otsingud"
               status: "Staatus"
         reports_section:
+          header_action: "Halda"
           no_data: "Pole andmeid, mida näidata"
           modal:
             enabled_heading: "Sisse lülitatud"
@@ -3593,6 +3632,10 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Sulge"
+              confirm: "Peata"
           delete:
             confirmation_modal:
               close: "Sulge"
@@ -3604,6 +3647,8 @@ et:
           suspended: "Peatatud"
           silenced: "Vaigistatud"
           staged: "Ettevalmistamisel"
+        activation_filter:
+          activated: "Aktiveeritud"
         approved: "Heakskiidetud?"
         titles:
           active: "Aktiivsed kasutajad"
@@ -3930,6 +3975,10 @@ et:
         image: "Pilt"
         delete_confirm: "Kas oled kindel, et soovid kustutada emotikoni :%{name}:?"
         settings: "Sätted"
+        export: "Ekspordi"
+        import: "Impordi"
+        import_category:
+          new: "Uus"
       embedding:
         get_started: "Kui soovid lisada Discourse'i teise veebisaidi sisse, alusta lisades oma teenusepakkuja"
         delete: "Kustuta"

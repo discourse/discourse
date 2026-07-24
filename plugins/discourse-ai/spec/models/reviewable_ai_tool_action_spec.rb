@@ -88,6 +88,36 @@ RSpec.describe ReviewableAiToolAction do
       expect(actions.has?(:approve)).to eq(false)
       expect(actions.has?(:reject)).to eq(false)
     end
+
+    it "returns no actions for a user who cannot see the review queue" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+      regular_user = Fabricate(:user)
+
+      actions = Reviewable::Actions.new(reviewable, Guardian.new(regular_user), {})
+      reviewable.build_actions(actions, Guardian.new(regular_user), {})
+
+      expect(actions.has?(:approve)).to eq(false)
+      expect(actions.has?(:reject)).to eq(false)
+    end
+
+    it "returns actions for a category group moderator scoped to the reviewable's category" do
+      category = Fabricate(:category)
+      post = Fabricate(:post, topic: Fabricate(:topic, category: category))
+      tool_action = create_tool_action(post_id: post.id)
+      reviewable = create_reviewable(tool_action)
+
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      Fabricate(:category_moderation_group, category:, group:)
+      group_moderator = Fabricate(:user, groups: [group])
+
+      actions = Reviewable::Actions.new(reviewable, Guardian.new(group_moderator), {})
+      reviewable.build_actions(actions, Guardian.new(group_moderator), {})
+
+      expect(actions.has?(:approve)).to eq(true)
+      expect(actions.has?(:reject)).to eq(true)
+    end
   end
 
   describe "#perform_approve" do
@@ -100,6 +130,58 @@ RSpec.describe ReviewableAiToolAction do
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:approved)
       expect(topic.reload.closed).to eq(true)
+    end
+
+    it "executes inline approval from the bot post containing its approval card" do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: bot_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      result = reviewable.perform(admin, :approve, post_id: approval_post.id)
+
+      expect(result.success?).to eq(true)
+      expect(result.transition_to).to eq(:approved)
+      expect(topic.reload.closed).to eq(true)
+    end
+
+    it "rejects inline approval from a bot post without its approval card", :aggregate_failures do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      other_post = Fabricate(:post, topic: topic, user: bot_user)
+
+      expect { reviewable.perform(admin, :approve, post_id: other_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "rejects inline approval when another user copies its approval card", :aggregate_failures do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      copied_card_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      expect { reviewable.perform(admin, :approve, post_id: copied_card_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
     end
 
     it "raises error when target is missing" do
@@ -118,14 +200,133 @@ RSpec.describe ReviewableAiToolAction do
       expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "approves even when tool returns an error result (e.g. stale target)" do
+    it "raises and stays pending when the tool returns an error result (e.g. stale target)" do
       tool_action = create_tool_action(params: { topic_id: -999, closed: true, reason: "test" })
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "raises and stays pending when the approver lacks permission at replay time" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+      moderator = Fabricate(:moderator)
+
+      # A plain moderator cannot suspend an admin, so the replayed tool fails.
+      target_user.update!(admin: true)
+
+      expect { reviewable.perform(moderator, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+      expect(target_user.reload.suspended?).to eq(false)
+    end
+
+    it "raises error when performed_by is a bot account" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(bot_user, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "attributes the action to the approving moderator for tools that opt into attribute_to_approver?" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
       reviewable = create_reviewable(tool_action)
 
       result = reviewable.perform(admin, :approve)
 
       expect(result.success?).to eq(true)
-      expect(result.transition_to).to eq(:approved)
+      expect(target_user.reload.suspended?).to eq(true)
+
+      suspend_history = UserHistory.where(action: UserHistory.actions[:suspend_user]).last
+      expect(suspend_history.acting_user_id).to eq(admin.id)
+      expect(suspend_history.target_user_id).to eq(target_user.id)
+      expect(suspend_history.reviewable_id).to eq(reviewable.id)
+    end
+
+    it "attributes a silence_user approval to the approving moderator" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "silence_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(target_user.reload.silenced?).to eq(true)
+
+      silence_history = UserHistory.where(action: UserHistory.actions[:silence_user]).last
+      expect(silence_history.acting_user_id).to eq(admin.id)
+      expect(silence_history.target_user_id).to eq(target_user.id)
+      expect(silence_history.reviewable_id).to eq(reviewable.id)
+    end
+
+    it "applies a change_site_setting approval credited to the approving admin" do
+      tool_action =
+        create_tool_action(
+          tool_name: "change_site_setting",
+          params: {
+            setting_name: "min_post_length",
+            value: "42",
+            reason: "Testing",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(SiteSetting.min_post_length).to eq(42)
+
+      change_history =
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "min_post_length",
+        ).last
+      expect(change_history.acting_user_id).to eq(admin.id)
+    end
+
+    it "raises and stays pending when a non-admin moderator approves a change_site_setting action" do
+      tool_action =
+        create_tool_action(
+          tool_name: "change_site_setting",
+          params: {
+            setting_name: "min_post_length",
+            value: "42",
+            reason: "Testing",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+      moderator = Fabricate(:moderator)
+
+      expect { reviewable.perform(moderator, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+      expect(SiteSetting.min_post_length).not_to eq(42)
     end
   end
 
@@ -139,6 +340,53 @@ RSpec.describe ReviewableAiToolAction do
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:rejected)
       expect(topic.reload.closed).to eq(false)
+    end
+
+    it "accepts inline rejection from the bot post containing its approval card" do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: bot_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      result = reviewable.perform(admin, :reject, post_id: approval_post.id)
+
+      expect(result.success?).to eq(true)
+      expect(result.transition_to).to eq(:rejected)
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "resolves multiple inline reviews independently from the same bot post" do
+      source_post = Fabricate(:post, topic: topic)
+      first_reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      second_reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      approval_post = Fabricate(:post, topic: topic, user: bot_user, raw: <<~RAW)
+            <div data-ai-tool-approval-reviewable-id='#{first_reviewable.id}'></div>
+            <div data-ai-tool-approval-reviewable-id='#{second_reviewable.id}'></div>
+          RAW
+
+      first_result = first_reviewable.perform(admin, :reject, post_id: approval_post.id)
+
+      expect(first_result.success?).to eq(true)
+      expect(first_reviewable.reload).to be_rejected
+      expect(second_reviewable.reload).to be_pending
+
+      second_result = second_reviewable.perform(admin, :reject, post_id: approval_post.id)
+
+      expect(second_result.success?).to eq(true)
+      expect(second_reviewable.reload).to be_rejected
+    end
+
+    it "raises error when performed_by is a bot account" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(bot_user, :reject) }.to raise_error(Discourse::InvalidAccess)
     end
   end
 end

@@ -33,6 +33,9 @@ el:
             topic_id:
               label: ID Θέματος
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Συνομιλία"
       invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
       preferences:
         all_events: "Ημερολόγιο Discourse - Όλες οι Εκδηλώσεις"
@@ -375,6 +378,8 @@ el:
       composer_actions:
         create_event:
           label: "Δημιουργία εκδήλωσης"
+        create_topic:
+          label: "Δημιουργία θέματος"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"
@@ -383,7 +388,6 @@ el:
         create_event_title: "Δημιουργία Εκδήλωσης"
         update_event_title: "Επεξεργασία Εκδήλωσης"
         advanced_settings_title: "Προηγμένες ρυθμίσεις"
-        advanced_settings: "Προηγμένες ρυθμίσεις"
         confirm_delete: "Σίγουρα θέλετε να διαγράψετε αυτήν την εκδήλωση;"
         confirm_close: "Σίγουρα θέλετε να κλείσετε αυτήν την εκδήλωση;"
         confirm_open: "Σίγουρα θέλετε να ανοίξετε αυτήν την εκδήλωση;"
@@ -444,11 +448,7 @@ el:
         allow_chat:
           label: "Ενσωμάτωση συνομιλίας"
           checkbox_label: "Δημιουργία και διαχείριση συγκεκριμένου καναλιού συνομιλίας για την εκδήλωση"
-        url:
-          label: "URL"
-          placeholder: "Προαιρετικό"
         location:
-          label: "Τοποθεσία"
           placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
         description:
           label: "Περιγραφή"

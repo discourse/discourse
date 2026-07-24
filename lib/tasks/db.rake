@@ -129,7 +129,11 @@ class SeedHelper
 end
 
 def execute_db_migration
-  ActiveRecord::Tasks::DatabaseTasks.migrate
+  if ENV["SKIP_STRUCTURE_SQL"] == "1"
+    ActiveRecord::Tasks::DatabaseTasks.migrate(skip_initialize: true)
+  else
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+  end
 
   if ENV["SKIP_SEED_FU"] != "1"
     Rake::Task["db:seed"].reenable
@@ -270,7 +274,7 @@ task "db:seed" => "environment" do
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
   rescue => error
     raise if ENV["RAISE_SEED_ERRORS"] == "1"
-    error.backtrace.each { |l| puts l }
+    puts error.full_message(highlight: false, order: :top)
   end
 end
 

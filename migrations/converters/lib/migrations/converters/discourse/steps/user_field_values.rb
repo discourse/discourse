@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserFieldValues < Conversion::ProgressStep
+      class UserFieldValues < Conversion::Step
         USER_FIELD_PREFIX = "user_field_"
 
         # `USER_FIELD_PREFIX` as a `LIKE` pattern: the `_` characters are literal
@@ -13,8 +13,6 @@ module Migrations
         USER_FIELD_LIKE_PATTERN = "#{USER_FIELD_PREFIX.gsub("_") { '\_' }}%"
 
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*)

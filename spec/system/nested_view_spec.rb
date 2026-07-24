@@ -255,6 +255,20 @@ RSpec.describe "Nested view" do
       expect(nested_view).to have_sort_active("old")
       expect(page).to have_current_path(/sort=old/)
     end
+
+    it "shows hot sorting only while its rollout gate is enabled" do
+      nested_view.visit_nested(topic)
+      find(".nested-sort-selector__trigger").click
+
+      expect(page).to have_no_css(".dropdown-menu .btn", text: I18n.t("js.nested_replies.sort.hot"))
+
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      nested_view.visit_nested(topic)
+      nested_view.click_sort("hot")
+
+      expect(nested_view).to have_sort_active("hot")
+      expect(page).to have_current_path(/sort=hot/)
+    end
   end
 
   describe "expand and collapse" do
@@ -300,6 +314,8 @@ RSpec.describe "Nested view" do
   end
 
   describe "mobile focused branch navigation" do
+    before { SiteSetting.nested_replies_max_depth = 10 }
+
     fab!(:root_reply) do
       Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Post with children")
     end

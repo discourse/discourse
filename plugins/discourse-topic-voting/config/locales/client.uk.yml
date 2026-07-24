@@ -15,33 +15,20 @@ uk:
       sort_options:
         votes: "Голоси"
     topic_voting:
-      category_type_ideas:
-        title: "Ідеї"
       notification_label:
         vote_released: "Голос повернуто"
-      title: "Голосування за тему"
-      reached_limit: "У вас немає голосів, видаліть існуюче голосування!"
-      list_votes: "Список своїх голосів"
-      votes_nav_help: "теми з найбільшою кількістю голосів за весь час"
       hot_nav_help: "найпопулярніші останні теми, включаючи ті, за які нещодавно голосували"
       voted: "Ви проголосували в цій темі"
-      allow_topic_voting: "Дозволити користувачам голосувати в темах цієї категорії"
       vote_title: "Голосувати"
       vote_title_plural: "Голоси"
       voting_closed_description: "Голосування по цій темі закрито"
       see_votes: "У вас залишилося %{count}/%{max} голосів"
-      locked: "Заблоковано"
       locked_description: "Підвищіть рівень своєї довіри, щоб проголосувати"
       votes:
         one: "%{count} голос"
         few: "%{count} голосів"
         many: "%{count} голосів"
         other: "%{count} голосів"
-      anonymous_button:
-        one: "Голосувати"
-        few: "Голоси"
-        many: "Голоси"
-        other: "Голоси"
       remove_vote: "Вилучити голос"
       watch_topic: "Сповіщати мене про нові публікації"
       no_votes_yet: "За це ще ніхто не проголосував"
@@ -59,10 +46,6 @@ uk:
         help: "теми, за які ви голосували"
     search:
       most_votes: "Найбільше голосів"
-      advanced:
-        vote:
-          count:
-            label: "Мінімальна кількість голосів"
     admin:
       web_hooks:
         voting_event:

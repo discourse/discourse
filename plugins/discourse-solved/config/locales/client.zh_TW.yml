@@ -12,6 +12,15 @@ zh_TW:
           kpi:
             accepted_solutions:
               label: "接受的解決方案"
+        sections:
+          support:
+            answerers:
+              staff: "管理員"
+              member: "成員"
+              basic: "初級使用者"
+            response_time:
+              buckets:
+                lt_1h: "< 1 小時"
   js:
     notifications:
       alt:

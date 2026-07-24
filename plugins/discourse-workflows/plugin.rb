@@ -2,12 +2,12 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 402418
+# meta_topic_id: 406990
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
 
-enabled_site_setting :discourse_workflows_enabled
+enabled_site_setting :enable_discourse_workflows
 
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
@@ -39,13 +39,21 @@ register_svg_icon "note-sticky"
 register_svg_icon "palette"
 register_svg_icon "reply"
 register_svg_icon "triangle-exclamation"
+register_svg_icon "flag"
 register_svg_icon "clock"
+register_svg_icon "business-time"
+register_svg_icon "dollar-sign"
 register_svg_icon "comments"
 register_svg_icon "pause"
 register_svg_icon "window-maximize"
 register_svg_icon "user-plus"
+register_svg_icon "user-minus"
 register_svg_icon "grip-vertical"
+register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "copy"
+register_svg_icon "paste"
+register_svg_icon "scissors"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 
@@ -125,9 +133,27 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name, old_value, new_value|
-    next if name != :discourse_workflows_enabled
+    next if name != :enable_discourse_workflows
     next unless new_value && !old_value
 
     DiscourseWorkflows::PluginEnableHandler.handle!
   end
+
+  # Automatic promotion of an upcoming change does not write the site setting,
+  # so :site_setting_changed never fires for it. See UpcomingChanges::NotifyPromotion.
+  on(:upcoming_change_enabled) do |name|
+    next if name != :enable_discourse_workflows
+
+    # A manual opt-in writes the setting before this event fires, so the
+    # :site_setting_changed hook above has already run.
+    next if SiteSetting.setting_modified_from_default?(:enable_discourse_workflows)
+
+    DiscourseWorkflows::PluginEnableHandler.handle!
+  end
+
+  register_stat("total", stat_type: :workflows) { DiscourseWorkflows::Statistics.total }
+  register_stat("created", stat_type: :workflows) { DiscourseWorkflows::Statistics.created }
+  register_stat("edited", stat_type: :workflows) { DiscourseWorkflows::Statistics.edited }
+  register_stat("executed", stat_type: :workflows) { DiscourseWorkflows::Statistics.executed }
+  register_stat("executions", stat_type: :workflows) { DiscourseWorkflows::Statistics.executions }
 end

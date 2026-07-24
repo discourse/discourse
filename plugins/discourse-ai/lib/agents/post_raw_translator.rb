@@ -8,45 +8,6 @@ module DiscourseAi
       end
 
       def system_prompt
-        examples = [
-          {
-            input: {
-              content:
-                "**Heathrow fechado**: Suspensão de voos deve continuar nos próximos dias, afirma gerente do aeroporto de Londres\n\n[details=Do site da BBC]\n\nA British Airways estimou que 85% de seus voos planejados seriam realizados no sábado, mas com atrasos em todos os voos. Às 7h GMT, a maioria das partidas havia ocorrido conforme o esperado, mas, das chegadas, nove dos primeiros 20 voos programados para aterrissar foram cancelados.\n\n[/details]",
-              target_locale: "en",
-            }.to_json,
-            output:
-              "**Heathrow Closed**: Flight Suspension Expected to Continue for the Coming Days, Says London Airport Manager\n\n[details=From the BBC website]\n\nBritish Airways estimated that 85% of its scheduled flights would operate on Saturday, but all flights were delayed. By 7:00 a.m. GMT, most departures had proceeded as expected, but of the arrivals, nine of the first 20 flights scheduled to land were canceled.\n\n[/details]",
-          },
-          {
-            input: {
-              content:
-                "[quote=\"alice, post:3, topic:42\"]\nHow do I get started?\n[/quote]\n\nWe're so glad you're here! Want to run your own Minecraft server? Just click the Get Started button below — it's easy.",
-              target_locale: "de",
-            }.to_json,
-            output:
-              "[quote=\"alice, post:3, topic:42\"]\nWie fange ich an?\n[/quote]\n\nWir freuen uns sehr, dass du hier bist! Möchtest du deinen eigenen Minecraft-Server betreiben? Klick einfach unten auf den „Loslegen“-Button — es ist ganz einfach.",
-          },
-          {
-            input: {
-              content:
-                "There has been an error in my update\n\n```ruby\napi_key = \"a quick brown fox\"\nfetch(\"https://api.example.com/data\", headers: { 'Authorization' => api_key })\n```\n\nPlease help me fix it.",
-              target_locale: "ja",
-            }.to_json,
-            output:
-              "アップデートでエラーが発生しました\n\n```ruby\napi_key = \"a quick brown fox\"\nfetch(\"https://api.example.com/data\", headers: { 'Authorization' => api_key })\n```\n\n修正にご協力ください。\"",
-          },
-          {
-            input: {
-              content:
-                "He proposed a so-called clean architecture for the new service. But clean doesn't always mean simple.",
-              target_locale: "de",
-            }.to_json,
-            output:
-              "Er schlug eine sogenannte „saubere“ Architektur für den neuen Dienst vor. Doch „sauber“ bedeutet nicht immer einfach.",
-          },
-        ]
-
         <<~PROMPT.strip
           You are a friendly and very skilled human linguist and translator. Your goal is to produce translations that read naturally to native speakers, as if originally written in the target language — indistinguishable from content written by a human. Follow these instructions strictly:
 
@@ -59,36 +20,77 @@ module DiscourseAi
           5. For ambiguous terms or phrases, do not translate word-for-word in isolation. Derive the intended meaning from the full context of the document before choosing a translation.
           6. Ensure the translation only contains the original language and the target language.
           7. Match the tone and register of the source text. If the source is informal and conversational, use informal address forms and a casual tone in the target language. Do not default to formal address (e.g. German Sie, French vous) unless the source text is itself formal.
-          8. Your translation is wrapped in a JSON string, so any bare ASCII `"` inside it will truncate the response. For any quoted text, both the opening and closing quote characters must be the target language's native quotation marks — for example German `„…"`, French `«…»`, Japanese `「…」` — never ASCII `"`.
+          8. For any quoted text, use the target language's native quotation marks — for example German „…", French «…», Japanese 「…」 — rather than ASCII quotes.
 
           Follow these instructions on what NOT to do:
           9. Do not translate code snippets or programming language names, but ensure that any comments within the code are translated. Code can be represented in ``` or in single ` backticks or in <code> HTML tags.
           10. Do not add any content besides the translation.
           11. Do not add unnecessary newlines.
 
-          Here are four examples of correct translations:
-
-          Input: #{examples[0][:input]}
-          Output: #{examples[0][:output]}
-
-          Input: #{examples[1][:input]}
-          Output: #{examples[1][:output]}
-
-          Input: #{examples[2][:input]}
-          Output: #{examples[2][:output]}
-
-          Input: #{examples[3][:input]}
-          Output: #{examples[3][:output]}
-
           The text to translate will be provided in JSON format with the following structure:
           {"content": "Text to translate", "target_locale": "Target language code"}
 
-          You are being consumed via an API that expects only the translated text. Only return the translated text in the correct language. Do not add questions or explanations.
+          Format your response as a JSON object with a single key named "output", which has the translation as the value.
+          Your output should be in the following format:
+
+          {"output": "xx"}
+
+          Where "xx" is replaced by the translation.
+          reply with valid JSON only
         PROMPT
       end
 
       def response_format
         [{ "key" => "output", "type" => "string" }]
+      end
+
+      def examples
+        [
+          [
+            {
+              content:
+                "**Heathrow fechado**: Suspensão de voos deve continuar nos próximos dias, afirma gerente do aeroporto de Londres\n\n[details=Do site da BBC]\n\nA British Airways estimou que 85% de seus voos planejados seriam realizados no sábado, mas com atrasos em todos os voos. Às 7h GMT, a maioria das partidas havia ocorrido conforme o esperado, mas, das chegadas, nove dos primeiros 20 voos programados para aterrissar foram cancelados.\n\n[/details]",
+              target_locale: "en",
+            }.to_json,
+            {
+              output:
+                "**Heathrow Closed**: Flight Suspension Expected to Continue for the Coming Days, Says London Airport Manager\n\n[details=From the BBC website]\n\nBritish Airways estimated that 85% of its scheduled flights would operate on Saturday, but all flights were delayed. By 7:00 a.m. GMT, most departures had proceeded as expected, but of the arrivals, nine of the first 20 flights scheduled to land were canceled.\n\n[/details]",
+            }.to_json,
+          ],
+          [
+            {
+              content:
+                "[quote=\"alice, post:3, topic:42\"]\nHow do I get started?\n[/quote]\n\nWe're so glad you're here! Want to run your own Minecraft server? Just click the Get Started button below — it's easy.",
+              target_locale: "de",
+            }.to_json,
+            {
+              output:
+                "[quote=\"alice, post:3, topic:42\"]\nWie fange ich an?\n[/quote]\n\nWir freuen uns sehr, dass du hier bist! Möchtest du deinen eigenen Minecraft-Server betreiben? Klick einfach unten auf den „Loslegen“-Button — es ist ganz einfach.",
+            }.to_json,
+          ],
+          [
+            {
+              content:
+                "There has been an error in my update\n\n```ruby\napi_key = \"a quick brown fox\"\nfetch(\"https://api.example.com/data\", headers: { 'Authorization' => api_key })\n```\n\nPlease help me fix it.",
+              target_locale: "ja",
+            }.to_json,
+            {
+              output:
+                "アップデートでエラーが発生しました\n\n```ruby\napi_key = \"a quick brown fox\"\nfetch(\"https://api.example.com/data\", headers: { 'Authorization' => api_key })\n```\n\n修正にご協力ください。",
+            }.to_json,
+          ],
+          [
+            {
+              content:
+                "He proposed a so-called clean architecture for the new service. But clean doesn't always mean simple.",
+              target_locale: "de",
+            }.to_json,
+            {
+              output:
+                "Er schlug eine sogenannte „saubere“ Architektur für den neuen Dienst vor. Doch „sauber“ bedeutet nicht immer einfach.",
+            }.to_json,
+          ],
+        ]
       end
     end
   end

@@ -27,6 +27,9 @@ he:
             topic_id:
               label: מזהה נושא
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "צ׳אט"
       invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
       on_holiday: "בחג"
       disable_holiday: "השבתה"
@@ -475,7 +478,6 @@ he:
         create_event_title: "יצירת אירוע"
         update_event_title: "עריכת אירוע"
         advanced_settings_title: "הגדרות מתקדמות"
-        advanced_settings: "הגדרות מתקדמות"
         confirm_delete: "למחוק את האירוע הזה?"
         confirm_close: "לסגור את האירוע הזה?"
         confirm_open: "לפתוח את האירוע הזה?"
@@ -514,11 +516,7 @@ he:
         allow_chat:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"
-        url:
-          label: "כתובת"
-          placeholder: "רשות"
         location:
-          label: "מיקום"
           placeholder: "הוספת מיקום, קישור או משהו."
         description:
           label: "תיאור"

@@ -21,6 +21,10 @@ ko:
         status: "상태"
         hidden: "숨김"
         failed: "실패"
+    access_control:
+      manage:
+        access_permission_editor: "에디터"
+        access_permission_remove: "제거"
     number:
       format:
         separator: "."
@@ -254,6 +258,9 @@ ko:
     age: "나이"
     joined: "가입일"
     admin_title: "관리자"
+    advanced_mode_toggle:
+      advanced_mode: "고급 모드"
+      simple_mode: "단순 모드"
     show_more: "자세히 보기"
     show_help: "옵션"
     links: "링크"
@@ -1121,6 +1128,9 @@ ko:
       notifications: "알림"
       statistics: "통계"
       desktop_notifications:
+        push_level:
+          none: "비활성"
+          all: "활성화"
         not_supported: "이 브라우저에서는 알림이 지원되지 않습니다."
         perm_denied_expl: "알림 권한을 거부한 상태입니다. 브라우저 설정에서 알림을 허용해 주세요."
         consent_prompt: "내 게시물에 댓글이 달리면 실시간으로 알림을 받을까요?"
@@ -1488,7 +1498,7 @@ ko:
         default: "(기본)"
         any: "모두"
       homepage:
-        default: "(기본)"
+        default: "기본"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -1660,6 +1670,27 @@ ko:
           cancel: "취소"
           create_link: "링크 만들기"
           create_link_and_send_email: "링크를 만들고 이메일 보내기"
+        invite_roles:
+          member_title: "회원 초대"
+          member_tab: "회원"
+          admin_tab: "스태프"
+          staff_role_admin: "관리자"
+          staff_role_moderator: "운영자"
+          email_placeholder: "이메일 주소"
+          invite_by_email: "이메일"
+          restrict_domain: "도메인으로 제한"
+          domain_placeholder: "example.com"
+          more_options: "추가 옵션"
+          update: "업데이트"
+          summary:
+            role_member: "회원"
+            role_admin: "관리자"
+            role_moderator: "운영자"
+            method_email: "이메일"
+            uses: "최대 사용"
+            expires: "만료"
+            topic: "글"
+            groups: "그룹"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -1839,7 +1870,6 @@ ko:
     created: "생성일"
     created_lowercase: "생성일"
     trust_level: "신뢰 레벨"
-    search_hint: "아이디, 이메일 또는 IP 주소"
     create_account:
       header_title: "환영합니다!"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
@@ -1883,6 +1913,9 @@ ko:
       email_label: "이메일"
       continue_button: "계속하기"
       verify_button: "계속하기"
+      signup_title: "계정 만들기"
+      account_ready_continue: "계속하기"
+      username_label: "아이디"
     login:
       header_title: "환영합니다"
       title: "로그인"
@@ -2081,6 +2114,7 @@ ko:
       discard: "취소"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
+      title_placeholder_redesign: "제목"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
       edit_reason_placeholder: "왜 편집 중입니까?"
       topic_featured_link_placeholder: "제목과 함께 표시된 링크를 입력하세요."
@@ -2483,6 +2517,7 @@ ko:
       sort:
         label: "정렬 기준"
         top: "인기글"
+        hot: "인기"
         new: "신규"
       load_more_children:
         other: "추가 %{count} 개 댓글"
@@ -2538,6 +2573,7 @@ ko:
       expand_details: "글의 세부 정보 펼치기"
       read_more_in_category: "더 읽을거리가 필요하신가요? %{categoryLink}에서 다른 글을 찾아 보거나 <a href='%{latestLink}'>최근 글</a>을 살펴보세요."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
+      sr_read: "읽기"
       bumped_at: "최근: %{date}"
       browse_latest_topics: "최근 글 보기"
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
@@ -2907,6 +2943,8 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
+        modal:
+          title: "번역"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3092,7 +3130,6 @@ ko:
       topic_featured_link_allowed: "이 카테고리에 추천 링크 허용"
       create: "새로운 카테고리"
       create_long: "새 카테고리 생성"
-      slug_placeholder: "(Optional) dashed-words for url"
       creation_error: 카테고리 생성 중에 오류가 발생했습니다.
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
       validations:
@@ -3499,7 +3536,6 @@ ko:
       selector_no_tags: "태그 없음"
       selector_remove_filter: "필터 제거"
       tags: "태그"
-      choose_for_topic: "태그(선택사항)"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"
@@ -3665,6 +3701,9 @@ ko:
         custom:
           save: "저장"
           delete: "삭제하기"
+          localizations:
+            title: "번역"
+            locale: "언어"
           links:
             reset: "기본값으로 재설정"
             icon:
@@ -3786,6 +3825,7 @@ ko:
       reports:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
+        all_groups: "모든 그룹"
         group_traffic: "트래픽"
         group_members: "회원"
         group_other: "기타"
@@ -3849,6 +3889,9 @@ ko:
               description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
             opengraph_image:
               description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
+            og_image_preview:
+              generate: "API 키 생성"
+              topic_id_label: "글 ID"
         fonts:
           title: "글꼴"
           form:
@@ -3910,6 +3953,20 @@ ko:
               title: "설정"
         badges:
           title: "배지"
+        category_management:
+          tabs:
+            settings: "설정"
+          types:
+            all:
+              title: "모든 카테고리"
+          table:
+            category: "카테고리"
+            visibility: "시계"
+            topics: "글"
+          visibility:
+            public: "공개"
+          visibility_filter:
+            all: "모든 카테고리"
         permalinks:
           title: "고유링크"
         emoji:
@@ -3968,7 +4025,7 @@ ko:
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         installed_version: "설치됨"
-        latest_version: "최신"
+        github: "GitHub"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
         dismiss_notice: "무시"
         new_features:
@@ -4020,7 +4077,6 @@ ko:
               posts: "글"
               share: "공유하기"
             whos_posting:
-              all_categories: "모든 카테고리"
               staff: "스태프"
             trust_level_pipeline:
               trust_levels:
@@ -4035,6 +4091,7 @@ ko:
               searches: "검색"
               status: "상태"
         reports_section:
+          header_action: "관리"
           no_data: "표시할 정보가 없습니다"
           modal:
             enabled_heading: "활성화"
@@ -4336,6 +4393,8 @@ ko:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "그룹"
+          locale_selector:
+            title: "언어"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
@@ -5017,6 +5076,10 @@ ko:
         active: "활성화됨"
         status: "상태"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "차단됨"
           delete:
             confirmation_modal:
               close: "닫기"
@@ -5029,6 +5092,9 @@ ko:
           suspended: "정지됨"
           silenced: "차단됨"
           staged: "스테이징됨"
+        activation_filter:
+          all: "모든 사용자"
+          activated: "활성화됨"
         approved: "승인되었나요?"
         titles:
           pending: "검토 대기 중인 사용자"
@@ -5474,6 +5540,10 @@ ko:
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"
         settings: "설정"
+        export: "내보내기"
+        import: "가져오기"
+        import_category:
+          new: "신규"
       embedding:
         get_started: "다른 웹사이트에 Discourse를 임베드하려면 먼저 호스트를 추가하세요."
         delete: "삭제하기"

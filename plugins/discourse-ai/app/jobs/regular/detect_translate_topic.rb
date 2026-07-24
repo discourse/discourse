@@ -6,8 +6,16 @@ module Jobs
     sidekiq_options retry: false
 
     def execute(args)
-      return if !DiscourseAi::Translation.enabled?
+      should_process_topic = DiscourseAi::Translation.enabled? || source_gist_detection_enabled?
+
+      return if !should_process_topic
       return if args[:topic_id].blank?
+
+      topic = Topic.find_by(id: args[:topic_id])
+      return if topic.blank? || topic.title.blank? || topic.deleted_at.present?
+
+      detected_locale = topic.locale
+      enqueue_gist(topic, detected_locale) if detected_locale.present?
 
       unless DiscourseAi::Translation.credits_available_for_topic_detection?
         Rails.logger.info(
@@ -15,9 +23,6 @@ module Jobs
         )
         return
       end
-
-      topic = Topic.find_by(id: args[:topic_id])
-      return if topic.blank? || topic.title.blank? || topic.deleted_at.present?
 
       force = args[:force] || false
       return if topic.user_id <= 0 && !force && !SiteSetting.ai_translation_include_bot_content
@@ -34,10 +39,10 @@ module Jobs
           return
         end
       else
-        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
+        return if !DiscourseAi::Translation.category_allowed?(topic.category)
       end
 
-      if (detected_locale = topic.locale).blank?
+      if detected_locale.blank?
         begin
           detected_locale = DiscourseAi::Translation::TopicLocaleDetector.detect_locale(topic)
         rescue FinalDestination::SSRFDetector::LookupFailedError
@@ -45,9 +50,12 @@ module Jobs
           # the backfill job will handle failures
           return
         end
+
+        return if detected_locale.blank?
+
+        enqueue_gist(topic, detected_locale)
       end
 
-      return if detected_locale.blank?
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
@@ -67,7 +75,8 @@ module Jobs
         next if !force && exists && !has_quota
 
         begin
-          DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)
+          localization = DiscourseAi::Translation::TopicLocalizer.localize(topic, locale)
+          enqueue_gist(topic, locale) if localization
         rescue FinalDestination::SSRFDetector::LookupFailedError
           # do nothing, there are too many sporadic lookup failures
         rescue => e
@@ -78,6 +87,26 @@ module Jobs
       end
 
       MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
+    end
+
+    private
+
+    def enqueue_gist(topic, desired_locale)
+      gists_enabled = SiteSetting.ai_summarization_enabled && SiteSetting.ai_summary_gists_enabled
+
+      return if !gists_enabled
+
+      locale =
+        DiscourseAi::Summarization
+          .gist_locales(topic)
+          .find { |candidate| LocaleNormalizer.is_same?(candidate, desired_locale) }
+      Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, locale:) if locale
+    end
+
+    def source_gist_detection_enabled?
+      SiteSetting.discourse_ai_enabled && SiteSetting.ai_translation_enabled &&
+        DiscourseAi::Translation.has_llm_model? && SiteSetting.ai_summarization_enabled &&
+        SiteSetting.ai_summary_gists_enabled
     end
   end
 end

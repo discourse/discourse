@@ -3,10 +3,8 @@
 module Migrations
   module Converters
     module Discourse
-      class Badges < Conversion::ProgressStep
+      class Badges < Conversion::Step
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*) FROM badges

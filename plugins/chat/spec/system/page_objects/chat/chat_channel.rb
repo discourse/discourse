@@ -52,6 +52,13 @@ module PageObjects
         find(".toggle-channel-membership-button.-join").click
       end
 
+      def click_preview_card_login
+        find(
+          ".chat-channel-preview-card .btn",
+          text: I18n.t("js.chat.channel.preview_card.log_in"),
+        ).click
+      end
+
       def message_by_id_selector(id)
         ".chat-channel .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
@@ -239,6 +246,10 @@ module PageObjects
         has_css?(".toggle-channel-membership-button.-join")
       end
 
+      def has_anonymous_preview_card?
+        has_css?(".chat-channel-preview-card.--anon")
+      end
+
       def has_no_composer?
         has_no_css?(".chat-composer")
       end
@@ -249,10 +260,6 @@ module PageObjects
 
       def has_no_star_button?
         has_no_css?(".c-navbar__star-channel-button")
-      end
-
-      def has_no_browse_all_link?
-        has_no_css?(".chat-channel-preview-card__browse-all")
       end
 
       def thread_list_button_selector

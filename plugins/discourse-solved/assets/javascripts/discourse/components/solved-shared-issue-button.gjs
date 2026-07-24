@@ -37,8 +37,31 @@ export default class SolvedSharedIssueButton extends Component {
     return this.currentUser && this.currentUser.id === this.args.post.user_id;
   }
 
+  get isClosed() {
+    return this.args.post.topic.closed;
+  }
+
+  get isArchived() {
+    return this.args.post.topic.archived;
+  }
+
   get disabled() {
-    return this.saving || this.isTopicAuthor;
+    return (
+      this.saving || this.isTopicAuthor || this.isClosed || this.isArchived
+    );
+  }
+
+  get titleKey() {
+    if (this.isTopicAuthor) {
+      return "solved.shared_issue.author_title";
+    }
+    if (this.isClosed) {
+      return "solved.shared_issue.closed_title";
+    }
+    if (this.isArchived) {
+      return "solved.shared_issue.archived_title";
+    }
+    return "solved.shared_issue.title";
   }
 
   get label() {
@@ -54,7 +77,7 @@ export default class SolvedSharedIssueButton extends Component {
 
   @action
   async toggle() {
-    if (this.isTopicAuthor) {
+    if (this.isTopicAuthor || this.isClosed || this.isArchived) {
       return;
     }
 
@@ -89,18 +112,14 @@ export default class SolvedSharedIssueButton extends Component {
             "btn-default"
             "post-action-menu__solved-shared-issue"
             (if this.hasSharedIssue "has-shared-issue")
-            (if this.isTopicAuthor "disabled")
+            (if this.disabled "disabled")
           }}
           ...attributes
           @action={{this.toggle}}
           @disabled={{this.disabled}}
           @icon="hand"
           @translatedLabel={{this.label}}
-          @title={{if
-            this.isTopicAuthor
-            "solved.shared_issue.author_title"
-            "solved.shared_issue.title"
-          }}
+          @title={{this.titleKey}}
         />
       </div>
     {{/if}}

@@ -6,7 +6,7 @@ module Migrations
       class CategoryModerationGroups < CopyStep
         depends_on :categories, :groups
 
-        column_names %i[category_id group_id]
+        column_names %i[category_id group_id created_at updated_at]
 
         requires_set :existing_category_moderation_groups,
                      "SELECT category_id, group_id FROM category_moderation_groups WHERE group_id > 0"

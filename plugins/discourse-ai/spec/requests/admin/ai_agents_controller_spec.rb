@@ -273,6 +273,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           tools: [["search", { "base_query" => "test" }, true]],
           top_p: 0.1,
           temperature: 0.5,
+          thinking_effort: "high",
           allow_topic_mentions: true,
           allow_personal_messages: true,
           allow_chat_channel_mentions: true,
@@ -283,7 +284,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           mcp_server_tool_names: {
             ai_mcp_server.id.to_s => ["search_issues"],
           },
-          execution_mode: "agentic",
           max_turn_tokens: 5000,
           compression_threshold: 80,
           response_format: [{ key: "summary", type: "string" }],
@@ -305,9 +305,9 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           expect(agent_json["name"]).to eq("superbot")
           expect(agent_json["top_p"]).to eq(0.1)
           expect(agent_json["temperature"]).to eq(0.5)
+          expect(agent_json["thinking_effort"]).to eq("high")
           expect(agent_json["default_llm_id"]).to eq(llm_model.id)
           expect(agent_json["forced_tool_count"]).to eq(2)
-          expect(agent_json["execution_mode"]).to eq("agentic")
           expect(agent_json["max_turn_tokens"]).to eq(5000)
 
           expect(agent_json["allow_topic_mentions"]).to eq(true)
@@ -328,6 +328,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           expect(agent.ai_agent_mcp_servers.first.selected_tool_names).to eq(["search_issues"])
           expect(agent.top_p).to eq(0.1)
           expect(agent.temperature).to eq(0.5)
+          expect(agent.thinking_effort).to eq("high")
         }.to change(AiAgent, :count).by(1)
       end
 
@@ -558,13 +559,12 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
     end
 
-    it "supports updating agentic params" do
+    it "supports updating token budget params" do
       agent = Fabricate(:ai_agent, name: "test_bot2")
 
       put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
           params: {
             ai_agent: {
-              execution_mode: "agentic",
               max_turn_tokens: 8000,
               compression_threshold: 75,
             },
@@ -573,7 +573,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to have_http_status(:ok)
       agent.reload
 
-      expect(agent.execution_mode).to eq("agentic")
       expect(agent.max_turn_tokens).to eq(8000)
 
       expect(agent.compression_threshold).to eq(75)
@@ -738,6 +737,25 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         expect(response.parsed_body["errors"].join).not_to include("en.discourse")
       end
 
+      it "allows editing thinking effort and refreshes the cached agent class" do
+        agent_id = DiscourseAi::Agents::Agent.system_agents.values.first
+        cached_agent = AiAgent.all_agents(enabled_only: false).find { |agent| agent.id == agent_id }
+        expect(cached_agent.thinking_effort).not_to eq("high")
+
+        put "/admin/plugins/discourse-ai/ai-agents/#{agent_id}.json",
+            params: {
+              ai_agent: {
+                thinking_effort: "high",
+              },
+            }
+
+        expect(response).to be_successful
+        expect(AiAgent.find(agent_id).thinking_effort).to eq("high")
+
+        cached_agent = AiAgent.all_agents(enabled_only: false).find { |agent| agent.id == agent_id }
+        expect(cached_agent.thinking_effort).to eq("high")
+      end
+
       it "does allow some actions" do
         put "/admin/plugins/discourse-ai/ai-agents/#{DiscourseAi::Agents::Agent.system_agents.values.first}.json",
             params: {
@@ -790,6 +808,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
         ],
         temperature: 0.8,
         top_p: 0.9,
+        thinking_effort: "high",
         response_format: [{ type: "string", key: "summary" }],
         examples: [["user example", "assistant example"]],
         default_llm_id: llm_model.id,
@@ -813,6 +832,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent_data["system_prompt"]).to eq("You are a tool master")
       expect(agent_data["temperature"]).to eq(0.8)
       expect(agent_data["top_p"]).to eq(0.9)
+      expect(agent_data["thinking_effort"]).to eq("high")
       expect(agent_data["response_format"]).to eq([{ "type" => "string", "key" => "summary" }])
       expect(agent_data["examples"]).to eq([["user example", "assistant example"]])
 
@@ -866,6 +886,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           system_prompt: "You are an imported assistant",
           temperature: 0.7,
           top_p: 0.8,
+          thinking_effort: "medium",
           response_format: [{ type: "string", key: "answer" }],
           examples: [["hello", "hi there"]],
           tools: ["SearchCommand", ["ReadCommand", { max_length: 1000 }, true]],
@@ -888,6 +909,7 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.system_prompt).to eq("You are an imported assistant")
       expect(agent.temperature).to eq(0.7)
       expect(agent.top_p).to eq(0.8)
+      expect(agent.thinking_effort).to eq("medium")
       expect(agent.response_format).to eq([{ "type" => "string", "key" => "answer" }])
       expect(agent.examples).to eq([["hello", "hi there"]])
       expect(agent.tools).to eq(["SearchCommand", ["ReadCommand", { "max_length" => 1000 }, true]])

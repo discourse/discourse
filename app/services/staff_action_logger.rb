@@ -319,6 +319,23 @@ class StaffActionLogger
     )
   end
 
+  def log_update_site_setting_localizations(locale:, setting_names:, opts: {})
+    raise Discourse::InvalidParameters.new(:locale) if locale.blank?
+    raise Discourse::InvalidParameters.new(:setting_names) if setting_names.blank?
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:custom_staff],
+        custom_type: "update_site_setting_localizations",
+        details:
+          {
+            locale:,
+            setting_names: Array(setting_names).map(&:to_s).uniq.sort.join("|"),
+          }.map { |key, value| "#{key}: #{truncate(value.to_s)}" }.join("\n"),
+      ),
+    )
+  end
+
   def log_site_setting_groups_change(setting_name, previous_value, new_value, opts = {})
     unless setting_name.present? && SiteSetting.respond_to?(setting_name)
       raise Discourse::InvalidParameters.new(:setting_name)
@@ -329,6 +346,34 @@ class StaffActionLogger
         subject: setting_name,
         previous_value: previous_value&.to_s,
         new_value: new_value&.to_s,
+      ),
+    )
+  end
+
+  def log_access_control_list_permission_change(
+    target,
+    previous_permissions,
+    new_permissions,
+    opts = {}
+  )
+    previous_permissions_details =
+      previous_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+     #{permission_name}:
+     -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    new_permissions_details =
+      new_permissions.map { |permission_name, permission| <<~STR }.join("\n")
+      #{permission_name}:
+      -> #{permission.map { |k, v| "#{k}: #{v.join(", ")}" }.join(",")}
+    STR
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_access_control_list_permissions],
+        subject: "#{target.class.polymorphic_name} (#{target.id})",
+        previous_value: previous_permissions_details,
+        new_value: new_permissions_details,
       ),
     )
   end

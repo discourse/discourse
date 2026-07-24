@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-jquery */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -15,7 +14,6 @@ import {
   shift,
 } from "@floating-ui/dom";
 import curryComponent from "ember-curry-component";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
@@ -74,17 +72,15 @@ function moveReactionAnimation(
   fakeReaction.style.top = startPosition;
   fakeReaction.style.opacity = 0;
 
-  $(fakeReaction).animate(
-    {
-      top: endPosition,
-      opacity: 1,
-    },
-    {
-      duration: 350,
-      complete: done,
-    },
-    "swing"
-  );
+  fakeReaction
+    .animate(
+      [
+        { top: startPosition, opacity: 0 },
+        { top: endPosition, opacity: 1 },
+      ],
+      { duration: 350, easing: "ease-in-out", fill: "forwards" }
+    )
+    .finished.then(done, () => {});
 }
 
 function addReaction(list, reactionId, complete) {
@@ -100,23 +96,19 @@ function scaleReactionAnimation(mainReaction, start, end, complete) {
     return run(this, complete);
   }
 
-  return $(mainReaction)
-    .stop()
-    .css("textIndent", start)
-    .animate(
-      { textIndent: end },
-      {
-        complete,
-        step(now) {
-          $(this)
-            .css("transform", `scale(${now})`)
-            .addClass("d-icon-d-unliked")
-            .removeClass("d-icon-d-liked");
-        },
-        duration: 150,
-      },
-      "linear"
-    );
+  // Cancel any in-flight scale animation before starting a new one.
+  mainReaction.getAnimations().forEach((animation) => animation.cancel());
+
+  mainReaction.classList.add("d-icon-d-unliked");
+  mainReaction.classList.remove("d-icon-d-liked");
+
+  const animation = mainReaction.animate(
+    [{ transform: `scale(${start})` }, { transform: `scale(${end})` }],
+    { duration: 150, easing: "linear", fill: "forwards" }
+  );
+  animation.finished.then(complete, () => {});
+
+  return animation;
 }
 
 export default class DiscourseReactionsActions extends Component {

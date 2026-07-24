@@ -375,8 +375,8 @@ RSpec.describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
             '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
           )
@@ -532,8 +532,8 @@ RSpec.describe UsersController do
 
           get "/u/password-reset/#{email_token.token}"
 
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
               '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
             )
@@ -589,8 +589,8 @@ RSpec.describe UsersController do
         end
 
         it "preloads with a security key challenge and allowed credential ids" do
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             password_reset = JSON.parse(json["password_reset"])
             expect(password_reset["challenge"]).not_to eq(nil)
             expect(password_reset["allowed_credential_ids"]).to eq(
@@ -903,6 +903,30 @@ RSpec.describe UsersController do
           expect(User.find_by(username: @user.username).user_option.timezone).to eq(
             "Australia/Brisbane",
           )
+        end
+      end
+
+      context "when signup params include protected profile attributes" do
+        fab!(:whisperers_group, :group)
+
+        let(:created_user) { User.find(response.parsed_body["user_id"]) }
+
+        before { SiteSetting.whispers_allowed_groups = whisperers_group.id.to_s }
+
+        it "ignores protected profile attributes on unauthenticated signup" do
+          post_user(
+            title: "Moderator",
+            primary_group_id: whisperers_group.id,
+            flair_group_id: whisperers_group.id,
+          )
+
+          expect(response).to have_http_status(:ok)
+          expect(created_user).to have_attributes(
+            title: nil,
+            primary_group_id: nil,
+            flair_group_id: nil,
+          )
+          expect(created_user).not_to be_a_whisperer
         end
       end
 
@@ -1620,6 +1644,19 @@ RSpec.describe UsersController do
         }
       end
       include_examples "failed signup"
+    end
+
+    context "when username is too long" do
+      let(:oversized_username) { "a" * 50_000 }
+
+      it "rejects signup without reflecting the username", :aggregate_failures do
+        expect { post_user(username: oversized_username) }.not_to change { User.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.body.bytesize).to be < 1_000
+        expect(response.body).not_to include(oversized_username)
+      end
     end
 
     context "when password param is missing" do
@@ -2348,6 +2385,36 @@ RSpec.describe UsersController do
       expect(invites[0]["user"]).to be_present
     end
 
+    it "hides last seen timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      hidden_invitee = Fabricate(:user, last_seen_at: 1.hour.ago)
+      hidden_invitee.user_option.update!(hide_profile: true)
+      visible_invitee = Fabricate(:user, last_seen_at: 2.hours.ago)
+
+      [hidden_invitee, visible_invitee].each do |redeemed_user|
+        invite = Fabricate(:invite, invited_by: inviter)
+        Fabricate(:invited_user, invite: invite, user: redeemed_user)
+      end
+
+      sign_in(inviter)
+      get "/u/#{inviter.username}/invited.json"
+
+      expect(response.status).to eq(200)
+
+      invited_users = response.parsed_body["invites"].map { |invite| invite["user"] }
+      hidden_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == hidden_invitee.id }
+      visible_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == visible_invitee.id }
+
+      expect(hidden_user_record).to be_present
+      expect(visible_user_record).to be_present
+      expect(hidden_user_record).not_to include("last_seen_at")
+      expect(visible_user_record).to include("last_seen_at")
+    end
+
     it "doesn't filter by email if another regular user" do
       inviter = Fabricate(:user, trust_level: TrustLevel[2])
       sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
@@ -2527,6 +2594,25 @@ RSpec.describe UsersController do
           invites = response.parsed_body["invites"]
           expect(invites.size).to eq(1)
           expect(invites[0]).to include("id" => invite.id)
+        end
+      end
+
+      context "with expired invites" do
+        it "returns an empty list without permission to see invite details" do
+          viewer = Fabricate(:user, trust_level: TrustLevel[2])
+          sign_in(viewer)
+          Fabricate(:invite, invited_by: inviter, expires_at: 1.day.ago)
+
+          get "/u/#{inviter.username}/invited/expired.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["can_see_invite_details"]).to eq(false)
+          expect(response.parsed_body["invites"]).to eq([])
+          expect(response.parsed_body["counts"]).to include(
+            "pending" => 0,
+            "expired" => 0,
+            "total" => 0,
+          )
         end
       end
     end
@@ -4434,6 +4520,22 @@ RSpec.describe UsersController do
       expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
 
+    it "prevents a moderator from destroying another user's secondary email" do
+      SiteSetting.email_editable = true
+      admin_secondary_email = Fabricate(:secondary_email, user: admin)
+      sign_in(moderator)
+
+      expect {
+        delete "/u/#{admin.username}/preferences/email.json",
+               params: {
+                 email: admin_secondary_email.email,
+               }
+      }.not_to change { UserEmail.exists?(admin_secondary_email.id) }
+
+      expect(response).to be_forbidden
+      expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+    end
+
     context "when logged in" do
       before do
         SiteSetting.email_editable = true
@@ -5361,6 +5463,54 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "staged user email visibility" do
+    fab!(:staged_user) { Fabricate(:staged, email: "staged-primary@example.com") }
+    fab!(:secondary_email) do
+      Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+    end
+    fab!(:email_change_request) do
+      Fabricate(
+        :email_change_request,
+        user: staged_user,
+        new_email: "staged-unconfirmed@example.com",
+      )
+    end
+
+    before do
+      SiteSetting.moderators_view_emails = false
+      sign_in(moderator)
+    end
+
+    it "respects email visibility for staged users" do
+      paths = ["/u/#{staged_user.username}.json", "/u/#{staged_user.username}/card.json"]
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(nil)
+        expect(user_json["secondary_emails"]).to eq(nil)
+        expect(user_json["unconfirmed_emails"]).to eq(nil)
+        expect(response.body).not_to include(staged_user.email)
+        expect(response.body).not_to include(secondary_email.email)
+        expect(response.body).not_to include(email_change_request.new_email)
+      end
+
+      SiteSetting.moderators_view_emails = true
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(staged_user.email)
+        expect(user_json["secondary_emails"]).to contain_exactly(secondary_email.email)
+        expect(user_json["unconfirmed_emails"]).to contain_exactly(email_change_request.new_email)
+      end
+    end
+  end
+
   describe "#cards" do
     fab!(:user) { Discourse.system_user }
     fab!(:user2, :user)
@@ -5458,8 +5608,8 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["accountCreated"]).to include(
             "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
           )
@@ -5494,6 +5644,34 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["users"].map { |u| u["username"] }).to match_array(users.map(&:username))
+      end
+
+      it "excludes users hidden by the regular user search scope" do
+        SiteSetting.must_approve_users = true
+
+        visible_user = Fabricate(:user, username: "vis_user", approved: true)
+        suspended_user =
+          Fabricate(:user, username: "susp_user", approved: true, suspended_till: 1.year.from_now)
+        inactive_user = Fabricate(:user, username: "inact_user", active: false, approved: true)
+        unapproved_user = Fabricate(:user, username: "unapp_user", approved: false)
+        staged_user = Fabricate(:user, username: "stage_user", approved: true, staged: true)
+
+        get "/u/search/users.json",
+            params: {
+              usernames: [
+                visible_user,
+                suspended_user,
+                inactive_user,
+                unapproved_user,
+                staged_user,
+              ].map(&:username).join(","),
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |user| user["username"] }).to contain_exactly(
+          visible_user.username,
+        )
       end
 
       it "searches groups if include_groups = true" do
@@ -5714,7 +5892,7 @@ RSpec.describe UsersController do
               }
           expect(response.status).to eq(200)
           groups = response.parsed_body["groups"]
-          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+          expect(groups).to eq([{ "name" => "admins", "full_name" => "Admins" }])
 
           DiscoursePluginRegistry.reset!
         end
@@ -5881,6 +6059,46 @@ RSpec.describe UsersController do
                 term: user.username,
               }
 
+          expect(users_found).to be_empty
+        end
+
+        it "does not let an anon user enumerate members of a group it cannot see" do
+          hidden =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          hidden.add(user)
+
+          get "/u/search/users.json", params: { group: hidden.name, term: user.username }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "lets a signed-in user filter by a non-public group they can see" do
+          sign_in(user)
+          group =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          member = Fabricate(:user, username: "visiblemember")
+          group.add(member)
+
+          get "/u/search/users.json", params: { group: group.name, term: "visiblemember" }
+
+          expect(response.status).to eq(200)
+          expect(users_found).to include("visiblemember")
+        end
+
+        it "returns no results rather than erroring for a group that does not exist" do
+          sign_in(user)
+
+          get "/u/search/users.json", params: { group: "does_not_exist", term: user.username }
+
+          expect(response.status).to eq(200)
           expect(users_found).to be_empty
         end
 
@@ -8188,6 +8406,47 @@ RSpec.describe UsersController do
         expect(unread_notifications.map { |notification| notification["id"] }).to eq(
           [unread_pm_notification.id, unread_group_message_summary_notification.id],
         )
+      end
+
+      context "with notifications for inaccessible private messages" do
+        fab!(:sender, :coding_horror)
+
+        fab!(:forbidden_pm) do
+          Fabricate(
+            :private_message_topic,
+            title: "Confidential Acquisition Plan",
+            user: sender,
+            recipient: user,
+          )
+        end
+
+        fab!(:forbidden_post) { Fabricate(:post, topic: forbidden_pm, user: sender) }
+
+        fab!(:forbidden_pm_notification) do
+          Fabricate(
+            :private_message_notification,
+            read: false,
+            user: user,
+            topic: forbidden_pm,
+            post: forbidden_post,
+            created_at: 3.minutes.ago,
+          )
+        end
+
+        before { TopicAllowedUser.where(topic: forbidden_pm, user: user).delete_all }
+
+        it "does not disclose titles of PMs the user can no longer access" do
+          get "/u/#{user.username}/user-menu-private-messages"
+
+          expect(response.status).to eq(200)
+          expect(response.body).not_to include(forbidden_pm.title)
+          expect(
+            response.parsed_body["unread_notifications"].map { |notification| notification["id"] },
+          ).to contain_exactly(
+            unread_pm_notification.id,
+            unread_group_message_summary_notification.id,
+          )
+        end
       end
 
       it "sends an array of read group_message_summary notifications" do

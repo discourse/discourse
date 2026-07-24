@@ -34,9 +34,8 @@ ru:
               label: ID темы
     discourse_calendar:
       livestream:
-        chat:
-          join_channel_header: "🌟 Присоединяйтесь к обсуждению! 🌟"
-          join_channel_message: "Подтвердите свое участие и откройте чат мероприятия. Присоединяйтесь к обсуждениям, делитесь своими впечатлениями и общайтесь с другими участниками!"
+        zoom:
+          chat: "Чат"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
       preferences:
         all_events: "Discourse Календарь - Все события"
@@ -511,7 +510,6 @@ ru:
         create_event_title: "Создать мероприятие"
         update_event_title: "Изменить мероприятие"
         advanced_settings_title: "Расширенные настройки"
-        advanced_settings: "Расширенные настройки"
         confirm_delete: "Действительно удалить это мероприятие ?"
         confirm_close: "Действительно закрыть это мероприятие ?"
         confirm_open: "Действительно открыть это мероприятие ?"
@@ -570,11 +568,7 @@ ru:
         allow_chat:
           label: "Интеграция чата"
           checkbox_label: "Создать и настроить чат-канал для конкретного события"
-        url:
-          label: "URL-адрес"
-          placeholder: "Необязательно"
         location:
-          label: "Расположение"
           placeholder: "Добавьте местоположение, ссылку или что-то еще."
         description:
           label: "Описание"

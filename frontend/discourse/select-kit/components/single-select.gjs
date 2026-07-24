@@ -46,6 +46,16 @@ export default class SingleSelect extends SelectKitComponent {
         );
       }
     } else {
+      if (this.value === "" && this.selectKit.valueProperty) {
+        const blankItem = (this.content || []).find(
+          (item) => item[this.selectKit.valueProperty] === ""
+        );
+
+        if (blankItem) {
+          return this.selectKit.modifySelection(blankItem);
+        }
+      }
+
       return this.selectKit.noneItem;
     }
   }

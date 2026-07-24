@@ -322,6 +322,8 @@ class TopicCreator
         display_name = email.split("@").first
 
         if user = find_or_create_user(email, display_name)
+          check_can_send_permission!(topic, user)
+
           if !@added_users.include?(user)
             @added_users << user
             topic.topic_allowed_users.build(user_id: user.id)
@@ -330,7 +332,7 @@ class TopicCreator
         end
       end
     ensure
-      rollback_with!(topic, :target_user_not_found) unless len == emails.length
+      rollback_with!(topic, :target_user_not_found) if topic.errors.blank? && len != emails.length
     end
   end
 
@@ -356,6 +358,7 @@ class TopicCreator
              @guardian.can_send_private_message?(
                obj,
                notify_moderators: topic&.subtype == TopicSubtype.notify_moderators,
+               private_message_context: @opts[:private_message_context],
              )
       rollback_with!(topic, :cant_send_pm)
     end

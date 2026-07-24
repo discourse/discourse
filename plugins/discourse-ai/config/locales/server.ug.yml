@@ -57,6 +57,8 @@ ug:
         github_file_content: "GitHub ھۆججەت مەزمۇنى"
         random_picker: "ئىختىيارىي تاللىغۇچ"
         categories: "سەھىپە تىزىمىنى كۆرسەت"
+        suspend_user: "ئىشلەتكۈچىنى توختات"
+        silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
@@ -85,6 +87,8 @@ ug:
           one: "%{count} بەلگە تېپىلدى"
           other: "%{count} بەلگە تېپىلدى"
         schema: "%{tables}"
+      flag_post:
+        score_reason: "سۈنئىي ئەقىل ماشىنا ئادىمى بۇ يازمىغا بەلگە سالدى."
       close_topic:
         errors:
           not_found: "تېما تېپىلمىدى."
@@ -117,6 +121,10 @@ ug:
       assign:
         errors:
           not_found: "تېما تېپىلمىدى."
+      add_reviewable_note:
+        errors:
+          not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
+          not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
     reviewables:
       ai_tool_action:
         approve:

@@ -1,12 +1,8 @@
 @use "lib/viewport";
 
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .d-header {
     height: 3.25em;
-  }
-
-  .d-header {
-    --d-control-height: var(--space-8);
   }
 
   .d-header .title {
@@ -33,7 +29,9 @@
   }
 
   .header-sidebar-toggle button .d-icon,
-  .d-header-icons .header-dropdown-toggle:not(.user-menu-panel) .d-icon {
+  .d-header-icons
+    .header-dropdown-toggle:not(.user-menu-panel, .language-switcher)
+    .d-icon {
     font-size: var(--font-up-3);
   }
 

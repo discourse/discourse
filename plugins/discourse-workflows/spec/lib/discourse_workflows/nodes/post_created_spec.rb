@@ -55,7 +55,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
   end
 
   describe "#output" do
-    it "returns post and topic data" do
+    it "returns post and topic data", :aggregate_failures do
       upload = Fabricate(:image_upload)
       UploadReference.create!(target: reply, upload: upload)
 
@@ -83,6 +83,16 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:topic][:archetype]).to eq(topic.archetype)
+      expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "returns personal message data without a category", :aggregate_failures do
+      personal_message_post = Fabricate(:post, topic: direct_pm_topic, user: reply_user)
+      output = described_class.new(personal_message_post).output
+
+      expect(output.dig(:post, :category_id)).to be_nil
+      expect(output.dig(:topic, :category_id)).to be_nil
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 
@@ -90,7 +100,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
     it "matches posts in subcategories by default" do
       expect(
         described_class.new(subcategory_post).matches?(
-          trigger_context("category_id" => topic.category_id.to_s),
+          trigger_context("category_ids" => [topic.category_id.to_s]),
         ),
       ).to eq(true)
     end
@@ -99,7 +109,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(
         described_class.new(subcategory_post).matches?(
           trigger_context(
-            "category_id" => topic.category_id.to_s,
+            "category_ids" => [topic.category_id.to_s],
             "include_subcategories" => false,
           ),
         ),
@@ -110,9 +120,25 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(
         described_class.new(reply).matches?(
           trigger_context(
-            "category_id" => topic.category_id.to_s,
+            "category_ids" => [topic.category_id.to_s],
             "include_subcategories" => false,
           ),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches posts in any of the configured categories" do
+      expect(
+        described_class.new(reply).matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
+        ),
+      ).to eq(true)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      expect(
+        described_class.new(reply).matches?(
+          trigger_context("category_id" => topic.category_id.to_s),
         ),
       ).to eq(true)
     end
@@ -140,7 +166,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
 
       expect(
         trigger.matches?(
-          trigger_context("category_id" => topic.category_id.to_s, "tag_names" => [tag.name]),
+          trigger_context("category_ids" => [topic.category_id.to_s], "tag_names" => [tag.name]),
         ),
       ).to eq(true)
     end
@@ -149,7 +175,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       other_category = Fabricate(:category)
       trigger = described_class.new(reply)
 
-      expect(trigger.matches?(trigger_context("category_id" => other_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
         false,
       )
       expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)

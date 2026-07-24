@@ -215,15 +215,9 @@ RSpec.describe ThemeField do
     expect(js_field.value_baked).to eq("baked")
 
     # All together
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/templates/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery-2"]',
-    )
+    expect(theme.javascript_cache.content).to include('"discourse/templates/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery-2":')
     expect(theme.javascript_cache.content).to include(
       "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )
@@ -732,6 +726,14 @@ RSpec.describe ThemeField do
         "theme_uploads_local" => {
           "test_js" => js_field.javascript_cache.local_url,
         },
+        "theme_setting_type_info" => {
+          hello: {
+            refresh: false,
+            resolve_group_membership: false,
+            textarea: false,
+            type: "string",
+          },
+        },
       )
 
       # this is important, we do not want local_js_urls to leak into scss
@@ -739,6 +741,7 @@ RSpec.describe ThemeField do
       expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
 
       expect(theme.scss_variables).not_to include("theme_uploads")
+      expect(theme.scss_variables).not_to include("theme_setting_type_info")
     end
   end
 

@@ -48,6 +48,8 @@ el:
           description: "Ενισχύει τη λειτουργία μετάφρασης μεταφράζοντας αναρτήσεις που περιέχουν Discourse Markdown"
       tool_summary:
         flag_post: "Αναφορά ανάρτησης"
+        suspend_user: "Αναστολή χρήστη"
+        silence_user: "Σίγαση χρήστη"
         unlist_topic: "Κατάργηση καταχώρισης θέματος"
         edit_post: "Επεξεργασία ανάρτησης"
         assign: "Ανάθεση θέματος"

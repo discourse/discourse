@@ -18,6 +18,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
     context "when everything's ok" do
       fab!(:badge) { Fabricate(:badge, name: "Helpful") }
+      fab!(:membership_group) { Fabricate(:group, name: "workflow_helpers") }
 
       it { is_expected.to run_successfully }
 
@@ -59,9 +60,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           :editor_username,
           :include_raw,
           :include_cooked,
+          :body_character_limit,
           :query,
         )
         expect(node_type.dig(:properties, :operation, :default)).to eq("create")
+        expect(node_type.dig(:properties, :limit)).to include(default: 30, min: 1, max: 800)
         expect(node_type[:operations].map { |operation| operation[:value] }).to eq(
           %w[create edit get list],
         )
@@ -97,6 +100,26 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           load_options_method: "badges",
         )
         expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
+      end
+
+      it "serializes the required group selector for group membership triggers",
+         :aggregate_failures do
+        %w[trigger:user_added_to_group trigger:user_removed_from_group].each do |identifier|
+          trigger = result[:node_types].find { |node_type| node_type[:identifier] == identifier }
+
+          expect(trigger.dig(:properties, :group_id)).to include(
+            type: :integer,
+            required: true,
+            no_data_expression: true,
+            ui: {
+              control: :group_select,
+            },
+          )
+          expect(trigger.dig(:metadata, "groups")).to include(
+            id: membership_group.id,
+            name: membership_group.name,
+          )
+        end
       end
 
       it "includes branching for condition nodes" do
@@ -168,10 +191,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         )
       end
 
-      it "does not serialize hidden loop node" do
+      it "serializes hidden executable node definitions outside the palette" do
         loop_node = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
 
-        expect(loop_node).to be_nil
+        expect(loop_node[:palette_visible]).to eq(false)
+        expect(loop_node[:output_contracts].pluck(:mode)).to eq(%i[passthrough passthrough])
       end
 
       it "serializes ui palette group for trigger nodes" do
@@ -252,8 +276,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       expect(unavailable[:available]).to eq(false)
       expect(unavailable[:unavailable_reason_key]).to eq(reason_key)
     ensure
-      DiscoursePluginRegistry.discourse_workflows_nodes.delete(unavailable_class)
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(unavailable_class)
     end
 
     it "serializes full descriptions for each registered node version" do
@@ -303,10 +326,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       expect(node_type).not_to have_key(:property_schema_versions)
       expect(node_type[:latest]).not_to have_key(:property_schema)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [v1, v2].include?(entry[:value])
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(v1, v2)
     end
   end
 end

@@ -15,6 +15,17 @@ fi:
           kpi:
             accepted_solutions:
               label: "Hyväksytyt ratkaisut"
+        sections:
+          support:
+            title: "Tuki"
+            answerers:
+              staff: "Henkilökunta"
+              member: "Jäsenet"
+              basic: "Haastaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tunti"
+                gt_24h: "> 24 tuntia"
   js:
     notifications:
       alt:

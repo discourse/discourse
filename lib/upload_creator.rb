@@ -368,6 +368,7 @@ class UploadCreator
   end
 
   def convert_to_jpeg!
+    return if @opts[:type] == "topic_og_image"
     return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
     return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
@@ -518,8 +519,11 @@ class UploadCreator
 
   def clean_svg!
     doc = Nokogiri.XML(@file)
+    doc.internal_subset&.remove
+    doc.external_subset&.remove
     doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
+    doc.traverse { |node| node.remove if node.type == Nokogiri::XML::Node::ENTITY_REF_NODE }
     doc
       .css("use")
       .each do |use_el|

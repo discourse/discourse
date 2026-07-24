@@ -260,7 +260,6 @@ hu:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "A változtatások összehasonlítása túl összetett a biztonságos kiszámításhoz. Kérjük, próbálkozzon kisebb módosításokkal."
     messages:
       invalid_locale: "%{invalid_locale} nem érvényes nyelv"
       too_long_validation:
@@ -617,6 +616,13 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
+    default_full_names:
+      everyone: "Mindenki"
+      admins: "Adminisztrátorok"
+      moderators: "Moderátorok"
+      staff: "Stáb"
+      anonymous_users: "Névtelen felhasználók"
+      logged_in_users: "Bejelentkezett felhasználók"
     default_descriptions:
       everyone: "Automatikus csoport, beleértve az összes tagot"
       staff: "Automatikus csoport, beleértve az adminokat és moderátorokat"
@@ -1273,6 +1279,7 @@ hu:
         level: "Bizalmi szint"
         count: "Tagok"
         share: "Megosztás"
+        signups: "Regisztrációk"
       levels:
         "0": "Új"
         "1": "Alapvető"
@@ -1773,8 +1780,6 @@ hu:
     silence_new_user_sensitivity: "Annak a valószínűsége, hogy egy új felhasználó el lesz némítva spam jelzések alapján"
     auto_close_topic_sensitivity: "Annak a valószínűsége, hogy egy megjelölt téma automatikusan zárolva lesz"
     cooldown_minutes_after_hiding_posts: "Percek száma, amennyit egy felhasználónak várnia kell, mielőtt szerkeszthetne egy olyan bejegyzést, amely a közösségi jelzések miatt lett elrejtve"
-    max_topics_in_first_day: "A témák maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
-    max_replies_in_first_day: "A válaszok maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
     tl2_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl2 (tag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl3_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl3 (törzstag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl4_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl4 (vezető) szintű felhasználók számára ennek a számnak a szorzásával"
@@ -1831,7 +1836,6 @@ hu:
     suppress_secured_categories_from_admin: "Az adminisztrátorok számára bizonyos felhasználói felületeken elrejti a privát témákat és üzeneteket. A tartalom azonban továbbra is látható lesz néhány helyen. Ez nem biztonsági funkció: az adminisztrátorok mindig hozzáférhetnek az oldal összes tartalmához."
     include_secure_categories_in_tag_counts: "Ha engedélyezve van, a címkék témáinak száma tartalmazni fogja azokat a témákat is, amelyek az összes felhasználó számára korlátozott olvasási kategóriába tartoznak. Ha le van tiltva, a normál felhasználóknak csak a témakörök száma jelenik meg egy olyan címkénél, ahol az összes téma nyilvános kategóriába tartozik."
     display_personal_messages_tag_counts: "Ha engedélyezve van, megjelenik az adott címkével ellátott személyes üzenetek száma."
-    top_menu: "Határozza meg, mely elemek jelenjenek meg a kezdőoldal navigációjában, és milyen sorrendben."
     post_menu: "Állítsa be az alapértelmezett bejegyzés menüelemek láthatóságát és sorrendjét. A bővítmények vagy témák által hozzáadott további elemeket külön kezelik, és nem jelennek meg ebben a listában."
     post_menu_hidden_items: "Azok a menüelemek, amelyek alapértelmezetten rejtve vannak a bejegyzés menüben, hacsak nem kattintanak a kibontási pontra. A bővítmények vagy témák által hozzáadott további elemeket külön kezelik, és nem jelennek meg ebben a listában."
     share_links: "Határozza meg, mely elemek jelenjenek meg a megosztási párbeszédablakban, és milyen sorrendben."
@@ -2405,7 +2409,6 @@ hu:
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
     share_quote_buttons: "Határozza meg, hogy mely elemek jelenjenek meg az idézet megosztási widgetben, és milyen sorrendben."
     share_quote_visibility: "Határozza meg, mikor jelenjenek meg az idézet megosztási gombok: soha, csak névtelen felhasználóknak, vagy minden felhasználónak. "
-    create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
@@ -2439,11 +2442,10 @@ hu:
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
     content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
-    fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
-    modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
     reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
+    modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_datetime: "Érvénytelen dátum/idő formátum. Kérjük, győződjön meg arról, hogy érvényes dátumot és időpontot adott meg."
@@ -2519,7 +2521,6 @@ hu:
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
       content_localization_locale_limit: "A támogatott nyelvjárások száma nem haladhatja meg a %{max} értéket."
-      content_localization_language_switcher_requirements: "A nyelvváltóhoz engedélyezni kell a „Területi beállítás süti alapján” és a „Felhasználói területi beállítás engedélyezése” webhelybeállításokat, valamint a „Tartalomhonosítás által támogatott területi beállítások” beállításnál legalább egy nyelvet meg kell adni."
       mediaconvert_role_arn_required: "Az AWS IAM szerepkör (ARN) megadása kötelező, ha az AWS MediaConvertet videókonvertáláshoz használják."
       mediaconvert_output_subdirectory_required: "A MediaConvert kimeneti alkönyvtárának megadása kötelező."
       s3_credentials_required_for_video_conversion: "S3 hitelesítő adatok szükségesek a videókonvertáláshoz. Kérjük, konfigurálja az S3 hozzáférési kulcsokat, vagy engedélyezze az IAM profilt."
@@ -4331,269 +4332,8 @@ hu:
       Ezt az oldalt az Ön barátságos moderátor csapata (%{base_path}/about) és *Ön*, a közösség működteti. Ha bármilyen további kérdése van arról, hogyan kellene működnie itt a dolgoknak, nyisson egy új témát a %{feedback_category} kategóriában, és beszéljük meg! Ha van egy kritikus vagy sürgős probléma, amit nem lehet kezelni meta témával vagy jelzéssel, lépjen kapcsolatba a moderátorokkal(%{base_path}/about).
   tos_topic:
     title: "Szolgáltatási feltételek"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Változtassa meg</a></h2>
-
-      Fórum adminisztrátor, alább találja az adatvédelmi szabályzat kezdőmintáját, amelyet testre kell szabnia, hogy megfeleljen az oldala igényeinek.
-
-      Ezek a feltételek jelenleg nem, de a jövőben szabályozhatják a(z) <%{base_url}> címen található internetes fórum használatát. Ebben az esetben a fórum használatához el kell fogadni az ezt a fórumot üzemeltető %{company_name} feltételeit.
-
-      A társaság más termékeket és szolgáltatásokat is kínálhat, eltérő feltételekkel. Ezek a feltételek csak a fórum használatára vonatkoznak.
-
-      Ugrás a következőkre:
-
-      - [Fontos feltételek](#heading--important-terms)
-      - [Engedély a fórum használatához](#heading--permission)
-      - [Fórum használatának feltételei](#heading--conditions)
-      - [Elfogadható használat](#heading--acceptable-use)
-      - [Tartalmi szabványok](#heading--content-standards)
-      - [Végrehajtás](#heading--enforcement)
-      - [Az Ön fiókja](#heading--your-account)
-      - [Az Ön tartalma](#heading--your-content)
-      - [Az Ön felelőssége](#heading--responsibility)
-      - [Felelősségkizárások](#heading--disclaimers)
-      - [Felelősség korlátozása](#heading--liability)
-      - [Visszajelzés](#heading--feedback)
-      - [Megszüntetés](#heading--termination)
-      - [Viták](#heading--disputes)
-      - [Általános feltételek](#heading--general)
-      - [Kapcsolat](#heading--contact)
-      - [Változtatások](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Fontos feltételek</a></h2>
-
-      ***Ezek a feltételek számos fontos rendelkezést tartalmaznak, amelyek befolyásolják az Ön jogait és kötelezettségeit, például a Felelősségkizárások szakaszban található felelősségkizárásokat, a társaság Önnel szembeni felelősségének korlátozását a Felelősség korlátozása szakaszban, az Ön beleegyezését, hogy fedezze a társaságot a fórum helytelen használatából eredő károkért az Ön felelőssége a használatért szakaszban, valamint a viták választottbírósági úton történő rendezésére vonatkozó megállapodást a Viták szakaszban.***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Engedély a fórum használatához</a></h2>
-
-      Ezen feltételek mellett a társaság engedélyt ad Önnek a fórum használatára. A fórum használatához mindenkinek el kell fogadnia ezeket a feltételeket.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">A fórum használatának feltételei</a></h2>
-
-      A fórum használatára vonatkozó engedély a következő feltételekhez kötött:
-
-      1. Legalább tizenhárom évesnek kell lennie.
-
-      2. Többé nem használhatja a fórumot, ha a társaság közvetlenül kapcsolatba lép Önnel, hogy közölje, nem használhatja azt.
-
-      3. A fórumot az [Elfogadható használat](#heading--acceptable-use) és [Tartalmi szabványok](#heading--content-standards) szerint kell használnia.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Elfogadható használat</a></h2>
-
-      1. Nem sértheti meg a törvényt a fórum használata során.
-
-      2. Nem használhatja és nem próbálhatja meg használni más felhasználó fiókját a fórumon az ő kifejezett engedélye nélkül.
-
-      3. Nem vásárolhat, adhat el vagy más módon nem kereskedhet felhasználónevekkel vagy egyéb egyedi azonosítókkal a fórumon.
-
-      4. Nem küldhet hirdetéseket, lánclevelet vagy egyéb kéretlen üzeneteket a fórumon keresztül, és nem használhatja a fórumot címek vagy egyéb személyes adatok gyűjtésére kereskedelmi levelezési listákhoz vagy adatbázisokhoz.
-
-      5. Nem automatizálhatja a fórumhoz való hozzáférést, és nem figyelheti a fórumot olyan eszközökkel, mint a webes robotok, a böngészőbővítmények vagy -kiegészítők, vagy más olyan számítógépes programok, melyek nem webböngészők. Indexelheti a fórumot egy nyilvánosan elérhető keresőmotor számára, ha Ön üzemeltet ilyet.
-
-      6. Nem használhatja a fórumot arra, hogy e-maileket küldjön terjesztési listákra, hírcsoportokba vagy csoportos levelezési álnevekre.
-
-      7. Nem keltheti hamisan azt a látszatot, hogy Ön kapcsolatban áll a társasággal vagy a társaság támogatja Önt.
-
-      8. Nem helyezhet el hiperhivatkozásokat a fórumon található képekre vagy más nem hiperszöveges tartalomra más weboldalakon.
-
-      9. Nem távolíthatja el a tulajdonjogot jelző jelzéseket a fórumról letöltött anyagokról.
-
-      10. Nem jelenítheti meg a fórum egyetlen részét sem más weboldalakon <iframe> segítségével.
-
-      11. Nem tilthatja le, kerülheti meg vagy játszhatja ki a fórum biztonsági vagy hozzáférési korlátozásait.
-
-      12. Nem terhelheti túl a fórum infrastruktúráját észszerűtlen mennyiségű kéréssel, vagy olyan kérésekkel, amelyek észszerűtlen terhelést rónak a fórum mögöttes információs rendszereire.
-
-      13. Nem adhatja ki magát másnak a fórumon.
-
-      14. Nem bátoríthat és nem segíthet senkit ezen feltételek megsértésében.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Tartalmi szabványok</a></h2>
-
-      1. Nem küldhet be olyan tartalmat a fórumra, amely illegális, sértő vagy más módon ártalmas másokra nézve. Ez magában foglalja a zaklató, nem megfelelő, bántalmazó vagy gyűlölködő magatartást tartalmazó tartalmakat.
-
-      2. Nem küldhet be olyan tartalmat a fórumra, amely sérti a törvényt, sérti bárki szellemi tulajdonjogait, megsérti bárki adatvédelmét, vagy megszegi a másokkal kötött megállapodásait.
-
-      3. Nem küldhet be olyan tartalmat a fórumra, amely rosszindulatú számítógépes kódot tartalmaz, például számítógépes vírusokat vagy kémprogramokat.
-
-      4. Nem küldhet be tartalmat a fórumra pusztán helyfoglalóként, egy adott cím, felhasználónév vagy más egyedi azonosító megtartása céljából.
-
-      5. Nem használhatja a fórumot olyan információk közzétételére, amelyeknek nincs joga a közzétételéhez, például mások bizalmas vagy személyes információi.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Végrehajtás</a></h2>
-
-      A társaság a törvény által megengedett legteljesebb mértékben vizsgálhatja és üldözheti ezen feltételek megsértését. A társaság értesítheti a bűnüldöző hatóságokat és együttműködhet velük a törvény és ezen feltételek megsértésének üldözésében.
-
-      A társaság fenntartja a jogot, hogy bármilyen okból megváltoztassa, szerkessze és törölje a fórumon található tartalmat. Ha úgy véli, hogy valaki ezen feltételeket megsértő tartalmat küldött be a fórumra, azonnal vegye fel velünk a kapcsolatot.
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Az Ön fiókja</a></h2>
-
-      Fiókot kell létrehoznia és be kell jelentkeznie a fórum egyes funkcióinak használatához.
-
-      Fiók létrehozásához meg kell adnia néhány információt magáról. Ha fiókot hoz létre, beleegyezik, hogy legalább érvényes e-mail-címet ad meg, és azt naprakészen tartja. Fiókját bármikor bezárhatja a(z) <%{contact_email}> címre küldött e-maillel.
-
-      Ön vállalja a felelősséget minden olyan műveletért, amelyet az Ön fiókjával végeznek, függetlenül attól, hogy Ön engedélyezte-e azt vagy sem, amíg nem zárolja a fiókját, vagy értesíti a társaságot, hogy a fiókját feltörték. Ön beleegyezik, hogy azonnal értesíti a társaságot, ha azt gyanítja, hogy a fiókját feltörték. Ön beleegyezik, hogy biztonságos jelszót választ a fiókjához, és azt titokban tartja.
-
-      A társaság korlátozhatja, felfüggesztheti vagy bezárhatja az Ön fórumbeli fiókját a szerzői jogi jogsértések kezelésére vonatkozó szabályzata szerint, vagy ha a társaság észszerűen úgy véli, hogy Ön megsértette ezen feltételek bármely szabályát.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Az Ön tartalma</a></h2>
-
-      Ezen feltételek semmilyen tulajdonjogot nem adnak a társaságnak az Ön által a fórummal megosztott szellemi tulajdonra, például az Ön fiókinformációira, bejegyzéseire vagy a fórumra beküldött egyéb tartalmakra vonatkozóan. Ezen feltételek Önnek sem adnak semmilyen tulajdonjogot a társaság szellemi tulajdonára vonatkozóan.
-
-      Ön és a társaság között Ön marad kizárólagosan felelős a fórumra beküldött tartalomért. Ön beleegyezik, hogy nem kelti azt a hamis látszatot, hogy a fórumra beküldött tartalom a társaság által szponzorált vagy jóváhagyott. Ezek a feltételek nem kötelezik a társaságot arra, hogy tárolja, karbantartsa vagy másolatokat készítsen az Ön által beküldött tartalomról, és hogy megváltoztassa azt ezen feltételeknek megfelelően.
-
-      A fórumra beküldött tartalom az Öné, és Ön dönti el, hogy milyen engedélyt ad másoknak arra vonatkozóan. De minimálisan Ön engedélyt ad a társaságnak arra, hogy az Ön által a fórumra beküldött tartalmat a fórum más felhasználói számára elérhetővé tegye. Ez a speciális engedély lehetővé teszi a társaság számára, hogy másolja, közzétegye és elemezze az Ön által a fórumra beküldött tartalmat.
-
-      Amikor az Ön által beküldött tartalmat eltávolítják a fórumról, akár Ön, akár a társaság teszi ezt, a társaság speciális engedélye akkor ér véget, amikor az utolsó másolat is eltűnik a társaság biztonsági mentéseiből, gyorsítótáraiból és egyéb rendszereiből. Az Ön által beküldött tartalomra alkalmazott egyéb engedélyek, például a Creative Commons licencek, továbbra is érvényben maradhatnak a tartalom eltávolítása után. Ezek az engedélyek másoknak vagy magának a társaságnak is jogot adhatnak arra, hogy az Ön tartalmát újra megosszák a fórumon keresztül.
-
-      Mások, akik megkapják az Ön által a fórumra beküldött tartalmat, megsérthetik azokat a feltételeket, amelyek alapján Ön engedélyezi a tartalmát. Ön beleegyezik, hogy a társaság nem vállal felelősséget Önnel szemben ezekért a jogsértésekért vagy azok következményeiért.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Az Ön felelőssége</a></h2>
-
-      Ön beleegyezik, hogy mentesíti a társaságot a mások által indított jogi követelésekkel szemben, amelyek az Ön által elkövetett feltételszegéssel, vagy az Ön fiókját a fórumon használó más személyek által elkövetett feltételszegéssel kapcsolatosak. Mind Ön, mind a társaság beleegyezik abba, hogy a lehető leghamarabb értesíti a másik felet minden olyan jogi követelésről, amelyért Önnek esetleg kártalanítania kell a társaságot. Ha a társaság elmulasztja Önt azonnal értesíteni egy jogi követelésről, Önnek nem kell kártalanítania a társaságot olyan károkért, amelyek ellen védekezhetett volna, vagy amelyeket enyhíthetett volna az azonnali értesítéssel. Ön beleegyezik, hogy lehetővé teszi a társaság számára az olyan jogi követelések kivizsgálásának, védelmének és rendezésének ellenőrzését, amelyekért Önnek kártalanítania kellene a társaságot, és hogy együttműködik ezekben az erőfeszítésekben. A társaság beleegyezik, hogy nem egyezik bele olyan rendezésbe, amely elismeri az Ön hibáját, vagy kötelezettségeket ró Önre az Ön előzetes beleegyezése nélkül.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Felelősségkizárások</a></h2>
-
-      ***Ön elfogadja a fórum és a fórumon található tartalom használatának minden kockázatát. Amennyire a törvény engedi, a társaság és beszállítói a fórumot a jelenlegi formájában biztosítják, bármiféle garancia nélkül.***
-
-      A fórum hiperhivatkozásai mások által üzemeltetett fórumokat és szolgáltatásokat tartalmazhatnak és integrálhatnak. A társaság nem vállal garanciát a mások által üzemeltetett szolgáltatásokra vagy az általuk esetlegesen biztosított tartalomra vonatkozóan. A mások által üzemeltetett szolgáltatások használatát más feltételek szabályozhatják Ön és a szolgáltatást üzemeltető fél között.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Felelősség korlátozása</a></h2>
-
-      ***Sem a társaság, sem beszállítói nem felelnek Önnel szemben olyan szerződésszegési károkért, amelyeket a stábuk észszerűen nem láthatott előre, amikor Ön elfogadta ezeket a feltételeket.***
-
-      ***Amennyire a törvény lehetővé teszi, a fórummal vagy a fórum tartalmával kapcsolatos bármilyen jellegű követelésért való teljes felelősségünk 50 dollárra korlátozódik.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Visszajelzés</a></h2>
-
-      A társaság örömmel fogadja az Ön visszajelzéseit és javaslatait a fórummal kapcsolatban. A velünk való kapcsolatfelvétel módjaiért lásd a lenti Kapcsolat részt.
-
-      Ön beleegyezik, hogy a társaság szabadon cselekedhet az Ön által adott visszajelzések és javaslatok alapján, és hogy a társaságnak nem kell értesítenie Önt arról, hogy az Ön visszajelzését felhasználták, nem kell engedélyt kérnie annak felhasználásához, és nem kell fizetnie Önnek. Ön beleegyezik, hogy nem nyújt be olyan visszajelzést vagy javaslatot, amelyről úgy véli, hogy bizalmas vagy tulajdonosi jellegű lehet Ön vagy mások számára.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Megszüntetés</a></h2>
-
-      Akár Ön, akár a társaság bármikor megszüntetheti az ezekben a feltételekben leírt megállapodást. Amikor megállapodásunk véget ér, a fórum használatára vonatkozó engedélye is megszűnik.
-
-      A következő rendelkezések érvényben maradnak megállapodásunk megszűnése után is: [Az Ön tartalma](#heading--your-content), [Visszajelzés](#heading--feedback), [Az Ön felelőssége](#heading--responsibility), [Felelősségkizárások](#heading--disclaimers), [Felelősség korlátozása](#heading--liability) és [Általános feltételek](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Viták</a></h2>
-
-      Minden, ezekkel a feltételekkel vagy a fórum használatával kapcsolatos vitát a(z) %{governing_law} szabályoz.
-      Ön és a társaság beleegyezik abba, hogy csak állami vagy szövetségi bíróságon kér ezekkel a feltételekkel kapcsolatos határozatot, %{city_for_disputes} városában. Sem Ön, sem a társaság nem emel kifogást ezen bíróságok joghatósága, fóruma vagy helyszíne ellen.
-
-      ***A számítógépes csalás és visszaélésről szóló törvény alapján benyújtott tiltó végzés vagy követelések kivételével Ön és a vállalat minden vitát kötelező érvényű Amerikai Választottbírósági Szövetség (American Arbitration Association) választottbírósági eljárásával rendez. A választottbíráskodás az AAA Kereskedelmi Választottbírósági Szabályzatát és a Fogyasztókkal kapcsolatos vitákra vonatkozó kiegészítő eljárásokat követi. A választottbíráskodásra %{city_for_disputes} városában kerül sor. Ön minden vitát egyénileg rendez, és nem csoportos kereset vagy más reprezentatív eljárás részeként, akár felperesként, akár csoporttagként. A választottbíró a vállalat engedélye nélkül nem vonja össze a vitát más választottbírósági eljárással.***
-
-      Bármely választottbírósági ítélet tartalmazza a választottbírósági eljárás költségeit, az észszerű ügyvédi díjakat és a tanúk észszerű költségeit. Ön és a vállalat a választottbírósági ítéletet bármelyik illetékes bíróság előtt érvényesítheti.
-
-      <h2 id="heading--general"><a href="#heading--general">Általános feltételek</a></h2>
-
-      Ha ezen feltételek valamely rendelkezése a leírtak szerint nem érvényesíthető, de megváltoztatható úgy, hogy érvényesíthető legyen, akkor azt a rendelkezést a lehető legkisebb mértékben úgy kell módosítani, hogy érvényesíthető legyen. Ellenkező esetben azt a rendelkezést el kell távolítani.
-
-      Ön nem ruházhatja át a társasággal kötött megállapodását. A társaság átruházhatja az Ön megállapodását a társaság bármely kapcsolt vállalkozására, bármely más társaságra, amely ellenőrzést szerez a társaság felett, vagy bármely más társaságra, amely megvásárolja a társaság fórummal kapcsolatos eszközeit. Ezen feltételekkel ellentétes bármely átruházási kísérlet jogilag hatálytalan.
-
-      Sem a jelen Megállapodás szerinti jog gyakorlása, sem a jelen Megállapodás bármely megsértésének lemondása nem jelenti a jelen Megállapodás bármely más megsértéséről való lemondást.
-
-      Ezek a feltételek testesítik meg az Ön és a társaság közötti összes megállapodási feltételt a fórum használatára vonatkozóan. Ezek a feltételek teljes mértékben helyettesítenek minden más, a fórum használatára vonatkozó megállapodást, legyen az írásos vagy sem.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kapcsolat</a></h2>
-
-      Ön értesítheti a társaságot ezen feltételek alapján, és kérdéseket küldhet a társaságnak a(z) <%{contact_email}> címre.
-
-      A társaság értesítheti Önt ezen feltételek alapján a fórumon lévő fiókjához megadott e-mail-cím használatával, vagy üzenet közzétételével a fórum kezdőlapján vagy az Ön fiókjának oldalán.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Változtatások</a></h2>
-
-      A társaság utoljára [ILLESSZE BE IDE AZ UTOLSÓ FRISSÍTÉS DÁTUMÁT] frissítette ezeket a feltételeket, és újra frissítheti azokat. A társaság minden frissítést közzétesz a fórumon. A lényeges változásokat tartalmazó frissítések esetén a társaság beleegyezik, hogy e-mailben értesíti Önt, ha Ön létrehozott egy fiókot és megadott egy érvényes e-mail-címet. A társaság speciális üzenetekkel vagy figyelmeztetésekkel is bejelentheti a frissítéseket a fórumon.
-
-      Miután értesítést kap ezeknek a feltételeknek a frissítéséről, el kell fogadnia az új feltételeket a fórum további használatához.
   privacy_topic:
     title: "Adatvédelmi szabályzat"
-    body: |
-      ## [Fórumadminisztrátor, alább találja az adatvédelmi szabályzat kiinduló sablonját, amelyet az Ön oldalához kell igazítania.]
-
-      <a name="collect"></a>
-
-      ## [Milyen információkat gyűjtünk?](#collect)
-
-      Információkat gyűjtünk Öntől, amikor regisztrál az oldalunkon, és adatokat gyűjtünk, amikor részt vesz a fórumon az itt megosztott tartalmak olvasásával, írásával és értékelésével.
-
-      Az oldalunkon történő regisztrációkor megkérhetjük, hogy adja meg nevét és e-mail-címét. Azonban látogathatja az oldalunkat regisztráció nélkül is. Az Ön e-mail-címét egy egyedi hivatkozást tartalmazó e-maillel ellenőrizzük. Ha felkeresik ezt a hivatkozást, akkor tudjuk, hogy Ön rendelkezik az e-mail-címmel.
-
-      Regisztrációkor és bejegyzés közzétételekor rögzítjük azt az IP-címet, ahonnan érkezett. Emellett megőrizhetjük a kiszolgálónaplókat, amelyek tartalmazzák a kiszolgálónkhoz küldött minden kérés IP-címét.
-
-      <a name="use"></a>
-
-      ## [Mire használjuk az Ön információit?](#use)
-
-      Az Öntől gyűjtött információkat az alábbi módok bármelyikén felhasználhatjuk:
-
-      * Az Ön élményének személyre szabásához — az Ön információi segítenek nekünk, hogy jobban reagáljunk az egyéni igényeire.
-
-      * Oldalunk fejlesztéséhez — folyamatosan törekszünk arra, hogy az Öntől kapott információk és visszajelzések alapján fejlesszük oldalunk kínálatát.
-
-      * Az ügyfélszolgálat javításához — az Ön információi segítenek nekünk, hogy hatékonyabban válaszoljunk az ügyfélszolgálati kérésekre és támogatási igényekre.
-
-      * Időszakos e-mailek küldéséhez — Az Ön által megadott e-mail-címet használhatjuk arra, hogy információkat, értesítéseket küldjünk Önnek a témák változásairól vagy az Ön felhasználónevével kapcsolatban, válaszoljunk a kérdéseire és kéréseire.
-
-      <a name="protect"></a>
-
-      ## [Hogyan védjük az Ön információit?](#protect)
-
-      Különféle biztonsági intézkedéseket alkalmazunk az Ön személyes adatainak biztonságának megőrzése érdekében, amikor megadja, beküldi vagy hozzáfér személyes adataihoz.
-
-      <a name="data-retention"></a>
-
-      ## [Mi az adatmegőrzési szabályzatunk?](#data-retention)
-
-      Jóhiszeműen törekszünk arra, hogy:
-
-      A kiszolgálónkhoz intézett összes kérés IP-címét tartalmazó kiszolgálónaplókat legfeljebb [NAPOK SZÁMA] napig őrizzük meg.
-
-      <a name="cookies"></a>
-
-      ## [Használunk sütiket?](#cookies)
-
-      Igen. A sütik kis fájlok, amelyeket egy webhely vagy annak szolgáltatója az Ön számítógépének merevlemezére továbbít a webböngészőjén keresztül (ha Ön ezt engedélyezi). Ezek a sütik lehetővé teszik, hogy a webhely felismerje az Ön böngészőjét, és ha van regisztrált fiókja, összekapcsolja azt a regisztrált fiókjával.
-
-      Sütiket használunk, hogy megértsük és elmenthessük az Ön preferenciáit a jövőbeli látogatásokhoz, és összesített adatokat gyűjtsünk a webhelyforgalomról és a webhely interakciójáról, hogy a jövőben jobb webhelyes élményeket és eszközöket kínálhassunk. Szerződhetünk külső szolgáltatókkal, hogy segítsenek nekünk jobban megérteni webhelyünk látogatóit. Ezek a szolgáltatók nem használhatják fel a nevünkben gyűjtött információkat, kivéve, ha az üzleti tevékenységünk folytatásában és fejlesztésében segítenek nekünk.
-
-      <a name="disclose"></a>
-
-      ## [Közlünk-e bármilyen információt külső felekkel?](#disclose)
-
-      Nem adjuk el, nem kereskedünk vagy egyéb módon nem továbbítjuk külső feleknek az Ön személyazonosításra alkalmas adatait. Ez nem vonatkozik azokra a megbízható harmadik felekre, akik segítenek nekünk webhelyünk üzemeltetésében, üzleti tevékenységünk folytatásában vagy az Ön kiszolgálásában, feltéve, hogy ezek a felek beleegyeznek abba, hogy ezeket az információkat bizalmasan kezelik. Akkor is kiadhatjuk az Ön adatait, ha úgy véljük, hogy a közzététel megfelelő a törvény betartásához, webhelyünk szabályzatainak érvényesítéséhez vagy saját vagy mások jogainak, tulajdonának vagy biztonságának védelméhez. Azonban a nem személyazonosításra alkalmas látogatói információkat átadhatjuk más feleknek marketing-, reklám- vagy egyéb célokra.
-
-      <a name="third-party"></a>
-
-      ## [Harmadik felek hivatkozásai](#third-party)
-
-      Alkalmanként, saját belátásunk szerint, harmadik fél termékeit vagy szolgáltatásait is szerepeltethetjük vagy kínálhatjuk webhelyünkön. Ezeknek a külső webhelyeknek külön és független adatvédelmi szabályzatuk van. Ezért nem vállalunk felelősséget vagy kötelezettséget ezen hivatkozott webhelyek tartalmáért és tevékenységeiért. Mindazonáltal törekszünk webhelyünk integritásának védelmére, és szívesen fogadunk minden visszajelzést ezekről a webhelyekről.
-
-      <a name="coppa"></a>
-
-      ## [Gyermekek Online Adatvédelmi Törvényének (COPPA) való megfelelés](#coppa)
-
-      Webhelyünk, termékeink és szolgáltatásaink mind 13 éves vagy annál idősebb embereknek szólnak. Ha ez a kiszolgáló az Egyesült Államokban van, és Ön 13 évnél fiatalabb, a COPPA ([Gyermekek Online Adatvédelmi Törvénye](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) követelményei szerint ne használja ezt a webhelyet.
-
-      <a name="online"></a>
-
-      ## [Csak online adatvédelmi szabályzat](#online)
-
-      Ez az online adatvédelmi szabályzat csak a webhelyünkön keresztül gyűjtött információkra vonatkozik, az offline módon gyűjtött információkra nem.
-
-      <a name="consent"></a>
-
-      ## [Az Ön beleegyezése](#consent)
-
-      Webhelyünk használatával Ön beleegyezik webhelyünk adatvédelmi szabályzatába.
-
-      <a name="changes"></a>
-
-      ## [Változtatások az adatvédelmi szabályzatunkban](#changes)
-
-      Ha úgy döntünk, hogy megváltoztatjuk adatvédelmi szabályzatunkat, ezeket a változtatásokat ezen az oldalon tesszük közzé.
-
-      Ez a dokumentum CC-BY-SA licenc alatt áll. Utolsó frissítés dátuma: [ILLESSZE BE IDE AZ UTOLSÓ FRISSÍTÉS DÁTUMÁT].
   badges:
     mass_award:
       errors:
@@ -5092,6 +4832,8 @@ hu:
         title: "Bejegyzés rejtve tartása"
         description: "Egyetértek a jelöléssel és a bejegyzés maradjon rejtve."
         complete: "A bejegyzés rejtve marad."
+      agree_and_keep_deleted:
+        title: "A bejegyzés maradjon törölve"
       agree_and_suspend:
         title: "Felhasználó felfüggesztése"
         description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"

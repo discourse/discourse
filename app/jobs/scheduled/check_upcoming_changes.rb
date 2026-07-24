@@ -85,10 +85,17 @@ module Jobs
                 :error
               end
 
+            backtrace =
+              if status[:backtrace].present?
+                backtrace = status[:backtrace]&.join("\n")
+              else
+                backtrace = status[:result_inspect_steps] || "N/A"
+              end
+
             verbose_log(
               site,
               log_level,
-              "Failed to notify about promotion of '#{setting_name}': #{status[:error]} with backtrace: #{status[:backtrace]&.join("\n") || "N/A"}",
+              "Failed to notify about promotion of '#{setting_name}': #{status[:error]} with backtrace: #{backtrace}",
             )
           end
         end

@@ -14,7 +14,7 @@ RSpec.describe Stylesheet::Manager do
   end
 
   it "still returns something for no themes" do
-    link = manager.stylesheet_link_tag(:desktop, "all")
+    link = manager.stylesheet_link_tag(:common, "all")
     expect(link).not_to eq("")
   end
 
@@ -58,7 +58,7 @@ RSpec.describe Stylesheet::Manager do
     it "generates the right links for non-theme targets" do
       manager = manager(nil)
 
-      hrefs = manager.stylesheet_details(:desktop, "all")
+      hrefs = manager.stylesheet_details(:common, "all")
 
       expect(hrefs.length).to eq(1)
     end
@@ -254,9 +254,9 @@ RSpec.describe Stylesheet::Manager do
     it "outputs tags for non-theme targets for theme component" do
       child_theme = Fabricate(:theme, component: true)
 
-      hrefs = manager(child_theme.id).stylesheet_details(:desktop, "all")
+      hrefs = manager(child_theme.id).stylesheet_details(:common, "all")
 
-      expect(hrefs.count).to eq(1) # desktop
+      expect(hrefs.count).to eq(1) # common
     end
 
     it "does not output tags for component targets with no styles" do
@@ -298,7 +298,7 @@ RSpec.describe Stylesheet::Manager do
       hrefs = manager.stylesheet_details(:admin, "all")
       expect(hrefs.count).to eq(1)
 
-      hrefs = manager.stylesheet_details(:mobile, "all")
+      hrefs = manager.stylesheet_details(:common, "all")
       expect(hrefs.count).to eq(1)
     end
   end
@@ -307,11 +307,11 @@ RSpec.describe Stylesheet::Manager do
     after { DiscoursePluginRegistry.reset! }
 
     it "can correctly account for plugins in default digest" do
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
       digest1 = builder.digest
 
       DiscoursePluginRegistry.stylesheets["fake"] = Set.new(["fake_file"])
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
+      builder = Stylesheet::Manager::Builder.new(target: :common, manager: manager)
       digest2 = builder.digest
 
       expect(digest1).not_to eq(digest2)
@@ -449,9 +449,6 @@ RSpec.describe Stylesheet::Manager do
 
       builder = Stylesheet::Manager::Builder.new(target: :admin, manager: manager)
       expect(builder.digest).to eq(builder.default_digest)
-
-      builder = Stylesheet::Manager::Builder.new(target: :desktop, manager: manager)
-      expect(builder.digest).to eq(builder.default_digest)
     end
 
     it "returns different digest based on hostname" do
@@ -467,7 +464,7 @@ RSpec.describe Stylesheet::Manager do
       initial_color_scheme_digest =
         Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
       initial_default_digest =
-        Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+        Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest
 
       SiteSetting.force_hostname = "host2.example.com"
       new_theme_digest =
@@ -479,7 +476,7 @@ RSpec.describe Stylesheet::Manager do
       new_color_scheme_digest =
         Stylesheet::Manager::Builder.new(target: :color_definitions, manager: manager).digest
       new_default_digest =
-        Stylesheet::Manager::Builder.new(target: :desktop, manager: manager).digest
+        Stylesheet::Manager::Builder.new(target: :common, manager: manager).digest
 
       expect(initial_theme_digest).not_to eq(new_theme_digest)
       expect(initial_color_scheme_digest).not_to eq(new_color_scheme_digest)
@@ -870,9 +867,7 @@ RSpec.describe Stylesheet::Manager do
   end
 
   describe ".precompile_css" do
-    let(:core_targets) do
-      %w[common desktop mobile admin wizard common_rtl desktop_rtl mobile_rtl admin_rtl wizard_rtl]
-    end
+    let(:core_targets) { %w[common admin wizard common_rtl admin_rtl wizard_rtl] }
 
     let(:theme_targets) do
       %i[
@@ -924,6 +919,31 @@ RSpec.describe Stylesheet::Manager do
       expect(StylesheetCache.pluck(:target)).to contain_exactly(*core_targets)
     end
 
+    it "hydrates core CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+
+      expect(output.scan(/\(cached\)/).length).to eq(core_targets.length)
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(core_targets.length)
+    end
+
+    it "hydrates theme CSS to disk from StylesheetCache without recompiling" do
+      capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+      cached_count = StylesheetCache.count
+      Stylesheet::Manager.rm_cache_folder
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"]).to be_empty
+
+      Stylesheet::Compiler.expects(:compile_asset).never
+      output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
+
+      expect(output).to include("(cached)")
+      expect(Dir["#{Stylesheet::Manager.cache_fullpath}/*.css"].length).to eq(cached_count)
+    end
+
     it "generates precompiled CSS - only themes" do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
 
@@ -937,7 +957,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(16) # 10 core targets + 2 theme (ltr/rtl) + 4 color schemes
+      expect(results.size).to eq(12) # 6 core targets + 2 theme (ltr/rtl) + 4 color schemes
 
       expect(results.count { |target| target =~ /^common_theme_/ }).to eq(2) # ltr/rtl
     end
@@ -949,7 +969,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(18) # 10 core targets + 2 theme rtl/ltr + 6 color schemes
+      expect(results.size).to eq(14) # 6 core targets + 2 theme rtl/ltr + 6 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(

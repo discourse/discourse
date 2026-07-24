@@ -12,6 +12,16 @@ ur:
           kpi:
             accepted_solutions:
               label: "قبول شدہ حل"
+        sections:
+          support:
+            answerers:
+              staff: "عملہ"
+              member: "ممبران"
+              basic: "بنیادی"
+            response_time:
+              buckets:
+                lt_1h: "< 1 گھنٹہ"
+                gt_24h: "> 24 گھنٹے"
   js:
     notifications:
       alt:

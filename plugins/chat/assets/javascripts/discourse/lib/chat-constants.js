@@ -18,12 +18,10 @@ export const INDICATOR_PREFERENCES = {
 };
 export const CHAT_ATTRS = [
   "chat_enabled",
-  "only_chat_push_notifications",
-  "ignore_channel_wide_mention",
+  "chat_announce_new_messages",
+  "chat_new_message_sound",
   "show_thread_title_prompts",
-  "chat_sound",
   "chat_email_frequency",
-  "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
   "chat_send_shortcut",
   "chat_quick_reaction_type",

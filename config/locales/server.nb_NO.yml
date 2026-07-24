@@ -294,6 +294,11 @@ nb_NO:
       trust_level_2: "tillitsnivå_2"
       trust_level_3: "tillitsnivå_3"
       trust_level_4: "tillitsnivå_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Adminer"
+      moderators: "Moderatorer"
+      staff: "Stab"
     request_membership_pm:
       title: "Ønske om medlemskap i gruppen @%{group_name}"
   education:
@@ -698,6 +703,7 @@ nb_NO:
       labels:
         count: "Medlemmer"
         share: "Del"
+        signups: "Påmeldinger"
       levels:
         "0": "Ny"
         "1": "Basic"

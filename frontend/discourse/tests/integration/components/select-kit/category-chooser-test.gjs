@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | SelectKit | CategoryChooser",
@@ -122,7 +122,10 @@ module(
       );
 
       assert.strictEqual(this.subject.header().value(), null);
-      assert.strictEqual(this.subject.header().label(), "category…");
+      assert.strictEqual(
+        this.subject.header().label(),
+        i18n("category.choose").replace("&hellip;", "…")
+      );
     });
 
     test("with allowUncategorized=null and defaultComposerCategory present", async function (assert) {
@@ -156,7 +159,10 @@ module(
       );
 
       assert.strictEqual(this.subject.header().value(), null);
-      assert.strictEqual(this.subject.header().label(), "category…");
+      assert.strictEqual(
+        this.subject.header().label(),
+        i18n("category.choose").replace("&hellip;", "…")
+      );
     });
 
     test("with allowUncategorized=null none=true", async function (assert) {

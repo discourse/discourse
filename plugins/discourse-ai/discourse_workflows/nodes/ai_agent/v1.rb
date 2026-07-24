@@ -19,6 +19,19 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               run_scope: "per_item",
             },
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "result" => {
+                      "type" => "string",
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               agent_id: {
                 type: :integer,
@@ -38,7 +51,6 @@ if defined?(DiscourseWorkflows)
                   filterable: true,
                   value_property: :id,
                   name_property: :name,
-                  resets: %w[llm_model_id],
                   set_from_option: {
                     agent_name: "name",
                     agent_force_default_llm: "force_default_llm",

@@ -7,6 +7,7 @@ import { cancel, later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import Form from "discourse/components/form";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -20,8 +21,10 @@ import {
   nodeTypeIcon,
   nodeTypeLabel,
   nodeTypeProducesData,
+  nodeTypeRunScopeLabelKey,
   nodeTypeStyle,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import {
   credentialSlotAnchorField,
@@ -31,6 +34,8 @@ import {
   findNodeType,
   getPropertySchema,
 } from "../../../lib/workflows/property-engine";
+import { runExecuteStep } from "../canvas/canvas-execute-step";
+import { shouldShowExecuteStep } from "../canvas/workflow-node";
 import CredentialControl from "../configurators/credential";
 import PropertyEngineConfigurator from "../configurators/property-engine";
 import InputContext from "../context/input";
@@ -58,6 +63,8 @@ const SAVED_FADE_DELAY_MS = 2500;
 const SAVED_REMOVE_DELAY_MS = 3000;
 
 export default class NodeConfigurator extends Component {
+  @service router;
+  @service toasts;
   @service workflowsNodeTypes;
 
   @tracked nodeName = this.args.model.node.name || "";
@@ -124,7 +131,7 @@ export default class NodeConfigurator extends Component {
   get resolvedNodeType() {
     return resolveNodeTypeVersion(
       findNodeType(this.nodeTypes, this.args.model.node.type),
-      this.args.model.node.typeVersion
+      typeVersionForNode(this.args.model.node)
     );
   }
 
@@ -168,7 +175,7 @@ export default class NodeConfigurator extends Component {
     return getPropertySchema(
       this.nodeTypes,
       this.args.model.node.type,
-      this.args.model.node.typeVersion
+      typeVersionForNode(this.args.model.node)
     );
   }
 
@@ -297,6 +304,14 @@ export default class NodeConfigurator extends Component {
     } else if (event.key === "Escape") {
       this.cancelEditingName();
     }
+  }
+
+  get runScopeLabel() {
+    const labelKey = nodeTypeRunScopeLabelKey(this.resolvedNodeType, {
+      typeVersion: this.args.model.node.typeVersion,
+      configuration: this.configuration,
+    });
+    return labelKey ? i18n(labelKey) : null;
   }
 
   get configuration() {
@@ -444,6 +459,25 @@ export default class NodeConfigurator extends Component {
     this.args.model.session.clearEditingContext();
   }
 
+  get canExecuteStep() {
+    return shouldShowExecuteStep(this.args.model.node);
+  }
+
+  @action
+  async executeStep() {
+    try {
+      await this.saveCurrentConfiguration();
+      await runExecuteStep({
+        clientId: this.args.model.node.clientId || this.args.model.node.id,
+        workflowId: this.args.model.session?.workflowId,
+        toasts: this.toasts,
+        router: this.router,
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   <template>
     <DModal
       @closeModal={{this.handleClose}}
@@ -522,6 +556,14 @@ export default class NodeConfigurator extends Component {
                 {{i18n "discourse_workflows.configurator.saved"}}
               {{/if}}
             </span>
+          {{/if}}
+          {{#if this.canExecuteStep}}
+            <DButton
+              @action={{this.executeStep}}
+              @icon="play"
+              @label="discourse_workflows.execute_step.run"
+              class="btn-small workflows-configurator-modal__execute-step"
+            />
           {{/if}}
           <DButton
             @action={{this.handleClose}}
@@ -631,6 +673,12 @@ export default class NodeConfigurator extends Component {
               {{/if}}
 
               {{#if (eq this.activeTab "settings")}}
+                {{#if this.runScopeLabel}}
+                  <div class="workflows-configurator-modal__run-scope">
+                    {{dIcon "circle-info"}}
+                    <span>{{this.runScopeLabel}}</span>
+                  </div>
+                {{/if}}
                 <Form
                   @data={{this.settingsFormData}}
                   @onRegisterApi={{this.registerSettingsApi}}

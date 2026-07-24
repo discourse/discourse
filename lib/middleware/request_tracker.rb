@@ -132,7 +132,6 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser_beacon)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
         end
-        trigger_beacon_browser_pageview_event(data)
       else
         if data[:is_embed]
           ApplicationRequest.increment!(:page_view_embed)
@@ -350,7 +349,7 @@ class Middleware::RequestTracker
     env["discourse.request_tracker"] = self
 
     if self.class.is_beacon_tracking_request?(request)
-      if self.class.same_origin_beacon_request?(request)
+      if self.class.same_origin_request?(request)
         result = [204, {}, []]
       else
         env["discourse.request_tracker.skip"] = true
@@ -362,6 +361,16 @@ class Middleware::RequestTracker
     if self.class.is_pageview_tracking_request?(request)
       result = [204, {}, []]
       return result
+    end
+
+    if self.class.is_engagement_tracking_request?(request)
+      env["discourse.request_tracker.skip"] = true
+      if self.class.same_origin_request?(request)
+        self.class.track_session_engagement(env)
+        return 204, {}, []
+      else
+        return 403, {}, []
+      end
     end
 
     MethodProfiler.start
@@ -659,11 +668,13 @@ class Middleware::RequestTracker
   end
 
   def self.is_beacon_tracking_request?(request)
-    SiteSetting.use_beacon_for_browser_page_views && request.post? &&
-      request.path == Discourse.beacon_pv_tracking_path
+    UpcomingChanges.enabled?(:dashboard_improvements) &&
+      (
+        SiteSetting.persist_browser_pageview_events || SiteSetting.trigger_browser_pageview_events
+      ) && request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
-  def self.same_origin_beacon_request?(request)
+  def self.same_origin_request?(request)
     origin = request.get_header("HTTP_ORIGIN").presence || request.referer.presence
     return false if origin.blank?
 
@@ -680,15 +691,51 @@ class Middleware::RequestTracker
     request.post? && request.path == "#{Discourse.base_path}/pageview"
   end
 
-  def self.extract_beacon_view_tracking_data(env)
+  def self.is_engagement_tracking_request?(request)
+    SiteSetting.persist_browser_pageview_events && request.post? &&
+      request.path == Discourse.engagement_tracking_path
+  end
+
+  def self.track_session_engagement(env)
+    payload = read_json_body(env)
+    return unless payload.is_a?(Hash)
+
+    Scheduler::Defer.later("Track session engagement") do
+      next if Discourse.pg_readonly_mode?
+
+      BrowserPageviewSessionEngagement.upsert_from_payload(
+        session_id: payload["session_id"],
+        mouse_move_events: payload["mouse_move_events"].to_i,
+        click_events: payload["click_events"].to_i,
+        key_events: payload["key_events"].to_i,
+        scroll_events: payload["scroll_events"].to_i,
+        touch_events: payload["touch_events"].to_i,
+        back_forward_events: payload["back_forward_events"].to_i,
+        engaged_seconds:
+          payload["engaged_seconds"].to_i.clamp(
+            0,
+            SiteSetting.browser_pageview_max_engaged_seconds,
+          ),
+        time_to_first_interaction_ms: payload["time_to_first_interaction_ms"].presence&.to_i,
+      )
+    rescue => e
+      Rails.logger.warn("Discarding session engagement: #{e.message}")
+    end
+  end
+
+  def self.read_json_body(env)
     body = env["rack.input"]&.read
     env["rack.input"]&.rewind
-    data =
-      begin
-        JSON.parse(body)
-      rescue JSON::ParserError
-        {}
-      end
+    return if body.blank?
+
+    JSON.parse(body)
+  rescue JSON::ParserError
+    nil
+  end
+  private_class_method :read_json_body
+
+  def self.extract_beacon_view_tracking_data(env)
+    data = read_json_body(env) || {}
 
     topic_id = data["topic_id"]&.to_i
     tracking_url = data["url"]&.slice(0, MAX_URL_LENGTH)
@@ -715,15 +762,29 @@ class Middleware::RequestTracker
   private_class_method :extract_beacon_view_tracking_data
 
   def self.track_browser_pageview(data)
-    return if data[:is_beacon]
     return if !tracks_browser_page_view?(data)
+    if !SiteSetting.persist_browser_pageview_events && !SiteSetting.trigger_browser_pageview_events
+      return
+    end
 
-    if SiteSetting.persist_browser_pageview_events
-      persist_browser_pageview_event(build_browser_pageview_event_payload(data))
-    elsif SiteSetting.trigger_browser_pageview_events
-      DiscourseEvent.trigger(:browser_pageview, build_browser_pageview_event_payload(data))
+    payload = build_browser_pageview_event_payload(data)
+
+    persist_browser_pageview_event(payload) if SiteSetting.persist_browser_pageview_events
+
+    if data[:is_beacon]
+      trigger_beacon_browser_pageview_event(payload)
+    else
+      trigger_browser_pageview_event(payload)
     end
   end
+
+  def self.trigger_browser_pageview_event(payload)
+    return if SiteSetting.persist_browser_pageview_events
+    return if !SiteSetting.trigger_browser_pageview_events
+
+    DiscourseEvent.trigger(:browser_pageview, payload)
+  end
+  private_class_method :trigger_browser_pageview_event
 
   def self.persist_browser_pageview_event(payload)
     if REQUIRED_BROWSER_PAGEVIEW_EVENT_FIELDS.any? { |key| payload[key].blank? }
@@ -764,10 +825,12 @@ class Middleware::RequestTracker
   end
   private_class_method :queue_browser_pageview_event
 
-  def self.trigger_beacon_browser_pageview_event(data)
-    if SiteSetting.trigger_browser_pageview_events
-      DiscourseEvent.trigger(:beacon_browser_pageview, build_browser_pageview_event_payload(data))
-    end
+  def self.trigger_beacon_browser_pageview_event(payload)
+    return if !UpcomingChanges.enabled?(:dashboard_improvements)
+    return if SiteSetting.persist_browser_pageview_events
+    return if !SiteSetting.trigger_browser_pageview_events
+
+    DiscourseEvent.trigger(:beacon_browser_pageview, payload)
   end
   private_class_method :trigger_beacon_browser_pageview_event
 
@@ -784,6 +847,14 @@ class Middleware::RequestTracker
       session_id: data[:tracking_session_id],
       topic_id: data[:topic_id],
       occurred_at: data[:occurred_at],
+      source:
+        (
+          if data[:is_beacon]
+            BrowserPageviewEvent::SOURCE_BEACON
+          else
+            BrowserPageviewEvent::SOURCE_PIGGYBACK
+          end
+        ),
     }
   end
   private_class_method :build_browser_pageview_event_payload

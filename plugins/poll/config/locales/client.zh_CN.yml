@@ -10,9 +10,15 @@ zh_CN:
       site_settings:
         categories:
           poll: "Discourse 投票"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "投票已结束"
+            poll_opened: "投票已开始"
   js:
     poll:
       title: "投票"
+      closed_by: "由 %{username} 结束"
       dynamic:
         enabled_hint: "可以添加或移除选项。"
       voters:
@@ -152,5 +158,3 @@ zh_CN:
           add: 添加选项
         automatic_close:
           label: 自动关闭投票
-        show_advanced: "显示高级选项"
-        hide_advanced: "隐藏高级选项"

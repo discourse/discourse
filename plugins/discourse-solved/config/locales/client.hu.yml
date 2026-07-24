@@ -15,6 +15,17 @@ hu:
           kpi:
             accepted_solutions:
               label: "Elfogadott megoldások"
+        sections:
+          support:
+            title: "Támogatás"
+            answerers:
+              staff: "Stáb"
+              member: "Tagok"
+              basic: "Alapvető"
+            response_time:
+              buckets:
+                lt_1h: "< 1 óra"
+                gt_24h: "> 24 óra"
   js:
     notifications:
       alt:

@@ -13,9 +13,9 @@ acceptance(`Post controls`, function (needs) {
 
     await click("#post_2 .button-count");
 
-    assert.dom(".post-users-popup").exists("post likes popup appears");
+    assert.dom(".users-popup").exists("post likes popup appears");
     assert
-      .dom(".post-users-popup__item")
+      .dom(".users-popup__item")
       .exists("liked users are listed in the popup");
   });
 
@@ -38,7 +38,6 @@ acceptance(`Post controls`, function (needs) {
       .dom("#post_1 button.show-replies")
       .hasAria("pressed", "true", "show replies button is now pressed");
 
-    // const replies = Array.from(queryAll("#post_1 .embedded-posts .reply"));
     assert
       .dom("#post_1 .embedded-posts .reply")
       .exists({ count: 1 }, "replies are rendered");

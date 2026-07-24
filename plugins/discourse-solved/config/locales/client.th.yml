@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 th:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "ทีมงาน"
+              member: "สมาชิก"
   js:
     notifications:
       alt:

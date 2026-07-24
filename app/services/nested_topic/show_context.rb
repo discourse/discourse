@@ -128,11 +128,13 @@ class NestedTopic::ShowContext
     all_posts.uniq!(&:id)
 
     preloader.prepare(all_posts)
-    context[:reply_counts] = loader.direct_reply_counts(all_posts.map(&:post_number))
-    context[:descendant_counts] = loader.total_descendant_counts(all_posts.map(&:id))
+    counts = loader.tree_counts(all_posts)
+    context[:reply_counts] = counts[:reply_counts]
+    context[:descendant_counts] = counts[:descendant_counts]
   end
 
   def serialize_context(
+    params:,
     loader:,
     serializer:,
     target_post:,
@@ -156,6 +158,7 @@ class NestedTopic::ShowContext
         end,
       target_post:
         serializer.serialize_tree(target_post, children_map, reply_counts, descendant_counts),
+      effective_sort: loader.effective_sort(params.sort),
       message_bus_last_id: topic_view.message_bus_last_id,
     }
   end

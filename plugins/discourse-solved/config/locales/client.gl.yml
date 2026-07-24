@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 gl:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Equipo"
+              member: "Membros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
   js:
     notifications:
       alt:

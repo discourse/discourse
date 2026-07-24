@@ -42,6 +42,8 @@ ro:
       logging_subject: "Detectare spam"
     ai_bot:
       tool_summary:
+        suspend_user: "Suspendă utilizatorul"
+        silence_user: "Redu la tăcere utilizatorul"
         search: "Caută"
         time: "Oră"
         summarize: "Rezumat"

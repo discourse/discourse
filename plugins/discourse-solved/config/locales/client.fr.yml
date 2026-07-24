@@ -15,6 +15,17 @@ fr:
           kpi:
             accepted_solutions:
               label: "Solutions acceptées"
+        sections:
+          support:
+            title: "Soutenir"
+            answerers:
+              staff: "Responsable"
+              member: "Membres"
+              basic: "Actif"
+            response_time:
+              buckets:
+                lt_1h: "< 1 heure"
+                gt_24h: "> 24 heures"
   js:
     notifications:
       alt:

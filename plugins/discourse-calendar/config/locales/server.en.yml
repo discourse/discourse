@@ -49,6 +49,9 @@ en:
     use_local_event_date: "Use local date after topic title instead of relative time."
     discourse_post_event_allowed_on_groups: "Groups that are allowed to create events."
     discourse_post_event_allowed_custom_fields: "Allows to let each event to set the value of custom fields."
+    discourse_post_event_allowed_custom_fields_invalid: "These custom field names are invalid: %{names}. Names must start and end with a letter or number and use single dots, dashes, or underscores as separators (for example: dress_code, live-stream, q.and.a)."
+    discourse_post_event_allowed_custom_fields_collision: "These custom field names resolve to the same name once dots, dashes, and letter case are normalized: %{names}. Each custom field must be unique."
+    discourse_post_event_allowed_custom_fields_reserved: "These custom field names are reserved by built-in event options (for example name, url, status, location): %{names}. Please choose different names."
     discourse_post_event_edit_notifications_time_extension: "Extends (in minutes) the period after the end of an event when `going` invitees are still being notified from edit in the original post."
     holiday_calendar_topic_id: "Topic ID of staffs holiday / absence calendar."
     holiday_status_emoji: Defines the emoji used for the holiday status.
@@ -70,8 +73,9 @@ en:
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup."
-    livestream_enabled: "Enable livestream chat for topics tagged 'livestream'."
-    livestream_chat_allowed_groups: "Only allowlisted groups can chat in the livestream channel."
+    livestream_zoom_enabled: "Enable Zoom video embedding for livestream topics."
+    livestream_zoom_sdk_key: "Zoom Meeting SDK client ID."
+    livestream_zoom_sdk_secret: "Zoom Meeting SDK client secret."
     livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 
@@ -101,6 +105,9 @@ en:
       all_events_feed_name: "%{site_title} - All events"
       my_events_feed_name: "%{site_title} - My events"
     invite_user_notification: "%{username} invited you to: %{description}"
+    livestream:
+      chat:
+        topic_reference_message: "This channel is for the event [%{title}](%{url}) — visit the topic for details and to RSVP."
     calendar_must_be_in_first_post: "Calendar tag can only be used in first post of a topic."
     more_than_one_calendar: "You can’t have more than one calendar in a post."
     more_than_two_dates: "A post of a calendar topic can’t contain more than two dates."
@@ -109,6 +116,13 @@ en:
     holiday_status:
       description: "On holiday"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
+      date_format: "%B %-d, %Y"
+      datetime_format: "%B %-d, %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} is about to start."
       after_event_reminder: "%{title} has ended."

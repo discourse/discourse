@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { modifier } from "ember-modifier";
 import ComposerActionTitle from "discourse/components/composer-action-title";
 import ComposerBody from "discourse/components/composer-body";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -21,6 +24,12 @@ import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import {
+  dampenedOverdrag,
+  shouldDeferSwipeToContent,
+  SWIPE_DISTANCE_THRESHOLD,
+  SWIPE_VELOCITY_THRESHOLD,
+} from "discourse/lib/swipe-events";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -34,7 +43,56 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
+import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
 import { i18n } from "discourse-i18n";
+
+const trackFieldsHeight = modifier((element, [enabled]) => {
+  if (!enabled) {
+    return;
+  }
+
+  const target = document.getElementById("reply-control");
+  if (!target) {
+    return;
+  }
+
+  const update = (height) => {
+    const rounded = Math.round(height);
+    target.style.setProperty("--composer-fields-height", `${rounded}px`);
+    target.classList.toggle("has-composer-fields", rounded > 0);
+  };
+
+  update(element.offsetHeight);
+
+  const observer = new ResizeObserver(([entry]) => {
+    update(entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height);
+  });
+  observer.observe(element);
+
+  return () => {
+    observer.disconnect();
+    target.style.removeProperty("--composer-fields-height");
+    target.classList.remove("has-composer-fields");
+  };
+});
+
+const PmUserSelector = <template>
+  <div class="user-selector">
+    <ComposerUserSelector
+      @topicId={{@topicId}}
+      @recipients={{@model.targetRecipients}}
+      @hasGroups={{@model.hasTargetGroups}}
+      @focusTarget={{@focusTarget}}
+      class={{dConcatClass "users-input" (if @showWarning "can-warn")}}
+    />
+    {{#if @showWarning}}
+      <label class="add-warning">
+        <Input @type="checkbox" @checked={{@model.isWarning}} />
+        <span>{{i18n "composer.add_warning"}}</span>
+      </label>
+    {{/if}}
+  </div>
+</template>;
 
 export default class ComposerContainer extends Component {
   @service composer;
@@ -44,9 +102,90 @@ export default class ComposerContainer extends Component {
   @service appEvents;
   @service keyValueStore;
 
+  @tracked toolbarPortalTarget;
+
+  #swipeEditor = null;
+  #swipeSlide = 0;
+
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
+  }
+
+  get composerRedesign() {
+    return this.siteSettings.enable_composer_redesign;
+  }
+
+  @action
+  onSwipeStart(state, event) {
+    // :focus-within keeps the match when a NodeView input inside the editor
+    // is focused (which doesn't set .in-focus)
+    const editor = state.element.querySelector(
+      ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
+    );
+
+    if (
+      !editor ||
+      !state.goingDown() ||
+      shouldDeferSwipeToContent(state, state.element)
+    ) {
+      event.preventDefault();
+      return;
+    }
+
+    this.#swipeEditor = editor;
+    this.#swipeSlide = -parseFloat(getComputedStyle(editor).marginTop) || 0;
+    editor.style.transition = "none";
+  }
+
+  @action
+  onSwipe(state) {
+    if (!this.#swipeEditor) {
+      return;
+    }
+
+    const pulled = Math.max(0, state.deltaY);
+    const margin =
+      pulled <= this.#swipeSlide
+        ? pulled - this.#swipeSlide
+        : dampenedOverdrag(pulled - this.#swipeSlide);
+    this.#swipeEditor.style.marginTop = `${margin}px`;
+  }
+
+  @action
+  onSwipeEnd(state) {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+
+    const dismissed =
+      state.deltaY > SWIPE_DISTANCE_THRESHOLD ||
+      state.velocityY > SWIPE_VELOCITY_THRESHOLD;
+
+    if (dismissed && editor.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
+
+    editor.style.marginTop = "";
+  }
+
+  @action
+  onSwipeCancel() {
+    const editor = this.#swipeEditor;
+    if (!editor) {
+      return;
+    }
+    this.#swipeEditor = null;
+    editor.style.transition = "";
+    editor.style.marginTop = "";
+  }
+
+  @action
+  setToolbarPortalTarget(element) {
+    this.toolbarPortalTarget = element;
   }
 
   get availableContentLocalizationLocales() {
@@ -112,14 +251,14 @@ export default class ComposerContainer extends Component {
   @bind
   onResizeDrag(size) {
     this.appEvents.trigger("composer:div-resizing");
-    this.composer.set("composerHeight", `${size}px`);
-    this.keyValueStore.set({
-      key: "composerHeight",
-      value: this.composer.composerHeight,
-    });
+
+    const height = `${size}px`;
+    // resuming from minimized restores the height from the model
+    this.composer.model?.set("composerHeight", height);
+    this.keyValueStore.set({ key: "composerHeight", value: height });
     document.documentElement.style.setProperty(
       "--composer-height",
-      size ? `${size}px` : ""
+      size ? height : ""
     );
 
     this._triggerComposerResized();
@@ -196,6 +335,14 @@ export default class ComposerContainer extends Component {
                 'with-category'
                 'without-category'
               }}"
+            {{dSwipe
+              onDidStartSwipe=this.onSwipeStart
+              onDidSwipe=this.onSwipe
+              onDidEndSwipe=this.onSwipeEnd
+              onDidCancelSwipe=this.onSwipeCancel
+              enabled=(if this.composerRedesign true false)
+              lockBody=false
+            }}
           >
             <span class="composer-open-plugin-outlet-container">
               <PluginOutlet
@@ -317,47 +464,50 @@ export default class ComposerContainer extends Component {
               />
             </div>
 
-            <ComposerEditor>
-              <div class="composer-fields">
+            <ComposerEditor @toolbarPortalTarget={{this.toolbarPortalTarget}}>
+              <div
+                class="composer-fields"
+                {{trackFieldsHeight this.composerRedesign}}
+              >
                 <PluginOutlet
                   @name="before-composer-fields"
                   @outletArgs={{lazyHash model=this.composer.model}}
                 />
                 {{#unless this.composer.model.viewFullscreen}}
                   {{#if this.composer.model.canEditTitle}}
-                    {{#if this.composer.model.creatingPrivateMessage}}
-                      <div class="user-selector">
-                        <ComposerUserSelector
+                    {{#unless this.composerRedesign}}
+                      {{#if this.composer.model.creatingPrivateMessage}}
+                        <PmUserSelector
                           @topicId={{this.composer.topicModel.id}}
-                          @recipients={{this.composer.model.targetRecipients}}
-                          @hasGroups={{this.composer.model.hasTargetGroups}}
+                          @model={{this.composer.model}}
                           @focusTarget={{this.composer.focusTarget}}
-                          class={{dConcatClass
-                            "users-input"
-                            (if this.composer.showWarning "can-warn")
-                          }}
+                          @showWarning={{this.composer.showWarning}}
                         />
-                        {{#if this.composer.showWarning}}
-                          <label class="add-warning">
-                            <Input
-                              @type="checkbox"
-                              @checked={{this.composer.model.isWarning}}
-                            />
-                            <span>{{i18n "composer.add_warning"}}</span>
-                          </label>
-                        {{/if}}
-                      </div>
-                    {{/if}}
+                      {{/if}}
+                    {{/unless}}
 
                     <div
                       class="title-and-category
                         {{if this.composer.isPreviewVisible 'with-preview'}}"
                     >
-                      <ComposerTitle
-                        @composer={{this.composer.model}}
-                        @lastValidatedAt={{this.composer.lastValidatedAt}}
-                        @focusTarget={{this.composer.focusTarget}}
-                      />
+                      {{#if this.composerRedesign}}
+                        {{#if this.composer.model.creatingPrivateMessage}}
+                          <PmUserSelector
+                            @topicId={{this.composer.topicModel.id}}
+                            @model={{this.composer.model}}
+                            @focusTarget={{this.composer.focusTarget}}
+                            @showWarning={{this.composer.showWarning}}
+                          />
+                        {{/if}}
+                      {{/if}}
+
+                      {{#unless this.composerRedesign}}
+                        <ComposerTitle
+                          @composer={{this.composer.model}}
+                          @lastValidatedAt={{this.composer.lastValidatedAt}}
+                          @focusTarget={{this.composer.focusTarget}}
+                        />
+                      {{/unless}}
 
                       {{#if this.composer.model.showCategoryChooser}}
                         <div class="category-input">
@@ -392,6 +542,8 @@ export default class ComposerContainer extends Component {
                               disabled=this.composer.disableTagsChooser
                               categoryId=this.composer.model.categoryId
                               minimum=this.composer.model.minimumRequiredTags
+                              icon=(if this.composerRedesign "tag")
+                              prioritizeRecentTags=true
                             }}
                           />
                           <PluginOutlet
@@ -416,6 +568,14 @@ export default class ComposerContainer extends Component {
                         }}
                       />
                     </div>
+
+                    {{#if this.composerRedesign}}
+                      <ComposerTitle
+                        @composer={{this.composer.model}}
+                        @lastValidatedAt={{this.composer.lastValidatedAt}}
+                        @focusTarget={{this.composer.focusTarget}}
+                      />
+                    {{/if}}
                   {{/if}}
 
                   <span>
@@ -439,154 +599,277 @@ export default class ComposerContainer extends Component {
               />
             </span>
 
-            <div class="submit-panel">
-              <span>
-                <PluginOutlet
-                  @name="composer-fields-below"
-                  @connectorTagName="div"
-                  @outletArgs={{lazyHash model=this.composer.model}}
-                />
-              </span>
+            {{#if this.composerRedesign}}
+              <div class="composer-footer">
+                <div
+                  class="composer-footer__toolbar"
+                  {{didInsert this.setToolbarPortalTarget}}
+                ></div>
 
-              <div class="save-or-cancel">
-                <ComposerSaveButton
-                  @action={{this.composer.saveAction}}
-                  @icon={{this.composer.saveIcon}}
-                  @label={{this.composer.saveLabel}}
-                  @forwardEvent={{true}}
-                  @disableSubmit={{this.composer.disableSubmit}}
-                />
+                <div class="submit-panel">
+                  <span>
+                    <PluginOutlet
+                      @name="composer-fields-below"
+                      @connectorTagName="div"
+                      @outletArgs={{lazyHash model=this.composer.model}}
+                    />
+                  </span>
 
-                {{#unless this.site.mobileView}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    class="discard-button btn-transparent"
-                    @title={{this.composer.cancelLabel}}
-                    @label={{this.composer.cancelLabel}}
-                  />
-                {{/unless}}
-
-                {{#if this.site.mobileView}}
-                  <DButton
-                    @action={{this.composer.cancel}}
-                    @icon={{this.composer.cancelIcon}}
-                    class="discard-button btn-transparent"
-                    @title={{this.composer.cancelLabel}}
-                  />
-                {{/if}}
-
-                <span>
-                  <PluginOutlet
-                    @name="composer-after-save-or-cancel"
-                    @outletArgs={{lazyHash model=this.composer.model}}
-                  />
-                </span>
-              </div>
-
-              {{#if this.site.mobileView}}
-                <span>
-                  <PluginOutlet
-                    @name="composer-mobile-buttons-bottom"
-                    @outletArgs={{lazyHash model=this.composer.model}}
-                  />
-                </span>
-
-                {{#if this.composer.allowUpload}}
-                  <a
-                    id="mobile-file-upload"
-                    class="btn btn-default no-text mobile-file-upload
-                      {{if this.composer.isUploading 'hidden'}}"
-                    aria-label={{i18n "composer.upload_title"}}
-                  >
-                    {{dIcon this.composer.uploadIcon}}
-                  </a>
-                {{/if}}
-
-                {{#if this.composer.allowPreview}}
-                  <a
-                    href
-                    class="btn btn-default no-text mobile-preview"
-                    title={{i18n "composer.show_preview"}}
-                    {{on "click" this.composer.togglePreview}}
-                    aria-label={{i18n "composer.show_preview"}}
-                  >
-                    {{dIcon "desktop"}}
-                  </a>
-                {{/if}}
-
-                {{#if this.composer.isPreviewVisible}}
-                  <DButton
-                    @action={{this.composer.togglePreview}}
-                    @title="composer.hide_preview"
-                    @ariaLabel="composer.hide_preview"
-                    @icon="pencil"
-                    class="hide-preview"
-                  />
-                {{/if}}
-              {{/if}}
-
-              {{#if
-                (or this.composer.isUploading this.composer.isProcessingUpload)
-              }}
-                <div id="file-uploading">
-                  {{#if this.composer.isProcessingUpload}}
-                    {{dLoadingSpinner size="small"}}<span>{{i18n
-                        "upload_selector.processing"
-                      }}</span>
-                  {{else}}
-                    {{dLoadingSpinner size="small"}}<span>{{i18n
-                        "upload_selector.uploading"
-                      }}
-                      {{this.composer.uploadProgress}}%</span>
+                  {{#if this.site.mobileView}}
+                    {{#if this.composer.model.noBump}}
+                      <span class="no-bump">{{dIcon "anchor"}}</span>
+                    {{/if}}
                   {{/if}}
 
-                  {{#if this.composer.isCancellable}}
-                    <a
-                      href
-                      id="cancel-file-upload"
-                      {{on "click" this.composer.cancelUpload}}
-                    >{{dIcon "xmark"}}</a>
+                  {{#if this.composer.model.draftStatus}}
+                    <div
+                      class={{if this.composer.isUploading "hidden"}}
+                      id="draft-status"
+                    >
+                      <span
+                        class="draft-error"
+                        title={{this.composer.model.draftStatus}}
+                      >
+                        {{#if this.composer.model.draftConflictUser}}
+                          {{dAvatar
+                            this.composer.model.draftConflictUser
+                            imageSize="small"
+                          }}
+                          {{dIcon "user-pen"}}
+                        {{else}}
+                          {{dIcon "triangle-exclamation"}}
+                        {{/if}}
+                        {{#if this.site.desktopView}}
+                          {{this.composer.model.draftStatus}}
+                        {{/if}}
+                      </span>
+                    </div>
+                  {{/if}}
+
+                  {{#if
+                    (or
+                      this.composer.isUploading this.composer.isProcessingUpload
+                    )
+                  }}
+                    <div id="file-uploading">
+                      {{#if this.composer.isProcessingUpload}}
+                        {{dLoadingSpinner size="small"}}<span>{{i18n
+                            "upload_selector.processing"
+                          }}</span>
+                      {{else}}
+                        {{dLoadingSpinner size="small"}}<span>{{i18n
+                            "upload_selector.uploading"
+                          }}
+                          {{this.composer.uploadProgress}}%</span>
+                      {{/if}}
+
+                      {{#if this.composer.isCancellable}}
+                        <a
+                          href
+                          id="cancel-file-upload"
+                          {{on "click" this.composer.cancelUpload}}
+                        >{{dIcon "xmark"}}</a>
+                      {{/if}}
+                    </div>
+                  {{/if}}
+
+                  <div class="save-or-cancel">
+
+                    <DButton
+                      @action={{this.composer.cancel}}
+                      class="discard-button btn-transparent"
+                      @title={{this.composer.cancelLabel}}
+                      @label={{this.composer.cancelLabel}}
+                    />
+
+                    <ComposerSaveButton
+                      @action={{this.composer.saveAction}}
+                      @label={{this.composer.saveLabel}}
+                      @forwardEvent={{true}}
+                      @disableSubmit={{this.composer.disableSubmit}}
+                    />
+
+                    <PluginOutlet
+                      @name="composer-after-save-or-cancel"
+                      @outletArgs={{lazyHash model=this.composer.model}}
+                    />
+
+                  </div>
+
+                  {{#if this.site.mobileView}}
+                    <span>
+                      <PluginOutlet
+                        @name="composer-mobile-buttons-bottom"
+                        @outletArgs={{lazyHash model=this.composer.model}}
+                      />
+                    </span>
+
+                    {{#if this.composer.allowPreview}}
+                      <a
+                        href
+                        class="btn btn-default no-text mobile-preview"
+                        title={{i18n "composer.show_preview"}}
+                        {{on "click" this.composer.togglePreview}}
+                        aria-label={{i18n "composer.show_preview"}}
+                      >
+                        {{dIcon "desktop"}}
+                      </a>
+                    {{/if}}
+
+                    {{#if this.composer.isPreviewVisible}}
+                      <DButton
+                        @action={{this.composer.togglePreview}}
+                        @title="composer.hide_preview"
+                        @ariaLabel="composer.hide_preview"
+                        @icon="pencil"
+                        class="hide-preview"
+                      />
+                    {{/if}}
+                  {{/if}}
+
+                  {{#if (and this.composer.allowPreview this.site.desktopView)}}
+                    <DButton
+                      @action={{this.composer.togglePreview}}
+                      @translatedTitle={{this.composer.toggleText}}
+                      @icon="angles-left"
+                      class={{dConcatClass
+                        "btn-transparent btn-mini-toggle toggle-preview"
+                        (unless this.composer.isPreviewVisible "active")
+                      }}
+                    />
                   {{/if}}
                 </div>
-              {{/if}}
+              </div>
+            {{else}}
+              <div class="submit-panel">
+                <span>
+                  <PluginOutlet
+                    @name="composer-fields-below"
+                    @connectorTagName="div"
+                    @outletArgs={{lazyHash model=this.composer.model}}
+                  />
+                </span>
 
-              {{#if this.composer.model.draftStatus}}
-                <div
-                  class={{if this.composer.isUploading "hidden"}}
-                  id="draft-status"
-                >
-                  <span
-                    class="draft-error"
-                    title={{this.composer.model.draftStatus}}
-                  >
-                    {{#if this.composer.model.draftConflictUser}}
-                      {{dAvatar
-                        this.composer.model.draftConflictUser
-                        imageSize="small"
-                      }}
-                      {{dIcon "user-pen"}}
-                    {{else}}
-                      {{dIcon "triangle-exclamation"}}
-                    {{/if}}
-                    {{#if this.site.desktopView}}
-                      {{this.composer.model.draftStatus}}
-                    {{/if}}
+                <div class="save-or-cancel">
+                  <ComposerSaveButton
+                    @action={{this.composer.saveAction}}
+                    @icon={{this.composer.saveIcon}}
+                    @label={{this.composer.saveLabel}}
+                    @forwardEvent={{true}}
+                    @disableSubmit={{this.composer.disableSubmit}}
+                  />
+
+                  {{#unless this.site.mobileView}}
+                    <DButton
+                      @action={{this.composer.cancel}}
+                      class="discard-button btn-transparent"
+                      @title={{this.composer.cancelLabel}}
+                      @label={{this.composer.cancelLabel}}
+                    />
+                  {{/unless}}
+
+                  {{#if this.site.mobileView}}
+                    <DButton
+                      @action={{this.composer.cancel}}
+                      @icon={{this.composer.cancelIcon}}
+                      class="discard-button btn-transparent"
+                      @title={{this.composer.cancelLabel}}
+                    />
+                  {{/if}}
+
+                  <span>
+                    <PluginOutlet
+                      @name="composer-after-save-or-cancel"
+                      @outletArgs={{lazyHash model=this.composer.model}}
+                    />
                   </span>
                 </div>
-              {{/if}}
 
-              {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                <DButton
-                  @action={{this.composer.togglePreview}}
-                  @translatedTitle={{this.composer.toggleText}}
-                  @icon="angles-left"
-                  class={{dConcatClass
-                    "btn-transparent btn-small toggle-preview"
-                    (unless this.composer.isPreviewVisible "active")
-                  }}
-                />
-              {{/if}}
-            </div>
+                {{#if this.site.mobileView}}
+                  <span>
+                    <PluginOutlet
+                      @name="composer-mobile-buttons-bottom"
+                      @outletArgs={{lazyHash model=this.composer.model}}
+                    />
+                  </span>
+
+                  {{#if this.composer.allowUpload}}
+                    <a
+                      id="mobile-file-upload"
+                      class="btn btn-default no-text mobile-file-upload
+                        {{if this.composer.isUploading 'hidden'}}"
+                      aria-label={{i18n "composer.upload_title"}}
+                    >
+                      {{dIcon this.composer.uploadIcon}}
+                    </a>
+                  {{/if}}
+                {{/if}}
+
+                {{#if
+                  (or
+                    this.composer.isUploading this.composer.isProcessingUpload
+                  )
+                }}
+                  <div id="file-uploading">
+                    {{#if this.composer.isProcessingUpload}}
+                      {{dLoadingSpinner size="small"}}<span>{{i18n
+                          "upload_selector.processing"
+                        }}</span>
+                    {{else}}
+                      {{dLoadingSpinner size="small"}}<span>{{i18n
+                          "upload_selector.uploading"
+                        }}
+                        {{this.composer.uploadProgress}}%</span>
+                    {{/if}}
+
+                    {{#if this.composer.isCancellable}}
+                      <a
+                        href
+                        id="cancel-file-upload"
+                        {{on "click" this.composer.cancelUpload}}
+                      >{{dIcon "xmark"}}</a>
+                    {{/if}}
+                  </div>
+                {{/if}}
+
+                {{#if this.composer.model.draftStatus}}
+                  <div
+                    class={{if this.composer.isUploading "hidden"}}
+                    id="draft-status"
+                  >
+                    <span
+                      class="draft-error"
+                      title={{this.composer.model.draftStatus}}
+                    >
+                      {{#if this.composer.model.draftConflictUser}}
+                        {{dAvatar
+                          this.composer.model.draftConflictUser
+                          imageSize="small"
+                        }}
+                        {{dIcon "user-pen"}}
+                      {{else}}
+                        {{dIcon "triangle-exclamation"}}
+                      {{/if}}
+                      {{#if this.site.desktopView}}
+                        {{this.composer.model.draftStatus}}
+                      {{/if}}
+                    </span>
+                  </div>
+                {{/if}}
+
+                {{#if (and this.composer.allowPreview this.site.desktopView)}}
+                  <DButton
+                    @action={{this.composer.togglePreview}}
+                    @translatedTitle={{this.composer.toggleText}}
+                    @icon="angles-left"
+                    class={{dConcatClass
+                      "btn-transparent btn-small toggle-preview"
+                      (unless this.composer.isPreviewVisible "active")
+                    }}
+                  />
+                {{/if}}
+              </div>
+            {{/if}}
           </div>
         {{else}}
           <div class="saving-text">

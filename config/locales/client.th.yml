@@ -19,6 +19,9 @@ th:
         hidden: "ถูกซ่อน"
         not_registered: "ไม่ได้ลงทะเบียน"
         failed: "ล้มเหลว"
+    access_control:
+      manage:
+        access_permission_remove: "ลบ"
     number:
       format:
         separator: "."
@@ -273,6 +276,9 @@ th:
     age: "อายุ"
     joined: "เข้าร่วมแล้ว"
     admin_title: "ผู้ดูแลระบบ"
+    advanced_mode_toggle:
+      advanced_mode: "โหมดขั้นสูง"
+      simple_mode: "โหมดอย่างง่าย"
     show_more: "แสดงเพิ่มเติม"
     show_help: "ตัวเลือก"
     links: "ลิงก์"
@@ -854,6 +860,8 @@ th:
       notifications: "การแจ้งเตือน"
       statistics: "สถิติ"
       desktop_notifications:
+        push_level:
+          none: "ปิดใช้งานแล้ว"
         not_supported: "ขออภัย บราวเซอร์นี้ไม่สนับสนุนการแจ้งเตือน"
         perm_denied_expl: "คุณปฏิเสธการอนุญาตการแจ้งเตือน เปิดการแจ้งเตือนในการตั้งค่าบราวเซอร์ของคุณ"
         consent_prompt: "เมื่อมีคนตอบกลับโพสต์ของคุณ คุณต้องการการแจ้งเตือนโดยทันทีหรือไม่"
@@ -1056,7 +1064,7 @@ th:
         default: "(ค่าเริ่มต้น)"
         any: "ใดๆ"
       homepage:
-        default: "(ค่าเริ่มต้น)"
+        default: "ค่าเริ่มต้น"
       password_confirmation:
         title: "ยืนยันรหัสผ่าน"
       invite_code:
@@ -1176,6 +1184,22 @@ th:
           description: "รายละเอียด"
           update_invite: "อัปเดต"
           cancel: "ยกเลิก"
+        invite_roles:
+          member_tab: "สมาชิก"
+          admin_tab: "ทีมงาน"
+          staff_role_admin: "ผู้ดูแลระบบ"
+          staff_role_moderator: "ผู้ดูแล"
+          email_placeholder: "name@example.com"
+          invite_by_email: "อีเมล"
+          update: "อัปเดต"
+          summary:
+            role_member: "สมาชิก"
+            role_admin: "ผู้ดูแลระบบ"
+            role_moderator: "ผู้ดูแล"
+            method_email: "อีเมล"
+            expires: "หมดอายุ"
+            topic: "หัวข้อ"
+            groups: "กลุ่ม"
       password:
         title: "รหัสผ่าน"
         common: "รหัสผ่านง่ายเกินไป"
@@ -1318,7 +1342,6 @@ th:
     created: "สร้างเมื่อ"
     created_lowercase: "ตั้งเมื่อ"
     trust_level: "ระดับความน่าไว้ใจ"
-    search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
       title: "สมัคร"
@@ -1349,6 +1372,8 @@ th:
       email_label: "อีเมล"
       continue_button: "ดำเนินการต่อ"
       verify_button: "ดำเนินการต่อ"
+      account_ready_continue: "ดำเนินการต่อ"
+      username_label: "ชื่อผู้ใช้"
     login:
       title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
@@ -1480,6 +1505,7 @@ th:
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
       title_placeholder: "บทสนทนานี้เกี่ยวกับอะไร ขอสั้นๆ 1 ประโยค"
+      title_placeholder_redesign: "ชื่อเรื่อง"
       title_or_link_placeholder: "พิมพ์หัวข้อ หรือวางลิงก์ที่นี่"
       edit_reason_placeholder: "ทำไมคุณถึงแก้ไข"
       topic_featured_link_placeholder: "กรอกลิงก์ที่แสดงหัวข้อ"
@@ -1793,6 +1819,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      sr_read: "อ่าน"
       bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
@@ -2457,7 +2484,6 @@ th:
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
-      choose_for_topic: "แท็กทางเลือก"
       add_synonyms: "เพิ่ม"
       delete_tag: "ลบแท็ก"
       delete_confirm_no_topics: "คุณแน่ใจหรือว่าต้องการลบแท็กนี้"
@@ -2626,6 +2652,7 @@ th:
           always: "เสมอ"
           never: "ไม่เลย"
       reports:
+        all_groups: "กลุ่มทั้งหมด"
         group_traffic: "การจราจร"
         group_members: "สมาชิก"
         group_other: "อื่นๆ"
@@ -2677,6 +2704,8 @@ th:
           form:
             mobile: "โทรศัพท์"
             email: "อีเมล"
+            og_image_preview:
+              topic_id_label: "หมายเลขกระทู้"
         fonts:
           backfill_modal:
             modal_yes: "ใช่"
@@ -2713,6 +2742,19 @@ th:
               title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
+        category_management:
+          tabs:
+            settings: "การตั้งค่า"
+          types:
+            all:
+              title: "หมวดหมู่ทั้งหมด"
+          table:
+            category: "หมวดหมู่"
+            topics: "หัวข้อ"
+          visibility:
+            public: "สาธารณะ"
+          visibility_filter:
+            all: "หมวดหมู่ทั้งหมด"
         permalinks:
           title: "ลิงค์ถาวร"
         emoji:
@@ -2746,7 +2788,7 @@ th:
         critical_available: "การอัพเดตที่สำคัญมีให้อัพเดต"
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
-        latest_version: "ล่าสุด"
+        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
@@ -2777,7 +2819,6 @@ th:
               posts: "โพส"
               share: "แบ่งปัน"
             whos_posting:
-              all_categories: "หมวดหมู่ทั้งหมด"
               staff: "ทีมงาน"
             trust_level_pipeline:
               trust_levels:
@@ -2790,6 +2831,7 @@ th:
               searches: "ค้นหา"
               status: "สถานะ"
         reports_section:
+          header_action: "จัดการ"
           modal:
             apply: "นำไปใช้"
         site_traffic:
@@ -3285,6 +3327,10 @@ th:
         active: "เปิดใช้งานแล้ว"
         status: "สถานะ"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ระงับการใช้งาน"
           delete:
             confirmation_modal:
               close: "ปิด"
@@ -3294,6 +3340,8 @@ th:
           active: "ใช้งานอยู่"
           staff: "ทีมงาน"
           suspended: "ระงับการใช้งาน"
+        activation_filter:
+          activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"
@@ -3535,6 +3583,9 @@ th:
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"
+        export: "ส่งออก"
+        import_category:
+          new: "ใหม่"
       embedding:
         delete: "ลบ"
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"

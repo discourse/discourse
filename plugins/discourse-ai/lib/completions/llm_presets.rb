@@ -25,13 +25,36 @@ module DiscourseAi
         private
 
         def build_presets
-          [anthropic_preset, google_preset, open_ai_preset, open_router_preset].freeze
+          [
+            anthropic_preset,
+            google_preset,
+            google_vertex_ai_preset,
+            open_ai_preset,
+            open_router_preset,
+          ].freeze
         end
 
         def anthropic_preset
           {
             id: "anthropic",
             models: [
+              model(
+                name: "claude-opus-4-8",
+                tokens: 1_000_000,
+                display_name: "Claude Opus 4.8",
+                max_output_tokens: 128_000,
+                input_cost: 5.0,
+                cached_input_cost: 0.50,
+                cache_write_cost: 6.25,
+                output_cost: 25.0,
+                vision_enabled: true,
+                # Opus 4.7+ rejects the classic thinking.type=enabled request
+                # and requires thinking.type=adaptive instead.
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
+              ),
               model(
                 name: "claude-opus-4-7",
                 tokens: 1_000_000,
@@ -42,6 +65,26 @@ module DiscourseAi
                 cache_write_cost: 6.25,
                 output_cost: 25.0,
                 vision_enabled: true,
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
+              ),
+              model(
+                name: "claude-sonnet-5",
+                tokens: 1_000_000,
+                display_name: "Claude Sonnet 5",
+                max_output_tokens: 64_000,
+                input_cost: 3.0,
+                cached_input_cost: 0.30,
+                cache_write_cost: 3.75,
+                output_cost: 15.0,
+                vision_enabled: true,
+                # Sonnet 5 also requires adaptive thinking, same as Opus 4.7+.
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
               ),
               model(
                 name: "claude-sonnet-4-6",
@@ -106,40 +149,66 @@ module DiscourseAi
           }
         end
 
+        def google_vertex_ai_preset
+          {
+            id: "google_vertex_ai",
+            models: [
+              model(
+                name: "google/gemini-3-flash",
+                tokens: 1_000_000,
+                display_name: "Gemini 3 Flash (Vertex)",
+                max_output_tokens: 65_000,
+                input_cost: 0.50,
+                cached_input_cost: 0.05,
+                output_cost: 3.0,
+                vision_enabled: true,
+                provider_params: {
+                  region: "global",
+                },
+              ),
+            ],
+            tokenizer: DiscourseAi::Tokenizer::GeminiTokenizer,
+            provider: "google_vertex_ai",
+          }
+        end
+
         def open_ai_preset
           {
             id: "open_ai",
             models: [
               model(
-                name: "gpt-5.5",
+                name: "gpt-5.6-sol",
                 tokens: 1_050_000,
-                display_name: "GPT-5.5",
+                display_name: "GPT-5.6 Sol",
                 max_output_tokens: 128_000,
                 input_cost: 5.0,
                 cached_input_cost: 0.50,
+                cache_write_cost: 6.25,
                 output_cost: 30.0,
                 vision_enabled: true,
                 endpoint: "https://api.openai.com/v1/responses",
               ),
               model(
-                name: "gpt-5.4",
-                tokens: 400_000,
-                display_name: "GPT-5.4",
+                name: "gpt-5.6-terra",
+                tokens: 1_050_000,
+                display_name: "GPT-5.6 Terra",
                 max_output_tokens: 128_000,
                 input_cost: 2.50,
                 cached_input_cost: 0.25,
+                cache_write_cost: 3.125,
                 output_cost: 15.0,
                 vision_enabled: true,
                 endpoint: "https://api.openai.com/v1/responses",
               ),
               model(
-                name: "gpt-5.4-nano",
-                tokens: 400_000,
-                display_name: "GPT-5.4 Nano",
+                name: "gpt-5.6-luna",
+                tokens: 1_050_000,
+                display_name: "GPT-5.6 Luna",
                 max_output_tokens: 128_000,
-                input_cost: 0.20,
-                cached_input_cost: 0.02,
-                output_cost: 1.25,
+                input_cost: 1.0,
+                cached_input_cost: 0.10,
+                cache_write_cost: 1.25,
+                output_cost: 6.0,
                 vision_enabled: true,
                 endpoint: "https://api.openai.com/v1/responses",
               ),
@@ -227,7 +296,8 @@ module DiscourseAi
           cache_write_cost: nil,
           output_cost: nil,
           vision_enabled: false,
-          endpoint: nil
+          endpoint: nil,
+          provider_params: nil
         )
           result = { name: name, tokens: tokens, display_name: display_name }
           result[:max_output_tokens] = max_output_tokens if max_output_tokens
@@ -237,6 +307,7 @@ module DiscourseAi
           result[:output_cost] = output_cost if output_cost
           result[:vision_enabled] = vision_enabled if vision_enabled
           result[:endpoint] = endpoint if endpoint
+          result[:provider_params] = provider_params if provider_params
           result
         end
       end

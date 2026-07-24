@@ -194,6 +194,12 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :clear_acls
+
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
+  end
+
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
@@ -305,6 +311,7 @@ class User < ActiveRecord::Base
   scope :suspended, -> { where("suspended_till IS NOT NULL AND suspended_till > ?", Time.zone.now) }
   scope :not_suspended, -> { where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now) }
   scope :activated, -> { where(active: true) }
+  scope :not_activated, -> { where(active: false) }
   scope :not_staged, -> { where(staged: false) }
   scope :approved, -> { where(approved: true) }
 
@@ -388,7 +395,7 @@ class User < ActiveRecord::Base
   def all_sidebar_sections
     sidebar_sections
       .or(SidebarSection.public_sections)
-      .includes(:sidebar_urls)
+      .includes(:localizations, sidebar_urls: :localizations)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
@@ -557,8 +564,8 @@ class User < ActiveRecord::Base
     # including anon" and is gated behind the granular pseudogroups upcoming
     # change.
     everyone_shortcut =
-      !SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
-        group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      group_ids.include?(Group::AUTO_GROUPS[:everyone]) &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
 
     logged_in_shortcut = group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
 
@@ -581,6 +588,10 @@ class User < ActiveRecord::Base
 
   def belonging_to_group_ids
     @belonging_to_group_ids ||= group_users.pluck(:group_id)
+  end
+
+  def permission_acl
+    @permission_acl ||= AccessControlList.matching_user(self).user_acl
   end
 
   def group_granted_trust_level
@@ -676,6 +687,7 @@ class User < ActiveRecord::Base
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
+    @permission_acl = nil
     super
   end
 
@@ -1041,8 +1053,24 @@ class User < ActiveRecord::Base
   def new_user_posting_on_first_day?
     return false if staff?
     return false if trust_level >= TrustLevel[2]
-    return false if first_post_created_at.present? && first_post_created_at <= 24.hours.ago
+    return false if created_at <= 24.hours.ago
     true
+  end
+
+  def first_day_topics_limit
+    if trust_level == TrustLevel[1]
+      SiteSetting.tl1_max_topics_in_first_day
+    else
+      SiteSetting.max_topics_in_first_day
+    end
+  end
+
+  def first_day_replies_limit
+    if trust_level == TrustLevel[1]
+      SiteSetting.tl1_max_replies_in_first_day
+    else
+      SiteSetting.max_replies_in_first_day
+    end
   end
 
   def new_user?
@@ -1177,12 +1205,13 @@ class User < ActiveRecord::Base
       return if !User.should_update_last_seen?(id, now)
     end
 
+    previous_seen_at = last_seen_at
     update_previous_visit(now)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless first_seen_at
 
-    DiscourseEvent.trigger(:user_seen, self)
+    DiscourseEvent.trigger(:user_seen, self, previous_seen_at)
   end
 
   def self.gravatar_template(email)
@@ -1368,22 +1397,29 @@ class User < ActiveRecord::Base
     !!(silenced_till && silenced_till > Time.zone.now)
   end
 
+  def self.format_penalty_reason(details)
+    return if details.blank?
+    sanitize_staff_reason(details).split("<br>").first
+  end
+
+  def self.sanitize_staff_reason(text)
+    STAFF_REASON_SANITIZER.sanitize(
+      PrettyText.cleanup(text.gsub("\n", "<br>")),
+      tags: STAFF_REASON_ALLOWED_TAGS,
+      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
+    )
+  end
+
   def silenced_record
     user_histories.where(action: UserHistory.actions[:silence_user]).order("id DESC").first
   end
 
   def full_silence_reason
-    text = silenced_record.try(:details) if silenced?
-    return text if text.blank?
-    sanitize_staff_reason(text)
+    full_penalty_reason(silenced_record) if silenced?
   end
 
   def silence_reason
-    if details = full_silence_reason
-      return details.split("<br>")[0]
-    end
-
-    nil
+    full_silence_reason&.split("<br>")&.first
   end
 
   def silenced_at
@@ -1399,25 +1435,17 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    text = suspend_record.try(:details) if suspended?
-    return text if text.blank?
-    sanitize_staff_reason(text)
+    full_penalty_reason(suspend_record) if suspended?
   end
 
   def suspend_reason
-    if details = full_suspend_reason
-      return details.split("<br>")[0]
-    end
-
-    nil
+    full_suspend_reason&.split("<br>")&.first
   end
 
-  def sanitize_staff_reason(text)
-    STAFF_REASON_SANITIZER.sanitize(
-      PrettyText.cleanup(text.gsub("\n", "<br>")),
-      tags: STAFF_REASON_ALLOWED_TAGS,
-      attributes: STAFF_REASON_ALLOWED_ATTRIBUTES,
-    )
+  def full_penalty_reason(record)
+    text = record&.details
+    return if text.blank?
+    User.sanitize_staff_reason(text)
   end
 
   def suspended_message
@@ -1736,7 +1764,8 @@ class User < ActiveRecord::Base
   end
 
   def set_random_avatar
-    if SiteSetting.selectable_avatars_mode != "disabled"
+    if SiteSetting.selectable_avatars_random_on_signup &&
+         SiteSetting.selectable_avatars_mode != "disabled"
       if upload = SiteSetting.selectable_avatars.sample
         update_column(:uploaded_avatar_id, upload.id)
         UserAvatar.create!(user_id: id, custom_upload_id: upload.id)
@@ -1784,6 +1813,7 @@ class User < ActiveRecord::Base
       end
 
     @belonging_to_group_ids = nil
+    @permission_acl = nil
   end
 
   def email

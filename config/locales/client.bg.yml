@@ -18,6 +18,10 @@ bg:
         in_location: "в"
         hidden: "скрит"
         failed: "провалени"
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Премахване"
     number:
       format:
         separator: "."
@@ -1100,6 +1104,9 @@ bg:
       notifications: "Известия"
       statistics: "Статистика"
       desktop_notifications:
+        push_level:
+          none: "Деактивирани"
+          all: "Да е включен"
         not_supported: "Известията не се поддържат от този браузър. Съжаляваме."
         perm_denied_expl: "Вие сте забранили известията. Моля разрешете ги чрез настройките на браузъра си."
         each_browser_note: "Забележка: Трябва да промените тази настройка във всеки браузър, който използвате. Всички известия ще бъдат деактивирани, ако поставите на пауза известията от потребителското меню, независимо от тази настройка."
@@ -1470,7 +1477,7 @@ bg:
         default: "(по подразбиране)"
         any: "всеки"
       homepage:
-        default: "(по подразбиране)"
+        default: "По подразбиране"
       password_confirmation:
         title: "Паролата отново"
       invite_code:
@@ -1632,6 +1639,24 @@ bg:
           send_invite_email_instructions: "Ограничете поканата до имейл, за да изпратите имейл с покана"
           update_invite: "Актуализация"
           cancel: "Прекрати"
+        invite_roles:
+          member_tab: "Членове"
+          admin_tab: "Персонал"
+          staff_role_admin: "Администратор"
+          staff_role_moderator: "Модератор"
+          email_placeholder: "name@example.com"
+          invite_by_email: "Имейл"
+          restrict_domain: "Ограничаване до домейн"
+          update: "Актуализация"
+          summary:
+            role_member: "Член"
+            role_admin: "Администратор"
+            role_moderator: "Модератор"
+            method_email: "Имейл"
+            uses: "Максимум използвания"
+            expires: "Изтича"
+            topic: "Тема"
+            groups: "Групи"
         bulk_invite:
           none: "Няма покани за показване на тази страница."
           text: "Групова покана"
@@ -1844,7 +1869,6 @@ bg:
     created: "Създадено"
     created_lowercase: "създадено"
     trust_level: "Ниво на доверие"
-    search_hint: "потребителско име, имейл или IP адрес"
     create_account:
       header_title: "Добре дошли!"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
@@ -1889,6 +1913,9 @@ bg:
       email_label: "Имейл"
       continue_button: "Напред"
       verify_button: "Напред"
+      signup_title: "Създайте своя акаунт"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"
@@ -2101,6 +2128,7 @@ bg:
       title: "Или натиснете %{modifier}Enter"
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
+      title_placeholder_redesign: "Заглавие"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
       edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
@@ -2470,6 +2498,7 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
+      sr_read: "четене"
       jump_reply: "Отидете до първоначалното местоположение на публикацията"
       jump_reply_aria: "Отидете до публикацията на @%{username} в първоначалното й местоположение"
       deleted: "Темата беше изтрита"
@@ -2936,7 +2965,6 @@ bg:
         delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       create_long: "Създай нова категория"
-      slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
       validations:
@@ -3267,7 +3295,6 @@ bg:
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
-      choose_for_topic: "етикети по желание"
       add_synonyms: "Добави"
       delete_tag: "Изтрийте таг"
       description: "Описание"
@@ -3453,6 +3480,7 @@ bg:
           always: "винаги"
           never: "никога"
       reports:
+        all_groups: "Всички групи"
         group_traffic: "Трафик"
         group_members: "Членове"
         group_other: "Други"
@@ -3506,6 +3534,9 @@ bg:
           form:
             mobile: "Мобилен"
             email: "Имейл "
+            og_image_preview:
+              generate: "Генраирай"
+              topic_id_label: "Тема ID "
         fonts:
           backfill_modal:
             modal_yes: "Да"
@@ -3547,6 +3578,20 @@ bg:
               title: "Настройки"
         badges:
           title: "Значки"
+        category_management:
+          tabs:
+            settings: "Настройки"
+          types:
+            all:
+              title: "Всички категории"
+          table:
+            category: "Категория"
+            visibility: "Видимост"
+            topics: "Теми"
+          visibility:
+            public: "Публични"
+          visibility_filter:
+            all: "Всички категории"
         permalinks:
           title: "Постоянни адреси"
         emoji:
@@ -3591,7 +3636,7 @@ bg:
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
-        latest_version: "Последни"
+        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
@@ -3620,7 +3665,6 @@ bg:
               posts: "Публикации"
               share: "Споделяне"
             whos_posting:
-              all_categories: "Всички категории"
               staff: "Персонал"
             trust_level_pipeline:
               trust_levels:
@@ -3635,6 +3679,7 @@ bg:
               searches: "Търсения"
               status: "Статус"
         reports_section:
+          header_action: "Управление"
           modal:
             enabled_heading: "Да е включен"
             apply: "Приложи"
@@ -4232,6 +4277,10 @@ bg:
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Затвори"
+              confirm: "Отстрани "
           delete:
             confirmation_modal:
               close: "Затвори"
@@ -4552,6 +4601,10 @@ bg:
         image: "Изображение "
         delete_confirm: "Сигурни ли сте че искате да изтриете тази :%{name}% емотикона? "
         settings: "Настройки"
+        export: "Експорт "
+        import: "Импорт"
+        import_category:
+          new: "Нов"
       embedding:
         get_started: "Ако искате да внедрите Discourse в друг сайт, започнете с добавянето на хоста му."
         delete: "Изтрий"

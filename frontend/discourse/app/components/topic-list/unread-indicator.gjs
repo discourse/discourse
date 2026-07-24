@@ -32,7 +32,7 @@ export default class UnreadIndicator extends Component {
         title={{i18n "topic.unread_indicator"}}
         class="badge badge-notification unread-indicator"
       >
-        {{~dIcon "asterisk"~}}
+        {{~dIcon "asterisk" label=(i18n "topic.unread_indicator")~}}
       </span>
     {{~/if~}}
   </template>

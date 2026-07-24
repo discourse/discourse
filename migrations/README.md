@@ -45,6 +45,54 @@ the same pattern. The discard mechanism itself is library-specific — mysql2 ha
 needs one at all: connect, fork an empty child that exits normally, wait for it, and query
 again from the parent (see the fork-safety specs in `postgres_spec.rb`).
 
+### Partitioning large steps
+
+Most steps run in a single worker. A handful are large enough that it's worth
+splitting them across CPU cores, so the framework can run one worker per chunk of
+the source. A step opts in from its `source` block:
+
+```ruby
+source do
+  reads_table "topic_users", where: "user_id > 0"
+  partition_by :topic_id
+end
+```
+
+`reads_table` is the part that reads a whole table: it defines `items`
+(`SELECT * FROM topic_users WHERE …`) and `max_progress` (the row count), filtered
+by `where`. It works on its own, without partitioning — a plain table-copy step
+declares just `reads_table` and writes neither method. `partition_by` adds the
+split: it takes the key (normally a single indexed column, so each chunk is an
+index range scan; pass an array for a composite key) and reuses the table and
+filter from `reads_table`, so it only needs the column. When both are present the
+generated queries add the chunk to their `WHERE` automatically.
+
+Override `items` when you need specific columns, a join, or a particular order —
+and then add `partition_slice` to its `WHERE` yourself:
+
+```ruby
+def items
+  @source_db.query("SELECT id, name FROM topic_users WHERE #{partition_slice} AND name IS NOT NULL")
+end
+```
+
+The framework does the rest. Before forking, it asks the adapter for the chunk
+boundaries — evenly sized chunks over a numeric key, or a sorted-key scan for a
+text/UUID/composite key. It then forks one worker per chunk; each worker reads
+its `[lower, upper)` slice (that's what `partition_slice` expands to), writes its
+own SQLite shard, and the shards are merged back into the run database.
+
+Two things to get right:
+
+- **In a custom query, add `partition_slice` to the `WHERE`.** Miss it and each
+  worker reads the whole source instead of its slice — duplicated work and wrong
+  counts.
+- **Only partition order-independent steps.** Workers run concurrently and their
+  output is merged, so there is no global order across the step. A running total
+  or a sequence number across all rows can't be partitioned. Deduplication can,
+  but do it in the source query (`DISTINCT ON`, a window function, a view) and
+  partition on the dedup key, rather than keeping state in `process`.
+
 ## Schema DSL
 
 The schema DSL lives in `migrations/tooling/lib/migrations/tooling/schema/dsl/`. Config sources
@@ -100,11 +148,3 @@ bin/lint --fix path/to/file
 ```
 
 Uses both rubocop and syntax_tree. Always lint changed files.
-
-## Known issues
-
-- **Parallel step items must be hashes (or other non-scalar JSON values).** Worker processes
-  receive their items as an Oj stream over a pipe, and Oj's stream parser can only detect the
-  end of a bare scalar (a number or string) once the next byte arrives — so a step whose
-  `items` yields scalars stalls the worker pipeline. Wrap scalar items in a hash
-  (e.g. `{ id: ... }`). This should go away if we switch the worker pipes from Oj to JSON.

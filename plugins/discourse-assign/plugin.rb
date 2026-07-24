@@ -19,6 +19,7 @@ module ::DiscourseAssign
 end
 
 require_relative "lib/discourse_assign/engine"
+require_relative "lib/discourse_assign/assignee_resolver"
 require_relative "lib/discourse_assign/assignment_permissions"
 require_relative "lib/discourse_assign/guardian_extensions"
 require_relative "lib/validators/assign_statuses_validator"
@@ -67,6 +68,14 @@ after_initialize do
   register_user_custom_field_type(frequency_field, :integer, max_length: 10)
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
+
+  add_to_serializer(
+    :notification,
+    :topic_bumped_at,
+    include_condition: -> do
+      object.notification_type == Notification.types[:assigned] && object.topic.present?
+    end,
+  ) { object.topic.bumped_at }
 
   add_to_serializer(
     :group_show,
@@ -180,24 +189,30 @@ after_initialize do
 
   BookmarkQuery.on_preload do |bookmarks, _bookmark_query|
     if SiteSetting.assign_enabled?
-      topics =
-        Bookmark
-          .select_type(bookmarks, "Topic")
-          .map(&:bookmarkable)
-          .concat(Bookmark.select_type(bookmarks, "Post").map { |bm| bm.bookmarkable.topic })
-          .uniq
+      topics = Bookmark.select_type(bookmarks, "Topic").map(&:bookmarkable)
+      posts = Bookmark.select_type(bookmarks, "Post").map(&:bookmarkable)
+
       assignments =
         Assignment
           .strict_loading
-          .where(topic_id: topics)
+          .active
+          .where(topic_id: topics.map(&:id).concat(posts.map(&:topic_id)).uniq)
           .includes(:assigned_to)
-          .index_by(&:topic_id)
+
+      topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
+      topic_assignments_map = topic_assignments.index_by(&:target_id)
+      post_assignments_map = post_assignments.index_by(&:target_id)
 
       topics.each do |topic|
-        assignment = assignments[topic.id]
+        assignment = topic_assignments_map[topic.id]
         # NOTE: preloading to `nil` is necessary to avoid N+1 queries
         topic.preload_assigned_to(assignment&.assigned_to)
         topic.preload_assignment_status(assignment&.status)
+      end
+
+      posts.each do |post|
+        assignment = post_assignments_map[post.id]
+        post.preload_assigned_to(assignment&.assigned_to)
       end
     end
   end
@@ -457,7 +472,7 @@ after_initialize do
 
   add_to_class(:list_controller, :group_topics_assigned) do
     group = Group.find_by("name = ?", params[:groupname])
-    guardian.ensure_can_see_group_members!(group)
+    guardian.ensure_can_see_group_and_members!(group)
 
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless guardian.can_assign_globally?
@@ -514,6 +529,13 @@ after_initialize do
   add_to_class(:topic, :preload_indirectly_assigned_to) do |indirectly_assigned_to|
     @indirectly_assigned_to = indirectly_assigned_to
   end
+
+  add_to_class(:post, :assigned_to) do
+    return @assigned_to if defined?(@assigned_to)
+    @assigned_to = assignment.assigned_to if assignment&.active
+  end
+
+  add_to_class(:post, :preload_assigned_to) { |assigned_to| @assigned_to = assigned_to }
 
   # TopicList serializer
   add_to_serializer(
@@ -687,33 +709,48 @@ after_initialize do
 
   # TopicsBulkAction
   TopicsBulkAction.register_operation("assign") do
-    if @user.can_assign?
-      assign_user = User.find_by_username(@operation[:username])
-      topics.each do |topic|
-        next if !@user.can_assign?(topic)
+    raise Discourse::InvalidAccess if !guardian.can_assign?
 
+    assign_to =
+      DiscourseAssign::AssigneeResolver.resolve!(
+        guardian,
+        username: @operation[:username],
+        group_name: @operation[:group_name],
+      )
+
+    topics.each do |topic|
+      next if !guardian.can_see?(topic)
+
+      result =
         Assigner.new(topic, @user).assign(
-          assign_user,
-          status: @operation[:status],
-          note: @operation[:note],
+          assign_to,
+          status: @operation[:status].presence,
+          note: @operation[:note].presence,
         )
+
+      if result[:success] || %i[already_assigned group_already_assigned].include?(result[:reason])
+        @changed_ids << topic.id
+      else
+        @errors[Assigner.failure_message(result[:reason], assign_to)] += 1
       end
     end
   end
 
   TopicsBulkAction.register_operation("unassign") do
-    if @user.can_assign?
-      topics.each { |topic| Assigner.new(topic, @user).unassign if guardian.can_assign?(topic) }
+    topics.each do |topic|
+      next if !guardian.can_see?(topic) || !guardian.can_assign?(topic)
+
+      Assigner.new(topic, @user).unassign
     end
   end
 
   register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :group_name
   register_permitted_bulk_action_parameter :status
   register_permitted_bulk_action_parameter :note
 
   add_to_class(:user_bookmark_base_serializer, :assigned_to) do
-    @assigned_to ||=
-      bookmarkable_type == "Topic" ? bookmarkable.assigned_to : bookmarkable.topic.assigned_to
+    @assigned_to ||= bookmarkable.assigned_to
   end
 
   add_to_class(:user_bookmark_base_serializer, :can_have_assignment?) do
@@ -1074,7 +1111,12 @@ after_initialize do
       posts.where(<<~SQL, user_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
       SQL
-    elsif group_id = Group.find_by(name: match)&.id
+    elsif group_id =
+          Group
+            .visible_groups(@guardian.user)
+            .members_visible_groups(@guardian.user)
+            .where(name: match)
+            .pick(:id)
       posts.where(<<~SQL, group_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
       SQL

@@ -34,9 +34,11 @@ plugins:
       - user_chat_thread_memberships
     columns:
       user_options:
+        - chat_announce_new_messages
         - chat_email_frequency
         - chat_enabled
         - chat_header_indicator_preference
+        - chat_new_message_sound
         - chat_quick_reaction_type
         - chat_quick_reactions_custom
         - chat_send_shortcut
@@ -68,6 +70,7 @@ plugins:
       - ai_mcp_oauth_tokens
       - ai_mcp_servers
       - ai_moderation_settings
+      - ai_post_image_captions
       - ai_posts_embeddings
       - ai_secrets
       - ai_spam_logs
@@ -120,6 +123,7 @@ plugins:
     tables:
       - data_explorer_queries
       - data_explorer_query_groups
+      - data_explorer_query_stats
     columns: {}
   discourse-gamification:
     tables:
@@ -165,6 +169,7 @@ plugins:
         - discourse_rewind_share_publicly
   discourse-rss-polling:
     tables:
+      - discourse_rss_polling_poll_attempts
       - discourse_rss_polling_rss_feeds
     columns: {}
   discourse-solved:
@@ -195,12 +200,15 @@ plugins:
     columns: {}
   discourse-workflows:
     tables:
+      - discourse_workflows_ai_authoring_sessions
       - discourse_workflows_credentials
       - discourse_workflows_data_tables
       - discourse_workflows_execution_data
+      - discourse_workflows_execution_stats
       - discourse_workflows_executions
       - discourse_workflows_variables
       - discourse_workflows_webhooks
+      - discourse_workflows_workflow_call_runs
       - discourse_workflows_workflow_dependencies
       - discourse_workflows_workflow_publish_history
       - discourse_workflows_workflow_versions
@@ -214,19 +222,19 @@ plugins:
     columns: {}
 plugin_checksums:
   automation: e69972690991bc04d92b2d161aac8921
-  chat: eed419ab29ae9cb0a73a32c0e7be9d6c
+  chat: 43ee047298d56af4fad013d534155812
   discourse-adplugin: 9e52419decf1099c5bc301a90e6cc91a
   discourse-affiliate: '08c6e1a851441a082e9be9ddddc63910'
-  discourse-ai: 0eb3819de9ca86f22434718c56a58d1b
+  discourse-ai: 4ff4f60e8c1744603f7f8590f8f99447
   discourse-assign: 7a7a36e8ac0214e8a6aca1a1ed9899aa
   discourse-cakeday: a5bb91366c8dc8d267088eb0c2679187
-  discourse-calendar: f61c87be8f574bba58a658b73748aa84
+  discourse-calendar: 6a305b06fa9121f17245cefbc726ce20
+  discourse-captcha: fd538c1338062354276ccfda4cbafd55
   discourse-chat-integration: ffa3bf5dba9089491d2fc02971eb96f8
-  discourse-data-explorer: ba288745bea628996590debdf02fbaa4
+  discourse-data-explorer: fb71ab79dbe07af481ba147ea526406f
   discourse-gamification: 633256e241b030fddcc059076f7474f8
   discourse-github: 3bd17b2c09828e232e7565edbf2c746f
   discourse-graphviz: 8a1835520fbf8f7f5d1ef8a25d737e20
-  discourse-hcaptcha: fd538c1338062354276ccfda4cbafd55
   discourse-lazy-videos: a916a4f265d1cc6f99a3e53f5bcd1e9e
   discourse-local-dates: 18d3ec627bf8546fe13bae24c6a5bb6c
   discourse-microsoft-auth: 3a95a5b50edc156ad06f40aadda7d6bc
@@ -237,15 +245,15 @@ plugin_checksums:
   discourse-post-voting: ece13b87f2fbac3e64f8aa3abe07fe3d
   discourse-reactions: e9de82d2ebb48eb434be2b646c7fec26
   discourse-rewind: 1e0f2acf6e8409f2d2f011e14405fa06
-  discourse-rss-polling: b7cb3eeb38beff3ce10b333f24128d2f
+  discourse-rss-polling: 526db84c3d2ade0fa03497031fea2333
   discourse-solved: 67743e14f4c5c2fae4487193c374e429
   discourse-subscriptions: 05eb12877a6a842a290a98fa0e70d462
   discourse-templates: a131c89a3e2b765f1eb6ec811c0fecea
   discourse-topic-voting: 5464e186402b9589d71f338c704a7d21
   discourse-user-notes: 4c1e04fac5708b51c1b09bd8ed0d786c
-  discourse-workflows: d46c6b3562eb76d9352ee6c99e30707a
+  discourse-workflows: 46b2e6fd1e8668786b498f0c06846f70
   discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
-  poll: 4af8698c5fcc1dc9a786b31ec8234171
+  poll: e481f2cfa0e7c22778dee12a1e9c33c6
   styleguide: 0fd92e5ef0c99ee047f206961a587544
 failed_plugins: []
 incomplete: false

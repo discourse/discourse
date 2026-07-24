@@ -24,19 +24,21 @@ jobs:
   gems:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Gems
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.4"
-
       - name: RSpec (isolated, no Rails)
+        # Each gem uses its own Gemfile (not the app's), so Rails is not on the
+        # load path. This proves the gems work standalone.
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem =="
@@ -45,6 +47,12 @@ jobs:
 
       - name: Converter coverage (no Rails)
         run: |
+          # Reuse the image's prebuilt bundle so a Gemfile.lock change installs
+          # only the delta, not the whole root bundle.
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
+          bundle config set --local path vendor/bundle
+          bundle config set --local deployment true
+          bundle config set --local without development
           bundle config set --local with migrations
           bundle install --jobs $(($(nproc) - 1))
           # Fails if the reference (Discourse) converter leaves an IntermediateDB
@@ -66,10 +74,17 @@ jobs:
       LOAD_PLUGINS: 1
 
     steps:
+      - name: Enable jemalloc
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
+        run: |
+          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
+
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 

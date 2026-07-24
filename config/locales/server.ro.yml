@@ -332,6 +332,11 @@ ro:
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
+    default_full_names:
+      everyone: "Toată lumea"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Echipa"
     default_descriptions:
       everyone: "Grup automat care include toți membrii"
       staff: "Grup automat, inclusiv administratori și moderatori"
@@ -721,6 +726,7 @@ ro:
       labels:
         count: "Membri"
         share: "Partajează"
+        signups: "Înregistrări"
       levels:
         "0": "Nou"
         "1": "De bază"
@@ -1033,8 +1039,6 @@ ro:
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pe care un utilizator trebuie să le aștepte până când va putea edita o postare ascunsă prin marcaje de avertizare ale comunității."
-    max_topics_in_first_day: "Numărul maxim de subiecte pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
-    max_replies_in_first_day: "Numărul maxim de răspunsuri pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
     tl2_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 2, multiplicând cu această valoare"
     tl3_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 3, multiplicând cu această valoare"
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
@@ -1320,7 +1324,6 @@ ro:
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
-    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1343,7 +1346,6 @@ ro:
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
       content_localization_locale_limit: "Numărul de locale acceptate nu poate depăși %{max}."
-      content_localization_language_switcher_requirements: "Comutatorul de limbă necesită ca „setarea localei din cookie” și „permite locala utilizatorului” din setările site-ului să fie activate, și „locale acceptate din localizarea de conținut” să aibă cel puțin o limbă."
       mediaconvert_role_arn_required: "Rolul AWS IAM ARN este necesar atunci când utilizezi AWS MediaConvert pentru conversia video."
       s3_credentials_required_for_video_conversion: "Sunt necesare datele de conectare S3 pentru conversia video. Te rog să configurezi cheile de acces S3 sau să activezi profilul IAM."
     keywords:

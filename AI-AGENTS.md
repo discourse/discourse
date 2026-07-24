@@ -19,10 +19,14 @@ Discourse is large with long history. Understand context before changes.
 - Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
+- Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
 
-### JSDoc
-- Do not add JSDoc to any new code you write.
-- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
+### Comments & Types
+- Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
+- In the frontend, typescript is typically used for platform-level code, javascript for business-logic
+- Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
+- Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
+- In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
@@ -34,6 +38,8 @@ Discourse is large with long history. Understand context before changes.
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+bin/qunit --filter "Some text" # Case-insensitive substring match on "module: test name"
+bin/qunit --filter "/Foo|Bar/i" # Slash-wrapped value is a regex (include the "i" flag); use for alternation
 
 # Linting
 bin/lint --fix path/to/file path/to/another/file

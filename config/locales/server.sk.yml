@@ -703,6 +703,13 @@ sk:
       trust_level_2: "stupen_dovery_2"
       trust_level_3: "stupen_dovery_3"
       trust_level_4: "stupen_dovery_4"
+    default_full_names:
+      everyone: "Každý"
+      admins: "Administrátori"
+      moderators: "Moderátori"
+      staff: "Personál"
+      anonymous_users: "Anonymní používatelia"
+      logged_in_users: "Prihlásení užívatelia"
     default_descriptions:
       everyone: "Automatická skupina vrátane všetkých členov"
       staff: "Automatická skupina vrátane administrátorov a moderátorov"
@@ -1404,6 +1411,7 @@ sk:
         level: "Úroveň dôvery"
         count: "Členovia"
         share: "Zdieľať"
+        signups: "Registrácie"
       levels:
         "0": "Nový"
         "1": "Základné"
@@ -1888,8 +1896,6 @@ sk:
     silence_new_user_sensitivity: "Pravdepodobnosť, že nový používateľ bude umlčaný na základe príznakov spamu"
     auto_close_topic_sensitivity: "Pravdepodobnosť, že sa označená téma automaticky uzavrie"
     cooldown_minutes_after_hiding_posts: "Počet minút koľko musí používateľ počkať pred tým než môže upraviť príspevok skytý pomocou komunitných značiek"
-    max_topics_in_first_day: "Maximálny počet tém, ktoré môže používateľ vytvoriť počas 24 hodín po vytvorení prvého príspevku"
-    max_replies_in_first_day: "Maximálny počet odpovedí, ktoré môže používateľ vytvoriť v priebehu 24 hodín od vytvorenia prvého príspevku"
     tl2_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 2 (člen) vynásobením týmto číslom"
     tl3_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 3 (bežný) vynásobením týmto číslom"
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"
@@ -1941,7 +1947,6 @@ sk:
     suppress_secured_categories_from_admin: "Potlačenie súkromných tém a PM v niektorých častiach používateľského rozhrania pre administrátorov. Obsah bude na niektorých miestach stále viditeľný. Toto nie je bezpečnostná funkcia: administrátori majú vždy prístup ku všetkému obsahu na stránke."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
-    top_menu: "Určite, ktoré položky a v akom poradí sa zobrazia v navigácii na domovskej stránke."
     post_menu: "Konfigurácia viditeľnosti a poradia predvolených položiek ponuky príspevku. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     post_menu_hidden_items: "Položky ponuky, ktoré sa majú predvolene skryť v ponuke príspevku, pokiaľ sa neklikne na rozbaľovaciu elipsu. Ďalšie položky pridané zásuvnými modulmi alebo témami sa spravujú samostatne a v tomto zozname sa nezobrazia."
     share_links: "Uveďte, ktoré položky sa maju zobraziť v zdieľacom dialógu a v akom poradí."
@@ -2490,7 +2495,6 @@ sk:
     gravatar_base_url: "Zadajte adresu URL na prístup k rozhraniu API poskytovateľa Gravatar. Toto nastavenie je rozhodujúce pre konverziu e-mailových adries na adresy URL Gravataru, v ktorých sú uložené obrázky avataru."
     share_quote_buttons: "Určite, ktoré položky a v akom poradí sa zobrazia vo widgete na zdieľanie citácií."
     share_quote_visibility: "Určite, kedy sa majú zobrazovať tlačidlá na zdieľanie citácií: nikdy, len anonymným používateľom alebo všetkým používateľom. "
-    create_revision_on_bulk_topic_moves: "Vytvorte revíziu pre prvé príspevky, keď sa témy hromadne presunú do novej kategórie."
     allow_changing_staged_user_tracking: "Umožniť nezaktívnenému používateľovi s právami administrátora meniť preferencie kategórií a upozornení na značky."
     use_email_for_username_and_name_suggestions: "Na návrhy používateľského mena a mena použite prvú časť e-mailových adries. Upozornenie: To môže zlým aktérom uľahčiť zistenie e-mailovej adresy vašich členov (pretože mnohí ľudia používajú bežných poskytovateľov e-mailu, ako je `gmail.com`)."
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
@@ -4443,271 +4447,8 @@ sk:
       Túto stránku prevádzkuje váš [priateľský moderátorský tím](%{base_path}/about) a *vy*, komunita. Ak máte ďalšie otázky o tom, ako by tu mali veci fungovať, otvorte novú tému na %{feedback_category} a poďme diskutovať! Ak sa vyskytne kritický alebo naliehavý problém, ktorý sa nedá vyriešiť pomocou meta témy alebo príznaku, [kontaktujte moderátorov](%{base_path}/o).
   tos_topic:
     title: "Podmienky používania"
-    body: |
-      <h2 id="heading--change-me"><a href="#heading--change-me">Zmeniť ma</a></h2>
-
-      Administrátor fóra, nájdite nižšie príklad počiatočnej šablóny pre zásady ochrany osobných údajov, ktorú by ste mali prispôsobiť potrebám vašej stránky.
-
-      Tieto podmienky neplatia, ale môžu jedného dňa platiť, pre používanie internetového fóra na <%{base_url}>. V takom prípade, na používanie fóra musíte súhlasiť s týmito podmienkami so spoločnosťou %{company_name}, ktorá prevádzkuje fórum.
-
-      Spoločnosť môže ponúkať iné produkty a služby za iných podmienok. Tieto podmienky sa vzťahujú iba na používanie fóra.
-
-      Preskočiť na:
-
-      - [Dôležité Podmienky](#heading--important-terms)
-      - [Tvoje Povolenie na Používanie Fóra](#heading--permission)
-      - [Podmienky na Používanie Fóra](#heading--conditions)
-      - [Prijateľné Používanie](#heading--acceptable-use)
-      - [Štandardy Obsahu](#heading--content-standards)
-      - [Vymáhanie](#heading--enforcement)
-      - [Tvoj Účet](#heading--your-account)
-      - [Tvoj Obsah](#heading--your-content)
-      - [Tvoja Zodpovednosť](#heading--responsibility)
-      - [Zrieknutie sa Zodpovednosti](#heading--disclaimers)
-      - [Limity Zodpovednosti](#heading--liability)
-      - [Spätná Väzba](#heading--feedback)
-      - [Ukončenie](#heading--termination)
-      - [Spory](#heading--disputes)
-      - [Všeobecné Podmienky](#heading--general)
-      - [Kontakt](#heading--contact)
-      - [Zmeny](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Dôležité Podmienky</a></h2>
-
-      ***Tieto podmienky obsahujú množstvo dôležitých ustanovení, ktoré ovplyvňujú tvoje práva a povinnosti, ako sú zrieknutia sa zodpovednosti v časti [Zrieknutie sa Zodpovednosti](#heading--disclaimers), limity zodpovednosti spoločnosti voči tebe v časti [Limity Zodpovednosti](#heading--liability), tvoj súhlas pokryť spoločnosť za škody spôsobené tvojím nesprávnym používaním fóra v časti [Zodpovednosť za Tvoje Používanie](#heading--responsibility), a dohodu o arbitráži sporov v časti [Spory](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Tvoje Povolenie na Používanie Fóra</a></h2>
-
-      V súlade s týmito podmienkami ti spoločnosť dáva povolenie používať fórum. Všetci musia súhlasiť s týmito podmienkami, aby mohli používať fórum.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Podmienky na Používanie Fóra</a></h2>
-
-      Tvoje povolenie používať fórum je podmienené nasledujúcimi podmienkami:
-
-      1. Musíš mať aspoň trinásť rokov.
-
-      2. Už nemôžeš používať fórum, ak ťa spoločnosť priamo kontaktuje a povie ti, že nemôžeš.
-
-      3. Musíš používať fórum v súlade s [Prijateľným Používaním](#heading--acceptable-use) a [Štandardmi Obsahu](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Prijateľné Používanie</a></h2>
-
-      1. Nemôžeš porušovať zákon používaním fóra.
-
-      2. Nemôžeš používať alebo sa pokúšať používať účet iného používateľa na fóre bez jeho konkrétneho povolenia.
-
-      3. Nemôžeš kupovať, predávať alebo inak obchodovať s používateľskými menami alebo inými jedinečnými identifikátormi na fóre.
-
-      4. Nemôžeš posielať reklamy, reťazové listy alebo iné ponuky cez fórum, ani používať fórum na zhromažďovanie adries alebo iných osobných údajov pre komerčné mailingové zoznamy alebo databázy.
-
-      5. Nemôžeš automatizovať prístup na fórum alebo monitorovať fórum, napríklad s webovým prehliadačom, rozšírením prehliadača alebo iným počítačovým programom, ktorý nie je webový prehliadač. Môžeš indexovať fórum pre verejne dostupný vyhľadávač, ak ho prevádzkuješ.
-
-      6. Nemôžeš používať fórum na posielanie e-mailov na distribučné zoznamy, diskusné skupiny alebo skupinové e-mailové aliasy.
-
-      7. Nemôžeš falošne naznačovať, že si spojený s alebo schválený spoločnosťou.
-
-      8. Nemôžeš hypertextovo odkazovať na obrázky alebo iný nehypertextový obsah na fóre na iných webových stránkach.
-
-      9. Nemôžeš odstraňovať žiadne označenia vlastníckych práv z materiálov, ktoré stiahneš z fóra.
-
-      10. Nemôžeš zobrazovať akúkoľvek časť fóra na iných webových stránkach s `<iframe>`.
-
-      11. Nemôžeš deaktivovať, obchádzať alebo obchádzať akékoľvek bezpečnostné alebo prístupové obmedzenia fóra.
-
-      12. Nemôžeš zaťažovať infraštruktúru fóra neprimeraným objemom požiadaviek alebo požiadaviek určených na uvalenie neprimeranej záťaže na informačné systémy, ktoré tvoria základ fóra.
-
-      13. Nemôžeš sa vydávať za iných prostredníctvom fóra.
-
-      14. Nemôžeš povzbudzovať alebo pomáhať nikomu v porušovaní týchto podmienok.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Štandardy Obsahu</a></h2>
-
-      1. Nemôžeš pridávať obsah na fórum, ktorý je nelegálny, urážlivý alebo inak škodlivý pre ostatných. To zahŕňa obsah, ktorý je obťažujúci, nevhodný, zneužívajúci alebo nenávistný.
-
-      2. Nemôžeš pridávať obsah na fórum, ktorý porušuje zákon, zasahuje do práv duševného vlastníctva niekoho iného, porušuje súkromie niekoho iného alebo porušuje dohody, ktoré máš s ostatnými.
-
-      3. Nemôžeš pridávať obsah na fórum, ktorý obsahuje škodlivý počítačový kód, ako sú počítačové vírusy alebo spyware.
-
-      4. Nemôžeš pridávať obsah na fórum ako jednoduchý zástupný symbol na držanie konkrétnej adresy, používateľského mena alebo iného jedinečného identifikátora.
-
-      5. Nemôžeš používať fórum na zverejňovanie informácií, na ktoré nemáš právo zverejniť, napríklad dôverné alebo osobné informácie iných.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Vymáhanie</a></h2>
-
-      Spoločnosť môže vyšetriť a stíhať porušenia týchto podmienok v najväčšom možnom rozsahu zákona. Spoločnosť môže oznámiť a spolupracovať s orgánmi činnými v trestnom konaní pri stíhaní porušení zákona a týchto podmienok.
-
-      Spoločnosť si vyhradzuje právo zmeniť, redigovať a vymazať obsah na fóre z akéhokoľvek dôvodu. Ak veríš, že niekto pridal obsah na fórum v rozpore s týmito podmienkami, [kontaktuj nás okamžite](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Tvoj Účet</a></h2>
-
-      Musíš si vytvoriť a prihlásiť sa do účtu, aby si mohol používať niektoré funkcie fóra.
-
-      Na vytvorenie účtu musíš poskytnúť niektoré informácie o sebe. Ak si vytvoríš účet, súhlasíš, že poskytneš minimálne platnú e-mailovú adresu a udržiavať túto adresu aktuálnu. Svoj účet môžeš kedykoľvek zavrieť e-mailom na <%{contact_email}>.
-
-      Sú
-
-      hlasíš, že budeš zodpovedný za všetky činnosti uskutočnené prostredníctvom tvojho účtu, či už s tvojím súhlasom alebo nie, až kým buď nezavrieš svoj účet alebo neoznámiš spoločnosti, že tvoj účet bol kompromitovaný. Súhlasíš, že okamžite oznámiš spoločnosti, ak máš podozrenie, že tvoj účet bol kompromitovaný. Súhlasíš, že si vyberieš bezpečné heslo pre svoj účet a udržíš ho v tajnosti.
-
-      Spoločnosť môže obmedziť, pozastaviť alebo zavrieť tvoj účet na fóre podľa svojej politiky na riešenie žiadostí o odstránenie obsahu súvisiaceho s autorskými právami, alebo ak spoločnosť oprávnene verí, že si porušil nejaké pravidlo v týchto podmienkach.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Tvoj Obsah</a></h2>
-
-      Nič v týchto podmienkach neposkytuje spoločnosti žiadne vlastnícke práva k duševnému vlastníctvu, ktoré zdieľaš na fóre, ako sú informácie o tvojom účte, príspevky alebo iný obsah, ktorý pridávaš na fórum. Nič v týchto podmienkach ti neposkytuje žiadne vlastnícke práva k duševnému vlastníctvu spoločnosti.
-
-      Medzi tebou a spoločnosťou, zostávaš výhradne zodpovedný za obsah, ktorý pridávaš na fórum. Súhlasíš, že nebudeš nesprávne naznačovať, že obsah, ktorý pridávaš na fórum, je sponzorovaný alebo schválený spoločnosťou. Tieto podmienky nezaväzujú spoločnosť uchovávať, udržiavať alebo poskytovať kópie obsahu, ktorý pridávaš, a meniť ho podľa týchto podmienok.
-
-      Obsah, ktorý pridávaš na fórum, patrí tebe a ty rozhoduješ, aké povolenie dáš ostatným na jeho používanie. Ale minimálne poskytuješ spoločnosti licenciu na poskytovanie obsahu, ktorý pridávaš na fórum, ostatným používateľom fóra. Táto špeciálna licencia umožňuje spoločnosti kopírovať, publikovať a analyzovať obsah, ktorý pridávaš na fórum.
-
-      Keď je obsah, ktorý pridávaš, odstránený z fóra, či už tebou alebo spoločnosťou, špeciálna licencia spoločnosti končí, keď posledná kópia zmizne zo záloh, cache a iných systémov spoločnosti. Iné licencie, ktoré uplatňuješ na obsah, ktorý pridávaš, ako napríklad licencie [Creative Commons](https://creativecommons.org), môžu pokračovať aj po odstránení tvojho obsahu. Tieto licencie môžu dať ostatným alebo samotnej spoločnosti právo zdieľať tvoj obsah prostredníctvom fóra znova.
-
-      Ostatní, ktorí prijímajú obsah, ktorý pridávaš na fórum, môžu porušovať podmienky, na ktoré licencuješ svoj obsah. Súhlasíš, že spoločnosť nebude zodpovedná za tieto porušenia alebo ich následky.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Tvoja Zodpovednosť</a></h2>
-
-      Súhlasíš, že odškodníš spoločnosť za právne nároky od iných súvisiace s tvojím porušením týchto podmienok, alebo porušením týchto podmienok inými osobami používajúcimi tvoj účet na fóre. Obe strany, ty a spoločnosť, súhlasíte, že druhú stranu okamžite upozorníte na akékoľvek právne nároky, za ktoré by si mohol odškodniť spoločnosť. Ak spoločnosť neoznámi právny nárok okamžite, nebudeš musieť odškodniť spoločnosť za škody, ktoré by si mohol obhajovať alebo zmierniť s okamžitým upozornením. Súhlasíš, že spoločnosti umožníš kontrolovať vyšetrovanie, obhajobu a urovnanie právnych nárokov, za ktoré by si musel odškodniť spoločnosť, a spolupracovať na týchto snahách. Spoločnosť súhlasí, že nebude súhlasiť s akýmkoľvek urovnaním, ktoré priznáva vinu za teba alebo ukladá povinnosti na teba bez tvojho predchádzajúceho súhlasu.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Zrieknutie sa Zodpovednosti</a></h2>
-
-      ***Prijímaš všetky riziká spojené s používaním fóra a obsahu na fóre. Pokiaľ to zákon umožňuje, spoločnosť a jej dodávatelia poskytujú fórum tak, ako je, bez akejkoľvek záruky.***
-
-      Fórum môže obsahovať hypertextové odkazy na fóra a služby prevádzkované inými osobami a integrovať ich. Spoločnosť neposkytuje žiadnu záruku na služby prevádzkované inými osobami alebo obsah, ktorý môžu poskytovať. Používanie služieb prevádzkovaných inými môže byť regulované inými podmienkami medzi tebou a prevádzkovateľom služby.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Limity Zodpovednosti</a></h2>
-
-      ***Ani spoločnosť, ani jej dodávatelia nebudú zodpovední za škody spôsobené porušením zmluvy, ktoré by ich personál nemohol rozumne predvídať, keď si súhlasil s týmito podmienkami.***
-
-      ***Pokiaľ to zákon umožňuje, celková zodpovednosť voči tebe za akékoľvek nároky akéhokoľvek druhu, ktoré súvisia s fórom alebo obsahom na fóre, bude obmedzená na 50 dolárov.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Spätná Väzba</a></h2>
-
-      Spoločnosť víta tvoju spätnú väzbu a návrhy pre fórum. Pozri si sekciu [Kontakt](#heading--contact) nižšie pre spôsoby, ako nás kontaktovať.
-
-      Súhlasíš, že spoločnosť bude môcť voľne konať na základe spätnej väzby a návrhov, ktoré poskytneš, a že spoločnosť ti nebude musieť oznámiť, že tvoja spätná väzba bola použitá, získať tvoje povolenie na jej použitie, ani ti platiť. Súhlasíš, že neposkytneš spätnú väzbu alebo návrhy, o ktorých si myslíš, že by mohli byť dôverné alebo vlastnícke, pre teba alebo pre iných.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Ukončenie</a></h2>
-
-      Ty alebo spoločnosť môžete kedykoľvek ukončiť dohodu vyjadrenú v týchto podmienkach. Keď naša dohoda skončí, tvoje povolenie používať fórum tiež skončí.
-
-      Nasledujúce ustanovenia pretrvajú po skončení našej dohody: [Tvoj Obsah](#heading--your-content), [Spätná Väzba](#heading--feedback), [Tvoja Zodpovednosť](#heading--responsibility), [Zrieknutie sa Zodpovednosti](#heading--disclaimers), [Limity Zodpovednosti](#heading--liability), a [Všeobecné Podmienky](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Spory</a></h2>
-
-      %{governing_law} bude riadiť akýkoľvek spor týkajúci sa týchto podmienok alebo tvojho používania fóra.
-
-      Ty a spoločnosť súhlasíte, že budete žiadať súdne príkazy týkajúce sa týchto podmienok iba na štátnom alebo federálnom súde v %{city_for_disputes}. Ani ty, ani spoločnosť nebudete namietať proti jurisdikcii, súdu alebo miestu v týchto súdoch.
-
-      ***Okrem žiadosti o súdny príkaz alebo nárokov podľa Zákona o počítačových podvodoch a zneužívaní sa ty a spoločnosť zaväzujete riešiť akýkoľvek spor záväznou arbitrážou American Arbitration Association. Arbitráž sa bude riadiť Obchodnými pravidlami AAA a Dodatkovými postupmi pre spotrebiteľské spory. Arbitráž sa bude konať v %{city_for_disputes}. Vyrieši
-
-      š akýkoľvek spor ako jednotlivec, a nie ako súčasť hromadnej žaloby alebo iného zástupného konania, či už ako žalobca alebo člen triedy. Žiadny arbitrážca nesmie spojiť akýkoľvek spor s inou arbitrážou bez súhlasu spoločnosti.***
-
-      Akékoľvek arbitrážne rozhodnutie bude zahŕňať náklady na arbitráž, primerané honoráre advokátov a primerané náklady na svedkov. Ty a spoločnosť môžete vstúpiť do arbitrážnych rozhodnutí v akomkoľvek súde s jurisdikciou.
-
-      <h2 id="heading--general"><a href="#heading--general">Všeobecné Podmienky</a></h2>
-
-      Ak je ustanovenie týchto podmienok nevykonateľné tak, ako je napísané, ale mohlo by byť zmenené, aby bolo vykonateľné, to ustanovenie by malo byť zmenené na minimálny potrebný rozsah, aby bolo vykonateľné. Inak by malo byť odstránené.
-
-      Nemôžeš priradiť svoju dohodu so spoločnosťou. Spoločnosť môže priradiť tvoju dohodu akémukoľvek pridruženému subjektu spoločnosti, akejkoľvek inej spoločnosti, ktorá získa kontrolu nad spoločnosťou, alebo akejkoľvek inej spoločnosti, ktorá kúpi aktíva spoločnosti súvisiace s fórom. Akýkoľvek pokus o priradenie proti týmto podmienkam nemá právny účinok.
-
-      Ani vykonávanie akéhokoľvek práva podľa tejto Dohody, ani zrieknutie sa akéhokoľvek porušenia tejto Dohody nezrieka akékoľvek iné porušenie tejto Dohody.
-
-      Tieto podmienky zahŕňajú všetky podmienky dohody medzi tebou a spoločnosťou o používaní fóra. Tieto podmienky úplne nahrádzajú akékoľvek iné dohody o tvojom používaní fóra, či už písomné alebo nie.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
-
-      Môžeš spoločnosť informovať v súlade s týmito podmienkami a posielať otázky spoločnosti na <%{contact_email}>.
-
-      Spoločnosť ťa môže informovať podľa týchto podmienok použitím e-mailovej adresy, ktorú poskytneš pre svoj účet na fóre, alebo zverejnením správy na hlavnej stránke fóra alebo na stránke tvojho účtu.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Zmeny</a></h2>
-
-      Spoločnosť naposledy aktualizovala tieto podmienky [VLOŽTE DÁTUM POSLEDNEJ AKTUALIZÁCIE], a môže tieto podmienky opäť aktualizovať. Spoločnosť zverejní všetky aktualizácie na fóre. Pre aktualizácie obsahujúce podstatné zmeny sa spoločnosť zaväzuje poslať ti e-mail, ak si vytvoril účet a poskytol platnú e-mailovú adresu. Spoločnosť môže tiež oznámiť aktualizácie prostredníctvom špeciálnych správ alebo upozornení na fóre.
-
-      Akonáhle dostaneš oznámenie o aktualizácii týchto podmienok, musíš súhlasiť s novými podmienkami, aby si mohol fórum naďalej používať.
   privacy_topic:
     title: "Ochrana súkromia"
-    body: |
-      ## [Forum Admin, prosím, nájdite nižšie počiatočnú šablónu pre zásady ochrany osobných údajov, ktorú by ste mali prispôsobiť vašej stránke.]
-
-      <a name="collect"></a>
-
-      ## [Aké informácie zhromažďujeme?](#collect)
-
-      Zhromažďujeme informácie, keď sa zaregistruješ na našej stránke a zhromažďujeme údaje, keď sa zúčastňuješ na fóre čítaním, písaním a hodnotením zdieľaného obsahu.
-
-      Pri registrácii na našej stránke môže byť požiadaný o zadanie mena a e-mailovej adresy. Môžeš však našu stránku navštíviť aj bez registrácie. Tvoja e-mailová adresa bude overená e-mailom obsahujúcim jedinečný odkaz. Ak tento odkaz navštíviš, vieme, že kontroluješ e-mailovú adresu.
-
-      Pri registrácii a zverejňovaní príspevkov zaznamenávame IP adresu, z ktorej príspevok pochádza. Môžeme tiež uchovávať serverové záznamy, ktoré obsahujú IP adresu každej požiadavky na náš server.
-
-      <a name="use"></a>
-
-      ## [Na čo používame tvoje informácie?](#use)
-
-      Akékoľvek informácie, ktoré od teba zhromažďujeme, môžu byť použité jedným z nasledujúcich spôsobov:
-
-      * Na personalizáciu tvojho zážitku &mdash; tvoje informácie nám pomáhajú lepšie reagovať na tvoje individuálne potreby.
-      * Na zlepšenie našej stránky &mdash; neustále sa snažíme zlepšovať naše ponuky na základe informácií a spätnej väzby, ktorú od teba dostávame.
-      * Na zlepšenie zákazníckeho servisu &mdash; tvoje informácie nám pomáhajú efektívnejšie reagovať na tvoje požiadavky a potreby podpory.
-      * Na zasielanie pravidelných e-mailov &mdash; E-mailová adresa, ktorú poskytneš, môže byť použitá na zasielanie informácií, upozornení, ktoré požaduješ o zmenách v témach alebo v reakcii na tvoje používateľské meno, odpovedanie na otázky a/alebo iné požiadavky.
-
-      <a name="protect"></a>
-
-      ## [Ako chránime tvoje informácie?](#protect)
-
-      Implementujeme rôzne bezpečnostné opatrenia na zachovanie bezpečnosti tvojich osobných údajov, keď zadávaš, odosielaš alebo pristupuješ k svojim osobným údajom.
-
-      <a name="data-retention"></a>
-
-      ## [Aká je tvoja politika uchovávania údajov?](#data-retention)
-
-      Vynasnažíme sa v dobrej viere:
-
-      * Uchovávať serverové záznamy obsahujúce IP adresy všetkých požiadaviek na tento server nie dlhšie ako [POČET DNÍ] dní.
-
-      <a name="cookies"></a>
-
-      ## [Používame cookies?](#cookies)
-
-      Áno. Cookies sú malé súbory, ktoré stránka alebo jej poskytovateľ služieb prenáša na pevný disk tvojho počítača prostredníctvom webového prehliadača (ak to dovolíš). Tieto cookies umožňujú stránke rozpoznať tvoj prehliadač a, ak máš zaregistrovaný účet, priradiť ho k tvojmu zaregistrovanému účtu.
-
-      Používame cookies na pochopenie a uloženie tvojich preferencií pre budúce návštevy a na zhromažďovanie súhrnných údajov o návštevnosti stránky a interakciách na stránke, aby sme mohli ponúknuť lepšie skúsenosti a nástroje v budúcnosti. Môžeme uzavrieť zmluvu s poskytovateľmi služieb tretích strán, aby nám pomohli lepšie porozumieť našim návštevníkom stránky. Títo poskytovatelia služieb nemajú povolené používať informácie zhromaždené v našom mene, okrem toho, aby nám pomohli vykonávať a zlepšovať naše podnikanie.
-
-      <a name="disclose"></a>
-
-      ## [Zverejňujeme nejaké informácie tretím stranám?](#disclose)
-
-      Neobchodujeme, nepredávame ani inak neprevádzame tvoje osobne identifikovateľné informácie tretím stranám. To nezahŕňa dôveryhodné tretie strany, ktoré nám pomáhajú prevádzkovať našu stránku, vykonávať našu činnosť alebo poskytovať služby tebe, pokiaľ tieto strany súhlasia s tým, že tieto informácie budú dôverné. Môžeme tiež zverejniť tvoje informácie, keď veríme, že je to vhodné na dodržanie zákona, na vynútenie našich zásad stránok alebo na ochranu našich alebo iných práv, majetku alebo bezpečnosti. Avšak, neosobné identifikovateľné informácie návštevníkov môžu byť poskytnuté iným stranám na marketing, reklamu alebo iné použitie.
-
-      <a name="third-party"></a>
-
-      ## [Odkazy tretích strán](#third-party)
-
-      Príležitostne môžeme na našej stránke podľa vlastného uváženia zahrnúť alebo ponúknuť produkty alebo služby tretích strán. Tieto stránky tretích strán majú samostatné a nezávislé zásady ochrany osobných údajov. Preto nemáme žiadnu zodpovednosť za obsah a činnosti týchto prepojených stránok. Napriek tomu sa snažíme chrániť integritu našej stránky a vítame akúkoľvek spätnú väzbu o týchto stránkach.
-
-      <a name="coppa"></a>
-
-      ## [Súlad s Children’s Online Privacy Protection Act (COPPA)](#coppa)
-
-      Naša stránka, produkty a služby sú všetky určené pre ľudí, ktorí majú najmenej 13 rokov alebo starší. Ak je tento server v USA a máš menej ako 13 rokov, podľa požiadaviek COPPA ([Children’s Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), nepoužívaj túto stránku.
-
-      <a name="online"></a>
-
-      ## [Online Zásady Ochrany Osobných Údajov](#online)
-
-      Tieto online zásady ochrany osobných údajov platia iba na informácie zhromaždené prostredníctvom našej stránky a nie na informácie zhromaždené offline.
-
-      <a name="consent"></a>
-
-      ## [Tvoj Súhlas](#consent)
-
-      Používaním našej stránky súhlasíš s našimi zásadami ochrany osobných údajov.
-
-      <a name="changes"></a>
-
-      ## [Zmeny v našich Zásadách Ochrany Osobných Údajov](#changes)
-
-      Ak sa rozhodneme zmeniť naše zásady ochrany osobných údajov, zverejníme tieto zmeny na tejto stránke.
-
-      Tento dokument je licencovaný pod CC-BY-SA. Posledná aktualizácia prebehla [VLOŽTE DÁTUM POSLEDNEJ AKTUALIZÁCIE].
   badges:
     mass_award:
       errors:
@@ -5176,6 +4917,8 @@ sk:
         title: "Udržujte príspevok skrytý"
         description: "Súhlasím s vlajkou a nechajte príspevok skrytý."
         complete: "Príspevok zostal skrytý."
+      agree_and_keep_deleted:
+        title: "Ponechať príspevok odstránený"
       agree_and_suspend:
         title: "Pozastavenie používateľa"
         description: "Súhlas s príznakom a pozastavenie používateľa."

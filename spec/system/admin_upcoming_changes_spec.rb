@@ -62,7 +62,7 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
-  it "shows the permanent soon notice for stable changes but not for site_setting_default types" do
+  it "shows the permanent soon notice for stable changes unless permanent_warning is false" do
     mock_upcoming_change_metadata(
       {
         about_page_extra_groups_show_description: {
@@ -76,6 +76,7 @@ describe "Admin upcoming changes" do
           status: :stable,
           impact_type: "site_setting_default",
           impact_role: "all_members",
+          permanent_warning: false,
         },
       },
     )
@@ -88,6 +89,53 @@ describe "Admin upcoming changes" do
     expect(
       upcoming_changes_page.change_item(:enable_upload_debug_mode),
     ).to have_no_permanent_soon_notice
+  end
+
+  describe "when the change depends on other settings" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          set_locale_from_cookie: {
+            impact: "feature,all_members",
+            status: :experimental,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+    end
+
+    it "shows a warning notice with links when the dependencies are not met" do
+      SiteSetting.allow_user_locale = false
+      upcoming_changes_page.visit
+
+      change_item = upcoming_changes_page.change_item(:set_locale_from_cookie)
+      expect(change_item).to have_depends_on_notice(
+        "This change requires Allow user locale to be enabled.",
+      )
+      expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
+        "Allow user locale",
+        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
+      )
+      expect(
+        upcoming_changes_page.change_item(:enable_upload_debug_mode),
+      ).to have_no_depends_on_notice
+    end
+
+    it "does not show the notice when the dependencies are met" do
+      SiteSetting.allow_user_locale = true
+      upcoming_changes_page.visit
+
+      expect(
+        upcoming_changes_page.change_item(:set_locale_from_cookie),
+      ).to have_no_depends_on_notice
+    end
   end
 
   it "does not show permanent upcoming changes" do
@@ -259,6 +307,26 @@ describe "Admin upcoming changes" do
       upcoming_changes_page.visit
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       expect(item.enabled_for).to eq("staff")
+    end
+
+    it "enables the change for staff when everyone is excluded" do
+      mock_with_allow(%i[staff specific_groups])
+      SiteSetting.enable_upload_debug_mode = false
+
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.select_enabled_for("staff")
+
+      expect(upcoming_changes_page).to have_enabled_for_success_toast(
+        "staff",
+        translation_args: {
+          staffGroupName: I18n.t("groups.default_names.staff").titleize,
+        },
+      )
+      expect(item).to be_enabled
+      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
+        Group::AUTO_GROUPS[:staff].to_s,
+      )
     end
   end
 

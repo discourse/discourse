@@ -269,6 +269,7 @@ RSpec.describe Admin::DashboardController do
               country_code: country_code,
               normalized_referrer: normalized_referrer,
               created_at: event_date,
+              source: "beacon",
             )
           end
 
@@ -411,6 +412,39 @@ RSpec.describe Admin::DashboardController do
         expect(ids).to eq(%w[reports highlights])
       end
 
+      it "returns successful sections when another section fails to build" do
+        error = StandardError.new("boom")
+        configure_dashboard_sections(%w[highlights search])
+        AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
+        AdminDashboardSearch.stubs(:build).raises(error)
+        Discourse.expects(:warn_exception).with(
+          error,
+          message: "Failed to build admin dashboard section",
+          env: {
+            section_id: "search",
+          },
+        )
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(section_payloads).to eq(
+          "highlights" => {
+            "id" => "highlights",
+            "data" => {
+              "value" => "highlights",
+            },
+          },
+          "search" => {
+            "id" => "search",
+            "data" => nil,
+            "error" => true,
+          },
+        )
+        expect(response.parsed_body["configuration"]).to be_present
+        expect(response.parsed_body).to have_key("problems")
+      end
+
       it "omits hidden sections from the data payload" do
         configure_dashboard_sections(%w[highlights reports])
 
@@ -494,6 +528,69 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to have_key("version_check")
+      end
+    end
+
+    describe "problems payload" do
+      before do
+        SiteSetting.dashboard_improvements = true
+        Discourse.cache.clear
+      end
+
+      fab!(:starttls_problem) do
+        Fabricate(:admin_notice, identifier: "starttls_disabled", priority: "high")
+      end
+
+      fab!(:host_names_problem) do
+        Fabricate(:admin_notice, identifier: "host_names", priority: "low")
+      end
+
+      it "returns every active problem check in a top-level problems key for an admin" do
+        sign_in(admin)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
+      end
+
+      it "returns every active problem check in a top-level problems key for a moderator" do
+        sign_in(moderator)
+
+        get "/admin/dashboard.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["problems"]).to match_array(
+          [
+            {
+              "id" => starttls_problem.id,
+              "priority" => "high",
+              "message" => starttls_problem.message,
+              "identifier" => "starttls_disabled",
+            },
+            {
+              "id" => host_names_problem.id,
+              "priority" => "low",
+              "message" => host_names_problem.message,
+              "identifier" => "host_names",
+            },
+          ],
+        )
       end
     end
 
@@ -653,6 +750,174 @@ RSpec.describe Admin::DashboardController do
 
       ids = response.parsed_body["sections"].map { |s| s["id"] }
       expect(ids).to eq(["highlights"])
+    end
+  end
+
+  describe "#update_section_settings" do
+    fab!(:category)
+    fab!(:category_2, :category)
+    fab!(:category_3, :category)
+
+    before { SiteSetting.dashboard_improvements = true }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
+    it "persists the selected category ids and returns 204 for admins" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [category_3.id, category.id, category_2.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq(
+        {
+          "activity_by_category" => {
+            "category_ids" => [category_3.id, category.id, category_2.id],
+          },
+        },
+      )
+    end
+
+    it "returns 400 when more than ten categories are given" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "persists the selected category ids and returns 204 for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
+          params: {
+            category_ids: [category_3.id, category.id, category_2.id],
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq(
+        { "whos_posting" => { "category_ids" => [category_3.id, category.id, category_2.id] } },
+      )
+    end
+
+    it "returns 400 when more than ten categories are given for whos_posting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/whos_posting.json",
+          params: {
+            category_ids: (1..11).to_a,
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "returns 400 when a category with the given id does not exist" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [category.id, Category.maximum(:id) + 1],
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("engagement")).to eq({})
+    end
+
+    it "returns 400 for an unknown section id" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/frobnitz/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 400 for a known section that does not support this setting" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/traffic/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+      expect(AdminDashboardSectionConfiguration.settings_for("traffic")).to eq({})
+    end
+
+    it "returns 400 for an unknown setting key" do
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/engagement/settings/not_a_real_setting.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns 404 for moderators" do
+      sign_in(moderator)
+
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for anonymous users" do
+      put "/admin/dashboard/sections/engagement/settings/activity_by_category.json",
+          params: {
+            category_ids: [1],
+          }
+
+      expect(response.status).to eq(404)
+    end
+
+    it "resolves a plugin-registered setting's permit shape and persists it" do
+      plugin = Plugin::Instance.new
+      fake_setting =
+        Class.new do
+          def self.permit
+            [:category_id]
+          end
+
+          def self.validate(attrs)
+            { "category_id" => attrs[:category_id].to_i }
+          end
+        end
+      plugin.register_admin_dashboard_section(
+        id: "support",
+        enabled: -> { true },
+        settings: {
+          "category_id" => fake_setting,
+        },
+      ) { {} }
+      sign_in(admin)
+
+      put "/admin/dashboard/sections/support/settings/category_id.json",
+          params: {
+            category_id: category.id,
+          }
+
+      expect(response.status).to eq(204)
+      expect(AdminDashboardSectionConfiguration.settings_for("support")).to eq(
+        { "category_id" => { "category_id" => category.id } },
+      )
     end
   end
 

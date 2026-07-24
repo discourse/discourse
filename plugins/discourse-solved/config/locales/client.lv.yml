@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 lv:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Personāls"
+              member: "Dalībnieki"
   js:
     notifications:
       alt:

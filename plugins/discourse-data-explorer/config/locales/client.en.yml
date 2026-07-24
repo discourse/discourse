@@ -44,7 +44,7 @@ en:
         regenerate_placeholder: "e.g. Update the query to limit to 50 results"
         prompt_label: "Prompt"
         generate: "Generate"
-        regenerate: "Update prompt"
+        regenerate: "Update query"
         generating: "Generating query with AI..."
         generation_timeout: "AI query generation timed out. You can write the SQL manually."
         generation_error: "Something went wrong generating the query."
@@ -90,6 +90,8 @@ en:
         title: "Database Schema"
         filter: "Search..."
         search_tables: "Search tables"
+        hide: "Hide schema"
+        show: "Show schema"
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
       types:
         bool:

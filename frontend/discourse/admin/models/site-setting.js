@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -151,6 +152,38 @@ export default class SiteSetting extends EmberObject {
       subject: this.setting,
       action_name: "change_site_setting",
     };
+  }
+
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name,
+      description: trustHTML(this.description),
+      type: this.type,
+      list_type: this.list_type,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.validValues,
+      allows_none: !!this.allowsNone,
+      allow_any: this.allow_any,
+      mandatory_values: this.mandatory_values,
+      disallowed_groups: this.disallowed_groups,
+      currentSavedValue: this.value,
+    };
+  }
+
+  get pendingValue() {
+    return this.buffered.get("value");
+  }
+
+  commit() {
+    this.validationMessage = null;
+    this.buffered.applyChanges();
+  }
+
+  rollback() {
+    this.buffered.discardChanges();
   }
 
   get requiresConfirmation() {

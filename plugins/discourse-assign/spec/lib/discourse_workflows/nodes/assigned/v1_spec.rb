@@ -9,7 +9,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
   end
 
   describe "#valid?" do
@@ -31,7 +31,8 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
   end
 
   describe "#output" do
-    it "returns assignment, post, topic, and assignee data for post assignments" do
+    it "returns assignment, post, topic, and assignee data for post assignments",
+       :aggregate_failures do
       assignment =
         Fabricate(
           :post_assignment,
@@ -60,9 +61,10 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
       expect(output[:assignment][:assigned_by_user][:username]).to eq(assigned_by_user.username)
       expect(output[:post][:id]).to eq(post.id)
       expect(output[:topic][:id]).to eq(topic.id)
+      expect(output).to match_node_output_schema(described_class)
     end
 
-    it "uses the topic first post for topic assignments" do
+    it "uses the topic first post for topic assignments", :aggregate_failures do
       assignment =
         Fabricate(:topic_assignment, topic:, assigned_to: group, assigned_by_user: assigned_by_user)
 
@@ -77,6 +79,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
       expect(output[:assignment][:assigned_to][:type]).to eq("group")
       expect(output[:assignment][:assigned_to][:group][:name]).to eq(group.name)
       expect(output[:post][:id]).to eq(topic.first_post.id)
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 

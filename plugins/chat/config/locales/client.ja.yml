@@ -240,8 +240,6 @@ ja:
       no_public_channels_cta: "チャンネルを閲覧する"
       kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       chat_notifications_title: "チャット通知"
-      only_chat_push_notifications:
-        title: "チャットのプッシュ通知のみ送信する"
       personalization_title: "パーソナライズ"
       ignore_channel_wide_mention:
         title: "チャンネル全体のメンションを無視する"
@@ -289,8 +287,6 @@ ja:
         title: "デスクトップチャットの通知音"
       sounds:
         none: "なし"
-        bell: "ベル"
-        ding: "ゴーン"
       title: "チャット"
       title_capitalized: "チャット"
       upload: "ファイルを添付する"
@@ -320,6 +316,8 @@ ja:
         filter_closed: 閉鎖
         filter_archived: アーカイブ済み
         filter_input_placeholder: チャンネル名で検索
+        filter_joined_all: "すべて"
+        filter_joined_joined: "参加中"
       chat_message_separator:
         today: 今日
         yesterday: 昨日
@@ -389,6 +387,9 @@ ja:
         no_memberships_found: メンバーが見つかりません
         memberships_count:
           other: "%{count} 人のメンバー"
+        preview_card:
+          log_in: "ログイン"
+          sign_up: "登録"
       create_channel:
         threading:
           label: "スレッドを有効にする"

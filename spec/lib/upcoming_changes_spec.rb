@@ -3,6 +3,28 @@
 RSpec.describe UpcomingChanges do
   let(:setting_name) { :enable_upload_debug_mode }
 
+  # The sample plugin's change. Plugin-owned changes are gated on their owning
+  # plugin being enabled by default, so this is gated unless it opts out below.
+  def mock_plugin_change(status: :alpha, **extra)
+    mock_upcoming_change_metadata(
+      {
+        enable_experimental_sample_plugin_feature: {
+          impact: "feature,admins",
+          status: status,
+          impact_type: "feature",
+          impact_role: "admins",
+          **extra,
+        },
+      },
+    )
+  end
+
+  # The same change, opted out of the owning-plugin gate with
+  # requires_plugin_enabled: false, so it stays usable while the plugin is disabled.
+  def mock_opted_out_plugin_change(status: :alpha, **extra)
+    mock_plugin_change(status: status, requires_plugin_enabled: false, **extra)
+  end
+
   before do
     mock_upcoming_change_metadata(
       {
@@ -399,11 +421,184 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".owning_plugin_configurable?" do
+    let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+    it "returns true for a core change with no owning plugin" do
+      expect(described_class.owning_plugin_configurable?(setting_name)).to eq(true)
+    end
+
+    it "returns true when the owning plugin is configurable" do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(true)
+    end
+
+    it "returns false when the owning plugin is not configurable" do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(false)
+    end
+
+    it "returns true when the owning plugin has not been loaded yet" do
+      Discourse.stubs(:plugins_by_name).returns({})
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(true)
+    end
+  end
+
+  describe ".owning_plugin_enabled?" do
+    let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+    after { UpcomingChanges.clear_caches! }
+
+    it "returns true for a core change with no owning plugin" do
+      expect(described_class.owning_plugin_enabled?(setting_name)).to eq(true)
+    end
+
+    context "when the change is gated on its plugin by default" do
+      it "returns true when the owning plugin is enabled" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(true)
+
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
+      end
+
+      it "returns false when the owning plugin is disabled" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
+
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns true when the owning plugin has not been loaded yet" do
+        Discourse.stubs(:plugins_by_name).returns({})
+
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
+      end
+    end
+
+    context "when the change opts out with requires_plugin_enabled: false" do
+      before { mock_opted_out_plugin_change }
+
+      it "returns true even when the owning plugin is disabled" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
+
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
+      end
+    end
+
+    context "when the change is the owning plugin's own enabled_site_setting" do
+      # The integrity spec requires this change to opt out with
+      # requires_plugin_enabled: false, but Plugin::Instance#enabled? reads the setting
+      # back through .enabled?, so guard against the stack overflow even if it is left
+      # gated. #enabled? reads the ivar directly, hence setting it rather than stubbing.
+      before do
+        SiteSetting::SAMPLE_TEST_PLUGIN.instance_variable_set(
+          :@enabled_site_setting,
+          plugin_setting_name,
+        )
+      end
+
+      after do
+        SiteSetting::SAMPLE_TEST_PLUGIN.instance_variable_set(:@enabled_site_setting, nil)
+        SiteSetting.remove_override!(plugin_setting_name)
+        UpcomingChanges.clear_caches!
+      end
+
+      it "returns true rather than recursing through Plugin::Instance#enabled?" do
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
+      end
+
+      it "keeps the change displayed while the plugin is off, since that row is how admins opt in" do
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(true)
+      end
+
+      it "still resolves the change normally" do
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+
+        SiteSetting.enable_experimental_sample_plugin_feature = true
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(true)
+      end
+    end
+  end
+
   describe ".enabled?" do
     after do
       SiteSetting.remove_override!(setting_name)
       SiteSetting.promote_upcoming_changes_on_status = :stable
       UpcomingChanges.clear_caches!
+    end
+
+    context "when the owning plugin is not configurable" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before { SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false) }
+
+      it "returns false even when the change has been promoted" do
+        SiteSetting.promote_upcoming_changes_on_status = :alpha
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns false even when the change is permanent" do
+        mock_upcoming_change_metadata(
+          { enable_experimental_sample_plugin_feature: { status: :permanent } },
+        )
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns true again once the plugin becomes configurable" do
+        SiteSetting.promote_upcoming_changes_on_status = :alpha
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(true)
+      end
+    end
+
+    context "when the owning plugin is disabled" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      after do
+        SiteSetting.remove_override!(plugin_setting_name)
+        UpcomingChanges.clear_caches!
+      end
+
+      before { SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false) }
+
+      it "returns true when the change opts out with requires_plugin_enabled: false" do
+        mock_opted_out_plugin_change
+        SiteSetting.enable_experimental_sample_plugin_feature = true
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(true)
+      end
+
+      it "returns false even when the admin has opted in" do
+        SiteSetting.enable_experimental_sample_plugin_feature = true
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns false even when the change has been promoted" do
+        SiteSetting.promote_upcoming_changes_on_status = :alpha
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns false even when the change is permanent" do
+        mock_plugin_change(status: :permanent)
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "keeps the admin's opt-in, so the change resolves again once the plugin is enabled" do
+        SiteSetting.enable_experimental_sample_plugin_feature = true
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+
+        SiteSetting::SAMPLE_TEST_PLUGIN.unstub(:enabled?)
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(true)
+      end
     end
 
     context "when the change is not registered" do
@@ -498,6 +693,107 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  # Models the self-hoster upgrade that lowers the default
+  # promote_upcoming_changes_on_status from :stable to :beta. A beta change
+  # that previously sat below the promotion threshold now meets it, so we must
+  # be sure the transition only auto-promotes changes the admin never touched
+  # and never overrides an admin's explicit opt-in/opt-out. The opt-out case is
+  # the critical one: the stored value equals the YAML default (false), and it
+  # only survives because setting_modified_from_default? treats upcoming change
+  # settings as modified whenever a DB row exists (see SiteSettingExtension#refresh!).
+  describe "lowering promote_upcoming_changes_on_status from :stable to :beta" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :beta,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    after do
+      SiteSetting.remove_override!(setting_name)
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    it "auto-promotes a change the admin never touched" do
+      expect(described_class.enabled?(setting_name)).to eq(false)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(true)
+    end
+
+    it "keeps a change the admin explicitly opted out of disabled" do
+      SiteSetting.enable_upload_debug_mode = false
+      expect(described_class.enabled?(setting_name)).to eq(false)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(false)
+    end
+
+    it "keeps a change the admin explicitly opted into enabled" do
+      SiteSetting.enable_upload_debug_mode = true
+      expect(described_class.enabled?(setting_name)).to eq(true)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(true)
+    end
+  end
+
+  describe ".change_dependencies_met?" do
+    it "returns true for a change with no dependencies" do
+      expect(described_class.change_dependencies_met?(:enable_upload_debug_mode)).to eq(true)
+    end
+
+    it "returns false when a boolean dependency is disabled" do
+      SiteSetting.allow_user_locale = false
+
+      expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(false)
+    end
+
+    it "returns true when all boolean dependencies are enabled" do
+      SiteSetting.allow_user_locale = true
+
+      expect(described_class.change_dependencies_met?(:set_locale_from_cookie)).to eq(true)
+    end
+
+    context "with depends_on_values for a non-boolean dependency" do
+      before do
+        SiteSetting
+          .type_supervisor
+          .dependencies
+          .stubs(:[])
+          .with(:fake_change)
+          .returns([:desktop_category_page_style])
+        SiteSetting.stubs(:dependency_values).returns(
+          { fake_change: { desktop_category_page_style: %w[categories_only] } },
+        )
+      end
+
+      it "returns true when the dependency matches an allowed value" do
+        SiteSetting.desktop_category_page_style = "categories_only"
+
+        expect(described_class.change_dependencies_met?(:fake_change)).to eq(true)
+      end
+
+      it "returns false when the dependency does not match an allowed value" do
+        SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
+
+        expect(described_class.change_dependencies_met?(:fake_change)).to eq(false)
+      end
+    end
+  end
+
   describe ".settings_hidden_while_enabled" do
     # `enable_upload_debug_mode` stands in for the change; the two real settings
     # below stand in for the legacy settings it would hide.
@@ -550,6 +846,32 @@ RSpec.describe UpcomingChanges do
       SiteSetting.enable_upload_debug_mode = true
 
       expect(described_class.settings_hidden_while_enabled).to be_empty
+    end
+
+    context "when the change is owned by a plugin the admin has opted into and then disabled" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before do
+        mock_plugin_change(hide_settings: hidden_setting_names)
+        SiteSetting.enable_experimental_sample_plugin_feature = true
+      end
+
+      after do
+        SiteSetting.remove_override!(plugin_setting_name)
+        UpcomingChanges.clear_caches!
+      end
+
+      it "hides the declared settings while the plugin is enabled" do
+        expect(described_class.settings_hidden_while_enabled).to contain_exactly(
+          *hidden_setting_names,
+        )
+      end
+
+      it "stops hiding them once the plugin is disabled, so the change leaves nothing behind" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
+
+        expect(described_class.settings_hidden_while_enabled).to be_empty
+      end
     end
 
     it "feeds SiteSetting.hidden_settings so the settings are hidden while enabled" do
@@ -839,10 +1161,121 @@ RSpec.describe UpcomingChanges do
   end
 
   describe "conditional display" do
+    after do
+      DiscoursePluginRegistry.reset_register!(:upcoming_change_conditional_display_callbacks)
+    end
+
     it "returns true when the conditional display method is undefined for an upcoming change" do
       expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
         true,
       )
+    end
+
+    it "returns true when the registered callback returns true" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { true }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    it "returns false when the registered callback returns false" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        false,
+      )
+    end
+
+    it "returns false when any registered callback returns false" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { true }
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        false,
+      )
+    end
+
+    it "ignores callbacks from disabled plugins" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(false)
+      plugin.register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    context "when the owning plugin is disabled" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before { SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false) }
+
+      after { UpcomingChanges.clear_caches! }
+
+      it "hides the change by default" do
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
+      end
+
+      it "hides the change even when the plugin registered a conditional display callback" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.register_upcoming_change_conditional_display(
+          plugin_setting_name,
+        ) { true }
+
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
+      end
+
+      context "when the change opts out with requires_plugin_enabled: false" do
+        before { mock_opted_out_plugin_change }
+
+        it "still displays the change" do
+          expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+            true,
+          )
+        end
+      end
+    end
+
+    context "when the owning plugin is not configurable" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      it "returns false" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
+      end
+
+      it "returns false without consulting the change's conditional display method" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+        UpcomingChanges::ConditionalDisplay.define_singleton_method(
+          :should_display_enable_experimental_sample_plugin_feature?,
+        ) { raise "should not be called" }
+
+        begin
+          expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+            false,
+          )
+        ensure
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_experimental_sample_plugin_feature?,
+          )
+        end
+      end
     end
 
     context "when the conditional display method is defined for an upcoming change" do
@@ -861,6 +1294,16 @@ RSpec.describe UpcomingChanges do
         end
 
         it "returns true" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(true)
+        end
+
+        it "takes precedence over registered callbacks" do
+          Plugin::Instance
+            .new
+            .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
           expect(
             UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
           ).to eq(true)
@@ -886,6 +1329,41 @@ RSpec.describe UpcomingChanges do
             UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
           ).to eq(false)
         end
+      end
+    end
+
+    describe ".should_display_enable_local_logins_via_code?" do
+      it "returns true when local logins via email are possible" do
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(true)
+      end
+
+      it "returns false when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
+        SiteSetting.enable_discourse_connect = true
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(false)
+      end
+
+      it "returns false when local logins via email are disabled" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(false)
+      end
+
+      it "stays displayed when the change is already enabled even if email login is later disabled" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(true)
       end
     end
   end

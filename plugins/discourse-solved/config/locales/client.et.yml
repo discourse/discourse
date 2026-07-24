@@ -12,6 +12,15 @@ et:
           kpi:
             accepted_solutions:
               label: "Aktsepteeritud lahendused"
+        sections:
+          support:
+            answerers:
+              staff: "Meeskond"
+              member: "Liikmed"
+              basic: "Tavakasutaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tund"
   js:
     notifications:
       alt:

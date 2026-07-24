@@ -461,7 +461,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+    if (this.currentUser.useRichEditor) {
       return 2;
     }
 
@@ -534,8 +534,13 @@ export default class Composer extends RestModel {
     if (custom) {
       return custom;
     }
-    return this.canEditTopicFeaturedLink
-      ? "composer.title_or_link_placeholder"
+
+    if (this.canEditTopicFeaturedLink) {
+      return "composer.title_or_link_placeholder";
+    }
+
+    return this.siteSettings.enable_composer_redesign
+      ? "composer.title_placeholder_redesign"
       : "composer.title_placeholder";
   }
 

@@ -59,7 +59,7 @@ export default class EmbedAuthFlow extends Service {
       return true;
     }
 
-    let hasAccess = false;
+    let hasAccess;
     try {
       hasAccess = await document.hasStorageAccess();
     } catch {

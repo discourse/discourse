@@ -1,20 +1,27 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  POOL_SIZE = AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size
-
-  def self.build(section_ids:, current_user:, start_date:, end_date:)
+  def self.build(section_ids:, current_user:, start_date:, end_date:, parallel: true)
     new(
       section_ids: section_ids,
       current_user: current_user,
       start_date: start_date,
       end_date: end_date,
-    ).build
+    ).build(parallel: parallel)
+  end
+
+  def self.pool_size
+    desired =
+      AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
+        DiscoursePluginRegistry.admin_dashboard_sections.size
+
+    available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
+    [desired, available].min
   end
 
   def self.thread_pool
     @thread_pool ||=
-      Scheduler::ThreadPool.new(min_threads: 0, max_threads: POOL_SIZE, idle_time: 30)
+      Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
   end
 
   def initialize(section_ids:, current_user:, start_date:, end_date:)
@@ -24,12 +31,26 @@ class AdminDashboardSectionLoader
     @end_date = end_date
   end
 
-  def build
+  def build(parallel: true)
+    if parallel
+      build_in_parallel
+    else
+      section_ids.map { |id| build_section(id) }
+    end
+  end
+
+  private
+
+  attr_reader :section_ids, :current_user, :start_date, :end_date
+
+  def build_in_parallel
     results = Queue.new
 
     section_ids.each do |id|
       self.class.thread_pool.post do
-        results << { id: id, data: section_data(id, current_user) }
+        ActiveRecord::Base.with_connection(prevent_permanent_checkout: true) do
+          results << { id: id, data: section_data(id, current_user) }
+        end
       rescue StandardError => e
         results << { id: id, error: e }
       end
@@ -39,7 +60,8 @@ class AdminDashboardSectionLoader
 
     section_ids.size.times do
       result = results.pop
-      raise result[:error] if result[:error]
+
+      result = failed_result(result) if result[:error]
 
       results_by_id[result[:id]] = result
     end
@@ -47,9 +69,23 @@ class AdminDashboardSectionLoader
     section_ids.map { |id| results_by_id.fetch(id) }
   end
 
-  private
+  def build_section(id)
+    { id: id, data: section_data(id, current_user) }
+  rescue StandardError => e
+    failed_result(id: id, error: e)
+  end
 
-  attr_reader :section_ids, :current_user, :start_date, :end_date
+  def failed_result(result)
+    Discourse.warn_exception(
+      result[:error],
+      message: "Failed to build admin dashboard section",
+      env: {
+        section_id: result[:id],
+      },
+    )
+
+    { id: result[:id], data: nil, error: true }
+  end
 
   def section_data(id, user)
     case id
@@ -67,6 +103,9 @@ class AdminDashboardSectionLoader
       AdminDashboard::Reports::Section.build(guardian: user.guardian)
     when "search"
       AdminDashboardSearch.build(start_date: start_date, end_date: end_date)
+    else
+      section = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == id }
+      section&.dig(:loader)&.call(start_date: start_date, end_date: end_date, current_user: user)
     end
   end
 end

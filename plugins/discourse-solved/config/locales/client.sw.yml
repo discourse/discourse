@@ -12,6 +12,12 @@ sw:
           kpi:
             accepted_solutions:
               label: "Majibu yaliyokubaliwa"
+        sections:
+          support:
+            answerers:
+              staff: "Wasaidizi"
+              member: "Wanachama"
+              basic: "Kawaida"
   js:
     notifications:
       alt:

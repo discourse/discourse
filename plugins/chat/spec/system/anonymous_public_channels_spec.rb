@@ -37,13 +37,12 @@ RSpec.describe "Anonymous public chat channels" do
       id: existing_message.id,
       text: "Existing public channel update",
     )
-    expect(channel_page).to have_join_channel_button
+    expect(channel_page).to have_anonymous_preview_card
     expect(channel_page).to have_no_composer
     expect(channel_page).to have_no_search_button
     expect(channel_page).to have_no_star_button
-    expect(channel_page).to have_no_browse_all_link
 
-    channel_page.join_channel
+    channel_page.click_preview_card_login
 
     expect(login_page).to be_open
   end
@@ -61,7 +60,7 @@ RSpec.describe "Anonymous public chat channels" do
 
     expect(chat_drawer_page).to have_open_channel(public_channel)
 
-    chat_drawer_page.join_channel
+    chat_drawer_page.click_preview_card_login
     expect(login_page).to be_open
   end
 

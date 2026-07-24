@@ -15,6 +15,17 @@ ja:
           kpi:
             accepted_solutions:
               label: "受け入れられた解決策"
+        sections:
+          support:
+            title: "支援する"
+            answerers:
+              staff: "スタッフ"
+              member: "メンバー"
+              basic: "ベーシック"
+            response_time:
+              buckets:
+                lt_1h: "< １時間"
+                gt_24h: "> 24 時間"
   js:
     notifications:
       alt:

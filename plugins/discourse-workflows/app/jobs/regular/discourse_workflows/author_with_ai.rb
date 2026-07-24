@@ -12,7 +12,8 @@ module Jobs
         "For generic requests like 'when someone posts' or 'when anyone posts', trigger:post_created covers all regular posts, including first posts and replies. Do not ask to distinguish replies from topic starters unless the request explicitly says replies only or new topics only.",
         "trigger:topic_closed exposes only the closed topic under topic.*. When a closed-topic workflow needs a first-post link, add action:topic with operation get and topic_id ={{ $json.topic.id }} immediately after the trigger. Use the exact fields returned by workflow_validate_patch for any first-post author data; do not assume post.trust_level is available.",
         "Do not ask whether trust level is available for trigger:post_created or trigger:post_edited; it is available as user.trust_level.",
-        "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_schema.",
+        "Do not generate fallback chains for undocumented author aliases; use the exact post.* fields from the node catalog output_contracts.",
+        "trigger:user_added_to_group and trigger:user_removed_from_group expose the affected user under user.*, the selected group under group.*, and event metadata under membership.*. Use user.username for the affected username and membership.action to distinguish added vs removed if needed.",
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
@@ -109,13 +110,13 @@ module Jobs
       def authoring_context_instructions
         context_tools = {
           workflow_node_catalog:
-            "Call this with targeted queries for node parameters, output schemas, capabilities, and examples.",
+            "Call this with targeted queries for node parameters, output contracts, capabilities, and examples.",
           workflow_ai_agent_catalog:
             "Call this before adding action:ai_agent nodes to find existing enabled AI agents to reuse. If none fit, propose create_ai_agent with name, description, and system_prompt.",
           workflow_graph_context:
             "Call this with workflow_id when you need the current graph nodes and connections.",
           workflow_validate_patch:
-            "Call this to dry-run candidate operations and inspect inferred node_schemas.",
+            "Call this to dry-run candidate operations and inspect inferred node_fields.",
           workflow_script_context:
             "Call this before writing Code node JavaScript to inspect the runtime API and mode rules.",
           workflow_validate_script:

@@ -7,6 +7,7 @@
 zh_CN:
   site_settings:
     discourse_automation_enabled: "启用 discourse-automation 插件"
+    discourse_automation_max_recursion_depth: "最大自动化递归深度"
   discourse_automation:
     staff_action_logs:
       empty_value: "（空）"
@@ -45,6 +46,7 @@ zh_CN:
         description: 创建或编辑类别时，将触发自动化
       recurring:
         title: 重复
+        invalid_interval: 时间间隔必须为正数。
       point_in_time:
         title: 时间点
         description: 当达到某个日期时，将触发自动化

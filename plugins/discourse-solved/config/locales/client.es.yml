@@ -15,6 +15,17 @@ es:
           kpi:
             accepted_solutions:
               label: "Soluciones aceptadas"
+        sections:
+          support:
+            title: "Soporte"
+            answerers:
+              staff: "Personal"
+              member: "Miembros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
+                gt_24h: "> 24 horas"
   js:
     notifications:
       alt:

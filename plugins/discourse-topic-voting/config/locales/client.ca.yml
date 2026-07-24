@@ -10,18 +10,12 @@ ca:
       sort_options:
         votes: "Vots"
     topic_voting:
-      reached_limit: "Us heu quedat sense vots. Elimineu un vot existent."
-      list_votes: "Llista els vots"
       voted: "Heu votat sobre aquest tema"
-      allow_topic_voting: "Permet als usuaris votar sobre temes d'aquesta categoria"
       vote_title: "Vota"
       vote_title_plural: "Vots"
       votes:
         one: " %{count} vot"
         other: "%{count} vots"
-      anonymous_button:
-        one: "Vota"
-        other: "Vots"
       remove_vote: "Elimina el vot"
       and_more_voters: "i %{count} més..."
       show_voters: "Mostra qui ha votat"

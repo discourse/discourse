@@ -118,6 +118,41 @@ describe DiscoursePostEvent::EventFinder do
     end
   end
 
+  context "when the event is associated to an unlisted topic" do
+    fab!(:admin)
+    fab!(:trust_level_4)
+    let(:post1) do
+      PostCreator.create!(
+        user,
+        title: "We should buy a boat",
+        raw: "The boat market is quite active lately.",
+      )
+    end
+    let!(:event) { Fabricate(:event, post: post1) }
+
+    before { post1.topic.update_column(:visible, false) }
+
+    it "doesn’t return the event for regular users" do
+      expect(finder.search(current_user)).to match_array([])
+    end
+
+    it "doesn’t return the event for anonymous users" do
+      expect(finder.search(nil)).to match_array([])
+    end
+
+    it "doesn’t return the event for the topic author" do
+      expect(finder.search(user)).to match_array([])
+    end
+
+    it "returns the event for staff" do
+      expect(finder.search(admin)).to match_array([event])
+    end
+
+    it "returns the event for trust level 4 users" do
+      expect(finder.search(trust_level_4)).to match_array([event])
+    end
+  end
+
   context "when events are filtered" do
     describe "by post_id" do
       let(:post1) do
@@ -385,6 +420,40 @@ describe DiscoursePostEvent::EventFinder do
       it "defaults to ascending order for invalid order values" do
         results = finder.search(current_user, { order: "invalid" })
         expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
+      end
+    end
+  end
+
+  describe "by topic id" do
+    fab!(:event_one) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+    fab!(:event_two) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
+
+    it "returns only the event in the given topic" do
+      expect(finder.search(current_user, { topic_id: event_one.post.topic_id })).to match_array(
+        [event_one],
+      )
+    end
+
+    it "returns nothing for a topic without an event" do
+      expect(finder.search(current_user, { topic_id: Fabricate(:topic).id })).to be_empty
+    end
+
+    context "with a closed event" do
+      fab!(:closed_event) do
+        Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public], closed: true)
+      end
+
+      it "excludes the closed event by default" do
+        expect(finder.search(current_user, { topic_id: closed_event.post.topic_id })).to be_empty
+      end
+
+      it "includes the closed event when include_closed is set" do
+        expect(
+          finder.search(
+            current_user,
+            { topic_id: closed_event.post.topic_id, include_closed: true },
+          ),
+        ).to match_array([closed_event])
       end
     end
   end

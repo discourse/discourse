@@ -15,6 +15,17 @@ pt_BR:
           kpi:
             accepted_solutions:
               label: "Soluções aceitas"
+        sections:
+          support:
+            title: "Apoio"
+            answerers:
+              staff: "Equipe"
+              member: "Membros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
+                gt_24h: "> 24 horas"
   js:
     notifications:
       alt:

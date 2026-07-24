@@ -22,6 +22,10 @@ hr:
         in_location: "u"
         hidden: "skriveno"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -415,6 +419,9 @@ hr:
     age: "Dob"
     joined: "Prijavljen"
     admin_title: "Administrator"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način rada"
+      simple_mode: "Jednostavni način rada"
     show_more: "Prikaži više"
     show_help: "Mogućnosti"
     links: "Linkovi"
@@ -1501,6 +1508,9 @@ hr:
       notifications: "Obavijesti"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Onemogućeno"
+          all: "Omogućeno"
         not_supported: "Nažalost, obavijesti nisu podržane u ovom pregledniku."
         perm_denied_expl: "Odbili ste dopuštenje za obavijesti. Dopusti obavijesti putem postavki preglednika."
         each_browser_note: "Napomena: ovu postavku morate promijeniti na svakom pregledniku koji koristite. Sve će obavijesti biti onemogućene ako pauzirate obavijesti iz korisničkog izbornika, bez obzira na ovu postavku."
@@ -2003,7 +2013,7 @@ hr:
         default: "(zadano)"
         any: "bilo koji"
       homepage:
-        default: "(zadano)"
+        default: "Zadano"
       password_confirmation:
         title: "Ponoviti zaporku"
       invite_code:
@@ -2204,6 +2214,28 @@ hr:
           create_link_and_send_email: "Napravite poveznicu i pošaljite e-mail"
           invite_saved_without_sending_email: "Pozivnica je spremljena. Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
           invite_saved_with_sending_email: "E-mail s pozivnicom je poslan. Također možete kopirati donju poveznicu i podijeliti je kako biste odmah odobrili pristup ovoj stranici."
+        invite_roles:
+          member_title: "Pozovite članove"
+          member_tab: "Članovi"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
+          admin_email_label: "E-mail adresa"
+          email_placeholder: "ime@primjer.com"
+          invite_by_email: "Email"
+          restrict_domain: "Ograniči na domenu"
+          more_options: "Više opcija"
+          update: "Ažuriraj"
+          summary:
+            role_member: "Član"
+            role_admin: "Administrator"
+            role_moderator: "Moderator"
+            method_email: "Email"
+            uses: "Maks. korisnika"
+            expires: "Istječe"
+            topic: "Tema"
+            groups: "Grupe"
+            edit: "Uredi pozivnicu"
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
@@ -2537,7 +2569,6 @@ hr:
     created: "Stvoreno"
     created_lowercase: "stvoreno"
     trust_level: "Razina Povjerenja"
-    search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Dobrodošli!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
@@ -2585,6 +2616,9 @@ hr:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      signup_title: "Kreiraj svoj račun"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko ime"
     login:
       header_title: "Dobro došli natrag"
       title: "Prijava"
@@ -2906,6 +2940,7 @@ hr:
       draft_saved: "Skica spremljena!"
       users_placeholder: "Dodajte korisnike ili grupe"
       title_placeholder: "O čemu je ova rasprava u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Titula"
       title_or_link_placeholder: "Upišite naslov ili ovdje zalijepite vezu"
       edit_reason_placeholder: "Zašto uređuješ?"
       topic_featured_link_placeholder: "Unesite vezu prikazanu s naslovom."
@@ -3515,6 +3550,7 @@ hr:
       sort:
         label: "Sortiraj po"
         top: "Najaktivnije"
+        hot: "Vruće"
         new: "Novo"
       load_more_children:
         one: "još %{count} odgovor"
@@ -3588,44 +3624,8 @@ hr:
       read_more_in_category: "Želite čitati više? Pregledajte ostale teme u %{categoryLink} ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       read_more: "Želite čitati više? <a href='%{categoryLink}'>Pregledajte sve kategorije</a> ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
+      sr_read: "pročitajte"
       participant_groups: "Grupe sudionika"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Postoji <a href="{basePath}/unread"># nepročitano</a>}
-                 few {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-              other {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { i <a href="{basePath}/new"># nova</a> preostala tema,}
-                 few { i <a href="{basePath}/new"># nove</a> preostale teme,}
-              other { i <a href="{basePath}/new"># nove</a> preostale teme,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-              other {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-              other {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ili pregledajte druge teme u {categoryLink}}
-          false { ili <a href="{basePath}/latest">pogledajte najnovije teme</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odgovor, idite na prvu objavu"
         few: "%{count} odgovora, idite na prvu objavu"
@@ -4094,7 +4094,7 @@ hr:
           few: "Prikaži %{count} prevedene lokalizacije"
           other: "Prikaži %{count} prevedenih lokalizacija"
         modal:
-          title: "Prijevodi za objavu"
+          title: "Prijevodi"
           confirm_delete: "Jeste li sigurni da želite izbrisati prijevode za '%{languageCode}'?"
         success: "Prijevodi su uspješno ažurirani"
         post_language_selector:
@@ -4311,7 +4311,7 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "kategorija&hellip;"
+      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -4351,7 +4351,6 @@ hr:
       type_settings_schema:
         site_settings: "Postavke web-mjesta"
       unsaved_changes: "Imate nespremljene promjene"
-      slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:
@@ -4884,7 +4883,6 @@ hr:
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
-      choose_for_topic: "neobavezne oznake"
       choose_for_topic_required:
         one: "odaberite najmanje %{count} oznaku"
         few: "odaberite najmanje %{count} oznake"
@@ -5064,8 +5062,6 @@ hr:
       no_read_topics_body: "Kada počnete čitati rasprave, ovdje ćete vidjeti popis. Da biste počeli čitati, potražite teme koje vas zanimaju u <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> ili pretražite po ključnoj riječi %{searchIcon}"
     no_group_messages_title: "Nisu pronađene grupne poruke"
     topic_entrance:
-      sr_jump_top_button: "Idite na prvu objavu - %{date}"
-      sr_jump_bottom_button: "Idite na zadnju objavu - %{date}"
       jump_top_button_title: "Skoči na prvi post"
       jump_bottom_button_title: "Skoči na zadnji post"
     fullscreen_table:
@@ -5120,6 +5116,10 @@ hr:
           public: "Vidljivo svima"
           always_public: "Sadržaj u ovom odjeljku je uvijek javan"
           more_menu: "Više izbornika"
+          localizations:
+            title: "Prijevodi"
+            locale: "Jezik"
+            title_label: "Naslov odjeljka"
           links:
             add: "Dodajte još jednu poveznicu"
             delete: "Izbrišite poveznicu"
@@ -5449,6 +5449,7 @@ hr:
         title: "Popis dostupnih izvještaja"
         sidebar_title: "Izvještaji"
         back: "Povratak na sva izvješća"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Ostalo"
@@ -5593,7 +5594,6 @@ hr:
             apple_touch_icon:
               title: "Apple dodirna ikona"
               description: "Ikona koja se koristi za Apple uređaje osjetljive na dodir. Ako se ostavi prazno, koristit će se velika_ikona."
-              help_text: "Preporučena veličina je 180 x 180 piksela. Ne preporučuje se prozirna pozadina."
             digest_logo:
               title: "Digest logotip"
               description: "Alternativna slika logotipa koja se koristi na vrhu sažetka e-pošte vaše web stranice. Ako je ostavljena prazna, upotrijebit će se slika iz postavke `logo`."
@@ -5601,6 +5601,9 @@ hr:
             opengraph_image:
               title: "OpenGraph slika"
               description: "Zadana opengraph slika, koristi se kada stranica nema drugu prikladnu sliku. Ako je ostavljeno prazno, koristit će se large_icon."
+            og_image_preview:
+              generate: "Generiraj"
+              topic_id_label: "ID teme"
             x_summary_large_image:
               title: "X sažetak velike slike"
               description: "X kartica 'sažetak velike slike'. Ako se ostavi prazno, generiraju se uobičajeni metapodaci kartice pomoću OpenGraph_image, sve dok to nije ujedno i .svg."
@@ -5710,6 +5713,21 @@ hr:
               title: "Objave i teme"
             stats_and_thresholds:
               title: "Statistike i pragovi"
+        category_management:
+          tabs:
+            settings: "Postavke"
+          types:
+            all:
+              title: "Sve kategorije"
+          filter_placeholder: "Filtrirajte kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tema"
+          visibility:
+            public: "Javnost"
+          visibility_filter:
+            all: "Sve kategorije"
         permalinks:
           title: "Poveznice"
           header_description: "Preusmjeravanja za prijavu za URL-ove koje forum ne zna"
@@ -5804,7 +5822,7 @@ hr:
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Posljednje"
+        github: "GitHub"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         dismiss_notice: "Zanemari"
         new_features:
@@ -5860,7 +5878,6 @@ hr:
               posts: "Postovi"
               share: "Podijeli"
             whos_posting:
-              all_categories: "Sve kategorije"
               staff: "Osoblje"
             trust_level_pipeline:
               trust_levels:
@@ -5875,6 +5892,7 @@ hr:
               searches: "Pretraživanja"
               status: "Statust"
         reports_section:
+          header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
           modal:
             enabled_heading: "Omogućeno"
@@ -6274,6 +6292,8 @@ hr:
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
+          locale_selector:
+            title: "Jezik"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"
@@ -7054,6 +7074,11 @@ hr:
         active: "Aktivirano"
         status: "Statust"
         bulk_actions:
+          clear_all: "Obriši sve"
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspendirajte"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -7065,6 +7090,9 @@ hr:
           suspended: "Suspendirani"
           silenced: "Utišano"
           staged: "Priređen"
+        activation_filter:
+          all: "Svi korisnici"
+          activated: "Aktivirano"
         approved: "Potvrđeni?"
         titles:
           active: "Aktivni korisnici"
@@ -7594,6 +7622,9 @@ hr:
         alt: "prilagođeni pregled emotikona"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Postavke"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         delete: "Pobriši"

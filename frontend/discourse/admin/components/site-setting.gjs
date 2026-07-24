@@ -24,7 +24,7 @@ import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
-import { and } from "discourse/truth-helpers";
+import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -74,6 +74,7 @@ export default class SiteSettingComponent extends Component {
   @tracked status = null;
   @tracked progress = null;
   updateExistingUsers = null;
+  trackChanges = true;
 
   constructor() {
     super(...arguments);
@@ -98,11 +99,12 @@ export default class SiteSettingComponent extends Component {
     }
   }
 
-  canSubscribeToSettingsJobs() {
-    const settingName = this.setting.setting;
+  get canSubscribeToSettingsJobs() {
+    const settingName = this.setting?.setting;
+
     return (
-      settingName.includes("default_categories") ||
-      settingName.includes("default_tags")
+      settingName?.includes("default_categories") ||
+      settingName?.includes("default_tags")
     );
   }
 
@@ -141,8 +143,26 @@ export default class SiteSettingComponent extends Component {
     return `site-settings/${this.typeClass}`;
   }
 
+  get siteSettingComponent() {
+    return getOwner(this).resolveRegistration("component:site-setting");
+  }
+
   get overridden() {
-    return !this.#valuesEqual(this.setting.default, this.buffered.get("value"));
+    return this.settingIsOverridden(this.setting);
+  }
+
+  get groupedOverridden() {
+    return [this.setting, ...this.inlineDependentSettings].some((setting) =>
+      this.settingIsOverridden(setting)
+    );
+  }
+
+  settingIsOverridden(setting) {
+    return !this.#valuesEqual(
+      setting.default,
+      setting.buffered.get("value"),
+      setting
+    );
   }
 
   get displayDescription() {
@@ -172,9 +192,13 @@ export default class SiteSettingComponent extends Component {
         return `<a href="${path}/admin/site_settings/category/all_results?filter=${encodeURIComponent(name)}">${label}</a>`;
       })
       .join(", ");
+    const translationKey =
+      Object.keys(this.setting.depends_on_values ?? {}).length > 0
+        ? "admin.site_settings.depends_on_values_notice"
+        : "admin.site_settings.depends_on_notice";
 
     return trustHTML(
-      i18n("admin.site_settings.depends_on_notice", {
+      i18n(translationKey, {
         count: this.setting.depends_on.length,
         dependencyLinks: links,
       })
@@ -231,8 +255,26 @@ export default class SiteSettingComponent extends Component {
   }
 
   get dirty() {
+    return this.settingIsDirty(this.setting);
+  }
+
+  get groupedDirty() {
+    return this.dirtySettings.length > 0;
+  }
+
+  get dirtySettings() {
+    return [this.setting, ...this.inlineDependentSettings].filter((setting) =>
+      this.settingIsDirty(setting)
+    );
+  }
+
+  settingIsDirty(setting) {
     let bufferVal = this.buffered.get("value");
-    let settingVal = this.setting?.value;
+    let settingVal = setting?.value;
+
+    if (setting !== this.setting) {
+      bufferVal = setting.buffered.get("value");
+    }
 
     if (isNone(bufferVal)) {
       bufferVal = "";
@@ -242,12 +284,14 @@ export default class SiteSettingComponent extends Component {
       settingVal = "";
     }
 
-    const dirty = !this.#valuesEqual(bufferVal, settingVal);
+    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
 
-    if (dirty) {
-      this.siteSettingChangeTracker.add(this.setting);
-    } else {
-      this.siteSettingChangeTracker.remove(this.setting);
+    if (this.trackChanges) {
+      if (dirty) {
+        this.siteSettingChangeTracker.add(setting);
+      } else {
+        this.siteSettingChangeTracker.remove(setting);
+      }
     }
 
     return dirty;
@@ -271,6 +315,14 @@ export default class SiteSettingComponent extends Component {
 
   get setting() {
     return this.args.setting;
+  }
+
+  get inlineDependentSettings() {
+    if (this.args.inline) {
+      return [];
+    }
+
+    return this.adminSiteSettingStore.inlineDependentSettings(this.setting);
   }
 
   get settingName() {
@@ -357,7 +409,9 @@ export default class SiteSettingComponent extends Component {
   }
 
   get disableControls() {
-    return !!this.setting.isSaving;
+    return [this.setting, ...this.inlineDependentSettings].some(
+      (setting) => setting.isSaving
+    );
   }
 
   get staffLogFilter() {
@@ -376,12 +430,7 @@ export default class SiteSettingComponent extends Component {
     if (this.setting.depends_behavior !== "hidden") {
       return false;
     }
-    return (
-      this.setting.depends_on?.some((name) => {
-        const parent = this.adminSiteSettingStore.get(name);
-        return parent && !isSettingValueTrue(parent.buffered.get("value"));
-      }) ?? false
-    );
+    return !this.adminSiteSettingStore.dependenciesSatisfied(this.setting);
   }
 
   get canUpdate() {
@@ -398,37 +447,48 @@ export default class SiteSettingComponent extends Component {
 
   @action
   async update() {
-    if (this.setting.requiresConfirmation) {
-      const confirm = await this.siteSettingChangeTracker.confirmChanges(
-        this.setting
-      );
+    const dirtySettings = this.dirtySettings;
+
+    for (const setting of dirtySettings) {
+      if (!setting.requiresConfirmation) {
+        continue;
+      }
+
+      const confirm =
+        await this.siteSettingChangeTracker.confirmChanges(setting);
 
       if (!confirm) {
         return;
       }
     }
 
-    if (this.setting.affectsExistingUsers) {
-      await this.siteSettingChangeTracker.configureBackfill(this.setting);
+    for (const setting of dirtySettings) {
+      if (setting.affectsExistingUsers) {
+        await this.siteSettingChangeTracker.configureBackfill(setting);
+      }
     }
 
-    await this.save();
+    await this.save(dirtySettings);
   }
 
   @action
-  async save() {
+  async save(settings = [this.setting]) {
+    settings.forEach((setting) => (setting.isSaving = true));
+
     try {
-      this.setting.isSaving = true;
+      await this._save(settings);
 
-      await this._save();
+      const refreshParams = {};
+      settings.forEach((setting) => {
+        setting.commit();
 
-      this.setting.validationMessage = null;
-      this.buffered.applyChanges();
+        if (setting.requiresReload) {
+          refreshParams[setting.setting] = setting.value;
+        }
+      });
 
-      if (this.setting.requiresReload) {
-        this.siteSettingChangeTracker.refreshPage({
-          [this.setting.setting]: this.setting.value,
-        });
+      if (Object.keys(refreshParams).length > 0) {
+        this.siteSettingChangeTracker.refreshPage(refreshParams);
       }
     } catch (e) {
       const json = e.jqXHR?.responseJSON;
@@ -436,17 +496,22 @@ export default class SiteSettingComponent extends Component {
         let errorString = json.errors[0];
 
         if (json.html_message) {
-          errorString = trustHTML(errorString);
+          errorString = trustHTML(sanitize(errorString));
+          settings.forEach((setting) => setting.buffered.discardChanges());
         }
 
-        this.setting.validationMessage = errorString;
+        settings.forEach(
+          (setting) => (setting.validationMessage = errorString)
+        );
       } else {
         // eslint-disable-next-line no-console
         console.error(e);
-        this.setting.validationMessage = i18n("generic_error");
+        settings.forEach(
+          (setting) => (setting.validationMessage = i18n("generic_error"))
+        );
       }
     } finally {
-      this.setting.isSaving = false;
+      settings.forEach((setting) => (setting.isSaving = false));
     }
   }
 
@@ -465,17 +530,25 @@ export default class SiteSettingComponent extends Component {
 
   @action
   cancel() {
-    this.buffered.discardChanges();
-    this.setting.validationMessage = null;
+    this.dirtySettings.forEach((setting) => {
+      setting.rollback();
+      setting.validationMessage = null;
+    });
   }
 
   @action
   resetDefault() {
-    this.buffered.set("value", this.setting.default);
-    this.setting.validationMessage = null;
-    if (isSettingValueTrue(this.setting.default)) {
-      this.adminSiteSettingStore.reveal(this.setting.setting);
-    }
+    [this.setting, ...this.inlineDependentSettings].forEach((setting) => {
+      if (!this.settingIsOverridden(setting)) {
+        return;
+      }
+
+      setting.buffered.set("value", setting.default);
+      setting.validationMessage = null;
+      if (isSettingValueTrue(setting.default)) {
+        this.adminSiteSettingStore.reveal(setting.setting);
+      }
+    });
   }
 
   @action
@@ -494,19 +567,27 @@ export default class SiteSettingComponent extends Component {
     this.setting.validationMessage = null;
   }
 
-  _save() {
-    const setting = this.buffered;
-    return SiteSetting.update(setting.get("setting"), setting.get("value"), {
-      updateExistingUsers: this.setting.updateExistingUsers,
+  _save(settings) {
+    if (settings.length === 1) {
+      const setting = settings[0].buffered;
+      return SiteSetting.update(setting.get("setting"), setting.get("value"), {
+        updateExistingUsers: settings[0].updateExistingUsers,
+      });
+    }
+
+    const params = {};
+    settings.forEach((setting) => {
+      params[setting.buffered.get("setting")] = {
+        value: setting.buffered.get("value"),
+        backfill: !!setting.updateExistingUsers,
+      };
     });
+
+    return SiteSetting.bulkUpdate(params);
   }
 
-  #valuesEqual(a, b) {
-    if (
-      this.setting.json_schema ||
-      this.setting.schema ||
-      this.setting.objects_schema
-    ) {
+  #valuesEqual(a, b, setting = this.setting) {
+    if (setting.json_schema || setting.schema || setting.objects_schema) {
       return deepEqual(a, b);
     } else {
       return a?.toString() === b?.toString();
@@ -520,7 +601,8 @@ export default class SiteSettingComponent extends Component {
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
-        {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}
+        {{if @inline 'inline-dependent-setting'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -585,6 +667,16 @@ export default class SiteSettingComponent extends Component {
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
           {{/if}}
+          {{#if this.inlineDependentSettings.length}}
+            <div class="inline-dependent-settings">
+              {{#each this.inlineDependentSettings as |dependentSetting|}}
+                <this.siteSettingComponent
+                  @setting={{dependentSetting}}
+                  @inline={{true}}
+                />
+              {{/each}}
+            </div>
+          {{/if}}
           <PluginOutlet
             @name="site-setting-after-description"
             @outletArgs={{lazyHash setting=this.setting}}
@@ -618,7 +710,7 @@ export default class SiteSettingComponent extends Component {
         {{/if}}
       </div>
 
-      {{#if (and this.dirty this.canUpdate)}}
+      {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
             @action={{this.update}}
@@ -635,7 +727,7 @@ export default class SiteSettingComponent extends Component {
             class="cancel setting-controls__cancel"
           />
         </div>
-      {{else if (and this.overridden this.canUpdate)}}
+      {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
         {{#if this.setting.secret}}
           <DButton
             @action={{this.toggleSecret}}

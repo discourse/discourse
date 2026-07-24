@@ -59,14 +59,10 @@
 
     <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
 
-    <%- if staff? %>
-      <% EmberAssets.script_chunks["chunk.admin"]&.each do |script_name| %>
-        <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
-      <% end %>
-    <%- end %>
-
     <%- unless customization_disabled? %>
-      <%= theme_js_lookup %>
+      <%- theme_js_assets.each do |asset| %>
+        <link rel="modulepreload" href="<%= asset[:url] %>" data-theme-id="<%= asset[:theme_id] %>" nonce="<%= csp_nonce_placeholder %>">
+      <%- end %>
       <%= theme_lookup("head_tag") %>
     <%- end %>
 
@@ -102,7 +98,7 @@
         <%= render partial: "common/discourse_stylesheet" %>
       </discourse-assets-stylesheets>
       <discourse-assets-json>
-        <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+        <script type="application/json" id="data-preloaded"><%= raw(preloaded_json) %></script>
       </discourse-assets-json>
       <discourse-assets-icons></discourse-assets-icons>
     </discourse-assets>

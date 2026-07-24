@@ -4,14 +4,14 @@ module DiscourseWorkflows
   class Executor
     class ExecutionStore
       MAX_EXECUTION_DATA_SIZE = 5.megabytes
-      MAX_STEP_IO_SIZE = 128.kilobytes
+      MAX_STEP_IO_SIZE = 1280.kilobytes
       MAX_STEP_STRING_BYTES = 16.kilobytes
       MAX_STEP_COLLECTION_SIZE = 50
       MAX_STEP_IO_DEPTH = 8
 
       delegate :workflow, :trigger_data, to: :@execution_context
 
-      attr_reader :trigger_node_id, :execution, :workflow_snapshot
+      attr_reader :trigger_node_id, :execution, :workflow_snapshot, :existing_run_data
 
       def initialize(trigger_node_id:, execution_context:, execution_mode:, options:)
         @trigger_node_id = trigger_node_id.to_s
@@ -38,6 +38,7 @@ module DiscourseWorkflows
         )
         @execution = create_execution!
         reset_collaborators!
+        restore_seeded_run_data!
         @execution
       end
 
@@ -60,6 +61,9 @@ module DiscourseWorkflows
           timeout_action: nil,
         )
         publish_execution_run_data
+        if @options.workflow_call_child?
+          DiscourseWorkflows::WorkflowCallContinuation.child_succeeded!(execution)
+        end
         execution
       end
 
@@ -79,6 +83,9 @@ module DiscourseWorkflows
         publish_execution_run_data(
           force: @options.draft_execution || @options.workflow_snapshot.present?,
         )
+        if @options.workflow_call_child?
+          DiscourseWorkflows::WorkflowCallContinuation.child_failed!(execution)
+        end
         execution
       end
 
@@ -131,7 +138,17 @@ module DiscourseWorkflows
           started_at: @execution.started_at || Time.current,
           finished_at: finished_at,
         )
+        attach_workflow_call_run!
         @execution
+      end
+
+      def attach_workflow_call_run!
+        return if @options.workflow_call_run_id.blank?
+
+        DiscourseWorkflows::WorkflowCallRun.where(id: @options.workflow_call_run_id).update_all(
+          child_execution_id: @execution.id,
+          updated_at: Time.current,
+        )
       end
 
       def execution_workflow_version_id
@@ -141,6 +158,25 @@ module DiscourseWorkflows
       def reset_collaborators!
         @execution_context.execution = @execution
         @execution_context.reset!
+      end
+
+      def restore_seeded_run_data!
+        seeded = @options.existing_execution&.execution_data&.run_data
+        return if seeded.blank?
+
+        @existing_run_data = seeded_runs_matching_snapshot(seeded)
+        restore_node_runs_from_run_data
+      end
+
+      def seeded_runs_matching_snapshot(seeded)
+        seeded.each_with_object({}) do |(node_name, runs), result|
+          node = @workflow_snapshot.find_node_by_name(node_name)
+          next if node.nil?
+
+          matching_runs =
+            Array(runs).select { |run| StepExecutionPlan.run_matches_node?(run, node) }
+          result[node_name] = matching_runs if matching_runs.any?
+        end
       end
 
       def restore_from!(execution_data)
@@ -334,13 +370,11 @@ module DiscourseWorkflows
 
         node_runs.each_with_object({}) do |(node_name, runs), result|
           existing_run_count = Array(@existing_run_data[node_name]).length
-          result[node_name] = Array(runs)
-            .drop(existing_run_count)
-            .map
-            .with_index do |run, index|
-              step = Array(steps_by_name[node_name])[existing_run_count + index]
-              serialize_node_run(node_name, run, step, existing_run_count + index)
-            end
+          new_runs = Array(runs).drop(existing_run_count)
+          node_steps = Array(steps_by_name[node_name]).last(new_runs.length)
+          result[node_name] = new_runs.map.with_index do |run, index|
+            serialize_node_run(node_name, run, node_steps[index], existing_run_count + index)
+          end
         end
       end
 

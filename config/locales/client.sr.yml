@@ -18,6 +18,10 @@ sr:
         in_location: "u"
         hidden: "sakriveno"
         failed: "neuspešno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: ","
@@ -1217,6 +1221,9 @@ sr:
       statistics: "Statistike"
       desktop_notifications:
         label: "Obaveštenja uživo"
+        push_level:
+          none: "Isključeno"
+          all: "Omogućeno"
         not_supported: "Notifikacije nisu podržane u ovom pregledaču. Izvinite."
         perm_default: "Uključi obaveštenja"
         perm_denied_btn: "Dozvola odbijena"
@@ -1459,7 +1466,7 @@ sr:
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
       homepage:
-        default: "(zadano)"
+        default: "Подразумевано"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -1543,6 +1550,22 @@ sr:
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
+        invite_roles:
+          member_title: "Pozovi članove"
+          member_tab: "Članovi"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          email_placeholder: "ime@primer.com"
+          invite_by_email: "E-mail"
+          more_options: "Više opcija"
+          summary:
+            role_member: "Član"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method_email: "E-mail"
+            topic: "Tema"
+            groups: "Grupe"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1691,7 +1714,6 @@ sr:
     created: "Napravljeno"
     created_lowercase: "napravljeno"
     trust_level: "Nivo poverenja"
-    search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Добро дошли!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uslove pružanja usluge</a> ."
@@ -1723,6 +1745,8 @@ sr:
       email_label: "E-mail"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"
@@ -1814,6 +1838,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2073,6 +2098,7 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
+      sr_read: "pročitano"
       suggest_create_topic: Spremni da <a href>otvorite novu temu?</a>
       deleted: "Tema je obrisana"
       slow_mode_update:
@@ -2308,7 +2334,6 @@ sr:
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
         delete: "Obriši"
-      slug_placeholder: "(Opciono) spojene-reči za url"
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
       validations:
@@ -2621,7 +2646,6 @@ sr:
       download: "Preuzmi"
     tagging:
       selector_remove_filter: "uklonite filter"
-      choose_for_topic: "opcione oznake"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
       description: "Opis"
@@ -2786,6 +2810,7 @@ sr:
           always: "uvek"
           never: "nikada"
       reports:
+        all_groups: "Sve grupe"
         group_members: "Članovi"
         group_other: "Ostalo"
         chart:
@@ -2836,6 +2861,9 @@ sr:
         logo:
           form:
             email: "Email"
+            og_image_preview:
+              generate: "Generiši"
+              topic_id_label: "ID Teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -2879,6 +2907,17 @@ sr:
               title: "Podešavanje"
         badges:
           title: "Značke"
+        category_management:
+          tabs:
+            settings: "Podešavanje"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            topics: "Teme"
+          visibility_filter:
+            all: "Sve kategorije"
         emoji:
           title: "Emoji"
         email_logs:
@@ -2915,7 +2954,6 @@ sr:
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Poslednje"
         dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
@@ -2953,8 +2991,6 @@ sr:
               empty: "Nema aktivnosti u izabranom periodu."
             whos_posting:
               title: "Ko objavljuje?"
-              all_categories: "Sve kategorije"
-              include_subcategories: "Uključi potkategorije"
               new_members: "Novi članovi"
               returning: "Vraćajući"
               staff: "Osoblje"
@@ -2976,14 +3012,6 @@ sr:
                   one: "-%{count} pad"
                   few: "-%{count} pada"
                   other: "-%{count} padova"
-              moves_in_aria:
-                one: "%{count} član se pomerio gore"
-                few: "%{count} člana su se pomerila gore"
-                other: "%{count} članova se pomerilo gore"
-              moves_out_aria:
-                one: "%{count} član se pomerio dole"
-                few: "%{count} člana su se pomerila dole"
-                other: "%{count} članova se pomerilo dole"
               stable_aria: "bez pokreta"
             headline:
               healthy_growth:
@@ -3013,6 +3041,7 @@ sr:
             table:
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           modal:
             enabled_heading: "Omogućeno"
             apply: "Primeni"
@@ -3528,6 +3557,10 @@ sr:
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
         active: "Aktivirano"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspenduj"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -3537,6 +3570,8 @@ sr:
           active: "Aktivno"
           staff: "Osoblje"
           suspended: "Suspendovani"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Potvrđenji?"
         titles:
           pending: "Korisnici koji čekaju reviziju"
@@ -3616,9 +3651,6 @@ sr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
-        delete_and_block: "Obriši i blokiraj korisnika"
-        delete_and_block_description: "Obrišite korisnika i blokirajte njihovu email i IP adresu."
-        delete_dont_block_description: "Obrišite korisnika bez blokiranja."
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Proverite da li ste obrisali sve njegove poruke pre nego što ponovo pokušate brisati."
         send_activation_email: "Pošalji Aktivacijski Email"
@@ -3816,6 +3848,9 @@ sr:
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         delete: "Obriši"
         title: "Ugrađivanje"

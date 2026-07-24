@@ -49,5 +49,27 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
 
       it { expect(check).to be_chill_about_it }
     end
+
+    context "when upcoming change is not enabled and should not be displayed for the site" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :stable,
+              impact_type: "feature",
+              impact_role: "admins",
+            },
+          },
+        )
+        UpcomingChanges::ConditionalDisplay
+          .expects(:should_display_enable_upload_debug_mode?)
+          .at_least_once
+          .returns(false)
+        SiteSetting.enable_upload_debug_mode = false
+      end
+
+      it { expect(check).to be_chill_about_it }
+    end
   end
 end

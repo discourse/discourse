@@ -50,7 +50,7 @@ pl_PL:
         regenerate_placeholder: "np. zaktualizuj zapytanie, aby ograniczyć je do 50 wyników"
         prompt_label: "Monit"
         generate: "Generuj"
-        regenerate: "Monit aktualizacji"
+        regenerate: "Aktualizuj zapytanie"
         generating: "Generowanie zapytań za pomocą AI..."
         generation_timeout: "Przekroczono limit czasu generowania zapytania AI. Możesz wpisać kod SQL ręcznie."
         generation_error: "Wystąpił błąd podczas generowania zapytania."
@@ -73,6 +73,8 @@ pl_PL:
         title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
         search_tables: "Przeszukaj tabele"
+        hide: "Ukryj schemat"
+        show: "Pokaż schemat"
         sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
       types:
         bool:
@@ -94,7 +96,10 @@ pl_PL:
       chart:
         form:
           label: "Typ wykresu"
-          bar: "Pasek"
+          line: "Liniowy"
+          bar: "Słupkowy"
+          stacked: "Skumulowany"
+          dual_axis: "Dwuosiowy"
         tooltip:
           total: "Razem: %{count}"
       chart_empty:

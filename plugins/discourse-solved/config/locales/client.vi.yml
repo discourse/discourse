@@ -10,6 +10,16 @@ vi:
       site_settings:
         categories:
           discourse_solved: "Discourse Solved"
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Nhân viên"
+              member: "Thành viên kênh"
+              basic: "Cơ Bản"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tiếng"
   js:
     notifications:
       alt:

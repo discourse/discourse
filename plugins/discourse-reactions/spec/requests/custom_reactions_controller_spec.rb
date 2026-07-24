@@ -151,6 +151,13 @@ describe DiscourseReactions::CustomReactionsController do
       expect(user_1_messages).to eq(nil)
     end
 
+    it "does not publish MessageBus messages when the post topic is unavailable" do
+      post_1.stubs(:topic).returns(nil)
+      MessageBus.expects(:publish).never
+
+      described_class.new.send(:publish_change_to_clients!, post_1, reaction: "cry")
+    end
+
     it "errors when reaction is invalid" do
       sign_in(user_1)
       expect do
@@ -523,8 +530,27 @@ describe DiscourseReactions::CustomReactionsController do
       get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
 
       expect(response.status).to eq(200)
-      usernames = response.parsed_body["users"].map { |u| u["username"] }
-      expect(usernames).to include(user_1.username, user_3.username, user_5.username)
+      users = response.parsed_body["users"]
+      expect(users.map { |user| user["username"] }).to include(
+        user_1.username,
+        user_3.username,
+        user_5.username,
+      )
+      expect(users.find { |user| user["username"] == user_1.username }["name"]).to eq(user_1.name)
+    end
+
+    it "does not expose reactor names to anonymous users when names are disabled" do
+      SiteSetting.enable_names = false
+      user_2.update!(name: "Hidden Reactor Name")
+      user_5.update!(name: "Hidden Liker Name")
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users-list.json"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
+      expect(users).to all(exclude("name"))
+      expect(response.body).not_to include(user_2.name, user_5.name)
     end
 
     it "filters by reaction_value" do
@@ -601,6 +627,20 @@ describe DiscourseReactions::CustomReactionsController do
       expect(parsed["reaction_users"][0]["users"][0]["avatar_template"]).to eq(
         user_5.avatar_template,
       )
+    end
+
+    it "does not expose reactor names to anonymous users when names are disabled" do
+      SiteSetting.enable_names = false
+      user_2.update!(name: "Hidden Reactor Name")
+      user_5.update!(name: "Hidden Liker Name")
+
+      get "/discourse-reactions/posts/#{post_2.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["reaction_users"].flat_map { |reaction| reaction["users"] }
+      expect(users.map { |user| user["username"] }).to include(user_2.username, user_5.username)
+      expect(users).to all(exclude("name"))
+      expect(response.body).not_to include(user_2.name, user_5.name)
     end
 
     it "return reaction_users of reaction when there are parameters" do

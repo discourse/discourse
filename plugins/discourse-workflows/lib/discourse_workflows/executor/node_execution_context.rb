@@ -3,13 +3,23 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      BYPASSED_PERMISSION_CHECKS_FIELD = "discourse_workflows_bypassed_permission_checks"
+      WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
+      WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
+      NODE_ID_FIELD = "discourse_workflows_node_id"
+
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS
       RUN_ONCE_FOR_EACH_ITEM = CodeRunner::RUN_ONCE_FOR_EACH_ITEM
       JAVASCRIPT_UNDEFINED = CodeRunner::JAVASCRIPT_UNDEFINED
       JobResult = Data.define(:ok, :result, :error)
-      WaitRequest = Data.define(:waiting_until)
+      WaitRequest =
+        Data.define(:waiting_until, :kind, :payload) do
+          def workflow_call?
+            kind == "workflow_call"
+          end
+        end
 
       def self.serialize_post(
         post,
@@ -62,8 +72,8 @@ module DiscourseWorkflows
           @wait_request = nil
         end
 
-        def request_wait(waiting_until)
-          @wait_request = WaitRequest.new(waiting_until)
+        def request_wait(waiting_until, kind: "default", payload: {})
+          @wait_request = WaitRequest.new(waiting_until, kind.to_s, payload.deep_stringify_keys)
         end
 
         def add_condition_details(details)
@@ -86,7 +96,7 @@ module DiscourseWorkflows
         end
       end
 
-      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx
+      attr_reader :user, :vars, :execution_id, :node_id, :webhook_ctx, :workflow_call_stack
 
       def initialize(
         input_items:,
@@ -102,6 +112,7 @@ module DiscourseWorkflows
         resolver: nil,
         vars: nil,
         workflow: nil,
+        workflow_version: nil,
         execution_id: nil,
         resume_token: nil,
         node_id: nil,
@@ -113,6 +124,7 @@ module DiscourseWorkflows
         workflow_dependencies: nil,
         workflow_snapshot: nil,
         webhook_context: nil,
+        workflow_call_stack: [],
         runtime_state: RuntimeState.new,
         static_data_state: nil
       )
@@ -134,6 +146,7 @@ module DiscourseWorkflows
         @resolver = resolver
         @vars = vars
         @workflow = workflow
+        @workflow_version = workflow_version
         @execution_id = execution_id
         @resume_token = resume_token
         @node_id = node_id
@@ -147,6 +160,7 @@ module DiscourseWorkflows
         @workflow_dependencies = workflow_dependencies
         @workflow_snapshot = workflow_snapshot
         @webhook_ctx = webhook_context
+        @workflow_call_stack = Array(workflow_call_stack).map(&:to_s)
         @static_data_state = static_data_state
       end
 
@@ -229,6 +243,13 @@ module DiscourseWorkflows
         input_items(input_index)
       end
 
+      def get_timezone
+        DiscourseWorkflows::WorkflowTimezone.for(
+          workflow: @workflow,
+          workflow_version: @workflow_version,
+        )
+      end
+
       def continue_on_fail
         on_error = @node_settings["onError"]
         return %w[continueRegularOutput continueErrorOutput].include?(on_error) if on_error.present?
@@ -294,7 +315,7 @@ module DiscourseWorkflows
         end
 
         if username.present?
-          user = User.find_by(username: username)
+          user = User.find_by_username(username)
           raise DiscourseWorkflows::NodeError, "User '#{username}' not found" if user.nil?
         else
           user = User.find_by(id: id)
@@ -308,15 +329,26 @@ module DiscourseWorkflows
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
       end
 
-      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil, whisper: false)
+      def create_post(
+        user:,
+        raw:,
+        topic_id:,
+        reply_to_post_number: nil,
+        whisper: false,
+        bypass_permission_checks: false
+      )
         topic = ::Topic.find(topic_id)
-        guardian = user.guardian
-        guardian.ensure_can_see!(topic)
-        raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+        bypass_permission_checks = ActiveModel::Type::Boolean.new.cast(bypass_permission_checks)
+        guardian = bypass_permission_checks ? Discourse.system_user.guardian : user.guardian
 
-        if topic.closed? || topic.archived?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+        if !bypass_permission_checks
+          guardian.ensure_can_see!(topic)
+          raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+
+          if topic.closed? || topic.archived?
+            raise DiscourseWorkflows::NodeError,
+                  I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+          end
         end
 
         post_args = {
@@ -338,7 +370,14 @@ module DiscourseWorkflows
           post_args[:post_type] = ::Post.types[:whisper]
         end
 
-        PostCreator.new(user, post_args).create!
+        if bypass_permission_checks
+          post_args[:guardian] = guardian
+          post_args[:skip_staff_author_pm_membership_sync] = true
+        end
+
+        post = PostCreator.new(user, post_args).create!
+        record_permission_bypass!(post) if bypass_permission_checks
+        post
       end
 
       def edit_post(user:, post_id:, raw:)
@@ -367,15 +406,16 @@ module DiscourseWorkflows
         self.class.serialize_topic(topic, guardian:, custom_field_names:)
       end
 
-      def put_execution_to_wait(waiting_until = nil)
-        @runtime_state.request_wait(waiting_until)
+      def put_execution_to_wait(waiting_until = nil, kind: "default", payload: {})
+        @runtime_state.request_wait(waiting_until, kind: kind, payload: payload)
       end
 
-      def resume_action_id(action)
+      def resume_action_id(action, target_user_id: nil)
         DiscourseWorkflows::InteractiveResume.action_id(
           execution_id: execution_id,
           resume_token: @resume_token,
           action: action,
+          target_user_id: target_user_id,
         )
       end
 
@@ -428,7 +468,28 @@ module DiscourseWorkflows
         paired_item
       end
 
+      def ensure_workflow_call_access!(workflow_id)
+        workflow_id = workflow_id.to_s
+        if @workflow && @node_id
+          return if workflow_references_dependency?("workflow_call", workflow_id)
+        elsif @parameters["workflow_id"].to_s == workflow_id
+          return
+        end
+
+        raise Discourse::InvalidAccess
+      end
+
       private
+
+      def record_permission_bypass!(post)
+        post.custom_fields[BYPASSED_PERMISSION_CHECKS_FIELD] = "true"
+        post.custom_fields[WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
+        if @workflow&.active_version_id
+          post.custom_fields[WORKFLOW_VERSION_ID_FIELD] = @workflow.active_version_id
+        end
+        post.custom_fields[NODE_ID_FIELD] = @node_id if @node_id
+        post.save_custom_fields
+      end
 
       def fetch_credentials(slot, item_index)
         raise ArgumentError, "credential slot is required" if slot.blank?

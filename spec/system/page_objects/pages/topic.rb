@@ -116,6 +116,13 @@ module PageObjects
         find_post_action_button(post, button).click
       end
 
+      def open_post_translations(post)
+        click_post_action_button(post, :show_more)
+        click_post_action_button(post, :add_translation)
+        find(".post-action-menu__view-translation").click
+        self
+      end
+
       def find_post_action_buttons(post)
         within_post(post) { find(".post-controls .actions") }
       end
@@ -136,13 +143,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        return has_css?(".post-users-popup .post-users-popup__item", count: count) if count
+        return has_css?(".users-popup .users-popup__item", count: count) if count
 
-        has_css?(".post-users-popup")
+        has_css?(".users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        has_no_css?(".post-users-popup")
+        has_no_css?(".users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)
@@ -348,7 +355,25 @@ module PageObjects
       end
 
       def click_like_reaction_for(post)
-        within_post(post) { find(".post-controls .actions .like").click }
+        post_container = post_container_for(post)
+
+        if post_container.has_css?(".discourse-reactions-reaction-button", wait: 0)
+          post_container.find(".discourse-reactions-reaction-button").click
+        else
+          post_container.find(".post-action-menu__like").click
+        end
+      end
+
+      def has_like_count_for?(post, count)
+        post_container_for(post).has_css?(
+          ".post-action-menu__like-count, .reactions-counter",
+          text: count.to_s,
+        )
+      end
+
+      def post_container_for(post)
+        post_number = post.is_a?(Post) ? post.post_number : post
+        post_by_number(post_number).ancestor(".topic-post")
       end
 
       def has_topic_map?

@@ -1191,11 +1191,11 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(post, hidden_post)
     end
 
-    it "returns hidden posts for everyone when configured" do
+    it "does not return hidden posts for anonymous users configured via everyone" do
       SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
       records = Post.where(id: [post.id, hidden_post.id])
 
-      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post, hidden_post)
+      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post)
     end
 
     it "returns hidden posts from moderated categories for category group moderators" do

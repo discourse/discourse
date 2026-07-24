@@ -41,6 +41,50 @@ module("Integration | Component | AiAdminDashboardHighlight", function (hooks) {
       .hasAttribute("aria-live", "polite", "it announces the loaded highlight");
   });
 
+  test("requests highlights for the same local dates as the dashboard sections", async function (assert) {
+    const outletArgs = {
+      period: "custom",
+      startDate: moment.parseZone("2026-05-01T00:00:00-04:00"),
+      endDate: moment.parseZone("2026-05-31T23:59:59-04:00"),
+      kpis: [],
+    };
+
+    pretender.get(
+      "/admin/plugins/discourse-ai/admin-dashboard-highlights.json",
+      (request) => {
+        assert.strictEqual(
+          request.queryParams.start_date,
+          "2026-05-01",
+          "it preserves the selected start date"
+        );
+        assert.strictEqual(
+          request.queryParams.end_date,
+          "2026-05-31",
+          "it preserves the selected end date"
+        );
+
+        return [
+          200,
+          { "Content-Type": "application/json" },
+          { highlight: "May stayed aligned with the KPI tiles." },
+        ];
+      }
+    );
+
+    await render(
+      <template>
+        <AiAdminDashboardHighlight @outletArgs={{outletArgs}} />
+      </template>
+    );
+
+    assert
+      .dom(".ai-admin-dashboard-highlight__text")
+      .hasText(
+        "May stayed aligned with the KPI tiles.",
+        "it renders the returned highlight"
+      );
+  });
+
   test("renders nothing when the endpoint fails", async function (assert) {
     pretender.get(
       "/admin/plugins/discourse-ai/admin-dashboard-highlights.json",

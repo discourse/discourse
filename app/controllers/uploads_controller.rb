@@ -373,9 +373,9 @@ class UploadsController < ApplicationController
       content_type: MiniMime.lookup_by_filename(upload.original_filename)&.content_type,
     }
 
-    if !FileHelper.is_inline_safe?(upload.original_filename)
+    if force_download? || !FileHelper.is_inline_safe?(upload.original_filename)
       opts[:disposition] = "attachment"
-    elsif params[:inline]
+    else
       opts[:disposition] = "inline"
     end
 

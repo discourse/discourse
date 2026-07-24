@@ -393,6 +393,11 @@ pt:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Pessoal"
     request_membership_pm:
       title: "Pedido de Adesão para @%{group_name}"
   education:
@@ -777,6 +782,7 @@ pt:
       labels:
         count: "Membros"
         share: "Partilhar"
+        signups: "Registos"
       levels:
         "0": "Novo"
         "1": "Básico"
@@ -1061,8 +1067,6 @@ pt:
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
-    max_topics_in_first_day: "O número máximo de tópicos que o utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
-    max_replies_in_first_day: "O número máximo de respostas que um utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc2 (membro) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc3 (habitual) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
@@ -1071,7 +1075,6 @@ pt:
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
-    top_menu: "Determine quais os itens que aparecem na navegação da página incial, e em que ordem."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     site_contact_username: "Um nome de utilizador válido de um membro do pessoal de onde enviar todas as mensagens automatizadas. Quando deixado em branco, a conta padrão do Sistema será usada."
     send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem de boas-vindas com um guia de início rápido."
@@ -1285,7 +1288,6 @@ pt:
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
-    create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
     errors:
       invalid_email: "Endereço de email inválido."

@@ -293,14 +293,20 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
+      screen_reader:
+        new_messages:
+          zero: "%{count} رسائل جديدة"
+          one: "رسالة جديدة %{count}"
+          two: "رسالتان جديدتان %{count}"
+          few: "%{count} رسائل جديدة"
+          many: "%{count} رسالة جديدة"
+          other: "%{count} رسائل جديدة"
       no_direct_message_channels: "لم تنضم إلى أي رسائل مباشرة بعد‎!"
       no_direct_message_channels_cta: "بدء محادثة"
       no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"
       no_public_channels_cta: "تصفح القنوات"
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       chat_notifications_title: "إشعارات الدردشة"
-      only_chat_push_notifications:
-        title: "إرسال الإشعارات الفورية للدردشة فقط"
       personalization_title: "التخصيص"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"
@@ -360,8 +366,6 @@ ar:
         title: "صوت إشعارات دردشة سطح المكتب"
       sounds:
         none: "لا يوجد"
-        bell: "جرس"
-        ding: "قرع"
       title: "دردشة"
       title_capitalized: "الدردشة"
       upload: "إرفاق ملف"
@@ -396,6 +400,8 @@ ar:
         filter_closed: مغلقة
         filter_archived: مؤرشفة
         filter_input_placeholder: البحث عن القناة بالاسم
+        filter_joined_all: "الكل"
+        filter_joined_joined: "تاريخ الانضمام"
       chat_message_separator:
         today: اليوم
         yesterday: الأمس
@@ -475,6 +481,9 @@ ar:
           few: "%{count} أعضاء"
           many: "%{count} عضوًا"
           other: "%{count} عضوًا"
+        preview_card:
+          log_in: "تسجيل الدخول"
+          sign_up: "الاشتراك"
       create_channel:
         threading:
           label: "تفعيل سلاسل الدردشة"
@@ -548,6 +557,14 @@ ar:
           other: "<span>لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
         single_user: "<span>لقد تفاعل %{username} بالرمز التعبيري </span>:%{emoji}:"
         multiple_users: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{username} بالرمز التعبيري </span>:%{emoji}:"
+        users_popup:
+          title:
+            zero: "%{count} تفاعل"
+            one: "تفاعل واحد (%{count})"
+            two: "تفاعلان (%{count})"
+            few: "%{count} تفاعلات"
+            many: "%{count} تفاعلًا"
+            other: "%{count} تفاعل"
         multiple_users_and_more:
           zero: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
           one: "<span>لقد تفاعل %{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري </span>:%{emoji}:"
@@ -909,7 +926,7 @@ ar:
         channel_id: "القناة"
       send_chat_message:
         channel_id: "القناة"
-        message: "رسالة"
+        message: "الرسالة"
       chat_approval:
-        message: "رسالة"
+        message: "الرسالة"
         channel_id: "القناة"

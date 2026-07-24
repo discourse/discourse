@@ -121,7 +121,6 @@ zh_TW:
         title: "桌面聊天通知聲音"
       sounds:
         none: "無"
-        bell: "鐘聲"
       title: "聊天"
       title_capitalized: "聊天"
       upload_to_channel: "上傳至 %{title}"
@@ -139,6 +138,8 @@ zh_TW:
         filter_open: 開啟
         filter_closed: 不公開
         filter_archived: 已封存
+        filter_joined_all: "全部"
+        filter_joined_joined: "建立日期"
       chat_message_separator:
         today: 今天
         yesterday: 昨天
@@ -178,6 +179,8 @@ zh_TW:
       channel:
         memberships_count:
           other: "%{count} 位成員"
+        preview_card:
+          log_in: "登入"
       create_channel:
         description: "描述"
         name: "變更名稱"

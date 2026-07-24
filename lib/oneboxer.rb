@@ -560,6 +560,8 @@ module Oneboxer
       elsif (fd.status_code || uri.nil?) && available_strategies.present?
         # Try a different oneboxing strategy, if we have any options left:
         return compute_external_onebox(url, available_strategies)
+      elsif fd.bot_challenge?
+        args[:error_message] = I18n.t("errors.onebox.bot_challenge")
       elsif fd.status_code
         args[:error_message] = I18n.t("errors.onebox.error_response", status_code: fd.status_code)
       end

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .docked-composer {
   --docked-composer-input-min-height: 2.5em;
   --docked-composer-max-width: 100%;
@@ -78,8 +80,6 @@
     gap: 0.5em;
     width: 100%;
     max-width: var(--docked-composer-max-width);
-    padding-left: var(--docked-composer-content-offset);
-    margin: 0 auto;
     box-sizing: border-box;
   }
 

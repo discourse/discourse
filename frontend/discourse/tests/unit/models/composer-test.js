@@ -576,8 +576,6 @@ module("Unit | Model | composer", function (hooks) {
   });
 
   test("composerVersion is correct when using modern 'rich text' composer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const composer = createComposer.call(this, {});
     composer.currentUser = User.current();
     composer.currentUser.set(

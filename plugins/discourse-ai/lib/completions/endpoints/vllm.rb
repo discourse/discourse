@@ -7,6 +7,15 @@ module DiscourseAi
         ENABLE_THINKING_PARSERS = %w[qwen3 gemma4 deepseek_v4].freeze
         THINKING_PARSERS = %w[granite deepseek_v3 holo2].freeze
         VLLM_REASONING_EFFORTS = %w[none low medium high].freeze
+        VLLM_REASONING_EFFORT_BY_CANONICAL = {
+          "none" => "none",
+          "minimal" => "low",
+          "low" => "low",
+          "medium" => "medium",
+          "high" => "high",
+          "xhigh" => "high",
+          "max" => "high",
+        }.freeze
 
         def self.can_contact?(llm_model)
           llm_model.provider == "vllm"
@@ -19,6 +28,7 @@ module DiscourseAi
         def decode(response_raw)
           parsed = JSON.parse(response_raw, symbolize_names: true)
           result = processor.process_message(parsed)
+          attach_tool_batch(result, parsed[:id])
 
           if output_thinking
             reasoning = parsed.dig(:choices, 0, :message, :reasoning).presence
@@ -34,6 +44,8 @@ module DiscourseAi
 
           elements = []
           (@decoder << chunk).each do |parsed_json|
+            @tool_batch_id = parsed_json[:id] if parsed_json[:id].present?
+
             if output_thinking
               reasoning = parsed_json.dig(:choices, 0, :delta, :reasoning).presence
               reasoning ||= parsed_json.dig(:choices, 0, :delta, :reasoning_content)
@@ -52,6 +64,7 @@ module DiscourseAi
             end
 
             result = processor.process_streamed_message(parsed_json)
+            attach_tool_batch(result, parsed_json[:id].presence || @tool_batch_id)
             elements << result if result
           end
 
@@ -69,9 +82,51 @@ module DiscourseAi
             @thinking = nil
           end
           result.concat(processor.finish)
+          attach_tool_batch(result, @tool_batch_id)
+          @tool_batch_id = nil
+          result
+        end
+
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+
+          if effort.present?
+            provider_effort = VLLM_REASONING_EFFORT_BY_CANONICAL[effort]
+          else
+            provider_effort = raw_custom_param("reasoning_effort")
+            effort = provider_effort
+          end
+
+          return DiscourseAi::Completions::ThinkingConfig.disabled if effort.blank?
+
+          if provider_effort.blank? || !VLLM_REASONING_EFFORTS.include?(provider_effort)
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: effort,
+            provider_effort: provider_effort,
+            enabled: provider_effort != "none",
+            explicit_none: provider_effort == "none",
+            strip_temperature: provider_effort != "none",
+            strip_top_p: provider_effort != "none",
+          )
         end
 
         private
+
+        def attach_tool_batch(result, response_id)
+          return if response_id.blank?
+
+          Array(result).each do |item|
+            next unless item.is_a?(ToolCall)
+
+            item.provider_data = item.provider_data.deep_merge(vllm: { tool_batch_id: response_id })
+          end
+        end
 
         def prepare_payload(prompt, model_params, dialect)
           payload = super
@@ -134,11 +189,7 @@ module DiscourseAi
         end
 
         def reasoning_effort
-          return @reasoning_effort if defined?(@reasoning_effort)
-
-          @reasoning_effort = raw_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !VLLM_REASONING_EFFORTS.include?(@reasoning_effort)
-          @reasoning_effort
+          thinking_config&.provider_effort
         end
 
         def raw_custom_param(key)
@@ -154,6 +205,8 @@ module DiscourseAi
 
           api_key = llm_model&.api_key || SiteSetting.ai_vllm_api_key
           headers["Authorization"] = "Bearer #{api_key}" if api_key.present?
+
+          headers.merge!(extra_request_headers)
 
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
         end

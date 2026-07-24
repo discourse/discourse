@@ -68,4 +68,19 @@ module("Unit | Service | chat-subscriptions-manager", function (hooks) {
     assert.strictEqual(channel.lastMessage, message);
     assert.strictEqual(channel.tracking.unreadCount, 0);
   });
+
+  test("new channel subscriptions use the channel from the event", async function (assert) {
+    const channel = this.fabricators.directMessageChannel({ id: 46 });
+    channel.current_user_membership = { following: true };
+    sinon.stub(this.chatChannelsManager.chatApi, "channel").throws();
+
+    this.subject._onNewChannelSubscription({ channel });
+
+    const storedChannel = await this.chatChannelsManager.find(channel.id, {
+      fetchIfNotFound: false,
+    });
+
+    assert.strictEqual(storedChannel, channel);
+    assert.true(storedChannel.currentUserMembership.following);
+  });
 });

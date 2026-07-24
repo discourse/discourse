@@ -13,14 +13,19 @@ pt_BR:
       logged_in_as: "Logado(a) como"
       permissions_header: 'Isso permitirá que "%{application_name}":'
       redirect_warning: "A autorização redirecionará você para"
-      copied: "Copiou!"
+      copy_key: "Copiar chave"
+      copied: "Copiado!"
       otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
       no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário(a)."
       generic_error: "Desculpe, não foi possível emitir as chaves de API de usuário(a). Esse recurso pode ter sido desativado pelo(a) administrador(a) do site."
       device:
         code: "Código"
         continue: "Continuar"
+        invalid_code: "Desculpe, esse código é inválido. Verifique o código e tente novamente."
+        expired_code: "Desculpe, esse código expirou ou já foi usado. Solicite um novo código do aplicativo e tente novamente."
         authorize_title: 'Autorizar "%{application_name}"'
+        expiry_notice: "Expira em: %{expires_at}"
+        no_expiry_warning: "Esta chave não expirará automaticamente. Só autorize isso se você confiar totalmente no aplicativo."
     blocks:
       ghost:
         status: "Status"
@@ -37,6 +42,10 @@ pt_BR:
         no_visible_children_hint: "Este bloco de container não foi renderizado porque nenhum de seus filhos está visível."
         condition_failed_hint: "Este bloco não foi renderizado porque suas condições falharam."
         head_hidden_tail_hint: "Este bloco não foi renderizado porque outro bloco foi renderizado primeiro no container `head`."
+    access_control:
+      manage:
+        access_permission_editor: "Editor(a)"
+        access_permission_remove: "Remover"
     carousel:
       go_to_slide: "Ir para o slide %{index}"
       previous: "Slide anterior"
@@ -93,6 +102,7 @@ pt_BR:
         x_minutes:
           one: "%{count} m"
           other: "%{count} m"
+        x_minutes_seconds: "%{minutes}m %{seconds}s"
         about_x_hours:
           one: "%{count} h"
           other: "%{count} h"
@@ -176,9 +186,12 @@ pt_BR:
     date_range_picker:
       apply: "Aplicar"
       start_date: "Data de início"
+      end_date: "Data de término"
+      date_placeholder: "aaaa/mm/dd"
       presets:
         last_7_days: "Últimos sete dias"
         last_30_days: "Últimos 30 dias"
+        last_3_months: "Últimos 3 meses"
         last_6_months: "Últimos seis meses"
         last_year: "Ano passado"
     languages:
@@ -352,6 +365,9 @@ pt_BR:
       search_placeholder: "Pesquisar"
     impersonation:
       notice: "Você está personificando %{username}"
+      time_left:
+        one: "(%{count} minuto restante)"
+        other: "(%{count} minutos restantes)"
       stop: "Parar de personificar"
     themes:
       default_description: "Padrão"
@@ -379,6 +395,8 @@ pt_BR:
         visual_overlay: "Sobreposição visual"
         ghost_blocks: "Blocos fantasmas"
         condition_debugging: "Depuração de condições"
+      plugin_outlet_debug:
+        find_on_github: "Buscar no GitHub"
       toggle_safe_mode: "Alternar modo de segurança"
       toggle_verbose_localization: "Alternar localização detalhada"
       disable_dev_tools: "Desativar ferramentas de desenvolvimento"
@@ -425,6 +443,9 @@ pt_BR:
     age: "Idade"
     joined: "Ingressou"
     admin_title: "Administração"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avançado"
+      simple_mode: "Modo simples"
     show_more: "exibir mais"
     show_help: "Opções"
     links: "Links"
@@ -472,7 +493,12 @@ pt_BR:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       select_theme:
+        action: "Selecionar tema"
+        modal_title: "Escolha um tema"
+        use_theme: "Usar tema selecionado"
         enabled: "Selecionado(a)"
+        applying_theme: "Aplicando tema..."
+        browse_all: "Gerenciar temas"
       invite_collaborators:
         title: "Convidar colaboradores"
         description: "Os primeiros membros ajudam a dar vida à sua comunidade."
@@ -603,6 +629,8 @@ pt_BR:
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       topic_bookmark: "Tópico"
+      post_bookmark: "Postagem #%{post_number}"
+      jump_to_post: "Ir para #%{post_number}"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
@@ -681,7 +709,10 @@ pt_BR:
       continue_as_guest: "Continuar como convidado"
       be_first_to_reply: "Seja o primeiro a responder!"
       editing_post: "Editando postagem"
+      reply_placeholder: "Escreva uma resposta..."
       signin_flow:
+        share_session_title: "Faça login no %{site_name}"
+        signin_required_title: "Faça login no %{site_name}"
         cancel: "Cancelar"
     topic_count_all:
       one: "Veja %{count} novo tópico"
@@ -1527,6 +1558,7 @@ pt_BR:
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
+        title: "Agendamento de notificações"
         label: "Ativar agendamento de notificações personalizada"
         tip: "Fora desse horário, suas notificações serão pausadas."
         midnight: "Meia-noite"
@@ -1570,8 +1602,16 @@ pt_BR:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
+        label: "Notificações ao vivo"
+        push_level:
+          none: "Desativados"
+          all: "Ativados"
         not_supported: "Notificações não compatíveis com este navegador. Desculpe."
+        perm_default: "Ativar notificações"
+        perm_denied_btn: "Permissão negada"
         perm_denied_expl: "Você negou permissão para notificações. Permita as notificações nas configurações do seu navegador."
+        disable: "Desativar notificações"
+        enable: "Ativar notificações"
         each_browser_note: "Observação: é preciso alterar esta configuração em todos os navegadores que você usar. Todas as notificações serão desativadas se você pausar as notificações no menu do usuário, independentemente desta configuração."
         consent_prompt: "Você quer notificações em tempo real quando as pessoas responderem às suas postagens?"
       dismiss: "Descartar"
@@ -1627,6 +1667,7 @@ pt_BR:
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
       enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
+      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -1831,7 +1872,13 @@ pt_BR:
         upcoming_changes: "Alterações previstas"
         calendar_subscriptions: "Calendário"
       calendar_subscriptions:
-        regenerate: "Regenerar URLs"
+        description: "Gere URLs de assinatura para sincronizar com seu aplicativo de calendário favorito (Google Agenda, Calendário da Apple, Outlook etc.). Essas URLs são links privados para os eventos da sua conta (lembretes favoritos, eventos do calendário etc.). Você pode revogar ou renovar as URLs de assinatura geradas a qualquer momento."
+        generate: "Gerar URLs de assinatura"
+        regenerate: "Gerar novas URLs"
+        regenerate_confirm: "Isso invalidará os URLs de assinatura de calendário existentes. Quaisquer aplicativos de calendário que usem os URLs antigos deixarão de receber atualizações. Continuar?"
+        revoke: "Revogar assinatura"
+        bookmarks: "Lembretes de Favoritos"
+        bookmarks_description: "Seus favoritos com lembrete de data"
         copy: "Copiar URL"
         copied: "Copiou!"
         add_to_google: "Google Calendar"
@@ -2066,7 +2113,7 @@ pt_BR:
         default: "(padrão)"
         any: "qualquer"
       homepage:
-        default: "(padrão)"
+        default: "Padrão"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -2267,6 +2314,32 @@ pt_BR:
           create_link_and_send_email: "Criar link e enviar e-mail"
           invite_saved_without_sending_email: "Convite salvo. Copie o link abaixo e compartilhe-o para receber acesso instantâneo ao site."
           invite_saved_with_sending_email: "O e-mail de convite foi enviado. Você também pode copiar o link abaixo e compartilhá-lo para dar acesso instantâneo ao site."
+        invite_roles:
+          member_title: "Convidar membros(as)"
+          sent_title: "Convite enviado"
+          member_tab: "Membros"
+          admin_tab: "Equipe"
+          staff_role_admin: "Administração"
+          staff_role_moderator: "Moderador(a)"
+          admin_email_label: "Endereço de e-mail"
+          email_placeholder: "nome@exemplo.com"
+          invite_by_email: "E-mail"
+          restrict_domain: "Restringir a domínio"
+          domain_placeholder: "example.com"
+          more_options: "Mais opções"
+          update: "Atualizar"
+          summary:
+            role_member: "Membro"
+            role_admin: "Administração"
+            role_moderator: "Moderador(a)"
+            method: "Compartilhamento"
+            method_email: "E-mail"
+            restriction: "Restrito a"
+            uses: "Máximo de usos"
+            expires: "Expira"
+            topic: "Tópico"
+            groups: "Grupos"
+            edit: "Editar convite"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2589,7 +2662,6 @@ pt_BR:
     created: "Criado(a)"
     created_lowercase: "criado(a)"
     trust_level: "Nível de confiança"
-    search_hint: "nome do(a) usuário(a), e-mail ou endereço IP"
     create_account:
       header_title: "Boas-vindas!"
       disclaimer: "Ao se cadastrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
@@ -2637,6 +2709,17 @@ pt_BR:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      resend: "Reenviar código"
+      resend_countdown: "Reenviar código (%{count}s)"
+      code_resent: "Enviamos um novo código."
+      use_different_email: "Usar um endereço de e-mail diferente"
+      signup_title: "Criar sua conta"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuário(a)"
+      username_placeholder: "Escolha um nome de usuário"
+      change_avatar: "Mudar avatar"
+      username_taken: "Esse nome de usuário está em uso. Tente outro."
+      username_unavailable: "Esse nome de usuário não está disponível. Tente %{suggestion}."
     login:
       header_title: "Boas-vindas outra vez"
       title: "Entrar"
@@ -2655,6 +2738,9 @@ pt_BR:
       security_key_description: "Quando você tiver sua chave física de segurança ou dispositivo móvel compatível preparado, pressione o botão Autenticar com Chave de Segurança abaixo."
       security_key_alternative: "Tentar de outra maneira"
       security_key_authenticate: "Autenticar com chave de segurança"
+      passkey_2fa_description: "Verifique sua identidade com sua senha."
+      use_passkey: "Usar senha"
+      use_security_key: "Usar chave de acesso"
       security_key_not_allowed_error: "O processo de autenticação com chave de segurança atingiu o limite de tempo ou foi cancelado."
       security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança informada."
       security_key_support_missing_error: "Seu dispositivo ou navegador atual não são compatíveis com o uso de chaves de segurança. Use um método diferente."
@@ -2729,6 +2815,7 @@ pt_BR:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
         security_key: "Em vez disso, utilizar uma chave de segurança"
+        passkey: "Use uma chave de acesso em vez disso."
       no_login_methods:
         title: "Nenhum método de entrada"
         description: "Nenhum método de entrada foi configurado. Os(as) administradores(as) podem acessar <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> para reconfigurar o site."
@@ -2773,6 +2860,13 @@ pt_BR:
       disabled: "Não exibir"
       sidebar_footer: "Exibir no rodapé da barra lateral"
       header: "Exibir no cabeçalho"
+    category_scope:
+      all: "Todas as categorias públicas e privadas"
+      public: "Categorias públicas"
+      include: "Incluir categorias selecionadas (com subcategorias)"
+      include_strict: "Incluir categorias selecionadas (sem subcategorias)"
+      exclude: "Excluir categorias selecionadas (com subcategorias)"
+      exclude_strict: "Excluir categorias selecionadas (sem subcategorias)"
     welcome_banner_location:
       above_topic_content: "Conteúdo acima do tópico"
       below_site_header: "Abaixo do cabeçalho do site"
@@ -2826,7 +2920,10 @@ pt_BR:
         categories_admin_dropdown:
           title: "Gerenciar categorias"
         tag_category_admin_dropdown:
+          edit_category: "Editar categoria"
+          edit_category_description: "Ajustar configurações para %{badge}"
           edit_tag: "Editar tag"
+          edit_tag_description: "Ajustar configurações para %{badge}"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
         bulk_select_bookmarks_dropdown:
@@ -2859,6 +2956,17 @@ pt_BR:
       default: Emojis personalizados
     filter_input:
       clear: "Limpar filtro"
+    filter_controls:
+      reset: "Redefinir filtro"
+      toggle: "Alternar filtros suspensos"
+    d_icon_grid_picker:
+      select_icon: "Selecionar ícone"
+      search_placeholder: "Buscar ícones..."
+      no_results: "Nenhum ícone encontrado"
+      results_count:
+        one: "%{count} ícone encontrado"
+        other: "%{count} ícones encontrados"
+      favorites: "Favoritos"
     shared_drafts:
       title: "Rascunhos compartilhados"
       notice: "Este tópico está visível apenas para quem puder publicar rascunhos compartilhados."
@@ -2866,6 +2974,8 @@ pt_BR:
       publish: "Publicar rascunho compartilhado"
       confirm_publish: "Você tem certeza de que deseja publicar este rascunho?"
       publishing: "Publicando tópico…"
+    gifs:
+      powered_by: "Desenvolvido por Klipy"
     codemirror:
       expression:
         sections:
@@ -2957,9 +3067,11 @@ pt_BR:
       title: "Ou aperte %{modifier}Enter"
       save_and_close: "Salvar e fechar"
       discard: "Descartar"
+      cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"
       edit_reason_placeholder: "Por que você está editando?"
       topic_featured_link_placeholder: "Inserir link mostrado no título."
@@ -3586,6 +3698,7 @@ pt_BR:
       sort:
         label: "Ordenar por"
         top: "Melhores"
+        hot: "Em alta"
         new: "Nova"
         old: "Antigo"
       load_more_children:
@@ -3595,6 +3708,8 @@ pt_BR:
         one: "%{count} resposta"
         other: "%{count} respostas"
       collapse: "Recolher"
+      category_settings:
+        convert_existing: "Converter tópicos existentes"
       no_replies: "Nenhuma resposta ainda."
       deleted_post_placeholder: "[excluído]"
       pinned_reply: "Fixada"
@@ -3654,40 +3769,8 @@ pt_BR:
       read_more_in_category: "Quer ler mais? Navegue por outros tópicos em %{categoryLink} ou <a href='%{latestLink}'>veja os tópicos mais recentes</a>."
       read_more: "Quer ler mais? <a href='%{categoryLink}'>Navegue por todas as categorias</a> ou <a href='%{latestLink}'>veja os tópicos mais recentes</a>."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
+      sr_read: "leitura"
       participant_groups: "Grupos de participantes"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Há <a href="{basePath}/unread"># tópico não lido</a>}
-              other {Há <a href="{basePath}/unread"># tópicos não lidos</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { e <a href="{basePath}/new"># novo</a> tópico restante,}
-              other { e <a href="{basePath}/new"># novos</a> tópicos restantes,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Resta <a href="{basePath}/unread"># tópico não lido</a>,}
-              other {Restam <a href="{basePath}/unread"># tópicos não lidos</a>,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Resta <a href="{basePath}/new"># novo</a> tópico,}
-              other {Restam <a href="{basePath}/new"># novos</a> tópicos,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ou navegue por outros tópicos em {categoryLink}}
-          false { ou <a href="{basePath}/latest">veja os tópicos mais recentes</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} resposta, pular para a primeira postagem"
         other: "%{count} respostas, pular para a primeira postagem"
@@ -4163,8 +4246,10 @@ pt_BR:
           one: "Visualizar %{count} local traduzido"
           other: "Visualizar %{count} locais traduzidos"
         modal:
-          title: "Traduções para postagem"
+          title: "Traduções"
           confirm_delete: "Tem certeza de que deseja excluir as traduções para \"%{languageCode}\"?"
+          post_language: "Idioma da publicação"
+          discard_language_change: "Descartar alteração"
         success: "As traduções foram atualizadas"
         post_language_selector:
           title: "Idioma da publicação"
@@ -4298,7 +4383,6 @@ pt_BR:
           one: "Tem certeza de que deseja mesclar estas postagens?"
           other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
-        diff_too_complex: "O diff é muito complexo para exibir. Por favor, tente visualizar edições menores individualmente."
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"
@@ -4377,7 +4461,7 @@ pt_BR:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "categoria&hellip;"
+      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -4427,7 +4511,6 @@ pt_BR:
       unsaved_changes: "Você tem alterações não salvas"
       slug: "Slug da categoria"
       parent: "Categoria pai"
-      slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
       errors:
@@ -4993,7 +5076,6 @@ pt_BR:
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas opcionais"
       choose_for_topic_required:
         one: "selecione pelo menos %{count} etiqueta…"
         other: "selecione pelo menos %{count} etiquetas…"
@@ -5007,7 +5089,6 @@ pt_BR:
       synonyms: "Sinônimos"
       synonyms_inline: "Estes sinônimos serão substituídos por %{base_tag_name}:"
       save: "Salvar nome e descrição da etiqueta"
-      restricted_to: "Restrito a"
       no_synonyms: "Esta tag não possui sinônimos."
       edit_synonyms: "Editar sinônimos"
       add_synonyms_label: "Adicionar sinônimos:"
@@ -5199,8 +5280,6 @@ pt_BR:
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
     no_group_messages_title: "Nenhuma mensagem de grupo encontrada"
     topic_entrance:
-      sr_jump_top_button: "Ir para primeira postagem - %{date}"
-      sr_jump_bottom_button: "Saltar para a última postagem - %{date}"
       jump_top_button_title: "Ir para a primeira postagem"
       jump_bottom_button_title: "Ir para a última postagem"
     fullscreen_table:
@@ -5254,6 +5333,10 @@ pt_BR:
           public: "Visível para todos(as)"
           always_public: "O conteúdo nesta seção é sempre público"
           more_menu: "Menu Mais"
+          localizations:
+            title: "Traduções"
+            locale: "Idioma"
+            title_label: "Título da seção"
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
@@ -5567,8 +5650,6 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
-    reset_filter: "Redefinir filtro"
-    toggle_filters: "Alternar filtros suspensos"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
@@ -5583,6 +5664,7 @@ pt_BR:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        all_groups: "Todos os grupos"
         group_engagement: "Engajamento"
         group_traffic: "Tráfego"
         group_members: "Membros"
@@ -5787,7 +5869,6 @@ pt_BR:
             apple_touch_icon:
               title: "Ícone de toque da Apple"
               description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
-              help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
             digest_logo:
               title: "Logotipo do Digest"
               description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
@@ -5795,6 +5876,9 @@ pt_BR:
             opengraph_image:
               title: "Imagem do OpenGraph"
               description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
+            og_image_preview:
+              generate: "Gerar"
+              topic_id_label: "ID do tópico"
             x_summary_large_image:
               title: "Imagem grande de resumo do X"
               description: "\"Imagem grande de resumo\" do cartão do X. Se ficar em branco, os metadados do cartão comum serão gerados por meio do OpenGraph_image, desde que não seja também um a .svg."
@@ -5970,6 +6054,23 @@ pt_BR:
               title: "Postagens no tópico"
             stats_and_thresholds:
               title: "Limites e estatísticas"
+        category_management:
+          create_category: "Criar categoria"
+          tabs:
+            settings: "Definições"
+          types:
+            all:
+              title: "Todas as categorias"
+          filter_placeholder: "Filtrar categorias"
+          table:
+            category: "Categoria"
+            visibility: "Visibilidade"
+            topics: "Tópicos"
+          visibility:
+            public: "Pública"
+          visibility_filter:
+            all: "Todas as categorias"
+            public: "Categorias públicas"
         permalinks:
           title: "Links permanentes"
           header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
@@ -6117,7 +6218,7 @@ pt_BR:
         stale_data: "Não foi realizada nenhuma verificação de atualizações ultimamente. Verifique se sidekiq esta em execução."
         version_check_pending: "Parece que você atualizou recentemente. Fantástico!"
         installed_version: "Instalado"
-        latest_version: "Última versão"
+        github: "GitHub"
         problems_found: "Algumas dicas baseadas nas configurações atuais do seu site"
         dismiss_notice: "Ignorar"
         new_features:
@@ -6177,7 +6278,6 @@ pt_BR:
               posts: "Postagens"
               share: "Compartilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Equipe"
             trust_level_pipeline:
               trust_levels:
@@ -6186,12 +6286,20 @@ pt_BR:
                 "2": "Membro"
                 "3": "Regular"
                 "4": "Líder"
+              count_title: "Número total de membros neste nível de confiança"
+              arrivals_aria:
+                one: "%{count} membro foi promovido para este nível de confiança"
+                other: "%{count} membros foram promovidos para este nível de confiança"
+              demotions_in_aria:
+                one: "%{count} membro foi rebaixado para este nível de confiança"
+                other: "%{count} membros foram rebaixados para este nível de confiança"
           search:
             title: "Pesquisar"
             table:
               searches: "Pesquisas"
               status: "Status"
         reports_section:
+          header_action: "Gerenciar"
           no_data: "Nenhum dado para exibir"
           modal:
             enabled_heading: "Ativados"
@@ -6735,6 +6843,8 @@ pt_BR:
             initial_members: "Membros expandidos"
             initial_members_description: "A quantidade de membros do grupo a ser exibida antes de adicionar um botão \"Ver mais\""
             show_description: "Incluir descrição"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Atualizar"
           toasts:
@@ -7836,11 +7946,12 @@ pt_BR:
         silence_reason: "Motivo do silêncio"
         bulk_actions:
           title: "Ações em massa"
-          admin_cant_be_deleted: "Não é possível excluir este(a) usuário(a), pois faz parte da administração"
-          too_many_or_old_posts: "Este(s) usuário(s) não poderá ser excluído(a), pois tem postagens de mais ou uma postagem muito antiga"
-          too_many_selected_users:
-            one: "Você atingiu o limite de usuários(as) de %{count} para exclusão em massa"
-            other: "Você atingiu o limite de usuários(as) de %{count} para a exclusão em massa"
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
+          suspend:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Suspender"
           delete:
             label: "Excluir usuários(as)…"
             confirmation_modal:
@@ -7868,6 +7979,9 @@ pt_BR:
           suspended: "Suspenso(a)"
           silenced: "Silenciado(a)"
           staged: "Encenado(a)"
+        activation_filter:
+          all: "Todos(as) os(as) usuários(as)"
+          activated: "Ativado(a)"
         approved: "Aprovado(a)?"
         titles:
           active: "Usuários(as) ativos(as)"
@@ -8502,6 +8616,10 @@ pt_BR:
         alt: "pré-visualização do emoji personalizado"
         delete_confirm: "Tem certeza que deseja excluir o emoji :%{name}:?"
         settings: "Configurações"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Nova"
       embedding:
         get_started: "Se você deseja incorporar Discourse em outro site, começe adicionando seu host."
         delete: "Excluir"

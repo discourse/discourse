@@ -206,6 +206,7 @@ after_initialize do
 
   if defined?(DiscourseAi)
     require_relative "lib/discourse_data_explorer/ai_query_params"
+    require_relative "lib/discourse_data_explorer/tools/find_queries"
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"
@@ -218,4 +219,16 @@ after_initialize do
       plugin: self,
     )
   end
+
+  register_stat("queries_total", stat_type: :de) { DiscourseDataExplorer::Statistics.queries_total }
+  register_stat("queries_created", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_created
+  end
+  register_stat("queries_edited", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_edited
+  end
+  register_stat("queries_executed", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_executed
+  end
+  register_stat("executions", stat_type: :de) { DiscourseDataExplorer::Statistics.executions }
 end

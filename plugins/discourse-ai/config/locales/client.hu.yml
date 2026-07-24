@@ -38,6 +38,14 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Betöltés…"
+        tool: "Művelet"
+        user: "Felhasználó"
+        approve: "Jóváhagyás"
+        reject: "Elutasítás"
+        approved: "Jóváhagyott"
+        rejected: "Elutasított"
       llm_selector:
         none: "Egyik sem"
       features:
@@ -60,6 +68,9 @@ hu:
         embeddings:
           setting_groups:
             related_topics: "Kapcsolódó témák"
+        image_caption:
+          setting_groups:
+            settings: "Beállítások"
         spam:
           name: "Kéretlen tartalom"
       modals:
@@ -68,6 +79,7 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        category_scope: "Kategóriák"
         stats:
           eta_minutes:
             one: "%{count} perc"
@@ -113,6 +125,12 @@ hu:
           select_all: "Összes kiválasztása"
           clear_all: "Összes törlése"
         delete: "Törlés"
+        thinking_effort_options:
+          none: "Egyik sem"
+          low: "Alacsony"
+          medium: "Közepes"
+          high: "Magas"
+          max: "Max"
         response_format:
           open_modal: "Szerkesztés"
           modal:
@@ -192,6 +210,7 @@ hu:
           google: "Google"
           fake: "Egyéni"
         provider_fields:
+          region: "Régió"
           adaptive_thinking: "Adaptív gondolkodás engedélyezése (Claude 4.6 modellekhez javasolt)"
           enable_thinking: "Gondolkodás engedélyezése (Gemini 2.5 modellek – token-keretet használ)"
           thinking_level: "Gondolkodási szint (Gemini 3 modellek – a következtetési mélységet szabályozza)"
@@ -211,8 +230,6 @@ hu:
           select: "Kiválasztás"
           selected: "Kiválasztott"
           try_again: "Újrapróbálkozás"
-        image_caption:
-          save_caption: "Mentés"
       embeddings:
         save: "Mentés"
         delete: "Törlés"

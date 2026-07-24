@@ -19,9 +19,11 @@ import NoticeControl from "../../components/workflows/configurators/notice-contr
 import QueryParams from "../../components/workflows/configurators/query-params";
 import SelectControl from "../../components/workflows/configurators/select-control";
 import TagsControl from "../../components/workflows/configurators/tags-control";
+import TimezoneControl from "../../components/workflows/configurators/timezone-control";
 import UrlPreview from "../../components/workflows/configurators/url-preview";
 import UserControl from "../../components/workflows/configurators/user-control";
 import UserOrGroupControl from "../../components/workflows/configurators/user-or-group-control";
+import UserSeenTriggerOptions from "../../components/workflows/configurators/user-seen-trigger-options";
 
 const FIELD_CONTROL_REGISTRY = {
   notice: { kind: "standalone", renderer: NoticeControl },
@@ -34,6 +36,10 @@ const FIELD_CONTROL_REGISTRY = {
   },
   data_table_columns: { kind: "standalone", renderer: DataTableColumns },
   query_params: { kind: "standalone", renderer: QueryParams },
+  user_seen_trigger_options: {
+    kind: "standalone",
+    renderer: UserSeenTriggerOptions,
+  },
 
   code: { kind: "field", type: "code", renderer: CodeControl },
   combo_box: { kind: "field", type: "custom", renderer: ComboBox },
@@ -65,6 +71,8 @@ const FIELD_CONTROL_REGISTRY = {
   icon: { kind: "field", type: "icon", renderer: IconControl },
   checkbox: { kind: "field", type: "checkbox", renderer: DefaultInputControl },
   textarea: { kind: "field", type: "textarea", renderer: DefaultInputControl },
+  time: { kind: "field", type: "input-time", renderer: DefaultInputControl },
+  timezone: { kind: "field", type: "custom", renderer: TimezoneControl },
 
   default: {
     kind: "field",

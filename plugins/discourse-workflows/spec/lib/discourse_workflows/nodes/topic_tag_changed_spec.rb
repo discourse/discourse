@@ -26,7 +26,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
   end
 
   describe "#output" do
-    it "returns tag change data with computed diffs" do
+    it "returns tag change data with computed diffs", :aggregate_failures do
       trigger =
         described_class.new(
           topic,
@@ -44,6 +44,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       expect(output[:added_tags]).to eq(%w[urgent])
       expect(output[:removed_tags]).to eq(%w[help])
       expect(output[:topic][:posters].map { |poster| poster[:user_id] }).to include(topic.user_id)
+      expect(output).to match_node_output_schema(described_class)
     end
 
     it "handles tags added from empty" do
@@ -73,6 +74,52 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
     it "returns true when the category parameter matches the topic category" do
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
 
+      expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
+        true,
+      )
+    end
+
+    it "matches topics in any of the configured categories" do
+      trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
+
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, topic.category_id.to_s]),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches subcategories by default but not when excluded" do
+      subcategory = Fabricate(:category, parent_category: topic.category)
+      subcategory_topic = Fabricate(:topic, category: subcategory)
+      trigger =
+        described_class.new(subcategory_topic, old_tag_names: ["bug"], new_tag_names: %w[urgent])
+
+      expect(trigger.matches?(trigger_context("category_ids" => [topic.category_id.to_s]))).to eq(
+        true,
+      )
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [topic.category_id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
+
+      expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
+    end
+
+    it "matches subcategories by default for legacy category_id-only nodes" do
+      subcategory = Fabricate(:category, parent_category: topic.category)
+      subcategory_topic = Fabricate(:topic, category: subcategory)
+      trigger =
+        described_class.new(subcategory_topic, old_tag_names: ["bug"], new_tag_names: %w[urgent])
+
       expect(trigger.matches?(trigger_context("category_id" => topic.category_id.to_s))).to eq(true)
     end
 
@@ -80,7 +127,7 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicTagChanged::V1 do
       other_category = Fabricate(:category)
       trigger = described_class.new(topic, old_tag_names: ["bug"], new_tag_names: %w[bug urgent])
 
-      expect(trigger.matches?(trigger_context("category_id" => other_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
         false,
       )
     end

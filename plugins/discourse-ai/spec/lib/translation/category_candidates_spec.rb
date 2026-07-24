@@ -2,10 +2,14 @@
 
 describe DiscourseAi::Translation::CategoryCandidates do
   describe ".get" do
-    it "returns all categories when no excluded categories are set" do
+    before do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
+    end
+
+    it "returns all categories when all categories are configured" do
       category_1 = Fabricate(:category)
       category_2 = Fabricate(:category)
-      SiteSetting.ai_translation_excluded_categories = ""
 
       categories = DiscourseAi::Translation::CategoryCandidates.get
       expect(categories).to include(category_1, category_2)
@@ -13,26 +17,51 @@ describe DiscourseAi::Translation::CategoryCandidates do
 
     it "returns private categories by default" do
       private_category = Fabricate(:private_category, group: Fabricate(:group))
-      SiteSetting.ai_translation_excluded_categories = ""
 
       expect(DiscourseAi::Translation::CategoryCandidates.get).to include(private_category)
     end
 
-    it "does not return excluded categories" do
-      included = Fabricate(:category)
-      excluded = Fabricate(:category)
-      SiteSetting.ai_translation_excluded_categories = excluded.id.to_s
+    it "returns only public categories when configured" do
+      public_category = Fabricate(:category)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      SiteSetting.ai_translation_category_scope = "public"
 
       categories = DiscourseAi::Translation::CategoryCandidates.get
-      expect(categories).to include(included)
-      expect(categories).not_to include(excluded)
+      expect(categories).to include(public_category)
+      expect(categories).not_to include(private_category)
+    end
+
+    it "includes selected categories and subcategories" do
+      parent_category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category:)
+      unselected_category = Fabricate(:category)
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = parent_category.id.to_s
+
+      categories = DiscourseAi::Translation::CategoryCandidates.get
+      expect(categories).to include(parent_category, subcategory)
+      expect(categories).not_to include(unselected_category)
+    end
+
+    it "excludes only selected categories in strict mode" do
+      parent_category = Fabricate(:category)
+      subcategory = Fabricate(:category, parent_category:)
+      SiteSetting.ai_translation_category_scope = "exclude_strict"
+      SiteSetting.ai_translation_categories = parent_category.id.to_s
+
+      categories = DiscourseAi::Translation::CategoryCandidates.get
+      expect(categories).to include(subcategory)
+      expect(categories).not_to include(parent_category)
     end
   end
 
   describe ".calculate_completion_per_locale" do
     fab!(:target_category, :category)
 
-    before { SiteSetting.ai_translation_excluded_categories = "" }
+    before do
+      SiteSetting.ai_translation_category_scope = "all"
+      SiteSetting.ai_translation_categories = ""
+    end
 
     context "when (scenario A) completion determined by category's locale" do
       it "returns done = total if all categories are in the locale" do
@@ -90,7 +119,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
     end
 
     it "returns 0 for done and total when no categories match" do
-      SiteSetting.ai_translation_excluded_categories = Category.pluck(:id).join("|")
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
 
       completion =
         DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale("pt")

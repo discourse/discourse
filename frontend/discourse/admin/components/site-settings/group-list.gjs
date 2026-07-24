@@ -3,59 +3,11 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import { AUTO_GROUPS } from "discourse/lib/constants";
+import {
+  mapEveryoneToLoggedInUsersIds,
+  mapLoggedInUsersToEveryoneForStorage,
+} from "discourse/lib/group-list-setting-aliasing";
 import ListSetting from "discourse/select-kit/components/list-setting";
-
-// TODO (martin) Remove all this indirection when
-// granular_anonymous_and_logged_in_groups_permissions is Permanent
-const EVERYONE_ID = AUTO_GROUPS.everyone.id.toString();
-const LOGGED_IN_USERS_ID = AUTO_GROUPS.logged_in_users.id.toString();
-
-function normalizeIds(ids) {
-  return ids.map((id) => id.toString());
-}
-
-function mapEveryoneToLoggedInUsersIds(ids, granularPermissionsEnabled) {
-  ids = normalizeIds(ids);
-
-  if (!granularPermissionsEnabled || !ids.includes(EVERYONE_ID)) {
-    return ids;
-  }
-
-  return [
-    ...new Set(ids.map((id) => (id === EVERYONE_ID ? LOGGED_IN_USERS_ID : id))),
-  ];
-}
-
-function mapLoggedInUsersToEveryoneForStorage(
-  ids,
-  granularPermissionsEnabled,
-  storedValue,
-  tokenSeparator
-) {
-  if (!granularPermissionsEnabled) {
-    return normalizeIds(ids);
-  }
-
-  const storedIds = normalizeIds(
-    (storedValue || "").split(tokenSeparator).filter(Boolean)
-  );
-
-  if (
-    !storedIds.includes(EVERYONE_ID) ||
-    storedIds.includes(LOGGED_IN_USERS_ID)
-  ) {
-    return normalizeIds(ids);
-  }
-
-  return [
-    ...new Set(
-      normalizeIds(ids).map((id) =>
-        id === LOGGED_IN_USERS_ID ? EVERYONE_ID : id
-      )
-    ),
-  ];
-}
 
 @tagName("")
 export default class GroupList extends Component {

@@ -7,11 +7,15 @@ class BrowserPageviewEvent < ActiveRecord::Base
   MAX_USER_AGENT_LENGTH = 1000
   MAX_NORMALIZED_REFERRER_LENGTH = 2000
   RETENTION_PERIOD = 3.months
+  SOURCE_PIGGYBACK = 1
+  SOURCE_BEACON = 2
   REDIS_QUEUE_KEY = "browser_pageview_events:pending"
   REDIS_FLUSH_LOCK_KEY = "browser_pageview_events:flush"
   REDIS_FLUSH_BATCH_SIZE = 1000
   REDIS_QUEUE_MAX_SIZE = 1_000_000
   REDIS_QUEUE_TTL = 1.day
+
+  enum :source, { piggyback: SOURCE_PIGGYBACK, beacon: SOURCE_BEACON }, scopes: false
 
   class << self
     def enqueue_for_later(payload)
@@ -73,6 +77,29 @@ class BrowserPageviewEvent < ActiveRecord::Base
       Discourse.redis.llen(REDIS_QUEUE_KEY).to_i
     end
 
+    def beacon_cutover_date
+      return if SiteSetting.use_legacy_pageviews
+      return if !UpcomingChanges.enabled?(:dashboard_improvements)
+      if !SiteSetting.trigger_browser_pageview_events &&
+           !SiteSetting.persist_browser_pageview_events
+        return
+      end
+
+      enabled_at = [
+        UpcomingChangeEvent.where(
+          upcoming_change_name: "dashboard_improvements",
+          event_type: %i[manual_opt_in automatically_promoted],
+        ).maximum(:created_at),
+        SiteSetting.where(name: "dashboard_improvements").maximum(:updated_at),
+      ].compact.max
+
+      return enabled_at.utc.to_date.tomorrow if enabled_at
+
+      ApplicationRequest.where(
+        req_type: %w[page_view_logged_in_browser_beacon page_view_anon_browser_beacon],
+      ).minimum(:date)
+    end
+
     def clear_queued!
       Discourse.redis.del(REDIS_QUEUE_KEY)
     end
@@ -131,6 +158,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         user_agent: payload[:user_agent]&.slice(0, MAX_USER_AGENT_LENGTH),
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         topic_id: payload[:topic_id],
+        source: payload[:source],
         occurred_at: payload[:occurred_at],
       }
     end
@@ -154,6 +182,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         session_id: payload[:session_id]&.slice(0, MAX_SESSION_ID_LENGTH),
         user_id: payload[:user_id],
         topic_id: payload[:topic_id],
+        source: payload[:source],
         created_at: payload[:occurred_at],
       }
     end
@@ -183,6 +212,14 @@ class BrowserPageviewEvent < ActiveRecord::Base
     RETENTION_PERIOD.ago.beginning_of_day
   end
 
+  def self.rollup_source
+    if UpcomingChanges.enabled?(:dashboard_improvements)
+      SOURCE_BEACON
+    else
+      SOURCE_PIGGYBACK
+    end
+  end
+
   before_save :truncate_fields
 
   private
@@ -210,6 +247,7 @@ end
 #  normalized_referrer_version :integer
 #  referrer                    :string(2000)
 #  score                       :integer
+#  source                      :integer          default("piggyback"), not null
 #  url                         :string(2000)     not null
 #  user_agent                  :string(1000)     not null
 #  created_at                  :datetime         not null

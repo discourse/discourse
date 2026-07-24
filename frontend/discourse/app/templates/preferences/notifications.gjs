@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
-import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
+import PushNotificationSelect from "discourse/components/push-notification-select";
 import UserNotificationSchedule from "discourse/components/user-notification-schedule";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -43,7 +43,7 @@ export default <template>
       <label class="control-label">{{i18n
           "user.desktop_notifications.label"
         }}</label>
-      <DesktopNotificationConfig />
+      <PushNotificationSelect @model={{@controller.model}} />
       <div class="instructions">{{i18n
           "user.desktop_notifications.each_browser_note"
         }}</div>

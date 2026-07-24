@@ -1,8 +1,16 @@
 plugins:
-  discourse_workflows_enabled:
+  enable_discourse_workflows:
     default: false
     client: true
     hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,admins"
+      learn_more_url: "https://meta.discourse.org/t/-/406990"
+      allow_enabled_for:
+        - everyone
+      requires_plugin_enabled: false
+      permanent_warning: false
   discourse_workflows_ai_authoring_enabled:
     default: false
     client: true

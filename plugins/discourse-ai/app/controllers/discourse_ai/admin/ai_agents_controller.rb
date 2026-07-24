@@ -460,9 +460,9 @@ module DiscourseAi
             :priority,
             :top_p,
             :temperature,
+            :thinking_effort,
             :default_llm_id,
             :user_id,
-            :max_context_posts,
             :vision_enabled,
             :vision_max_pixels,
             :rag_chunk_tokens,
@@ -476,7 +476,6 @@ module DiscourseAi
             :show_thinking,
             :forced_tool_count,
             :force_default_llm,
-            :execution_mode,
             :max_turn_tokens,
             :compression_threshold,
             :require_approval,
@@ -641,8 +640,6 @@ module DiscourseAi
           },
           user_id: {
           },
-          max_context_posts: {
-          },
           vision_enabled: {
           },
           vision_max_pixels: {
@@ -669,8 +666,6 @@ module DiscourseAi
           forced_tool_count: {
           },
           force_default_llm: {
-          },
-          execution_mode: {
           },
           max_turn_tokens: {
           },

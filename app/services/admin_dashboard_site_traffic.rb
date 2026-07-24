@@ -108,7 +108,45 @@ class AdminDashboardSiteTraffic
 
     kpis[:logged_in_share] = { value: logged_in_share } if !logged_in_share.nil?
 
+    direct_traffic = direct_traffic_value
+    kpis[:direct_traffic] = { value: direct_traffic } if !direct_traffic.nil?
+
+    if SiteSetting.persist_browser_pageview_events
+      kpis[:bounce_rate] = { value: bounce_rate_value }
+      kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
+    end
+
     kpis
+  end
+
+  def bounce_rate_value
+    sessions = session_engagement_totals[:sessions]
+    return nil if sessions.zero?
+
+    ((session_engagement_totals[:bounced].to_f / sessions) * 100).round
+  end
+
+  def average_session_duration_value
+    sessions = session_engagement_totals[:sessions]
+    return nil if sessions.zero?
+
+    (session_engagement_totals[:engaged_seconds_total].to_f / sessions).round
+  end
+
+  def session_engagement_totals
+    @session_engagement_totals ||=
+      DB
+        .query_hash(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date)
+          SELECT
+            COALESCE(SUM(sessions), 0)::bigint AS sessions,
+            COALESCE(SUM(bounced), 0)::bigint AS bounced,
+            COALESCE(SUM(engaged_seconds_total), 0)::bigint AS engaged_seconds_total
+          FROM browser_pageview_session_engagement_daily_rollups
+          WHERE date >= :start_date
+            AND date <= :end_date
+        SQL
+        .first
+        .symbolize_keys
   end
 
   def browser_pageviews_kpi(totals, prior_rows)
@@ -124,6 +162,25 @@ class AdminDashboardSiteTraffic
     return nil if login_required?
 
     totals[:human].positive? ? ((totals[:logged_in].to_f / totals[:human]) * 100).round : 0
+  end
+
+  def direct_traffic_value
+    return nil if !SiteSetting.persist_browser_pageview_events
+
+    count_column = login_required? ? "logged_in_count" : "count"
+
+    row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
+          SELECT
+            COALESCE(SUM(#{count_column}), 0)::bigint AS total,
+            COALESCE(SUM(#{count_column}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date <= :end_date
+        SQL
+
+    return nil if row.total.zero?
+
+    ((row.direct.to_f / row.total) * 100).round
   end
 
   def pageview_series(rows, include_embedded:)
@@ -178,9 +235,16 @@ class AdminDashboardSiteTraffic
 
     req_type_sql =
       if login_required?
-        "req_type = :logged_in_req_type"
+        "req_type IN (:logged_in_req_type, :logged_in_beacon_req_type)"
       else
-        "req_type IN (:logged_in_req_type, :anonymous_req_type)"
+        <<~SQL.squish
+          req_type IN (
+            :logged_in_req_type,
+            :anonymous_req_type,
+            :logged_in_beacon_req_type,
+            :anonymous_beacon_req_type
+          )
+        SQL
       end
 
     @prior_period_tracking_started =
@@ -195,6 +259,8 @@ class AdminDashboardSiteTraffic
         prior_start_date: prior_start_date,
         logged_in_req_type: selected_request_types[:logged_in],
         anonymous_req_type: selected_request_types[:anonymous],
+        logged_in_beacon_req_type: beacon_request_types[:logged_in],
+        anonymous_beacon_req_type: beacon_request_types[:anonymous],
       ).present?
   end
 
@@ -220,7 +286,22 @@ class AdminDashboardSiteTraffic
       end.merge(crawlers: "page_view_crawler", embedded: "page_view_embed")
   end
 
+  def beacon_request_types
+    @beacon_request_types ||= {
+      logged_in: ApplicationRequest.req_types["page_view_logged_in_browser_beacon"],
+      anonymous: ApplicationRequest.req_types["page_view_anon_browser_beacon"],
+    }
+  end
+
+  def beacon_cutover_date
+    return @beacon_cutover_date if defined?(@beacon_cutover_date)
+
+    @beacon_cutover_date = BrowserPageviewEvent.beacon_cutover_date
+  end
+
   def traffic_rows(range_start_date, range_end_date)
+    cutover_date = beacon_cutover_date || (range_end_date + 1.day)
+
     DB.query(
       <<~SQL,
         WITH dates AS (
@@ -234,8 +315,26 @@ class AdminDashboardSiteTraffic
         )
         SELECT
           dates.date,
-          COALESCE(SUM(CASE WHEN ar.req_type = :logged_in_req_type THEN ar.count ELSE 0 END), 0)::bigint AS logged_in,
-          COALESCE(SUM(CASE WHEN ar.req_type = :anonymous_req_type THEN ar.count ELSE 0 END), 0)::bigint AS anonymous,
+          COALESCE(
+            SUM(
+              CASE
+                WHEN dates.date < :beacon_cutover_date AND ar.req_type = :logged_in_req_type THEN ar.count
+                WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :logged_in_beacon_req_type THEN ar.count
+                ELSE 0
+              END
+            ),
+            0
+          )::bigint AS logged_in,
+          COALESCE(
+            SUM(
+              CASE
+                WHEN dates.date < :beacon_cutover_date AND ar.req_type = :anonymous_req_type THEN ar.count
+                WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :anonymous_beacon_req_type THEN ar.count
+                ELSE 0
+              END
+            ),
+            0
+          )::bigint AS anonymous,
           COALESCE(SUM(CASE WHEN ar.req_type = :crawler_req_type THEN ar.count ELSE 0 END), 0)::bigint AS crawlers,
           COALESCE(SUM(CASE WHEN ar.req_type = :embedded_req_type THEN ar.count ELSE 0 END), 0)::bigint AS embedded
         FROM dates
@@ -244,6 +343,8 @@ class AdminDashboardSiteTraffic
           AND ar.req_type IN (
             :logged_in_req_type,
             :anonymous_req_type,
+            :logged_in_beacon_req_type,
+            :anonymous_beacon_req_type,
             :crawler_req_type,
             :embedded_req_type
           )
@@ -252,8 +353,11 @@ class AdminDashboardSiteTraffic
       SQL
       start_date: range_start_date,
       end_date: range_end_date,
+      beacon_cutover_date: cutover_date,
       logged_in_req_type: selected_request_types[:logged_in],
       anonymous_req_type: selected_request_types[:anonymous],
+      logged_in_beacon_req_type: beacon_request_types[:logged_in],
+      anonymous_beacon_req_type: beacon_request_types[:anonymous],
       crawler_req_type: selected_request_types[:crawlers],
       embedded_req_type: selected_request_types[:embedded],
     )

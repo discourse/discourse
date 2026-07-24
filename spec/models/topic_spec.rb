@@ -556,6 +556,14 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#markdown_link_title" do
+    it "escapes markdown metacharacters that can break a link title" do
+      topic = Fabricate.build(:topic, title: "Party](https://evil.example) \\ oops")
+
+      expect(topic.markdown_link_title).to eq("Party\\]\\(https://evil.example\\) \\\\ oops")
+    end
+  end
+
   describe "fancy title" do
     let(:topic) { Fabricate.build(:topic, title: %{"this topic" -- has ``fancy stuff''}) }
 
@@ -2375,9 +2383,10 @@ RSpec.describe Topic do
     end
 
     it "sets topic status update user to topic creator if it is a TL4 user" do
-      tl4_topic = Fabricate.build(:topic, user: Fabricate.build(:trust_level_4, id: 998))
+      topic_creator = Fabricate(:trust_level_4)
+      tl4_topic = Fabricate.build(:topic, user: topic_creator)
       tl4_topic.set_or_create_timer(TopicTimer.types[:close], 3)
-      expect(tl4_topic.topic_timers.first.user_id).to eq(998)
+      expect(tl4_topic.topic_timers.first.user).to eq(topic_creator)
     end
 
     it "removes close topic status update if arg is nil" do
@@ -2813,6 +2822,63 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#regenerate_og_image" do
+    fab!(:topic)
+
+    before { SiteSetting.generate_topic_og_image = true }
+
+    it "clears generated OG images when the topic becomes ineligible" do
+      old_upload = Fabricate(:upload)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      topic.update_column(:og_image_upload_id, old_upload.id)
+      UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
+
+      topic.update!(category: private_category)
+
+      expect(topic.reload.og_image_upload_id).to be_nil
+      expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
+    end
+
+    it "enqueues regeneration after each ten replies" do
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, posts_count: 10)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      topic.update_column(:posts_count, 20)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+
+    it "enqueues regeneration after each ten likes" do
+      post = Fabricate(:post, topic: topic)
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, like_count: 9)
+
+      post.update_column(:like_count, 10)
+
+      expect { topic.update_action_counts }.to change { Jobs::GenerateTopicOgImage.jobs.size }.by(1)
+
+      post.update_column(:like_count, 11)
+
+      expect { topic.reload.update_action_counts }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      post.update_column(:like_count, 20)
+
+      expect { topic.reload.update_action_counts }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+  end
+
   describe "trash!" do
     fab!(:topic)
 
@@ -2922,17 +2988,20 @@ RSpec.describe Topic do
     before do
       SiteSetting.max_topics_in_first_day = 1
       SiteSetting.max_replies_in_first_day = 1
+      SiteSetting.tl1_max_topics_in_first_day = 2
+      SiteSetting.tl1_max_replies_in_first_day = 2
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
       RateLimiter.enable
     end
 
-    it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
+    it "limits TL0 users to max_topics_in_first_day and max_replies_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
 
       freeze_time(start)
 
-      user = Fabricate(:user, refresh_auto_groups: true)
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[0], refresh_auto_groups: true)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 10.minutes)
@@ -2947,26 +3016,52 @@ RSpec.describe Topic do
       )
     end
 
-    it "starts counting when they make their first post/topic" do
+    it "limits TL1 users to TL1 first day limits" do
       start = Time.now.tomorrow.beginning_of_day
 
       freeze_time(start)
 
-      user = Fabricate(:user, refresh_auto_groups: true)
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      topic_id = create_post(user: user).topic_id
+
+      freeze_time(start + 10.minutes)
+      create_post(user: user)
+
+      freeze_time(start + 20.minutes)
+      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+
+      freeze_time(start + 30.minutes)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 40.minutes)
+      create_post(user: user, topic_id: topic_id)
+
+      freeze_time(start + 50.minutes)
+      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(
+        RateLimiter::LimitExceeded,
+      )
+    end
+
+    it "starts counting when the account is created" do
+      start = Time.now.tomorrow.beginning_of_day
+
+      freeze_time(start)
+
+      user =
+        Fabricate(:user, created_at: start, trust_level: TrustLevel[0], refresh_auto_groups: true)
 
       freeze_time(start + 25.hours)
       topic_id = create_post(user: user).topic_id
 
       freeze_time(start + 26.hours)
-      expect { create_post(user: user) }.to raise_error(RateLimiter::LimitExceeded)
+      create_post(user: user)
 
       freeze_time(start + 27.hours)
       create_post(user: user, topic_id: topic_id)
 
       freeze_time(start + 28.hours)
-      expect { create_post(user: user, topic_id: topic_id) }.to raise_error(
-        RateLimiter::LimitExceeded,
-      )
+      create_post(user: user, topic_id: topic_id)
     end
   end
 
@@ -3166,6 +3261,27 @@ RSpec.describe Topic do
 
       expect(topic.save).to be_truthy
       expect(topic.featured_link).to eq("https://github.com/discourse/discourse")
+    end
+
+    it "normalizes unsafe characters in the featured link before saving" do
+      topic.featured_link = 'https://example.com/?"onclick="alert(1)"'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://example.com/?%22onclick=%22alert(1)%22")
+    end
+
+    it "preserves an already percent-encoded featured link without double-encoding" do
+      topic.featured_link = "https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b"
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b")
+    end
+
+    it "rejects a featured link that cannot be normalized instead of storing it raw" do
+      topic.featured_link = 'https://evil.com/?"onclick="alert(1)"&pad=' + ("a" * 2000)
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
     end
 
     context "when category restricts present" do

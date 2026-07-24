@@ -179,13 +179,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
     users =
       rows.map do |row|
-        {
+        format_user(
+          row,
           id: row.id,
-          username: row.username,
-          name: row.name,
           avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
           reaction: row.reaction,
-        }
+        )
       end
 
     render_json_dump(users: users, total_rows: total)
@@ -296,6 +295,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     guardian.filter_hidden_posts(posts)
   end
 
+  def format_user(user, avatar_template:, **extra_attributes)
+    attributes = { username: user.username }
+    attributes[:name] = user.name if SiteSetting.enable_names?
+    attributes[:avatar_template] = avatar_template
+    attributes.merge!(extra_attributes)
+  end
+
   def get_users(reaction)
     DiscourseReactions::PostReactionsQuery
       .apply_ignored_users_filter(
@@ -307,13 +313,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
       .map do |reaction_user|
-        {
-          username: reaction_user.user.username,
-          name: reaction_user.user.name,
+        format_user(
+          reaction_user.user,
           avatar_template: reaction_user.user.avatar_template,
           can_undo: reaction_user.can_undo?,
           created_at: reaction_user.created_at.to_s,
-        }
+        )
       end
   end
 
@@ -344,13 +349,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def format_like_user(like)
-    {
-      username: like.user.username,
-      name: like.user.name,
+    format_user(
+      like.user,
       avatar_template: like.user.avatar_template,
       can_undo: guardian.can_delete_post_action?(like),
       created_at: like.created_at.to_s,
-    }
+    )
   end
 
   def format_likes_users(likes)
@@ -369,13 +373,15 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
+    return unless (topic = post.topic)
+
     message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
 
     opts = {}
-    secure_audience = post.topic.secure_audience_publish_messages
+    secure_audience = topic.secure_audience_publish_messages
     opts = secure_audience if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
 
-    MessageBus.publish("/topic/#{post.topic.id}/reactions", message, opts)
+    MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
   end
 
   def secure_reaction_users!(reaction_users)

@@ -108,8 +108,6 @@ ko:
       no_public_channels_cta: "채널 찾아보기"
       kicked_from_channel: "더 이상 이 채널에 접근할 수 없습니다."
       chat_notifications_title: "채팅 알림"
-      only_chat_push_notifications:
-        title: "채팅 푸시 알림만 보내기"
       open: "채팅 열기"
       placeholder_channel: "%{channelName}에서 채팅"
       placeholder_thread: "스레드에서 채팅"
@@ -162,6 +160,8 @@ ko:
         filter_closed: 닫힘
         filter_archived: 보관됨
         filter_input_placeholder: 이름으로 채널 검색
+        filter_joined_all: "모두"
+        filter_joined_joined: "가입"
       chat_message_separator:
         today: 오늘
         yesterday: 어제
@@ -212,6 +212,8 @@ ko:
         no_memberships_found: 회원을 찾을 수 없음
         memberships_count:
           other: "회원 %{count}명"
+        preview_card:
+          log_in: "로그인"
       create_channel:
         choose_category:
           label: "카테고리 선택"

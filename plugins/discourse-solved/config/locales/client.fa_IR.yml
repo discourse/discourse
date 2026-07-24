@@ -12,6 +12,16 @@ fa_IR:
           kpi:
             accepted_solutions:
               label: "راه حل مورد قبول"
+        sections:
+          support:
+            answerers:
+              staff: "همکاران"
+              member: "اعضاء"
+              basic: "پایه‌ای"
+            response_time:
+              buckets:
+                lt_1h: "< ۱ ساعت"
+                gt_24h: "> ۲۴ ساعت"
   js:
     notifications:
       alt:

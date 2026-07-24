@@ -78,6 +78,7 @@ module DiscourseWorkflows
       def resolve_parameter_value(value, schema = nil)
         return value if no_data_expression?(schema)
         return resolve_fixed_collection_value(value, schema) if fixed_collection_schema?(schema)
+        return resolve_collection_value(value, schema) if collection_schema?(schema)
 
         resolved_value =
           case value
@@ -115,6 +116,29 @@ module DiscourseWorkflows
           row_schema = fixed_collection_row_schema(schema, group_name)
           resolve_fixed_collection_group_value(group_value, row_schema)
         end
+      end
+
+      def resolve_collection_value(value, schema)
+        if value.is_a?(Hash)
+          return(
+            value.transform_values.with_index do |option_value, index|
+              option_name = value.keys[index]
+              option_schema = collection_option_schema(schema, option_name)
+              resolve_parameter_value(option_value, option_schema)
+            end
+          )
+        end
+
+        resolve_parameter_value(value, schema_value(schema, :item_schema))
+      end
+
+      def collection_option_schema(schema, option_name)
+        option =
+          Array(schema_value(schema, :options)).find do |entry|
+            (schema_value(entry, :name) || "").to_s == option_name.to_s
+          end
+
+        option&.except(:name, "name", :display_name, "display_name")
       end
 
       def resolve_fixed_collection_group_value(value, row_schema)
@@ -181,7 +205,11 @@ module DiscourseWorkflows
       end
 
       def fixed_collection_schema?(schema)
-        schema_value(schema, :type) == :fixed_collection
+        schema_value(schema, :type).to_s == "fixed_collection"
+      end
+
+      def collection_schema?(schema)
+        schema_value(schema, :type).to_s == "collection"
       end
 
       def no_data_expression?(schema)
@@ -189,7 +217,7 @@ module DiscourseWorkflows
       end
 
       def coerce_parameter_value(value, schema)
-        return value if schema_value(schema, :type) != :boolean
+        return value if schema_value(schema, :type).to_s != "boolean"
 
         BOOLEAN_TYPE.cast(value) == true
       end

@@ -1,4 +1,4 @@
-.tag-livestream.chat-enabled.archetype-regular {
+.livestream-topic.chat-enabled.archetype-regular {
   // we need to fullscreen the header icons to match the chat panel
   // being on the right side of the screen
   .d-header-wrap .wrap {
@@ -37,6 +37,24 @@
 
     .chat-drawer {
       height: 100%;
+    }
+  }
+
+  .discourse-calendar-livestream-zoom-entry {
+    width: min(100%, 1444px);
+    margin-left: auto;
+    margin-right: auto;
+
+    &__frame {
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--primary-low);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--secondary);
+      display: none;
     }
   }
 }

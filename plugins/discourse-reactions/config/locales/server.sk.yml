@@ -16,8 +16,6 @@ sk:
     first_reaction:
       name: Prvá reakcia
       description: Reagoval na príspevok
-      long_description: |
-        Tento odznak sa udeľuje pri prvej reakcii na príspevok. Reagovanie na príspevky je skvelý spôsob, ako dať ostatným členom komunity vedieť, že to, čo uverejnili, bolo zaujímavé, užitočné, cool alebo zábavné. Podeľte sa o svoju reakciu!
   reports:
     reactions:
       title: "Reakcie"

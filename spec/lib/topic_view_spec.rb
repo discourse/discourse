@@ -1108,6 +1108,19 @@ RSpec.describe TopicView do
         expect(topic_view_for_post(2).image_url).to eq(nil)
         expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
+
+      it "uses the generated OG image only for eligible topics" do
+        SiteSetting.generate_topic_og_image = true
+        og_upload = Fabricate(:image_upload)
+        topic.update_column(:og_image_upload_id, og_upload.id)
+
+        expect(topic_view_for_post(1).image_url).to end_with(og_upload.url)
+
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        topic.update_column(:category_id, private_category.id)
+
+        expect(TopicView.new(topic.id, admin, post_number: 1).image_url).to eq(nil)
+      end
     end
   end
 

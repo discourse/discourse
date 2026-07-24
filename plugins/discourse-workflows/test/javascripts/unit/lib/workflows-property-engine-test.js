@@ -67,6 +67,35 @@ module("Unit | Utility | workflows property engine", function () {
     );
   });
 
+  test("falls back to the shared property_engine.fields scope", function (assert) {
+    assert.strictEqual(
+      propertyLabel("trigger:topic_created", "category_ids"),
+      "Categories"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:topic_created", "category_ids"),
+      "Only trigger for topics in these categories. Leave empty to match all categories."
+    );
+    assert.strictEqual(
+      propertyPlaceholder("trigger:topic_closed", "category_ids"),
+      "All categories"
+    );
+    assert.strictEqual(
+      propertyLabel("trigger:topic_tag_changed", "include_subcategories"),
+      "Include subcategories"
+    );
+
+    // node-scoped keys win over the shared scope
+    assert.strictEqual(
+      propertyLabel("trigger:post_moved", "category_ids"),
+      "Destination categories"
+    );
+    assert.strictEqual(
+      propertyDescription("trigger:stale_topic", "category_ids"),
+      "Only consider topics in these categories. Leave empty to match all categories."
+    );
+  });
+
   test("resolves dynamic value hints for expression fields", function (assert) {
     assert.strictEqual(
       propertyDynamicValueHint("action:topic", "category_id", {

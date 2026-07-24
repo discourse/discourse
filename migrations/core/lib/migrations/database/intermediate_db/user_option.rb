@@ -47,6 +47,7 @@ module Migrations
             notification_level_when_replying,
             notify_on_linked_posts,
             oldest_search_log_date,
+            push_notification_level,
             seen_popups,
             show_original_content,
             sidebar_link_to_filtered_list,
@@ -62,7 +63,7 @@ module Migrations
             watched_precedence_over_muted
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -106,6 +107,7 @@ module Migrations
         # @param notification_level_when_replying                 [Integer, nil]
         # @param notify_on_linked_posts                           [Boolean, nil]
         # @param oldest_search_log_date                           [Time, nil]
+        # @param push_notification_level                          [Integer, nil]
         # @param seen_popups                                      [Integer, nil]
         # @param show_original_content                            [Boolean, nil]
         # @param sidebar_link_to_filtered_list                    [Boolean, nil]
@@ -159,6 +161,7 @@ module Migrations
           notification_level_when_replying: nil,
           notify_on_linked_posts: nil,
           oldest_search_log_date: nil,
+          push_notification_level: nil,
           seen_popups: nil,
           show_original_content: nil,
           sidebar_link_to_filtered_list: nil,
@@ -212,6 +215,7 @@ module Migrations
             notification_level_when_replying,
             Migrations::Database.format_boolean(notify_on_linked_posts),
             Migrations::Database.format_datetime(oldest_search_log_date),
+            push_notification_level,
             seen_popups,
             Migrations::Database.format_boolean(show_original_content),
             Migrations::Database.format_boolean(sidebar_link_to_filtered_list),

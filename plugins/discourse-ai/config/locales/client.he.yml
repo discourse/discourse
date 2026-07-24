@@ -18,7 +18,6 @@ he:
       dashboard:
         emotion:
           title: "רגש"
-          description: "הטבלה מפרטת את כמות הפוסטים שסווגו עם רגש שנקבע. הסיווג נעשה בעזרת המודל ‚SamLowe/roberta-base-go_emotions’."
         reports:
           filters:
             group_by:
@@ -191,6 +190,14 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      ai_tool_approval:
+        loading: "בטעינה…"
+        tool: "פעולה"
+        user: "משתמש"
+        approve: "אישור"
+        reject: "לדחות"
+        approved: "אושר"
+        rejected: "נדחה"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
       llm_selector:
@@ -259,9 +266,11 @@ he:
           translate: "תרגום"
           markdown_tables: "יצירת טבלה ב־Markdown"
           custom_prompt: "בקשה מותאמת אישית"
-          image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+        image_caption:
+          setting_groups:
+            settings: "הגדרות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -293,6 +302,7 @@ he:
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
         supported_locales: "שפות נתמכות"
         supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
+        category_scope: "קטגוריות"
         admin_actions:
           translation_settings: "הגדרות תרגום"
           localization_settings: "הגדרות התאמת שפה"
@@ -427,8 +437,6 @@ he:
         overwrite: "לדרוס"
         description: "תיאור"
         no_llm_selected: "לא נבחר דגם שפה"
-        max_context_posts: "כמות מרבית של פוסטים להקשר"
-        max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
         vision_max_pixel_sizes:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
@@ -458,6 +466,12 @@ he:
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
         top_p: "ה־P המובילים"
         top_p_help: "ה־P המובילים לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 1.0)"
+        thinking_effort_options:
+          none: "ללא"
+          low: "נמוכה"
+          medium: "בינונית"
+          high: "גבוהה"
+          max: "מרבי"
         priority: "עדיפות"
         tool_options: "אפשרויות כלי"
         rag_conversation_chunks: "חיפוש בחלקי הדיון"
@@ -601,6 +615,7 @@ he:
           group: "קבוצה"
           max_tokens: "כמות אסימונים מרבית"
           max_usages: "כמות שימושים מרבית"
+          max_cost: "עלות מרבית"
           duration: "משך"
           confirm_delete: "למחוק את המכסה הזאת?"
           add: "הוספת מכסה"
@@ -611,14 +626,16 @@ he:
             week: "7 ימים"
             custom: "התאמה אישית…"
           hours: "שעות"
-          max_tokens_required: "חובה להגדיר אם לא הוגדרה כמות שימושים מרבית"
-          max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
+          max_tokens_required: "חייב להיות מוגדר אם שימושים מרביים ועלות מרבית לא מוגדרות"
+          max_usages_required: "חובה להגדיר אם כמות אסימונים מרבית ועלות מרבית לא מוגדרות"
+          max_cost_help: "העלות המרבית המשוערת שכל משתמש בקבוצה זו יכול להוציא על מודל הבינה המלאכותית הזה במהלך פרק הזמן שצוין. העלות מבוססת על מחירי הקלט, הפלט, הקלט במטמון וכתיבה למטמון שהוגדרו עבור המודל."
+          max_cost_required: "חובה להגדיר אם כמות אסימונים מרבית וכמות שימושים מרבית לא מוגדרות"
         credit_allocation:
           next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
           ai_bot: "בוט בינה מלאכותית"
           ai_helper: "מסייע (%{agent})"
-          ai_helper_image_caption: "כותרת תמונה"
+          ai_image_caption: "כותרת תמונה"
           ai_summarization: "סיכום"
           ai_embeddings_semantic_search: "חיפוש בינה מלאכותית"
           ai_spam: "ספאם"
@@ -634,7 +651,6 @@ he:
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-1-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-4-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -680,7 +696,7 @@ he:
         provider_fields:
           access_key_id: "מזהה מפתח גישה ל־AWS Bedrock"
           role_arn: "ARN של AWS Bedrock"
-          region: "אזור של AWS Bedrock"
+          region: "אזור"
           organization: "מזהה ארגון OpenAI כרשות"
           disable_system_prompt: "השבתת הודעת מערכת בבקשות"
           enable_native_tool: "הפעלת תמיכה בכלים מובנים"
@@ -701,11 +717,6 @@ he:
         description: "נא לבחור באחת מהאפשרויות להלן והבינה המלאכותית תציע לך גרסה חדשה של הטקסט."
         selection_hint: "עצה: אפשר לבחור חלק מהטקסט בטרם פתיחת המסייע כדי לשכתב רק את החלק הזה."
         suggest_errors:
-          too_many_tags:
-            one: "יכולה להיות לך עד תגית אחת"
-            two: "יכולות להיות לך עד שתי תגיות"
-            many: "יכולות להיות לך עד %{count} תגיות"
-            other: "יכולות להיות לך עד %{count} תגיות"
           no_suggestions: "אין הצעות זמינות"
         missing_content: "נא למלא קצת תוכן כדי לחולל הצעות."
         context_menu:
@@ -739,11 +750,6 @@ he:
           select: "בחירה"
           selected: "נבחרים"
           try_again: "ניסיון נוסף"
-        image_caption:
-          button_label: "מתן כותרת עם בינה מלאכותית"
-          generating: "הכותרת מתחוללת…"
-          credits: "הכותרת נוספה ע״י בינה מלאכותית"
-          save_caption: "שמירה"
         no_content_error: "יש להוסיף קודם תוכן כדי לבצע עליו פעולות בינה מלאכותית"
       errors:
         credit_limit_dialog:
@@ -811,7 +817,7 @@ he:
         click_to_run_label: "הרצת תוצר"
       ai_bot:
         title: "בוט בינה מלאכותית"
-        llm: "מודל"
+        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"
@@ -917,11 +923,6 @@ he:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
           regenerate_summaries_option: "תקצירי נושאים."
-          regenerate_gists_success:
-            one: "התקציר הקצר נוצר מחדש בהצלחה"
-            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
-            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"

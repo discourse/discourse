@@ -37,6 +37,10 @@ es:
         no_visible_children_hint: "Este bloque contenedor no se representa porque ninguno de sus elementos secundarios es visible."
         condition_failed_hint: "Este bloque no se representa porque no se cumplen sus condiciones."
         head_hidden_tail_hint: "Este bloque no se representa porque otro bloque se representó primero en el contenedor «head»."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Eliminar"
     carousel:
       go_to_slide: "Ir a la diapositiva %{index}"
       previous: "Diapositiva anterior"
@@ -427,6 +431,9 @@ es:
     age: "Edad"
     joined: "Registrado"
     admin_title: "Administrador"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avanzado"
+      simple_mode: "Modo simple"
     show_more: "mostrar más"
     show_help: "Opciones"
     links: "Enlaces"
@@ -1579,6 +1586,9 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
+        push_level:
+          none: "Desactivado"
+          all: "Activado"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
         each_browser_note: "Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste."
@@ -2084,7 +2094,7 @@ es:
         default: "(por defecto)"
         any: "cualquiera"
       homepage:
-        default: "(por defecto)"
+        default: "Por defecto"
       password_confirmation:
         title: "Vuelve a introducir la contraseña"
       invite_code:
@@ -2285,6 +2295,31 @@ es:
           create_link_and_send_email: "Crear enlace y enviar correo electrónico"
           invite_saved_without_sending_email: "Invitación guardada. Copia el enlace de abajo y compártelo para conceder acceso instantáneo a este sitio."
           invite_saved_with_sending_email: "Se ha enviado el correo electrónico de invitación. También puedes copiar el enlace de abajo y compartirlo para conceder acceso instantáneo a este sitio."
+        invite_roles:
+          member_title: "Invitar a miembros"
+          sent_title: "Invitación enviada"
+          member_tab: "Miembros"
+          admin_tab: "Personal"
+          staff_role_admin: "Administrador"
+          staff_role_moderator: "Moderador"
+          admin_email_label: "Dirección de correo electrónico"
+          email_placeholder: "nombre@ejemplo.com"
+          invite_by_email: "Correo electrónico"
+          restrict_domain: "Restringir a un dominio"
+          more_options: "Más opciones"
+          update: "Actualizar"
+          summary:
+            role_member: "Miembro"
+            role_admin: "Administrador"
+            role_moderator: "Moderador"
+            method: "Compartir"
+            method_email: "Correo electrónico"
+            restriction: "Restringido a"
+            uses: "Máximo de usos"
+            expires: "Caduca"
+            topic: "Tema"
+            groups: "Grupos"
+            edit: "Editar invitación"
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2607,7 +2642,6 @@ es:
     created: "Creado"
     created_lowercase: "creado"
     trust_level: "Nivel de confianza"
-    search_hint: "usuario, correo electrónico o dirección IP"
     create_account:
       header_title: "¡Hola!"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
@@ -2655,6 +2689,9 @@ es:
       email_label: "Correo electrónico"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Crea tu cuenta"
+      account_ready_continue: "Continuar"
+      username_label: "Nombre de usuario"
     login:
       header_title: "Bienvenido/a de vuelta"
       title: "Iniciar sesión"
@@ -2881,6 +2918,9 @@ es:
       default: Emojis personalizados
     filter_input:
       clear: "Limpiar filtro"
+    filter_controls:
+      reset: "Quitar filtro"
+      toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
       search_placeholder: "Buscar iconos..."
@@ -2992,6 +3032,7 @@ es:
       draft_saved: "¡Borrador guardado!"
       users_placeholder: "Añadir usuarios o grupos"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
+      title_placeholder_redesign: "Título"
       title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué estás editando?"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
@@ -3673,6 +3714,7 @@ es:
       sort:
         label: "Ordenar por"
         top: "Destacados"
+        hot: "Caliente"
         new: "Nuevo"
       load_more_children:
         one: "%{count} respuesta más"
@@ -3740,40 +3782,8 @@ es:
       read_more_in_category: "¿Quieres leer más? Explora otros temas en %{categoryLink} o <a href='%{latestLink}'>consulta los últimos temas</a>."
       read_more: "¿Quieres leer más? <a href='%{categoryLink}'>Examina todas las categorías</a> o <a href='%{latestLink}'>consulta los últimos temas</a>."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
+      sr_read: "leer"
       participant_groups: "Grupos participantes"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/unread"># sin leer</a>}
-              other {Hay <a href="{basePath}/unread"># sin leer</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { y <a href="{basePath}/new"># tema nuevo</a> restante,}
-              other { y <a href="{basePath}/new"># temas nuevos</a> restantes,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/unread"># tema nuevo</a> restante,}
-              other {Hay <a href="{basePath}/unread"># temas nuevos</a> restantes,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Hay <a href="{basePath}/new"># nuevo</a> restante,}
-              other {Hay <a href="{basePath}/new"># nuevos</a> restantes,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { o explora otros temas en {categoryLink}}
-          false { o <a href="{basePath}/latest">consulta otros temas</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} respuesta, ve a la primera publicación"
         other: "%{count} respuestas, ve a la primera publicación"
@@ -4256,8 +4266,9 @@ es:
           one: "Ver %{count} traducción a idioma local"
           other: "Ver %{count} traducciones a idiomas locales"
         modal:
-          title: "Traducciones de la publicación"
+          title: "Traducciones"
           confirm_delete: "¿Seguro que quieres eliminar las traducciones de «%{languageCode}»?"
+          discard_language_change: "Descartar cambio"
         success: "Las traducciones se han actualizado correctamente"
         post_language_selector:
           none: "No establecido"
@@ -4389,7 +4400,6 @@ es:
           one: "¿Seguro que quieres fusionar estas publicaciones?"
           other: "¿Seguro que quieres fusionar estas %{count} publicaciones?"
       revisions:
-        diff_too_complex: "La diferencia es demasiado compleja para mostrarla. Intenta ver las ediciones individuales más pequeñas."
         locale:
           no_locale_set: "No hay ningún idioma establecido"
           locale_removed: "Idioma eliminado"
@@ -4468,7 +4478,7 @@ es:
     category:
       none: "(sin categoría)"
       all: "Todas las categorías"
-      choose: "categoría&hellip;"
+      choose: "Categoría&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoría"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -4526,7 +4536,6 @@ es:
       unsaved_changes: "Tienes cambios sin guardar"
       slug: "Slug de la categoría"
       parent: "Categoría principal"
-      slug_placeholder: "(Opcional) palabras-separadas-por-guiones para URL"
       creation_error: Se produjo un error al crear la categoría.
       save_error: Se produjo un error al guardar la categoría
       errors:
@@ -5098,7 +5107,6 @@ es:
       selector_no_tags: "sin etiquetas"
       selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"
-      choose_for_topic: "etiquetas (opcional)"
       choose_for_topic_required:
         one: "selecciona al menos %{count} etiqueta…"
         other: "selecciona al menos %{count} etiquetas…"
@@ -5112,7 +5120,6 @@ es:
       synonyms: "Sinónimos"
       synonyms_inline: "Estos sinónimos se sustituirán por %{base_tag_name}:"
       save: "Guardar el nombre y la descripción de la etiqueta"
-      restricted_to: "Restringido a"
       no_synonyms: "Esta etiqueta no tiene sinónimos."
       edit_synonyms: "Editar sinónimos"
       add_synonyms_label: "Añadir sinónimos:"
@@ -5304,8 +5311,6 @@ es:
       no_read_topics_body: "Cuando empieces a leer temas, los verás aquí en una lista. Puedes empezar a buscar temas que te interesen en <a href='%{topUrl}'>Destacados</a>, la lista de <a href='%{categoriesUrl}'>Categorías</a> o buscando palabras %{searchIcon}"
     no_group_messages_title: "No hay ningún mensaje en el grupo"
     topic_entrance:
-      sr_jump_top_button: "Ir a la primera publicación - %{date}"
-      sr_jump_bottom_button: "Ir a la última publicación - %{date}"
       jump_top_button_title: "Ir a la primera publicación"
       jump_bottom_button_title: "Ir a la última publicación"
     fullscreen_table:
@@ -5359,6 +5364,10 @@ es:
           public: "Visible para todos"
           always_public: "El contenido de esta sección es siempre público"
           more_menu: "Menú Más"
+          localizations:
+            title: "Traducciones"
+            locale: "Idioma"
+            title_label: "Título de la sección"
           links:
             add: "Añadir otro enlace"
             delete: "Eliminar enlace"
@@ -5672,8 +5681,6 @@ es:
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
-    reset_filter: "Quitar filtro"
-    toggle_filters: "Activar/desactivar filtros desplegables"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -5688,6 +5695,7 @@ es:
         title: "Lista de informes disponibles"
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
+        all_groups: "Todos los grupos"
         group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"
@@ -5901,7 +5909,6 @@ es:
             apple_touch_icon:
               title: "Icono táctil de Apple"
               description: "Icono usado para dispositivos táctiles de Apple. Si se deja en blanco, se usará large_icon."
-              help_text: "El tamaño recomendado es de 180 x 180 píxeles. No se recomienda usar fondo transparente."
             digest_logo:
               title: "Logotipo de Digest"
               description: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de tu sitio. Si se deja en blanco, se utilizará la imagen del «logo»."
@@ -5909,6 +5916,9 @@ es:
             opengraph_image:
               title: "Imagen de OpenGraph"
               description: "Imagen de gráfico abierto por defecto, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+            og_image_preview:
+              generate: "Generar clave de API"
+              topic_id_label: "ID del tema"
             x_summary_large_image:
               title: "Imagen grande de resumen de X"
               description: "Tarjeta de X «imagen grande de resumen». Si se deja en blanco, se generan metadatos de tarjeta normales usando OpenGraph_image, siempre y cuando no sea también un archivo .svg."
@@ -6083,6 +6093,22 @@ es:
               title: "Publicaciones y temas"
             stats_and_thresholds:
               title: "Estadísticas y umbrales"
+        category_management:
+          create_category: "Crear categoría"
+          tabs:
+            settings: "Ajustes"
+          types:
+            all:
+              title: "Todas las categorías"
+          filter_placeholder: "Filtrar categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidad"
+            topics: "Temas"
+          visibility:
+            public: "Público"
+          visibility_filter:
+            all: "Todas las categorías"
         permalinks:
           title: "Enlaces permanentes"
           header_description: "Redirecciones para URL que no existan ya en el foro"
@@ -6230,7 +6256,7 @@ es:
         stale_data: "No se ha realizado recientemente ninguna revisión de actualizaciones. Asegúrate de que sidekiq esté funcionando."
         version_check_pending: "Parece que has actualizado recientemente. ¡Fantástico!"
         installed_version: "Instalada"
-        latest_version: "Última"
+        github: "GitHub"
         problems_found: "Algunos consejos con base en tus ajustes actuales"
         dismiss_notice: "Ignorar"
         new_features:
@@ -6290,7 +6316,6 @@ es:
               posts: "Publicaciones"
               share: "Compartir"
             whos_posting:
-              all_categories: "Todas las categorías"
               staff: "Personal"
             trust_level_pipeline:
               trust_levels:
@@ -6305,6 +6330,7 @@ es:
               searches: "Búsquedas"
               status: "Estado"
         reports_section:
+          header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
           modal:
             enabled_heading: "Activado"
@@ -6847,6 +6873,8 @@ es:
             initial_members: "Ampliación de miembros"
             initial_members_description: "Número de miembros del grupo que se muestran antes de añadir un botón Ver más."
             show_description: "Incluir descripción"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           toasts:
@@ -7949,11 +7977,12 @@ es:
         silence_reason: "Motivo para silenciar"
         bulk_actions:
           title: "Acciones en bloque"
-          admin_cant_be_deleted: "Este usuario no se puede eliminar porque es administrador"
-          too_many_or_old_posts: "Este usuario no se puede eliminar porque tiene demasiadas publicaciones o una publicación muy antigua."
-          too_many_selected_users:
-            one: "Has alcanzado el límite de %{count} usuario para la eliminación en bloque"
-            other: "Has alcanzado el límite de %{count} usuarios para la eliminación en bloque"
+          select_all: "Seleccionar todo"
+          clear_all: "Borrar todo"
+          suspend:
+            confirmation_modal:
+              close: "Cerrar"
+              confirm: "Suspender"
           delete:
             label: "Eliminar usuarios…"
             confirmation_modal:
@@ -7981,6 +8010,9 @@ es:
           suspended: "Suspendidos"
           silenced: "Silenciados"
           staged: "Temporal"
+        activation_filter:
+          all: "Todos los usuarios"
+          activated: "Activados"
         approved: "¿Aprobado/s?"
         titles:
           active: "Usuarios activos"
@@ -8614,6 +8646,10 @@ es:
         alt: "vista previa de emoji personalizado"
         delete_confirm: "¿Seguro que quieres eliminar el emoji :%{name}:?"
         settings: "Ajustes"
+        export: "Exportar"
+        import: "Importar"
+        import_category:
+          new: "Nuevo"
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         delete: "Eliminar"

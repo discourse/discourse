@@ -3,12 +3,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-/** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
-/** @type {import("discourse/ui-kit/d-button.gjs").default} */
 import DButton from "discourse/ui-kit/d-button";
-/** @type {import("discourse/ui-kit/d-icon-grid-picker/content.gjs").default} */
 import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -21,7 +18,7 @@ import { i18n } from "discourse-i18n";
  * @property {object} Args
  *
  * @property {string} Args.value - The currently selected icon ID.
- * @property {Function} Args.onChange - Called with the selected icon ID when an icon is picked.
+ * @property {(iconId: string | null) => void} Args.onChange - Called with the selected icon ID when an icon is picked, or `null` when the selection is cleared.
  * @property {string[]} [Args.favorites] - Icon IDs to display in a pinned favorites row above the grid.
  * @property {boolean} [Args.showSelectedName] - When true, the selected icon's name is shown
  *   alongside the icon in both the trigger button and the favorites chip. Adds a
@@ -44,8 +41,8 @@ import { i18n } from "discourse-i18n";
  *   Defaults to "d_icon_grid_picker.clear".
  * @property {boolean} [Args.modalForMobile] - Whether to show as a modal on mobile. Defaults to true.
  * @property {boolean} [Args.inline] - When true, renders the menu inline instead of floating.
- * @property {Function} [Args.onShow] - Called when the picker menu is opened.
- * @property {Function} [Args.onClose] - Called when the picker menu is closed.
+ * @property {import("discourse/float-kit/lib/constants").FloatCallback} [Args.onShow] - Called when the picker menu is opened.
+ * @property {import("discourse/float-kit/lib/constants").FloatCallback} [Args.onClose] - Called when the picker menu is closed.
  */
 
 /**

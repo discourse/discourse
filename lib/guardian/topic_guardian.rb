@@ -59,6 +59,15 @@ module TopicGuardian
       (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
   end
 
+  def can_set_topic_timer?(topic = nil)
+    return false if anonymous? || is_silenced?
+    return true if @user.is_system_user?
+    return false if topic && !can_see_topic?(topic)
+    return true if is_staff?
+
+    @user.in_any_groups?(SiteSetting.topic_timers_allowed_groups_map)
+  end
+
   def can_move_topic_to_category?(category)
     category =
       (
@@ -311,6 +320,9 @@ module TopicGuardian
     return true if new_archetype == topic.archetype
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
+    end
+    if new_archetype == Archetype.private_message || topic.private_message?
+      return can_convert_topic?(topic)
     end
     true
   end

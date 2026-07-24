@@ -75,7 +75,6 @@ it:
     ai_summarization_enabled: "Abilita la funzionalità riepilogo"
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
-    ai_summary_backfill_maximum_topics_per_hour: "Numero di riepiloghi degli argomenti da riempire all'ora."
     ai_bot_enabled: "Abilita il modulo Bot IA."
     ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"
@@ -99,7 +98,6 @@ it:
       description: "Questo rapporto contieni l'analisi del sentimento dei messaggi, raggruppati per categoria, con punteggi positivi, negativi e neutri per ciascun messaggio e ciascuna categoria."
     overall_sentiment:
       title: "Sentimento generale"
-      description: 'Il grafico confronta il numero di messaggi classificati come positivi o negativi. Questi vengono calcolati quando i punteggi positivi o negativi > il punteggio soglia impostato. Ciò significa che i messaggi neutri non vengono mostrati. Sono esclusi anche i messaggi personali (MP). Classificazione effettuata con "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Positività(%)"
       yaxis: "Data"
     emotion_admiration:
@@ -228,8 +226,6 @@ it:
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      image_caption:
-        attribution: "Didascalia da IA"
     share_ai:
       read_more: "Leggi la trascrizione completa"
       onebox_title: "Conversazione IA con %{llm_name}"
@@ -401,6 +397,8 @@ it:
         random_picker: "Selettore casuale"
         categories: "Elenca le categorie"
         flag_post: "Segnala messaggio"
+        suspend_user: "Sospendi utente"
+        silence_user: "Silenzia utente"
         search: "Cerca"
         tags: "Elenca le etichette"
         time: "Ora"
@@ -581,7 +579,6 @@ it:
       removed: "rimosso"
     errors:
       quota_exceeded: "Hai superato la quota per questo modello. Riprova tra %{relative_time}."
-      quota_required: "È necessario specificare il numero massimo di token o utilizzi per questo modello"
       no_query_specified: Il parametro di query è obbligatorio, specificalo.
       no_user_specified: Il parametro username o user_unique_id è obbligatorio, specificalo.
       user_not_found: L'utente specificato non esiste. Controlla il parametro username.

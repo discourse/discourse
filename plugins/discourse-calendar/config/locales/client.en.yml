@@ -28,10 +28,21 @@ en:
               label: Topic ID
     discourse_calendar:
       livestream:
+        zoom:
+          join: "Join Zoom"
+          chat: "Chat"
+          open_in_zoom: "Open in Zoom"
+          load_error: "You left the webinar or we are unable to load Zoom in this page."
+          too_early: "You can join the webinar closer to the event start time"
+          view_topic: "View topic for the event"
+          not_started_retrying:
+            one: "The webinar hasn't started yet. Retrying join in %{count} second..."
+            other: "The webinar hasn't started yet. Retrying join in %{count} seconds..."
+          not_started_trying_again: "Trying to join the webinar again now..."
         chat:
-          going: "Click Going"
-          join_channel_header: "🌟 Join the Buzz! 🌟"
-          join_channel_message: "Confirm your attendance and unlock our event chat. Dive into discussions, share your excitement, and connect with fellow attendees!"
+          rsvp_to_event: "RSVP to the event to start chatting"
+          rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
+          rsvp_body: "Connect with other attendees before, during, and after the event."
       invite_user_notification: "%{username} invited you to: %{description}"
       preferences:
         all_events: "Discourse Calendar - All Events"
@@ -459,6 +470,8 @@ en:
         create_event_button: "Create event"
         action_title: "Create a new event"
         all_day: "All day"
+        livestream: "Livestream"
+        livestream_chat_disabled: "Enable chat to create livestream channels."
         reminder:
           units:
             minutes:
@@ -494,7 +507,6 @@ en:
         create_event_title: "Create Event"
         update_event_title: "Edit Event"
         advanced_settings_title: "Advanced settings"
-        advanced_settings: "Advanced settings"
         confirm_delete: "Are you sure you want to delete this event?"
         confirm_close: "Are you sure you want to close this event?"
         confirm_open: "Are you sure you want to open this event?"
@@ -556,11 +568,11 @@ en:
         allow_chat:
           label: "Chat integration"
           checkbox_label: "Create and manage event specific chat channel"
-        url:
-          label: "URL"
-          placeholder: "Optional"
+        livestream:
+          label: "Livestream"
+          checkbox_label: "Embed the URL as a video and open livestream chat for attendees"
         location:
-          label: "Location"
+          label: "Location or URL"
           placeholder: "Add a location, link or something."
         description:
           label: "Description"

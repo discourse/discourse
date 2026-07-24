@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminSchemaSettingEditor from "discourse/admin/components/schema-setting/editor";
 import SiteSetting from "discourse/admin/models/site-setting";
@@ -8,7 +8,6 @@ import schemaAndData, {
   SCHEMA_MODES,
 } from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -18,19 +17,15 @@ class TreeFromDOM {
   }
 
   refresh() {
-    this.nodes = [
-      ...queryAll(
-        ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
-      ),
-    ].map((container, index) => {
+    this.nodes = findAll(
+      ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
+    ).map((container, index) => {
       const li = container;
       const active = li.classList.contains("--active");
 
-      const children = [
-        ...queryAll(
-          `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
-        ),
-      ].map((child) => {
+      const children = findAll(
+        `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
+      ).map((child) => {
         return {
           element: child,
           textElement: child.querySelector(
@@ -39,11 +34,9 @@ class TreeFromDOM {
         };
       });
 
-      const addButtons = [
-        ...queryAll(
-          `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
-        ),
-      ];
+      const addButtons = findAll(
+        `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+      );
 
       return {
         active,
@@ -65,7 +58,7 @@ class InputFieldsFromDOM {
     this.fields = {};
     this.count = 0;
 
-    [...queryAll(".schema-field")].forEach((field) => {
+    findAll(".schema-field").forEach((field) => {
       this.count += 1;
 
       this.fields[field.dataset.name] = {
@@ -1217,6 +1210,63 @@ module(
       assert
         .dom(groupsSelector.error())
         .hasText("You can only select 3 items.");
+    });
+
+    test("input fields of type groups filter disallowed groups", async function (assert) {
+      this.site.groups = [
+        { id: 0, name: "everyone" },
+        { id: 1, name: "admins" },
+        { id: 2, name: "moderators" },
+      ];
+
+      const setting = ThemeSettings.create({
+        setting: "objects_setting",
+        objects_schema: {
+          name: "something",
+          properties: {
+            group_ids: {
+              type: "groups",
+              disallowed_groups: "0|1",
+            },
+          },
+        },
+        value: [
+          {
+            group_ids: [],
+          },
+        ],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+      const groupsSelector = selectKit(
+        `${inputFields.fields.group_ids.selector} .select-kit`
+      );
+
+      await groupsSelector.expand();
+
+      assert.false(
+        groupsSelector.rowByValue("0").exists(),
+        "everyone is not in the list"
+      );
+      assert.false(
+        groupsSelector.rowByValue("1").exists(),
+        "admins is not in the list"
+      );
+      assert.true(
+        groupsSelector.rowByValue("2").exists(),
+        "moderators is in the list"
+      );
     });
 
     test("generic identifier is used when identifier is not specified in the schema", async function (assert) {

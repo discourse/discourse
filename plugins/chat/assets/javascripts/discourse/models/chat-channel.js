@@ -105,6 +105,7 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
+    this.livestreamTopic = args.livestream_topic;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));

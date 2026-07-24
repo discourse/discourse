@@ -5,7 +5,7 @@ import ClickTrack from "discourse/lib/click-track";
 
 export default class LinksRedirect extends Component {
   click(event) {
-    if (event?.target?.tagName === "A") {
+    if (event.target.closest("a")) {
       return ClickTrack.trackClick(event, getOwner(this));
     }
   }

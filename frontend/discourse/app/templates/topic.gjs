@@ -112,6 +112,7 @@ export default <template>
             @loadingMore={{nested.loadingMore}}
             @loadMoreRoots={{nested.loadMoreRoots}}
             @sort={{nested.sort}}
+            @effectiveSort={{nested.effectiveSort}}
             @changeSort={{nested.changeSort}}
             @replyToPost={{nested.replyToPost}}
             @editPost={{nested.editPost}}
@@ -375,7 +376,7 @@ export default <template>
               @jumpToDate={{@controller.jumpToDate}}
               @jumpToIndex={{@controller.jumpToIndex}}
               class="topic-navigation"
-              as |info|
+              as |info toggleProgressExpansion|
             >
               <PluginOutlet
                 @name="topic-navigation"
@@ -421,7 +422,7 @@ export default <template>
                 <TopicProgress
                   @prevEvent={{info.prevEvent}}
                   @topic={{@controller.model}}
-                  @expanded={{info.topicProgressExpanded}}
+                  @onExpandToggle={{toggleProgressExpansion}}
                   @jumpToPost={{@controller.jumpToPost}}
                 >
                   <PluginOutlet

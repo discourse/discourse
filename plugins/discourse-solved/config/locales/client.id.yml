@@ -12,6 +12,14 @@ id:
           kpi:
             accepted_solutions:
               label: "Solusi yang diterima"
+        sections:
+          support:
+            answerers:
+              staff: "Staf"
+              member: "Anggota"
+            response_time:
+              buckets:
+                gt_24h: "> 24 jam"
   js:
     notifications:
       alt:

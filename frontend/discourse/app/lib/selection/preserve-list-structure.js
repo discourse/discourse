@@ -322,8 +322,15 @@ export function preserveListStructureInClonedContent(container, range) {
     annotateOrphanListItemsWithOriginalInfo(container, range);
   }
 
-  if (originalListItem) {
-    const parentList = originalListItem.parentElement;
+  // When the list's wrapper is itself inside the clone (e.g. a list nested in a
+  // fully-selected quote), the structure is intact and must not be re-wrapped.
+  const parentList = originalListItem?.parentElement;
+  const listWrapperInClone =
+    parentList &&
+    parentList !== range.commonAncestorContainer &&
+    range.commonAncestorContainer.contains(parentList);
+
+  if (originalListItem && !listWrapperInClone) {
     const isParentAList =
       parentList?.tagName === "OL" || parentList?.tagName === "UL";
 

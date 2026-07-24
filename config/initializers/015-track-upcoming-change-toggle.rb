@@ -18,18 +18,18 @@ Rails.application.config.after_initialize { UpcomingChanges.clear_caches! }
 
 DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
   # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
-  if setting_name == :simple_email_subject
-    SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: true })
-  elsif setting_name == :enable_horizon_high_context_topic_cards
+  if setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: true)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: true)
   end
 end
 
 DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
   # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
-  if setting_name == :simple_email_subject
-    SiteSetting::Action::SimpleEmailSubjectToggled.call(params: { setting_enabled: false })
-  elsif setting_name == :enable_horizon_high_context_topic_cards
+  if setting_name == :enable_horizon_high_context_topic_cards
     Themes::Action::HorizonHighContextTopicCardsToggled.call(enabled: false)
+  elsif setting_name == :remove_and_replace_uncategorized
+    SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.call(enabled: false)
   end
 end

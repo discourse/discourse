@@ -18,7 +18,10 @@ module TestSetup
     WordWatcher.disable_cache
     UpcomingChanges.clear_caches!
 
-    SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+    previous_default_theme_id = SiteSetting.default_theme_id
+    SiteSetting.provider.clear
+    SiteSetting.refresh!
+    Theme.expire_site_cache! if SiteSetting.default_theme_id != previous_default_theme_id
 
     # Set some standard overrides for tests. Some for performance, some to make the tests easier,
     # and some because their default was changed, and we didn't want to refactor all the relevant specs.
@@ -33,9 +36,6 @@ module TestSetup
       allow_uncategorized_topics: true,
     }.each { |k, v| SiteSetting.set(k, v) }
 
-    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
-    SiteSetting.refresh_site_setting_group_ids!
-
     # very expensive IO operations
     SiteSetting.automatically_download_gravatars = false
 
@@ -47,7 +47,10 @@ module TestSetup
     # Database is rolled back between specs, but I18n override cache doesn't.
     # Flush it if there were any TranslationOverrides created.
     overrides_by_site = I18n.instance_variable_get(:@overrides_by_site) || {}
-    I18n.reload! if overrides_by_site.values.flat_map(&:values).any?(&:any?)
+    if overrides_by_site.values.flat_map(&:values).any?(&:any?)
+      I18n.reload!
+      ExtraLocalesController.clear_cache!
+    end
 
     RspecErrorTracker.clear_exceptions
 

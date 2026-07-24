@@ -270,8 +270,6 @@ cs:
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       chat_notifications_title: "Upozornění chatu"
-      only_chat_push_notifications:
-        title: "Odesílat pouze push notifikace chatu"
       personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
         title: "Ignorovat zmínky v rámci celého kanálu"
@@ -322,8 +320,6 @@ cs:
         title: "Zvuk upozornění na ploše"
       sounds:
         none: "Žádná"
-        bell: "Zvonek"
-        ding: "Cink"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Připojit soubor"
@@ -356,6 +352,8 @@ cs:
         filter_closed: Zavřené
         filter_archived: Archivované
         filter_input_placeholder: Vyhledat kanál podle názvu
+        filter_joined_all: "Vše"
+        filter_joined_joined: "Účet vytvořen"
       chat_message_separator:
         today: Dnes
         yesterday: Včera
@@ -431,6 +429,9 @@ cs:
           few: "%{count} členové"
           many: "%{count} členů"
           other: "%{count} členů"
+        preview_card:
+          log_in: "Přihlásit se"
+          sign_up: "Registrace"
       create_channel:
         threading:
           label: "Povolit vlákna"

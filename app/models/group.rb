@@ -62,6 +62,7 @@ class Group < ActiveRecord::Base
 
   before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_destroy :expire_cache
+  after_destroy :clear_acls
   after_save :destroy_deletions
   after_save :update_primary_group
   after_save :update_title
@@ -86,6 +87,10 @@ class Group < ActiveRecord::Base
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("group_names")
     SvgSprite.expire_cache
+  end
+
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, group_id: id)
   end
 
   validate :name_format_validator
@@ -137,7 +142,7 @@ class Group < ActiveRecord::Base
     everyone: 99,
   }
 
-  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}\Z/i
 
   def self.visibility_levels
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
@@ -184,6 +189,8 @@ class Group < ActiveRecord::Base
                 "groups.id NOT IN (:ids)",
                 ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
+          else
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
           end
 
           if !user&.admin
@@ -248,6 +255,8 @@ class Group < ActiveRecord::Base
                 "groups.id NOT IN (:ids)",
                 ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
+          else
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
           end
 
           if !user&.admin
@@ -384,6 +393,17 @@ class Group < ActiveRecord::Base
     else
       self.bio_cooked = nil
     end
+  end
+
+  def bio_summary
+    PrettyText.excerpt(
+      bio_cooked,
+      300,
+      strip_links: true,
+      strip_images: true,
+      text_entities: true,
+      plain_hashtags: true,
+    ).presence
   end
 
   def record_email_setting_changes!(user)
@@ -549,12 +569,15 @@ class Group < ActiveRecord::Base
       group.name = default_name
     end
 
-    # the everyone, anonymous_users, and logged_in_users groups are special — they
+    group.full_name =
+      I18n.t("groups.default_full_names.#{name}", locale: SiteSetting.default_locale)
+
+    # the everyone, anonymous_users, and logged_in_users groups are special - they
     # represent implicit populations (unauthenticated visitors, or all logged-in
     # users) that cannot be enumerated via group_users rows.
     case name
     when :everyone, :anonymous_users, :logged_in_users
-      group.visibility_level = Group.visibility_levels[:staff]
+      group.visibility_level = Group.visibility_levels[:logged_on_users]
       group.save!
       return group
     when :moderators
@@ -1169,8 +1192,16 @@ class Group < ActiveRecord::Base
     value
       .split("|")
       .each do |domain|
-        domain.sub!(%r{\Ahttps?://}, "")
-        domain.sub!(%r{/.*\z}, "")
+        domain =
+          domain
+            .strip
+            .downcase
+            .sub(%r{\Ahttps?://}, "")
+            .sub(%r{/.*\z}, "")
+            .sub(/\A.*@/, "")
+            .sub(/:\d+\z/, "")
+
+        next if domain.blank?
 
         if domain =~ Group::VALID_DOMAIN_REGEX
           valid_domains << domain
@@ -1179,7 +1210,7 @@ class Group < ActiveRecord::Base
         end
       end
 
-    valid_domains
+    valid_domains.uniq
   end
 
   private

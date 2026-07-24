@@ -21,7 +21,6 @@ de:
       dashboard:
         emotion:
           title: "Emotion"
-          description: "Die Tabelle listet die Anzahl der Beiträge auf, die mit einer bestimmten Emotion klassifiziert wurden. Klassifiziert mit dem Modell „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -232,6 +231,15 @@ de:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Wird geladen …"
+        agent: "Agent"
+        tool: "Aktion"
+        user: "Nutzer"
+        approve: "Genehmigen"
+        reject: "Ablehnen"
+        approved: "Genehmigt"
+        rejected: "Abgelehnt"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -332,7 +340,6 @@ de:
           translate: "Übersetzen"
           markdown_tables: "Markdown-Tabelle generieren"
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
-          image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
           chat_thread_titles: "Titel von Chat-Threads"
@@ -341,6 +348,9 @@ de:
             enabled_features: "Aktivierte Funktionen"
             automation: "Automatisierung"
             agents: "Agenten"
+        image_caption:
+          setting_groups:
+            settings: "Einstellungen"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -377,6 +387,7 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
+        category_scope: "Kategorien"
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
@@ -536,16 +547,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_context_posts: "Max. Kontext-Beiträge"
-        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Benutzer verwenden soll (leer für Standardwert)."
-        execution_mode: "Ausführungsmodus"
-        execution_mode_help: "Steuert, wie der Agent die Toolausführung und den Gesprächskontext verwaltet. Standardmäßig werden feste Runden-/Tool-Limits verwendet. Agentic verwendet ein Token-Budget mit automatischer Kontextkomprimierung für längere, leistungsfähigere Tool-Nutzungssitzungen."
-        execution_mode_options:
-          default: "Standard (feste Limits)"
-          agentic: "Agentic (Token-Budget)"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtzahl an Token (Input + Output), die während einer einzelnen Bot-Antwort über alle LLM-Aufrufe hinweg verbraucht werden. Wenn diese Option gesetzt ist, werden die festen Limits für den Abschluss und die Tools durch ein Token-Budget ersetzt, das ein agentenbasiertes Verhalten ermöglicht. Leer lassen für Standardgrenzen."
-        compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
@@ -617,6 +618,12 @@ de:
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        thinking_effort_options:
+          none: "Keine Auswahl"
+          low: "Niedrig"
+          medium: "Mittel"
+          high: "Hoch"
+          max: "Höchstwert"
         priority: "Priorität"
         priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
@@ -870,9 +877,7 @@ de:
             custom: "Benutzerdefiniert …"
           hours: "Stunden"
           max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
-          max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
-          max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
           soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."
@@ -881,7 +886,7 @@ de:
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{agent})"
-          ai_helper_image_caption: "Bildbeschriftungen"
+          ai_image_caption: "Bildbeschriftungen"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Zusammenfassen"
           ai_embeddings_semantic_search: "KI-Suche"
@@ -897,8 +902,6 @@ de:
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
           google-gemini-3-1-pro: "Googles intelligentestes Modell"
           google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
-          open_ai-gpt-5-4: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-4-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
           open_router-moonshotai-kimi-k2-6: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
@@ -949,7 +952,7 @@ de:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
           role_arn: "AWS Bedrock-Rollen-ARN"
           inference_profile_arn: "AWS Bedrock Anwendungs-Inferenzprofil ARN"
-          region: "AWS-Bedrock-Region"
+          region: "Region"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
           enable_native_tool: "Aktiviere native Tool-Unterstützung"
@@ -981,9 +984,6 @@ de:
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
         suggest_errors:
-          too_many_tags:
-            one: "Du kannst höchstens %{count} Schlagwort haben."
-            other: "Du kannst höchstens %{count} Schlagwörter haben."
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
         context_menu:
@@ -1017,11 +1017,6 @@ de:
           select: "Auswählen"
           selected: "Ausgewählt"
           try_again: "Erneut versuchen"
-        image_caption:
-          button_label: "Beschriftung mit KI"
-          generating: "Beschriftung wird generiert …"
-          credits: "Beschriftet durch KI"
-          save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
       errors:
         credit_limit_dialog:
@@ -1112,8 +1107,8 @@ de:
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
         title: "KI-Bot"
-        agent: "Agent"
-        llm: "Modell"
+        agent: "Agent:"
+        llm: "Modell:"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"
@@ -1227,15 +1222,9 @@ de:
           bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
-          regenerate_gists_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
-          regenerate_topic_summary_success:
-            one: "Themenzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
           regenerate_topic_summary_error:
             one: "Themenzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"

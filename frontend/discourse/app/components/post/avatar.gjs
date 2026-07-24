@@ -86,7 +86,6 @@ export default class PostAvatar extends Component {
             {{else}}
               <DUserAvatar
                 class="main-avatar"
-                tabindex="-1"
                 @hideTitle={{true}}
                 @lazy={{true}}
                 @size={{this.size}}

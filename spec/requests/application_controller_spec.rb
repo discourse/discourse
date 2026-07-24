@@ -3,6 +3,31 @@
 RSpec.describe ApplicationController do
   fab!(:user)
 
+  describe "shared session key" do
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    it "renders the meta tag for a logged-in user" do
+      sign_in(user)
+
+      get "/latest"
+
+      expect(response.body).to match(/<meta name="shared_session_key" content="[^"]+">/)
+    end
+
+    it "authenticates a login-required route via the header" do
+      SiteSetting.login_required = true
+      token = UserAuthToken.generate!(user_id: user.id)
+      key = SecureRandom.hex
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
+
+      get "/latest.json"
+      expect(response.status).to eq(403)
+
+      get "/latest.json", headers: { "HTTP_X_SHARED_SESSION_KEY" => key }
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "for cache control headers" do
     it "sets the `no-cache, no-store` cache control response header when no error is raised" do
       get "/latest"
@@ -1404,6 +1429,55 @@ RSpec.describe ApplicationController do
       end
     end
 
+    context "with a logged in user whose interface language differs from the default locale" do
+      let(:user) { Fabricate(:user, locale: :ja) }
+
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.default_locale = "en"
+        sign_in(user)
+      end
+
+      it "serves the whole not-found page, including the title, in the user's locale" do
+        get "/missingroute"
+        expect(response.status).to eq(404)
+
+        # the body is rendered in the user's interface language...
+        expect(response.body).to include(I18n.t("page_not_found.home", locale: :ja))
+        expect(response.body).to include(I18n.t("page_not_found.search_title", locale: :ja))
+
+        # ...and so is the <h1> title
+        expect(response.body).to include(
+          ActionController::Base.helpers.sanitize(
+            I18n.t("page_not_found.title", locale: :ja),
+            tags: %w[a],
+            attributes: %w[href class target rel],
+          ),
+        )
+      end
+
+      it "serves the forbidden page title in the user's locale" do
+        SiteSetting.detailed_404 = true
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+        get "/c/#{private_category.slug}/l/latest"
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t("page_forbidden.title", locale: :ja))
+      end
+
+      it "serves the SPA-injected error panel (JSON extras) in the user's locale" do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+
+        get "/t/#{private_topic.slug}/#{private_topic.id}.json"
+        expect(response.status).to eq(404)
+
+        extras = response.parsed_body["extras"]
+        expect(extras["title"]).to eq(I18n.t("page_not_found.page_title", locale: :ja))
+        expect(extras["html"]).to include(I18n.t("page_not_found.title", locale: :ja))
+      end
+    end
+
     context "with set_locale_from_cookie enabled" do
       context "when cookie locale differs from default locale" do
         before do
@@ -1678,8 +1752,8 @@ RSpec.describe ApplicationController do
       it "does not include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["banner"]).to eq("{}")
         end
       end
@@ -1688,8 +1762,8 @@ RSpec.describe ApplicationController do
         sign_in(user)
         get "/"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1700,8 +1774,8 @@ RSpec.describe ApplicationController do
       it "does include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1710,7 +1784,7 @@ RSpec.describe ApplicationController do
     context "with content localization enabled" do
       def banner_html
         preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
-        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+        JSON.parse(JSON.parse(preloaded.text)["banner"])["html"]
       end
 
       before do
@@ -1788,9 +1862,7 @@ RSpec.describe ApplicationController do
 
   describe "preloading data" do
     def preloaded_json
-      JSON.parse(
-        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
-      )
+      JSON.parse(Nokogiri::HTML5.fragment(response.body).css("script#data-preloaded").first.text)
     end
 
     context "when user is anon" do

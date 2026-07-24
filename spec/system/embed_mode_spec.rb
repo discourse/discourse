@@ -72,10 +72,7 @@ describe "Embed mode" do
   context "when logged in" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-    before do
-      SiteSetting.rich_editor = true
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
     context "with a topic that has no replies" do
       fab!(:no_reply_topic, :topic)

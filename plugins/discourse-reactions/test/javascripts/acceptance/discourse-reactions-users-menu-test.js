@@ -69,7 +69,7 @@ acceptance(
         undefined,
         "first fetch has no reaction_value"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
 
       await click('[data-reaction-filter="heart"]');
       assert.strictEqual(
@@ -77,7 +77,7 @@ acceptance(
         1,
         "does not refetch when filtering by heart"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 3 });
+      assert.dom(".users-popup__item").exists({ count: 3 });
 
       await click('[data-reaction-filter="laughing"]');
       assert.strictEqual(
@@ -85,7 +85,7 @@ acceptance(
         1,
         "does not refetch when filtering by laughing"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 2 });
+      assert.dom(".users-popup__item").exists({ count: 2 });
 
       await click('[data-reaction-filter="all"]');
       assert.strictEqual(
@@ -93,7 +93,41 @@ acceptance(
         1,
         "does not refetch when returning to all"
       );
-      assert.dom(".post-users-popup__item").exists({ count: 5 });
+      assert.dom(".users-popup__item").exists({ count: 5 });
+    });
+
+    test("closes the users menu when navigating away", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert.dom(".users-popup").exists("the reactions menu is open");
+
+      await visit("/");
+
+      assert
+        .dom(".users-popup")
+        .doesNotExist("the reactions menu closes when navigating away");
+    });
+
+    test("emoji filters and list reactions show the emoji name in the title", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert
+        .dom('[data-reaction-filter="laughing"] img.emoji')
+        .hasAttribute(
+          "title",
+          "laughing",
+          "the emoji filter shows the emoji name as its title"
+        );
+
+      assert
+        .dom(".users-popup__item .users-popup__reaction[alt='laughing']")
+        .hasAttribute(
+          "title",
+          "laughing",
+          "a reaction in the user list shows the emoji name as its title"
+        );
     });
   }
 );

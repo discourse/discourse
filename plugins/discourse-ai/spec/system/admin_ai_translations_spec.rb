@@ -20,6 +20,7 @@ RSpec.describe "Admin AI translations" do
         ],
         total: 300,
         posts_with_detected_locale: 150,
+        cached_at: Time.now.utc.iso8601,
       },
     )
 
@@ -44,9 +45,32 @@ RSpec.describe "Admin AI translations" do
 
       expect(translations_page).to have_translation_settings_button
       expect(translations_page).to have_localization_settings_button
+      expect(page).to have_css(
+        ".ai-translation-settings-button",
+        text: I18n.t("js.discourse_ai.translations.admin_actions.translation_settings"),
+      )
+      expect(page).to have_css(
+        ".ai-localization-settings-button",
+        text: I18n.t("js.discourse_ai.translations.admin_actions.localization_settings"),
+      )
+      expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
+      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
+      expect(page).to have_css(
+        ".ai-translations__settings-panel > .setting:first-child .d-toggle-switch",
+      )
+      expect(page).to have_no_css(".ai-translations__settings-panel.alert-info")
 
       expect(translations_page).to have_charts_section
       expect(translations_page).to have_chart
+      expect(page).to have_no_css(
+        ".admin-config-area-card__title",
+        text: I18n.t("js.discourse_ai.translations.progress_chart.title"),
+      )
+      expect(page).to have_css(
+        ".ai-translations__cached-results",
+        text: "Showing cached results from",
+      )
+      expect(page).to have_no_content("estimated to take")
 
       screenshot_marker(label: "ai-admin-translations", only: "desktop")
     end
@@ -60,7 +84,7 @@ RSpec.describe "Admin AI translations" do
       )
     end
 
-    it "navigates to localization settings when clicking the localization button" do
+    it "navigates to app language settings when clicking the app language button" do
       find(".ai-localization-settings-button").click
 
       expect(page).to have_current_path("/admin/config/localization")
@@ -74,7 +98,8 @@ RSpec.describe "Admin AI translations" do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
-      SiteSetting.ai_translation_excluded_categories = category.id.to_s
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = category.id.to_s
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
       translations_page.visit
@@ -106,15 +131,15 @@ RSpec.describe "Admin AI translations" do
       translations_page.visit
     end
 
-    it "displays the alert with locale selector" do
+    it "displays the settings panel with locale selector" do
       expect(translations_page).to have_locale_selector
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.supported_locales"))
     end
 
-    it "displays the category selector alongside the locale selector" do
-      expect(page).to have_css(".alert.alert-info")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.excluded_categories"))
-      expect(page).to have_css(".category-selector")
+    it "displays the category scope selector alongside the locale selector" do
+      expect(page).to have_css(".ai-translations__settings-panel")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
+      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
     end
 
     it "allows adding and saving languages" do
@@ -130,33 +155,35 @@ RSpec.describe "Admin AI translations" do
     end
   end
 
-  describe "when categories are not excluded" do
+  describe "when selected categories are configured" do
     fab!(:category)
 
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr"
-      SiteSetting.ai_translation_excluded_categories = ""
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
       visit "/admin/plugins/discourse-ai/ai-translations"
     end
 
-    it "displays the setup alert with the category selector" do
-      expect(page).to have_css(".alert.alert-info")
-      expect(page).to have_content(I18n.t("js.discourse_ai.translations.excluded_categories"))
+    it "displays the settings panel with the category selector" do
+      expect(page).to have_css(".ai-translations__settings-panel")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
       expect(page).to have_css(".category-selector")
     end
 
-    it "allows adding and saving excluded categories" do
+    it "allows adding and saving selected categories" do
       find(".category-selector").click
       find(".category-row[data-value='#{category.id}']").click
 
       within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
 
       expect(page).to have_no_css(".ai-translations__category-input-row .setting-controls__ok")
-      expect(SiteSetting.ai_translation_excluded_categories).to eq(category.id.to_s)
+      expect(SiteSetting.ai_translation_category_scope).to eq("include")
+      expect(SiteSetting.ai_translation_categories).to eq(category.id.to_s)
     end
   end
 
@@ -176,6 +203,7 @@ RSpec.describe "Admin AI translations" do
           ],
           total: 200,
           posts_with_detected_locale: 100,
+          cached_at: Time.now.utc.iso8601,
         },
       )
     end

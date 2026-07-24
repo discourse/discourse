@@ -6,9 +6,13 @@ module DiscourseAi
       # Returns the number of posts that have been translated, and the total number of posts that need translation for a given locale.
       # The total number of posts is based off candidates that already have a locale.
       # Also returns aggregate counts for total eligible posts and posts with detected locale.
-      # @return [Hash] a hash with keys :translation_progress (array), :total (integer), and :posts_with_detected_locale (integer)
+      # @return [Hash] a hash with keys :translation_progress (array), :total (integer), :posts_with_detected_locale (integer), and :cached_at (string)
       def self.get_completion_all_locales
-        Discourse.cache.fetch(progress_cache_key, expires_in: 30.minutes) { completion_all_locales }
+        Discourse
+          .cache
+          .fetch(progress_cache_key, expires_in: 30.minutes) do
+            completion_all_locales.merge(cached_at: Time.now.utc.iso8601)
+          end
       end
 
       def self.needs_localization(limit:)
@@ -59,25 +63,15 @@ module DiscourseAi
 
         posts = posts.joins(:topic)
 
-        # if no categories are excluded, posts from all categories will be sent for translation
-        # private categories need to be explicitly excluded
-        excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
         pm_scope = SiteSetting.ai_translation_personal_messages
+        category_condition, category_params =
+          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
 
-        if excluded_category_ids.present?
-          posts =
-            posts.where(
-              "topics.category_id NOT IN (:cats) OR topics.archetype = :pm",
-              cats: excluded_category_ids,
-              pm: Archetype.private_message,
-            )
-        else
-          posts =
-            posts.where(
-              "topics.category_id IS NOT NULL OR topics.archetype = :pm",
-              pm: Archetype.private_message,
-            )
-        end
+        posts =
+          posts.where(
+            "topics.archetype = :pm OR (#{category_condition})",
+            category_params.merge(pm: Archetype.private_message),
+          )
 
         # PM scope filter
         case pm_scope
@@ -116,7 +110,7 @@ module DiscourseAi
           SiteSetting.ai_translation_include_bot_content,
           SiteSetting.ai_translation_max_post_length,
           SiteSetting.ai_translation_personal_messages,
-          DiscourseAi::Translation.excluded_category_ids.sort.join(","),
+          DiscourseAi::Translation.category_scope_cache_key,
         ].join(":")
       end
 

@@ -1,11 +1,10 @@
-/* eslint-disable ember/no-jquery */
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
@@ -67,7 +66,6 @@ export default class TextareaTextManipulation {
 
   eventPrefix;
   textarea;
-  $textarea;
 
   autocompleteHandler;
   placeholder;
@@ -81,7 +79,6 @@ export default class TextareaTextManipulation {
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
-    this.$textarea = $(textarea);
 
     this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
 
@@ -189,10 +186,15 @@ export default class TextareaTextManipulation {
       }
 
       if (match) {
-        this._insertAt(match.index, match.index + match[0].length, newVal);
+        this._insertAt(
+          match.index,
+          match.index + match[0].length,
+          newVal,
+          opts
+        );
       }
     } else {
-      this._insertAt(needleStart, needleStart + oldVal.length, newVal);
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
     }
 
     if (
@@ -376,8 +378,8 @@ export default class TextareaTextManipulation {
     this.blurAndFocus();
   }
 
-  _insertAt(start, end, text) {
-    insertAtTextarea(this.textarea, start, end, text);
+  _insertAt(start, end, text, opts = {}) {
+    insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
   extractTable(text) {
@@ -629,7 +631,7 @@ export default class TextareaTextManipulation {
 
     if (shouldAutocomplete) {
       let autocompletePrefix = `${indentationLevel}${newPrefix}`;
-      let autocompletePostfix = text.substring(offset);
+      let autocompletePostfix;
       const autocompletePrefixLength = autocompletePrefix.length;
       let scrollPosition;
 
@@ -779,12 +781,11 @@ export default class TextareaTextManipulation {
 
   @bind
   toggleDirection() {
-    let currentDir = this.$textarea.attr("dir")
-        ? this.$textarea.attr("dir")
-        : siteDir(),
-      newDir = currentDir === "ltr" ? "rtl" : "ltr";
+    const currentDir = this.textarea.getAttribute("dir") || siteDir();
+    const newDir = currentDir === "ltr" ? "rtl" : "ltr";
 
-    this.$textarea.attr("dir", newDir).focus();
+    this.textarea.setAttribute("dir", newDir);
+    this.textarea.focus();
   }
 
   @bind
@@ -1015,7 +1016,19 @@ export default class TextareaTextManipulation {
   }
 }
 
-function insertAtTextarea(textarea, start, end, text) {
+function insertAtTextarea(
+  textarea,
+  start,
+  end,
+  text,
+  { skipFocus = false } = {}
+) {
+  if (skipFocus && document.activeElement !== textarea) {
+    textarea.setRangeText(text, start, end, "preserve");
+    textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    return;
+  }
+
   textarea.setSelectionRange(start, end);
   textarea.focus();
   if (start !== end && text === "") {
@@ -1028,11 +1041,9 @@ function insertAtTextarea(textarea, start, end, text) {
 /** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
-  $textarea;
 
   constructor(textarea) {
     this.textarea = textarea;
-    this.$textarea = $(textarea);
   }
 
   getValue() {
@@ -1051,15 +1062,11 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
-    // @ts-ignore
-    return this.$textarea.caretPosition({ pos: start + 1 });
+    return caretCoordinates(this.textarea, { pos: start + 1 });
   }
 
   async inCodeBlock() {
-    return await inCodeBlock(
-      this.textarea.value ?? this.$textarea.val(),
-      caretPosition(this.textarea)
-    );
+    return await inCodeBlock(this.textarea.value, caretPosition(this.textarea));
   }
 }
 

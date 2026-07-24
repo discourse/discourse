@@ -51,6 +51,9 @@ zh_CN:
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
     discourse_post_event_allowed_on_groups: "允许创建活动的群组。"
     discourse_post_event_allowed_custom_fields: "允许让每个活动设置自定义字段的值。"
+    discourse_post_event_allowed_custom_fields_invalid: "以下自定义字段名称无效：%{names}。名称必须以字母或数字开头和结尾，并使用单个点号、连字符或下划线作为分隔符（例如：dress_code、live-stream、q.and.a）。"
+    discourse_post_event_allowed_custom_fields_collision: "在对点号、连字符和字母大小写进行标准化处理后，这些自定义字段名称会解析为相同的名称：%{names}。每个自定义字段都必须唯一。"
+    discourse_post_event_allowed_custom_fields_reserved: "这些自定义字段名称被内置事件选项（例如：名称、URL、状态、位置）保留：%{names}。请选择其他名称。"
     discourse_post_event_edit_notifications_time_extension: "活动结束后延长一段时间（以分钟为单位），让“参加”的受邀者仍可以收到原始帖子的编辑通知。"
     holiday_calendar_topic_id: "管理人员假期/缺勤日历的话题 ID。"
     holiday_status_emoji: 给节日状态设置表情图片。
@@ -72,8 +75,6 @@ zh_CN:
     sidebar_show_upcoming_events: "在边栏中的“更多”下显示近期活动链接。"
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
-    livestream_enabled: "启用带有“直播”标签的话题的直播聊天功能。"
-    livestream_chat_allowed_groups: "只有被列入允许名单的群组才能在直播频道聊天。"
     livestream_embeddable_chat_allowed_paths: "允许嵌入直播聊天的路径。"
     livestream_enable_modal_chat_on_mobile: "在移动设备上以模态窗口形式显示直播聊天信息。"
   discourse_calendar:
@@ -110,6 +111,8 @@ zh_CN:
     holiday_status:
       description: "休假"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%Y 年%-m 月 %-d 日"
     notifications:
       before_event_reminder: "%{title} 即将开始。"
       after_event_reminder: "%{title} 已结束。"

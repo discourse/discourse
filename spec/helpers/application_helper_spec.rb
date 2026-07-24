@@ -2,6 +2,57 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationHelper do
+  describe "#discourse_pageview_tracking_meta_tags" do
+    it "includes beacon tracking meta tags for anonymous users when dashboard_improvements is enabled" do
+      SiteSetting.dashboard_improvements = true
+      helper.stubs(:current_user).returns(nil)
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "omits beacon tracking meta tags when dashboard_improvements is disabled" do
+      SiteSetting.dashboard_improvements = false
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).not_to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "includes beacon tracking meta tags for browser pageview event triggers" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "includes the engagement tracking meta tag when pageview events are persisted" do
+      SiteSetting.persist_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-engagement-tracking-enabled"')
+    end
+
+    it "omits the engagement tracking meta tag in a trigger-only config so the browser does not send /srv/se beacons the server rejects" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+      expect(tags).not_to include('name="discourse-engagement-tracking-enabled"')
+    end
+  end
+
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML
@@ -173,13 +224,13 @@ RSpec.describe ApplicationHelper do
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
       helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
@@ -518,8 +569,11 @@ RSpec.describe ApplicationHelper do
           login_method: nil,
         )
 
-      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
-      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
+      @application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
+      expect(helper.preloaded_json).to include(
+        %{"test":"[\\"\\u003c\\\\/script\\u003e\\u003cscript\\u003e \uFFFD\\"]"},
+      )
+      expect(helper.preloaded_json).not_to include("</script>")
     end
   end
 
@@ -550,6 +604,16 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "crawlable_meta_data" do
+    it "escapes the description exactly once" do
+      result =
+        helper.crawlable_meta_data(description: %(Tom & O'Reilly "><script>alert(1)</script>))
+
+      expect(result).to include(
+        %(<meta property="og:description" content="Tom &amp; O&#39;Reilly &quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;" />),
+      )
+      expect(result).not_to include("<script>")
+    end
+
     it "Supports ASCII URLs with odd chars" do
       result =
         helper.crawlable_meta_data(
@@ -1269,6 +1333,78 @@ RSpec.describe ApplicationHelper do
       expect(result).to include('itemprop="comment"')
       expect(result).to include("itemscope")
       expect(result).to include('itemtype="http://schema.org/Comment"')
+    end
+  end
+
+  describe "#shared_session_key" do
+    fab!(:user)
+
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    context "when the request carries an auth token" do
+      let(:auth_token) { UserAuthToken.generate!(user_id: user.id) }
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the auth token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the auth token does not belong to the current user" do
+      fab!(:other_user, :user)
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[
+          Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY
+        ] = UserAuthToken.generate!(user_id: other_user.id)
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
+    end
+
+    context "when the auth token is impersonating the current user" do
+      fab!(:admin)
+
+      let(:auth_token) do
+        UserAuthToken
+          .generate!(user_id: admin.id)
+          .tap do |token|
+            token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+          end
+      end
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the impersonating token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the request carries no auth token" do
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = nil
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
     end
   end
 end

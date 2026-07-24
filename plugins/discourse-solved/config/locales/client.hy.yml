@@ -12,6 +12,16 @@ hy:
           kpi:
             accepted_solutions:
               label: "Ընդունված լուծումներ"
+        sections:
+          support:
+            answerers:
+              staff: "Անձնակազմ"
+              member: "Անդամներ"
+              basic: "Հիմնական"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ժամով"
+                gt_24h: "> Վերջին 24 ժամվա"
   js:
     notifications:
       alt:

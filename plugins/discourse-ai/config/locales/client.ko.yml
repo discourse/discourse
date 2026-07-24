@@ -38,6 +38,14 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      ai_tool_approval:
+        loading: "로드 중..."
+        tool: "처리"
+        user: "사용자"
+        approve: "승인"
+        reject: "거부"
+        approved: "승인"
+        rejected: "거부됨"
       llm_selector:
         none: "없음"
       features:
@@ -71,6 +79,9 @@ ko:
         inference:
           setting_groups:
             settings: "기본 설정"
+        image_caption:
+          setting_groups:
+            settings: "설정"
         translation:
           setting_groups:
             settings: "기본 설정"
@@ -80,6 +91,7 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        category_scope: "카테고리"
         stats:
           eta_minutes:
             other: "%{count}분"
@@ -115,6 +127,12 @@ ko:
         enabled: "활성화?"
         allowed_groups: "허용 된 그룹"
         delete: "삭제"
+        thinking_effort_options:
+          none: "없음"
+          low: "낮음"
+          medium: "중간"
+          high: "높음"
+          max: "최대"
         response_format:
           open_modal: "편집"
           modal:
@@ -188,6 +206,8 @@ ko:
         providers:
           google: "구글"
           fake: "사용자 정의"
+        provider_fields:
+          region: "지역"
       ai_helper:
         context_menu:
           cancel: "취소"
@@ -201,8 +221,6 @@ ko:
         thumbnail_suggestions:
           select: "선택"
           try_again: "다시 시도"
-        image_caption:
-          save_caption: "저장"
       embeddings:
         save: "저장"
         delete: "삭제"

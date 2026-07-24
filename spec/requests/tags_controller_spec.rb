@@ -587,6 +587,34 @@ RSpec.describe TagsController do
       )
     end
 
+    it "preserves the edit path when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit")
+    end
+
+    it "preserves the edit tab when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
+    it "does not redirect the edit page when the slug already matches" do
+      sign_in(admin)
+
+      get "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirects the id-only edit route to the canonical slug edit URL" do
+      get "/tag/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) { Fabricate(:topic, tags: [tag], category: category) }
 
@@ -1015,6 +1043,20 @@ RSpec.describe TagsController do
         settings = response.parsed_body["tag_settings"]
         expect(settings["slug"]).to eq("custom-slug")
         expect(tag.reload.slug).to eq("custom-slug")
+      end
+
+      it "rejects tag slugs with unsupported characters" do
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "." } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
+
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "a.a" } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
       end
 
       it "updates the tag description" do
@@ -1553,6 +1595,26 @@ RSpec.describe TagsController do
         expect(response.parsed_body["results"]).to match(
           [include(name: tag.name, id: tag.id), include(name: tag2.name, id: tag2.id)],
         )
+      end
+
+      it "surfaces the signed-in user's recently used tags first when the upcoming change is enabled" do
+        SiteSetting.prioritize_recently_used_tags = true
+        Fabricate(:tag, name: "popular", public_topic_count: 100)
+        recent = Fabricate(:tag, name: "recent", public_topic_count: 1)
+        Fabricate(:topic, user: user, tags: [recent])
+        sign_in(user)
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              prioritizeRecentTags: true,
+              filterForInput: true,
+            }
+
+        expect(response.status).to eq(200)
+        names = response.parsed_body["results"].map { |tag| tag["name"] }
+        expect(names.first).to eq("recent")
+        expect(names).to include("popular")
       end
 
       context "with category restriction" do

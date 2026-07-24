@@ -5,13 +5,17 @@ DiscourseAi::Engine.routes.draw do
     get "status" => "ai_credits#status"
   end
 
+  scope path: "/post-image-captions", defaults: { format: :json } do
+    get ":post_id" => "post_image_captions#index"
+    put ":post_id/:base62_sha1" => "post_image_captions#update"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"
     post "suggest_category" => "assistant#suggest_category"
     post "suggest_tags" => "assistant#suggest_tags"
     post "stream_suggestion" => "assistant#stream_suggestion"
-    post "caption_image" => "assistant#caption_image"
   end
 
   scope module: :embeddings, path: "/embeddings", defaults: { format: :json } do
@@ -46,6 +50,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    post "/" => "conversations#create"
     put "/:topic_id/starred" => "conversations#update_starred"
   end
 

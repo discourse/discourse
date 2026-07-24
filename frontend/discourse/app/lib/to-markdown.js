@@ -15,6 +15,20 @@ async function ensureDefaultExtensions() {
   );
 }
 
+// Chrome and Safari copy the space next to an inline element as a non-breaking
+// space, which stops a pasted emoji from cooking. Restore just the copy
+// artifact - a lone nbsp in a bare span - so an author's own nbsp is kept.
+function restoreReplacedSpaces(root) {
+  const spans = root.querySelectorAll(
+    "span:not([class]):not([style]), span.Apple-converted-space"
+  );
+  for (const span of spans) {
+    if (span.childNodes.length === 1 && span.textContent === "\u00a0") {
+      span.replaceWith(root.ownerDocument.createTextNode(" "));
+    }
+  }
+}
+
 // Deprecated no-ops - kept for backward compatibility
 function deprecationWarning(name) {
   deprecated(
@@ -53,7 +67,7 @@ export default async function toMarkdown(html) {
       { DOMParser: ProseMirrorDOMParser },
       { createSchema },
       { default: Serializer },
-      { transformWordListsHtml },
+      { transformWordHtml },
       { isBoundary },
     ] = await Promise.all([
       import("prosemirror-model"),
@@ -73,11 +87,13 @@ export default async function toMarkdown(html) {
     const pluginParams = { utils: { isBoundary } };
     const serializer = new Serializer(extensions, pluginParams);
 
-    const processedHtml = transformWordListsHtml(html);
+    const processedHtml = transformWordHtml(html);
     const parsedDoc = new DOMParser().parseFromString(
       processedHtml,
       "text/html"
     );
+
+    restoreReplacedSpaces(parsedDoc.body);
 
     for (const ext of extensions) {
       if (typeof ext.transformParsedHTML === "function") {

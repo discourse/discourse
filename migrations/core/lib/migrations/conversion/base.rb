@@ -9,7 +9,7 @@ module Migrations
         @settings = settings
       end
 
-      def run(only_steps: [], skip_steps: [])
+      def run(only_steps: [], skip_steps: [], max_parallel_steps: nil, no_fork: false)
         if respond_to?(:setup)
           puts "Initializing..."
           setup
@@ -17,47 +17,51 @@ module Migrations
 
         create_database
 
-        filter_steps(steps, only_steps, skip_steps).each do |step_class|
-          step = create_step(step_class)
-          before_step_execution(step)
-          execute_step(step)
-          after_step_execution(step)
-        end
+        # Titles are known from the step classes (no instantiation, no queries),
+        # so the reporter can reserve its title column up front. The steps
+        # themselves are built and sized lazily. Each step's source is opened
+        # and counted in its own fork when it runs.
+        step_classes = filter_steps(steps, only_steps, skip_steps)
+        @reporter = Reporting::Factory.build(titles: step_classes.map(&:title))
+
+        StepScheduler.new(
+          step_classes:,
+          reporter: @reporter,
+          step_factory: method(:create_step),
+          shard_manager: @shard_manager,
+          writer: @writer,
+          budget: WorkerBudget.available, # usable CPUs minus one for the parent + merges
+          max_parallel_steps:,
+          no_fork:,
+        ).run
       rescue SignalException
-        STDERR.puts "\nAborted"
-        exit(1)
+        @aborted = true
+        exit(130)
       ensure
         Database::IntermediateDB.close
+        @shard_manager&.cleanup
+        # Restore the terminal (and flush the final frame) before printing the
+        # run-level abort line, so it lands cleanly below the reporter output
+        # instead of fighting the live region.
+        @reporter&.close
+        STDERR.puts "\n#{I18n.t("cli.aborted")}" if @aborted
       end
 
       def steps
-        step_class = StepBase
+        step_class = Step
         current_module = self.class.name.deconstantize.constantize
 
-        current_module
-          .constants
-          .map { |c| current_module.const_get(c) }
-          .select { |klass| klass.is_a?(Class) && klass < step_class }
-          .sort_by(&:to_s)
-      end
+        classes =
+          current_module
+            .constants
+            .map { |c| current_module.const_get(c) }
+            .select { |klass| klass.is_a?(Class) && klass < step_class }
 
-      def before_step_execution(step)
-        # do nothing
-      end
-
-      def execute_step(step)
-        executor =
-          if step.is_a?(ProgressStep)
-            ProgressStepExecutor
-          else
-            StepExecutor
-          end
-
-        executor.new(step).execute
-      end
-
-      def after_step_execution(step)
-        # do nothing
+        # Unlike the importer, the full step set is sorted here and the
+        # `--only`/`--skip` filtering happens afterwards (see `filter_steps` in
+        # `run`). This is intentional: re-running a single step via `--only`
+        # has to keep working even when that step declares dependencies.
+        TopologicalSorter.sort(classes)
       end
 
       def step_args(step_class)
@@ -70,8 +74,13 @@ module Migrations
         db_path = File.expand_path(settings[:intermediate_db][:path], Migrations.root_path)
         Database.migrate(db_path, migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH)
 
-        db = Database.connect(db_path)
-        Database::IntermediateDB.setup(db)
+        @shard_manager =
+          ShardManager.new(
+            canonical_path: db_path,
+            migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH,
+          )
+        @writer = Database::Connection.new(path: db_path)
+        Database::IntermediateDB.setup(@writer)
       end
 
       def create_step(step_class)

@@ -6,7 +6,15 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import {
+  dataExplorerStore,
+  rememberedMode,
+  rememberMode,
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class AdminPluginsExplorerNew extends Controller {
   @service store;
@@ -22,8 +30,9 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedSql = "";
   @tracked generatedName = "";
   @tracked generatedDescription = "";
-  @tracked mode = "ai";
+  @tracked mode = rememberedMode() ?? "ai";
   @tracked schema = null;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
   @tracked previewResults = null;
@@ -77,7 +86,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   @action
@@ -91,11 +100,18 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   setMode(value) {
     this.mode = value;
+    rememberMode(value);
   }
 
   @action
   updateManualSql(value) {
     this.manualSql = value;
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
   }
 
   @action
@@ -278,8 +294,9 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedSql = "";
     this.generatedName = "";
     this.generatedDescription = "";
-    this.mode = "ai";
+    this.mode = rememberedMode() ?? "ai";
     this.schema = null;
+    this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
     this.manualFormData = { name: "", description: "" };

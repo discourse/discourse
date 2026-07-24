@@ -29,23 +29,6 @@ RSpec.describe Migrations::Database::IntermediateDB do
       end
     end
 
-    it "works with `Migrations::Database::OfflineConnection`" do
-      connection = Migrations::Database::OfflineConnection.new
-
-      described_class.setup(connection)
-      described_class.insert("INSERT INTO foo (id, name) VALUES (?, ?)", 1, "Alice")
-      described_class.insert("INSERT INTO foo (id, name) VALUES (?, ?)", 2, "Bob")
-
-      expect(connection.parametrized_insert_statements).to eq(
-        [
-          ["INSERT INTO foo (id, name) VALUES (?, ?)", [1, "Alice"]],
-          ["INSERT INTO foo (id, name) VALUES (?, ?)", [2, "Bob"]],
-        ],
-      )
-
-      connection.close
-    end
-
     it "switches the connection" do
       old_connection = create_connection_double
       new_connection = create_connection_double
@@ -71,6 +54,32 @@ RSpec.describe Migrations::Database::IntermediateDB do
       described_class.setup(new_connection)
       expect(old_connection).to have_received(:close)
       expect(new_connection).to_not have_received(:close)
+    end
+  end
+
+  describe ".conflict_strategy_for" do
+    it "returns `:ignore` for a table whose model declares it" do
+      expect(described_class.conflict_strategy_for("uploads")).to eq(:ignore)
+    end
+
+    it "returns `:raise` for a table whose model does not declare a strategy" do
+      expect(described_class.conflict_strategy_for("topic_tags")).to eq(:raise)
+    end
+
+    it "returns `:raise` for a table without a model" do
+      expect(described_class.conflict_strategy_for("schema_migrations")).to eq(:raise)
+    end
+
+    it "reads the strategy from the model, so a new `OR IGNORE` model flips it" do
+      model =
+        Module.new do
+          def self.conflict_strategy
+            :ignore
+          end
+        end
+      stub_const("#{described_class}::Widget", model)
+
+      expect(described_class.conflict_strategy_for("widgets")).to eq(:ignore)
     end
   end
 

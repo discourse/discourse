@@ -100,6 +100,7 @@ discourse_calendar:
     list_type: simple
     client: true
     default: ""
+    validator: "CalendarCustomFieldsValidator"
   events_calendar_categories:
     type: category_list
     client: true
@@ -136,12 +137,18 @@ discourse_calendar:
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
-  livestream_enabled:
+      requires_plugin_enabled: false
+  livestream_zoom_enabled:
     default: false
     client: true
+  livestream_zoom_sdk_key:
+    default: ""
+  livestream_zoom_sdk_secret:
+    default: ""
+    secret: true
   livestream_embeddable_chat_allowed_paths:
     type: list
     default: "/t"
@@ -150,7 +157,3 @@ discourse_calendar:
   livestream_enable_modal_chat_on_mobile:
     default: true
     client: true
-  livestream_chat_allowed_groups:
-    default: "11" # default group trust_level_1
-    client: true
-    type: group_list

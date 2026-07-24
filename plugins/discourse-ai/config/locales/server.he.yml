@@ -91,7 +91,6 @@ he:
     ai_summarization_enabled: "הפעלת יכולת הסיכום"
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
-    ai_summary_backfill_maximum_topics_per_hour: "מספר תקצירי הנושאים למילוי חוזר בשעה."
     ai_bot_enabled: "הפעלת מודול בוט הבינה המלאכותית."
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
@@ -123,7 +122,6 @@ he:
       description: "הדוח מספק ניתוח רגשות לפוסטים, בקיבוץ לפי קטגוריות, עם דירוג חיובי, שלילי ופושר לכל אחד מהפוסטים והקטגוריות."
     overall_sentiment:
       title: "רגש כללי"
-      description: 'התרשים משווה את מספר הפוסטים שמסווגים כחיוביים או שליליים. אלו מחושבים כאשר ניקוד חיובי או שלילי הוא גדול מסף הניקוד המוגדר. משמעות הדבר היא שפוסטים נייטרליים לא מופיעים. הודעות אישיות מוחרגות גם כן. מסווגות באמצעות „cardiffnlp/twitter-roberta-base-sentiment-latest”'
       xaxis: "חיובי(%)"
       yaxis: "תאריך"
     emotion_admiration:
@@ -259,8 +257,6 @@ he:
         explain: "הסבר"
         illustrate_post: "איור פוסט"
         replace_dates: "תאריכים חכמים"
-      image_caption:
-        attribution: "הכותרת נוספה ע״י בינה מלאכותית"
     share_ai:
       read_more: "הצגת התמליל המלא"
       onebox_title: "דיון בינה מלאכותית עם %{llm_name}"
@@ -434,6 +430,8 @@ he:
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
         flag_post: "סימון פוסט"
+        suspend_user: "השעיית משתמש"
+        silence_user: "השתקת משתמש"
         edit_post: "עריכת פוסט"
         search: "חיפוש"
         tags: "הצגת תגיות"
@@ -643,7 +641,7 @@ he:
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
-      quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
+      quota_required: "חובה לציין כמות אסימונים מרבית, שימושים או עלות למודל הזה"
       no_query_specified: משתנה השאילתה נחוץ, נא לציין אותו.
       no_user_specified: המשתנים username או user_unique_id נחוצים, נא לציין לפחות אחד מהם.
       user_not_found: המשתמש שצוין לא קיים. נא לבדוק את המשתנה username.

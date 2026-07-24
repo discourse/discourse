@@ -36,12 +36,43 @@ RSpec.describe Migrations::Tooling::Schema::DSL::TableBuilder do
       end.to raise_error(Migrations::Tooling::Schema::ConfigError, /Invalid model mode :invalid/)
     end
 
+    it "defaults the conflict strategy to `:raise`" do
+      Migrations::Tooling::Schema.table :users do
+        primary_key :id
+        include :id
+      end
+
+      expect(Migrations::Tooling::Schema.tables["users"].conflict_strategy).to eq(:raise)
+    end
+
+    it "records a declared conflict strategy" do
+      Migrations::Tooling::Schema.table :uploads do
+        conflict_strategy :ignore
+        synthetic!
+        primary_key :id
+        add_column :id, :text
+      end
+
+      expect(Migrations::Tooling::Schema.tables["uploads"].conflict_strategy).to eq(:ignore)
+    end
+
+    it "raises on an invalid conflict strategy" do
+      expect do
+        Migrations::Tooling::Schema.table :users do
+          conflict_strategy :maybe
+        end
+      end.to raise_error(
+        Migrations::Tooling::Schema::ConfigError,
+        /Invalid conflict strategy :maybe/,
+      )
+    end
+
     it "raises when synthetic table uses include or include_all" do
       %i[include include_all].each do |method|
         expect do
           Migrations::Tooling::Schema.table :"log_#{method}" do
             synthetic!
-            send(method, *(:id if method == :include))
+            public_send(method, *(:id if method == :include))
           end
         end.to raise_error(
           Migrations::Tooling::Schema::ConfigError,

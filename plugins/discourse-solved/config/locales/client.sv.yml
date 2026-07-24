@@ -12,6 +12,17 @@ sv:
           kpi:
             accepted_solutions:
               label: "Godkända lösningar"
+        sections:
+          support:
+            title: "Stöd"
+            answerers:
+              staff: "Personal"
+              member: "Medlemmar"
+              basic: "Grundläggande"
+            response_time:
+              buckets:
+                lt_1h: "< 1 timme"
+                gt_24h: "> 24 timmar"
   js:
     notifications:
       alt:

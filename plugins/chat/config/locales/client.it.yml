@@ -245,8 +245,6 @@ it:
       no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       chat_notifications_title: "Notifiche chat"
-      only_chat_push_notifications:
-        title: "Invia solo le notifiche push della chat"
       ignore_channel_wide_mention:
         title: "Ignora le menzioni a livello di canale"
       show_thread_title_prompts:
@@ -294,8 +292,6 @@ it:
         title: "Suono di notifica della chat desktop"
       sounds:
         none: "Nessuno"
-        bell: "Campanello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Allega un file"
@@ -326,6 +322,8 @@ it:
         filter_closed: Chiusi
         filter_archived: Archiviati
         filter_input_placeholder: Cerca canale per nome
+        filter_joined_all: "Tutte"
+        filter_joined_joined: "Partecipante"
       chat_message_separator:
         today: Oggi
         yesterday: Ieri
@@ -392,6 +390,9 @@ it:
         memberships_count:
           one: "%{count} membro"
           other: "%{count} membri"
+        preview_card:
+          log_in: "Accedi"
+          sign_up: "Registrazione"
       create_channel:
         threading:
           label: "Abilita il threading"
