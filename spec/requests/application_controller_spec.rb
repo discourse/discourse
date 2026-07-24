@@ -1752,8 +1752,8 @@ RSpec.describe ApplicationController do
       it "does not include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["banner"]).to eq("{}")
         end
       end
@@ -1762,8 +1762,8 @@ RSpec.describe ApplicationController do
         sign_in(user)
         get "/"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1774,8 +1774,8 @@ RSpec.describe ApplicationController do
       it "does include banner info for anonymous users" do
         get "/login"
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(JSON.parse(json["banner"])["html"]).to eq("<p>A banner topic</p>")
         end
       end
@@ -1784,7 +1784,7 @@ RSpec.describe ApplicationController do
     context "with content localization enabled" do
       def banner_html
         preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
-        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+        JSON.parse(JSON.parse(preloaded.text)["banner"])["html"]
       end
 
       before do
@@ -1862,9 +1862,7 @@ RSpec.describe ApplicationController do
 
   describe "preloading data" do
     def preloaded_json
-      JSON.parse(
-        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
-      )
+      JSON.parse(Nokogiri::HTML5.fragment(response.body).css("script#data-preloaded").first.text)
     end
 
     context "when user is anon" do

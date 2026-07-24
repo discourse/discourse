@@ -98,7 +98,7 @@
         <%= render partial: "common/discourse_stylesheet" %>
       </discourse-assets-stylesheets>
       <discourse-assets-json>
-        <div class="hidden" id="data-preloaded" data-preloaded="<%= preloaded_json %>"></div>
+        <script type="application/json" id="data-preloaded"><%= raw(preloaded_json) %></script>
       </discourse-assets-json>
       <discourse-assets-icons></discourse-assets-icons>
     </discourse-assets>

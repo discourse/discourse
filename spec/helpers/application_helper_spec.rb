@@ -569,8 +569,11 @@ RSpec.describe ApplicationHelper do
           login_method: nil,
         )
 
-      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
-      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
+      @application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
+      expect(helper.preloaded_json).to include(
+        %{"test":"[\\"\\u003c\\\\/script\\u003e\\u003cscript\\u003e \uFFFD\\"]"},
+      )
+      expect(helper.preloaded_json).not_to include("</script>")
     end
   end
 
