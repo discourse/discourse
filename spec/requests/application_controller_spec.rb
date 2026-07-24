@@ -879,7 +879,7 @@ RSpec.describe ApplicationController do
           dark_secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
           dark_tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
 
-          expect(style).to include(<<~CSS.indent(6))
+          expect(style).to include(<<~CSS.indent(4))
             @media (prefers-color-scheme: light) {
               html {
                 background-color: ##{light_secondary};
@@ -891,7 +891,7 @@ RSpec.describe ApplicationController do
             }
           CSS
 
-          expect(style).to include(<<~CSS.indent(6))
+          expect(style).to include(<<~CSS.indent(4))
             @media (prefers-color-scheme: dark) {
               html {
                 background-color: ##{dark_secondary};
@@ -902,6 +902,156 @@ RSpec.describe ApplicationController do
               }
             }
           CSS
+        end
+      end
+
+      context "with custom splash screen images" do
+        let(:light_svg) do
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect id="light-marker" width="10" height="10"/></svg>'
+        end
+        let(:dark_svg) do
+          '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle id="dark-marker" r="5"/></svg>'
+        end
+
+        def create_splash_upload(content, filename)
+          file = file_from_contents(content, filename, "images")
+          UploadCreator.new(file, filename).create_for(admin.id)
+        end
+
+        # The static splash image is delivered through the `--splash-bg` custom
+        # property; decode each occurrence back to its source SVG.
+        def splash_bg_svgs(style)
+          style
+            .scan(/--splash-bg:\s*url\("([^"]+)"\)/)
+            .map { |match| Base64.decode64(match.first.split(",").last) }
+        end
+
+        def splash_bg_in_media(style, query)
+          start = style.index("@media #{query} {")
+          return if start.nil?
+
+          open = style.index("{", start)
+          depth = 0
+          close = open
+          while close < style.length
+            depth += 1 if style[close] == "{"
+            depth -= 1 if style[close] == "}"
+            break if depth.zero?
+            close += 1
+          end
+
+          uri = style[open + 1...close][/--splash-bg:\s*url\("([^"]+)"\)/, 1]
+          Base64.decode64(uri.split(",").last) if uri
+        end
+
+        before { SiteSetting.splash_screen_image = create_splash_upload(light_svg, "light.svg").id }
+
+        context "when a distinct dark image is configured" do
+          before do
+            SiteSetting.splash_screen_image_dark = create_splash_upload(dark_svg, "dark.svg").id
+          end
+
+          it "uses the light image for the light scheme and the dark image for the dark scheme" do
+            cookies[:forced_color_mode] = nil
+            get "/"
+
+            light_bg, dark_bg = splash_bg_svgs(css_select("#d-splash style").to_s)
+            expect(light_bg).to include("light-marker")
+            expect(dark_bg).to include("dark-marker")
+          end
+
+          it "uses the dark image when dark mode is forced" do
+            cookies[:forced_color_mode] = "dark"
+            get "/"
+
+            expect(splash_bg_in_media(css_select("#d-splash style").to_s, "all")).to include(
+              "dark-marker",
+            )
+          end
+        end
+
+        context "when no dark image is configured" do
+          it "falls back to the light image in the dark scheme" do
+            cookies[:forced_color_mode] = nil
+            get "/"
+
+            light_bg, dark_bg = splash_bg_svgs(css_select("#d-splash style").to_s)
+            expect(light_bg).to include("light-marker")
+            expect(dark_bg).to include("light-marker")
+          end
+        end
+
+        context "with a dark-only configuration" do
+          before do
+            SiteSetting.splash_screen_image = ""
+            SiteSetting.splash_screen_image_dark = create_splash_upload(dark_svg, "dark.svg").id
+          end
+
+          it "uses the dark image in the dark scheme and the default loader in light" do
+            cookies[:forced_color_mode] = nil
+            get "/"
+
+            style = css_select("#d-splash style").to_s
+            bgs = splash_bg_svgs(style)
+
+            expect(bgs.size).to eq(1)
+            expect(bgs.first).to include("dark-marker")
+            expect(style).to include("light-splash-element")
+          end
+
+          it "uses the dark image when dark mode is forced" do
+            cookies[:forced_color_mode] = "dark"
+            get "/"
+
+            expect(splash_bg_svgs(css_select("#d-splash style").to_s).first).to include(
+              "dark-marker",
+            )
+          end
+
+          it "does not apply the dark image when light mode is forced" do
+            cookies[:forced_color_mode] = "light"
+            get "/"
+
+            style = css_select("#d-splash style").to_s
+            expect(splash_bg_in_media(style, "all")).to be_nil
+            expect(splash_bg_in_media(style, "none")).to include("dark-marker")
+          end
+        end
+
+        context "with distinct animated images in auto-switching mode" do
+          let(:light_svg) do
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><style>@keyframes l {}</style><rect id="light-marker" width="10" height="10"/></svg>'
+          end
+          let(:dark_svg) do
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><style>@keyframes d {}</style><circle id="dark-marker" r="5"/></svg>'
+          end
+
+          before do
+            SiteSetting.splash_screen_image_dark = create_splash_upload(dark_svg, "dark.svg").id
+            cookies[:forced_color_mode] = nil
+          end
+
+          it "inlines both SVGs and toggles them with a prefers-color-scheme media query" do
+            get "/"
+
+            expect(response.body).to include("light-marker").and include("dark-marker")
+
+            style = css_select("#d-splash style").to_s
+            expect(style).to include(<<~CSS.indent(4))
+              @media (prefers-color-scheme: dark) {
+                #d-splash .light-splash-element {
+                  display: none;
+                }
+              }
+            CSS
+            expect(style).to include(<<~CSS.indent(4))
+              @media (prefers-color-scheme: light) {
+                #d-splash .dark-splash-element {
+                  display: none;
+                }
+              }
+            CSS
+          end
         end
       end
     end

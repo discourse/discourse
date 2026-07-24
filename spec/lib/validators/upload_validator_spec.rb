@@ -116,5 +116,20 @@ RSpec.describe UploadSettingValidator do
         expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_svg"))
       end
     end
+
+    context "with splash_screen_image_dark" do
+      subject(:validator) { described_class.new(name: :splash_screen_image_dark) }
+
+      fab!(:upload)
+
+      it "is validated as an SVG setting too" do
+        allow_any_instance_of(Upload).to receive(:content).and_return(
+          "<svg><script>evil()</script></svg>",
+        )
+
+        expect(validator.valid_value?(upload.id)).to eq(false)
+        expect(validator.error_message).to eq(I18n.t("site_settings.errors.invalid_svg"))
+      end
+    end
   end
 end

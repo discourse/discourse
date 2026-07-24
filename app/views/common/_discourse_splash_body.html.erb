@@ -1,0 +1,10 @@
+<%- if splash_screen_image_animated?(dark: dark) %>
+  <div class="splash-custom animated">
+    <div class="splash-logo-container animated"><%= splash_screen_inline_svg(dark: dark) %></div>
+  </div>
+<%- else %>
+  <div class="splash-custom static">
+    <div class="splash-logo-container static"></div>
+    <div class="dots-container"><%= render "common/discourse_splash_dots" %></div>
+  </div>
+<%- end %>

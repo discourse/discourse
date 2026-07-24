@@ -4200,6 +4200,13 @@ uncategorized:
     area: "interface"
     validator: "UploadSettingValidator"
 
+  splash_screen_image_dark:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    validator: "UploadSettingValidator"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
