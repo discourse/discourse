@@ -1,0 +1,59 @@
+# frozen_string_literal: true
+
+Migrations::Tooling::Schema.table :posts do
+  index :topic_id, :post_number
+
+  # The finalized `raw` is rebuilt at import time; `original_raw` keeps the
+  # untouched source body alongside the placeholder-substituted `raw`.
+  add_column :original_raw, :text
+
+  # `reply_to_post_number` is resolved to the parent post's `original_id` in the
+  # converter, so it's stored as a post reference rather than a number.
+  column :reply_to_post_number, rename_to: :reply_to_post_id
+
+  column :post_type, :post_type
+  column :hidden_reason_id, :post_hidden_reason
+
+  # Post numbers are recomputed at import time, so the source value is optional.
+  column :post_number, required: false
+
+  # Every converted post is Markdown; the importer leaves `cook_method` at
+  # `regular`. A `raw_html`/`email` post bypasses markdown-it at cook time, so
+  # none of the markdown the placeholder resolver splices in — upload
+  # references, quote tags, hashtags, rebuilt links — would render inside one.
+  # Making this converter-settable means pairing it with an HTML rendering mode
+  # in the resolver (or a no-embeds rule for such posts); unlock it with that,
+  # not before.
+  ignore :cook_method, reason: "Fixed at regular until non-Markdown posts are a designed feature"
+
+  ignore :baked_at,
+         :baked_version,
+         :bookmark_count,
+         :cooked,
+         :edit_reason,
+         :illegal_count,
+         :image_upload_id,
+         :inappropriate_count,
+         :incoming_link_count,
+         :last_version_at,
+         :like_score,
+         :notify_moderators_count,
+         :notify_user_count,
+         :off_topic_count,
+         :outbound_message_id,
+         :percent_rank,
+         :public_version,
+         :qa_vote_count,
+         :quote_count,
+         :raw_email,
+         :reads,
+         :reply_count,
+         :reply_quoted,
+         :score,
+         :self_edits,
+         :spam_count,
+         :version,
+         :via_email,
+         :word_count,
+         reason: "Calculated or unused columns"
+end
