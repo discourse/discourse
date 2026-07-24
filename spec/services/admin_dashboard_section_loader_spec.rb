@@ -45,6 +45,79 @@ describe AdminDashboardSectionLoader do
       )
     end
 
+    it "includes report card payloads in the reports section data" do
+      provider =
+        Class.new(AdminDashboard::Reports::SourceProvider) do
+          def self.source_name = "section_loader_test"
+          def self.label = "Test"
+
+          def self.resolve_many(identifiers, guardian:)
+            identifiers.index_with do |identifier|
+              AdminDashboard::Reports::ResolvedReport.new(
+                source: source_name,
+                identifier: identifier.to_s,
+                title: "Report #{identifier}",
+                description: nil,
+                label: label,
+                url: "/reports/#{identifier}",
+              )
+            end
+          end
+
+          def self.fetch_many(identifiers, guardian:, filters:)
+            identifiers.index_with { |identifier| { identifier:, filters: } }
+          end
+        end
+      plugin = Plugin::Instance.new
+      DiscoursePluginRegistry.register_admin_dashboard_report_source(provider, plugin)
+      AdminDashboardReport.delete_all
+      AdminDashboardReport.create!(
+        source: provider.source_name,
+        identifier: "activity",
+        position: 0,
+      )
+
+      result =
+        described_class.build(
+          section_ids: ["reports"],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        )
+
+      expect(result).to eq(
+        [
+          {
+            id: "reports",
+            data: {
+              items: [
+                {
+                  source: provider.source_name,
+                  identifier: "activity",
+                  title: "Report activity",
+                  description: nil,
+                  label: "Test",
+                  url: "/reports/activity",
+                  key: "#{provider.source_name}:activity",
+                  payload: {
+                    identifier: "activity",
+                    filters: {
+                      start_date: "2026-05-01",
+                      end_date: "2026-05-07",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      )
+    ensure
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == provider
+      end
+    end
+
     it "returns partial section data when a section fails to build" do
       error = StandardError.new("boom")
       AdminDashboardSiteTraffic.stubs(:build).returns({ value: "traffic" })

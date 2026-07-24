@@ -100,12 +100,25 @@ class AdminDashboardSectionLoader
     when "engagement"
       AdminDashboardEngagement.build(start_date: start_date, end_date: end_date, current_user: user)
     when "reports"
-      AdminDashboard::Reports::Section.build(guardian: user.guardian)
+      reports_section_data(user)
     when "search"
       AdminDashboardSearch.build(start_date: start_date, end_date: end_date)
     else
       section = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == id }
       section&.dig(:loader)&.call(start_date: start_date, end_date: end_date, current_user: user)
     end
+  end
+
+  def reports_section_data(user)
+    section = AdminDashboard::Reports::Section.build(guardian: user.guardian)
+    fetched =
+      AdminDashboard::Reports::BulkFetch.call(
+        items: section[:items],
+        filters: { start_date:, end_date: }.compact,
+        guardian: user.guardian,
+      )
+    payloads = fetched[:items].index_by { |item| item[:key] }
+
+    { items: section[:items].map { |item| item.merge(payload: payloads.dig(item[:key], :data)) } }
   end
 end

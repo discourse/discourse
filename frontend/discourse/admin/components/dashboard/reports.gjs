@@ -1,15 +1,12 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import DashboardReportEmptyState from "discourse/admin/components/dashboard/report-empty-state";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import ManageReports from "discourse/admin/components/modal/manage-reports";
 import { lookupAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
-import { loadDashboardReports } from "discourse/admin/lib/dashboard-reports-loader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -23,15 +20,6 @@ const VISIBLE_CAP = 10;
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
-
-  @tracked cards = [];
-  @tracked loading = false;
-
-  constructor() {
-    super(...arguments);
-    this.cards = this.items.map((item) => ({ ...item, payload: null }));
-    this.loadPayloads();
-  }
 
   get items() {
     return this.args.data?.items ?? [];
@@ -50,42 +38,6 @@ export default class DashboardReports extends Component {
 
   get addTileVisible() {
     return this.canEdit && this.items.length < VISIBLE_CAP;
-  }
-
-  @cached
-  get filters() {
-    const filters = {};
-    if (this.args.startDate) {
-      filters.start_date = moment(this.args.startDate).format("YYYY-MM-DD");
-    }
-    if (this.args.endDate) {
-      filters.end_date = moment(this.args.endDate).format("YYYY-MM-DD");
-    }
-    return filters;
-  }
-
-  @action
-  async loadPayloads() {
-    if (!this.items.length) {
-      this.cards = [];
-      return;
-    }
-
-    this.loading = true;
-    try {
-      const payloads = await loadDashboardReports({
-        items: this.layoutItems,
-        filters: this.filters,
-      });
-      this.cards = this.items.map((item) => ({
-        ...item,
-        payload: payloads.get(item.key),
-      }));
-    } catch (e) {
-      popupAjaxError(e);
-    } finally {
-      this.loading = false;
-    }
   }
 
   @action
@@ -138,11 +90,8 @@ export default class DashboardReports extends Component {
           {{i18n "admin.dashboard.sections.reports.fetch_error"}}
         </div>
       {{else}}
-        <div
-          class="db-reports"
-          {{didUpdate this.loadPayloads @data @startDate @endDate}}
-        >
-          {{#each this.cards key="key" as |card|}}
+        <div class="db-reports">
+          {{#each this.items key="key" as |card|}}
             <div class="db-report__card" data-identifier={{card.key}}>
               <div class="db-report__header">
                 <a href={{card.url}} class="db-report__name">{{card.title}}</a>
