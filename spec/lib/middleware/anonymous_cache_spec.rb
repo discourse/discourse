@@ -337,6 +337,28 @@ RSpec.describe Middleware::AnonymousCache do
     end
   end
 
+  describe "cacheability request env" do
+    def cacheability_seen_by_app(request_env)
+      cacheability = nil
+      app =
+        lambda do |inner_env|
+          cacheability = inner_env[Middleware::AnonymousCache::CACHEABLE_ENV]
+          [200, {}, []]
+        end
+
+      described_class.new(app).call(request_env)
+      cacheability
+    end
+
+    it "is true when the request can use the anonymous cache" do
+      expect(cacheability_seen_by_app(env)).to eq(true)
+    end
+
+    it "is false when the request cannot use the anonymous cache" do
+      expect(cacheability_seen_by_app(env("REQUEST_METHOD" => "POST"))).to eq(false)
+    end
+  end
+
   describe "invalid request payload" do
     it "returns 413 for GET request with payload" do
       status, headers, _ =

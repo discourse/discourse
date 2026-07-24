@@ -10,10 +10,6 @@ module Middleware
     end
 
     def call(env)
-      if !Middleware::AnonymousCache::Helper.new(env).cacheable?
-        env[NONCE_ENV] = SecureRandom.alphanumeric(25)
-      end
-
       status, headers, response = @app.call(env)
 
       if nonce_placeholder = headers.delete(PLACEHOLDER_HEADER)

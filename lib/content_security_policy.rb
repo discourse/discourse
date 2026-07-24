@@ -9,9 +9,15 @@ class ContentSecurityPolicy
     end
 
     def nonce_placeholder(response_headers, request_env:)
-      response_headers[::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER] ||= request_env[
-        ::Middleware::CspScriptNonceInjector::NONCE_ENV
-      ] || "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+      response_headers[::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER] ||= if request_env[
+           ::Middleware::AnonymousCache::CACHEABLE_ENV
+         ]
+        "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+      else
+        request_env[::Middleware::CspScriptNonceInjector::NONCE_ENV] ||= SecureRandom.alphanumeric(
+          25,
+        )
+      end
     end
   end
 
