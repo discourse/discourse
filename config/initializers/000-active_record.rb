@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-ActiveRecord::Tasks::DatabaseTasks.structure_load_flags = { postgresql: "--single-transaction" }
+if !Discourse.is_parallel_test?
+  ActiveRecord::Tasks::DatabaseTasks.structure_load_flags = { postgresql: "--single-transaction" }
+end
 
 # No ActiveRecord for these models. Avoids the "unknown OID" warnings.
 # We need it in core, because plugins are not loaded in core tests,
