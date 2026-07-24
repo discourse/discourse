@@ -172,6 +172,38 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".item[data-id='3']").exists("shows second feature item");
   });
 
+  test("marks the dropdown active when its value differs from the default", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".d-filter-controls__dropdown.--active")
+      .doesNotExist("not active while on the default option");
+
+    await select(".d-filter-controls__dropdown", "feature");
+
+    assert
+      .dom(".d-filter-controls__dropdown.--active")
+      .exists("active once a non-default option is chosen");
+  });
+
   test("combines text and dropdown filters (client-side)", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name", "description"]);
@@ -282,7 +314,7 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     assert.dom(".filter-input").hasValue("", "clears text input");
   });
 
-  test("shows reset button next to filter input when there are active filters that find results", async function (assert) {
+  test("shows the reset button next to the input when a text filter finds results", async function (assert) {
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
 
@@ -306,7 +338,35 @@ module("Integration | ui-kit | DFilterControls", function (hooks) {
     await fillIn(".filter-input", "first");
     assert
       .dom(".d-filter-controls > .d-filter-controls__reset")
-      .exists("shows reset button after filter controls");
+      .exists("shows the reset button beside the input");
+  });
+
+  test("keeps the reset button visible while loading", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("onTextFilterChange", () => {});
+
+    await render(
+      <template>
+        <DFilterControls
+          @array={{this.data}}
+          @onTextFilterChange={{this.onTextFilterChange}}
+          @loading={{true}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </DFilterControls>
+      </template>
+    );
+
+    await fillIn(".filter-input", "first");
+    assert
+      .dom(".d-filter-controls > .d-filter-controls__reset")
+      .exists("reset button stays put during a reload");
   });
 
   test("respects minItemsForFilter parameter", async function (assert) {
