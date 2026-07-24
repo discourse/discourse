@@ -2,6 +2,7 @@
 
 module Middleware
   class CspScriptNonceInjector
+    NONCE_ENV = "discourse.csp_nonce"
     PLACEHOLDER_HEADER = "Discourse-CSP-Nonce-Placeholder"
 
     def initialize(app, settings = {})
@@ -9,12 +10,19 @@ module Middleware
     end
 
     def call(env)
+      if !Middleware::AnonymousCache::Helper.new(env).cacheable?
+        env[NONCE_ENV] = SecureRandom.alphanumeric(25)
+      end
+
       status, headers, response = @app.call(env)
 
       if nonce_placeholder = headers.delete(PLACEHOLDER_HEADER)
-        nonce = SecureRandom.alphanumeric(25)
-        parts = []
-        response.each { |part| parts << part.to_s.gsub(nonce_placeholder, nonce) }
+        nonce = env[NONCE_ENV] || SecureRandom.alphanumeric(25)
+        parts = response
+        if !env[NONCE_ENV]
+          parts = []
+          response.each { |part| parts << part.to_s.gsub(nonce_placeholder, nonce) }
+        end
         %w[Content-Security-Policy Content-Security-Policy-Report-Only].each do |name|
           next if headers[name].blank?
           headers[name] = headers[name].sub("script-src ", "script-src 'nonce-#{nonce}' ")
