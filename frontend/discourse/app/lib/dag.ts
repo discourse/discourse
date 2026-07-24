@@ -64,11 +64,11 @@ interface DAGVertex<T> {
 }
 
 /**
- * Module-level cache for sort results. Keyed by a content fingerprint
- * (keys + before/after constraints), stores the sorted key order.
- * Different DAG instances with the same structure share the cached
- * order, which matters for hot paths like the post menu where the
- * same button set is resolved per post.
+ * Module-level cache for sort results. Keyed by a fingerprint of the
+ * resolved graph (vertices, insertion order, and edges), stores the
+ * sorted key order. Different DAG instances with the same structure
+ * share the cached order, which matters for hot paths like the post
+ * menu where the same button set is resolved per post.
  */
 const sortCache = new Map<string, string[]>();
 const SORT_CACHE_MAX = 50;
@@ -77,16 +77,6 @@ const WAITING = 0;
 const READY_QUEUE = 1;
 const READY_STACK = 2;
 const PLACED = 3;
-
-function normalizePosition(pos: string | string[] | undefined): string {
-  if (!pos) {
-    return "";
-  }
-  if (typeof pos === "string") {
-    return pos;
-  }
-  return pos.join("\x1F");
-}
 
 export default class DAG<T = unknown> {
   /**
@@ -531,9 +521,8 @@ export default class DAG<T = unknown> {
 
   /**
    * Returns the sorted key order, using the module-level content cache
-   * when possible. The cache is keyed by a fingerprint of the items
-   * and their constraints (values are excluded since they don't affect
-   * sort order).
+   * when possible. The cache is keyed by a fingerprint of the resolved
+   * graph (values are excluded since they don't affect sort order).
    */
   #resolveKeyOrder(): string[] {
     const fingerprint = this.#contentFingerprint();
@@ -555,15 +544,14 @@ export default class DAG<T = unknown> {
   }
 
   #contentFingerprint(): string {
+    // Keys the shared cache on everything #sort() consumes: vertices, insertion order, and resolved edges.
     let fp = "";
-    for (const [key, { before, after }] of this.#items) {
-      fp +=
-        key +
-        "\0" +
-        normalizePosition(before) +
-        "\0" +
-        normalizePosition(after) +
-        "\n";
+    for (const [key, v] of this.#vertices) {
+      fp += key + "\x1D" + v.insertionIdx + "\x1D";
+      if (v.outEdges.size > 0) {
+        fp += Array.from(v.outEdges).sort().join("\x1F");
+      }
+      fp += "\n";
     }
     return fp;
   }

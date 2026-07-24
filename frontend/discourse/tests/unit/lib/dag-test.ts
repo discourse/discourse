@@ -381,6 +381,38 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
+  test("module-level content cache: fallback order is not shared across differing options", function (assert) {
+    // The cache fingerprint is built from the items' requested before/after
+    // only. When a cycle triggers the fallback path, the resolved order also
+    // depends on defaultPosition (and throwErrorOnCycle), so two DAGs with the
+    // same items but a different defaultPosition must NOT share a sort.
+    const items: Array<[string, string, DAGPosition]> = [
+      ["cache_a", "a", { after: "cache_b" }],
+      ["cache_b", "b", { after: "cache_a" }], // cycle cache_a <-> cache_b
+      ["cache_c", "c", {}],
+    ];
+
+    const first = DAG.from(items, {
+      throwErrorOnCycle: false,
+      defaultPosition: { before: "cache_c" },
+    });
+    assert.deepEqual(
+      resolveKeys(first),
+      ["cache_b", "cache_a", "cache_c"],
+      "first DAG resolves the cycle using its own defaultPosition"
+    );
+
+    const second = DAG.from(items, {
+      throwErrorOnCycle: false,
+      defaultPosition: { after: "cache_c" },
+    });
+    assert.deepEqual(
+      resolveKeys(second),
+      ["cache_c", "cache_b", "cache_a"],
+      "second DAG must use its own defaultPosition, not the cached order from the first"
+    );
+  });
+
   /* after locality */
 
   test("single after: item placed immediately after anchor", function (assert) {
