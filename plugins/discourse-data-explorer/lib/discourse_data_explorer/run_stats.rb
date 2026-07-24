@@ -32,12 +32,14 @@ module DiscourseDataExplorer
     end
 
     class << self
-      # Idempotent: `after_initialize` runs once per boot, but the Kit registry
-      # is process-lifetime state, so dev reloads may re-enter (spike trade-off).
-      def register!
+      # Declares through the plugin.rb `jsonapi` keyword — the real registration
+      # path. Idempotent: `after_initialize` runs once per boot, but the Kit
+      # registry is process-lifetime state, so dev reloads may re-enter (spike
+      # trade-off).
+      def register!(plugin = Discourse.plugins_by_name["discourse-data-explorer"])
         return if JsonApiKit.plugins.key?(NAMESPACE)
 
-        JsonApiKit.register_plugin(namespace: NAMESPACE) do
+        plugin.jsonapi(namespace: NAMESPACE) do
           register_relationship(
             :queries,
             resource: StatsResource,

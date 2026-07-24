@@ -7,9 +7,10 @@ enforcement (A), include-gated relationships (B), per-owner version changes with
 auto-namespaced filter renames (D), disabled-plugin strictness (E), and the C resolution —
 core-timeline base snap, per-plugin overrides, per-owner gaps, and `CORE_PLUGINS`-granted
 core-timeline membership (bundled plugin's change advances the advertised version; its
-override → 400). Still unbuilt: the plugin-facing `jsonapi` block in plugin.rb (the spike
-registers at the Kit level), `register_sort` projection, date-monotonicity enforcement,
-the repo ⟺ `CORE_PLUGINS` CI consistency check, F (frontend).
+override → 400). The plugin-facing **`jsonapi` keyword is built** (2026-07-24): defined on
+`Plugin::Instance` (spike-side; its real home is core), and the run-stats registration
+goes through it at boot. Still unbuilt: `register_sort` projection, date-monotonicity
+enforcement, the repo ⟺ `CORE_PLUGINS` CI consistency check, F (frontend).
 
 **Vocabulary (decided 2026-07-24):** the concept this doc historically calls an
 "extension" is named **plugin** everywhere — code included (`JsonApiKit::Plugin`,

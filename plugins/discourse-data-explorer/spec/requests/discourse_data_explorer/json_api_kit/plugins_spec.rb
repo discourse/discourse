@@ -7,7 +7,7 @@
 # (unregistered ⇒ strict 400s), the atomic ownership enforcement claimed in A/B,
 # and C's timeline semantics (own timeline frozen at the pin, overrides,
 # CORE_PLUGINS riding the core timeline).
-RSpec.describe "JSON:API Kit plugin plugins" do
+RSpec.describe "JSON:API Kit plugins" do
   fab!(:admin)
   fab!(:ran_query) { Fabricate(:query, hidden: false, last_run_at: Time.utc(2026, 7, 1, 10, 0)) }
   fab!(:never_run_query) { Fabricate(:query, hidden: false, last_run_at: nil) }
@@ -273,6 +273,31 @@ RSpec.describe "JSON:API Kit plugin plugins" do
       it "rejects the request" do
         expect(response.status).to eq(400)
       end
+    end
+  end
+
+  # The plugin.rb declaration surface: one `jsonapi` block per plugin,
+  # available to every Plugin::Instance (the run-stats registration itself goes
+  # through it at boot).
+  describe "the plugin.rb `jsonapi` keyword" do
+    let(:data_explorer) { Discourse.plugins_by_name["discourse-data-explorer"] }
+
+    around do |example|
+      DiscourseDataExplorer::JsonApiKit.unregister_plugin("run-stats")
+      example.run
+    ensure
+      DiscourseDataExplorer::JsonApiKit.unregister_plugin("run-stats")
+      DiscourseDataExplorer::RunStats.register!
+    end
+
+    it "registers the declarations with the Kit" do
+      data_explorer.jsonapi(namespace: "run-stats") do
+        register_relationship(:queries, resource: DiscourseDataExplorer::RunStats::StatsResource) do
+          nil
+        end
+      end
+
+      expect(DiscourseDataExplorer::JsonApiKit.plugins.keys).to include("run-stats")
     end
   end
 

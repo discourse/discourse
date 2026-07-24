@@ -47,11 +47,20 @@ FastJsonapi::SerializationCore::ClassMethods.prepend(
   DiscourseDataExplorer::JsonApiKit::LazyNestedLinkagePatch,
 )
 
+# The plugin-facing declaration surface (docs/plugins-design.md B): one `jsonapi`
+# block per plugin, atomic. Its real home is core, next to the other plugin.rb
+# keywords; the spike defines it from the Kit's side.
+class ::Plugin::Instance
+  def jsonapi(namespace:, &block)
+    DiscourseDataExplorer::JsonApiKit.register_plugin(namespace:, &block)
+  end
+end
+
 after_initialize do
   # A stand-in "official plugin" exercising the Kit's plugin surface for
   # real — its contributions show up in the generated API docs. See
   # lib/discourse_data_explorer/run_stats.rb.
-  DiscourseDataExplorer::RunStats.register!
+  DiscourseDataExplorer::RunStats.register!(self)
 
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
