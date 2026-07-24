@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
         put "user_count" => "site_settings#user_count"
       end
 
+      post "onboarding/events" => "onboarding_events#create"
+
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"

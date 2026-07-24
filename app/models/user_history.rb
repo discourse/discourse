@@ -170,6 +170,9 @@ class UserHistory < ActiveRecord::Base
         notified_about_composer_education: 125, # not used anymore
         recover_post: 126,
         change_access_control_list_permissions: 127,
+        admin_onboarding_step_completed: 128,
+        admin_onboarding_completed: 129,
+        admin_onboarding_dismissed: 130,
       )
   end
 
@@ -301,6 +304,9 @@ class UserHistory < ActiveRecord::Base
       change_site_setting_groups
       upcoming_change_available
       change_access_control_list_permissions
+      admin_onboarding_step_completed
+      admin_onboarding_completed
+      admin_onboarding_dismissed
     ]
   end
 
