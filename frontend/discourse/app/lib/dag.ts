@@ -78,6 +78,13 @@ const READY_QUEUE = 1;
 const READY_STACK = 2;
 const PLACED = 3;
 
+class DAGCycleError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DAGCycleError";
+  }
+}
+
 export default class DAG<T = unknown> {
   /**
    * Creates a new DAG instance from an iterable of entries.
@@ -326,18 +333,19 @@ export default class DAG<T = unknown> {
       try {
         this.#addVertexAndEdges(key, value, before, after);
       } catch (e) {
-        if (e.message.match(/cycle/i)) {
-          const { before: newBefore, after: newAfter } =
-            this.#defaultPositionForKey(key);
-          try {
-            this.#addVertexAndEdges(key, value, newBefore, newAfter);
-          } catch (e2) {
-            if (!e2.message?.match(/cycle/i)) {
-              throw e2;
-            }
-            // Both the requested and default positions create a cycle.
-            // The vertex exists but has no constraint edges.
+        if (!(e instanceof DAGCycleError)) {
+          throw e;
+        }
+        const { before: newBefore, after: newAfter } =
+          this.#defaultPositionForKey(key);
+        try {
+          this.#addVertexAndEdges(key, value, newBefore, newAfter);
+        } catch (e2) {
+          if (!(e2 instanceof DAGCycleError)) {
+            throw e2;
           }
+          // Both the requested and default positions create a cycle.
+          // The vertex exists but has no constraint edges.
         }
       }
     }
@@ -398,7 +406,7 @@ export default class DAG<T = unknown> {
 
   #addEdge(from: DAGVertex<T>, to: DAGVertex<T>): boolean {
     if (from.key === to.key) {
-      throw new Error("cycle detected: " + to.key + " <- " + to.key);
+      throw new DAGCycleError("cycle detected: " + to.key + " <- " + to.key);
     }
 
     if (from.outEdges.has(to.key)) {
@@ -408,7 +416,7 @@ export default class DAG<T = unknown> {
     if (to.outEdges.size > 0) {
       const path = this.#findCyclePath(to, from.key);
       if (path !== null) {
-        throw new Error("cycle detected: " + path);
+        throw new DAGCycleError("cycle detected: " + path);
       }
     }
 
@@ -655,7 +663,9 @@ export default class DAG<T = unknown> {
           remaining.push(key);
         }
       }
-      throw new Error("cycle detected among: " + JSON.stringify(remaining));
+      throw new DAGCycleError(
+        "cycle detected among: " + JSON.stringify(remaining)
+      );
     }
 
     return result;
