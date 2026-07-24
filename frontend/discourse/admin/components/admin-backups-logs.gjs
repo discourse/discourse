@@ -1,90 +1,98 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
-import Component from "@ember/component";
-import { scheduleOnce } from "@ember/runloop";
-import { classNames } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { cancel, scheduleOnce } from "@ember/runloop";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
-@classNames("admin-backups-logs")
 export default class AdminBackupsLogs extends Component {
-  showLoadingSpinner = false;
-  hasFormattedLogs = false;
-  noLogsMessage = i18n("admin.backups.logs.none");
-  formattedLogs = "";
-  index = 0;
+  @tracked formattedLogs = "";
 
-  _reset() {
-    this.setProperties({ formattedLogs: "", index: 0 });
-  }
-
-  _scrollDown() {
-    const div = this.element;
-    div.scrollTop = div.scrollHeight;
-  }
-
-  @on("init")
-  @observes("logs.[]")
-  _resetFormattedLogs() {
-    if (this.logs.length === 0) {
-      this._reset(); // reset the cached logs whenever the model is reset
-      this.renderLogs();
-    }
-  }
-
-  _updateFormattedLogsFunc() {
-    const logs = this.logs;
-    if (logs.length === 0) {
+  registerElement = (element) => {
+    this.#element = element;
+    this.updateLogs();
+  };
+  updateLogs = () => {
+    if (this.args.logs.length === 0) {
+      cancel(this.#formatTimer);
+      this.#formatTimer = null;
+      this.#resetFormattedLogs();
       return;
     }
 
-    // do the log formatting only once for HELLish performance
-    let formattedLogs = this.formattedLogs;
-    for (let i = this.index, length = logs.length; i < length; i++) {
-      const date = logs[i].get("timestamp"),
-        message = logs[i].get("message");
-      formattedLogs += "[" + date + "] " + message + "\n";
-    }
-    // update the formatted logs & cache index
-    this.setProperties({
-      formattedLogs,
-      index: logs.length,
-    });
-    // force rerender
-    this.renderLogs();
+    this.#formatTimer = discourseDebounce(this, this.#formatLogs, 150);
+  };
+  #element;
+  #formatTimer;
+  #lastProcessedLog;
+  #processedLogCount = 0;
 
-    scheduleOnce("afterRender", this, this._scrollDown);
+  #formatLogs = () => {
+    const logs = this.args.logs;
+
+    if (logs.length === 0) {
+      this.#resetFormattedLogs();
+      return;
+    }
+
+    if (
+      this.#processedLogCount > logs.length ||
+      (this.#processedLogCount > 0 &&
+        logs[this.#processedLogCount - 1] !== this.#lastProcessedLog)
+    ) {
+      this.#resetFormattedLogs();
+    }
+
+    let appendedLogs = "";
+    for (let index = this.#processedLogCount; index < logs.length; index++) {
+      const log = logs[index];
+      appendedLogs += `[${log.get("timestamp")}] ${log.get("message")}\n`;
+    }
+
+    this.formattedLogs += appendedLogs;
+    this.#processedLogCount = logs.length;
+    this.#lastProcessedLog = logs.at(-1);
+    scheduleOnce("afterRender", this, this.#performScroll);
+  };
+
+  #performScroll = () => {
+    if (this.#element) {
+      this.#element.scrollTop = this.#element.scrollHeight;
+    }
+  };
+
+  willDestroy() {
+    cancel(this.#formatTimer);
+    this.#element = null;
+    super.willDestroy(...arguments);
   }
 
-  @on("init")
-  @observes("logs.[]")
-  _updateFormattedLogs() {
-    discourseDebounce(this, this._updateFormattedLogsFunc, 150);
+  #resetFormattedLogs() {
+    this.formattedLogs = "";
+    this.#processedLogCount = 0;
+    this.#lastProcessedLog = null;
   }
 
-  renderLogs() {
-    const formattedLogs = this.formattedLogs;
-    if (formattedLogs && formattedLogs.length > 0) {
-      this.set("hasFormattedLogs", true);
-    } else {
-      this.set("hasFormattedLogs", false);
-    }
-    // add a loading indicator
-    if (this.get("status.isOperationRunning")) {
-      this.set("showLoadingSpinner", true);
-    } else {
-      this.set("showLoadingSpinner", false);
-    }
+  get lastLog() {
+    return this.args.logs.at(-1);
   }
 
   <template>
-    {{#if this.hasFormattedLogs}}
-      <pre>{{this.formattedLogs}}</pre>
-    {{else}}
-      <p>{{this.noLogsMessage}}</p>
-    {{/if}}
-    {{#if this.showLoadingSpinner}}
-      <div class="spinner small"></div>
-    {{/if}}
+    <div
+      ...attributes
+      class="admin-backups-logs"
+      {{didInsert this.registerElement}}
+      {{didUpdate this.updateLogs @logs.length this.lastLog}}
+    >
+      {{#if this.formattedLogs}}
+        <pre>{{this.formattedLogs}}</pre>
+      {{else}}
+        <p>{{i18n "admin.backups.logs.none"}}</p>
+      {{/if}}
+      {{#if @status.isOperationRunning}}
+        <div class="spinner small"></div>
+      {{/if}}
+    </div>
   </template>
 }
