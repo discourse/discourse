@@ -314,6 +314,12 @@ export default class AdminDashboardController extends Controller {
   }
 
   @action
+  async refreshSection(sectionId) {
+    this.#updateSection(sectionId, { error: false, stale: true });
+    await this.loadSection(sectionId);
+  }
+
+  @action
   retrySection(sectionId) {
     this.#updateSection(sectionId, { error: false });
     this.loadSection(sectionId);

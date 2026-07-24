@@ -67,8 +67,8 @@ export default class DashboardReports extends Component {
 
   @action
   async onLayoutChanged() {
-    if (this.args.refreshSections) {
-      await this.args.refreshSections();
+    if (this.args.refreshSection) {
+      await this.args.refreshSection();
     }
   }
 
