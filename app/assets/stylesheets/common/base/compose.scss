@@ -37,6 +37,11 @@ html.composer-open:not(.has-full-page-chat) {
   }
 }
 
+.composer-toggles-menu-content,
+.composer-actions-dropdown {
+  z-index: z("mobile-composer");
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -218,48 +223,82 @@ html.composer-open:not(.has-full-page-chat) {
       }
     }
 
-    .composer-action-title {
-      display: flex;
-      align-items: center;
-      width: auto;
-      max-width: 100%;
-      min-width: 0; // allows shrinking when needed
+    .composer-actions-trigger {
+      border-color: var(--input-border-color);
+    }
 
-      .action-title {
-        display: flex;
-        align-items: center;
-        line-height: normal;
-        min-width: 0;
+    .composer-actions-trigger .d-button-label {
+      @include ellipsis;
+    }
 
-        .topic-link,
-        .user-link,
-        .post-link {
-          margin-right: 8px;
+    .composer-whisper-indicator {
+      margin-left: auto;
 
-          @include ellipsis;
-        }
-      }
-
-      .username {
-        margin-right: 5px;
-        max-width: 100px;
-
-        @include ellipsis;
-
-        @media screen and (width <= 500px) {
+      @include viewport.until(sm) {
+        .d-button-label {
           display: none;
         }
+
+        .d-icon {
+          margin-right: 0;
+        }
       }
+      font-size: var(--font-down-1);
+      border-radius: var(--d-border-radius);
+
+      &.--public {
+        --d-button-default-text-color: var(--primary-high);
+        --d-button-flat-icon-color: var(--primary-high);
+      }
+
+      &.--whispering {
+        --d-button-default-text-color: var(--tertiary);
+        --d-button-flat-icon-color: var(--tertiary);
+
+        &:hover {
+          background-color: var(--tertiary-200);
+        }
+      }
+    }
+
+    .composer-actions-reply-target-link {
+      --d-button-default-text-color: var(--primary-high);
+      --d-button-flat-icon-color: var(--primary-high);
+      overflow: hidden;
+
+      &__label {
+        @include ellipsis;
+      }
+    }
+
+    .composer-action-title {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0; // allows shrinking when needed
 
       img.avatar {
         margin-right: 3px;
       }
     }
 
+    .action-title {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+
+      .topic-link {
+        @include ellipsis;
+      }
+    }
+
     .composer-controls {
       display: flex;
-      gap: 8px;
-      margin-left: 8px;
     }
 
     // Protection for languages with long strings on very small screens. This
@@ -270,6 +309,12 @@ html.composer-open:not(.has-full-page-chat) {
         flex-wrap: wrap;
       }
 
+      .composer-actions-reply-target-link {
+        .d-icon {
+          margin-right: none;
+        }
+      }
+
       .display-edit-reason.--active {
         width: 100%;
       }
@@ -278,10 +323,6 @@ html.composer-open:not(.has-full-page-chat) {
         width: 100%;
         margin-left: 0;
         margin-top: var(--space-2);
-      }
-
-      .composer-controls {
-        align-self: flex-start;
       }
     }
   }
@@ -377,7 +418,7 @@ html.composer-open:not(.has-full-page-chat) {
       width: auto;
 
       &.has-selection {
-        .name {
+        .selected-name .name {
           font-size: var(--font-up-1);
         }
       }
@@ -548,11 +589,11 @@ html.composer-open:not(.has-full-page-chat) {
       flex: 1 1 auto;
     }
 
-    .btn-primary {
-      flex: 0 0 auto;
+    .d-combo-button-button .d-icon {
+      margin-right: 0.45em;
     }
 
-    .cancel {
+    .d-c .cancel {
       align-items: center;
       display: flex;
       margin-left: 1em;
@@ -634,10 +675,6 @@ html.composer-open:not(.has-full-page-chat) {
       color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
-    }
-
-    + .btn-mini-toggle {
-      margin-left: 0;
     }
   }
 
@@ -1195,5 +1232,20 @@ body.has-sidebar-page {
       --layout-gap: 1em;
       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
     }
+  }
+}
+
+.composer-toggle-item {
+  cursor: pointer;
+
+  @include menu-item;
+
+  &__icons .d-toggle-switch {
+    --toggle-switch-width: var(--d-sidebar-section-link-prefix-width);
+    --toggle-switch-height: 16px;
+  }
+
+  &__icons .d-toggle-switch__checkbox-slider .d-icon {
+    display: none;
   }
 }

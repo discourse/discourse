@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const DEFAULT_QUICK_TIPS = [
@@ -76,7 +76,7 @@ export default class RandomQuickTip extends Component {
   <template>
     <li class="search-random-quick-tip">
       <button
-        class={{concatClass
+        class={{dConcatClass
           "tip-label"
           (if this.randomTip.clickable "tip-clickable")
         }}

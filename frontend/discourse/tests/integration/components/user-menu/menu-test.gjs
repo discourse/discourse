@@ -1,12 +1,11 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { click, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Menu from "discourse/components/user-menu/menu";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | user-menu", function (hooks) {
+module("Integration | Component | UserMenu", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default tab is all notifications", async function (assert) {
@@ -16,7 +15,7 @@ module("Integration | Component | user-menu", function (hooks) {
       .dom(".top-tabs.tabs-list .btn.active")
       .hasAttribute("id", "user-menu-button-all-notifications");
 
-    const notifications = queryAll("#quick-access-all-notifications ul li");
+    const notifications = findAll("#quick-access-all-notifications ul li");
     assert.dom(notifications[0]).hasClass("edited");
     assert.dom(notifications[1]).hasClass("replied");
     assert.dom(notifications[2]).hasClass("liked-consolidated");
@@ -41,7 +40,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     this.currentUser.set("can_send_private_messages", true);
     await render(<template><Menu /></template>);
-    const tabs = queryAll(".top-tabs.tabs-list .btn");
+    const tabs = findAll(".top-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 6);
     ["all-notifications", "replies", "likes", "messages", "bookmarks"].forEach(
       (tab, index) => {
@@ -55,7 +54,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the bottom", async function (assert) {
     this.currentUser.set("can_send_private_messages", true);
     await render(<template><Menu /></template>);
-    const tabs = queryAll(".bottom-tabs.tabs-list .btn");
+    const tabs = findAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
@@ -69,7 +68,7 @@ module("Integration | Component | user-menu", function (hooks) {
     await render(<template><Menu /></template>);
     assert.dom("#user-menu-button-likes").doesNotExist();
 
-    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    const tabs = findAll(".tabs-list .btn"); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
 
     assert.deepEqual(
@@ -89,7 +88,7 @@ module("Integration | Component | user-menu", function (hooks) {
       .dom("#user-menu-button-review-queue")
       .hasAttribute("data-tab-number", "5");
 
-    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    const tabs = findAll(".tabs-list .btn"); // top and bottom tabs
     assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
@@ -116,7 +115,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     assert.dom("#user-menu-button-messages").doesNotExist();
 
-    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    const tabs = findAll(".tabs-list .btn"); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
 
     assert.deepEqual(
@@ -271,14 +270,14 @@ module("Integration | Component | user-menu", function (hooks) {
       "request params has filter_by_types set to `liked`, `liked_consolidated` and `reaction`"
     );
     assert.strictEqual(queryParams.silent, "true");
-    let activeTabs = queryAll(".top-tabs .btn.active");
+    let activeTabs = findAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(
       activeTabs[0].id,
       "user-menu-button-likes",
       "active tab is now the likes tab"
     );
-    assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
+    assert.dom("#quick-access-likes ul li").exists({ count: 3 });
 
     await click("#user-menu-button-replies");
     assert.dom("#quick-access-replies.quick-access-panel").exists();
@@ -288,7 +287,7 @@ module("Integration | Component | user-menu", function (hooks) {
       "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");
-    activeTabs = queryAll(".top-tabs .btn.active");
+    activeTabs = findAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(
       activeTabs[0].id,
@@ -298,14 +297,14 @@ module("Integration | Component | user-menu", function (hooks) {
 
     await click("#user-menu-button-review-queue");
     assert.dom("#quick-access-review-queue.quick-access-panel").exists();
-    activeTabs = queryAll(".top-tabs .btn.active");
+    activeTabs = findAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(
       activeTabs[0].id,
       "user-menu-button-review-queue",
       "active tab is now the reviewables tab"
     );
-    assert.strictEqual(queryAll("#quick-access-review-queue ul li").length, 8);
+    assert.dom("#quick-access-review-queue ul li").exists({ count: 8 });
   });
 
   test("count on the likes tab", async function (assert) {

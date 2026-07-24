@@ -5,7 +5,7 @@ RSpec.describe S3Inventory do
     S3Inventory.new(:upload, s3_inventory_bucket: "some-inventory-bucket/inventoried-bucket/prefix")
   end
 
-  let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
+  let(:csv_filename) { "#{Rails.root.join("spec/fixtures/csv/s3_inventory.csv")}" }
 
   let(:system_themes_screenshots) do
     UploadReference
@@ -191,7 +191,7 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_client.expects(:get_object).once
+      inventory.s3_helper.expects(:download_file).once
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
     end
@@ -212,7 +212,7 @@ RSpec.describe S3Inventory do
         },
       )
 
-      inventory.s3_client.expects(:get_object).never
+      inventory.s3_helper.expects(:download_file).never
 
       capture_stdout { inventory.backfill_etags_and_list_missing }
 

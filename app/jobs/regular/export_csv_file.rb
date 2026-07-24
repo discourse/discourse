@@ -67,6 +67,8 @@ module Jobs
       entity[:method] = :"#{entity[:name]}_export"
       raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
 
+      Guardian.new(@current_user).ensure_can_export_entity!(@entity, nil, @extra)
+
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
       entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
         "#{@extra[:name].dasherize}-#{@timestamp}"
@@ -199,7 +201,7 @@ module Jobs
         @extra[:include_subcategories],
       ) if @extra[:include_subcategories].present?
 
-      report = Report.find(@extra[:name], @extra)
+      report = Report.find(@extra[:name], @extra.merge(guardian: @current_user&.guardian))
 
       header = []
       titles = {}
@@ -353,6 +355,7 @@ module Jobs
 
     def get_staff_action_fields(staff_action)
       staff_action_array = []
+      can_see_content = staff_action_log_guardian.can_see_staff_action_log_content?(staff_action)
 
       HEADER_ATTRS_FOR["staff_action"].each do |attr|
         data =
@@ -368,6 +371,8 @@ module Jobs
             else
               "#{user.username} #{staff_action.attributes[attr]}"
             end
+          elsif %w[details context].include?(attr) && !can_see_content
+            attr == "details" ? I18n.t("staff_action_logs.redacted") : nil
           else
             staff_action.attributes[attr]
           end
@@ -427,6 +432,10 @@ module Jobs
       end
 
       screened_url_array
+    end
+
+    def staff_action_log_guardian
+      @staff_action_log_guardian ||= Guardian.new(@current_user)
     end
 
     def notify_user(upload, export_title)

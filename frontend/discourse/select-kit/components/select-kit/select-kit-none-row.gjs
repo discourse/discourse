@@ -1,12 +1,12 @@
 import { classNames } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 @classNames("none")
 export default class SelectKitNoneRow extends SelectKitRowComponent {
   <template>
     {{#each this.icons as |i|}}
-      {{icon i translatedTitle=this.dasherizedTitle}}
+      {{dIcon i translatedTitle=this.dasherizedTitle}}
     {{/each}}
 
     <span class="name">

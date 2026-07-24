@@ -19,20 +19,20 @@ end
 # Table name: moved_posts
 #
 #  id                :bigint           not null, primary key
-#  old_topic_id      :bigint           not null
-#  old_post_id       :bigint           not null
-#  old_post_number   :bigint           not null
-#  new_topic_id      :bigint           not null
-#  new_topic_title   :string           not null
-#  new_post_id       :bigint           not null
-#  new_post_number   :bigint           not null
 #  created_new_topic :boolean          default(FALSE), not null
+#  full_move         :boolean
+#  new_post_number   :bigint           not null
+#  new_topic_title   :string           not null
+#  old_post_number   :bigint           not null
+#  old_topic_title   :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  old_topic_title   :string
+#  new_post_id       :bigint           not null
+#  new_topic_id      :bigint           not null
+#  old_post_id       :bigint           not null
+#  old_topic_id      :bigint           not null
 #  post_user_id      :integer
 #  user_id           :integer
-#  full_move         :boolean
 #
 # Indexes
 #

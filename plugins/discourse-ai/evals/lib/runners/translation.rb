@@ -17,7 +17,8 @@ module DiscourseAi
           feature_name&.start_with?("translation:")
         end
 
-        def initialize(feature_name)
+        def initialize(feature_name, agent_prompt_override = nil)
+          super
           @operation = feature_name
           if !OPERATIONS.key?(@operation)
             raise ArgumentError, "Unsupported translation feature '#{feature_name}'"
@@ -90,7 +91,7 @@ module DiscourseAi
             )
 
           bot = DiscourseAi::Agents::Bot.as(system_user, agent: agent, model: llm)
-          capture_plain_response(bot, context, execution_context:).strip
+          capture_structured_response(bot, context, schema_key: :output, execution_context:).strip
         end
 
         def build_payload(case_args, content, output)

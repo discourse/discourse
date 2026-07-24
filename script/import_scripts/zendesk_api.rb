@@ -430,17 +430,15 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
 
       retry_count = 0
 
-      begin
-        while retry_count < 5
-          begin
-            response = connection.request(get)
-            puts("Retry successful!") if retry_count > 0
-            break
-          rescue => e
-            puts "Request failed #{url}. Waiting and will retry. #{e.class.name} #{e.message}"
-            sleep(20)
-            retry_count += 1
-          end
+      while retry_count < 5
+        begin
+          response = connection.request(get)
+          puts("Retry successful!") if retry_count > 0
+          break
+        rescue => e
+          puts "Request failed #{url}. Waiting and will retry. #{e.class.name} #{e.message}"
+          sleep(20)
+          retry_count += 1
         end
       end
 

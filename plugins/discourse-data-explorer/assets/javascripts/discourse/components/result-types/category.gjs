@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 export default class Category extends Component {
   get categoryBadgeReplacement() {

@@ -36,6 +36,8 @@ es:
       topic_search_placeholder: "Buscar temas por título o contenido"
       sidebar_name_filter_placeholder: "Nombre/nombre de usuario"
       assigned: "Asignada"
+      group_no_assignments_title: "Sin asignaciones"
+      group_no_assignments_body: "Actualmente no hay asignaciones activas para este grupo."
       group_everyone: "Todos"
       assigned_to: "Asignado a"
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
@@ -198,3 +200,13 @@ es:
       title: "Editar asignaciones"
       topic: "Tema"
       post: "Publicación"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "Asignar tema"
+        "trigger:assigned": "Asignada"
+      assign_topic:
+        operations:
+          assign: "Asignar"
+          unassign: "Anular asignación"
+        topic_id: "ID del tema"
+        assignee: "Asignado"

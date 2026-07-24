@@ -6,7 +6,6 @@
 
 de:
   site_settings:
-    enable_login_with_amazon: "Authentifizierung über „Anmelden mit Amazon“ aktivieren, erfordert `login with amazon client id` und `login with amazon client secret`."
     login_with_amazon_client_id: "Client-ID für „Anmelden mit Amazon“"
     login_with_amazon_client_secret: "Client-Geheimnis für „Anmelden mit Amazon“"
     login_with_amazon_scope: "OAuth2-Bereiche für „Anmelden mit Amazon“ (durch Leerzeichen getrennt)"

@@ -6,7 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | badge-title", function (hooks) {
+module("Integration | Component | BadgeTitle", function (hooks) {
   setupRenderingTest(hooks);
 
   test("badge title", async function (assert) {

@@ -64,6 +64,7 @@ ar:
   assign_mailer:
     title: "تعيين مرسل البريد"
     subject_template: "عيَّن [%{email_prefix}] %{assignee_name} الموضوع \"%{topic_title}\" إليك!"
+    subject_template_improved: "%{email_prefix}: عيَّن %{assignee_name} الموضوع \"%{topic_title}\" إليك!"
     text_body_template: |
       مرحبًا، **عيَّن** %{assignee_name} مناقشةً إليك
       > **%{topic_title}**

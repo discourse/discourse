@@ -1,7 +1,7 @@
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import IncomingEmail from "discourse/admin/models/incoming-email";
-import formatDate from "discourse/helpers/format-date";
 import routeAction from "discourse/helpers/route-action";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 
 const RECEIVED_HEADERS = [
   { key: "admin.email.incoming_emails.from_address" },
@@ -38,7 +38,7 @@ export default <template>
   >
     <:default as |emailLog|>
       <tr data-test-email-log-row-id={{emailLog.id}}>
-        <td>{{formatDate emailLog.created_at}}</td>
+        <td>{{dFormatDate emailLog.created_at}}</td>
         <td>{{emailLog.from_address}}</td>
         <td>{{emailLog.to_addresses}}</td>
         <td>

@@ -32,6 +32,7 @@ module DiscourseAi
                   temperature: options["temperature"],
                   top_p: options["top_p"],
                   max_tokens: options["max_tokens"],
+                  thinking_effort: options["thinking_effort"],
                   stop_sequences: options["stop_sequences"],
                 )
               end
@@ -58,10 +59,7 @@ module DiscourseAi
         end
 
         def llm_user
-          @llm_user ||=
-            begin
-              post&.user || @bot_user
-            end
+          @llm_user ||= post&.user || @bot_user
         end
 
         def post

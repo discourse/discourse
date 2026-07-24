@@ -87,6 +87,18 @@ RSpec.describe Chat::ListChannelMessages do
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end
 
+    context "when anonymous users can view public chat but public channels are disabled" do
+      let(:guardian) { Guardian.new(nil) }
+
+      before do
+        SiteSetting.chat_allowed_groups =
+          "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        SiteSetting.enable_public_channels = false
+      end
+
+      it { is_expected.to fail_a_policy(:can_view_channel) }
+    end
+
     context "when target message is not found" do
       let(:optional_params) { { target_message_id: -1 } }
 

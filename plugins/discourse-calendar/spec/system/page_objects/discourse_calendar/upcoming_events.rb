@@ -4,8 +4,8 @@ module PageObjects
   module Pages
     module DiscourseCalendar
       class UpcomingEvents < PageObjects::Pages::Base
-        def visit
-          super("/upcoming-events")
+        def visit(prefix = "")
+          super("#{prefix}/upcoming-events")
         end
 
         def next
@@ -58,6 +58,15 @@ module PageObjects
 
         def has_event?(title)
           has_css?(".fc-event-title", text: title)
+        end
+
+        def click_event_on(date)
+          try_until_success do
+            page.execute_script(<<~JS)
+              document.querySelector(".fc-daygrid-day[data-date='#{date}'] .fc-event").click();
+            JS
+            has_css?("[data-identifier='post-event-menu']")
+          end
         end
 
         def has_no_event?(title)

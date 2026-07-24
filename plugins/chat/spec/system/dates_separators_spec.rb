@@ -6,6 +6,7 @@ RSpec.describe "Dates separators" do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap
@@ -44,7 +45,7 @@ RSpec.describe "Dates separators" do
     it "doesn't impact the last visit separator" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("message1")
-      chat_page.visit_channel(channel_2)
+      sidebar_page.open_channel(channel_2)
 
       using_session(:user_1) do
         sign_in(user_1)
@@ -52,7 +53,7 @@ RSpec.describe "Dates separators" do
         channel_page.send_message("message2")
       end
 
-      chat_page.visit_channel(channel_1)
+      sidebar_page.open_channel(channel_1)
 
       expect(page).to have_css(
         ".chat-message-separator__text-container",

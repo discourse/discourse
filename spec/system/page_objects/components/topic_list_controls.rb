@@ -14,26 +14,14 @@ module PageObjects
         has_css?(".nav-item_new", exact_text: text)
       end
 
-      def has_unread?(count:)
-        text =
-          if count == 0
-            I18n.t("js.filters.unread.title")
-          else
-            I18n.t("js.filters.unread.title_with_count", count: count)
-          end
-
-        has_css?(".nav-item_unread", exact_text: text)
-      end
-
-      def dismiss_unread(untrack: false)
-        click_button("dismiss-topics-top")
-        find(".dismiss-read-modal__stop-tracking").click if untrack
-        click_button("dismiss-read-confirm")
+      def dismiss_new
+        click_button("dismiss-new-top")
         self
       end
 
-      def dismiss_new
-        click_button("dismiss-new-top")
+      def dismiss_new_and_stop_tracking
+        click_button("dismiss-new-menu-top")
+        find(".dismiss-new-stop-tracking").click
         self
       end
 

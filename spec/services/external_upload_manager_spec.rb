@@ -225,12 +225,16 @@ RSpec.describe ExternalUploadManager do
     end
 
     context "when the upload type is backup" do
+      fab!(:admin)
+
+      subject(:manager) { ExternalUploadManager.new(external_upload_stub, {}) }
+
       let(:object_size) { 200.megabytes }
       let(:object_file) { file_from_fixtures("backup_since_v1.6.tar.gz", "backups") }
       let!(:external_upload_stub) do
         Fabricate(
           :attachment_external_upload_stub,
-          created_by: user,
+          created_by: admin,
           filesize: object_size,
           upload_type: "backup",
           original_filename: "backup_since_v1.6.tar.gz",

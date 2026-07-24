@@ -133,7 +133,10 @@ RSpec.describe "AI Bot - Homepage" do
   end
 
   context "when `ai_bot_enable_dedicated_ux` is enabled" do
-    before { SiteSetting.ai_bot_add_to_header = true }
+    before do
+      SiteSetting.ai_bot_add_to_header = true
+      SiteSetting.ai_bot_enable_docked_composer = true
+    end
 
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
@@ -253,15 +256,33 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
     end
 
+    it "allows navigating to a specific LLM and agent with slugified names" do
+      visit "/discourse-ai/ai-bot/conversations?agent=test-agent&llm=duplicate"
+
+      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
+      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
+    end
+
+    it "keeps the URL in sync with the selected agent and LLM" do
+      ai_pm_homepage.visit
+
+      ai_pm_homepage.agent_selector.expand
+      ai_pm_homepage.agent_selector.select_row_by_name(agent.name)
+      expect(page).to have_current_path(/agent=test-agent/)
+
+      ai_pm_homepage.llm_selector.expand
+      ai_pm_homepage.llm_selector.select_row_by_name(claude_2_dup.display_name)
+      expect(page).to have_current_path(/agent=test-agent/)
+      expect(page).to have_current_path(/llm=duplicate/)
+    end
+
     it "removes agent from selector when allow_personal_messages is disabled" do
-      begin
-        agent.update!(allow_personal_messages: false)
-        ai_pm_homepage.visit
-        ai_pm_homepage.agent_selector.expand
-        expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
-      ensure
-        agent.update!(allow_personal_messages: true)
-      end
+      agent.update!(allow_personal_messages: false)
+      ai_pm_homepage.visit
+      ai_pm_homepage.agent_selector.expand
+      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
+    ensure
+      agent.update!(allow_personal_messages: true)
     end
 
     it "includes agent in selector when allow_personal_messages is enabled" do

@@ -1,0 +1,349 @@
+.workflows-execution-detail {
+  &__step {
+    border: 1.5px solid var(--primary-low);
+    border-radius: 0.375em;
+    padding: var(--space-3) var(--space-3);
+    margin-bottom: var(--space-3);
+
+    &.--success {
+      border-color: var(--workflow-status-success);
+      background: var(--workflow-status-success-low);
+    }
+
+    &.--error {
+      border-color: var(--workflow-status-error);
+    }
+
+    &.--running {
+      border-color: var(--workflow-status-running);
+    }
+
+    &.--skipped {
+      border-color: var(--primary-low);
+      opacity: 0.7;
+    }
+
+    &.--filtered {
+      border-color: var(--primary-medium);
+      opacity: 0.7;
+    }
+
+    &.--waiting {
+      border-color: var(--workflow-status-waiting);
+    }
+  }
+
+  &__step-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__step-icon {
+    flex-shrink: 0;
+    width: 1.25em;
+    text-align: center;
+    color: var(--primary-medium);
+
+    .--kind-trigger & {
+      color: var(--workflow-node-color-orange);
+    }
+
+    .--kind-condition & {
+      color: var(--workflow-node-color-teal);
+    }
+
+    .--kind-action & {
+      color: var(--workflow-node-color-purple);
+    }
+
+    .--kind-flow & {
+      color: var(--workflow-node-color-indigo);
+    }
+  }
+
+  &__step-name {
+    font-weight: bold;
+  }
+
+  &__step-operation {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    &::before {
+      content: "›";
+      margin-right: var(--space-1);
+    }
+  }
+
+  &__kind-badge {
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    padding: 0.15em 0.45em;
+    border-radius: 0.25em;
+
+    &.--trigger {
+      background: color-mix(
+        in srgb,
+        var(--workflow-node-color-orange) 15%,
+        transparent
+      );
+      color: var(--workflow-node-color-orange);
+    }
+
+    &.--condition {
+      background: color-mix(
+        in srgb,
+        var(--workflow-node-color-teal) 15%,
+        transparent
+      );
+      color: var(--workflow-node-color-teal);
+    }
+
+    &.--action {
+      background: color-mix(
+        in srgb,
+        var(--workflow-node-color-purple) 15%,
+        transparent
+      );
+      color: var(--workflow-node-color-purple);
+    }
+
+    &.--flow {
+      background: color-mix(
+        in srgb,
+        var(--workflow-node-color-indigo) 15%,
+        transparent
+      );
+      color: var(--workflow-node-color-indigo);
+    }
+  }
+
+  &__step-summary {
+    font-size: var(--font-down-1);
+    color: var(--workflow-status-error);
+    margin-top: var(--space-1);
+    padding-left: calc(1.25em + var(--space-2));
+  }
+
+  &__step-type {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__step-badge {
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    text-transform: lowercase;
+    padding: 0.1em 0.4em;
+    border-radius: 0.25em;
+
+    &.--success {
+      background: var(--workflow-status-success-low);
+      color: var(--workflow-status-success);
+    }
+
+    &.--error {
+      background: var(--workflow-status-error-low);
+      color: var(--workflow-status-error);
+    }
+
+    &.--running {
+      background: var(--workflow-status-running-low);
+      color: var(--workflow-status-running);
+    }
+
+    &.--skipped {
+      background: var(--primary-low);
+      color: var(--primary-medium);
+    }
+
+    &.--filtered {
+      background: var(--workflow-status-running-low);
+      color: var(--workflow-status-running);
+    }
+
+    &.--waiting {
+      background: var(--workflow-status-waiting-low);
+      color: var(--workflow-status-waiting);
+    }
+  }
+
+  &__step-time {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    margin-left: auto;
+  }
+
+  &__step.--success .workflows-execution-detail__step-time {
+    color: var(--workflow-status-success);
+  }
+
+  &__step.--success .workflows-execution-detail__step-body {
+    border-color: var(--workflow-status-success);
+  }
+
+  &__conditions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-bottom: var(--space-2);
+  }
+
+  &__condition {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-down-1);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 0.25em;
+
+    &.--passed {
+      background: var(--workflow-status-success-low);
+    }
+
+    &.--failed {
+      background: var(--workflow-status-running-low);
+    }
+
+    code {
+      background: var(--primary-very-low);
+      padding: 0.1em 0.3em;
+      border-radius: 0.2em;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__condition-result {
+    font-weight: bold;
+
+    .--passed > & {
+      color: var(--workflow-status-success);
+    }
+
+    .--failed > & {
+      color: var(--workflow-status-running);
+    }
+  }
+
+  &__condition-value {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__condition-expression {
+    color: var(--primary-medium);
+    background: none;
+    padding: 0;
+    font-size: var(--font-down-1);
+  }
+
+  &__condition-arrow {
+    color: var(--primary-medium);
+  }
+
+  &__condition-operator {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &__step-body {
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--primary-low);
+    font-size: var(--font-down-1);
+  }
+
+  &__workflow-call {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+    border: 1px solid var(--primary-low);
+    border-radius: 0.25em;
+    background: var(--primary-very-low);
+
+    &.--caller {
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+  }
+
+  &__workflow-call-main {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__workflow-call.--caller &__workflow-call-main {
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  &__workflow-call-icon {
+    flex-shrink: 0;
+    color: var(--primary-medium);
+  }
+
+  &__workflow-call-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__workflow-call-label {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+  }
+
+  &__workflow-call-name {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+  }
+
+  &__workflow-call-link {
+    margin-inline-start: auto;
+  }
+
+  &__workflow-call-error {
+    flex-basis: 100%;
+    color: var(--workflow-status-error);
+    overflow-wrap: anywhere;
+  }
+
+  &__item-count {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    margin-left: var(--space-1);
+  }
+
+  &__step-section {
+    margin-bottom: var(--space-2);
+
+    pre {
+      background: var(--primary-very-low);
+      padding: var(--space-2);
+      border-radius: 0.25em;
+      font-size: var(--font-down-1);
+      max-height: 200px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

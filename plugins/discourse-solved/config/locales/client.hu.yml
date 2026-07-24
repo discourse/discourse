@@ -10,11 +10,28 @@ hu:
       site_settings:
         categories:
           discourse_solved: "Discourse Megoldások"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Elfogadott megoldások"
+        sections:
+          support:
+            title: "Támogatás"
+            answerers:
+              staff: "Stáb"
+              member: "Tagok"
+              basic: "Alapvető"
+            response_time:
+              buckets:
+                lt_1h: "< 1 óra"
+                gt_24h: "> 24 óra"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "elfogadva"
+          topic_solved_notification: "megoldott"
     solutions: "Megoldások"
     solved:
       title: "Megoldva"
@@ -51,9 +68,12 @@ hu:
       confirm_solved_removal: "Ez a módosítás letiltja a témakör megoldásait, és eltávolítja az elfogadott megoldást."
       confirm_solved_removal_confirm: "Megerősítés"
       confirm_solved_removal_cancel: "Mégse"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Megválaszolták a kérdését?
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "hozzászólásod megoldásként lett megjelölve"
       category_type_support:

@@ -255,8 +255,8 @@ RSpec.describe PostCreator do
         admin_ids = [Group[:admins].id]
         expect(
           messages.any? do |m|
-            m.group_ids != admin_ids &&
-              (!m.user_ids.include?(other_admin.id) && !m.user_ids.include?(admin.id))
+            m.group_ids != admin_ids && !m.user_ids.include?(other_admin.id) &&
+              !m.user_ids.include?(admin.id)
           end,
         ).to eq(false)
       end
@@ -692,20 +692,22 @@ RSpec.describe PostCreator do
   describe "whisper" do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
+    before { SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}" }
+
     it "whispers do not mess up the public view" do
       freeze_time_safe
 
-      first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
+      first = PostCreator.new(admin, topic_id: topic.id, raw: "this is the first post").create
 
       freeze_time 1.year.from_now
 
-      user_stat = user.user_stat
+      user_stat = admin.user_stat
 
       whisper =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
-          reply_to_post_number: 1,
+          reply_to_post_number: first.post_number,
           post_type: Post.types[:whisper],
           raw: "this is a whispered reply",
         ).create
@@ -718,7 +720,7 @@ RSpec.describe PostCreator do
 
       whisper_reply =
         PostCreator.new(
-          user,
+          admin,
           topic_id: topic.id,
           reply_to_post_number: whisper.post_number,
           post_type: Post.types[:regular],
@@ -730,8 +732,8 @@ RSpec.describe PostCreator do
 
       expect(user_stat.reload.post_count).to eq(0)
 
-      user.reload
-      expect(user.last_posted_at).to eq_time(1.year.ago)
+      admin.reload
+      expect(admin.last_posted_at).to eq_time(1.year.ago)
 
       # date is not precise enough in db
       whisper_reply.reload
@@ -875,8 +877,8 @@ RSpec.describe PostCreator do
       GroupMessage
         .expects(:create)
         .with do |group_name, msg_type, params|
-          group_name == (Group[:moderators].name) && msg_type == (:spam_post_blocked) &&
-            params[:user].id == (user.id)
+          group_name == Group[:moderators].name && msg_type == :spam_post_blocked &&
+            params[:user].id == user.id
         end
       creator.create
     end
@@ -1172,6 +1174,17 @@ RSpec.describe PostCreator do
       PostCreator.create!(admin2, raw: "I am also an admin, and a mod", topic_id: post.topic_id)
 
       expect(post.topic.topic_allowed_users.where(user_id: admin2.id).count).to eq(0)
+
+      tl0_user = Fabricate(:user, trust_level: 0, refresh_auto_groups: true)
+      PostCreator.create!(
+        tl0_user,
+        raw: "Automated support reply",
+        topic_id: post.topic_id,
+        guardian: Discourse.system_user.guardian,
+        skip_staff_author_pm_membership_sync: true,
+      )
+
+      expect(post.topic.topic_allowed_users.where(user_id: tl0_user.id).count).to eq(0)
     end
 
     it "does not add whisperers to allowed users of the topic" do
@@ -1222,7 +1235,7 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      expect(topic.word_count).to eq(0)
+      expect(topic.word_count).to be_nil
 
       p2 = Fabricate(:post, topic: topic)
       Topic.reset_highest(topic.id)
@@ -1237,7 +1250,7 @@ RSpec.describe PostCreator do
       expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
 
-    it "does not bump highest_post_number for small_action posts in PMs" do
+    it "does not bump any post number counter for small_action posts" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
       Fabricate(:post, topic: topic)
       topic.reload
@@ -1256,7 +1269,7 @@ RSpec.describe PostCreator do
       topic.reload
 
       expect(topic.highest_post_number).to eq(1)
-      expect(topic.highest_staff_post_number).to eq(2)
+      expect(topic.highest_staff_post_number).to eq(1)
     end
   end
 

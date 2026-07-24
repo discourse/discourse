@@ -34,7 +34,7 @@ export default class FKControlCode extends FKBaseControl {
       id={{@field.id}}
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}
-      aria-describedby={{if @field.error @field.errorId}}
+      aria-describedby={{@field.describedBy}}
       ...attributes
     />
   </template>

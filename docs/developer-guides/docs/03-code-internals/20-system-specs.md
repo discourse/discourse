@@ -10,13 +10,13 @@ Rails system specs are used to simulate the actions of a real user using the app
 
 We currently only support running system specs in Chrome, make sure you have Chrome installed before proceeding. Run `pnpm i` to ensure Playwright is correctly set up.
 
-Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running Ember CLI when writing system specs.
+Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running the frontend bundler when writing system specs.
 
 ## Running system specs
 
 Any system spec can be run with the `bin/rspec FILENAME.rb` command. By default the specs are run in a headless version of Chrome, meaning no browser window will open while the spec is running.
 
-> :warning: If you do not already have the Discourse rails server running with `bin/ember-cli -u`, you will need to run `bin/ember-cli --build` after every JavaScript change to see these reflected in the headless browser. **It is recommended you just keep your local server running while writing system specs.**
+> :warning: If you do not already have the Discourse rails server running with `bin/dev`, you will need to run `pnpm --dir=frontend/discourse build` after every JavaScript change to see these reflected in the headless browser. **It is recommended you just keep your local server running while writing system specs.**
 >
 > Also, ensure you run rails migrations any time you make modifications to your local database schema.
 

@@ -367,6 +367,12 @@ export function buildResolver(baseName) {
       }
     }
 
+    addModules(modules) {
+      for (const [key, value] of Object.entries(modules)) {
+        define(key, () => value);
+      }
+    }
+
     /**
      * Builds a list of template path candidates based on various naming conventions.
      * Supports legacy naming patterns (underscored, dasherized, etc.) for backwards compatibility.

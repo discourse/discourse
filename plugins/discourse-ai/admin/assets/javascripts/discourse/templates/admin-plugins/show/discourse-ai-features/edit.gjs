@@ -2,9 +2,8 @@ import { concat } from "@ember/helper";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
-import { eq, or } from "discourse/truth-helpers";
+import SettingDefinitionField from "discourse/components/setting-definition-field";
 import { i18n } from "discourse-i18n";
-import AiFeatureSettingField from "discourse/plugins/discourse-ai/discourse/components/ai-feature-setting-field";
 
 export default <template>
   <BackButton
@@ -35,45 +34,10 @@ export default <template>
                         as |setting|
                       }}
                         {{#if setting}}
-                          <form.Field
-                            @name={{setting.setting}}
-                            @title={{setting.humanized_name}}
-                            @description={{if
-                              (eq setting.type "bool")
-                              null
-                              setting.description
-                            }}
-                            @format="large"
-                            @validation={{@controller.getValidationFor setting}}
-                            @type={{if
-                              (eq setting.type "bool")
-                              "checkbox"
-                              (if
-                                (eq setting.type "integer")
-                                "input-number"
-                                (if
-                                  (eq setting.type "enum")
-                                  "select"
-                                  (if
-                                    (or
-                                      (eq setting.type "category_list")
-                                      (eq setting.type "group_list")
-                                      (eq setting.type "list")
-                                    )
-                                    "custom"
-                                    "input"
-                                  )
-                                )
-                              )
-                            }}
-                            as |field|
-                          >
-                            <AiFeatureSettingField
-                              @Control={{field.Control}}
-                              @setting={{setting}}
-                              @field={{field}}
-                            />
-                          </form.Field>
+                          <SettingDefinitionField
+                            @definition={{setting.definition}}
+                            @form={{form}}
+                          />
                         {{/if}}
                       {{/let}}
                     {{/each}}
@@ -81,44 +45,10 @@ export default <template>
                 {{/each}}
               {{else}}
                 {{#each @model.feature_settings as |setting|}}
-                  <form.Field
-                    @name={{setting.setting}}
-                    @title={{setting.humanized_name}}
-                    @description={{if
-                      (eq setting.type "bool")
-                      null
-                      setting.description
-                    }}
-                    @format="large"
-                    @type={{if
-                      (eq setting.type "bool")
-                      "checkbox"
-                      (if
-                        (eq setting.type "integer")
-                        "input-number"
-                        (if
-                          (eq setting.type "enum")
-                          "select"
-                          (if
-                            (or
-                              (eq setting.type "category_list")
-                              (eq setting.type "group_list")
-                              (eq setting.type "list")
-                            )
-                            "custom"
-                            "input"
-                          )
-                        )
-                      )
-                    }}
-                    as |field|
-                  >
-                    <AiFeatureSettingField
-                      @Control={{field.Control}}
-                      @setting={{setting}}
-                      @field={{field}}
-                    />
-                  </form.Field>
+                  <SettingDefinitionField
+                    @definition={{setting.definition}}
+                    @form={{form}}
+                  />
                 {{/each}}
               {{/if}}
               <form.Actions>

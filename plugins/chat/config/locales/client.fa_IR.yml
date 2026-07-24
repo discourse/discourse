@@ -189,8 +189,6 @@ fa_IR:
         title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
       sounds:
         none: "هیچ کدام"
-        bell: "زنگ"
-        ding: "دینگ"
       title: "گفتگو"
       title_capitalized: "گفتگو"
       upload: "پیوست کردن یک پرونده"
@@ -213,6 +211,8 @@ fa_IR:
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
+        filter_joined_all: "همه"
+        filter_joined_joined: "ملحق شده"
       chat_message_separator:
         today: امروز
         yesterday: دیروز
@@ -255,12 +255,14 @@ fa_IR:
         memberships_count:
           one: "%{count} عضو"
           other: "%{count} عضو"
+        preview_card:
+          log_in: "ورود"
       create_channel:
         choose_category:
           label: "انتخاب دسته‌بندی"
           none: "یکی را انتخاب کنید..."
         create: "ایجاد کانال"
-        description: "توضیحات «اختیاری»"
+        description: "توضیح"
         name: "نام کانال"
         title: "کانال جدید"
         type: "نوع"
@@ -435,3 +437,12 @@ fa_IR:
       panels:
         chat:
           label: "گفتگو"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "کانال"
+      send_chat_message:
+        channel_id: "کانال"
+        message: "پیام"
+      chat_approval:
+        message: "پیام"
+        channel_id: "کانال"

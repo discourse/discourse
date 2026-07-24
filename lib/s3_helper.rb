@@ -75,7 +75,7 @@ class S3Helper
       begin
         if File.size(file.path) >= FIFTEEN_MEGABYTES
           options[:multipart_threshold] = FIFTEEN_MEGABYTES
-          obj.upload_file(file, options)
+          transfer_manager.upload_file(file, bucket: obj.bucket_name, key: obj.key, **options)
           obj.load
           obj.etag
         else
@@ -104,7 +104,7 @@ class S3Helper
 
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      self.copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
+      copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
     end
 
     # delete the file
@@ -174,10 +174,10 @@ class S3Helper
         response.copy_object_result.etag
       else
         # larger files, multipart copy
-        response.data.etag
+        destination_object.reload.etag
       end
 
-    [destination, etag.gsub('"', "")]
+    [destination, etag&.gsub('"', "")]
   end
 
   # Several places in the application need certain CORS rules to exist
@@ -327,8 +327,14 @@ class S3Helper
     end
   end
 
+  def upload_file(filename, source_path, **options)
+    obj = object(filename)
+    transfer_manager.upload_file(source_path, bucket: obj.bucket_name, key: obj.key, **options)
+  end
+
   def download_file(filename, destination_path, failure_message = nil)
-    object(filename).download_file(destination_path)
+    obj = object(filename)
+    transfer_manager.download_file(destination_path, bucket: obj.bucket_name, key: obj.key)
   rescue => err
     raise failure_message&.to_s ||
             "Failed to download #{filename} because #{err.message.length > 0 ? err.message : err.class.to_s}"
@@ -443,6 +449,10 @@ class S3Helper
 
   private
 
+  def transfer_manager
+    Aws::S3::TransferManager.new(client: s3_client)
+  end
+
   def init_aws_s3_client(stub_responses: false)
     options = @s3_options
     options = options.merge(stub_responses: true) if stub_responses
@@ -450,12 +460,10 @@ class S3Helper
   end
 
   def fetch_bucket_cors_rules
-    begin
-      s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
-      []
-    end
+    s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
+  rescue Aws::S3::Errors::NoSuchCORSConfiguration
+    # no rule
+    []
   end
 
   def default_s3_options
@@ -484,7 +492,7 @@ class S3Helper
   def multisite_upload_path
     path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
     return path if !Rails.env.test?
-    File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}", "/")
+    File.join(path, "test_#{Discourse.test_env_number}", "/")
   end
 
   def s3_resource

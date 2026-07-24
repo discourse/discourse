@@ -16,7 +16,7 @@ function triggerTitleUpdate(appEvents) {
   appEvents.trigger("notifications:changed", { forced: true });
 }
 
-module("Integration | Component | d-document", function (hooks) {
+module("Integration | Component | DDocument", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with user menu", async function (assert) {

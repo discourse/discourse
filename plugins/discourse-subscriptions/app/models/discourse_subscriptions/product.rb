@@ -10,9 +10,9 @@ end
 # Table name: discourse_subscriptions_products
 #
 #  id          :bigint           not null, primary key
-#  external_id :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  external_id :string           not null
 #
 # Indexes
 #

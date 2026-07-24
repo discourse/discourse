@@ -15,6 +15,7 @@ fi:
         title: Ajoita viesti ketjussa Dataselaimen tuloksilla
         description: Vastaanota ajoitettuja raportteja tiettyyn ketjuun
   data_explorer:
+    admin_dashboard_label: "Dataselain"
     report_generator:
       private_message:
         title: "Kyselyn %{query_name} ajoitettu raportti"

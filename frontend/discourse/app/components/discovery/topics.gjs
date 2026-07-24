@@ -3,28 +3,30 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import CountI18n from "discourse/components/count-i18n";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
-import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import List from "discourse/components/topic-list/list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DCountI18n from "discourse/ui-kit/d-count-i18n";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
+  @service site;
+  @service siteSettings;
 
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
@@ -87,13 +89,13 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicsAndRepliesToggle() {
-    return this.new && this.currentUser?.new_new_view_enabled;
+    return this.new && this.currentUser?.unified_new_enabled;
   }
 
   get newRepliesCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countUnread({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -107,7 +109,7 @@ export default class DiscoveryTopics extends Component {
   get newTopicsCount() {
     this.topicTrackingState.get("messageCount"); // Autotrack this
 
-    if (this.currentUser?.new_new_view_enabled) {
+    if (this.currentUser?.unified_new_enabled) {
       return this.topicTrackingState.countNew({
         categoryId: this.args.category?.id,
         noSubcategories: this.args.noSubcategories,
@@ -119,7 +121,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get showTopicPostBadges() {
-    return !this.new || this.currentUser?.new_new_view_enabled;
+    return !this.new || this.currentUser?.unified_new_enabled;
   }
 
   get showEmptyFilterEducationInFooter() {
@@ -142,6 +144,15 @@ export default class DiscoveryTopics extends Component {
 
   get expandAllPinned() {
     return this.args.tag || this.args.category;
+  }
+
+  get showBottomDismissButtons() {
+    return (
+      this.allLoaded &&
+      (!this.site.mobileView ||
+        (this.site.mobileView &&
+          !this.siteSettings.floating_dismiss_topics_on_mobile))
+    );
   }
 
   @action
@@ -228,7 +239,7 @@ export default class DiscoveryTopics extends Component {
               class="alert alert-info clickable
                 {{if @model.loadingBefore 'loading'}}"
             >
-              <CountI18n
+              <DCountI18n
                 @key="topic_count_"
                 @suffix={{this.topicTrackingState.filter}}
                 @count={{or
@@ -237,7 +248,7 @@ export default class DiscoveryTopics extends Component {
                 }}
               />
               {{#if @model.loadingBefore}}
-                {{loadingSpinner size="small"}}
+                {{dLoadingSpinner size="small"}}
               {{/if}}
             </a>
           </div>
@@ -274,7 +285,7 @@ export default class DiscoveryTopics extends Component {
           @listContext="discovery"
         />
 
-        <LoadMore @action={{this.loadMore}} />
+        <DLoadMore @action={{this.loadMore}} />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
@@ -293,7 +304,7 @@ export default class DiscoveryTopics extends Component {
     </DiscoveryTopicsList>
 
     <footer class="topic-list-bottom">
-      <ConditionalLoadingSpinner @condition={{@model.loadingMore}} />
+      <DConditionalLoadingSpinner @condition={{@model.loadingMore}} />
       {{#if this.allLoaded}}
         <PluginOutlet
           @name="topic-list-bottom"
@@ -304,15 +315,18 @@ export default class DiscoveryTopics extends Component {
             model=@model
           }}
         >
-          <TopicDismissButtons
-            @position="bottom"
-            @selectedTopics={{@bulkSelectHelper.selected}}
-            @model={{@model}}
-            @showResetNew={{@showResetNew}}
-            @showDismissRead={{@showDismissRead}}
-            @resetNew={{@resetNew}}
-            @dismissRead={{@dismissRead}}
-          />
+          {{#if this.showBottomDismissButtons}}
+            <TopicDismissButtons
+              @position="bottom"
+              @selectedTopics={{@bulkSelectHelper.selected}}
+              @model={{@model}}
+              @showResetNew={{@showResetNew}}
+              @showNewDismissCombo={{this.showTopicsAndRepliesToggle}}
+              @showDismissRead={{@showDismissRead}}
+              @resetNew={{@resetNew}}
+              @dismissRead={{@dismissRead}}
+            />
+          {{/if}}
 
           {{#if this.showEmptyFilterEducationInFooter}}
             <EmptyTopicFilter

@@ -1,9 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
-import avatar from "discourse/helpers/avatar";
-import number from "discourse/helpers/number";
 import { or } from "discourse/truth-helpers";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import fullnumber from "../helpers/fullnumber";
 
 @tagName("")
@@ -21,7 +21,7 @@ export default class GamificationLeaderboardRow extends Component {
         role="button"
         data-user-card={{this.rank.username}}
       >
-        {{avatar this.rank imageSize="large"}}
+        {{dAvatar this.rank imageSize="large"}}
         <span class="user__name">
           {{#if this.siteSettings.prioritize_username_in_ux}}
             {{this.rank.username}}
@@ -32,7 +32,7 @@ export default class GamificationLeaderboardRow extends Component {
       </div>
       <div class="user__score">
         {{#if this.site.mobileView}}
-          {{number this.rank.total_score}}
+          {{dNumber this.rank.total_score}}
         {{else}}
           {{fullnumber this.rank.total_score}}
         {{/if}}

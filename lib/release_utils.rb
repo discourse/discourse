@@ -192,7 +192,7 @@ module ReleaseUtils
 
   def self.with_clean_worktree(origin_branch)
     git "fetch", "origin", origin_branch
-    path = "#{Rails.root}/tmp/version-bump-worktree-#{SecureRandom.hex}"
+    path = "#{Rails.root.join("tmp/version-bump-worktree-#{SecureRandom.hex}")}"
     begin
       FileUtils.mkdir_p(path)
       git "worktree", "add", "--detach", path, "origin/#{origin_branch}"

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarPinnedMessagesButton extends Component {
@@ -32,7 +32,7 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
         class="c-navbar__pinned-messages-btn btn no-text btn-transparent"
         {{on "click" this.handleClick}}
       >
-        {{icon "thumbtack"}}
+        {{dIcon "thumbtack"}}
         {{#if @channel.hasUnseenPins}}
           <span class="c-navbar__pinned-messages-btn__unread-indicator"></span>
         {{/if}}

@@ -67,16 +67,20 @@ class ProblemCheck
   #
   CORE_PROBLEM_CHECKS = [
     ProblemCheck::BadFaviconUrl,
+    ProblemCheck::ContentSecurityPolicyDisabled,
+    ProblemCheck::EmailSendingFailures,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
     ProblemCheck::ForceHttps,
     ProblemCheck::GithubConfig,
+    ProblemCheck::GithubOneboxBackoff,
     ProblemCheck::GoogleAnalyticsVersion,
     ProblemCheck::GoogleOauth2Config,
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
@@ -194,10 +198,7 @@ class ProblemCheck
     if problem.blank?
       tracker.no_problem!(next_run_at:)
     else
-      tracker.problem!(
-        next_run_at:,
-        details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
-      )
+      tracker.problem!(next_run_at:, details: problem.details.merge(base_path: Discourse.base_path))
     end
   end
 
@@ -213,19 +214,19 @@ class ProblemCheck
 
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
+    problem_details =
+      override_data.merge(
+        target.present? ? translation_data(target) : translation_data,
+      ).symbolize_keys
+    notice_details = problem_details.merge(details)
+    notice_details[AdminNotice::TRANSLATION_KEY_DETAIL] = override_key if override_key
 
     Problem.new(
-      I18n.t(
-        override_key || translation_key,
-        base_path: Discourse.base_path,
-        **override_data.merge(
-          target.present? ? translation_data(target) : translation_data,
-        ).symbolize_keys,
-      ),
-      priority: self.config.priority,
+      I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
+      priority: config.priority,
       identifier:,
       target: target_identifier,
-      details:,
+      details: notice_details,
     )
   end
 

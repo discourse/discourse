@@ -91,11 +91,10 @@ class Stats
 
   def thread_class
     @thread_class ||=
-      begin
-        @classes.find do |addr, n|
+      @classes.find do |addr, n|
           n == "Thread"
         end.first
-      end
+      
   end
 
   def detect_threads(line)

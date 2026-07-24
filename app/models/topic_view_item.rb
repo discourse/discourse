@@ -68,13 +68,14 @@ end
 #
 # Table name: topic_views
 #
-#  topic_id   :integer          not null
-#  viewed_at  :date             not null
-#  user_id    :integer
 #  ip_address :inet
+#  viewed_at  :date             not null
+#  topic_id   :integer          not null
+#  user_id    :integer
 #
 # Indexes
 #
+#  index_topic_views_for_user_participation     (viewed_at,user_id,topic_id) WHERE (user_id IS NOT NULL)
 #  index_topic_views_on_topic_id_and_viewed_at  (topic_id,viewed_at)
 #  index_topic_views_on_user_id_and_viewed_at   (user_id,viewed_at)
 #  index_topic_views_on_viewed_at_and_topic_id  (viewed_at,topic_id)

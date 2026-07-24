@@ -2,14 +2,14 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -23,7 +23,7 @@ export default <template>
           class="btn btn-default"
           id="change-password-button"
         >
-          {{icon "envelope"}}
+          {{dIcon "envelope"}}
           {{#if @controller.model.no_password}}
             {{i18n "user.change_password.set_password"}}
           {{else}}
@@ -49,7 +49,7 @@ export default <template>
             class="btn btn-danger"
             id="remove-password-link"
           >
-            {{icon "trash-can"}}
+            {{dIcon "trash-can"}}
             {{i18n "user.change_password.remove"}}
           </button>
         </div>
@@ -102,7 +102,7 @@ export default <template>
       <div class="auth-tokens">
         {{#each @controller.authTokens as |token|}}
           <div class="row auth-token">
-            <div class="auth-token-icon">{{icon token.icon}}</div>
+            <div class="auth-token-icon">{{dIcon token.icon}}</div>
             {{#unless token.is_active}}
               <AuthTokenDropdown
                 @token={{token}}
@@ -130,7 +130,7 @@ export default <template>
                   (i18n
                     "user.auth_tokens.browser_last_seen"
                     browser=token.browser
-                    date=(formatDate token.seen_at)
+                    date=(dFormatDate token.seen_at)
                   )
                 }}
               {{/if}}
@@ -142,10 +142,10 @@ export default <template>
       {{#if @controller.canShowAllAuthTokens}}
         <a href {{on "click" @controller.toggleShowAllAuthTokens}}>
           {{#if @controller.showAllAuthTokens}}
-            {{icon "angle-up"}}
+            {{dIcon "angle-up"}}
             <span>{{i18n "user.auth_tokens.show_few"}}</span>
           {{else}}
-            {{icon "angle-down"}}
+            {{dIcon "angle-down"}}
             <span>
               {{i18n
                 "user.auth_tokens.show_all"
@@ -161,7 +161,7 @@ export default <template>
         {{on "click" (fn @controller.revokeAuthToken null)}}
         class="pull-right text-danger"
       >
-        {{icon "right-from-bracket"}}
+        {{dIcon "right-from-bracket"}}
         <span>
           {{i18n "user.auth_tokens.log_out_all"}}
         </span>

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  category_types:
+    ideas:
+      name: "Ιδέες"
+      title: "ιδέες"
+      description: "Όπου τα μέλη μπορούν να υποβάλλουν ιδέες και να ψηφίζουν αυτές που επιθυμούν περισσότερο."
   site_settings:
     topic_voting_enabled: 'Να επιτρέπεται σε χρήστες να ψηφίζουν σε νήματα;'
     topic_voting_enable_vote_limits: 'Περιορίστε τον αριθμό των ψήφων ανά χρήστη με βάση το επίπεδο εμπιστοσύνης'
@@ -17,6 +22,25 @@ el:
     topic_voting_show_votes_on_profile: 'Να επιτρέπεται στους χρήστες να βλέπουν τις ψήφους τους στην ροή δραστηριότητάς τους;'
     topic_voting_alert_votes_left: 'Να ειδοποιείται ο χρήστης όταν απομένουν τόσες ψήφοι'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Εμφάνιση ψηφοφόρων"
+      show_votes_on_profile:
+        label: "Εμφάνιση ψήφων στο προφίλ"
+      enable_vote_limits:
+        label: "Περιορισμός ψήφων μελών"
+      tl0_vote_limit:
+        label: "Όριο ψήφων TL0"
+      tl1_vote_limit:
+        label: "Όριο ψήφων TL1"
+      tl2_vote_limit:
+        label: "Όριο ψήφων TL2"
+      tl3_vote_limit:
+        label: "Όριο ψήφων TL3"
+      tl4_vote_limit:
+        label: "Όριο ψήφων TL4"
+      alert_votes_left:
+        label: "Ειδοποίηση όταν απομένουν ψήφοι"
     votes_moved:
       one: "Μια ψήφος έχει μετακινηθεί."
       other: "%{count} ψήφοι έχουν μετακινηθεί."

@@ -5,11 +5,24 @@
 # https://translate.discourse.org/
 
 ug:
+  category_types:
+    events:
+      name: "پائالىيەت"
+      title: "پائالىيەت"
   reports:
     currently_away:
       labels:
         username: ئىشلەتكۈچى ئاتى
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "كۈن"
+        week: "ھەپتە"
+        month: "ئاي"
+        year: "يىل"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%Y-يىلى %-d-%B"
     errors:
       bulk_invite:
         error: "ھۆججەتنى يۈكلەۋاتقاندا خاتالىق كۆرۈلدى. سەل تۇرۇپ قايتا سىناڭ."

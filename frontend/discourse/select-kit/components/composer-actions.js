@@ -27,6 +27,22 @@ export function _clearSnapshots() {
   _actionSnapshot = null;
 }
 
+let _registeredActions = [];
+let _warnedConditionIds = new Set();
+
+export function registerComposerAction(opts) {
+  _registeredActions.push(opts);
+}
+
+export function registeredComposerActions() {
+  return _registeredActions;
+}
+
+export function _clearRegisteredActions() {
+  _registeredActions = [];
+  _warnedConditionIds = new Set();
+}
+
 @classNames("composer-actions")
 @pluginApiIdentifiers(["composer-actions"])
 @selectKitOptions({
@@ -114,7 +130,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     return {};
   }
 
-  @computed("seq")
+  @computed("seq", "composerModel.categoryId", "composerModel.category")
   get content() {
     let items = [];
 
@@ -269,6 +285,34 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       });
     }
 
+    _registeredActions.forEach((opts) => {
+      let visible = true;
+      if (opts.condition) {
+        try {
+          visible = !!opts.condition(this);
+        } catch (e) {
+          if (!_warnedConditionIds.has(opts.id)) {
+            _warnedConditionIds.add(opts.id);
+            // eslint-disable-next-line no-console
+            console.error(
+              `composer-actions: condition for "${opts.id}" threw`,
+              e
+            );
+          }
+          visible = false;
+        }
+      }
+      if (!visible) {
+        return;
+      }
+      items.push({
+        id: opts.id,
+        name: i18n(opts.label),
+        description: opts.description ? i18n(opts.description) : undefined,
+        icon: opts.icon,
+      });
+    });
+
     return items;
   }
 
@@ -410,6 +454,13 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   @action
   onChange(value) {
+    const registered = _registeredActions.find((a) => a.id === value);
+    if (registered) {
+      registered.action(this.composerModel, this);
+      this.contentChanged();
+      return;
+    }
+
     const composerAction = `${camelize(value)}Selected`;
     if (this[composerAction]) {
       this[composerAction](

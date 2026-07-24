@@ -6,6 +6,10 @@
 
 sl:
   js:
+    discourse_ai:
+      features:
+        data_explorer:
+          name: "Raziskovalec podatkov"
     errors:
       explorer:
         no_semicolons: "Odstranite podpičja iz poizvedbe."
@@ -19,6 +23,9 @@ sl:
       create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
+      ai:
+        generate: "Ustvari"
+        optional: "neobvezno"
       import:
         label: "Uvozi"
       help:
@@ -32,14 +39,12 @@ sl:
           yes: "Da"
           no: "Ne"
           null_: "Null"
-      export: "Izvozi"
       run: "Zaženi"
-      edit: "Uredi"
       delete: "Izbriši"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabela"
-      show_graph: "Graf"
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Stolpični"
       others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
       run_time: "Poizvedba končana v %{value} ms."
       result_count:
@@ -55,9 +60,16 @@ sl:
       query_time: "Zadnja izvedba"
       query_user: "Ustvaril"
       column: "Stolpec %{number}"
-      explain_label: "Vključi načrt poizvedbe?"
       reset_params: "Ponastavi"
       search_placeholder: "Išči..."
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
     group:
       reports: "Poročila"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Raziskovalec podatkov"
+      sql:
+        query_id: "Poizvedba"
+        param_value: "Stanje"
+        output:
+          results: "Rezultati"

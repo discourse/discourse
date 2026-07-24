@@ -121,10 +121,7 @@ RSpec.describe Admin::ImpersonateController do
   describe "#destroy" do
     before { sign_in(admin) }
 
-    it "checks if experimental impersonation is allowed for the acting user" do
-      SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
-      SiteSetting.refresh!
-
+    it "succeeds and logs the impersonation" do
       post "/admin/impersonate.json", params: { username_or_email: user.username }
 
       delete "/admin/impersonate.json"
@@ -133,10 +130,10 @@ RSpec.describe Admin::ImpersonateController do
       expect(session[:current_user_id]).to eq(admin.id)
     end
 
-    it "does not pass routing constraint when current user is not impersonating" do
+    it "does nothing and returns success if not impersonating" do
       delete "/admin/impersonate.json"
 
-      expect(response.status).to eq(404)
+      expect(response.status).to eq(200)
     end
 
     it "stops impersonating" do

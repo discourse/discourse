@@ -63,7 +63,7 @@ module DiscourseChatIntegration
         matching_rules =
           matching_rules.select do |rule|
             next true if rule.tags.nil? || rule.tags.empty? # Filter has no tags specified
-            any_tags_match = !((rule.tags & topic_tags).empty?)
+            any_tags_match = !(rule.tags & topic_tags).empty?
             next any_tags_match # If any tags match, keep this filter, otherwise throw away
           end
       end
@@ -109,7 +109,7 @@ module DiscourseChatIntegration
           provider.trigger_notification(post, channel, rule)
           channel.update_attribute("error_key", nil) if channel.error_key
         rescue => e
-          if e.class == (DiscourseChatIntegration::ProviderError) && e.info.key?(:error_key) &&
+          if e.class == DiscourseChatIntegration::ProviderError && e.info.key?(:error_key) &&
                !e.info[:error_key].nil?
             channel.update_attribute("error_key", e.info[:error_key])
           else

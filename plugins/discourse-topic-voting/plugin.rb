@@ -32,10 +32,7 @@ require_relative "lib/discourse_topic_voting/engine"
 require_relative "lib/discourse_topic_voting/topic_votes_filter"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails
-    .root
-    .join("plugins", "discourse-topic-voting", "db", "fixtures")
-    .to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-topic-voting/db/fixtures").to_s
 
   reloadable_patch do
     register_category_type(DiscourseTopicVoting::Categories::Types::Ideas)
@@ -230,6 +227,18 @@ after_initialize do
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
+  on(:upcoming_change_enabled) do |setting_name|
+    if setting_name == :enable_topic_voting_badges
+      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: true)
+    end
+  end
+
+  on(:upcoming_change_disabled) do |setting_name|
+    if setting_name == :enable_topic_voting_badges
+      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: false)
+    end
+  end
+
   Discourse::Application.routes.prepend do
     get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed", :format => :rss
   end
@@ -242,5 +251,14 @@ after_initialize do
         :constraints => {
           username: RouteFormat.username,
         }
+  end
+
+  register_anonymous_action("vote_topic") do |user, params|
+    DiscourseTopicVoting::Votes::Cast.call(
+      params: {
+        topic_id: params["topic_id"],
+      },
+      guardian: user.guardian,
+    )
   end
 end

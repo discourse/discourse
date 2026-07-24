@@ -8,4 +8,5 @@ ActiveRecord.schema_cache_ignored_tables.push(
   "ai_posts_embeddings",
   "ai_user_embeddings",
   "ai_document_fragments_embeddings",
+  /\Adiscourse_workflows_data_table_\d+_rows\z/,
 )

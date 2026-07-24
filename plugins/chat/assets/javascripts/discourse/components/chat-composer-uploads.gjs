@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import PickFilesButton from "discourse/components/pick-files-button";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { cloneJSON } from "discourse/lib/object";
@@ -13,6 +12,7 @@ import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
 
 @tagName("")
@@ -167,7 +167,7 @@ export default class ChatComposerUploads extends Component {
         </div>
       {{/if}}
 
-      <PickFilesButton
+      <DPickFilesButton
         @allowMultiple={{true}}
         @fileInputId={{this.fileUploadElementId}}
         @fileInputClass="hidden-upload-field"

@@ -2,21 +2,32 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
+import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ChatMessageReactionsUsers from "discourse/plugins/chat/discourse/components/chat-message-reactions-users";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {
   @service currentUser;
+  @service menu;
   @service site;
+  @service siteSettings;
   @service tooltip;
 
   registerTooltip = modifier((element) => {
-    if (this.args.disableTooltip || !this.popoverContent?.length) {
+    if (
+      this.args.disableTooltip ||
+      this.useReactionsUsersPopup ||
+      !this.popoverContent?.length
+    ) {
       return;
     }
 
@@ -34,6 +45,97 @@ export default class ChatMessageReaction extends Component {
     };
   });
 
+  // With the new reactions popup enabled, hovering (desktop) or long-pressing
+  // (mobile) a reaction opens a users popup centred on that reaction. Each
+  // reaction registers its own popup; the shared `groupIdentifier` ensures only
+  // one is open at a time, so moving to another reaction opens a fresh popup.
+  registerReactionsUsersPopup = modifier((element) => {
+    if (!this.useReactionsUsersPopup) {
+      return;
+    }
+
+    const desktop = !this.site.mobileView;
+
+    const instance = this.menu.register(element, {
+      identifier: "chat-message-reaction-users",
+      groupIdentifier: "chat-message-reaction-users",
+      component: ChatMessageReactionsUsers,
+      modalForMobile: true,
+      arrow: true,
+      offset: 15,
+      placement: "bottom",
+      fallbackPlacements: ["top"],
+      triggers: desktop ? ["hover"] : ["hold"],
+      data: {
+        message: this.args.message,
+        emoji: this.args.reaction.emoji,
+        // Lets the popup keep itself open while the pointer is over it, so the
+        // hover-to-open popup only closes once the pointer leaves both the
+        // reaction and the popup.
+        onContentPointerEnter: desktop
+          ? this.cancelCloseReactionsUsersPopup
+          : undefined,
+        onContentPointerLeave: desktop
+          ? this.scheduleCloseReactionsUsersPopup
+          : undefined,
+      },
+    });
+    this.#reactionsUsersPopupInstance = instance;
+
+    if (desktop) {
+      element.addEventListener(
+        "pointerenter",
+        this.cancelCloseReactionsUsersPopup,
+        { passive: true }
+      );
+      element.addEventListener(
+        "pointerleave",
+        this.scheduleCloseReactionsUsersPopup,
+        { passive: true }
+      );
+    }
+
+    return () => {
+      cancel(this.#closeReactionsUsersPopupTimer);
+      element.removeEventListener(
+        "pointerenter",
+        this.cancelCloseReactionsUsersPopup
+      );
+      element.removeEventListener(
+        "pointerleave",
+        this.scheduleCloseReactionsUsersPopup
+      );
+      instance.destroy();
+      this.#reactionsUsersPopupInstance = null;
+    };
+  });
+  #reactionsUsersPopupInstance = null;
+  #closeReactionsUsersPopupTimer = null;
+
+  // Close on a short delay so moving the pointer across the gap between the
+  // reaction and the popup (or briefly off either) doesn't dismiss it.
+  @bind
+  scheduleCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+    this.#closeReactionsUsersPopupTimer = discourseLater(() => {
+      this.#reactionsUsersPopupInstance?.close({ focusTrigger: false });
+    }, 250);
+  }
+
+  @bind
+  cancelCloseReactionsUsersPopup() {
+    cancel(this.#closeReactionsUsersPopupTimer);
+  }
+
+  // When the new reactions popup is enabled the reaction opens a users popup, so
+  // the names tooltip is suppressed here.
+  get useReactionsUsersPopup() {
+    return (
+      this.siteSettings.enable_new_chat_reactions_popup &&
+      !this.args.disableTooltip
+    );
+  }
+
   get showCount() {
     return this.args.showCount ?? true;
   }
@@ -49,6 +151,11 @@ export default class ChatMessageReaction extends Component {
   @action
   handleClick(event) {
     event.stopPropagation();
+
+    if (!this.currentUser) {
+      getOwner(this).lookup("route:application").send("showLogin");
+      return;
+    }
 
     this.args.onReaction?.(
       this.args.reaction.emoji,
@@ -70,11 +177,12 @@ export default class ChatMessageReaction extends Component {
       <button
         {{on "click" this.handleClick passive=true}}
         {{this.registerTooltip}}
+        {{this.registerReactionsUsersPopup}}
         type="button"
         title={{this.emojiString}}
         data-emoji-name={{@reaction.emoji}}
         tabindex={{if @interactive "0" "-1"}}
-        class={{concatClass
+        class={{dConcatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
         }}

@@ -6,7 +6,7 @@
 
 pl_PL:
   site_settings:
-    enable_login_with_amazon: "Włącz logowanie za pomocą uwierzytelniania Amazon, wymaga `login with amazon client id` i `login with amazon client secret`."
+    enable_login_with_amazon: "Włącz logowanie z uwierzytelnianiem Amazon, wymaga {{setting:login_with_amazon_client_id}} i {{setting:login_with_amazon_client_secret}}."
     login_with_amazon_client_id: "Zaloguj się przy użyciu ID klienta Amazon"
     login_with_amazon_client_secret: "Zaloguj się za pomocą sekretu klienta Amazon"
     login_with_amazon_scope: "Zaloguj się za pomocą zakresów Amazon OAuth2 (oddzielone spacją)"

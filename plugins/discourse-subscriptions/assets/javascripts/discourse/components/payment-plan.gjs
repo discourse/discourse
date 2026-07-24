@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import formatCurrency from "../helpers/format-currency";
 
@@ -31,7 +31,7 @@ export default class PaymentPlan extends Component {
   <template>
     <DButton
       @action={{this.planClick}}
-      class={{concatClass
+      class={{dConcatClass
         "btn-discourse-subscriptions-subscribe"
         this.selectedClass
       }}

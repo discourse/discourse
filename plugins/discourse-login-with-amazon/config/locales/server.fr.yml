@@ -6,7 +6,6 @@
 
 fr:
   site_settings:
-    enable_login_with_amazon: "Activez la connexion avec l'authentification Amazon, nécessite « connexion avec l'identifiant client amazon » et « connexion avec le secret client amazon »."
     login_with_amazon_client_id: "Connexion avec l'identifiant client Amazon"
     login_with_amazon_client_secret: "Connexion avec le secret client Amazon"
     login_with_amazon_scope: "Connexion avec les autorisations OAuth2 d'Amazon (séparées par des espaces)"

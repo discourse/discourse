@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -139,7 +139,7 @@ export default class ActivityCalendar extends Component {
                   <td
                     data-date={{cell.date}}
                     title={{this.computeCellTitle cell}}
-                    class={{concatClass
+                    class={{dConcatClass
                       "rewind-calendar-cell"
                       (this.computeClass cell.post_count)
                     }}

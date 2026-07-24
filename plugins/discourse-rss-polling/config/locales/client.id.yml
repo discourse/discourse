@@ -11,3 +11,12 @@ id:
         author: Pengarang
         discourse_category: Kategori
         discourse_tags: Label
+        feeds:
+          edit: Ubah
+          delete: Hapus
+          save: Simpan
+        test:
+          dismiss: Bubar
+        status:
+          enabled: Diaktifkan
+          disabled: Dinonaktifkan

@@ -121,7 +121,7 @@ describe DiscourseDataExplorer::DataExplorer do
         expect(colrender).to eq({ 1 => "json" })
       end
 
-      it "treats columns with the actual json data type as 'json'" do
+      it "treats columns with the actual json or jsonb data type as 'json'" do
         ApiKeyScope.create(
           resource: "topics",
           action: "update",
@@ -137,6 +137,47 @@ describe DiscourseDataExplorer::DataExplorer do
         result = described_class.run_query(query)
         _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
         expect(colrender).to eq({ 1 => "json" })
+      end
+
+      it "treats jsonb columns as 'json'" do
+        query =
+          DiscourseDataExplorer::Query.create!(
+            name: "some query",
+            sql: "SELECT '[{\"key\": \"value\"}]'::jsonb AS response_format",
+          )
+        result = described_class.run_query(query)
+
+        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+
+        expect(colrender).to eq({ 0 => "json" })
+      end
+
+      it "treats json and jsonb array columns as 'json'" do
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT
+                ARRAY['{\"key\": \"value\"}'::json] AS json_values,
+                ARRAY['{\"key\": \"value\"}'::jsonb] AS jsonb_values
+            SQL
+        result = described_class.run_query(query)
+
+        _, colrender = DiscourseDataExplorer::DataExplorer.add_extra_data(result[:pg_result])
+
+        expect(colrender).to eq({ 0 => "json", 1 => "json" })
+      end
+
+      it "limits relation resolution to the query result limit per relation type" do
+        SiteSetting.data_explorer_query_result_limit = 2
+        topics = Fabricate.times(4, :topic)
+        query = DiscourseDataExplorer::Query.create!(name: "some query", sql: <<~SQL)
+              SELECT #{topics[0].id} AS topic_id, #{topics[2].id} AS related_topic_id
+              UNION ALL
+              SELECT #{topics[1].id} AS topic_id, #{topics[3].id} AS related_topic_id
+            SQL
+
+        pg_result = described_class.run_query(query)[:pg_result]
+        relations, _ = DiscourseDataExplorer::DataExplorer.add_extra_data(pg_result)
+
+        expect(relations[:topic].as_json.size).to eq(2)
       end
 
       describe "serializing models to serializer" do

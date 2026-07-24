@@ -4,23 +4,23 @@ RSpec.describe StylesheetsController do
   it "can survive cache miss" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)
-    builder = Stylesheet::Manager::Builder.new(target: "desktop_rtl", manager: manager, theme: nil)
+    builder = Stylesheet::Manager::Builder.new(target: "common_rtl", manager: manager, theme: nil)
     builder.compile
 
     digest = StylesheetCache.first.digest
     StylesheetCache.destroy_all
 
-    get "/stylesheets/desktop_rtl_#{digest}.css"
+    get "/stylesheets/common_rtl_#{digest}.css"
     expect(response.status).to eq(200)
 
     cached = StylesheetCache.first
-    expect(cached.target).to eq "desktop_rtl"
+    expect(cached.target).to eq "common_rtl"
     expect(cached.digest).to eq digest
 
     # tmp folder destruction and cached
     Stylesheet::Manager.rm_cache_folder
 
-    get "/stylesheets/desktop_rtl_#{digest}.css"
+    get "/stylesheets/common_rtl_#{digest}.css"
     expect(response.status).to eq(200)
 
     # there is an edge case which is ... disk and db cache is nuked, very unlikely to happen
@@ -32,7 +32,7 @@ RSpec.describe StylesheetsController do
 
     manager = Stylesheet::Manager.new(theme_id: theme.id)
 
-    builder = Stylesheet::Manager::Builder.new(target: :desktop, theme: theme, manager: manager)
+    builder = Stylesheet::Manager::Builder.new(target: :common, theme: theme, manager: manager)
     builder.compile
 
     Stylesheet::Manager.rm_cache_folder
@@ -116,25 +116,80 @@ RSpec.describe StylesheetsController do
     end
   end
 
+  context "when a plugin registers assets for each target" do
+    fab!(:user)
+    fab!(:admin)
+
+    let(:plugin) { plugin_from_fixtures("stylesheet_targets_plugin") }
+
+    matcher :have_stylesheet do |target|
+      match { |body| body.include?(%(data-target="stylesheet_targets_#{target}")) }
+    end
+
+    before do
+      Discourse.plugins << plugin
+      plugin.activate!
+      Stylesheet::Importer.register_imports!
+      StylesheetCache.destroy_all
+    end
+
+    after do
+      Discourse.plugins.delete(plugin)
+      Stylesheet::Importer.register_imports!
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "renders a link tag for every target when viewer is staff" do
+      sign_in(admin)
+      get "/latest"
+
+      expect(response.body).to have_stylesheet(:plugin)
+      expect(response.body).to have_stylesheet(:plugin_mobile)
+      expect(response.body).to have_stylesheet(:plugin_desktop)
+      expect(response.body).to have_stylesheet(:plugin_admin)
+    end
+
+    it "does not render the admin link tag for non-staff users" do
+      sign_in(user)
+      get "/latest"
+
+      expect(response.body).to have_stylesheet(:plugin)
+      expect(response.body).to have_stylesheet(:plugin_mobile)
+      expect(response.body).to have_stylesheet(:plugin_desktop)
+      expect(response.body).not_to have_stylesheet(:plugin_admin)
+    end
+
+    it "does not render any link tags when the plugin is disabled" do
+      plugin.stubs(:enabled?).returns(false)
+      sign_in(admin)
+      get "/latest"
+
+      expect(response.body).not_to have_stylesheet(:plugin)
+      expect(response.body).not_to have_stylesheet(:plugin_mobile)
+      expect(response.body).not_to have_stylesheet(:plugin_desktop)
+      expect(response.body).not_to have_stylesheet(:plugin_admin)
+    end
+  end
+
   it "ignores Accept header and does not include Vary header" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)
-    builder = Stylesheet::Manager::Builder.new(target: "desktop", manager: manager, theme: nil)
+    builder = Stylesheet::Manager::Builder.new(target: "common", manager: manager, theme: nil)
     builder.compile
 
     digest = StylesheetCache.first.digest
 
-    get "/stylesheets/desktop_#{digest}.css"
+    get "/stylesheets/common_#{digest}.css"
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)
 
-    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "text/html" }
+    get "/stylesheets/common_#{digest}.css", headers: { "Accept" => "text/html" }
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)
 
-    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "invalidcontenttype" }
+    get "/stylesheets/common_#{digest}.css", headers: { "Accept" => "invalidcontenttype" }
     expect(response.status).to eq(200)
     expect(response.headers["Content-Type"]).to eq("text/css")
     expect(response.headers["Vary"]).to eq(nil)

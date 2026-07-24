@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatMessageCreatorSearchInput extends Component {
@@ -10,7 +10,7 @@ export default class ChatMessageCreatorSearchInput extends Component {
   <template>
     <div class="chat-message-creator__search-input-container">
       <div class="chat-message-creator__search-input">
-        {{icon
+        {{dIcon
           "magnifying-glass"
           class="chat-message-creator__search-input__search-icon"
         }}

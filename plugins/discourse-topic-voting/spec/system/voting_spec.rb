@@ -17,10 +17,12 @@ RSpec.describe "Topic voting" do
   fab!(:post2) { Fabricate(:post, topic: topic2) }
 
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:banner) { PageObjects::Components::AdminChangesBanner.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:user_page) { PageObjects::Pages::User.new }
   let(:admin_page) { PageObjects::Pages::AdminSiteSettings.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
+  let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -31,12 +33,13 @@ RSpec.describe "Topic voting" do
     category_page.visit(category1)
     expect(category_page).to have_no_css(category_page.votes)
 
-    # enable voting in category
-    category_page.visit_settings(category1)
-    form.field("custom_fields.enable_topic_voting").toggle
-    category_page.save_settings
+    category_page.visit_general(category1)
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.expand
+    category_type_selector.option(".category-type-selector__result.--category-type-ideas").click
+    banner.click_save
 
-    expect(Category.can_vote?(category1.id)).to eq(true)
+    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
 
     # make a vote
     category_page.visit(category1)
@@ -276,6 +279,21 @@ RSpec.describe "Topic voting" do
 
       topic_page.remove_vote
       expect(topic_page.vote_count).to have_text("0")
+    end
+
+    it "still offers the watch notification prompt after voting" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page.vote_count).to have_text("1")
+      expect(topic_page).to have_watch_toggle_off
+      expect(page).to have_no_css(".see-votes")
+
+      topic_page.click_watch_toggle
+      expect(topic_page).to have_watch_toggle_on
+      expect(TopicUser.find_by(user: admin, topic: voting_topic1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
+      )
     end
   end
 end

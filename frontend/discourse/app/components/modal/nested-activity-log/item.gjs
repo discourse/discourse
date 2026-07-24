@@ -5,12 +5,12 @@ import {
   GROUP_ACTION_CODES,
   ICONS,
 } from "discourse/components/post/small-action";
-import UserAvatar from "discourse/components/user-avatar";
-import icon from "discourse/helpers/d-icon";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const ACTIVITY_LOG_ICONS = {
@@ -69,12 +69,12 @@ export default class NestedActivityLogItem extends Component {
   <template>
     <li class="nested-activity-log-modal__item">
       <span class="nested-activity-log-modal__icon" aria-hidden="true">
-        {{icon this.iconName}}
+        {{dIcon this.iconName}}
       </span>
       <div class="nested-activity-log-modal__content">
         <div class="nested-activity-log-modal__desc">
           {{#if this.user}}
-            <UserAvatar
+            <DUserAvatar
               @ariaHidden={{true}}
               @size="small"
               @user={{this.user}}

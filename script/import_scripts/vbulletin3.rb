@@ -364,26 +364,24 @@ EOM
     puts "", "creating groups membership..."
 
     Group.find_each do |group|
-      begin
-        next if group.automatic
-        puts "\t#{group.name}"
-        next if GroupUser.where(group_id: group.id).count > 0
-        user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
-        next if user_ids_in_group.size == 0
-        values =
-          user_ids_in_group
-            .map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }
-            .join(",")
+      next if group.automatic
+      puts "\t#{group.name}"
+      next if GroupUser.where(group_id: group.id).count > 0
+      user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
+      next if user_ids_in_group.size == 0
+      values =
+        user_ids_in_group
+          .map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }
+          .join(",")
 
-        DB.exec <<~SQL
+      DB.exec <<~SQL
           INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values}
         SQL
 
-        Group.reset_counters(group.id, :group_users)
-      rescue Exception => e
-        puts e.message
-        puts e.backtrace.join("\n")
-      end
+      Group.reset_counters(group.id, :group_users)
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.join("\n")
     end
   end
 
@@ -587,7 +585,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
       category.default_list_filter = "none"
     end
 
-    if (forum["is_category_only"] == 1 && access[:public_access] == 1)
+    if forum["is_category_only"] == 1 && access[:public_access] == 1
       puts "\t#{category.name} is a public category only"
       category.permissions = { everyone: :readonly }
       category.save()
@@ -1337,18 +1335,16 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
     start = Time.now
 
     Post.find_each do |post|
-      begin
-        old_raw = post.raw.dup
-        new_raw = postprocess_post_raw(post, post.raw)
-        if new_raw != old_raw
-          post.raw = new_raw
-          post.save
-        end
-      rescue PrettyText::JavaScriptError
-        nil
-      ensure
-        print_status(current += 1, max, start)
+      old_raw = post.raw.dup
+      new_raw = postprocess_post_raw(post, post.raw)
+      if new_raw != old_raw
+        post.raw = new_raw
+        post.save
       end
+    rescue PrettyText::JavaScriptError
+      nil
+    ensure
+      print_status(current += 1, max, start)
     end
   end
 

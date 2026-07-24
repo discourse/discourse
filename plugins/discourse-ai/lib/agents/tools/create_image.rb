@@ -60,48 +60,46 @@ module DiscourseAi
           errors = []
 
           max_prompts.each do |prompt|
-            begin
-              # Create tool instance with parameters
-              tool_params = { prompt: prompt }
+            # Create tool instance with parameters
+            tool_params = { prompt: prompt }
 
-              tool_instance =
-                tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
+            tool_instance =
+              tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
 
-              # Invoke the tool
-              tool_instance.invoke { |_progress| }
+            # Invoke the tool
+            tool_instance.invoke { |_progress| }
 
-              # Extract the custom_raw which contains the generated image markdown
-              if tool_instance.custom_raw.present?
-                # Parse the upload short_url from the markdown
-                upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
-                if upload_match
-                  short_url = upload_match[1]
-                  sha1 = Upload.sha1_from_short_url(short_url)
-                  upload = Upload.find_by(sha1: sha1) if sha1
-                  uploads << { prompt: prompt, upload: upload, url: short_url } if upload
-                else
-                  # Tool returned custom_raw but not in expected format
-                  Rails.logger.error(
-                    "CreateImage: Tool #{tool_class.name} returned custom_raw in unexpected format. " \
-                      "Expected markdown with upload:// URL. " \
-                      "custom_raw preview: #{tool_instance.custom_raw.truncate(200)}",
-                  )
-                  errors << "Tool returned invalid image format"
-                end
+            # Extract the custom_raw which contains the generated image markdown
+            if tool_instance.custom_raw.present?
+              # Parse the upload short_url from the markdown
+              upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
+              if upload_match
+                short_url = upload_match[1]
+                sha1 = Upload.sha1_from_short_url(short_url)
+                upload = Upload.find_by(sha1: sha1) if sha1
+                uploads << { prompt: prompt, upload: upload, url: short_url } if upload
               else
-                # Tool returned no output
-                Rails.logger.warn(
-                  "CreateImage: Tool #{tool_class.name} returned no custom_raw output for prompt: #{prompt.truncate(50)}",
+                # Tool returned custom_raw but not in expected format
+                Rails.logger.error(
+                  "CreateImage: Tool #{tool_class.name} returned custom_raw in unexpected format. " \
+                    "Expected markdown with upload:// URL. " \
+                    "custom_raw preview: #{tool_instance.custom_raw.truncate(200)}",
                 )
-                errors << "Tool returned no output"
+                errors << "Tool returned invalid image format"
               end
-            rescue => e
-              Rails.logger.error(
-                "CreateImage: Failed to generate image for prompt '#{prompt.truncate(50)}'. " \
-                  "Tool: #{tool_class.name}, Error: #{e.class.name} - #{e.message}",
+            else
+              # Tool returned no output
+              Rails.logger.warn(
+                "CreateImage: Tool #{tool_class.name} returned no custom_raw output for prompt: #{prompt.truncate(50)}",
               )
-              errors << e.message
+              errors << "Tool returned no output"
             end
+          rescue => e
+            Rails.logger.error(
+              "CreateImage: Failed to generate image for prompt '#{prompt.truncate(50)}'. " \
+                "Tool: #{tool_class.name}, Error: #{e.class.name} - #{e.message}",
+            )
+            errors << e.message
           end
 
           if uploads.empty?

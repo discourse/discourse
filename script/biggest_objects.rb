@@ -20,11 +20,9 @@ ObjectSpace.trace_object_allocations do
 
   RailsMultisite::ConnectionManagement.each_connection do
     (ActiveRecord::Base.connection.tables - %w[schema_migrations versions]).each do |table|
-      begin
-        table.classify.constantize.first
-      rescue StandardError
-        nil
-      end
+      table.classify.constantize.first
+    rescue StandardError
+      nil
     end
   end
 end

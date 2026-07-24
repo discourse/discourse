@@ -170,5 +170,3 @@ sk:
           add: Pridať možnosť
         automatic_close:
           label: Automaticky zatvoriť hlasovanie
-        show_advanced: "Zobraziť rozšírené možnosti"
-        hide_advanced: "Skryť rozšírené možnosti"

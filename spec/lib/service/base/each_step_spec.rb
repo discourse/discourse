@@ -132,6 +132,80 @@ RSpec.describe Service::Base::EachStep do
       end
     end
 
+    context "with isolation between iterations" do
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          step :setup
+
+          each :users, persist: { observed_values: -> { [] } } do
+            step :track
+          end
+
+          private
+
+          def setup
+            context[:users] = %i[alice bob]
+          end
+
+          def track(user:, observed_values:)
+            observed_values << context[:transient]
+            context[:transient] = user
+          end
+        end
+      end
+
+      it "does not leak non-persisted variables between iterations" do
+        expect(result).to have_attributes(observed_values: [nil, nil])
+      end
+    end
+
+    context "when the outer context contains an ActiveRecord model" do
+      fab!(:user)
+
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          model :user
+          step :setup_usernames
+
+          each :usernames,
+               persist: {
+                 seen_user_ids: -> { [] },
+                 user_persisted_states: -> { [] },
+               } do
+            step :track_user
+          end
+
+          private
+
+          def fetch_user(user_id:)
+            User.find(user_id)
+          end
+
+          def setup_usernames
+            context[:usernames] = %i[alice bob]
+          end
+
+          def track_user(user:, seen_user_ids:, user_persisted_states:)
+            seen_user_ids << user.id
+            user_persisted_states << user.persisted?
+          end
+        end
+      end
+
+      let(:dependencies) { { user_id: user.id } }
+
+      it "keeps the original model available inside each iterations" do
+        expect(result).to have_attributes(
+          seen_user_ids: [user.id, user.id],
+          user_persisted_states: [true, true],
+        )
+      end
+    end
+
     context "with persist option" do
       context "with a lambda initializer" do
         let(:service) do
@@ -194,6 +268,46 @@ RSpec.describe Service::Base::EachStep do
         it "initializes by calling the method" do
           expect(result[:results]).to eq(processed: %i[alice bob], count: 2)
         end
+      end
+    end
+
+    context "when nesting each steps" do
+      let(:service) do
+        Class.new do
+          include Service::Base
+
+          model :groups
+
+          each :groups, persist: { processed: -> { [] } } do
+            each :group, as: :item, persist: { processed: -> { context[:processed] } } do
+              step :collect_item
+            end
+          end
+
+          private
+
+          def fetch_groups
+            context[:input_groups]
+          end
+
+          def collect_item(group:, item:, processed:)
+            processed << [group, item]
+          end
+        end
+      end
+      let(:dependencies) { { input_groups: [%i[alice bob], %i[charlie dave]] } }
+
+      it { is_expected.to run_successfully }
+
+      it "accumulates results across both levels of iteration" do
+        expect(result[:processed]).to eq(
+          [
+            [%i[alice bob], :alice],
+            [%i[alice bob], :bob],
+            [%i[charlie dave], :charlie],
+            [%i[charlie dave], :dave],
+          ],
+        )
       end
     end
   end

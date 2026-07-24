@@ -4,11 +4,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserMenuItemsList extends Component {
@@ -127,7 +127,7 @@ export default class UserMenuItemsList extends Component {
             @translatedAriaLabel={{this.showAllTitle}}
             @translatedTitle={{this.showAllTitle}}
           >
-            {{icon "chevron-down" aria-label=this.showAllTitle}}
+            {{dIcon "chevron-down" aria-label=this.showAllTitle}}
           </DButton>
         {{/if}}
         {{#if this.showDismiss}}
@@ -137,7 +137,7 @@ export default class UserMenuItemsList extends Component {
             title={{this.dismissTitle}}
             {{on "click" this.dismissButtonClick}}
           >
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "user.dismiss"}}
           </button>
         {{/if}}

@@ -25,8 +25,8 @@ RSpec.describe InvitesController do
         ),
       )
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq("")
         expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
@@ -38,8 +38,8 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(200)
       expect(response.body).to include(invite.email)
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
         expect(invite_info["email"]).to eq(invite.email)
@@ -65,8 +65,8 @@ RSpec.describe InvitesController do
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).not_to eq(staged_user.username)
         expect(invite_info["user_fields"]).to be_nil
@@ -82,8 +82,8 @@ RSpec.describe InvitesController do
       server_session[:authentication] = { email: invite.email, email_valid: false }
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email"]).to eq(invite.email)
         expect(invite_info["user_fields"]).to be_nil
@@ -99,8 +99,8 @@ RSpec.describe InvitesController do
       server_session[:authentication] = { email: invite.email, email_valid: true }
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq(staged_user.username)
         expect(invite_info["user_fields"][user_field.id.to_s]).to eq("some value")
@@ -114,8 +114,8 @@ RSpec.describe InvitesController do
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq(staged_user.username)
         expect(invite_info["user_fields"][user_field.id.to_s]).to eq("some value")
@@ -124,15 +124,15 @@ RSpec.describe InvitesController do
 
     it "includes token validity boolean" do
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email_verified_by_link"]).to eq(false)
       end
 
       get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email_verified_by_link"]).to eq(true)
       end
@@ -213,8 +213,8 @@ RSpec.describe InvitesController do
           ),
         )
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["username"]).to eq(user.username)
           expect(invite_info["email"]).to eq(user.email)
@@ -238,8 +238,8 @@ RSpec.describe InvitesController do
           ),
         )
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["username"]).to eq(user.username)
           expect(invite_info["email"]).to eq(user.email)
@@ -255,8 +255,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
           expect(invite_info["existing_user_can_redeem_error"]).to eq(
@@ -271,8 +271,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
         end
@@ -285,8 +285,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_id"]).to eq(user.id)
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
@@ -302,8 +302,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_id"]).to eq(user.id)
           expect(invite_info["existing_user_can_redeem"]).to eq(true)
@@ -628,6 +628,207 @@ RSpec.describe InvitesController do
 
         error_message = response.parsed_body["errors"].first
         expect(error_message).to eq("Custom message is too long (maximum is 1000 characters)")
+      end
+    end
+
+    context "with admin invite" do
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      it "creates a single-use admin invite" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_admin"]).to eq(true)
+
+        invite = Invite.last
+        expect(invite.admin).to eq(true)
+        expect(invite.email).to eq("test@example.com")
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "ignores the max_redemptions_allowed parameter" do
+        sign_in(admin)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               max_redemptions_allowed: 10,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invite.last.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails when enable_invite_modal_with_roles is disabled" do
+        SiteSetting.enable_invite_modal_with_roles = false
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails for moderators and regular users" do
+        sign_in(Fabricate(:moderator))
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+
+        sign_in(user)
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails when combined with a topic, groups or a domain" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               topic_id: topic.id,
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_admin: "true",
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json", params: { is_admin: "true", domain: "example.com" }
+        expect(response.status).to eq(400)
+      end
+
+      it "cannot escalate an existing member invite to admin via #update" do
+        sign_in(admin)
+        invite = Fabricate(:invite, invited_by: admin, email: "member@example.com")
+
+        put "/invites/#{invite.id}", params: { is_admin: "true", admin: "true" }
+
+        expect(response.status).to eq(200)
+        expect(invite.reload.admin).to eq(false)
+      end
+
+      it "does not create admin invites via bulk create" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: %w[bulk1@example.com bulk2@example.com],
+               is_admin: "true",
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invite.where(email: %w[bulk1@example.com bulk2@example.com]).pluck(:admin)).to eq(
+          [false, false],
+        )
+      end
+
+      it "cannot add a topic or groups to an admin invite via #update" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { topic_id: topic.id }
+        expect(response.status).to eq(400)
+
+        put "/invites/#{invite.id}", params: { group_ids: [group.id] }
+        expect(response.status).to eq(400)
+
+        expect(invite.reload.topics).to be_empty
+        expect(invite.groups).to be_empty
+      end
+
+      it "cannot strip the email from an admin invite via #update" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_admin: "true" }
+        expect(response.status).to eq(200)
+        invite = Invite.last
+
+        put "/invites/#{invite.id}", params: { domain: "example.com" }
+
+        expect(response.status).to eq(422)
+        expect(invite.reload.email).to eq("test@example.com")
+        expect(invite.admin).to eq(true)
+      end
+
+      it "is rate limited" do
+        sign_in(admin)
+        RateLimiter.enable
+
+        10.times do |i|
+          post "/invites.json", params: { email: "test#{i}@example.com", is_admin: "true" }
+          expect(response.status).to eq(200)
+        end
+
+        post "/invites.json", params: { email: "test-over@example.com", is_admin: "true" }
+        expect(response.status).to eq(429)
+      end
+    end
+
+    context "with moderator invite" do
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      it "creates a single-use moderator invite" do
+        sign_in(admin)
+
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["grants_moderator"]).to eq(true)
+        expect(response.parsed_body["grants_admin"]).to eq(false)
+
+        invite = Invite.last
+        expect(invite.moderator).to eq(true)
+        expect(invite.admin).to eq(false)
+        expect(invite.email).to eq("test@example.com")
+        expect(invite.max_redemptions_allowed).to eq(1)
+      end
+
+      it "fails for moderators and regular users" do
+        sign_in(Fabricate(:moderator))
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+        expect(response.status).to eq(403)
+
+        sign_in(user)
+        post "/invites.json", params: { email: "test@example.com", is_moderator: "true" }
+        expect(response.status).to eq(403)
+      end
+
+      it "fails when combined with a topic, groups or a domain" do
+        sign_in(admin)
+        topic = Fabricate(:topic)
+        group = Fabricate(:group)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_moderator: "true",
+               topic_id: topic.id,
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json",
+             params: {
+               email: "test@example.com",
+               is_moderator: "true",
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(400)
+
+        post "/invites.json", params: { is_moderator: "true", domain: "example.com" }
+        expect(response.status).to eq(400)
       end
     end
 
@@ -1153,6 +1354,7 @@ RSpec.describe InvitesController do
 
       it "fails when discourse connect is enabled" do
         SiteSetting.discourse_connect_url = "https://example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         put "/invites/show/#{invite.invite_key}.json"
@@ -1430,6 +1632,30 @@ RSpec.describe InvitesController do
         expect(job_args["type"]).to eq("signup")
         expect(job_args["user_id"]).to eq(invited_user.id)
         expect(EmailToken.hash_token(job_args["email_token"])).to eq(tokens.first.token_hash)
+      end
+
+      it "redeems pending email invites after email confirmation" do
+        pending_email_invite =
+          Fabricate(:invite, invited_by: Fabricate(:user), email: "target@example.com")
+
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: pending_email_invite.email,
+              password: "verystrongpassword",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.confirm_email"))
+        expect(invite.reload.redemption_count).to eq(1)
+        invited_user = User.find_by_email(pending_email_invite.email)
+        expect(invited_user).to be_present
+        expect(Invite.exists?(pending_email_invite.id)).to eq(true)
+
+        email_token = Jobs::CriticalUserEmail.jobs.first["args"].first["email_token"]
+        EmailToken.confirm(email_token, scope: EmailToken.scopes[:signup])
+
+        expect(pending_email_invite.reload).to be_redeemed
+        expect(pending_email_invite.invited_users.first.user).to eq(invited_user)
       end
 
       it "does not automatically log in the user if their email matches an existing user's and shows an error" do
@@ -1871,25 +2097,25 @@ RSpec.describe InvitesController do
     end
 
     context "while logged in" do
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/discourse.csv") }
+      let(:csv_file) { File.new("#{Rails.root.join("spec/fixtures/csv/discourse.csv")}") }
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 
       let(:csv_file_with_headers) do
-        File.new("#{Rails.root}/spec/fixtures/csv/discourse_headers.csv")
+        File.new("#{Rails.root.join("spec/fixtures/csv/discourse_headers.csv")}")
       end
       let(:file_with_headers) { Rack::Test::UploadedFile.new(File.open(csv_file_with_headers)) }
       let(:csv_file_with_locales) do
-        File.new("#{Rails.root}/spec/fixtures/csv/invites_with_locales.csv")
+        File.new("#{Rails.root.join("spec/fixtures/csv/invites_with_locales.csv")}")
       end
       let(:file_with_locales) { Rack::Test::UploadedFile.new(File.open(csv_file_with_locales)) }
       let(:csv_file_with_malicious_headers) do
-        File.new("#{Rails.root}/spec/fixtures/csv/invite_malicious_headers.csv")
+        File.new("#{Rails.root.join("spec/fixtures/csv/invite_malicious_headers.csv")}")
       end
       let(:file_with_malicious_headers) do
         Rack::Test::UploadedFile.new(File.open(csv_file_with_malicious_headers))
       end
       let(:csv_file_with_valid_and_invalid_headers) do
-        File.new("#{Rails.root}/spec/fixtures/csv/invite_valid_and_invalid_headers.csv")
+        File.new("#{Rails.root.join("spec/fixtures/csv/invite_valid_and_invalid_headers.csv")}")
       end
       let(:file_with_valid_and_invalid_headers) do
         Rack::Test::UploadedFile.new(File.open(csv_file_with_valid_and_invalid_headers))
@@ -1910,6 +2136,7 @@ RSpec.describe InvitesController do
 
       it "allows admin to bulk invite when DiscourseConnect enabled" do
         SiteSetting.discourse_connect_url = "https://example.com"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         sign_in(admin)

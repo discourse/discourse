@@ -11,6 +11,9 @@ require "securerandom"
 require_relative "../lib/chrome_installed_checker"
 
 class QunitRunner
+  DEFAULT_BROWSER_START_TIMEOUT = 45
+  DEFAULT_BROWSER_INACTIVITY_TIMEOUT = 30
+
   def initialize(args)
     @file_paths = []
     @verbose = ENV["ACTIONS_STEP_DEBUG"] == "true"
@@ -29,6 +32,11 @@ class QunitRunner
     @plugin_targets = []
 
     @headless = true
+    @browser_watchdog = boolean_env("QUNIT_BROWSER_WATCHDOG", default: true)
+    @browser_start_timeout =
+      positive_integer_env("QUNIT_BROWSER_START_TIMEOUT", DEFAULT_BROWSER_START_TIMEOUT)
+    @browser_inactivity_timeout =
+      positive_integer_env("QUNIT_BROWSER_INACTIVITY_TIMEOUT", DEFAULT_BROWSER_INACTIVITY_TIMEOUT)
 
     parse_options(args)
   end
@@ -56,9 +64,11 @@ class QunitRunner
         opts.separator ""
         opts.separator "Options:"
 
-        opts.on("-f", "--filter FILTER", "Run tests matching this filter") do |filter|
-          @filter = filter
-        end
+        opts.on(
+          "-f",
+          "--filter FILTER",
+          "Run tests matching this filter against \"module: test name\" (case-insensitive substring, or a slash-wrapped regex like /foo/i)",
+        ) { |filter| @filter = filter }
 
         opts.on("--dry-run", "Show what would run without executing") { @dry_run = true }
 
@@ -112,6 +122,27 @@ class QunitRunner
           @headless = h
         end
 
+        opts.on(
+          "--[no-]browser-watchdog",
+          "Fail fast if the browser stalls on startup or between tests (env: QUNIT_BROWSER_WATCHDOG)",
+        ) { |enabled| @browser_watchdog = enabled }
+
+        opts.on(
+          "--browser-start-timeout SECONDS",
+          Integer,
+          "Browser connection timeout (default: 45; env: QUNIT_BROWSER_START_TIMEOUT)",
+        ) do |seconds|
+          @browser_start_timeout = positive_integer(seconds, "--browser-start-timeout")
+        end
+
+        opts.on(
+          "--browser-inactivity-timeout SECONDS",
+          Integer,
+          "Browser inactivity timeout outside active tests (default: 30; env: QUNIT_BROWSER_INACTIVITY_TIMEOUT)",
+        ) do |seconds|
+          @browser_inactivity_timeout = positive_integer(seconds, "--browser-inactivity-timeout")
+        end
+
         opts.on("-v", "--verbose", "Verbose output") { @verbose = true }
 
         opts.on("-h", "--help", "Show this help message") do
@@ -127,6 +158,7 @@ class QunitRunner
             bin/qunit --standalone --target chat     # Run single plugin tests
             bin/qunit --standalone plugins/chat/test/javascripts/unit/lib/chat-audio-test.js
             bin/qunit --standalone --filter "Acceptance: Emoji"
+            bin/qunit --standalone --filter "/DButton|DIconGridPicker/i"
         NOTES
       end
 
@@ -243,6 +275,9 @@ class QunitRunner
     env["TESTEM_DEFAULT_BROWSER"] = ENV["TESTEM_DEFAULT_BROWSER"] || detect_browser
     env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
     env["QUNIT_HEADLESS"] = "0" if !@headless
+    env["QUNIT_BROWSER_WATCHDOG"] = @browser_watchdog ? "1" : "0"
+    env["QUNIT_BROWSER_START_TIMEOUT"] = @browser_start_timeout.to_s
+    env["QUNIT_BROWSER_INACTIVITY_TIMEOUT"] = @browser_inactivity_timeout.to_s
 
     parallel = !@plugin_targets.any? && present_string(@parallel)
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || !@standalone_mode
@@ -297,14 +332,14 @@ class QunitRunner
     end
 
     if path.include?("/frontend/discourse/tests/")
-      return path.split("/frontend/discourse/").last
+      return path.split("/frontend/discourse/tests/").last
     elsif path.include?("/tests/")
-      return path.split("/tests/").last.prepend("tests/")
+      return path.split("/tests/").last
     end
 
     parts = path.split("/")
     if idx = parts.index("tests")
-      return parts[idx..-1].join("/")
+      return parts[(idx + 1)..-1].join("/")
     end
 
     file_path
@@ -367,7 +402,7 @@ class QunitRunner
     ensure_pnpm_installed!
     install_node_dependencies!
 
-    @rails_port = next_available_port(60_098)
+    @rails_port = next_available_port(4_566)
     server_env = build_server_environment(@rails_port)
     server_pid = nil
     log_path = File.join(rails_root, "tmp", "test_server_#{@rails_port}.log")
@@ -478,6 +513,8 @@ class QunitRunner
 
       puts "Timed out. Cannot connect to forked server!"
       puts File.read(log_path) if File.exist?(log_path)
+      puts "\n--- Sockets on port #{port} ---"
+      system("ss -tlnp 'sport = :#{port}' 2>/dev/null || ss -tlnp | grep ':#{port} '")
       exit 1
     end
 
@@ -501,11 +538,9 @@ class QunitRunner
   def build_theme_test_pages(query)
     pages =
       if ENV["THEME_IDS"] && !ENV["THEME_IDS"].empty?
-        ENV["THEME_IDS"]
-          .split("|")
-          .map { |theme_id| "#{@qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+        ENV["THEME_IDS"].split("|").map { |theme_id| "#{@qunit_path}?#{query}&id=#{theme_id}" }
       else
-        ["#{@qunit_path}?#{query}&testem=1"]
+        ["#{@qunit_path}?#{query}"]
       end
 
     pages.shuffle.join(",")
@@ -530,6 +565,7 @@ class QunitRunner
     params["theme_id"] = @theme_id if @theme_id
     params["target"] = resolved_target if resolved_target && !@plugin_targets.any?
     params["report_requests"] = "1" if @report_requests
+    params["testem"] = "1"
 
     encode_query_string(params)
   end
@@ -607,6 +643,28 @@ class QunitRunner
 
     str = value.to_s
     str.empty? ? nil : str
+  end
+
+  def boolean_env(name, default:)
+    value = ENV[name]
+    return default if value.nil?
+    return true if %w[1 true].include?(value.downcase)
+    return false if %w[0 false].include?(value.downcase)
+
+    abort "Error: #{name} must be one of: 1, 0, true, false"
+  end
+
+  def positive_integer_env(name, default)
+    value = ENV[name]
+    return default if value.nil?
+
+    positive_integer(Integer(value, exception: false), name)
+  end
+
+  def positive_integer(value, name)
+    abort "Error: #{name} must be greater than 0" if !value || value <= 0
+
+    value
   end
 
   def resolve_plugin_namespace(directory_name)

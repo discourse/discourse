@@ -3,12 +3,12 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import TextArea from "discourse/components/textarea";
-import icon from "discourse/helpers/d-icon";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { not } from "discourse/truth-helpers";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AssignmentChooser from "./assignment-chooser";
 
 export default class Assignment extends Component {
   @service siteSettings;
@@ -16,6 +16,29 @@ export default class Assignment extends Component {
 
   get assignee() {
     return this.args.assignment.username || this.args.assignment.group_name;
+  }
+
+  get targetId() {
+    return this.args.assignment.targetId || this.args.assignment.target?.id;
+  }
+
+  get targetType() {
+    return this.args.assignment.targetType || "Topic";
+  }
+
+  get suggestions() {
+    return this.taskActions.suggestionsFor(this.targetId, this.targetType);
+  }
+
+  get allowedGroups() {
+    return this.taskActions.allowedGroupsFor(this.targetId, this.targetType);
+  }
+
+  get allowedGroupsForAssignment() {
+    return this.taskActions.allowedGroupsForAssignmentFor(
+      this.targetId,
+      this.targetType
+    );
   }
 
   get status() {
@@ -52,7 +75,7 @@ export default class Assignment extends Component {
 
   @action
   setAssignee([newAssignee]) {
-    if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
+    if (this.allowedGroupsForAssignment.includes(newAssignee)) {
       this.args.assignment.username = null;
       this.args.assignment.group_name = newAssignee;
     } else {
@@ -74,7 +97,7 @@ export default class Assignment extends Component {
         {{if this.showAssigneeIeEmptyError 'assignee-error'}}"
     >
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-      <EmailGroupUserChooser
+      <AssignmentChooser
         autocomplete="off"
         @id="assignee-chooser"
         @value={{this.assignee}}
@@ -84,10 +107,10 @@ export default class Assignment extends Component {
           mobilePlacementStrategy="absolute"
           includeGroups=true
           customSearchOptions=(hash
-            assignableGroups=true
-            defaultSearchResults=this.taskActions.suggestions
+            assignableGroups=true defaultSearchResults=this.suggestions
           )
-          groupMembersOf=this.taskActions.allowedGroups
+          assignmentGroups=this.allowedGroupsForAssignment
+          groupMembersOf=this.allowedGroups
           maximum=1
           tabindex=1
           expandedOnInsert=(not this.assignee)
@@ -98,7 +121,7 @@ export default class Assignment extends Component {
 
       {{#if this.showAssigneeIeEmptyError}}
         <span class="error-label">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           {{i18n "discourse_assign.assign_modal.choose_assignee"}}
         </span>
       {{/if}}
@@ -123,7 +146,7 @@ export default class Assignment extends Component {
         >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
 
-      <TextArea
+      <DTextarea
         id="assign-modal-note"
         @value={{@assignment.note}}
         {{on "keydown" this.handleTextAreaKeydown}}

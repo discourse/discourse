@@ -318,7 +318,7 @@ RSpec.describe DiscourseAi::Agents::Agent do
   describe ".sync_external_registry!" do
     fab!(:fake_plugin) do
       plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
       plugin
     end
 
@@ -370,6 +370,20 @@ RSpec.describe DiscourseAi::Agents::Agent do
 
     it "registers external tools for name-based lookup" do
       register_fake_feature
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+    end
+
+    it "rebuilds external tool lookup when the cache is partially reset" do
+      register_fake_feature
+
+      expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
+        FakeExternalPlugin::FakeExternalTool,
+      )
+
+      described_class.instance_variable_set(:@external_tools_by_name, nil)
 
       expect(described_class.external_tool_by_name("FakeExternalTool")).to eq(
         FakeExternalPlugin::FakeExternalTool,

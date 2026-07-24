@@ -89,5 +89,3 @@ gl:
           label: Título (opcional)
         automatic_close:
           label: Pechar automaticamente a enquisa
-        show_advanced: "Amosar opcións avanzadas"
-        hide_advanced: "Agochar opcións avanzadas"

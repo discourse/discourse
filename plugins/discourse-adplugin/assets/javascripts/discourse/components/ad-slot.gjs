@@ -137,10 +137,18 @@ export function slotContenders(
         indexNumber
       );
 
+    const canBePlacedInBetweenNestedRoots =
+      placeUnderscored === "nested_roots_between" &&
+      isNthTopicListItem(
+        parseInt(houseAds.settings.after_nth_root, 10),
+        indexNumber
+      );
+
     if (
       adAvailable &&
       (notPlacingBetweenTopics ||
         canBePlacedInBetweenTopics ||
+        canBePlacedInBetweenNestedRoots ||
         isNthPost(parseInt(houseAds.settings.after_nth_post, 10), postNumber))
     ) {
       types.push("house-ad");
@@ -149,8 +157,7 @@ export function slotContenders(
 
   Object.keys(adConfig).forEach((adNetwork) => {
     const config = adConfig[adNetwork];
-    let settingNames = null,
-      name;
+    let settingNames, name;
 
     if (
       _isNetworkAvailable(siteSettings, config.enabledSetting) &&

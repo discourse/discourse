@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import categoryBadge from "discourse/helpers/category-badge";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Categories extends Component {
@@ -10,7 +10,7 @@ export default class Categories extends Component {
   <template>
     <StyleguideExample @title="categoryBadge" @code={{this.categoryBadgeCode}}>
       {{#each @dummy.categories as |c|}}
-        {{categoryBadge c categoryStyle="bullet"}}
+        {{dCategoryBadge c categoryStyle="bullet"}}
       {{/each}}
     </StyleguideExample>
   </template>

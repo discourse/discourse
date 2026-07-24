@@ -1,16 +1,20 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const UpcomingChangeBadge = <template>
   <span
-    class={{concatClass "upcoming-change__badge" "--has-tooltip" @badgeClass}}
+    class={{dConcatClass
+      "d-table-badge upcoming-change__badge"
+      "--has-tooltip"
+      @badgeClass
+    }}
   >
-    <span class="upcoming-change__badge-content">
-      {{icon @icon}}
+    <span class="d-table-badge__content upcoming-change__badge-content">
+      {{dIcon @icon}}
       {{i18n @badgeLabelKey}}
     </span>
     {{yield}}
@@ -43,7 +47,7 @@ export default class UpcomingChangeBadges extends Component {
   }
 
   <template>
-    <div class="upcoming-change__badges">
+    <div class="d-table__badges upcoming-change__badges">
       <DTooltip
         @content={{i18n
           (concat
@@ -61,8 +65,8 @@ export default class UpcomingChangeBadges extends Component {
             }}
           >
 
-            <span class="upcoming-change__badge-info">
-              {{icon "info"}}
+            <span class="d-table-badge__info upcoming-change__badge-info">
+              {{dIcon "info"}}
             </span>
           </UpcomingChangeBadge>
         </:trigger>

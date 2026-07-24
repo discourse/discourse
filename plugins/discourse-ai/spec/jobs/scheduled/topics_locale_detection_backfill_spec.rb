@@ -12,7 +12,8 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
-    SiteSetting.ai_translation_target_categories = topic.category_id.to_s
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -82,11 +83,11 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     job.execute({ limit: 10 })
   end
 
-  describe "with target categories" do
-    fab!(:target_category, :category)
-    fab!(:non_target_category, :category)
-    fab!(:target_topic) { Fabricate(:topic, category: target_category, locale: nil) }
-    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category, locale: nil) }
+  describe "with selected categories" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category, locale: nil) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category, locale: nil) }
 
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
@@ -94,15 +95,19 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     fab!(:pm_topic, :private_message_topic)
 
     before do
-      SiteSetting.ai_translation_target_categories = target_category.id.to_s
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
       SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "only processes topics from target categories" do
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(target_topic).once
+    it "only processes topics from selected categories" do
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
-        .with(non_target_topic)
+        .with(included_topic)
+        .once
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(excluded_topic)
         .never
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
@@ -113,17 +118,20 @@ describe Jobs::TopicsLocaleDetectionBackfill do
       job.execute({ limit: 10 })
     end
 
-    it "processes target category topics and group PMs when pm_translation_scope is group" do
+    it "processes included category topics and group PMs when pm_translation_scope is group" do
       SiteSetting.ai_translation_personal_messages = "group"
 
-      DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(target_topic).once
+      DiscourseAi::Translation::TopicLocaleDetector
+        .expects(:detect_locale)
+        .with(included_topic)
+        .once
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
         .with(group_pm_topic)
         .once
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
-        .with(non_target_topic)
+        .with(excluded_topic)
         .never
       DiscourseAi::Translation::TopicLocaleDetector.expects(:detect_locale).with(pm_topic).never
 

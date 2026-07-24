@@ -8,6 +8,7 @@ describe "Permanently delete" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
+  let(:confirm_modal) { PageObjects::Modals::PermanentlyDeleteConfirm.new }
 
   let(:confirmation_phrase) { I18n.t("js.post.controls.permanently_delete_confirm_phrase") }
 
@@ -23,8 +24,8 @@ describe "Permanently delete" do
 
     it "permanently deletes the post after confirmation" do
       topic_page.permanently_delete_post(post)
-      dialog.fill_in_confirmation_phrase(confirmation_phrase)
-      dialog.click_danger
+      confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
+      confirm_modal.click_danger
 
       expect(page).to have_no_css("#post_#{post.post_number}")
       expect(Post.unscoped.exists?(post.id)).to eq(false)
@@ -32,9 +33,9 @@ describe "Permanently delete" do
 
     it "does not delete the post when cancelling" do
       topic_page.permanently_delete_post(post)
-      dialog.click_no
+      confirm_modal.cancel
 
-      expect(dialog).to be_closed
+      expect(confirm_modal).to be_closed
       expect(topic_page).to have_deleted_post(post)
       expect(Post.unscoped.exists?(post.id)).to eq(true)
     end
@@ -70,8 +71,8 @@ describe "Permanently delete" do
 
     it "permanently deletes the topic after confirmation" do
       topic_page.permanently_delete_post(first_post)
-      dialog.fill_in_confirmation_phrase(confirmation_phrase)
-      dialog.click_danger
+      confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
+      confirm_modal.click_danger
 
       expect(page).to have_current_path("/")
       expect(Topic.unscoped.exists?(topic.id)).to eq(false)
@@ -109,9 +110,9 @@ describe "Permanently delete" do
       expect(post_history_modal).to have_destroy_revisions_button
       post_history_modal.destroy_revisions
 
-      expect(dialog).to be_open
-      dialog.fill_in_confirmation_phrase(confirmation_phrase)
-      dialog.click_danger
+      expect(confirm_modal).to be_open
+      confirm_modal.fill_in_confirmation_phrase(confirmation_phrase)
+      confirm_modal.click_danger
 
       expect(page).to have_no_css("#post_#{post_with_revisions.post_number} .post-info.edits")
       expect(PostRevision.exists?(revision_id)).to eq(false)

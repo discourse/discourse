@@ -31,7 +31,9 @@ module Chat
       automatic = ::Chat::UserChatChannelMembership.join_modes[:automatic]
       group_permissions = ALLOWED_GROUP_PERMISSIONS
       group_ids = SiteSetting.chat_allowed_groups_map
-      everyone_allowed = group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      everyone_allowed =
+        group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+          group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
       max_users = SiteSetting.max_chat_auto_joined_users
       now = Time.zone.now
       last_seen_at = 30.days.ago

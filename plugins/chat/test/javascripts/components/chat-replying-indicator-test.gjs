@@ -23,7 +23,7 @@ async function removeUser(id, channelName = "/chat-reply/1") {
   });
 }
 
-module("Component | chat-replying-indicator", function (hooks) {
+module("Component | ChatReplyingIndicator", function (hooks) {
   setupRenderingTest(hooks);
 
   test("not displayed when no one is replying", async function (assert) {

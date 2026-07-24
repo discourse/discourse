@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 
 const ShareSource = <template>
   <DButton

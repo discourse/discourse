@@ -33,6 +33,7 @@ module Jobs
     private
 
     def process_invitees(invitees)
+      invitees = invitees.map(&:with_indifferent_access)
       invitees = filter_out_unavailable_groups(invitees)
 
       max_bulk_invitees = SiteSetting.discourse_post_event_max_bulk_invitees
@@ -70,16 +71,26 @@ module Jobs
         return
       end
 
+      attendance = invitee["attendance"] || "going"
+      status = DiscoursePostEvent::Invitee.statuses[attendance.to_sym]
+
+      if status.nil?
+        save_log "Skipping '#{invitee["identifier"]}' due to unknown attendance: '#{attendance}'"
+        @failed += 1
+        return
+      end
+
+      post_id = @event.post.id
+
       users.each do |user_id|
         # Respect capacity: skip creating new going when full
-        attendance = invitee["attendance"] || "going"
         if attendance == "going" && @event.at_capacity?
           save_log "Skipping '#{invitee["identifier"]}' due to max attendees reached"
           @failed += 1
           next
         end
 
-        create_attendance(user_id, @event.post.id, attendance)
+        create_attendance(user_id, post_id, status)
       end
 
       @processed += 1
@@ -88,19 +99,12 @@ module Jobs
       @failed += 1
     end
 
-    def create_attendance(user_id, post_id, attendance)
-      unknown = DiscoursePostEvent::Invitee::UNKNOWN_ATTENDANCE
-
-      if attendance == unknown
-        DiscoursePostEvent::Invitee.where(user_id: user_id, post_id: post_id).destroy_all
-      else
-        status = DiscoursePostEvent::Invitee.statuses[attendance.to_sym]
-        invitee =
-          DiscoursePostEvent::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
-        invitee.notified = false
-        invitee.status = status
-        invitee.save!
-      end
+    def create_attendance(user_id, post_id, status)
+      invitee =
+        DiscoursePostEvent::Invitee.find_or_initialize_by(user_id: user_id, post_id: post_id)
+      invitee.notified = false
+      invitee.status = status
+      invitee.save!
     end
 
     def save_log(message)
@@ -136,7 +140,7 @@ module Jobs
       invitees.filter do |i|
         group = groups.find { |g| g.name === i[:identifier] }
 
-        !group || (@guardian.can_see_group?(group) && @guardian.can_see_group_members?(group))
+        !group || @guardian.can_see_group_and_members?(group)
       end
     end
   end

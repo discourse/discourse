@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Loaded via MAGICK_CONFIGURE_PATH, set in config/initializers/003-imagemagick.rb.
+-->
+<policymap>
+  <policy domain="resource" name="memory" value="1GiB"/>
+  <policy domain="resource" name="map" value="2GiB"/>
+  <policy domain="resource" name="area" value="4GP"/>
+  <policy domain="resource" name="disk" value="8GiB"/>
+  <policy domain="resource" name="width" value="64KP"/>
+  <policy domain="resource" name="height" value="64KP"/>
+  <policy domain="resource" name="list-length" value="512"/>
+  <policy domain="resource" name="time" value="300"/>
+
+  <!-- no external delegate programs (Ghostscript, ffmpeg, ...) -->
+  <policy domain="delegate" rights="none" pattern="*"/>
+
+  <!-- no image filters -->
+  <policy domain="filter" rights="none" pattern="*"/>
+
+  <!-- block stdio/fd pipes, /etc, traversal, and @ file indirection -->
+  <policy domain="path" rights="none" pattern="-"/>
+  <policy domain="path" rights="none" pattern="fd:*"/>
+  <policy domain="path" rights="none" pattern="/etc/*"/>
+  <policy domain="path" rights="none" pattern="*../*"/>
+  <policy domain="path" rights="none" pattern="@*"/>
+
+  <!-- deny all coders, then allow only the formats Discourse uses -->
+  <policy domain="coder" rights="none" pattern="*"/>
+  <!-- upload/thumbnail raster formats -->
+  <policy domain="coder" rights="read|write" pattern="{GIF,JPEG,JPG,PNG,WEBP,AVIF,ICO}"/>
+  <!-- HEIC/HEIF: UploadCreator#convert_heif! transcodes to JPEG -->
+  <policy domain="coder" rights="read|write" pattern="{HEIC,HEIF}"/>
+  <!-- MSVG: SVG dimension reads; the plain SVG coder stays denied -->
+  <policy domain="coder" rights="read|write" pattern="MSVG"/>
+  <!-- XC: LetterAvatar canvas -->
+  <policy domain="coder" rights="read|write" pattern="XC"/>
+  <!-- ICC/ICM: RT_sRGB.icm "-profile" on resize/crop/downsize -->
+  <policy domain="coder" rights="read|write" pattern="{ICC,ICM}"/>
+  <!-- HISTOGRAM/INFO: Upload#calculate_dominant_color! -->
+  <policy domain="coder" rights="read|write" pattern="{HISTOGRAM,INFO}"/>
+
+  <policy domain="system" name="symlink" rights="none" pattern="follow"/>
+</policymap>

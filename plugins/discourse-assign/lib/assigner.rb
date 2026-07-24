@@ -3,6 +3,8 @@
 require "email/sender"
 require "nokogiri"
 
+require_relative "discourse_assign/assignment_permissions"
+
 class ::Assigner
   ASSIGNMENTS_PER_TOPIC_LIMIT = 5
 
@@ -70,7 +72,7 @@ class ::Assigner
   def self.auto_assign(post, force: false)
     return unless SiteSetting.assigns_by_staff_mention
 
-    if post.user && post.topic && post.user.can_assign?
+    if post.user && post.topic && post.user.can_assign?(post.topic)
       return if post.topic.assignment.present? && !force
 
       # remove quotes, oneboxes and code blocks
@@ -94,28 +96,35 @@ class ::Assigner
   end
 
   def self.is_last_staff_post?(post)
-    allowed_user_ids = User.assign_allowed.pluck(:id).join(",")
+    allowed_user_ids =
+      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic)
+    return false if allowed_user_ids.empty?
 
-    sql = <<~SQL
-      SELECT 1
-        FROM posts p
-        JOIN users u ON u.id = p.user_id
-       WHERE p.deleted_at IS NULL
-         AND p.topic_id = :topic_id
-         AND u.id IN (#{allowed_user_ids})
-      HAVING MAX(post_number) = :post_number
-    SQL
-
-    args = { topic_id: post.topic_id, post_number: post.post_number }
-
-    DB.exec(sql, args) == 1
+    Post.where(topic_id: post.topic_id, user_id: allowed_user_ids).maximum(:post_number) ==
+      post.post_number
   end
 
   def self.mentioned_staff(post)
     mentions = post.raw_mentions
     if mentions.present?
-      User.human_users.assign_allowed.where("username_lower IN (?)", mentions.map(&:downcase)).first
+      User
+        .human_users
+        .where(id: DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(post.topic))
+        .where(username_lower: mentions.map(&:downcase))
+        .first
     end
+  end
+
+  def self.failure_message(reason, assign_to)
+    name = assign_to.is_a?(User) ? assign_to.username : assign_to&.name
+
+    I18n.t(
+      "discourse_assign.#{reason}",
+      username: name,
+      group: name,
+      limit: ASSIGNMENTS_PER_TOPIC_LIMIT,
+      max: SiteSetting.max_assigned_topics,
+    )
   end
 
   def self.publish_topic_tracking_state(topic, user_id)
@@ -130,11 +139,13 @@ class ::Assigner
   end
 
   def allowed_user_ids
-    @allowed_user_ids ||= User.assign_allowed.pluck(:id)
+    @allowed_user_ids ||=
+      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(@target)
   end
 
   def allowed_group_ids
-    @allowed_group_ids ||= Group.assignable(@assigned_by).pluck(:id)
+    @allowed_group_ids ||=
+      DiscourseAssign::AssignmentPermissions.allowed_group_ids_for_target(@assigned_by, @target)
   end
 
   def can_assign_to?(assign_to)
@@ -261,13 +272,30 @@ class ::Assigner
     allow_self_reassign: false,
     should_notify: true
   )
+    return { success: false, reason: :no_assignee } if assign_to.blank?
+
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
+    if !guardian.can_assign?(@target)
+      return { success: false, reason: :forbidden_assigner_not_allowed }
+    end
+
     if topic.private_message? && SiteSetting.invite_on_assign
-      if assigned_to_type == "Group"
-        invite_group(assign_to, should_notify)
-      else
-        invite_user(assign_to)
+      group = assign_to.is_a?(Group)
+
+      begin
+        group ? invite_group(assign_to, should_notify) : invite_user(assign_to)
+      rescue Discourse::InvalidAccess,
+             Topic::NotAllowed,
+             Topic::UserExists,
+             RateLimiter::LimitExceeded
+        reason =
+          if group
+            :forbidden_group_assignee_not_pm_participant
+          else
+            :forbidden_assignee_not_pm_participant
+          end
+        return { success: false, reason: }
       end
     end
 
@@ -320,7 +348,7 @@ class ::Assigner
         status: status,
       )
 
-    first_post.publish_change_to_clients!(:revised, reload_topic: true)
+    first_post&.publish_change_to_clients!(:revised, reload_topic: true)
     queue_notification(assignment) if should_notify
 
     # This assignment should never be notified
@@ -380,6 +408,8 @@ class ::Assigner
       end
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
+
+    DiscourseEvent.trigger(:assigned, assignment)
 
     { success: true }
   end
@@ -444,19 +474,21 @@ class ::Assigner
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
-      MessageBus.publish(
-        "/staff/topic-assignment",
-        {
-          type: "unassigned",
-          topic_id: topic.id,
-          post_id: post_target? && @target.id,
-          post_number: post_target? && @target.post_number,
-          assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
-          assignment_note: nil,
-          assignment_status: nil,
-        },
-        user_ids: allowed_user_ids,
-      )
+      if allowed_user_ids.present?
+        MessageBus.publish(
+          "/staff/topic-assignment",
+          {
+            type: "unassigned",
+            topic_id: topic.id,
+            post_id: post_target? && @target.id,
+            post_number: post_target? && @target.post_number,
+            assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
+            assignment_note: nil,
+            assignment_status: nil,
+          },
+          user_ids: allowed_user_ids,
+        )
+      end
     end
   end
 
@@ -552,7 +584,8 @@ class ::Assigner
   end
 
   def no_assignee_change?(assignee)
-    @target.assignment&.assigned_to_id == assignee.id
+    @target.assignment&.assigned_to_id == assignee.id &&
+      @target.assignment&.assigned_to_type == assignee.class.name
   end
 
   def details_change?(note, status)

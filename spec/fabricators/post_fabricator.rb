@@ -137,6 +137,28 @@ Fabricator(:post_with_external_links, from: :post) do
   MD
 end
 
+Fabricator(:post_with_rich_content, from: :post) do
+  user { Fabricate(:user, refresh_auto_groups: true) }
+  topic
+  raw <<~MD
+    Here is a link to http://google.com now then.
+
+    > What's up with this quote? It's just that, a quote.
+
+    And this is an unordered list:
+
+    - list item 1 is about this long
+    - list item 2 with a longer description for testing purposes
+    - third list item with a date: [date=2026-03-18 timezone=America/Toronto]
+
+    [details="Summary"]
+      Gotta add some stuff inside the fold.
+    [/details]
+
+    :smile:
+  MD
+end
+
 Fabricator(:private_message_post, from: :post) do
   transient :recipient
   user

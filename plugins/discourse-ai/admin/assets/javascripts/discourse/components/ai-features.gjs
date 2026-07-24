@@ -3,63 +3,69 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DSelect from "discourse/components/d-select";
-import FilterInput from "discourse/components/filter-input";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiFeaturesList from "./ai-features-list";
 
 const ALL = "all";
-const CONFIGURED = "configured";
-const UNCONFIGURED = "unconfigured";
+const ENABLED = "enabled";
+const NOT_ENABLED = "not enabled";
 
 export default class AiFeatures extends Component {
   @service adminPluginNavManager;
+  @service store;
 
   @tracked filterValue = "";
-  @tracked selectedFeatureGroup = CONFIGURED;
+  @tracked selectedFeatureGroup = ENABLED;
+  @tracked refreshedFeatures = null;
 
   constructor() {
     super(...arguments);
 
     // if there are features but none are configured, show unconfigured
-    if (this.args.features?.length > 0) {
-      const configuredCount = this.args.features.filter(
+    if (this.features?.length > 0) {
+      const configuredCount = this.features.filter(
         (f) => f.module_enabled === true
       ).length;
       if (configuredCount === 0) {
-        this.selectedFeatureGroup = UNCONFIGURED;
+        this.selectedFeatureGroup = NOT_ENABLED;
       }
     }
+  }
+
+  get features() {
+    return this.refreshedFeatures ?? this.args.features;
   }
 
   get featureGroupOptions() {
     return [
       { value: ALL, label: i18n("discourse_ai.features.filters.all") },
       {
-        value: CONFIGURED,
-        label: i18n("discourse_ai.features.nav.configured"),
+        value: ENABLED,
+        label: i18n("discourse_ai.features.nav.enabled"),
       },
       {
-        value: UNCONFIGURED,
-        label: i18n("discourse_ai.features.nav.unconfigured"),
+        value: NOT_ENABLED,
+        label: i18n("discourse_ai.features.nav.not_enabled"),
       },
     ];
   }
 
   get filteredFeatures() {
-    if (!this.args.features || this.args.features.length === 0) {
+    if (!this.features || this.features.length === 0) {
       return [];
     }
 
-    let features = this.args.features;
+    let features = this.features;
 
-    if (this.selectedFeatureGroup === CONFIGURED) {
+    if (this.selectedFeatureGroup === ENABLED) {
       features = features.filter((feature) => feature.module_enabled === true);
-    } else if (this.selectedFeatureGroup === UNCONFIGURED) {
+    } else if (this.selectedFeatureGroup === NOT_ENABLED) {
       features = features.filter((feature) => feature.module_enabled === false);
     }
 
@@ -164,8 +170,14 @@ export default class AiFeatures extends Component {
   @action
   resetAndFocus() {
     this.filterValue = "";
-    this.selectedFeatureGroup = CONFIGURED;
+    this.selectedFeatureGroup = ENABLED;
     document.querySelector(".admin-filter__input").focus();
+  }
+
+  @action
+  async refreshFeatures() {
+    const features = await this.store.findAll("ai-feature");
+    this.refreshedFeatures = features.content;
   }
 
   <template>
@@ -194,7 +206,7 @@ export default class AiFeatures extends Component {
           {{/each}}
         </DSelect>
 
-        <FilterInput
+        <DFilterInput
           placeholder={{i18n "discourse_ai.features.filters.text"}}
           @filterAction={{this.onFilterChange}}
           @value={{this.filterValue}}
@@ -203,7 +215,7 @@ export default class AiFeatures extends Component {
         />
       </div>
 
-      <AiDefaultLlmSelector />
+      <AiDefaultLlmSelector @onChange={{this.refreshFeatures}} />
 
       {{#if this.filteredFeatures.length}}
         <AiFeaturesList @modules={{this.filteredFeatures}} />

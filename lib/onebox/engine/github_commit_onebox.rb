@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
-require_relative "../mixins/github_auth_header"
+require_relative "../mixins/github_api"
 
 module Onebox
   module Engine
@@ -10,7 +10,7 @@ module Onebox
       include LayoutSupport
       include JSON
       include Onebox::Mixins::GithubBody
-      include Onebox::Mixins::GithubAuthHeader
+      include Onebox::Mixins::GithubApi
 
       matches_domain("github.com", "www.github.com")
       always_https
@@ -21,6 +21,20 @@ module Onebox
 
       def url
         "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{match[:sha]}"
+      end
+
+      def inline_data
+        return unless github_token?
+
+        result = raw
+        message = result["commit"]["message"].split("\n").first
+        {
+          title:
+            "#{message} - #{match[:org]}/#{match[:repository]}@#{result["sha"][0...7]} - GitHub",
+        }
+      rescue StandardError => e
+        Rails.logger.warn("Inline GitHub commit onebox error for #{@url}: #{e.message}")
+        nil
       end
 
       private
@@ -38,7 +52,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header(match[:org])).clone
+        result = raw.clone
 
         lines = result["commit"]["message"].split("\n")
         result["title"] = lines.first

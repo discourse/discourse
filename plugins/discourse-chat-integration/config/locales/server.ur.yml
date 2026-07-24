@@ -60,7 +60,7 @@ ur:
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
           rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
           rule_string_tags_suffix: " ٹیگز کے ساتھ: *%{tags}*"
-        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` لکھیں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
@@ -72,7 +72,7 @@ ur:
         transcript:
           error: "ٹرانسکرِپٹ بناتے وقت کچھ غلط ہو گیا، معذرت!"
           post_to_discourse: "ٹرانسکرِپٹ کے ساتھ ڈسکورس پر ایک لڑی کا مسودہ تیار کرنے کے لیے یہاں کلک کریں"
-          api_required: "معذرت، یہ اِنٹیگرَیشَن ٹرانسکرِپٹس شائع کرنے کیلئے سیٹ اَپ نہیں ہے۔"
+          api_required: "معذرت، یہ انضمام ٹرانسکرپٹس پوسٹ کرنے کی حمایت کے لیے ترتیب نہیں دیا گیا۔"
           view_on_slack: "%{name}میں سلَّیک پر دیکھیں"
           first_message_pretext: "شروع %{n} پیغامات قبل:"
           last_message_pretext: "اور ختم %{n} پیغامات قبل:"
@@ -94,7 +94,7 @@ ur:
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
           rule_string: "<b>%{index})</b> <b>%{filter}</b>پوسٹس <b>%{category}</b> میں"
           rule_string_tags_suffix: " ٹیگز کے ساتھ: <b>%{tags}</b>"
-        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے <code>help/</code> رَن کریں۔"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے <code>help/</code> لکھیں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"
@@ -126,7 +126,7 @@ ur:
           no_rules: "اِس چینل کیلئے قائم کوئی اصول نہیں ہیں۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
           rule_string: "*%{index})* *%{filter}* پوسٹس *%{category}* میں"
           rule_string_tags_suffix: " ٹیگز کے ساتھ: *%{tags}*"
-        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` رَن کریں۔"
+        parse_error: "معذرت، مجھے یہ سمجھ نہیں آیا۔ ہدایات کیلئے `discourse help/` لکھیں۔"
         create:
           created: "اصول کامیای سے بنا لیا گیا"
           updated: "اصول کامیای سے اَپ ڈَیٹ ہو گیا"

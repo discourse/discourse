@@ -1,6 +1,5 @@
 import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
-import { escapeMarkdownCharacters } from "discourse/lib/markdown-image-builder";
 import { humanizeList } from "discourse/lib/text";
 import { capabilities } from "discourse/services/capabilities";
 import I18n, { i18n } from "discourse-i18n";
@@ -202,7 +201,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif, jxl"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 
@@ -236,7 +235,7 @@ export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
 }
 
 export function isImage(path) {
-  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif|jxl)$/i.test(path);
 }
 
 export function isVideo(path) {
@@ -285,7 +284,7 @@ function markdownNameFromFileName(fileName) {
     name = i18n("upload_selector.default_image_alt_text");
   }
 
-  return escapeMarkdownCharacters(name);
+  return name.replace(/\[|\]|\|/g, "");
 }
 
 function imageMarkdown(upload) {
@@ -301,7 +300,7 @@ function playableMediaMarkdown(upload, type) {
 }
 
 function attachmentMarkdown(upload) {
-  return `[${escapeMarkdownCharacters(upload.original_filename)}|attachment](${
+  return `[${upload.original_filename.replace(/\[|\]|\|/g, "")}|attachment](${
     upload.short_url
   }) (${I18n.toHumanSize(upload.filesize)})`;
 }

@@ -1,3 +1,89 @@
-#!/bin/bash
+#!/usr/bin/env node
+/* eslint-disable no-console */
 
-bin/ember-cli -u
+const fs = require("fs");
+const path = require("path");
+const { spawnSync } = require("child_process");
+const { parseArgs } = require("util");
+const concurrently = require("concurrently");
+
+const RAILS_ROOT = path.resolve(__dirname, "..");
+
+let nodeModulesOutdated = false;
+try {
+  const installed = fs.readFileSync(
+    path.join(RAILS_ROOT, "node_modules/.pnpm/lock.yaml"),
+    "utf8"
+  );
+  const lockfile = fs.readFileSync(
+    path.join(RAILS_ROOT, "pnpm-lock.yaml"),
+    "utf8"
+  );
+  nodeModulesOutdated = installed !== lockfile;
+} catch (e) {
+  nodeModulesOutdated = true;
+}
+
+if (nodeModulesOutdated) {
+  console.log(
+    "[bin/dev] Detected outdated or missing node_modules. Running pnpm install..."
+  );
+  const result = spawnSync("pnpm", [`--dir=${RAILS_ROOT}`, "install"], {
+    stdio: "inherit",
+  });
+  if (result.status !== 0) {
+    if (result.error && result.error.code === "ENOENT") {
+      console.error("pnpm is not installed. run `npm install -g pnpm`");
+    }
+    process.exit(1);
+  }
+}
+
+const serverEnv = { ...process.env };
+serverEnv.UNICORN_PORT ||= "3000";
+
+if (process.env.CODESPACE_NAME) {
+  serverEnv.DISCOURSE_PORT = "443";
+  serverEnv.DISCOURSE_FORCE_HTTPS = "1";
+  serverEnv.DISCOURSE_FORCE_HOSTNAME = `${process.env.CODESPACE_NAME}-${serverEnv.UNICORN_PORT}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+}
+
+const { values: args } = parseArgs({
+  options: { only: { type: "string" } },
+});
+
+const commands = [];
+
+if (!args.only || args.only === "rails") {
+  commands.push({
+    name: "rails",
+    command: path.join(RAILS_ROOT, "bin/pitchfork"),
+    cwd: RAILS_ROOT,
+    env: serverEnv,
+    prefixColor: "#22c4f1",
+  });
+}
+
+if (!args.only || args.only === "ember") {
+  commands.push({
+    name: "ember",
+    command: "./rolldown.mjs",
+    cwd: path.join(RAILS_ROOT, "frontend/discourse"),
+    prefixColor: "#f27a21",
+  });
+}
+
+if (commands.length === 0) {
+  console.error(`[bin/dev] --only must be 'rails' or 'ember'`);
+  process.exit(1);
+}
+
+const { result } = concurrently(commands, {
+  killOthersOn: ["success", "failure"],
+  killSignal: "SIGTERM",
+});
+
+result.then(
+  () => process.exit(0),
+  () => process.exit(1)
+);

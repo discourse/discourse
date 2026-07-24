@@ -9,10 +9,7 @@ describe "Admin Welcome Banner Config" do
     SiteSetting.allow_user_locale = true
   end
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   describe "locale selector" do
     it "displays a locale selector" do

@@ -4,7 +4,7 @@ module DiscourseAi
     class EntryPoint
       def inject_into(plugin)
         plugin.register_seedfu_fixtures(
-          Rails.root.join("plugins", "discourse-ai", "db", "fixtures", "ai_helper"),
+          Rails.root.join("plugins/discourse-ai/db/fixtures/ai_helper"),
         )
 
         plugin.add_to_serializer(:current_user, :can_use_assistant) do

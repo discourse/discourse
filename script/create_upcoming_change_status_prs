@@ -1,0 +1,182 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+require "open3"
+require "shellwords"
+
+class UpcomingChangeStatusPRs
+  def initialize(env: ENV)
+    @report_file = env.fetch("REPORT_FILE") { abort "REPORT_FILE is required" }
+    @base_branch = env.fetch("BASE_BRANCH") { abort "BASE_BRANCH is required" }
+    @dry_run = env.fetch("DRY_RUN", "true") == "true"
+    @stale_after_days = env.fetch("STALE_AFTER_DAYS", "14")
+    @github_repository = env.fetch("GITHUB_REPOSITORY", "")
+    @github_step_summary = env.fetch("GITHUB_STEP_SUMMARY", "/dev/stdout")
+    @rails_command = env.fetch("RAILS_COMMAND", "bin/rails")
+  end
+
+  def run
+    if !@dry_run && @github_repository != "discourse/discourse"
+      abort "Refusing to create pull requests outside discourse/discourse."
+    end
+
+    run!("git", "fetch", "origin", @base_branch)
+
+    eligible_changes.each { |change| process(change) }
+  end
+
+  private
+
+  def eligible_changes
+    JSON.parse(File.read(@report_file)).select { |change| change["eligible"] }
+  end
+
+  def process(change)
+    name = change["name"]
+    settings_path = change["settings_path"]
+    original_pr_number = change["original_pr_number"]
+    branch = change["branch"]
+    title = change["title"]
+    pr_label = change["pr_label"]
+    body_file = "/tmp/upcoming-change-#{name}-body.md"
+    assignee = resolve_assignee(original_pr_number)
+
+    File.write(body_file, change["pr_body"])
+
+    if @dry_run
+      write_dry_run_summary(
+        name:,
+        branch:,
+        title:,
+        body_file:,
+        assignee:,
+        settings_path:,
+        pr_label:,
+      )
+      return
+    end
+
+    if open_pr_exists?(branch)
+      puts "Open PR already exists for #{branch}; skipping."
+      return
+    end
+
+    run!("git", "checkout", "-B", branch, "origin/#{@base_branch}")
+    rails_runner(
+      "script/upcoming_changes_status_report",
+      "--",
+      "--stale-after-days",
+      @stale_after_days,
+      "--apply",
+      name,
+    )
+    run!("git", "add", settings_path)
+    run!("git", "commit", "-m", title)
+    run!("git", "push", "-f", "origin", branch)
+
+    create_pr(branch:, title:, body_file:, pr_label:, assignee:)
+  end
+
+  def resolve_assignee(original_pr_number)
+    return if original_pr_number.nil? || original_pr_number.to_s.empty?
+
+    login, status =
+      Open3.capture2(
+        "gh",
+        "pr",
+        "view",
+        original_pr_number.to_s,
+        "--json",
+        "author",
+        "--jq",
+        ".author.login",
+      )
+    status.success? ? login.strip : nil
+  end
+
+  def open_pr_exists?(branch)
+    count =
+      capture!(
+        "gh",
+        "pr",
+        "list",
+        "--head",
+        branch,
+        "--state",
+        "open",
+        "--json",
+        "number",
+        "--jq",
+        "length",
+      ).strip
+    count != "0"
+  end
+
+  def create_pr(branch:, title:, body_file:, pr_label:, assignee:)
+    args = [
+      "gh",
+      "pr",
+      "create",
+      "--base",
+      @base_branch,
+      "--head",
+      branch,
+      "--title",
+      title,
+      "--body-file",
+      body_file,
+      "--label",
+      pr_label,
+    ]
+    args.push("--assignee", assignee) if assignee && !assignee.empty?
+    run!(*args)
+  end
+
+  def rails_runner(*args)
+    run!(@rails_command, "runner", *args, env: { "SKIP_DB_AND_REDIS" => "1", "RAILS_DB" => "nonexistent" })
+  end
+
+  def write_dry_run_summary(name:, branch:, title:, body_file:, assignee:, settings_path:, pr_label:)
+    create_pr_line =
+      if assignee && !assignee.empty?
+        "gh pr create --base #{@base_branch} --head #{branch} --title \"#{title}\" --body-file #{body_file} --label #{pr_label} --assignee #{assignee}"
+      else
+        "gh pr create --base #{@base_branch} --head #{branch} --title \"#{title}\" --body-file #{body_file} --label #{pr_label}"
+      end
+
+    summary = <<~SUMMARY
+      ### #{name}
+
+      ```bash
+      git checkout -B #{branch} origin/#{@base_branch}
+      SKIP_DB_AND_REDIS=1 RAILS_DB=nonexistent bin/rails runner script/upcoming_changes_status_report -- --stale-after-days #{@stale_after_days} --apply #{name}
+      git add #{settings_path}
+      git commit -m "#{title}"
+      git push -f origin #{branch}
+      #{create_pr_line}
+      ```
+
+    SUMMARY
+
+    File.open(@github_step_summary, "a") { |file| file.write(summary) }
+  end
+
+  # Runs a command, streaming output, and aborts on failure (set -e equivalent).
+  def run!(*args, env: {})
+    args = args.map(&:to_s)
+    unless system(env, *args)
+      abort "Command failed (#{$?.exitstatus}): #{args.shelljoin}"
+    end
+  end
+
+  # Runs a command and returns its stdout, aborting on failure (set -e + pipefail).
+  def capture!(*args)
+    args = args.map(&:to_s)
+    stdout, status = Open3.capture2(*args)
+    abort "Command failed (#{status.exitstatus}): #{args.shelljoin}" unless status.success?
+    stdout
+  end
+end
+
+UpcomingChangeStatusPRs.new.run if $PROGRAM_NAME == __FILE__

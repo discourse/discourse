@@ -53,7 +53,8 @@ module Chat
       target_date: nil,
       include_target_message_id: false
     )
-      messages = base_query(channel: channel)
+      include_bookmarks = guardian.user.present?
+      messages = base_query(channel: channel, include_bookmarks: include_bookmarks)
       messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
       if thread_id.present?
         include_thread_messages = true
@@ -78,7 +79,12 @@ module Chat
       end
 
       if target_message_id.present? && direction.blank?
-        query_around_target(target_message_id, channel, messages)
+        query_around_target(
+          target_message_id,
+          channel,
+          messages,
+          include_bookmarks: include_bookmarks,
+        )
       else
         if target_date.present?
           query_by_date(target_date, channel, messages)
@@ -95,7 +101,7 @@ module Chat
       end
     end
 
-    def self.base_query(channel:)
+    def self.base_query(channel:, include_bookmarks: true)
       query =
         Chat::Message
           .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
@@ -103,11 +109,12 @@ module Chat
           .includes(user: :primary_group)
           .includes(chat_webhook_event: :incoming_chat_webhook)
           .includes(reactions: :user)
-          .includes(:bookmarks)
           .includes(uploads: { optimized_videos: :optimized_upload })
           .includes(chat_channel: :chatable)
           .includes(:pinned_message)
           .where(chat_channel_id: channel.id)
+
+      query = query.includes(:bookmarks) if include_bookmarks
 
       user_includes = SiteSetting.enable_user_status ? %i[user_status user_option] : %i[user_option]
       query.includes(
@@ -122,8 +129,11 @@ module Chat
       )
     end
 
-    def self.query_around_target(target_message_id, channel, messages)
-      target_message = base_query(channel: channel).with_deleted.find_by(id: target_message_id)
+    def self.query_around_target(target_message_id, channel, messages, include_bookmarks: true)
+      target_message =
+        base_query(channel: channel, include_bookmarks: include_bookmarks).with_deleted.find_by(
+          id: target_message_id,
+        )
 
       past_messages =
         messages

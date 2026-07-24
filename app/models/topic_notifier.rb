@@ -20,6 +20,10 @@ class TopicNotifier
     change_level user_id, :watching, reason
   end
 
+  def track_topic!(user_id, reason = :created_topic)
+    change_level user_id, :tracking, reason
+  end
+
   # Enable/disable the mute on the topic
   def toggle_mute(user_id)
     change_level user_id, (muted?(user_id) ? levels[:regular] : levels[:muted])

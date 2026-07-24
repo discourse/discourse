@@ -188,3 +188,12 @@ sk:
       title: "Úprava priradení"
       topic: "Téma"
       post: "Príspevok"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Priradené"
+      assign_topic:
+        operations:
+          assign: "Priradiť"
+          unassign: "Nepriradené"
+        topic_id: "ID témy"
+        assignee: "Príjemca"

@@ -88,38 +88,6 @@ RSpec.describe "User chat preferences" do
     end
   end
 
-  shared_examples "select and save" do
-    it "can select and save" do
-      user_preferences_chat_page.visit
-      form.field(field_name).select(val)
-      form.submit
-      user_preferences_chat_page.visit
-
-      expect(form.field(field_name).value).to eq val
-    end
-  end
-
-  describe "chat sound" do
-    include_examples "select and save" do
-      let(:field_name) { "chat_sound" }
-      let(:val) { "bell" }
-    end
-  end
-
-  describe "header_indicator_preference" do
-    include_examples "select and save" do
-      let(:field_name) { "chat_header_indicator_preference" }
-      let(:val) { "dm_and_mentions" }
-    end
-  end
-
-  describe "separate sidebar mode" do
-    include_examples "select and save" do
-      let(:field_name) { "chat_separate_sidebar_mode" }
-      let(:val) { "fullscreen" }
-    end
-  end
-
   it "can select send shorcut sidebar mode" do
     user_preferences_chat_page.visit
     form.field("chat_send_shortcut").select("meta_enter")
@@ -129,6 +97,15 @@ RSpec.describe "User chat preferences" do
     expect(
       form.field("chat_send_shortcut").component.find("input[type='radio'][value='meta_enter']"),
     ).to be_checked
+  end
+
+  it "can select and save separate sidebar mode" do
+    user_preferences_chat_page.visit
+    form.field("chat_separate_sidebar_mode").select("fullscreen")
+    form.submit
+    user_preferences_chat_page.visit
+
+    expect(form.field("chat_separate_sidebar_mode").value).to eq("fullscreen")
   end
 
   context "as an admin on another user's preferences" do

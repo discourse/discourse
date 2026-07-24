@@ -1,6 +1,58 @@
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import formatLocalDate from "./format-local-date";
 
+function wrapDateRangeSpans(element) {
+  const dateSpans = element.querySelectorAll(
+    "span.discourse-local-date[data-range]"
+  );
+  const processed = new Set();
+
+  for (const span of dateSpans) {
+    if (processed.has(span) || span.closest(".discourse-local-date-range")) {
+      continue;
+    }
+
+    const range = span.dataset.range;
+    if (range !== "true" && range !== "from") {
+      continue;
+    }
+
+    let toSpan = span.nextSibling;
+    while (toSpan && toSpan.nodeType === Node.TEXT_NODE) {
+      toSpan = toSpan.nextSibling;
+    }
+
+    if (
+      !toSpan?.classList?.contains("discourse-local-date") ||
+      !toSpan.dataset?.range
+    ) {
+      continue;
+    }
+
+    processed.add(span);
+    processed.add(toSpan);
+
+    span.dataset.range = "from";
+    toSpan.dataset.range = "to";
+
+    const doc =
+      element.nodeType === Node.DOCUMENT_NODE ? element : element.ownerDocument;
+    const wrapper = doc.createElement("span");
+    wrapper.className = "discourse-local-date-range";
+    span.parentNode.insertBefore(wrapper, span);
+    wrapper.appendChild(span);
+
+    let node = wrapper.nextSibling;
+    while (node && node !== toSpan) {
+      const next = node.nextSibling;
+      wrapper.appendChild(node);
+      node = next;
+    }
+
+    wrapper.appendChild(toSpan);
+  }
+}
+
 const OPTIONAL_DATA_ATTRS = [
   "format",
   "recurring",
@@ -64,6 +116,10 @@ const extension = {
         {
           tag: "span.discourse-local-date[data-date]",
           getAttrs: (dom) => {
+            // Skip spans that are part of a range (handled by local_date_range via wrapper)
+            if (dom.dataset.range) {
+              return false;
+            }
             return {
               date: dom.dataset.date,
               time: dom.dataset.time,
@@ -278,6 +334,11 @@ const extension = {
         }
       },
     };
+  },
+
+  // Pre-process HTML to wrap adjacent date-range spans before parsing
+  transformParsedHTML(element) {
+    wrapDateRangeSpans(element);
   },
 };
 

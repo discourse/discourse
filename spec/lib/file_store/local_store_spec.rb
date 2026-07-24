@@ -36,48 +36,44 @@ RSpec.describe FileStore::LocalStore do
     end
 
     it "moves the file to the tombstone" do
-      begin
-        upload =
-          UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
-            Fabricate(:user).id,
-          )
+      upload =
+        UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
+          Fabricate(:user).id,
+        )
 
-        path = store.path_for(upload)
-        mtime = File.mtime(path)
+      path = store.path_for(upload)
+      mtime = File.mtime(path)
 
-        sleep 0.01 # Delay a little for mtime to be updated
-        store.remove_upload(upload)
-        tombstone_path = path.sub("/uploads/", "/uploads/tombstone/")
+      sleep 0.01 # Delay a little for mtime to be updated
+      store.remove_upload(upload)
+      tombstone_path = path.sub("/uploads/", "/uploads/tombstone/")
 
-        expect(File.exist?(tombstone_path)).to eq(true)
-        expect(File.mtime(tombstone_path)).to_not eq(mtime)
-      ensure
-        [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
-      end
+      expect(File.exist?(tombstone_path)).to eq(true)
+      expect(File.mtime(tombstone_path)).to_not eq(mtime)
+    ensure
+      [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
     end
   end
 
   describe "#remove_optimized_image" do
     it "moves the file to the tombstone" do
-      begin
-        upload =
-          UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
-            Fabricate(:user).id,
-          )
+      upload =
+        UploadCreator.new(file_from_fixtures("smallest.png"), "smallest.png").create_for(
+          Fabricate(:user).id,
+        )
 
-        upload.create_thumbnail!(1, 1)
-        upload.reload
+      upload.create_thumbnail!(1, 1)
+      upload.reload
 
-        optimized_image = upload.thumbnail(1, 1)
-        path = store.path_for(optimized_image)
+      optimized_image = upload.thumbnail(1, 1)
+      path = store.path_for(optimized_image)
 
-        store.remove_optimized_image(optimized_image)
-        tombstone_path = path.sub("/uploads/", "/uploads/tombstone/")
+      store.remove_optimized_image(optimized_image)
+      tombstone_path = path.sub("/uploads/", "/uploads/tombstone/")
 
-        expect(File.exist?(tombstone_path)).to eq(true)
-      ensure
-        [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
-      end
+      expect(File.exist?(tombstone_path)).to eq(true)
+    ensure
+      [path, tombstone_path].each { |file_path| File.delete(file_path) if File.exist?(file_path) }
     end
   end
 

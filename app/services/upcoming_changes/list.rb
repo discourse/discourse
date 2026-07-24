@@ -34,6 +34,7 @@ class UpcomingChanges::List
           true
         end
       end
+      .select { |setting| UpcomingChanges::ConditionalDisplay.should_display?(setting[:setting]) }
       .each do |setting|
         setting[:value] = setting[:value] == "true"
 
@@ -59,8 +60,11 @@ class UpcomingChanges::List
           :value,
           :upcoming_change,
           :plugin,
+          :depends_on,
+          :depends_on_humanized_names,
         ).merge(
           dependents: UpcomingChanges.find_dependents_for_change(setting[:setting]),
+          depends_on_met: UpcomingChanges.change_dependencies_met?(setting[:setting]),
           overriding_defaults:
             SiteSetting.upcoming_change_default_overrides.values.any? do |override|
               override[:upcoming_change] == setting[:setting]
@@ -71,11 +75,11 @@ class UpcomingChanges::List
 
   def load_upcoming_change_groups(upcoming_changes:)
     group_ids =
-      upcoming_changes
-        .map { |change| SiteSetting.site_setting_group_ids[change[:setting]] }
-        .flatten
-        .compact
-        .uniq
+      (
+        upcoming_changes.flat_map do |change|
+          SiteSetting.site_setting_group_ids[change[:setting]]
+        end + [Group::AUTO_GROUPS[:staff]]
+      ).compact.uniq
     groups = Group.where(id: group_ids).pluck(:id, :name).to_h
 
     upcoming_changes.each do |setting|

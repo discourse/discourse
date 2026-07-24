@@ -10,11 +10,28 @@ fr:
       site_settings:
         categories:
           discourse_solved: "Discourse résolu"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Solutions acceptées"
+        sections:
+          support:
+            title: "Soutenir"
+            answerers:
+              staff: "Responsable"
+              member: "Membres"
+              basic: "Actif"
+            response_time:
+              buckets:
+                lt_1h: "< 1 heure"
+                gt_24h: "> 24 heures"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "accepté"
+          topic_solved_notification: "résolu"
     solutions: "Solutions"
     solved:
       title: "Résolus"
@@ -41,9 +58,12 @@ fr:
       move_post_cancel: "Annuler"
       confirm_solved_removal_confirm: "Confirmer"
       confirm_solved_removal_cancel: "Annuler"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "votre message a été marqué comme solution"
       category_type_support:

@@ -160,6 +160,42 @@ links:
 - `min`: Minimum number of records for the property. Value of the keyword has to be an integer.
 - `max`: Maximum number of records for the property. Value of the keyword has to be an integer.
 
+#### Resolving group membership
+
+Object settings can resolve `type: groups` properties to a boolean for the current user. This is useful when theme code only needs to know whether the current user is in one of the configured groups, because `currentUser.groups` only includes groups that are visible to the user.
+
+Add `resolve_group_membership: true` to the `groups` property:
+
+```yaml
+menu_sections:
+  type: objects
+  default:
+    - name: section 1
+      groups:
+        - 1
+        - 3
+  schema:
+    name: menu section
+    properties:
+      name:
+        type: string
+      groups:
+        type: groups
+        resolve_group_membership: true
+```
+
+The admin UI and stored setting value still use the original `groups` array. In the frontend runtime `settings` object, Discourse removes the group IDs from each object and adds a boolean with the same property name prefixed by `user_in_`:
+
+```gjs
+for (const section of settings.menu_sections) {
+  if (section.user_in_groups) {
+    // User is in at least one selected group for this section.
+  }
+}
+```
+
+This option is only valid on object schema properties with `type: groups`. It also works on nested object schemas and with automatic groups such as `logged_in_users` and `anonymous_users`.
+
 #### Nested objects structure
 
 An object can also have a property which contains an array of objects. In order to create a nested objects structure, a property can also be annotated with `type: objects` and the associated `schema` definition.

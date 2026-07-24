@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -35,7 +35,7 @@ export default class ImagesUploader extends Component {
         disabled={{this.uploadingOrProcessing}}
         title={{i18n "admin.site_settings.uploaded_image_list.upload.title"}}
       >
-        {{icon "far-image"}}&nbsp;{{this.uploadButtonText}}
+        {{dIcon "far-image"}}&nbsp;{{this.uploadButtonText}}
         <input
           {{didInsert this.uppyUpload.setup}}
           class="hidden-upload-field"

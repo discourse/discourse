@@ -27,7 +27,7 @@ class WebhooksController < ActionController::Base
 
     events = params["_json"] || [params]
     events.each do |event|
-      message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
+      message_id = Email::MessageIdService.message_id_clean(event["smtp-id"] || "")
       to_address = event["email"]
       error_code = event["status"]
 
@@ -184,6 +184,9 @@ class WebhooksController < ActionController::Base
   def aws
     raw = request.raw_post
     json = JSON.parse(raw)
+
+    return signature_failure unless Email::Sns.allowed_topic_arn?(json["TopicArn"])
+    return signature_failure unless Email::Sns.authentic?(raw)
 
     case json["Type"]
     when "SubscriptionConfirmation"

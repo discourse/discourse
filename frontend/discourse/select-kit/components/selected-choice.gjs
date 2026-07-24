@@ -5,8 +5,8 @@ import { on } from "@ember/modifier";
 import { computed } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -49,7 +49,7 @@ export default class SelectedChoice extends Component {
   <template>
     {{#if this.readOnly}}
       <button
-        class="btn btn-default disabled"
+        class="btn btn-default disabled tag-choice"
         title={{i18n "admin.site_settings.mandatory_group"}}
       >{{this.itemName}}</button>
     {{else}}
@@ -60,9 +60,9 @@ export default class SelectedChoice extends Component {
         data-name={{this.itemName}}
         type="button"
         id="{{this.id}}-choice"
-        class="btn btn-default selected-choice {{this.extraClass}}"
+        class="btn btn-default selected-choice tag-choice {{this.extraClass}}"
       >
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
         {{#if (has-block)}}
           {{yield}}
         {{else}}

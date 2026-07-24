@@ -5,7 +5,7 @@ module DiscourseLazyVideos
     attr_reader :controller, :post
 
     PROVIDER_NAMES = { "youtube" => "YouTube", "vimeo" => "Vimeo", "tiktok" => "TikTok" }.freeze
-    SCRIPT_ESCAPE_REGEX = %r{</script}i.freeze
+    SCRIPT_ESCAPE_REGEX = %r{</script}i
     LAZY_VIDEO_CONTAINER = "lazy-video-container"
 
     def initialize(controller, post)

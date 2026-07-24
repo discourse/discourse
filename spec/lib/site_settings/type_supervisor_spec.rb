@@ -140,7 +140,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
   context "with different data types" do
     class TestEnumClass
       def self.valid_value?(v)
-        self.values.include?(v)
+        values.include?(v)
       end
 
       def self.values
@@ -453,7 +453,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
   describe ".type_hash" do
     class TestEnumClass2
       def self.valid_value?(v)
-        self.values.include?(v)
+        values.include?(v)
       end
 
       def self.values

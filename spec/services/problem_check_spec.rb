@@ -8,6 +8,20 @@ RSpec.describe ProblemCheck do
     PluginCheck = Class.new(described_class)
     DisabledCheck = Class.new(described_class) { self.enabled = false }
     MultiTargetCheck = Class.new(described_class) { self.targets = -> { %w[foo bar] } }
+    TargetedFailingCheck =
+      Class.new(described_class) do
+        self.targets = -> { %w[foo] }
+
+        def call
+          problem(target, override_data: { error: "Bad target" })
+        end
+
+        private
+
+        def translation_data(target)
+          { target_name: target }
+        end
+      end
     FailingCheck =
       Class.new(described_class) do
         def call
@@ -16,6 +30,18 @@ RSpec.describe ProblemCheck do
 
         def translation_key
           "failing_check"
+        end
+      end
+    UnsafeDetailsCheck =
+      Class.new(described_class) do
+        def call
+          ProblemCheck::Problem.new(
+            "Unsafe problem",
+            details: {
+              detail: "<img src=x onerror=alert(1)>Unsafe",
+              link_url: 'https://example.com" onclick="alert(1)',
+            },
+          )
         end
       end
     PassingCheck =
@@ -38,7 +64,9 @@ RSpec.describe ProblemCheck do
         InlineCheck,
         DisabledCheck,
         MultiTargetCheck,
+        TargetedFailingCheck,
         FailingCheck,
+        UnsafeDetailsCheck,
         PassingCheck,
       ],
       &example
@@ -49,8 +77,10 @@ RSpec.describe ProblemCheck do
     Object.send(:remove_const, InlineCheck.name)
     Object.send(:remove_const, DisabledCheck.name)
     Object.send(:remove_const, MultiTargetCheck.name)
+    Object.send(:remove_const, TargetedFailingCheck.name)
     Object.send(:remove_const, PluginCheck.name)
     Object.send(:remove_const, FailingCheck.name)
+    Object.send(:remove_const, UnsafeDetailsCheck.name)
     Object.send(:remove_const, PassingCheck.name)
   end
 
@@ -60,8 +90,10 @@ RSpec.describe ProblemCheck do
   let(:enabled_check) { RealtimeCheck }
   let(:disabled_check) { DisabledCheck }
   let(:multi_target_check) { MultiTargetCheck }
+  let(:targeted_failing_check) { TargetedFailingCheck }
   let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
+  let(:unsafe_details_check) { UnsafeDetailsCheck }
   let(:passing_check) { PassingCheck }
 
   describe ".[]" do
@@ -140,6 +172,32 @@ RSpec.describe ProblemCheck do
       it { expect { failing_check.new.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
     end
 
+    context "when problem details contain unsafe HTML" do
+      before do
+        I18n.backend.store_translations(
+          :en,
+          dashboard: {
+            problem: {
+              unsafe_details_check: 'Problem <a href="%{link_url}">details</a>: %{detail}',
+            },
+          },
+        )
+      end
+
+      it "sanitizes problem details rendered in admin notice messages" do
+        unsafe_details_check.new.run
+
+        message = AdminNotice.find_by!(identifier: "unsafe_details_check").message
+
+        aggregate_failures do
+          expect(message).to include('<a href="https://example.com">details</a>')
+          expect(message).to include("Unsafe")
+          expect(message).not_to include("onclick")
+          expect(message).not_to include("<img")
+        end
+      end
+    end
+
     context "when check is passing" do
       it { expect { passing_check.new.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
     end
@@ -170,6 +228,33 @@ RSpec.describe ProblemCheck do
 
       it "deletes the tracker" do
         expect { multi_target_check.new("baz").run }.to change { ProblemCheckTracker.count }.by(-1)
+      end
+    end
+
+    context "when targeted check is failing" do
+      before do
+        I18n.backend.store_translations(
+          :en,
+          dashboard: {
+            problem: {
+              targeted_failing_check: "Problem with %{target_name}: %{error}",
+            },
+          },
+        )
+      end
+
+      it "stores target translation data and override data in the tracker" do
+        targeted_failing_check.new("foo").run
+
+        tracker = ProblemCheckTracker.find_by!(identifier: "targeted_failing_check", target: "foo")
+        notice = AdminNotice.find_by!(identifier: "targeted_failing_check")
+
+        expect(tracker.details).to include(
+          "target_name" => "foo",
+          "error" => "Bad target",
+          "base_path" => Discourse.base_path,
+        )
+        expect(notice.message).to eq("Problem with foo: Bad target")
       end
     end
   end

@@ -2,7 +2,7 @@
 
 RSpec.describe Encodings do
   def to_utf8(filename)
-    string = File.read("#{Rails.root}/spec/fixtures/encodings/#{filename}").chomp
+    string = File.read("#{Rails.root.join("spec/fixtures/encodings/#{filename}")}").chomp
     Encodings.to_utf8(string)
   end
 

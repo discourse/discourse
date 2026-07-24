@@ -22,12 +22,12 @@ module DiscoursePostEvent
 
     after_commit :upsert_topic_custom_field, on: %i[create update]
     def upsert_topic_custom_field
-      if self.event.post && self.event.post.is_first_post?
+      if event.post && event.post.is_first_post?
         TopicCustomField.upsert(
           {
-            topic_id: self.event.post.topic_id,
+            topic_id: event.post.topic_id,
             name: TOPIC_POST_EVENT_STARTS_AT,
-            value: self.starts_at,
+            value: starts_at,
             created_at: Time.now,
             updated_at: Time.now,
           },
@@ -36,9 +36,9 @@ module DiscoursePostEvent
 
         TopicCustomField.upsert(
           {
-            topic_id: self.event.post.topic_id,
+            topic_id: event.post.topic_id,
             name: TOPIC_POST_EVENT_ENDS_AT,
-            value: self.ends_at,
+            value: ends_at,
             created_at: Time.now,
             updated_at: Time.now,
           },
@@ -47,9 +47,9 @@ module DiscoursePostEvent
 
         TopicCustomField.upsert(
           {
-            topic_id: self.event.post.topic_id,
+            topic_id: event.post.topic_id,
             name: TOPIC_POST_EVENT_ALL_DAY,
-            value: self.event.all_day || false,
+            value: event.all_day || false,
             created_at: Time.now,
             updated_at: Time.now,
           },
@@ -86,7 +86,7 @@ end
 # Indexes
 #
 #  idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq  (event_id,starts_at) UNIQUE
-#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at,starts_at DESC,updated_at DESC,id DESC)
 #  index_discourse_calendar_post_event_dates_on_event_id            (event_id)
+#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at,starts_at DESC,updated_at DESC,id DESC)
 #  index_discourse_calendar_post_event_dates_on_finished_at         (finished_at)
 #

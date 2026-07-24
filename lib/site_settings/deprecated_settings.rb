@@ -9,6 +9,8 @@ module SiteSettings::DeprecatedSettings
     ["min_first_post_typing_time", "fast_typing_threshold", false, "3.4"],
     ["twitter_summary_large_image", "x_summary_large_image", false, "3.4"],
     ["external_system_avatars_enabled", "external_system_avatars_url", false, "3.5"],
+    ["allow_duplicate_topic_titles", "duplicate_topic_titles", false, "2027.1"],
+    ["allow_duplicate_topic_titles_category", "duplicate_topic_titles", false, "2027.1"],
   ]
 
   def setup_deprecated_methods
@@ -26,7 +28,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send(override ? new_setting : "_#{old_setting}", scoped_to)
+      public_send(override ? new_setting : "_#{old_setting}", scoped_to)
     end
 
     SiteSetting.singleton_class.alias_method(:"_#{old_setting}?", :"#{old_setting}?") if !override
@@ -39,7 +41,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
+      public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
     end
 
     SiteSetting.singleton_class.alias_method(:"_#{old_setting}=", :"#{old_setting}=") if !override
@@ -52,7 +54,7 @@ module SiteSettings::DeprecatedSettings
         )
       end
 
-      self.public_send("#{override ? new_setting : "_" + old_setting}=", val)
+      public_send("#{override ? new_setting : "_" + old_setting}=", val)
     end
   end
 end

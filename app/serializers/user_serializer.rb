@@ -162,6 +162,7 @@ class UserSerializer < UserCardSerializer
             scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
             created_at: k.created_at,
             last_used_at: k.last_used_at,
+            expires_at: k.expires_at,
           }
         end
 

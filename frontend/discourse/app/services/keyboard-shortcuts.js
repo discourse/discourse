@@ -51,6 +51,37 @@ export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
   ? "meta"
   : "ctrl";
 
+const NESTED_POST_CONTENT_SELECTOR = [
+  ":scope > .nested-post__main > .nested-post__article",
+  ":scope > .nested-post__main > .nested-post__collapsed-bar",
+  ":scope > .nested-post__main > .nested-post__placeholder",
+].join(", ");
+
+const NESTED_POST_SELECTOR = [
+  ".nested-view .nested-view__op-article",
+  ".nested-view .nested-post",
+].join(", ");
+
+const SELECTED_POST_SELECTOR = [
+  ".topic-post.selected article[data-post-id]",
+  ".nested-view__op-article[data-keyboard-selected][data-post-id]",
+  ".nested-post[data-keyboard-selected] > .nested-post__main > .nested-post__article[data-post-id]",
+  ".nested-post[data-keyboard-selected] > .nested-post__main > .nested-post__collapsed-bar[data-post-number]",
+  ".nested-post[data-keyboard-selected] > .nested-post__main > .nested-post__placeholder[data-post-number]",
+].join(", ");
+
+const SELECTED_POST_LIKE_BUTTON_SELECTOR = [
+  ".topic-post.selected button.toggle-like",
+  ".nested-view__op-article[data-keyboard-selected] button.toggle-like",
+  ".nested-post[data-keyboard-selected] > .nested-post__main > .nested-post__article button.toggle-like",
+].join(", ");
+
+const SELECTED_POST_DATE_SELECTOR = [
+  ".topic-post.selected a.post-date",
+  ".nested-view__op-article[data-keyboard-selected] a.post-date",
+  ".nested-post[data-keyboard-selected] > .nested-post__main > .nested-post__article a.post-date",
+].join(", ");
+
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
@@ -94,7 +125,7 @@ const DEFAULT_BINDINGS = {
   // we use this odd routing here vs a postAction: cause like
   // has an animation so the widget handles that
   // TODO: teach controller how to trigger the widget animation
-  l: { click: ".topic-post.selected button.toggle-like" },
+  l: { click: SELECTED_POST_LIKE_BUTTON_SELECTOR },
   "m m": { handler: "setTrackingToMuted" }, // mark topic as muted
   "m r": { handler: "setTrackingToRegular" }, // mark topic as regular
   "m t": { handler: "setTrackingToTracking" }, // mark topic as tracking
@@ -113,7 +144,7 @@ const DEFAULT_BINDINGS = {
   p: { handler: "showCurrentUser" },
   q: { handler: "quoteReply" },
   r: { postAction: "replyToPost" },
-  s: { click: ".topic-post.selected a.post-date", anonymous: true }, // share post
+  s: { click: SELECTED_POST_DATE_SELECTOR, anonymous: true }, // share post
   "shift+j": { handler: "nextSection", anonymous: true },
   "shift+k": { handler: "prevSection", anonymous: true },
   "shift+p": { handler: "pinUnpinTopic" },
@@ -453,11 +484,126 @@ export default class KeyboardShortcutLib extends Service {
   }
 
   selectDown() {
+    if (document.querySelector(".nested-view")) {
+      this._moveAmongNestedPosts(1);
+      return;
+    }
     this._moveSelection({ direction: 1, scrollWithinPosts: true });
   }
 
   selectUp() {
+    if (document.querySelector(".nested-view")) {
+      this._moveAmongNestedPosts(-1);
+      return;
+    }
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  }
+
+  _moveAmongNestedPosts(direction) {
+    // Mirrors _moveSelection; nested post wrappers extend through their whole
+    // subtrees, so use each wrapper's own content element for height/offset.
+    const now = +new Date();
+    const fast =
+      this._lastMoveTime && now - this._lastMoveTime < 1.5 * animationDuration;
+    this._lastMoveTime = now;
+
+    const posts = Array.from(document.querySelectorAll(NESTED_POST_SELECTOR));
+    if (!posts.length) {
+      return;
+    }
+    const contentOf = (post) =>
+      post.querySelector(NESTED_POST_CONTENT_SELECTOR) || post;
+
+    let selected = posts.find((p) => p.hasAttribute("data-keyboard-selected"));
+
+    if (selected && !fast) {
+      const rect = contentOf(selected).getBoundingClientRect();
+      if (rect.bottom < headerOffset() || rect.top > window.innerHeight) {
+        selected = null;
+      }
+    }
+
+    if (!selected) {
+      const offset = headerOffset();
+      selected =
+        posts.find((p) => {
+          const rect = contentOf(p).getBoundingClientRect();
+          return direction > 0 ? rect.top >= offset : rect.bottom >= offset;
+        }) || posts[posts.length - 1];
+      direction = 0;
+    }
+
+    if (!fast && direction !== 0) {
+      const selectedContent = contentOf(selected);
+      const beginContent = domUtils.offset(selectedContent).top;
+      const endContent = beginContent + selectedContent.offsetHeight;
+      const beginScreen = window.scrollY;
+      const endScreen = beginScreen + window.innerHeight;
+
+      if (direction < 0 && beginScreen > beginContent) {
+        return this._scrollTo(
+          Math.max(
+            beginScreen - window.innerHeight + 3 * headerOffset(),
+            beginContent - headerOffset()
+          )
+        );
+      } else if (direction > 0 && endScreen < endContent - headerOffset()) {
+        return this._scrollTo(
+          Math.min(
+            endScreen - 3 * headerOffset(),
+            endContent - window.innerHeight
+          )
+        );
+      }
+    }
+
+    let next;
+    let newIndex = posts.indexOf(selected);
+    while (true) {
+      newIndex += direction;
+      next = posts[newIndex];
+      if (!next) {
+        return;
+      }
+      if (contentOf(next).getBoundingClientRect().height > 0) {
+        break;
+      }
+      if (direction === 0) {
+        break;
+      }
+    }
+
+    // Data attribute, not a class — Ember rebuilds .nested-post's class on cloaking/highlight changes and would wipe it.
+    for (const p of posts) {
+      p.removeAttribute("data-keyboard-selected");
+      p.removeAttribute("tabindex");
+    }
+    next.setAttribute("data-keyboard-selected", "true");
+    next.setAttribute("tabindex", "0");
+    next.focus({ preventScroll: true });
+
+    // Subscribed by Nested to trigger boundary load-more on last-post selection.
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles: posts,
+      selectedArticle: next,
+    });
+
+    const nextContent = contentOf(next);
+    const contentTop = domUtils.offset(nextContent).top;
+    const contentTopPosition = contentTop - headerOffset();
+
+    // k onto a tall post lands at its bottom page so successive k's scroll up through it.
+    if (
+      !fast &&
+      direction < 0 &&
+      nextContent.offsetHeight > window.innerHeight
+    ) {
+      return this._scrollTo(
+        contentTop + nextContent.offsetHeight - window.innerHeight
+      );
+    }
+
+    this._scrollTo(contentTopPosition);
   }
 
   bulkSelectItem() {
@@ -637,19 +783,24 @@ export default class KeyboardShortcutLib extends Service {
 
   sendToSelectedPost(action, elem) {
     // TODO: We should keep track of the post without a CSS class
-    const selectedPost =
-      elem || document.querySelector(".topic-post.selected article.boxed");
+    const selectedPost = elem || document.querySelector(SELECTED_POST_SELECTOR);
 
     let selectedPostId;
+    let selectedPostNumber;
     if (selectedPost) {
       selectedPostId = parseInt(selectedPost.dataset.postId, 10);
+      selectedPostNumber = parseInt(selectedPost.dataset.postNumber, 10);
     }
 
-    if (selectedPostId) {
+    if (selectedPostId || selectedPostNumber) {
       const topicController = getOwner(this).lookup("controller:topic");
-      const post = topicController
-        .get("model.postStream.posts")
-        .find((p) => p.id === selectedPostId);
+      const post = topicController.get("model.postStream.posts").find((p) => {
+        if (selectedPostId) {
+          return p.id === selectedPostId;
+        }
+
+        return p.post_number === selectedPostNumber;
+      });
       if (post) {
         // TODO: Use ember closure actions
 
@@ -946,7 +1097,7 @@ export default class KeyboardShortcutLib extends Service {
   }
 
   _getSelectedPost() {
-    return document.querySelector(".topic-post.selected article[data-post-id]");
+    return document.querySelector(SELECTED_POST_SELECTOR);
   }
 
   _getSelectedTopicListItem() {

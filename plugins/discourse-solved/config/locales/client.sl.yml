@@ -5,11 +5,28 @@
 # https://translate.discourse.org/
 
 sl:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Sprejete rešitve"
+        sections:
+          support:
+            answerers:
+              staff: "Osebje"
+              member: "Člani"
+              basic: "Osnovni uporabnik"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ura"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "sprejeto"
+          topic_solved_notification: "rešeno"
     solutions: "Rešitve"
     solved:
       title: "Rešeno"
@@ -38,9 +55,12 @@ sl:
       move_post_cancel: "Prekliči"
       confirm_solved_removal_confirm: "Potrdi"
       confirm_solved_removal_cancel: "Prekliči"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Ste dobili odgovor na vaše vprašanje?
         description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "vaša objava je bila označena kot rešitev"
     topic_statuses:

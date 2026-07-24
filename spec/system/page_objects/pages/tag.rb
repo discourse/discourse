@@ -20,6 +20,18 @@ module PageObjects
         has_no_css?("#show-tag-info")
       end
 
+      def edit_tag_btn
+        find("#edit-tag")
+      end
+
+      def has_edit_tag_btn?
+        has_css?("#edit-tag")
+      end
+
+      def has_no_edit_tag_btn?
+        has_no_css?("#edit-tag")
+      end
+
       def has_no_tag?(name)
         has_no_css?(".tag-box", text: name)
       end

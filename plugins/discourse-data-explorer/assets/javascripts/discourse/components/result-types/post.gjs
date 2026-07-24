@@ -1,5 +1,5 @@
 import { trustHTML } from "@ember/template";
-import avatar from "discourse/helpers/avatar";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const Post = <template>
   {{#if @ctx.post}}
@@ -10,7 +10,7 @@ const Post = <template>
     >
       <div class="title">
         <div class="quote-controls">
-          {{! template-lint-disable no-invalid-link-text }}
+          {{! eslint-disable ember/template-no-invalid-link-text }}
           <a
             href="/t/via-quote/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
             title="go to the quoted post"
@@ -23,7 +23,7 @@ const Post = <template>
           class="result-post-link"
           href="/t/{{@ctx.post.topic_id}}/{{@ctx.post.post_number}}"
         >
-          {{avatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
+          {{dAvatar @ctx.post imageSize="tiny"}}{{@ctx.post.username}}:
         </a>
       </div>
 

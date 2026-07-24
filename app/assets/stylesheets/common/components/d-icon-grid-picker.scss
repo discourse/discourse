@@ -13,8 +13,12 @@
 
 .d-icon-grid-picker {
   /* Apply icon color to the trigger icon when --icon-color is set */
-  .fk-d-menu__trigger > .d-icon {
+  .fk-d-menu__trigger > .d-icon:not(.d-icon-grid-picker__caret) {
     color: var(--icon-color, currentColor);
+  }
+
+  .d-icon-grid-picker-trigger {
+    gap: var(--space-1);
   }
 
   /* Split-button layout: DMenu trigger + clear button side by side */
@@ -42,7 +46,6 @@
   }
 
   &__caret {
-    margin-left: 1em;
     font-size: var(--font-down-2);
   }
 

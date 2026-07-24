@@ -10,10 +10,10 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { isValidInput } from "discourse/select-kit/lib/input-utils";
 import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 @classNames("select-kit-row")
@@ -42,9 +42,17 @@ import { i18n } from "discourse-i18n";
 export default class SelectKitRow extends Component {
   tabIndex = 0;
   index = 0;
-  role = "menuitemradio";
 
   @tracked _langOverride;
+
+  get isActionRow() {
+    return typeof this.item?.onSelect === "function";
+  }
+
+  @computed("item.onSelect")
+  get role() {
+    return this.isActionRow ? "menuitem" : "menuitemradio";
+  }
 
   @computed("item.lang")
   get lang() {
@@ -86,8 +94,11 @@ export default class SelectKitRow extends Component {
     return guidFor(this.item);
   }
 
-  @computed("isSelected")
+  @computed("isSelected", "item.onSelect")
   get ariaChecked() {
+    if (this.isActionRow) {
+      return undefined;
+    }
     return this.isSelected ? "true" : "false";
   }
 
@@ -229,7 +240,7 @@ export default class SelectKitRow extends Component {
 
   <template>
     {{#each this.icons as |i|}}
-      {{icon i translatedTitle=this.dasherizedTitle}}
+      {{dIcon i translatedTitle=this.dasherizedTitle}}
     {{/each}}
 
     <span class="name">

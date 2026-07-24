@@ -539,6 +539,48 @@ RSpec.describe FinalDestination do
         expect(final.status).to eq(:resolved)
       end
     end
+
+    context "when the response is a bot verification challenge" do
+      it "detects a WAF challenge header" do
+        fd_stub_request(:head, "https://eviltrout.com").to_return(
+          status: 202,
+          headers: {
+            "x-amzn-waf-action" => "challenge",
+          },
+        )
+
+        final = FinalDestination.new("https://eviltrout.com", opts)
+        expect(final.resolve).to be_nil
+        expect(final.status).to eq(:failure)
+        expect(final.status_code).to eq(202)
+        expect(final.bot_challenge?).to eq(true)
+      end
+
+      it "detects a CDN challenge header" do
+        fd_stub_request(:head, "https://eviltrout.com").to_return(
+          status: 403,
+          headers: {
+            "cf-mitigated" => "challenge",
+          },
+        )
+
+        final = FinalDestination.new("https://eviltrout.com", opts)
+        expect(final.resolve).to be_nil
+        expect(final.status).to eq(:failure)
+        expect(final.status_code).to eq(403)
+        expect(final.bot_challenge?).to eq(true)
+      end
+
+      it "does not report a challenge for a plain error response" do
+        fd_stub_request(:head, "https://eviltrout.com").to_return(status: 403)
+
+        final = FinalDestination.new("https://eviltrout.com", opts)
+        expect(final.resolve).to be_nil
+        expect(final.status).to eq(:failure)
+        expect(final.status_code).to eq(403)
+        expect(final.bot_challenge?).to eq(false)
+      end
+    end
   end
 
   describe "#get" do

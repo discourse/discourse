@@ -124,27 +124,25 @@ module Email
       id_hash = Digest::SHA1.hexdigest(@message_id)
 
       DistributedMutex.synchronize("process_email_#{id_hash}") do
-        begin
-          # If we find an existing incoming email record with the exact same `message_id`
-          # do not create a new `IncomingEmail` record to avoid double ups.
-          return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
+        # If we find an existing incoming email record with the exact same `message_id`
+        # do not create a new `IncomingEmail` record to avoid double ups.
+        return if @incoming_email = IncomingEmail.find_by(message_id: @message_id)
 
-          Email::Validator.ensure_valid!(@mail)
+        Email::Validator.ensure_valid!(@mail)
 
-          @from_email, @from_display_name = parse_from_field(@mail)
-          @from_user = User.find_by_email(@from_email)
-          @incoming_email = create_incoming_email
+        @from_email, @from_display_name = parse_from_field(@mail)
+        @from_user = User.find_by_email(@from_email)
+        @incoming_email = create_incoming_email
 
-          post = process_internal
+        post = process_internal
 
-          raise BouncedEmailError if is_bounce?
+        raise BouncedEmailError if is_bounce?
 
-          post
-        rescue Exception => e
-          @incoming_email.update_columns(error: e.class.name) if @incoming_email
-          delete_created_staged_users
-          raise
-        end
+        post
+      rescue Exception => e
+        @incoming_email.update_columns(error: e.class.name) if @incoming_email
+        delete_created_staged_users
+        raise
       end
     end
 
@@ -249,11 +247,9 @@ module Email
         first_exception = nil
 
         destinations.each do |destination|
-          begin
-            return process_destination(destination, user, body, elided)
-          rescue => e
-            first_exception ||= e
-          end
+          return process_destination(destination, user, body, elided)
+        rescue => e
+          first_exception ||= e
         end
 
         raise first_exception if first_exception
@@ -292,10 +288,8 @@ module Email
         next if mail[field].blank?
 
         mail[field].each do |address_field|
-          begin
-            address_field.decoded
-            recipients << address_field.address.downcase
-          end
+          address_field.decoded
+          recipients << address_field.address.downcase
         end
       end
 
@@ -461,7 +455,7 @@ module Email
           # use the first html extracter that matches
           if html_extracter = HTML_EXTRACTERS.select { |_, r| html[r] }.min_by { |_, r| html =~ r }
             doc = Nokogiri::HTML5.fragment(html)
-            self.public_send(:"extract_from_#{html_extracter[0]}", doc)
+            public_send(:"extract_from_#{html_extracter[0]}", doc)
           else
             markdown =
               HtmlToMarkdown.new(html, keep_img_tags: true, keep_cid_imgs: true).to_markdown
@@ -763,28 +757,26 @@ module Email
     end
 
     def self.extract_email_address_and_name(value)
-      begin
-        # ensure the email header value is a string
-        value = value.to_s
-        # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
-        value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
-        # 'mailto:' suffix isn't supported by Mail::Address parsing
-        value = value.gsub("mailto:", "")
-        # parse the email header value
-        parsed = Mail::Address.new(value)
-        # extract the email address and name
-        mail = parsed.address.to_s.downcase.strip
-        name = parsed.name.to_s.strip
-        # ensure the email address is "valid"
-        if mail.include?("@")
-          # remove surrounding quotes from the name
-          name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
-          # return the email address and name
-          [mail, name]
-        end
-      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
-        # something went wrong parsing the email header value, return nil
+      # ensure the email header value is a string
+      value = value.to_s
+      # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
+      value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
+      # 'mailto:' suffix isn't supported by Mail::Address parsing
+      value = value.gsub("mailto:", "")
+      # parse the email header value
+      parsed = Mail::Address.new(value)
+      # extract the email address and name
+      mail = parsed.address.to_s.downcase.strip
+      name = parsed.name.to_s.strip
+      # ensure the email address is "valid"
+      if mail.include?("@")
+        # remove surrounding quotes from the name
+        name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
+        # return the email address and name
+        [mail, name]
       end
+    rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError
+      # something went wrong parsing the email header value, return nil
     end
 
     def subject
@@ -963,7 +955,7 @@ module Email
       end
 
       target_post = post_ids.any? && Post.where(id: post_ids).order(:created_at).last
-      too_old_for_group_smtp = (destination_too_old?(target_post) && group.smtp_enabled)
+      too_old_for_group_smtp = destination_too_old?(target_post) && group.smtp_enabled
 
       if target_post.blank? || too_old_for_group_smtp
         create_topic(
@@ -1587,46 +1579,44 @@ module Email
         next if mail_object[d].blank?
 
         mail_object[d].each do |address_field|
-          begin
-            address_field.decoded
-            email = address_field.address.downcase
-            display_name = address_field.display_name.try(:to_s)
-            next if !email.include?("@")
+          address_field.decoded
+          email = address_field.address.downcase
+          display_name = address_field.display_name.try(:to_s)
+          next if !email.include?("@")
 
-            if should_invite?(email)
-              user = User.find_by_email(email)
+          if should_invite?(email)
+            user = User.find_by_email(email)
 
-              # cap number of staged users created per email
-              if (!user || user.staged) &&
-                   @staged_users.count >= SiteSetting.maximum_staged_users_per_email
-                max_staged_users_post ||=
-                  post.topic.add_moderator_post(
-                    sender,
-                    I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
-                    import_mode: @opts[:import_mode],
-                  )
-                next
-              end
-
-              user = find_or_create_user(email, display_name, user: user)
-              if user && can_invite?(post.topic, user)
-                post.topic.topic_allowed_users.create!(user_id: user.id)
-                TopicUser.auto_notification_for_staging(
-                  user.id,
-                  post.topic_id,
-                  TopicUser.notification_reasons[:auto_watch],
-                )
-                post.topic.add_small_action(
+            # cap number of staged users created per email
+            if (!user || user.staged) &&
+                 @staged_users.count >= SiteSetting.maximum_staged_users_per_email
+              max_staged_users_post ||=
+                post.topic.add_moderator_post(
                   sender,
-                  "invited_user",
-                  user.username,
+                  I18n.t("emails.incoming.maximum_staged_user_per_email_reached"),
                   import_mode: @opts[:import_mode],
                 )
-              end
+              next
             end
-          rescue ActiveRecord::RecordInvalid, EmailNotAllowed
-            # don't care if user already allowed or the user's email address is not allowed
+
+            user = find_or_create_user(email, display_name, user: user)
+            if user && can_invite?(post.topic, user)
+              post.topic.topic_allowed_users.create!(user_id: user.id)
+              TopicUser.auto_notification_for_staging(
+                user.id,
+                post.topic_id,
+                TopicUser.notification_reasons[:auto_watch],
+              )
+              post.topic.add_small_action(
+                sender,
+                "invited_user",
+                user.username,
+                import_mode: @opts[:import_mode],
+              )
+            end
           end
+        rescue ActiveRecord::RecordInvalid, EmailNotAllowed
+          # don't care if user already allowed or the user's email address is not allowed
         end
       end
     end

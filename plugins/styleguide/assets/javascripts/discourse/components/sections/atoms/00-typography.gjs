@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "../../styleguide-example";
 
-<template>
+export default <template>
   <StyleguideExample @title="h1">
     <h1>{{i18n "styleguide.sections.typography.example"}}</h1>
   </StyleguideExample>

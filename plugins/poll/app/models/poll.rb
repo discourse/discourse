@@ -5,6 +5,7 @@ class Poll < ActiveRecord::Base
   self.inheritance_column = nil
 
   belongs_to :post, -> { with_deleted }
+  belongs_to :closed_by, class_name: "User", optional: true
 
   has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
@@ -104,6 +105,7 @@ end
 #  anonymous_voters :integer
 #  chart_type       :integer          default("bar"), not null
 #  close_at         :datetime
+#  closed_at        :datetime
 #  dynamic          :boolean          default(FALSE), not null
 #  groups           :string
 #  max              :integer
@@ -117,6 +119,7 @@ end
 #  visibility       :integer          default("secret"), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  closed_by_id     :integer
 #  post_id          :bigint
 #
 # Indexes

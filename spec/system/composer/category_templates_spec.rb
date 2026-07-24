@@ -438,7 +438,7 @@ describe "Composer Form Templates" do
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
     attach_file "prescription-uploader",
-                "#{Rails.root}/spec/fixtures/images/logo.png",
+                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
                 make_visible: true
 
     expect(page).to have_css(".d-editor-preview img[alt='logo.png']")
@@ -454,7 +454,7 @@ describe "Composer Form Templates" do
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
     attach_file "prescription-uploader",
-                "#{Rails.root}/spec/fixtures/images/animated.gif",
+                "#{Rails.root.join("spec/fixtures/images/animated.gif")}",
                 make_visible: true
 
     expect(page).to have_css(
@@ -472,13 +472,13 @@ describe "Composer Form Templates" do
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
     attach_file "prescription-uploader",
-                "#{Rails.root}/spec/fixtures/images/logo.png",
+                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
                 make_visible: true
     attach_file "additional-docs-uploader",
                 [
-                  "#{Rails.root}/spec/fixtures/media/small.mp3",
-                  "#{Rails.root}/spec/fixtures/media/small.mp4",
-                  "#{Rails.root}/spec/fixtures/pdf/small.pdf",
+                  "#{Rails.root.join("spec/fixtures/media/small.mp3")}",
+                  "#{Rails.root.join("spec/fixtures/media/small.mp4")}",
+                  "#{Rails.root.join("spec/fixtures/pdf/small.pdf")}",
                 ],
                 make_visible: true
     composer.fill_title(topic_title)
@@ -499,11 +499,11 @@ describe "Composer Form Templates" do
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
     attach_file "prescription-uploader",
-                "#{Rails.root}/spec/fixtures/images/logo.png",
+                "#{Rails.root.join("spec/fixtures/images/logo.png")}",
                 make_visible: true
     composer.fill_title(topic_title)
     attach_file "prescription-uploader",
-                "#{Rails.root}/spec/fixtures/images/fake.jpg",
+                "#{Rails.root.join("spec/fixtures/images/fake.jpg")}",
                 make_visible: true
 
     expect(page).to have_css(".form-template-field__uploaded-files li", count: 1)
@@ -547,7 +547,11 @@ describe "Composer Form Templates" do
 
     expect(page).to have_css(".d-editor-preview", text: message)
 
-    attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
+    attach_file(
+      "5-uploader",
+      "#{Rails.root.join("spec/fixtures/images/logo.png")}",
+      make_visible: true,
+    )
     expect(page).to have_css(".d-editor-preview img")
 
     composer_message = "This is **bold** composer content"

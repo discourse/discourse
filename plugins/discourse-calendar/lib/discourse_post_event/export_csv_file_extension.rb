@@ -34,4 +34,19 @@ module DiscoursePostEvent
       end
     end
   end
+
+  module GuardianExtension
+    def can_export_entity?(entity, entity_id = nil, args = nil)
+      if entity == "post_event"
+        return false if !SiteSetting.discourse_post_event_enabled
+
+        event_id = args&.[](:id) || args&.[]("id")
+        event = DiscoursePostEvent::Event.find_by(id: event_id)
+
+        return event.present? && can_act_on_discourse_post_event?(event)
+      end
+
+      super
+    end
+  end
 end

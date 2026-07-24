@@ -6,7 +6,6 @@
 
 es:
   site_settings:
-    enable_login_with_amazon: "Habilitar el inicio de sesión con la autenticación de Amazon, requiere «iniciar sesión con el id de cliente de amazon» e «iniciar sesión con el secreto de cliente de amazon»."
     login_with_amazon_client_id: "Iniciar sesión con el ID de cliente de Amazon"
     login_with_amazon_client_secret: "Iniciar sesión con el secreto de cliente de Amazon"
     login_with_amazon_scope: "Iniciar sesión con los ámbitos de Amazon OAuth2 (separados por espacio)"

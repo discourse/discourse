@@ -67,5 +67,29 @@ describe DiscourseSolved::Queries do
       expect(described_class.solved_count(user.id)).to eq(0)
       expect(described_class.solved_count(admin.id)).to eq(0)
     end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "returns the correct count of solved topics for a user when topics have multiple solutions" do
+        expect(described_class.solved_count(user.id)).to eq(0)
+
+        topic1 = Fabricate(:topic)
+        Fabricate(:post, topic: topic1)
+        post1 = Fabricate(:post, topic: topic1, user: user)
+        post2 = Fabricate(:post, topic: topic1, user: user)
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post1.id }, guardian: admin.guardian)
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post2.id }, guardian: admin.guardian)
+
+        expect(described_class.solved_count(user.id)).to eq(2)
+
+        topic2 = Fabricate(:topic)
+        Fabricate(:post, topic: topic2)
+        post3 = Fabricate(:post, topic: topic2, user: user)
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post3.id }, guardian: admin.guardian)
+
+        expect(described_class.solved_count(user.id)).to eq(3)
+      end
+    end
   end
 end

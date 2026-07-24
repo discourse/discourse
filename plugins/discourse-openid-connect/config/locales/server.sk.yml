@@ -18,7 +18,6 @@ sk:
     openid_connect_allow_association_change: "Umožniť používateľom odpojiť a znovu pripojiť svoje účty Discourse od poskytovateľa OpenID Connect"
     openid_connect_verbose_logging: "Zaznamenávanie podrobných informácií o overovaní openid-connect do `/logs`. Počas bežného používania nechajte túto funkciu vypnutú."
     openid_connect_authorize_parameters: "Parametre URL, ktoré budú zahrnuté v presmerovaní z /auth/oidc na koncový bod autorizácie IDP"
-    openid_connect_overrides_email: "Pri každom prihlásení prepíšte e-mail používateľa pomocou hodnoty openid-connect. Funguje rovnako ako nastavenie `auth_overrides_email`, ale je špecifické pre prihlásenia OpenID Connect."
     openid_connect_claims: "Explicitne definujte nároky na použitie so zriaďovateľmi, ktorí neodovzdávajú údaje na základe rozsahov. (JSON)"
     openid_connect_match_by_email: "Použite e-mailovú adresu na priradenie overovania OpenID Connect k existujúcim používateľským kontám Discourse."
     openid_connect_use_pkce: "Povolenie funkcie Proof Key for Code Exchange (PKCE) pre overovanie OpenID Connect."

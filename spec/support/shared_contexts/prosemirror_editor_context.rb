@@ -36,9 +36,10 @@ RSpec.shared_context "with prosemirror editor" do
     cdp.copy_test_image
     cdp.paste
 
+    expect(composer).to have_no_in_progress_uploads
     expect(rich).to have_css(".composer-image-node img", count: 1)
     expect(rich).to have_no_css(".composer-image-node img[src='/images/transparent.png']")
-    expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
+    expect(rich).to have_no_css("img[data-placeholder='true']")
 
     rich.find(".composer-image-node img").click
 

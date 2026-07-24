@@ -101,7 +101,12 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def can_see_members
-    scope.can_see_group_members?(object)
+    @can_see_members = scope.can_see_group_members?(object) if !defined?(@can_see_members)
+    @can_see_members
+  end
+
+  def include_user_count?
+    can_see_members
   end
 
   private

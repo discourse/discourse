@@ -1,13 +1,12 @@
-import { render } from "@ember/test-helpers";
+import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Dropdown from "discourse/components/form-template-field/dropdown";
 import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | form-template-field | dropdown",
+  "Integration | Component | FormTemplateField | Dropdown",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -28,7 +27,7 @@ module(
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");
 
-      const dropdown = queryAll(
+      const dropdown = findAll(
         ".form-template-field__dropdown option:not(.form-template-field__dropdown-placeholder)"
       );
       assert.strictEqual(dropdown.length, 3, "it has 3 choices");

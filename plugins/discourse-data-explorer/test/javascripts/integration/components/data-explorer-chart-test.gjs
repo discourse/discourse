@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DataExplorerChart from "../../discourse/components/data-explorer-chart";
 
-module("Integration | Component | data-explorer-chart", function (hooks) {
+module("Integration | Component | DataExplorerChart", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders a bar chart with a single dataset", async function (assert) {
@@ -82,5 +82,27 @@ module("Integration | Component | data-explorer-chart", function (hooks) {
     );
 
     assert.dom("canvas").exists("renders a canvas for stacked chart");
+  });
+
+  test("renders a dual-axis line chart", async function (assert) {
+    const labels = ["2024-01-01", "2024-01-02"];
+    const datasets = [
+      { label: "distinct_repliers", values: [263, 220] },
+      { label: "replies_per_person", values: [6, 8] },
+    ];
+
+    await render(
+      <template>
+        <DataExplorerChart
+          @labels={{labels}}
+          @datasets={{datasets}}
+          @chartType="line"
+          @stacked={{false}}
+          @dualAxis={{true}}
+        />
+      </template>
+    );
+
+    assert.dom("canvas").exists("renders a canvas for dual-axis chart");
   });
 });

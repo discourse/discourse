@@ -9,7 +9,6 @@ fi:
     chat_separate_sidebar_mode: "Näytä erilliset sivupalkkitilat foorumille ja chatille."
     chat_enabled: "Ota chat käyttöön."
     enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
-    chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että ylläpitäjillä ja valvojilla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_auto_silence_duration: "Määrä minuutteina, jonka ajaksi käyttäjät hiljennetään heidän ylittäessään chat-viestien luontirajan. Voit poistaa automaattisen hiljentämisen käytöstä asettamalla arvoksi 0."
@@ -30,7 +29,6 @@ fi:
     chat_editing_grace_period_max_diff_low_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasot 0 ja 1)."
     chat_editing_grace_period_max_diff_high_trust: "Kuinka monen merkin muutos sallitaan chatin muokkauksen katumusaikana. Jos muutos on isompi, chat-viestin yhteydessä näytetään (muokattu)-tunniste (luottamustasosta 2 ylöspäin)."
     chat_preferred_index: "Ensisijainen välilehti ladattaessa /chat."
-    allow_chat_in_anonymous_mode: "Ota tämä asetus käyttöön, jotta sivustoasi selaavat käyttäjät voivat käyttää chatia anonyymisti. Tämä asetus edellyttää, että \"allow anonymous mode\" -asetus on käytössä."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
@@ -219,6 +217,10 @@ fi:
     scriptables:
       send_chat_message:
         title: Lähetä chat-viesti
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Hyväksy"
+      default_deny_label: "Hylkää"
   reviewable_score_types:
     needs_review:
       title: "Vaatii käsittelyä"

@@ -33,11 +33,12 @@ en:
     no_ads_for_tags: "Don't show ads on topic list and topic pages belonging to these tags."
     house_ads_after_nth_topic: 'If "Between topics" house ads are defined, show an ad after every N topic, where N is this value.'
     house_ads_after_nth_post: 'If "Between posts" house ads are defined, show an ad after every N posts, where N is this value.'
+    house_ads_after_nth_root: 'If "Between nested roots" house ads are defined, show an ad after every N root replies in the nested replies view, where N is this value.'
     house_ads_frequency: "If other ad networks are configured to show in an ad slot, how often should house ads be shown, as a percentage."
     ads_txt: "Contents of your ads.txt file. More details available at <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>this Google AdSense help page</a>."
     ad_plugin_routes_enabled: "Enable route targeting for house ads"
 
-    dfp_publisher_id: "Input your Google Ad Manager (formerly called DFP) network code, which is found in your network settings. NOTE: You will need to update the 'content security policy script src' setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
+    dfp_publisher_id: "Input your Google Ad Manager (formerly called DFP) network code, which is found in your network settings. NOTE: You will need to update the {{setting:content_security_policy_script_src}} setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
     dfp_publisher_id_mobile: "(Optional) If you want to use a different Ad Manager publisher id for the mobile version of the site, enter it here. Leave blank to use dfp_publisher_id on mobile."
     dfp_through_trust_level: "Show your ads to users based on trust levels. Users with trust level higher than this value will not see ads."
     dfp_exclude_groups: "Ads will not be shown to members of these groups"
@@ -71,7 +72,7 @@ en:
     dfp_target_post_bottom_key_code: "Input custom targeting keys - inventory Level"
     dfp_target_post_bottom_value_code: "Input custom targeting values - inventory Level"
 
-    adsense_publisher_code: "Your publisher ID. Enter only the number, excluding 'pub-'. NOTE: You will need to update the 'content security policy script src' setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
+    adsense_publisher_code: "Your publisher ID. Enter only the number, excluding 'pub-'. NOTE: You will need to update the {{setting:content_security_policy_script_src}} setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
     adsense_through_trust_level: "Show your ads to users based on trust levels. Users with trust level higher than this value will not see ads."
     adsense_exclude_groups: "Ads will not be shown to members of these groups"
     adsense_topic_list_top_code: "Enter code of the ad unit to display at topic list top location. This is the number assigned to the ad unit, not the JavaScript code."
@@ -127,7 +128,7 @@ en:
     carbonads_topic_list_top_enabled: "Show an ad above the topic list"
     carbonads_above_post_stream_enabled: "Show an ad above the post stream"
 
-    adbutler_publisher_id: "AdButler Publisher ID. NOTE: You may need to update the 'content security policy script src' setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
+    adbutler_publisher_id: "AdButler Publisher ID. NOTE: You may need to update the {{setting:content_security_policy_script_src}} setting. See <a href='https://meta.discourse.org/t/33734' target='_blank'>this topic</a> for the latest instructions."
     adbutler_mobile_topic_list_top_zone_id: "Zone ID for mobile topic list top location"
     adbutler_mobile_topic_above_post_stream_zone_id: "Zone ID for mobile topic above post stream location"
     adbutler_mobile_post_bottom_zone_id: "Zone ID for mobile post bottom location"

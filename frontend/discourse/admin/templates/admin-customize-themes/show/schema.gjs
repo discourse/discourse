@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import Editor from "discourse/admin/components/schema-setting/editor";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -11,7 +11,7 @@ export default <template>
       @model={{@model.theme.id}}
       class="btn-transparent customize-show-schema__back"
     >
-      {{icon "arrow-left"}}{{@model.theme.name}}
+      {{dIcon "arrow-left"}}{{@model.theme.name}}
     </LinkTo>
     <h2>
       {{i18n "admin.customize.schema.title" (hash name=@model.setting.setting)}}

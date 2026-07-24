@@ -117,5 +117,3 @@ ro:
           add: Adaugă opțiune
         automatic_close:
           label: Închide sondaj automat
-        show_advanced: "Afișați opțiunile avansate"
-        hide_advanced: "Ascundeți opțiunile avansate"

@@ -197,7 +197,7 @@ export default class PasswordResetController extends Controller {
       if (e.jqXHR?.status === 429) {
         this.set("errorMessage", i18n("user.second_factor.rate_limit"));
       } else {
-        throw new Error(e);
+        throw new Error(e, { cause: e });
       }
     } finally {
       this.set("isLoading", false);

@@ -3,8 +3,8 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { getNext, getPrevious } from "./lib/iterate-list";
 import Member from "./member";
@@ -73,7 +73,7 @@ export default class Members extends Component {
   <template>
     <div class="chat-message-creator__members-container">
       <div class="chat-message-creator__members">
-        {{icon "magnifying-glass"}}
+        {{dIcon "magnifying-glass"}}
 
         {{#each @members as |member|}}
           <Member

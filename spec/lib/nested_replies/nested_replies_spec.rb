@@ -98,13 +98,13 @@ RSpec.describe NestedReplies do
       expect(json[:is_nested_view]).to eq(true)
     end
 
-    it "returns false for is_nested_view when not set" do
+    it "omits is_nested_view when the topic isn't nested" do
       topic.nested_topic&.destroy!
 
       topic_view = TopicView.new(topic.id, user)
       json = TopicViewSerializer.new(topic_view, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:is_nested_view]).to eq(false)
+      expect(json.key?(:is_nested_view)).to eq(false)
     end
 
     context "when topic is a private message" do

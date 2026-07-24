@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-jquery */
-import { click, fillIn, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, findAll, triggerEvent } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (query(selector).classList.contains("is-expanded")) {
@@ -58,38 +56,29 @@ async function selectKitSelectNoneRow(selector) {
 
 async function selectKitSelectRowByIndex(index, selector) {
   checkSelectKitIsNotCollapsed(selector);
-  await click(queryAll(`${selector} .select-kit-row`)[index]);
+  await click(findAll(`${selector} .select-kit-row`)[index]);
 }
 
 async function keyboardHelper(value, target, selector) {
   target = query(selector).querySelector(target || ".filter-input");
 
-  if (value === "selectAll") {
-    // special casing the only one not working with triggerEvent
-    const event = $.Event("keydown");
-    event.key = "A";
-    event.keyCode = 65;
-    event.metaKey = true;
-    $(target).trigger(event);
-  } else {
-    const mapping = {
-      enter: { key: "Enter", keyCode: 13 },
-      backspace: { key: "Backspace", keyCode: 8 },
-      escape: { key: "Escape", keyCode: 27 },
-      down: { key: "ArrowDown", keyCode: 40 },
-      up: { key: "ArrowUp", keyCode: 38 },
-      tab: { key: "Tab", keyCode: 9 },
-    };
+  const mapping = {
+    enter: { key: "Enter", keyCode: 13 },
+    backspace: { key: "Backspace", keyCode: 8 },
+    escape: { key: "Escape", keyCode: 27 },
+    down: { key: "ArrowDown", keyCode: 40 },
+    up: { key: "ArrowUp", keyCode: 38 },
+    tab: { key: "Tab", keyCode: 9 },
+  };
 
-    await triggerEvent(
-      target,
-      "keydown",
-      mapping[value.toLowerCase()] || {
-        key: value,
-        keyCode: value.charCodeAt(0),
-      }
-    );
-  }
+  await triggerEvent(
+    target,
+    "keydown",
+    mapping[value.toLowerCase()] || {
+      key: value,
+      keyCode: value.charCodeAt(0),
+    }
+  );
 }
 
 function rowHelper(row) {
@@ -317,7 +306,7 @@ export default function selectKit(selector) {
 
     async deselectItemByIndex(index) {
       await click(
-        queryAll(`${selector} .selected-content .selected-choice`)[index]
+        findAll(`${selector} .selected-content .selected-choice`)[index]
       );
     },
 

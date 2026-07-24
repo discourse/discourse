@@ -15,6 +15,10 @@ module DiscourseTopicVoting
             SiteSetting.topic_voting_enabled = true
           end
 
+          def plugin_enabled?
+            SiteSetting.topic_voting_enabled
+          end
+
           def category_matches?(category)
             return false if !SiteSetting.topic_voting_enabled
 

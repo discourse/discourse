@@ -26,7 +26,7 @@ class TopicTimer < BaseTimer
 
   before_save do
     self.created_at ||= Time.zone.now if execute_at
-    self.public_type = self.public_type?
+    self.public_type = public_type?
   end
 
   # These actions are in place to make sure the topic is in the correct
@@ -38,7 +38,7 @@ class TopicTimer < BaseTimer
   # which change the topic's status straight away and set a timer to do the
   # opposite action in the future.
   after_save do
-    if (saved_change_to_execute_at? || saved_change_to_user_id?)
+    if saved_change_to_execute_at? || saved_change_to_user_id?
       if status_type == TopicTimer.types[:silent_close] || status_type == TopicTimer.types[:close]
         topic.update_status("closed", false, user) if topic.closed?
       end

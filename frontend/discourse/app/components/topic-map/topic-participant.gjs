@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import UserLink from "discourse/components/user-link";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { avatarImg } from "discourse/lib/avatar-utils";
 import { userPath } from "discourse/lib/url";
 import { gt } from "discourse/truth-helpers";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import DUserLink from "discourse/ui-kit/d-user-link";
 
 const addTopicParticipantClassesCallbacks = [];
 
@@ -60,7 +60,7 @@ export default class TopicParticipant extends Component {
       @outletArgs={{lazyHash participant=@participant}}
     >
       <div class={{this.participantClasses}}>
-        <UserLink
+        <DUserLink
           @username={{@participant.username}}
           @href={{this.userUrl}}
           class={{this.linkClasses}}
@@ -71,8 +71,8 @@ export default class TopicParticipant extends Component {
           {{#if (gt @participant.post_count 1)}}
             <span class="post-count">{{@participant.post_count}}</span>
           {{/if}}
-          <UserAvatarFlair @user={{@participant}} />
-        </UserLink>
+          <DUserAvatarFlair @user={{@participant}} />
+        </DUserLink>
       </div>
     </PluginOutlet>
   </template>

@@ -27,7 +27,6 @@ de:
     oauth2_json_email_verified_path: "Pfad im OAuth2-Benutzer-JSON zum E-Mail-Verifizierungsstatus des Benutzers. Beispiel: user.email.verified. oauth2_email_verified muss deaktiviert sein, damit diese Einstellung eine Wirkung hat"
     oauth2_json_avatar_path: "Pfad im OAuth2-Benutzer-JSON zum Avatar des Benutzers. Beispiel: user.avatar_url"
     oauth2_email_verified: "Aktivieren, wenn die OAuth2-Website die E-Mail verifiziert hat"
-    oauth2_overrides_email: "Überschreibt die Discourse-E-Mail-Adresse bei jeder Anmeldung mit der remote E-Mail-Adresse. Funktioniert genauso wie die Einstellung `auth_overrides_email`, ist aber spezifisch für OAuth2-Anmeldungen."
     oauth2_send_auth_header: "Client-Anmeldedaten in einem HTTP-Autorisierungs-Header senden"
     oauth2_send_auth_body: "Client-Anmeldedaten im Anfrage-Body senden"
     oauth2_debug_auth: "Ausführliche Informationen zur Fehlerbehebung in Protokolle aufnehmen"

@@ -11,7 +11,7 @@ import { module, test } from "qunit";
 import SimpleList from "discourse/admin/components/simple-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | simple-list", function (hooks) {
+module("Integration | Component | SimpleList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {

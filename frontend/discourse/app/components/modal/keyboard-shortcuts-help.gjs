@@ -4,10 +4,10 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DModal from "discourse/components/d-modal";
-import FilterInput from "discourse/components/filter-input";
 import { translateModKey } from "discourse/lib/utilities";
 import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcuts";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
@@ -25,8 +25,24 @@ const translationForExtraShortcuts = {
   meta: META,
   ctrl: CTRL,
   enter: ENTER,
+  esc: ESC,
   comma: COMMA,
 };
+
+const SEARCH_ALIASES = new Map();
+function addSearchAlias(key, aliasKey) {
+  // Some platforms render distinct keys (e.g. Meta and Ctrl) with the same
+  // string. Merge aliases so both semantic names remain searchable.
+  const alias = i18n(`${KEY}.search_aliases.${aliasKey}`);
+  const existing = SEARCH_ALIASES.get(key);
+  SEARCH_ALIASES.set(key, existing ? `${existing} ${alias}` : alias);
+}
+addSearchAlias(SHIFT, "shift");
+addSearchAlias(ALT, "alt");
+addSearchAlias(META, "meta");
+addSearchAlias(CTRL, "ctrl");
+addSearchAlias(ENTER, "enter");
+addSearchAlias(ESC, "esc");
 
 function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
@@ -74,14 +90,34 @@ function wrapInSpan(shortcut, delimiter) {
   return `<span class="delimiter-${delimiter}" dir="ltr">${shortcut}</span>`;
 }
 
+function buildSearchText(keys) {
+  return keys
+    .flatMap((k) => {
+      const alias = SEARCH_ALIASES.get(k);
+      return alias ? [k, alias] : [k];
+    })
+    .join(" ");
+}
+
 function buildShortcut(
   key,
   { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
 ) {
-  const context = {
+  // "space"/"newline" mean keys1 then keys2 are pressed in sequence — one
+  // searchable combination. "or"/"slash" mean alternatives — each group
+  // searched independently so tokens can't span alternatives
+  // (e.g. "ctrl /" must not match a "/ or Ctrl+Alt+F" shortcut).
+  const isSequence =
+    shortcutsDelimiter === "space" || shortcutsDelimiter === "newline";
+  const shortcutTexts = isSequence
+    ? [buildSearchText([...keys1, ...keys2])]
+    : [keys1, keys2].filter((keys) => keys.length > 0).map(buildSearchText);
+
+  return {
     shortcut: buildHTML(keys1, keys2, shortcutsDelimiter),
+    shortcutTexts,
+    description: i18n(`${KEY}.${key}`, { shortcut: "" }).trim(),
   };
-  return i18n(`${KEY}.${key}`, context);
 }
 
 export default class KeyboardShortcutsHelp extends Component {
@@ -336,20 +372,37 @@ export default class KeyboardShortcutsHelp extends Component {
 
   @action
   filterShortcuts(event) {
-    this.searchTerm = event.target.value.toLowerCase().trim();
+    this.searchTerm = event.target.value.toLowerCase();
   }
 
   get filteredShortcuts() {
+    const searchTokens = this.searchTerm.trim().split(/\s+/).filter(Boolean);
     return Object.entries(this.shortcuts).reduce(
       (acc, [category, shortcutCategory]) => {
         const filteredShortcuts = Object.entries(
           shortcutCategory.shortcuts
         ).reduce((shortcutsAcc, [name, shortcut]) => {
-          if (
-            this.searchTerm === "" ||
-            name.toLowerCase().includes(this.searchTerm) ||
-            shortcut.toLowerCase().includes(this.searchTerm)
-          ) {
+          const nameLower = name.toLowerCase();
+          const descriptionLower = shortcut.description.toLowerCase();
+
+          // For shortcuts with alternative key groups, all tokens must satisfy
+          // within a single group (plus name/description) so that tokens can't
+          // span alternatives.
+          const matches =
+            searchTokens.length === 0 ||
+            shortcut.shortcutTexts.some((text) => {
+              const lower = text.toLowerCase();
+              const compact = lower.replace(/\s+/g, "");
+              return searchTokens.every(
+                (token) =>
+                  nameLower.includes(token) ||
+                  descriptionLower.includes(token) ||
+                  lower.includes(token) ||
+                  compact.includes(token)
+              );
+            });
+
+          if (matches) {
             shortcutsAcc[name] = shortcut;
           }
           return shortcutsAcc;
@@ -456,15 +509,16 @@ export default class KeyboardShortcutsHelp extends Component {
     <DModal
       @title={{i18n "keyboard_shortcuts_help.title"}}
       @closeModal={{@closeModal}}
-      class="keyboard-shortcuts-modal -max"
+      class="keyboard-shortcuts-modal --max"
     >
       <:body>
         <div id="keyboard-shortcuts-help">
 
-          <FilterInput
+          <DFilterInput
             @filterAction={{this.filterShortcuts}}
             @value={{this.searchTerm}}
             placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
+            aria-label={{i18n "keyboard_shortcuts_help.search_placeholder"}}
           />
 
           <div class="keyboard-shortcuts-help__container">
@@ -476,14 +530,33 @@ export default class KeyboardShortcutsHelp extends Component {
                 class="shortcut-category span-{{shortcutCategory.count}}
                   shortcut-category-{{category}}"
               >
-                <h2>{{i18n
+                <h2 id="shortcut-category-{{category}}-heading">{{i18n
                     (concat "keyboard_shortcuts_help." category ".title")
                   }}</h2>
-                <ul>
-                  {{#each-in shortcutCategory.shortcuts as |name shortcut|}}
-                    <li>{{trustHTML shortcut}}</li>
-                  {{/each-in}}
-                </ul>
+                <table aria-labelledby="shortcut-category-{{category}}-heading">
+                  <thead class="sr-only">
+                    <tr>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.description_header"
+                        }}</th>
+                      <th scope="col">{{i18n
+                          "keyboard_shortcuts_help.key_header"
+                        }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each-in shortcutCategory.shortcuts as |name pair|}}
+                      <tr>
+                        <td class="shortcut-description">{{trustHTML
+                            pair.description
+                          }}</td>
+                        <td class="shortcut-key">{{trustHTML
+                            pair.shortcut
+                          }}</td>
+                      </tr>
+                    {{/each-in}}
+                  </tbody>
+                </table>
               </section>
             {{/each-in}}
           </div>

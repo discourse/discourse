@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import DNavigation from "discourse/components/d-navigation";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | d-navigation", function (hooks) {
+module("Integration | Component | DNavigation", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

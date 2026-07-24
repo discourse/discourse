@@ -1,4 +1,4 @@
-import categoryLink from "discourse/helpers/category-link";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -11,7 +11,7 @@ export default <template>
         <tbody>
           {{#each @controller.model.permissions as |permission|}}
             <tr>
-              <td>{{categoryLink permission.category}}</td>
+              <td>{{dCategoryLink permission.category}}</td>
               <td>{{permission.description}}</td>
             </tr>
           {{/each}}

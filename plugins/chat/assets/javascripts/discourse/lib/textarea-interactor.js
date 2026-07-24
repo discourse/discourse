@@ -117,6 +117,11 @@ export default class TextareaInteractor extends EmberObject {
   }
 
   @bind
+  applyLink() {
+    return this.textManipulation.applyLink(...arguments);
+  }
+
+  @bind
   isInside() {
     return this.textManipulation.isInside(...arguments);
   }

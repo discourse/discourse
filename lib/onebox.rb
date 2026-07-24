@@ -17,7 +17,7 @@ module Onebox
     connect_timeout: 5,
     timeout: 10,
     max_download_kb: 2048, # 2MB
-    load_paths: [File.join(Rails.root, "lib/onebox/templates")],
+    load_paths: [Rails.root.join("lib/onebox/templates").to_s],
     allowed_ports: [80, 443],
     allowed_schemes: %w[http https],
     sanitize_config: SanitizeConfig::ONEBOX,

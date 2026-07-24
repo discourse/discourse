@@ -63,14 +63,14 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
 
     assert.dom(".shortcut-category-new_category").exists();
-    assert.dom(".shortcut-category-new_category li").exists({ count: 1 });
+    assert.dom(".shortcut-category-new_category tbody tr").exists({ count: 1 });
   });
 
   test("a plugin can add a shortcut to and existing category in the shortcut help modal", async function (assert) {
     await visit("/");
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
     const countBefore = document.querySelectorAll(
-      ".shortcut-category-application li"
+      ".shortcut-category-application tbody tr"
     ).length;
 
     await click(".modal-close");
@@ -89,7 +89,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
 
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
     assert
-      .dom(".shortcut-category-application li")
+      .dom(".shortcut-category-application tbody tr")
       .exists({ count: countBefore + 1 });
   });
 });

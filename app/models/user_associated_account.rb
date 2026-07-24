@@ -6,7 +6,7 @@ class UserAssociatedAccount < ActiveRecord::Base
   def self.cleanup!
     # This happens when a user starts the registration flow, but doesn't complete it
     # Keeping the rows doesn't cause any technical issue, but we shouldn't store PII unless it's attached to a user
-    self.where("user_id IS NULL AND updated_at < ?", 1.day.ago).delete_all
+    where("user_id IS NULL AND updated_at < ?", 1.day.ago).delete_all
   end
 end
 
@@ -15,15 +15,15 @@ end
 # Table name: user_associated_accounts
 #
 #  id            :bigint           not null, primary key
-#  provider_name :string           not null
-#  provider_uid  :string           not null
-#  user_id       :integer
-#  last_used     :datetime         not null
-#  info          :jsonb            not null
 #  credentials   :jsonb            not null
 #  extra         :jsonb            not null
+#  info          :jsonb            not null
+#  last_used     :datetime         not null
+#  provider_name :string           not null
+#  provider_uid  :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  user_id       :integer
 #
 # Indexes
 #

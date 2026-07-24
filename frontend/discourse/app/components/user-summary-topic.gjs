@@ -3,10 +3,10 @@ import Component from "@ember/component";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 
 @tagName("")
 export default class UserSummaryTopic extends Component {
@@ -22,10 +22,10 @@ export default class UserSummaryTopic extends Component {
         }}
       >
         <span class="topic-info">
-          {{formatDate @createdAt format="tiny" noTitle="true"}}
+          {{dFormatDate @createdAt format="tiny" noTitle="true"}}
           {{#if @likes}}
             &middot;
-            {{icon "heart"}}&nbsp;<span class="like-count">{{number
+            {{dIcon "heart"}}&nbsp;<span class="like-count">{{dNumber
                 @likes
               }}</span>
           {{/if}}

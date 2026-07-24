@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class BrowseMore extends Component {
@@ -11,6 +11,7 @@ export default class BrowseMore extends Component {
   @service pmTopicTrackingState;
   @service site;
   @service topicTrackingState;
+  @service siteSettings;
 
   groupLink(groupName) {
     return `<a class="group-link" href="${getURL(
@@ -89,6 +90,12 @@ export default class BrowseMore extends Component {
         HAS_CATEGORY: !!category,
         categoryLink: category ? categoryBadgeHTML(category) : null,
         basePath: getURL(""),
+        unreadUrl: this.siteSettings.enable_unified_new
+          ? getURL("/new?subset=replies")
+          : getURL("/unread"),
+        newUrl: this.siteSettings.enable_unified_new
+          ? getURL("/new?subset=topics")
+          : getURL("/new"),
       });
     } else if (category) {
       return i18n("topic.read_more_in_category", {

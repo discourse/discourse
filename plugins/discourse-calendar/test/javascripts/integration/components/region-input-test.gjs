@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import RegionInput from "discourse/plugins/discourse-calendar/discourse/components/region-input";
 
-module("Integration | Component | region-input", function (hooks) {
+module("Integration | Component | RegionInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displaying the 'None' region option", async function (assert) {

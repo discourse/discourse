@@ -68,6 +68,10 @@ da:
     scriptables:
       send_chat_message:
         title: Send chatbesked
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Godkend"
+      default_deny_label: "Nægt"
   reviewable_score_types:
     needs_review:
       title: "Behøver Gennemgang"

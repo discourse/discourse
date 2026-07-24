@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def execution_mode
-          "default"
-        end
-
         def max_turn_tokens
           nil
         end
@@ -70,10 +66,8 @@ module DiscourseAi
 
             if agent.system
               instance = agent.new
-              (
-                instance.required_tools == [] ||
-                  (instance.required_tools - all_available_tools).empty?
-              )
+              instance.required_tools == [] ||
+                (instance.required_tools - all_available_tools).empty?
             else
               true
             end
@@ -100,6 +94,8 @@ module DiscourseAi
             Tools::Read,
             Tools::FlagPost,
             Tools::CloseTopic,
+            Tools::SuspendUser,
+            Tools::SilenceUser,
             Tools::UnlistTopic,
             Tools::LockPost,
             Tools::DeleteTopic,
@@ -111,9 +107,12 @@ module DiscourseAi
             Tools::GrantBadge,
             Tools::ListReviewables,
             Tools::PerformReviewableAction,
+            Tools::AddReviewableNote,
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
+            Tools::ReadSiteSetting,
+            Tools::ChangeSiteSetting,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
@@ -164,7 +163,9 @@ module DiscourseAi
         def sync_external_registry!
           configs = external_feature_configs
           signature = configs.hash
-          return if @external_registry_signature == signature
+          if @external_registry_signature == signature && @external_tools_by_name && @system_agents
+            return
+          end
 
           @external_registry_signature = signature
           external_agents = {}
@@ -238,6 +239,10 @@ module DiscourseAi
             ReportRunner => -33,
             Discover => -34,
             ChatThreadTitler => -35,
+            SentimentClassifier => -36,
+            EmotionClassifier => -37,
+            AdminDashboardHighlights => -38,
+            DiscourseAdminAssistant => -39,
           }.freeze
         end
       end
@@ -271,6 +276,10 @@ module DiscourseAi
         nil
       end
 
+      def thinking_effort
+        nil
+      end
+
       def options
         {}
       end
@@ -280,6 +289,10 @@ module DiscourseAi
       end
 
       def examples
+        []
+      end
+
+      def native_tools
         []
       end
 
@@ -337,6 +350,7 @@ module DiscourseAi
 
         prompt.max_pixels = self.class.vision_max_pixels if self.class.vision_enabled
         prompt.tools = available_tools.map(&:signature) if available_tools
+        prompt.native_tools = native_tools if native_tools.present?
         available_tools.each do |tool|
           tool.inject_prompt(prompt: prompt, context: context, agent: self)
         end

@@ -4,7 +4,7 @@ RSpec.describe ThemeSettingsSerializer do
   fab!(:theme)
 
   let(:theme_setting) do
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+    yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
     theme.settings
@@ -15,6 +15,44 @@ RSpec.describe ThemeSettingsSerializer do
       payload = ThemeSettingsSerializer.new(theme_setting[:objects_setting]).as_json
 
       expect(payload[:theme_settings][:objects_schema][:name]).to eq("section")
+    end
+
+    it "includes disallowed groups metadata for group properties" do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        objects_setting:
+          type: objects
+          default: []
+          schema:
+            name: section
+            properties:
+              group_ids:
+                type: groups
+                disallowed_groups: "0|1"
+      YAML
+      theme.save!
+
+      payload = ThemeSettingsSerializer.new(theme.reload.settings[:objects_setting]).as_json
+
+      expect(
+        payload[:theme_settings][:objects_schema][:properties][:group_ids][:disallowed_groups],
+      ).to eq("0|1")
+    end
+  end
+
+  describe "#disallowed_groups" do
+    it "includes disallowed groups metadata for group list settings" do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        groups_setting:
+          type: list
+          list_type: group
+          disallowed_groups: "0|1"
+          default: "2|3"
+      YAML
+      theme.save!
+
+      payload = ThemeSettingsSerializer.new(theme.reload.settings[:groups_setting]).as_json
+
+      expect(payload[:theme_settings][:disallowed_groups]).to eq("0|1")
     end
   end
 

@@ -14,14 +14,13 @@ module Jobs
       TopicTimer.pending_timers.find_each do |timer|
         # the typed job may not enqueue if it has already
         # been scheduled with enqueue_at
-        begin
-          timer.enqueue_typed_job
-        rescue => err
-          Discourse.warn_exception(
-            err,
-            message: "Error when attempting to enqueue topic timer job for timer #{timer.id}",
-          )
-        end
+
+        timer.enqueue_typed_job
+      rescue => err
+        Discourse.warn_exception(
+          err,
+          message: "Error when attempting to enqueue topic timer job for timer #{timer.id}",
+        )
       end
     end
   end

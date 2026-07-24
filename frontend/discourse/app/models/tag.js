@@ -15,7 +15,7 @@ export default class Tag extends RestModel {
       return getURL(`/tag/${slugForUrl}/${this.id}`);
     }
     // fallback for tags without id (legacy)
-    return getURL(`/tag/${this.name}`);
+    return getURL(`/tag/${this.name.replaceAll(".", "%2E")}`);
   }
 
   @computed("count", "pm_count")

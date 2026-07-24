@@ -14,11 +14,11 @@ end
 # Table name: group_requests
 #
 #  id         :bigint           not null, primary key
-#  group_id   :integer
-#  user_id    :integer
 #  reason     :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  group_id   :integer
+#  user_id    :integer
 #
 # Indexes
 #

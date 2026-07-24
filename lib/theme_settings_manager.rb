@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager
-  attr_reader :name, :theme, :default
+  attr_reader :name, :theme, :default, :opts
 
   def self.types
     ThemeSetting.types
   end
 
   def self.cast_row_value(row)
-    type_name = self.types.invert[row.data_type].downcase.capitalize
+    type_name = types.invert[row.data_type].downcase.capitalize
     klass = "ThemeSettingsManager::#{type_name}".constantize
     klass.cast(klass.extract_value_from_row(row))
   end
 
   def self.create(name, default, type, theme, opts = {})
-    type_name = self.types.invert[type].downcase.capitalize
+    type_name = types.invert[type].downcase.capitalize
     klass = "ThemeSettingsManager::#{type_name}".constantize
     klass.new(name, default, theme, opts)
   end
@@ -53,6 +53,10 @@ class ThemeSettingsManager
 
   def requests_refresh?
     @opts[:refresh]
+  end
+
+  def disallowed_groups
+    @opts[:disallowed_groups]
   end
 
   def value=(new_value)

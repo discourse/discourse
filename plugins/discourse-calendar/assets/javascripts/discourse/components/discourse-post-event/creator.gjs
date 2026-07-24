@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import avatar from "discourse/helpers/avatar";
 import { formatUsername } from "discourse/lib/utilities";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";
 
 export default class DiscoursePostEventCreator extends Component {
@@ -14,7 +14,7 @@ export default class DiscoursePostEventCreator extends Component {
 
       <span class="event-creator">
         <a class="topic-invitee-avatar" data-user-card={{@user.username}}>
-          {{avatar @user imageSize="tiny"}}
+          {{dAvatar @user imageSize="tiny"}}
           <span class="username">{{this.username}}</span>
         </a>
       </span>

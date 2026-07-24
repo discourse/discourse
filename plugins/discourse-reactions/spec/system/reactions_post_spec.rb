@@ -108,4 +108,27 @@ describe "Reactions | Post reactions" do
       expect(reactions_button).to have_no_emoji_picker_emoji("middle_finger")
     end
   end
+
+  context "when clicking a reaction whose value contains a URL-reserved character" do
+    fab!(:other_user, :user)
+    let(:popup) { PageObjects::Components::PostReactionsPopup.new }
+
+    before do
+      DiscourseReactions::ReactionManager.new(
+        reaction_value: "+1",
+        user: other_user,
+        post: post_2,
+      ).toggle!
+    end
+
+    it "loads the reaction users in the popup" do
+      visit post_2.url
+      expect(reactions_list).to have_reaction("+1")
+
+      reactions_list.click_reaction("+1")
+
+      expect(popup).to be_open
+      expect(popup).to have_user(other_user.username)
+    end
+  end
 end

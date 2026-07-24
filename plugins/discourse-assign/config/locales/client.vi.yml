@@ -62,3 +62,8 @@ vi:
     edit_assignments_modal:
       topic: "Chủ đề"
       post: "Tút"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Được chỉ định"
+      assign_topic:
+        topic_id: "ID Chủ đề"

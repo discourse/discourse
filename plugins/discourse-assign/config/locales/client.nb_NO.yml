@@ -66,3 +66,11 @@ nb_NO:
     edit_assignments_modal:
       topic: "Emne"
       post: "Innlegg"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Tildelt"
+      assign_topic:
+        operations:
+          assign: "Tildel"
+          unassign: "Fjern tildelning"
+        topic_id: "Emne-ID"

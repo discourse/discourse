@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "yaml"
+require_relative "../site_settings/object_uploads_normalizer"
 
 desc "Exports site settings"
 task "site_settings:export" => :environment do
@@ -10,7 +11,7 @@ end
 
 desc "Imports site settings"
 task "site_settings:import" => :environment do
-  yml = (STDIN.tty?) ? "" : STDIN.read
+  yml = STDIN.tty? ? "" : STDIN.read
   if yml == ""
     puts
     puts "Please specify a settings yml file"
@@ -89,4 +90,25 @@ task "site_settings:find_dead" => :environment do
   else
     puts "No dead settings found."
   end
+end
+
+# TODO(gabriel): This was added as a fix for a bug in `type: object` settings.
+# Some settings were storing the upload URLs instead of upload IDs.
+# This rake task can be removed by May 2027
+# Remove `spec/tasks/site_settings_spec.rb` too.
+desc "Normalize upload URLs in objects site/theme settings to upload IDs"
+task "site_settings:normalize_object_uploads" => :environment do
+  dry_run = ENV["DRY_RUN"] == "1"
+  counts = SiteSettings::ObjectUploadsNormalizer.new(dry_run:).normalize
+
+  puts
+  puts "Results:"
+  puts " Processed:    #{counts[:processed]}"
+  puts " Changed:      #{counts[:changed]}"
+  puts " Unchanged:    #{counts[:unchanged]}"
+  puts " Skipped:      #{counts[:skipped]}"
+  puts " Invalid JSON: #{counts[:invalid_json]}"
+  puts " Errors:       #{counts[:errors]}"
+
+  exit 1 if counts[:errors] > 0
 end

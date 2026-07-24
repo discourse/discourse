@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 da:
+  category_types:
+    events:
+      name: "Hændelser"
+      title: "hændelser"
   reports:
     currently_away:
       labels:
@@ -42,6 +46,12 @@ da:
     working_day_end_hour: "Sluttidspunkt for arbejdsdagstiderne."
     close_to_working_day_hours_extension: "Indstil udvidelsestid i arbejdstimer for at fremhæve tidszonerne."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dag"
+        week: "Uge"
+        month: "Måned"
+        year: "År"
     invite_user_notification: "%{username} inviterede dig til: %{description}"
     calendar_must_be_in_first_post: "Kalender-tag kan kun bruges i første opslag af et emne."
     more_than_one_calendar: "Du kan ikke have mere end en kalender i et indlæg."

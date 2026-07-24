@@ -37,25 +37,17 @@ In the background, these translations are stored alongside the core translations
 theme_translation.{theme_id}.sidebar.welcome
 ```
 
-You should never hardcode the theme_id in your theme code, so there are a few ways to help you access the translations.
-
-In `.hbs` files, you can use the dedicated helper
-
-```hbs
-{{theme-i18n "my_translation_key"}}
-```
-
-Or, if you need to pass the translation key into another component, you can use the `theme-prefix` helper:
-
-```hbs
-<DButton @label={{theme-prefix "my_translation_key"}} />
-```
-
-In Javascript, or in `.gjs` files, you can use the themePrefix function. This is automatically injected, and does not need to be imported:
+You should never hardcode the theme_id in your theme code. To dynamically build the translation key, use the `themePrefix` helper:
 
 ```gjs
-const result = I18n.t(themePrefix("my_translation_key"));
+import { i18n } from "discourse-i18n";
+import { themePrefix } from "virtual:theme";
 
+// In JS code:
+const result = i18n(themePrefix("my_translation_key"));
+console.log("From Javascript", result);
+
+// In a template tag:
 <template>{{i18n (themePrefix "blah")}}</template>
 ```
 

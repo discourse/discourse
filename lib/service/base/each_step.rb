@@ -16,18 +16,18 @@ module Service
       end
 
       def run_step
-        context.with_isolation(persist_keys: [item_name, :index, *initializers.keys]) do
-          context.merge!(initializers.transform_values { instance.instance_exec(&it) })
-          Array
-            .wrap(context[name])
-            .tap do |collection|
-              context[result_key].merge!(total: collection.size, skipped?: collection.empty?)
-            end
-            .each_with_index do |item, index|
+        context.merge!(initializers.transform_values { instance.instance_exec(&it) })
+        Array
+          .wrap(context[name])
+          .tap do |collection|
+            context[result_key].merge!(total: collection.size, skipped?: collection.empty?)
+          end
+          .each_with_index do |item, index|
+            context.with_isolation(persist_keys: [item_name, :index, *initializers.keys]) do
               context.merge!(item_name => item, :index => index)
               steps.each { |step| step.call(instance, context) }
             end
-        end
+          end
       end
 
       private

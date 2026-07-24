@@ -44,3 +44,6 @@ hr:
       title: "Uredi zadatke"
       topic: "Tema"
       post: "Objava"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID teme"

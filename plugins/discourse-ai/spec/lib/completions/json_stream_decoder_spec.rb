@@ -11,7 +11,7 @@ describe DiscourseAi::Completions::JsonStreamDecoder do
   end
 
   it "should handle anthropic mixed stlye streams" do
-    stream = (<<~TEXT).split("|")
+    stream = <<~TEXT.split("|")
       event: |message_start|
       data: |{"hel|lo": "world"}|
 
@@ -31,7 +31,7 @@ describe DiscourseAi::Completions::JsonStreamDecoder do
   end
 
   it "should be able to handle complex overlaps" do
-    stream = (<<~TEXT).split("|")
+    stream = <<~TEXT.split("|")
       data: |{"hel|lo": "world"}
 
       data: {"foo": "bar"}

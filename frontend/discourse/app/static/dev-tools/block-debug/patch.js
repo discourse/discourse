@@ -12,12 +12,9 @@ import {
 } from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
-/** @type {import("./block-info.gjs").default} */
 import BlockInfo from "./block-info";
 import { blockDebugLogger } from "./debug-logger";
-/** @type {import("./ghost-block.gjs").default} */
 import GhostBlock from "./ghost-block";
-/** @type {import("./outlet-info.gjs").default} */
 import OutletInfo from "./outlet-info";
 
 /**
@@ -55,7 +52,7 @@ function makeDebugCallback(fn) {
  * @param {boolean} isLoggingEnabled - Whether logging is enabled (unused, kept for API compatibility)
  * @param {Function} resolveBlockFn - Function to resolve block references to classes
  * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
- * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, isGhost?: boolean, asGhost?: Function}>} Array of ghost component data
+ * @returns {Array<{Component: import("@glint/template").ComponentLike, isGhost?: boolean, asGhost?: Function}>} Array of ghost component data
  */
 function createGhostChildren(
   childEntries,

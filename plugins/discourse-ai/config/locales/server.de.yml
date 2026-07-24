@@ -36,10 +36,6 @@ de:
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
-        flagged_post: |
-          <div>Antwort des Modells:</div>
-          <p>%{llm_response}</p>
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -74,7 +70,6 @@ de:
     ai_sentiment_enabled: "Aktiviere das Stimmungsmodul."
     ai_sentiment_inference_service_api_endpoint: "URL, unter der die API für das Stimmungsmodul läuft"
     ai_sentiment_inference_service_api_key: "API-Schlüssel für die Stimmungsmodul-API"
-    ai_sentiment_models: "Modelle, die für die Inferenz verwendet werden. Das Stimmungsmodul klassifiziert Beiträge in den Bereichen positiv/neutral/negativ. Emotionen werden in die Bereiche Wut/Ekel/Furcht/Freude/neutral/Traurigkeit/Überraschung eingeordnet."
     ai_nsfw_detection_enabled: "Aktiviere das NSFW-Modul."
     ai_nsfw_inference_service_api_endpoint: "URL, unter der die API für das NSFW-Modul läuft"
     ai_nsfw_inference_service_api_key: "API-Schlüssel für die NSFW-API"
@@ -114,7 +109,6 @@ de:
     ai_summarization_agent: "Der Agent, der für die Zusammenfassungsfunktion verwendet werden soll"
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
-    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enabled_llms: "LLMs zur Auswahl für KI-Bot-Unterhaltungen"
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -135,10 +129,12 @@ de:
     ai_discord_search_agent: "Der Agent, der für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "KI-Übersetzungsfunktion aktivieren"
+    ai_translation_personal_messages: "Legt fest, welche persönlichen Nachrichten übersetzt werden. „none“ deaktiviert die Übersetzung von privaten Nachrichten. „group“ übersetzt nur private Gruppennachrichten. „all“ übersetzt alle privaten Nachrichten."
     ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
+    ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
     ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
@@ -151,7 +147,6 @@ de:
       description: "Dieser Bericht enthält eine Stimmungsanalyse für Beiträge, gruppiert nach Kategorie, mit positiven, negativen und neutralen Bewertungen für jeden Beitrag und jede Kategorie."
     overall_sentiment:
       title: "Allgemeine Stimmung"
-      description: 'Das Diagramm vergleicht die Anzahl der Beiträge, die entweder als positiv oder negativ eingestuft werden. Sie werden berechnet, wenn die positive oder negative Bewertung über dem festgelegten Schwellenwert liegt. Das bedeutet, dass neutrale Beiträge nicht angezeigt werden. Persönliche Nachrichten (PN) sind ebenfalls ausgeschlossen. Klassifiziert mit „cardiffnlp/twitter-roberta-base-sentiment-latest“'
       xaxis: "Positiv (%)"
       yaxis: "Datum"
     emotion_admiration:
@@ -313,10 +308,16 @@ de:
         oauth_token_exchange_failed: "Der OAuth-Token-Austausch ist mit dem Status %{status} fehlgeschlagen."
         oauth_https_required: "OAuth erfordert, dass deine Website über HTTPS bereitgestellt wird."
         oauth_callback_failed: "OAuth-Verbindung fehlgeschlagen: %{message}"
+        oauth_refresh_token_required: "Der OAuth-Autorisierungsserver hat kein Aktualisierungstoken zurückgegeben. Passe die erweiterten OAuth-Optionen an und stelle die Verbindung zu diesem MCP-Server erneut her."
         oauth_client_metadata_public_https_required: "Die Registrierung von Client-Metadatendokumenten erfordert eine öffentliche HTTPS-Website-URL. Aktuelle Client-Metadaten-URL: %{url}"
         oauth_registration_endpoint_missing: "Der OAuth-Autorisierungsserver bietet keinen Registrierungsendpunkt an."
+        oauth_manual_client_registration_required: "Der OAuth-Autorisierungsserver %{issuer} unterstützt keine dynamische Client-Registrierung. Stelle diesen MCP-Server auf manuelle Client-Anmeldedaten um und gib eine registrierte OAuth-Client-ID an."
+        oauth_client_secret_required: "Der OAuth-Autorisierungsserver %{issuer} erfordert eine Client-Authentifizierung über den Token-Endpunkt (%{methods}). Konfiguriere manuelle Client-Anmeldedaten mit einem Client-Secret."
+        oauth_token_endpoint_auth_method_unsupported: "Der OAuth-Autorisierungsserver %{issuer} gibt nur nicht unterstützte Methoden zur Client-Authentifizierung am Token-Endpunkt an (%{methods}). Dieser MCP-Server unterstützt derzeit: none, client_secret_basic und client_secret_post."
         oauth_client_registration_failed: "Die dynamische Client-Registrierung ist mit dem Status „%{status}“ fehlgeschlagen."
         oauth_client_registration_failed_no_id: "Die dynamische Client-Registrierung war erfolgreich, aber es wurde keine „client_id“ zurückgegeben."
+      oauth_authorization_params_invalid: "Die OAuth-Autorisierungsparameter müssen ein JSON-Objekt sein."
+      oauth_token_params_invalid: "Die Parameter des OAuth-Tokens müssen ein JSON-Objekt sein."
     ai_helper:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
@@ -334,8 +335,6 @@ de:
         explain: "Erklären"
         illustrate_post: "Beitrag illustrieren"
         replace_dates: "Intelligente Termine"
-      image_caption:
-        attribution: "Beschriftet durch KI"
     share_ai:
       read_more: "Vollständiges Transkript lesen"
       onebox_title: "KI-Unterhaltung mit %{llm_name}"
@@ -360,6 +359,8 @@ de:
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
       tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
+      chat_tool_approval:
+        unexpected_error: "ein unerwarteter Fehler ist aufgetreten"
       agents:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_agent: "System-Agenten können nicht gelöscht werden, bitte deaktiviere ihn stattdessen"
@@ -442,7 +443,6 @@ de:
           description: "Standard-Agent für die Übersetzerfunktion des Helfers"
         image_captioner:
           name: "Bildbeschriftungen"
-          description: "Standard-Agent für die Bildbeschriftungsfunktion des Helfers"
         locale_detector:
           name: "Sprachdetektor"
           description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."
@@ -540,6 +540,8 @@ de:
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
         close_topic: "Thema schließen"
+        suspend_user: "Benutzer sperren"
+        silence_user: "Benutzer stummschalten"
         unlist_topic: "Thema aus der Liste entfernen"
         lock_post: "Beitrag sperren"
         delete_topic: "Thema löschen"
@@ -550,7 +552,7 @@ de:
         set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
         grant_badge: "Abzeichen verleihen"
-        list_reviewables: "Liste der Warteschlange zur Überprüfung"
+        list_reviewables: "Warteschlange zur Überprüfung auflisten"
         perform_reviewable_action: "Aktion der Warteschlange zur Überprüfung"
         assign: "Thema zuordnen"
         mark_as_solved: "Als gelöst markieren"
@@ -595,7 +597,7 @@ de:
         set_slow_mode: "Den langsamen Modus für ein Thema aktivieren oder deaktivieren"
         move_posts: "Beiträge in ein neues oder vorhandenes Thema verschieben"
         grant_badge: "Einem Benutzer ein Abzeichen verleihen"
-        list_reviewables: "Ausstehende Listeneinträge der Warteschlange zur Überprüfung mit optionaler Filterung"
+        list_reviewables: "Ausstehende Einträge der Warteschlange zur Überprüfung mit optionaler Filterung auflisten"
         perform_reviewable_action: "Eine Aktion für einen Eintrag in der Warteschlange zur Überprüfung ausführen"
         assign: "Einem Benutzer oder einer Gruppe ein Thema zuweisen oder die Zuweisung aufheben"
         mark_as_solved: "Einen Beitrag als akzeptierte Lösung markieren oder die Markierung aufheben"
@@ -696,6 +698,12 @@ de:
           not_allowed: "Du darfst dieses Thema nicht schließen oder öffnen."
           no_reason: "Zum Schließen oder Öffnen eines Themas ist eine Begründung erforderlich."
         success: "Thema erfolgreich aktualisiert."
+      suspend_user:
+        errors:
+          not_found: "Benutzer nicht gefunden."
+      silence_user:
+        errors:
+          not_found: "Benutzer nicht gefunden."
       unlist_topic:
         errors:
           not_found: "Thema nicht gefunden."
@@ -801,6 +809,10 @@ de:
           conflict: "Dieser Eintrag in der Warteschlange zur Überprüfung wurde von einer anderen Person aktualisiert. Bitte versuche es erneut."
           action_failed: "Die Aktion konnte nicht ausgeführt werden"
         success: "Die Ausführung von '%{action}' für den Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung war erfolgreich."
+      add_reviewable_note:
+        errors:
+          not_allowed: "Du darfst auf die Warteschlange zur Überprüfung nicht zugreifen"
+          not_found: "Eintrag der Warteschlange nicht gefunden"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -812,6 +824,7 @@ de:
         tool_not_found: "Das Tool '%{tool_name}' ist nicht mehr verfügbar."
         bot_user_missing: "Der Bot-Benutzer existiert nicht mehr."
         execution_error: "Tool-Ausführung fehlgeschlagen: %{error}"
+        execution_error_unknown: "ein unerwarteter Fehler ist aufgetreten"
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."
@@ -884,7 +897,6 @@ de:
       limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
-      quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.

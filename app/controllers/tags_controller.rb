@@ -48,12 +48,11 @@ class TagsController < ::ApplicationController
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
-    show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
     preload_localizations = SiteSetting.content_localization_enabled
 
     if SiteSetting.tags_listed_by_group
       ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
-      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
+      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags?
       ungrouped_tags = ungrouped_tags.order(:id)
       ungrouped_tags = ungrouped_tags.includes(:localizations) if preload_localizations
 
@@ -69,14 +68,15 @@ class TagsController < ::ApplicationController
             {
               id: tag_group.id,
               name: tag_group.name,
-              tags: self.class.tag_counts_json(tag_group.none_synonym_tags, guardian),
+              tags:
+                self.class.tag_counts_json(browsable_tags(tag_group.none_synonym_tags), guardian),
             }
           end
 
       @tags = self.class.tag_counts_json(ungrouped_tags, guardian)
       @extras = { tag_groups: grouped_tag_counts }
     else
-      tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = show_all_tags? ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
       tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
       unrestricted_tags = unrestricted_tags.includes(:localizations) if preload_localizations
@@ -96,11 +96,9 @@ class TagsController < ::ApplicationController
       category_tag_counts =
         categories
           .map do |c|
-            category_tags =
-              self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
-                guardian,
-              )
+            visible_category_tags =
+              browsable_tags(DiscourseTagging.filter_visible(c.none_synonym_tags, guardian))
+            category_tags = self.class.tag_counts_json(visible_category_tags, guardian)
 
             next if category_tags.empty?
 
@@ -163,6 +161,7 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       fetch_tag(raise_not_found: false)
+      raise Discourse::NotFound if params[:tag_id].present? && @tag.blank?
 
       if @tag
         if @tag.target_tag_id.present? && @tag.target_tag_id != @tag.id
@@ -218,7 +217,7 @@ class TagsController < ::ApplicationController
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *canonical_params.values.map { |t| t.force_encoding("UTF-8") })}"
 
       if @list.topics.size == 0 && @tag_name != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -320,30 +319,28 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
-      begin
-        Tag.transaction do
-          CSV.foreach(file.tempfile) do |row|
-            if row.length > 2
-              raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
-            end
+      Tag.transaction do
+        CSV.foreach(file.tempfile) do |row|
+          if row.length > 2
+            raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
+          end
 
-            tag_name = DiscourseTagging.clean_tag(row[0])
-            tag_group_name = row[1] || nil
+          tag_name = DiscourseTagging.clean_tag(row[0])
+          tag_group_name = row[1] || nil
 
-            tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
+          tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
 
-            if tag_group_name
-              tag_group =
-                TagGroup.find_by_name_insensitive(tag_group_name) ||
-                  TagGroup.create!(name: tag_group_name)
-              tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
-            end
+          if tag_group_name
+            tag_group =
+              TagGroup.find_by_name_insensitive(tag_group_name) ||
+                TagGroup.create!(name: tag_group_name)
+            tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
           end
         end
-        render json: success_json
-      rescue Discourse::InvalidParameters => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
       end
+      render json: success_json
+    rescue Discourse::InvalidParameters => e
+      render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
     end
   end
 
@@ -496,6 +493,15 @@ class TagsController < ::ApplicationController
 
   private
 
+  def show_all_tags?
+    guardian.can_admin_tags? && guardian.is_admin?
+  end
+
+  def browsable_tags(tags)
+    return tags if show_all_tags?
+    DiscourseTagging.without_pm_only_tags(tags, guardian)
+  end
+
   def fetch_tag(raise_not_found: true)
     if params[:tag_id].present?
       # Try finding by ID first
@@ -520,6 +526,7 @@ class TagsController < ::ApplicationController
     tag = tag.target_tag if tag.target_tag_id.present?
 
     url = tag.url
+    url += tag_edit_path_suffix
     url += "/l/#{filter}" if filter.present?
 
     if @filter_on_category
@@ -544,8 +551,8 @@ class TagsController < ::ApplicationController
     return false if request.format.json?
     # intersection routes use tag_name, not tag_slug/tag_id - don't redirect
     return false if params[:additional_tag_names].present?
-    # don't redirect if we found the tag by name (numeric tag name on legacy route)
-    return false if @tag_found_by_name
+    # numeric-name fallback should only suppress redirects on legacy routes without a slug
+    return false if @tag_found_by_name && params[:tag_slug].blank?
 
     if params[:tag_id].present?
       # new format - redirect if slug doesn't match
@@ -560,47 +567,54 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless SiteSetting.tagging_enabled?
   end
 
+  def tag_edit_path_suffix
+    return "/edit/#{params[:tab]}" if params[:tab].present?
+    return "/edit" if request.path.delete_prefix(Discourse.base_path).end_with?("/edit")
+
+    ""
+  end
+
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
-    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name, :slug)
+    target_tags =
+      Tag
+        .visible(guardian)
+        .where(id: tags.filter_map(&:target_tag_id).uniq)
+        .select(:id, :name, :slug)
 
-    tags
-      .map do |t|
-        topic_count = t.public_send(Tag.topic_count_column(guardian))
+    tags.map do |t|
+      topic_count = t.public_send(Tag.topic_count_column(guardian))
 
-        next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
+      tag_name = t.name
+      tag_description = t.description
 
-        tag_name = t.name
-        tag_description = t.description
-
-        if ContentLocalization.show_translated_tag?(t, guardian)
-          localization = t.get_localization
-          tag_name = localization&.name || tag_name
-          tag_description = localization&.description || tag_description
-        end
-
-        attrs = {
-          id: t.id,
-          text: tag_name,
-          name: tag_name,
-          slug: t.slug.presence || "#{t.id}-tag",
-          description: tag_description,
-          count: topic_count,
-          pm_only: topic_count == 0 && t.pm_topic_count > 0,
-          target_tag:
-            if t.target_tag_id
-              target = target_tags.find { |x| x.id == t.target_tag_id }
-              target ? { id: target.id, name: target.name, slug: target.slug } : nil
-            end,
-        }
-
-        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
-          attrs[:pm_count] = t.pm_topic_count
-        end
-
-        attrs
+      if ContentLocalization.show_translated_tag?(t, guardian)
+        localization = t.get_localization
+        tag_name = localization&.name || tag_name
+        tag_description = localization&.description || tag_description
       end
-      .compact
+
+      attrs = {
+        id: t.id,
+        text: tag_name,
+        name: tag_name,
+        slug: t.slug.presence || "#{t.id}-tag",
+        description: tag_description,
+        count: topic_count,
+        pm_only: topic_count == 0 && t.pm_topic_count > 0,
+        target_tag:
+          if t.target_tag_id
+            target = target_tags.find { |x| x.id == t.target_tag_id }
+            target ? { id: target.id, name: target.name, slug: target.slug } : nil
+          end,
+      }
+
+      if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+        attrs[:pm_count] = t.pm_topic_count
+      end
+
+      attrs
+    end
   end
 
   def set_category

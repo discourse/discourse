@@ -25,7 +25,8 @@ module DiscourseAi
                     :user_language,
                     :bypass_response_format,
                     :mcp_state,
-                    :guardian
+                    :guardian,
+                    :reviewable_id
 
       def initialize(
         post: nil,

@@ -7,6 +7,10 @@ module PageObjects
         Components::TopicList.new
       end
 
+      def topic_list_header
+        Components::TopicListHeader.new
+      end
+
       def category_drop
         Components::SelectKit.new(".category-breadcrumb li:first-of-type .category-drop")
       end

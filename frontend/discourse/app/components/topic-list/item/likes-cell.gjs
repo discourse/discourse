@@ -1,13 +1,13 @@
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { gt } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 
 const LikesCell = <template>
   <td class="num likes topic-list-data">
     {{#if (gt @topic.like_count 0)}}
       <a href={{@topic.summaryUrl}}>
-        {{number @topic.like_count}}
-        {{icon "heart"}}
+        {{dNumber @topic.like_count}}
+        {{dIcon "heart"}}
       </a>
     {{/if}}
   </td>

@@ -11,7 +11,6 @@ RSpec.describe "Ideas Category Type Setup" do
   let(:toast) { PageObjects::Components::Toasts.new }
 
   before do
-    SiteSetting.enable_simplified_category_creation = true
     SiteSetting.enable_ideas_category_type_setup = true
     sign_in(admin)
   end
@@ -37,6 +36,50 @@ RSpec.describe "Ideas Category Type Setup" do
     expect(SiteSetting.topic_voting_enabled).to eq(true)
     category = Category.find_by(name: "Ideas")
     expect(Category.can_vote?(category.id)).to eq(true)
+  end
+
+  it "can remove the ideas type picked on the setup screen while creating a category" do
+    visit("/new-category/setup")
+    category_type_card.find_type_card("ideas").click
+    expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "ideas"))
+
+    form.field("name").fill_in("No longer ideas")
+
+    category_page.toggle_advanced_settings
+
+    category_type_selector = PageObjects::Components::DMenu.new(".category-type-selector")
+    category_type_selector.remove_selected_option("Ideas")
+    banner.click_save
+
+    expect(page).to have_no_css(".d-nav-submenu__tabs .edit-category-ideas")
+    category = Category.find_by(name: "No longer ideas")
+    expect(category.category_types.keys).to eq(%i[discussion])
+    expect(Category.can_vote?(category.id)).to eq(false)
+  end
+
+  context "when a related site setting has been customized" do
+    before { SiteSetting.topic_voting_tl0_vote_limit = 10 }
+
+    it "prefills the customized value and keeps it when creating an ideas category" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("ideas").click
+      find(".edit-category-ideas").click
+
+      expect(form.field("category_type_site_settings.topic_voting_tl0_vote_limit").value).to eq(
+        "10",
+      )
+
+      banner.click_save
+      expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
+
+      expect(SiteSetting.topic_voting_tl0_vote_limit).to eq(10)
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "topic_voting_tl0_vote_limit",
+        ),
+      ).to be_empty
+    end
   end
 
   context "when the ideas category type setup is disabled" do
@@ -109,7 +152,9 @@ RSpec.describe "Ideas Category Type Setup" do
 
     it "shows the not ideas type message" do
       visit("/c/#{category.slug}/edit/ideas")
-      expect(page).to have_content(I18n.t("js.topic_voting.category_type_ideas.not_ideas_type"))
+      expect(page).to have_content(
+        I18n.t("js.category.unknown_category_type_description", categoryType: "ideas"),
+      )
     end
   end
 end

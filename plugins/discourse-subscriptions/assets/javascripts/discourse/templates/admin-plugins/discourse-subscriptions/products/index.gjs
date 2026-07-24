@@ -1,7 +1,7 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import routeAction from "discourse/helpers/route-action";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import formatUnixDate from "../../../../helpers/format-unix-date";
 
@@ -20,7 +20,7 @@ export default <template>
         @model="new"
         class="btn btn-primary"
       >
-        {{icon "plus"}}
+        {{dIcon "plus"}}
         <span>
           {{i18n "discourse_subscriptions.admin.products.operations.new"}}
         </span>
@@ -59,7 +59,7 @@ export default <template>
                     @model={{product.id}}
                     class="btn no-text btn-icon"
                   >
-                    {{icon "far-pen-to-square"}}
+                    {{dIcon "far-pen-to-square"}}
                   </LinkTo>
 
                   <DButton

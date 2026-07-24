@@ -57,19 +57,4 @@ describe "Viewing sidebar mobile", mobile: true do
 
     expect(sidebar_dropdown).to be_hidden
   end
-
-  it "toggles to desktop view after clicking on the toggle to desktop view button" do
-    SiteSetting.viewport_based_mobile_mode = false
-
-    visit("/latest")
-
-    expect(page).to have_css(".mobile-view")
-
-    sidebar_dropdown.click
-    sidebar_dropdown.click_toggle_to_desktop_view_button
-
-    visit("/latest")
-
-    expect(page).to have_css(".desktop-view")
-  end
 end

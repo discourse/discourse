@@ -30,6 +30,7 @@ class NestedTopic::ShowContext
   step :expand_reply_trees
   step :prepare_posts
   step :serialize_context
+  step :attach_suggested_and_related
 
   private
 
@@ -127,11 +128,13 @@ class NestedTopic::ShowContext
     all_posts.uniq!(&:id)
 
     preloader.prepare(all_posts)
-    context[:reply_counts] = loader.direct_reply_counts(all_posts.map(&:post_number))
-    context[:descendant_counts] = loader.total_descendant_counts(all_posts.map(&:id))
+    counts = loader.tree_counts(all_posts)
+    context[:reply_counts] = counts[:reply_counts]
+    context[:descendant_counts] = counts[:descendant_counts]
   end
 
   def serialize_context(
+    params:,
     loader:,
     serializer:,
     target_post:,
@@ -155,7 +158,15 @@ class NestedTopic::ShowContext
         end,
       target_post:
         serializer.serialize_tree(target_post, children_map, reply_counts, descendant_counts),
+      effective_sort: loader.effective_sort(params.sort),
       message_bus_last_id: topic_view.message_bus_last_id,
     }
+  end
+
+  # Context view has no pagination, so this always runs — parallel to the
+  # final page in NestedTopic::ListRoots, where the same step is gated on
+  # has_more_roots=false.
+  def attach_suggested_and_related(serializer:, response:)
+    response.merge!(serializer.serialize_suggested_and_related)
   end
 end

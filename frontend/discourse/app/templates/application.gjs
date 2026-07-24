@@ -5,7 +5,6 @@ import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
-import CustomHtml from "discourse/components/custom-html";
 import DDocument from "discourse/components/d-document";
 import DStyles from "discourse/components/d-styles";
 import DVirtualHeight from "discourse/components/d-virtual-height";
@@ -24,7 +23,6 @@ import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
 import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
-import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -34,6 +32,7 @@ import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { eq } from "discourse/truth-helpers";
+import DCustomHtml from "discourse/ui-kit/d-custom-html";
 
 export default <template>
   <DStyles />
@@ -123,7 +122,7 @@ export default <template>
 
           <div class="container" id="main-container">
             {{#if @controller.showTop}}
-              <CustomHtml @name="top" />
+              <DCustomHtml @name="top" />
             {{/if}}
             <NotificationConsentBanner />
             <PwaInstallBanner />
@@ -162,7 +161,7 @@ export default <template>
       @outletArgs={{lazyHash showFooter=@controller.showFooter}}
     />
     {{#if @controller.showFooter}}
-      <CustomHtml
+      <DCustomHtml
         @name="footer"
         @triggerAppEvent={{true}}
         class="custom-footer-content"
@@ -176,7 +175,6 @@ export default <template>
 
     <ModalContainer />
     <DialogHolder />
-    <TopicEntrance />
     <ComposerContainer />
     <RenderGlimmerContainer />
 

@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import SortableColumn from "./sortable-column";
 
 export default class TopicCell extends Component {
@@ -22,7 +23,10 @@ export default class TopicCell extends Component {
                 @translatedLabel={{tab.name}}
                 @translatedTitle={{tab.name}}
                 @icon={{tab.icon}}
-                class={{if (this.moreTopicsTabs.isActiveTab tab) "active"}}
+                class={{dConcatClass
+                  "topic-list-header-tab"
+                  (if (this.moreTopicsTabs.isActiveTab tab) "active")
+                }}
                 tabindex={{if (this.moreTopicsTabs.isActiveTab tab) -1 0}}
               />
             </li>

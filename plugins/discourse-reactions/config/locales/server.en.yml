@@ -3,11 +3,13 @@ en:
     discourse_reactions_like_icon: "Defines the icon used for the main reaction button. This should be a <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> icon name, not an emoji name."
     discourse_reactions_reaction_for_like: "Defines the reaction associated to the Like action. Historical Like records will not be changed if this setting changes, it is <strong>strongly recommended</strong> that this setting is never changed."
     discourse_reactions_enabled: "Enable the discourse-reactions plugin."
+    enable_new_post_reply_count_position: "Move the post reactions summary before the reply count in the post controls."
     discourse_reactions_enabled_reactions: "Defines a list of enabled reactions, any emoji is allowed here."
     discourse_reactions_desaturated_reaction_panel: "Reduces visual noise of reactions by displaying them desaturated until hover."
     discourse_reactions_excluded_from_like: "Reactions that do not count as a Like. Any reactions that are not on this list will count as a Like for badges, reporting, and other purposes."
-    discourse_reactions_like_sync_enabled: "If this is enabled, historical reactions will have their matching Like records created, except those reactions defined in `discourse_reactions_excluded_from_like`. This sync will happen on a regular basis in the background, and also when you change `discourse_reactions_excluded_from_like`."
-    discourse_reactions_allow_any_emoji: "If this is enabled, will add a button allowing users to select any emoji in the reactions picker. Members will be allowed to choose any emoji, including custom emoji, for reactions. To limit available reactions, use the `emoji_deny_list` site setting."
+    discourse_reactions_like_sync_enabled: "If this is enabled, historical reactions will have their matching Like records created, except those reactions defined in {{setting:discourse_reactions_excluded_from_like}}. This sync will happen on a regular basis in the background, and also when you change {{setting:discourse_reactions_excluded_from_like}}."
+    discourse_reactions_allow_any_emoji: "If this is enabled, will add a button allowing users to select any emoji in the reactions picker. Members will be allowed to choose any emoji, including custom emoji, for reactions. To limit available reactions, use the {{setting:emoji_deny_list}} site setting."
+    enable_discourse_reactions_by_default: "Changes the default value for the {{setting:discourse_reactions_enabled}} setting from disabled to enabled when this upcoming change is enabled."
     errors:
       invalid_excluded_emoji: "You cannot exclude emojis that are not in 'discourse reactions enabled reactions' (except built-in default exclusions), and you cannot exclude the emoji used for 'discourse reactions reaction for like'."
   badges:
@@ -15,7 +17,7 @@ en:
       name: First Reaction
       description: Reacted to the post
       long_description: |
-        This badge is granted the first time you react to a post. Reacting to the posts is a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun. Share your reaction!
+        This badge is granted the first time you use the emoji reactions picker to react to a post. This is different from a standard Like: it's a great way to let your fellow community members know that what they posted was interesting, useful, cool, or fun!”
   reports:
     reactions:
       title: "Reactions"

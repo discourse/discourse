@@ -44,7 +44,7 @@ module Chat
 
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          new_messages_message_bus_channel(chat_channel.id),
           {
             type: "channel",
             channel_id: chat_channel.id,
@@ -61,7 +61,7 @@ module Chat
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel, chat_message)
         MessageBus.publish(
-          self.new_messages_message_bus_channel(chat_channel.id),
+          new_messages_message_bus_channel(chat_channel.id),
           {
             type: "thread",
             channel_id: chat_channel.id,
@@ -320,7 +320,7 @@ module Chat
       end
 
       MessageBus.publish(
-        self.user_tracking_state_message_bus_channel(user.id),
+        user_tracking_state_message_bus_channel(user.id),
         data.as_json,
         user_ids: [user.id],
       )
@@ -349,7 +349,7 @@ module Chat
       end
 
       MessageBus.publish(
-        self.bulk_user_tracking_state_message_bus_channel(user.id),
+        bulk_user_tracking_state_message_bus_channel(user.id),
         channel_last_read_map.as_json,
         user_ids: [user.id],
       )
@@ -365,7 +365,7 @@ module Chat
 
     def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
       MessageBus.publish(
-        self.new_mentions_message_bus_channel(chat_channel_id),
+        new_mentions_message_bus_channel(chat_channel_id),
         { message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
         user_ids: [user_id],
       )
@@ -501,10 +501,26 @@ module Chat
     private
 
     def self.permissions(channel)
-      {
-        user_ids: channel.allowed_user_ids.presence,
-        group_ids: channel.allowed_group_ids.presence,
-      }.compact
+      group_ids = channel.allowed_group_ids.presence
+      if group_ids.blank? && channel.category_channel? && !channel.read_restricted?
+        return {} if Chat.anonymous_public_channel_access_allowed?
+
+        group_ids = chat_allowed_group_ids
+      end
+
+      { user_ids: channel.allowed_user_ids.presence, group_ids: group_ids }.compact
+    end
+
+    def self.chat_allowed_group_ids
+      pseudo_everyone_ids = [Group::AUTO_GROUPS[:everyone], Group::AUTO_GROUPS[:logged_in_users]]
+      excluded_group_ids = [Group::AUTO_GROUPS[:anonymous_users]]
+      Chat
+        .allowed_group_ids
+        .reject { |group_id| excluded_group_ids.include?(group_id) }
+        .map do |group_id|
+          pseudo_everyone_ids.include?(group_id) ? Group::AUTO_GROUPS[:trust_level_0] : group_id
+        end
+        .uniq
     end
 
     def self.anonymous_guardian

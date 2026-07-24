@@ -11,8 +11,6 @@ acceptance("Managing Group - Save Button", function (needs) {
 
     await click(".groups-form-primary-group");
 
-    await click('a[href="/g/alternative-group/manage/interaction"]');
-
     const visibilitySelector = selectKit(
       ".select-kit.groups-form-visibility-level"
     );

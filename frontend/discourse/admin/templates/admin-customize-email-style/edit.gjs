@@ -1,6 +1,6 @@
 import EmailStylesEditor from "discourse/admin/components/email-styles-editor";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DButton from "discourse/ui-kit/d-button";
 
 export default <template>
   <PluginOutlet

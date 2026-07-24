@@ -59,7 +59,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "keeps the answer when allow_solved_on_all_topics is true" do
@@ -69,7 +69,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
   end
 
@@ -112,7 +112,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "keeps answer when solved tag is removed but topic is in a solved category" do
@@ -125,7 +125,7 @@ describe PostRevisor do
       topic.reload
 
       expect(topic.solved).to be_present
-      expect(topic.solved.answer_post_id).to eq(reply.id)
+      expect(topic.solved.topic_answers.first.answer_post_id).to eq(reply.id)
     end
 
     it "unaccepts answer when both category changes to unsolved and solved tag is removed" do
@@ -136,6 +136,26 @@ describe PostRevisor do
 
       described_class.new(post).revise!(admin, { category_id: category.id, tags: [] })
       expect(topic.reload.solved).to be_nil
+    end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+      it "unaccepts all answers when both category changes to unsolved and solved tag is removed" do
+        topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
+        post = Fabricate(:post, topic: topic)
+        reply = Fabricate(:post, topic: topic, post_number: 2)
+        reply2 = Fabricate(:post, topic: topic)
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, guardian: admin.guardian)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: reply2.id,
+          },
+          guardian: admin.guardian,
+        )
+
+        described_class.new(post).revise!(admin, { category_id: category.id, tags: [] })
+        expect(topic.reload.solved).to be_nil
+      end
     end
   end
 

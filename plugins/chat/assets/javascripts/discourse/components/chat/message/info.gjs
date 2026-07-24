@@ -5,12 +5,12 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import UserStatusMessage from "discourse/components/user-status-message";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { and, eq, not } from "discourse/truth-helpers";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
@@ -111,7 +111,7 @@ export default class ChatMessageInfo extends Component {
         {{#if @message.chatWebhookEvent}}
           {{#if @message.chatWebhookEvent.username}}
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "chat-message-info__username"
                 this.usernameClasses
               }}
@@ -126,7 +126,7 @@ export default class ChatMessageInfo extends Component {
         {{else}}
           <span
             role="button"
-            class={{concatClass
+            class={{dConcatClass
               "chat-message-info__username"
               this.usernameClasses
               "clickable"
@@ -136,7 +136,7 @@ export default class ChatMessageInfo extends Component {
             <span class="chat-message-info__username__name">{{this.name}}</span>
             {{#if this.showStatus}}
               <span class="chat-message-info__status">
-                <UserStatusMessage @status={{@message.user.status}} />
+                <DUserStatusMessage @status={{@message.user.status}} />
               </span>
             {{/if}}
           </span>
@@ -161,7 +161,7 @@ export default class ChatMessageInfo extends Component {
               class="chat-message-info__pinned"
               title={{i18n "chat.pinned"}}
             >
-              {{icon "thumbtack"}}
+              {{dIcon "thumbtack"}}
             </span>
           {{/if}}
         {{/if}}
@@ -170,10 +170,10 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
               <LinkTo @route="review.show" @model={{@message.reviewableId}}>
-                {{icon "flag" title="chat.flagged"}}
+                {{dIcon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
-              {{icon "flag" title="chat.you_flagged"}}
+              {{dIcon "flag" title="chat.you_flagged"}}
             {{/if}}
           </span>
         {{/if}}

@@ -23,7 +23,10 @@ module Jobs
       # NOTE: Only Topics are supported for now, in future we will need a more flexible
       # way of doing this.
       if conversation.target_type == "Topic"
-        rebaked_posts = TopicUploadSecurityManager.new(conversation.target).run
+        topic = conversation.target_topic
+        return if topic.blank?
+
+        rebaked_posts = TopicUploadSecurityManager.new(topic).run
 
         if rebaked_posts.any?
           new_context =
@@ -42,8 +45,9 @@ module Jobs
       # NOTE: Only Topics are supported for now, in future we will need a more flexible
       # way of doing this.
       if target_type == "Topic"
-        topic = target_type.constantize.find_by(id: target_id)
+        topic = Topic.with_deleted.find_by(id: target_id)
         return if topic.blank?
+
         TopicUploadSecurityManager.new(topic).run
       end
     end

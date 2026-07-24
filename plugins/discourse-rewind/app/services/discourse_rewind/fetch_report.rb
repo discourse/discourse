@@ -39,7 +39,7 @@ module DiscourseRewind
     private
 
     def fetch_date(params:, year:)
-      Date.new(year).all_year
+      Time.zone.local(year).all_year
     end
 
     def fetch_report(params:, for_user:, year:, date:)

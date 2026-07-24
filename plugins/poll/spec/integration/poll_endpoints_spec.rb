@@ -261,7 +261,7 @@ RSpec.describe "DiscoursePoll endpoints" do
           user,
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          [user_votes["user_#{index}".to_sym]],
+          [user_votes[:"user_#{index}"]],
         )
         DiscoursePoll::Poll.vote(
           user,
@@ -396,7 +396,7 @@ RSpec.describe "DiscoursePoll endpoints" do
             user,
             private_post.id,
             DiscoursePoll::DEFAULT_POLL_NAME,
-            [user_votes["user_#{index}".to_sym]],
+            [user_votes[:"user_#{index}"]],
           )
           UserCustomField.create(
             user_id: user.id,

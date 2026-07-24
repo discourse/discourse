@@ -13,6 +13,9 @@ id:
             topic_id:
               label: ID Topik
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Obrolan"
       invite_user_notification: "%{username} mengundang Anda ke: %{description}"
       on_holiday: "Saat Liburan"
       disable_holiday: "Nonaktifkan"
@@ -71,6 +74,9 @@ id:
     group_timezones:
       search: "Cari..."
     discourse_post_event:
+      event_description:
+        show_more: "Tampilkan lebih banyak"
+        show_less: "Tampilkan lebih sedikit"
       bulk_invite_modal:
         confirm: "konfirmasi"
         success: "File telah sukses diunggah, anda akan mendapat pesan pemberitahuan saat proses telah selesai."
@@ -85,6 +91,15 @@ id:
               title: "Umum"
             private:
               title: "Pribadi"
+      composer:
+        reminder:
+          units:
+            minutes:
+              other: "menit"
+            hours:
+              other: "jam"
+            days:
+              other: "hari"
       builder_modal:
         custom_fields:
           placeholder: "Opsional"
@@ -99,11 +114,12 @@ id:
             days: "hari"
         recurrence:
           every_day: "Setiap hari"
-        url:
-          placeholder: "Opsional"
-        location:
-          label: "Lokasi"
+          ordinals:
+            last: "terakhir"
+        attendance:
+          none: "Tidak ada"
         description:
           label: "Deskripsi"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Umum"

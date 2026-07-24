@@ -49,7 +49,7 @@ RSpec.describe NestedTopic::TogglePin do
     context "when pin limit is reached" do
       before do
         Fabricate(:nested_topic, topic: topic).update!(
-          pinned_post_ids: Array.new(NestedTopic::MAX_PINNED_POSTS) { |i| i + 1000 },
+          pinned_post_ids: Array.new(NestedTopic::MAX_PINNED_POSTS) { |i| post.id + i + 1 },
         )
       end
 
@@ -86,7 +86,7 @@ RSpec.describe NestedTopic::TogglePin do
       context "when pin limit is reached but post is already pinned" do
         before do
           Fabricate(:nested_topic, topic: topic).update!(
-            pinned_post_ids: [post.id] + Array.new(9) { |i| i + 1000 },
+            pinned_post_ids: [post.id] + Array.new(9) { |i| post.id + i + 1 },
           )
         end
 

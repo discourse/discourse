@@ -59,7 +59,7 @@ let signups = {
   prev_end_date: "2018-06-17T00:00:00Z",
   prev30Days: null,
   dates_filtering: true,
-  report_key: "reports:signups:start:end:[:prev_period]:4",
+  report_key: `reports:signups:start:end:[:prev_period]:${SCHEMA_VERSION}`,
   available_filters: [
     {
       id: "group",
@@ -83,27 +83,24 @@ let signups = {
 let signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_exception";
 signups_fixture.error = "exception";
-signups_fixture.report_key =
-  "reports:signups_exception:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:signups_exception:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_exception = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_timeout";
 signups_fixture.error = "timeout";
-signups_fixture.report_key =
-  "reports:signups_timeout:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:signups_timeout:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_timeout = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "not_found";
 signups_fixture.error = "not_found";
-signups_fixture.report_key = "reports:not_found:start:end:[:prev_period]:4";
+signups_fixture.report_key = `reports:not_found:start:end:[:prev_period]:${SCHEMA_VERSION}`;
 const signups_not_found = signups_fixture;
 
 signups_fixture = JSON.parse(JSON.stringify(signups));
 signups_fixture.type = "signups_with_groups";
-signups_fixture.report_key =
-  'reports:signups_with_groups:start:end:[:prev_period]:50:{"group":"88"}:4';
+signups_fixture.report_key = `reports:signups_with_groups:start:end:[:prev_period]:50:{"group":"88"}:${SCHEMA_VERSION}`;
 const signups_with_group = signups_fixture;
 
 const startDate = moment()
@@ -154,10 +151,10 @@ const page_view_total_reqs = {
   total: 921672,
 };
 
-const staff_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
-staff_logins.type = "staff_logins";
-staff_logins.modes = ["table"];
-staff_logins.report_key = `reports:staff_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
+const admin_logins = JSON.parse(JSON.stringify(page_view_total_reqs));
+admin_logins.type = "admin_logins";
+admin_logins.modes = ["table"];
+admin_logins.report_key = `reports:admin_logins:start:end:[:prev_period]:50:${SCHEMA_VERSION}`;
 
 const reportsBulkFixtures = {
   "/admin/reports/bulk": {
@@ -168,7 +165,7 @@ const reportsBulkFixtures = {
       signups_exception,
       signups_timeout,
       page_view_total_reqs,
-      staff_logins,
+      admin_logins,
     ],
   },
 };

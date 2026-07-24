@@ -63,9 +63,9 @@ RSpec.describe Jobs::SharedConversationAdjustUploadSecurity do
       run_job
     end
 
-    it "doesn't attempt to run the topic upload security manager if the topic has been deleted" do
-      TopicUploadSecurityManager.any_instance.expects(:run).never
+    it "runs the topic upload security manager if the topic has been trashed" do
       topic.trash!
+      TopicUploadSecurityManager.any_instance.expects(:run).once
       run_job
     end
   end

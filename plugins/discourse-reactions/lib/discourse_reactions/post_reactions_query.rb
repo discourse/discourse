@@ -2,16 +2,37 @@
 
 module DiscourseReactions
   class PostReactionsQuery
-    def self.call(post:, reaction_filter: nil, limit: 30, offset: 0)
-      query = new(post: post, reaction_filter: reaction_filter, limit: limit, offset: offset)
+    def self.call(post:, reaction_filter: nil, limit: 30, offset: 0, current_user_id: nil)
+      query =
+        new(
+          post: post,
+          reaction_filter: reaction_filter,
+          limit: limit,
+          offset: offset,
+          current_user_id: current_user_id,
+        )
       [query.rows, query.total]
     end
 
-    def initialize(post:, reaction_filter: nil, limit: 30, offset: 0)
+    def self.apply_ignored_users_filter(scope, user_column:, current_user_id:)
+      return scope if current_user_id.blank?
+
+      scope.where(<<~SQL, current_user_id: current_user_id)
+        NOT EXISTS (
+          SELECT 1 FROM ignored_users ig
+          WHERE ig.user_id = :current_user_id
+            AND ig.ignored_user_id = #{user_column}
+            AND ig.ignored_user_id <> :current_user_id
+        )
+      SQL
+    end
+
+    def initialize(post:, reaction_filter: nil, limit: 30, offset: 0, current_user_id: nil)
       @post = post
       @reaction_filter = reaction_filter
       @limit = limit
       @offset = offset
+      @current_user_id = current_user_id
     end
 
     def rows
@@ -45,25 +66,28 @@ module DiscourseReactions
     def total
       @total ||=
         if specific_reaction?
-          ReactionUser
-            .joins(:reaction)
-            .where(
+          filter_ignored_users(
+            ReactionUser.joins(:reaction).where(
               post_id: post.id,
               discourse_reactions_reactions: {
                 reaction_value: reaction_filter,
               },
-            )
-            .count
+            ),
+            user_column: "discourse_reactions_reaction_users.user_id",
+          ).count
         elsif main_reaction_filter?
           plain_likes_scope.count
         else
-          ReactionUser.where(post_id: post.id).count + plain_likes_scope.count
+          filter_ignored_users(
+            ReactionUser.where(post_id: post.id),
+            user_column: "discourse_reactions_reaction_users.user_id",
+          ).count + plain_likes_scope.count
         end
     end
 
     private
 
-    attr_reader :post, :reaction_filter, :limit, :offset
+    attr_reader :post, :reaction_filter, :limit, :offset, :current_user_id
 
     def main_reaction
       @main_reaction ||= Reaction.main_reaction_id
@@ -92,11 +116,13 @@ module DiscourseReactions
         main_reaction: main_reaction,
         limit: limit,
         offset: offset,
+        current_user_id: current_user_id,
       }
     end
 
     def plain_likes_scope
-      PostAction.where(post_id: post.id).where(shadow_like_filter, like: like_type)
+      scope = PostAction.where(post_id: post.id).where(shadow_like_filter, like: like_type)
+      filter_ignored_users(scope, user_column: "post_actions.user_id")
     end
 
     def reactions_select_sql
@@ -107,6 +133,7 @@ module DiscourseReactions
         INNER JOIN discourse_reactions_reactions dr ON dr.id = drru.reaction_id
         INNER JOIN users u ON u.id = drru.user_id
         WHERE drru.post_id = :post_id
+        #{ignored_users_filter_sql("drru.user_id")}
       SQL
     end
 
@@ -118,7 +145,29 @@ module DiscourseReactions
         INNER JOIN users u ON u.id = post_actions.user_id
         WHERE post_actions.post_id = :post_id
           AND (#{shadow_like_filter})
+        #{ignored_users_filter_sql("post_actions.user_id")}
       SQL
+    end
+
+    def ignored_users_filter_sql(user_column)
+      return "" if current_user_id.blank?
+
+      <<~SQL
+        AND NOT EXISTS (
+          SELECT 1 FROM ignored_users ig
+          WHERE ig.user_id = :current_user_id
+            AND ig.ignored_user_id = #{user_column}
+            AND ig.ignored_user_id <> :current_user_id
+        )
+      SQL
+    end
+
+    def filter_ignored_users(scope, user_column:)
+      self.class.apply_ignored_users_filter(
+        scope,
+        user_column: user_column,
+        current_user_id: current_user_id,
+      )
     end
   end
 end

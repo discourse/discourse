@@ -32,7 +32,7 @@ const adminSearchFixtures = {
     ],
     reports: [
       {
-        type: "staff_logins",
+        type: "admin_logins",
         title: "Admin Logins",
         description: "List of admin login times with locations.",
         description_link: null,

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
@@ -8,6 +7,7 @@ import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { and, not } from "discourse/truth-helpers";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -61,7 +61,7 @@ export default class Results extends Component {
 
   <template>
     {{#unless this.inTopicContext}}
-      <ConditionalLoadingSection @isLoading={{this.loading}}>
+      <DConditionalLoadingSection @isLoading={{this.loading}}>
         <div class="results">
           <PluginOutlet
             @name="search-menu-results-top"
@@ -146,7 +146,7 @@ export default class Results extends Component {
             }}
           />
         </div>
-      </ConditionalLoadingSection>
+      </DConditionalLoadingSection>
     {{/unless}}
   </template>
 }

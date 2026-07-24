@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include TagParamLimit
+
   # Bug with Rails 7+
   # see https://github.com/rails/rails/issues/44867
   self._flash_types -= [:notice]
@@ -41,6 +43,8 @@ class PostsController < ApplicationController
   end
 
   def latest
+    discourse_expires_in 1.minute
+
     params.permit(:before)
     last_post_id = params[:before].to_i
     last_post_id = nil if last_post_id <= 0
@@ -114,6 +118,7 @@ class PostsController < ApplicationController
             add_excerpt: true,
             add_title: true,
             all_post_actions: counts,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
           ),
         )
       end
@@ -149,7 +154,15 @@ class PostsController < ApplicationController
       end
 
       format.json do
-        render_json_dump(serialize_data(posts, PostSerializer, scope: guardian, add_excerpt: true))
+        render_json_dump(
+          serialize_data(
+            posts,
+            PostSerializer,
+            scope: guardian,
+            add_excerpt: true,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
+          ),
+        )
       end
     end
   end
@@ -161,6 +174,7 @@ class PostsController < ApplicationController
   def raw_email
     params.require(:id)
     post = Post.unscoped.find(params[:id].to_i)
+    guardian.ensure_can_see!(post)
     guardian.ensure_can_view_raw_email!(post)
     text, html = Email.extract_parts(post.raw_email)
     render json: { raw_email: post.raw_email, text_part: text, html_part: html }
@@ -181,6 +195,8 @@ class PostsController < ApplicationController
   end
 
   def create
+    return if reject_too_many_tags!(:tags)
+
     manager_params = create_params
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
@@ -571,15 +587,14 @@ class PostsController < ApplicationController
   def revert
     raise Discourse::NotFound unless guardian.is_staff?
 
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
-    raise Discourse::NotFound unless post_revision
-
     post = find_post_from_params
     raise Discourse::NotFound if post.blank?
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
@@ -799,29 +814,30 @@ class PostsController < ApplicationController
   end
 
   def find_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
+    post = find_post_from_params
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
   end
 
   def find_latest_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
+    post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post_id).order(:number)
+    finder = PostRevision.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision

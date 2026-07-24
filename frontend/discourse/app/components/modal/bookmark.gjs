@@ -9,14 +9,6 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
-import DModal, {
-  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-} from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
-import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import discourseLater from "discourse/lib/later";
@@ -28,6 +20,14 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DModal, {
+  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+} from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
+import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
@@ -48,7 +48,6 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
   @tracked flash = null;
-  @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
   @tracked _closeWithoutSaving = false;
   @tracked _savingBookmarkManually = false;
@@ -194,11 +193,6 @@ export default class BookmarkModal extends Component {
       .finally(() => {
         this._saving = false;
       });
-  }
-
-  @action
-  toggleShowOptions() {
-    this.showOptions = !this.showOptions;
   }
 
   @action
@@ -384,7 +378,7 @@ export default class BookmarkModal extends Component {
       </:headerPrimaryAction>
 
       <:body>
-        <div class="control-group bookmark-name-wrap">
+        <div class="control-group">
           <Input
             id="bookmark-name"
             @value={{this.bookmark.name}}
@@ -393,34 +387,25 @@ export default class BookmarkModal extends Component {
             placeholder={{i18n "post.bookmarks.name_placeholder"}}
             aria-label={{i18n "post.bookmarks.name_input_label"}}
           />
-          <DButton
-            @icon="gear"
-            @action={{this.toggleShowOptions}}
-            @ariaLabel="post.bookmarks.options"
-            @title="post.bookmarks.options"
-            class="bookmark-options-button"
+        </div>
+
+        <div class="bookmark-options-panel">
+          <label
+            class="control-label"
+            for="bookmark_auto_delete_preference"
+          >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
+          <ComboBox
+            @content={{this.autoDeletePreferences}}
+            @value={{this.bookmark.autoDeletePreference}}
+            @id="bookmark-auto-delete-preference"
+            @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
+            class="bookmark-option-selector"
           />
         </div>
 
-        {{#if this.showOptions}}
-          <div class="bookmark-options-panel">
-            <label
-              class="control-label"
-              for="bookmark_auto_delete_preference"
-            >{{i18n "bookmarks.auto_delete_preference.label"}}</label>
-            <ComboBox
-              @content={{this.autoDeletePreferences}}
-              @value={{this.bookmark.autoDeletePreference}}
-              @id="bookmark-auto-delete-preference"
-              @onChange={{fn (mut this.bookmark.autoDeletePreference)}}
-              class="bookmark-option-selector"
-            />
-          </div>
-        {{/if}}
-
         {{#if this.showExistingReminderAt}}
           <div class="alert alert-info existing-reminder-at-alert">
-            {{icon "far-clock"}}
+            {{dIcon "far-clock"}}
             <span>{{i18n
                 "bookmarks.reminders.existing_reminder"
                 at_date_time=this.existingReminderAtFormatted
@@ -434,7 +419,7 @@ export default class BookmarkModal extends Component {
           </label>
 
           {{#if this.userHasTimezoneSet}}
-            <TimeShortcutPicker
+            <DTimeShortcutPicker
               @timeShortcuts={{this.timeOptions}}
               @prefilledDatetime={{this.prefilledDatetime}}
               @onTimeSelected={{this.onTimeSelected}}
@@ -444,7 +429,7 @@ export default class BookmarkModal extends Component {
             />
           {{else}}
             <div class="alert alert-info">{{trustHTML
-                (i18n "bookmarks.no_timezone" basePath=(basePath))
+                (i18n "bookmarks.no_timezone" basePath=(dBasePath))
               }}</div>
           {{/if}}
         </div>

@@ -87,6 +87,54 @@ RSpec.describe UserGuardian do
         expect(guardian.can_claim_reviewable_topic?(topic, true)).to eq(true)
       end
     end
+
+    context "with category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      let(:guardian) { Guardian.new(cat_mod_user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+      end
+
+      it "returns false for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(private_topic)).to eq(false)
+      end
+
+      it "returns false for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(private_topic, true)).to eq(false)
+      end
+    end
+
+    context "with category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      let(:guardian) { Guardian.new(cat_mod_user) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+      end
+
+      it "returns true for non-automatic requests" do
+        SiteSetting.reviewable_claiming = "optional"
+        expect(guardian.can_claim_reviewable_topic?(private_topic)).to eq(true)
+      end
+
+      it "returns true for automatic requests" do
+        expect(guardian.can_claim_reviewable_topic?(private_topic, true)).to eq(true)
+      end
+    end
   end
 
   describe "#can_pick_avatar?" do
@@ -149,6 +197,29 @@ RSpec.describe UserGuardian do
   describe "#can_see_user?" do
     it "is always true" do
       expect(Guardian.new.can_see_user?(anything)).to eq(true)
+    end
+  end
+
+  describe "#can_see_bookmarks?" do
+    fab!(:target_user, :user)
+    fab!(:other_user, :user)
+    fab!(:bookmark_moderator, :moderator)
+    fab!(:bookmark_admin, :admin)
+
+    it "allows only the target user and admins" do
+      aggregate_failures do
+        expect(Guardian.new(target_user).can_see_bookmarks?(target_user)).to eq(true)
+        expect(Guardian.new(bookmark_admin).can_see_bookmarks?(target_user)).to eq(true)
+        expect(Guardian.new(other_user).can_see_bookmarks?(target_user)).to eq(false)
+        expect(Guardian.new(bookmark_moderator).can_see_bookmarks?(target_user)).to eq(false)
+        expect(Guardian.new.can_see_bookmarks?(target_user)).to eq(false)
+      end
+    end
+
+    it "raises when the viewer cannot see bookmarks" do
+      expect {
+        Guardian.new(bookmark_moderator).ensure_can_see_bookmarks!(target_user)
+      }.to raise_error(Discourse::InvalidAccess)
     end
   end
 
@@ -461,6 +532,7 @@ RSpec.describe UserGuardian do
 
       it "isn't allowed when SSO is enabled" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         expect(guardian.can_delete_user?(user)).to eq(false)
       end

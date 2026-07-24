@@ -150,6 +150,35 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
+  test("restores the resized height when resuming a minimized draft", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "this draft has been resized");
+
+    // drag past the minimum so the height clamps to a known value
+    await triggerEvent(".grippie", "mousedown", { clientY: 500 });
+    await triggerEvent(".grippie", "mousemove", { clientY: 3000 });
+    await triggerEvent(".grippie", "mouseup");
+
+    const resizedHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+    assert.strictEqual(resizedHeight, "255px", "applies the dragged height");
+
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "40px",
+      "minimizes to the draft bar"
+    );
+
+    await click(".toggle-fullscreen");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "restores the resized height instead of the default when resumed"
+    );
+  });
+
   test("fires resize event after width transition", async function (assert) {
     await visit("/");
     await click("#create-topic");
@@ -373,7 +402,7 @@ acceptance(`Composer`, function (needs) {
     await click(".topic-post[data-post-number='1'] button.edit");
 
     await click(".d-modal__footer .discard-draft-modal__cancel-btn");
-    assert.dom(".discard-draft-modal.modal").doesNotExist();
+    assert.dom(".discard-draft-modal.d-modal").doesNotExist();
     assert
       .dom(".d-editor-input")
       .hasValue(
@@ -383,7 +412,7 @@ acceptance(`Composer`, function (needs) {
 
     await click(".topic-post[data-post-number='1'] button.edit");
     await click(".d-modal__footer .discard-draft-modal__discard-btn");
-    assert.dom(".discard-draft-modal.modal").doesNotExist();
+    assert.dom(".discard-draft-modal.d-modal").doesNotExist();
 
     assert
       .dom(".d-editor-input")
@@ -401,10 +430,10 @@ acceptance(`Composer`, function (needs) {
 
     await visit("/t/this-is-a-test-topic/9");
     await click("#topic-footer-buttons .create");
-    assert.dom(".discard-draft-modal.modal").exists();
+    assert.dom(".discard-draft-modal.d-modal").exists();
 
     await click(".d-modal__footer .discard-draft-modal__cancel-btn");
-    assert.dom(".discard-draft-modal.modal").doesNotExist();
+    assert.dom(".discard-draft-modal.d-modal").doesNotExist();
 
     assert
       .dom(".d-editor-input")
@@ -462,14 +491,16 @@ acceptance(`Composer`, function (needs) {
     );
     await click("#topic-footer-buttons .btn.create");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("pops up the discard drafts modal");
 
     await click(".d-modal__footer .discard-draft-modal__cancel-btn");
 
-    assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+    assert.dom(".discard-draft-modal.d-modal").doesNotExist("hides modal");
     await click("#topic-footer-buttons .btn.create");
-    assert.dom(".discard-draft-modal.modal").exists("pops up the modal again");
+    assert
+      .dom(".discard-draft-modal.d-modal")
+      .exists("pops up the modal again");
 
     await click(".d-modal__footer .discard-draft-modal__discard-btn");
 
@@ -505,12 +536,12 @@ acceptance(`Composer`, function (needs) {
 
     await click("#reply-control .discard-button");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("shows Discard draft confirmation modal");
 
     await click(".d-modal__footer .discard-draft-modal__cancel-btn");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .doesNotExist("hides modal on Cancel button click");
     assert
       .dom(".d-editor-input")
@@ -528,12 +559,12 @@ acceptance(`Composer`, function (needs) {
 
     await click("#reply-control .discard-button");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("pops up the discard drafts modal");
 
     await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .doesNotExist("hides modal on Esc key stroke");
 
     await fillIn(
@@ -681,7 +712,7 @@ acceptance(`Composer`, function (needs) {
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".topic-post[data-post-number='2'] button.edit");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("pops up a confirmation dialog");
 
     await click(".d-modal__footer .discard-draft-modal__discard-btn");
@@ -949,7 +980,7 @@ acceptance(`Composer`, function (needs) {
     await click(".toggler");
     await click(".topic-post[data-post-number='2'] button.edit");
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("pops up a confirmation dialog");
     assert
       .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
@@ -973,7 +1004,7 @@ acceptance(`Composer`, function (needs) {
     await click("#create-topic");
 
     assert
-      .dom(".discard-draft-modal.modal")
+      .dom(".discard-draft-modal.d-modal")
       .exists("pops up a confirmation dialog");
     assert
       .dom(".d-modal__footer .discard-draft-modal__discard-btn")
@@ -1461,7 +1492,7 @@ acceptance(`Composer - default category not set`, function (needs) {
     assert.strictEqual(selectKit(".category-chooser").header().value(), null);
     assert.strictEqual(
       selectKit(".category-chooser").header().name(),
-      "category&hellip;"
+      i18n("category.choose")
     );
   });
 });

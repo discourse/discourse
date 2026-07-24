@@ -24,11 +24,42 @@ const setDefaultState = (ctx, options = {}) => {
   ctx.setProperties(properties);
 };
 
-module("Integration | Component | select-kit/combo-box", function (hooks) {
+module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.set("subject", selectKit());
+  });
+
+  test("selecting a row with a blank value", async function (assert) {
+    setDefaultState(this, {
+      content: [{ value: "", name: "default" }, ...DEFAULT_CONTENT],
+      value: "latest",
+      onChange: (value) => this.set("value", value),
+    });
+
+    await render(
+      <template>
+        <ComboBox
+          @content={{this.content}}
+          @value={{this.value}}
+          @valueProperty="value"
+          @nameProperty="name"
+          @onChange={{this.onChange}}
+          @options={{hash castInteger=true}}
+        />
+      </template>
+    );
+
+    await this.subject.expand();
+    await this.subject.selectRowByValue("");
+
+    assert.strictEqual(this.value, "", "onChange receives the blank value");
+    assert.strictEqual(
+      this.subject.header().name(),
+      "default",
+      "the blank-value row displays as selected before any save"
+    );
   });
 
   test("options.clearable", async function (assert) {

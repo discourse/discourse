@@ -23,4 +23,23 @@
       font-weight: bold;
     }
   }
+
+  &.--compact {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 0;
+
+    .d-stat-tile {
+      padding: 0.25em 0.5em;
+
+      &__label {
+        font-size: var(--font-down-2);
+        margin-bottom: 0;
+      }
+
+      &__value {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
 }

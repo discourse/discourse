@@ -76,7 +76,7 @@ const setDefaultState = (ctx, options = {}) => {
 };
 
 module(
-  "Integration | Component | select-kit/color-palette-picker",
+  "Integration | Component | SelectKit | ColorPalettePicker",
   function (hooks) {
     setupRenderingTest(hooks);
 

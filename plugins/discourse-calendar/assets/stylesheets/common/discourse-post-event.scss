@@ -5,6 +5,23 @@ $show-interested: inherit;
   display: none;
 }
 
+.discourse-post-event-onebox {
+  display: block;
+  margin: var(--space-4) 0;
+}
+
+.discourse-post-event-onebox .discourse-post-event-widget,
+.discourse-post-event--preview .discourse-post-event-widget {
+  box-shadow: 0 0 0 3px var(--primary-100);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  margin: var(--space-1) 0;
+}
+
+.composer-onebox-node {
+  white-space: normal;
+}
+
 .discourse-post-event {
   display: flex;
   justify-content: center;
@@ -148,7 +165,7 @@ $show-interested: inherit;
 
     .month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -244,11 +261,20 @@ $show-interested: inherit;
         flex: 1;
       }
 
+      .going-button.d-combo-button {
+        flex: 1;
+
+        .d-combo-button-menu {
+          flex: 0 0 auto;
+        }
+      }
+
       .interested-button {
         display: $show-interested;
       }
 
-      &.status-going .going-button .d-icon {
+      &.status-going .going-button > .d-icon,
+      &.status-going .going-button .d-combo-button-button .d-icon {
         color: var(--success);
       }
 
@@ -406,6 +432,10 @@ $show-interested: inherit;
     }
   }
 
+  .event-location a {
+    overflow-wrap: anywhere;
+  }
+
   .event-description {
     align-items: start;
     padding-right: 2em;
@@ -448,6 +478,14 @@ $show-interested: inherit;
       max-width: 80%;
 
       @include ellipsis;
+    }
+  }
+
+  .event-livestream {
+    padding-top: 0;
+
+    button {
+      width: 100%;
     }
   }
 
@@ -495,6 +533,12 @@ $show-interested: inherit;
   }
 }
 
+.discourse-post-event-going-menu-content {
+  .--selected .d-icon {
+    color: var(--success);
+  }
+}
+
 .event-dates {
   // hardcoded as cooking date is async and will change height after initial rendering otherwise
   // not ideal but a decent low tech solution
@@ -515,5 +559,31 @@ $show-interested: inherit;
     color: var(--primary-high);
     margin: 0 0.5em;
     text-align: center;
+  }
+}
+
+.discourse-post-event {
+  .event__placeholder {
+    display: inline-block;
+    border-radius: var(--d-border-radius, 0.25em);
+    background-color: var(--primary-low);
+  }
+
+  .event__placeholder--text {
+    width: 8em;
+    height: 0.9em;
+    vertical-align: middle;
+  }
+
+  .event__placeholder--avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  .event__placeholder--button {
+    width: 5em;
+    height: 2em;
+    margin-right: 0.5em;
   }
 }

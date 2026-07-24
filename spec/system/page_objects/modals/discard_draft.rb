@@ -5,11 +5,11 @@ module PageObjects
       MODAL_SELECTOR = ".discard-draft-modal"
 
       def open?
-        has_css?(".modal.d-modal#{MODAL_SELECTOR}")
+        has_css?(".d-modal#{MODAL_SELECTOR}")
       end
 
       def closed?
-        has_no_css?(".modal.d-modal#{MODAL_SELECTOR}")
+        has_no_css?(".d-modal#{MODAL_SELECTOR}")
       end
 
       def click_discard

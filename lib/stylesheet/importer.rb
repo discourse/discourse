@@ -16,7 +16,7 @@ module Stylesheet
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
-        ["", "mobile", "desktop"].each do |type|
+        ["", "mobile", "desktop", "admin"].each do |type|
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
           stylesheets =
             (
@@ -64,23 +64,14 @@ module Stylesheet
 
         CSS
 
-      if SiteSetting.rich_editor
-        contents << <<~CSS
-          #{font_css(jetbrains_mono)}
-          #{render_font_special_properties(jetbrains_mono, "body")}
-          :root {
-            --d-font-family--monospace: #{jetbrains_mono[:stack]};
-          }
+      contents << <<~CSS
+        #{font_css(jetbrains_mono)}
+        #{render_font_special_properties(jetbrains_mono, "body")}
+        :root {
+          --d-font-family--monospace: #{jetbrains_mono[:stack]};
+        }
 
-        CSS
-      else
-        contents << <<~CSS
-          :root {
-            --d-font-family--monospace: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", menlo, monaco, consolas, monospace;
-          }
-
-        CSS
-      end
+      CSS
 
       contents
     end
@@ -164,7 +155,7 @@ module Stylesheet
           rescue StandardError
             ColorScheme.base_colors
           end
-      elsif (@theme_id && !theme.component)
+      elsif @theme_id && !theme.component
         colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,

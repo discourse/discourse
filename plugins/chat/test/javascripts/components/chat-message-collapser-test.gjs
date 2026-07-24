@@ -1,7 +1,6 @@
-import { click, render, settled, waitFor } from "@ember/test-helpers";
+import { click, findAll, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import ChatMessageCollapser from "discourse/plugins/chat/discourse/components/chat-message-collapser";
 
 const youtubeCooked =
@@ -91,7 +90,7 @@ module("Component | chat message collapser youtube", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const link = queryAll(".chat-message-collapser-link");
+    const link = findAll(".chat-message-collapser-link");
 
     assert.strictEqual(link.length, 2, "two youtube links rendered");
     assert
@@ -110,7 +109,7 @@ module("Component | chat message collapser youtube", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const text = queryAll(".chat-message-collapser p");
+    const text = findAll(".chat-message-collapser p");
 
     assert.strictEqual(text.length, 3, "shows all written text");
     assert.dom(text[0]).hasText("written text", "first line of written text");
@@ -127,7 +126,7 @@ module("Component | chat message collapser youtube", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const youtubeDivs = queryAll(".youtube-onebox");
+    const youtubeDivs = findAll(".youtube-onebox");
 
     assert.strictEqual(youtubeDivs.length, 2, "two youtube previews rendered");
 
@@ -144,7 +143,7 @@ module("Component | chat message collapser youtube", function (hooks) {
 
     assert.strictEqual(youtubeDivs.length, 2, "two youtube previews rendered");
 
-    await click(queryAll(".chat-message-collapser-opened")[1]);
+    await click(findAll(".chat-message-collapser-opened")[1]);
 
     assert
       .dom(".youtube-onebox[data-video-id='ytId1']")
@@ -285,7 +284,7 @@ module("Component | chat message collapser animated image", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const links = queryAll("a.chat-message-collapser-link-small");
+    const links = findAll("a.chat-message-collapser-link-small");
 
     assert.dom(links[0]).includesText("avatar.png");
     assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
@@ -303,7 +302,7 @@ module("Component | chat message collapser animated image", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const text = queryAll(".chat-message-collapser p");
+    const text = findAll(".chat-message-collapser p");
 
     assert.strictEqual(text.length, 5, "shows all written text");
     assert.dom(text[0]).hasText("written text");
@@ -318,7 +317,7 @@ module("Component | chat message collapser animated image", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const animatedOneboxes = queryAll(".animated.onebox");
+    const animatedOneboxes = findAll(".animated.onebox");
 
     assert.strictEqual(animatedOneboxes.length, 2, "two oneboxes rendered");
 
@@ -335,7 +334,7 @@ module("Component | chat message collapser animated image", function (hooks) {
 
     assert.strictEqual(animatedOneboxes.length, 2, "two oneboxes rendered");
 
-    await click(queryAll(".chat-message-collapser-opened")[1]);
+    await click(findAll(".chat-message-collapser-opened")[1]);
 
     assert
       .dom(".onebox[src='/images/avatar.png']")
@@ -362,7 +361,7 @@ module(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
       );
 
-      const links = queryAll("a.chat-message-collapser-link-small");
+      const links = findAll("a.chat-message-collapser-link-small");
 
       assert.dom(links[0]).includesText("http://cat1.com");
       assert.dom(links[0]).hasAttribute("href", "http://cat1.com/");
@@ -378,7 +377,7 @@ module(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
       );
 
-      const text = queryAll(".chat-message-collapser p");
+      const text = findAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 5, "shows all written text");
       assert.dom(text[0]).hasText("written text");
@@ -393,7 +392,7 @@ module(
         <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
       );
 
-      const imageOneboxes = queryAll(".onebox");
+      const imageOneboxes = findAll(".onebox");
 
       assert.strictEqual(imageOneboxes.length, 2, "two oneboxes rendered");
 
@@ -410,7 +409,7 @@ module(
 
       assert.strictEqual(imageOneboxes.length, 2, "two oneboxes rendered");
 
-      await click(queryAll(".chat-message-collapser-opened")[1]);
+      await click(findAll(".chat-message-collapser-opened")[1]);
 
       assert
         .dom(".onebox[href='http://cat1.com']")
@@ -436,7 +435,7 @@ module("Component | chat message collapser images", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const links = queryAll("a.chat-message-collapser-link-small");
+    const links = findAll("a.chat-message-collapser-link-small");
 
     assert.dom(links[0]).includesText("shows alt");
     assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
@@ -454,7 +453,7 @@ module("Component | chat message collapser images", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const text = queryAll(".chat-message-collapser p");
+    const text = findAll(".chat-message-collapser p");
 
     assert.strictEqual(text.length, 6, "shows all written text");
     assert.dom(text[0]).hasText("written text");
@@ -469,7 +468,7 @@ module("Component | chat message collapser images", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const images = queryAll("img");
+    const images = findAll("img");
 
     assert.strictEqual(images.length, 3);
 
@@ -486,7 +485,7 @@ module("Component | chat message collapser images", function (hooks) {
 
     assert.strictEqual(images.length, 3);
 
-    await click(queryAll(".chat-message-collapser-opened")[1]);
+    await click(findAll(".chat-message-collapser-opened")[1]);
 
     assert
       .dom("img[src='/images/avatar.png']")
@@ -507,9 +506,9 @@ module("Component | chat message collapser images", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const links = queryAll("a.chat-message-collapser-link-small");
-    const images = queryAll("img");
-    const collapser = queryAll(".chat-message-collapser-opened");
+    const links = findAll("a.chat-message-collapser-link-small");
+    const images = findAll("img");
+    const collapser = findAll(".chat-message-collapser-opened");
 
     assert.strictEqual(links.length, 2);
     assert.strictEqual(images.length, 3, "shows images and emoji");
@@ -566,7 +565,7 @@ module("Component | chat message collapser galleries", function (hooks) {
       <template><ChatMessageCollapser @cooked={{this.cooked}} /></template>
     );
 
-    const text = queryAll(".chat-message-collapser p");
+    const text = findAll(".chat-message-collapser p");
 
     assert.strictEqual(text.length, 2, "shows all written text");
     assert.dom(text[0]).hasText("written text");

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarCloseThreadButton extends Component {
@@ -15,7 +15,7 @@ export default class ChatNavbarCloseThreadButton extends Component {
         @models={{@thread.channel.routeModels}}
         title={{i18n "chat.thread.close"}}
       >
-        {{icon "xmark"}}
+        {{dIcon "xmark"}}
       </LinkTo>
     {{/if}}
   </template>

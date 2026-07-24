@@ -15,13 +15,18 @@ vi:
       title: RSS Polling
     admin:
       rss_polling:
-        feed: Cài đặt nguồn cấp dữ liệu
-        discourse: Cài đặt Discourse
         author: Tác giả
         feed_url: URL
         discourse_category: Chuyên mục
         discourse_tags: Thẻ
-        feed_category_filter: Bộ lọc theo chuyên mục
-        documentation: Tài liệu cấu hình RSS Polling
-        destroy_feed:
-          confirm: "Bạn có chắc chắn muốn xóa nguồn cấp này?"
+        feeds:
+          edit: Sửa
+          delete: Xóa
+          save: Lưu lại
+          confirm_delete: "Bạn có chắc chắn muốn xóa nguồn cấp này?"
+        test:
+          title: Xem trước
+          dismiss: Bỏ qua
+        status:
+          enabled: Đã bật
+          disabled: Vô hiệu hóa

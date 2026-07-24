@@ -10,10 +10,10 @@ end
 # Table name: allowed_pm_users
 #
 #  id                 :bigint           not null, primary key
-#  user_id            :integer          not null
-#  allowed_pm_user_id :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  allowed_pm_user_id :integer          not null
+#  user_id            :integer          not null
 #
 # Indexes
 #

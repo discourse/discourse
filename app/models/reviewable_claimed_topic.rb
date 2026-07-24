@@ -23,11 +23,11 @@ end
 # Table name: reviewable_claimed_topics
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  topic_id   :integer          not null
+#  automatic  :boolean          default(FALSE), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  automatic  :boolean          default(FALSE), not null
+#  topic_id   :integer          not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

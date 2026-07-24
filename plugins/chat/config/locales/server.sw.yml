@@ -28,6 +28,9 @@ sw:
     actions:
       chat_reply:
         title: Jibu
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Imethibitishwa"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

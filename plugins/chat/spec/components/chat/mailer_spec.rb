@@ -68,6 +68,11 @@ describe Chat::Mailer do
         expect_enqueued
       end
 
+      it "queues a chat summary email when everyone is mapped to logged_in_users" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
+        expect_enqueued
+      end
+
       it "does not queue a chat summary when chat is globally disabled" do
         SiteSetting.chat_enabled = false
         expect_not_enqueued

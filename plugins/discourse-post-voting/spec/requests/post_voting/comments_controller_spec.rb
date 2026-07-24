@@ -55,6 +55,17 @@ RSpec.describe PostVoting::CommentsController do
 
       expect(comment["id"]).to eq(comment_3.id)
     end
+
+    it "does not expose names when names are disabled" do
+      SiteSetting.enable_names = false
+      comment_2.user.update!(name: "Secret Name")
+
+      get "/post_voting/comments.json", params: { post_id: answer.id, last_comment_id: comment.id }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Secret Name")
+      expect(response.parsed_body["comments"].any? { |comment| comment.key?("name") }).to eq(false)
+    end
   end
 
   describe "#create" do

@@ -15,11 +15,11 @@ RSpec.describe "Nested view category default" do
 
   let(:nested_view) { PageObjects::Pages::NestedView.new }
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before do
     SiteSetting.nested_replies_enabled = true
-    SiteSetting.enable_simplified_category_creation = false
     nested_category.category_setting.update!(nested_replies_default: true)
     Fabricate(:nested_topic, topic: topic)
   end
@@ -32,15 +32,8 @@ RSpec.describe "Nested view category default" do
 
       category_page.visit_settings(unchecked_category)
 
-      expect(page).to have_css(
-        ".enable-nested-replies-default input[type='checkbox']:not(:checked)",
-        visible: :all,
-      )
-
-      find(".enable-nested-replies-default label.checkbox-label").click
+      form.field("category_setting.nested_replies_default").toggle
       category_page.save_settings
-
-      expect(page).to have_current_path(%r{/c/#{unchecked_category.slug}})
 
       unchecked_category.reload
       expect(unchecked_category.nested_replies_default).to eq(true)
@@ -49,51 +42,40 @@ RSpec.describe "Nested view category default" do
     it "shows checkbox as checked when category has nested default enabled" do
       category_page.visit_settings(nested_category)
 
-      expect(page).to have_css(
-        ".enable-nested-replies-default input[type='checkbox']:checked",
-        visible: :all,
-      )
-    end
-
-    context "with simplified category creation" do
-      before { SiteSetting.enable_simplified_category_creation = true }
-
-      it "allows admin to enable nested view default for a category" do
-        unchecked_category = Fabricate(:category, name: "Unchecked Category")
-
-        category_page.visit_settings(unchecked_category)
-
-        form.field("category_setting.nested_replies_default").toggle
-        category_page.save_settings
-
-        unchecked_category.reload
-        expect(unchecked_category.nested_replies_default).to eq(true)
-      end
-
-      it "shows checkbox as checked when category has nested default enabled" do
-        category_page.visit_settings(nested_category)
-
-        expect(form.field("category_setting.nested_replies_default")).to be_checked
-      end
+      expect(form.field("category_setting.nested_replies_default")).to be_checked
     end
   end
 
-  describe "topic redirect" do
+  describe "topic routing" do
     before { sign_in(user) }
 
-    it "redirects to nested view when visiting a topic URL directly" do
+    it "renders nested view when visiting a topic URL directly" do
       page.visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
     end
 
-    it "redirects to nested view when clicking a topic from the category page" do
+    it "renders nested view when clicking a topic from the category page" do
       page.visit("/c/#{nested_category.slug}/#{nested_category.id}")
       find(".topic-list-item .raw-topic-link[data-topic-id='#{topic.id}']").click
 
-      expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_nested_view
+    end
+
+    it "takes the user to the top of a nested topic from a scrolled list" do
+      category_page.visit(nested_category)
+      expect(topic_list).to have_topic(topic)
+
+      topic_list.scroll_page_down
+      expect(topic_list).to be_scrolled_down
+
+      topic_list.visit_topic(topic)
+
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
+      expect(nested_view).to have_nested_view
+      try_until_success { expect(page.evaluate_script("window.scrollY")).to eq(0) }
     end
 
     it "does not redirect topics in categories without nested default" do
@@ -103,34 +85,6 @@ RSpec.describe "Nested view category default" do
       page.visit("/t/#{normal_topic.slug}/#{normal_topic.id}")
 
       expect(page).to have_current_path(%r{/t/#{normal_topic.slug}/#{normal_topic.id}})
-      expect(nested_view).to have_no_nested_view
-    end
-
-    it "respects ?flat=1 to force flat view even in nested-default category" do
-      page.visit("/t/#{topic.slug}/#{topic.id}?flat=1")
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
-      expect(page).to have_current_path(/flat=1/)
-      expect(nested_view).to have_no_nested_view
-    end
-
-    it "does not redirect to nested when navigating within flat view (e.g. topic timeline)" do
-      page.visit("/t/#{topic.slug}/#{topic.id}?flat=1")
-      expect(nested_view).to have_no_nested_view
-
-      # Simulate the exact code path the topic timeline uses:
-      # topic.urlForPostNumber() → DiscourseURL.routeTo()
-      # This exercises the topic-url-for-post-number transformer which rewrites
-      # URLs to /nested/ for nested-default categories.
-      page.execute_script(<<~JS)
-        (function() {
-          var topic = Discourse.lookup("controller:topic").model;
-          var url = topic.urlForPostNumber(#{reply.post_number});
-          require("discourse/lib/url").default.routeTo(url);
-        })();
-      JS
-
-      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(nested_view).to have_no_nested_view
     end
   end

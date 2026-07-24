@@ -7,7 +7,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | select-kit/tag-drop", function (hooks) {
+module("Integration | Component | SelectKit | TagDrop", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

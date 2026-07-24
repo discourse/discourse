@@ -155,5 +155,3 @@ fr:
           add: Ajouter une option
         automatic_close:
           label: Fermer le sondage automatiquement
-        show_advanced: "Afficher les options avancées"
-        hide_advanced: "Masquer les options avancées"

@@ -8,7 +8,7 @@ end
 
 class Stylesheet::Manager
   # Bump this number to invalidate all stylesheet caches (e.g. if you change something inside the compiler)
-  BASE_COMPILER_VERSION = 6
+  BASE_COMPILER_VERSION = 7
 
   # Add any dependencies here which should automatically cause a global cache invalidation.
   BASE_CACHE_KEY = "#{BASE_COMPILER_VERSION}::#{DiscourseFonts::VERSION}"
@@ -16,7 +16,7 @@ class Stylesheet::Manager
   CACHE_PATH = "tmp/stylesheet-cache"
   private_constant :CACHE_PATH
 
-  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_DIR = "#{Rails.root.join("tmp/cache/assets/#{Rails.env}")}"
   THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
@@ -49,7 +49,7 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    targets = %i[common desktop mobile admin wizard]
+    targets = %i[common admin wizard]
     targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
@@ -57,19 +57,26 @@ class Stylesheet::Manager
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
       )
     targets +=
       Discourse.find_plugin_css_assets(
         include_disabled: true,
         mobile_view: true,
         desktop_view: true,
+        include_admin: true,
         rtl: true,
       )
 
     targets.each do |target|
-      $stderr.puts "precompile target: #{target}"
+      builder = Stylesheet::Manager::Builder.new(target: target, manager: nil)
 
-      Stylesheet::Manager::Builder.new(target: target, manager: nil).compile(force: true)
+      if builder.hydrate_from_cache!
+        $stderr.puts "precompile target: #{target} (cached)"
+      else
+        $stderr.puts "precompile target: #{target}"
+        builder.compile
+      end
     end
   end
 
@@ -90,7 +97,7 @@ class Stylesheet::Manager
     compiled = Set.new
 
     themes.each do |theme_id, light_color_scheme_id, dark_color_scheme_id|
-      manager = self.new(theme_id: theme_id)
+      manager = new(theme_id: theme_id)
 
       targets.each do |target|
         next if theme_id == -1
@@ -106,8 +113,13 @@ class Stylesheet::Manager
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
             next if !scss_checker.has_scss(theme.id)
-            $stderr.puts "precompile target: #{target} #{theme.name}"
-            builder.compile(force: true)
+
+            if builder.hydrate_from_cache!
+              $stderr.puts "precompile target: #{target} #{theme.name} (cached)"
+            else
+              $stderr.puts "precompile target: #{target} #{theme.name}"
+              builder.compile
+            end
             compiled << "#{target}_#{theme.id}"
           end
       end
@@ -116,13 +128,20 @@ class Stylesheet::Manager
       theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
       [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
-        Stylesheet::Manager::Builder.new(
-          target: COLOR_SCHEME_STYLESHEET,
-          theme: theme,
-          color_scheme: scheme,
-          manager: manager,
-        ).compile(force: true)
+        builder =
+          Stylesheet::Manager::Builder.new(
+            target: COLOR_SCHEME_STYLESHEET,
+            theme: theme,
+            color_scheme: scheme,
+            manager: manager,
+          )
+
+        if builder.hydrate_from_cache!
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (cached)"
+        else
+          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+          builder.compile
+        end
       end
 
       clear_color_scheme_cache!
@@ -156,20 +175,20 @@ class Stylesheet::Manager
   def self.manifest_full_path
     path = "#{MANIFEST_DIR}/stylesheet-manifest"
     return path if !Rails.env.test?
-    "#{path}-test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}"
+    "#{path}-test_#{Discourse.test_env_number}"
   end
   private_class_method :manifest_full_path
 
   def self.use_file_hash_for_cachebuster?
-    Rails.env.production?
+    Rails.env.production? || Rails.env.test?
   end
   private_class_method :use_file_hash_for_cachebuster?
 
   def self.list_files
     globs = [
-      "#{Rails.root}/app/assets/stylesheets/**/*.*css",
-      "#{Rails.root}/app/assets/images/**/*.*",
-      "#{Rails.root}/lib/stylesheet/*.rb",
+      "#{Rails.root.join("app/assets/stylesheets/**/*.*css")}",
+      "#{Rails.root.join("app/assets/images/**/*.*")}",
+      "#{Rails.root.join("lib/stylesheet/*.rb")}",
     ]
 
     Discourse.plugins.each do |plugin|
@@ -194,9 +213,9 @@ class Stylesheet::Manager
   private_class_method :fs_assets_hash
 
   def self.cache_fullpath
-    path = "#{Rails.root}/#{CACHE_PATH}"
+    path = "#{Rails.root.join("#{CACHE_PATH}")}"
     return path if !Rails.env.test?
-    File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+    File.join(path, "test_#{Discourse.test_env_number}")
   end
 
   if Rails.env.test?
@@ -248,11 +267,11 @@ class Stylesheet::Manager
     themes
   end
 
-  def stylesheet_data(target = :desktop)
+  def stylesheet_data(target)
     stylesheet_details(target, "all")
   end
 
-  def stylesheet_preload_tag(target = :desktop, media = "all")
+  def stylesheet_preload_tag(target, media = "all")
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -263,7 +282,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = "all", preload_callback = nil)
+  def stylesheet_link_tag(target, media = "all", preload_callback = nil)
     stylesheets = stylesheet_details(target, media)
     stylesheets
       .map do |stylesheet|
@@ -279,7 +298,7 @@ class Stylesheet::Manager
       .html_safe
   end
 
-  def stylesheet_details(target = :desktop, media = "all")
+  def stylesheet_details(target, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
     relative_url_root = GlobalSetting.relative_url_root

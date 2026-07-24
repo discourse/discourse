@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DirectoryItem from "discourse/components/directory-item";
-import ResponsiveTable from "discourse/components/responsive-table";
-import TableHeaderToggle from "discourse/components/table-header-toggle";
 import directoryColumnIsAutomatic from "discourse/helpers/directory-column-is-automatic";
+import DResponsiveTable from "discourse/ui-kit/d-responsive-table";
+import DTableHeaderToggle from "discourse/ui-kit/d-table-header-toggle";
 import { i18n } from "discourse-i18n";
 
 export default class DirectoryTable extends Component {
@@ -26,11 +26,11 @@ export default class DirectoryTable extends Component {
   }
 
   <template>
-    <ResponsiveTable {{didInsert this.setupTable}}>
+    <DResponsiveTable {{didInsert this.setupTable}}>
       <:header>
-        <TableHeaderToggle @field="username" @order={{@order}} @asc={{@asc}} />
+        <DTableHeaderToggle @field="username" @order={{@order}} @asc={{@asc}} />
         {{#each @columns as |column|}}
-          <TableHeaderToggle
+          <DTableHeaderToggle
             @onToggle={{this.updateOrderAndAsc}}
             @field={{column.name}}
             @icon={{column.icon}}
@@ -59,6 +59,6 @@ export default class DirectoryTable extends Component {
           />
         {{/each}}
       </:body>
-    </ResponsiveTable>
+    </DResponsiveTable>
   </template>
 }

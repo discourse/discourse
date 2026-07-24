@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  category_types:
+    events:
+      name: "رویدادها"
+      title: "رویدادها"
   reports:
     currently_away:
       labels:
@@ -17,10 +21,18 @@ fa_IR:
     events_calendar_categories: "نمایش رویدادهای تقویم در بالای دسته‌بندی"
     sidebar_show_upcoming_events: "پیوند رویدادهای آینده را در نوار کناری زیر «بیشتر» نمایش دهید."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "روز"
+        week: "هفته"
+        month: "ماه"
+        year: "سال"
     invite_user_notification: "%{username} شما را دعوت کرده به: %{description}"
     holiday_status:
       description: "در تعطیلات"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d، %Y"
     errors:
       bulk_invite:
         error: "خطایی هنگام آپلود فایل رخ داده است. لطفا بعدا امتحان کنید."

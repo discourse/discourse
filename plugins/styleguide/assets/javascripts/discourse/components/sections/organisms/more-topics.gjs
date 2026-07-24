@@ -70,7 +70,7 @@ export default class MoreTopicsOrganism extends Component {
       </StyleguideComponent>
 
       <Controls>
-        {{! template-lint-disable no-potential-path-strings}}
+        {{! eslint-disable ember/template-no-potential-path-strings }}
         <Row @name="@topic type">
           <ComboBox
             @value={{this.variant}}

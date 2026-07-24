@@ -110,6 +110,8 @@ id:
         filter_open: Buka
         filter_closed: Tertutup
         filter_archived: Diarsipkan
+        filter_joined_all: "Semua"
+        filter_joined_joined: "Joined"
       members_view:
         back_to_settings: "Kembali ke pengaturan"
       about_view:
@@ -142,6 +144,7 @@ id:
       create_channel:
         threading:
           label: "Aktifkan threading"
+        description: "Deskripsi"
         type: "Tipe"
         types:
           category: "Kategori"
@@ -248,3 +251,10 @@ id:
       panels:
         chat:
           label: "Obrolan"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Kirim pesan obrolan"
+      send_chat_message:
+        message: "pesan"
+      chat_approval:
+        message: "pesan"

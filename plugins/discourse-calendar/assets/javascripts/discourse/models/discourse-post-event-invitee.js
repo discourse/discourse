@@ -7,11 +7,13 @@ export default class DiscoursePostEventInvitee {
   }
 
   @tracked status;
+  @tracked recurring;
 
   constructor(args = {}) {
     this.id = args.id;
     this.post_id = args.post_id;
     this.status = args.status;
+    this.recurring = args.recurring;
     this.user = this.#initUserModel(args.user);
   }
 

@@ -40,6 +40,12 @@ sw:
               title: "Umma"
             private:
               title: "Binafsi"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "siku"
+              other: "siku"
       builder_modal:
         custom_fields:
           placeholder: "Sio Muhimu"
@@ -54,12 +60,12 @@ sw:
         recurrence:
           label: "Kurudiarudia"
           none: "Hakuna kurudia"
-        url:
-          label: "Anwani ya mtandao"
-          placeholder: "Sio Muhimu"
-        location:
-          label: "Sehemu"
+        attendance:
+          none: "Hakuna"
         description:
           label: "Maelezo"
+        event_type:
+          public:
+            title: "Umma"
       invite_user_or_group:
         invite: "Tuma"

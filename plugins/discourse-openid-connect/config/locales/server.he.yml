@@ -18,7 +18,6 @@ he:
     openid_connect_allow_association_change: "לאפשר למשתמשים להתנתק ולהתחבר מחדש לחשבונות ה־Discourse שלהם מספק ה־OpenID Connect שלהם."
     openid_connect_verbose_logging: "תיעוד פרטי אימות openid-connect מפורטים אל `‎/logs`. עדיף להשבית במהלך תפעול שגרתי."
     openid_connect_authorize_parameters: "משתני הכתובת שיתווספו להפניה מ־‎/auth/oidc לנקודת הקצה לאימות של ספק הזהות"
-    openid_connect_overrides_email: "בכל כניסה למערכת, לדרוס את כתובת הדוא״ל עם ערך openid-connect. עובד כמו ההגדרה `auth_overrides_email` (אימות עוקף דוא״ל), אך הוא משמש נקודתית לכניסה עם OpenID Connect."
     openid_connect_claims: "הגדרת הטענות במפורש לשימוש מול ספקים שלא מעבירים נתונים בחזרה על סמך תחומים. (JSON)"
     openid_connect_match_by_email: "להשתמש בכתובת דוא״ל כדי לתאם את אימותי OpenID Connect לחשבונות משתמש קיימים ב־Discourse."
     openid_connect_use_pkce: "הפעלת מפתח הוכחה לחילופי קודים (PKCE) עבור אימות OpenID Connect."

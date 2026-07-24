@@ -296,6 +296,51 @@ RSpec.describe Tag do
     end
   end
 
+  describe ".recently_used_by" do
+    it "returns the user's tags, most recently used first" do
+      older_tag = Fabricate(:tag)
+      newer_tag = Fabricate(:tag)
+      Fabricate(:topic, user: user, tags: [older_tag])
+      Fabricate(:topic, user: user, tags: [newer_tag])
+
+      expect(Tag.recently_used_by(user)).to eq([newer_tag.id, older_tag.id])
+    end
+
+    it "orders by the topic's creation date, not its id" do
+      recent_tag = Fabricate(:tag)
+      old_tag = Fabricate(:tag)
+      Fabricate(:topic, user: user, tags: [recent_tag], created_at: 1.minute.ago)
+      Fabricate(:topic, user: user, tags: [old_tag], created_at: 1.year.ago)
+
+      expect(Tag.recently_used_by(user)).to eq([recent_tag.id, old_tag.id])
+    end
+
+    it "excludes tags from private messages" do
+      Fabricate(:private_message_topic, user: user, tags: [Fabricate(:tag)])
+
+      expect(Tag.recently_used_by(user)).to be_empty
+    end
+
+    it "excludes tags from deleted topics" do
+      Fabricate(:topic, user: user, tags: [Fabricate(:tag)]).trash!
+
+      expect(Tag.recently_used_by(user)).to be_empty
+    end
+
+    it "only considers the given number of most recent topics" do
+      older_tag = Fabricate(:tag)
+      newer_tag = Fabricate(:tag)
+      Fabricate(:topic, user: user, tags: [older_tag])
+      Fabricate(:topic, user: user, tags: [newer_tag])
+
+      expect(Tag.recently_used_by(user, limit: 1)).to eq([newer_tag.id])
+    end
+
+    it "returns an empty array for a user with no topics" do
+      expect(Tag.recently_used_by(user)).to eq([])
+    end
+  end
+
   describe ".ensure_consistency!" do
     it "should exclude private message topics" do
       topic

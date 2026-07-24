@@ -2,9 +2,9 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import boundAvatar from "discourse/helpers/bound-avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 
 @tagName("")
 export default class UserProfileAvatar extends Component {
@@ -18,10 +18,10 @@ export default class UserProfileAvatar extends Component {
           @name="user-profile-avatar-img-wrapper"
           @outletArgs={{lazyHash user=@user}}
         >
-          {{boundAvatar @user "huge"}}
+          {{dBoundAvatar @user "huge"}}
         </PluginOutlet>
 
-        <UserAvatarFlair @user={{@user}} />
+        <DUserAvatarFlair @user={{@user}} />
         <div>
           <PluginOutlet
             @name="user-profile-avatar-flair"

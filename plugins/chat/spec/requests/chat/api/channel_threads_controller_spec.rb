@@ -41,6 +41,21 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns a public category channel thread" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+        end
+      end
+
       context "with user status enabled" do
         before { SiteSetting.enable_user_status = true }
 
@@ -328,6 +343,27 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when user can only see a readonly category channel" do
+        fab!(:group) { Fabricate(:group, users: [current_user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+        fab!(:channel_1) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "when the title is too long" do
         let(:title) { "x" * Chat::Thread::MAX_TITLE_LENGTH + "x" }
 
@@ -339,6 +375,33 @@ RSpec.describe Chat::Api::ChannelThreadsController do
             ["Title is too long (maximum is #{Chat::Thread::MAX_TITLE_LENGTH} characters)"],
           )
         end
+      end
+    end
+
+    context "when a direct-message recipient excludes the current user from their PM allowlist" do
+      fab!(:recipient, :user)
+      fab!(:allowed_user, :user)
+      fab!(:channel_1) do
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, recipient],
+          threading_enabled: true,
+        )
+      end
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      before do
+        recipient.user_option.update!(enable_allowed_pm_users: true)
+        AllowedPmUser.create!(user: recipient, allowed_pm_user: allowed_user)
+      end
+
+      it "does not create a thread" do
+        expect { post "/chat/api/channels/#{channel_id}/threads", params: params }.not_to change {
+          Chat::Thread.count
+        }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
       end
     end
 

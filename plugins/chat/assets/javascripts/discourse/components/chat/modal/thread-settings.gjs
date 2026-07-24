@@ -4,10 +4,10 @@ import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ChatModalThreadSettings extends Component {
@@ -77,7 +77,7 @@ export default class ChatModalThreadSettings extends Component {
 
         {{#if this.currentUser.admin}}
           <div class="discourse-ai-cta">
-            <p class="discourse-ai-cta__title">{{icon "circle-info"}}
+            <p class="discourse-ai-cta__title">{{dIcon "circle-info"}}
               {{i18n "chat.thread_title_modal.discourse_ai.title"}}</p>
             <p class="discourse-ai-cta__description">{{trustHTML
                 (i18n

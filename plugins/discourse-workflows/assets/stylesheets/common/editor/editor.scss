@@ -1,0 +1,61 @@
+.workflows-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: calc(100vh - 200px);
+
+  &__body {
+    flex: 1 0 auto;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__name-field {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: 2;
+  }
+
+  &__name-row {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .form-kit__container {
+      margin: 0;
+      border: 0;
+    }
+
+    .form-kit__container-content {
+      width: auto;
+    }
+
+    .form-kit__field-toggle {
+      width: auto;
+    }
+  }
+
+  &__name-input {
+    width: 280px;
+    font-size: var(--font-up-2);
+    padding: var(--space-2);
+    text-align: left;
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent;
+  }
+
+  &__name-toggle {
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-2);
+  }
+}

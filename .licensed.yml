@@ -82,3 +82,4 @@ reviewed:
     - tilt # MIT
     - ttfunk # Ruby or GPLv2/GPLv3
     - unf # BSD-2-Clause
+    - version_gem # MIT

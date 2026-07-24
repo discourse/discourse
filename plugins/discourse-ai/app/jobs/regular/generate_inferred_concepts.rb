@@ -40,13 +40,11 @@ module Jobs
       manager = DiscourseAi::InferredConcepts::Manager.new
 
       items.each do |item|
-        begin
-          process_item(item, item_type, match_only, manager)
-        rescue => e
-          Rails.logger.error(
-            "Error generating concepts from #{item_type.singularize} #{item.id}: #{e.message}\n#{e.backtrace.join("\n")}",
-          )
-        end
+        process_item(item, item_type, match_only, manager)
+      rescue => e
+        Rails.logger.error(
+          "Error generating concepts from #{item_type.singularize} #{item.id}: #{e.message}\n#{e.backtrace.join("\n")}",
+        )
       end
     end
 

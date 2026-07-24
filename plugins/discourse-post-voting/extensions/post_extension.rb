@@ -27,7 +27,7 @@ module PostVoting
     end
 
     def comments
-      topic.posts.where(reply_to_post_number: self.post_number).order("post_number ASC")
+      topic.posts.where(reply_to_post_number: post_number).order("post_number ASC")
     end
 
     private

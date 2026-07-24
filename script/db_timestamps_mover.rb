@@ -99,37 +99,37 @@ class TimestampsUpdater
     # add 1000 years to the interval to avoid uniqueness conflicts:
     operator = days < 0 ? "-" : "+"
     interval_expression = "#{operator} INTERVAL '1000 years #{days.abs} days'"
-    update_table(table_name, column_name, interval_expression)
+    update_table(table_name, column_name, interval_expression, clamp: false)
 
     # return back by 1000 years:
     operator = days < 0 ? "+" : "-"
     interval_expression = "#{operator} INTERVAL '1000 years'"
-    update_table(table_name, column_name, interval_expression)
+    update_table(table_name, column_name, interval_expression, clamp: false)
   end
 
-  def update_table(table_name, column_name, interval_expression)
+  def update_table(table_name, column_name, interval_expression, clamp: true)
+    new_value = "#{column_name} #{interval_expression}"
+    new_value = "LEAST(#{new_value}, now())" if clamp
+
     sql = <<~SQL
       UPDATE #{table_name}
-      SET #{column_name} = #{column_name} #{interval_expression}
+      SET #{column_name} = #{new_value}
+      WHERE #{column_name} IS NOT NULL
     SQL
     @raw_connection.exec(sql)
   end
 end
 
 def is_i?(string)
-  begin
-    true if Integer(string)
-  rescue StandardError
-    false
-  end
+  true if Integer(string)
+rescue StandardError
+  false
 end
 
 def is_date?(string)
-  begin
-    true if Date.parse(string)
-  rescue StandardError
-    false
-  end
+  true if Date.parse(string)
+rescue StandardError
+  false
 end
 
 def create_updater

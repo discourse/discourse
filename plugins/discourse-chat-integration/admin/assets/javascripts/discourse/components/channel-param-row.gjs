@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { concat, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import InputTip from "discourse/components/input-tip";
+import DInputTip from "discourse/ui-kit/d-input-tip";
 import { i18n } from "discourse-i18n";
 
 export default class ChannelParamRow extends Component {
@@ -58,7 +58,7 @@ export default class ChannelParamRow extends Component {
           name="param-{{@param.key}}"
         />
 
-        <InputTip @validation={{this.validation}} />
+        <DInputTip @validation={{this.validation}} />
       </td>
     </tr>
 

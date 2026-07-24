@@ -1,5 +1,5 @@
-import concatClass from "discourse/helpers/concat-class";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import DominatingTopicComposerMessage from "./composer-messages/dominating-topic";
 import EducationComposerMessage from "./composer-messages/education";
 import GetARoomComposerMessage from "./composer-messages/get-a-room";
@@ -31,7 +31,7 @@ function getComposerMessageComponent(templateName) {
 }
 
 const ComposerMessage = <template>
-  <div class={{concatClass "composer-popup" @message.extraClass}}>
+  <div class={{dConcatClass "composer-popup" @message.extraClass}}>
     {{#let
       (getComposerMessageComponent @message.templateName)
       as |MessageComponent|

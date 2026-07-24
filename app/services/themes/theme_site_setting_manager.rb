@@ -20,7 +20,7 @@ class Themes::ThemeSiteSettingManager
     validates :theme_id, presence: true
     validates :name, presence: true
 
-    after_validation { self.name = self.name.to_sym if self.name.present? }
+    after_validation { self.name = name.to_sym if name.present? }
   end
 
   policy :current_user_is_admin

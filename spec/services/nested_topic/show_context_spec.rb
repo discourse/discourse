@@ -72,6 +72,19 @@ RSpec.describe NestedTopic::ShowContext do
       end
     end
 
+    context "with suggested/related payload" do
+      # The context view has no pagination, so the suggested/related keys
+      # must always ride along with the response — mirrors the final-page
+      # behavior in NestedTopic::ListRoots.
+      fab!(:other_topic) { Fabricate(:post).topic }
+
+      it "attaches suggested/related keys to the response" do
+        response = result[:response]
+        expect(response).to include(:suggested_topics)
+        expect(response[:suggested_topics].map(&:id)).to include(other_topic.id)
+      end
+    end
+
     context "with context_depth set to 0" do
       let(:params) { { target_post_number: target.post_number, sort: "top", context_depth: 0 } }
 

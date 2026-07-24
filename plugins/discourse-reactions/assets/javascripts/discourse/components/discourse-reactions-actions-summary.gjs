@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { reactionsHiddenForUser } from "../lib/hidden-post";
 import DiscourseReactionsActions from "./discourse-reactions-actions";
 
 export default class ReactionsActionSummary extends Component {
@@ -10,6 +11,10 @@ export default class ReactionsActionSummary extends Component {
     }
 
     if (args.post.reaction_users_count <= 0) {
+      return false;
+    }
+
+    if (reactionsHiddenForUser(args.post)) {
       return false;
     }
 
@@ -33,7 +38,7 @@ export default class ReactionsActionSummary extends Component {
 
   <template>
     {{#if @shouldRender}}
-      <div>
+      <div class="reactions-actions-summary">
         <DiscourseReactionsActions @post={{@post}} @position="left" />
       </div>
     {{/if}}

@@ -10,11 +10,28 @@ he:
       site_settings:
         categories:
           discourse_solved: "Discourse נפתר"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "פתרונות מקובלים"
+        sections:
+          support:
+            title: "תמיכה"
+            answerers:
+              staff: "סגל"
+              member: "חברים"
+              basic: "בסיסיים"
+            response_time:
+              buckets:
+                lt_1h: "< שעה"
+                gt_24h: "> 24 שעות"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "התקבל"
+          topic_solved_notification: "נפתר"
     solutions: "פתרונות"
     solved:
       title: "נפתר"
@@ -43,9 +60,12 @@ he:
       move_post_cancel: "ביטול"
       confirm_solved_removal_confirm: "אישור"
       confirm_solved_removal_cancel: "ביטול"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: התשובה שלך נענתה?
         description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
+      topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "הפוסט שלך סומן כפתרון"
       category_type_support:

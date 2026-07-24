@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import BadgeButton from "discourse/components/badge-button";
+import DBadgeButton from "discourse/ui-kit/d-badge-button";
 
 export default class UserBadge extends Component {
   get showGrantCount() {
@@ -15,11 +15,11 @@ export default class UserBadge extends Component {
 
   <template>
     <a class="user-card-badge-link" href={{this.badgeUrl}}>
-      <BadgeButton @badge={{@badge}} @showName={{@showName}}>
+      <DBadgeButton @badge={{@badge}} @showName={{@showName}}>
         {{#if this.showGrantCount}}
           <span class="count">&nbsp;(&times;{{@count}})</span>
         {{/if}}
-      </BadgeButton>
+      </DBadgeButton>
     </a>
   </template>
 }

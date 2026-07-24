@@ -9,7 +9,6 @@ he:
     chat_separate_sidebar_mode: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט."
     chat_enabled: "הפעלת צ׳אט."
     enable_public_channels: "הפעלת ערוצים ציבוריים על בסיס קטגוריות."
-    chat_allowed_groups: "משתמשים בקבוצות אלה יכולים להתכתב בצ׳אט. נא לשים לב שמנהלים ומפקחים יכולים תמיד לגשת לצ׳אט."
     chat_channel_retention_days: "הודעות הצ׳אט בערוצים הרגילים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_dm_retention_days: "הודעות הצ׳אט בערוצי הצ׳אט האישיים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_auto_silence_duration: "מספר הדקות שבמהלכן שמשתמשים יושתקו כאשר הם חורגים ממגבלת קצב יצירת הודעת בצ׳אט. 0 משבית את ההשתקה האוטומטית."
@@ -30,7 +29,6 @@ he:
     chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     chat_preferred_index: "לשונית מועדפת בעת טעינת ‎/chat."
-    allow_chat_in_anonymous_mode: "יש להפעיל את ההגדרה הזאת כדי לאפשר למשתמשים שגולשים באתר שלך באלמוניות להשתמש בצ׳אט. ההגדרה הזאת דורשת שההגדרה `allow anonymous mode` (לאפשר מצב אלמוני) תהיה פעילה."
     chat_search_enabled: "הפעלת ההגדרה הזאת תאפשר למשתמשים לחפש הודעות צ׳אט."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
@@ -254,6 +252,10 @@ he:
     scriptables:
       send_chat_message:
         title: שליחת הודעת צ׳אט
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "אישור"
+      default_deny_label: "דחייה"
   reviewable_score_types:
     needs_review:
       title: "נדרשת סקירה"

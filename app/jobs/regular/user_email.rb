@@ -160,7 +160,7 @@ module Jobs
       email_args = {}
 
       if (post || notification || notification_type || args[:force_respect_seen_recently]) &&
-           (seen_recently && !user.suspended?)
+           seen_recently && !user.suspended?
         return skip_message(SkippedEmailLog.reason_types[:user_email_seen_recently])
       end
 

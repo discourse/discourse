@@ -50,12 +50,20 @@ sv:
     close_to_working_day_hours_extension: "Ställ in förlängningstid i arbetsdagstimmar för att markera tidszonerna."
     events_calendar_categories: "Visa en evenemangskalender högst upp i en kategori."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dag"
+        week: "Vecka"
+        month: "Månad"
+        year: "År"
     invite_user_notification: "%{username} har bjudit in dig till: %{description}"
     calendar_must_be_in_first_post: "Kalendertaggen kan endast användas i första inlägget i ett ämne."
     more_than_one_calendar: "Du kan inte ha mer än en kalender i ett inlägg."
     more_than_two_dates: "Ett inlägg i ett kalenderämne får inte innehålla mer än två datum."
     event_expired: "Evenemanget har upphört"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     notifications:
       before_event_reminder: "%{title} är på väg att börja."
       after_event_reminder: "%{title} har avslutats."

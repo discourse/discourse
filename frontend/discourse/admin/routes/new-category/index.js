@@ -6,10 +6,7 @@ export default class NewCategoryIndex extends DiscourseRoute {
   @service router;
 
   beforeModel() {
-    if (
-      this.categoryTypeChooser.isEnabled &&
-      !this.categoryTypeChooser.hasCompletedSetup
-    ) {
+    if (!this.categoryTypeChooser.hasCompletedSetup) {
       this.router.replaceWith("newCategory.setup");
     } else {
       this.router.replaceWith("newCategory.tabs", "general");

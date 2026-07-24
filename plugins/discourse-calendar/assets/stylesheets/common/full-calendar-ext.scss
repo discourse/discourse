@@ -42,6 +42,15 @@
   }
 }
 
+.fc-timegrid-slot-lane {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--tertiary-50);
+    opacity: 0.6;
+  }
+}
+
 .fc-daygrid-day-frame {
   .fc-daygrid-day-top {
     justify-content: center;
@@ -50,6 +59,14 @@
       font-size: var(--font-down-2);
       color: var(--primary);
     }
+  }
+}
+
+.fc-daygrid-day {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--tertiary-50);
   }
 }
 
@@ -88,6 +105,12 @@
 
 #upcoming-events-calendar {
   height: 100%;
+}
+
+[data-identifier="post-event-tooltip"] img.only-emoji {
+  width: 1em;
+  height: 1em;
+  margin: 0;
 }
 
 @include viewport.until(md) {

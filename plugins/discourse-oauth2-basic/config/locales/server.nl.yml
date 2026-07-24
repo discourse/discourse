@@ -27,7 +27,6 @@ nl:
     oauth2_json_email_verified_path: "Pad in de OAuth2-gebruikers-JSON naar de e-mailverificatiestatus van de gebruiker, bijvoorbeeld user.email.verified. Deze instelling heeft alleen effect als oauth2_email_verified is uitgeschakeld"
     oauth2_json_avatar_path: "Pad in de Oauth2-gebruikers-JSON naar de avatar van de gebruiker, bijvoorbeeld user.avatar_url"
     oauth2_email_verified: "Controleer dit als de OAuth2-site het e-mailadres heeft geverifieerd"
-    oauth2_overrides_email: "Overschrijf het Discourse-e-mailadres met het externe e-mailadres bij elke aanmelding. Werkt hetzelfde als de instelling `auth_overrides_email`, maar is specifiek voor OAuth2-aanmeldingen."
     oauth2_send_auth_header: "Clientaanmeldgegevens sturen in een HTTP-autorisatieheader"
     oauth2_send_auth_body: "Clientaanmeldgegevens sturen in verzoektekst"
     oauth2_debug_auth: "Uitgebreide debuggegevens opnemen in je logs"

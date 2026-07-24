@@ -7,11 +7,11 @@ import { service } from "@ember/service";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import IncomingEmailModal from "discourse/admin/components/modal/incoming-email";
 import IncomingEmail from "discourse/admin/models/incoming-email";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BOUNCED_HEADERS = [
@@ -68,12 +68,12 @@ export default class AdminEmailLogsBounced extends Component {
         as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
       >
         <tr data-test-email-log-row-id={{emailLog.id}}>
-          <td>{{formatDate emailLog.created_at}}</td>
+          <td>{{dFormatDate emailLog.created_at}}</td>
           <td>
             {{#if emailLog.user}}
               <span class="email-logs-user">
                 <LinkTo @route="adminUser" @model={{emailLog.user}}>
-                  {{avatar emailLog.user imageSize="tiny"}}
+                  {{dAvatar emailLog.user imageSize="tiny"}}
                   {{emailLog.user.username}}
                 </LinkTo>
               </span>
@@ -92,7 +92,7 @@ export default class AdminEmailLogsBounced extends Component {
                 {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
                 title={{i18n "admin.email.details_title"}}
               >
-                {{icon "circle-info"}}
+                {{dIcon "circle-info"}}
               </a>
             {{/if}}
           </td>

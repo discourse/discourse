@@ -11,6 +11,7 @@ libdir = File.join(File.dirname(__FILE__), "vendor/holidays/lib")
 $LOAD_PATH.unshift(libdir) if $LOAD_PATH.exclude?(libdir)
 
 require_relative "lib/calendar_settings_validator"
+require_relative "lib/calendar_custom_fields_validator"
 require_relative "lib/calendar_first_day_of_week"
 require_relative "lib/calendar_upcoming_events_default_view"
 
@@ -33,12 +34,17 @@ register_asset "stylesheets/mobile/discourse-post-event.scss", :mobile
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/user-preferences.scss"
 register_asset "stylesheets/common/upcoming-events-list.scss"
+register_asset "stylesheets/common/livestream.scss"
+register_asset "stylesheets/desktop/livestream.scss", :desktop
+register_asset "stylesheets/mobile/livestream.scss", :mobile
 register_svg_icon "calendar-day"
 register_svg_icon "clock"
 register_svg_icon "file-csv"
 register_svg_icon "star"
 register_svg_icon "file-arrow-up"
 register_svg_icon "location-pin"
+register_svg_icon "arrows-up-to-line"
+extend_content_security_policy(worker_src: %w[https://source.zoom.us blob:])
 
 module ::DiscourseCalendar
   PLUGIN_NAME = "discourse-calendar"
@@ -57,6 +63,142 @@ module ::DiscourseCalendar
 
   # List of groups
   GROUP_TIMEZONES_CUSTOM_FIELD = "group-timezones"
+
+  module Livestream
+    LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL = "/discourse-calendar/livestream/chat-status"
+
+    def self.handle_topic_chat_channel_creation(topic)
+      return if topic.category.blank?
+      return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
+      return unless topic.first_post&.event&.livestream?
+
+      channel =
+        Chat::Channel.create!(
+          chatable_id: topic.category.id,
+          chatable_type: "Category",
+          name: topic.title,
+          emoji: "spiral_calendar",
+          status: Chat::Channel.statuses[:open],
+          type: "CategoryChannel",
+          allow_channel_wide_mentions: true,
+        )
+
+      DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
+      channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+      pin_topic_reference_message(topic, channel)
+    end
+
+    def self.pin_topic_reference_message(topic, channel)
+      guardian = Discourse.system_user.guardian
+      message = nil
+
+      Chat::CreateMessage.call(
+        guardian:,
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "discourse_calendar.livestream.chat.topic_reference_message",
+              title: topic.markdown_link_title,
+              url: topic.relative_url,
+            ),
+        },
+        options: {
+          enforce_membership: true,
+        },
+      ) do |create_result|
+        on_success { |message_instance:| message = message_instance }
+        on_failure do
+          Rails.logger.warn(
+            "Failed to create livestream topic reference message for channel #{channel.id}: #{create_result.inspect_steps}",
+          )
+        end
+      end
+
+      return if message.blank?
+
+      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).update_all(
+        reference_message_id: message.id,
+      )
+
+      return if !SiteSetting.chat_pinned_messages
+
+      Chat::PinMessage.call(
+        guardian:,
+        params: {
+          message_id: message.id,
+          channel_id: channel.id,
+        },
+      ) do |pin_result|
+        on_failure do
+          Rails.logger.warn(
+            "Failed to pin livestream topic reference message for channel #{channel.id}: #{pin_result.inspect_steps}",
+          )
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.warn(
+        "Failed to post livestream topic reference message for channel #{channel.id}: #{e.message}",
+      )
+    end
+
+    def self.livestream_chat_status_channel(user_id)
+      "#{LIVESTREAM_CHAT_STATUS_MESSAGE_BUS_CHANNEL}/#{user_id}"
+    end
+
+    def self.publish_livestream_chat_status(membership, user:)
+      MessageBus.publish(
+        livestream_chat_status_channel(user.id),
+        Chat::UserChannelMembershipSerializer.new(membership, scope: user.guardian).to_json,
+        user_ids: [user.id],
+      )
+    end
+
+    class ChannelSerializationContext
+      def initialize(user)
+        @user = user
+      end
+
+      def invitees_by_post_id
+        return {} if @user.nil?
+
+        @invitees_by_post_id ||=
+          DiscoursePostEvent::Invitee.where(user_id: @user.id).index_by(&:post_id)
+      end
+
+      def invitee_event_ids
+        invitees_by_post_id.keys
+      end
+
+      def group_names
+        return [] if @user.nil?
+
+        @group_names ||= @user.groups.pluck(:name)
+      end
+    end
+
+    module ChannelSerializerExtension
+      private
+
+      def livestream_serialization_context
+        @livestream_serialization_context ||=
+          @options[:livestream_context] ||
+            DiscourseCalendar::Livestream::ChannelSerializationContext.new(scope.user)
+      end
+
+      def livestream_invitees_by_post_id
+        livestream_serialization_context.invitees_by_post_id
+      end
+
+      def livestream_invitee_event_ids
+        livestream_serialization_context.invitee_event_ids
+      end
+
+      def livestream_user_group_names
+        livestream_serialization_context.group_names
+      end
+    end
+  end
 
   def self.users_on_holiday
     PluginStore.get(PLUGIN_NAME, USERS_ON_HOLIDAY_KEY) || []
@@ -77,6 +219,9 @@ module ::DiscoursePostEvent
 end
 
 require_relative "lib/discourse_calendar/engine"
+require_relative "lib/discourse_calendar/livestream/topic_extension"
+require_relative "lib/discourse_calendar/livestream/chat_channel_extension"
+require_relative "lib/discourse_calendar/livestream/zoom_url_parser"
 
 Dir
   .glob(File.expand_path("../lib/discourse_calendar/site_settings/*.rb", __FILE__))
@@ -84,6 +229,7 @@ Dir
 
 after_initialize do
   reloadable_patch do
+    register_category_type(DiscourseCalendar::Categories::Types::Events)
     Category.register_custom_field_type("sort_topics_by_event_start_date", :boolean)
     Category.register_custom_field_type("disable_topic_resorting", :boolean)
     register_preloaded_category_custom_fields("sort_topics_by_event_start_date")
@@ -131,13 +277,18 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
+  require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "lib/discourse_post_event/email_renderer"
   require_relative "lib/discourse_post_event/engine"
+  require_relative "lib/discourse_post_event/event_excerpt"
   require_relative "lib/discourse_post_event/event_finder"
+  require_relative "lib/discourse_post_event/event_onebox_data"
   require_relative "lib/discourse_post_event/event_parser"
   require_relative "lib/discourse_post_event/event_validator"
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
   require_relative "lib/discourse_post_event/export_csv_file_extension"
   require_relative "lib/discourse_post_event/post_extension"
+  require_relative "lib/discourse_post_event/topic_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
   require_relative "lib/discourse_post_event/web_hook_extension"
@@ -176,8 +327,12 @@ after_initialize do
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
+    Guardian.prepend(DiscoursePostEvent::GuardianExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscoursePostEvent::TopicExtension)
+    Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
+    Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
 
   add_to_class(:user, :can_create_discourse_post_event?) do
@@ -209,14 +364,10 @@ after_initialize do
   end
 
   add_to_class(:user, :can_act_on_discourse_post_event?) do |event|
-    return @can_act_on_discourse_post_event if defined?(@can_act_on_discourse_post_event)
-    @can_act_on_discourse_post_event =
-      begin
-        return true if staff?
-        can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
-      rescue StandardError
-        false
-      end
+    return true if staff?
+    can_create_discourse_post_event? && Guardian.new(self).can_edit_post?(event.post)
+  rescue StandardError
+    false
   end
 
   add_to_class(:guardian, :can_act_on_discourse_post_event?) do |event|
@@ -241,8 +392,42 @@ after_initialize do
     end,
   ) { DiscoursePostEvent::EventSerializer.new(object.event, scope: scope, root: false) }
 
+  TopicView.on_preload do |topic_view|
+    if SiteSetting.discourse_post_event_enabled
+      # always set the store (even when empty) and avoid a per-post query for every post in the topic
+      topic_view.set_preloaded_post_data(
+        :event_oneboxes,
+        DiscoursePostEvent::EventOneboxData.build(
+          posts: topic_view.posts,
+          guardian: topic_view.guardian,
+        ),
+      )
+    end
+  end
+
+  add_to_serializer(
+    :post,
+    :event_oneboxes,
+    include_condition: -> { SiteSetting.discourse_post_event_enabled && event_oneboxes.present? },
+  ) do
+    # use the batched topic-view preload on the common read path
+    # otherwise compute just this post so the event card shows without a page refresh
+    @event_oneboxes ||=
+      begin
+        preloaded = topic_view&.preloaded_post_data(:event_oneboxes)
+        if preloaded
+          preloaded[object.id] || {}
+        elsif object.cooked&.include?("data-topic")
+          DiscoursePostEvent::EventOneboxData.build(posts: [object], guardian: scope)[object.id] ||
+            {}
+        else
+          {}
+        end
+      end
+  end
+
   on(:post_created) do |post|
-    DiscoursePostEvent::Event.update_from_raw(post)
+    DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
     post.association(:event).reload
     if SiteSetting.discourse_post_event_enabled && post.event
       WebHook.enqueue_calendar_event_hooks(:calendar_event_created, post.event)
@@ -252,7 +437,7 @@ after_initialize do
   on(:post_edited) do |post|
     event_before = post.event
     had_image_before = event_before&.image_upload_id.present?
-    DiscoursePostEvent::Event.update_from_raw(post)
+    DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
     post.association(:event).reload
 
     if SiteSetting.discourse_post_event_enabled
@@ -443,18 +628,18 @@ after_initialize do
   end
 
   validate(:post, :validate_calendar) do |force = nil|
-    return unless self.raw_changed? || force
+    return unless raw_changed? || force
 
     validator = DiscourseCalendar::CalendarValidator.new(self)
     validator.validate_calendar
   end
 
   validate(:post, :validate_event) do |force = nil|
-    return unless self.raw_changed? || force
-    return if self.is_first_post?
+    return unless raw_changed? || force
+    return if is_first_post?
 
     # Skip if not a calendar topic
-    return if !self.topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
+    return if !topic&.first_post&.custom_fields&.[](DiscourseCalendar::CALENDAR_CUSTOM_FIELD)
 
     validator = DiscourseCalendar::EventValidator.new(self)
     validator.validate_event
@@ -569,11 +754,18 @@ after_initialize do
     group_names = group_timezones["groups"] || []
 
     if group_names.present?
+      visible_group_ids =
+        Group
+          .where(name: group_names)
+          .visible_groups(scope.user)
+          .members_visible_groups(scope.user)
+          .select(:id)
+
       users =
         User
           .human_users
           .joins(:groups, :user_option)
-          .where("groups.name": group_names)
+          .where(groups: { id: visible_group_ids })
           .select("users.*", "groups.name AS group_name", "user_options.timezone")
 
       usernames_on_holiday = DiscourseCalendar.users_on_holiday
@@ -600,74 +792,19 @@ after_initialize do
       fragment
         .css(".discourse-post-event")
         .each do |event_node|
-          tz = event_node["data-timezone"] || "UTC"
-          starts_at = event_node["data-start"]
-          ends_at = event_node["data-end"]
-
-          formatted_start =
-            begin
-              DateTime.parse(starts_at).strftime("%B %-d, %Y %-I:%M %p")
-            rescue StandardError
-              starts_at
-            end
-          dates = "#{formatted_start} (#{tz})"
-
-          if ends_at
-            formatted_end =
-              begin
-                DateTime.parse(ends_at).strftime("%B %-d, %Y %-I:%M %p")
-              rescue StandardError
-                ends_at
-              end
-            dates = "#{dates} → #{formatted_end} (#{tz})"
-          end
-
-          event_name = event_node["data-name"] || post.topic.title
-          location = event_node["data-location"]
-          url = event_node["data-url"]
-
-          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
-          image_url = UrlHelper.absolute(event.image_upload.url) if event&.image_upload_id
-
-          rows = +""
-
-          rows << <<~HTML if image_url.present?
-            <tr>
-              <td style="padding: 0;">
-                <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
-              </td>
-            </tr>
-          HTML
-
-          rows << <<~HTML
-            <tr>
-              <td style="padding: 12px;">
-                <a href="#{Discourse.base_url}#{post.url}" style="font-weight: bold; font-size: 1.1em;">#{CGI.escape_html(event_name)}</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(dates)}</td>
-            </tr>
-          HTML
-
-          rows << <<~HTML if location.present?
-              <tr>
-                <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(location)}</td>
-              </tr>
-            HTML
-
-          rows << <<~HTML if url.present?
-              <tr>
-                <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(url)}">#{CGI.escape_html(url)}</a></td>
-              </tr>
-            HTML
-
-          event_node.replace <<~HTML
-            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
-              #{rows}
-            </table>
-          HTML
+          event_node.replace(DiscoursePostEvent::EmailRenderer.render(event_node, post))
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to render event in email for post #{post&.id}",
+          )
         end
+    end
+  end
+
+  on(:reduce_excerpt) do |fragment, options|
+    if SiteSetting.discourse_post_event_enabled
+      DiscoursePostEvent::EventExcerpt.call(fragment, post: options[:post])
     end
   end
 
@@ -771,5 +908,136 @@ after_initialize do
     on_holiday_usernames = DiscourseCalendar.users_on_holiday
     report.data = (group_usernames & on_holiday_usernames).map { |username| { username: username } }
     report.total = report.data.count
+  end
+
+  register_anonymous_action("rsvp_event") do |user, params|
+    event_id = params["event_id"]
+    recurring = ActiveModel::Type::Boolean.new.cast(params["recurring"])
+    existing_invitee = DiscoursePostEvent::Invitee.find_by(post_id: event_id, user_id: user.id)
+
+    if existing_invitee
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          event_id: event_id,
+          invitee_id: existing_invitee.id,
+          status: params["status"],
+          recurring: recurring,
+        },
+        guardian: user.guardian,
+      )
+    else
+      DiscoursePostEvent::CreateInvitee.call(
+        params: {
+          event_id: event_id,
+          status: params["status"],
+          recurring: recurring,
+          user_id: user.id,
+        },
+        guardian: user.guardian,
+      )
+    end
+  end
+
+  # DISCOURSE LIVESTREAM
+
+  add_to_serializer(
+    :topic_view,
+    :chat_channel_id,
+    include_condition: -> do
+      event = object.topic.first_post&.event
+      event&.livestream? && object.topic.topic_chat_channel.present? &&
+        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
+    end,
+  ) { object.topic.topic_chat_channel.chat_channel_id }
+
+  add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  Chat::ChannelSerializer.include(DiscourseCalendar::Livestream::ChannelSerializerExtension)
+
+  register_modifier(:chat_channel_fetcher_public_includes) do |includes|
+    includes + [{ livestream_topic_chat_channel: { topic: { first_post: :event } } }]
+  end
+
+  register_modifier(:chat_channel_serializer_public_options) do |serializer_options, guardian|
+    serializer_options.merge(
+      livestream_context:
+        DiscourseCalendar::Livestream::ChannelSerializationContext.new(guardian.user),
+    )
+  end
+
+  add_to_serializer(
+    "Chat::Channel",
+    :livestream_topic,
+    include_condition: -> do
+      return false if object.chatable_type != "Category"
+
+      topic = object.livestream_topic_chat_channel&.topic
+      event = topic&.first_post&.event
+
+      return false if !event
+
+      event.livestream? &&
+        event.can_access_livestream_chat?(
+          scope.user,
+          invitee_event_ids: livestream_invitee_event_ids,
+          group_names: livestream_user_group_names,
+        )
+    end,
+  ) do
+    topic = object.livestream_topic_chat_channel.topic
+    event = topic.first_post&.event
+    watching_invitee = livestream_invitees_by_post_id[event&.id]
+
+    can_update_attendance =
+      if scope.anonymous? || !event
+        false
+      else
+        event.can_user_update_attendance?(
+          scope.user,
+          invitee_event_ids: livestream_invitee_event_ids,
+          group_names: livestream_user_group_names,
+        )
+      end
+
+    {
+      id: topic.id,
+      title: topic.title,
+      slug: topic.slug,
+      url: topic.relative_url,
+      event_id: topic.first_post&.id,
+      reference_message_id: object.livestream_topic_chat_channel.reference_message_id,
+      can_update_attendance: can_update_attendance,
+      watching_invitee_status:
+        watching_invitee && DiscoursePostEvent::Invitee.statuses[watching_invitee.status],
+    }
+  end
+
+  on(:chat_channel_trashed) do |channel, user|
+    # If the chat channel is deleted, delete the related TopicChatChannel record
+    DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
+  end
+
+  on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
+    topic = invitee.event.post.topic
+    topic_chat_channel = topic.topic_chat_channel
+
+    next if !topic_chat_channel
+
+    user = User.find(invitee.user_id)
+    channel = topic_chat_channel.chat_channel
+    manager = Chat::ChannelMembershipManager.new(channel)
+
+    # Attendance is the chat gate: anyone going is auto-followed into the
+    # livestream channel, anyone else is unfollowed.
+    membership =
+      if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
+        manager.follow(user)
+      else
+        manager.unfollow(user)
+      end
+
+    if membership
+      DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
+    end
   end
 end

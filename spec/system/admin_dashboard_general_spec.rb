@@ -9,29 +9,12 @@ describe "Admin Dashboard General Tab" do
 
   before { sign_in(admin) }
 
-  context "when reporting_improvements is enabled" do
-    before { SiteSetting.reporting_improvements = true }
+  it "displays correct visit counters combining desktop and mobile visits" do
+    visit("/admin")
 
-    it "displays correct visit counters combining desktop and mobile visits" do
-      visit("/admin")
-
-      within ".admin-report.visits .admin-report-counters" do
-        expect(page).to have_css(".today-count", text: "2")
-        expect(page).to have_css(".yesterday-count", text: "1")
-      end
-    end
-  end
-
-  context "when reporting_improvements is disabled" do
-    before { SiteSetting.reporting_improvements = false }
-
-    it "displays correct visit counters" do
-      visit("/admin")
-
-      within ".admin-report.visits .admin-report-counters" do
-        expect(page).to have_css(".today-count", text: "2")
-        expect(page).to have_css(".yesterday-count", text: "1")
-      end
+    within ".admin-report.visits .admin-report-counters" do
+      expect(page).to have_css(".today-count", text: "2")
+      expect(page).to have_css(".yesterday-count", text: "1")
     end
   end
 end

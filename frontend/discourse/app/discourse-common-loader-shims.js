@@ -3,7 +3,7 @@ import loaderShim from "discourse/lib/loader-shim";
 
 // Soon-to-be-deprecated discourse-common imports
 loaderShim("discourse-common/helpers/base-path", () =>
-  importSync("discourse/helpers/base-path")
+  importSync("discourse/ui-kit/helpers/d-base-path")
 );
 loaderShim("discourse-common/helpers/base-url", () =>
   importSync("discourse/helpers/base-url")
@@ -18,7 +18,7 @@ loaderShim("discourse-common/helpers/component-for-row", () =>
   importSync("discourse/helpers/component-for-row")
 );
 loaderShim("discourse-common/helpers/d-icon", () =>
-  importSync("discourse/helpers/d-icon")
+  importSync("discourse/ui-kit/helpers/d-icon")
 );
 loaderShim("discourse-common/helpers/fa-icon", () =>
   importSync("discourse/helpers/fa-icon")

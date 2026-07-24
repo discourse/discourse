@@ -39,10 +39,10 @@ end
 # Table name: model_accuracies
 #
 #  id                  :bigint           not null, primary key
-#  model               :string           not null
 #  classification_type :string           not null
 #  flags_agreed        :integer          default(0), not null
 #  flags_disagreed     :integer          default(0), not null
+#  model               :string           not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #

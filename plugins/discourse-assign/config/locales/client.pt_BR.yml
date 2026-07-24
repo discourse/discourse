@@ -186,3 +186,12 @@ pt_BR:
       title: "Editar atribuições"
       topic: "Tópico"
       post: "Postar"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Atribuiu"
+      assign_topic:
+        operations:
+          assign: "Atribuir"
+          unassign: "Remover atribuição"
+        topic_id: "ID do tópico"
+        assignee: "Destinatário(a)"

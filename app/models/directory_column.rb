@@ -60,14 +60,14 @@ end
 # Table name: directory_columns
 #
 #  id                 :bigint           not null, primary key
-#  name               :string
 #  automatic_position :integer
-#  icon               :string
-#  user_field_id      :integer
 #  enabled            :boolean          not null
+#  icon               :string
+#  name               :string
 #  position           :integer          not null
-#  created_at         :datetime
 #  type               :integer          default("automatic"), not null
+#  created_at         :datetime
+#  user_field_id      :integer
 #
 # Indexes
 #

@@ -7,14 +7,17 @@ import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse/lib/get-url";
+import {
+  clearModelFields,
+  modelFieldNames,
+  registerModelField,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { deepEqual } from "discourse/lib/object";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import {
-  defineTrackedProperty,
-  enumerateTrackedKeys,
-} from "discourse/lib/tracked-tools";
+import { enumerateTrackedKeys } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -25,8 +28,6 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
-const pluginTrackedProperties = new Set();
-
 /**
  * @internal
  * Adds a tracked property to the post model.
@@ -36,7 +37,8 @@ const pluginTrackedProperties = new Set();
  * @param {string} propertyKey - The key of the property to track.
  */
 export function _addTrackedPostProperty(propertyKey) {
-  pluginTrackedProperties.add(propertyKey);
+  stampModelClass(Post, "post");
+  registerModelField("post", propertyKey);
 }
 
 /**
@@ -45,7 +47,7 @@ export function _addTrackedPostProperty(propertyKey) {
  * USE ONLY FOR TESTING PURPOSES.
  */
 export function clearAddedTrackedPostProperties() {
-  pluginTrackedProperties.clear();
+  clearModelFields("post");
 }
 
 export default class Post extends RestModel {
@@ -144,7 +146,6 @@ export default class Post extends RestModel {
   @tracked badges_granted;
   @tracked bookmarked;
   @tracked can_delete;
-  @tracked can_edit;
   @tracked can_permanently_delete;
   @tracked can_recover;
   @tracked can_see_hidden_post;
@@ -169,6 +170,8 @@ export default class Post extends RestModel {
   @tracked likeAction;
   @tracked link_counts;
   @tracked localization_outdated;
+  @tracked localizedCooked;
+  @tracked localized_oneboxes;
   @tracked locked;
   @tracked moderator;
   @tracked name;
@@ -200,18 +203,21 @@ export default class Post extends RestModel {
   @tracked via_email;
   @tracked wiki;
   @tracked yours;
+  @tracked _can_edit;
   // for compatibility with existing code
   // mark fist post as deleted if topic was deleted
   // post is either highlighted as deleted or hidden/removed from the post stream
   // post or content still can be recovered
 
-  constructor() {
-    super(...arguments);
-
-    // adds tracked properties defined by plugin to the instance
-    pluginTrackedProperties.forEach((propertyKey) => {
-      defineTrackedProperty(this, propertyKey);
+  @dependentKeyCompat
+  get can_edit() {
+    return applyValueTransformer("post-can-edit", this._can_edit, {
+      post: this,
     });
+  }
+
+  set can_edit(value) {
+    this._can_edit = value;
   }
 
   @dependentKeyCompat
@@ -288,19 +294,8 @@ export default class Post extends RestModel {
     return this.firstPost ? this.topic?.deleted_at : this.deleted_at;
   }
 
-  @computed(
-    "post_number",
-    "topic_id",
-    "topic.slug",
-    "topic.is_nested_view",
-    "topic._forcedFlat"
-  )
+  @computed("post_number", "topic_id", "topic.slug")
   get url() {
-    if (this.topic?.is_nested_view && !this.topic?._forcedFlat) {
-      const slug = this.topic.slug || "topic";
-      const topicId = this.topic_id || this.topic.id;
-      return getURL(`/n/${slug}/${topicId}/${this.post_number}`);
-    }
     return postUrl(
       this.topic?.slug || this.topic_slug,
       this.topic_id || this.get("topic.id"),
@@ -459,10 +454,16 @@ export default class Post extends RestModel {
     return this.post_type === this.site.post_types.moderator_action;
   }
 
+  get isWarning() {
+    return this.topic?.is_warning;
+  }
+
   get isSmallAction() {
-    return (
+    return applyValueTransformer(
+      "post-is-small-action",
       this.post_type === this.site.post_types.small_action ||
-      this.action_code === "split_topic"
+        this.action_code === "split_topic",
+      { post: this }
     );
   }
 
@@ -684,7 +685,7 @@ export default class Post extends RestModel {
     [
       ...Object.keys(otherPost),
       ...enumerateTrackedKeys(otherPost),
-      ...pluginTrackedProperties,
+      ...modelFieldNames("post"),
     ].forEach((key) => {
       let value = otherPost[key],
         oldValue = this[key];
@@ -720,6 +721,22 @@ export default class Post extends RestModel {
     return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
+  }
+
+  async toggleLocalizedContent() {
+    if (this.localizedCooked) {
+      this.setProperties({
+        cooked: this.localizedCooked,
+        localizedCooked: null,
+      });
+    } else {
+      const result = await ajax(`/posts/${this.id}/cooked.json`);
+
+      this.setProperties({
+        localizedCooked: this.cooked,
+        cooked: result.cooked,
+      });
+    }
   }
 
   rebake() {

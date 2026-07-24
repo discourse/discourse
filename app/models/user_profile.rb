@@ -35,8 +35,8 @@ class UserProfile < ActiveRecord::Base
     if saved_change_to_profile_background_upload_id? ||
          saved_change_to_card_background_upload_id? || saved_change_to_bio_raw?
       upload_ids =
-        [self.profile_background_upload_id, self.card_background_upload_id] +
-          Upload.extract_upload_ids(self.bio_raw)
+        [profile_background_upload_id, card_background_upload_id] +
+          Upload.extract_upload_ids(bio_raw)
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -62,24 +62,24 @@ class UserProfile < ActiveRecord::Base
   end
 
   def recook_bio
-    self.bio_raw_will_change!
+    bio_raw_will_change!
     cook
   end
 
   def upload_card_background(upload)
-    self.update!(card_background_upload: upload)
+    update!(card_background_upload: upload)
   end
 
   def clear_card_background
-    self.update!(card_background_upload: nil)
+    update!(card_background_upload: nil)
   end
 
   def upload_profile_background(upload)
-    self.update!(profile_background_upload: upload)
+    update!(profile_background_upload: upload)
   end
 
   def clear_profile_background
-    self.update!(profile_background_upload: nil)
+    update!(profile_background_upload: nil)
   end
 
   def self.rebake_old(limit)
@@ -88,11 +88,9 @@ class UserProfile < ActiveRecord::Base
       .where("bio_cooked_version IS NULL OR bio_cooked_version < ?", BAKED_VERSION)
       .limit(limit)
       .each do |p|
-        begin
-          p.rebake!
-        rescue => e
-          problems << { profile: p, ex: e }
-        end
+        p.rebake!
+      rescue => e
+        problems << { profile: p, ex: e }
       end
     problems
   end
@@ -133,7 +131,7 @@ class UserProfile < ActiveRecord::Base
         type: type,
       ).create_for(user.id)
 
-    if (is_card_background)
+    if is_card_background
       user.user_profile.upload_card_background(upload)
     else
       user.user_profile.upload_profile_background(upload)
@@ -155,7 +153,7 @@ class UserProfile < ActiveRecord::Base
       Jobs.enqueue_in(
         SiteSetting.editing_grace_period,
         :pull_user_profile_hotlinked_images,
-        user_id: self.user_id,
+        user_id: user_id,
       )
     end
   end
@@ -167,9 +165,9 @@ class UserProfile < ActiveRecord::Base
   end
 
   def cooked
-    if self.bio_raw.present?
+    if bio_raw.present?
       PrettyText.cook(
-        self.bio_raw,
+        bio_raw,
         omit_nofollow: user.has_trust_level?(TrustLevel[3]) && !SiteSetting.tl3_links_no_follow,
       )
     else
@@ -178,7 +176,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def cook
-    if self.bio_raw.present?
+    if bio_raw.present?
       if bio_raw_changed?
         self.bio_cooked = cooked
         self.bio_cooked_version = BAKED_VERSION
@@ -194,21 +192,19 @@ class UserProfile < ActiveRecord::Base
 
   def website_domain_validator
     allowed_domains = SiteSetting.allowed_user_website_domains
-    return if (allowed_domains.blank? || self.website.blank?)
+    return if allowed_domains.blank? || website.blank?
 
     domain =
       begin
-        URI.parse(self.website).host
+        URI.parse(website).host
       rescue URI::Error
       end
     if allowed_domains.split("|").exclude?(domain)
-      self.errors.add :base,
-                      (
-                        I18n.t(
-                          "user.website.domain_not_allowed",
-                          domains: allowed_domains.split("|").join(", "),
-                        )
-                      )
+      errors.add :base,
+                 I18n.t(
+                   "user.website.domain_not_allowed",
+                   domains: allowed_domains.split("|").join(", "),
+                 )
     end
   end
 
@@ -221,18 +217,18 @@ end
 #
 # Table name: user_profiles
 #
-#  user_id                      :integer          not null, primary key
-#  location                     :string(3000)
-#  website                      :string(3000)
-#  bio_raw                      :text
 #  bio_cooked                   :text
-#  dismissed_banner_key         :integer
 #  bio_cooked_version           :integer
+#  bio_raw                      :text
+#  dismissed_banner_key         :integer
+#  location                     :string(3000)
 #  views                        :integer          default(0), not null
-#  profile_background_upload_id :integer
+#  website                      :string(3000)
 #  card_background_upload_id    :integer
-#  granted_title_badge_id       :bigint
 #  featured_topic_id            :integer
+#  granted_title_badge_id       :bigint
+#  profile_background_upload_id :integer
+#  user_id                      :integer          not null, primary key
 #
 # Indexes
 #

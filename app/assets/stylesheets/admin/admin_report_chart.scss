@@ -8,7 +8,7 @@
   }
 }
 
-body.uc-reporting-improvements .admin-contents:not(.dashboard) .chart {
+.admin-contents:not(.dashboard) .chart {
   &__wrapper {
     display: flex;
     flex-direction: column;
@@ -89,6 +89,12 @@ body.uc-reporting-improvements .admin-contents:not(.dashboard) .chart {
 
     @include viewport.until(sm) {
       flex-direction: column;
+    }
+  }
+
+  &__filter {
+    &.--include_subcategories {
+      align-self: center;
     }
   }
 

@@ -13,7 +13,7 @@ describe PrettyText do
       [/policy]
     MD
 
-    cooked = (<<~HTML).strip
+    cooked = <<~HTML.strip
       <div class="policy" data-accept="banana" data-group="team" data-reminder="weekly" data-renew-start="2010-01-01" data-revoke="apple" data-version="1">
       <p>I always open <strong>doors</strong>!</p>
       </div>
@@ -29,7 +29,7 @@ describe PrettyText do
       [/policy]
     MD
 
-    cooked = (<<~HTML).strip
+    cooked = <<~HTML.strip
       <div class="policy" data-accept="banana" data-groups="team,staff" data-reminder="weekly" data-renew-start="2010-01-01" data-revoke="apple" data-version="1">
       <p>I always open <strong>doors</strong>!</p>
       </div>

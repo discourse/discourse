@@ -4,7 +4,7 @@ class SiteSetting::UpsertGroups
   include Service::Base
 
   params do
-    before_validation { self.group_names = Array.wrap(self.group_names).delete_if(&:empty?) }
+    before_validation { self.group_names = Array.wrap(group_names).delete_if(&:empty?) }
 
     attribute :group_names, :array
     attribute :setting, :string
@@ -13,6 +13,7 @@ class SiteSetting::UpsertGroups
   end
 
   policy :current_user_is_admin
+  policy :allowed_enabled_for_target
   only_if(:provided_group_names) do
     model :group_ids
 
@@ -41,6 +42,13 @@ class SiteSetting::UpsertGroups
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def allowed_enabled_for_target(params:)
+    return true if params.group_names.empty?
+
+    target = params.group_names == ["staff"] ? :staff : :specific_groups
+    UpcomingChanges.target_allowed?(params.setting, target)
   end
 
   def fetch_group_ids(params:)

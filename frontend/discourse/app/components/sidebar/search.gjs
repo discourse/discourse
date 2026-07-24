@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { translateModKey } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class Search extends Component {
@@ -32,7 +32,7 @@ export default class Search extends Component {
             @icon="magnifying-glass"
             class="btn-transparent sidebar-search__icon"
           />
-          {{! template-lint-disable no-pointer-down-event-binding }}
+          {{! eslint-disable ember/template-no-pointer-down-event-binding }}
           <input
             {{on "mousedown" this.onClick}}
             placeholder={{i18n "sidebar.search"}}

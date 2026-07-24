@@ -63,6 +63,6 @@ class AiSpamSerializer < ApplicationSerializer
   def spam_scanning_user
     user = DiscourseAi::AiModeration::SpamScanner.flagging_user
 
-    (user.presence&.serializable_hash(only: %i[id username name admin]))
+    user.presence&.serializable_hash(only: %i[id username name admin])
   end
 end

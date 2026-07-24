@@ -7,7 +7,7 @@ class ColorSchemeRevisor
   end
 
   def self.revise(color_scheme, params)
-    self.new(color_scheme, params).revise
+    new(color_scheme, params).revise
   end
 
   def revise

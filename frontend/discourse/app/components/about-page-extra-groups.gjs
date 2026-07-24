@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AboutPageUsers from "discourse/components/about-page-users";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 
 export default class AboutPageExtraGroups extends Component {
   @service site;
@@ -109,7 +109,7 @@ export default class AboutPageExtraGroups extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
+    <DConditionalLoadingSpinner @condition={{this.loading}}>
       {{#each this.groups as |group|}}
         <section
           class="about__{{group.name}}
@@ -128,6 +128,6 @@ export default class AboutPageExtraGroups extends Component {
           />
         </section>
       {{/each}}
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

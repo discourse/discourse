@@ -32,7 +32,7 @@ describe "Unified new topic list" do
 
   shared_examples "new list new topics and replies toggle" do
     context "when unified new is enabled" do
-      before { SiteSetting.experimental_new_new_view_groups = group.name }
+      before { SiteSetting.enable_unified_new = true }
 
       it "shows all new topics and replies by default" do
         visit("/new")
@@ -304,7 +304,7 @@ describe "Unified new topic list" do
     end
 
     context "when unified new is not enabled" do
-      before { SiteSetting.experimental_new_new_view_groups = "" }
+      before { SiteSetting.enable_unified_new = false }
 
       it "doesn't show the tabs toggle" do
         visit("/new")
@@ -318,7 +318,7 @@ describe "Unified new topic list" do
 
     context "when there are no new topics" do
       before do
-        SiteSetting.experimental_new_new_view_groups = group.name
+        SiteSetting.enable_unified_new = true
 
         [new_topic, new_topic_in_category, new_topic_with_tag].each do |topic|
           TopicUser.update_last_read(user, topic.id, 1, 1, 1)
@@ -347,7 +347,7 @@ describe "Unified new topic list" do
 
     context "when there are no new replies" do
       before do
-        SiteSetting.experimental_new_new_view_groups = group.name
+        SiteSetting.enable_unified_new = true
 
         [new_reply, new_reply_in_category, new_reply_with_tag].each do |topic|
           TopicUser.update_last_read(user, topic.id, 2, 1, 1)
@@ -380,7 +380,7 @@ describe "Unified new topic list" do
 
     context "when there's only new topics" do
       before do
-        SiteSetting.experimental_new_new_view_groups = group.name
+        SiteSetting.enable_unified_new = true
 
         [new_reply, new_reply_in_category, new_reply_with_tag].each do |topic|
           TopicUser.update_last_read(user, topic.id, 2, 1, 1)
@@ -409,7 +409,7 @@ describe "Unified new topic list" do
 
     context "when there's only new replies" do
       before do
-        SiteSetting.experimental_new_new_view_groups = group.name
+        SiteSetting.enable_unified_new = true
 
         [new_topic, new_topic_in_category, new_topic_with_tag].each do |topic|
           TopicUser.update_last_read(user, topic.id, 1, 1, 1)

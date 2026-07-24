@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import icon from "discourse/helpers/d-icon";
 import { clipboardCopy } from "discourse/lib/utilities";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptionUrl extends Component {
@@ -44,7 +44,7 @@ export default class CalendarSubscriptionUrl extends Component {
           {{on "click" this.copy}}
           class="btn btn-default btn-small"
         >
-          {{icon (if this.copied "check" "copy")}}
+          {{dIcon (if this.copied "check" "copy")}}
           {{if
             this.copied
             (i18n "user.calendar_subscriptions.copied")
@@ -57,7 +57,7 @@ export default class CalendarSubscriptionUrl extends Component {
           rel="noopener noreferrer"
           class="btn btn-flat btn-small"
         >
-          {{icon "fab-google"}}
+          {{dIcon "fab-google"}}
           {{i18n "user.calendar_subscriptions.add_to_google"}}
         </a>
         <a
@@ -66,11 +66,11 @@ export default class CalendarSubscriptionUrl extends Component {
           rel="noopener noreferrer"
           class="btn btn-flat btn-small"
         >
-          {{icon "fab-microsoft"}}
+          {{dIcon "fab-microsoft"}}
           {{i18n "user.calendar_subscriptions.add_to_outlook"}}
         </a>
         <a href={{this.webcalUrl}} class="btn btn-flat btn-small">
-          {{icon "fab-apple"}}
+          {{dIcon "fab-apple"}}
           {{i18n "user.calendar_subscriptions.add_to_apple"}}
         </a>
       </div>

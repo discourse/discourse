@@ -11,41 +11,34 @@ module DiscourseSubscriptions
       PAGE_LIMIT = 10
 
       def index
-        begin
-          subscription_ids = Subscription.all.pluck(:external_id)
-          subscriptions = {
-            has_more: false,
-            data: [],
-            length: 0,
-            last_record: params[:last_record],
-          }
+        subscription_ids = Subscription.all.pluck(:external_id)
+        subscriptions = { has_more: false, data: [], length: 0, last_record: params[:last_record] }
 
-          if subscription_ids.present? && is_stripe_configured?
-            while subscriptions[:length] < PAGE_LIMIT
-              current_set = get_subscriptions(subscriptions[:last_record])
+        if subscription_ids.present? && is_stripe_configured?
+          while subscriptions[:length] < PAGE_LIMIT
+            current_set = get_subscriptions(subscriptions[:last_record])
 
-              until valid_subscriptions =
-                      find_valid_subscriptions(current_set[:data], subscription_ids)
-                current_set = get_subscriptions(current_set[:data].last)
-                break if current_set[:has_more] == false
-              end
-
-              subscriptions[:data] = subscriptions[:data].concat(valid_subscriptions.to_a)
-              subscriptions[:last_record] = current_set[:data].last[:id] if current_set[
-                :data
-              ].present?
-              subscriptions[:length] = subscriptions[:data].length
-              subscriptions[:has_more] = current_set[:has_more]
-              break if subscriptions[:has_more] == false
+            until valid_subscriptions =
+                    find_valid_subscriptions(current_set[:data], subscription_ids)
+              current_set = get_subscriptions(current_set[:data].last)
+              break if current_set[:has_more] == false
             end
-          elsif !is_stripe_configured?
-            subscriptions = nil
-          end
 
-          render_json_dump subscriptions
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
+            subscriptions[:data] = subscriptions[:data].concat(valid_subscriptions.to_a)
+            subscriptions[:last_record] = current_set[:data].last[:id] if current_set[
+              :data
+            ].present?
+            subscriptions[:length] = subscriptions[:data].length
+            subscriptions[:has_more] = current_set[:has_more]
+            break if subscriptions[:has_more] == false
+          end
+        elsif !is_stripe_configured?
+          subscriptions = nil
         end
+
+        render_json_dump subscriptions
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       def destroy

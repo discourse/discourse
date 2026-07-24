@@ -9,8 +9,8 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
@@ -270,7 +270,7 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper
               {{this.handleFocus}}
-              {{closeOnClickOutside
+              {{dCloseOnClickOutside
                 this.toggleSearchMenu
                 (hash
                   targetSelector=".search-menu-panel"

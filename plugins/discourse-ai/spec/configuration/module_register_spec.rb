@@ -1,33 +1,18 @@
 # frozen_string_literal: true
 
-unless defined?(FakeExternalAgent)
-  class FakeExternalAgent < DiscourseAi::Agents::Agent
-    def tools
-      []
-    end
-
-    def system_prompt
-      "Test agent"
-    end
-  end
-end
-
 describe DiscourseAi::Configuration::Module do
   fab!(:fake_plugin) do
     plugin = Plugin::Instance.new
-    plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+    plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
     plugin
   end
 
   before do
-    DiscoursePluginRegistry.register_external_ai_feature(
-      {
-        module_name: :test_plugin,
-        feature: :test_feature,
-        agent_klass: FakeExternalAgent,
-        enabled_by_setting: nil,
-      },
-      fake_plugin,
+    DiscourseAi.register_feature(
+      module_name: :test_plugin,
+      feature: :test_feature,
+      agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+      plugin: fake_plugin,
     )
   end
 
@@ -52,30 +37,53 @@ describe DiscourseAi::Configuration::Module do
       expect(test_mod.id).to eq(expected_id)
     end
 
+    it "auto-defines the agent site setting for the feature" do
+      expected_default =
+        DiscourseAi::Agents::Agent.external_agent_id(
+          DiscourseAi::TestHelpers::FakeExternalAgent,
+        ).to_s
+      expect(SiteSetting.test_plugin_test_feature_agent).to eq(expected_default)
+    end
+
+    it "registers the ai-features area and assigns the agent setting to it" do
+      expect(SiteSetting.valid_areas).to include("ai-features/test_plugin")
+      expect(SiteSetting.areas[:test_plugin_test_feature_agent]).to include(
+        "ai-features/test_plugin",
+      )
+    end
+
+    it "assigns enabled_by_setting to the area when provided" do
+      DiscourseAi.register_feature(
+        module_name: :test_plugin,
+        feature: :gated_feature,
+        agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+        enabled_by_setting: "discourse_ai_enabled",
+        plugin: fake_plugin,
+      )
+
+      expect(SiteSetting.areas[:discourse_ai_enabled]).to eq("ai-features/test_plugin")
+    end
+
     context "with multiple features gated by different settings" do
       before do
         DiscoursePluginRegistry._raw_external_ai_features.reject! do |entry|
           entry[:value][:module_name] == :test_plugin
         end
 
-        DiscoursePluginRegistry.register_external_ai_feature(
-          {
-            module_name: :test_plugin,
-            feature: :feature_a,
-            agent_klass: FakeExternalAgent,
-            enabled_by_setting: "data_explorer_enabled",
-          },
-          fake_plugin,
+        DiscourseAi.register_feature(
+          module_name: :test_plugin,
+          feature: :feature_a,
+          agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+          enabled_by_setting: "data_explorer_enabled",
+          plugin: fake_plugin,
         )
 
-        DiscoursePluginRegistry.register_external_ai_feature(
-          {
-            module_name: :test_plugin,
-            feature: :feature_b,
-            agent_klass: FakeExternalAgent,
-            enabled_by_setting: "data_explorer_ai_queries_enabled",
-          },
-          fake_plugin,
+        DiscourseAi.register_feature(
+          module_name: :test_plugin,
+          feature: :feature_b,
+          agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+          enabled_by_setting: "data_explorer_ai_queries_enabled",
+          plugin: fake_plugin,
         )
       end
 

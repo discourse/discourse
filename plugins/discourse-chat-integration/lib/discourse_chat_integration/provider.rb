@@ -16,13 +16,12 @@ module DiscourseChatIntegration
     end
 
     def self.enabled_providers
-      self.providers.select { |provider| self.is_enabled(provider) }
+      providers.select { |provider| is_enabled(provider) }
     end
 
     def self.disabled_providers
-      self
-        .providers
-        .reject { |provider| self.is_enabled(provider) }
+      providers
+        .reject { |provider| is_enabled(provider) }
         .sort_by do |provider|
           score = defined?(provider::POPULARITY_SCORE) ? provider::POPULARITY_SCORE : 0
           [-score, provider::PROVIDER_NAME]
@@ -30,15 +29,15 @@ module DiscourseChatIntegration
     end
 
     def self.provider_names
-      self.providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
+      providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.enabled_provider_names
-      self.enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
+      enabled_providers.map! { |provider_klass| provider_klass::PROVIDER_NAME }
     end
 
     def self.get_by_name(name)
-      self.providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
+      providers.find { |provider_klass| provider_klass::PROVIDER_NAME == name }
     end
 
     def self.is_enabled(provider)
@@ -92,7 +91,7 @@ module DiscourseChatIntegration
         engine =
           provider
             .constants
-            .select { |constant| constant.to_s =~ (/Engine$/) && (constant.to_s != "HookEngine") }
+            .select { |constant| constant.to_s =~ /Engine$/ && (constant.to_s != "HookEngine") }
             .map(&provider.method(:const_get))
             .first
 

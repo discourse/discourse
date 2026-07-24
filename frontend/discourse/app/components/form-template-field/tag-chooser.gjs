@@ -6,9 +6,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { not } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {
@@ -96,25 +96,13 @@ export default class TagChooserField extends Component {
 
   @action
   handleSelectedValues(event) {
-    const getFallbackValue = (optionValue) =>
-      optionValue.toLowerCase().replace(/\s+/g, "-");
-    let choiceMap = null;
-    const tagChoices = this.args.attributes?.tag_choices;
-
-    if (tagChoices) {
-      choiceMap = new Map(
-        Object.entries(tagChoices).map(([key, value]) => [value, key])
-      );
-    }
-
-    const selectedValues = Array.from(event.target.selectedOptions).map(
-      (option) => {
-        const mappedValue = choiceMap?.get(option.textContent.trim());
-        return mappedValue ?? getFallbackValue(option.value);
-      }
+    const nameByDisplay = new Map(
+      this.formattedChoices.map((choice) => [choice.display, choice.name])
     );
 
-    return selectedValues;
+    return Array.from(event.target.selectedOptions)
+      .map((option) => nameByDisplay.get(option.value))
+      .filter(Boolean);
   }
 
   @action
@@ -161,7 +149,7 @@ export default class TagChooserField extends Component {
         <label class="form-template-field__label">
           {{@attributes.label}}
           {{#if @validations.required}}
-            {{icon "asterisk" class="form-template-field__required-indicator"}}
+            {{dIcon "asterisk" class="form-template-field__required-indicator"}}
           {{/if}}
         </label>
       {{/if}}

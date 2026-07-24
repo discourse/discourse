@@ -19,7 +19,7 @@ class InlineFootnote extends Component {
       @closeOnClickOutside={{true}}
     >
       <:trigger>
-        {{! template-lint-disable no-invalid-link-text }}
+        {{! eslint-disable ember/template-no-invalid-link-text }}
         <a
           class="expand-footnote"
           href
@@ -53,7 +53,13 @@ export default apiInitializer((api) => {
       }
 
       const footnoteId = refLink.getAttribute("href");
-      const footnoteContent = elem.querySelector(footnoteId)?.innerHTML;
+      const footnoteElement = elem.querySelector(footnoteId)?.cloneNode(true);
+
+      footnoteElement
+        ?.querySelectorAll("sup.footnote-ref, .footnote-backref")
+        .forEach((element) => element.remove());
+
+      const footnoteContent = footnoteElement?.innerHTML;
 
       const expandableFootnote = document.createElement("span");
       expandableFootnote.className = "inline-footnote";

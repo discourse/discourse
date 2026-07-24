@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../lib/discourse_assign/assignment_permissions"
+
 class Assignment < ActiveRecord::Base
   VALID_TYPES = %w[topic post].freeze
 
@@ -98,6 +100,10 @@ class Assignment < ActiveRecord::Base
   def publish_topic_assignment
     return if !assigned_to
 
+    allowed_user_ids =
+      DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target || topic)
+    return if allowed_user_ids.blank?
+
     serializer_class = assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
     MessageBus.publish(
       "/staff/topic-assignment",
@@ -111,7 +117,7 @@ class Assignment < ActiveRecord::Base
         assignment_note: note,
         assignment_status: status,
       },
-      user_ids: User.assign_allowed.pluck(:id),
+      user_ids: allowed_user_ids,
     )
   end
 
@@ -133,17 +139,17 @@ end
 # Table name: assignments
 #
 #  id                  :bigint           not null, primary key
-#  topic_id            :integer          not null
-#  assigned_to_id      :integer          not null
-#  assigned_by_user_id :integer          not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  assigned_to_type    :string           not null
-#  target_id           :integer          not null
-#  target_type         :string           not null
 #  active              :boolean          default(TRUE)
+#  assigned_to_type    :string           not null
 #  note                :string
 #  status              :text
+#  target_type         :string           not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  assigned_by_user_id :integer          not null
+#  assigned_to_id      :integer          not null
+#  target_id           :integer          not null
+#  topic_id            :integer          not null
 #
 # Indexes
 #

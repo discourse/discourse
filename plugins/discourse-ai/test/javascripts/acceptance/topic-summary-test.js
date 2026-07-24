@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -21,13 +21,8 @@ acceptance("Topic - Summary", function (needs) {
       return helper.response(json);
     });
 
-    server.get("/discourse-ai/summarization/t/1", () => {
-      return helper.response({
-        ai_topic_summary: {
-          summarized_text: "This a",
-        },
-        done: false,
-      });
+    server.post("/discourse-ai/summarization/t/1", () => {
+      return helper.response({ success: "OK" });
     });
 
     server.get("/discourse-ai/credits/status", () => {
@@ -45,16 +40,22 @@ acceptance("Topic - Summary", function (needs) {
     updateCurrentUser({ id: currentUserId });
   });
 
+  async function openStreamingSummaryModal() {
+    (await waitFor(".ai-summarization-button")).click();
+    await waitFor(".ai-summary-modal .ai-summary__container");
+  }
+
   test("displays streamed summary", async function (assert) {
     await visit("/t/-/1");
 
     const partialSummary = "This a";
+
+    await openStreamingSummaryModal();
+
     await publishToMessageBus("/discourse-ai/summaries/topic/1", {
       done: false,
       ai_topic_summary: { summarized_text: partialSummary },
     });
-
-    await click(".ai-summarization-button");
 
     assert
       .dom(".ai-summary-box .generated-summary p")
@@ -85,13 +86,8 @@ acceptance("Topic - Summary", function (needs) {
   test("clicking summary links", async function (assert) {
     await visit("/t/-/1");
 
-    const partialSummary = "In this post,";
-    await publishToMessageBus("/discourse-ai/summaries/topic/1", {
-      done: false,
-      ai_topic_summary: { summarized_text: partialSummary },
-    });
+    await openStreamingSummaryModal();
 
-    await click(".ai-summarization-button");
     const finalSummaryCooked =
       "In this post,  <a href='/t/-/1/1'>bianca</a> said some stuff.";
     const finalSummaryResult = "In this post, bianca said some stuff.";

@@ -352,9 +352,9 @@ class ColorScheme < ActiveRecord::Base
   validate :no_edits_for_remote_copies, on: :update
   validates_associated :color_scheme_colors
 
-  BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss"
+  BASE_COLORS_FILE = "#{Rails.root.join("app/assets/stylesheets/common/foundation/colors.scss")}"
   COLOR_TRANSFORMATION_FILE =
-    "#{Rails.root}/app/assets/stylesheets/common/foundation/color_transformations.scss"
+    "#{Rails.root.join("app/assets/stylesheets/common/foundation/color_transformations.scss")}"
 
   @mutex = Mutex.new
 
@@ -464,17 +464,15 @@ class ColorScheme < ActiveRecord::Base
 
   def colors=(arr)
     @colors_by_name = nil
-    arr.each { |c| self.color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex]) }
+    arr.each { |c| color_scheme_colors << ColorSchemeColor.new(name: c[:name], hex: c[:hex]) }
   end
 
   def colors_by_name
     @colors_by_name ||=
-      self
-        .colors
-        .inject({}) do |sum, c|
-          sum[c.name] = c
-          sum
-        end
+      colors.inject({}) do |sum, c|
+        sum[c.name] = c
+        sum
+      end
   end
 
   def clear_colors_cache
@@ -526,7 +524,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def publish_discourse_stylesheet
-    self.class.publish_discourse_stylesheets!(self.id) if self.id
+    self.class.publish_discourse_stylesheets!(id) if id
   end
 
   def self.publish_discourse_stylesheets!(id = nil)
@@ -562,7 +560,7 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def bump_version
-    self.version += 1 if self.id
+    self.version += 1 if id
   end
 
   def is_dark?
@@ -580,20 +578,20 @@ class ColorScheme < ActiveRecord::Base
 
   def diverge_from_remote
     new_scheme = dup
-    new_scheme.colors = self.colors_hashes
+    new_scheme.colors = colors_hashes
     new_scheme.via_wizard = false
     new_scheme.user_selectable = false
     new_scheme.base_scheme_id = nil
     new_scheme.skip_publish = true
     new_scheme.remote_copy = true
 
-    DistributedMutex.synchronize("color_scheme_diverge_from_remote_#{self.id}") do
-      self.reload
-      if self.base_scheme.blank?
-        self.transaction do
+    DistributedMutex.synchronize("color_scheme_diverge_from_remote_#{id}") do
+      reload
+      if base_scheme.blank?
+        transaction do
           new_scheme.save!
           self.base_scheme_id = new_scheme.id
-          self.save!
+          save!
         end
       end
     end

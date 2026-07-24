@@ -74,13 +74,14 @@ module DiscourseAi
           end
 
           flag_success = true
-          if %w[spam spam_silence].include?(flag_type)
+          if spam_flag?
             result =
               PostActionCreator.new(
                 Discourse.system_user,
                 post,
                 PostActionType.types[:spam],
-                message: flag_reason,
+                message: spam_post_action_message,
+                reason: spam_score_reason,
                 queue_for_review: true,
               ).perform
             flag_success = result.success?
@@ -153,18 +154,35 @@ module DiscourseAi
         end
 
         def flag_reason
-          if feature_context[:automation_id].present? && feature_context[:automation_name].present?
-            I18n.t(
-              "discourse_automation.scriptables.llm_triage.flagged_post",
-              base_path: feature_context[:base_path] || Discourse.base_path,
-              llm_response:
-                ERB::Util.html_escape(feature_context[:llm_response].presence || reason),
-              automation_id: feature_context[:automation_id].to_s,
-              automation_name: ERB::Util.html_escape(feature_context[:automation_name].to_s),
-            )
-          else
-            I18n.t("discourse_ai.ai_bot.flag_post.reason", reason: reason)
-          end
+          DiscourseAi::Automation.flag_post_reason(
+            reason: reason,
+            llm_response: feature_context[:llm_response],
+            automation_id: feature_context[:automation_id],
+            automation_name: feature_context[:automation_name],
+            base_path: feature_context[:base_path] || Discourse.base_path,
+          )
+        end
+
+        def spam_score_reason
+          DiscourseAi::Automation.spam_score_reason(
+            automation_id: feature_context[:automation_id],
+            automation_name: feature_context[:automation_name],
+            base_path: feature_context[:base_path] || Discourse.base_path,
+          )
+        end
+
+        def spam_post_action_message
+          DiscourseAi::Automation.spam_post_action_message(
+            reason: reason,
+            llm_response: feature_context[:llm_response],
+            automation_id: feature_context[:automation_id],
+            automation_name: feature_context[:automation_name],
+            base_path: feature_context[:base_path] || Discourse.base_path,
+          )
+        end
+
+        def spam_flag?
+          %w[spam spam_silence].include?(flag_type)
         end
 
         def feature_context

@@ -1,6 +1,5 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import MessageBus from "message-bus-client";
 import { module, test } from "qunit";
 import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -26,7 +25,7 @@ module("Unit | Model | private-message-topic-tracking-state", function (hooks) {
   test("modifying state calls onStateChange callbacks", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-      messageBus: MessageBus,
+      messageBus: window.MessageBus,
       currentUser: store.createRecord("user", { id: 77889, username: "test" }),
     });
 
@@ -52,7 +51,7 @@ module(
       setupPretender();
       const store = getOwner(this).lookup("service:store");
       const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-        messageBus: MessageBus,
+        messageBus: window.MessageBus,
         currentUser: store.createRecord("user", {
           id: 77889,
           username: "test",
@@ -112,7 +111,7 @@ module(
       setupPretender();
       const store = getOwner(this).lookup("service:store");
       const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
-        messageBus: MessageBus,
+        messageBus: window.MessageBus,
         currentUser: store.createRecord("user", {
           id: 77889,
           username: "test",

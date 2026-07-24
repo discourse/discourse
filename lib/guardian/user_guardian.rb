@@ -7,7 +7,7 @@ module UserGuardian
   end
 
   def can_pick_avatar?(user_avatar, upload)
-    return false unless self.user
+    return false unless user
     return true if is_admin?
     # can always pick blank avatar
     return true if !upload
@@ -49,6 +49,10 @@ module UserGuardian
   end
 
   def can_see_notifications?(user)
+    is_me?(user) || is_admin?
+  end
+
+  def can_see_bookmarks?(user)
     is_me?(user) || is_admin?
   end
 
@@ -124,6 +128,7 @@ module UserGuardian
 
   def can_see_user_status?(user)
     return false if user.blank?
+    return false if user.user_option&.hide_profile?
 
     if user.silenced?
       is_me?(user) || is_staff?
@@ -179,12 +184,10 @@ module UserGuardian
     is_staff_or_is_me = is_staff? || is_me?(user)
     cache_key = is_staff_or_is_me ? :staff_or_me : :other
 
-    @allowed_user_field_ids[cache_key] ||= begin
-      if is_staff_or_is_me
-        UserField.pluck(:id)
-      else
-        UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
-      end
+    @allowed_user_field_ids[cache_key] ||= if is_staff_or_is_me
+      UserField.pluck(:id)
+    else
+      UserField.where("show_on_profile OR show_on_user_card").pluck(:id)
     end
   end
 

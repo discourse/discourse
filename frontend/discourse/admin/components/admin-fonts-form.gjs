@@ -9,13 +9,13 @@ import {
   MAIN_FONTS,
   MORE_FONTS,
 } from "discourse/admin/lib/constants";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
@@ -163,7 +163,7 @@ export default class AdminFontsForm extends Component {
           {{#each DEFAULT_TEXT_SIZES as |textSize|}}
             <DButton
               @action={{fn this.setButtonValue field.set textSize}}
-              class={{concatClass
+              class={{dConcatClass
                 "admin-fonts-form__button-option text-size btn-flat"
                 textSize
                 (if (eq transientData.default_text_size textSize) "active")

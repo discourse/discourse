@@ -9,7 +9,7 @@
   &-code,
   &-image {
     .form-kit__container-content {
-      width: var(--form-kit-large-input) !important;
+      min-width: var(--form-kit-large-input);
     }
   }
 

@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isPresent } from "@ember/utils";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class ChatChannelArchiveStatus extends Component {
@@ -57,7 +57,7 @@ export default class ChatChannelArchiveStatus extends Component {
     {{#if this.shouldRender}}
       {{#if @channel.archive.failed}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "alert alert-warn chat-channel-retry-archive"
             @channel.status
           }}
@@ -75,7 +75,7 @@ export default class ChatChannelArchiveStatus extends Component {
         </div>
       {{else if @channel.archive.completed}}
         <div
-          class={{concatClass "chat-channel-archive-status" @channel.status}}
+          class={{dConcatClass "chat-channel-archive-status" @channel.status}}
         >
           {{this.channelArchiveCompletedMessage}}
         </div>

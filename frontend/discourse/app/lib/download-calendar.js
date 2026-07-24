@@ -39,23 +39,28 @@ export function downloadIcs(title, dates, options = {}) {
 }
 
 export function downloadGoogle(title, dates, options = {}) {
+  const parsedRrule = _parseRRule(options.rrule);
+
   dates.forEach((date) => {
     const link = new URL("https://www.google.com/calendar/event");
     link.searchParams.append("action", "TEMPLATE");
     link.searchParams.append("text", title);
-    link.searchParams.append(
-      "dates",
-      `${_formatDateForGoogleApi(date.startsAt, date.timezone)}/${_formatDateForGoogleApi(
+
+    let dateRange;
+    if (date.allDay) {
+      const { startDate, endDate } = _allDayMoments(date);
+      dateRange = `${startDate.format("YYYYMMDD")}/${endDate.format("YYYYMMDD")}`;
+    } else {
+      dateRange = `${_formatDateForGoogleApi(date.startsAt, date.timezone)}/${_formatDateForGoogleApi(
         date.endsAt,
         date.timezone
-      )}`
-    );
+      )}`;
+    }
+    link.searchParams.append("dates", dateRange);
 
-    if (options.rrule) {
-      const rrule = _parseRRule(options.rrule);
-      if (rrule && _hasFreq(rrule)) {
-        link.searchParams.append("recur", `RRULE:${rrule}`);
-      }
+    if (parsedRrule && _hasFreq(parsedRrule)) {
+      const rrule = date.allDay ? _dateOnlyUntil(parsedRrule) : parsedRrule;
+      link.searchParams.append("recur", `RRULE:${rrule}`);
     }
 
     if (options.location) {
@@ -76,12 +81,18 @@ export function formatDates(dates) {
       startsAt: date.startsAt,
       endsAt: date.endsAt
         ? date.endsAt
-        : moment.utc(date.startsAt).add(1, "hours").format(),
+        : date.allDay
+          ? null
+          : moment.utc(date.startsAt).add(1, "hours").format(),
     };
 
     // Preserve timezone if present
     if (date.timezone) {
       formatted.timezone = date.timezone;
+    }
+
+    if (date.allDay) {
+      formatted.allDay = true;
     }
 
     return formatted;
@@ -171,38 +182,57 @@ function _hasFreq(rrule) {
   return /FREQ=/i.test(rrule);
 }
 
+function _dateOnlyUntil(rrule) {
+  return rrule.replace(/(UNTIL=\d{8})T\d{6}Z?/i, "$1");
+}
+
+function _allDayMoments(date) {
+  const startDate = moment(date.startsAt, "YYYY-MM-DD");
+  const endDate = (
+    date.endsAt ? moment(date.endsAt, "YYYY-MM-DD") : startDate.clone()
+  ).add(1, "day");
+  return { startDate, endDate };
+}
+
 /**
  * Generate ICS calendar data for the given dates
  *
  * @param {string} title - Event title
- * @param {Array} dates - Array of date objects with startsAt, endsAt, and optional timezone
+ * @param {Array} dates - Array of date objects with startsAt, endsAt, optional timezone, and optional allDay (date-only event)
  * @param {Object} options - Optional parameters (rrule, location, details, timezone)
  * @returns {string} - ICS formatted calendar data
  */
 export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\n";
+  const parsedRrule = _parseRRule(options.rrule);
   dates.forEach((date) => {
-    const timezone = date.timezone || options.timezone;
-    const startDate = timezone
-      ? moment.tz(date.startsAt, timezone)
-      : moment(date.startsAt);
-    const endDate = timezone
-      ? moment.tz(date.endsAt, timezone)
-      : moment(date.endsAt);
-    const rrule = _parseRRule(options.rrule);
+    let rrule = parsedRrule;
 
-    // Format date-time based on whether we have timezone info
-    const formatDateTime = (momentObj) => {
-      return momentObj.format("YYYYMMDDTHHmmss");
-    };
+    let startDate, endDate, dtStartValue, dtEndValue;
 
-    const dtStartValue = timezone
-      ? `DTSTART;TZID=${timezone}:${formatDateTime(startDate)}`
-      : `DTSTART:${startDate.utc().format("YYYYMMDDTHHmmss")}Z`;
+    if (date.allDay) {
+      if (rrule) {
+        rrule = _dateOnlyUntil(rrule);
+      }
+      ({ startDate, endDate } = _allDayMoments(date));
+      dtStartValue = `DTSTART;VALUE=DATE:${startDate.format("YYYYMMDD")}`;
+      dtEndValue = `DTEND;VALUE=DATE:${endDate.format("YYYYMMDD")}`;
+    } else {
+      const timezone = date.timezone || options.timezone;
+      startDate = timezone
+        ? moment.tz(date.startsAt, timezone)
+        : moment(date.startsAt);
+      endDate = timezone
+        ? moment.tz(date.endsAt, timezone)
+        : moment(date.endsAt);
 
-    const dtEndValue = timezone
-      ? `DTEND;TZID=${timezone}:${formatDateTime(endDate)}`
-      : `DTEND:${endDate.utc().format("YYYYMMDDTHHmmss")}Z`;
+      dtStartValue = timezone
+        ? `DTSTART;TZID=${timezone}:${startDate.format("YYYYMMDDTHHmmss")}`
+        : `DTSTART:${startDate.utc().format("YYYYMMDDTHHmmss")}Z`;
+      dtEndValue = timezone
+        ? `DTEND;TZID=${timezone}:${endDate.format("YYYYMMDDTHHmmss")}`
+        : `DTEND:${endDate.utc().format("YYYYMMDDTHHmmss")}Z`;
+    }
 
     data = data.concat(
       "BEGIN:VEVENT\r\n" +

@@ -2,11 +2,11 @@ import { array, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import slice from "discourse/helpers/slice";
 import { gt } from "discourse/truth-helpers";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const CC_ADDRESS_DISPLAY_THRESHOLD = 2;
@@ -54,12 +54,12 @@ export default <template>
   >
     <:default as |emailLog ccThreshold sortWithAddressFilter|>
       <tr class="sent-email-item" data-test-email-log-row-id={{emailLog.id}}>
-        <td class="sent-email-date">{{formatDate emailLog.created_at}}</td>
+        <td class="sent-email-date">{{dFormatDate emailLog.created_at}}</td>
         <td class="sent-email-username">
           {{#if emailLog.user}}
             <span class="email-logs-user">
               <LinkTo @route="adminUser" @model={{emailLog.user}}>
-                {{avatar emailLog.user imageSize="tiny"}}
+                {{dAvatar emailLog.user imageSize="tiny"}}
                 {{emailLog.user.username}}
               </LinkTo>
             </span>
@@ -69,7 +69,7 @@ export default <template>
         </td>
         <td class="sent-email-address">
           {{#if emailLog.bounced}}
-            {{icon "arrow-rotate-right" title="admin.email.bounced"}}
+            {{dIcon "arrow-rotate-right" title="admin.email.bounced"}}
           {{/if}}
           <a href="mailto:{{emailLog.to_address}}" title="TO">
             {{emailLog.to_address}}

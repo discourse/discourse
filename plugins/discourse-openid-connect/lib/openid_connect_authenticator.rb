@@ -40,7 +40,9 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
     if provides_groups?
       claim = SiteSetting.openid_connect_groups_claim
-      groups = auth_token.extra&.dig(:raw_info, claim)
+      result.associated_groups = []
+      groups =
+        auth_token.extra&.dig(:raw_info, claim) || auth_token.extra&.dig(:id_token_info, claim)
 
       if groups.is_a?(Array)
         result.associated_groups = groups.map { |group_name| { id: group_name, name: group_name } }
@@ -51,7 +53,36 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
       end
     end
 
+    result.user_field_values = user_field_values_from(auth_token)
+
     result
+  end
+
+  def user_field_values_from(auth_token)
+    mappings = JSON.parse(SiteSetting.openid_connect_user_field_mappings.presence || "[]")
+    return {} if mappings.blank?
+
+    raw_info = auth_token.extra&.[](:raw_info)
+    id_token_info = auth_token.extra&.[](:id_token_info)
+
+    mappings.each_with_object({}) do |mapping, hash|
+      claim = mapping["claim"].to_s
+      field_id = mapping["user_field_id"]
+      next if claim.blank? || field_id.blank?
+
+      source =
+        if raw_info&.key?(claim)
+          raw_info
+        elsif id_token_info&.key?(claim)
+          id_token_info
+        end
+      next if source.nil?
+
+      value = source[claim]
+      hash[field_id.to_s] = value.is_a?(Array) ? value.join(",") : value.to_s
+    end
+  rescue JSON::ParserError
+    {}
   end
 
   def always_update_user_email?
@@ -148,6 +179,12 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
                             },
                           }
 
+                          ssl_opts = mtls_ssl_options
+                          if ssl_opts.present?
+                            opts[:client_options][:auth_scheme] = :tls_client_auth
+                            opts[:client_options][:connection_opts][:ssl] = ssl_opts
+                          end
+
                           opts[:client_options][:connection_build] = lambda do |builder|
                             if SiteSetting.openid_connect_verbose_logging
                               builder.response :logger,
@@ -167,6 +204,22 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
 
   def generate_code_challenge(code_verifier)
     Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier)).tr("+/", "-_").tr("=", "")
+  end
+
+  def mtls_ssl_options
+    cert_pem = SiteSetting.openid_connect_mtls_client_cert
+    key_pem = SiteSetting.openid_connect_mtls_client_key
+    return {} if cert_pem.blank? || key_pem.blank?
+
+    key_passcode = SiteSetting.openid_connect_mtls_client_key_passcode.presence
+
+    {
+      client_cert: OpenSSL::X509::Certificate.new(cert_pem),
+      client_key: OpenSSL::PKey.read(key_pem, key_passcode),
+    }
+  rescue OpenSSL::OpenSSLError => e
+    oidc_log("Failed to parse mTLS certificate or key: #{e.message}", error: true)
+    raise
   end
 
   def request_timeout_seconds

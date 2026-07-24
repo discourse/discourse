@@ -94,5 +94,3 @@ id:
           add: Tambahkan opsi
         automatic_close:
           label: Tutup poll secara otomatis
-        show_advanced: "Tampilkan Opsi Lanjutan"
-        hide_advanced: "Sembunyikan Opsi Lanjutan"

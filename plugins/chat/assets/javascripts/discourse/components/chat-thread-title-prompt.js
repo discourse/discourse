@@ -65,6 +65,7 @@ export default class ChatThreadTitlePrompt extends Component {
 
   get canShowToast() {
     if (
+      !this.currentUser ||
       this.site.desktopView ||
       (this.args.thread.originalMessage?.user?.id !== this.currentUser.id &&
         !this.currentUser.admin)

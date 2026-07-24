@@ -8,30 +8,38 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
-import DMultiSelect from "discourse/components/d-multi-select";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  availableCategoryType,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq, or } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const DISCUSSION_TYPE_ID = "discussion";
@@ -62,6 +70,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   constructor() {
     super(...arguments);
+
     this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
       ...type,
       preventRemoval: type.id === DISCUSSION_TYPE_ID,
@@ -310,6 +319,14 @@ export default class UpsertCategoryGeneral extends Component {
       : "category.visibility.public";
   }
 
+  get privateVisibilityLocked() {
+    return applyValueTransformer("category-visibility-private-locked", false, {
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+  }
+
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
   }
@@ -334,6 +351,21 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeVisibility(value) {
+    // Wrapped so consumers can intercept the change; skipping `next` vetoes it.
+    return applyBehaviorTransformer(
+      "category-visibility-change",
+      () => this.#applyVisibilityChange(value),
+      {
+        nextVisibility: value,
+        previousVisibility: this.categoryVisibility,
+        category: this.args.category,
+        form: this.args.form,
+        transientData: this.args.transientData,
+      }
+    );
+  }
+
+  #applyVisibilityChange(value) {
     // Save current permissions before switching to public
     if (value === "public" && this.isPrivateCategory) {
       this.#previousPermissions = (this.permissions || []).map((p) => ({
@@ -589,12 +621,13 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    {{#if this.isEditingExistingCategory}}
+    {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @name="category_types"
         @title={{i18n "category.category_types"}}
         @format="max"
         @type="custom"
+        @showOptional={{false}}
         as |field|
       >
         <field.Control>
@@ -610,25 +643,27 @@ export default class UpsertCategoryGeneral extends Component {
           >
             <:result as |type|>
               <div
-                class={{concatClass
+                class={{dConcatClass
                   "category-type-selector__result"
-                  (unless type.available "--unavailable")
+                  (unless (availableCategoryType type) "--unavailable")
                   (concat "--category-type-" type.id)
                 }}
               >
                 <div class="category-type-selector__name">
                   <span class="category-type-selector__icon">
-                    {{emoji type.icon}}
+                    {{dEmoji type.icon}}
                   </span>
 
                   {{type.name}}
 
-                  {{#unless type.available}}
+                  {{#unless (availableCategoryType type)}}
                     <span class="category-type-selector__result-badge">
                       <PluginOutlet
                         @name="category-type-selector-result-badge"
                         @outletArgs={{lazyHash type=type}}
-                      />
+                      >
+                        {{unavailableBadgeText type}}
+                      </PluginOutlet>
                     </span>
                   {{/unless}}
                 </div>
@@ -646,7 +681,7 @@ export default class UpsertCategoryGeneral extends Component {
     {{/if}}
 
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-general"
         (if (eq @selectedTab "general") "active")
@@ -741,7 +776,8 @@ export default class UpsertCategoryGeneral extends Component {
                     <DIconGridPicker
                       @value={{field.value}}
                       @onChange={{field.set}}
-                      @allowClear={{true}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @iconColor={{concat "#" @transientData.color}}
                     />
                   </field.Control>
@@ -764,6 +800,9 @@ export default class UpsertCategoryGeneral extends Component {
                       @didSelectEmoji={{field.set}}
                       @modalForMobile={{false}}
                       @btnClass="btn-default btn-emoji"
+                      @icon={{null}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @label={{unless
                         field.value
                         (i18n "category.select_emoji")
@@ -775,8 +814,10 @@ export default class UpsertCategoryGeneral extends Component {
 
               <Content @name="square">
                 {{trustHTML
-                  (categoryBadge
-                    (this.buildTransientModel @transientData) styleType="square"
+                  (dCategoryBadge
+                    (this.buildTransientModel @transientData)
+                    styleType="square"
+                    previewColor=true
                   )
                 }}
               </Content>
@@ -792,10 +833,10 @@ export default class UpsertCategoryGeneral extends Component {
         >
           <@form.Container
             @title={{i18n "category.description"}}
-            class="edit-category-description-container"
+            class="edit-category-description-container --full"
           >
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "description-content"
                 (unless this.descriptionExpanded "--collapsed")
                 (if this.descriptionOverflows "--overflowing")
@@ -806,7 +847,7 @@ export default class UpsertCategoryGeneral extends Component {
                 this.categoryDescription
               }}
             >
-              <DecoratedHtml
+              <DDecoratedHtml
                 @html={{this.categoryDescription}}
                 @className="readonly-field"
               />
@@ -889,19 +930,26 @@ export default class UpsertCategoryGeneral extends Component {
               >
                 <:trigger>
                   <Condition @name="public" @disabled={{true}}>
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
                 </:trigger>
               </DTooltip>
             {{else}}
               <Condition @name="public">
-                {{icon "check"}}
+                {{dIcon "check"}}
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
-            <Condition @name="group_restricted">
-              {{icon "check"}}
+            <Condition
+              @name="group_restricted"
+              @locked={{this.privateVisibilityLocked}}
+            >
+              {{#if this.privateVisibilityLocked}}
+                {{dIcon "lock"}}
+              {{else}}
+                {{dIcon "check"}}
+              {{/if}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>
@@ -918,7 +966,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @onChange={{this.onChangeAccessGroups}}
                   @options={{hash disabled=this.isParentRestricted}}
                 />
-                {{! template-lint-disable no-invalid-interactive }}
+                {{! eslint-disable ember/template-no-invalid-interactive }}
                 <span
                   class="category-permission-hint"
                   {{on "click" this.goToSecurityTab}}

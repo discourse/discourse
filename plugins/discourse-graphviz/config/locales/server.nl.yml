@@ -7,4 +7,3 @@
 nl:
   site_settings:
     discourse_graphviz_enabled: "Graphviz-plug-in inschakelen"
-    graphviz_default_svg: "Standaard ingesteld op SVG-rendering in plaats van afbeeldingsrendering, kan per grafiek worden aangepast met het element 'svg=true|false'."

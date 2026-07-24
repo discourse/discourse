@@ -24,15 +24,19 @@ module DiscourseAi
             )
 
           bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
-          sql =
-            capture_structured_response(
-              bot,
-              context,
-              schema_key: "sql",
-              execution_context: execution_context,
-            )
+          bot.reply(context, execution_context:)
 
-          wrap_result(sql.strip, { feature: feature_name })
+          captured =
+            context.feature_context[DiscourseDataExplorer::Tools::SubmitQuery::CONTEXT_KEY] || {}
+
+          sql = captured[:sql].to_s.chomp(";").strip
+          metadata = {
+            feature: feature_name,
+            name: captured[:name].to_s.strip,
+            description: captured[:description].to_s.strip,
+          }
+
+          wrap_result(sql, metadata)
         end
       end
     end

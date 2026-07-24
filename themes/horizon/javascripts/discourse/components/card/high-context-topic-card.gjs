@@ -3,23 +3,25 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { themePrefix } from "virtual:theme";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import avatar from "discourse/helpers/avatar";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
-import number from "discourse/helpers/number";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
-import { or } from "discourse/truth-helpers";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+import { topicWasUpdatedAfterLastPost } from "../../lib/topic-activity";
 import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
@@ -101,6 +103,14 @@ export default class HighContextTopicCard extends Component {
     return this.args.topic.creator;
   }
 
+  get hasLastReplyContext() {
+    return this.hasReplies && !topicWasUpdatedAfterLastPost(this.args.topic);
+  }
+
+  get hasContext() {
+    return this.hasLastReplyContext || this.hasAssigned;
+  }
+
   get lastPoster() {
     return {
       user: this.args.topic.lastPosterUser,
@@ -136,7 +146,7 @@ export default class HighContextTopicCard extends Component {
       <div class="hc-topic-card__header">
         <div class="hc-topic-card__op">
           <div class="hc-topic-card__avatar">
-            {{avatar this.topicCreator imageSize="medium"}}
+            {{dAvatar this.topicCreator imageSize="medium"}}
           </div>
           <div class="hc-topic-card__op-info">
             <span class="hc-topic-card__op-timestamp">
@@ -153,22 +163,26 @@ export default class HighContextTopicCard extends Component {
         </div>
         <div class="hc-topic-card__status-tags">
           {{#if this.hasSolved}}
-            <span class="hc-topic-card__status --solved">
+            <span
+              class="hc-topic-card__status --solved"
+              aria-label={{i18n (themePrefix "solved")}}
+            >
               {{#if this.capabilities.viewport.sm}}
                 {{i18n (themePrefix "solved")}}
               {{/if}}
-              {{icon "square-check"}}
+              {{dIcon "square-check"}}
             </span>
           {{/if}}
 
           {{#if this.statusBadge}}
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "hc-topic-card__status"
                 this.statusBadge.className
               }}
+              aria-label={{i18n this.statusBadge.text}}
             >
-              {{icon this.statusBadge.icon}}
+              {{dIcon this.statusBadge.icon}}
 
               {{#if this.capabilities.viewport.sm}}
                 <span class="hc-topic-card__status-text">{{i18n
@@ -181,7 +195,7 @@ export default class HighContextTopicCard extends Component {
       </div>
 
       <div class="hc-topic-card__content">
-        <div class="hc-topic-card__title">
+        <div class="hc-topic-card__title" role="heading" aria-level="2">
           <TopicStatus @topic={{@topic}} @context="topic-list" />
           <TopicLink
             {{on "focus" this.onTitleFocus}}
@@ -192,6 +206,10 @@ export default class HighContextTopicCard extends Component {
           {{~#if @topic.featured_link~}}
             &nbsp;{{topicFeaturedLink @topic}}
           {{~/if~}}
+          <PluginOutlet
+            @name="topic-list-after-title"
+            @outletArgs={{lazyHash topic=@topic}}
+          />
           <UnreadIndicator @topic={{@topic}} />
           <TopicPostBadges
             @unreadPosts={{@topic.unread_posts}}
@@ -205,24 +223,27 @@ export default class HighContextTopicCard extends Component {
         {{/if}}
       </div>
 
-      {{#if (or this.hasReplies this.hasAssigned)}}
+      {{#if this.hasContext}}
         <div class="hc-topic-card__context">
-          {{#if this.hasReplies}}
+          {{#if this.hasLastReplyContext}}
             <div class="hc-topic-card__last-reply">
-              {{avatar this.lastPoster.user imageSize="tiny"}}
+              {{dAvatar this.lastPoster.user imageSize="tiny"}}
               <span
                 class="hc-topic-card__last-reply-name"
               >{{this.lastPoster.username}}</span>
               <span>{{i18n (themePrefix "replied")}}</span>
               <span class="hc-topic-card__time">
-                {{formatDate @topic.bumpedAt leaveAgo="true"}}
+                {{dFormatDate @topic.last_posted_at leaveAgo="true"}}
               </span>
             </div>
           {{/if}}
           {{#if this.hasAssigned}}
             {{#if this.assignedUser}}
               <div class="hc-topic-card__assigned">
-                {{icon "user-plus"}}
+                {{dIcon "user-plus"}}
+                <span class="sr-only">{{i18n
+                    "discourse_assign.assigned_to"
+                  }}</span>
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{this.assignedUser.username}}</span>
@@ -230,7 +251,10 @@ export default class HighContextTopicCard extends Component {
             {{/if}}
             {{#each this.indirectAssignees as |assignment|}}
               <div class="hc-topic-card__assigned">
-                {{icon "user-plus"}}
+                {{dIcon "user-plus"}}
+                <span class="sr-only">{{i18n
+                    "discourse_assign.assigned_to"
+                  }}</span>
                 <span
                   class="hc-topic-card__assigned-name"
                 >{{assignment.user.username}}</span>
@@ -252,7 +276,11 @@ export default class HighContextTopicCard extends Component {
           {{/unless}}
 
           {{#if this.hasTags}}
-            {{discourseTags @topic mode="list" className="hc-topic-card__tags"}}
+            {{dDiscourseTags
+              @topic
+              mode="list"
+              className="hc-topic-card__tags"
+            }}
           {{/if}}
         </div>
 
@@ -263,8 +291,8 @@ export default class HighContextTopicCard extends Component {
               aria-label={{this.voteCountLabel}}
               title={{this.voteCountLabel}}
             >
-              {{icon "check-to-slot" skipTitle=true}}
-              <span class="hc-topic-card__votes-count">{{number
+              {{dIcon "check-to-slot" skipTitle=true}}
+              <span class="hc-topic-card__votes-count">{{dNumber
                   @topic.vote_count
                 }}</span>
             </span>
@@ -276,8 +304,8 @@ export default class HighContextTopicCard extends Component {
               aria-label={{this.replyCountLabel}}
               title={{this.replyCountLabel}}
             >
-              {{icon "reply" skipTitle=true}}
-              <span class="hc-topic-card__count">{{number
+              {{dIcon "reply" skipTitle=true}}
+              <span class="hc-topic-card__count">{{dNumber
                   @topic.replyCount
                 }}</span>
             </span>
@@ -289,8 +317,8 @@ export default class HighContextTopicCard extends Component {
               aria-label={{this.likeCountLabel}}
               title={{this.likeCountLabel}}
             >
-              {{icon "heart" skipTitle=true}}
-              <span class="hc-topic-card__count">{{number
+              {{dIcon "heart" skipTitle=true}}
+              <span class="hc-topic-card__count">{{dNumber
                   @topic.like_count
                 }}</span>
             </span>

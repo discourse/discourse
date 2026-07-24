@@ -8,16 +8,6 @@ module DiscourseAi
       end
 
       def system_prompt
-        examples = [
-          { input: { content: "Japan", target_locale: "es" }.to_json, output: "Japón" },
-          { input: { content: "Cats and Dogs", target_locale: "zh_CN" }.to_json, output: "猫和狗" },
-          {
-            input: { content: "Q&A", target_locale: "pt" }.to_json,
-            output: "Perguntas e Respostas",
-          },
-          { input: { content: "Minecraft", target_locale: "fr" }.to_json, output: "Minecraft" },
-        ]
-
         <<~PROMPT.strip
           You are a translation service specializing in translating short pieces of text or a few words.
           These words may be things like a name, description, or title. Adhere to the following guidelines:
@@ -27,29 +17,33 @@ module DiscourseAi
           3. Translation maintains the original meaning
           4. Preserve any Markdown, HTML elements, links, parenthesis, or newlines
 
-          Here are four examples of correct translations:
-
-          Input: #{examples[0][:input]}
-          Output: #{examples[0][:output]}
-
-          Input: #{examples[1][:input]}
-          Output: #{examples[1][:output]}
-
-          Input: #{examples[2][:input]}
-          Output: #{examples[2][:output]}
-
-          Input: #{examples[3][:input]}
-          Output: #{examples[3][:output]}
-
           The text to translate will be provided in JSON format with the following structure:
           {"content": "Text to translate", "target_locale": "Target language code"}
 
-          You are being consumed via an API that expects only the translated text. Only return the translated text in the correct language. Do not add questions or explanations.
+          Format your response as a JSON object with a single key named "output", which has the translation as the value.
+          Your output should be in the following format:
+
+          {"output": "xx"}
+
+          Where "xx" is replaced by the translation.
+          reply with valid JSON only
         PROMPT
       end
 
       def response_format
         [{ "key" => "output", "type" => "string" }]
+      end
+
+      def examples
+        [
+          [{ content: "Japan", target_locale: "es" }.to_json, { output: "Japón" }.to_json],
+          [{ content: "Cats and Dogs", target_locale: "zh_CN" }.to_json, { output: "猫和狗" }.to_json],
+          [
+            { content: "Q&A", target_locale: "pt" }.to_json,
+            { output: "Perguntas e Respostas" }.to_json,
+          ],
+          [{ content: "Minecraft", target_locale: "fr" }.to_json, { output: "Minecraft" }.to_json],
+        ]
       end
     end
   end

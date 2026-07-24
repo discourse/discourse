@@ -60,7 +60,7 @@ RSpec.describe "Share conversation" do
     clip_text = cdp.read_clipboard
     expect(clip_text).not_to eq("")
 
-    conversation = (<<~TEXT).strip
+    conversation = <<~TEXT.strip
       <details class='ai-quote'>
       <summary>
       <span>This is my special PM</span>
@@ -93,7 +93,7 @@ RSpec.describe "Share conversation" do
     clip_text = cdp.read_clipboard
     expect(clip_text).not_to eq("")
 
-    conversation = (<<~TEXT).strip
+    conversation = <<~TEXT.strip
       <details class='ai-quote'>
       <summary>
       <span>This is my special PM</span>
@@ -121,7 +121,7 @@ RSpec.describe "Share conversation" do
     clip_text = cdp.read_clipboard
     expect(clip_text).not_to eq("")
 
-    conversation = (<<~TEXT).strip
+    conversation = <<~TEXT.strip
       <details class='ai-quote'>
       <summary>
       <span>This is my special PM</span>

@@ -14,14 +14,96 @@ pl_PL:
     rss_polling:
       title: Pobieranie RSS
     admin:
+      logs:
+        staff_actions:
+          actions:
+            create_rss_polling_feed: utwórz kanał RSS
+            update_rss_polling_feed: zaktualizuj kanał RSS
+            destroy_rss_polling_feed: usuń kanał RSS
+            enable_rss_polling_feed: włącz kanał RSS
+            disable_rss_polling_feed: wyłącz kanał RSS
+            poll_rss_polling_feed: sprawdź kanał RSS teraz
       rss_polling:
-        feed: Ustawienia kanału
-        discourse: Ustawienia Discourse
+        feed_settings: Ustawienia kanału
+        discourse_settings: Ustawienia Discourse
         author: Autor
         feed_url: URL
+        feed_url_must_be_http: Wpisz poprawny adres URL kanału, zaczynający się od http:// lub https://.
         discourse_category: Kategoria
         discourse_tags: Tagi
+        required_tags_hint: "Ta kategoria wymaga jednego z poniższych tagów — dodaj jeden, w przeciwnym razie zaimportowane tematy zostaną odrzucone:"
+        required_tag_error: 'Dodaj co najmniej tag(i) %{count} z grupy „%{tag_group}”, w przeciwnym razie zaimportowane tematy zostaną odrzucone.'
         feed_category_filter: Filtr kategorii
-        documentation: Dokumentacja konfiguracji pobierania RSS
-        destroy_feed:
-          confirm: "Czy na pewno chcesz usunąć ten kanał?"
+        feed_category_filter_description: Importuj tylko elementy, których kategoria kanału zawiera ten tekst (bez uwzględniania wielkości liter). Pozostaw puste, aby zaimportować wszystko.
+        showing: "Wyświetlono pierwsze %{count} z %{total} elementów."
+        feeds:
+          title: Kanały
+          nav_description: Zarządzaj kanałami RSS/Atom importowanymi do Discourse.
+          description: Skonfiguruj kanały RSS/Atom, które będą odpytywane i importowane jako tematy.
+          add: Dodaj kanał
+          add_header: Dodaj kanał
+          edit_header: Edytuj kanał
+          empty: Nie skonfigurowano jeszcze żadnych kanałów.
+          edit: Edytuj
+          delete: Usuń
+          enable: Włącz kanał
+          disable: Wyłącz kanał
+          back: Powrót do kanałów
+          save: Zapisz
+          confirm_delete: "Czy na pewno chcesz usunąć ten kanał?"
+          delete_success: Kanał usunięty
+          save_success: Kanał zapisany
+          enable_success: Kanał włączony
+          disable_success: Kanał wyłączony
+        test:
+          button: Kanał testowy
+          title: Podgląd
+          empty: Ten kanał nie zwrócił żadnych elementów.
+          dismiss: Odrzuć
+          would_import: Zaimportowałby
+          summary:
+            would_import: "%{count} zaimportowałby"
+            already_imported: "%{count} już zaimportowano"
+            skipped: "%{count} pominąłbym"
+          already_imported: "Już zaimportowano — sondowanie zaktualizuje istniejący temat <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'></a>."
+          already_imported_plain: "Już zaimportowano — sprawdzenie stanu zaktualizowałoby istniejący wątek."
+          skip_reasons:
+            missing_content: Pominięto — element nie ma treści.
+            missing_title: Pominięto — element nie ma tytułu.
+            invalid_url: Pominięto — ten element nie ma żadnego poprawnie działającego linku, z którego można by go zaimportować.
+            category_filter_mismatch: "Pominięto — kategorie elementów: %{categories}"
+            category_filter_mismatch_none: Pominięto — element nie ma kategorii.
+          errors:
+            fetch_failed: Nie udało się pobrać kanału. Sprawdź, czy adres URL jest poprawny i osiągalny.
+            parse_failed: Odpowiedź nie wygląda na prawidłowy kanał RSS lub Atom.
+            invalid_feed: Nie można odczytać kanału, ponieważ jest on nieprawidłowy.
+            blank_feed_url: Wpisz adres URL kanału, który chcesz przetestować.
+            category_deleted: Kategoria, do której importuje się ten kanał, już nie istnieje. Edytuj kanał i wybierz nową kategorię.
+            unknown: Nie udało się odczytać tego kanału. Może być tymczasowo niedostępny lub zwracać nieoczekiwaną treść. Przetestuj kanał w celu diagnozy lub sprawdź szczegóły w dziennikach.
+        status:
+          enabled: Włączono
+          disabled: Wyłączone
+          disabled_note: Nie będzie przeprowadzać ankiety zgodnie z harmonogramem
+        history:
+          recent: Ostatnie sprawdzenia
+          show_older: "Pokaż %{count} starsze"
+          poll_now: Sprawdź teraz
+          poll_now_dirty: Zapisz zmiany przed rozpoczęciem sprawdzenia.
+          poll_now_disabled: Przed rozpoczęciem sprawdzenia należy włączyć kanał.
+          poll_confirm: Sprawdzenie teraz pobierze ten kanał i zaimportuje lub zaktualizuje tematy. Kontynuować?
+          poll_started: Rozpoczęto sprawdzanie — najnowsza próba pojawi się tutaj wkrótce.
+          empty: Ten kanał nie był jeszcze objęty sprawdzeniem.
+          no_items: W tym sprawdzeniu nie uwzględniono żadnych odpowiedzi.
+          no_changes: Bez zmian
+          imported_count: "%{count} zaimportowano"
+          updated_count: "%{count} zaktualizowano"
+          skipped_count: "%{count} pominięto"
+          failed_count: "%{count} nie powiodło się"
+          imported: "Zaimportowano jako nowy temat <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'></a>."
+          imported_plain: "Zaimportowano jako nowy temat."
+          updated: "Zaktualizowano istniejący temat <a href='%{topic_url}' target='_blank' rel='noopener noreferrer'></a>."
+          updated_plain: "Zaktualizowano istniejący temat."
+          failed: Nie udało się zaimportować.
+          failed_reasons:
+            import_rejected: "Nie można zaimportować — element nie ma prawidłowego łącza, z którego można go zaimportować."
+            import_error: "Nie można zaimportować: %{error}"

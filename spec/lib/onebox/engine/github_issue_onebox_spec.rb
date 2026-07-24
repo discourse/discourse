@@ -54,4 +54,19 @@ RSpec.describe Onebox::Engine::GithubIssueOnebox do
       end
     end
   end
+
+  describe "#inline_data" do
+    let(:link) { "https://github.com/discourse/discourse/issues/1" }
+
+    it "returns nil when no access token is configured" do
+      expect(described_class.new(link).inline_data).to be_nil
+    end
+
+    it "returns the issue title from the API when an access token is configured" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+      expect(described_class.new(link).inline_data).to eq(
+        title: "Test issue #2 - Issue #1 - discourse/discourse - GitHub",
+      )
+    end
+  end
 end

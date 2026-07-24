@@ -10,17 +10,6 @@ describe CategoriesController do
     sign_in(admin)
   end
 
-  it "enables voting correctly" do
-    put "/categories/#{category.id}.json",
-        params: {
-          custom_fields: {
-            "enable_topic_voting" => true,
-          },
-        }
-
-    expect(Category.can_vote?(category.id)).to eq(true)
-  end
-
   it "does not recreate database record" do
     category_setting = DiscourseTopicVoting::CategorySetting.create!(category: category)
 
@@ -51,14 +40,10 @@ describe CategoriesController do
   describe "#update" do
     before do
       Category.reset_voting_cache
-      SiteSetting.enable_simplified_category_creation = true
       SiteSetting.enable_ideas_category_type_setup = true
     end
 
-    after do
-      SiteSetting.enable_simplified_category_creation = false
-      SiteSetting.enable_ideas_category_type_setup = false
-    end
+    after { SiteSetting.enable_ideas_category_type_setup = false }
 
     it "can add the ideas type to the category" do
       expect(Category.can_vote?(category.id)).to eq(false)

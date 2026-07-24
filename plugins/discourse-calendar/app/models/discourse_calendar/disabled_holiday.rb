@@ -12,9 +12,9 @@ end
 # Table name: discourse_calendar_disabled_holidays
 #
 #  id           :bigint           not null, primary key
+#  disabled     :boolean          default(TRUE), not null
 #  holiday_name :string           not null
 #  region_code  :string           not null
-#  disabled     :boolean          default(TRUE), not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #

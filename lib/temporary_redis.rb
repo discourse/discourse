@@ -60,7 +60,7 @@ class TemporaryRedis
       ensure
         if !success && (Time.now - start) >= 5
           STDERR.puts "ERROR: Could not connect to redis in 5 seconds."
-          self.remove
+          remove
           exit(1)
         elsif !success
           sleep 0.1

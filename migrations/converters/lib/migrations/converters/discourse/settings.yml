@@ -1,0 +1,20 @@
+intermediate_db:
+  path: "/shared/import/intermediate.db"
+
+# All `source_db` keys are passed through to libpq (`PG::Connection`), so any
+# libpq connection parameter is valid here. For a database on the same machine
+# the simplest setup is the Unix socket with peer authentication — set `host`
+# to the socket directory and drop `port`, `user` and `password`:
+#
+#   source_db:
+#     host: "/var/run/postgresql"
+#     dbname: "discourse_source_db"
+source_db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "username"
+  password: "password"
+  dbname: "discourse_source_db"
+
+categories:
+  map_seeded_categories: true

@@ -680,6 +680,10 @@ export default class PostStream extends RestModel {
     return this._identityMap[id];
   }
 
+  get loadedPosts() {
+    return Object.values(this._identityMap).filter(Boolean);
+  }
+
   loadPostByPostNumber(postNumber) {
     const url = `/posts/by_number/${this.topic.id}/${postNumber}`;
 
@@ -1342,13 +1346,19 @@ export default class PostStream extends RestModel {
   }
 
   _setSuggestedTopics(result) {
-    if (!result.suggested_topics) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "post-stream-suggested-topics",
+      () => {
+        if (!result.suggested_topics) {
+          return;
+        }
 
-    this.topic.setProperties({
-      suggested_topics: result.suggested_topics,
-      suggested_group_name: result.suggested_group_name,
-    });
+        this.topic.setProperties({
+          suggested_topics: result.suggested_topics,
+          suggested_group_name: result.suggested_group_name,
+        });
+      },
+      { postStream: this, result }
+    );
   }
 }

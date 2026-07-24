@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 import ChannelData from "./channel-data";
 import InlineChannelForm from "./inline-channel-form";
@@ -79,7 +79,7 @@ export default class ChannelDetails extends Component {
               class="btn-default btn-small"
             >
               <:content>
-                <DropdownMenu as |dropdown|>
+                <DDropdownMenu as |dropdown|>
                   <dropdown.item>
                     <DButton
                       @icon="pencil"
@@ -105,7 +105,7 @@ export default class ChannelDetails extends Component {
                       class="btn-transparent btn-danger delete-channel"
                     />
                   </dropdown.item>
-                </DropdownMenu>
+                </DDropdownMenu>
               </:content>
             </DMenu>
           </div>

@@ -24,6 +24,7 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
     info do
       {
         nickname: access_token.params["info"]["username"],
+        name: access_token.params["info"]["name"],
         email: access_token.params["info"]["email"],
         image: access_token.params["info"]["image"],
       }

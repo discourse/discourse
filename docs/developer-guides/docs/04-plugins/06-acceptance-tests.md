@@ -10,9 +10,9 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 Did you know that Discourse has two large test suites for its code base? On the server side, our Ruby code has a test suite that uses [rspec](https://rspec.info/). For the browser application, we have a [qunit](https://qunitjs.com/) suite that has [ember-testing](https://guides.emberjs.com/release/testing/testing-application/) included.
 
-Assuming you have a development environment set up, if you visit the `http://localhost:4200/tests` URL you will start running the JavaScript test suite in your browser. One fun aspect is that you can see it testing the application in a miniature window in the bottom right corner:
+Assuming you have a development environment set up, if you visit the `http://localhost:3000/tests` URL you will start running the JavaScript test suite in your browser. One fun aspect is that you can see it testing the application in a miniature window in the bottom right corner:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/6/2/62a63eca67d134def1580fd9fbd84ff62b531ee1.png" width="690" height="481">
+![JavaScript test suite running in the browser|690x481](/assets/acceptance-tests-2.png)
 
 The Discourse application is built with **a lot** of tests that will begin running when you visit the `/tests` URL. So it may be helpful to filter your tests by the plugin you are working on. You can do that in the interface by clicking **Plugin** dropdown and selecting your plugin:
 
@@ -76,7 +76,7 @@ After we simulate a click on the button, we can check whether the tentacle appea
 assert.ok(exists(".tentacle"), "the tentacle wants to rule the world!");
 ```
 
-Not too bad is it? You can try the test yourself by visiting `http://localhost:4200/tests?qunit_single_plugin=purple-tentacle&qunit_skip_core=1` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
+Not too bad is it? You can try the test yourself by visiting `http://localhost:3000/tests?qunit_single_plugin=purple-tentacle&qunit_skip_core=1` on your development machine. You should very quickly see the purple tentacle appear and all tests will pass.
 
 If you want to run the plugin qunit tests on the command line using PhantomJS, you can run
 

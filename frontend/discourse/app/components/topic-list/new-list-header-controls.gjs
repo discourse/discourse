@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class NewListHeaderControls extends Component {
@@ -40,7 +40,7 @@ export default class NewListHeaderControls extends Component {
   <template>
     <button
       {{on "click" (fn @changeNewListSubset null)}}
-      class={{concatClass
+      class={{dConcatClass
         "topics-replies-toggle --all"
         (if this.allActive "active")
       }}
@@ -51,7 +51,7 @@ export default class NewListHeaderControls extends Component {
 
     <button
       {{on "click" (fn @changeNewListSubset "topics")}}
-      class={{concatClass
+      class={{dConcatClass
         "topics-replies-toggle --topics"
         (if this.topicsActive "active")
       }}
@@ -62,7 +62,7 @@ export default class NewListHeaderControls extends Component {
 
     <button
       {{on "click" (fn @changeNewListSubset "replies")}}
-      class={{concatClass
+      class={{dConcatClass
         "topics-replies-toggle --replies"
         (if this.repliesActive "active")
       }}

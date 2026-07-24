@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 @tagName("")
 export default class AdminReportTableCell extends Component {
@@ -53,7 +53,7 @@ export default class AdminReportTableCell extends Component {
   <template>
     <td
       title={{this.value}}
-      class={{concatClass "admin-report-table-cell" this.type this.property}}
+      class={{dConcatClass "admin-report-table-cell" this.type this.property}}
       ...attributes
     >
       {{trustHTML this.formattedValue}}

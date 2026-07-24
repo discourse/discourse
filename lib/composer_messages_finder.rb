@@ -185,7 +185,7 @@ class ComposerMessagesFinder
   private
 
   def educate_reply?(type)
-    replying? && @details[:topic_id] && (@topic.present? && !@topic.private_message?) &&
+    replying? && @details[:topic_id] && @topic.present? && !@topic.private_message? &&
       (@user.post_count >= SiteSetting.educate_until_posts) &&
       !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
   end

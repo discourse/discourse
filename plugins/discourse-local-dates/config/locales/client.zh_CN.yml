@@ -22,8 +22,6 @@ zh_CN:
       create:
         form:
           insert: 插入
-          advanced_mode: 高级模式
-          simple_mode: 简单模式
           format_description: "用于向用户显示日期的格式。使用 Z 显示偏移，使用 zz 显示时区名称。"
           timezones_title: 要显示的时区
           timezones_description: 时区将用于在预览和回退中显示日期。

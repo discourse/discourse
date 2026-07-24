@@ -145,6 +145,36 @@ describe DirectoryItem, type: :model do
       ).to eq(1)
     end
 
+    describe "with multiple solutions enabled" do
+      fab!(:topic1_additional_post) { Fabricate(:post, topic: topic1, user:) }
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "includes multiple accepted solutions from same topic" do
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: topic_post1.id,
+          },
+          guardian: admin.guardian,
+        )
+
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: topic1_additional_post.id,
+          },
+          guardian: admin.guardian,
+        )
+
+        DirectoryItem.refresh!
+
+        expect(
+          DirectoryItem.find_by(
+            user_id: user.id,
+            period_type: DirectoryItem.period_types[:daily],
+          ).solutions,
+        ).to eq(2)
+      end
+    end
+
     context "when refreshing across dates" do
       it "updates the user's solution count from 1 to 0" do
         freeze_time 40.days.ago

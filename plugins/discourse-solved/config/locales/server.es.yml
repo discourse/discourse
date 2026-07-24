@@ -6,6 +6,23 @@
 
 es:
   accepted_answer: "Respuesta aceptada"
+  category_types:
+    support:
+      name: "Soporte"
+      title: "soporte"
+      description: "Donde los miembros pueden hacer preguntas y marcar las respuestas como soluciones."
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permitir al propietario del tema y al personal marcar una respuesta como la solución"
+      solved_topics_auto_close_hours:
+        label: "Cierre automático de temas resueltos (horas)"
+        description: "Cierra automáticamente el tema después de este número de horas una vez marcado como resuelto. Establece en 0 para desactivarlo."
+      notify_on_staff_accept_solved:
+        label: "Notificar al creador del tema cuando el personal marque una solución"
+      solved_topics_auto_close_duration:
+        label: "Cierre automático de temas resueltos"
+        description: "Cierra automáticamente los temas resueltos transcurrido este tiempo desde la última respuesta. Establece en 0 para desactivar."
   site_settings:
     solved_enabled: "Activar el complemento de solución, que permite a los usuarios seleccionar soluciones para temas"
     allow_solved_on_all_topics: "Permitir que los usuarios seleccionen soluciones en todos los temas (si no lo marcas, puedes activarlo individualmente por categoría o etiqueta)"

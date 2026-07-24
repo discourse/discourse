@@ -151,6 +151,27 @@ module("Unit | Columns", function (hooks) {
     );
   });
 
+  test("adds original position to lightbox items", function (assert) {
+    document.getElementById("qunit-fixture").innerHTML =
+      `<div class="d-image-grid">
+<a class="lightbox" href="/1.png"><img src="/images/avatar.png" width="20" height="20" role="presentation"></a>
+<a class="lightbox" href="/2.png"><img src="/images/avatar.png" width="20" height="20" role="presentation"></a>
+<a class="lightbox" href="/3.png"><img src="/images/avatar.png" width="20" height="20" role="presentation"></a>
+<a class="lightbox" href="/4.png"><img src="/images/avatar.png" width="20" height="20" role="presentation"></a>
+</div>`;
+
+    const grid = document.querySelector(".d-image-grid");
+    const cols = new Columns(grid);
+
+    assert.strictEqual(cols.items.length, 4);
+    assert.deepEqual(
+      [...document.querySelectorAll(".lightbox")].map(
+        (item) => item.dataset.lightboxPosition
+      ),
+      ["0", "2", "1", "3"]
+    );
+  });
+
   test("renders a single item in a P tag", function (assert) {
     document.getElementById("qunit-fixture").innerHTML =
       `<div class="d-image-grid">

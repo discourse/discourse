@@ -6,25 +6,28 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DateTimeInput from "discourse/components/date-time-input";
-import InputTip from "discourse/components/input-tip";
-import RadioButton from "discourse/components/radio-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import withEventValue from "discourse/helpers/with-event-value";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { optionalRequire } from "discourse/lib/utilities";
-import autoFocus from "discourse/modifiers/auto-focus";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DModal from "discourse/ui-kit/d-modal";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup" with {
+  discourseImport: "optional",
+};
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -376,10 +379,6 @@ export default class PollUiBuilderModal extends Component {
       (event.metaKey || event.ctrlKey) &&
       this.siteSettings.discourse_local_dates_enabled
     ) {
-      const generateCurrentDateMarkup = optionalRequire(
-        "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup"
-      );
-
       if (!generateCurrentDateMarkup) {
         return;
       }
@@ -443,7 +442,7 @@ export default class PollUiBuilderModal extends Component {
           <li>
             <DButton
               @action={{fn this.updatePollType "regular"}}
-              class={{concatClass
+              class={{dConcatClass
                 "poll-type-value poll-type-value-regular"
                 (if this.isRegular "active")
               }}
@@ -454,7 +453,7 @@ export default class PollUiBuilderModal extends Component {
           <li>
             <DButton
               @action={{fn this.updatePollType "multiple"}}
-              class={{concatClass
+              class={{dConcatClass
                 "poll-type-value poll-type-value-multiple"
                 (if this.isMultiple "active")
               }}
@@ -466,7 +465,7 @@ export default class PollUiBuilderModal extends Component {
             <li>
               <DButton
                 @action={{fn this.updatePollType "number"}}
-                class={{concatClass
+                class={{dConcatClass
                   "poll-type-value poll-type-value-number"
                   (if this.isNumber "active")
                 }}
@@ -479,7 +478,7 @@ export default class PollUiBuilderModal extends Component {
             <li>
               <DButton
                 @action={{fn this.updatePollType "ranked_choice"}}
-                class={{concatClass
+                class={{dConcatClass
                   "poll-type-value poll-type-value-ranked-choice"
                   (if this.isRankedChoice "active")
                 }}
@@ -515,7 +514,7 @@ export default class PollUiBuilderModal extends Component {
               />
               {{#if this.showMinNumOfOptionsValidation}}
                 {{#unless this.minNumOfOptionsValidation.ok}}
-                  <InputTip @validation={{this.minNumOfOptionsValidation}} />
+                  <DInputTip @validation={{this.minNumOfOptionsValidation}} />
                 {{/unless}}
               {{/if}}
             {{else}}
@@ -524,7 +523,7 @@ export default class PollUiBuilderModal extends Component {
                   <input
                     type="text"
                     value={{option.value}}
-                    {{autoFocus}}
+                    {{dAutoFocus}}
                     {{on "input" (fn this.updateValue option)}}
                     {{on "keydown" (fn this.onInputKeydown option index)}}
                   />
@@ -550,7 +549,7 @@ export default class PollUiBuilderModal extends Component {
                     (not this.minNumOfOptionsValidation.ok)
                   )
                 }}
-                  <InputTip @validation={{this.minNumOfOptionsValidation}} />
+                  <DInputTip @validation={{this.minNumOfOptionsValidation}} />
                 {{/if}}
               </div>
             {{/if}}
@@ -602,7 +601,7 @@ export default class PollUiBuilderModal extends Component {
           </div>
 
           {{#unless this.minMaxValueValidation.ok}}
-            <InputTip @validation={{this.minMaxValueValidation}} />
+            <DInputTip @validation={{this.minMaxValueValidation}} />
           {{/unless}}
         {{/unless}}
 
@@ -641,7 +640,7 @@ export default class PollUiBuilderModal extends Component {
             <label class="input-group-label">{{i18n
                 "poll.ui_builder.automatic_close.label"
               }}</label>
-            <DateTimeInput
+            <DDateTimeInput
               @date={{this.pollAutoClose}}
               @onChange={{fn (mut this.pollAutoClose)}}
               @clearable={{true}}
@@ -669,24 +668,24 @@ export default class PollUiBuilderModal extends Component {
                 }}</label>
 
               <div class="radio-group">
-                <RadioButton
+                <DRadioButton
                   @id="poll-chart-type-bar"
                   @name="poll-chart-type"
                   @value="bar"
                   @selection={{this.chartType}}
                 />
-                <label for="poll-chart-type-bar">{{icon "chart-bar"}}
+                <label for="poll-chart-type-bar">{{dIcon "chart-bar"}}
                   {{i18n "poll.ui_builder.poll_chart_type.bar"}}</label>
               </div>
 
               <div class="radio-group">
-                <RadioButton
+                <DRadioButton
                   @id="poll-chart-type-pie"
                   @name="poll-chart-type"
                   @value="pie"
                   @selection={{this.chartType}}
                 />
-                <label for="poll-chart-type-pie">{{icon "chart-pie"}}
+                <label for="poll-chart-type-pie">{{dIcon "chart-pie"}}
                   {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
               </div>
             </div>
@@ -704,15 +703,9 @@ export default class PollUiBuilderModal extends Component {
 
         <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
 
-        <DButton
-          @action={{this.toggleAdvanced}}
-          @icon="gear"
-          @title={{if
-            this.showAdvanced
-            "poll.ui_builder.hide_advanced"
-            "poll.ui_builder.show_advanced"
-          }}
-          class="btn-default show-advanced"
+        <AdvancedModeToggle
+          @active={{this.showAdvanced}}
+          @onToggle={{this.toggleAdvanced}}
         />
 
       </:footer>

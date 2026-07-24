@@ -45,7 +45,7 @@ module BackupRestore
       obj = s3_helper.object(filename)
       raise BackupFileExists.new if obj.exists?
 
-      obj.upload_file(source_path, content_type: content_type)
+      s3_helper.upload_file(filename, source_path, content_type: content_type)
       reset_cache
     end
 
@@ -71,7 +71,7 @@ module BackupRestore
       folder_prefix = s3_helper.s3_bucket_folder_path.nil? ? "" : s3_helper.s3_bucket_folder_path
 
       if Rails.env.test?
-        folder_prefix = File.join(folder_prefix, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}")
+        folder_prefix = File.join(folder_prefix, "test_#{Discourse.test_env_number}")
       end
 
       folder_prefix

@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { next } from "@ember/runloop";
-import concatClass from "discourse/helpers/concat-class";
 import { waitForAnimationEnd } from "discourse/lib/animation-utils";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminSiteSettingsCategoryNav extends Component {
   get categories() {
@@ -37,7 +37,7 @@ export default class AdminSiteSettingsCategoryNav extends Component {
     >
       {{#each this.categories as |category|}}
         <li
-          class={{concatClass
+          class={{dConcatClass
             "admin-site-settings-category-nav__item"
             category.nameKey
           }}

@@ -247,6 +247,32 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
         end
       end
 
+      context "when a change should not be displayed on this site" do
+        before do
+          UpcomingChanges::ConditionalDisplay.stubs(
+            :should_display_enable_upload_debug_mode?,
+          ).returns(false)
+        end
+
+        it "does not notify admins for the hidden setting" do
+          expect { result }.not_to change {
+            Notification
+              .where(notification_type: Notification.types[:upcoming_change_automatically_promoted])
+              .where("data::text LIKE ?", "%enable_upload_debug_mode%")
+              .count
+          }
+        end
+
+        it "returns the correct error and error key" do
+          expect(result[:change_notification_statuses][:enable_upload_debug_mode]).to match(
+            success: false,
+            error:
+              "Setting enable_upload_debug_mode is not displayed on this site, skipping promotion notification",
+            error_key: :should_not_be_displayed,
+          )
+        end
+      end
+
       context "when settings are opted out" do
         before { SiteSetting.enable_upload_debug_mode = false }
 

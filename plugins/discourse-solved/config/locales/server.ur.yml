@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ur:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "ٹاپک کے مالک اور اسٹاف کو حل کے طور پر ایک جواب کو نشان زد کرنے کی اجازت دیں"
   site_settings:
     solved_enabled: "سَولوڈ پلگ اِن فعال کریں، صارفین کو ٹاپک کے حل منتخب کرنے کی اجازت دیں"
     accept_all_solutions_trust_level: "کسی بھی ٹاپک پر سے حل کا انتخاب کرنے کے لئے کم از کم ٹرسٹ لَیول (یہاں تک کہ جب اصل پوسٹر بھی نہ ہوں)"

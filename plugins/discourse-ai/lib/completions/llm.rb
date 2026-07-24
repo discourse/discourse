@@ -32,6 +32,7 @@ module DiscourseAi
             cohere
             open_ai
             google
+            google_vertex_ai
             azure
             samba_nova
             mistral
@@ -48,6 +49,26 @@ module DiscourseAi
 
         def tokenizer_names
           DiscourseAi::Tokenizer::BasicTokenizer.available_llm_tokenizers.map(&:name)
+        end
+
+        # Endpoint capabilities the admin UI needs to render provider forms.
+        # Endpoints match on provider (and sometimes url), so a lightweight
+        # probe is enough to resolve them.
+        def provider_capabilities
+          probe = Struct.new(:provider, :url)
+
+          provider_names.each_with_object({}) do |provider, capabilities|
+            endpoint =
+              begin
+                DiscourseAi::Completions::Endpoints::Base.endpoint_for(probe.new(provider, ""))
+              rescue UNKNOWN_MODEL
+                nil
+              end
+
+            capabilities[provider] = {
+              requires_configured_url: endpoint ? endpoint.requires_configured_url? : true,
+            }
+          end
         end
 
         def valid_provider_models
@@ -134,6 +155,7 @@ module DiscourseAi
       # @param feature_context { Hash - Optional } - The feature context to use for the completion.
       # @param partial_tool_calls { Boolean - Optional } - If true, the completion will return partial tool calls.
       # @param output_thinking { Boolean - Optional } - If true, the completion will return the thinking output for thinking models.
+      # @param thinking_effort { String - Optional } - Provider-agnostic per-call thinking effort override.
       # @param response_format { Hash - Optional } - JSON schema passed to the API as the desired structured output.
       # @param [Experimental] extra_model_params { Hash - Optional } - Other params that are not available accross models. e.g. response_format JSON schema.
       # @param execution_context { DiscourseAi::Completions::ExecutionContext - Optional } - Explicit per-call context for token tracking and audit logging.
@@ -155,6 +177,7 @@ module DiscourseAi
         partial_tool_calls: false,
         output_thinking: false,
         response_format: nil,
+        thinking_effort: nil,
         extra_model_params: nil,
         cancel_manager: nil,
         execution_context: nil,
@@ -173,11 +196,16 @@ module DiscourseAi
             partial_tool_calls: partial_tool_calls,
             output_thinking: output_thinking,
             response_format: response_format,
+            thinking_effort: thinking_effort,
             extra_model_params: extra_model_params,
           },
         )
 
-        model_params = { max_tokens: max_tokens, stop_sequences: stop_sequences }
+        model_params = {
+          max_tokens: max_tokens,
+          stop_sequences: stop_sequences,
+          thinking_effort: thinking_effort,
+        }
 
         if SiteSetting.ai_llm_temperature_top_p_enabled
           model_params[:temperature] = temperature if temperature
@@ -208,9 +236,12 @@ module DiscourseAi
 
         model_params.keys.each { |key| model_params.delete(key) if model_params[key].nil? }
 
+        gateway = @gateway || gateway_klass.new(llm_model)
+        model_params = gateway.prepare_model_params(model_params) if gateway.respond_to?(
+          :prepare_model_params,
+        )
         dialect = dialect_klass.new(prompt, llm_model, opts: model_params)
 
-        gateway = @gateway || gateway_klass.new(llm_model)
         gateway.perform_completion!(
           dialect,
           user,

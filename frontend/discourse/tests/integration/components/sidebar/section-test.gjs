@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import Section from "discourse/components/sidebar/section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | sidebar | section", function (hooks) {
+module("Integration | Component | Sidebar | Section", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default displaySection value for section", async function (assert) {

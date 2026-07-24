@@ -10,7 +10,6 @@ export default class DStyles extends Component {
   @service session;
   @service site;
   @service interfaceColor;
-  @service siteSettings;
 
   get categoryColors() {
     return [
@@ -99,13 +98,9 @@ export default class DStyles extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.viewport_based_mobile_mode}}
-      {{htmlClass (if this.site.mobileView "mobile-view" "desktop-view")}}
-      {{htmlClass
-        (if this.site.mobileView "mobile-device" "not-mobile-device")
-      }}
-    {{/if}}
-    {{! template-lint-disable no-forbidden-elements }}
+    {{htmlClass (if this.site.mobileView "mobile-view" "desktop-view")}}
+    {{htmlClass (if this.site.mobileView "mobile-device" "not-mobile-device")}}
+    {{! eslint-disable ember/template-no-forbidden-elements }}
     <style id="d-styles">
       {{#if this.site.categories}}
         {{this.categoryColors}}

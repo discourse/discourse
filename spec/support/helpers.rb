@@ -382,6 +382,14 @@ module Helpers
     )
   end
 
+  def has_trigger?(trigger_name)
+    DB.exec(<<~SQL) != 0
+      SELECT 1
+      FROM INFORMATION_SCHEMA.TRIGGERS
+      WHERE trigger_name = '#{trigger_name}'
+    SQL
+  end
+
   private
 
   def directory_from_caller

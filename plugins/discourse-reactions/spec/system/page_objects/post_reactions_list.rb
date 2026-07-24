@@ -20,7 +20,7 @@ module PageObjects
       end
 
       def reaction_list_emoji_selector(reaction)
-        "#discourse-reactions-list-emoji-#{post_id}-#{reaction}"
+        %([id="discourse-reactions-list-emoji-#{post_id}-#{reaction}"])
       end
 
       def has_reaction?(reaction)
@@ -40,6 +40,10 @@ module PageObjects
         find("#{reaction_list_emoji_selector(reaction)} .user-list .container").has_text?(
           usernames.join("\n"),
         )
+      end
+
+      def click_counter
+        context_component.find(".discourse-reactions-counter").click
       end
     end
   end

@@ -9,6 +9,13 @@ hy:
     currently_away:
       labels:
         username: Օգտանուն
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Օր"
+        week: "Շաբաթ"
+        month: "Ամիս"
+        year: "Տարի"
   discourse_post_event:
     errors:
       bulk_invite:

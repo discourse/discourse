@@ -244,6 +244,7 @@ export default class TagShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.bulkSelectHelper.clear();
+    controller.syncTagInfo();
     setTopicList(model.list);
 
     if (model.category || model.additionalTags) {

@@ -6,6 +6,7 @@ import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import ComposerActionsNew from "discourse/components/composer-actions-new";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -17,7 +18,8 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import ComposerActions from "discourse/select-kit/components/composer-actions";
+import ComposerActionsOld from "discourse/select-kit/components/composer-actions";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const TITLES = {
@@ -34,6 +36,7 @@ export default class ComposerActionTitle extends Component {
   // text customizations to use those.
 
   @service composer;
+  @service siteSettings;
 
   @computed("model.replyOptions")
   get options() {
@@ -142,35 +145,62 @@ export default class ComposerActionTitle extends Component {
 
   <template>
     <div class="composer-action-title" ...attributes>
-      <ComposerActions
-        @composerModel={{this.model}}
-        @replyOptions={{this.model.replyOptions}}
-        @canWhisper={{this.canWhisper}}
-        @canUnlistTopic={{this.canUnlistTopic}}
-        @action={{this.model.action}}
-        @tabindex={{this.tabindex}}
-        @topic={{this.model.topic}}
-        @post={{this.model.post}}
-        @whisper={{this.model.whisper}}
-        @noBump={{this.model.noBump}}
-        @options={{hash mobilePlacementStrategy="fixed"}}
-      />
+      {{#if this.siteSettings.enable_new_composer_actions}}
+        <span class="action-title" role="heading" aria-level="1">
+          <ComposerActionsNew
+            @composerModel={{this.model}}
+            @replyOptions={{this.model.replyOptions}}
+            @action={{this.model.action}}
+            @tabindex={{this.tabindex}}
+            @topic={{this.model.topic}}
+            @post={{this.model.post}}
+            @options={{hash mobilePlacementStrategy="fixed"}}
+          />
 
-      <span class="action-title" role="heading" aria-level="1">
-        {{this.actionTitle}}
-        {{#if this.replyTargetSegment}}
-          {{#if this.canEditReplyTo}}
-            <button
-              type="button"
-              class="composer-edit-reply-to"
-              title={{i18n "composer.change_reply_to.open"}}
-              {{on "click" this.openChangeReplyToModal}}
-            >{{this.replyTargetSegment}}</button>
-          {{else}}
-            {{this.replyTargetSegment}}
+          {{#if this.replyTargetSegment}}
+            {{#if this.canEditReplyTo}}
+              <DButton
+                @action={{this.openChangeReplyToModal}}
+                @title="composer.change_reply_to.open"
+                @translatedLabel={{this.replyTargetSegment}}
+                class="composer-edit-reply-to btn-default"
+              />
+            {{else}}
+              {{this.replyTargetSegment}}
+            {{/if}}
           {{/if}}
-        {{/if}}
-      </span>
+        </span>
+      {{else}}
+        <ComposerActionsOld
+          @composerModel={{this.model}}
+          @replyOptions={{this.model.replyOptions}}
+          @canWhisper={{this.canWhisper}}
+          @canUnlistTopic={{this.canUnlistTopic}}
+          @action={{this.model.action}}
+          @tabindex={{this.tabindex}}
+          @topic={{this.model.topic}}
+          @post={{this.model.post}}
+          @whisper={{this.model.whisper}}
+          @noBump={{this.model.noBump}}
+          @options={{hash mobilePlacementStrategy="fixed"}}
+        />
+
+        <span class="action-title" role="heading" aria-level="1">
+          {{this.actionTitle}}
+          {{#if this.replyTargetSegment}}
+            {{#if this.canEditReplyTo}}
+              <button
+                type="button"
+                class="composer-edit-reply-to"
+                title={{i18n "composer.change_reply_to.open"}}
+                {{on "click" this.openChangeReplyToModal}}
+              >{{this.replyTargetSegment}}</button>
+            {{else}}
+              {{this.replyTargetSegment}}
+            {{/if}}
+          {{/if}}
+        </span>
+      {{/if}}
     </div>
   </template>
 }

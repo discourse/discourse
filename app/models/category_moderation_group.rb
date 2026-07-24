@@ -10,10 +10,10 @@ end
 # Table name: category_moderation_groups
 #
 #  id          :bigint           not null, primary key
-#  category_id :integer
-#  group_id    :integer
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  category_id :integer
+#  group_id    :integer
 #
 # Indexes
 #

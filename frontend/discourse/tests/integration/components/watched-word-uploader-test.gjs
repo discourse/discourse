@@ -8,7 +8,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | watched-word-uploader", function (hooks) {
+module("Integration | Component | WatchedWordUploader", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

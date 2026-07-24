@@ -2,26 +2,23 @@
 import Component, { Input } from "@ember/component";
 import { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import CreateInvite from "discourse/components/modal/create-invite";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ShareSource from "discourse/components/share-source";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import Sharing from "discourse/lib/sharing";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class ShareTopicModal extends Component {
-  @service modal;
-
   @computed("model.topic")
   get topic() {
     return this.model?.topic;
@@ -116,7 +113,7 @@ export default class ShareTopicModal extends Component {
 
   @action
   inviteUsers() {
-    this.modal.show(CreateInvite, {
+    showCreateInviteModal(this, {
       model: {
         inviteToTopic: true,
         topics: [this.topic],
@@ -167,7 +164,7 @@ export default class ShareTopicModal extends Component {
               readonly={{true}}
               size="200"
             />
-            <CopyButton @selector="input.invite-link" @ariaLabel="share.url" />
+            <DCopyButton @selector="input.invite-link" @ariaLabel="share.url" />
           </div>
         </div>
 

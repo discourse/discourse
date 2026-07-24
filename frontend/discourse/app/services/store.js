@@ -433,7 +433,10 @@ export default class StoreService extends Service {
         // If a property value is unchanged, remove it from the update list
         updatedProperties &&
           Object.keys(updatedProperties).forEach((key) => {
-            if (existing[key] === updatedProperties[key]) {
+            if (
+              key.startsWith("__") ||
+              existing[key] === updatedProperties[key]
+            ) {
               delete updatedProperties[key];
             }
           });

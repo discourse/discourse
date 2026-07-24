@@ -264,6 +264,43 @@ describe Jobs::DiscoursePolicy::CheckPolicy do
     expect(user2_notifications.first.high_priority).to eq(true)
   end
 
+  context "when the policy topic is restricted" do
+    it "creates reminders only for users who can see it" do
+      freeze_time
+
+      policy_user_with_topic_access = Fabricate(:user)
+      policy_user_without_topic_access = Fabricate(:user)
+
+      policy_target_group = Fabricate(:group)
+      policy_target_group.add(policy_user_with_topic_access)
+      policy_target_group.add(policy_user_without_topic_access)
+
+      private_category_access_group = Fabricate(:group)
+      private_category_access_group.add(policy_user_with_topic_access)
+      private_category = Fabricate(:private_category, group: private_category_access_group)
+
+      raw = <<~MD
+        [policy group=#{policy_target_group.name} reminder=weekly]
+        I always open **doors**!
+        [/policy]
+      MD
+
+      post = create_post(raw: raw, user: Fabricate(:admin), category: private_category)
+
+      freeze_time 2.weeks.from_now
+
+      job.execute
+
+      expect(
+        Notification.where(
+          notification_type: Notification.types[:topic_reminder],
+          topic_id: post.topic_id,
+          post_number: 1,
+        ).pluck(:user_id),
+      ).to contain_exactly(policy_user_with_topic_access.id)
+    end
+  end
+
   it "will delete the existing policy reminder notification before creating a new one" do
     Jobs.run_immediately!
     freeze_time

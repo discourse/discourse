@@ -13,7 +13,7 @@ fr:
   js:
     filters:
       unassigned:
-        title: "Désattribué"
+        title: "Non attribué"
         help: "Sujets qui ne sont pas attribués"
     action_codes:
       assigned: "Attribué à %{who} le %{when}"
@@ -35,7 +35,7 @@ fr:
       cant_act_unclaimed: "Il faut réserver ce sujet avant d'agir sur les signalements."
       topic_search_placeholder: "Rechercher des sujets par titre ou contenu"
       sidebar_name_filter_placeholder: "Nom ou nom d'utilisateur"
-      assigned: "Attribué(s)"
+      assigned: "Attribué"
       group_everyone: "Tout le monde"
       assigned_to: "Attribué à"
       assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
@@ -186,3 +186,12 @@ fr:
       title: "Modifier les attributions"
       topic: "Sujet"
       post: "Publication"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Attribué(s)"
+      assign_topic:
+        operations:
+          assign: "Attribuer"
+          unassign: "Annuler l'attribution"
+        topic_id: "ID du sujet"
+        assignee: "Attributaire"

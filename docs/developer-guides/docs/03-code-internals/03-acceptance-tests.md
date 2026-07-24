@@ -77,7 +77,7 @@ It’s worth noting that you don’t need to test every little thing in a compon
 
 ### Acceptance Tests
 
-[Acceptance tests](https://guides.emberjs.com/v1.12.0/testing/acceptance/) are often easier to write, and can be more powerful than component tests as they test your application the same way a user would in their browser. I often start with acceptance tests, and then if I am making a complicated component I’ll add tests for it too.
+[Acceptance tests](https://guides.emberjs.com/release/testing/acceptance/) are often easier to write, and can be more powerful than component tests as they test your application the same way a user would in their browser. I often start with acceptance tests, and then if I am making a complicated component I’ll add tests for it too.
 
 Here’s how we can write an acceptance test that will visit our `/admin/snack` route and confirm that the snack was rendered:
 

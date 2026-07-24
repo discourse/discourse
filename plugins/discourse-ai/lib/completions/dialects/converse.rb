@@ -56,7 +56,7 @@ module DiscourseAi
         end
 
         def max_prompt_tokens
-          llm_model.max_prompt_tokens
+          max_prompt_tokens_with_reserved_output
         end
 
         def native_tool_support?
@@ -107,23 +107,44 @@ module DiscourseAi
         end
 
         def user_msg(msg)
-          images = nil
-          if vision_support?
-            encoded_uploads = prompt.encoded_uploads(msg)
-            encoded_uploads&.each do |upload|
-              images ||= []
-              images << {
-                image: {
-                  format: upload[:format] || detect_format(upload[:mime_type]),
-                  source: {
-                    bytes: upload[:base64],
-                  },
-                },
-              }
-            end
-          end
+          content_array = [msg[:content]].flatten
 
-          { role: "user", content: DiscourseAi::Completions::Prompt.text_only(msg), images: images }
+          content_array =
+            to_encoded_content_array(
+              content: content_array,
+              upload_encoder: ->(details) { upload_node(details) },
+              text_encoder: ->(text) { { text: text } },
+              allow_images: vision_support?,
+              allow_documents: true,
+              allowed_attachment_types: llm_model.allowed_attachment_types,
+              upload_filter: ->(encoded) { converse_upload_allowed?(encoded) },
+            )
+
+          { role: "user", content: content_array }
+        end
+
+        def converse_upload_allowed?(encoded)
+          return true if encoded[:kind] == :image
+
+          document_allowed?(encoded) && encoded[:text].present?
+        end
+
+        def upload_node(details)
+          return { text: details[:text] } if details[:text].present?
+          return if details[:kind] != :image
+
+          {
+            image: {
+              format: details[:format] || detect_format(details[:mime_type]),
+              source: {
+                # AWS SDK for Ruby expects raw bytes here and will base64-encode them
+                # on the wire. Passing the already-base64-encoded string causes Bedrock
+                # to receive doubly-encoded data and respond with
+                # "Could not process image".
+                bytes: Base64.decode64(details[:base64]),
+              },
+            },
+          }
         end
 
         def model_msg(msg)

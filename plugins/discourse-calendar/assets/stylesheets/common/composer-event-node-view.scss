@@ -99,7 +99,7 @@
 
     .composer-event__month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -127,7 +127,9 @@
 
   .composer-event__dates,
   .composer-event__location,
-  .composer-event__attendees {
+  .composer-event__attendees,
+  .composer-event__reminder,
+  .composer-event__livestream {
     position: relative;
     display: grid;
     grid-template-columns: 3em 1fr;
@@ -139,10 +141,37 @@
       border-top: 1px solid var(--primary-low);
     }
 
-    > .d-icon {
+    > .d-icon,
+    > .composer-event__reminder-icon {
       color: var(--primary-high);
       margin: 0 auto;
       padding: 0;
+    }
+  }
+
+  .composer-event__reminder {
+    grid-template-columns: 3em auto auto 1fr;
+    justify-items: start;
+
+    .composer-event__reminder-icon .d-icon {
+      color: var(--primary-high);
+    }
+
+    .composer-event__reminder-value {
+      width: 4em;
+      text-align: left;
+    }
+
+    .composer-event__reminder-unit {
+      color: var(--primary-medium);
+      line-height: var(--line-height-small);
+    }
+  }
+
+  .composer-event__dates {
+    .d-icon-clock {
+      align-self: baseline;
+      margin-top: var(--space-1);
     }
   }
 
@@ -152,14 +181,94 @@
   }
 
   .composer-event__date-range {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr;
     align-items: center;
-    flex-wrap: wrap;
     margin-right: calc(-1 * var(--space-6));
     gap: var(--space-half);
+    width: 100%;
 
-    .composer-event__date-separator {
-      color: var(--primary-medium);
+    &:not(.composer-event__date-range--has-time) {
+      grid-template-columns: auto auto;
+
+      @include viewport.until(sm) {
+        .composer-event__date-arrow {
+          display: none;
+        }
+      }
+
+      @include viewport.from(sm) {
+        grid-template-columns: auto auto 1fr;
+      }
+    }
+  }
+
+  .composer-event__livestream-toggle,
+  .composer-event__all-day-toggle {
+    display: flex;
+    margin-bottom: var(--space-1);
+    grid-column: 1 / -1;
+
+    @include viewport.from(sm) {
+      padding-left: 0.5em;
+    }
+  }
+
+  .composer-event__livestream-toggle {
+    grid-column-start: 2;
+    justify-self: start;
+  }
+
+  .d-toggle-switch:has(.composer-event__livestream-switch:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .composer-event__date-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+
+      .composer-event__time-input {
+        max-width: unset;
+      }
+
+      .composer-event__date-arrow {
+        margin: 0 auto;
+      }
+
+      &:not(.--multi-day) {
+        .composer-event__date-wrapper {
+          grid-column: 1 / -1;
+        }
+      }
+
+      &.--multi-day {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+
+  .composer-event__date-arrow {
+    color: var(--primary-low-mid);
+    justify-self: start;
+    margin-inline: var(--space-2);
+  }
+
+  .d-modal__body & {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    textarea,
+    input {
+      background: var(--primary-very-low);
     }
   }
 }
@@ -182,6 +291,7 @@
 .composer-event__date-wrapper {
   position: relative;
   display: flex;
+  min-width: 0;
 }
 
 .composer-event__date-display {
@@ -199,30 +309,70 @@
   }
 }
 
-.composer-event__date-input {
+.composer-event__date-wrapper .composer-event__date-input {
   padding: var(--space-half) var(--space-1);
-  min-height: 2.25rem;
+  height: 2.25rem;
+  min-height: 2.5em; // avoids shift on focus in Chrome
   cursor: pointer;
   color: transparent !important;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   flex: 1;
-  min-width: 0;
-  width: 9rem;
+  width: 100%;
+
+  @include viewport.from(sm) {
+    min-width: 10em; // avoids shift on focus in webkit
+    width: 9rem;
+  }
 
   &:focus {
+    color: inherit !important;
+
     @include viewport.from(sm) {
-      color: inherit !important;
       width: auto;
     }
   }
 }
 
-@include viewport.from(sm) {
-  .composer-event__date-input:focus + .composer-event__date-display {
-    display: none;
+input.composer-event__time-input[type="time"] {
+  padding-block: var(--space-2);
+  cursor: pointer;
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-height: 2.5em;
+
+  @include viewport.from(sm) {
+    width: 6rem;
   }
+}
+
+.composer-event__date-input,
+.composer-event__time-input {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: normal;
+}
+
+// webkit needs special handling to center content vertically in date and time inputs
+.composer-event__date-input::-webkit-datetime-edit,
+.composer-event__time-input::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+}
+
+.composer-event__date-input::-webkit-date-and-time-value,
+.composer-event__time-input::-webkit-date-and-time-value {
+  margin: auto 0;
+  text-align: left;
+  width: 100%;
+}
+
+.composer-event__date-input:focus + .composer-event__date-display {
+  display: none;
 }
 
 .composer-event__location-input {

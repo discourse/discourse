@@ -1,10 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
 
 const CollapsedInfo = <template>
@@ -19,7 +20,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="created-at">{{i18n "user.created"}}</dt>
             <dd class="created-at">
-              {{ageWithTooltip @model.created_at format="medium"}}
+              {{dAgeWithTooltip @model.created_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -27,7 +28,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-posted-at">{{i18n "user.last_posted"}}</dt>
             <dd class="last-posted-at">
-              {{ageWithTooltip @model.last_posted_at format="medium"}}
+              {{dAgeWithTooltip @model.last_posted_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -35,7 +36,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-seen-at">{{i18n "user.last_seen"}}</dt>
             <dd class="last-seen-at">
-              {{ageWithTooltip @model.last_seen_at format="medium"}}
+              {{dAgeWithTooltip @model.last_seen_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -67,7 +68,7 @@ const CollapsedInfo = <template>
                   @action={{fn (routeAction "checkEmail") @model}}
                   @icon="envelope"
                   @label="admin.users.check_email.text"
-                  class="btn-primary"
+                  class="btn-small btn-primary"
                 />
               {{/if}}
             </dd>
@@ -95,12 +96,21 @@ const CollapsedInfo = <template>
         {{/if}}
 
         {{#if @canDeleteUser}}
-          <div class="pull-right"><DButton
-              @action={{@adminDelete}}
-              @icon="triangle-exclamation"
-              @label="user.admin_delete"
-              class="btn-danger btn-delete-user"
-            /></div>
+          <div class="pull-right">
+            <DropdownSelectBox
+              @nameProperty="label"
+              @content={{@adminDeleteOptions}}
+              @onChange={{@adminDelete}}
+              @options={{hash
+                icon="triangle-exclamation"
+                showCaret=true
+                translatedNone=(i18n "user.admin_delete")
+                customStyle=true
+                btnCustomClasses="btn-danger"
+              }}
+              class="btn-small btn-delete-user"
+            />
+          </div>
         {{/if}}
 
         <PluginOutlet

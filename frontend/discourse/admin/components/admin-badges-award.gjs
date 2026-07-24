@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import iconOrImage from "discourse/helpers/icon-or-image";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesAward extends Component {
@@ -110,7 +110,7 @@ export default class AdminBadgesAward extends Component {
       {{#if @badge}}
         <form class="form-horizontal">
           <div class="badge-preview control-group">
-            {{iconOrImage @badge}}
+            {{dIconOrImage @badge}}
             <span class="badge-display-name">{{@badge.name}}</span>
           </div>
           <div class="control-group">
@@ -147,7 +147,7 @@ export default class AdminBadgesAward extends Component {
             class="btn-primary"
           />
           <LinkTo @route="adminBadges.index" class="btn btn-normal">
-            {{icon "xmark"}}
+            {{dIcon "xmark"}}
             <span>{{i18n "cancel"}}</span>
           </LinkTo>
         </form>
@@ -157,15 +157,15 @@ export default class AdminBadgesAward extends Component {
         {{#if this.resultsMessage}}
           <p>
             {{#if this.success}}
-              {{icon "check" class="bulk-award-status-icon success"}}
+              {{dIcon "check" class="bulk-award-status-icon success"}}
             {{else}}
-              {{icon "xmark" class="bulk-award-status-icon failure"}}
+              {{dIcon "xmark" class="bulk-award-status-icon failure"}}
             {{/if}}
             {{this.resultsMessage}}
           </p>
           {{#if this.unmatchedEntries.length}}
             <p>
-              {{icon
+              {{dIcon
                 "triangle-exclamation"
                 class="bulk-award-status-icon failure"
               }}

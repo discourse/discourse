@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::AiHelper::AssistantController do
   fab!(:newuser)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:restricted_group, :group)
 
   before do
     enable_current_plugin
@@ -18,6 +19,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     it "returns 403 when user cannot see the post" do
       sign_in(user)
+
+      AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
 
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: group)
@@ -39,6 +44,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     it "is able to stream suggestions to helper" do
       sign_in(user)
+
+      AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
 
       category = Fabricate(:category)
       category.set_permissions(everyone: :full)
@@ -79,6 +88,30 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       expect(last_message.channel).to eq(channel)
       expect(last_message.data[:result]).to eq("hello world")
       expect(last_message.data[:done]).to eq(true)
+    end
+
+    context "when the user is not in the helper mode agent's allowed_group_ids" do
+      before { Jobs.run_later! }
+
+      it "returns a 403 before enqueuing the streamed suggestion" do
+        sign_in(user)
+
+        AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+          allowed_group_ids: [restricted_group.id],
+        )
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "hello wrld",
+               location: "composer",
+               client_id: "1234",
+               custom_prompt: "Translate to Spanish",
+               mode: DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
+      end
     end
 
     context "when mode is illustrate_post" do
@@ -140,6 +173,21 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         expect(response.parsed_body["thumbnails"]).to be_present
         expect(response.parsed_body["thumbnails"].length).to eq(1)
         expect(response.parsed_body["thumbnails"].first["id"]).to eq(upload.id)
+      end
+
+      it "returns a 403 when the user cannot access the post illustrator agent" do
+        sign_in(user)
+        post_illustrator_agent.update!(allowed_group_ids: [restricted_group.id])
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "A beautiful sunset",
+               location: "composer",
+               mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
       end
     end
 
@@ -299,7 +347,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     context "when logged in as an allowed user" do
       before do
         sign_in(user)
-        user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
         SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
@@ -346,6 +393,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       end
 
       it "uses custom instruction when using custom_prompt mode" do
+        AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        )
+
         translated_text = "Un usuario escribio esto"
         expected_diff =
           "<div class=\"inline-diff\"><p><ins>Un </ins><ins>usuario </ins><ins>escribio </ins><ins>esto</ins><del>A </del><del>user </del><del>wrote </del><del>this</del></p></div>"
@@ -361,6 +412,26 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           expect(response.status).to eq(200)
           expect(response.parsed_body["suggestions"].first).to eq(translated_text)
           expect(response.parsed_body["diff"]).to eq(expected_diff)
+        end
+      end
+
+      context "when the user is not in the helper mode agent's allowed_group_ids" do
+        it "returns a 403 response" do
+          AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+            allowed_group_ids: [restricted_group.id],
+          )
+
+          DiscourseAi::Completions::Llm.with_prepared_responses(["Un usuario escribio esto"]) do
+            post "/discourse-ai/ai-helper/suggest",
+                 params: {
+                   mode: DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
+                   text: "A user wrote this",
+                   custom_prompt: "Translate to Spanish",
+                 }
+          end
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to be_present
         end
       end
 
@@ -503,7 +574,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     context "when logged in as an allowed user" do
       before do
         sign_in(user)
-        user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
         SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
@@ -581,193 +651,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
   end
 
   describe "#caption_image" do
-    let(:image) { plugin_file_from_fixtures("100x100.jpg") }
-    let(:upload) { UploadCreator.new(image, "image.jpg").create_for(Discourse.system_user.id) }
-    let(:image_url) { "#{Discourse.base_url}#{upload.url}" }
-    let(:caption) { "A picture of a cat sitting on a table" }
-    let(:caption_with_attrs) do
-      "A picture of a cat sitting on a table (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})"
-    end
-    let(:bad_caption) { "A picture of a cat \nsitting on a |table|" }
+    it "returns not found" do
+      post "/discourse-ai/ai-helper/caption_image"
 
-    def request_caption(params, caption = "A picture of a cat sitting on a table")
-      DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
-        post "/discourse-ai/ai-helper/caption_image", params: params
-
-        yield(response)
-      end
-    end
-
-    context "when logged in as an allowed user" do
-      before do
-        sign_in(user)
-
-        SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-      end
-
-      it "returns the suggested caption for the image" do
-        request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
-          expect(r.status).to eq(200)
-          expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-        end
-      end
-
-      it "returns a cleaned up caption from the LLM" do
-        request_caption({ image_url: image_url, image_url_type: "long_url" }, bad_caption) do |r|
-          expect(r.status).to eq(200)
-          expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-        end
-      end
-
-      it "truncates the caption from the LLM" do
-        request_caption({ image_url: image_url, image_url_type: "long_url" }, caption * 10) do |r|
-          expect(r.status).to eq(200)
-          expect(r.parsed_body["caption"].size).to be < caption.size * 10
-        end
-      end
-
-      context "when the image_url is a short_url" do
-        let(:image_url) { upload.short_url }
-
-        it "returns the suggested caption for the image" do
-          request_caption({ image_url: image_url, image_url_type: "short_url" }) do |r|
-            expect(r.status).to eq(200)
-            expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-          end
-        end
-      end
-
-      context "when the image_url is a short_path" do
-        let(:image_url) { "#{Discourse.base_url}#{upload.short_path}" }
-
-        it "returns the suggested caption for the image" do
-          request_caption({ image_url: image_url, image_url_type: "short_path" }) do |r|
-            expect(r.status).to eq(200)
-            expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-          end
-        end
-      end
-
-      it "returns a 502 error when the completion call fails" do
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          [DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new],
-        ) do
-          post "/discourse-ai/ai-helper/caption_image",
-               params: {
-                 image_url: image_url,
-                 image_url_type: "long_url",
-               }
-
-          expect(response.status).to eq(502)
-        end
-      end
-
-      it "returns a 400 error when the image_url is blank" do
-        post "/discourse-ai/ai-helper/caption_image"
-
-        expect(response.status).to eq(400)
-      end
-
-      it "returns a 404 error if no upload is found" do
-        post "/discourse-ai/ai-helper/caption_image",
-             params: {
-               image_url: "http://blah.com/img.jpeg",
-               image_url_type: "long_url",
-             }
-
-        expect(response.status).to eq(404)
-      end
-
-      context "for secure uploads" do
-        fab!(:group)
-        fab!(:private_category) { Fabricate(:private_category, group: group) }
-        let(:image) { plugin_file_from_fixtures("100x100.jpg") }
-        let(:upload) { UploadCreator.new(image, "image.jpg").create_for(Discourse.system_user.id) }
-        let(:image_url) { "#{Discourse.base_url}/secure-uploads/#{upload.url}" }
-
-        before do
-          Jobs.run_immediately!
-
-          # this is done so the after_save callbacks for site settings to make
-          # UploadReference records works
-          @original_provider = SiteSetting.provider
-          SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
-          enable_current_plugin
-          setup_s3
-          stub_s3_store
-          SiteSetting.secure_uploads = true
-          SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-
-          Group.find(SiteSetting.composer_ai_helper_allowed_groups_map.first).add(user)
-          user.reload
-
-          stub_request(
-            :get,
-            "http://s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/original/1X/#{upload.sha1}.#{upload.extension}",
-          ).to_return(status: 200, body: "", headers: {})
-        end
-        after { SiteSetting.provider = @original_provider }
-
-        it "returns a 403 error if the user cannot access the secure upload" do
-          # hosted-site plugin edge case, it enables embeddings
-          SiteSetting.ai_embeddings_enabled = false
-
-          create_post(
-            title: "Secure upload post",
-            raw: "This is a new post <img src=\"#{upload.url}\" />",
-            category: private_category,
-            user: Discourse.system_user,
-          )
-
-          post "/discourse-ai/ai-helper/caption_image",
-               params: {
-                 image_url: image_url,
-                 image_url_type: "long_url",
-               }
-          expect(response.status).to eq(403)
-        end
-
-        it "returns a 200 message and caption if user can access the secure upload" do
-          group.add(user)
-
-          request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
-            expect(r.status).to eq(200)
-            expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-          end
-        end
-
-        context "if the input URL is for a secure upload but not on the secure-uploads path" do
-          let(:image_url) { "#{Discourse.base_url}#{upload.url}" }
-
-          it "creates a signed URL properly and makes the caption" do
-            group.add(user)
-
-            request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
-              expect(r.status).to eq(200)
-              expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
-            end
-          end
-        end
-      end
-
-      context "when performing numerous requests" do
-        it "rate limits" do
-          RateLimiter.enable
-
-          rate_limit = described_class::RATE_LIMITS["caption_image"]
-          amount = rate_limit[:amount]
-
-          amount.times do
-            request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
-              expect(r.status).to eq(200)
-            end
-          end
-
-          request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
-            expect(r.status).to eq(429)
-          end
-        end
-      end
+      expect(response.status).to eq(404)
     end
   end
 
@@ -777,7 +664,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     before do
       sign_in(user)
-      user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
       SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       SiteSetting.ai_embeddings_selected_model = embedding_definition.id
       SiteSetting.ai_embeddings_enabled = true
@@ -792,6 +678,39 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
                }
 
           expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the selected category restricts tags" do
+        fab!(:allowed_tag, :tag)
+        fab!(:restricted_tag, :tag)
+        fab!(:restricted_category) { Fabricate(:category, allowed_tags: [allowed_tag.name]) }
+        fab!(:topic)
+
+        before do
+          Fabricate(:topic_tag, topic:, tag: allowed_tag)
+          Fabricate(:topic_tag, topic:, tag: restricted_tag)
+
+          WebMock.stub_request(:post, embedding_definition.url).to_return(
+            status: 200,
+            body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+          )
+
+          DiscourseAi::Embeddings::Vector.instance.generate_representation_from(topic)
+        end
+
+        it "does not suggest tags the category disallows" do
+          post "/discourse-ai/ai-helper/suggest_tags",
+               params: {
+                 text: "hello",
+                 category_id: restricted_category.id,
+               }
+
+          expect(response.status).to eq(200)
+
+          suggested = response.parsed_body["assistant"].map { |t| t["name"] }
+          expect(suggested).to include(allowed_tag.name)
+          expect(suggested).not_to include(restricted_tag.name)
         end
       end
     end

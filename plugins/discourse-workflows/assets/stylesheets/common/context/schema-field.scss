@@ -1,0 +1,63 @@
+.workflows-schema-field-list {
+  @include unstyled-list;
+
+  &.is-nested {
+    padding-left: var(--space-9);
+  }
+}
+
+.workflows-schema-field {
+  font-family: monospace;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    padding: 0.35em 0;
+  }
+
+  &.has-children > &__row {
+    &:hover .workflows-schema-field__key {
+      color: var(--primary);
+    }
+  }
+
+  &__toggle {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
+
+  &__key {
+    border: 1px solid var(--primary-200);
+    padding: var(--space-half) var(--space-1);
+    color: var(--primary-800);
+    border-radius: 2px;
+    gap: var(--space-1);
+    display: flex;
+    align-items: center;
+    cursor: grab;
+
+    &:hover {
+      background-color: var(--primary-100);
+      border-color: var(--primary-300);
+      color: var(--primary);
+
+      .workflows-schema-field__key-icon {
+        border-color: var(--primary-300);
+      }
+    }
+  }
+
+  &__key-icon {
+    border-right: 1px solid var(--primary-200);
+    padding-right: var(--space-1);
+    font-size: var(--font-down-1);
+  }
+
+  &__type {
+    font-size: var(--font-down-2);
+    padding: 0.1em 0.5em;
+    border-radius: 0.75em;
+    font-weight: 700;
+    border: 1px solid;
+  }
+}

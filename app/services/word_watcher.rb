@@ -54,7 +54,20 @@ class WordWatcher
   end
 
   def self.regexps_for_action(action)
-    cached_words_for_action(action)&.to_h { |_, attrs| [word_to_regexp(attrs[:word]), attrs] }
+    words = cached_words_for_action(action)
+    return if words.blank?
+
+    words.each_with_object({}) do |(_, attrs), hash|
+      regexp = word_to_regexp(attrs[:word])
+      begin
+        Regexp.new(regexp)
+        hash[regexp] = attrs
+      rescue RegexpError => e
+        Rails.logger.warn(
+          "Watched word '#{attrs[:word]}' has invalid regex '#{regexp}' for #{action}: #{e.message}",
+        )
+      end
+    end
   end
 
   # This regexp is run in miniracer, and the client JS app

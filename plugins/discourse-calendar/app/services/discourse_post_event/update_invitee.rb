@@ -8,6 +8,7 @@ module DiscoursePostEvent
       attribute :event_id, :integer
       attribute :invitee_id, :integer
       attribute :status, :symbol
+      attribute :recurring, :boolean, default: false
 
       validates :event_id, presence: true
       validates :invitee_id, presence: true
@@ -50,7 +51,7 @@ module DiscoursePostEvent
     end
 
     def update(invitee:, params:)
-      invitee.update_attendance!(params.status)
+      invitee.update_attendance!(params.status, recurring: params.recurring)
     end
   end
 end

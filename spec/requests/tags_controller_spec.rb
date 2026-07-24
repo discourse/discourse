@@ -50,6 +50,12 @@ RSpec.describe TagsController do
         expect(serialized_tag["count"]).to eq(1)
         expect(serialized_tag["pm_count"]).to eq(nil)
         expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["name"] == pm_only_tag.name }
+
+        expect(serialized_tag["count"]).to eq(0)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(true)
       end
 
       it "does not include pm_count attribute when user cannot tag PM topics even if display_personal_messages_tag_counts site setting has been enabled" do
@@ -157,12 +163,25 @@ RSpec.describe TagsController do
       end
 
       context "when disabled" do
-        before do
-          SiteSetting.pm_tags_allowed_for_groups = ""
+        before { SiteSetting.pm_tags_allowed_for_groups = "" }
+
+        it "shows tags only used in personal messages to admins" do
           sign_in(admin)
+
+          get "/tags.json"
+
+          expect(response.parsed_body["tags"]).to match(
+            [
+              include(name: test_tag.name, id: test_tag.id, pm_only: true),
+              include(name: topic_tag.name, id: topic_tag.id),
+              include(name: pm_only_tag.name, id: pm_only_tag.id, pm_only: true),
+            ],
+          )
         end
 
-        it "hides pm tags" do
+        it "hides tags only used in personal messages from regular users" do
+          sign_in(user)
+
           get "/tags.json"
 
           expect(response.parsed_body["tags"]).to match(
@@ -175,6 +194,31 @@ RSpec.describe TagsController do
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "retrieves the right tags"
+
+      it "hides tags only used in personal messages from grouped lists for regular users" do
+        Fabricate(:tag_group, tags: [topic_tag, pm_only_tag])
+
+        sign_in(user)
+
+        get "/tags.json"
+
+        group = response.parsed_body.dig("extras", "tag_groups").first
+        expect(group["tags"].map { |tag| tag["name"] }).to contain_exactly(topic_tag.name)
+      end
+
+      it "shows tags only used in personal messages in grouped lists to admins" do
+        Fabricate(:tag_group, tags: [topic_tag, pm_only_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        group = response.parsed_body.dig("extras", "tag_groups").first
+        expect(group["tags"].map { |tag| tag["name"] }).to contain_exactly(
+          topic_tag.name,
+          pm_only_tag.name,
+        )
+      end
 
       it "works for tags in groups" do
         _tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
@@ -240,6 +284,31 @@ RSpec.describe TagsController do
       before { SiteSetting.tags_listed_by_group = false }
       include_examples "retrieves the right tags"
 
+      it "hides tags only used in personal messages from category tag lists for regular users" do
+        category.update!(tags: [topic_tag, pm_only_tag])
+
+        sign_in(user)
+
+        get "/tags.json"
+
+        category_tags = response.parsed_body.dig("extras", "categories").first
+        expect(category_tags["tags"].map { |tag| tag["name"] }).to contain_exactly(topic_tag.name)
+      end
+
+      it "shows tags only used in personal messages in category tag lists to admins" do
+        category.update!(tags: [topic_tag, pm_only_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        category_tags = response.parsed_body.dig("extras", "categories").first
+        expect(category_tags["tags"].map { |tag| tag["name"] }).to contain_exactly(
+          topic_tag.name,
+          pm_only_tag.name,
+        )
+      end
+
       it "returns the right tags and categories tags for admin user" do
         category.update!(tags: [test_tag])
 
@@ -251,7 +320,7 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        expect(tags.length).to eq(2)
+        expect(tags.length).to eq(3)
 
         expect(tags[0]["name"]).to eq(test_tag.name)
         expect(tags[0]["text"]).to eq(test_tag.name)
@@ -261,6 +330,9 @@ RSpec.describe TagsController do
         expect(tags[0]["target_tag"]).to eq(nil)
 
         expect(tags[1]["name"]).to eq(topic_tag.name)
+
+        expect(tags[2]["name"]).to eq(pm_only_tag.name)
+        expect(tags[2]["pm_only"]).to eq(true)
 
         categories = response.parsed_body["extras"]["categories"]
 
@@ -285,8 +357,10 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        expect(tags.length).to eq(2)
-        expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+        expect(tags.length).to eq(3)
+        expect(tags.map { |tag| tag["name"] }).to eq(
+          [test_tag.name, topic_tag.name, pm_only_tag.name],
+        )
 
         initial_sql_queries_count =
           track_sql_queries do
@@ -296,8 +370,10 @@ RSpec.describe TagsController do
 
             tags = response.parsed_body["tags"]
 
-            expect(tags.length).to eq(2)
-            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+            expect(tags.length).to eq(3)
+            expect(tags.map { |tag| tag["name"] }).to eq(
+              [test_tag.name, topic_tag.name, pm_only_tag.name],
+            )
 
             categories = response.parsed_body["extras"]["categories"]
 
@@ -316,8 +392,10 @@ RSpec.describe TagsController do
 
             tags = response.parsed_body["tags"]
 
-            expect(tags.length).to eq(2)
-            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+            expect(tags.length).to eq(3)
+            expect(tags.map { |tag| tag["name"] }).to eq(
+              [test_tag.name, topic_tag.name, pm_only_tag.name],
+            )
 
             categories = response.parsed_body["extras"]["categories"]
 
@@ -425,6 +503,46 @@ RSpec.describe TagsController do
       expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
     end
 
+    it "shows tags with periods by canonical id URL and encoded legacy URL" do
+      node = Fabricate(:tag, name: "node.js")
+      node_topic = Fabricate(:topic, tags: [node])
+
+      get "/tag/#{node.slug}/#{node.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        node_topic.id,
+      )
+
+      get "/tag/node%2Ejs.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        node_topic.id,
+      )
+    end
+
+    it "shows tag intersections with encoded period tag names" do
+      node = Fabricate(:tag, name: "node.js")
+      other = Fabricate(:tag, name: "other")
+      matching_topic = Fabricate(:topic, tags: [node, other])
+      Fabricate(:topic, tags: [node])
+
+      get "/tags/intersection/node%2Ejs/other.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        matching_topic.id,
+      )
+    end
+
+    it "returns tag info for an encoded period tag name" do
+      Fabricate(:tag, name: "node.js")
+
+      get "/tag/node%2Ejs/info.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_info"]["name"]).to eq("node.js")
+    end
+
     it "should handle invalid tags" do
       get "/tag/%2ftest%2f"
       expect(response.status).to eq(404)
@@ -529,6 +647,52 @@ RSpec.describe TagsController do
       expect(response.body).not_to include("ActionView::Template::Error")
     end
 
+    it "returns 404 for missing numeric /tag/:tag_id routes" do
+      get "/tag/9999999"
+      expect(response.status).to eq(404)
+    end
+
+    it "redirects slug routes for numeric tag names to the canonical slug/id URL" do
+      numeric_tag_name = (Tag.maximum(:id).to_i + 10_000).to_s
+      numeric_tag = Fabricate(:tag, name: numeric_tag_name)
+      Fabricate(:topic, tags: [numeric_tag])
+
+      get "/tag/not-the-slug/#{numeric_tag_name}"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with(
+        "/tag/#{numeric_tag.slug_for_url}/#{numeric_tag.id}",
+      )
+    end
+
+    it "preserves the edit path when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit")
+    end
+
+    it "preserves the edit tab when redirecting a mismatched slug" do
+      get "/tag/not-the-slug/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
+    it "does not redirect the edit page when the slug already matches" do
+      sign_in(admin)
+
+      get "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
+      expect(response.status).to eq(200)
+    end
+
+    it "redirects the id-only edit route to the canonical slug edit URL" do
+      get "/tag/#{tag.id}/edit/general"
+
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to end_with("/tag/#{tag.slug_for_url}/#{tag.id}/edit/general")
+    end
+
     context "with a category in the path" do
       fab!(:topic_in_category) { Fabricate(:topic, tags: [tag], category: category) }
 
@@ -626,6 +790,37 @@ RSpec.describe TagsController do
       )
     end
 
+    it "returns synonyms only used in personal messages to users who cannot tag PMs" do
+      synonym.update!(pm_topic_count: 1)
+      get "/tag/#{tag.name}/info.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("tag_info", "synonyms").map { |t| t["text"] }).to eq(
+        [synonym.name],
+      )
+    end
+
+    context "when a synonym is hidden from the current user" do
+      fab!(:hidden_synonym) do
+        Fabricate(
+          :tag,
+          name: "hidden-synonym",
+          description: "private synonym description",
+          target_tag: tag,
+        )
+      end
+      fab!(:hidden_tag_group) do
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_synonym])
+      end
+
+      it "does not expose the synonym" do
+        get "/tag/#{tag.name}/info.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("tag_info", "synonyms")).to be_empty
+        expect(response.body).not_to include(hidden_synonym.name)
+        expect(response.body).not_to include(hidden_synonym.description)
+      end
+    end
+
     it "returns 404 if tag is staff-only" do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
@@ -705,6 +900,40 @@ RSpec.describe TagsController do
           expect(response.parsed_body.dig("tag_info", "category_ids")).to be_empty
           expect(response.parsed_body["categories"]).to be_blank
           expect(response.parsed_body.dig("tag_info", "category_restricted")).to eq(true)
+        end
+
+        it "doesn't leak the restricted tag group name to users without access" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "doesn't leak the restricted tag group name to anon" do
+          SiteSetting.tags_listed_by_group = true
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([])
+        end
+
+        it "still returns the restricted tag group name to admins" do
+          SiteSetting.tags_listed_by_group = true
+          sign_in(admin)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq([tag_group.name])
+        end
+
+        it "returns only visible tag group names when tag is in multiple groups" do
+          SiteSetting.tags_listed_by_group = true
+          public_tag_group = Fabricate(:tag_group, name: "public-group", tags: [tag])
+          sign_in(user)
+          get "/tag/#{tag.name}/info.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.dig("tag_info", "tag_group_names")).to eq(
+            [public_tag_group.name],
+          )
         end
       end
     end
@@ -838,6 +1067,32 @@ RSpec.describe TagsController do
         expect(settings["can_edit"]).to eq(true)
         expect(settings["can_admin"]).to eq(false)
       end
+
+      it "does not leak hidden synonyms or tag groups to non-staff tag editors" do
+        SiteSetting.tags_listed_by_group = true
+        hidden_synonym = Fabricate(:tag, name: "hidden-synonym", target_tag: tag)
+        visible_tag_group = Fabricate(:tag_group, name: "Visible Tag Group", tags: [tag])
+        Fabricate(
+          :tag_group,
+          name: "Hidden Synonym Group",
+          permissions: {
+            "staff" => 1,
+          },
+          tags: [hidden_synonym],
+        )
+        Fabricate(:tag_group, name: "Hidden Tag Group", permissions: { "staff" => 1 }, tags: [tag])
+
+        sign_in(regular_user)
+        get "/tag/#{tag.id}/settings.json"
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["synonyms"].map { |s| s["name"] }).to contain_exactly(synonym.name)
+        expect(settings["tag_group_names"]).to contain_exactly(visible_tag_group.name)
+        expect(settings["tag_groups"].map { |tg| tg["name"] }).to contain_exactly(
+          visible_tag_group.name,
+        )
+      end
     end
   end
 
@@ -875,6 +1130,20 @@ RSpec.describe TagsController do
         settings = response.parsed_body["tag_settings"]
         expect(settings["slug"]).to eq("custom-slug")
         expect(tag.reload.slug).to eq("custom-slug")
+      end
+
+      it "rejects tag slugs with unsupported characters" do
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "." } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
+
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "a.a" } }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include("Slug is invalid")
+        expect(tag.reload.slug).to eq("original-name")
       end
 
       it "updates the tag description" do
@@ -960,6 +1229,38 @@ RSpec.describe TagsController do
         put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "user-updated" } }
         expect(response.status).to eq(200)
         expect(tag.reload.name).to eq("user-updated")
+      end
+
+      it "does not allow mutating or exposing hidden synonyms by ID" do
+        hidden_synonym = Fabricate(:tag, name: "hidden-synonym", target_tag: tag)
+        hidden_tag = Fabricate(:tag, name: "hidden-tag")
+        Fabricate(
+          :tag_group,
+          permissions: {
+            "staff" => 1,
+          },
+          tag_names: [hidden_synonym.name, hidden_tag.name],
+        )
+
+        sign_in(regular_user)
+        put "/tag/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                removed_synonym_ids: [hidden_synonym.id],
+                new_synonyms: [{ id: hidden_tag.id }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        synonyms = response.parsed_body.dig("tag_settings", "synonyms")
+        synonym_names = synonyms.map { |s| s["name"] }
+        synonym_ids = synonyms.map { |s| s["id"] }
+        expect(synonym_names).not_to include(hidden_synonym.name)
+        expect(synonym_names).not_to include(hidden_tag.name)
+        expect(synonym_ids).not_to include(hidden_synonym.id)
+        expect(synonym_ids).not_to include(hidden_tag.id)
+        expect(hidden_synonym.reload.target_tag_id).to eq(tag.id)
+        expect(hidden_tag.reload.target_tag_id).to be_nil
       end
     end
   end
@@ -1383,6 +1684,26 @@ RSpec.describe TagsController do
         )
       end
 
+      it "surfaces the signed-in user's recently used tags first when the upcoming change is enabled" do
+        SiteSetting.prioritize_recently_used_tags = true
+        Fabricate(:tag, name: "popular", public_topic_count: 100)
+        recent = Fabricate(:tag, name: "recent", public_topic_count: 1)
+        Fabricate(:topic, user: user, tags: [recent])
+        sign_in(user)
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              prioritizeRecentTags: true,
+              filterForInput: true,
+            }
+
+        expect(response.status).to eq(200)
+        names = response.parsed_body["results"].map { |tag| tag["name"] }
+        expect(names.first).to eq("recent")
+        expect(names).to include("popular")
+      end
+
       context "with category restriction" do
         fab!(:yup) { Fabricate(:tag, name: "yup") }
         fab!(:category) { Fabricate(:category, tags: [yup]) }
@@ -1581,7 +1902,7 @@ RSpec.describe TagsController do
           expect(result).to be_present
           expect(result["disabled"]).to eq(true)
           expect(result["title"]).to eq(
-            I18n.t("tags.forbidden.one_tag_per_topic_group", tag_group_name: "Workflow"),
+            I18n.t("tags.forbidden.one_tag_per_topic_group", tag_names: "todo"),
           )
         end
 
@@ -1589,6 +1910,20 @@ RSpec.describe TagsController do
           get "/tags/filter/search.json",
               params: {
                 q: "ready",
+                filterForInput: true,
+                selected_tag_ids: [workflow_tag1.id],
+              }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body["results"].find { |t| t["name"] == "ready-to-deploy" }
+          expect(result).to be_present
+          expect(result["disabled"]).to eq(true)
+        end
+
+        it "returns sibling tag as disabled when the term matches a later word" do
+          get "/tags/filter/search.json",
+              params: {
+                q: "deploy",
                 filterForInput: true,
                 selected_tag_ids: [workflow_tag1.id],
               }
@@ -1932,8 +2267,10 @@ RSpec.describe TagsController do
     end
 
     context "while logged in" do
-      let(:csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags.csv") }
-      let(:invalid_csv_file) { File.new("#{Rails.root}/spec/fixtures/csv/tags_invalid.csv") }
+      let(:csv_file) { File.new("#{Rails.root.join("spec/fixtures/csv/tags.csv")}") }
+      let(:invalid_csv_file) do
+        File.new("#{Rails.root.join("spec/fixtures/csv/tags_invalid.csv")}")
+      end
 
       let(:file) { Rack::Test::UploadedFile.new(File.open(csv_file)) }
 

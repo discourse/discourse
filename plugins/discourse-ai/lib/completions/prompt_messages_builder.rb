@@ -5,6 +5,11 @@ module DiscourseAi
     class PromptMessagesBuilder
       MAX_CHAT_UPLOADS = 5
       MAX_TOPIC_UPLOADS = 5
+      MAX_CONTEXT_MESSAGES = 1000
+      COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
+      COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
+      COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
+      IMAGE_UPLOAD_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
       attr_reader :chat_context_posts
       attr_accessor :topic
 
@@ -13,10 +18,21 @@ module DiscourseAi
         channel:,
         context_post_ids:,
         max_messages:,
-        include_uploads:,
+        context_token_budget: nil,
+        tokenizer: nil,
+        include_uploads: nil,
+        include_image_uploads: nil,
+        include_document_uploads: nil,
+        allowed_attachment_types: nil,
         bot_user_ids:,
         instruction_message: nil
       )
+        include_image_uploads, include_document_uploads =
+          normalize_upload_inclusion(
+            include_uploads,
+            include_image_uploads,
+            include_document_uploads,
+          )
         include_thread_titles = !channel.direct_message_channel? && !message.thread_id
 
         current_id = message.id
@@ -27,6 +43,7 @@ module DiscourseAi
         elsif !channel.direct_message_channel? && !message.thread_id
           messages =
             Chat::Message
+              .includes(:user, :uploads, :thread)
               .joins("left join chat_threads on chat_threads.id = chat_messages.thread_id")
               .where(chat_channel_id: channel.id)
               .where(
@@ -52,7 +69,9 @@ module DiscourseAi
           builder.set_chat_context_posts(
             context_post_ids,
             guardian,
-            include_uploads: include_uploads,
+            include_image_uploads: include_image_uploads,
+            include_document_uploads: include_document_uploads,
+            allowed_attachment_types: allowed_attachment_types,
           )
         end
 
@@ -63,8 +82,14 @@ module DiscourseAi
           if bot_user_ids.include?(m.user_id)
             builder.push(type: :model, content: m.message)
           else
-            upload_ids = nil
-            upload_ids = m.uploads.map(&:id) if include_uploads && m.uploads.present?
+            upload_ids =
+              filtered_upload_ids_from_uploads(
+                m.uploads,
+                include_image_uploads: include_image_uploads,
+                include_document_uploads: include_document_uploads,
+                allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
+              )
             mapped_message = m.message
 
             thread_title = nil
@@ -85,13 +110,33 @@ module DiscourseAi
           end
         end
 
+        builder.trim_to_token_budget!(context_token_budget, tokenizer:)
+
         builder.to_a(
           limit: max_messages,
           style: channel.direct_message_channel? ? :chat_with_context : :chat,
         )
       end
 
-      def self.messages_from_post(post, style: nil, max_posts:, bot_usernames:, include_uploads:)
+      def self.messages_from_post(
+        post,
+        style: nil,
+        max_posts:,
+        context_token_budget: nil,
+        tokenizer: nil,
+        bot_usernames:,
+        include_uploads: nil,
+        include_image_uploads: nil,
+        include_document_uploads: nil,
+        allowed_attachment_types: nil
+      )
+        include_image_uploads, include_document_uploads =
+          normalize_upload_inclusion(
+            include_uploads,
+            include_image_uploads,
+            include_document_uploads,
+          )
+
         # Pay attention to the `post_number <= ?` here.
         # We want to inject the last post as context because they are translated differently.
 
@@ -123,6 +168,7 @@ module DiscourseAi
 
         builder = new
         builder.topic = post.topic
+        guardian = Guardian.new(post.user)
 
         context.reverse_each do |raw, username, custom_prompt, upload_ids, created_at|
           custom_prompt_translation =
@@ -155,14 +201,159 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            context[:upload_ids] = upload_ids.compact if upload_ids.present? && include_uploads
+            context[:upload_ids] = filtered_upload_ids_for_prompt(
+              upload_ids,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
+            )
             context[:created_at] = created_at
 
             builder.push(**context)
           end
         end
 
+        builder.trim_to_token_budget!(context_token_budget, tokenizer:)
+
         builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
+      end
+
+      def self.message_text(value)
+        case value
+        when Hash
+          message_text(value[:content] || value["content"])
+        when Array
+          value.map { |item| message_text(item) }.join
+        else
+          value.to_s
+        end
+      end
+
+      # Finds the last compression checkpoint: a bot-authored :user message
+      # (blank id) wrapped in the compressed context markers, acknowledged by
+      # the :model message that follows it.
+      def self.compression_checkpoint_index(messages)
+        (messages.length - 2).downto(0) do |index|
+          message = messages[index]
+          next if message[:type] != :user
+          next if message[:id].present?
+          next if !message_text(message).start_with?(COMPRESSED_CONTEXT_PREFIX)
+
+          next_message = messages[index + 1]
+          if next_message[:type] != :model || message_text(next_message) != COMPRESSED_CONTEXT_ACK
+            next
+          end
+
+          return index
+        end
+
+        nil
+      end
+
+      def self.normalize_upload_inclusion(
+        include_uploads,
+        include_image_uploads,
+        include_document_uploads
+      )
+        include_image_uploads = include_uploads if include_image_uploads.nil?
+        include_document_uploads = include_uploads if include_document_uploads.nil?
+
+        [!!include_image_uploads, !!include_document_uploads]
+      end
+
+      def self.filtered_upload_ids_for_prompt(
+        upload_ids,
+        include_image_uploads:,
+        include_document_uploads:,
+        guardian:,
+        allowed_attachment_types: nil
+      )
+        return if !include_image_uploads && !include_document_uploads
+        return if upload_ids.blank?
+
+        upload_ids = Array(upload_ids).compact.map(&:to_i)
+        uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+
+        filtered_upload_ids =
+          upload_ids.select do |upload_id|
+            upload = uploads_by_id[upload_id]
+            upload &&
+              upload_allowed_for_prompt?(
+                upload,
+                include_image_uploads: include_image_uploads,
+                include_document_uploads: include_document_uploads,
+                allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
+              )
+          end
+
+        filtered_upload_ids.presence
+      end
+
+      def self.filtered_upload_ids_from_uploads(
+        uploads,
+        include_image_uploads:,
+        include_document_uploads:,
+        guardian:,
+        allowed_attachment_types: nil
+      )
+        return if !include_image_uploads && !include_document_uploads
+        return if uploads.blank?
+
+        uploads
+          .select do |upload|
+            upload_allowed_for_prompt?(
+              upload,
+              include_image_uploads: include_image_uploads,
+              include_document_uploads: include_document_uploads,
+              allowed_attachment_types: allowed_attachment_types,
+              guardian: guardian,
+            )
+          end
+          .map(&:id)
+          .presence
+      end
+
+      def self.upload_allowed_for_prompt?(
+        upload,
+        include_image_uploads:,
+        include_document_uploads:,
+        guardian:,
+        allowed_attachment_types: nil
+      )
+        type_allowed =
+          if image_upload?(upload)
+            include_image_uploads
+          else
+            include_document_uploads &&
+              document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
+          end
+        return false if !type_allowed
+
+        guardian.can_see_upload?(upload)
+      end
+
+      def self.document_upload_allowed_for_prompt?(upload, allowed_attachment_types)
+        allowed_attachment_types = LlmModel.normalize_attachment_types(allowed_attachment_types)
+        return false if allowed_attachment_types.blank?
+
+        mime_type =
+          MiniMime.lookup_by_filename(upload.original_filename)&.content_type ||
+            "application/octet-stream"
+        attachment_type =
+          DiscourseAi::Completions::UploadEncoder.attachment_type_for(upload.extension, mime_type)
+        allowed_attachment_types.include?(attachment_type)
+      end
+
+      def self.image_upload?(upload)
+        extension = upload.extension.to_s.delete_prefix(".").downcase
+        return true if IMAGE_UPLOAD_EXTENSIONS.include?(extension)
+
+        filename = upload.original_filename.to_s
+        filename = "upload.#{extension}" if File.extname(filename).blank? && extension.present?
+
+        MiniMime.lookup_by_filename(filename)&.content_type.to_s.start_with?("image/")
       end
 
       def initialize
@@ -170,7 +361,21 @@ module DiscourseAi
         @timestamps = {}
       end
 
-      def set_chat_context_posts(post_ids, guardian, include_uploads:)
+      def set_chat_context_posts(
+        post_ids,
+        guardian,
+        include_uploads: nil,
+        include_image_uploads: nil,
+        include_document_uploads: nil,
+        allowed_attachment_types: nil
+      )
+        include_image_uploads, include_document_uploads =
+          self.class.normalize_upload_inclusion(
+            include_uploads,
+            include_image_uploads,
+            include_document_uploads,
+          )
+
         posts = []
         Post
           .where(id: post_ids)
@@ -186,9 +391,15 @@ module DiscourseAi
           posts.each do |post|
             posts_context << "url: #{post.url}\n"
             posts_context << "#{post.username}: #{post.raw}\n\n"
-            if include_uploads
-              post.uploads.each { |upload| posts_context << { upload_id: upload.id } }
-            end
+            upload_ids =
+              self.class.filtered_upload_ids_from_uploads(
+                post.uploads,
+                include_image_uploads: include_image_uploads,
+                include_document_uploads: include_document_uploads,
+                allowed_attachment_types: allowed_attachment_types,
+                guardian: guardian,
+              )
+            upload_ids&.each { |upload_id| posts_context << { upload_id: upload_id } }
           end
           posts_context << "}}}"
           @chat_context_posts = posts_context
@@ -201,7 +412,8 @@ module DiscourseAi
         return topic_array if style == :topic
 
         # the rest of the styles can include multiple messages
-        result = valid_messages_array(@raw_messages)
+        raw_messages = messages_after_last_compression(@raw_messages).map(&:dup)
+        result = valid_messages_array(raw_messages)
         prepend_chat_post_context(result) if style == :chat_with_context
 
         if limit
@@ -209,6 +421,32 @@ module DiscourseAi
         else
           result
         end
+      end
+
+      def trim_to_token_budget!(token_budget, tokenizer: nil)
+        token_budget = token_budget.to_i
+        return if token_budget <= 0 || @raw_messages.length <= 1
+
+        checkpoint_index = compression_checkpoint_index(@raw_messages)
+        scoped_messages = checkpoint_index ? @raw_messages[checkpoint_index..] : @raw_messages
+        checkpoint_messages = checkpoint_index ? scoped_messages.first(2) : []
+        candidates = checkpoint_index ? scoped_messages.drop(2) : scoped_messages
+
+        kept = []
+        used_tokens =
+          checkpoint_messages.sum { |message| estimate_message_tokens(message, tokenizer) }
+
+        candidates.reverse_each do |message|
+          message_tokens = estimate_message_tokens(message, tokenizer)
+          # stop at the first message that does not fit so kept history stays
+          # contiguous; always keep the latest message even when over budget
+          break if kept.present? && used_tokens + message_tokens > token_budget
+
+          kept << message
+          used_tokens += message_tokens
+        end
+
+        @raw_messages = checkpoint_messages + kept.reverse
       end
 
       def push(
@@ -229,32 +467,41 @@ module DiscourseAi
           raise ArgumentError, "provider_data must be a hash"
         end
 
+        content = normalize_content_uploads(content) if content.is_a?(Array)
         content = [content, *upload_ids.map { |upload_id| { upload_id: upload_id } }] if upload_ids
         message = { type: type, content: content }
         message[:name] = name.to_s if name
         message[:id] = id.to_s if id
         message[:provider_data] = provider_data.deep_symbolize_keys if provider_data.present?
         if thinking
-          if thinking["message"] || thinking["provider_info"]
-            message[:thinking] = thinking["message"] if thinking["message"]
-            provider_info =
-              DiscourseAi::Completions::Thinking.normalize_provider_info(thinking["provider_info"])
-            message[:thinking_provider_info] = provider_info if provider_info.present?
-          else
-            legacy_provider_info = {}
-            if thinking["thinking_signature"]
-              legacy_provider_info[:anthropic] ||= {}
-              legacy_provider_info[:anthropic][:signature] = thinking["thinking_signature"]
-            end
-            if thinking["redacted_thinking_signature"]
-              legacy_provider_info[:anthropic] ||= {}
-              legacy_provider_info[:anthropic][:redacted_signature] = thinking[
-                "redacted_thinking_signature"
-              ]
-            end
+          if thinking.is_a?(Hash)
+            thinking = thinking.deep_symbolize_keys
 
-            message[:thinking] = thinking["thinking"] if thinking["thinking"]
-            message[:thinking_provider_info] = legacy_provider_info if legacy_provider_info.present?
+            if thinking[:message] || thinking[:provider_info]
+              message[:thinking] = thinking[:message] if thinking[:message]
+              provider_info =
+                DiscourseAi::Completions::Thinking.normalize_provider_info(thinking[:provider_info])
+              message[:thinking_provider_info] = provider_info if provider_info.present?
+            else
+              legacy_provider_info = {}
+              if thinking[:thinking_signature]
+                legacy_provider_info[:anthropic] ||= {}
+                legacy_provider_info[:anthropic][:signature] = thinking[:thinking_signature]
+              end
+              if thinking[:redacted_thinking_signature]
+                legacy_provider_info[:anthropic] ||= {}
+                legacy_provider_info[:anthropic][:redacted_signature] = thinking[
+                  :redacted_thinking_signature
+                ]
+              end
+
+              message[:thinking] = thinking[:thinking] if thinking[:thinking]
+              message[
+                :thinking_provider_info
+              ] = legacy_provider_info if legacy_provider_info.present?
+            end
+          else
+            message[:thinking] = thinking
           end
         end
 
@@ -265,6 +512,44 @@ module DiscourseAi
       end
 
       private
+
+      # Custom prompts round-trip through JSON (post_custom_prompt), which
+      # turns {upload_id: 1} into {"upload_id" => 1}. Prompt#validate_message
+      # only accepts the symbol-keyed form, so normalize on the way in.
+      def normalize_content_uploads(content)
+        content.map do |part|
+          if part.is_a?(Hash) && (upload_id = part[:upload_id] || part["upload_id"])
+            { upload_id: upload_id }
+          else
+            part
+          end
+        end
+      end
+
+      def estimate_message_tokens(message, tokenizer)
+        text = message_text(message)
+        return 0 if text.blank?
+
+        if tokenizer
+          tokenizer.size(text)
+        else
+          (text.bytesize / 3.0).ceil
+        end
+      end
+
+      def message_text(value)
+        self.class.message_text(value)
+      end
+
+      def compression_checkpoint_index(messages)
+        self.class.compression_checkpoint_index(messages)
+      end
+
+      def messages_after_last_compression(messages)
+        compression_index = compression_checkpoint_index(messages)
+
+        compression_index ? messages[compression_index..] : messages
+      end
 
       def valid_messages_array(messages)
         result = []
@@ -446,7 +731,7 @@ module DiscourseAi
       end
 
       def topic_array
-        raw_messages = @raw_messages.dup
+        raw_messages = messages_after_last_compression(@raw_messages.dup)
         content_array = []
         content_array << "You are operating in a Discourse forum.\n\n"
         content_array << format_topic_info(@topic) if @topic
@@ -485,12 +770,12 @@ module DiscourseAi
       end
 
       def chat_array(limit:)
-        if @raw_messages.length > 1
-          buffer = [
-            +"You are replying inside a Discourse chat channel. Here is a summary of the conversation so far:\n{{{",
-          ]
+        raw_messages = messages_after_last_compression(@raw_messages)
+        buffer = []
+        if raw_messages.length > 1
+          buffer << +"You are replying inside a Discourse chat channel. Here is a summary of the conversation so far:\n{{{"
 
-          @raw_messages[0..-2].each do |message|
+          raw_messages[0..-2].each do |message|
             buffer << "\n"
 
             if message[:type] == :user
@@ -508,7 +793,7 @@ module DiscourseAi
           buffer << "\n"
         end
 
-        last_message = @raw_messages[-1]
+        last_message = raw_messages[-1]
         buffer << "#{last_message[:id] || "User"}: "
         buffer << last_message[:content]
 

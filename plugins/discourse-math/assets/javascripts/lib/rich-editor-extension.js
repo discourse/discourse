@@ -175,14 +175,14 @@ const extension = {
         {
           tag: "span.math",
           getAttrs: (dom) => ({
-            text: dom.textContent,
+            text: dom.textContent.trim(),
             mathType: "tex",
           }),
         },
         {
           tag: "span.asciimath",
           getAttrs: (dom) => ({
-            text: dom.textContent,
+            text: dom.textContent.trim(),
             mathType: "asciimath",
           }),
         },
@@ -207,7 +207,7 @@ const extension = {
         {
           tag: "div.math",
           getAttrs: (dom) => ({
-            text: dom.textContent,
+            text: dom.textContent.trim(),
             mathType: "tex",
           }),
         },

@@ -58,7 +58,7 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "includes the image_url if there is an image for the change in public/images" do
-        Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+        Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
 
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
@@ -111,6 +111,99 @@ RSpec.describe UpcomingChanges::List do
           results = result.upcoming_changes
           mock_setting = results.find { |change| change[:setting] == :allow_user_locale }
           expect(mock_setting[:overriding_defaults]).to eq(false)
+        end
+      end
+
+      describe "depends_on settings" do
+        before do
+          # This replaces the metadata mocked in the outer `before` block, so
+          # enable_upload_debug_mode must be re-mocked here.
+          mock_upcoming_change_metadata(
+            {
+              set_locale_from_cookie: {
+                impact: "feature,all_members",
+                status: :experimental,
+                impact_type: "feature",
+                impact_role: "all_members",
+              },
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :experimental,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it "includes the settings the change depends on and their humanized names" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on]).to eq([:allow_user_locale])
+          expect(mock_setting[:depends_on_humanized_names]).to eq(["Allow user locale"])
+        end
+
+        it "includes depends_on_met as false when a dependency is not enabled" do
+          SiteSetting.allow_user_locale = false
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on_met]).to eq(false)
+        end
+
+        it "includes depends_on_met as true when all dependencies are enabled" do
+          SiteSetting.allow_user_locale = true
+
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :set_locale_from_cookie }
+
+          expect(mock_setting[:depends_on_met]).to eq(true)
+        end
+
+        it "includes depends_on_met as true for changes with no dependencies" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:depends_on_met]).to eq(true)
+        end
+
+        it "includes an empty depends_on for changes with no dependencies" do
+          results = result.upcoming_changes
+          mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+
+          expect(mock_setting[:depends_on]).to eq([])
+        end
+      end
+
+      describe "conditional display" do
+        context "when the upcoming change should display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(true)
+          end
+
+          it "returns true" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).to be_present
+          end
+        end
+
+        context "when the upcoming change should not display" do
+          before do
+            UpcomingChanges::ConditionalDisplay.stubs(
+              :should_display_enable_upload_debug_mode?,
+            ).returns(false)
+          end
+
+          it "returns false" do
+            results = result.upcoming_changes
+            mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
+            expect(mock_setting).not_to be_present
+          end
         end
       end
 

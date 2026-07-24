@@ -68,13 +68,18 @@ describe "Uploading files in chat messages" do
 
       expect(page).to have_css(".chat-composer-upload .preview .preview-img")
 
-      expect { channel_page.send_message }.to change { Chat::Message.count }.by(1)
+      count_before = Chat::Message.count
+      channel_page.send_message
+
+      try_until_success { expect(Chat::Message.count).to eq(count_before + 1) }
 
       expect(channel_page).to have_no_css(".chat-composer-upload")
 
-      message = Chat::Message.last
-      upload = message.uploads.first
-      expect(upload.thumbnail).to be_present
+      upload = nil
+      try_until_success(reason: "wait for the upload to be processed") do
+        upload = Chat::Message.last.uploads.first
+        expect(upload.thumbnail&.url).to be_present
+      end
 
       # image has src attribute with thumbnail url
       expect(channel_page).to have_css(".chat-uploads img[src$='#{upload.thumbnail.url}']")
@@ -158,7 +163,8 @@ describe "Uploading files in chat messages" do
       expect(channel_page.message_by_id(message_2.id)).to have_no_css(".chat-uploads")
 
       channel_page.click_send_message
-      expect(message_2.reload.upload_ids).to be_empty
+
+      try_until_success { expect(message_2.reload.upload_ids).to be_empty }
     end
 
     it "allows adding more uploads" do

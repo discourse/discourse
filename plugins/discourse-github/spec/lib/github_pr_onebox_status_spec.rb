@@ -219,6 +219,68 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
   end
 
+  describe "#inline_data" do
+    let(:onebox) { Onebox::Engine::GithubPullRequestOnebox.new(gh_link) }
+
+    it "returns nil when no token is configured and github_pr_status_enabled is false" do
+      SiteSetting.github_pr_status_enabled = false
+      expect(onebox.inline_data).to be_nil
+    end
+
+    it "returns the title for a private repo when a token is configured and status is disabled" do
+      SiteSetting.github_pr_status_enabled = false
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+      stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+
+      expect(onebox.inline_data).to eq(
+        title: "Add audio onebox - Pull Request #1253 - discourse/discourse - GitHub",
+      )
+    end
+
+    it "returns the commit title when the URL links to a specific commit in the PR" do
+      SiteSetting.github_onebox_access_tokens = "discourse|github_pat_1234"
+      sha = "803d023e2307309f8b776ab3b8b7e38ba91c0919"
+      commit_onebox =
+        Onebox::Engine::GithubPullRequestOnebox.new(
+          "https://github.com/discourse/discourse/pull/1253/commits/#{sha}",
+        )
+      stub_request(
+        :get,
+        "https://api.github.com/repos/discourse/discourse/commits/#{sha}",
+      ).to_return(
+        status: 200,
+        body: MultiJson.dump("sha" => sha, "commit" => { "message" => "Add audio onebox" }),
+      )
+
+      expect(commit_onebox.inline_data).to eq(
+        title: "Add audio onebox - discourse/discourse@803d023 - GitHub",
+      )
+    end
+
+    context "when github_pr_status_enabled is true" do
+      before { SiteSetting.github_pr_status_enabled = true }
+
+      it "returns a title with repo and PR number plus a status css class" do
+        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+        stub_request(:get, reviews_api_uri).to_return(status: 200, body: "[]")
+
+        expect(onebox.inline_data).to eq(
+          title: "Add audio onebox - Pull Request #1253 - discourse/discourse - GitHub",
+          css_class: "--gh-status-open",
+        )
+      end
+
+      it "returns the title without a status css class when the status fetch fails" do
+        stub_request(:get, api_uri).to_return(status: 200, body: MultiJson.dump(open_pr_response))
+        stub_request(:get, reviews_api_uri).to_return(status: 500, body: "error")
+
+        expect(onebox.inline_data).to eq(
+          title: "Add audio onebox - Pull Request #1253 - discourse/discourse - GitHub",
+        )
+      end
+    end
+  end
+
   describe "#status_date_label" do
     let(:onebox) { Onebox::Engine::GithubPullRequestOnebox.new(gh_link) }
 

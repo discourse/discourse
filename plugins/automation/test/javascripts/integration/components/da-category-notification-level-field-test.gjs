@@ -7,7 +7,7 @@ import AutomationField from "discourse/plugins/automation/admin/components/autom
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
 
 module(
-  "Integration | Component | da-category-notification-level-field",
+  "Integration | Component | DaCategoryNotificationLevelField",
   function (hooks) {
     setupRenderingTest(hooks);
 

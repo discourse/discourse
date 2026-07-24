@@ -4,10 +4,10 @@
 
 <%- if theme_id.present? %>
   <%= discourse_stylesheet_link_tag(:common_theme, supports_rtl: true) %>
-  <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
+  <%= discourse_stylesheet_link_tag(mobile_device? ? :mobile_theme : :desktop_theme) %>
 <%- end %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request, rtl: rtl?).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_device?, desktop_view: !mobile_device?, request: request, rtl: rtl?).each do |file| %>
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>
 

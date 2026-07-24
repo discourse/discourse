@@ -1,25 +1,25 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
-import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
-import PasswordField from "discourse/components/password-field";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import UserField from "discourse/components/user-field";
-import UserInfo from "discourse/components/user-info";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DPasswordField from "discourse/ui-kit/d-password-field";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import DUserInfo from "discourse/ui-kit/d-user-info";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -49,7 +49,7 @@ export default <template>
             <div class="invited-by">
               <p>{{i18n "invites.invited_by"}}</p>
               <p>
-                <UserInfo @user={{@controller.invitedBy}} />
+                <DUserInfo @user={{@controller.invitedBy}} />
               </p>
             </div>
 
@@ -72,7 +72,7 @@ export default <template>
               {{! authOptions are present once the user has followed the OmniAuth flow (e.g. twitter/google/etc) }}
               {{#if @controller.authOptions}}
                 {{#unless @controller.isInviteLink}}
-                  <InputTip
+                  <DInputTip
                     @validation={{@controller.emailValidation}}
                     id="account-email-validation"
                   />
@@ -111,7 +111,7 @@ export default <template>
                     <label class="alt-placeholder" for="new-account-email">
                       {{i18n "user.email.title"}}
                     </label>
-                    <InputTip
+                    <DInputTip
                       @validation={{@controller.emailValidation}}
                       id="account-email-validation"
                     />
@@ -149,7 +149,7 @@ export default <template>
                     <label class="alt-placeholder" for="new-account-username">
                       {{i18n "user.username.title"}}
                     </label>
-                    <InputTip
+                    <DInputTip
                       @validation={{@controller.usernameValidation}}
                       id="username-validation"
                     />
@@ -171,7 +171,7 @@ export default <template>
 
                 {{#unless @controller.externalAuthsOnly}}
                   <div class="input password-input input-group">
-                    <PasswordField
+                    <DPasswordField
                       {{on "focusin" @controller.scrollInputIntoView}}
                       @value={{@controller.accountPassword}}
                       @capsLockOn={{@controller.capsLockOn}}
@@ -183,14 +183,14 @@ export default <template>
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
                     </label>
-                    <TogglePasswordMask
+                    <DTogglePasswordMask
                       @maskPassword={{@controller.maskPassword}}
                       @togglePasswordMask={{@controller.togglePasswordMask}}
                       @parentController="invites-show"
                     />
                     <div class="create-account__password-info">
                       <div class="create-account__password-tip-validation">
-                        <InputTip
+                        <DInputTip
                           @validation={{@controller.passwordValidation}}
                           id="password-validation"
                         />
@@ -198,7 +198,7 @@ export default <template>
                           class="caps-lock-warning
                             {{unless @controller.capsLockOn 'hidden'}}"
                         >
-                          {{icon "triangle-exclamation"}}
+                          {{dIcon "triangle-exclamation"}}
                           {{i18n "login.caps_lock_warning"}}
                         </div>
                       </div>

@@ -15,13 +15,18 @@ zh_CN:
       title: RSS 轮询
     admin:
       rss_polling:
-        feed: Feed 设置
-        discourse: Discourse 设置
         author: 作者
         feed_url: URL
         discourse_category: 类别
         discourse_tags: 标签
-        feed_category_filter: 类别筛选器
-        documentation: RSS 轮询配置文档
-        destroy_feed:
-          confirm: "确定要删除此 Feed 吗？"
+        feeds:
+          edit: 编辑
+          delete: 删除
+          save: 保存
+          confirm_delete: "确定要删除此 Feed 吗？"
+        test:
+          title: 预览
+          dismiss: 关闭
+        status:
+          enabled: 已启用
+          disabled: 已禁用

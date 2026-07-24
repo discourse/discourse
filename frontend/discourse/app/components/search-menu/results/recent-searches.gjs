@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import User from "discourse/models/user";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class RecentSearches extends Component {
@@ -26,7 +26,7 @@ export default class RecentSearches extends Component {
   async clearRecent() {
     const result = await User.resetRecentSearches();
     if (result.success) {
-      this.currentUser.recent_searches.clear();
+      this.currentUser.set("recent_searches", []);
     }
   }
 

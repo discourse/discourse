@@ -1,5 +1,5 @@
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const BulkSelectCell = <template>
@@ -10,7 +10,7 @@ const BulkSelectCell = <template>
         title={{i18n "topics.bulk.toggle"}}
         class="btn-transparent bulk-select no-text --primary"
       >
-        {{icon "list-check"}}
+        {{dIcon "list-check"}}
       </button>
     {{/if}}
   </th>

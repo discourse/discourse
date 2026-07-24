@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { logArgToConsole } from "../lib/console-logger";
 import { formatValue, getTypeInfo } from "../lib/value-formatter";
 
@@ -128,7 +128,7 @@ export default class ArgsTable extends Component {
         {{#each this.entries as |entry|}}
           <button
             type="button"
-            class={{concatClass
+            class={{dConcatClass
               "outlet-args-table__row"
               (if entry.isDeprecated "--deprecated")
             }}
@@ -143,7 +143,7 @@ export default class ArgsTable extends Component {
               @{{entry.key}}
               {{#if entry.isDeprecated}}
                 <span class="outlet-args-table__deprecated-badge">
-                  {{icon "triangle-exclamation"}}
+                  {{dIcon "triangle-exclamation"}}
                 </span>
               {{/if}}
             </span>

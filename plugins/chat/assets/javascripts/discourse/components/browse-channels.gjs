@@ -6,11 +6,12 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import EmptyState from "discourse/components/empty-state";
-import FilterInput from "discourse/components/filter-input";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
 import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -28,9 +29,37 @@ export default class BrowseChannels extends Component {
   @service siteSettings;
 
   @tracked filter = "";
+  @tracked selectedJoinedFilter = "all";
 
   get currentTab() {
     return this.args.currentTab ?? ALL;
+  }
+
+  get joinedFilters() {
+    return [
+      { label: i18n("chat.browse.filter_joined_all"), value: "all" },
+      { label: i18n("chat.browse.filter_joined_joined"), value: "joined" },
+      {
+        label: i18n("chat.browse.filter_joined_not_joined"),
+        value: "not-joined",
+      },
+    ];
+  }
+
+  @action
+  setJoinedFilter(value) {
+    this.selectedJoinedFilter = value;
+  }
+
+  @action
+  filterChannelsByJoined(listItems) {
+    if (this.selectedJoinedFilter === "joined") {
+      return listItems.filter((channel) => channel.isFollowing);
+    } else if (this.selectedJoinedFilter === "not-joined") {
+      return listItems.filter((channel) => !channel.isFollowing);
+    } else {
+      return listItems;
+    }
   }
 
   @cached
@@ -89,18 +118,34 @@ export default class BrowseChannels extends Component {
           </ul>
         </nav>
 
-        <FilterInput
-          {{didInsert this.focusFilterInput}}
-          @filterAction={{this.setFilter}}
-          @icons={{hash right="magnifying-glass"}}
-          placeholder={{i18n "chat.browse.filter_input_placeholder"}}
-        />
+        <div class="chat-browse-view__filter-controls">
+          <DSelect
+            @value={{this.selectedJoinedFilter}}
+            @onChange={{this.setJoinedFilter}}
+            @includeNone={{false}}
+            class="chat-browse-view__filter-select"
+            as |select|
+          >
+            {{#each this.joinedFilters as |filter|}}
+              <select.Option @value={{filter.value}}>
+                {{filter.label}}
+              </select.Option>
+            {{/each}}
+          </DSelect>
+          <DFilterInput
+            {{didInsert this.focusFilterInput}}
+            @filterAction={{this.setFilter}}
+            @icons={{hash right="magnifying-glass"}}
+            placeholder={{i18n "chat.browse.filter_input_placeholder"}}
+          />
+        </div>
       </div>
 
       <div class="chat-browse-view__content_wrapper">
         <div class="chat-browse-view__content">
           <List
             @collection={{this.channelsCollection}}
+            @filterFn={{this.filterChannelsByJoined}}
             class="chat-browse-view__cards"
             as |list|
           >
@@ -109,7 +154,7 @@ export default class BrowseChannels extends Component {
             </list.Item>
 
             <list.EmptyState>
-              <EmptyState
+              <DEmptyState
                 @title={{i18n "chat.empty_state.title"}}
                 @body={{i18n "chat.empty_state.direct_message"}}
                 @ctaLabel={{i18n "chat.empty_state.direct_message_cta"}}

@@ -38,7 +38,7 @@ module Jobs
             )
           else
             post.update_column(:cooked, cp.html)
-            post.topic.update_excerpt(post.excerpt_for_topic) if post.is_first_post?
+            post.sync_first_post_caches
             extract_links(post)
             post.publish_change_to_clients! :revised
           end

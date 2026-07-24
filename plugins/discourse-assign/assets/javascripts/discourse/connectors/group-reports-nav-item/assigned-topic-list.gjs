@@ -6,7 +6,11 @@ import GroupAssignedMenuItem from "../../components/group-assigned-menu-item";
 @tagName("")
 export default class AssignedTopicList extends Component {
   static shouldRender(args, context) {
-    return context.currentUser?.can_assign && args.group.can_show_assigned_tab;
+    return (
+      context.currentUser?.can_assign_globally &&
+      args.group.can_show_assigned_tab &&
+      args.group.can_see_members
+    );
   }
 
   <template>

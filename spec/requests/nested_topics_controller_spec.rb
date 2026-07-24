@@ -3,7 +3,7 @@
 RSpec.describe NestedTopicsController, type: :request do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:topic) { Fabricate(:topic, user: user, last_posted_at: Time.current) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
   before { SiteSetting.nested_replies_enabled = true }
@@ -22,12 +22,45 @@ RSpec.describe NestedTopicsController, type: :request do
     url
   end
 
+  def set_cached_hot_scores(score_by_post)
+    score_by_post.each { |post, score| DB.exec(<<~SQL, post_id: post.id, score: score) }
+          UPDATE nested_hot_post_scores
+          SET hot_score = :score,
+              thread_hot_score = :score
+          WHERE post_id = :post_id
+        SQL
+  end
+
   describe "GET respond" do
     it "redirects crawlers to the flat topic view" do
       get "/n/#{topic.slug}/#{topic.id}", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
       expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}")
       expect(response.status).to eq(301)
+    end
+
+    it "redirects browser requests to the canonical topic route" do
+      get "/n/#{topic.slug}/#{topic.id}"
+
+      expect(response).to redirect_to("/t/#{topic.slug}/#{topic.id}")
+      expect(response.status).to eq(302)
+    end
+
+    it "redirects browser context requests to the canonical topic route and preserves nested query params" do
+      get "/n/#{topic.slug}/#{topic.id}/5",
+          params: {
+            sort: "new",
+            context: "0",
+            collapse_replies: "true",
+            embed_mode: "true",
+            class_name: "lee-af",
+            ignored: "drop-me",
+          }
+
+      expect(response).to redirect_to(
+        "/t/#{topic.slug}/#{topic.id}/5?class_name=lee-af&collapse_replies=true&context=0&embed_mode=true&sort=new",
+      )
+      expect(response.status).to eq(302)
     end
 
     it "redirects crawlers to the flat topic view with post number" do
@@ -121,6 +154,253 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json["page"]).to eq(0)
     end
 
+    it "keeps hot selected while a missing snapshot safely uses top and requests a refresh" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      low_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 1)
+      high_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+      3.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreQueue.clear
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sort"]).to eq("hot")
+      expect(response.parsed_body["effective_sort"]).to eq("top")
+      expect(response.parsed_body["roots"].map { |root| root["id"] }.first(2)).to eq(
+        [high_root.id, low_root.id],
+      )
+      expect(NestedReplies::HotScoreQueue.pop).to eq(topic.id)
+    ensure
+      NestedReplies::HotScoreQueue.clear
+    end
+
+    it "orders a deleted placeholder by the heat of its public descendant" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      deleted_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hot_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: deleted_root.post_number)
+      liked_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 20)
+      2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      deleted_root.update_columns(deleted_at: Time.current)
+      hot_child.update_columns(like_score: 100, created_at: 1.hour.ago)
+      liked_root.update_columns(like_score: 10, created_at: 1.hour.ago)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      deleted_root_json = response.parsed_body["roots"].first
+      expect(deleted_root_json["id"]).to eq(deleted_root.id)
+      expect(deleted_root_json["deleted_post_placeholder"]).to eq(true)
+      expect(deleted_root_json["children"].map { |child| child["id"] }).to eq([hot_child.id])
+    end
+
+    it "spends the hot preload budget on the strongest branch" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hot_child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      cold_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      hot_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_child.post_number)
+      hot_great_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_grandchild.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: cold_child.post_number)
+      topic.update_columns(posts_count: 7)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        root => 100.0,
+        hot_child => 100.0,
+        cold_child => 40.0,
+        hot_grandchild => 100.0,
+        hot_great_grandchild => 100.0,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 4) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      hot_child_json = root_json["children"].find { |child| child["id"] == hot_child.id }
+      cold_child_json = root_json["children"].find { |child| child["id"] == cold_child.id }
+      hot_grandchild_json =
+        hot_child_json["children"].find { |child| child["id"] == hot_grandchild.id }
+      expect(root_json["children"].map { |child| child["id"] }).to eq([hot_child.id, cold_child.id])
+      expect(hot_child_json["children"].map { |child| child["id"] }).to eq([hot_grandchild.id])
+      expect(hot_grandchild_json["children"].map { |child| child["id"] }).to eq(
+        [hot_great_grandchild.id],
+      )
+      expect(cold_child_json["children"]).to eq([])
+    end
+
+    it "uses depth penalty to return to another hot sibling branch" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.nested_replies_hot_preload_depth_penalty = 1.0
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      first_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      second_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      first_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: first_child.post_number)
+      second_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: second_child.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: first_grandchild.post_number)
+      topic.update_columns(posts_count: 7)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        root => 100.0,
+        first_child => 100.0,
+        second_child => 99.9,
+        first_grandchild => 100.0,
+        second_grandchild => 99.9,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 4) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      first_child_json = root_json["children"].find { |child| child["id"] == first_child.id }
+      second_child_json = root_json["children"].find { |child| child["id"] == second_child.id }
+      first_grandchild_json =
+        first_child_json["children"].find { |child| child["id"] == first_grandchild.id }
+      expect(first_grandchild_json["children"]).to eq([])
+      expect(second_child_json["children"].map { |child| child["id"] }).to eq(
+        [second_grandchild.id],
+      )
+    end
+
+    it "caps each hot root branch and spends the remaining budget on other roots" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      hottest_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      other_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hottest_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hottest_root.post_number)
+      hottest_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hottest_child.post_number)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: user,
+        reply_to_post_number: hottest_grandchild.post_number,
+      )
+      other_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: other_root.post_number)
+      other_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: other_child.post_number)
+      topic.update_columns(posts_count: 8)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        hottest_root => 100.0,
+        hottest_child => 100.0,
+        hottest_grandchild => 100.0,
+        other_root => 90.0,
+        other_child => 90.0,
+        other_grandchild => 90.0,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 2) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      roots = response.parsed_body["roots"]
+      hottest_root_json = roots.find { |json_root| json_root["id"] == hottest_root.id }
+      hottest_child_json =
+        hottest_root_json["children"].find { |child| child["id"] == hottest_child.id }
+      hottest_grandchild_json =
+        hottest_child_json["children"].find { |child| child["id"] == hottest_grandchild.id }
+      other_root_json = roots.find { |json_root| json_root["id"] == other_root.id }
+      other_child_json = other_root_json["children"].find { |child| child["id"] == other_child.id }
+      expect(hottest_child_json["children"].map { |child| child["id"] }).to eq(
+        [hottest_grandchild.id],
+      )
+      expect(hottest_grandchild_json["children"]).to eq([])
+      expect(other_child_json["children"].map { |child| child["id"] }).to eq([other_grandchild.id])
+    end
+
+    it "preloads replies created after the hot snapshot" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      4.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      new_child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      expect(root_json["children"].map { |child| child["id"] }).to eq([new_child.id])
+    end
+
+    it "preloads visible whisper branches for whisperers when sorting by hot" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      Fabricate(:nested_topic, topic: topic)
+      regular_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: regular_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      whisper_root =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: nil,
+          post_type: Post.types[:whisper],
+        )
+      whisper_grandchild =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: whisper_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(admin)
+
+      get show_url(topic, sort: "hot")
+
+      roots = response.parsed_body["roots"]
+      regular_root_json = roots.find { |root| root["id"] == regular_root.id }
+      whisper_root_json = roots.find { |root| root["id"] == whisper_root.id }
+      expect(regular_root_json["children"].map { |child| child["id"] }).to eq([whisper_child.id])
+      expect(whisper_root_json["children"].map { |child| child["id"] }).to eq(
+        [whisper_grandchild.id],
+      )
+    end
+
     it "piggybacks suggested topics at the top level when the first page is the last page" do
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       suggested = Fabricate(:post).topic
@@ -180,6 +460,92 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json).not_to have_key("topic")
       expect(json).not_to have_key("op_post")
       expect(json["page"]).to eq(1)
+    end
+
+    describe "topic.has_activity_log" do
+      it "is false when the topic has no small actions or whispers with action codes" do
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when the topic has a visible small_action post" do
+        topic.add_small_action(admin, "closed.enabled")
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "ignores whisper action-code posts for non-whisperers" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true when whisperers have a whisper action-code post" do
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+        topic.add_moderator_post(
+          admin,
+          nil,
+          post_type: Post.types[:whisper],
+          action_code: "assigned",
+          custom_fields: {
+            "action_code_who" => user.username,
+          },
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
+
+      it "does not leak the existence of hidden small_actions to non-staff" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(user)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(false)
+      end
+
+      it "is true for staff when the only small_action is hidden" do
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+        sign_in(admin)
+        get show_url(topic, page: 0)
+
+        expect(response.parsed_body["topic"]["has_activity_log"]).to eq(true)
+      end
     end
 
     it "paginates with has_more_roots" do
@@ -368,6 +734,28 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(root_json["deleted_post_placeholder"]).to eq(true)
         expect(root_json["cooked"]).to be_present
         expect(root_json["cooked"]).not_to eq("")
+      end
+
+      it "lets staff view a fully-deleted topic so they can recover it" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get show_url(topic)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
+
+      it "returns 404 for non-staff on a fully-deleted topic" do
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        sign_in(user)
+
+        get show_url(topic)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -801,6 +1189,33 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(child_ids).to eq([first.id, second.id])
       end
 
+      it "sorts children by a fresh hot snapshot" do
+        SiteSetting.nested_replies_hot_sort_enabled = true
+        Fabricate(:nested_topic, topic: topic)
+        liked_child =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: root.post_number,
+            like_count: 20,
+          )
+        hot_branch =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        hot_grandchild =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_branch.post_number)
+        liked_child.update_columns(like_score: 10, created_at: 1.hour.ago)
+        hot_grandchild.update_columns(like_score: 100, created_at: 1.hour.ago)
+        topic.update_columns(posts_count: 6)
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+        sign_in(user)
+
+        get children_url(topic, root.post_number, sort: "hot")
+
+        child_ids = response.parsed_body["children"].map { |child| child["id"] }
+        expect(child_ids).to eq([hot_branch.id, liked_child.id])
+      end
+
       it "respects sort at max nesting depth" do
         SiteSetting.nested_replies_max_depth = 2
         child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
@@ -869,6 +1284,26 @@ RSpec.describe NestedTopicsController, type: :request do
       json = response.parsed_body
       child_json = json["children"].find { |c| c["id"] == grandchild.id }
       expect(child_json).to be_present
+      expect(child_json["children"]).to eq([])
+    end
+
+    it "uses live descendant counts when stat rows are missing" do
+      SiteSetting.nested_replies_cap_nesting_depth = true
+      SiteSetting.nested_replies_max_depth = 3
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: child.post_number)
+      NestedViewPostStat.where(post_id: [parent.id, child.id]).delete_all
+      sign_in(user)
+
+      get children_url(topic, root.post_number, depth: 2)
+
+      json = response.parsed_body
+      parent_json = json["children"].find { |post_json| post_json["id"] == parent.id }
+      child_json = parent_json["children"].find { |post_json| post_json["id"] == child.id }
+      expect(parent_json["total_descendant_count"]).to eq(2)
+      expect(child_json["direct_reply_count"]).to eq(1)
+      expect(child_json["total_descendant_count"]).to eq(1)
       expect(child_json["children"]).to eq([])
     end
 
@@ -987,6 +1422,7 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json).to have_key("ancestor_chain")
       expect(json).to have_key("siblings")
       expect(json).to have_key("target_post")
+      expect(json["effective_sort"]).to eq("top")
       expect(json).to have_key("message_bus_last_id")
     end
 
@@ -1084,6 +1520,20 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(ancestor["cooked"]).to be_present
         expect(ancestor["cooked"]).not_to eq("")
       end
+
+      it "lets staff load the context view of a fully-deleted topic" do
+        reply = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+        PostDestroyer.new(admin, op).destroy
+        topic.reload
+        expect(topic.deleted_at).to be_present
+        sign_in(admin)
+
+        get context_url(topic, reply.post_number)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["op_post"]).to be_present
+        expect(json["op_post"]["deleted_post_placeholder"]).to eq(true)
+      end
     end
   end
 
@@ -1171,6 +1621,58 @@ RSpec.describe NestedTopicsController, type: :request do
 
       expect(TopicUser.count).to eq(topic_user_count)
     end
+
+    describe "catching up on visit" do
+      fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        Fabricate(:nested_topic, topic: topic)
+        topic.update!(highest_post_number: 2, highest_staff_post_number: 2)
+      end
+
+      it "advances last_read_post_number to highest_post_number for a nested topic" do
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: topic, user: reader)
+        expect(topic_user.last_read_post_number).to eq(2)
+      end
+
+      it "marks the topic's unread notifications as read" do
+        reply_notification =
+          Fabricate(
+            :replied_notification,
+            user: reader,
+            topic: topic,
+            post: root_reply,
+            read: false,
+          )
+
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        expect(reply_notification.reload.read).to eq(true)
+      end
+
+      it "does nothing for non-nested topics opened via /n/" do
+        flat_topic = Fabricate(:topic, user: user)
+        Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
+        flat_topic.update!(highest_post_number: 1, highest_staff_post_number: 1)
+
+        sign_in(reader)
+        get show_url(flat_topic), params: { track_visit: true }
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: flat_topic, user: reader)
+        expect(topic_user&.last_read_post_number).to be_blank
+      end
+    end
   end
 
   describe "GET activity" do
@@ -1216,6 +1718,73 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(actions[1]["username"]).to eq(admin.username)
     end
 
+    it "does not expose hidden small-action posts to users who cannot see them" do
+      visible_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "closed.enabled",
+          raw: "visible activity body",
+        )
+      hidden_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "opened.enabled",
+          raw: "hidden activity secret",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      sign_in(user)
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      ids = actions.map { |action| action["id"] }
+      expect(ids).to include(visible_action.id)
+      expect(ids).not_to include(hidden_action.id)
+      expect(response.body).not_to include("hidden activity secret")
+    end
+
+    it "does not expose hidden small-action posts to anonymous users" do
+      Fabricate(
+        :small_action,
+        topic: topic,
+        user: admin,
+        action_code: "opened.enabled",
+        raw: "hidden activity secret",
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("hidden activity secret")
+    end
+
+    it "still exposes hidden small-action posts to staff" do
+      hidden_action =
+        Fabricate(
+          :small_action,
+          topic: topic,
+          user: admin,
+          action_code: "opened.enabled",
+          raw: "hidden activity secret",
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+
+      sign_in(admin)
+      get activity_url(topic)
+      expect(response.status).to eq(200)
+
+      actions = response.parsed_body["small_actions"]
+      expect(actions.map { |action| action["id"] }).to include(hidden_action.id)
+    end
+
     it "excludes whisper action-code posts for non-whisperers" do
       topic.add_moderator_post(
         admin,
@@ -1252,6 +1821,30 @@ RSpec.describe NestedTopicsController, type: :request do
 
       actions = response.parsed_body["small_actions"]
       expect(actions.map { |a| a["action_code"] }).to include("assigned")
+    end
+  end
+
+  describe "embed mode" do
+    before { SiteSetting.embed_full_app = true }
+
+    it "preserves class_name when redirecting embed_mode to the canonical topic route" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true", class_name: "lee-af" })
+      expect(response).to redirect_to(
+        "/t/#{topic.slug}/#{topic.id}?class_name=lee-af&embed_mode=true",
+      )
+    end
+
+    it "strips X-Frame-Options when embed_mode is allowed" do
+      SiteSetting.embed_any_origin = true
+      get("/n/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "ignores class_name when embed_mode is not allowed" do
+      get("/n/#{topic.slug}/#{topic.id}", params: { class_name: "lee-af" })
+      expect(response.body).not_to match(/<html[^>]*\blee-af\b/)
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
   end
 end

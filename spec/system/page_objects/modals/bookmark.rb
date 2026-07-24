@@ -32,14 +32,6 @@ module PageObjects
         has_css?(".bookmark-reminder-modal[data-bookmark-id='#{bookmark_id}']")
       end
 
-      def open_options_panel
-        find(".bookmark-options-button").click
-      end
-
-      def has_open_options_panel?
-        has_css?(".bookmark-options-panel")
-      end
-
       def select_relative_time_duration(duration)
         find("#bookmark-relative-time-picker").fill_in(with: duration)
       end

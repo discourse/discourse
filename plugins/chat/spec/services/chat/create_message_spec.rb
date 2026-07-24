@@ -182,6 +182,16 @@ RSpec.describe Chat::CreateMessage do
         )
         result
       end
+
+      it "processes the direct message channel outside of the service transaction" do
+        initial_depth = ActiveRecord::Base.connection.open_transactions
+        transaction_depth_when_called = nil
+        Chat::Action::PublishAndFollowDirectMessageChannel
+          .expects(:call)
+          .with { transaction_depth_when_called = ActiveRecord::Base.connection.open_transactions }
+        result
+        expect(transaction_depth_when_called).to eq(initial_depth)
+      end
     end
 
     shared_examples "a message in a thread" do
@@ -322,7 +332,7 @@ RSpec.describe Chat::CreateMessage do
             context "when user can't create a message in the channel" do
               before { channel.closed!(Discourse.system_user) }
 
-              it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+              it { is_expected.to fail_a_policy(:channel_allows_message_creation) }
             end
 
             context "when user can create a message in the channel" do
@@ -482,10 +492,13 @@ RSpec.describe Chat::CreateMessage do
                 end
 
                 context "when nor thread nor reply is provided" do
-                  context "when message is not valid" do
+                  context "when message is too long" do
                     let(:content) { "a" * (SiteSetting.chat_maximum_message_length + 1) }
 
-                    it { is_expected.to fail_with_an_invalid_model(:message_instance) }
+                    it "fails the contract" do
+                      expect(result).to fail_a_contract
+                      expect(result.params.errors.of_kind?(:message, :too_long)).to eq(true)
+                    end
                   end
 
                   context "when message is valid" do

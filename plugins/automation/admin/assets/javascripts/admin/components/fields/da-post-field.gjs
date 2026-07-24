@@ -1,4 +1,4 @@
-import DEditor from "discourse/components/d-editor";
+import DEditor from "discourse/ui-kit/d-editor";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

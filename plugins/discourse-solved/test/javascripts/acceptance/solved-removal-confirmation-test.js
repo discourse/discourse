@@ -15,7 +15,7 @@ function solvedTopicFixture(overrides = {}) {
 function unsolvedTopicFixture() {
   const topic = cloneJSON(postStreamWithAcceptedAnswerExcerpt("an answer"));
   topic.category_id = 100;
-  topic.accepted_answer = null;
+  topic.accepted_answers = [];
   topic.post_stream.posts.forEach((p) => {
     p.accepted_answer = false;
     p.can_accept_answer = false;

@@ -16,8 +16,8 @@ end
 # Table name: data_explorer_query_groups
 #
 #  id       :bigint           not null, primary key
-#  query_id :bigint
 #  group_id :integer
+#  query_id :bigint
 #
 # Indexes
 #

@@ -85,6 +85,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:can_create_thread_in_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_errors(:thread) do |model|
         render json: failed_json.merge(errors: [model.errors.full_messages.join(", ")]),
@@ -92,5 +93,11 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
+  end
+
+  private
+
+  def allow_anonymous_public_chat_access?
+    action_name == "show" && anonymous_public_chat_access_enabled?
   end
 end

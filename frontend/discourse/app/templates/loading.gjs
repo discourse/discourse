@@ -1,7 +1,7 @@
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 
 export default <template>
-  {{loadingSpinner}}
+  {{dLoadingSpinner}}
   {{hideApplicationFooter}}
 </template>

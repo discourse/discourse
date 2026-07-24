@@ -22,8 +22,6 @@ vi:
       create:
         form:
           insert: Chèn
-          advanced_mode: Chế độ nâng cao
-          simple_mode: Chế độ đơn giản
           format_description: "Định dạng được sử dụng để hiển thị ngày cho người dùng. Sử dụng Z để hiển thị độ lệch và zz cho tên múi giờ."
           timezones_title: Múi giờ hiển thị
           timezones_description: Múi giờ sẽ được sử dụng để hiển thị ngày trong bản xem trước và dự phòng.

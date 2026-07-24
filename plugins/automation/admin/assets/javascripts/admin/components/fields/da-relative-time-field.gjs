@@ -1,4 +1,4 @@
-import RelativeTimePicker from "discourse/components/relative-time-picker";
+import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
@@ -11,7 +11,7 @@ export default class RelativeTimeField extends BaseField {
 
         <div class="controls">
           <div class="field-wrapper">
-            <RelativeTimePicker
+            <DRelativeTimePicker
               @durationMinutes={{@field.metadata.value}}
               @onChange={{this.mutValue}}
             />

@@ -3,40 +3,20 @@
 module DiscourseSolved::TopicExtension
   extend ActiveSupport::Concern
 
-  prepended { has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy }
+  prepended do
+    has_one :solved, class_name: "DiscourseSolved::SolvedTopic", dependent: :destroy
+    has_many :shared_issues,
+             class_name: "DiscourseSolved::SharedIssue",
+             foreign_key: :topic_id,
+             dependent: :delete_all
+  end
 
   def solved_auto_close_hours
     hours = category&.solved_auto_close_hours || 0
     hours.zero? ? SiteSetting.solved_topics_auto_close_hours : hours
   end
 
-  def accepted_answer_post_info
-    return unless solved
-    return unless answer_post = solved.answer_post
-
-    answer_post_user = answer_post.user || Discourse.system_user
-    accepter = solved.accepter || self.user || Discourse.system_user
-
-    excerpt = SiteSetting.solved_quote_length > 0 ? answer_post.cooked : nil
-
-    accepted_answer = {
-      post_number: answer_post.post_number,
-      username: answer_post_user.username,
-      name: answer_post_user.name,
-      avatar_template: answer_post_user.avatar_template,
-      excerpt:,
-    }
-
-    if SiteSetting.show_who_marked_solved
-      accepted_answer[:accepter_name] = accepter.name
-      accepted_answer[:accepter_username] = accepter.username
-    end
-
-    if !SiteSetting.enable_names || !SiteSetting.display_name_on_posts
-      accepted_answer[:name] = nil
-      accepted_answer[:accepter_name] = nil
-    end
-
-    accepted_answer
+  def topic_answers
+    solved&.topic_answers || DiscourseSolved::TopicAnswer.none
   end
 end

@@ -6,12 +6,14 @@ export default class DiscoursePostEventEventStats {
   }
 
   @tracked going = 0;
+  @tracked goingRecurring = 0;
   @tracked interested = 0;
   @tracked invited = 0;
   @tracked notGoing = 0;
 
   constructor(args = {}) {
     this.going = args.going;
+    this.goingRecurring = args.going_recurring;
     this.invited = args.invited;
     this.interested = args.interested;
     this.notGoing = args.not_going;

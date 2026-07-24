@@ -252,11 +252,11 @@ end
 # Table name: tag_users
 #
 #  id                 :integer          not null, primary key
-#  tag_id             :integer          not null
-#  user_id            :integer          not null
 #  notification_level :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  tag_id             :integer          not null
+#  user_id            :integer          not null
 #
 # Indexes
 #

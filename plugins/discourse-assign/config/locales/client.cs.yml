@@ -190,3 +190,12 @@ cs:
       title: "Upravit přiřazení"
       topic: "Téma"
       post: "Příspěvek"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Přiděleno"
+      assign_topic:
+        operations:
+          assign: "Přidělit"
+          unassign: "Odebrat přidělení"
+        topic_id: "ID tématu"
+        assignee: "Komu"

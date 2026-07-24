@@ -17,7 +17,13 @@ class RRuleConfigurator
           break if date.day == starts_at.day
         end
 
-        "FREQ=MONTHLY;BYDAY=#{count}#{weekday.upcase[0, 2]}"
+        # If this is the last occurrence of the weekday in the month, use -1
+        # ("last") so the rule fires every month, including months where this
+        # weekday only occurs four times.
+        is_last = starts_at.day + 7 > starts_at.end_of_month.day
+        byday_count = is_last ? -1 : count
+
+        "FREQ=MONTHLY;BYDAY=#{byday_count}#{weekday.upcase[0, 2]}"
       when "every_weekday"
         "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
       when "every_two_weeks"

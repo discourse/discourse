@@ -29,6 +29,7 @@ pt:
         locale_detector:
           name: "Detetor de idioma"
       tool_summary:
+        silence_user: "Silenciar utilizador"
         search: "Pesquisar"
         time: "Hora"
         summarize: "Resumir"

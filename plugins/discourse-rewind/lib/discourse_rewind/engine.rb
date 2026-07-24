@@ -12,7 +12,7 @@ module ::DiscourseRewind
 
     Rails.application.reloader.to_prepare do
       Dir[
-        "#{Rails.root}/plugins/discourse-rewind/app/services/discourse_rewind/rewind/action/*.rb"
+        "#{Rails.root.join("plugins/discourse-rewind/app/services/discourse_rewind/rewind/action/*.rb")}"
       ].each { |file| require_dependency file }
     end
   end

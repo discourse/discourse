@@ -85,6 +85,36 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
       expect(topic.reload.tags.map(&:name)).to include("bug")
     end
 
+    it "includes document uploads independently from image uploads" do
+      ai_agent.update!(vision_enabled: false)
+      llm_model.update!(allowed_attachment_types: ["txt"])
+      SiteSetting.authorized_extensions = "*"
+      image_upload = Fabricate(:image_upload, posts: [post])
+      document_upload = Fabricate(:upload, original_filename: "notes.txt", extension: "txt")
+      UploadReference.create!(target: post, upload: document_upload)
+
+      mock_response = { "tags" => ["bug"], "confidence" => 90 }.to_json
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+        described_class.handle(
+          post: post.reload,
+          tagger_agent_id: ai_agent.id,
+          available_tags: available_tags,
+          confidence_threshold: 70,
+          max_tags: 3,
+          max_post_tokens: 4000,
+          allow_restricted_tags: false,
+          max_posts_for_context: 5,
+        )
+
+        tagger_prompt = DiscourseAi::Completions::Llm.prompts.last
+        content = tagger_prompt.messages.last[:content]
+
+        expect(content).to include({ upload_id: document_upload.id })
+        expect(content).not_to include({ upload_id: image_upload.id })
+      end
+    end
+
     it "respects confidence threshold" do
       mock_response = { "tags" => ["bug"], "confidence" => 50 }.to_json
 

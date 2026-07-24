@@ -119,6 +119,32 @@ describe "discourse_post_event_recurrence" do
     end
   end
 
+  describe "resetting invitees on recurrence advance" do
+    fab!(:going_once_user, :user)
+    fab!(:going_recurring_user, :user)
+
+    before { post_event_1.update!(recurrence: "every_week") }
+
+    it "clears non-recurring going invitees and keeps recurring ones" do
+      DiscoursePostEvent::Invitee.create_attendance!(going_once_user.id, post_event_1.id, :going)
+      DiscoursePostEvent::Invitee.create_attendance!(
+        going_recurring_user.id,
+        post_event_1.id,
+        :going,
+        recurring: true,
+      )
+
+      post_event_1.set_next_date
+
+      once = post_event_1.invitees.find_by(user_id: going_once_user.id)
+      recurring = post_event_1.invitees.find_by(user_id: going_recurring_user.id)
+
+      expect(once.status).to be_nil
+      expect(recurring.status).to eq(DiscoursePostEvent::Invitee.statuses[:going])
+      expect(recurring.recurring).to eq(true)
+    end
+  end
+
   context "when the recurring event is closed" do
     before { post_event_1.update!(recurrence: "every_week", closed: true) }
 

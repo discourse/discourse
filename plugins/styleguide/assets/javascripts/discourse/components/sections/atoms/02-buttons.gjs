@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import concatClass from "discourse/helpers/concat-class";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class Buttons extends Component {
@@ -289,7 +289,7 @@ import { not } from "discourse/truth-helpers";
           @icon="xmark"
           @translatedTitle={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -303,7 +303,7 @@ import { not } from "discourse/truth-helpers";
           @icon="xmark"
           @translatedTitle={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -316,7 +316,7 @@ import { not } from "discourse/truth-helpers";
         <DButton
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -329,7 +329,7 @@ import { not } from "discourse/truth-helpers";
         <DButton
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -343,7 +343,7 @@ import { not } from "discourse/truth-helpers";
           @icon="plus"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -357,7 +357,7 @@ import { not } from "discourse/truth-helpers";
           @icon="plus"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-default" bs.class}}
+          class={{dConcatClass "btn-default" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -371,7 +371,7 @@ import { not } from "discourse/truth-helpers";
           @icon="plus"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-primary" bs.class}}
+          class={{dConcatClass "btn-primary" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -385,7 +385,7 @@ import { not } from "discourse/truth-helpers";
           @icon="plus"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-primary" bs.class}}
+          class={{dConcatClass "btn-primary" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -399,7 +399,7 @@ import { not } from "discourse/truth-helpers";
           @icon="trash-can"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-danger" bs.class}}
+          class={{dConcatClass "btn-danger" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -413,7 +413,7 @@ import { not } from "discourse/truth-helpers";
           @icon="trash-can"
           @translatedLabel={{bs.text}}
           @disabled={{bs.disabled}}
-          class={{concatClass "btn-danger" bs.class}}
+          class={{dConcatClass "btn-danger" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -427,7 +427,7 @@ import { not } from "discourse/truth-helpers";
           @icon="trash-can"
           @disabled={{bs.disabled}}
           @translatedTitle={{bs.title}}
-          class={{concatClass "btn-flat" bs.class}}
+          class={{dConcatClass "btn-flat" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -441,7 +441,7 @@ import { not } from "discourse/truth-helpers";
           @icon="trash-can"
           @disabled={{bs.disabled}}
           @translatedLabel={{bs.text}}
-          class={{concatClass "btn-flat" bs.class}}
+          class={{dConcatClass "btn-flat" bs.class}}
         />
       {{/each}}
     </StyleguideExample>
@@ -455,7 +455,7 @@ import { not } from "discourse/truth-helpers";
           @icon="trash-can"
           @disabled={{bs.disabled}}
           @translatedLabel={{bs.text}}
-          class={{concatClass "btn-transparent" bs.class}}
+          class={{dConcatClass "btn-transparent" bs.class}}
         />
       {{/each}}
     </StyleguideExample>

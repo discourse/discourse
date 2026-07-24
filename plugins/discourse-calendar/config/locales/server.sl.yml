@@ -41,6 +41,12 @@ sl:
     working_day_end_hour: "Končna ura delovnega dne."
     close_to_working_day_hours_extension: "Nastavite podaljšan delovni čas, da izpostavite časovni obseg."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dan"
+        week: "Teden"
+        month: "Mesec"
+        year: "Leto"
     invite_user_notification: "%{username} vas vabi na: %{description}"
     calendar_must_be_in_first_post: "Oznako za koledar lahko uporabite samo v prvi objavi teme."
     more_than_one_calendar: "V objavi sme biti največ en koledar."

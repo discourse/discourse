@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataWhisperIndicator extends Component {
@@ -22,7 +22,7 @@ export default class PostMetaDataWhisperIndicator extends Component {
 
   <template>
     <div class="post-info whisper" title={{this.title}}>
-      {{icon "far-eye-slash"}}
+      {{dIcon "far-eye-slash"}}
     </div>
   </template>
 }

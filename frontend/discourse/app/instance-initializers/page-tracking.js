@@ -31,9 +31,10 @@ export default {
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
-
-    const siteSettings = owner.lookup("service:site-settings");
-    if (siteSettings.use_beacon_for_browser_page_views) {
+    const dashboardImprovementsEnabled =
+      document.querySelector("meta[name=discourse-beacon-pageview-enabled]")
+        ?.content === "true";
+    if (dashboardImprovementsEnabled) {
       router.on("routeDidChange", this.handleRouteDidChange);
     }
 
@@ -102,10 +103,7 @@ export default {
   },
 
   handleRouteDidChange(transition) {
-    if (
-      transition.isAborted ||
-      (transition.urlMethod === "replace" && transition.queryParamsOnly)
-    ) {
+    if (transition.isAborted) {
       return;
     }
 
@@ -132,6 +130,8 @@ export default {
       referrer: referrerUrl,
       topicId,
     });
+
+    _preNavigationUrl = window.location.href;
   },
 
   handleRouteWillChange(transition) {
@@ -171,7 +171,6 @@ export default {
       trackingUrl = new URL(path, window.location.origin).href;
       trackingReferrer = window.location.href;
     }
-    _preNavigationUrl = window.location.href;
     trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
 
     if (

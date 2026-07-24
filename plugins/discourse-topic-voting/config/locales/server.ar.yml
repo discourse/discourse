@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  category_types:
+    ideas:
+      name: "الأفكار"
+      title: "الأفكار"
+      description: "المكان الذي يمكن للأعضاء فيه إرسال الأفكار والتصويت على ما يفضلونه."
   site_settings:
     topic_voting_enabled: 'هل تريد السماح للأعضاء بالتصويت على الموضوعات؟'
     topic_voting_enable_vote_limits: 'تقييد عدد الأصوات لكل مستخدم بناءً على مستوى الثقة'
@@ -17,6 +22,25 @@ ar:
     topic_voting_show_votes_on_profile: 'هل تريد السماح للأعضاء برؤية أصواتهم في موجز النشاط؟'
     topic_voting_alert_votes_left: 'تنبيه المستخدم عندما يتبقى هذا العدد من الأصوات'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "عرض أسماء المصوِّتين"
+      show_votes_on_profile:
+        label: "إظهار الأصوات في الملف الشخصي"
+      enable_vote_limits:
+        label: "تحديد عدد أصوات الأعضاء"
+      tl0_vote_limit:
+        label: "حدّ التصويت لمستوى الثقة 0"
+      tl1_vote_limit:
+        label: "حدّ التصويت لمستوى الثقة 1"
+      tl2_vote_limit:
+        label: "حدّ التصويت لمستوى الثقة 2"
+      tl3_vote_limit:
+        label: "حدّ التصويت لمستوى الثقة 3"
+      tl4_vote_limit:
+        label: "حدّ التصويت لمستوى الثقة 4"
+      alert_votes_left:
+        label: "تنبيه عند بقاء عدد محدود من الأصوات"
     votes_moved:
       zero: "تم نقل %{count} من الأصوات."
       one: "تم نقل صوت واحد."
@@ -37,3 +61,20 @@ ar:
         topic_votes_max: "الحد الأقصى لعدد الأصوات على الموضوع"
         order_topic_votes: "ترتيب الموضوعات حسب الأكثر تصويتًا"
         order_topic_votes_asc: "ترتيب الموضوعات حسب الأقل تصويتًا"
+  badges:
+    daydreamer:
+      name: "حالم"
+      description: "الحصول على صوت واحد على موضوعك"
+      long_description: "تُمنح هذه الشارة عند الحصول على صوت واحد على أحد موضوعاتك. :white_check_mark: فكرة رائعة. :+1:"
+    brainstormer:
+      name: "مُفكّر"
+      description: "الحصول على 5 أصوات على موضوعك"
+      long_description: "تُمنح هذه الشارة عند الحصول على 5 أصوات على أحد موضوعاتك. :white_check_mark: يحظى موضوعك باهتمام متزايد."
+    innovator:
+      name: "مبتكر"
+      description: "الحصول على 15 صوتًا على موضوعك"
+      long_description: "تُمنح هذه الشارة عند الحصول على 15 صوتًا على أحد موضوعاتك. :white_check_mark: فكرة قوية لا يمكن تجاهلها."
+    visionary:
+      name: "صاحب رؤية"
+      description: "الحصول على 25 صوتًا على موضوعك"
+      long_description: "تُمنح هذه الشارة عند الحصول على 25 صوتًا على أحد موضوعاتك. :white_check_mark: أعطِ الناس ما يريدونه! :clap:"

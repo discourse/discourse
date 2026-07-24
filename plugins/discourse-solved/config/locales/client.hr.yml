@@ -5,11 +5,25 @@
 # https://translate.discourse.org/
 
 hr:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            answerers:
+              staff: "Osoblje"
+              member: "Članovi"
+              basic: "Osnovno"
+            response_time:
+              buckets:
+                lt_1h: "< 1 sat"
+                gt_24h: "> 24 sata"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "prihvaćen"
+          topic_solved_notification: "riješeno"
     solved:
       title: "Riješeno"
       allow_accepted_answers: "Dopusti vlasniku teme i osoblju da označi odgovor kao rješenje"
@@ -28,6 +42,8 @@ hr:
       move_post_cancel: "Odustani"
       confirm_solved_removal_confirm: "Potvrdi"
       confirm_solved_removal_cancel: "Odustani"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Je li odgovoreno na vaše pitanje?
         description: "Označite odgovor i pomozite drugima pomoću gumba za rješenje ispod točnog odgovora."

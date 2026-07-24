@@ -6,7 +6,7 @@ import { tomorrow } from "discourse/lib/time-utils";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 
-module("Integration | Component | bookmark-icon", function (hooks) {
+module("Integration | Component | BookmarkIcon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with reminder", async function (assert) {

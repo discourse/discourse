@@ -39,6 +39,8 @@ class Invite < ActiveRecord::Base
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
   validate :email_xor_domain
+  validate :ensure_valid_admin_invite, if: :admin?
+  validate :ensure_valid_moderator_invite, if: :moderator?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -63,7 +65,7 @@ class Invite < ActiveRecord::Base
     return if email.blank?
     user = Invite.find_user_by_email(email)
 
-    if user && user.id != self.invited_users&.first&.user_id
+    if user && user.id != invited_users&.first&.user_id
       self.email_already_exists = true
       errors.add(:base, user_exists_error_msg(email))
     end
@@ -76,13 +78,13 @@ class Invite < ActiveRecord::Base
   # Even if a domain is specified on the invite, it still counts as
   # an invite link.
   def is_invite_link?
-    self.email.blank?
+    email.blank?
   end
 
   # Email invites have specific behaviour and it's easier to visually
   # parse is_email_invite? than !is_invite_link?
   def is_email_invite?
-    self.email.present?
+    email.present?
   end
 
   def redeemable?
@@ -90,14 +92,14 @@ class Invite < ActiveRecord::Base
   end
 
   def redeemed_by_user?(redeeming_user)
-    self.invited_users.exists?(user: redeeming_user)
+    invited_users.exists?(user: redeeming_user)
   end
 
   def redeemed?
     if is_invite_link?
       redemption_count >= max_redemptions_allowed
     else
-      self.invited_users.count > 0
+      invited_users.count > 0
     end
   end
 
@@ -111,11 +113,11 @@ class Invite < ActiveRecord::Base
   end
 
   def can_be_redeemed_by?(user)
-    return false if !self.redeemable?
+    return false if !redeemable?
     return false if redeemed_by_user?(user)
-    return true if self.domain.blank? && self.email.blank?
-    return true if self.email.present? && email_matches?(user.email)
-    self.domain.present? && domain_matches?(user.email)
+    return true if domain.blank? && email.blank?
+    return true if email.present? && email_matches?(user.email)
+    domain.present? && domain_matches?(user.email)
   end
 
   def expired?
@@ -169,11 +171,17 @@ class Invite < ActiveRecord::Base
       end
 
     if invite
+      was_admin = invite.admin?
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
         expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
         emailed_status: emailed_status,
+        # update_columns skips validations, so the inviter checks from
+        # ensure_valid_admin_invite / ensure_valid_moderator_invite have to be
+        # re-applied here
+        admin: !!opts[:admin] && !!invited_by&.admin?,
+        moderator: !!opts[:moderator] && !!invited_by&.staff?,
       )
     else
       create_args =
@@ -182,6 +190,7 @@ class Invite < ActiveRecord::Base
           :description,
           :domain,
           :moderator,
+          :admin,
           :custom_message,
           :max_redemptions_allowed,
         )
@@ -194,12 +203,21 @@ class Invite < ActiveRecord::Base
       invite = Invite.create!(create_args)
     end
 
-    topic_id = opts[:topic]&.id || opts[:topic_id]
-    invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+    DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
 
-    group_ids = opts[:group_ids]
-    if group_ids.present?
-      group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+    if invite.admin? || invite.moderator?
+      # staff invites never carry topic or group associations; clear any left
+      # over from a reused member invite
+      invite.topic_invites.destroy_all
+      invite.invited_groups.destroy_all
+    else
+      topic_id = opts[:topic]&.id || opts[:topic_id]
+      invite.topic_invites.find_or_create_by!(topic_id: topic_id) if topic_id.present?
+
+      group_ids = opts[:group_ids]
+      if group_ids.present?
+        group_ids.each { |group_id| invite.invited_groups.find_or_create_by!(group_id: group_id) }
+      end
     end
 
     if emailed_status == emailed_status_types[:pending]
@@ -293,12 +311,12 @@ class Invite < ActiveRecord::Base
   end
 
   def resend_invite
-    self.update_columns(
+    update_columns(
       updated_at: Time.zone.now,
       invalidated_at: nil,
       expires_at: SiteSetting.invite_expiry_days.days.from_now,
     )
-    Jobs.enqueue(:invite_email, invite_id: self.id)
+    Jobs.enqueue(:invite_email, invite_id: id)
   end
 
   def limit_invites_per_day
@@ -306,17 +324,11 @@ class Invite < ActiveRecord::Base
   end
 
   def self.base_directory
-    File.join(
-      Rails.root,
-      "public",
-      "uploads",
-      "csv",
-      RailsMultisite::ConnectionManagement.current_db,
-    )
+    Rails.public_path.join("uploads", "csv", RailsMultisite::ConnectionManagement.current_db).to_s
   end
 
   def ensure_max_redemptions_allowed
-    if self.max_redemptions_allowed.nil?
+    if max_redemptions_allowed.nil?
       self.max_redemptions_allowed = 1
     else
       limit =
@@ -328,9 +340,9 @@ class Invite < ActiveRecord::Base
           end
         )
 
-      if self.email.present? && self.max_redemptions_allowed != 1
+      if email.present? && max_redemptions_allowed != 1
         errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one"))
-      elsif !self.max_redemptions_allowed.between?(1, limit)
+      elsif !max_redemptions_allowed.between?(1, limit)
         errors.add(
           :max_redemptions_allowed,
           I18n.t("invite_link.max_redemptions_limit", max_limit: limit),
@@ -340,25 +352,43 @@ class Invite < ActiveRecord::Base
   end
 
   def valid_redemption_count
-    if self.redemption_count > self.max_redemptions_allowed
+    if redemption_count > max_redemptions_allowed
       errors.add(
         :redemption_count,
         I18n.t(
           "invite.redemption_count_less_than_max",
-          max_redemptions_allowed: self.max_redemptions_allowed,
+          max_redemptions_allowed: max_redemptions_allowed,
         ),
       )
     end
   end
 
-  def valid_domain
-    return if self.domain.blank?
+  def ensure_valid_admin_invite
+    errors.add(:base, I18n.t("invite.admin_invite_requires_email")) if email.blank?
 
-    self.domain.downcase!
-
-    if self.domain !~ Invite::DOMAIN_REGEX
-      self.errors.add(:base, I18n.t("invite.domain_not_allowed_admin"))
+    # only checked when the flag is set so that later saves (e.g. marking the
+    # invite redeemed) don't fail if the inviter has since been demoted
+    if (new_record? || will_save_change_to_admin?) && !invited_by&.admin?
+      errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
     end
+  end
+
+  def ensure_valid_moderator_invite
+    errors.add(:base, I18n.t("invite.moderator_invite_requires_email")) if email.blank?
+
+    # only checked when the flag is set so that later saves (e.g. marking the
+    # invite redeemed) don't fail if the inviter has since been demoted
+    if (new_record? || will_save_change_to_moderator?) && !invited_by&.staff?
+      errors.add(:base, I18n.t("invite.moderator_invite_requires_staff_inviter"))
+    end
+  end
+
+  def valid_domain
+    return if domain.blank?
+
+    domain.downcase!
+
+    errors.add(:base, I18n.t("invite.domain_not_allowed_admin")) if domain !~ Invite::DOMAIN_REGEX
   end
 
   def user_exists_error_msg(email)
@@ -373,23 +403,24 @@ end
 # Table name: invites
 #
 #  id                      :integer          not null, primary key
-#  invite_key              :string(32)       not null
+#  admin                   :boolean          default(FALSE), not null
+#  custom_message          :text
+#  deleted_at              :datetime
+#  description             :string(100)
+#  domain                  :string
 #  email                   :string
-#  invited_by_id           :integer          not null
+#  email_token             :string
+#  emailed_status          :integer
+#  expires_at              :datetime         not null
+#  invalidated_at          :datetime
+#  invite_key              :string(32)       not null
+#  max_redemptions_allowed :integer          default(1), not null
+#  moderator               :boolean          default(FALSE), not null
+#  redemption_count        :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  deleted_at              :datetime
 #  deleted_by_id           :integer
-#  invalidated_at          :datetime
-#  moderator               :boolean          default(FALSE), not null
-#  custom_message          :text
-#  emailed_status          :integer
-#  max_redemptions_allowed :integer          default(1), not null
-#  redemption_count        :integer          default(0), not null
-#  expires_at              :datetime         not null
-#  email_token             :string
-#  domain                  :string
-#  description             :string(100)
+#  invited_by_id           :integer          not null
 #
 # Indexes
 #

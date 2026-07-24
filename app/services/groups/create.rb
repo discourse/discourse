@@ -108,6 +108,7 @@ class Groups::Create
   end
 
   policy :can_create_group
+  policy :can_request_access
   model :user_attributes, :build_user_attributes, optional: true
   model :group, :instantiate_group
   only_if(:should_associate_groups) { step :associate_groups }
@@ -121,6 +122,10 @@ class Groups::Create
 
   def can_create_group(guardian:)
     guardian.can_create_group?
+  end
+
+  def can_request_access(params:)
+    params.owner_ids.present? || !params.allow_membership_requests
   end
 
   def build_user_attributes(params:)

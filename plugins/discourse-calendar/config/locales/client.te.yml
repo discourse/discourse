@@ -27,6 +27,9 @@ te:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "మరిన్ని చూపించండి"
+        show_less: "తక్కువ చూపించండి"
       show_all: "అన్నీ చూపండి"
       add_to_calendar: "క్యాలెండర్‌కు జోడించండి"
       created_by: "సృష్టికర్త"
@@ -46,6 +49,18 @@ te:
               title: "బహిరంగం"
             private:
               title: "అంతరంగికం"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "నిమిషం"
+              other: "నిమిషాలు"
+            hours:
+              one: "గంట"
+              other: "గంటలు"
+            days:
+              one: "రోజు"
+              other: "రోజులు"
       builder_modal:
         custom_fields:
           placeholder: "ఐచ్ఛికం"
@@ -61,14 +76,12 @@ te:
           periods:
             before: "ముందు"
             after: "తర్వాత"
-        url:
-          label: "URL"
-          placeholder: "ఐచ్ఛికం"
-        location:
-          label: "ప్రాంతం"
+        attendance:
+          none: "ఏదీ లేదు"
         description:
           label: "వివరణ"
-        status:
-          label: "స్థితి"
+        event_type:
+          public:
+            title: "బహిరంగం"
       invite_user_or_group:
         invite: "పంపండి"

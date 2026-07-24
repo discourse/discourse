@@ -6,6 +6,21 @@
 
 hu:
   js:
+    user_api_key:
+      title: '"%{application_name}" engedélyezése'
+      authorize: "Engedélyezés"
+      deny: "Mégse"
+      logged_in_as: "Bejelentkezve mint"
+      permissions_header: 'Ez lehetővé teszi a(z) "%{application_name}" számára a következőket:'
+      redirect_warning: "Az engedélyezés átirányít a következőre:"
+      copied: "Másolva!"
+      otp_description: 'Szeretné, hogy a(z) „%{application_name}” hozzáférjen ehhez az oldalhoz?'
+      no_trust_level: "Sajnáljuk, nem rendelkezik a felhasználói API eléréséhez szükséges megbízhatósági szinttel"
+      generic_error: "Sajnos nem tudunk felhasználói API-kulcsokat kiadni, előfordulhat, hogy ezt a funkciót a webhely adminisztrátora letiltotta"
+      device:
+        code: "Kód"
+        continue: "Folytatás"
+        authorize_title: '"%{application_name}" engedélyezése'
     blocks:
       ghost:
         status: "Állapot"
@@ -22,6 +37,10 @@ hu:
         no_visible_children_hint: "Ez a konténerblokk nem jelenik meg, mert egyetlen aleleme sem látható."
         condition_failed_hint: "Ez a blokk nem jelenik meg, mert a feltételei nem teljesültek."
         head_hidden_tail_hint: "Ez a blokk nem jelenik meg, mert a head konténerben már egy másik blokk korábban megjelent."
+    access_control:
+      manage:
+        access_permission_editor: "Szerkesztő"
+        access_permission_remove: "Eltávolítás"
     carousel:
       go_to_slide: "%{index} elemre ugrás"
       previous: "Előző elem"
@@ -158,6 +177,14 @@ hu:
       placeholder: dátum
       from_placeholder: "ettől:"
       to_placeholder: "eddig:"
+    date_range_picker:
+      apply: "Alkalmaz"
+      presets:
+        last_7_days: "Elmúlt 7 nap"
+        last_30_days: "Elmúlt 30 nap"
+        last_3_months: "Elmúlt 3 hónap"
+        last_6_months: "Elmúlt 6 hónap"
+        last_year: "Tavaly"
     languages:
       ar:
         name: Arab
@@ -358,7 +385,6 @@ hu:
         condition_debugging: "Feltétel hibakeresése"
       toggle_safe_mode: "Biztonságos mód be-/kikapcsolása"
       toggle_verbose_localization: "Részletes honosítási mód be-/kikapcsolása"
-      toggle_mobile_view: "Mobil nézet be-/kikapcsolása"
       disable_dev_tools: "Fejlesztői eszközök letiltása"
     s3:
       regions:
@@ -403,6 +429,9 @@ hu:
     age: "Életkor"
     joined: "Tagság kezdete"
     admin_title: "Adminisztrátor"
+    advanced_mode_toggle:
+      advanced_mode: "Speciális mód"
+      simple_mode: "Egyszerű mód"
     show_more: "több megjelenítése"
     show_help: "Beállítások"
     links: "Hivatkozások"
@@ -416,8 +445,6 @@ hu:
     tos: "Szolgáltatási feltételek"
     rules: "Szabályok"
     conduct: "Magatartási kódex"
-    mobile_view: "Mobil nézet"
-    desktop_view: "Asztali nézet"
     now: "épp most"
     read_more: "olvasás tovább"
     more: "Több"
@@ -451,6 +478,8 @@ hu:
     admin_onboarding_banner:
       launch_in_easy_steps: "Indítás %{step_count} egyszerű lépésben"
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
+      select_theme:
+        enabled: "Kiválasztott"
       invite_collaborators:
         title: "Együttműködők meghívása"
         description: "Az első tagok segítenek életre kelteni a közösségedet."
@@ -477,11 +506,6 @@ hu:
           what_is_your_favorite_food:
             title: "Mi a kedvenc ételed?"
             body: "Oszd meg kedvenc ételeidet a közösséggel! Kezdjük: Imádom a pizzát, főleg extra sajttal és pepperonival."
-      spread_the_word:
-        title: "Terjeszd az igét!"
-        description: "Ossz meg egy linket mindenkivel a hálózatodban"
-        action: "Hivatkozás másolása"
-        copied_to_clipboard: "Hivatkozás vágólapra másolva!"
     about:
       edit: "Lap szerkesztése"
       simple_title: "Névjegy"
@@ -658,6 +682,9 @@ hu:
       storage_access_prompt: "Már van %{site_name} fiókod? Engedélyezd a hozzáférést a munkamenetedhez, hogy saját nevedben hozzászólhass."
       allow_access: "Hozzáférés engedélyezése"
       continue_as_guest: "Folytatás vendégként"
+      editing_post: "Bejegyzés szerkesztése"
+      signin_flow:
+        cancel: "Mégse"
     topic_count_all:
       one: "%{count} új téma megtekintése"
       other: "%{count} új téma megtekintése"
@@ -1202,7 +1229,8 @@ hu:
             from_alias_hint: "A csoportos SMTP e-mailek küldésekor a „feladó” címként használandó álnév. Megjegyzés: ezt nem minden e-mail-szolgáltató támogatja, tekintse meg a szolgáltató dokumentációját."
         membership:
           title: Tagság
-          access: Hozzáférés
+          join_method:
+            invite: "Meghívóval"
         categories:
           title: Kategóriák
           long_title: "Kategória alapértelmezett értesítései"
@@ -1235,7 +1263,6 @@ hu:
         title: "Jogok"
         none: "Ehhez a csoporthoz nem tartoznak kategóriák."
         description: "A csoport tagjai hozzáférhetnek ezekhez a kategóriákhoz"
-      public_admission: "A felhasználók szabadon csatlakozhatnak a csoporthoz (Nyilvánosan látható csoport szükséges)"
       public_exit: "A felhasználók szabadon elhagyhatják a csoportot"
       empty:
         posts: "A csoport tagjai még nem írtak bejegyzést"
@@ -1251,7 +1278,6 @@ hu:
       request: "Kérés"
       message: "Üzenet"
       confirm_leave: "Biztos, hogy elhagyja ezt a csoportot?"
-      allow_membership_requests: "Engedélyezi a felhasználóknak, hogy tagsági kéréseket küldjenek a csoport tulajdonosainak (Nyilvánosan látható csoport szükséges)"
       membership_request_template: "A felhasználóknak megjelenítendő egyéni sablon a tagsági kéréseknél."
       membership_request:
         submit: "Kérés beküldése"
@@ -1502,7 +1528,6 @@ hu:
         normal_option: "Normál"
         normal_option_title: "Értesítést fog kapni, ha a felhasználó válaszol, idézi vagy megemlíti."
       notification_schedule:
-        title: "Értesítési ütemterv"
         label: "Egyéni értesítési ütemterv engedélyezése"
         tip: "Ezeken az órákon kívül az értesítések szünetelnek."
         midnight: "Éjfél"
@@ -1546,13 +1571,11 @@ hu:
       notifications: "Értesítések"
       statistics: "Statisztikák"
       desktop_notifications:
-        label: "Elő értesítések"
+        push_level:
+          none: "Kikapcsolva"
+          all: "Bekapcsolva"
         not_supported: "Az értesítések nem támogatottak ebben a böngészőben. Sajnáljuk."
-        perm_default: "Értesítések bekapcsolása"
-        perm_denied_btn: "Hozzáférés megtagadva"
         perm_denied_expl: "Letiltotta a figyelmeztetéseket. Engedélyezze őket a böngésző beállításaiban."
-        disable: "Értesítések kikapcsolása"
-        enable: "Értesítések bekapcsolása"
         each_browser_note: "Megjegyzés: Ezt a beállítást minden használt böngészőben módosítania kell. Ettől a beállítástól függetlenül minden értesítés le lesz tiltva, ha szünetelteti az értesítéseket a felhasználói menüből."
         consent_prompt: "Szeretne élő értesítéseket kapni, ha valaki válaszol a hozzászólásaira?"
       dismiss: "Elvetés"
@@ -1685,6 +1708,9 @@ hu:
       undo_revoke_access: "Hozzáférés visszaállítása"
       api_approved: "Jóváhagyva:"
       api_last_used_at: "Utoljára használva:"
+      api_expires_at: "Lejár:"
+      api_expired_at: "Lejárt:"
+      api_expires_never: "soha"
       api_show_permissions:
         one: "%{count} engedély megadva"
         other: "%{count} engedély megadva"
@@ -2041,7 +2067,7 @@ hu:
         default: "(alapértelmezett)"
         any: "bármely"
       homepage:
-        default: "(alapértelmezett)"
+        default: "Alapértelmezett"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -2242,6 +2268,32 @@ hu:
           create_link_and_send_email: "Hivatkozás létrehozása és e-mail küldése"
           invite_saved_without_sending_email: "Meghívó mentve. Másolja ki az alábbi linket, és ossza meg, hogy azonnal hozzáférést biztosítson ehhez az oldalhoz."
           invite_saved_with_sending_email: "A meghívó e-mail elküldve. Az alábbi linket is kimásolhatja és megoszthatja, hogy azonnal hozzáférést biztosítson ehhez az oldalhoz."
+        invite_roles:
+          member_title: "Tagok meghívása"
+          sent_title: "Meghívó elküldve"
+          member_tab: "Tagok"
+          admin_tab: "Stáb"
+          staff_role_admin: "Adminisztrátor"
+          staff_role_moderator: "Moderátor"
+          admin_email_label: "E-mail-cím"
+          email_placeholder: "név@example.com"
+          invite_by_email: "E-mail:"
+          restrict_domain: "Domainre korlátozás"
+          domain_placeholder: "example.com"
+          more_options: "További lehetőségek"
+          update: "Frissítés"
+          summary:
+            role_member: "Tag"
+            role_admin: "Adminisztrátor"
+            role_moderator: "Moderátor"
+            method: "Megosztás"
+            method_email: "E-mail:"
+            restriction: "Korlátozva a következőre:"
+            uses: "Maximális használat"
+            expires: "Lejár"
+            topic: "Téma"
+            groups: "Csoportok"
+            edit: "Meghívó szerkesztése"
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2564,7 +2616,6 @@ hu:
     created: "Létrehozva"
     created_lowercase: "létrehozva"
     trust_level: "Bizalmi szint"
-    search_hint: "felhasználónév, e-mail vagy IP-cím"
     create_account:
       header_title: "Üdvözöljük!"
       disclaimer: "Csak akkor regisztráljon, ha elfogadja az <a href='%{privacy_link}' target='blank'>adatvédelmi szabályzatot</a> és a <a href='%{tos_link}' target='blank'>szolgáltatási feltételeket</a>."
@@ -2608,6 +2659,13 @@ hu:
       confirm_title: Tovább a(z) %{site_name} oldalra
       logging_in_as: Bejelentkezés mint %{email}
       confirm_button: Bejelentkezés befejezése
+    code_login:
+      email_label: "E-mail:"
+      continue_button: "Folytatás"
+      verify_button: "Folytatás"
+      signup_title: "Regisztráció"
+      account_ready_continue: "Folytatás"
+      username_label: "Felhasználónév"
     login:
       header_title: "Üdvözöljük újra"
       title: "Bejelentkezés"
@@ -2830,6 +2888,9 @@ hu:
       default: Egyéni emodzsik
     filter_input:
       clear: "Szűrő kiürítése"
+    filter_controls:
+      reset: "Szűrő visszaállítása"
+      toggle: "Legördülő szűrők be- és kikapcsolása"
     shared_drafts:
       title: "Megosztott vázlatok"
       notice: "Ez a téma csak azok számára látható, akik megosztott vázlatokat tehetnek közzé."
@@ -2837,6 +2898,10 @@ hu:
       publish: "Megosztott vázlat közzététele"
       confirm_publish: "Biztos, hogy közzéteszi ezt a vázlatot?"
       publishing: "Téma közzététele…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metaadat"
     composer:
       autocomplete:
         username_missing: "A kiválasztott automatikus kiegészítési találatból hiányzik a felhasználónév."
@@ -2927,8 +2992,9 @@ hu:
       draft_saved: "Vázlat mentve!"
       users_placeholder: "Felhasználók vagy csoportok hozzáadása"
       title_placeholder: "Mi lesz a témája ennek a beszélgetésnek egy rövid mondatban?"
+      title_placeholder_redesign: "Cím"
       title_or_link_placeholder: "Írja be a címet, vagy illesszen be ide egy hivatkozást"
-      edit_reason_placeholder: "miért szerkeszt?"
+      edit_reason_placeholder: "Miért szerkeszti?"
       topic_featured_link_placeholder: "Írja be a címmel megjelenített hivatkozást."
       remove_featured_link: "Hivatkozás eltávolítása a témából."
       reply_placeholder: "Ide írjon. A formázáshoz használhat Markdownt, BBCode-ot vagy HTML-t. Idehúzhat vagy beilleszthet képeket."
@@ -2997,6 +3063,7 @@ hu:
       collapse: "Szerkesztő panel minimalizálása"
       open: "Szerkesztő panel megnyitása"
       abandon: "Szerkesztő bezárása és a vázlat elvetése"
+      edit_reason: "Miért szerkeszti?"
       enter_fullscreen: "Belépés a teljes képernyős szerkesztőbe"
       exit_fullscreen: "Kilépés a teljes képernyős szerkesztőből"
       exit_fullscreen_prompt: "Nyomja meg a <kbd>ESC</kbd> gombot a teljes képernyőről való kilépéshez"
@@ -3031,25 +3098,26 @@ hu:
           desc: Új üzenet létrehozása azonos címzettekkel
         reply_to_topic:
           label: Válasz a témára
+          trigger: Téma
           desc: Válasz a témára, nem konkrét bejegyzésre
+        reply_to_message:
+          trigger: Üzenet
         toggle_whisper:
           label: Suttogás be/ki
-          desc: A suttogások csak a stáb tagjai számára láthatók
         create_topic:
-          label: "Új téma"
           desc: Új téma létrehozása
         create_personal_message:
-          label: "Új üzenet"
           desc: "Új személyes üzenet létrehozása"
         shared_draft:
           label: "Megosztott vázlat"
           desc: "Témavázlat készítése, amely csak az engedélyezett felhasználók számára látható"
         toggle_topic_bump:
-          label: "Téma előrehozása be/ki"
           desc: "Válasz a legutóbbi válasz dátumának módosítása nélkül"
         toggle_unlisted:
           label: Nem listázott állapot be/ki
           desc: "A nem listázott témák csak közvetlen linken keresztül érhetők el."
+        edit_post: "Bejegyzés szerkesztése"
+        unknown_user: "Felhasználó"
       reload: "Újratöltés"
       ignore: "Letiltás"
       image_alt_text:
@@ -3358,6 +3426,7 @@ hu:
           placeholder: legfeljebb
           aria_label: szűrés a megtekintések legnagyobb száma szerint
     hamburger_menu: "Navigációs menü"
+    header_panel: "Fejléc"
     new_item: "új"
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal a jelenlegi tevékenységek és beállítások összesítésével"
@@ -3443,6 +3512,17 @@ hu:
           other: "Elvetés (%{count})…"
         dismiss_tooltip: "Csak az új hozzászólások elvetése vagy a témák követésének leállítása"
         also_dismiss_topics: "Ezen témák követésének leállítása, így sosem fognak olvasatlanként megjelenni"
+        dismiss_new_topics: "Új témák elvetése"
+        dismiss_new_replies: "Új válaszok elvetése"
+        dismiss_new_topics_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
+        dismiss_all_with_selected:
+          one: "Elvetés (%{count})"
+          other: "Elvetés (%{count})"
         dismiss_new: "Újak elvetése"
         dismiss_new_modal:
           title: "Újak elvetése"
@@ -3501,7 +3581,7 @@ hu:
         education:
           topic_tracking_preferences: 'Az új témakövetési beállításokat a <a href="%{basePath}/my/preferences/tracking">beállítások</a> között tekintheti meg és módosíthatja.'
           unread: "Semmi sem maradt olvasatlanul... lenyűgöző!"
-          new_new: "Jelenleg semmi újdonság... nézz vissza később!"
+          unified_new: "Jelenleg semmi újdonság... nézz vissza később!"
           new: "Jelenleg semmi újdonság... nézz vissza később!"
           generic: "Nincs itt semmi látnivaló... nézz vissza később!"
     topic_bulk_actions:
@@ -3541,6 +3621,7 @@ hu:
       sort:
         label: "Rendezés"
         top: "Népszerű"
+        hot: "Felkapott"
         new: "Új"
       load_more_children:
         one: "és %{count} további válasz"
@@ -3553,6 +3634,9 @@ hu:
       deleted_post_placeholder: "[törölve]"
       ignored_post_placeholder: "[figyelmen kívül hagyott]"
       pinned_reply: "Kiemelt"
+    share_target:
+      new_topic: "Új téma"
+      new_message: "Új üzenet"
     topic:
       filter_to:
         one: "%{count} bejegyzés a témában"
@@ -3605,40 +3689,8 @@ hu:
       read_more_in_category: "Szeretne többet olvasni? Böngésszen más témák között a %{categoryLink} oldalon, vagy <a href='%{latestLink}'>tekintse meg a legújabb témákat</a>."
       read_more: "Szeretne többet olvasni? <a href='%{categoryLink}'>Összes kategória böngészése</a> vagy <a href='%{latestLink}'> legújabb témák megtekintése</a>."
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
+      sr_read: "olvasható"
       participant_groups: "Résztvevő csoportok"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># olvasatlan</a>}
-              other {<a href="{basePath}/unread"># olvasatlan</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { és <a href="{basePath}/new"># új</a> téma van hátra,}
-              other { és <a href="{basePath}/new"># új</a> téma van hátra,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># olvasatlan</a> téma van hátra,}
-              other {<a href="{basePath}/unread"># olvasatlan</a> téma van hátra,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># új</a> téma van hátra,}
-              other {<a href="{basePath}/new"># új</a> téma van hátra,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { vagy böngésszen a(z) {categoryLink} témái között}
-          false { vagy <a href="{basePath}/latest">nézze meg a legújabb témákat</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} válasz, ugrás az első bejegyzésre"
         other: "%{count} válasz, ugrás az első bejegyzésre"
@@ -4111,8 +4163,9 @@ hu:
           one: "%{count} fordítás megtekintése"
           other: "%{count} fordítás megtekintése"
         modal:
-          title: "Fordítás a bejegyzéshez"
+          title: "Fordítások"
           confirm_delete: "Biztos, hogy törölni akarja a(z) „%{languageCode}” fordításokat?"
+          discard_language_change: "Változás elvetése"
         success: "A fordítások sikeresen frissültek"
         post_language_selector:
           none: "Nincs beállítva"
@@ -4244,7 +4297,6 @@ hu:
           one: "Biztos, hogy egyesíti ezeket a bejegyzéseket?"
           other: "Biztos, hogy egyesíti ezt a(z) %{count} bejegyzést?"
       revisions:
-        diff_too_complex: "A különbségek túl összetettek a megjelenítéshez. Kérjük, próbálja meg az egyes kisebb szerkesztéseket külön-külön megtekinteni."
         locale:
           no_locale_set: "Nincs beállítva nyelv"
           locale_removed: "Nyelv eltávolítva"
@@ -4292,7 +4344,6 @@ hu:
         name_placeholder: "Mire való ez a könyvjelző?"
         name_input_label: "Könyvjelző neve"
         set_reminder: "Emlékeztetés"
-        options: "Beállítások"
         actions:
           delete_bookmark:
             name: "Könyvjelző törlése"
@@ -4323,7 +4374,7 @@ hu:
     category:
       none: "(nincs kategória)"
       all: "Összes kategória"
-      choose: "kategória&hellip;"
+      choose: "Kategória&hellip;"
       edit: "Szerkesztés"
       edit_title: "Kategória szerkesztése"
       edit_dialog_title: "Szerkesztés: %{categoryName}"
@@ -4372,13 +4423,11 @@ hu:
         site_settings: "Webhely beállítások"
       choose_type:
         title: "Válasszon kategóriatípust"
-        requires_plugin: "Szükséges bővítmény"
       create_category: "Kategória létrehozása"
       save: "Kategória mentése"
       unsaved_changes: "Nem mentett módosításai vannak"
       slug: "Kategória URL-végződés"
       parent: "Szülő kategória"
-      slug_placeholder: "(Nem kötelező) kötőjeles-szavak a webcímhez"
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
       errors:
@@ -4765,7 +4814,7 @@ hu:
         new_replies_tooltip: "Új válaszok"
         replies: "Válaszok"
         replies_with_count: "Válaszok (%{count})"
-      new_new:
+      unified_new:
         help: "az elmúlt napokban létrehozott vagy megválaszolt témák"
       posted:
         title: "Saját bejegyzéseim"
@@ -4835,110 +4884,62 @@ hu:
       title: "Billentyűkombinációk"
       short_title: "Rövidítések"
       search_ctrl_f_tip: "A teljes fórumon való kereséshez nyomja meg a <kbd>/</kbd> gombot"
+      description_header: "Leírás"
+      key_header: "Kulcs"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Ugrás oda"
-        home: "%{shortcut} Kezdőlap"
-        latest: "%{shortcut} Legutóbbi"
-        new: "%{shortcut} Új"
-        unread: "%{shortcut} Olvasatlan"
-        unseen: "%{shortcut} nem látta"
-        categories: "%{shortcut} Kategóriák"
-        top: "%{shortcut} Felső"
-        bookmarks: "%{shortcut} Könyvjelzők"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Üzenetek"
-        drafts: "%{shortcut} Piszkozatok"
-        next: "%{shortcut} Következő téma"
-        previous: "%{shortcut} Előző téma"
+        home: "Kezdőlap"
+        latest: "Legutóbbi"
+        new: "Új"
+        unread: "Olvasatlan"
+        unseen: "Nem látott"
+        categories: "Kategóriák"
+        top: "Népszerű"
+        bookmarks: "Könyvjelzők"
+        profile: "Profil"
+        messages: "Üzenetek"
+        drafts: "Vázlatok"
       navigation:
         title: "Navigáció"
-        jump: "%{shortcut} Ugrás a bejegyzésre #"
-        back: "%{shortcut} Vissza"
-        up_down: "%{shortcut} Mozgókép kiválasztása &uarr; &darr;"
-        open: "%{shortcut} Kiválasztott téma megnyitása"
-        open_new_window: "%{shortcut} Kiválasztott téma megnyitása új lapon/ablakban"
-        next_prev: "%{shortcut} Következő/előző szakasz"
-        go_to_unread_post: "%{shortcut} Ugrás az első olvasatlan bejegyzésre"
+        back: "Vissza"
+        up_down: "Mozgókép kiválasztása &uarr; &darr;"
       application:
         title: "Alkalmazás"
-        create: "%{shortcut} Új téma vagy személyes üzenet létrehozása"
-        notifications: "%{shortcut} Értesítések megnyitása"
-        hamburger_menu: "%{shortcut} Navigációs menü megnyitása"
-        user_profile_menu: "%{shortcut} Felhasználói menü megnyitása"
-        show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
-        search: "%{shortcut} Keresés"
-        filter_sidebar: "%{shortcut} Szűrő oldalsáv"
-        help: "%{shortcut} Billentyűzetsúgó megnyitása"
-        toggle_bulk_select: "%{shortcut} Csoportos kiválasztás be/ki"
-        dismiss: "%{shortcut} Kijelölt téma(k) elvetése"
-        x: "%{shortcut} Kiválasztás be/ki (tömeges kiválasztási módban)"
-        log_out: "%{shortcut} Kijelentkezés"
+        search: "Keresés"
+        log_out: "Kijelentkezés"
       composing:
         title: "Megfogalmaz"
-        return: "%{shortcut} Vissza az alkotóhoz"
-        minimize: "%{shortcut} szerkesztő minimalizálása"
-        create_or_reply: "%{shortcut} Téma létrehozása vagy válasz küldése"
-        fullscreen: "%{shortcut} Alkotó teljes képernyő"
-        insert_current_time: "%{shortcut} Aktuális idő beillesztése"
-        bold: "%{shortcut} Félkövér"
-        italic: "%{shortcut} Dőlt"
-        link: "%{shortcut} Link beszúrása"
-        preformatted: "%{shortcut} Előformázott szöveg"
-        paragraph: "%{shortcut} Bekezdés"
-        heading_1: "%{shortcut} 1. címsor"
-        heading_2: "%{shortcut} 2. címsor"
-        heading_3: "%{shortcut} 3. címsor"
-        heading_4: "%{shortcut} 4. címsor"
-        toggle_direction: "%{shortcut} Szövegirány váltása"
-        ordered_list: "%{shortcut} Rendezett lista"
-        unordered_list: "%{shortcut} Rendezetlen lista"
-        blockquote: "%{shortcut} Idézetblokk"
+        link: "Hivatkozás beszúrása"
+        preformatted: "Előformázott szöveg"
+        paragraph: "Bekezdés"
+        blockquote: "Idézetblokk"
       bookmarks:
         title: "Könyvjelzők"
-        enter: "%{shortcut} Mentés és bezárás"
-        later_today: "%{shortcut} Ma később"
-        later_this_week: "%{shortcut} Később ezen a héten"
-        tomorrow: "%{shortcut} Holnap"
-        next_week: "%{shortcut} Jövő hét"
-        next_month: "%{shortcut} Jövő hónap"
-        next_business_week: "%{shortcut} A jövő hét kezdete"
-        next_business_day: "%{shortcut} Következő munkanap"
-        custom: "%{shortcut} Egyéni dátum és idő"
-        none: "%{shortcut} Nincs emlékeztető"
-        delete: "%{shortcut} Könyvjelző törlése"
+        enter: "Mentés és bezárás"
+        later_today: "Ma később"
+        later_this_week: "Később ezen a héten"
+        tomorrow: "Holnap"
+        next_week: "Jövő hét"
+        next_month: "Jövő hónap"
+        next_business_day: "Következő munkanap"
+        custom: "Egyéni dátum és idő"
+        none: "Nincs emlékeztető"
+        delete: "Könyvjelző törlése"
       actions:
         title: "Műveletek"
-        bookmark_topic: "%{shortcut} Kapcsolja be a könyvjelző témakörét"
-        pin_unpin_topic: "%{shortcut} Téma rögzítése/feloldása"
-        share_topic: "%{shortcut} Téma megosztása"
-        share_post: "%{shortcut} Bejegyzés megosztása"
-        reply_as_new_topic: "%{shortcut} Válasz csatolt témaként"
-        reply_topic: "%{shortcut}Válasz a témára"
-        reply_post: "%{shortcut} Válasz a bejegyzésre"
-        quote_post: "%{shortcut}Bejegyzés idézése"
-        like: "%{shortcut} Bejegyzés kedvelése"
-        flag: "%{shortcut} Bejegyzés jelentés"
-        bookmark: "%{shortcut} Bejegyzés könyvjelzővel való ellátása"
-        edit: "%{shortcut}Bejegyzés szerkesztése"
-        delete: "%{shortcut}Bejegyzés törlése"
-        mark_muted: "%{shortcut} Téma némítása"
-        mark_regular: "%{shortcut} Normál (alapértelmezett) téma"
-        mark_tracking: "%{shortcut} Téma követése"
-        mark_watching: "%{shortcut} Téma figyelése"
-        print: "%{shortcut} Téma nyomtatása"
-        defer: "%{shortcut} Téma megjelölése olvasatlanként"
-        topic_admin_actions: "%{shortcut} Nyitott témaadminisztrátori tevékenységek"
-        archive_private_message: "%{shortcut} Az archív személyes üzenet be- és kikapcsolása"
+        reply_as_new_topic: "Válasz hivatkozott témaként"
+        reply_topic: "Válasz a témára"
+        edit: "Bejegyzés szerkesztése"
+        delete: "Bejegyzés törlése"
+        mark_tracking: "Téma követése"
+        mark_watching: "Téma figyelése"
+        defer: "Témák megjelölése olvasatlanként"
       search_menu:
         title: "Keresés menü"
-        prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
-        insert_url: "%{shortcut} Kijelölés beillesztése a megnyitott szerkesztőbe"
-        full_page_search: "%{shortcut} Teljes oldalas keresés indítása"
       admin:
         title: "Adminisztrátor"
-        search_prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
-        search_open: "%{shortcut} Nyissa meg a keresést az admin felületre"
-        search_full_page: "%{shortcut} Teljes oldali adminisztrátori keresés megnyitása"
     badges:
       earned_n_times:
         one: "Nyerte ezt a jelvényt %{count} idővel"
@@ -4996,7 +4997,6 @@ hu:
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
-      choose_for_topic: "Megadható címke"
       choose_for_topic_required:
         one: "válasszon legalább %{count} címkét"
         other: "válasszon legalább %{count} címkét"
@@ -5008,19 +5008,8 @@ hu:
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       category_restricted: "Ez a címke olyan kategóriákra korlátozódik, amelyekhez nincs hozzáférési jogosultsága."
       synonyms: "Szinonimák"
-      synonyms_description: "A következő címkék használatakor ezek helyére <b>%{base_tag_name}</b>kerül."
       synonyms_inline: "Ezek a szinonimák a következőre lesznek lecserélve: %{base_tag_name}:"
       save: "Címke nevének és leírásának mentése"
-      tag_groups_info:
-        one: 'Ez a címke a "%{tag_groups}" csoportba tartozik.'
-        other: "Ez a címke a következő csoportokhoz tartozik: %{tag_groups}."
-      tag_groups_info_prefix:
-        one: "Ez a címke a következő csoporthoz tartozik: "
-        other: "Ez a címke a következő csoportokhoz tartozik: "
-      category_restrictions:
-        one: "Csak ebben a kategóriában használható"
-        other: "Csak ezekben a kategóriákban használható:"
-      restricted_to: "Korlátozva a következőre:"
       no_synonyms: "Ennek a címkének nincsenek szinonimái."
       edit_synonyms: "Szinonimák szerkesztése"
       add_synonyms_label: "Szinonimák hozzáadása:"
@@ -5212,8 +5201,6 @@ hu:
       no_read_topics_body: "Amint elkezd beszélgetéseket olvasni, itt egy listát fog látni. Az olvasás megkezdéséhez keresse meg az Önt érdeklő témákat a <a href='%{topUrl}'>Top</a> vagy a <a href='%{categoriesUrl}'>Kategóriák</a> között, vagy keressen kulcsszóval %{searchIcon}."
     no_group_messages_title: "Nem található csoportos üzenet"
     topic_entrance:
-      sr_jump_top_button: "Ugrás az első bejegyzéshez - %{date}"
-      sr_jump_bottom_button: "Ugrás az utolsó bejegyzésre - %{date}"
       jump_top_button_title: "Ugrás az első bejegyzésre"
       jump_bottom_button_title: "Ugrás az utolsó bejegyzéshez"
     fullscreen_table:
@@ -5267,6 +5254,10 @@ hu:
           public: "Mindenki számára látható"
           always_public: "Az ebben a részben található tartalom mindig nyilvános"
           more_menu: "További menü"
+          localizations:
+            title: "Fordítások"
+            locale: "Nyelv"
+            title_label: "A szakasz címe"
           links:
             add: "Újabb link hozzáadása"
             delete: "Link törlése"
@@ -5462,7 +5453,7 @@ hu:
           title: "Tábla szerkesztése"
           cancel: "mégse"
           create: "Mentés"
-          reason: "miért szerkeszti?"
+          reason: "Miért szerkeszti?"
           trigger_reason: "Add meg a szerkesztés okát"
         default_edit_reason: "Tábla frissítése táblázatszerkesztővel"
       default_header:
@@ -5575,19 +5566,11 @@ hu:
             bookmarks: "%{category} kategória címke nélküli témái, amelyeket könyvjelzőhöz adtál"
             default: "%{filter} témák a(z) %{category} kategóriában címkék nélkül"
         categories: "Minden kategória"
-    content_localization:
-      toggle_localized:
-        translated: "Az oldal gépi fordítású. Kattintson az eredeti megtekintéséhez."
-        not_translated: "Az oldal nincs lefordítva. Kattintson a fordításhoz."
-        translations_enabled: "Fordítások engedélyezve"
-        translations_disabled: "Fordítások letiltva"
     language_switcher:
       title: "Oldal nyelvének módosítása"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
-    reset_filter: "Szűrő visszaállítása"
-    toggle_filters: "Legördülő szűrők be- és kikapcsolása"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
@@ -5602,6 +5585,7 @@ hu:
         title: "Aktív bejelentések listája"
         sidebar_title: "Jelentések"
         back: "Vissza az összes jelentéshez"
+        all_groups: "Összes csoport"
         group_engagement: "Elköteleződés"
         group_traffic: "Forgalom"
         group_members: "Tagok"
@@ -5805,7 +5789,6 @@ hu:
             apple_touch_icon:
               title: "Apple touch ikon"
               description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
-              help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
             digest_logo:
               title: "Összefoglaló logó"
               description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
@@ -5813,6 +5796,9 @@ hu:
             opengraph_image:
               title: "OpenGraph kép"
               description: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
+            og_image_preview:
+              generate: "Generálás"
+              topic_id_label: "Témaazonosító"
             x_summary_large_image:
               title: "X összefoglaló nagy kép"
               description: "X kártya 'összefoglaló nagy kép'. Ha üresen hagyja, a kártya metaadatai az OpenGraph_image segítségével generálódnak, feltéve, hogy az nem .svg."
@@ -5986,6 +5972,22 @@ hu:
               title: "Bejegyzések és témák"
             stats_and_thresholds:
               title: "Statisztikák és küszöbértékek"
+        category_management:
+          create_category: "Kategória létrehozása"
+          tabs:
+            settings: "Beállítások"
+          types:
+            all:
+              title: "Minden kategória"
+          filter_placeholder: "Kategóriák szűrése"
+          table:
+            category: "Kategória"
+            visibility: "Láthatóság"
+            topics: "Témák"
+          visibility:
+            public: "Nyilvános"
+          visibility_filter:
+            all: "Minden kategória"
         permalinks:
           title: "Közvetlen hivatkozások"
           header_description: "A fórum által nem ismert webcímekre történő átirányítás"
@@ -6133,7 +6135,7 @@ hu:
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
         installed_version: "Telepítve"
-        latest_version: "Legfrissebb"
+        github: "GitHub"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         dismiss_notice: "Letiltás"
         new_features:
@@ -6179,6 +6181,49 @@ hu:
         too_many_requests: Túl sokszor hajtotta végre ezt a műveletet. Az újabb próbálkozás előtt várjon.
         not_found_error: Sajnos ez a jelentés nem létezik
         custom_date_range: Egyéni dátumtartomány
+        stable: "stabil"
+        sections:
+          reports:
+            title: "Jelentések"
+          traffic:
+            title: "Látogatottság"
+          engagement:
+            title: "Elköteleződés"
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témák"
+              posts: "Bejegyzések"
+              share: "Megosztás"
+            whos_posting:
+              staff: "Stáb"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Új"
+                "1": "Alapvető"
+                "2": "Tag"
+                "3": "Átlagos"
+                "4": "Vezető"
+          search:
+            title: "Keresés"
+            table:
+              searches: "Keresések"
+              status: "Állapot"
+        reports_section:
+          header_action: "Kezelés"
+          no_data: "Nincs megjeleníthető adat"
+          modal:
+            enabled_heading: "Bekapcsolva"
+            all_heading: "Összes bejelentés"
+            apply: "Alkalmaz"
+        site_traffic:
+          series:
+            anonymous: "Névtelen"
+            crawlers: "Keresőrobotok"
+        period:
+          last_7_days: "Elmúlt 7 nap"
+          last_30_days: "Elmúlt 30 nap"
+          last_3_months: "Elmúlt 3 hónap"
+          custom: "Egyéni"
         reports:
           trend_title: "%{percent} megváltoztatni. Jelenlegi %{current}, volt %{prev} az előző időszakban"
           percent_change_tooltip: "%{percent} változás."
@@ -6258,7 +6303,6 @@ hu:
             incoming_email: "Egyéni bejövő e-mail-cím"
             incoming_email_placeholder: "Adja meg az e-mail-címét"
             incoming_email_tooltip: "Több e-mail címet a | karakterrel választhat el."
-            visibility: Láthatóság
             visibility_levels:
               title: "Ki láthatja ezt a csoportot?"
               public: "Mindenki"
@@ -6687,9 +6731,10 @@ hu:
           your_organization: "Az Ön szervezete"
           your_organization_description: "Az Általános Szerződési Feltételekben és az Adatvédelmi közleményben szereplő információkat arra használjuk, hogy megmutassuk, ki üzemelteti a webhelyet, és milyen joghatóság alatt."
           company_name: "Név"
-          company_name_placeholder: "Példa szervezet"
           company_name_warning: |
             Ha üresen hagyja, akkor a szolgáltatási feltételek vagy az adatvédelmi nyilatkozat nem jelenik meg.
+          company_url: "Weboldal"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Irányadó jog"
           governing_law_placeholder: "Tartomány, állam vagy ország"
           governing_law_help: |
@@ -6706,6 +6751,8 @@ hu:
             initial_members: "Bővített tagok"
             initial_members_description: "A Továbbiak megtekintése gomb hozzáadása előtt megjelenítendő csoporttagok száma."
             show_description: "Leírás hozzáadása"
+          locale_selector:
+            title: "Nyelv"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:
@@ -7797,11 +7844,12 @@ hu:
         silence_reason: "Némítás oka"
         bulk_actions:
           title: "Csoportos műveletek"
-          admin_cant_be_deleted: "Ez a felhasználó nem törölhető, mert rendszergazda"
-          too_many_or_old_posts: "Ezt a felhasználót nem lehet törölni, mert túl sok, vagy nagyon régi bejegyzése van"
-          too_many_selected_users:
-            one: "Elérte a csoportos törlés %{count} felhasználós korlátját"
-            other: "Elérte a csoportos törlés %{count} felhasználós korlátját"
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
+          suspend:
+            confirmation_modal:
+              close: "Bezárás"
+              confirm: "Felfüggesztett"
           delete:
             label: "Felhasználók törlése…"
             confirmation_modal:
@@ -7829,6 +7877,9 @@ hu:
           suspended: "Felfüggesztett"
           silenced: "Némított"
           staged: "Lépcsőzetes"
+        activation_filter:
+          all: "Minden felhasználó"
+          activated: "Aktiválva"
         approved: "Jóváhagyott?"
         titles:
           active: "Aktív felhasználók"
@@ -8048,7 +8099,6 @@ hu:
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
         delete_confirm_title: "Biztosan törli ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
-        delete_and_block: "Törölje a felhasználót, és blokkolja az e-mail- és IP-címét"
         delete_dont_block: "Felhasználó törlése"
         deleting_user: "Felhasználó törlése"
         deleted: "A felhasználó el lett távolítva"
@@ -8469,6 +8519,10 @@ hu:
         alt: "egyéni emodzsi előnézete"
         delete_confirm: "Biztos, hogy törli a(z) :%{name}: emodzsit?"
         settings: "Beállítások"
+        export: "Exportálás"
+        import: "Importálás"
+        import_category:
+          new: "Új"
       embedding:
         get_started: "Ha a Discourse-ot egy másik weboldalba akarja ágyazni, akkor kezdje a gépnév megadásával."
         delete: "Törlés"

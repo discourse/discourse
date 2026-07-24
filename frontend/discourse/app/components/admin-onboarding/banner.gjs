@@ -7,20 +7,33 @@ import { service } from "@ember/service";
 import SiteSetting from "discourse/admin/models/site-setting";
 import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
+import ThemePickerModal from "discourse/components/admin-onboarding/modal/theme-picker";
 import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
-import DButton from "discourse/components/d-button";
-import CreateInvite from "discourse/components/modal/create-invite";
-import { getAbsoluteURL } from "discourse/lib/get-url";
+import { showCreateInviteModal } from "discourse/lib/invite-modal";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
+import { defaultHomepage } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [
+  class SelectTheme extends OnboardingStep {
+    static name = "select_theme";
+
+    @service modal;
+
+    icon = "paintbrush";
+
+    @action
+    performAction() {
+      this.modal.show(ThemePickerModal, {
+        model: { onThemeSelected: () => this.markAsCompleted() },
+      });
+    }
+  },
   class InviteCollaborators extends OnboardingStep {
     static name = "invite_collaborators";
 
-    @service modal;
     @service appEvents;
 
     icon = "paper-plane";
@@ -37,8 +50,8 @@ const STEPS = [
 
     @action
     performAction() {
-      this.modal.show(CreateInvite, {
-        model: { invites: trackedArray() },
+      showCreateInviteModal(this, {
+        model: { invites: trackedArray(), defaultRole: "admin" },
       });
     }
   },
@@ -75,7 +88,7 @@ const STEPS = [
     }
 
     completeStep() {
-      this.markAsCompleted();
+      return this.markAsCompleted();
     }
 
     showStartPostingOptions() {
@@ -113,55 +126,15 @@ const STEPS = [
       this.showStartPostingOptions();
     }
   },
-  class SpreadTheWord extends OnboardingStep {
-    static name = "spread_the_word";
-    @service toasts;
-
-    @tracked icon = "copy";
-
-    @action
-    performAction() {
-      clipboardCopy(getAbsoluteURL("/"));
-
-      this.toasts.success({
-        data: {
-          message: i18n(
-            "admin_onboarding_banner.spread_the_word.copied_to_clipboard"
-          ),
-        },
-      });
-
-      this.markAsCompleted();
-    }
-  },
 ];
 
 export default class AdminOnboardingBanner extends Component {
   @service currentUser;
-  @service appEvents;
   @service keyValueStore;
   @service router;
   @service toasts;
 
   @tracked dismissed = false;
-
-  constructor() {
-    super(...arguments);
-    this.appEvents.on(
-      "onboarding-step:completed",
-      this,
-      this.checkIfOnboardingIsComplete
-    );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off(
-      "onboarding-step:completed",
-      this,
-      this.checkIfOnboardingIsComplete
-    );
-  }
 
   get shouldDisplay() {
     if (this.dismissed) {
@@ -176,13 +149,14 @@ export default class AdminOnboardingBanner extends Component {
     return currentRouteName === `discovery.${defaultHomepage()}`;
   }
 
-  checkIfOnboardingIsComplete() {
+  @action
+  async checkIfOnboardingIsComplete() {
     const allStepsAreDone = STEPS.every(
       (Step) => !!this.keyValueStore.get(`onboarding_step_${Step.name}`)
     );
 
     if (allStepsAreDone) {
-      this.endOnboarding({ skipped: false });
+      await this.endOnboarding({ skipped: false });
     }
   }
 
@@ -223,7 +197,7 @@ export default class AdminOnboardingBanner extends Component {
           <div class="admin-onboarding-banner__content">
             <div class="admin-onboarding-banner__steps">
               {{#each STEPS as |Step|}}
-                <Step />
+                <Step @onCompleted={{this.checkIfOnboardingIsComplete}} />
               {{/each}}
             </div>
           </div>

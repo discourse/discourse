@@ -22,6 +22,27 @@ module Chat
       render json: success_json
     end
 
+    def message_reactions_users
+      params.require(:message_id)
+
+      message = Chat::Message.find_by(id: params[:message_id], chat_channel_id: @chat_channel.id)
+      raise Discourse::NotFound if message.nil? || !guardian.can_see_chat_message?(message)
+
+      page = params[:page].to_i.clamp(0..)
+      limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
+
+      rows, total =
+        Chat::MessageReactionUsersQuery.call(
+          message: message,
+          emoji: params[:emoji],
+          limit: limit,
+          offset: page * limit,
+          current_user_id: current_user.id,
+        )
+
+      render_json_dump(users: serialize_data(rows, Chat::ReactionUserSerializer), total_rows: total)
+    end
+
     def rebake
       Chat::RebakeMessage.call(service_params) do
         on_success { render(json: success_json) }

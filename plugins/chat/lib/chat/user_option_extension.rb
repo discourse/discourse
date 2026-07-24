@@ -51,6 +51,14 @@ module Chat
         base.attribute :show_thread_title_prompts, :boolean, default: true
       end
 
+      if !base.method_defined?(:chat_announce_new_messages?)
+        base.attribute :chat_announce_new_messages, :boolean, default: true
+      end
+
+      if !base.method_defined?(:chat_new_message_sound?)
+        base.attribute :chat_new_message_sound, :boolean, default: false
+      end
+
       if !base.method_defined?(:chat_quick_reaction_type_frequent?)
         base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
       end

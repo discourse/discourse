@@ -1,5 +1,5 @@
-import DButton from "discourse/components/d-button";
-import NavItem from "discourse/components/nav-item";
+import DButton from "discourse/ui-kit/d-button";
+import DNavItem from "discourse/ui-kit/d-nav-item";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -29,15 +29,15 @@ export default <template>
     </div>
 
     <ul class="nav nav-pills">
-      <NavItem
+      <DNavItem
         @route="adminPlugins.discourse-subscriptions.products"
         @label="discourse_subscriptions.admin.products.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminPlugins.discourse-subscriptions.coupons"
         @label="discourse_subscriptions.admin.coupons.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminPlugins.discourse-subscriptions.subscriptions"
         @label="discourse_subscriptions.admin.subscriptions.title"
       />

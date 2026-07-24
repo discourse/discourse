@@ -62,7 +62,7 @@ describe "Admin upcoming changes" do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
-  it "shows the permanent soon notice for stable changes but not for site_setting_default types" do
+  it "shows the permanent soon notice for stable changes unless permanent_warning is false" do
     mock_upcoming_change_metadata(
       {
         about_page_extra_groups_show_description: {
@@ -76,6 +76,7 @@ describe "Admin upcoming changes" do
           status: :stable,
           impact_type: "site_setting_default",
           impact_role: "all_members",
+          permanent_warning: false,
         },
       },
     )
@@ -88,6 +89,53 @@ describe "Admin upcoming changes" do
     expect(
       upcoming_changes_page.change_item(:enable_upload_debug_mode),
     ).to have_no_permanent_soon_notice
+  end
+
+  describe "when the change depends on other settings" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          set_locale_from_cookie: {
+            impact: "feature,all_members",
+            status: :experimental,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+    end
+
+    it "shows a warning notice with links when the dependencies are not met" do
+      SiteSetting.allow_user_locale = false
+      upcoming_changes_page.visit
+
+      change_item = upcoming_changes_page.change_item(:set_locale_from_cookie)
+      expect(change_item).to have_depends_on_notice(
+        "This change requires Allow user locale to be enabled.",
+      )
+      expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
+        "Allow user locale",
+        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
+      )
+      expect(
+        upcoming_changes_page.change_item(:enable_upload_debug_mode),
+      ).to have_no_depends_on_notice
+    end
+
+    it "does not show the notice when the dependencies are met" do
+      SiteSetting.allow_user_locale = true
+      upcoming_changes_page.visit
+
+      expect(
+        upcoming_changes_page.change_item(:set_locale_from_cookie),
+      ).to have_no_depends_on_notice
+    end
   end
 
   it "does not show permanent upcoming changes" do
@@ -206,6 +254,82 @@ describe "Admin upcoming changes" do
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
   end
 
+  describe "allow_enabled_for restrictions" do
+    def mock_with_allow(allow)
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: allow,
+          },
+        },
+      )
+    end
+
+    it "shows only No one and Everyone when allow_enabled_for is [everyone]" do
+      mock_with_allow([:everyone])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone")
+    end
+
+    it "shows only No one and Staff when allow_enabled_for is [staff]" do
+      mock_with_allow([:staff])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "staff")
+    end
+
+    it "shows No one, Staff, and Specific group(s) when allow_enabled_for is [staff, specific_groups]" do
+      mock_with_allow(%i[staff specific_groups])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "staff", "groups")
+    end
+
+    it "shows all four options when allow_enabled_for is omitted" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for_options).to contain_exactly("no_one", "everyone", "staff", "groups")
+    end
+
+    it "displays the broadest allowed target when an auto-promoted change has no admin scope" do
+      mock_with_allow(%i[staff specific_groups])
+      # Simulate the post-promotion state: setting is enabled globally but the
+      # admin has not configured a SiteSettingGroup. "Everyone" is no longer an
+      # allowed dropdown target, so the row should display "staff" as the
+      # broadest allowed scope.
+      SiteSetting.enable_upload_debug_mode = true
+
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item.enabled_for).to eq("staff")
+    end
+
+    it "enables the change for staff when everyone is excluded" do
+      mock_with_allow(%i[staff specific_groups])
+      SiteSetting.enable_upload_debug_mode = false
+
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.select_enabled_for("staff")
+
+      expect(upcoming_changes_page).to have_enabled_for_success_toast(
+        "staff",
+        translation_args: {
+          staffGroupName: I18n.t("groups.default_names.staff").titleize,
+        },
+      )
+      expect(item).to be_enabled
+      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
+        Group::AUTO_GROUPS[:staff].to_s,
+      )
+    end
+  end
+
   it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do
     upcoming_changes_page.visit
 
@@ -263,8 +387,51 @@ describe "Admin upcoming changes" do
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "enabled")
   end
 
+  it "updates the filter when a notification is clicked while already on the page" do
+    user_menu = PageObjects::Components::UserMenu.new
+
+    Fabricate(
+      :notification,
+      user: current_user,
+      notification_type: Notification.types[:upcoming_change_available],
+      data: {
+        upcoming_change_names: ["enable_upload_debug_mode"],
+        upcoming_change_humanized_names: [
+          SiteSettings::LabelFormatter.humanized_name(:enable_upload_debug_mode),
+        ],
+        count: 1,
+      }.to_json,
+    )
+    Fabricate(
+      :notification,
+      user: current_user,
+      notification_type: Notification.types[:upcoming_change_available],
+      data: {
+        upcoming_change_names: ["about_page_extra_groups_show_description"],
+        upcoming_change_humanized_names: [
+          SiteSettings::LabelFormatter.humanized_name(:about_page_extra_groups_show_description),
+        ],
+        count: 1,
+      }.to_json,
+    )
+
+    visit "/"
+
+    user_menu.open.click_notification_with_href("enable_upload_debug_mode")
+
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+
+    user_menu.open.click_notification_with_href("about_page_extra_groups_show_description")
+
+    expect(upcoming_changes_page).to have_change(:about_page_extra_groups_show_description)
+    expect(upcoming_changes_page).to have_no_change(:enable_upload_debug_mode)
+  end
+
   it "displays a notification dot on the sidebar and clears it when navigating to upcoming changes" do
     sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
+
+    Discourse.stubs(:site_creation_date).returns(1.day.ago)
 
     UpcomingChangeEvent.create!(
       event_type: :added,

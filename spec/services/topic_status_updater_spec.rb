@@ -24,7 +24,7 @@ RSpec.describe TopicStatusUpdater do
     expect(post.topic.posts.count).to eq(2)
 
     tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(2)
+    expect(tu.last_read_post_number).to eq(1)
   end
 
   it "respects topics_unread_when_closed preference for private messages" do

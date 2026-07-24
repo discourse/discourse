@@ -4,7 +4,7 @@ module PageObjects
   module Modals
     class DeleteThemesConfirm < PageObjects::Pages::Base
       def has_theme?(name)
-        has_css?(".modal li", text: name)
+        has_css?(".d-modal li", text: name)
       end
 
       def confirm

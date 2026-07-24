@@ -10,10 +10,10 @@ end
 # Table name: category_form_templates
 #
 #  id               :bigint           not null, primary key
-#  category_id      :bigint           not null
-#  form_template_id :bigint           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  category_id      :bigint           not null
+#  form_template_id :bigint           not null
 #
 # Indexes
 #

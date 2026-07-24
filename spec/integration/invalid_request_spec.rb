@@ -36,4 +36,10 @@ RSpec.describe "invalid requests", type: :request do
     expect(fake_logger.warnings).to be_empty
     expect(fake_logger.errors).to have_attributes(size: 1)
   end
+
+  it "handles query strings whose key types collide" do
+    get "/?foo=1&foo%5B1%5D=2"
+    expect(response.status).to eq(400)
+    expect(fake_logger.warnings).to be_empty
+  end
 end

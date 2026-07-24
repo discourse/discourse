@@ -42,7 +42,7 @@ class DiscoursePoll::Poll
               end
             end
 
-        self.validate_votes!(poll, new_option_ids)
+        validate_votes!(poll, new_option_ids)
 
         old_option_ids =
           poll
@@ -81,9 +81,7 @@ class DiscoursePoll::Poll
         end
       end
 
-    if serialized_poll[:type] == RANKED_CHOICE
-      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
-    else
+    if serialized_poll[:type] != RANKED_CHOICE
       # Ensure consistency here as we do not have a unique index to limit the
       # number of votes per the poll's configuration.
       is_multiple = serialized_poll[:type] == MULTIPLE
@@ -145,19 +143,9 @@ class DiscoursePoll::Poll
   end
 
   def self.remove_vote(user, post_id, poll_name)
-    poll_id = nil
-
-    serialized_poll =
-      DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
-        poll_id = poll.id
-        PollVote.where(poll: poll, user: user).delete_all
-      end
-
-    if serialized_poll[:type] == RANKED_CHOICE
-      serialized_poll[:ranked_choice_outcome] = DiscoursePoll::RankedChoice.outcome(poll_id)
+    DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
+      PollVote.where(poll: poll, user: user).delete_all
     end
-
-    serialized_poll
   end
 
   def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)
@@ -203,12 +191,32 @@ class DiscoursePoll::Poll
         return
       end
 
-      poll.status = status
-      poll.save!
+      if poll.status != status
+        poll.status = status
+
+        if poll.closed?
+          poll.closed_by = user
+          poll.closed_at = Time.zone.now
+          log_action = "poll_closed"
+        else
+          poll.closed_by = nil
+          poll.closed_at = nil
+          log_action = "poll_opened"
+        end
+
+        poll.save!
+
+        StaffActionLogger.new(user).log_custom(log_action, { post_id:, subject: poll_name })
+      end
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id:, polls: [serialized_poll] }
 
+      # This payload is broadcast to every subscriber on the topic channel, so
+      # we only broadcast public data by serializing it as an anonymous user.
+      payload = {
+        post_id:,
+        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
+      }
       post.publish_message!("/polls/#{post.topic_id}", payload)
 
       serialized_poll
@@ -257,16 +265,14 @@ class DiscoursePoll::Poll
                , po.digest
                , pv.rank AS int_rank
                , pv.user_id
-               , u.username
-               , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at) AS row
+               , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at, pv.user_id) AS row
           FROM poll_votes pv
           JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
-          JOIN users u ON pv.user_id = u.id
           WHERE pv.poll_id IN (:poll_ids)
                 /* where */
         ) v
         WHERE row BETWEEN :offset AND :offset_plus_limit
-        ORDER BY digest, int_rank, username
+        ORDER BY digest, int_rank, row
       SQL
 
     votes = DB.query(query, params.merge(poll_ids: uncached_poll_ids))
@@ -530,8 +536,13 @@ class DiscoursePoll::Poll
       poll.reload
 
       serialized_poll = PollSerializer.new(poll, root: false, scope: guardian).as_json
-      payload = { post_id:, polls: [serialized_poll] }
 
+      # This payload is broadcast to every subscriber on the topic channel, so
+      # we only broadcast public data by serializing it as an anonymous user.
+      payload = {
+        post_id:,
+        polls: [PollSerializer.new(poll, root: false, scope: Guardian.new).as_json],
+      }
       post.publish_message!("/polls/#{post.topic_id}", payload)
 
       serialized_poll

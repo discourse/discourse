@@ -4,11 +4,13 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Category.clear_subcategory_ids if name === :max_category_nesting
 
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
-  # existing users are approved.
+  # existing users are approved unless they currently have a pending reviewable.
   if name == :must_approve_users && new_value == true
     User
       .where(approved: false)
-      .joins("LEFT JOIN reviewables r ON r.target_id = users.id")
+      .joins(
+        "LEFT JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User' AND r.status = #{Reviewable.statuses[:pending]}",
+      )
       .where(r: { id: nil })
       .update_all(approved: true)
   end
@@ -54,20 +56,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if %i[title site_description].include?(name)
     topics = SeedData::Topics.with_default_locale
     topics.update(site_setting_names: ["welcome_topic_id"], skip_changed: true)
-  elsif %i[company_name contact_email governing_law city_for_disputes].include?(name)
-    topics = SeedData::Topics.with_default_locale
-    %w[tos_topic_id privacy_topic_id].each do |site_setting|
-      topic_id = SiteSetting.get(site_setting)
-      if topic_id > 0 && Topic.with_deleted.exists?(id: topic_id)
-        if SiteSetting.company_name.blank?
-          topics.delete(site_setting_names: [site_setting], skip_changed: true)
-        else
-          topics.update(site_setting_names: [site_setting], skip_changed: true)
-        end
-      elsif SiteSetting.company_name.present?
-        topics.create(site_setting_names: [site_setting])
-      end
-    end
   end
 
   Theme.expire_site_cache! if name == :default_theme_id
@@ -86,6 +74,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     end
   end
 
+  if name == :simple_email_subject
+    SiteSetting::Action::SimpleEmailSubjectToggled.call(enabled: new_value)
+  end
+
   if name == :content_localization_enabled && new_value == true
     %i[post_menu post_menu_hidden_items].each do |setting_name|
       current_items = SiteSetting.get(setting_name).split("|")
@@ -102,13 +94,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if SiteSetting.discourse_id_client_id.present? && SiteSetting.discourse_id_client_secret.present?
     if %i[title logo logo_small site_description].include?(name)
       Scheduler::Defer.later("Update Discourse ID metadata") do
-        begin
-          DiscourseId::Register.call(update: true)
-        rescue StandardError => e
-          Rails.logger.error(
-            "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
-          )
-        end
+        DiscourseId::Register.call(update: true)
+      rescue StandardError => e
+        Rails.logger.error(
+          "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
+        )
       end
     end
   end

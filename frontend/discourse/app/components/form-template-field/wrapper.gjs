@@ -23,6 +23,7 @@ const FormTemplateField = <template>
     @validations={{@content.validations}}
     @value={{@initialValue}}
     @onChange={{@onChange}}
+    @uppyComposerUpload={{@uppyComposerUpload}}
   />
 </template>;
 
@@ -109,6 +110,7 @@ export default class FormTemplateFieldWrapper extends Component {
             @content={{content}}
             @initialValue={{get this.initialValues content.id}}
             @onChange={{this.onChange}}
+            @uppyComposerUpload={{@uppyComposerUpload}}
           />
         {{/each}}
       </div>

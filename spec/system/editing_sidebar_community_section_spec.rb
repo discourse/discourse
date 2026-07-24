@@ -56,6 +56,32 @@ RSpec.describe "Editing Sidebar Community Section" do
     )
   end
 
+  it "lets an admin localize manually created Community section links" do
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_supported_locales = "ja"
+    user.update!(locale: "ja")
+
+    sign_in(admin)
+
+    visit("/latest")
+
+    modal = sidebar.click_community_section_more_button.click_customize_community_section_button
+    modal.add_link
+    modal.fill_last_link("Solutions Leaderboard", "/solutions-leaderboard")
+    modal.add_last_link_localization("ソリューションリーダーボード")
+    modal.add_link
+    modal.fill_last_link("Untranslated Link", "/untranslated-link")
+    modal.save
+    modal.confirm_update
+
+    sign_in(user)
+
+    visit("/latest")
+
+    expect(sidebar).to have_community_section_link("ソリューションリーダーボード", href: "/solutions-leaderboard")
+    expect(sidebar).to have_community_section_link("Untranslated Link", href: "/untranslated-link")
+  end
+
   it "allows admin to edit community section when no secondary section links" do
     SidebarSection
       .where(title: "Community")

@@ -238,12 +238,22 @@ class BulkImport::Base
   def load_index(type)
     map = {}
 
-    @raw_connection.send_query(
-      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
-    )
-    @raw_connection.set_single_row_mode
-
-    @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    if @import_prefix
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id LIKE '#{@import_prefix}:%'",
+      )
+      @raw_connection.set_single_row_mode
+      prefix_length = @import_prefix.length + 1
+      @raw_connection.get_result.stream_each do |row|
+        map[row["original_id"][prefix_length..]] = row["discourse_id"]
+      end
+    else
+      @raw_connection.send_query(
+        "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type} AND original_id NOT LIKE '%:%'",
+      )
+      @raw_connection.set_single_row_mode
+      @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+    end
 
     @raw_connection.get_result
 
@@ -549,11 +559,16 @@ class BulkImport::Base
     username
     username_lower
     name
+    locale
     title
     active
+    staged
     trust_level
     admin
     moderator
+    approved
+    approved_at
+    approved_by_id
     date_of_birth
     ip_address
     registration_ip_address
@@ -713,6 +728,7 @@ class BulkImport::Base
     category_id
     visible
     closed
+    archived
     pinned_at
     pinned_until
     pinned_globally
@@ -869,7 +885,8 @@ class BulkImport::Base
 
   GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
 
-  SOLVED_TOPIC_COLUMNS = %i[topic_id answer_post_id accepter_user_id created_at updated_at]
+  SOLVED_TOPIC_COLUMNS = %i[topic_id created_at updated_at]
+  TOPIC_ANSWER_COLUMNS = %i[solved_topic_id answer_post_id accepter_user_id created_at updated_at]
 
   POST_EVENT_COLUMNS = %i[
     id
@@ -1195,6 +1212,10 @@ class BulkImport::Base
     create_records(rows, "discourse_solved_solved_topics", SOLVED_TOPIC_COLUMNS, &block)
   end
 
+  def create_topic_answers(rows, &block)
+    create_records(rows, "discourse_solved_topic_answers", TOPIC_ANSWER_COLUMNS, &block)
+  end
+
   def create_post_events(rows, &block)
     create_records(rows, "discourse_post_event_events", POST_EVENT_COLUMNS, &block)
   end
@@ -1369,11 +1390,18 @@ class BulkImport::Base
     user[:username_lower] = user[:username].downcase
     user[:trust_level] ||= TrustLevel[1]
     user[:active] = true unless user.has_key?(:active)
+    user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
     user[:last_emailed_at] ||= NOW
     user[:created_at] ||= NOW
     user[:updated_at] ||= user[:created_at]
+
+    user[:approved] = true if user[:approved].nil?
+    if user[:approved]
+      user[:approved_at] ||= user[:created_at]
+      user[:approved_by_id] ||= Discourse::SYSTEM_USER_ID
+    end
     user[:suspended_at] ||= user[:suspended_at]
     user[:suspended_till] ||= user[:suspended_till] ||
       (200.years.from_now if user[:suspended_at].present?)
@@ -1475,7 +1503,7 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
-    if user_option.key?(:hide_profile_and_presence)
+    if !user_option[:hide_profile_and_presence].nil?
       hide_profile_and_presence = user_option[:hide_profile_and_presence]
       user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
     end
@@ -1546,7 +1574,7 @@ class BulkImport::Base
     category[:name_lower] = name_lower
 
     slug_next_number = 1
-    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+    original_slug = slug = category[:slug] || Slug.for(name_lower, "")
 
     while !@category_slugs.add?(slug.downcase)
       slug = "#{original_slug}-#{slug_next_number}"
@@ -1958,8 +1986,14 @@ class BulkImport::Base
   def process_discourse_solved_solved_topics(solved_topic)
     solved_topic[:created_at] ||= NOW
     solved_topic[:updated_at] ||= NOW
-    solved_topic[:accepter_user_id] ||= Discourse::SYSTEM_USER_ID
     solved_topic
+  end
+
+  def process_discourse_solved_topic_answers(topic_answer)
+    topic_answer[:created_at] ||= NOW
+    topic_answer[:updated_at] ||= NOW
+    topic_answer[:accepter_user_id] ||= Discourse::SYSTEM_USER_ID
+    topic_answer
   end
 
   def process_discourse_post_event_events(post_event)
@@ -2178,24 +2212,20 @@ class BulkImport::Base
       begin
         @raw_connection.copy_data(sql, @encoder) do
           rows.each do |row|
-            begin
-              if (mapped = yield(row))
-                processed = send(process_method_name, mapped)
-                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-                unless processed[:skip]
-                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
-                end
-              end
-              rows_created += 1
-              if rows_created % 100 == 0
-                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-              end
-            rescue => e
-              puts "\n"
-              puts "ERROR: #{e.message}"
-              puts e.backtrace.join("\n")
+            if (mapped = yield(row))
+              processed = send(process_method_name, mapped)
+              imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+              imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+              @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
             end
+            rows_created += 1
+            if rows_created % 100 == 0
+              print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+            end
+          rescue => e
+            puts "\n"
+            puts "ERROR: #{e.message}"
+            puts e.backtrace.join("\n")
           end
         end
       rescue => e

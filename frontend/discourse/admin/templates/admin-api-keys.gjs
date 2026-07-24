@@ -1,7 +1,7 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -21,12 +21,12 @@ export default <template>
       <actions.Primary @route="adminApiKeys.new" @label="admin.api_keys.add" />
     </:actions>
     <:tabs>
-      <NavItem
+      <DNavItem
         @route="adminApiKeys.settings"
         @label="settings"
         class="admin-api-keys-tabs__settings"
       />
-      <NavItem
+      <DNavItem
         @route="adminApiKeys.index"
         @label="admin.config.api_keys.title"
         class="admin-api-keys-tabs__index"

@@ -541,6 +541,24 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:replied_notification, user: user, post: response) }
 
+    it "lets admins add the site name to the sender name via the email_from override" do
+      TranslationOverride.upsert!(
+        SiteSetting.default_locale,
+        "email_from",
+        "%{user_name} via %{site_name}",
+      )
+
+      mail =
+        UserNotifications.user_replied(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      expect(mail[:from].display_names).to eql(["John Doe via #{Email.site_title}"])
+    end
+
     it "generates a correct email" do
       SiteSetting.default_email_in_reply_to = true
 
@@ -724,11 +742,6 @@ RSpec.describe UserNotifications do
         expect(body).not_to include("%{optional_cat}")
         expect(body).not_to include("%{optional_pm}")
         expect(body).not_to include("%{optional_re}")
-
-        TranslationOverride.revert!(
-          I18n.locale,
-          ["user_notifications.user_replied.text_body_template"],
-        )
       end
     end
 
@@ -987,6 +1000,10 @@ RSpec.describe UserNotifications do
       before do
         SiteSetting.group_in_subject = true
         SiteSetting.simple_email_subject = true
+
+        # Enabling simple_email_subject rewrites email_subject to a template
+        # without %{optional_pm}, which is where the group name is rendered.
+        SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 
       let(:group) { Fabricate(:group, name: "my_group") }

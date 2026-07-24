@@ -1,12 +1,12 @@
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import DatePickerPast from "discourse/components/date-picker-past";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -63,7 +63,7 @@ export default <template>
       </div>
     </div>
 
-    <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+    <DConditionalLoadingSpinner @condition={{@controller.loading}}>
 
       <div class="email-preview-digest">
         {{#if @controller.showSendEmailForm}}
@@ -73,7 +73,7 @@ export default <template>
                 {{i18n "admin.email.sending_test"}}
               {{else}}
                 <label>{{i18n "admin.email.send_digest_label"}}</label>
-                <TextField
+                <DTextField
                   @value={{@controller.email}}
                   @placeholderKey="admin.email.test_email_address"
                 />
@@ -109,6 +109,6 @@ export default <template>
         </div>
       </div>
 
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </PluginOutlet>
 </template>

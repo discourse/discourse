@@ -9,6 +9,7 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:reply, :post) { Fabricate(:post, topic: topic) }
+  fab!(:reply2, :post) { Fabricate(:post, topic: topic) }
 
   before do
     enable_current_plugin
@@ -29,7 +30,21 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
 
     expect(result[:status]).to eq("success")
     expect(topic.reload.solved).to be_present
-    expect(topic.solved.answer_post).to eq(reply)
+    expect(topic.topic_answers[0].post).to eq(reply)
+  end
+
+  it "unmarks existing solution when accepting another one" do
+    result = tool(post_id: reply.id, solved: true, reason: "This answers the question").invoke
+    expect(result[:status]).to eq("success")
+    expect(topic.reload.solved).to be_present
+    expect(topic.topic_answers.length).to eq(1)
+    expect(topic.topic_answers[0].post).to eq(reply)
+
+    result = tool(post_id: reply2.id, solved: true, reason: "This answers the question").invoke
+    expect(result[:status]).to eq("success")
+    expect(topic.reload.solved).to be_present
+    expect(topic.topic_answers.length).to eq(1)
+    expect(topic.topic_answers[0].post).to eq(reply2)
   end
 
   it "unmarks a post as the accepted solution" do
@@ -67,5 +82,34 @@ RSpec.describe DiscourseAi::Agents::Tools::MarkAsSolved do
     result = t.invoke
 
     expect(result[:status]).to eq("error")
+  end
+
+  describe "with multiple solutions enabled" do
+    before { SiteSetting.solved_allow_multiple_solutions = true }
+
+    it "can accept/unaccept multiple solutions" do
+      result = tool(post_id: reply.id, solved: true, reason: "This answers the question").invoke
+      expect(result[:status]).to eq("success")
+      expect(topic.reload.solved).to be_present
+      expect(topic.topic_answers.length).to eq(1)
+      expect(topic.topic_answers[0].post).to eq(reply)
+
+      result = tool(post_id: reply2.id, solved: true, reason: "This answers the question").invoke
+      expect(result[:status]).to eq("success")
+      expect(topic.reload.solved).to be_present
+      expect(topic.topic_answers.length).to eq(2)
+      expect(topic.topic_answers[0].post).to eq(reply)
+      expect(topic.topic_answers[1].post).to eq(reply2)
+
+      result = tool(post_id: reply.id, solved: false, reason: "Not the right answer").invoke
+      expect(result[:status]).to eq("success")
+      expect(topic.reload.solved).to be_present
+      expect(topic.topic_answers.length).to eq(1)
+      expect(topic.topic_answers[0].post).to eq(reply2)
+
+      result = tool(post_id: reply2.id, solved: false, reason: "Not the right answer").invoke
+      expect(result[:status]).to eq("success")
+      expect(topic.reload.solved).to be_nil
+    end
   end
 end

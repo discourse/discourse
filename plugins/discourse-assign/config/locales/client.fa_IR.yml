@@ -48,3 +48,8 @@ fa_IR:
     edit_assignments_modal:
       topic: "موضوع"
       post: "نوشته"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "اختصاص داده شده"
+      assign_topic:
+        topic_id: "شناسه موضوع"

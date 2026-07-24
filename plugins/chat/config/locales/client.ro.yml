@@ -97,6 +97,8 @@ ro:
         filter_all: Toate
         filter_open: Deschide
         filter_closed: Închis
+        filter_joined_all: "Toate"
+        filter_joined_joined: "Înscris"
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
@@ -134,7 +136,11 @@ ro:
           one: "%{count}/%{max} membru"
           few: "%{count}/%{max} membri"
           other: "%{count}/%{max} de membri"
+      channel:
+        preview_card:
+          log_in: "Autentificare"
       create_channel:
+        description: "Descriere"
         type: "Tip"
         types:
           category: "Categorie"
@@ -269,3 +275,12 @@ ro:
       start_new_dm:
         text: Începe un mesaj direct nou
         title: Creează o discuție personală
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mesaj"
+      chat_approval:
+        message: "Mesaj"
+        channel_id: "Canal"

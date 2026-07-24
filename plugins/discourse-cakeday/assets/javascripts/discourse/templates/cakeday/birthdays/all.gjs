@@ -1,11 +1,11 @@
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 import UserInfoList from "../../../components/user-info-list";
 
 export default <template>
-  <LoadMore @selector=".user-info" @action={{@controller.loadMore}}>
+  <DLoadMore @selector=".user-info" @action={{@controller.loadMore}}>
     <div class="cakeday-months">
       <h2 class="cakeday-header">{{i18n "birthdays.month.title"}}</h2>
       <ComboBox
@@ -16,12 +16,12 @@ export default <template>
       />
     </div>
 
-    <ConditionalLoadingSpinner @condition={{@controller.model.loading}}>
+    <DConditionalLoadingSpinner @condition={{@controller.model.loading}}>
       <UserInfoList @users={{@controller.model}} @isBirthday={{true}}>
         {{i18n "birthdays.month.empty"}}
       </UserInfoList>
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
 
-    <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-  </LoadMore>
+    <DConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
+  </DLoadMore>
 </template>

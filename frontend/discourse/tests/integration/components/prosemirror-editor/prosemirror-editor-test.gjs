@@ -9,7 +9,7 @@ import ProsemirrorEditor from "discourse/static/prosemirror/components/prosemirr
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
-module("Integration | Component | prosemirror-editor", function (hooks) {
+module("Integration | Component | ProsemirrorEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(() => clearRichEditorExtensions());
@@ -60,8 +60,6 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered nodeSpec/parser/serializer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     withPluginApi((api) => {
       // Multiple parsers can be registered for the same node type
       api.registerRichEditorExtension({
@@ -114,8 +112,6 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered markSpec/parser/serializer", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     withPluginApi((api) => {
       api.registerRichEditorExtension({
         // just for testing purpose - our actual hashtag is a node, not a mark
@@ -151,8 +147,6 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered nodeViews", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const state = {};
 
     withPluginApi((api) => {
@@ -181,8 +175,6 @@ module("Integration | Component | prosemirror-editor", function (hooks) {
   });
 
   test("supports registered plugins with array, object or function", async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const state = {};
 
     withPluginApi((api) => {

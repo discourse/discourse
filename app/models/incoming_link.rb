@@ -39,7 +39,7 @@ class IncomingLink < ActiveRecord::Base
       post_id ||=
         Post.where(topic_id: opts[:topic_id], post_number: opts[:post_number] || 1).pick(:id)
 
-      cid = current_user ? (current_user.id) : (nil)
+      cid = current_user ? current_user.id : nil
       ip_address = nil if cid
 
       unless cid && cid == user_id
@@ -75,9 +75,7 @@ class IncomingLink < ActiveRecord::Base
   end
 
   def referer
-    if self.incoming_referer
-      self.incoming_referer.incoming_domain.to_url + self.incoming_referer.path
-    end
+    incoming_referer.incoming_domain.to_url + incoming_referer.path if incoming_referer
   end
 
   def domain
@@ -119,12 +117,12 @@ end
 # Table name: incoming_links
 #
 #  id                  :integer          not null, primary key
-#  created_at          :datetime         not null
-#  user_id             :integer
 #  ip_address          :inet
+#  created_at          :datetime         not null
 #  current_user_id     :integer
-#  post_id             :integer          not null
 #  incoming_referer_id :integer
+#  post_id             :integer          not null
+#  user_id             :integer
 #
 # Indexes
 #

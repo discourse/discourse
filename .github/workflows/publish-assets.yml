@@ -4,12 +4,7 @@ on:
   push:
     branches:
       - main
-      - stable
       - release/*
-      - precompile-asset-improvements
-    tags:
-      - beta
-      - v*
 
 concurrency:
   group: publish-assets-${{ format('{0}-{1}', github.run_number, github.job) }}
@@ -18,7 +13,7 @@ concurrency:
 jobs:
   publish-assets:
     if: github.repository == 'discourse/discourse'
-    runs-on: 'cdck-linux-8-core'
+    runs-on: "cdck-linux-8-core"
     container: discourse/discourse_test:release
     timeout-minutes: 30
 
@@ -38,7 +33,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 

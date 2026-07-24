@@ -5,11 +5,29 @@
 # https://translate.discourse.org/
 
 nb_NO:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godtatte løsninger"
+        sections:
+          support:
+            answerers:
+              staff: "Stab"
+              member: "Medlemmer"
+              basic: "Basic"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "godtatt"
+          topic_solved_notification: "løst"
     solved:
       title: "Løst"
       allow_accepted_answers: "Tillat enmeeier og personale å markere et svar som løsning"
@@ -26,6 +44,8 @@ nb_NO:
       move_post_cancel: "Avbryt"
       confirm_solved_removal_confirm: "Bekreft"
       confirm_solved_removal_cancel: "Avbryt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "Dette emnet har en løsning"

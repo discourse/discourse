@@ -2,7 +2,7 @@ name: check-pr-body
 
 on:
   pull_request_target:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, synchronize]
 
 jobs:
   sanitize:
@@ -12,31 +12,44 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }} 
+          ref: ${{ github.event.pull_request.head.sha }}
+          # Fetch the bump commit too: it's the parent of the dedupe commit
+          # that dependabot-pnpm-dedupe.yml adds on top.
+          fetch-depth: 2
       - name: "Replace PR body with commit message"
         shell: ruby {0}
-        env: 
-          PR_BODY: ${{ github.event.pull_request.body }}
+        env:
           PR_NUMBER: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          original_description = ENV['PR_BODY']
+          pr_number = ENV['PR_NUMBER']
 
-          if !original_description.include? "Dependabot commands and options"
+          # Event's payload body can be stale, re-fetch.
+          original_description = `gh pr view #{pr_number} --json body --jq .body`
+          raise "Failed to fetch PR body" unless $?.success?
+
+          if !original_description.include? "<details>"
             puts "PR body does not contain rich Dependabot content, skipping"
             exit 0
           end
 
-          commit_message = `git log -1 --pretty=%b`
+          # dependabot-pnpm-dedupe.yml adds a "pnpm dedupe [dependabot skip]"
+          # commit (no body) on top, so target the latest non-skip one.
+          commit_message = `git log -F --grep='[dependabot skip]' --invert-grep --pretty=%b -1`
           raise "Failed to get commit message" unless $?.success?
 
           new_description = commit_message.split("\n---\n").first.strip
 
+          if new_description.empty?
+            puts "Computed body is empty, skipping to avoid wiping the PR body"
+            exit 0
+          end
+
           puts "Updating body to commit message...\n\n---\n#{new_description}\n---"
 
-          system "gh", "pr", "edit", ENV['PR_NUMBER'], "--body", new_description
+          system "gh", "pr", "edit", pr_number, "--body", new_description
 
           comment = <<~COMMENT
             PR body updated to plaintext for easier squash-merging. Original body content below:
@@ -47,7 +60,7 @@ jobs:
           COMMENT
 
           puts "Adding comment with original info..."
-          command = ["gh", "pr", "comment", ENV['PR_NUMBER'], "--body", comment]
+          command = ["gh", "pr", "comment", pr_number, "--body", comment]
           begin
             system *command, "--edit-last", exception: true
           rescue

@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import TopicParticipant from "discourse/components/topic-map/topic-participant";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | topic-participant", function (hooks) {
+module("Integration | Component | TopicParticipant", function (hooks) {
   setupRenderingTest(hooks);
 
   test("one post", async function (assert) {

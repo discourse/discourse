@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import LikedUsersList from "../liked-users-list";
 
 export default class PostMenuLikeButton extends Component {
@@ -21,7 +21,12 @@ export default class PostMenuLikeButton extends Component {
   @tracked isAnimated = false;
 
   get disabled() {
-    return this.currentUser && !this.args.post.canToggleLike;
+    if (!this.currentUser) {
+      // Archived topics reject likes server-side; closed topics still accept
+      // them, so let anon defer-and-replay after login.
+      return !!this.args.post.topic?.archived;
+    }
+    return !this.args.post.canToggleLike;
   }
 
   get title() {
@@ -61,7 +66,7 @@ export default class PostMenuLikeButton extends Component {
   <template>
     {{#if @post.showLike}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "double-button"
           (if @post.liked "has-liked" "")
           "post-action-menu__double-button"
@@ -71,7 +76,7 @@ export default class PostMenuLikeButton extends Component {
           <LikedUsersList ...attributes @post={{@post}} />
         {{/if}}
         <DButton
-          class={{concatClass
+          class={{dConcatClass
             "post-action-menu__like"
             "toggle-like"
             "btn-icon"
@@ -80,7 +85,7 @@ export default class PostMenuLikeButton extends Component {
           }}
           ...attributes
           data-post-id={{@post.id}}
-          disabled={{this.disabled}}
+          @disabled={{this.disabled}}
           @action={{this.toggleLike}}
           @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}

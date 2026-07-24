@@ -17,8 +17,6 @@ gl:
       create:
         form:
           insert: Inserir
-          advanced_mode: Modo avanzado
-          simple_mode: Modo simple
           format_description: "Formato usado para presentarlle a data ao usuario. Use Z para amosar o desprazamento e zz para o nome da zona horaria."
           timezones_title: Zonas horarias que presentar
           timezones_description: As zonas horarias utilizaranse para presentar datas na visualización previa e na alternativa.

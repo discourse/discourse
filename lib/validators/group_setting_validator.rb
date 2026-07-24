@@ -6,7 +6,10 @@ class GroupSettingValidator
   end
 
   def valid_value?(val)
-    val.blank? || Group.exists?(name: val)
+    return true if val.blank?
+
+    group_id = Integer(val, exception: false)
+    (group_id.present? && Group.exists?(id: group_id)) || Group.exists?(name: val)
   end
 
   def error_message

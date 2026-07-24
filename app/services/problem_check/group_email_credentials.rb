@@ -37,21 +37,18 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
   end
 
   def try_validate(group, &blk)
-    begin
-      blk.call
-      no_problem
-    rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
-      error_message =
-        EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server)
+    blk.call
+    no_problem
+  rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
+    error_message = EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server)
 
-      problem(group, override_data: { error: error_message })
-    rescue => err
-      Discourse.warn_exception(
-        err,
-        message:
-          "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name}).",
-      )
-      no_problem
-    end
+    problem(group, override_data: { error: error_message })
+  rescue => err
+    Discourse.warn_exception(
+      err,
+      message:
+        "Unexpected error when checking SMTP credentials for group #{group.id} (#{group.name}).",
+    )
+    no_problem
   end
 end

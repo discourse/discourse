@@ -8,6 +8,8 @@ class UserAuthToken < ActiveRecord::Base
   # overriding `#user` later in the class definition.
   alias_method :acting_user, :user
 
+  scope :unexpired, -> { where("rotated_at > ?", SiteSetting.maximum_session_age.hours.ago) }
+
   ROTATE_TIME_MINS = 10
   ROTATE_TIME = ROTATE_TIME_MINS.minutes
   # used when token did not arrive at client
@@ -22,11 +24,11 @@ class UserAuthToken < ActiveRecord::Base
   before_destroy do
     UserAuthToken.log_verbose(
       action: "destroy",
-      user_auth_token_id: self.id,
-      user_id: self.user_id,
-      user_agent: self.user_agent,
-      client_ip: self.client_ip,
-      auth_token: self.auth_token,
+      user_auth_token_id: id,
+      user_id: user_id,
+      user_agent: user_agent,
+      client_ip: client_ip,
+      auth_token: auth_token,
     )
   end
 
@@ -43,7 +45,10 @@ class UserAuthToken < ActiveRecord::Base
 
     return if !guardian.can_impersonate?(puppet)
 
-    puppet.tap { |u| u.is_impersonating = true }
+    puppet.tap do |user|
+      user.is_impersonating = true
+      user.impersonation_expires_at = impersonation_expires_at
+    end
   end
 
   def self.log(info)
@@ -141,15 +146,8 @@ class UserAuthToken < ActiveRecord::Base
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)
-    expire_before = SiteSetting.maximum_session_age.hours.ago
 
-    user_token =
-      where(
-        "(auth_token = :token OR
-                          prev_auth_token = :token) AND rotated_at > :expire_before",
-        token: token,
-        expire_before: expire_before,
-      )
+    user_token = unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token)
 
     if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
       user_token = user_token.annotate("path:#{path}")
@@ -237,8 +235,8 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def rotate!(info = nil)
-    user_agent = (info && info[:user_agent] || self.user_agent)
-    client_ip = (info && info[:client_ip] || self.client_ip)
+    user_agent = info && info[:user_agent] || self.user_agent
+    client_ip = info && info[:client_ip] || self.client_ip
 
     token = SecureRandom.hex(16)
 
@@ -256,7 +254,7 @@ class UserAuthToken < ActiveRecord::Base
     rotated_at = :now
   WHERE id = :id AND (auth_token_seen or rotated_at < :safeguard_time)
 ",
-        id: self.id,
+        id: id,
         user_agent: user_agent,
         client_ip: client_ip&.to_s,
         now: Time.zone.now,

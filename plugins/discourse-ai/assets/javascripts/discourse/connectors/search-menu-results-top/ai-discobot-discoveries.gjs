@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSearchDiscoveries from "../../components/ai-search-discoveries";
 import AiSearchDiscoveriesTooltip from "../../components/ai-search-discoveries-tooltip";
@@ -48,7 +48,7 @@ export default class AiDiscobotDiscoveries extends Component {
         {{#if this.discobotDiscoveries.showDiscoveryTitle}}
           <h3 class="ai-search-discoveries__discoveries-title">
             <span>
-              {{icon "discobot"}}
+              {{dIcon "discobot"}}
               {{i18n "discourse_ai.discobot_discoveries.main_title"}}
             </span>
 
@@ -64,7 +64,7 @@ export default class AiDiscobotDiscoveries extends Component {
 
         {{#if this.search.results.topics.length}}
           <h3 class="ai-search-discoveries__regular-results-title">
-            {{icon "bars-staggered"}}
+            {{dIcon "bars-staggered"}}
             {{i18n "discourse_ai.discobot_discoveries.regular_results"}}
           </h3>
         {{/if}}

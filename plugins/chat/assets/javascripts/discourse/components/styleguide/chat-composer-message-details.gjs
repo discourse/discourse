@@ -3,23 +3,21 @@ import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import { optionalRequire } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-
-const StyleguideComponent = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/component"
-);
-const Controls = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls"
-);
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
+  discourseImport: "optional",
+};
+import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls" with {
+  discourseImport: "optional",
+};
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
+  discourseImport: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discourseImport: "optional",
+};
 
 export default class ChatStyleguideChatComposerMessageDetails extends Component {
   @service currentUser;

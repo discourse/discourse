@@ -13,10 +13,7 @@ RSpec.describe Admin::EmailTemplatesController do
   let(:original_body) { original_text("user_notifications.admin_login.text_body_template") }
   let(:headers) { { ACCEPT: "application/json" } }
 
-  after do
-    TranslationOverride.delete_all
-    I18n.reload!
-  end
+  after { I18n.reload! }
 
   describe "#index" do
     context "when logged in as an admin" do

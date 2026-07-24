@@ -63,6 +63,11 @@ RSpec.describe Categories::Unconfigure do
         result
         expect(Discourse.cache.read(Categories::TypeRegistry::COUNTS_CACHE_KEY)).to be_nil
       end
+
+      it "clears the site categories cache so `category_types` propagates" do
+        Site.expects(:clear_cache).at_least_once
+        result
+      end
     end
   end
 end

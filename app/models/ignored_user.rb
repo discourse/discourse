@@ -27,12 +27,12 @@ end
 # Table name: ignored_users
 #
 #  id              :bigint           not null, primary key
-#  user_id         :integer          not null
-#  ignored_user_id :integer          not null
+#  expiring_at     :datetime         not null
+#  summarized_at   :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  summarized_at   :datetime
-#  expiring_at     :datetime         not null
+#  ignored_user_id :integer          not null
+#  user_id         :integer          not null
 #
 # Indexes
 #

@@ -15,14 +15,6 @@ export default {
         return;
       }
 
-      // Restrict feature to browsers that support OffscreenCanvas
-      if (typeof OffscreenCanvas === "undefined") {
-        return;
-      }
-      if (!("createImageBitmap" in self)) {
-        return;
-      }
-
       addComposerUploadPreProcessor(
         UppyMediaOptimization,
         ({ isMobileDevice }) => {

@@ -4,10 +4,10 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import { MODES } from "./constants";
 import ChatablesLoader from "./lib/chatables-loader";
@@ -33,7 +33,7 @@ export default class ChatMessageCreatorSearch extends Component {
         type: "list-action",
         label: i18n("chat.new_message_modal.new_group_chat"),
         enabled: true,
-        icon: "users",
+        icon: "user-group",
         id: "new-group-chat",
       });
     }

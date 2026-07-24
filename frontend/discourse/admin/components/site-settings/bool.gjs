@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isSettingValueTrue } from "discourse/admin/models/site-setting";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 
 export default class Bool extends Component {
   get enabled() {
@@ -26,7 +27,9 @@ export default class Bool extends Component {
         checked={{this.enabled}}
         disabled={{@disabled}}
       />
-      <span>{{trustHTML @setting.description}}</span>
+      <span {{linkifySettingLinks @setting.description}}>{{trustHTML
+          @setting.description
+        }}</span>
     </label>
   </template>
 }

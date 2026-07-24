@@ -40,7 +40,7 @@ module UserNameSuggester
     original_allowed_username = current_username
     current_username = User.normalize_username(current_username) if current_username
 
-    until (normalized_attempt == current_username || User.username_available?(attempt) || i > 100)
+    until normalized_attempt == current_username || User.username_available?(attempt) || i > 100
       if offset.nil?
         normalized = User.normalize_username(name)
         similar = "#{normalized}(0|1|2|3|4|5|6|7|8|9)+"

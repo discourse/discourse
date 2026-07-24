@@ -1,5 +1,5 @@
-import SaveControls from "discourse/components/save-controls";
 import Categories from "discourse/components/user-preferences/categories";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -13,7 +13,7 @@ export default <template>
   />
 
   {{#if @controller.canSave}}
-    <SaveControls
+    <DSaveControls
       @model={{@controller.model}}
       @action={{@controller.save}}
       @saved={{@controller.saved}}

@@ -42,16 +42,6 @@ RSpec.describe "Visit channel" do
     context "when regular user" do
       before { sign_in(current_user) }
 
-      context "when chat is disabled" do
-        before { current_user.user_option.update!(chat_enabled: false) }
-
-        it "redirects to homepage" do
-          visit("/chat/c/-/#{category_channel_1.id}")
-
-          expect(page).to have_current_path("/latest")
-        end
-      end
-
       context "when current user is not allowed to chat" do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
 
@@ -127,7 +117,7 @@ RSpec.describe "Visit channel" do
           it "allows to join it" do
             chat.visit_channel(category_channel_1)
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join_channel"))
+            expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
           end
 
           it "shows a preview of the channel" do
@@ -152,10 +142,7 @@ RSpec.describe "Visit channel" do
             it "allows to join it" do
               chat.visit_thread(thread)
 
-              expect(page).to have_content(
-                I18n.t("js.chat.channel_settings.join_channel"),
-                count: 2,
-              )
+              expect(page).to have_css(".toggle-channel-membership-button.-join", count: 2)
             end
           end
         end

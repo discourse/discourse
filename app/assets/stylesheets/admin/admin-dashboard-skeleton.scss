@@ -1,0 +1,311 @@
+.db-skeleton {
+  --db-skeleton-animation-rgb: #{hexToRGB($primary-50)};
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  &__section-header {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    height: 14px;
+    width: 140px;
+  }
+
+  &__section-wrapper {
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+
+    // negative margin offsets the wrapper padding so the row's top border spans full width
+    .db-skeleton__row {
+      margin-inline: calc(var(--space-4) * -1);
+    }
+  }
+
+  &__kpi-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-4);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+  }
+
+  &__kpi {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
+    }
+  }
+
+  &__kpi-value {
+    background: var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 60%;
+    height: 28px;
+  }
+
+  &__kpi-label {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: 75%;
+    height: 12px;
+  }
+
+  &__kpi-delta {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: 30%;
+    height: 12px;
+  }
+
+  &__report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  &__report-card {
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    padding: var(--space-4);
+    box-sizing: border-box;
+    background: var(--secondary);
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__report-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__report-card-title {
+    background: var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 40%;
+    height: 14px;
+  }
+
+  &__report-card-label {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: 64px;
+    height: 14px;
+  }
+
+  &__report-card-chart {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    flex: 1;
+  }
+
+  &__subheader {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-8);
+  }
+
+  &__subintro {
+    flex: 1;
+    max-width: 60ch;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__heading-line {
+    background: var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 70%;
+    height: 16px;
+  }
+
+  &__text-line {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: 100%;
+    height: 10px;
+
+    &.--short {
+      width: 80%;
+    }
+  }
+
+  &__metric-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-10);
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  &__metric-number {
+    background: var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 60px;
+    height: 22px;
+  }
+
+  &__metric-label {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    width: 90px;
+    height: 10px;
+  }
+
+  &__chart {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    height: 240px;
+    width: 100%;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-4);
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__row-block {
+    flex: 1;
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    &:not(:last-child) {
+      border-right: 1px solid var(--primary-low);
+    }
+
+    &.--full {
+      flex: 1 1 100%;
+    }
+  }
+
+  &__row-block-title {
+    background: var(--primary-200);
+    border-radius: var(--d-border-radius);
+    width: 35%;
+    height: 14px;
+  }
+
+  &__list {
+    @include unstyled-list;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  &__list-name {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    height: 12px;
+    flex: 0 1 60%;
+  }
+
+  &__list-value {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    height: 12px;
+    width: 50px;
+  }
+
+  &__pipeline {
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius);
+    height: 60px;
+    width: 100%;
+  }
+
+  *[class*="db-skeleton__"]:not(
+      .db-skeleton__section,
+      .db-skeleton__section-wrapper,
+      .db-skeleton__kpi-row,
+      .db-skeleton__kpi,
+      .db-skeleton__report-grid,
+      .db-skeleton__report-card,
+      .db-skeleton__report-card-header,
+      .db-skeleton__subheader,
+      .db-skeleton__subintro,
+      .db-skeleton__metric-row,
+      .db-skeleton__metric,
+      .db-skeleton__row,
+      .db-skeleton__row-block,
+      .db-skeleton__list,
+      .db-skeleton__list-row
+    ) {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &.--animation {
+    *[class*="db-skeleton__"]:not(
+        .db-skeleton__section,
+        .db-skeleton__section-wrapper,
+        .db-skeleton__kpi-row,
+        .db-skeleton__kpi,
+        .db-skeleton__report-grid,
+        .db-skeleton__report-card,
+        .db-skeleton__report-card-header,
+        .db-skeleton__subheader,
+        .db-skeleton__subintro,
+        .db-skeleton__metric-row,
+        .db-skeleton__metric,
+        .db-skeleton__row,
+        .db-skeleton__row-block,
+        .db-skeleton__list,
+        .db-skeleton__list-row
+      )::after {
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        rgb(var(--db-skeleton-animation-rgb), 0) 0,
+        rgb(var(--db-skeleton-animation-rgb), 0.3) 50%,
+        rgb(var(--db-skeleton-animation-rgb), 0.5) 100%
+      );
+      content: "";
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: db-skeleton-shimmer 1.25s infinite;
+      }
+    }
+
+    @keyframes db-skeleton-shimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+  }
+}

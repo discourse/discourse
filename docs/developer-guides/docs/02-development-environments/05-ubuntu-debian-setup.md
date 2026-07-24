@@ -96,20 +96,20 @@ bin/rails db:migrate
 RAILS_ENV=test bin/rails db:create db:migrate
 ```
 
-Start rails and ember server:
+Start rails and the frontend bundler:
 
 ```sh
-bin/ember-cli -u
+bin/dev
 ```
 
 If the images are not appearing, use this command instead:
 (_you can also specify an IP if you are working on a remote server_)
 
 ```sh
-DISCOURSE_HOSTNAME=localhost UNICORN_LISTENER=localhost:3000 bin/ember-cli -u
+DISCOURSE_HOSTNAME=localhost UNICORN_LISTENER=localhost:3000 bin/dev
 ```
 
-You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation.
+You should now be able to navigate to [http://localhost:3000](http://localhost:3000) to see your local Discourse installation.
 
 ## Create New Admin
 

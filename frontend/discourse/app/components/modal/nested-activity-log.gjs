@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DModal from "discourse/components/d-modal";
 import NestedActivityLogItem from "discourse/components/modal/nested-activity-log/item";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class NestedActivityLog extends Component {
@@ -37,7 +37,7 @@ export default class NestedActivityLog extends Component {
       class="nested-activity-log-modal"
     >
       <:body>
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
+        <DConditionalLoadingSpinner @condition={{this.loading}}>
           {{#if this.smallActions.length}}
             <ul class="nested-activity-log-modal__list">
               {{#each this.smallActions as |sa|}}
@@ -52,7 +52,7 @@ export default class NestedActivityLog extends Component {
               {{i18n "nested_replies.activity_log.empty"}}
             </p>
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
     </DModal>
   </template>

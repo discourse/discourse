@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
@@ -53,11 +53,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           label: i18n("admin.upcoming_changes.filter.status_stable"),
           value: "stable",
           filterFn: (change) => change.upcoming_change.status === "stable",
-        },
-        {
-          label: i18n("admin.upcoming_changes.filter.status_permanent"),
-          value: "permanent",
-          filterFn: (change) => change.upcoming_change.status === "permanent",
         },
       ],
       type: [
@@ -164,7 +159,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   <template>
-    <AdminFilterControls
+    <DFilterControls
       @array={{this.upcomingChanges}}
       @searchableProps={{array
         "humanized_name"
@@ -181,6 +176,13 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       }}
       @initialTextFilter={{@changeNamesFilter}}
       @onResetFilters={{@onClearChangeNamesFilter}}
+      @textFilterQueryParam="changeNamesFilter"
+      @dropdownFilterQueryParams={{hash
+        status="status"
+        type="type"
+        impactRole="impactRole"
+        enabled="enabled"
+      }}
     >
       <:content as |upcomingChanges|>
         <table class="d-table upcoming-changes-table">
@@ -204,7 +206,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           </tbody>
         </table>
       </:content>
-    </AdminFilterControls>
+    </DFilterControls>
 
     {{#unless this.upcomingChanges}}
       <AdminConfigAreaEmptyList

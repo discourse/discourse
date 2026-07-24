@@ -269,6 +269,21 @@ describe TopicQuery do
       expect(query.topics.length).to eq(1)
       expect(query.topics.first).to eq(assigned_topic)
     end
+
+    it "ignores the assigned filter for scoped users" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+      assigned_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+      unassigned_topic = Fabricate(:topic)
+
+      Assigner.new(assigned_topic, scoped_user).assign(scoped_user)
+      query = TopicQuery.new(scoped_user, assigned: scoped_user.username).list_latest
+
+      expect(query.topics).to contain_exactly(assigned_topic, unassigned_topic)
+    end
   end
 
   def assign_to(topic, user, assignee)

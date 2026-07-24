@@ -27,6 +27,7 @@ module Categories
     step :unconfigure_category
     step :log_action
     step :clear_category_type_counts_cache
+    step :clear_site_cache
 
     private
 
@@ -55,6 +56,10 @@ module Categories
 
     def clear_category_type_counts_cache
       Discourse.cache.delete(Categories::TypeRegistry::COUNTS_CACHE_KEY)
+    end
+
+    def clear_site_cache
+      Site.clear_cache
     end
   end
 end

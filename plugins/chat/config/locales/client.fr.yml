@@ -245,8 +245,6 @@ fr:
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       chat_notifications_title: "Notifications de discussion"
-      only_chat_push_notifications:
-        title: "Envoyer uniquement des notifications push de discussion"
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
       show_thread_title_prompts:
@@ -294,8 +292,6 @@ fr:
         title: "Son de notification de discussion sur ordinateur"
       sounds:
         none: "Aucun"
-        bell: "Cloche"
-        ding: "Ding"
       title: "discussion"
       title_capitalized: "Discussion"
       upload: "Joindre un fichier"
@@ -326,6 +322,8 @@ fr:
         filter_closed: Fermé
         filter_archived: Archivé
         filter_input_placeholder: Rechercher un canal par nom
+        filter_joined_all: "Tout"
+        filter_joined_joined: "Rejoint"
       chat_message_separator:
         today: Aujourd'hui
         yesterday: Hier
@@ -372,7 +370,6 @@ fr:
         input_placeholder: Ajouter un nom
         slug_description: Un identifiant de canal est utilisé dans l'URL au lieu du nom du canal
         name: Nom du canal
-        slug: Identifiant de canal (facultatif)
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description
@@ -393,6 +390,9 @@ fr:
         memberships_count:
           one: "%{count} membre"
           other: "%{count} membres"
+        preview_card:
+          log_in: "Se connecter"
+          sign_up: "S'inscrire"
       create_channel:
         threading:
           label: "Activer le fil"
@@ -429,9 +429,8 @@ fr:
             one: 'Les utilisateurs de %{group} et de %{count} autre groupe auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
             other: 'Les utilisateurs de %{group} et de %{count} autres groupes auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
         create: "Créer un canal"
-        description: "Description (facultative)"
+        description: "Description"
         name: "Nom du canal"
-        slug: "Identifiant de canal (facultatif)"
         title: "Nouveau canal"
         type: "Type"
         types:
@@ -706,7 +705,7 @@ fr:
         chat_reviewable_message:
           title: "Message de discussion signalé"
         reviewable_chat_message:
-          title: "Message de discussion marqué"
+          title: "Message de discussion signalé"
           noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:
@@ -749,3 +748,14 @@ fr:
       panels:
         chat:
           label: "Discussion"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Envoyer un message de chat"
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Message"
+      chat_approval:
+        message: "Message"
+        channel_id: "Canal"

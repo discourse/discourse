@@ -12,3 +12,13 @@ te:
         feed_url: URL
         discourse_category: వర్గం
         discourse_tags: ట్యాగులు
+        feeds:
+          edit: సవరించండి
+          delete: తొలగించు
+          save: సేవ్ చేయండి
+        test:
+          title: ప్రివ్యూ
+          dismiss: రద్దుచేయండి
+        status:
+          enabled: ప్రారంభించబడింది
+          disabled: నిలిపివేయబడింది

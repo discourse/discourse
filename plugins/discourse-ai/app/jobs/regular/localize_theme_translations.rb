@@ -63,17 +63,14 @@ module Jobs
         ).translate
       return if value.blank?
 
-      ThemeTranslationOverride.upsert(
-        {
+      record =
+        ThemeTranslationOverride.find_or_initialize_by(
           theme_id: theme.id,
           locale: locale,
           translation_key: key,
-          value: value,
-          created_at: Time.now,
-          updated_at: Time.now,
-        },
-        unique_by: %i[theme_id locale translation_key],
-      )
+        )
+      record.value = value
+      record.save!
     rescue FinalDestination::SSRFDetector::LookupFailedError
       # transient lookup failures
     rescue => e

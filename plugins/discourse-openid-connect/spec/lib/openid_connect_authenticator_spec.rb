@@ -108,16 +108,31 @@ describe OpenIDConnectAuthenticator do
         expect(result.associated_groups).to eq([])
       end
 
-      it "does not set associated_groups when the claim is missing" do
+      it "treats a missing claim as an empty groups list" do
         result = authenticator.after_authenticate(hash)
-        expect(result.associated_groups).to be_nil
+        expect(result.associated_groups).to eq([])
       end
 
-      it "logs an error when the claim is not an array" do
+      it "logs an error and clears groups when the claim is not an array" do
         hash[:extra][:raw_info][:groups] = "not_an_array"
         Rails.logger.expects(:error).with(includes("not an array"))
         result = authenticator.after_authenticate(hash)
-        expect(result.associated_groups).to be_nil
+        expect(result.associated_groups).to eq([])
+      end
+
+      it "falls back to the id_token when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "groups" => %w[group1 group2] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq(
+          [{ id: "group1", name: "group1" }, { id: "group2", name: "group2" }],
+        )
+      end
+
+      it "prefers raw_info over the id_token when both contain the claim" do
+        hash[:extra][:raw_info][:groups] = %w[from_userinfo]
+        hash[:extra][:id_token_info] = { "groups" => %w[from_id_token] }
+        result = authenticator.after_authenticate(hash)
+        expect(result.associated_groups).to eq([{ id: "from_userinfo", name: "from_userinfo" }])
       end
     end
 
@@ -131,6 +146,124 @@ describe OpenIDConnectAuthenticator do
           [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
         )
       end
+    end
+  end
+
+  describe "user field syncing" do
+    fab!(:user_field)
+
+    it "leaves user_field_values empty when no mappings are configured" do
+      result = authenticator.after_authenticate(hash)
+      expect(result.user_field_values).to eq({})
+    end
+
+    context "with a mapping configured" do
+      before do
+        SiteSetting.openid_connect_user_field_mappings = [
+          { "claim" => "department", "user_field_id" => user_field.id },
+        ].to_json
+      end
+
+      it "pulls the value from raw_info" do
+        hash[:extra][:raw_info][:department] = "Engineering"
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "falls back to id_token_info when the claim is missing from raw_info" do
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+      end
+
+      it "joins array values with commas" do
+        hash[:extra][:raw_info][:department] = %w[Eng Ops]
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
+      end
+
+      it "skips mappings whose claim is missing entirely" do
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq({})
+      end
+
+      it "clears the field when raw_info has the claim set to an empty string" do
+        hash[:extra][:raw_info][:department] = ""
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+
+      it "clears the field when raw_info has the claim set to null" do
+        hash[:extra][:raw_info][:department] = nil
+        hash[:extra][:id_token_info] = { "department" => "Engineering" }
+        result = authenticator.after_authenticate(hash)
+        expect(result.user_field_values).to eq(user_field.id.to_s => "")
+      end
+    end
+  end
+
+  describe "mTLS support" do
+    let!(:mtls_key) { OpenSSL::PKey::RSA.new(2048) }
+    let!(:mtls_cert) do
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = mtls_key.public_key
+      cert.sign(mtls_key, OpenSSL::Digest.new("SHA256"))
+      cert
+    end
+
+    it "returns empty hash when no mTLS settings are configured" do
+      SiteSetting.openid_connect_mtls_client_cert = ""
+      SiteSetting.openid_connect_mtls_client_key = ""
+      expect(authenticator.mtls_ssl_options).to eq({})
+    end
+
+    it "parses valid PEM certificate and key" do
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_cert]).to be_a(OpenSSL::X509::Certificate)
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "raises OpenSSL error for invalid cert PEM" do
+      SiteSetting.openid_connect_mtls_client_cert = "not-a-cert"
+      SiteSetting.openid_connect_mtls_client_key = mtls_key.to_pem
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+
+    it "raises OpenSSL error for invalid key PEM" do
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = "not-a-key"
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+
+    it "decrypts a key with a passcode when the setting is provided" do
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "some_passphrase"
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "raises OpenSSL error when the passphrase is wrong" do
+      encrypted_key = mtls_key.export(OpenSSL::Cipher.new("aes-256-cbc"), "some_passphrase")
+
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "wrong_passphrase"
+      SiteSetting.openid_connect_mtls_client_cert = mtls_cert.to_pem
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
     end
   end
 

@@ -761,7 +761,9 @@ RSpec.describe TopicTrackingState do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
-      expect(row.tags.map { |t| t["name"] }).to contain_exactly("apples", "bananas")
+      expect(row.tags.map { |t| t["id"] }).to contain_exactly(
+        *Tag.where(name: %w[apples bananas]).pluck(:id),
+      )
     end
   end
 
@@ -813,6 +815,20 @@ RSpec.describe TopicTrackingState do
     expect(TopicTrackingState.report(user)).to be_empty
   end
 
+  it "does not report a topic as unread when its only new post is a small action" do
+    TopicUser.change(
+      user.id,
+      topic.id,
+      notification_level: TopicUser.notification_levels[:tracking],
+      last_read_post_number: 1,
+    )
+
+    topic.add_small_action(Discourse.system_user, "closed.enabled")
+
+    expect(topic.reload.highest_post_number).to eq(1)
+    expect(TopicTrackingState.report(user).map(&:topic_id)).not_to include(topic.id)
+  end
+
   describe ".report" do
     it "correctly reports topics with staff posts" do
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
@@ -836,51 +852,51 @@ RSpec.describe TopicTrackingState do
   describe ".report_totals" do
     fab!(:user2, :user)
 
-    it "correctly returns new/unread totals" do
+    it "correctly returns combined new + unread totals" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1 })
 
       create_post(user: user, topic: post.topic)
 
-      # when user replies, they have 0 new count
+      # when user replies, they have 0 combined new+unread count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
-      # when we reply the poster will have an unread item
+      # when we reply the poster will have one combined new+unread item
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
       create_post(user: user2, topic: post.topic)
 
-      # when a third user replies, the original user should have an unread item
+      # when a third user replies, the original user should have one combined new+unread item
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
-      # the post user still has one unread
+      # the post user still has one combined new+unread item
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 1 })
 
       post2 = create_post
       post2.topic.notifier.watch_topic!(user.id)
 
-      # watching another new topic bumps the new count
+      # watching another new topic bumps the combined new+unread count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 1 })
+      expect(report).to eq({ new: 2 })
     end
 
     it "respects treat_as_new_topic_start_date user option" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0 })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1 })
 
       user.user_option.new_topic_duration_minutes = 5
       user.user_option.save
@@ -888,31 +904,7 @@ RSpec.describe TopicTrackingState do
       post.topic.save
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
-    end
-
-    it "respects new_new_view_enabled" do
-      new_new_group = Fabricate(:group)
-      SiteSetting.experimental_new_new_view_groups = new_new_group.name
-      user.groups << new_new_group
-
-      report = TopicTrackingState.report_totals(user)
       expect(report).to eq({ new: 0 })
-
-      post.topic.notifier.watch_topic!(post.topic.user_id)
-
-      post2 = create_post
-      Fabricate(:post, topic: post2.topic)
-
-      tracking = {
-        notification_level: TopicUser.notification_levels[:tracking],
-        last_read_post_number: 1,
-      }
-
-      TopicUser.change(user.id, post2.topic_id, tracking)
-
-      report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 2 })
     end
   end
 

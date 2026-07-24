@@ -20,12 +20,14 @@ uk:
     patreon_verbose_log: 'увімкнути детальний журнал оплат Patreon'
     patreon_donation_prompt_enabled: "Увімкнути підказку про пожертвування?"
     patreon_donation_prompt_show_after_topics: "Показати запит на пожертвування після n тем"
+    patreon_api_version: "Версія API Patreon. Версія 1 застаріла - створіть новий OAuth-клієнт на Patreon і перейдіть на версію 2."
     patreon_donation_prompt_campaign_url: "URL-адреса кампанії з швидким пожертвуванням"
     errors:
       patreon_creator_username_not_set: "Перш ніж увімкнути вхід до Patreon, потрібно встановити ім’я користувача для Discourse Creator Patreon."
   dashboard:
     problem:
       access_token_invalid: "Значення токенів доступу та оновлення автора Patreon неправильні. Ви повинні скопіювати та вставити нові токени з <a href='https://www.patreon.com/platform/documentation/clients'>вебсайту Patreon</a> до <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>налаштувань сайту</a>."
+      patreon_api_v1_deprecated: "Ви використовуєте API Patreon v1, який є застарілим. Будь ласка, <a href='https://www.patreon.com/portal/registration/register-clients'>створіть новий OAuth-клієнт v2 на Patreon</a>, оновіть свої облікові дані та перейдіть на API v2 у <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>налаштуваннях сайту</a>."
   patreon:
     error:
       invalid_response: "Неправильна відповідь від API Patreon"

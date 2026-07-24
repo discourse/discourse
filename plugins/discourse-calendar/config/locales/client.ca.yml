@@ -45,6 +45,12 @@ ca:
               title: "Públic"
             private:
               title: "Privat"
+      composer:
+        reminder:
+          units:
+            days:
+              one: "dia"
+              other: "dies"
       builder_modal:
         custom_fields:
           placeholder: "Opcional"
@@ -64,14 +70,14 @@ ca:
           label: "Recurrència"
           none: "Sense recurrència"
           every_day: "Cada dia"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Ubicació"
+          ordinals:
+            last: "darrer"
+        attendance:
+          none: "Cap"
         description:
           label: "Descripció"
-        status:
-          label: "Estat"
+        event_type:
+          public:
+            title: "Públic"
       invite_user_or_group:
         invite: "Envia"

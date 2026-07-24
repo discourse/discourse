@@ -23,8 +23,8 @@ runs:
     - name: Configure Git
       shell: bash
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "discoursebot"
+        git config --global user.email "team@discourse.org"
 
     - name: Bundler cache
       uses: actions/cache@v4

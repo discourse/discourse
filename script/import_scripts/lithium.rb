@@ -924,31 +924,29 @@ SQL
     Post
       .where("id > ?", @max_start_id)
       .find_each do |post|
-        begin
-          id = post.custom_fields["import_unique_id"]
-          next unless id
-          raw = mysql_query("select body from message2 where unique_id = '#{id}'").first["body"]
-          unless raw
-            puts "Missing raw for post: #{post.id}"
-            next
-          end
-          new_raw = postprocess_post_raw(raw, post.user_id)
-          files = attachments.select { |a| a["message_uid"].to_s == id }
-          new_raw << html_for_attachments(post.user_id, files)
-          unless post.raw == new_raw
-            post.raw = new_raw
-            post.cooked = post.cook(new_raw)
-            cpp = CookedPostProcessor.new(post)
-            cpp.link_post_uploads
-            post.custom_fields["import_post_process"] = true
-            post.save
-          end
-        rescue PrettyText::JavaScriptError
-          puts "GOT A JS error on post: #{post.id}"
-          nil
-        ensure
-          print_status(current += 1, max)
+        id = post.custom_fields["import_unique_id"]
+        next unless id
+        raw = mysql_query("select body from message2 where unique_id = '#{id}'").first["body"]
+        unless raw
+          puts "Missing raw for post: #{post.id}"
+          next
         end
+        new_raw = postprocess_post_raw(raw, post.user_id)
+        files = attachments.select { |a| a["message_uid"].to_s == id }
+        new_raw << html_for_attachments(post.user_id, files)
+        unless post.raw == new_raw
+          post.raw = new_raw
+          post.cooked = post.cook(new_raw)
+          cpp = CookedPostProcessor.new(post)
+          cpp.link_post_uploads
+          post.custom_fields["import_post_process"] = true
+          post.save
+        end
+      rescue PrettyText::JavaScriptError
+        puts "GOT A JS error on post: #{post.id}"
+        nil
+      ensure
+        print_status(current += 1, max)
       end
 
     SiteSetting.authorized_extensions = default_extensions

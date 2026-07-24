@@ -53,6 +53,7 @@ module DiscourseAi
           examples: ai_agent.examples,
           temperature: ai_agent.temperature,
           top_p: ai_agent.top_p,
+          thinking_effort: ai_agent.thinking_effort,
           response_format: ai_agent.response_format,
           tools: transform_tools_for_export(ai_agent.tools, serialized_custom_tools),
           mcp_servers: serialize_mcp_servers(ai_agent),

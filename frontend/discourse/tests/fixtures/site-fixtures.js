@@ -44,6 +44,18 @@ const siteFixtures = {
         "hot",
         "unseen"
       ],
+      homepage_choices: [
+        "latest",
+        "new",
+        "unseen",
+        "top",
+        "categories",
+        "read",
+        "posted",
+        "bookmarks",
+        "hot",
+        "unread"
+      ],
       periods: ["all", "yearly", "quarterly", "monthly", "weekly", "daily"],
       top_menu_items: [
         "latest",

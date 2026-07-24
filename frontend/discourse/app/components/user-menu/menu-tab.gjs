@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class UserMenuTab extends Component {
   get isActive() {
@@ -42,7 +42,7 @@ export default class UserMenuTab extends Component {
       {{on "click" @onTabClick}}
       {{on "keydown" @onTabClick}}
     >
-      {{icon @tab.icon}}
+      {{dIcon @tab.icon}}
       {{#if @tab.count}}
         <span
           aria-hidden="true"

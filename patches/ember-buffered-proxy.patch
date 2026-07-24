@@ -1,0 +1,40 @@
+diff --git a/addon/mixin.js b/addon/mixin.js
+index 2908c546735d262efca3f4e50a32587a3ae27c04..1aa9cd7975434bb193ed7e8d053df97c2e877124 100644
+--- a/addon/mixin.js
++++ b/addon/mixin.js
+@@ -1,6 +1,6 @@
+ /* eslint-disable ember/no-get */
+ /* eslint-disable ember/no-new-mixins */
+-import Ember from 'ember';
++import { meta } from '@ember/-internals/meta';
+ import Mixin from '@ember/object/mixin';
+ import { isArray } from '@ember/array';
+ import { readOnly } from '@ember/object/computed';
+@@ -12,20 +12,20 @@ import {
+   notifyPropertyChange,
+ } from '@ember/object';
+ 
+-import { gte, lte } from 'ember-compatibility-helpers';
++// import { gte, lte } from 'ember-compatibility-helpers';
+ 
+ import { aliasMethod, empty } from './helpers';
+ 
+-const { meta } = Ember; // eslint-disable-line ember/new-module-imports
++// const { meta } = Ember; // eslint-disable-line ember/new-module-imports
+ const hasOwnProp = Object.prototype.hasOwnProperty;
+ 
+ function monkeyPatchedNotifyPropertyChange(context, key) {
+-  if (gte('3.13.0') && lte('3.19.0')) {
+-    let content = get(context, 'content');
+-    notifyPropertyChange(content, key);
+-  } else {
++  // if (gte('3.13.0') && lte('3.19.0')) {
++  //   let content = get(context, 'content');
++  //   notifyPropertyChange(content, key);
++  // } else {
+     notifyPropertyChange(context, key);
+-  }
++  // }
+ }
+ 
+ export default Mixin.create({

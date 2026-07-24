@@ -174,16 +174,7 @@ class ReviewablesController < ApplicationController
   end
 
   def destroy
-    user =
-      if is_api?
-        if @guardian.is_admin?
-          fetch_user_from_params
-        else
-          raise Discourse::InvalidAccess
-        end
-      else
-        current_user
-      end
+    user = fetch_target_user
 
     reviewable =
       Reviewable.find_by_flagger_or_queued_post_creator(

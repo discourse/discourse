@@ -9,7 +9,7 @@ describe "Topic page" do
       <a name="toc-h2-testing" class="anchor" href="#toc-h2-testing" aria-label="Heading link">x</a>
       Testing
     </h2>
-    <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.</p>
+    <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan. Vestibulum feugiat mi vitae turpis tempor dignissim.</p>
     HTML
 
   it "allows TOC anchor navigation" do
@@ -17,7 +17,7 @@ describe "Topic page" do
 
     find("#toc-h2-testing .anchor", visible: :all).click
 
-    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
   end
 
   context "with a subfolder setup" do
@@ -28,7 +28,10 @@ describe "Topic page" do
 
       find("#toc-h2-testing .anchor", visible: :all).click
 
-      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+      expect(page).to have_current_path(
+        %r{/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing},
+        url: true,
+      )
     end
   end
 
@@ -43,7 +46,7 @@ describe "Topic page" do
     it "includes the copy button" do
       visit("/t/#{topic.slug}/#{topic.id}")
 
-      expect(".codeblock-button-wrapper").to be_present
+      expect(page).to have_css(".codeblock-button-wrapper")
     end
   end
 
@@ -73,7 +76,7 @@ describe "Topic page" do
 
     visit("/t/#{topic.slug}/#{topic.id}")
 
-    expect(".toggle-admin-menu").to be_present
+    expect(page).to have_css(".toggle-admin-menu")
 
     send_keys([:shift, "a"])
 
@@ -93,6 +96,62 @@ describe "Topic page" do
       send_keys(:end)
 
       expect(find("#post_#{topic.highest_post_number}")).to be_visible
+    end
+  end
+
+  context "with rich content" do
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:topic2, :topic)
+
+    before do
+      Fabricate(:post, topic: topic2, user: user_1, cooked: <<~HTML)
+        <h2>Key Takeaways</h2>
+        <p>After reviewing this topic, here are the main points:</p>
+        <ul>
+          <li><strong>Performance matters</strong>: always benchmark first</li>
+          <li><em>Readability</em>: code is read more often than written</li>
+          <li>Testing: write tests before writing code</li>
+        </ul>
+        <p>Use <code>inline code</code> to clarify technical details.</p>
+        <aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/38698">
+          <header class="source">
+            <a href="https://github.com/discourse/discourse/pull/38698" target="_blank" rel="noopener">github.com</a>
+          </header>
+          <article class="onebox-body">
+            <div class="github-row">
+              <div class="github-icon-container" title="Pull Request">
+                <svg width="60" height="60" class="github-icon" viewBox="0 0 14 16" aria-hidden="true"><path fill-rule="evenodd" d="M10.86 7c-.45-1.72-2-3-3.86-3-1.86 0-3.41 1.28-3.86 3H0v2h3.14c.45 1.72 2 3 3.86 3 1.86 0 3.41-1.28 3.86-3H14V7h-3.14zM7 10.2c-1.22 0-2.2-.98-2.2-2.2 0-1.22.98-2.2 2.2-2.2 1.22 0 2.2.98 2.2 2.2 0 1.22-.98 2.2-2.2 2.2z"></path></svg>
+              </div>
+              <div class="github-info-container">
+                <h4><a href="https://github.com/discourse/discourse/pull/38698" target="_blank" rel="noopener">DEV: Add example pull request for onebox testing</a></h4>
+                <div class="github-info">
+                  <div class="date">opened Jan 15, 2026</div>
+                  <div class="user">discourse</div>
+                </div>
+              </div>
+            </div>
+          </article>
+          <div class="onebox-metadata"></div>
+          <div style="clear: both"></div>
+        </aside>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eget ex id diam pulvinar tempor ut id nisi. Nam non nisl tellus. Cras sodales eu diam scelerisque molestie. Curabitur neque ante, feugiat sit amet nisl vitae, accumsan convallis lacus. Nam nec velit dolor. Morbi vulputate erat lorem, et semper ex sodales id. In non iaculis dui. Morbi dolor est, pulvinar vel gravida ut, feugiat sed mi. Praesent tincidunt dictum turpis.</p>
+        HTML
+
+      Fabricate(:post_with_rich_content, topic: topic2, user: admin)
+    end
+
+    it "renders all content types and scrolls to the last post" do
+      visit "/t/#{topic2.slug}/#{topic2.id}"
+
+      expect(page).to have_css("h2", text: "Key Takeaways")
+      expect(page).to have_css("blockquote")
+      expect(page).to have_css(".emoji")
+
+      screenshot_marker(label: "topic-rich-content")
+
+      send_keys(:end)
+      expect(find("#post_#{topic2.reload.highest_post_number}")).to be_visible
     end
   end
 
@@ -121,7 +180,7 @@ describe "Topic page" do
 
       # compare the selected text with the last paragraph
       expect(select_content).to eq(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan. Vestibulum feugiat mi vitae turpis tempor dignissim.",
       )
     end
   end

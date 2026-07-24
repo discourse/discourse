@@ -8,6 +8,8 @@ module DiscourseAi
         @vector = DiscourseAi::Embeddings::Vector.instance
         @schema = DiscourseAi::Embeddings::Schema.for(Topic)
         @topic_id = opts[:topic_id]
+        @category = opts[:category]
+        @selected_tag_ids = opts[:selected_tag_ids]
       end
 
       def categories
@@ -87,6 +89,7 @@ module DiscourseAi
           .group_by { |c| c[:name] }
           .map { |name, scores| { name: name, score: scores.sum { |s| s[:score] } } }
           .sort_by { |c| -c[:score] }
+          .then { reject_tags_disallowed_in_category(it) }
           .take(7)
           .then do |tags|
             models = Tag.where(name: tags.map { it[:name] }).index_by(&:name)
@@ -101,6 +104,25 @@ module DiscourseAi
       end
 
       private
+
+      def reject_tags_disallowed_in_category(candidates)
+        return candidates if candidates.empty?
+
+        allowed_names =
+          DiscourseTagging
+            .filter_allowed_tags(
+              @user.guardian,
+              category: @category,
+              selected_tag_ids: @selected_tag_ids,
+              for_topic: true,
+              only_tag_names: candidates.map { |c| c[:name] },
+              limit: nil,
+            )
+            .map(&:name)
+            .to_set
+
+        candidates.select { |c| allowed_names.include?(c[:name]) }
+      end
 
       def nearest_neighbors(limit: 50)
         if @topic_id

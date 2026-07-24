@@ -308,7 +308,12 @@ describe Jobs::DiscoursePostEventSendReminder do
       end
 
       def setup_recurring_event_invitees
-        DiscoursePostEvent::Invitee.create_attendance!(going_user.id, recurring_event.id, :going)
+        DiscoursePostEvent::Invitee.create_attendance!(
+          going_user.id,
+          recurring_event.id,
+          :going,
+          recurring: true,
+        )
         DiscoursePostEvent::Invitee.create_attendance!(
           interested_user.id,
           recurring_event.id,
@@ -323,16 +328,19 @@ describe Jobs::DiscoursePostEventSendReminder do
           going_user_unread_notification.id,
           recurring_event.id,
           :going,
+          recurring: true,
         )
         DiscoursePostEvent::Invitee.create_attendance!(
           going_user_read_notification.id,
           recurring_event.id,
           :going,
+          recurring: true,
         )
         DiscoursePostEvent::Invitee.create_attendance!(
           visited_going_user.id,
           recurring_event.id,
           :going,
+          recurring: true,
         )
       end
 
@@ -491,7 +499,12 @@ describe Jobs::DiscoursePostEventSendReminder do
             recurrence: "every_week",
           )
 
-        DiscoursePostEvent::Invitee.create_attendance!(dst_user.id, dst_event.id, :going)
+        DiscoursePostEvent::Invitee.create_attendance!(
+          dst_user.id,
+          dst_event.id,
+          :going,
+          recurring: true,
+        )
 
         freeze_time(Time.find_zone("America/New_York").parse("2025-11-05 10:50"))
 

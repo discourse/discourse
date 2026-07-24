@@ -3,8 +3,6 @@
 RSpec.describe FormTemplatesController do
   fab!(:user)
 
-  before { SiteSetting.enable_form_templates = true }
-
   describe "#index" do
     fab!(:form_template)
     fab!(:form_template_2, :form_template)
@@ -24,6 +22,37 @@ RSpec.describe FormTemplatesController do
         form_templates = [form_template, form_template_2, form_template_3].sort_by(&:id).map(&:id)
 
         expect(templates).to eq(form_templates)
+      end
+
+      context "with private and public category templates" do
+        fab!(:group)
+        fab!(:private_category) { Fabricate(:private_category, group: group) }
+        fab!(:private_template) do
+          Fabricate(
+            :form_template,
+            name: "Private Template",
+            template: "---\n- type: input\n  id: secret\n",
+          )
+        end
+        fab!(:public_category, :category)
+        fab!(:public_template) { Fabricate(:form_template, name: "Public Template") }
+
+        before do
+          private_category.form_templates << private_template
+          public_category.form_templates << public_template
+        end
+
+        it "does not return templates only associated with private categories" do
+          get "/form-templates.json"
+          expect(response.status).to eq(200)
+          returned_templates = response.parsed_body["form_templates"]
+          returned_ids = returned_templates.map { |t| t["id"] }
+          expect(returned_ids).to include(public_template.id)
+          expect(returned_ids).not_to include(private_template.id)
+          expect(returned_templates.map { |t| t["template"] }).not_to include(
+            private_template.template,
+          )
+        end
       end
     end
 
@@ -61,6 +90,19 @@ RSpec.describe FormTemplatesController do
         expect(current_template["id"]).to eq(form_template.id)
         expect(current_template["name"]).to eq(form_template.name)
         expect(current_template["template"]).to eq(form_template.template)
+      end
+
+      context "with a template only in an inaccessible private category" do
+        fab!(:group)
+        fab!(:private_category) { Fabricate(:private_category, group: group) }
+        fab!(:private_template) { Fabricate(:form_template, name: "Secret Template") }
+
+        before { private_category.form_templates << private_template }
+
+        it "returns 404" do
+          get "/form-templates/#{private_template.id}.json"
+          expect(response.status).to eq(404)
+        end
       end
 
       context "when using tag groups in a form template" do

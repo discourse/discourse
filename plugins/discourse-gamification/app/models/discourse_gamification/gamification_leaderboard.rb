@@ -49,7 +49,7 @@ module DiscourseGamification
     end
 
     def self.find_position_by(leaderboard_id:, for_user_id:, period: nil)
-      self.scores_for(leaderboard_id, for_user_id: for_user_id, period: period).first
+      scores_for(leaderboard_id, for_user_id: for_user_id, period: period).first
     end
 
     def self.scores_for(leaderboard_id, page: 0, for_user_id: false, period: nil, user_limit: nil)
@@ -57,7 +57,7 @@ module DiscourseGamification
       limit = user_limit || PAGE_SIZE
       period = period || "all_time"
 
-      leaderboard = self.find(leaderboard_id)
+      leaderboard = find(leaderboard_id)
 
       return [] unless leaderboard
 

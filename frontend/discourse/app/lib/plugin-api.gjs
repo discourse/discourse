@@ -1,5 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
+import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -11,11 +13,6 @@ import {
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import {
-  NON_STREAM_HTML_DECORATOR,
-  registerHtmlDecorator,
-} from "discourse/components/decorated-html";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -46,13 +43,8 @@ import { registerFullPageSearchType } from "discourse/controllers/full-page-sear
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { addBeforeLoadMoreCallback as addBeforeLoadMoreNotificationsCallback } from "discourse/controllers/user-notifications";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { registerReviewableStatusName } from "discourse/helpers/reviewable-status";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
@@ -82,6 +74,15 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
+import {
+  defineModelAccessor,
+  defineModelMethod,
+  defineModelResettableField,
+  registerModelCallback,
+  registerModelField,
+  registerModelSaveProperty,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
@@ -137,10 +138,21 @@ import {
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
+import { registerComposerAction } from "discourse/select-kit/components/composer-actions";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "discourse/select-kit/components/user-chooser";
 import { modifySelectKit } from "discourse/select-kit/lib/plugin-api";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { disableDefaultKeyboardShortcuts } from "discourse/services/keyboard-shortcuts";
+import {
+  NON_STREAM_HTML_DECORATOR,
+  registerHtmlDecorator,
+} from "discourse/ui-kit/d-decorated-html";
+import { addToolbarCallback } from "discourse/ui-kit/d-editor";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
+import { registerCustomAvatarHelper } from "discourse/ui-kit/helpers/d-user-avatar";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 
 const blockedModifications = ["component:topic-list"];
@@ -747,6 +759,212 @@ class _PluginApi {
     names.forEach((name) => _addTrackedTopicProperty(name));
   }
 
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
+  }
+
+  /**
+   * Adds a tracked data field to a store model, so a property your plugin adds
+   * (e.g. one included in the server payload) is reactive in the UI.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the field to add.
+   * @param {Object} [options]
+   * @param {(*|Function)} [options.defaultValue] - Value when the server omits
+   *   the field (default `undefined`). A function runs per instance at
+   *   construction — before the payload (server wins) and too early for create
+   *   args — for per-record mutable defaults, e.g. `() => ({})`.
+   * @param {("array"|"object"|"set")} [options.type] - Store the field as a
+   *   reactive collection, created fresh per instance so it is never shared.
+   * @param {boolean} [options.resettable] - Requires a function `defaultValue`;
+   *   resets to it when the derived value changes, and a manual assignment
+   *   sticks until then.
+   *
+   * @example
+   * api.addModelField("bookmark", "is_pinned", { defaultValue: false });
+   * api.addModelField("post", "comments", { type: "array" });
+   * api.addModelField("post", "polls_votes", { type: "object" });
+   * api.addModelField("post", "meta", { defaultValue: () => ({}) });
+   * api.addModelField("composer", "createAsPostVoting", {
+   *   resettable: true,
+   *   defaultValue() {
+   *     return !!this.category?.create_as_post_voting_default;
+   *   },
+   * });
+   */
+  addModelField(modelName, name, options = {}) {
+    const klass = this._resolveModelClass(modelName, { stamp: true });
+    if (!klass) {
+      return;
+    }
+
+    if (options.resettable) {
+      if (typeof options.defaultValue !== "function") {
+        throw new Error(
+          "addModelField: `resettable` requires `defaultValue` to be a function (the initializer to reset to)."
+        );
+      }
+      defineModelResettableField(klass, name, options.defaultValue);
+    } else {
+      registerModelField(modelName, name, options);
+    }
+  }
+
+  /**
+   * Adds an accessor (getter and/or setter) to a store model.
+   *
+   * Defined on the prototype (works in templates and with autotracking). For a
+   * single side, prefer `addModelGetter` / `addModelSetter`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the property to add.
+   * @param {Object} accessor
+   * @param {Function} [accessor.get] - Getter, called with the instance as `this`.
+   * @param {Function} [accessor.set] - Setter, called with the new value.
+   *
+   * @example
+   * api.addModelAccessor("post", "polls", {
+   *   get() {
+   *     return this._polls;
+   *   },
+   *   set(value) {
+   *     this._polls = value;
+   *   },
+   * });
+   */
+  addModelAccessor(modelName, name, accessor) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelAccessor(klass, name, accessor);
+    }
+  }
+
+  /**
+   * Adds a getter (computed/derived property) to a store model. Shorthand for
+   * `addModelAccessor` with only a getter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the getter to add.
+   * @param {Function} getter - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelGetter("bookmark", "isPinned", function () {
+   *   return this.is_pinned;
+   * });
+   */
+  addModelGetter(modelName, name, getter) {
+    this.addModelAccessor(modelName, name, { get: getter });
+  }
+
+  /**
+   * Adds a setter to a store model. Shorthand for `addModelAccessor` with only a
+   * setter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "topic".
+   * @param {string} name - The name of the setter to add.
+   * @param {Function} setter - Called with the new value; the instance is `this`.
+   *
+   * @example
+   * api.addModelSetter("topic", "related_topics", function (value) {
+   *   this._relatedTopicsRecords = value;
+   * });
+   */
+  addModelSetter(modelName, name, setter) {
+    this.addModelAccessor(modelName, name, { set: setter });
+  }
+
+  /**
+   * Adds an instance method to a store model.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the method to add.
+   * @param {Function} fn - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelMethod("bookmark", "togglePin", function () {
+   *   this.is_pinned = !this.is_pinned;
+   * });
+   */
+  addModelMethod(modelName, name, fn) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelMethod(klass, name, fn);
+    }
+  }
+
+  /**
+   * Registers a property to include in a model's save payload.
+   *
+   * For persisting a field your plugin adds (see `addModelField`). By default
+   * `instance[name]` is sent; pass `valueFn` (bound to the instance) to send a
+   * computed value, e.g. to nest data under `custom_fields`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "group".
+   * @param {string} name - The name of the property to include when saving.
+   * @param {Function} [valueFn] - Returns the value to send; called with the
+   *   model instance as `this`.
+   *
+   * @example
+   * api.addModelSaveProperty("group", "assignable_level");
+   * api.addModelSaveProperty("group", "custom_fields", function () {
+   *   return { my_field: this.my_field };
+   * });
+   */
+  addModelSaveProperty(modelName, name, valueFn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelSaveProperty(modelName, name, valueFn);
+    }
+  }
+
+  /**
+   * Registers a callback to run on a model's lifecycle.
+   *
+   * Runs with the model instance as `this`, replacing `modifyClass` overrides
+   * of `init`/`save`. `init` fires per instance after create args are applied.
+   * Create/update events fire on the standard store save path (and for `Group`,
+   * which also fires destroy); other models with a custom `save()` (e.g.
+   * `Category`) don't. `after*` callbacks returning a promise are awaited.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {("init"|"beforeCreate"|"afterCreate"|"beforeUpdate"|"afterUpdate"|"beforeDestroy"|"afterDestroy"|"beforeSave"|"afterSave")} event -
+   *   The lifecycle event. "beforeSave"/"afterSave" fire for both create and update.
+   * @param {Function} fn - Called with nothing (init/destroy), the request props
+   *   (before create/update), or the server result (after*).
+   *
+   * @example
+   * api.addModelCallback("bookmark", "afterSave", function (result) {
+   *   // ...
+   * });
+   */
+  addModelCallback(modelName, event, fn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelCallback(modelName, event, fn);
+    }
+  }
+
   /**
    * Decommissioned API
    **/
@@ -784,6 +1002,10 @@ class _PluginApi {
   /**
    * Add a new button in the topic admin menu.
    *
+   * Optionally pass a `section` to group buttons under a labelled subheader.
+   * Adjacent buttons sharing the same `section.id` are grouped together;
+   * provide either an i18n `label` key or a pre-translated `translatedLabel`.
+   *
    * Example:
    *
    * ```
@@ -795,6 +1017,7 @@ class _PluginApi {
    *     icon: 'mug-saucer',
    *     className: 'hot-coffee',
    *     label: 'coffee.title',
+   *     section: { id: 'beverages', label: 'beverages.title' },
    *   };
    * });
    * ```
@@ -906,6 +1129,33 @@ class _PluginApi {
     );
 
     this.addComposerToolbarPopupMenuOption(opts);
+  }
+
+  /**
+   * Register a custom item in the composer-actions dropdown (the menu next
+   * to the composer title that switches between Reply, Create Topic, etc.).
+   *
+   * @param {Object} opts
+   * @param {string} opts.id - Unique identifier for the item.
+   * @param {string} opts.label - I18n key for the item's display name.
+   * @param {string} [opts.description] - Optional I18n key for the item's description text.
+   * @param {string} [opts.icon] - Optional icon name.
+   * @param {Function} [opts.condition] - `(composerActionsComponent) => boolean`. Item is shown when this returns truthy, or when omitted.
+   * @param {Function} opts.action - `(composerModel, composerActionsComponent) => void`. Called when the user picks the item.
+   *
+   * @example
+   * api.addComposerAction({
+   *   id: "create_event",
+   *   label: "discourse_post_event.composer_actions.create_event.label",
+   *   description: "discourse_post_event.composer_actions.create_event.desc",
+   *   icon: "calendar-days",
+   *   condition: (component) =>
+   *     component.composerModel?.category?.isType("events"),
+   *   action: (composerModel) => composerModel.set("creatingEvent", true),
+   * });
+   */
+  addComposerAction(opts) {
+    registerComposerAction(opts);
   }
 
   /**
@@ -2434,6 +2684,12 @@ class _PluginApi {
    * Support for customizing the composer text. By providing a callback. Callbacks should
    * return `null` or `undefined` if you don't need a customization based on the current state.
    *
+   * Supported callback keys: `actionTitle`, `saveLabel`, `saveIcon`,
+   * `titlePlaceholder`. Each callback receives the composer model and
+   * returns an i18n key (or a translated string for `actionTitle`, or an
+   * icon name for `saveIcon`). Return `null` or `undefined` to fall
+   * through to the default.
+   *
    * ```
    * api.customizeComposerText({
    *   actionTitle(model) {
@@ -2444,6 +2700,12 @@ class _PluginApi {
    *
    *   saveLabel(model) {
    *     return "my.custom_save_label_key";
+   *   },
+   *
+   *   titlePlaceholder(model) {
+   *     if (model.creatingEvent) {
+   *       return "my.event_title_placeholder";
+   *     }
    *   }
    * })
    *
@@ -2928,6 +3190,65 @@ class _PluginApi {
   }
 
   /**
+   * Registers a component used to render a report on the customisable
+   * Reports section of the new admin dashboard. Pair with the server-side
+   * `register_admin_dashboard_report_source` registration: the source name
+   * passed here matches the provider's `source_name`. The component
+   * receives `@item`, `@payload`, and `@filters` and is mounted inside the
+   * card's chart area; the card frame (title, label pill, X-to-remove) is
+   * owned by core.
+   *
+   * ```
+   * import MyReportCard from "discourse/plugins/my-plugin/discourse/components/my-report-card";
+   *
+   * api.registerAdminDashboardReportRenderer("my_source", MyReportCard);
+   * ```
+   *
+   * @param {string} source - The provider's source_name.
+   * @param {Component} componentClass - A Glimmer component that accepts @item, @payload, @filters.
+   */
+  registerAdminDashboardReportRenderer(source, componentClass) {
+    registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
+   * Registers a component to render a whole section in the redesigned admin
+   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
+   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * match the one registered there, and the loader block registered there
+   * produces the `@data` this component receives.
+   *
+   * The component is rendered once for each visible section with a matching id.
+   * The render site also stamps a `--<id>` class and a `data-section-id="<id>"`
+   * attribute on it, so forward `...attributes` onto your root element (wrapping
+   * the shared `<DashboardSection>` component does this for you).
+   *
+   * The component receives these args:
+   * - `@data` {Object} — the section payload: the hash returned by the
+   *   server-side loader block passed to `register_admin_dashboard_section`.
+   * - `@startDate` {Date} — start of the selected dashboard period.
+   * - `@endDate` {Date} — end of the selected dashboard period.
+   * - `@fetchError` {boolean} — true when the dashboard sections request failed.
+   * - `@period` {string} — the selected period preset (e.g. "monthly"), or
+   *   "custom" for a custom range.
+   * - `@loading` {boolean} — true while the dashboard is (re)loading sections.
+   *   Provided for convenience; a section that refetches on its own (as Solved's
+   *   "support" section does) may track its own loading state instead.
+   *
+   * ```
+   * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";
+   *
+   * api.registerAdminDashboardSection("my_section", MySection);
+   * ```
+   *
+   * @param {string} id - The section id, matching the server-side registration.
+   * @param {Component} componentClass - A Glimmer component for the section.
+   */
+  registerAdminDashboardSection(id, componentClass) {
+    registerAdminDashboardSection(id, componentClass);
+  }
+
+  /**
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -3315,9 +3636,6 @@ class _PluginApi {
 
   /**
    * Registers a custom tab for the category edit page.
-   * Only available when the `enable_simplified_category_creation`
-   * site setting is enabled, this will not work for the legacy
-   * category edit page.
    *
    * ```
    * api.registerEditCategoryTab({
@@ -3341,8 +3659,7 @@ class _PluginApi {
 
   /**
    * Register a callback that runs when the user changes category type selection in the
-   * **simplified** category editor (General tab) when `enable_simplified_category_creation` is
-   * enabled. It does not run on the legacy category editor.
+   * category editor's General tab.
    *
    * Callbacks run in order. Each may be `async`. The change applies only if every callback
    * returns a **truthy** value; a **falsy** return blocks the new selection. If a callback

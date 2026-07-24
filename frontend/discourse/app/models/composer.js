@@ -14,7 +14,10 @@ import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -128,7 +131,7 @@ export const SAVE_ICONS = {
   [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
-  [CREATE_TOPIC]: "plus",
+  [CREATE_TOPIC]: "far-pen-to-square",
   [PRIVATE_MESSAGE]: "envelope",
   [CREATE_SHARED_DRAFT]: "far-clipboard",
 };
@@ -219,7 +222,7 @@ export default class Composer extends RestModel {
     ? this.post?.locale
     : null;
 
-  unlistTopic = false;
+  @tracked unlistTopic = false;
   noBump = false;
   draftSaving = false;
   draftForceSave = false;
@@ -228,6 +231,19 @@ export default class Composer extends RestModel {
   @tracked _categoryId = null;
 
   @tracked _archetypesOverride;
+
+  @tracked _user;
+
+  @dependentKeyCompat
+  get user() {
+    return applyValueTransformer("composer-user", this._user, {
+      composer: this,
+    });
+  }
+
+  set user(value) {
+    this._user = value;
+  }
 
   @computed("site.archetypes")
   get archetypes() {
@@ -370,12 +386,15 @@ export default class Composer extends RestModel {
     this._categoryId = categoryId;
 
     if (oldCategoryId !== categoryId) {
-      if (this.site.lazy_load_categories) {
-        Category.asyncFindById(categoryId).then(() => {
-          this.applyTopicTemplate(oldCategoryId, categoryId);
-        });
-      } else {
+      const applyTemplate = () => {
         this.applyTopicTemplate(oldCategoryId, categoryId);
+        this.appEvents?.trigger("composer:category-changed", this);
+      };
+
+      if (this.site.lazy_load_categories) {
+        Category.asyncFindById(categoryId).then(applyTemplate);
+      } else {
+        applyTemplate();
       }
     }
   }
@@ -392,7 +411,9 @@ export default class Composer extends RestModel {
 
   @dependentKeyCompat
   get editingPost() {
-    return isEdit(this.get("action"));
+    return applyValueTransformer("composer-editing-post", isEdit(this.action), {
+      composer: this,
+    });
   }
 
   @computed("category.minimumRequiredTags")
@@ -458,7 +479,7 @@ export default class Composer extends RestModel {
   }
 
   get composerVersion() {
-    if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+    if (this.currentUser.useRichEditor) {
       return 2;
     }
 
@@ -525,10 +546,19 @@ export default class Composer extends RestModel {
     );
   }
 
-  @computed("canEditTopicFeaturedLink")
+  @computed("canEditTopicFeaturedLink", "category")
   get titlePlaceholder() {
-    return this.canEditTopicFeaturedLink
-      ? "composer.title_or_link_placeholder"
+    const custom = this.customizationFor("titlePlaceholder");
+    if (custom) {
+      return custom;
+    }
+
+    if (this.canEditTopicFeaturedLink) {
+      return "composer.title_or_link_placeholder";
+    }
+
+    return this.siteSettings.enable_composer_redesign
+      ? "composer.title_placeholder_redesign"
       : "composer.title_placeholder";
   }
 
@@ -891,29 +921,35 @@ export default class Composer extends RestModel {
   }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
-    if (this.action !== CREATE_TOPIC) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "composer-apply-topic-template",
+      () => {
+        if (this.action !== CREATE_TOPIC) {
+          return;
+        }
 
-    let reply = this.reply;
+        let reply = this.reply;
 
-    // If the user didn't change the template, clear it
-    if (oldCategoryId) {
-      const oldCat = Category.findById(oldCategoryId);
-      if (oldCat && oldCat.topic_template === reply) {
-        reply = "";
-      }
-    }
+        // If the user didn't change the template, clear it
+        if (oldCategoryId) {
+          const oldCat = Category.findById(oldCategoryId);
+          if (oldCat && oldCat.topic_template === reply) {
+            reply = "";
+          }
+        }
 
-    if (!isEmpty(reply)) {
-      return;
-    }
+        if (!isEmpty(reply)) {
+          return;
+        }
 
-    const category = Category.findById(categoryId);
-    if (category) {
-      this.set("reply", category.topic_template || "");
-      this.set("originalText", category.topic_template || "");
-    }
+        const category = Category.findById(categoryId);
+        if (category) {
+          this.set("reply", category.topic_template || "");
+          this.set("originalText", category.topic_template || "");
+        }
+      },
+      { composer: this, oldCategoryId, categoryId }
+    );
   }
 
   /**
@@ -941,11 +977,18 @@ export default class Composer extends RestModel {
    @param {String} [opts.title]
    **/
   open(opts) {
-    let promise = Promise.resolve();
-
     if (!opts) {
       opts = {};
     }
+
+    return applyBehaviorTransformer("composer-open", () => this._open(opts), {
+      composer: this,
+      opts,
+    });
+  }
+
+  _open(opts) {
+    let promise = Promise.resolve();
 
     this.set("loading", true);
 

@@ -19,8 +19,8 @@ end
 # Table name: user_api_key_client_scopes
 #
 #  id                     :bigint           not null, primary key
-#  user_api_key_client_id :bigint           not null
 #  name                   :string(100)      not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  user_api_key_client_id :bigint           not null
 #

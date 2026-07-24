@@ -64,6 +64,7 @@ de:
   assign_mailer:
     title: "Mailer zuordnen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"
+    subject_template_improved: "%{email_prefix}: %{assignee_name} hat dir '%{topic_title}' zugeordnet!"
     text_body_template: |
       Hey, %{assignee_name} hat dich einer Diskussion **zugeordnet**
       > **%{topic_title}**

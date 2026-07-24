@@ -10,7 +10,7 @@ class ThemeSettingsManager::Bool < ThemeSettingsManager
   end
 
   def value=(new_value)
-    new_value = (self.class.cast(new_value)).to_s
+    new_value = self.class.cast(new_value).to_s
     super(new_value)
   end
 end

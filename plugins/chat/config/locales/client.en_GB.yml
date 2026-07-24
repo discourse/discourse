@@ -11,6 +11,8 @@ en_GB:
         description: "Description"
       about_view:
         description: Description
+      create_channel:
+        description: "Description"
       composer:
         italic_text: "emphasised text"
       incoming_webhooks:

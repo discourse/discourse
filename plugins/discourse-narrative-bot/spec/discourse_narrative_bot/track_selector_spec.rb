@@ -15,15 +15,13 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
     )
   end
 
+  let(:quote_sample) do
+    DiscourseNarrativeBot::QuoteGenerator.format_quote("Be Like Water", "Bruce Lee")
+  end
+
   before do
     stub_image_size
-    stub_request(
-      :get,
-      "http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote",
-    ).to_return(
-      status: 200,
-      body: "{\"quoteText\":\"Be Like Water\",\"quoteAuthor\":\"Bruce Lee\"}",
-    )
+    DiscourseNarrativeBot::QuoteGenerator.stubs(:generate).returns(quote_sample)
 
     SiteSetting.discourse_narrative_bot_enabled = true
   end
@@ -46,8 +44,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
         discobot_username: discobot_username,
         dice_trigger: described_class.dice_trigger,
         quote_trigger: described_class.quote_trigger,
-        quote_sample:
-          DiscourseNarrativeBot::QuoteGenerator.format_quote("Be Like Water", "Bruce Lee"),
+        quote_sample:,
         magic_8_ball_trigger: described_class.magic_8_ball_trigger,
       )
     }
@@ -673,13 +670,7 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
             described_class.new(:reply, user, post_id: post.id).select
             new_post = Post.last
 
-            expect(new_post.raw).to eq(
-              I18n.t(
-                "discourse_narrative_bot.quote.results",
-                quote: "Be Like Water",
-                author: "Bruce Lee",
-              ),
-            )
+            expect(new_post.raw).to eq(quote_sample)
           end
 
           context "when quote is requested incorrectly" do
@@ -699,28 +690,6 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
               expect { described_class.new(:reply, user, post_id: post.id).select }.to_not change {
                 Post.count
               }
-            end
-          end
-
-          context "when user requesting quote has a preferred locale" do
-            before do
-              SiteSetting.allow_user_locale = true
-              user.update!(locale: "it")
-              srand(1)
-            end
-
-            it "should create the right reply" do
-              post.update!(raw: "@discobot quote")
-              described_class.new(:reply, user, post_id: post.id).select
-              key = "discourse_narrative_bot.quote.6"
-
-              expect(Post.last.raw).to eq(
-                I18n.t(
-                  "discourse_narrative_bot.quote.results",
-                  quote: I18n.t("#{key}.quote"),
-                  author: I18n.t("#{key}.author"),
-                ),
-              )
             end
           end
         end

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 108
+  BASE_COMPILER_VERSION = 113
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
 
   CACHE_DEPENDENCY_GLOBS = %w[
     node_modules/.pnpm/lock.yaml
-    frontend/asset-processor/**/*.js
+    frontend/asset-processor/**/*.{js,mjs}
     frontend/discourse/lib/babel-transform-module-renames.js
     frontend/discourse/config/targets.js
   ]
@@ -55,7 +55,7 @@ class AssetProcessor
   end
 
   def self.build_asset_processor
-    Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.js")
+    Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
   end
 
   def self.inputs_digest
@@ -79,7 +79,7 @@ class AssetProcessor
   end
 
   def self.with_file_lock(&block)
-    lock_path = "#{Rails.root}/#{LOCK_FILE}"
+    lock_path = "#{Rails.root.join("#{LOCK_FILE}")}"
     FileUtils.mkdir_p(File.dirname(lock_path))
     File.open(lock_path, File::CREAT | File::RDWR) do |lock_file|
       lock_file.flock(File::LOCK_EX)

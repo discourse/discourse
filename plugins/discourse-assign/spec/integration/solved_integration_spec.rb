@@ -30,7 +30,7 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
       topic.reload
 
-      expect(topic.solved.answer_post_id).to eq(post.id)
+      expect(topic.topic_answers[0].answer_post_id).to eq(post.id)
       expect(topic.assignment.reload.status).to eq("Done")
     end
 
@@ -46,6 +46,35 @@ RSpec.describe "Solved integration", if: defined?(DiscourseSolved) do
       DiscourseSolved::UnacceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
 
       expect(topic.assignment.reload.status).to eq("New")
+    end
+
+    describe "with multiple solutions enabled" do
+      fab!(:post2) { Fabricate(:post, topic: topic) }
+
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "updates all assignments to assignment_status_on_unsolve status only when no accepted solutions remain" do
+        assigner = Assigner.new(topic, user)
+        result = assigner.assign(user)
+        expect(result[:success]).to eq(true)
+
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
+        expect(topic.assignment.reload.status).to eq("Done")
+
+        DiscourseSolved::AcceptAnswer.call!(params: { post_id: post2.id }, guardian: user.guardian)
+        expect(topic.assignment.reload.status).to eq("Done")
+
+        DiscourseSolved::UnacceptAnswer.call!(params: { post_id: post.id }, guardian: user.guardian)
+        expect(topic.assignment.reload.status).to eq("Done")
+
+        DiscourseSolved::UnacceptAnswer.call!(
+          params: {
+            post_id: post2.id,
+          },
+          guardian: user.guardian,
+        )
+        expect(topic.assignment.reload.status).to eq("New")
+      end
     end
 
     it "does not update the assignee when a post is accepted" do

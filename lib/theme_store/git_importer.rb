@@ -3,7 +3,7 @@
 class ThemeStore::GitImporter < ThemeStore::BaseImporter
   COMMAND_TIMEOUT_SECONDS = 20
 
-  attr_reader :url
+  attr_reader :url, :compatibility_resolved_ref
 
   def initialize(url, private_key: nil, branch: nil)
     @url = GitUrl.normalize(url)
@@ -13,25 +13,7 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
   def import!
     clone!
-
-    if version = Discourse.find_compatible_git_resource(temp_folder)
-      begin
-        execute "git", "cat-file", "-e", version
-      rescue RuntimeError
-        tracking_ref =
-          execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
-        remote_name = tracking_ref.split("/", 2)[0]
-        execute "git", "fetch", remote_name, "#{version}:#{version}"
-      end
-
-      begin
-        execute "git", "reset", "--hard", version
-      rescue RuntimeError
-        raise RemoteTheme::ImportError.new(
-                I18n.t("themes.import_error.git_ref_not_found", ref: version),
-              )
-      end
-    end
+    checkout_compatible_version!
   end
 
   def commits_since(hash)
@@ -54,6 +36,29 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
   protected
 
+  def checkout_compatible_version!
+    return unless version = Discourse.find_compatible_git_resource(temp_folder)
+
+    @compatibility_resolved_ref = version.delete_prefix("origin/")
+
+    begin
+      execute "git", "cat-file", "-e", version
+    rescue RuntimeError
+      tracking_ref =
+        execute "git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"
+      remote_name = tracking_ref.split("/", 2)[0]
+      execute "git", "fetch", remote_name, "#{version}:#{version}"
+    end
+
+    begin
+      execute "git", "reset", "--hard", version
+    rescue RuntimeError
+      raise RemoteTheme::ImportError.new(
+              I18n.t("themes.import_error.git_ref_not_found", ref: version),
+            )
+    end
+  end
+
   def redirected_uri
     first_clone_uri = @uri.dup
     first_clone_uri.path.gsub!(%r{/\z}, "")
@@ -75,6 +80,24 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
   def raise_import_error!
     raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
+  end
+
+  def raise_command_import_error!(error)
+    message = error.stderr.to_s
+    translation_key =
+      if error.status && (error.status.exitstatus == 124 || !error.status.exited?)
+        "themes.import_error.git_timeout"
+      elsif message.match?(/Permission denied|publickey|Authentication failed|access denied/i)
+        "themes.import_error.git_authentication"
+      elsif message.match?(/Remote branch .* not found/i)
+        "themes.import_error.git_branch_not_found"
+      elsif message.match?(/Repository not found|does not appear to be a git repository/i)
+        "themes.import_error.git_repository_not_found"
+      else
+        "themes.import_error.git"
+      end
+
+    raise RemoteTheme::ImportError.new(I18n.t(translation_key))
   end
 
   def clone!
@@ -128,8 +151,8 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
     begin
       Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-    rescue RuntimeError
-      raise_import_error!
+    rescue Discourse::Utils::CommandError => error
+      raise_command_import_error!(error)
     end
   end
 
@@ -146,8 +169,8 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
 
       begin
         Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-      rescue RuntimeError
-        raise_import_error!
+      rescue Discourse::Utils::CommandError => error
+        raise_command_import_error!(error)
       end
     end
   end

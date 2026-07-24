@@ -19,8 +19,8 @@ ar:
     openid_connect_allow_association_change: "السماح للمستخدمين بإلغاء ربط حسابات Discourse وإعادة ربطها من مقدِّم خدمة OpenID Connect"
     openid_connect_verbose_logging: "تسجيل معلومات مصادقة openid-connect المفصَّلة في `/logs`. اترك هذا الإعداد متوقفًا خلال الاستخدام العادي."
     openid_connect_authorize_parameters: "معلمات عنوان URL التي تضمينها في إعادة التوجيه من /auth/oidc إلى نقطة نهاية مصادقة IDP"
-    openid_connect_overrides_email: "تجاوز عنوان البريد الإلكتروني للمستخدم باستخدام قيمة openid-connect في كل عملية تسجيل دخول. يعمل هذا الإعداد بنفس طريقة عمل `auth_overrides_email`، لكنه خاص بعمليات تسجيل الدخول باستخدام OpenID Connect."
     openid_connect_claims: "تحديد المطالبات بشكلٍ صريح، والتي سيتم استخدامها مع مقدِّمي الخدمة الذي لا يعيدون تمرير البيانات حسب النطاقات (JSON)"
+    openid_connect_groups_claim: "اسم الحقل (claim) في رمز OIDC الذي يحتوي على مجموعات المستخدمين كمصفوفة من السلاسل النصية. اتركه فارغًا لتعطيل مزامنة المجموعات."
     openid_connect_match_by_email: "استخدم عنوان البريد الإلكتروني لمطابقة مصادقات OpenID Connect مع حسابات مستخدمي Discourse الموجودة."
     openid_connect_use_pkce: "تفعيل Proof Key for Code Exchange (PKCE) لمصادقة OpenID Connect."
   login:

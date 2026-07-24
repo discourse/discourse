@@ -5,12 +5,12 @@ import { cancel, next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
-import DButton from "discourse/components/d-button";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 import Category from "discourse/models/category";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -37,9 +37,9 @@ export default class TopicTimerInfo extends Component {
     }
   }
 
-  @computed
+  @computed("currentUser.canSetTopicTimer")
   get canModifyTimer() {
-    return this.currentUser && this.currentUser.get("canManageTopic");
+    return this.currentUser?.get("canSetTopicTimer");
   }
 
   @computed("canModifyTimer", "removeTopicTimer")

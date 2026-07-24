@@ -21,8 +21,12 @@ const INTERACTIVE_SELECTOR = [
   ".lightbox",
 ].join(", ");
 
-function isInteractive(event) {
-  return event.defaultPrevented || event.target.closest(INTERACTIVE_SELECTOR);
+function isInteractive(event, element) {
+  if (event.defaultPrevented) {
+    return true;
+  }
+  const interactive = event.target.closest(INTERACTIVE_SELECTOR);
+  return interactive && element.contains(interactive);
 }
 
 function noTextSelected() {
@@ -81,7 +85,7 @@ function toggleSpoiler(event, element) {
   if (element.getAttribute("data-spoiler-state") === "blurred") {
     _setSpoilerVisible(element);
     event.preventDefault();
-  } else if (!isInteractive(event) && noTextSelected()) {
+  } else if (!isInteractive(event, element) && noTextSelected()) {
     _setSpoilerHidden(element);
   }
 }

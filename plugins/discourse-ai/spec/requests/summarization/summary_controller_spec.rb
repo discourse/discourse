@@ -6,13 +6,14 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
-    def create_cached_summary(topic)
-      strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic)
+    def create_cached_summary(topic, locale: SiteSetting.default_locale)
+      strategy = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic, locale: locale)
       content_sha = AiSummary.build_sha(strategy.targets_data.map { |target| target[:id] }.join)
 
       Fabricate(
         :ai_summary,
         target: topic,
+        locale: locale,
         original_content_sha: content_sha,
         highest_target_number: topic.highest_post_number,
       )
@@ -38,6 +39,55 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response_summary.dig("ai_topic_summary", "summarized_text")).to eq(
           summary.summarized_text,
         )
+      end
+    end
+
+    describe "CSRF protection for state-changing summary requests" do
+      fab!(:user, :leader)
+
+      before do
+        sign_in(user)
+        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
+      end
+
+      it "does not enqueue a streaming job via GET when no cached summary exists" do
+        expect { get "/discourse-ai/summarization/t/#{topic.id}.json?stream=true" }.not_to change {
+          Jobs::StreamTopicAiSummary.jobs.size
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
+      it "does not generate a summary via GET when no cached summary exists" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["This is a summary"]) do
+          expect { get "/discourse-ai/summarization/t/#{topic.id}.json" }.not_to change {
+            AiSummary.where(target: topic).count
+          }
+        end
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
+      it "enqueues a streaming job via POST" do
+        post "/discourse-ai/summarization/t/#{topic.id}.json", params: { stream: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
+      end
+
+      it "generates a summary via POST" do
+        summary_text = "This is a summary"
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary_text]) do
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
+        end
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.where(target: topic).count).to eq(1)
+        expect(response.parsed_body.dig("ai_topic_summary", "summarized_text")).to eq(summary_text)
       end
     end
 
@@ -99,7 +149,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         summary_text = "This is a summary"
 
         DiscourseAi::Completions::Llm.with_prepared_responses([summary_text]) do
-          get "/discourse-ai/summarization/t/#{topic.id}.json"
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
 
           expect(response.status).to eq(200)
           response_summary = response.parsed_body["ai_topic_summary"]
@@ -114,8 +164,36 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         end
       end
 
-      it "signals the summary is outdated" do
+      it "creates and returns a summary in the displayed language" do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_supported_locales = "he"
+        topic.update!(locale: "en")
+        user.update!(locale: "he")
+        english_summary = create_cached_summary(topic, locale: "en")
+        english_summary.update!(summarized_text: "English summary")
+
         get "/discourse-ai/summarization/t/#{topic.id}.json"
+
+        expect(response.status).to eq(404)
+
+        hebrew_summary_text = "זהו סיכום בעברית"
+        DiscourseAi::Completions::Llm.with_prepared_responses([hebrew_summary_text]) do
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
+        end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("ai_topic_summary", "summarized_text")).to eq(
+          hebrew_summary_text,
+        )
+        expect(
+          AiSummary.complete.where(target: topic).pluck(:locale, :summarized_text),
+        ).to contain_exactly(["en", "English summary"], ["he", hebrew_summary_text])
+      end
+
+      it "signals the summary is outdated" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["This is a summary"]) do
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
+        end
 
         Fabricate(:post, topic: topic, post_number: 3)
         topic.update!(highest_post_number: 3)
@@ -187,14 +265,28 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       Jobs.run_immediately!
     end
 
+    def gist_tool_call(summary, id:)
+      DiscourseAi::Completions::ToolCall.new(
+        id:,
+        name: "set_topic_summary",
+        parameters: {
+          summary:,
+        },
+      )
+    end
+
     context "when a single topic id is provided" do
       before { sign_in(admin) }
 
       it "regenerates the gist" do
-        put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id }
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [gist_tool_call("Topic gist", id: "gist_1")],
+        ) { put "/discourse-ai/summarization/regen_gist", params: { topic_id: topic.id } }
 
         expect(response.status).to eq(200)
-        expect(AiSummary.gist.where(target: topic).count).to eq(1)
+        expect(AiSummary.gist.where(target: topic, locale: SiteSetting.default_locale).count).to eq(
+          1,
+        )
       end
     end
 
@@ -202,7 +294,17 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       before { sign_in(admin) }
 
       it "regenerates the gists" do
-        put "/discourse-ai/summarization/regen_gist", params: { topic_ids: [topic.id, topic_1.id] }
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          [
+            gist_tool_call("First topic gist", id: "gist_1"),
+            gist_tool_call("Second topic gist", id: "gist_2"),
+          ],
+        ) do
+          put "/discourse-ai/summarization/regen_gist",
+              params: {
+                topic_ids: [topic.id, topic_1.id],
+              }
+        end
 
         expect(response.status).to eq(200)
         expect(AiSummary.gist.where(target: topic).count).to eq(1)
@@ -259,19 +361,23 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     context "when a single topic id is provided" do
       before { sign_in(admin) }
 
-      it "deletes cached summary and enqueues regeneration job" do
-        existing_summary = Fabricate(:ai_summary, target: topic)
+      it "preserves the cached summary and enqueues a forced regeneration job" do
+        existing_summary = Fabricate(:ai_summary, target: topic, locale: SiteSetting.default_locale)
 
         put "/discourse-ai/summarization/regen_summary", params: { topic_id: topic.id }
 
         expect(response.status).to eq(200)
-        expect(AiSummary.find_by(id: existing_summary.id)).to be_nil
+        expect(AiSummary.find_by(id: existing_summary.id)).to eq(existing_summary)
         expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
 
         job_args = Jobs::StreamTopicAiSummary.jobs.first["args"].first
-        expect(job_args["topic_id"]).to eq(topic.id)
-        expect(job_args["user_id"]).to eq(admin.id)
-        expect(job_args["skip_age_check"]).to eq(true)
+        expect(job_args).to include(
+          "topic_id" => topic.id,
+          "user_id" => admin.id,
+          "locale" => SiteSetting.default_locale,
+          "force_regenerate" => true,
+        )
+        expect(job_args).not_to have_key("skip_age_check")
       end
 
       it "enqueues job even when there is no existing summary" do

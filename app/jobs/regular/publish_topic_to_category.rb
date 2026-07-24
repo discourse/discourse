@@ -3,11 +3,16 @@
 module Jobs
   class PublishTopicToCategory < ::Jobs::TopicTimerBase
     def execute_timer_action(topic_timer, topic)
-      return unless Guardian.new(topic_timer.user).can_see?(topic)
+      user = topic_timer.user
+      guardian = Guardian.new(user)
+      category = topic_timer.category
 
-      TopicTimer.transaction do
-        TopicPublisher.new(topic, Discourse.system_user, topic_timer.category_id).publish!
-      end
+      return if category.blank?
+      return unless guardian.can_set_topic_timer?(topic)
+      return unless guardian.can_create_topic_on_category?(category)
+      return if topic.private_message? && !guardian.can_convert_topic?(topic)
+
+      TopicTimer.transaction { TopicPublisher.new(topic, user, category.id).publish! }
 
       Topic.find(topic.id).inherit_auto_close_from_category
     end

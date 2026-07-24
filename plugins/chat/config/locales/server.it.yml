@@ -9,7 +9,6 @@ it:
     chat_separate_sidebar_mode: "Mostra modalità separate della barra laterale per forum e chat."
     chat_enabled: "Abilita chat."
     enable_public_channels: "Abilita i canali pubblici in base alle categorie."
-    chat_allowed_groups: "Gli utenti in questi gruppi possono chattare. N.B. Amministratori e moderatori possono sempre accedere alla chat."
     chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_auto_silence_duration: "Numero di minuti per i quali gli utenti verranno silenziati quando superano il limite di velocità di creazione dei messaggi di chat. Imposta il valore su '0' per disabilitare il silenziamento automatico."
@@ -30,7 +29,6 @@ it:
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
     chat_preferred_index: "Scheda preferita per il caricamento di /chat."
-    allow_chat_in_anonymous_mode: "Abilita questa impostazione per consentire agli utenti che navigano sul tuo sito in modo anonimo di utilizzare la chat. Questa impostazione richiede che l'opzione \"Consenti modalità anonima\" sia abilitata."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -218,6 +216,10 @@ it:
     scriptables:
       send_chat_message:
         title: Invia messaggio di chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Approva"
+      default_deny_label: "Nega"
   reviewable_score_types:
     needs_review:
       title: "Necessita di revisione"

@@ -84,7 +84,7 @@ module PageObjects
         end
 
         def open_emoji_picker
-          find(context).find(SELECTOR).find(".chat-composer-button.-emoji").click
+          find(context).find(SELECTOR).find(".chat-composer-button.--emoji").click
         end
 
         def cancel_editing

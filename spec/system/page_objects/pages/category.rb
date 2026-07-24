@@ -67,7 +67,7 @@ module PageObjects
       end
 
       def back_to_category
-        find(".edit-category .back-button").click
+        find(".edit-category-page .back-button").click
         self
       end
 
@@ -149,11 +149,6 @@ module PageObjects
 
       def click_new
         page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
-      end
-
-      def click_setting_tab(name)
-        find(".edit-category-nav .edit-category-#{name}").click
-        self
       end
 
       def click_edit_category

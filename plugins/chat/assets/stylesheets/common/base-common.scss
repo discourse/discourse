@@ -25,9 +25,12 @@ html.ios-device.has-full-page-chat body {
 }
 
 html.ios-device.has-full-page-chat body #main-outlet {
-  .c-routes.--channel-info {
-    @include chat-height;
-    overflow-y: auto;
+  .c-routes {
+    &.--channel-info,
+    &.--browse {
+      @include chat-height;
+      overflow-y: auto;
+    }
   }
 }
 

@@ -40,11 +40,8 @@
       }
 
       .name-wrapper {
+        @include ellipsis;
         min-width: 0;
-
-        .name {
-          @include ellipsis;
-        }
       }
 
       // When name should appear first (site setting)
@@ -91,6 +88,15 @@
 
   &.medium {
     min-height: 60px;
+
+    @include viewport.from(sm) {
+      display: flex;
+
+      .user-image {
+        width: 55px;
+        margin-right: 0;
+      }
+    }
 
     .username,
     .name {

@@ -20,6 +20,7 @@ RSpec.describe "Nested view ignored users" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     Fabricate(:ignored_user, user: viewer, ignored_user: ignored_author)
     sign_in(viewer)
   end

@@ -1,10 +1,9 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
   fakeTime,
   loggedInUser,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -125,10 +124,8 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
     await click("div.user-notifications div div button");
     await click(".future-date-input-selector-header");
 
-    const options = Array.from(
-      queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
-        x.innerText.trim()
-      )
+    const options = findAll(`ul.select-kit-collection li span.name`).map((x) =>
+      x.innerText.trim()
     );
 
     const expected = [
@@ -150,3 +147,26 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
     assert.deepEqual(options, expected, "options are correct");
   });
 });
+
+acceptance("User Notifications - Upcoming Changes - Admin", function (needs) {
+  needs.user({ admin: true });
+
+  test("Shows the upcoming changes preference", async function (assert) {
+    await visit("/u/eviltrout/preferences/notifications");
+
+    assert.dom(".control-group.upcoming-changes").exists();
+  });
+});
+
+acceptance(
+  "User Notifications - Upcoming Changes - Regular User",
+  function (needs) {
+    needs.user();
+
+    test("Does not show the upcoming changes preference", async function (assert) {
+      await visit("/u/charlie/preferences/notifications");
+
+      assert.dom(".control-group.upcoming-changes").doesNotExist();
+    });
+  }
+);

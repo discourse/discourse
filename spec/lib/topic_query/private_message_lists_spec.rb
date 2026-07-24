@@ -3,9 +3,9 @@
 RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2, :user)
-  fab!(:user_3, :user)
-  fab!(:user_4, :user)
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_3) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_4) { Fabricate(:user, refresh_auto_groups: true) }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
@@ -54,6 +54,66 @@ RSpec.describe TopicQuery::PrivateMessageLists do
       pm.add_moderator_post(admin, "Thank you for your flag")
 
       expect(TopicQuery.new(user_4).list_private_messages(user_4).topics).to contain_exactly(pm)
+    end
+  end
+
+  describe "private_messages_personal_inbox_query modifier" do
+    fab!(:hidden_pm) do
+      create_post(
+        user: user,
+        target_usernames: [user_2.username],
+        archetype: Archetype.private_message,
+      ).topic
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier_block) { ->(list, _user) { list.where(<<~SQL) } }
+          NOT EXISTS (
+            SELECT 1 FROM topic_custom_fields tcf
+            WHERE tcf.topic_id = topics.id
+            AND tcf.name = 'hidden_from_inbox'
+            AND tcf.value = 't'
+          )
+        SQL
+
+    before do
+      hidden_pm.custom_fields["hidden_from_inbox"] = "t"
+      hidden_pm.save_custom_fields
+
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :private_messages_personal_inbox_query,
+        &modifier_block
+      )
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :private_messages_personal_inbox_query,
+        &modifier_block
+      )
+    end
+
+    it "filters topics out of #list_private_messages" do
+      topics = TopicQuery.new(user_2).list_private_messages(user_2).topics
+
+      expect(topics).to include(private_message)
+      expect(topics).not_to include(hidden_pm)
+    end
+
+    it "leaves #list_private_messages_archive untouched" do
+      [private_message, hidden_pm].each { |pm| UserArchivedMessage.archive!(user_2.id, pm) }
+
+      topics = TopicQuery.new(user_2).list_private_messages_archive(user_2).topics
+
+      expect(topics).to include(private_message, hidden_pm)
+    end
+
+    it "leaves #list_private_messages_sent untouched" do
+      topics = TopicQuery.new(user).list_private_messages_sent(user).topics
+
+      expect(topics).to include(private_message, hidden_pm)
     end
   end
 

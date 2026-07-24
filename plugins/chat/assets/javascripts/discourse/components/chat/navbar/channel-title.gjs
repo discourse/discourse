@@ -3,15 +3,16 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class ChatNavbarChannelTitle extends Component {
   @service chatApi;
   @service chatStateManager;
+  @service currentUser;
 
   @tracked isTogglingStarred = false;
 
@@ -37,13 +38,13 @@ export default class ChatNavbarChannelTitle extends Component {
   }
 
   get showStarButton() {
-    return !!this.args.channel?.currentUserMembership;
+    return this.currentUser && this.args.channel?.isFollowing;
   }
 
   @action
   async toggleStarred() {
     const channel = this.args.channel;
-    if (!channel?.currentUserMembership || this.isTogglingStarred) {
+    if (!channel?.isFollowing || this.isTogglingStarred) {
       return;
     }
 
@@ -86,7 +87,7 @@ export default class ChatNavbarChannelTitle extends Component {
               @action={{this.toggleStarred}}
               @icon={{this.starIcon}}
               @disabled={{this.isTogglingStarred}}
-              class={{concatClass
+              class={{dConcatClass
                 "btn-transparent"
                 "c-navbar__star-channel-button"
                 (if this.isStarred "--starred")

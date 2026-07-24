@@ -39,3 +39,6 @@ ro:
     edit_assignments_modal:
       topic: "Subiect"
       post: "Articol"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID subiect"

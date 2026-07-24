@@ -17,7 +17,7 @@ module DiscourseChatIntegration::Provider::GroupmeProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "#{topic.category.parent_category.name}/#{topic.category.name}"
           else
             "#{topic.category.name}"
@@ -84,7 +84,7 @@ module DiscourseChatIntegration::Provider::GroupmeProvider
 
   def self.trigger_notification(post, channel, rule)
     data_package = generate_groupme_message(post)
-    self.send_via_webhook(data_package, channel)
+    send_via_webhook(data_package, channel)
   end
 
   def self.get_channel_by_name(name)

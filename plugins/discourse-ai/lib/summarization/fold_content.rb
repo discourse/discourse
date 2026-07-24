@@ -9,6 +9,9 @@ module DiscourseAi
     # into a final version.
     #
     class FoldContent
+      class MissingToolOutput < StandardError
+      end
+
       def initialize(bot, strategy, persist_summaries: true)
         @bot = bot
         @strategy = strategy
@@ -41,7 +44,15 @@ module DiscourseAi
       # Finds a summary matching the target and strategy. Marks it as outdated if the strategy found newer content
       def existing_summary
         if !defined?(@existing_summary)
-          summary = AiSummary.find_by(target: strategy.target, summary_type: strategy.type)
+          summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type)
+          summary = summaries.find_by(locale: strategy.locale)
+
+          if summary.blank? && strategy.locale.present?
+            summary =
+              summaries
+                .where.not(locale: nil)
+                .find { |candidate| LocaleNormalizer.is_same?(candidate.locale, strategy.locale) }
+          end
 
           if summary
             @existing_summary = summary
@@ -53,7 +64,19 @@ module DiscourseAi
       end
 
       def delete_cached_summaries!
-        AiSummary.where(target: strategy.target, summary_type: strategy.type).destroy_all
+        summaries = AiSummary.where(target: strategy.target, summary_type: strategy.type)
+
+        if strategy.locale.present?
+          summary_ids =
+            summaries
+              .where.not(locale: nil)
+              .filter_map do |summary|
+                summary.id if LocaleNormalizer.is_same?(summary.locale, strategy.locale)
+              end
+          AiSummary.where(id: summary_ids).destroy_all
+        else
+          summaries.where(locale: nil).destroy_all
+        end
       end
 
       def truncate(item)
@@ -157,13 +180,20 @@ module DiscourseAi
             feature_name: strategy.feature,
             resource_url: "#{Discourse.base_path}/t/-/#{strategy.target.id}",
             messages: strategy.as_llm_messages(content_in_window),
+            bypass_response_format: strategy.output_tool.present?,
           )
 
         summary = +""
+        tool_output = strategy.output_tool.present?
 
         buffer_blk =
           Proc.new do |partial, _, type|
-            if type == :structured_output
+            if tool_output
+              if type == :custom_raw
+                summary.replace(partial.to_s)
+                on_partial_blk.call(summary) if on_partial_blk
+              end
+            elsif type == :structured_output
               json_summary_schema_key = bot.agent.response_format&.first.to_h
               partial_summary =
                 partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
@@ -180,6 +210,10 @@ module DiscourseAi
           end
 
         bot.reply(context, &buffer_blk)
+
+        if tool_output && summary.blank?
+          raise MissingToolOutput, "The model did not set a topic summary"
+        end
 
         summary
       end

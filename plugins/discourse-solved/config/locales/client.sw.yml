@@ -5,11 +5,25 @@
 # https://translate.discourse.org/
 
 sw:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Majibu yaliyokubaliwa"
+        sections:
+          support:
+            answerers:
+              staff: "Wasaidizi"
+              member: "Wanachama"
+              basic: "Kawaida"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "imeruhusiwa"
+          topic_solved_notification: "imetatuliwa"
     solved:
       title: "Imetatuliwa"
       allow_accepted_answers: "Ruhusu Muanzilishi wa Mada na Wasaidizi kuchagua jibu kama Suluhisho"

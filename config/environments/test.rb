@@ -65,7 +65,7 @@ Discourse::Application.configure do
 
   # Catch missing translations during test runs.
   config.i18n.raise_on_missing_translations = true
-  config.i18n.load_path += Dir[Rails.root.join("spec", "support", "locales", "**", "*.yml")]
+  config.i18n.load_path += Dir[Rails.root.join("spec/support/locales/**/*.yml")]
 
   config.after_initialize do
     ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
@@ -88,12 +88,6 @@ Discourse::Application.configure do
 
   if defined?(RspecErrorTracker)
     config.middleware.insert_after ActionDispatch::Flash, RspecErrorTracker
-  end
-
-  if ENV["CI"].present?
-    config.to_prepare do
-      ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
-    end
   end
 
   # This is a NGINX specific header

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ko:
+  data_explorer:
+    admin_dashboard_label: "데이터 탐색기"

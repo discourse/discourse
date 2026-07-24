@@ -3,15 +3,15 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import I18n, { i18n } from "discourse-i18n";
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
@@ -201,7 +201,7 @@ export default class WelcomeBanner extends Component {
     {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "welcome-banner"
           this.locationClass
           this.bgImgClass

@@ -14,6 +14,25 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return /^http(s)?:\/\//.test(this.model?.remote_theme?.remote_url);
   }
 
+  @computed("model.remote_theme.remote_url")
+  get prettyRemoteUrl() {
+    const remoteUrl = this.model?.remote_theme?.remote_url;
+
+    if (/^https?:\/\/github\.com\//.test(remoteUrl)) {
+      return remoteUrl.replace(/^https?:\/\//, "").replace(/\.git$/, "");
+    }
+
+    return remoteUrl;
+  }
+
+  @computed("model.remote_theme.local_compat_ref", "model.remote_theme.branch")
+  get displayBranch() {
+    return (
+      this.model?.remote_theme?.local_compat_ref ||
+      this.model?.remote_theme?.branch
+    );
+  }
+
   @computed("model.remote_theme.remote_url", "model.remote_theme.branch")
   get remoteThemeLink() {
     return this.model?.remote_theme?.branch

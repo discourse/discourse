@@ -9,10 +9,10 @@ end
 # Table name: chat_message_custom_prompts
 #
 #  id            :bigint           not null, primary key
-#  message_id    :bigint           not null
 #  custom_prompt :json             not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  message_id    :bigint           not null
 #
 # Indexes
 #

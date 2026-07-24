@@ -232,6 +232,15 @@ RSpec.describe DiscoursePluginRegistry do
       expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
     end
 
+    it "registers admin css properly" do
+      registry.register_asset("test.css", :admin, plugin_directory_name)
+
+      expect(registry.admin_stylesheets[plugin_directory_name].count).to eq(1)
+      expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
+      expect(registry.desktop_stylesheets[plugin_directory_name]).to eq(nil)
+      expect(registry.mobile_stylesheets[plugin_directory_name]).to eq(nil)
+    end
+
     it "registers color definitions properly" do
       registry.register_asset("test.css", :color_definitions, plugin_directory_name)
       expect(registry.color_definition_stylesheets[plugin_directory_name]).to eq("test.css")

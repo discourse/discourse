@@ -3,8 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class DSegmentedControl extends Component {
@@ -32,6 +33,14 @@ export default class DSegmentedControl extends Component {
     return () => cancelAnimationFrame(frameId);
   });
 
+  get classNames() {
+    const classes = ["d-segmented-control"];
+    if (this.args.size === "small") {
+      classes.push("d-segmented-control--small");
+    }
+    return classes.join(" ");
+  }
+
   get legend() {
     if (this.args.label) {
       return i18n(this.args.label);
@@ -44,9 +53,14 @@ export default class DSegmentedControl extends Component {
     this.args.onSelect?.(value);
   }
 
+  @action
+  handleClick(value) {
+    this.args.onClickItem?.(value);
+  }
+
   <template>
     <fieldset
-      class="d-segmented-control"
+      class={{this.classNames}}
       {{this.positionSlider @value}}
       ...attributes
     >
@@ -60,11 +74,12 @@ export default class DSegmentedControl extends Component {
 
       {{#each @items as |item|}}
         <label
-          class={{concatClass
+          class={{dConcatClass
             "d-segmented-control__label"
             item.class
             (if item.disabled "is-disabled")
           }}
+          {{on "click" (fn this.handleClick item.value)}}
         >
           <input
             type="radio"
@@ -75,7 +90,10 @@ export default class DSegmentedControl extends Component {
             class="d-segmented-control__input"
             {{on "change" (fn this.handleChange item.value)}}
           />
-          <span class="d-segmented-control__text">{{item.label}}</span>
+          <span class="d-segmented-control__text">
+            {{#if item.icon}}{{dIcon item.icon}}{{/if}}
+            {{item.label}}
+          </span>
         </label>
       {{/each}}
     </fieldset>

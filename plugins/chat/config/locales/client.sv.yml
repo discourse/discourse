@@ -227,8 +227,6 @@ sv:
         channels_list: "Lista över chattkanaler"
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       chat_notifications_title: "Chattaviseringar"
-      only_chat_push_notifications:
-        title: "Skicka bara push-meddelanden för chatt"
       ignore_channel_wide_mention:
         title: "Ignorera omnämnanden i hela kanalen"
       open: "Öppna chatt"
@@ -272,8 +270,6 @@ sv:
         title: "Meddelandeljud för chatt via dator"
       sounds:
         none: "Ingen"
-        bell: "Bell"
-        ding: "Ding"
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
@@ -303,6 +299,8 @@ sv:
         filter_closed: Stängd
         filter_archived: Arkiverad
         filter_input_placeholder: Sök kanal efter namn
+        filter_joined_all: "Alla"
+        filter_joined_joined: "Gick med"
       chat_message_separator:
         today: Idag
         yesterday: Igår
@@ -349,7 +347,6 @@ sv:
         input_placeholder: Lägg till ett namn
         slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
         name: Kanalnamn
-        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -370,6 +367,8 @@ sv:
         memberships_count:
           one: "%{count} medlem"
           other: "%{count} medlemmar"
+        preview_card:
+          log_in: "Logga in"
       create_channel:
         threading:
           label: "Aktivera trådning"
@@ -406,9 +405,8 @@ sv:
             one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
             other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
-        description: "Beskrivning (valfritt)"
+        description: "Beskrivning"
         name: "Kanalnamn"
-        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:
@@ -690,3 +688,12 @@ sv:
       panels:
         chat:
           label: "Chatt"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelande"
+      chat_approval:
+        message: "Meddelande"
+        channel_id: "Kanal"

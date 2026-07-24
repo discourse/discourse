@@ -1,0 +1,13 @@
+en:
+  js:
+    discourse_captcha:
+      missing_token: "Please complete the captcha challenge."
+      verification_failed: "Captcha verification failed. Please try again."
+      placeholder: placeholder
+      contact_system_administrator: "There has been a problem with your captcha provider, if this problem persists please contact a system administrator"
+
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_captcha: "Discourse Captcha"

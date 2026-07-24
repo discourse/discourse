@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, get } from "@ember/object";
-import AsyncContent from "discourse/components/async-content";
-import SmallUserList, {
-  smallUserAttrs,
-} from "discourse/components/small-user-list";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { eq } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DSmallUserList, {
+  smallUserAttrs,
+} from "discourse/ui-kit/d-small-user-list";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { whoVoted } from "../lib/post-voting-utilities";
 
@@ -49,7 +49,7 @@ export default class PostVotingWhoVotedList extends Component {
   }
 
   <template>
-    <AsyncContent @asyncData={{this.loadWhoVoted}}>
+    <DAsyncContent @asyncData={{this.loadWhoVoted}}>
       <:loading>
         {{i18n "loading"}}
       </:loading>
@@ -75,7 +75,7 @@ export default class PostVotingWhoVotedList extends Component {
           {{/if}}
         {{/let}}
       </:content>
-    </AsyncContent>
+    </DAsyncContent>
   </template>
 }
 
@@ -83,7 +83,7 @@ const PostVotingSmallUserList = <template>
   {{#if @list}}
     <div class="post-voting-popup-content__wrapper">
       <span
-        class={{concatClass
+        class={{dConcatClass
           "post-voting-popup-content__icon"
           (if (eq @direction "up") "--upvote" "--downvote")
         }}
@@ -91,10 +91,10 @@ const PostVotingSmallUserList = <template>
           (if (eq @direction "up") "vote.upvotes" "vote.downvotes")
         }}
       >
-        {{icon "vote-up-filled"}}
+        {{dIcon "vote-up-filled"}}
       </span>
       <span class="post-voting-popup-content__count">{{@list.length}}</span>
-      <SmallUserList
+      <DSmallUserList
         class="post-voting-popup-content__voters"
         @users={{@list}}
       />

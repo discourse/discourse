@@ -9,10 +9,6 @@ Project-specific instructions for AI agents. MUST be loaded at conversation star
 ## Development Rules
 Discourse is large with long history. Understand context before changes.
 
-### All Files
-- Always lint changed files
-- Create subagent to review changes against this file after completing tasks
-
 ### Toolset
 - Use `pnpm` for JavaScript, `bundle` for Ruby
 - Use helpers in bin over bundle exec (bin/rspec, bin/rake, bin/lint)
@@ -23,64 +19,34 @@ Discourse is large with long history. Understand context before changes.
 - Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
+- Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
 
-### JSDoc
-- Do not add JSDoc to any new code you write.
-- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
+### Comments & Types
+- Prefer self-documenting code. Comments should only be added when future misunderstanding is likely. They should be terse, and should describe 'why', not 'what'. They should not be used to describe history.
+- In the frontend, typescript is typically used for platform-level code, javascript for business-logic
+- Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
+- Simple JSDoc/TSDoc comments can be used in other code for editor intellisense, but this is not essential
+- In core, never name plugin features or specific libraries in comments/docs — describe by mechanism
 
 ## Testing
-- Do not write unnecessary comments in tests, every single assertion doesn't need a comment
-- Don't test functionality handled by other classes/components
-- Don't write obvious tests
-- Ruby: use `fab!` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
+- Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
 
-### fab! Syntax
-- `fab!(:user)` - creates object using Fabricator defaults (name matches fabricator)
-- `fab!(:user_1, :user)` - preferred when variable name differs from fabricator, no custom attributes
-- `fab!(:user) { Fabricate(:user, username: "some_username") }` - with block for custom attributes
-
-### Page Objects (System Specs)
-- Located in `spec/system/page_objects/pages/`, inherit from `PageObjects::Pages::Base`
-- NEVER store `find()` results - causes stale element references after re-renders
-- Use `has_x?` / `has_no_x?` patterns for state checks (finds fresh each time)
-- Action methods find+interact atomically, return `self` for chaining
-- Don't assert immediate UI feedback after clicks (tests browser, not app logic)
-
-### Commands
-
-#### Ruby RSpec tests
-
-To run all RSpec examples in file use `bin/rspec <path>`. Example:
-
-```bash
-bin/rspec spec/path/file_spec.rb
-```
-
-To run one or more RSpec examples or groups, append the line number to the path. `bin/rspec <path>:<line_number>`. Example:
-
-```bash
-bin/rspec spec/path/file_spec.rb:123
-```
-
-#### JavaScript Tests
+## Commands
 
 ```bash
 # JavaScript tests - bin/qunit
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
-```
+bin/qunit --filter "Some text" # Case-insensitive substring match on "module: test name"
+bin/qunit --filter "/Foo|Bar/i" # Slash-wrapped value is a regex (include the "i" flag); use for alternation
 
-#### Linting
-
-```bash
 # Linting
-bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file
 bin/lint --fix --recent # Lint all recently changed files
 ```
 
-ALWAYS lint any changes you make
+ALWAYS lint any changes you make with `bin/lint --fix`
 
 ## Site Settings
 - Configured in `config/site_settings.yml` or `config/settings.yml` for plugins
@@ -95,8 +61,10 @@ ALWAYS lint any changes you make
 
 ## Database & Performance
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
-- Migrations: use the skill at .skills/discourse-migration before writing or reviewing any migration
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
+
+## Migrations
+- Use the skill at `.skills/discourse-migration` before writing or reviewing any migration
 
 ## HTTP Response Codes
 - **204 No Content**: Use `head :no_content` for successful operations that don't return data
@@ -114,7 +82,7 @@ ALWAYS lint any changes you make
 - XSS: use `{{}}` (escaped) not `{{{ }}}`, sanitize with `sanitize`/`cook`, no `innerHTML`, careful with `@html`
 - Auth: Guardian classes (`lib/guardian.rb`), POST/PUT/DELETE for state changes, CSRF tokens, `protect_from_forgery`
 - Input: validate client+server, strong parameters, length limits, don't trust client-only validation
-- Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns
+- Authorization: Guardian classes, route+action permissions, scope limiting, `can_see?`/`can_edit?` patterns. Use user.guardian shorthand not Guardian.new(user)
 
 ## Knowledge Sharing
 - ALWAYS persist information for ALL developers (no conversational-only memory)

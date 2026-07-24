@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
@@ -16,6 +15,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 import CategoryDropHeader from "./category-drop/category-drop-header";
 

@@ -8,11 +8,11 @@ end
 #
 # Table name: topic_search_data
 #
-#  topic_id    :integer          not null, primary key
-#  raw_data    :text
 #  locale      :string           not null
+#  raw_data    :text
 #  search_data :tsvector
 #  version     :integer          default(0)
+#  topic_id    :integer          not null, primary key
 #
 # Indexes
 #

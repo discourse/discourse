@@ -27,6 +27,22 @@ describe ListController do
       expect(response.status).to eq(403)
     end
 
+    it "filters requests from users who can only assign in scoped categories" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone])
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      sign_in(scoped_user)
+
+      get "/topics/group-topics-assigned/#{scoped_group.name}.json"
+      expect(response.status).to eq(403)
+
+      get "/topics/messages-assigned/#{scoped_user.username_lower}.json"
+      expect(response.status).to eq(403)
+    end
+
     it "as an anon user" do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(403)
@@ -62,6 +78,21 @@ describe ListController do
       Assigner.new(topic2, user).assign(user2)
 
       sign_in(user)
+    end
+
+    it "returns 403 for a group hidden from the acting user" do
+      hidden_group =
+        Fabricate(
+          :group,
+          visibility_level: Group.visibility_levels[:staff],
+          assignable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+
+      get "/g/#{hidden_group.name}.json"
+      expect(response.status).to eq(404)
+
+      get "/topics/group-topics-assigned/#{hidden_group.name}.json"
+      expect(response.status).to eq(403)
     end
 
     it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesn't include deleted topic" do

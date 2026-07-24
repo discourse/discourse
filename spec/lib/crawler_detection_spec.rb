@@ -2,7 +2,7 @@
 
 RSpec.describe CrawlerDetection do
   def crawler!(user_agent, via = nil)
-    raise "#{user_agent} should be a crawler!" if (!CrawlerDetection.crawler?(user_agent, via))
+    raise "#{user_agent} should be a crawler!" if !CrawlerDetection.crawler?(user_agent, via)
   end
 
   def not_crawler!(s)
@@ -91,6 +91,42 @@ RSpec.describe CrawlerDetection do
           "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E)",
         ),
       ).to eq(true)
+    end
+  end
+
+  describe ".crawler_layout_request?" do
+    it "returns true for crawler HTML requests" do
+      request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(true)
+    end
+
+    it "returns false for JSON requests" do
+      request =
+        ActionDispatch::TestRequest.create(
+          "HTTP_USER_AGENT" => "Googlebot",
+          "action_dispatch.request.path_parameters" => {
+            format: "json",
+          },
+        )
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(false)
+    end
+
+    it "honors the escaped fragments site setting" do
+      SiteSetting.enable_escaped_fragments = false
+      request =
+        ActionDispatch::TestRequest.create(
+          "HTTP_USER_AGENT" =>
+            "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36",
+        )
+      request.params["_escaped_fragment_"] = ""
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(false)
+
+      SiteSetting.enable_escaped_fragments = true
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(true)
     end
   end
 

@@ -12,7 +12,7 @@ describe "Admin Plugins List" do
   end
 
   let(:automation_plugin) do
-    Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "automation", "plugin.rb"))
+    Plugin::Instance.parse_from_source(Rails.root.join("plugins/automation/plugin.rb").to_s)
   end
 
   it "shows the list of plugins" do

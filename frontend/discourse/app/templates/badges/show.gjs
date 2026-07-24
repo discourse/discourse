@@ -1,15 +1,15 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import BadgeCard from "discourse/components/badge-card";
 import BadgeTitle from "discourse/components/badge-title";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserInfo from "discourse/components/user-info";
-import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DBadgeCard from "discourse/ui-kit/d-badge-card";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DUserInfo from "discourse/ui-kit/d-user-info";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -25,7 +25,7 @@ export default <template>
     </h1>
 
     <div class="show-badge-details">
-      <BadgeCard
+      <DBadgeCard
         @badge={{@controller.model}}
         @size="large"
         @count={{@controller.userBadgesGrantCount}}
@@ -74,10 +74,10 @@ export default <template>
 
     {{#if @controller.userBadges}}
       <div class="user-badges {{@controller.model.slug}}">
-        <LoadMore @action={{@controller.loadMore}}>
+        <DLoadMore @action={{@controller.loadMore}}>
           <div class="badges-granted">
             {{#each @controller.userBadges as |ub|}}
-              <UserInfo
+              <DUserInfo
                 @user={{ub.user}}
                 @size="medium"
                 @date={{ub.granted_at}}
@@ -85,7 +85,7 @@ export default <template>
               >
                 <div class="granted-on">
                   {{trustHTML
-                    (i18n "badges.granted_on" date=(formatDate ub.granted_at))
+                    (i18n "badges.granted_on" date=(dFormatDate ub.granted_at))
                   }}
                 </div>
 
@@ -95,10 +95,10 @@ export default <template>
                     href="{{ub.topic.url}}/{{ub.post_number}}"
                   >{{trustHTML ub.topic.fancyTitle}}</a>
                 {{/if}}
-              </UserInfo>
+              </DUserInfo>
             {{/each}}
           </div>
-        </LoadMore>
+        </DLoadMore>
 
         {{#unless @controller.canLoadMore}}
           {{#if @controller.canShowOthers}}
@@ -113,7 +113,7 @@ export default <template>
         {{/unless}}
       </div>
 
-      <ConditionalLoadingSpinner @condition={{@controller.canLoadMore}} />
+      <DConditionalLoadingSpinner @condition={{@controller.canLoadMore}} />
     {{/if}}
   </div>
 </template>

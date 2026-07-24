@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import { SCROLLED_UP, UNSCROLLED } from "discourse/services/scroll-direction";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class FooterNav extends Component {
   @service capabilities;
@@ -103,7 +103,7 @@ export default class FooterNav extends Component {
       {{htmlClass "footer-nav-visible"}}
     {{/if}}
 
-    <div class={{concatClass "footer-nav" (if this.isVisible "visible")}}>
+    <div class={{dConcatClass "footer-nav" (if this.isVisible "visible")}}>
       <div class="footer-nav-widget">
         <DButton
           @action={{this.goBack}}

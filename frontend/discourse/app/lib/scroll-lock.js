@@ -8,7 +8,7 @@ function lockScroll(element) {
     return;
   }
 
-  let scrollGap = 0;
+  let scrollGap;
 
   //Add scroll gap if using default scrolling element
   if (element === document.scrollingElement) {

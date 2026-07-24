@@ -27,7 +27,6 @@ sk:
     oauth2_json_email_verified_path: "Cesta v súbore JSON používateľa OAuth2 k stavu overenia e-mailu používateľa. Napr.: user.email.verified. Aby toto nastavenie malo nejaký účinok, musí byť parameter oauth2_email_verified vypnutý."
     oauth2_json_avatar_path: "Cesta v súbore JSON používateľa Oauth2 k avataru používateľa. napr.: user.avatar_url"
     oauth2_email_verified: "Zaškrtnite toto políčko, ak stránka OAuth2 overila e-mail"
-    oauth2_overrides_email: "Prepíšte e-mailovú adresu Discourse vzdialenou e-mailovou adresou pri každom prihlásení. Funguje rovnako ako nastavenie `auth_overrides_email`, ale je špecifické pre prihlásenia OAuth2."
     oauth2_send_auth_header: "Odoslať klientske prihlasovacie údaje v hlavičke HTTP Authorization"
     oauth2_send_auth_body: "Odoslať prihlasovacie údaje klienta v tele požiadavky"
     oauth2_debug_auth: "Zahrňte do protokolov rozsiahle informácie o ladení"

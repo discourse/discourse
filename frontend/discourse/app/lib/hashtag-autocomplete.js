@@ -8,7 +8,7 @@ import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib
 import discourseLater from "discourse/lib/later";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
+import { CANCELLED_STATUS } from "discourse/ui-kit/modifiers/d-autocomplete";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically

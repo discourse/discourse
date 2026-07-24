@@ -4,45 +4,54 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { i18n } from "discourse-i18n";
+import {
+  askAdminToEnablePluginText,
+  availableCategoryType,
+  showAskAdminMessage,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import icon from "discourse/ui-kit/helpers/d-icon";
 
 export default class CategoryTypeCards extends Component {
   @service categoryTypeChooser;
+  @service composer;
   @service router;
 
   @action
   selectType(type) {
-    this.categoryTypeChooser.choose(
-      type.id,
-      type.name,
-      type.configuration_schema,
-      type.title,
-      this.args.counts[type.id]
-    );
+    this.categoryTypeChooser.choose(type, this.args.counts[type.id]);
     this.router.transitionTo("newCategory.tabs", "general");
+  }
+
+  @action
+  messageAdmin(type) {
+    this.composer.openNewMessage({
+      recipients: type.contact_admin_username,
+      topicTitle: type.required_plugin,
+    });
   }
 
   <template>
     <div class="category-type-cards">
       {{#each @types as |type|}}
         <div
-          class={{concatClass
+          class={{dConcatClass
             "category-type-cards__card"
-            (unless type.available "--unavailable")
+            (unless (availableCategoryType type) "--unavailable")
             (concat "--category-type-" type.id)
           }}
         >
           <button
             type="button"
             class="category-type-cards__card-select"
-            disabled={{unless type.available true}}
+            disabled={{unless (availableCategoryType type) true}}
             {{on "click" (fn this.selectType type)}}
           >
             <span class="category-type-cards__card-icon">
-              {{emoji type.icon alt="" skipTitle=true}}
+              {{dEmoji type.icon alt="" skipTitle=true}}
             </span>
             <span class="category-type-cards__card-name">
               {{type.name}}
@@ -53,21 +62,38 @@ export default class CategoryTypeCards extends Component {
               </span>
             {{/if}}
           </button>
-          {{#unless type.available}}
+          {{#unless (availableCategoryType type)}}
             <span class="category-type-cards__card-badge">
               <PluginOutlet
                 @name="category-type-card-top-right-corner"
                 @outletArgs={{lazyHash type=type}}
               >
-                {{i18n "category.choose_type.requires_plugin"}}
+                {{unavailableBadgeText type}}
               </PluginOutlet>
             </span>
           {{/unless}}
           <div class="category-type-cards__card-bottom">
+
             <PluginOutlet
               @name="category-type-card-bottom"
               @outletArgs={{lazyHash type=type}}
-            />
+            >
+              {{#if (showAskAdminMessage type)}}
+                <button
+                  type="button"
+                  class="btn category-type-cards__ask-admin-message"
+                  {{on "click" (fn this.messageAdmin type)}}
+                >
+                  <span class="category-type-cards__ask-admin-message-text">
+                    {{icon "envelope"}}
+                    {{askAdminToEnablePluginText type}}
+                  </span>
+                  <span class="category-type-cards__ask-admin-message-link">
+                    {{icon "arrow-right"}}
+                  </span>
+                </button>
+              {{/if}}
+            </PluginOutlet>
           </div>
         </div>
       {{/each}}

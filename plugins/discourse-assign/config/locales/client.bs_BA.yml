@@ -30,3 +30,6 @@ bs_BA:
     edit_assignments_modal:
       topic: "Topic"
       post: "Objava"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID teme"

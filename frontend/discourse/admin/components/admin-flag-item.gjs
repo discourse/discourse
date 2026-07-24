@@ -8,14 +8,14 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { SYSTEM_FLAG_IDS } from "discourse/admin/lib/constants";
-import DButton from "discourse/components/d-button";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class AdminFlagItem extends Component {
@@ -122,7 +122,7 @@ export default class AdminFlagItem extends Component {
 
   <template>
     <tr
-      class={{concatClass
+      class={{dConcatClass
         "d-table__row admin-flag-item"
         @flag.name_key
         (if this.isSaved "saved")
@@ -181,7 +181,7 @@ export default class AdminFlagItem extends Component {
               @triggerClass="btn-default"
             >
               <:content>
-                <DropdownMenu as |dropdown|>
+                <DDropdownMenu as |dropdown|>
                   {{#unless @isFirstFlag}}
                     <dropdown.item>
                       <DButton
@@ -213,7 +213,7 @@ export default class AdminFlagItem extends Component {
                       @title={{this.deleteTitle}}
                     />
                   </dropdown.item>
-                </DropdownMenu>
+                </DDropdownMenu>
               </:content>
             </DMenu>
           {{/if}}

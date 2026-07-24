@@ -86,7 +86,7 @@ export default class Columns {
     const columns = this._prepareColumns(count);
     const heights = Array(count).fill(0);
 
-    this.items.forEach((item) => {
+    this.items.forEach((item, index) => {
       let shortest = 0;
 
       for (let j = 1; j < count; ++j) {
@@ -102,6 +102,12 @@ export default class Columns {
       heights[shortest] += img && img.width > 0 ? img.height / img.width : 1;
 
       const wrappedItem = this._wrapDirectImage(item);
+      const lightboxEl = wrappedItem.matches(".lightbox")
+        ? wrappedItem
+        : wrappedItem.querySelector(".lightbox");
+      if (lightboxEl) {
+        lightboxEl.dataset.lightboxPosition = index;
+      }
       columns[shortest].append(wrappedItem);
     });
 

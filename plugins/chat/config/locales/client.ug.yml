@@ -246,8 +246,6 @@ ug:
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
       chat_notifications_title: "سۆھبەت ئۇقتۇرۇشى"
-      only_chat_push_notifications:
-        title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
       ignore_channel_wide_mention:
         title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
       show_thread_title_prompts:
@@ -295,8 +293,6 @@ ug:
         title: "ئۈستەل يۈزى سۆھبەت ئۇقتۇرۇشىنىڭ ئاۋازى"
       sounds:
         none: "يوق"
-        bell: "قوڭغۇراق"
-        ding: "دىڭ"
       title: "سۆھبەت"
       title_capitalized: "سۆھبەت"
       upload: "ھۆججەت يۈكلە"
@@ -327,6 +323,8 @@ ug:
         filter_closed: تاقالدى
         filter_archived: ئارخىپلاشتۇرۇلغان
         filter_input_placeholder: ئىسمى بويىچە قانال ئىزدە
+        filter_joined_all: "ھەممىسى"
+        filter_joined_joined: "قوشۇلدى"
       chat_message_separator:
         today: بۈگۈن
         yesterday: تۈنۈگۈن
@@ -373,7 +371,6 @@ ug:
         input_placeholder: ئات قوش
         slug_description: تور ئادرېسىدا قانال ئىسمىنى ئىشلەتمەي قانال قىسقارتىلما ئىشلىتىدۇ
         name: قانال ئىسمى
-        slug: قانال قىسقارتىلمىسى (تاللاشچان)
       channel_edit_description_modal:
         title: چۈشەندۈرۈش تەھرىر
         input_placeholder: چۈشەندۈرۈش قوش
@@ -394,6 +391,9 @@ ug:
         memberships_count:
           one: "%{count} ئەزا"
           other: "%{count} ئەزا"
+        preview_card:
+          log_in: "تىزىمغا كىرىش"
+          sign_up: "تىزىملىتىڭ"
       create_channel:
         threading:
           label: "تېما رەتلەشنى قوزغات"
@@ -430,9 +430,8 @@ ug:
             one: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
             other: '%{group} ۋە باشقا %{count} گۇرۇپپىدىكى ئىشلەتكۈچى <a href="%{settingLink}" target="_blank">بىخەتەرلىك تەڭشىكى</a> گە ئاساسەن بۇ قانالنى زىيارەت قىلىدۇ'
         create: "قانال قۇر"
-        description: "چۈشەندۈرۈش (تاللاشچان)"
+        description: "چۈشەندۈرۈش"
         name: "قانال ئىسمى"
-        slug: "قانال قىسقارتىلمىسى (تاللاشچان)"
         title: "يېڭى قانال"
         type: "تىپى"
         types:
@@ -753,3 +752,14 @@ ug:
       panels:
         chat:
           label: "سۆھبەت"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "سۆھبەت ئۇچۇرى يوللا"
+      chat_message_created:
+        channel_id: "قانال"
+      send_chat_message:
+        channel_id: "قانال"
+        message: "ئۇچۇر"
+      chat_approval:
+        message: "ئۇچۇر"
+        channel_id: "قانال"

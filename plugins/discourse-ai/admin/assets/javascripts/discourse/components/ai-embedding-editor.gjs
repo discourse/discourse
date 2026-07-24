@@ -8,16 +8,16 @@ import { service } from "@ember/service";
 import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
 import { eq, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiSecretSelector from "./ai-secret-selector";
 
@@ -592,22 +592,22 @@ export default class AiEmbeddingEditor extends Component {
 
         {{#if this.displayTestResult}}
           <form.Container @format="full" class="ai-embedding-editor-tests">
-            <ConditionalLoadingSpinner
+            <DConditionalLoadingSpinner
               @size="small"
               @condition={{this.testRunning}}
             >
               {{#if this.testResult}}
                 <div class="ai-embedding-editor-tests__success">
-                  {{icon "check"}}
+                  {{dIcon "check"}}
                   {{i18n "discourse_ai.embeddings.tests.success"}}
                 </div>
               {{else}}
                 <div class="ai-embedding-editor-tests__failure">
-                  {{icon "xmark"}}
+                  {{dIcon "xmark"}}
                   {{this.testErrorMessage}}
                 </div>
               {{/if}}
-            </ConditionalLoadingSpinner>
+            </DConditionalLoadingSpinner>
           </form.Container>
         {{/if}}
       </Form>

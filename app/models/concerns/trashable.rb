@@ -32,6 +32,6 @@ module Trashable
   private
 
   def trash_update(deleted_at, deleted_by_id)
-    self.update_columns(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
+    update_columns(deleted_at: deleted_at, deleted_by_id: deleted_by_id)
   end
 end

@@ -2,6 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
 module("Integration | Component | CreateInvite", function (hooks) {
@@ -175,6 +176,44 @@ module("Integration | Component | CreateInvite", function (hooks) {
       98,
       "uses invite_link_max_redemptions_limit as the default value if it's smaller than 10"
     );
+  });
+
+  test("focuses the description field after expanding advanced options", async function (assert) {
+    const model = {};
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".edit-link-options");
+
+    assert
+      .dom("input[name='description']")
+      .isFocused(
+        "the description input receives focus when advanced options expand, so screen reader users land inside the form"
+      );
+  });
+
+  test("focuses the copy/share button after the invite link is created", async function (assert) {
+    const model = {};
+    pretender.post("/invites", () =>
+      response({
+        id: 42,
+        link: "https://example.com/invites/abc123",
+      })
+    );
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".save-invite");
+
+    assert
+      .dom(".link-share-container button")
+      .isFocused(
+        "focus moves to the copy/share button after the invite is created"
+      );
   });
 
   test("the expiresAfterDays field", async function (assert) {

@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Composer topic featured links", function (needs) {
   needs.user();
@@ -23,6 +24,37 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".title-input input")
       .hasValue("An interesting article", "title is from the oneboxed article");
+  });
+
+  test("featured link after body content is entered", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "Existing topic title");
+    await selectKit(".category-chooser").expand();
+    await selectKit(".category-chooser").selectRowByValue(2);
+    await fillIn(".d-editor-input", "this is the content of a new topic post");
+    await fillIn("#reply-title", "http://www.example.com/has-title.html");
+
+    assert
+      .dom(".title-input input")
+      .hasValue("An interesting article", "title is from the oneboxed article");
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "this is the content of a new topic post\n\nhttp://www.example.com/has-title.html",
+        "link is appended to existing body content"
+      );
+    assert
+      .dom(".d-editor-preview")
+      .includesHtml("onebox", "appended link previews as a onebox");
+
+    const composer = this.owner.lookup("service:composer");
+
+    assert.strictEqual(
+      composer.model.featuredLink,
+      "http://www.example.com/has-title.html",
+      "featured link is set"
+    );
   });
 
   test("onebox result doesn't include a title", async function (assert) {

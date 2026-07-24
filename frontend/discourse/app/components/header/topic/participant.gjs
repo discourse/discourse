@@ -3,10 +3,10 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
 import { eq, or } from "discourse/truth-helpers";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class Participant extends Component {
   @service appEvents;
@@ -38,14 +38,14 @@ export default class Participant extends Component {
         title={{@username}}
       >
         {{#if (eq @type "user")}}
-          {{avatar
+          {{dBoundAvatarTemplate
             @user.avatar_template
             (or @avatarSize "tiny")
             (hash title=@username)
           }}
         {{else}}
           <span>
-            {{icon "users"}}
+            {{dIcon "users"}}
             {{@username}}
           </span>
         {{/if}}

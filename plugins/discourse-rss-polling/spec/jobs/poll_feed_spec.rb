@@ -160,5 +160,240 @@ RSpec.describe Jobs::DiscourseRssPolling::PollFeed do
         job.execute(feed_url: authenticated_url, author_username: author.username)
       }.to change { author.topics.count }.by(1)
     end
+
+    context "with user_id" do
+      it "creates a topic when given user_id" do
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.topics.count
+        }.by(1)
+      end
+
+      it "keeps working after the user is renamed" do
+        UsernameChanger.change(author, "renamed_account")
+
+        expect { job.execute(feed_url: feed_url, user_id: author.id) }.to change {
+          author.reload.topics.count
+        }.by(1)
+      end
+
+      it "falls back to the system user and logs when the referenced user no longer exists" do
+        deleted_id = author.id
+        author.destroy!
+
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, user_id: deleted_id) }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
+    end
+
+    context "with an unknown author_username (legacy fallback)" do
+      it "falls back to the system user and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("not found")).at_least_once
+
+        expect { job.execute(feed_url: feed_url, author_username: "ghost_user") }.to change {
+          Discourse.system_user.topics.count
+        }.by(1)
+      end
+    end
+
+    context "with an rss_feed_id" do
+      let(:rss_feed) { Fabricate(:rss_feed, url: feed_url, user: author) }
+
+      it "records a poll attempt with per-item outcomes" do
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.to change { DiscourseRssPolling::PollAttempt.count }.by(1)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.rss_feed_id).to eq(rss_feed.id)
+        expect(attempt.status).to eq("success")
+        expect(attempt.imported_count).to eq(1)
+        expect(attempt.items.first).to include(
+          "status" => "imported",
+          "title" => "Poll Feed Spec Fixture",
+        )
+        expect(attempt.items.first["topic_url"]).to be_present
+      end
+
+      it "publishes the recorded attempt to the admin-only message bus channel" do
+        messages =
+          MessageBus.track_publish("/rss-polling/feeds/#{rss_feed.id}") do
+            job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+          end
+
+        expect(messages.size).to eq(1)
+        expect(messages.first.group_ids).to eq([Group::AUTO_GROUPS[:admins]])
+        expect(messages.first.data[:status]).to eq("success")
+        expect(messages.first.data[:imported_count]).to eq(1)
+      end
+
+      it "polls again when force is true even if it was polled recently" do
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(2)
+      end
+
+      it "marks the feed as recently polled when forced so the next scheduled poll is throttled" do
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        expect(DiscourseRssPolling::PollAttempt.count).to eq(1)
+      end
+
+      it "does not poll a disabled feed on a scheduled (non-forced) run" do
+        rss_feed.update!(enabled: false)
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.not_to change { DiscourseRssPolling::PollAttempt.count }
+      end
+
+      it "does not poll a disabled feed even when forced" do
+        rss_feed.update!(enabled: false)
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id, force: true)
+        }.not_to change { DiscourseRssPolling::PollAttempt.count }
+      end
+
+      it "records a skipped outcome when the category filter doesn't match" do
+        job.execute(
+          feed_url: feed_url,
+          user_id: author.id,
+          rss_feed_id: rss_feed.id,
+          feed_category_filter: "does-not-match",
+        )
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.skipped_count).to eq(1)
+        expect(attempt.items.first).to include(
+          "status" => "skipped",
+          "reason" => "category_filter_mismatch",
+        )
+      end
+
+      it "records a failed outcome with a reason when an item can't be imported" do
+        TopicEmbed.stubs(:import).returns(nil)
+
+        job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.status).to eq("error")
+        expect(attempt.failed_count).to eq(1)
+        expect(attempt.imported_count).to eq(0)
+        expect(attempt.items.first).to include("status" => "failed", "reason" => "import_rejected")
+      end
+
+      it "isolates a failing item, records its error message, and keeps polling" do
+        TopicEmbed.stubs(:import).raises(StandardError.new("boom"))
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.not_to raise_error
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.status).to eq("error")
+        expect(attempt.failed_count).to eq(1)
+        expect(attempt.items.first["status"]).to eq("failed")
+        expect(attempt.items.first["reason"]).to include("boom")
+      end
+
+      it "records an error attempt and re-raises when the whole poll fails" do
+        DiscourseRssPolling::RssFeed::Action::FetchFeed.stubs(:call).raises(
+          StandardError.new("kaboom"),
+        )
+
+        expect {
+          job.execute(feed_url: feed_url, user_id: author.id, rss_feed_id: rss_feed.id)
+        }.to raise_error(StandardError)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt).to be_present
+        expect(attempt.status).to eq("error")
+        expect(attempt.error).to eq("unknown")
+      end
+
+      it "records a breadcrumb attempt when the target category was deleted" do
+        category = Fabricate(:category)
+        deleted_id = category.id
+        category.destroy!
+
+        expect {
+          job.execute(
+            feed_url: feed_url,
+            user_id: author.id,
+            rss_feed_id: rss_feed.id,
+            discourse_category_id: deleted_id,
+          )
+        }.to change { DiscourseRssPolling::PollAttempt.count }.by(1)
+
+        attempt = DiscourseRssPolling::PollAttempt.last
+        expect(attempt.status).to eq("error")
+        expect(attempt.error).to eq("category_deleted")
+        expect(attempt.items).to be_empty
+      end
+
+      it "does not record duplicate category_deleted breadcrumbs on repeated scheduled polls" do
+        category = Fabricate(:category)
+        deleted_id = category.id
+        category.destroy!
+
+        2.times do
+          job.execute(
+            feed_url: feed_url,
+            user_id: author.id,
+            rss_feed_id: rss_feed.id,
+            discourse_category_id: deleted_id,
+          )
+        end
+
+        expect(
+          DiscourseRssPolling::PollAttempt.where(
+            rss_feed_id: rss_feed.id,
+            error: "category_deleted",
+          ).count,
+        ).to eq(1)
+      end
+
+      it "resumes polling once the category is restored (throttle not consumed by the breadcrumb)" do
+        category = Fabricate(:category)
+        deleted_id = category.id
+        category.destroy!
+
+        job.execute(
+          feed_url: feed_url,
+          user_id: author.id,
+          rss_feed_id: rss_feed.id,
+          discourse_category_id: deleted_id,
+        )
+
+        new_category = Fabricate(:category)
+
+        expect {
+          job.execute(
+            feed_url: feed_url,
+            user_id: author.id,
+            rss_feed_id: rss_feed.id,
+            discourse_category_id: new_category.id,
+          )
+        }.to change { author.topics.count }.by(1)
+      end
+
+      it "keeps only the most recent attempts per feed" do
+        stub_const(DiscourseRssPolling::PollAttempt, "KEEP_PER_FEED", 2) do
+          4.times { DiscourseRssPolling::PollAttempt.record!(rss_feed_id: rss_feed.id, items: []) }
+        end
+
+        expect(DiscourseRssPolling::PollAttempt.where(rss_feed_id: rss_feed.id).count).to eq(2)
+      end
+    end
   end
 end

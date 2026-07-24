@@ -162,6 +162,31 @@ RSpec.describe AdminUserIndexQuery do
     end
   end
 
+  describe "sorting by a penalty reason" do
+    fab!(:user_a) { Fabricate(:user, suspended_till: 1.year.from_now, suspended_at: Time.zone.now) }
+    fab!(:user_z) { Fabricate(:user, suspended_till: 1.year.from_now, suspended_at: Time.zone.now) }
+
+    before do
+      UserHistory.create!(
+        action: UserHistory.actions[:suspend_user],
+        target_user_id: user_a.id,
+        acting_user_id: Discourse.system_user.id,
+        details: "aaa reason",
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:suspend_user],
+        target_user_id: user_z.id,
+        acting_user_id: Discourse.system_user.id,
+        details: "zzz reason",
+      )
+    end
+
+    it "orders by the suspend reason (joining only when sorting by it)" do
+      query = ::AdminUserIndexQuery.new(query: "suspended", order: "suspend_reason", asc: "true")
+      expect(real_users(query).map(&:id)).to eq([user_a.id, user_z.id])
+    end
+  end
+
   describe "with a staged user" do
     fab!(:user) { Fabricate(:user, staged: true) }
     fab!(:user2) { Fabricate(:user, staged: false) }
@@ -169,6 +194,26 @@ RSpec.describe AdminUserIndexQuery do
     it "finds the staged user" do
       query = ::AdminUserIndexQuery.new(query: "staged")
       expect(real_users(query)).to eq([user])
+    end
+  end
+
+  describe "with the activation filter" do
+    fab!(:activated_user) { Fabricate(:user, active: true) }
+    fab!(:not_activated_user) { Fabricate(:user, active: false) }
+
+    it "finds only not activated users" do
+      query = ::AdminUserIndexQuery.new(query: "new", activation: "not_activated")
+      expect(real_users(query)).to contain_exactly(not_activated_user)
+    end
+
+    it "finds only activated users" do
+      query = ::AdminUserIndexQuery.new(query: "new", activation: "activated")
+      expect(real_users(query)).to contain_exactly(activated_user)
+    end
+
+    it "finds all users when no activation filter is provided" do
+      query = ::AdminUserIndexQuery.new(query: "new")
+      expect(real_users(query)).to contain_exactly(activated_user, not_activated_user)
     end
   end
 
@@ -230,8 +275,85 @@ RSpec.describe AdminUserIndexQuery do
       fab!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 
       it "matches the ip address" do
-        query = ::AdminUserIndexQuery.new(filter: " 117.207.94.9 ")
+        query =
+          ::AdminUserIndexQuery.new(filter: " 117.207.94.9 ", guardian: Fabricate(:admin).guardian)
         expect(query.find_users.count()).to eq(1)
+      end
+    end
+
+    context "with multiple terms" do
+      fab!(:user_one) { Fabricate(:user, username: "bulk_user_1", email: "first@example.com") }
+      fab!(:user_two) { Fabricate(:user, username: "bulk_user_2", email: "second@example.com") }
+
+      it "matches usernames separated by commas" do
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1,bulk_user_2")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "matches usernames separated by whitespace" do
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1 bulk_user_2")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1\nbulk_user_2")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "matches a mix of usernames and emails" do
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1, second@example.com")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "matches a list of emails" do
+        query = ::AdminUserIndexQuery.new(filter: "first@example.com,second@example.com")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+
+        query = ::AdminUserIndexQuery.new(filter: "first@example.com second@example.com")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "matches secondary emails exactly" do
+        Fabricate(:secondary_email, user: user_two, email: "extra@elsewhere.com")
+
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1,extra@elsewhere.com")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "ignores blank tokens" do
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1, ,,  bulk_user_2,")
+        expect(query.find_users).to contain_exactly(user_one, user_two)
+      end
+
+      it "treats like and regex metacharacters literally" do
+        query = ::AdminUserIndexQuery.new(filter: "bulk_user_1,foo(")
+        expect(query.find_users).to contain_exactly(user_one)
+
+        query = ::AdminUserIndexQuery.new(filter: "a|b,zzz%")
+        expect(query.find_users).to be_empty
+      end
+
+      it "still uses the exact email bypass for a single term with a trailing comma" do
+        query = ::AdminUserIndexQuery.new(filter: "first@example.com,").find_users_query
+        expect(query.to_sql.downcase).not_to include("ilike")
+        expect(query).to contain_exactly(user_one)
+      end
+
+      it "does not search by ip address when multiple terms are given" do
+        Fabricate(:user, ip_address: "117.207.94.9")
+
+        query =
+          ::AdminUserIndexQuery.new(
+            filter: "117.207.94.9,117.207.94.10",
+            guardian: Fabricate(:admin).guardian,
+          )
+        expect(query.find_users).to be_empty
+      end
+
+      it "raises when there are too many terms" do
+        filter = (0..AdminUserIndexQuery::MAX_FILTER_TERMS).map { |i| "user#{i}" }.join(",")
+
+        expect { ::AdminUserIndexQuery.new(filter: filter).find_users }.to raise_error(
+          Discourse::InvalidParameters,
+        )
       end
     end
   end

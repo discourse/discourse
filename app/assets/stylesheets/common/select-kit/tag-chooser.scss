@@ -5,14 +5,19 @@
     .select-kit-row {
       display: flex;
       align-items: baseline;
+      flex-wrap: wrap;
 
       .discourse-tag-count {
         margin-left: 5px;
       }
 
+      .synonym-hint {
+        margin-left: 0.5em;
+        color: var(--primary-medium);
+      }
+
       &.disabled {
         opacity: 1;
-        flex-wrap: wrap;
 
         .discourse-tag {
           opacity: 0.5;

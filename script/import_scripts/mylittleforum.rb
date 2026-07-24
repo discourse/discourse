@@ -826,13 +826,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def append_missing_upload(filename)
-    begin
-      File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
-    rescue => e
-      print_warning(
-        "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}",
-      )
-    end
+    File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
+  rescue => e
+    print_warning("Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}")
   end
 
   def find_uploads_table_name
@@ -1020,35 +1016,33 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       .where("raw LIKE '%/images/uploaded/%'")
       .find_in_batches(batch_size: BATCH_SIZE) do |posts|
         posts.each do |post|
+          old_raw = post.raw.to_s
+          next if old_raw.blank?
+          #next unless old_raw =~ @legacy_upload_regex
+          next if old_raw.exclude?("/images/uploaded/")
           begin
-            old_raw = post.raw.to_s
-            next if old_raw.blank?
-            #next unless old_raw =~ @legacy_upload_regex
-            next if old_raw.exclude?("/images/uploaded/")
-            begin
-              total_legacy = old_raw.scan(@legacy_upload_regex).length
-              mapped_legacy =
-                old_raw
-                  .scan(@legacy_upload_regex)
-                  .count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
-              if total_legacy > 0
-                print_warning(
-                  "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}",
-                )
-              end
-            rescue StandardError
+            total_legacy = old_raw.scan(@legacy_upload_regex).length
+            mapped_legacy =
+              old_raw
+                .scan(@legacy_upload_regex)
+                .count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
+            if total_legacy > 0
+              print_warning(
+                "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}",
+              )
             end
-
-            new_raw = rewrite_legacy_uploads(old_raw)
-            next if new_raw == old_raw
-
-            post.raw = new_raw
-            post.save!
-            post.rebake!
-            print "."
-          rescue => e
-            print_warning("Repair failed for post #{post.id}: #{e.message}")
+          rescue StandardError
           end
+
+          new_raw = rewrite_legacy_uploads(old_raw)
+          next if new_raw == old_raw
+
+          post.raw = new_raw
+          post.save!
+          post.rebake!
+          print "."
+        rescue => e
+          print_warning("Repair failed for post #{post.id}: #{e.message}")
         end
       end
 

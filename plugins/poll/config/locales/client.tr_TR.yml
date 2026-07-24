@@ -12,6 +12,7 @@ tr_TR:
           poll: "Discourse Anketi"
   js:
     poll:
+      title: "Anket"
       dynamic:
         enabled_hint: "Seçenekler eklenebilir veya kaldırılabilir."
       voters:
@@ -159,5 +160,3 @@ tr_TR:
           add: Seçenek ekle
         automatic_close:
           label: Anketi otomatik olarak kapat
-        show_advanced: "Gelişmiş Seçenekleri Göster"
-        hide_advanced: "Gelişmiş Seçenekleri Gizle"

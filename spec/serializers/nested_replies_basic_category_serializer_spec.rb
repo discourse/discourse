@@ -22,4 +22,13 @@ RSpec.describe CategorySerializer do
 
     expect(json[:category_setting][:nested_replies_default]).to eq(false)
   end
+
+  it "serializes the category conversion custom field" do
+    category.mark_nested_replies_conversion_completed!
+    cat = Category.includes(:category_setting).find(category.id)
+
+    json = CategorySerializer.new(cat, scope: Guardian.new(admin), root: false).as_json
+
+    expect(json[:custom_fields][NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD]).to eq(true)
+  end
 end

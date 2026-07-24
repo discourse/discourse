@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
-module("Integration | Component | avatar-uploader", function (hooks) {
+module("Integration | Component | AvatarUploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("uploading", async function (assert) {

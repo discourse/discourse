@@ -18,7 +18,7 @@ In your local terminal, navigate to a directory where you want to store your new
 
 When setup is done, you'll see `✅ Done!`, and you'll be prompted to start "watching" the theme. Answer yes, and then work through the watching setup.
 
-For the root URL, enter the base URL of the Discourse site you'd like to sync the theme to. For a local development environment, use something like `http://localhost:4200`. For a production site, use something like `https://meta.discourse.org`. Or for Theme Creator, use `https://discourse.theme-creator.io`.
+For the root URL, enter the base URL of the Discourse site you'd like to sync the theme to. For a local development environment, use something like `http://localhost:3000`. For a production site, use something like `https://meta.discourse.org`. Or for Theme Creator, use `https://discourse.theme-creator.io`.
 
 Now you'll need to generate an API key. For a local development environment or production forum, visit the "API Keys" section of the admin panel, choose "Add API key", and create one associated with your user account, and a "Global" scope. Then paste it into the `discourse_theme` CLI.
 

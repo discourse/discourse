@@ -152,6 +152,57 @@ RSpec.describe "List channels | mobile", mobile: true do
         end
       end
     end
+
+    context "when long pressing a channel row" do
+      fab!(:category_channel_1, :category_channel)
+
+      let(:channel_row) { PageObjects::Components::Chat::ChannelRow.new(category_channel_1.id) }
+
+      before { category_channel_1.add(current_user) }
+
+      it "opens the channel menu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+
+        expect(page).to have_css(".fk-d-menu-modal .chat-channel-sidebar-link-menu")
+      end
+
+      it "leaves the channel using the menu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+        find(".chat-channel-sidebar-link-menu__leave-channel").click
+
+        expect(channel_row).to be_non_existent
+      end
+
+      it "changes the notification level from the menu submenu" do
+        visit("/chat/channels")
+
+        channel_row.long_press
+        find(".chat-channel-sidebar-link-menu__open-notification-settings").click
+        find(".chat-channel-sidebar-link-menu__notification-level-never").click
+
+        expect(category_channel_1.membership_for(current_user).reload.notification_level).to eq(
+          "never",
+        )
+      end
+
+      context "when direct message channel" do
+        fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
+
+        let(:dm_channel_row) { PageObjects::Components::Chat::ChannelRow.new(dm_channel_1.id) }
+
+        it "opens the channel menu" do
+          visit("/chat/direct-messages")
+
+          dm_channel_row.long_press
+
+          expect(page).to have_css(".fk-d-menu-modal .chat-channel-sidebar-link-menu")
+        end
+      end
+    end
   end
 
   context "when no category channels" do

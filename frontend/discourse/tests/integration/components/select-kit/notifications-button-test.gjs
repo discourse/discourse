@@ -8,7 +8,7 @@ import selectKit, {
 } from "discourse/tests/helpers/select-kit-helper";
 
 module(
-  "Integration | Component | select-kit/notifications-button",
+  "Integration | Component | SelectKit | NotificationsButton",
   function (hooks) {
     setupRenderingTest(hooks);
 

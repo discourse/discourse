@@ -96,5 +96,3 @@ lv:
           add: Pievienot opciju
         automatic_close:
           label: Automātiski aizvērt aptauju
-        show_advanced: "Rādīt papildu opcijas"
-        hide_advanced: "Slēpt papildu opcijas"

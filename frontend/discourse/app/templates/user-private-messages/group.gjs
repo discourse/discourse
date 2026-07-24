@@ -1,6 +1,6 @@
-import DNavigationItem from "discourse/components/d-navigation-item";
 import MessagesSecondaryNav from "discourse/components/user-nav/messages-secondary-nav";
-import icon from "discourse/helpers/d-icon";
+import DNavigationItem from "discourse/ui-kit/d-navigation-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -11,7 +11,7 @@ export default <template>
       @ariaCurrentContext="subNav"
       class="user-nav__messages-group-latest"
     >
-      {{icon "envelope"}}
+      {{dIcon "envelope"}}
       <span>{{i18n "categories.latest"}}</span>
     </DNavigationItem>
 
@@ -21,7 +21,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__messages-group-new"
       >
-        {{icon "circle-exclamation"}}
+        {{dIcon "circle-exclamation"}}
         <span>{{@controller.newLinkText}}</span>
       </DNavigationItem>
 
@@ -30,7 +30,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__messages-group-unread"
       >
-        {{icon "circle-plus"}}
+        {{dIcon "circle-plus"}}
         <span>{{@controller.unreadLinkText}}</span>
       </DNavigationItem>
 
@@ -39,7 +39,7 @@ export default <template>
         @ariaCurrentContext="subNav"
         class="user-nav__messages-group-archive"
       >
-        {{icon "box-archive"}}
+        {{dIcon "box-archive"}}
         <span>{{i18n "user.messages.archive"}}</span>
       </DNavigationItem>
     {{/if}}

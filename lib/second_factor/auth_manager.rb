@@ -158,7 +158,13 @@ class SecondFactor::AuthManager
     @target_user = target_user
     @action = action
     @allowed_methods =
-      Set.new([UserSecondFactor.methods[:totp], UserSecondFactor.methods[:security_key]]).freeze
+      Set.new(
+        [
+          UserSecondFactor.methods[:totp],
+          UserSecondFactor.methods[:security_key],
+          UserSecondFactor.methods[:passkey],
+        ],
+      ).freeze
   end
 
   def allow_backup_codes!

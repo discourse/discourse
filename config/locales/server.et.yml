@@ -244,6 +244,11 @@ et:
       trust_level_2: "usaldustase_2"
       trust_level_3: "usaldustase_3"
       trust_level_4: "usaldustase_4"
+    default_full_names:
+      everyone: "Kõik"
+      admins: "Adminnid"
+      moderators: "Moderaatorid"
+      staff: "Meeskond"
   education:
     until_posts:
       one: "%{count} postitus"
@@ -523,6 +528,9 @@ et:
     scopes:
       read: "Loe kõiki"
       write: "Kirjuta kõikidesse"
+    device:
+      code: "Kood"
+      continue: "Jätka"
   reports:
     default:
       labels:
@@ -564,6 +572,30 @@ et:
       xaxis: "Päev"
     new_contributors:
       xaxis: "Päev"
+    activity_by_category:
+      labels:
+        category: "Kategooriad"
+        topics: "Teemasid"
+        posts: "Postitust"
+        share: "Jaga"
+    posters_by_member_type:
+      labels:
+        count: "Postitust"
+        share: "Jaga"
+      types:
+        staff: "Meeskond"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Liikmed"
+        share: "Jaga"
+        signups: "Registreerumised"
+      levels:
+        "0": "Uus"
+        "1": "Tavakasutaja"
+        "2": "Liige"
+        "3": "Püsiliige"
+        "4": "Vedaja"
     trust_level_growth:
       yaxis: "Päev"
     consolidated_page_views:
@@ -580,6 +612,8 @@ et:
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonüümne"
       yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
@@ -665,6 +699,12 @@ et:
         user: "Kasutaja"
         num_clicks: "Klikke"
         num_topics: "Teemasid"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Külastusi"
     top_traffic_sources:
       title: "Suurima liikluse allikad"
       xaxis: "Domeen"
@@ -702,6 +742,8 @@ et:
       xaxis: "Päev"
     page_view_logged_in_browser_reqs:
       xaxis: "Päev"
+    page_view_embed_reqs:
+      xaxis: "Päev"
     http_background_reqs:
       title: "Taustal"
       xaxis: "Päev"
@@ -736,7 +778,7 @@ et:
       labels:
         user: Kasutaja
         location: Asukoht
-    staff_logins:
+    admin_logins:
       labels:
         user: Kasutaja
         location: Asukoht
@@ -789,6 +831,10 @@ et:
     types:
       category: "Liigid"
       user: "Kasutajad"
+  posts_filter:
+    description:
+      order_latest: "Viimased postitused"
+      order_latest_topic: "Viimased teemad"
   original_poster: "Esialgne postitaja"
   most_recent_poster: "Viimane postitaja"
   frequent_poster: "Tihedam postitaja"
@@ -1045,6 +1091,8 @@ et:
               private:
                 label: "Privaatne"
   onebox:
+    google_meet:
+      meeting_code: "Kood:"
     github:
       closed: "suletud"
       status_date:

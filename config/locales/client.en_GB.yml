@@ -79,6 +79,7 @@ en_GB:
       advanced:
         in_category:
           label: Categorised
+    header_panel: "Header"
     topic:
       automatically_add_to_groups: "This invitation also includes access to these groups:"
     post:
@@ -102,6 +103,9 @@ en_GB:
       categories:
         title: "Categories"
     keyboard_shortcuts_help:
+      description_header: "Description"
+      jump_to:
+        categories: "Categories"
       navigation:
         title: "Navigation"
     tagging:
@@ -125,6 +129,8 @@ en_GB:
           header_description: "Customise the template in which all html emails are rendered, and style using CSS"
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
+        reports_section:
+          no_data: "No data to display"
       flags:
         description: "Description"
       api:

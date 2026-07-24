@@ -10,8 +10,14 @@ X-WR-CALNAME:<%= IcalEncoder.encode(@calendar_name) %>
 BEGIN:VEVENT
 UID:calendar_event_#<%= event.id %>_<%= starts_at.to_i %>@<%= Discourse.current_hostname %>
 DTSTAMP:<%= Time.now.utc.strftime("%Y%m%dT%H%M%SZ") %>
+<%- if event.all_day -%>
+<%- last_day = (ends_at.present? ? ends_at.utc - 1.second : starts_at.utc).to_date -%>
+DTSTART;VALUE=DATE:<%= starts_at.utc.strftime("%Y%m%d") %>
+DTEND;VALUE=DATE:<%= (last_day + 1).strftime("%Y%m%d") %>
+<%- else -%>
 DTSTART:<%= starts_at.utc.strftime("%Y%m%dT%H%M%SZ") %>
 DTEND:<%= ends_at.presence ? ends_at.utc.strftime("%Y%m%dT%H%M%SZ") : (starts_at + 1.hour).utc.strftime("%Y%m%dT%H%M%SZ") %>
+<%- end -%>
 SUMMARY:<%= IcalEncoder.encode(event.name.presence || event.post.topic.title) %>
 <%- if event.location.present? -%>LOCATION:<%= IcalEncoder.encode(event.location) %>
 <%- end -%>

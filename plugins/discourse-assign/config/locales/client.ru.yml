@@ -194,3 +194,12 @@ ru:
       title: "Изменить назначения"
       topic: "Тема"
       post: "Публикация"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Назначенные"
+      assign_topic:
+        operations:
+          assign: "Назначить"
+          unassign: "Снять ответственного"
+        topic_id: "ID темы"
+        assignee: "Назначенный"

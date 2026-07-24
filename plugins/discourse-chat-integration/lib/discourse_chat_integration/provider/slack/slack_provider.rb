@@ -157,7 +157,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"
@@ -168,7 +168,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     icon_url =
       if SiteSetting.chat_integration_slack_icon_url.present?
         "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
-      elsif (url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)).present?
+      elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
         "#{Discourse.base_url}#{url}"
       end
 
@@ -215,7 +215,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     icon_url =
       if SiteSetting.chat_integration_slack_icon_url.present?
         "#{Discourse.base_url}#{SiteSetting.chat_integration_slack_icon_url}"
-      elsif (url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)).present?
+      elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
         "#{Discourse.base_url}#{url}"
       end
 
@@ -246,7 +246,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
         if topic.category&.uncategorized?
           "[#{I18n.t("uncategorized_category_name")}]"
         elsif topic.category
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"
@@ -345,7 +345,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     unless response.kind_of? Net::HTTPSuccess
       if response.code.to_s == "403"
         error_key = "chat_integration.provider.slack.errors.action_prohibited"
-      elsif response.body == ("channel_not_found") || response.body == ("channel_is_archived")
+      elsif response.body == "channel_not_found" || response.body == "channel_is_archived"
         error_key = "chat_integration.provider.slack.errors.channel_not_found"
       else
         error_key = nil
@@ -365,9 +365,9 @@ module DiscourseChatIntegration::Provider::SlackProvider
     message = slack_message(post, channel_id, filter)
 
     if SiteSetting.chat_integration_slack_access_token.empty?
-      self.send_via_webhook(message)
+      send_via_webhook(message)
     else
-      self.send_via_api(post, channel_id, message)
+      send_via_api(post, channel_id, message)
     end
   end
 

@@ -159,5 +159,3 @@ hu:
           add: Lehetőség hozzáadása
         automatic_close:
           label: Szavazás automatikus lezárása
-        show_advanced: "Speciális beállítások megjelenítése"
-        hide_advanced: "Speciális beállítások elrejtése"

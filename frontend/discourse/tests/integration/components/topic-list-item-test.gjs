@@ -5,7 +5,7 @@ import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | topic-list-item", function (hooks) {
+module("Integration | Component | TopicListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("checkbox is rendered checked if topic is in selected array", async function (assert) {

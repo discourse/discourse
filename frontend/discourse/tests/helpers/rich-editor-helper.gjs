@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
-import DEditor from "discourse/components/d-editor";
+import DEditor from "discourse/ui-kit/d-editor";
 
 export async function setupRichEditor(assert, markdown, multiToggle = false) {
   const self = new (class {
@@ -109,8 +109,6 @@ export async function testMarkdown(
  */
 export function testRenderedMarkdown(markdown, assertions) {
   return async function (assert) {
-    this.siteSettings.rich_editor = true;
-
     const [editorClass] = await setupRichEditor(assert, markdown);
 
     // The editor is already in the DOM, so we can use assert.dom directly

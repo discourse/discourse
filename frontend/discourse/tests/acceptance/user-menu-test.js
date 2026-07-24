@@ -4,13 +4,13 @@ import {
   click,
   currentRouteName,
   currentURL,
+  findAll,
   triggerEvent,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
-import DButton from "discourse/components/d-button";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -21,9 +21,9 @@ import {
   acceptance,
   loggedInUser,
   publishToMessageBus,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 acceptance("User menu", function (needs) {
@@ -281,7 +281,7 @@ acceptance("User menu", function (needs) {
       .dom("#user-menu-button-custom-tab-2")
       .exists("second custom tab is rendered");
 
-    const tabs = [...queryAll(".tabs-list.top-tabs .btn")];
+    const tabs = findAll(".tabs-list.top-tabs .btn");
 
     assert.deepEqual(
       tabs.reduce((acc, tab) => {
@@ -343,7 +343,7 @@ acceptance("User menu", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    const notifications = queryAll(
+    const notifications = findAll(
       "#quick-access-all-notifications ul li.notification"
     );
     assert

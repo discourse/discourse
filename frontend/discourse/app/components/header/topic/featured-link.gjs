@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class FeaturedLink extends Component {
   get meta() {
@@ -15,7 +15,7 @@ export default class FeaturedLink extends Component {
         target={{this.meta.target}}
         href={{this.meta.href}}
       >
-        {{icon "up-right-from-square"}}
+        {{dIcon "up-right-from-square"}}
         {{this.meta.domain}}
       </a>
     {{/if}}

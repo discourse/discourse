@@ -102,6 +102,16 @@ export const ADMIN_NAV_MAP = [
         multi_tabbed: true,
       },
       {
+        name: "admin_category_management",
+        route: "adminConfig.categoryManagement",
+        label: "admin.config.category_management.title",
+        description: "admin.config.category_management.header_description",
+        keywords: "admin.config.category_management.keywords",
+        icon: "folder",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
+      },
+      {
         name: "admin_badges",
         route: "adminBadges",
         label: "admin.config.badges.title",

@@ -15,13 +15,18 @@ de:
       title: RSS-Abfrage
     admin:
       rss_polling:
-        feed: Feed-Einstellungen
-        discourse: Discourse-Einstellungen
         author: Verfasser
         feed_url: URL
         discourse_category: Kategorie
         discourse_tags: Schlagwörter
-        feed_category_filter: Kategoriefilter
-        documentation: Dokumentation zur Konfiguration von RSS-Abfragen
-        destroy_feed:
-          confirm: "Bist du sicher, dass du diesen Feed löschen möchtest?"
+        feeds:
+          edit: Bearbeiten
+          delete: Löschen
+          save: Speichern
+          confirm_delete: "Bist du sicher, dass du diesen Feed löschen möchtest?"
+        test:
+          title: Vorschau
+          dismiss: Schließen
+        status:
+          enabled: Aktiviert
+          disabled: Deaktiviert

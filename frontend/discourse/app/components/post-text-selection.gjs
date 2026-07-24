@@ -11,12 +11,11 @@ import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import toMarkdown from "discourse/lib/to-markdown";
 import {
   getElement,
+  selectedHTML,
   selectedNode,
   selectedRange,
-  selectedText,
   setCaretPosition,
 } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
@@ -78,7 +77,10 @@ export default class PostTextSelection extends Component {
     }
 
     const quoteState = this.computeQuoteState(cooked);
-    const supportsFastEdit = this.computeSupportsFastEdit(cooked, quoteState);
+    const supportsFastEdit = await this.computeSupportsFastEdit(
+      cooked,
+      quoteState
+    );
 
     await this.toggleFastEdit(quoteState, supportsFastEdit);
   }
@@ -89,10 +91,16 @@ export default class PostTextSelection extends Component {
     // other action to change its value until toggleFastEdit is complete
     const post = this.post;
 
+    const { markdown } = await quoteState.markdown();
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     if (supportsFastEdit) {
       this.modal.show(FastEditModal, {
         model: {
-          initialValue: quoteState.buffer,
+          initialValue: markdown,
           post,
         },
       });
@@ -109,9 +117,7 @@ export default class PostTextSelection extends Component {
       // selecting even a part of the text of a list item will include
       // "* " at the beginning of the buffer, we remove it to be able
       // to find it in row
-      const buffer = fixQuotes(
-        quoteState.buffer.split("\n")[0].replace(/^\* /, "")
-      );
+      const buffer = fixQuotes(markdown.split("\n")[0].replace(/^\* /, ""));
 
       rows.some((row, index) => {
         if (row.length && row.includes(buffer)) {
@@ -151,6 +157,10 @@ export default class PostTextSelection extends Component {
   async showToolbar(cooked) {
     const shouldRenderBelow = this.shouldRenderBelow();
     const quoteState = this.computeQuoteState(cooked);
+    const supportsFastEdit = await this.computeSupportsFastEdit(
+      cooked,
+      quoteState
+    );
 
     let offset = 3;
 
@@ -182,7 +192,7 @@ export default class PostTextSelection extends Component {
       trapTab: false,
       closeOnScroll: false,
       data: {
-        supportsFastEdit: this.computeSupportsFastEdit(cooked, quoteState),
+        supportsFastEdit,
         canEditPost: this.canEditPost,
         canCopyQuote: this.canCopyQuote,
         topic: this.args.topic,
@@ -240,7 +250,9 @@ export default class PostTextSelection extends Component {
       return; // we changed the range here, so we want to go through the selection change handler again
     }
 
-    if (!selectedText()?.length) {
+    const selection = window.getSelection();
+
+    if (selection.isCollapsed || !selection.toString().trim().length) {
       return;
     }
 
@@ -319,7 +331,7 @@ export default class PostTextSelection extends Component {
     return await this.args.buildQuoteMarkdown();
   }
 
-  computeSupportsFastEdit(cooked, quoteState) {
+  async computeSupportsFastEdit(cooked, quoteState) {
     const selection = window.getSelection();
     let supportsFastEdit = this.canEditPost;
 
@@ -337,15 +349,16 @@ export default class PostTextSelection extends Component {
     }
 
     if (supportsFastEdit) {
-      const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
+      const { markdown } = await quoteState.markdown();
+      const regexp = new RegExp(escapeRegExp(markdown), "gi");
       try {
         const matches = cooked.innerHTML.match(regexp);
 
         if (
-          quoteState.buffer.length === 0 ||
-          quoteState.buffer.includes("|") || // tables are too complex
-          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-          quoteState.buffer.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
+          markdown.length === 0 ||
+          markdown.includes("|") || // tables are too complex
+          markdown.match(/\n/g) || // linebreaks are too complex
+          markdown.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
           matches?.length !== 1 // duplicates are too complex
         ) {
           supportsFastEdit = false;
@@ -361,18 +374,30 @@ export default class PostTextSelection extends Component {
   }
 
   computeQuoteState(cooked) {
-    const _selectedText = selectedText();
+    const html = selectedHTML();
     const _selectedElement = getElement(selectedNode());
     const postId = cooked.closest(".boxed, .reply")?.dataset?.postId;
 
-    // computing markdown takes a lot of time on long posts
-    // this code attempts to compute it only when we can't fast track
-    let opts = {
-      full:
-        selectedRange().startOffset > 0
-          ? false
-          : _selectedText === toMarkdown(cooked.innerHTML),
+    const range = selectedRange();
+    const startNode = range.startContainer;
+
+    const isFirstCookedChild = (node) => {
+      if (node === cooked) {
+        return true;
+      }
+
+      if (node.parentNode.firstChild !== node) {
+        return false;
+      }
+
+      return isFirstCookedChild(node.parentNode);
     };
+
+    const canBeFull =
+      range.startOffset === 0 &&
+      cooked.contains(startNode) &&
+      isFirstCookedChild(startNode);
+    const opts = { full: false };
 
     for (
       let element = _selectedElement;
@@ -388,7 +413,13 @@ export default class PostTextSelection extends Component {
     }
 
     const quoteState = this.args.quoteState;
-    quoteState.selected(postId, _selectedText, opts);
+    quoteState.selected(
+      postId,
+      null,
+      opts,
+      html,
+      canBeFull ? cooked.innerHTML : null
+    );
     return quoteState;
   }
 

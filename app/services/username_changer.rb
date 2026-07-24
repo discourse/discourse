@@ -9,7 +9,7 @@ class UsernameChanger
   end
 
   def self.change(user, new_username, actor = nil)
-    self.new(user, new_username, actor).change
+    new(user, new_username, actor).change
   end
 
   def self.override(user, new_username)

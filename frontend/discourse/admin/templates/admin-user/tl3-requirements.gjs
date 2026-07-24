@@ -1,13 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import checkIcon from "discourse/admin/helpers/check-icon";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li><LinkTo @route="adminUser" @model={{@controller.model}}>{{icon
+        <li><LinkTo @route="adminUser" @model={{@controller.model}}>{{dIcon
               "angle-left"
             }}
             &nbsp;{{@controller.model.username}}</LinkTo></li>
@@ -174,22 +174,22 @@ export default <template>
         {{#if @controller.model.tl3Requirements.requirements_lost}}
           {{! tl implicitly not locked }}
           {{#if @controller.model.tl3Requirements.on_grace_period}}
-            {{icon "xmark"}}
+            {{dIcon "xmark"}}
             {{i18n "admin.user.tl3_requirements.on_grace_period"}}
           {{else}}
             {{! not on grace period }}
-            {{icon "xmark"}}
+            {{dIcon "xmark"}}
             {{i18n "admin.user.tl3_requirements.does_not_qualify"}}
             {{i18n "admin.user.tl3_requirements.will_be_demoted"}}
           {{/if}}
         {{else}}
           {{! requirements not lost - remains tl3 }}
           {{#if @controller.model.tl3Requirements.trust_level_locked}}
-            {{icon "lock"}}
+            {{dIcon "lock"}}
             {{i18n "admin.user.tl3_requirements.locked_will_not_be_demoted"}}
           {{else}}
             {{! tl not locked }}
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "admin.user.tl3_requirements.qualifies"}}
             {{#if @controller.model.tl3Requirements.on_grace_period}}
               {{i18n "admin.user.tl3_requirements.on_grace_period"}}
@@ -200,16 +200,16 @@ export default <template>
         {{! is not tl3 }}
         {{#if @controller.model.tl3Requirements.requirements_met}}
           {{! met & not tl3 - will be promoted}}
-          {{icon "check"}}
+          {{dIcon "check"}}
           {{i18n "admin.user.tl3_requirements.qualifies"}}
           {{i18n "admin.user.tl3_requirements.will_be_promoted"}}
         {{else}}
           {{! requirements not met - remains regular }}
           {{#if @controller.model.tl3Requirements.trust_level_locked}}
-            {{icon "lock"}}
+            {{dIcon "lock"}}
             {{i18n "admin.user.tl3_requirements.locked_will_not_be_promoted"}}
           {{else}}
-            {{icon "xmark"}}
+            {{dIcon "xmark"}}
             {{i18n "admin.user.tl3_requirements.does_not_qualify"}}
           {{/if}}
         {{/if}}

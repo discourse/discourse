@@ -128,9 +128,13 @@ shared_examples "login scenarios" do
 
     it "cannot browse annonymously" do
       visit "/"
+
+      screenshot_marker(label: "login-required")
       expect(page).to have_css(".login-welcome")
       expect(page).to have_css(".site-logo")
       find(".login-welcome .login-button").click
+
+      screenshot_marker(label: "login-form")
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
@@ -175,7 +179,7 @@ shared_examples "login scenarios" do
     end
 
     it "does not leak category metadata if homepage is /categories" do
-      SiteSetting.top_menu = "categories|latest|new|unread|top"
+      SiteSetting.top_menu = "categories|latest|new|top"
       visit "/"
 
       expect(page).to have_css(".login-welcome")

@@ -19,8 +19,7 @@ class SiteSetting::Update
       dependent_order = SiteSetting.type_supervisor.dependencies.order
 
       self.settings =
-        self
-          .settings
+        settings
           .to_a
           .map do |setting|
             Setting.new(
@@ -37,7 +36,7 @@ class SiteSetting::Update
 
     after_validation do
       self.settings =
-        self.settings.map do |setting|
+        settings.map do |setting|
           raw_value = setting.value
 
           setting.value =

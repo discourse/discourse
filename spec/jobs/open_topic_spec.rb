@@ -19,7 +19,10 @@ RSpec.describe Jobs::OpenTopic do
 
   it "publishes to the topic message bus so the topic status reloads" do
     MessageBus.expects(:publish).at_least_once
-    MessageBus.expects(:publish).with("/topic/#{topic.id}", reload_topic: true).once
+    MessageBus
+      .expects(:publish)
+      .with("/topic/#{topic.id}", { reload_topic: true }, topic.secure_audience_publish_messages)
+      .once
     freeze_time(61.minutes.from_now) do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
     end
@@ -45,6 +48,27 @@ RSpec.describe Jobs::OpenTopic do
         expect(topic_timer.status_type).to eq(TopicTimer.types[:close])
         expect(topic_timer.execute_at).to eq_time(5.hours.from_now)
       end
+    end
+  end
+
+  describe "when user is allowed to set topic timers" do
+    fab!(:user)
+    fab!(:group)
+    fab!(:topic) { Fabricate(:topic_timer, status_type: TopicTimer.types[:open], user: user).topic }
+
+    before do
+      topic.update!(closed: true)
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+    end
+
+    it "opens the topic" do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      expect(topic.reload.open?).to eq(true)
     end
   end
 

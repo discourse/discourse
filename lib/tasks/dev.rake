@@ -40,7 +40,7 @@ task "dev:repopulate" => ["db:load_config"] do |_, args|
       "Do you want to repopulate the database with fresh data? It will recreate DBs and run migration from scratch before generating all the samples. (Y/n)  ",
     )
 
-  if (answer == "" || answer.downcase == "y")
+  if answer == "" || answer.downcase == "y"
     Rake::Task["dev:reset"].invoke
   else
     puts "You can run `bin/rails dev:reset` to repopulate anytime."

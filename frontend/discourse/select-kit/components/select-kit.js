@@ -127,6 +127,7 @@ function protoProp(prototype, key, descriptor) {
 @classNameBindings(
   "selectKit.isLoading:is-loading",
   "selectKit.isExpanded:is-expanded",
+  "selectKit.isPlacedAbove:is-placed-above",
   "selectKit.options.disabled:is-disabled",
   "selectKit.isHidden:is-hidden",
   "selectKit.hasSelection:has-selection"
@@ -161,6 +162,7 @@ function protoProp(prototype, key, descriptor) {
   autofocus: false,
   placementStrategy: null,
   mobilePlacementStrategy: null,
+  mobilePlacement: null,
   desktopPlacementStrategy: null,
   hiddenValues: null,
   disabled: false,
@@ -188,6 +190,12 @@ export default class SelectKit extends Component {
   @autoTrackedArray mainCollection = null;
   @autoTrackedArray errorsCollection = null;
 
+  _handleNativeToggle = () => {
+    if (this.element.open !== this.selectKit.isExpanded) {
+      this.element.open ? this._open() : this._close();
+    }
+  };
+
   init() {
     super.init(...arguments);
 
@@ -214,6 +222,7 @@ export default class SelectKit extends Component {
         isLoading: false,
         isHidden: false,
         isExpanded: false,
+        isPlacedAbove: false,
         isFilterExpanded: false,
         enterDisabled: false,
         hasSelection: false,
@@ -326,6 +335,8 @@ export default class SelectKit extends Component {
       this.updateFloatingUiPosition
     );
 
+    this.element.addEventListener("toggle", this._handleNativeToggle);
+
     if (this.selectKit.options.expandedOnInsert) {
       next(() => {
         this._open();
@@ -348,6 +359,8 @@ export default class SelectKit extends Component {
       this,
       this.updateFloatingUiPosition
     );
+
+    this.element.removeEventListener("toggle", this._handleNativeToggle);
 
     this.cleanupFloatingUi?.();
   }
@@ -547,8 +560,14 @@ export default class SelectKit extends Component {
       }
 
       if (this.singleSelect) {
-        value = isPresent(value.firstObject) ? value.firstObject : null;
-        items = isPresent(items.firstObject) ? items.firstObject : null;
+        const firstValue = value.firstObject;
+        const firstItem = items.firstObject;
+
+        value =
+          isPresent(firstValue) || (firstValue === "" && firstItem)
+            ? firstValue
+            : null;
+        items = isPresent(firstItem) ? firstItem : null;
       }
 
       this._boundaryActionHandler("onChange", value, items);
@@ -761,7 +780,11 @@ export default class SelectKit extends Component {
         ) {
           filter = this.createContentFromInput(filter);
           if (this.validateCreate(filter, content)) {
-            this.selectKit.set("newItem", this.defaultItem(filter, filter));
+            const newItem = this.defaultItem(filter, filter);
+            if (typeof newItem === "object" && newItem !== null) {
+              newItem.isNew = true;
+            }
+            this.selectKit.set("newItem", newItem);
             content.unshift(this.selectKit.newItem);
           }
         }
@@ -903,7 +926,14 @@ export default class SelectKit extends Component {
   }
 
   select(value, item) {
-    if (!isPresent(value)) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
+    // A row may explicitly carry a blank value (e.g. "use the default");
+    // selecting it is a real selection, not a clear.
+    if (!isPresent(value) && !(value === "" && item)) {
       this._onClearSelection();
     } else {
       const existingItem = this.findValue(this.mainCollection, item);
@@ -959,6 +989,7 @@ export default class SelectKit extends Component {
 
     this.selectKit.setProperties({
       isExpanded: false,
+      isPlacedAbove: false,
       filter: null,
     });
   }
@@ -972,16 +1003,12 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    if (this.site.desktopView) {
-      this.cleanupFloatingUi?.();
-      this.cleanupFloatingUi = autoUpdate(
-        this.getHeader(),
-        this._bodyElement(),
-        () => this.updateFloatingUiPosition()
-      );
-    } else {
-      this.updateFloatingUiPosition();
-    }
+    this.cleanupFloatingUi?.();
+    this.cleanupFloatingUi = autoUpdate(
+      this.getHeader(),
+      this._bodyElement(),
+      () => this.updateFloatingUiPosition()
+    );
 
     this.selectKit.setProperties({
       isExpanded: true,
@@ -1094,11 +1121,11 @@ export default class SelectKit extends Component {
       hide(),
     ];
 
-    computePosition(referenceElement, floatingElement, {
-      placement: this.selectKit.options.placement,
+    return computePosition(referenceElement, floatingElement, {
+      placement: this._computePlacement(),
       strategy,
       middleware,
-    }).then(({ x, y, middlewareData }) => {
+    }).then(({ x, y, placement, middlewareData }) => {
       const style = {
         width,
         minWidth,
@@ -1117,6 +1144,7 @@ export default class SelectKit extends Component {
         }
       }
 
+      this.selectKit.set("isPlacedAbove", placement.startsWith("top"));
       Object.assign(floatingElement.style, style);
     });
   }
@@ -1210,6 +1238,14 @@ export default class SelectKit extends Component {
     }
 
     return placementStrategy;
+  }
+
+  _computePlacement() {
+    if (this.site.mobileView && this.selectKit.options.mobilePlacement) {
+      return this.selectKit.options.mobilePlacement;
+    }
+
+    return this.selectKit.options.placement;
   }
 
   _deprecated(text) {

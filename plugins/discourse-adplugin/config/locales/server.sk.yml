@@ -16,7 +16,6 @@ sk:
     house_ads_after_nth_post: 'Ak sú definované vlastné reklamy „Medzi príspevkami“, zobrazte reklamu po každých N príspevkoch, kde N je táto hodnota.'
     house_ads_frequency: "Ak sú iné reklamné siete nakonfigurované na zobrazovanie v reklamnom priestore, ako často by sa mali zobrazovať vlastné reklamy v percentách."
     ads_txt: "Obsah súboru ads.txt. Viac informácií nájdete na <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>tejto stránke pomoci Google AdSense</a>."
-    dfp_publisher_id: "Zadajte kód siete Google Ad Manager (predtým nazývaný DFP), ktorý nájdete v nastaveniach siete. POZNÁMKA: Budete musieť aktualizovať nastavenie \"content security policy script src\". Najnovšie pokyny nájdete v <a href='https://meta.discourse.org/t/33734' target='_blank'>tejto téme</a>."
     dfp_publisher_id_mobile: "(Voliteľné) Ak chcete pre mobilnú verziu webu použiť iné ID vydavateľa služby Ad Manager, zadajte ho sem. Ak chcete v mobile použiť dfp_publisher_id, nechajte toto pole prázdne."
     dfp_through_trust_level: "Zobrazujte svoje reklamy používateľom na základe úrovne dôvery. Používatelia s úrovňou dôvery vyššou ako táto hodnota reklamy neuvidia."
     dfp_exclude_groups: "Reklamy sa nebudú zobrazovať členom týchto skupín"
@@ -45,7 +44,6 @@ sk:
     dfp_mobile_post_bottom_ad_sizes: "Vyberte si veľkosť reklamy pre reklamnú jednotku, ktorá sa zobrazuje medzi príspevkami v mobilnom zobrazení."
     dfp_target_post_bottom_key_code: "Vstupné kľúče vlastného zacielenia – úroveň inventára"
     dfp_target_post_bottom_value_code: "Zadajte hodnoty vlastného zacielenia – úroveň inventára"
-    adsense_publisher_code: "Vaše ID vydavateľa. Zadajte iba číslo okrem „pub-“. POZNÁMKA: Budete musieť aktualizovať nastavenie „content security policy script src“. Najnovšie pokyny nájdete v <a href='https://meta.discourse.org/t/33734' target='_blank'>tejto téme</a> ."
     adsense_through_trust_level: "Zobrazujte svoje reklamy používateľom na základe úrovne dôvery. Používatelia s úrovňou dôvery vyššou ako táto hodnota reklamy neuvidia."
     adsense_exclude_groups: "Reklamy sa nebudú zobrazovať členom týchto skupín"
     adsense_topic_list_top_code: "Zadajte kód reklamnej jednotky, ktorá sa má zobrazovať v hornej časti zoznamu tém. Ide o číslo priradené reklamnej jednotke, nie o kód JavaScriptu."
@@ -98,7 +96,6 @@ sk:
     carbonads_exclude_groups: "Reklamy sa nebudú zobrazovať členom týchto skupín"
     carbonads_topic_list_top_enabled: "Zobrazenie reklamy nad zoznamom tém"
     carbonads_above_post_stream_enabled: "Zobrazenie reklamy nad prúdom príspevkov"
-    adbutler_publisher_id: "ID vydavateľa AdButler. POZNÁMKA: Možno budete musieť aktualizovať nastavenie „content security policy script src“. Najnovšie pokyny nájdete v <a href='https://meta.discourse.org/t/33734' target='_blank'>tejto téme</a> ."
     adbutler_mobile_topic_list_top_zone_id: "ID zóny pre najvyššie umiestnenie v zozname mobilných tém"
     adbutler_mobile_topic_above_post_stream_zone_id: "ID zóny pre mobilnú tému nad umiestnením streamu príspevku"
     adbutler_mobile_post_bottom_zone_id: "ID zóny pre umiestnenie spodnej časti mobilného stĺpika"

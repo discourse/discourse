@@ -1,17 +1,22 @@
 import { getOwner } from "@ember/owner";
 import { trustHTML } from "@ember/template";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import { iconHTML } from "discourse/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
+import { renderAvatar } from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
   "topic.assigned_to_group",
+  "topic.can_assign",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
 ];
+
+function canAssignTopic(context) {
+  return context.topic?.can_assign ?? context.currentUser?.can_assign;
+}
 
 export default {
   id: "reassign",
@@ -19,7 +24,7 @@ export default {
   classNames: ["reassign"],
 
   async action(id) {
-    if (!this.currentUser?.can_assign) {
+    if (!canAssignTopic(this)) {
       return;
     }
 
@@ -95,7 +100,7 @@ export default {
 
   displayed() {
     return (
-      this.currentUser?.can_assign &&
+      canAssignTopic(this) &&
       this.site.desktopView &&
       (this.topic.isAssigned() || this.topic.hasAssignedPosts())
     );

@@ -4,15 +4,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
 import ExpandPost from "discourse/components/expand-post";
 import PostListItemDetails from "discourse/components/post-list/item/details";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { userPath } from "discourse/lib/url";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 export default class PostListItem extends Component {
   @service site;
@@ -81,7 +81,7 @@ export default class PostListItem extends Component {
   }
 
   get itemClasses() {
-    return concatClass(
+    return dConcatClass(
       "post-list-item",
       this.moderatorActionClass,
       this.primaryGroupClass,
@@ -118,7 +118,7 @@ export default class PostListItem extends Component {
 
         {{#if this.isDraft}}
           <div class="draft-icon">
-            {{icon this.draftIcon class="icon"}}
+            {{dIcon this.draftIcon class="icon"}}
           </div>
         {{else}}
           <a
@@ -127,7 +127,7 @@ export default class PostListItem extends Component {
             class="avatar-link"
           >
             <div class="avatar-wrapper">
-              {{avatar
+              {{dAvatar
                 this.user
                 imageSize="large"
                 extraClasses="actor"
@@ -180,7 +180,7 @@ export default class PostListItem extends Component {
         data-user-id={{@post.user_id}}
         class="excerpt"
       >
-        <DecoratedHtml
+        <DDecoratedHtml
           @html={{trustHTML (or @post.expandedExcerpt @post.excerpt)}}
           @className="cooked"
         />

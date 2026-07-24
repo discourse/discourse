@@ -4,18 +4,25 @@ import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import EmailLog from "discourse/admin/models/email-log";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
-import LoadMore from "discourse/components/load-more";
-import TextField from "discourse/components/text-field";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import DiscourseURL, {
+  applyQueryParams,
+  searchParamsFromPath,
+} from "discourse/lib/url";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class EmailLogsList extends Component {
+  @service router;
+
   @tracked allLoaded = false;
   @tracked loading = false;
   @tracked filterValues = {};
@@ -49,9 +56,13 @@ export default class EmailLogsList extends Component {
     if (!this.initialized) {
       this.initialized = true;
 
+      // router.currentURL, unlike window.location, is also correct under the
+      // test environment's mock location
+      const params = searchParamsFromPath(this.router.currentURL);
+
       const initialValues = {};
       this.args.filters?.forEach((filter) => {
-        initialValues[filter.property] = "";
+        initialValues[filter.property] = params.get(filter.name) || "";
       });
       this.filterValues = initialValues;
 
@@ -133,8 +144,29 @@ export default class EmailLogsList extends Component {
         [filterConfig.property]: event.target.value,
       };
       this.loadMoreEnabled = false;
-      discourseDebounce(this, this.loadLogs, INPUT_DELAY);
+      discourseDebounce(this, this.applyFilters, INPUT_DELAY);
     }
+  }
+
+  applyFilters() {
+    this.syncFiltersToUrl();
+    this.loadLogs();
+  }
+
+  syncFiltersToUrl() {
+    // no currentURL means the router isn't live (e.g. rendering tests)
+    if (!this.router.currentURL) {
+      return;
+    }
+
+    const updates = {};
+    this.args.filters?.forEach(({ property, name }) => {
+      updates[name] = this.filterValues[property];
+    });
+
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, updates)
+    );
   }
 
   @action
@@ -151,7 +183,7 @@ export default class EmailLogsList extends Component {
   }
 
   <template>
-    <LoadMore
+    <DLoadMore
       @action={{this.loadMore}}
       @enabled={{this.canLoadMore}}
       @rootMargin="0px 0px 250px 0px"
@@ -174,7 +206,7 @@ export default class EmailLogsList extends Component {
               </td>
               {{#each @filters as |filter|}}
                 <td>
-                  <TextField
+                  <DTextField
                     @value={{get this.filterValues filter.property}}
                     @placeholderKey={{filter.placeholder}}
                     {{on "input" (fn this.updateFilter filter.name)}}
@@ -203,8 +235,8 @@ export default class EmailLogsList extends Component {
           </tbody>
         </table>
       </HorizontalScrollSyncWrapper>
-    </LoadMore>
+    </DLoadMore>
 
-    <ConditionalLoadingSpinner @condition={{this.loading}} />
+    <DConditionalLoadingSpinner @condition={{this.loading}} />
   </template>
 }

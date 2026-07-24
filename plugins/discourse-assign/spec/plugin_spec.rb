@@ -34,6 +34,19 @@ RSpec.describe DiscourseAssign do
       expect(assigned_option).to be_nil
     end
 
+    it "does not add assigned filter option for scoped users" do
+      SiteSetting.assign_allowed_on_groups = ""
+      category = Fabricate(:category)
+      scoped_group = Fabricate(:group)
+      scoped_user = Fabricate(:user, groups: [scoped_group])
+      allow_group_to_assign_in_category(category, scoped_group)
+
+      options = TopicsFilter.option_info(scoped_user.guardian)
+
+      assigned_option = options.find { |option| option[:name] == "assigned:" }
+      expect(assigned_option).to be_nil
+    end
+
     it "does not add assigned filter option for anonymous users" do
       options = TopicsFilter.option_info(Guardian.new)
 
@@ -113,6 +126,80 @@ RSpec.describe DiscourseAssign do
           expect(filtered_topic_ids).to contain_exactly(private_topic_assignment.topic.id)
         end
       end
+    end
+  end
+
+  describe "discourse-assign posts_filter_options modifier" do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = Group::AUTO_GROUPS[:staff]
+      user.update!(admin: true)
+    end
+
+    it "adds assigned_to filter option for users who can assign" do
+      options = PostsFilter.option_info(user.guardian)
+
+      assigned_option = options.find { |option| option[:name] == "assigned_to:" }
+      expect(assigned_option).to include(
+        name: "assigned_to:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username",
+        priority: 1,
+      )
+    end
+
+    it "does not add assigned_to filter option for users who cannot assign" do
+      options = PostsFilter.option_info(Fabricate(:user).guardian)
+
+      assigned_option = options.find { |option| option[:name] == "assigned_to:" }
+      expect(assigned_option).to be_nil
+    end
+  end
+
+  describe "discourse-assign PostsFilter filtering" do
+    fab!(:group)
+    fab!(:user)
+    fab!(:assigned_post, :post)
+    fab!(:other_assigned_post, :post)
+    fab!(:unassigned_post, :post)
+    fab!(:post_assignment) { Fabricate(:post_assignment, post: assigned_post, assigned_to: user) }
+    fab!(:other_assignment) do
+      Fabricate(:post_assignment, post: other_assigned_post, assigned_to: Fabricate(:user))
+    end
+
+    before do
+      SiteSetting.assign_allowed_on_groups = "#{group.id}"
+      group.add(user)
+    end
+
+    it "filters posts by assigned user" do
+      filtered_post_ids =
+        PostsFilter
+          .new("assigned_to:#{user.username}", guardian: Guardian.new(user))
+          .search
+          .pluck(:id)
+
+      expect(filtered_post_ids).to contain_exactly(assigned_post.id)
+    end
+
+    it "filters posts by assigned and unassigned topics" do
+      assigned_post_ids =
+        PostsFilter.new("assigned_to:*", guardian: Guardian.new(user)).search.pluck(:id)
+      unassigned_post_ids =
+        PostsFilter.new("assigned_to:nobody", guardian: Guardian.new(user)).search.pluck(:id)
+
+      expect(assigned_post_ids).to contain_exactly(assigned_post.id, other_assigned_post.id)
+      expect(unassigned_post_ids).to include(unassigned_post.id)
+    end
+
+    it "raises when the user cannot see assignments" do
+      expect do
+        PostsFilter
+          .new("assigned_to:#{user.username}", guardian: Guardian.new(Fabricate(:user)))
+          .search
+          .load
+      end.to raise_error(Discourse::InvalidAccess)
     end
   end
 

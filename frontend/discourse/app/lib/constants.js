@@ -26,6 +26,9 @@ export const CATEGORY_STYLE_TYPES = { square: 0, icon: 1, emoji: 2 };
 
 export const CATEGORY_TEXT_COLORS = ["FFFFFF", "000000"];
 
+export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS =
+  "additional_assign_allowed_on_groups";
+
 // NOTE: Group names are changed based on the site's locale, see
 // Group.refresh_automatic_group! for more details
 export const AUTO_GROUPS = {
@@ -33,6 +36,8 @@ export const AUTO_GROUPS = {
   admins: { id: 1, automatic: true, name: "admins" },
   moderators: { id: 2, automatic: true, name: "moderators" },
   staff: { id: 3, automatic: true, name: "staff" },
+  anonymous_users: { id: 4, automatic: true, name: "anonymous_users" },
+  logged_in_users: { id: 5, automatic: true, name: "logged_in_users" },
   trust_level_0: { id: 10, automatic: true, name: "trust_level_0" },
   trust_level_1: { id: 11, automatic: true, name: "trust_level_1" },
   trust_level_2: { id: 12, automatic: true, name: "trust_level_2" },
@@ -49,8 +54,6 @@ export const GROUP_VISIBILITY_LEVELS = {
   staff: 3,
   owners: 4,
 };
-
-export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
 
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
@@ -74,6 +77,7 @@ export const ADMIN_SEARCH_RESULT_TYPES = [
   "theme",
   "component",
   "report",
+  "upcomingChange",
 ];
 
 export const API_KEY_SCOPE_MODES = ["global", "read_only", "granular"];

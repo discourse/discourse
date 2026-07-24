@@ -82,13 +82,13 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/frontend"
-    d_node_modules = "#{Rails.root}/frontend/discourse/node_modules"
-    md_node_modules = "#{Rails.root}/frontend/discourse-markdown-it/node_modules"
+    root_path = "#{Rails.root.join("frontend")}"
+    d_node_modules = "#{Rails.root.join("frontend/discourse/node_modules")}"
+    md_node_modules = "#{Rails.root.join("frontend/discourse-markdown-it/node_modules")}"
     ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{md_node_modules}/xss/dist/xss.js")
-    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
+    ctx.load("#{Rails.root.join("lib/pretty_text/vendor-shims.js")}")
 
     ctx_load_directory(
       ctx: ctx,
@@ -119,7 +119,7 @@ module PrettyText
       )
     end
 
-    ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
+    ctx.load("#{Rails.root.join("lib/pretty_text/shims.js")}")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
     Discourse.plugins.each do |plugin|
@@ -198,7 +198,13 @@ module PrettyText
       context = v8
 
       custom_emoji = {}
-      Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
+      Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
+
+      allowed_iframes =
+        DiscoursePluginRegistry.apply_modifier(
+          :pretty_text_allowed_iframes,
+          SiteSetting.allowed_iframes.split("|"),
+        )
 
       # note, any additional options added to __optInput here must be
       # also be added to the buildOptions function in pretty-text.js,
@@ -206,6 +212,7 @@ module PrettyText
       buffer = +<<~JS
         __optInput = {};
         __optInput.siteSettings = #{SiteSetting.client_settings_json};
+        __optInput.allowedIframes = #{allowed_iframes.to_json};
         #{"__optInput.disableEmojis = true" if opts[:disable_emojis]}
         __paths = #{paths_json};
         __optInput.getURL = __getURL;
@@ -252,7 +259,7 @@ module PrettyText
       buffer << "__pt = __DiscourseMarkdownIt.withCustomFeatures(__pluginFeatures).withOptions(__optInput);"
 
       # Be careful disabling sanitization. We allow for custom emails
-      buffer << ("__pt.disableSanitizer();") if opts[:sanitize] == false
+      buffer << "__pt.disableSanitizer();" if opts[:sanitize] == false
 
       opts = context.eval(buffer)
 
@@ -284,11 +291,21 @@ module PrettyText
       JS
   end
 
+  def self.sanitize(html, opts = {})
+    protect { v8.eval(<<~JS) }
+        (() => {
+          const AllowLister = require("pretty-text/allow-lister").default;
+          const sanitize = require("pretty-text/sanitizer").sanitize;
+          return sanitize(#{html.to_s.inspect}, new AllowLister(#{opts.to_json}));
+        })()
+      JS
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
     set = SiteSetting.emoji_set.inspect
-    custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
+    custom = Emoji.custom.map { |e| [e.name, e.cdn_url] }.to_h.to_json
 
     protect { v8.eval(<<~JS) }
         __paths = #{paths_json};
@@ -532,23 +549,21 @@ module PrettyText
     doc
       .css("a[href]")
       .each do |a|
-        begin
-          href = a["href"].to_s
-          next if href.blank?
-          next if href.start_with?("mailto:")
-          next if href.start_with?(Discourse.base_url)
-          next if URI(href).host.present?
+        href = a["href"].to_s
+        next if href.blank?
+        next if href.start_with?("mailto:")
+        next if href.start_with?(Discourse.base_url)
+        next if URI(href).host.present?
 
-          a["href"] = (
-            if href.start_with?(Discourse.base_path)
-              "#{Discourse.base_url_no_prefix}#{href}"
-            else
-              "#{Discourse.base_url}#{href}"
-            end
-          )
-        rescue URI::Error
-          # leave it
-        end
+        a["href"] = (
+          if href.start_with?(Discourse.base_path)
+            "#{Discourse.base_url_no_prefix}#{href}"
+          else
+            "#{Discourse.base_url}#{href}"
+          end
+        )
+      rescue URI::Error
+        # leave it
       end
   end
 

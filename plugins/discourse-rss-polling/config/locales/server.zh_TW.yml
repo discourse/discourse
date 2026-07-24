@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  site_settings:
-    rss_polling_frequency: "[RSS Polling] 訊息更新頻率（分鐘）"

@@ -25,7 +25,7 @@ module PageObjects
       end
 
       def filter_controls
-        PageObjects::Components::AdminFilterControls.new(
+        PageObjects::Components::DFilterControls.new(
           ".upcoming-changes",
           has_multiple_dropdowns: true,
         )

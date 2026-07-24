@@ -29,6 +29,14 @@ RSpec.describe TopicsFilter do
       expect(tag_options).not_to be_nil
     end
 
+    it "should advertise the - prefix for the group: option" do
+      group_option = options.find { |o| o[:name] == "group:" }
+
+      expect(group_option[:prefixes]).to contain_exactly(
+        { name: "-", description: I18n.t("filter.description.exclude_group") },
+      )
+    end
+
     it "should not include user-specific options for anonymous users" do
       anon_options = TopicsFilter.option_info(Guardian.new)
       logged_in_options = TopicsFilter.option_info(user.guardian)
@@ -193,6 +201,65 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("group:group1+group2")
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1 returns topics without participants from the group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u2.id, topic_by_u3.id)
+      end
+
+      it "-groups:group1,group2 returns topics with participants from neither group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-groups:group1,group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u3.id)
+      end
+
+      it "-group:group1+group2 returns topics where both groups are not represented together" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id)
+      end
+
+      it "-group:missing is a no-op when the group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1+missing is a no-op when any group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1 returns topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to include(topic.id)
       end
 
       it "group:group1 should not return topics where the only post from a group member is deleted" do
@@ -455,7 +522,7 @@ RSpec.describe TopicsFilter do
 
       TopicUser.notification_levels.keys.each do |notification_level|
         describe "when query string is `in:#{notification_level}`" do
-          fab!("user_#{notification_level}_topic".to_sym) do
+          fab!(:"user_#{notification_level}_topic") do
             Fabricate(:topic).tap do |topic|
               TopicUser.change(
                 user.id,
@@ -480,7 +547,7 @@ RSpec.describe TopicsFilter do
                 .new(guardian: Guardian.new(user))
                 .filter_from_query_string("in:#{notification_level}")
                 .pluck(:id),
-            ).to contain_exactly(self.public_send("user_#{notification_level}_topic").id)
+            ).to contain_exactly(public_send("user_#{notification_level}_topic").id)
           end
         end
       end
@@ -1206,6 +1273,36 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(closed_and_unlisted_topic.id)
         end
       end
+
+      describe "when query string is `status:noreplies`" do
+        fab!(:topic_without_replies) { Fabricate(:topic, posts_count: 1) }
+        fab!(:topic_with_replies) { Fabricate(:topic, posts_count: 2) }
+
+        it "should only return topics that have no replies" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:noreplies")
+              .pluck(:id),
+          ).to contain_exactly(topic_without_replies.id)
+        end
+      end
+
+      describe "when query string is `status:single_user`" do
+        fab!(:single_user_topic) { Fabricate(:topic, participant_count: 1) }
+        fab!(:multi_user_topic) { Fabricate(:topic, participant_count: 2) }
+
+        it "should only return topics that have a single participant" do
+          topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:single_user")
+              .pluck(:id)
+
+          expect(topic_ids).to include(single_user_topic.id)
+          expect(topic_ids).not_to include(multi_user_topic.id)
+        end
+      end
     end
 
     describe "when filtering by tags" do
@@ -1301,6 +1398,18 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tags:#{tag.name}+#{tag2.name}")
             .pluck(:id),
         ).to contain_exactly(topic_with_tag_and_tag2.id)
+      end
+
+      it "should return topics tagged with period-delimited tag names" do
+        tag_with_period = Fabricate(:tag, name: "node.js")
+        topic_with_period_tag = Fabricate(:topic, tags: [tag_with_period])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tags:#{tag_with_period.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_period_tag.id)
       end
 
       it "should only return topics that are tagged with tag1 and tag2 when query string is `tags:tag1 tags:tag2`" do

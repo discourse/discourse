@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import CalendarSubscriptionUrl from "discourse/components/calendar-subscription-url";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarSubscriptions extends Component {
@@ -84,7 +84,7 @@ export default class CalendarSubscriptions extends Component {
       {{#if this.urls}}
         <div class="calendar-subscriptions__urls">
           <div class="alert alert-info calendar-subscriptions__warning">
-            {{icon "triangle-exclamation"}}
+            {{dIcon "triangle-exclamation"}}
             {{i18n "user.calendar_subscriptions.urls_warning"}}
           </div>
 
@@ -112,7 +112,7 @@ export default class CalendarSubscriptions extends Component {
       {{else if this.hasSubscription}}
         <div class="calendar-subscriptions__active">
           <p class="calendar-subscriptions__active-status">
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "user.calendar_subscriptions.active_subscription"}}
           </p>
           <div class="calendar-subscriptions__actions">

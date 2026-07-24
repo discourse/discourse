@@ -105,5 +105,3 @@ sr:
           add: Додај опцију
         automatic_close:
           label: Automatski zatvorite anketu
-        show_advanced: "Прикажи напредне опције"
-        hide_advanced: "Сакриј напредне опције"

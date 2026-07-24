@@ -5,13 +5,46 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import Category from "discourse/models/category";
 import formatEventForCalendar from "../lib/format-event-for-calendar";
+import openEventComposer from "../lib/open-event-composer";
 import FullCalendar from "./full-calendar";
 
 export default class CategoryCalendar extends Component {
+  @service composer;
   @service currentUser;
   @service router;
   @service siteSettings;
   @service discoursePostEventService;
+
+  get canCreateEvent() {
+    if (!this.currentUser) {
+      return false;
+    }
+
+    return (
+      this.currentUser.can_create_discourse_post_event &&
+      this.currentUser.can_create_topic &&
+      this.category?.canCreateTopic
+    );
+  }
+
+  @action
+  async onDateClick(info) {
+    await openEventComposer({
+      composer: this.composer,
+      currentUser: this.currentUser,
+      siteSettings: this.siteSettings,
+      info,
+      category: this.category,
+    });
+  }
+
+  get includeSubcategories() {
+    return !this.router.currentRoute?.attributes?.noSubcategories;
+  }
+
+  get refreshKey() {
+    return `${this.category.id}-${this.includeSubcategories}`;
+  }
 
   @bind
   async loadEvents(info) {
@@ -21,8 +54,11 @@ export default class CategoryCalendar extends Component {
         before: info.endStr,
         include_ongoing: true,
         category_id: this.category.id,
-        include_subcategories: true,
       };
+
+      if (this.includeSubcategories) {
+        params.include_subcategories = true;
+      }
 
       const events = await this.discoursePostEventService.fetchEvents(params);
       return this.formattedEvents(events);
@@ -119,10 +155,11 @@ export default class CategoryCalendar extends Component {
     {{#if this.shouldRender}}
       <FullCalendar
         @onLoadEvents={{this.loadEvents}}
+        @onDateClick={{if this.canCreateEvent this.onDateClick}}
         @height="650px"
         @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
-        @refreshKey={{this.category.id}}
+        @refreshKey={{this.refreshKey}}
       />
     {{/if}}
   </template>

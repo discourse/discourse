@@ -58,6 +58,51 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       it { is_expected.to fail_a_policy(:meets_or_exceeds_status) }
     end
 
+    context "when the change is owned by a plugin that is not configurable" do
+      let(:setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+        mock_upcoming_change_metadata(
+          enable_experimental_sample_plugin_feature: {
+            impact: "feature,admins",
+            status: :stable,
+          },
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:change_should_be_displayed) }
+
+      it "does not fire the upcoming_change_enabled event" do
+        events = DiscourseEvent.track_events(:upcoming_change_enabled) { result }
+
+        expect(events).to be_empty
+      end
+    end
+
+    context "when the change should not be displayed on this site" do
+      before do
+        UpcomingChanges::ConditionalDisplay.stubs(
+          :should_display_enable_upload_debug_mode?,
+        ).returns(false)
+      end
+
+      it { is_expected.to fail_a_policy(:change_should_be_displayed) }
+
+      it "does not notify admins or create an event" do
+        expect { result }.to not_change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+          ).count
+        }.and not_change {
+                UpcomingChangeEvent.where(
+                  event_type: :admins_notified_automatic_promotion,
+                  upcoming_change_name: :enable_upload_debug_mode,
+                ).count
+              }
+      end
+    end
+
     context "when change has already been notified about promotion" do
       let(:changes_already_notified_about_promotion) { [:enable_upload_debug_mode] }
 
@@ -137,6 +182,29 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
             upcoming_change_name: :enable_upload_debug_mode,
           ).count
         }.by(1)
+      end
+
+      it "creates an automatically_promoted event recording the promotion" do
+        expect { result }.to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }.by(1)
+      end
+
+      it "does not create a duplicate automatically_promoted event when one already exists" do
+        UpcomingChangeEvent.create!(
+          event_type: :automatically_promoted,
+          upcoming_change_name: :enable_upload_debug_mode,
+        )
+
+        expect { result }.not_to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }
       end
 
       it "triggers DiscourseEvent for the promoted setting" do
@@ -252,6 +320,34 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
           data = JSON.parse(notifications.first.data)
           expect(data["upcoming_change_names"]).to eq(["enable_upload_debug_mode"])
           expect(data["count"]).to eq(1)
+        end
+      end
+
+      context "when the notification creation fails" do
+        before do
+          Notification::Action::BulkCreate.stubs(:call).raises(ActiveRecord::StatementInvalid.new)
+        end
+
+        it "rolls back the staff action log" do
+          expect { result }.not_to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_toggled],
+              subject: "enable_upload_debug_mode",
+            ).count
+          }
+        end
+
+        it "rolls back the upcoming change event" do
+          expect { result }.not_to change {
+            UpcomingChangeEvent.where(
+              event_type: :admins_notified_automatic_promotion,
+              upcoming_change_name: :enable_upload_debug_mode,
+            ).count
+          }
+        end
+
+        it "fails the service" do
+          expect(result).to fail_with_exception
         end
       end
 

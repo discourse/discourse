@@ -15,8 +15,9 @@ module DiscourseDataExplorer
     end
 
     def self.list_query(user, guardian)
+      admin = user.admin?
       group_ids = []
-      if !user.admin?
+      if !admin
         group_ids = user.visible_groups.pluck(:id)
         return if group_ids.empty?
       end
@@ -30,7 +31,10 @@ module DiscourseDataExplorer
           .joins(
             "LEFT JOIN data_explorer_queries ON data_explorer_queries.id = data_explorer_query_groups.query_id",
           )
-      query = query.where("data_explorer_query_groups.group_id IN (?)", group_ids) if !user.admin?
+      if !admin
+        query = query.where("data_explorer_query_groups.group_id IN (?)", group_ids)
+        query = query.where("data_explorer_queries.hidden = false")
+      end
       query
     end
 
@@ -57,7 +61,7 @@ module DiscourseDataExplorer
     end
 
     def self.reminder_conditions(bookmark)
-      bookmark.bookmarkable.present?
+      bookmark.bookmarkable.present? && can_see?(bookmark.user.guardian, bookmark)
     end
 
     def self.can_see?(guardian, bookmark)
@@ -65,8 +69,11 @@ module DiscourseDataExplorer
     end
 
     def self.can_see_bookmarkable?(guardian, bookmarkable)
-      return false if !bookmarkable.group
-      guardian.user_is_a_member_of_group?(bookmarkable.group)
+      return false if bookmarkable.blank? || bookmarkable.group.blank? || bookmarkable.query.blank?
+      return true if guardian.is_admin?
+
+      !bookmarkable.query.hidden? &&
+        guardian.group_and_user_can_access_query?(bookmarkable.group, bookmarkable.query)
     end
   end
 end

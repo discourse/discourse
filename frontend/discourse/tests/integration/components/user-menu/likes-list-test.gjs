@@ -6,7 +6,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 module(
-  "Integration | Component | user-menu | likes-notifications-list",
+  "Integration | Component | UserMenu | LikesNotificationsList",
   function (hooks) {
     setupRenderingTest(hooks);
 

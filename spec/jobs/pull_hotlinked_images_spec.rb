@@ -296,19 +296,31 @@ RSpec.describe Jobs::PullHotlinkedImages do
         end
       end
 
-      context "when the upload access_control_post is different to the current post" do
-        it "redownloads the upload" do
-          setup_s3
-          SiteSetting.secure_uploads = true
+      context "when the post hotlinks a secure upload owned by another post" do
+        fab!(:private_group, :group)
+        fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic) }
 
-          upload = Fabricate(:secure_upload_s3, secure: true)
+        fab!(:upload) do
+          enable_secure_uploads
+          Fabricate(:secure_upload_s3, secure: true)
+        end
+
+        fab!(:post) do
+          secure_url = Discourse.base_url + Upload.secure_uploads_url_from_upload_url(upload.url)
+          create_post(user: user, raw: "<img src='#{secure_url}'>")
+        end
+
+        before do
+          enable_secure_uploads
           stub_s3(upload)
           Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
-          url = Upload.secure_uploads_url_from_upload_url(upload.url)
-          url = Discourse.base_url + url
-          post = Fabricate(:post, user: user, raw: "<img src='#{url}'>")
-          upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
+        end
+
+        it "redownloads when the post user can see the owning post" do
+          upload.update(access_control_post: Fabricate(:post))
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.to change {
             Upload.count
@@ -317,6 +329,40 @@ RSpec.describe Jobs::PullHotlinkedImages do
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.not_to change {
             Upload.count
           }
+        end
+
+        it "does not redownload when the post user cannot see the owning post" do
+          upload.update!(access_control_post: private_post)
+
+          expect(user.guardian.can_see_post?(private_post)).to eq(false)
+
+          expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }.not_to change {
+            Upload.count
+          }
+          expect(post.reload.raw).to include(Upload.secure_uploads_url_from_upload_url(upload.url))
+          expect(post.post_hotlinked_media).to be_empty
+        end
+
+        it "does not redownload when the post user cannot see the owning post and the URL points at the optimized variant" do
+          upload.update!(access_control_post: private_post)
+
+          optimized_secure_url =
+            "#{Discourse.base_url}#{Upload.secure_uploads_url_from_upload_url(upload.url).gsub("/original/", "/optimized/")}"
+          bypass_post = create_post(user: user, raw: "<img src='#{optimized_secure_url}'>")
+
+          expect { Jobs::PullHotlinkedImages.new.execute(post_id: bypass_post.id) }.not_to change {
+            Upload.count
+          }
+        end
+
+        it "does not redownload when the secure URL does not match any known upload" do
+          unresolved_url =
+            "#{Discourse.base_url}/secure-uploads/original/1X/#{SecureRandom.hex(20)}.png"
+          unresolved_post = create_post(user: user, raw: "<img src='#{unresolved_url}'>")
+
+          expect {
+            Jobs::PullHotlinkedImages.new.execute(post_id: unresolved_post.id)
+          }.not_to change { Upload.count }
         end
       end
     end

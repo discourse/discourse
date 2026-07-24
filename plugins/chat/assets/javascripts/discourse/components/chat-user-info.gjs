@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
-import UserStatusMessage from "discourse/components/user-status-message";
 import { userPath } from "discourse/lib/url";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
@@ -52,7 +52,7 @@ export default class ChatUserInfo extends Component {
 
       {{#if this.showStatus}}
         <div class="user-status" {{this.trackUserStatus @user}}>
-          <UserStatusMessage
+          <DUserStatusMessage
             @status={{@user.status}}
             @showDescription={{this.showStatusDescription}}
           />

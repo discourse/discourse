@@ -12,9 +12,10 @@ module DiscourseDataExplorer
 
       return { error: result[:error], duration_secs: result[:duration_secs] } if result[:error]
 
-      result_json = ResultFormatConverter.convert(:json, result, query_params:, explain:)
+      result_json =
+        ResultFormatConverter.convert(:json, result, query_params:, explain:, current_user:)
 
-      if cacheable?(query, explain:) && default_limit?(limit)
+      if query.id.present? && cacheable?(query, explain:) && default_limit?(limit)
         cache_key_params = resolve_params(query, raw_params)
         QueryResultCache.write(query.id, cache_key_params, result_json)
       end

@@ -42,6 +42,8 @@ el:
           title: "Γραμμή πλοήγησης"
         categories_list:
           title: "Λίστα Κατηγοριών"
+        topic_statuses:
+          title: "Καταστάσεις Θέματος"
         topic_timer_info:
           title: "Χρονοδιακόπτες Θεμάτων"
         post:

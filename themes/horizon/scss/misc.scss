@@ -23,8 +23,8 @@
   background-color: transparent;
 }
 
-.admin-report .main .report-alert.no-data,
-.admin-report .main .report-alert.rate-limited {
+.admin-report .chart__body .report-alert.no-data,
+.admin-report .chart__body .report-alert.rate-limited {
   background-color: var(--d-content-background);
 }
 

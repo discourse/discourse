@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import AdminHolidaysList from "discourse/plugins/discourse-calendar/discourse/components/admin-holidays-list";
 
-module("Integration | Component | admin-holidays-list", function (hooks) {
+module("Integration | Component | AdminHolidaysList", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displaying a list of the provided holidays", async function (assert) {

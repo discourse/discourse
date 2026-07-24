@@ -60,7 +60,7 @@ RSpec.describe DiscourseAi::Agents::ToolRunner do
         @counter = 0
         stub_request(:post, cloudflare_embedding_def.url).to_return(
           status: 200,
-          body: lambda { |req| { result: { data: [([@counter += 2] * 1024)] } }.to_json },
+          body: lambda { |req| { result: { data: [[@counter += 2] * 1024] } }.to_json },
           headers: {
           },
         )

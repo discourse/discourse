@@ -21,7 +21,7 @@ describe "Edit Category Images" do
         find("#category-logo-uploader .file-uploader__controls").click
         attach_file(
           "category-logo-uploader__input",
-          "#{Rails.root}/spec/fixtures/images/logo.png",
+          "#{Rails.root.join("spec/fixtures/images/logo.png")}",
           make_visible: true,
         )
 

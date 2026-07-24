@@ -3,7 +3,9 @@ import { array, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
-import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
+import { not } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ManageTagsForm extends Component {
@@ -42,6 +44,15 @@ export default class ManageTagsForm extends Component {
   blockedTagsFor(rows, index, side) {
     const tags = rows?.[index]?.[side];
     return tags?.length ? tags : undefined;
+  }
+
+  @bind
+  mobilePlacementForReplaceRowTagChooser(rows, index) {
+    const rowsBelow = rows.length - 1 - index;
+    if (rowsBelow < 3) {
+      return "top";
+    }
+    return null;
   }
 
   @action
@@ -171,7 +182,7 @@ export default class ManageTagsForm extends Component {
             @onSet={{this.afterFieldSet}}
             as |field|
           >
-            <field.Control />
+            <field.Control @showAllTags={{true}} />
           </form.Field>
         {{/if}}
 
@@ -197,7 +208,10 @@ export default class ManageTagsForm extends Component {
         @onSet={{this.afterFieldSet}}
         as |field|
       >
-        <field.Control @categoryId={{@categoryId}} />
+        <field.Control
+          @categoryId={{@categoryId}}
+          @showAllTags={{not @categoryId}}
+        />
       </form.Field>
 
       <form.Container
@@ -221,6 +235,7 @@ export default class ManageTagsForm extends Component {
                 as |field|
               >
                 <field.Control
+                  @showAllTags={{true}}
                   @maximum={{1}}
                   @placeholder="topic_bulk_actions.manage_tags.replace.from_placeholder"
                   @blockedTags={{this.blockedTagsFor
@@ -228,12 +243,16 @@ export default class ManageTagsForm extends Component {
                     index
                     "to"
                   }}
+                  @mobilePlacement={{this.mobilePlacementForReplaceRowTagChooser
+                    transientData.replace_rows
+                    index
+                  }}
                 />
               </collection.Field>
             </row.Col>
 
             <row.Col @size={{1}} class="manage-tags-form__replace-arrow">
-              {{icon "arrow-right"}}
+              {{dIcon "arrow-right"}}
             </row.Col>
 
             <row.Col @size={{5}}>
@@ -250,12 +269,17 @@ export default class ManageTagsForm extends Component {
               >
                 <field.Control
                   @categoryId={{@categoryId}}
+                  @showAllTags={{not @categoryId}}
                   @maximum={{1}}
                   @placeholder="topic_bulk_actions.manage_tags.replace.to_placeholder"
                   @blockedTags={{this.blockedTagsFor
                     transientData.replace_rows
                     index
                     "from"
+                  }}
+                  @mobilePlacement={{this.mobilePlacementForReplaceRowTagChooser
+                    transientData.replace_rows
+                    index
                   }}
                 />
               </collection.Field>

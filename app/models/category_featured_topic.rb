@@ -83,12 +83,12 @@ end
 #
 # Table name: category_featured_topics
 #
-#  category_id :integer          not null
-#  topic_id    :integer          not null
+#  id          :integer          not null, primary key
+#  rank        :integer          default(0), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  rank        :integer          default(0), not null
-#  id          :integer          not null, primary key
+#  category_id :integer          not null
+#  topic_id    :integer          not null
 #
 # Indexes
 #

@@ -11,16 +11,16 @@ end
 # Table name: ai_spam_logs
 #
 #  id                  :bigint           not null, primary key
-#  post_id             :bigint           not null
-#  llm_model_id        :bigint           not null
-#  ai_api_audit_log_id :bigint
-#  reviewable_id       :bigint
+#  error               :string(3000)
 #  is_spam             :boolean          not null
 #  payload             :string(20000)    default(""), not null
+#  reason              :text
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  error               :string(3000)
-#  reason              :text
+#  ai_api_audit_log_id :bigint
+#  llm_model_id        :bigint           not null
+#  post_id             :bigint           not null
+#  reviewable_id       :bigint
 #
 # Indexes
 #

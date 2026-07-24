@@ -110,15 +110,13 @@ bundle exec rails server
 
 You should now be able to connect with your Discourse app on [http://localhost:3000](http://localhost:3000) - try it out!
 
-**Starting with Discourse 2.5+ EmberCLI is required in development and these additional steps will be required:**
-
 In a separate terminal instance, navigate to your discourse folder (`cd ~/discourse`) and run:
 
 ```sh
-bin/ember-cli
+bin/dev --only ember
 ```
 
-You should now be able to navigate to [http://localhost:4200](http://localhost:4200) to see your local Discourse installation.
+This starts the frontend bundler; the app remains served from [http://localhost:3000](http://localhost:3000).
 [/quote]
 
 ## Creating a Command to Start Discourse

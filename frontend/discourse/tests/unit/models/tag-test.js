@@ -19,6 +19,11 @@ module("Unit | Model | tag", function (hooks) {
     assert.strictEqual(tag.totalCount, 13);
   });
 
+  test("url encodes legacy tag names with periods without ids", function (assert) {
+    const tag = this.store.createRecord("tag", { name: "node.js" });
+    assert.strictEqual(tag.url, "/tag/node%2Ejs");
+  });
+
   test("pmOnly", function (assert) {
     const tag = this.store.createRecord("tag", { pm_only: false });
 

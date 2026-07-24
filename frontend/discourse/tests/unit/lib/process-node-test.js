@@ -25,6 +25,58 @@ module("Unit | Lib | process-node", function (hooks) {
     assert.strictEqual(result.post.topic, topic);
   });
 
+  test("stores post records in the topic post stream when available", function (assert) {
+    const store = getStore(this);
+    const storedPosts = [];
+    const topic = {
+      id: 42,
+      slug: "test",
+      postStream: {
+        posts: [],
+        stream: [],
+        storePost(post) {
+          storedPosts.push(post);
+          return post;
+        },
+      },
+    };
+    const nodeData = { id: 100, post_number: 2 };
+
+    const result = processNode(store, topic, nodeData);
+
+    assert.strictEqual(storedPosts.length, 1);
+    assert.strictEqual(storedPosts[0], result.post);
+    assert.deepEqual(topic.postStream.posts, [result.post]);
+    assert.deepEqual(topic.postStream.stream, [result.post.id]);
+    assert.strictEqual(result.post.topic, topic);
+  });
+
+  test("does not duplicate existing post stream records", function (assert) {
+    const store = getStore(this);
+    const existingPost = store.createRecord("post", {
+      id: 100,
+      post_number: 2,
+    });
+    const topic = {
+      id: 42,
+      slug: "test",
+      postStream: {
+        posts: [existingPost],
+        stream: [existingPost.id],
+        storePost() {
+          return existingPost;
+        },
+      },
+    };
+    const nodeData = { id: 100, post_number: 2 };
+
+    const result = processNode(store, topic, nodeData);
+
+    assert.strictEqual(result.post, existingPost);
+    assert.deepEqual(topic.postStream.posts, [existingPost]);
+    assert.deepEqual(topic.postStream.stream, [existingPost.id]);
+  });
+
   test("returns empty children when node has no children", function (assert) {
     const store = getStore(this);
     const topic = { id: 42, slug: "test" };

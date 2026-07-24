@@ -28,3 +28,6 @@ sr:
     edit_assignments_modal:
       topic: "Tema"
       post: "Post"
+    discourse_workflows:
+      assign_topic:
+        topic_id: "ID Teme"

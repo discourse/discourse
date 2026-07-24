@@ -13,7 +13,7 @@ ur:
   js:
     chat_integration:
       menu_title: "چَیٹ اِنٹیگرَیشَن"
-      settings: "سیٹِنگ"
+      settings: "ترتیبات"
       more_providers: "مزید "
       channels_title: "چینلوں"
       channels_with_errors: "اس فراہم کنندہ کے کچھ چینلز آخری بار پیغامات بھیجنے میں ناکام ہو گئے۔ مزید جاننے کے لیے ایرر آئیکن(ز) پر کلک کریں۔"

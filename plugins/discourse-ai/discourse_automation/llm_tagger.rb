@@ -121,7 +121,7 @@ if defined?(DiscourseAutomation)
           max_post_tokens: max_post_tokens,
           allow_restricted_tags: allow_restricted_tags,
           max_posts_for_context: max_posts_for_context,
-          automation: self.automation,
+          automation: automation,
         )
 
         post.topic.custom_fields["llm_tagger_processed"] = true

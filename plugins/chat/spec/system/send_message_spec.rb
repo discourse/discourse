@@ -117,8 +117,10 @@ RSpec.describe "Send message" do
       drawer_page.open_channel(channel_1)
       channel_page.send_message
 
-      expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
-      expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
+      try_until_success do
+        expect(tested_context.dig(:context, :post_ids)).to eq([post_1.id, post_2.id])
+        expect(tested_context.dig(:context, :topic_id)).to eq(post_1.topic_id)
+      end
     ensure
       DiscourseEvent.off(:chat_message_created, &blk)
     end

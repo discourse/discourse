@@ -37,8 +37,10 @@ RSpec.describe "AI Post helper" do
 
   def select_post_text(selected_post)
     topic_page.visit_topic(topic)
+    post_paragraph = "#{topic_page.post_by_number_selector(selected_post.post_number)} .cooked p"
+    expect(page).to have_css(post_paragraph)
     page.execute_script(
-      "var element = document.querySelector('#{topic_page.post_by_number_selector(selected_post.post_number)} .cooked p'); " +
+      "var element = document.querySelector('#{post_paragraph}'); " +
         "var range = document.createRange(); " + "range.selectNodeContents(element); " +
         "var selection = window.getSelection(); " + "selection.removeAllRanges(); " +
         "selection.addRange(range);" + "const event = new PointerEvent('pointerup');" +

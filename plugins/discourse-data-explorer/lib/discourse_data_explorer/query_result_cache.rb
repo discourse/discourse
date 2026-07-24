@@ -29,6 +29,7 @@ module DiscourseDataExplorer
       key = cache_key(query_id, params_hash)
       index_key = cache_index_key(query_id)
       now = Time.now.to_f
+      prune_stale_entries(index_key, now)
       return false if limit_reached?(index_key, key)
 
       Discourse.redis.setex(key, CACHE_TTL, serialized)
@@ -55,6 +56,10 @@ module DiscourseDataExplorer
       Discourse.redis.zcard(index_key) >= MAX_CACHE_ENTRIES
     end
 
-    private_class_method :limit_reached?
+    def self.prune_stale_entries(index_key, now)
+      Discourse.redis.zremrangebyscore(index_key, "-inf", now - CACHE_TTL)
+    end
+
+    private_class_method :limit_reached?, :prune_stale_entries
   end
 end

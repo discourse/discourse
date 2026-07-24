@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | add-category-tag-classes", function (hooks) {
+module("Integration | Component | AddCategoryTagClasses", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adds category classes to body", async function (assert) {

@@ -26,6 +26,7 @@ class UserSilencer
   end
 
   def silence
+    return false if @user.staff?
     hide_posts unless @opts[:keep_posts]
     return false if @user.silenced_till.present?
     @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
@@ -89,7 +90,10 @@ class UserSilencer
         .where(user_id: @user.id, post_number: 1)
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
-    Topic.where(id: topic_ids).update_all(visible: false) unless topic_ids.empty?
+    unless topic_ids.empty?
+      Topic.where(id: topic_ids).update_all(visible: false)
+      CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
+    end
   end
 
   def unsilence

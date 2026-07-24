@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const GetARoomComposerMessage = <template>
   <ComposerTipCloseButton @action={{fn @closeMessage @message}} />

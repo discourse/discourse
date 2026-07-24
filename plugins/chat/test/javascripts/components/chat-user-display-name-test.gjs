@@ -4,7 +4,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 module(
-  "Component | chat-user-display-name | prioritize username in UX",
+  "Component | ChatUserDisplayName | prioritize username in UX",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -33,7 +33,7 @@ module(
 );
 
 module(
-  "Component | chat-user-display-name | prioritize name in UX",
+  "Component | ChatUserDisplayName | prioritize name in UX",
   function (hooks) {
     setupRenderingTest(hooks);
 

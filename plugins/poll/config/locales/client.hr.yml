@@ -107,5 +107,3 @@ hr:
           add: Dodaj opciju
         automatic_close:
           label: Automatski zatvori anketu
-        show_advanced: "Prikaži napredne mogućnosti"
-        hide_advanced: "Sakrij napredne opcije"

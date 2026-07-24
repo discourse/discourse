@@ -290,17 +290,22 @@ RSpec.describe Admin::WatchedWordsController do
       end
 
       it "reads file content before deferring work so tempfile cleanup does not cause errors" do
+        upload_tempfile = nil
+
+        allow(ActionDispatch::Http::UploadedFile).to receive(
+          :new,
+        ).and_wrap_original do |original, hash|
+          upload_tempfile ||= hash[:tempfile]
+          original.call(hash)
+        end
+
         allow(Scheduler::Defer).to receive(
           :later,
         ).and_wrap_original do |original, *args, **kwargs, &block|
-          if args.first == "Upload watched words"
-            # Simulate Rack::TempfileReaper: delete all tempfiles before the deferred block runs.
-            # With the fix, File.read has already been called before Defer.later, so this is safe.
-            # Without the fix, the block tries File.read on a deleted tempfile.
-            ObjectSpace.each_object(Tempfile) do |tempfile|
-              tempfile.close! if tempfile.path&.include?("RackMultipart")
-            end
-          end
+          # Simulate Rack::TempfileReaper closing the multipart tempfile after the request completes,
+          # before the deferred block runs. With the fix, File.read has already happened so the
+          # block does not need the tempfile anymore.
+          upload_tempfile&.close! if args.first == "Upload watched words"
           block.call
         end
 
@@ -310,6 +315,7 @@ RSpec.describe Admin::WatchedWordsController do
                file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv")),
              }
 
+        expect(upload_tempfile).to be_a(Tempfile)
         expect(response.status).to eq(200)
         expect(WatchedWord.count).to eq(6)
       end

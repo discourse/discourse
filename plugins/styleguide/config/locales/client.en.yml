@@ -97,6 +97,7 @@ en:
           title: "Modal"
           header: "Modal Title"
           footer: "Modal Footer"
+          open: "Open modal"
         user_about:
           title: "User About Box"
         header_icons:

@@ -188,7 +188,209 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     }
   end
 
+  def gemini_rate_limit_body(retry_delay: "45s")
+    {
+      error: {
+        code: 429,
+        message: "quota exceeded",
+        status: "RESOURCE_EXHAUSTED",
+        details: [{ "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: retry_delay }],
+      },
+    }.to_json
+  end
+
   before { enable_current_plugin }
+
+  it "uses Gemini RetryInfo retryDelay from rate limit response bodies" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(45, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    request =
+      stub_request(:post, url).to_return(
+        { status: 429, body: gemini_rate_limit_body(retry_delay: "45s") },
+        { status: 200, body: gemini_mock.response("ok").to_json },
+      )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+    expect(request).to have_been_requested.times(2)
+    expect(AiApiAuditLog.last.request_attempts).to eq(
+      [{ "status" => 429, "delay_ms" => 0 }, { "status" => 200, "delay_ms" => 45_000 }],
+    )
+  end
+
+  it "caps Gemini RetryInfo retryDelay from rate limit response bodies" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(60, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "120s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores oversized Gemini rate limit response bodies when extracting retry delays" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "45s") + (" " * 10_000) },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "uses the larger retry delay from Gemini RetryInfo and Retry-After" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(10, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      {
+        status: 429,
+        body: gemini_rate_limit_body(retry_delay: "10s"),
+        headers: {
+          "Retry-After" => "5",
+        },
+      },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "uses Gemini RetryInfo retryDelay for transient errors" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(12, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 503, body: gemini_rate_limit_body(retry_delay: "12s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "supports fractional Gemini RetryInfo retryDelay values" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2.5, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "2.5s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores non-positive Gemini RetryInfo retryDelay values" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: gemini_rate_limit_body(retry_delay: "0s") },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "finds Gemini RetryInfo among other error details" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(7, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    body = {
+      error: {
+        code: 429,
+        details: [
+          { "@type": "type.googleapis.com/google.rpc.Help" },
+          { "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: "7s" },
+        ],
+      },
+    }.to_json
+    stub_request(:post, url).to_return(
+      { status: 429, body: body },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
+
+  it "ignores invalid Gemini rate limit response bodies when extracting retry delays" do
+    DiscourseAi::Completions::Endpoints::Gemini.any_instance.stubs(:retry_jitter).returns(0)
+    DiscourseAi::Completions::Endpoints::Gemini
+      .any_instance
+      .expects(:sleep_before_retry)
+      .with(2, nil)
+      .once
+
+    url = "#{model.url}:generateContent?key=123"
+    stub_request(:post, url).to_return(
+      { status: 429, body: "{" },
+      { status: 200, body: gemini_mock.response("ok").to_json },
+    )
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+
+    expect(llm.generate("Hello", user: user)).to eq("ok")
+  end
 
   it "correctly configures thinking when enabled" do
     model.update!(provider_params: { enable_thinking: "true", thinking_tokens: "10000" })
@@ -303,7 +505,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "correctly configures thinking level when set" do
-    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "high",
+      },
+    )
 
     response = gemini_mock.response("Using thinking level").to_json
     req_body = nil
@@ -325,8 +534,116 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
   end
 
+  it "requests Gemini thought summaries when enabled" do
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "medium",
+      },
+    )
+
+    response = gemini_mock.response("Using thought summaries").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate(
+      "Hello",
+      user: user,
+      output_thinking: true,
+      extra_model_params: {
+        include_thought_summaries: true,
+      },
+    )
+
+    parsed = JSON.parse(req_body, symbolize_names: true)
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq(
+      { thinkingLevel: "medium", includeThoughts: true },
+    )
+  end
+
+  it "decodes non-streamed thought summaries as thinking" do
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              { text: "I should inspect the provided URL.", thought: true },
+              { text: "The URL contains latest topic data." },
+            ],
+            role: "model",
+          },
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate("Hello", user: user, output_thinking: true)
+
+    expect(result.first).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.first.message).to eq("I should inspect the provided URL.")
+    expect(result.last).to eq("The URL contains latest topic data.")
+  end
+
+  it "streams thought summaries separately from answer text" do
+    payload =
+      [
+        {
+          candidates: [
+            { content: { parts: [{ text: "I should ", thought: true }], role: "model" } },
+          ],
+        },
+        {
+          candidates: [
+            { content: { parts: [{ text: "inspect the URL.", thought: true }], role: "model" } },
+          ],
+        },
+        { candidates: [{ content: { parts: [{ text: "Answer text" }], role: "model" } }] },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result =
+      llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+
+    expect(
+      output.map do |partial|
+        partial.is_a?(String) ? partial : [partial.message, partial.partial?]
+      end,
+    ).to eq(
+      [
+        ["I should ", true],
+        ["inspect the URL.", true],
+        ["I should inspect the URL.", false],
+        "Answer text",
+      ],
+    )
+    expect(result).to eq("Answer text")
+  end
+
   it "thinking_level takes priority over enable_thinking" do
     model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
       provider_params: {
         enable_thinking: true,
         thinking_level: "medium",
@@ -377,8 +694,244 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
   end
 
+  it "maps thinking_effort to Gemini 3 thinking levels" do
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+    )
+
+    response = gemini_mock.response("Using thinking effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "xhigh", temperature: 0.5)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
+    expect(parsed.dig(:generationConfig, :temperature)).to be_nil
+  end
+
+  it "maps minimal thinking_effort to low for Gemini 3.1 Pro" do
+    model.update!(
+      name: "gemini-3.1-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview",
+    )
+
+    response = gemini_mock.response("Using minimal effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "minimal")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "low" })
+  end
+
+  it "maps unsupported Gemini 3 Pro thinking levels to supported levels" do
+    model.update!(
+      name: "gemini-3-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview",
+    )
+
+    response = gemini_mock.response("Using medium effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "medium")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
+  end
+
+  it "uses thinkingBudget 0 for explicit none thinking_effort" do
+    response = gemini_mock.response("No thinking").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate(
+      "Hello",
+      user: user,
+      thinking_effort: "none",
+      output_thinking: true,
+      extra_model_params: {
+        include_thought_summaries: true,
+      },
+    )
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingBudget: 0 })
+  end
+
+  it "omits thinkingConfig entirely for none on Gemini 3 Pro-tier models that can't disable thinking" do
+    model.update!(
+      name: "gemini-3.1-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview",
+    )
+    response = gemini_mock.response("Still thinking").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "none")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
+  end
+
+  it "does not send thinking levels to pre-Gemini 3 generateContent models" do
+    response = gemini_mock.response("Unsupported thinking level").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "high")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
+  end
+
+  it "adds configured service tier using the Gemini API field name" do
+    response = gemini_mock.response("Configured service tier").to_json
+    url = "#{model.url}:generateContent?key=123"
+
+    captured_bodies = []
+    stub_request(:post, url).with(
+      body:
+        proc do |req_body|
+          captured_bodies << JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    {
+      "default" => nil,
+      "standard" => "standard",
+      "flex" => "flex",
+      "priority" => "priority",
+    }.each do |configured_tier, expected_tier|
+      model.update!(provider_params: { service_tier: configured_tier })
+
+      DiscourseAi::Completions::Llm.proxy(model).generate("Hello", user: user)
+
+      payload = captured_bodies.last
+      if expected_tier
+        expect(payload[:serviceTier]).to eq(expected_tier)
+      else
+        expect(payload).not_to have_key(:serviceTier)
+      end
+      expect(payload).not_to have_key(:service_tier)
+    end
+  end
+
+  it "omits service tier when it is not configured" do
+    response = gemini_mock.response("No service tier").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user)
+
+    expect(JSON.parse(req_body, symbolize_names: true)).not_to have_key(:serviceTier)
+  end
+
+  it "omits service tier when it is invalid" do
+    model.update!(provider_params: { service_tier: "invalid" })
+
+    response = gemini_mock.response("Invalid service tier").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user)
+
+    expect(JSON.parse(req_body, symbolize_names: true)).not_to have_key(:serviceTier)
+  end
+
   it "strips temperature when thinking_level is set" do
-    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "high",
+      },
+    )
 
     response = gemini_mock.response("Stripped temp").to_json
     req_body = nil
@@ -450,6 +1003,262 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     parsed = JSON.parse(req_body, symbolize_names: true)
 
     expect(parsed[:tool_config]).to eq({ function_calling_config: { mode: "AUTO" } })
+  end
+
+  it "sends google_search grounding without a function_calling_config when only native tools are present" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    response = gemini_mock.response("World").to_json
+
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    response = llm.generate(prompt, user: user)
+
+    expect(response).to eq("World")
+
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    # Gemini rejects function_calling_config when there are no function_declarations
+    expect(parsed[:tools]).to eq([{ google_search: {} }])
+    expect(parsed).not_to have_key(:tool_config)
+  end
+
+  it "emits native web search thinking from grounding metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    grounding_metadata = {
+      webSearchQueries: ["OpenAI news"],
+      searchEntryPoint: {
+        renderedContent: "<div>Search suggestions</div>",
+      },
+      groundingChunks: [{ web: { uri: "https://openai.com/news", title: "OpenAI" } }],
+      groundingSupports: [
+        {
+          segment: {
+            startIndex: 0,
+            endIndex: 15,
+            text: "Grounded answer",
+          },
+          groundingChunkIndices: [0],
+        },
+      ],
+    }
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ text: "Grounded answer" }],
+            role: "model",
+          },
+          groundingMetadata: grounding_metadata,
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user, output_thinking: true)
+
+    expect(result.first).to eq("Grounded answer")
+    expect(result.last).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.last.message).to eq("Web search: OpenAI news")
+    expect(result.last.provider_info.dig(:gemini, :grounding_metadata)).to eq(
+      grounding_metadata.except(:searchEntryPoint),
+    )
+  end
+
+  it "streams native web search thinking from grounding metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_search"]
+
+    rows = [
+      { candidates: [{ content: { parts: [{ text: "Grounded " }], role: "model" } }] },
+      { candidates: [{ content: { parts: [{ text: "answer" }], role: "model" } }] },
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: "", thoughtSignature: "sig-123" }],
+              role: "model",
+            },
+            finishReason: "STOP",
+            groundingMetadata: {
+              webSearchQueries: ["OpenAI news", "Anthropic news"],
+              groundingChunks: [{ web: { uri: "https://openai.com/news", title: "OpenAI" } }],
+            },
+          },
+        ],
+      },
+    ]
+    payload = rows.map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result = llm.generate(prompt, user: user, output_thinking: true) { |partial| output << partial }
+    thinking = output.find { |partial| partial.is_a?(DiscourseAi::Completions::Thinking) }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Grounded ", "answer", "Web search: OpenAI news, Anthropic news"],
+    )
+    expect(thinking.provider_info.dig(:gemini, :grounding_metadata, :webSearchQueries)).to eq(
+      ["OpenAI news", "Anthropic news"],
+    )
+    expect(thinking.provider_info.dig(:gemini, :thought_signature_parts)).to eq(
+      [{ text: "", thoughtSignature: "sig-123" }],
+    )
+    expect(Array(result).join).to eq("Grounded answer")
+  end
+
+  it "keeps grounding metadata hidden when Gemini does not include search queries" do
+    payload =
+      [
+        { candidates: [{ content: { parts: [{ text: "Fetched answer" }], role: "model" } }] },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "", thoughtSignature: "sig-789" }],
+                role: "model",
+              },
+              finishReason: "STOP",
+              groundingMetadata: {
+                groundingChunks: [
+                  { web: { uri: "https://meta.discourse.org/latest.json", title: "Meta" } },
+                ],
+                groundingSupports: [
+                  {
+                    segment: {
+                      startIndex: 0,
+                      endIndex: 14,
+                      text: "Fetched answer",
+                    },
+                    groundingChunkIndices: [0],
+                  },
+                ],
+              },
+              urlContextMetadata: {
+                urlMetadata: [
+                  {
+                    retrievedUrl: "https://meta.discourse.org/latest.json",
+                    urlRetrievalStatus: "URL_RETRIEVAL_STATUS_SUCCESS",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Fetched answer", nil, "Web fetch: https://meta.discourse.org/latest.json"],
+    )
+    expect(output.grep(DiscourseAi::Completions::Thinking).first.provider_info[:gemini]).to include(
+      :grounding_metadata,
+      :thought_signature_parts,
+    )
+  end
+
+  it "emits hidden thinking for streamed text thought signatures" do
+    payload =
+      [
+        { candidates: [{ content: { parts: [{ text: "Hello" }], role: "model" } }] },
+        {
+          candidates: [
+            {
+              content: {
+                parts: [{ text: "", thoughtSignature: "sig-456" }],
+                role: "model",
+              },
+              finishReason: "STOP",
+            },
+          ],
+        },
+      ].map { |row| "data: #{row.to_json}\n\n" }.join
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:streamGenerateContent?alt=sse&key=123"
+    output = []
+
+    stub_request(:post, url).to_return(status: 200, body: payload)
+
+    result =
+      llm.generate("Hello", user: user, output_thinking: true) { |partial| output << partial }
+    thinking = output.find { |partial| partial.is_a?(DiscourseAi::Completions::Thinking) }
+
+    expect(output.map { |partial| partial.is_a?(String) ? partial : partial.message }).to eq(
+      ["Hello", nil],
+    )
+    expect(thinking.provider_info.dig(:gemini, :thought_signature_parts)).to eq(
+      [{ text: "", thoughtSignature: "sig-456" }],
+    )
+    expect(Array(result).join).to eq("Hello")
+  end
+
+  it "emits native web fetch thinking from URL context metadata" do
+    prompt = DiscourseAi::Completions::Prompt.new("Hello")
+    prompt.native_tools = ["web_fetch"]
+
+    url_context_metadata = {
+      urlMetadata: [
+        {
+          retrievedUrl: "https://example.com/report",
+          urlRetrievalStatus: "URL_RETRIEVAL_STATUS_SUCCESS",
+        },
+      ],
+    }
+    response = {
+      candidates: [
+        {
+          content: {
+            parts: [{ text: "Fetched answer" }],
+            role: "model",
+          },
+          urlContextMetadata: url_context_metadata,
+        },
+      ],
+    }.to_json
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).to_return(status: 200, body: response)
+
+    result = llm.generate(prompt, user: user, output_thinking: true)
+
+    expect(result.first).to eq("Fetched answer")
+    expect(result.last).to be_a(DiscourseAi::Completions::Thinking)
+    expect(result.last.message).to eq("Web fetch: https://example.com/report")
+    expect(result.last.provider_info.dig(:gemini, :url_context_metadata)).to eq(
+      url_context_metadata,
+    )
   end
 
   it "properly encodes tool calls" do

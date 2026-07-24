@@ -7,8 +7,8 @@ task "documentation" do
 end
 
 def generate_chat_documentation
-  destination = File.join(Rails.root, "documentation/chat/frontend/")
-  config = File.join(Rails.root, ".jsdoc")
+  destination = Rails.root.join("documentation/chat/frontend/").to_s
+  config = Rails.root.join(".jsdoc").to_s
   files = %w[
     plugins/chat/assets/javascripts/discourse/lib/collection.js
     plugins/chat/assets/javascripts/discourse/pre-initializers/chat-plugin-api.js
@@ -19,7 +19,7 @@ def generate_chat_documentation
   require "open3"
   require "yard"
   YARD::Templates::Engine.register_template_path(
-    File.join(Rails.root, "documentation", "yard-custom-template"),
+    Rails.root.join("documentation/yard-custom-template").to_s,
   )
   files = %w[
     plugins/chat/app/services/base.rb

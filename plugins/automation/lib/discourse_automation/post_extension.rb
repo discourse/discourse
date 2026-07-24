@@ -8,7 +8,7 @@ module DiscourseAutomation
 
     def discourse_automation_topic_required_words
       return if !SiteSetting.discourse_automation_enabled
-      return if self.post_type == Post.types[:small_action]
+      return if post_type == Post.types[:small_action]
       return if !topic
       return if topic.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD].blank?
 

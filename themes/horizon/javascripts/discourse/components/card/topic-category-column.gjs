@@ -1,4 +1,4 @@
-import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 const TopicCategoryColumn = <template>
   {{categoryLinkHTML @topic.category}}

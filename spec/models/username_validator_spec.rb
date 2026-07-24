@@ -179,9 +179,9 @@ RSpec.describe UsernameValidator do
         SiteSetting.max_username_length = max_username_length
 
         expect_valid(
-          "Д" * (max_username_length),
-          "س" * (max_username_length),
-          "மி" * (max_username_length),
+          "Д" * max_username_length,
+          "س" * max_username_length,
+          "மி" * max_username_length,
           failure_reason: "Should be valid as usernames are <= #{max_username_length}",
         )
       end

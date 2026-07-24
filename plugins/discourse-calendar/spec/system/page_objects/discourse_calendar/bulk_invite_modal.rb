@@ -38,8 +38,17 @@ module PageObjects
           self
         end
 
+        def upload_csv(path)
+          find(".csv-bulk-invites input.hidden-upload-field", visible: :all).set(path)
+          self
+        end
+
         def closed?
           has_no_css?(".post-event-bulk-invite")
+        end
+
+        def has_invitee_rows?(count)
+          has_css?(".bulk-invite-row", count:)
         end
       end
     end

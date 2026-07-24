@@ -69,37 +69,33 @@ RSpec.describe StaticController do
     let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
-      begin
-        assets_path = Rails.public_path.join("assets")
+      assets_path = Rails.public_path.join("assets")
 
-        FileUtils.mkdir_p(assets_path)
+      FileUtils.mkdir_p(assets_path)
 
-        file_path = assets_path.join("test.js.br")
-        File.write(file_path, "fake brotli file")
+      file_path = assets_path.join("test.js.br")
+      File.write(file_path, "fake brotli file")
 
-        get "/cdn_asset/#{site}/test.js.br"
+      get "/cdn_asset/#{site}/test.js.br"
 
-        expect(response.status).to eq(200)
-        expect(response.headers["Cache-Control"]).to match(/public/)
-      ensure
-        File.delete(file_path)
-      end
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to match(/public/)
+    ensure
+      File.delete(file_path)
     end
 
     it "does not serve files outside the assets directory via path traversal" do
-      begin
-        secret_dir = Rails.public_path.join("assets-secret")
-        FileUtils.mkdir_p(secret_dir)
-        secret_file = secret_dir.join("leak.txt")
-        File.write(secret_file, "secret content")
+      secret_dir = Rails.public_path.join("assets-secret")
+      FileUtils.mkdir_p(secret_dir)
+      secret_file = secret_dir.join("leak.txt")
+      File.write(secret_file, "secret content")
 
-        get "/cdn_asset/#{site}/../assets-secret/leak.txt"
+      get "/cdn_asset/#{site}/../assets-secret/leak.txt"
 
-        expect(response.status).to eq(404)
-      ensure
-        File.delete(secret_file) if secret_file && File.exist?(secret_file)
-        FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
-      end
+      expect(response.status).to eq(404)
+    ensure
+      File.delete(secret_file) if secret_file && File.exist?(secret_file)
+      FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
     end
 
     context "with fallback_assets_path" do
@@ -195,6 +191,54 @@ RSpec.describe StaticController do
             expect(response).to redirect_to("http://example.com/page")
           end
         end
+      end
+    end
+
+    it "renders the localized guidelines post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original guidelines body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳されたガイドライン本文",
+          cooked: "<p>翻訳されたガイドライン本文</p>",
+        )
+      SiteSetting.guidelines_topic_id = post.topic.id
+
+      get "/guidelines", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
+      end
+    end
+
+    it "renders the localized TOS post" do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.set_locale_from_param = true
+      post = create_post(raw: "Original TOS body")
+      post.update!(locale: "en")
+      localization =
+        Fabricate(
+          :post_localization,
+          post:,
+          locale: "ja",
+          raw: "翻訳された利用規約本文",
+          cooked: "<p>翻訳された利用規約本文</p>",
+        )
+      SiteSetting.tos_topic_id = post.topic.id
+
+      get "/tos", params: { tl: "ja" }
+
+      aggregate_failures do
+        expect(response.status).to eq(200)
+        expect(response.body).to include(localization.cooked)
+        expect(response.body).not_to include(post.cooked)
       end
     end
 

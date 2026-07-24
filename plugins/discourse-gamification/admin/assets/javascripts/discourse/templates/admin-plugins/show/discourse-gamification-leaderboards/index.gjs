@@ -1,9 +1,9 @@
 import { concat, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import formatDate from "discourse/helpers/format-date";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 import AdminCreateLeaderboard from "discourse/plugins/discourse-gamification/admin/components/admin-create-leaderboard";
 
@@ -60,9 +60,9 @@ export default <template>
                 </td>
                 <td>
                   {{#if leaderboard.fromDate}}
-                    {{formatDate (@controller.parseDate leaderboard.fromDate)}}
+                    {{dFormatDate (@controller.parseDate leaderboard.fromDate)}}
                     -
-                    {{formatDate (@controller.parseDate leaderboard.toDate)}}
+                    {{dFormatDate (@controller.parseDate leaderboard.toDate)}}
                   {{else}}
                     {{leaderboard.defaultPeriod}}
                   {{/if}}

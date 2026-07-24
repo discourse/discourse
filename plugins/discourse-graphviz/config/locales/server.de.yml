@@ -7,4 +7,3 @@
 de:
   site_settings:
     discourse_graphviz_enabled: "Graphviz-Plug-in aktivieren"
-    graphviz_default_svg: "Standardmäßig wird SVG-Rendering anstelle von Bild-Rendering verwendet. Kann pro Diagramm mit dem Element `svg=true|false` angepasst werden."

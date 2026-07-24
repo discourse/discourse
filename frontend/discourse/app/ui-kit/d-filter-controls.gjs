@@ -1,0 +1,506 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn, get, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { trackedObject } from "@ember/reactive/collections";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
+import { resettableTracked } from "discourse/lib/tracked-tools";
+import DiscourseURL, {
+  applyQueryParams,
+  searchParamsFromPath,
+} from "discourse/lib/url";
+import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
+import DSelect from "discourse/ui-kit/d-select";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+
+/**
+ * filter controls component that support both client-side and server-side filtering
+ *
+ * client: provide searchableProps and filterFn in dropdownOptions
+ * server: provide onTextFilterChange or onDropdownFilterChange callbacks
+ *
+ * @component DFilterControls
+ * @param {Array} array - The dataset to display
+ * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
+ *                                for nested properties (e.g. "user.name")
+ * @param {Array|Object} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
+ *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
+ * @param {String} [inputPlaceholder] - Placeholder text for search input
+ * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
+ *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
+ * @param {String|Object} [dropdownValue] - Current dropdown value(s), defaults to defaultDropdownValue
+ * @param {String} [noResultsMessage] - Message shown when no results found
+ * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
+ * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
+ * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
+ * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
+ *                                              For multiple dropdowns: receives (key, value)
+ * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
+ * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
+ * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
+ * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
+ *                                           if minItemsForFilter is set and the array is empty
+ */
+
+export default class DFilterControls extends Component {
+  @service router;
+
+  @tracked dropdownFilter = "all";
+  @tracked
+  showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+  @resettableTracked textFilter = this.initialTextFilterValue;
+
+  dropdownFilters = trackedObject();
+
+  constructor() {
+    super(...arguments);
+
+    this.applyDropdownValues();
+
+    if (this.hasUrlOwnedDropdowns) {
+      // keep URL-owned dropdowns in sync across real transitions (e.g. a
+      // same-route link with different params); our own replaceState writes
+      // don't fire this event, so user selections are never reverted
+      this.router.on("routeDidChange", this.applyDropdownsFromUrl);
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this.hasUrlOwnedDropdowns) {
+      this.router.off("routeDidChange", this.applyDropdownsFromUrl);
+    }
+  }
+
+  get initialTextFilterValue() {
+    // reading router.currentURL makes this getter re-evaluate on transitions,
+    // so same-route links carrying the query param re-seed the input
+    const fromUrl =
+      this.args.textFilterQueryParam && this.showFilters
+        ? this.currentSearchParams.get(this.args.textFilterQueryParam)
+        : null;
+
+    if (fromUrl !== null) {
+      // verbatim: this value round-trips through our own URL writes while the
+      // user is typing, so any normalization here would rewrite the input
+      // mid-edit and jump the caret
+      return fromUrl;
+    }
+
+    return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+  }
+
+  get currentSearchParams() {
+    // router.currentURL, unlike window.location, is also correct under the
+    // test environment's mock location
+    return searchParamsFromPath(this.router.currentURL);
+  }
+
+  get hasUrlOwnedDropdowns() {
+    return (
+      (this.args.dropdownFilterQueryParam ||
+        this.args.dropdownFilterQueryParams) &&
+      !("dropdownValue" in this.args)
+    );
+  }
+
+  #validatedUrlValue(params, paramName, options) {
+    const value = params.get(paramName);
+    return value !== null && options.some((option) => option.value === value)
+      ? value
+      : null;
+  }
+
+  get array() {
+    return Array.isArray(this.args.array) ? this.args.array : [];
+  }
+
+  get searchableProps() {
+    return Array.isArray(this.args.searchableProps)
+      ? this.args.searchableProps
+      : [];
+  }
+
+  get hasMultipleDropdowns() {
+    return (
+      !Array.isArray(this.dropdownOptions) &&
+      typeof this.dropdownOptions === "object"
+    );
+  }
+
+  get dropdownOptions() {
+    return this.args.dropdownOptions || [];
+  }
+
+  get showDropdownFilter() {
+    return (
+      this.dropdownOptions.length > 1 ||
+      (this.hasMultipleDropdowns && this.showFilterDropdowns)
+    );
+  }
+
+  get defaultDropdownValue() {
+    return this.args.defaultDropdownValue || "all";
+  }
+
+  get dropdownValue() {
+    return this.args.dropdownValue || this.defaultDropdownValue;
+  }
+
+  get showFilters() {
+    return this.args.minItemsForFilter
+      ? this.array.length >= this.args.minItemsForFilter
+      : true;
+  }
+
+  get hasActiveFilters() {
+    if (this.textFilter.length > 0) {
+      return true;
+    }
+
+    if (this.hasMultipleDropdowns) {
+      return Object.keys(this.dropdownFilters).some((key) => {
+        return this.dropdownFilters[key] !== this.defaultValue(key);
+      });
+    }
+
+    return this.dropdownFilter !== this.defaultDropdownValue;
+  }
+
+  get filteredData() {
+    let filtered = [...this.array];
+
+    // skip if we have external callbacks (server-side)
+    const hasExternalCallbacks =
+      this.args.onTextFilterChange || this.args.onDropdownFilterChange;
+    if (hasExternalCallbacks) {
+      return filtered;
+    }
+
+    if (this.textFilter.length > 0) {
+      const terms = this.textFilter
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+      filtered = filtered.filter((item) =>
+        terms.some((term) =>
+          this.searchableProps.some((key) => {
+            const value = this.getNestedValue(item, key);
+            return value && value.toString().toLowerCase().includes(term);
+          })
+        )
+      );
+    }
+
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownFilters).forEach((key) => {
+        const selectedValue = this.dropdownFilters[key];
+        const options = this.dropdownOptions[key] || [];
+        const selectedOption = options.find(
+          (option) => option.value === selectedValue
+        );
+        if (selectedOption?.filterFn) {
+          filtered = filtered.filter(selectedOption.filterFn);
+        }
+      });
+    } else if (this.dropdownFilter !== this.defaultDropdownValue) {
+      const selectedOption = this.dropdownOptions.find(
+        (option) => option.value === this.dropdownFilter
+      );
+      if (selectedOption?.filterFn) {
+        filtered = filtered.filter(selectedOption.filterFn);
+      }
+    }
+
+    return filtered;
+  }
+
+  /**
+   * Allows searchable props in the format user.name, this function gets the
+   * nested value based on a dot-separated path.
+   *
+   * @param {Object} obj - The object to get value from
+   * @param {String} path - The property path (e.g. "user.name")
+   * @returns {*} The value at the path
+   */
+  getNestedValue(obj, path) {
+    return path.split(".").reduce((current, key) => current?.[key], obj);
+  }
+
+  defaultValue(key) {
+    const defaults =
+      typeof this.defaultDropdownValue === "object"
+        ? this.defaultDropdownValue
+        : {};
+    return defaults[key] || "all";
+  }
+
+  @action
+  applyDropdownsFromUrl() {
+    if (!this.showFilters || !this.hasUrlOwnedDropdowns) {
+      return;
+    }
+
+    const params = this.currentSearchParams;
+
+    if (this.hasMultipleDropdowns) {
+      for (const [key, paramName] of Object.entries(
+        this.args.dropdownFilterQueryParams ?? {}
+      )) {
+        const defaultValue = this.defaultValue(key);
+        const value =
+          this.#validatedUrlValue(
+            params,
+            paramName,
+            this.dropdownOptions[key] ?? []
+          ) ?? defaultValue;
+
+        this.dropdownFilters[key] = value;
+        this.showFilterDropdowns ||= value !== defaultValue;
+      }
+    } else if (this.args.dropdownFilterQueryParam) {
+      this.dropdownFilter =
+        this.#validatedUrlValue(
+          params,
+          this.args.dropdownFilterQueryParam,
+          this.dropdownOptions
+        ) ?? this.defaultDropdownValue;
+    }
+  }
+
+  dropdownValueFor(key) {
+    const values =
+      typeof this.dropdownValue === "object" ? this.dropdownValue : {};
+    return values[key] || this.defaultValue(key);
+  }
+
+  @action
+  applyDropdownValues() {
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownOptions).forEach((key) => {
+        this.dropdownFilters[key] = this.dropdownValueFor(key);
+      });
+    } else {
+      this.dropdownFilter = this.dropdownValue;
+    }
+  }
+
+  syncTextFilterQueryParam() {
+    this.updateQueryParams({
+      [this.args.textFilterQueryParam]: this.textFilter,
+    });
+  }
+
+  updateQueryParams(updates) {
+    // no currentURL means the router isn't live (e.g. rendering tests)
+    if (!this.showFilters || !this.router.currentURL) {
+      return;
+    }
+
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, updates)
+    );
+  }
+
+  @action
+  onTextFilterChange(event) {
+    this.textFilter = event.target?.value || "";
+
+    if (this.args.textFilterQueryParam) {
+      discourseDebounce(this, this.syncTextFilterQueryParam, INPUT_DELAY);
+    }
+
+    this.args.onTextFilterChange?.(event);
+  }
+
+  @action
+  onDropdownFilterChange(keyOrValue, value) {
+    const multiple = this.hasMultipleDropdowns;
+    const selectedValue = multiple ? value : keyOrValue;
+    const paramName = multiple
+      ? this.args.dropdownFilterQueryParams?.[keyOrValue]
+      : this.args.dropdownFilterQueryParam;
+    const defaultValue = multiple
+      ? this.defaultValue(keyOrValue)
+      : this.defaultDropdownValue;
+
+    if (multiple) {
+      this.dropdownFilters[keyOrValue] = value;
+    } else {
+      this.dropdownFilter = keyOrValue;
+    }
+
+    if (paramName) {
+      this.updateQueryParams({
+        [paramName]: selectedValue === defaultValue ? null : selectedValue,
+      });
+    }
+
+    if (multiple) {
+      this.args.onDropdownFilterChange?.(keyOrValue, value);
+      this.args.onDropdownChange?.(keyOrValue, value);
+    } else {
+      this.args.onDropdownFilterChange?.(keyOrValue);
+      this.args.onDropdownChange?.(keyOrValue);
+    }
+  }
+
+  @action
+  resetFilters() {
+    this.textFilter = "";
+
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownFilters).forEach((key) => {
+        const defaultValue = this.defaultValue(key);
+        this.dropdownFilters[key] = defaultValue;
+        this.args.onDropdownChange?.(key, defaultValue);
+      });
+    } else {
+      this.dropdownFilter = this.defaultDropdownValue;
+      this.args.onDropdownChange?.(this.defaultDropdownValue);
+    }
+
+    const queryParams = [
+      this.args.textFilterQueryParam,
+      this.args.dropdownFilterQueryParam,
+      ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
+    ].filter(Boolean);
+    if (queryParams.length) {
+      this.updateQueryParams(
+        Object.fromEntries(queryParams.map((name) => [name, null]))
+      );
+    }
+
+    if (this.args.onResetFilters) {
+      this.args.onResetFilters();
+    }
+
+    schedule("afterRender", () => {
+      document.querySelector(".d-filter-controls__input")?.focus();
+    });
+  }
+
+  @action
+  toggleFilters() {
+    this.showFilterDropdowns = !this.showFilterDropdowns;
+  }
+
+  <template>
+    {{yield to="aboveFilters"}}
+
+    {{#if this.showFilters}}
+      <div
+        class={{dConcatClass
+          "d-filter-controls"
+          (if this.hasMultipleDropdowns "--multiple-dropdowns")
+        }}
+        {{didInsert this.applyDropdownsFromUrl}}
+        {{didUpdate
+          this.applyDropdownValues
+          @defaultDropdownValue
+          @dropdownValue
+        }}
+      >
+        <div class="d-filter-controls__inputs">
+          <DFilterInput
+            placeholder={{@inputPlaceholder}}
+            @filterAction={{this.onTextFilterChange}}
+            @value={{this.textFilter}}
+            class="d-filter-controls__input"
+            @icons={{hash left="magnifying-glass"}}
+          />
+
+          {{#if this.hasMultipleDropdowns}}
+            <DButton
+              class="btn-transparent d-filter-controls__toggle-filters"
+              @icon="filter"
+              @title="filter_controls.toggle"
+              @action={{this.toggleFilters}}
+            />
+          {{/if}}
+        </div>
+
+        {{#if this.showDropdownFilter}}
+          <div class="d-filter-controls__dropdowns">
+            {{#if this.hasMultipleDropdowns}}
+              {{#each-in this.dropdownOptions as |key options|}}
+                <DSelect
+                  @value={{get this.dropdownFilters key}}
+                  @includeNone={{false}}
+                  @onChange={{fn this.onDropdownFilterChange key}}
+                  class="d-filter-controls__dropdown d-filter-controls__dropdown--{{key}}"
+                  data-dropdown-key={{key}}
+                  as |select|
+                >
+                  {{#each options as |option|}}
+                    <select.Option @value={{option.value}}>
+                      {{option.label}}
+                    </select.Option>
+                  {{/each}}
+                </DSelect>
+              {{/each-in}}
+            {{else}}
+              <DSelect
+                @value={{this.dropdownFilter}}
+                @includeNone={{false}}
+                @onChange={{this.onDropdownFilterChange}}
+                class="d-filter-controls__dropdown"
+                as |select|
+              >
+                {{#each this.dropdownOptions as |option|}}
+                  <select.Option @value={{option.value}}>
+                    {{option.label}}
+                  </select.Option>
+                {{/each}}
+              </DSelect>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if (and this.hasActiveFilters (not @loading))}}
+          <DButton
+            @icon="arrow-rotate-left"
+            @label="filter_controls.reset"
+            @action={{this.resetFilters}}
+            class="btn-default d-filter-controls__reset"
+          />
+        {{/if}}
+
+        {{yield to="actions"}}
+      </div>
+    {{/if}}
+
+    {{yield to="aboveContent"}}
+
+    {{#if this.filteredData.length}}
+      {{yield this.filteredData to="content"}}
+    {{else if this.showFilters}}
+      {{#if (and this.hasActiveFilters (not @loading))}}
+        <div class="d-filter-controls__no-results">
+          {{#if @noResultsMessage}}
+            <p>{{@noResultsMessage}}</p>
+          {{/if}}
+          <DButton
+            @icon="arrow-rotate-left"
+            @label="filter_controls.reset"
+            @action={{this.resetFilters}}
+            class="btn-default d-filter-controls__reset"
+          />
+        </div>
+      {{/if}}
+    {{else}}
+      {{#if @showCustomEmptyState}}
+        {{yield to="customEmptyState"}}
+      {{else}}
+        {{yield this.array to="content"}}
+      {{/if}}
+    {{/if}}
+  </template>
+}

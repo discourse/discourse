@@ -119,5 +119,3 @@ sv:
           add: Lägg till alternativ
         automatic_close:
           label: Stäng omröstning automatiskt
-        show_advanced: "Visa avancerade alternativ"
-        hide_advanced: "Dölj avancerade alternativ"

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MenuPanel from "discourse/components/menu-panel";
 import SearchMenu from "discourse/components/search-menu";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class SearchMenuWrapper extends Component {
   @service site;
@@ -19,7 +19,7 @@ export default class SearchMenuWrapper extends Component {
       aria-live="polite"
       ...attributes
     >
-      <MenuPanel class={{concatClass this.animationClass "search-menu-panel"}}>
+      <MenuPanel class={{dConcatClass this.animationClass "search-menu-panel"}}>
         <SearchMenu
           @onClose={{@closeSearchMenu}}
           @inlineResults={{true}}

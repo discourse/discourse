@@ -7,7 +7,7 @@ def write_template(path, task_name, template)
   JS
 
   basename = File.basename(path)
-  output_path = "#{Rails.root}/frontend/#{path}"
+  output_path = "#{Rails.root.join("frontend/#{path}")}"
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
@@ -17,6 +17,9 @@ end
 
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
+
+  category_additional_assign_allowed_groups =
+    DiscourseAssign::AssignmentPermissions::CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS
 
   auto_groups =
     Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
@@ -66,6 +69,8 @@ task "javascript:update_constants" => :environment do
 
     export const CATEGORY_TEXT_COLORS = #{Category::DEFAULT_TEXT_COLORS};
 
+    export const CATEGORY_ADDITIONAL_ASSIGN_ALLOWED_GROUPS = "#{category_additional_assign_allowed_groups}";
+
     // NOTE: Group names are changed based on the site's locale, see
     // Group.refresh_automatic_group! for more details
     export const AUTO_GROUPS = #{auto_groups.to_json};
@@ -73,8 +78,6 @@ task "javascript:update_constants" => :environment do
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
 
     export const GROUP_VISIBILITY_LEVELS = #{Group.visibility_levels.to_json};
-
-    export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 

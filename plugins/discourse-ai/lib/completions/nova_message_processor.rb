@@ -34,7 +34,7 @@ class DiscourseAi::Completions::NovaMessageProcessor
     end
 
     def to_tool_call
-      parameters = JSON.parse(raw_json, symbolize_names: true)
+      parameters = DiscourseAi::Completions::ToolArgumentsParser.parse(raw_json)
       # we dupe to avoid poisoning the original tool call
       @tool_call = @tool_call.dup
       @tool_call.partial = false
@@ -54,6 +54,10 @@ class DiscourseAi::Completions::NovaMessageProcessor
 
   def to_tool_calls
     @tool_calls.map { |tool_call| tool_call.to_tool_call }
+  end
+
+  def finish
+    []
   end
 
   def process_streamed_message(parsed)

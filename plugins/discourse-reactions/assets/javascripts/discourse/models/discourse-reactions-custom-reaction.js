@@ -104,12 +104,13 @@ export default class CustomReaction extends RestModel {
   }
 
   static findReactionUsers(postId, options = {}) {
-    let url = `/discourse-reactions/posts/${postId}/reactions-users.json`;
+    const data = {};
     if (options.reactionValue) {
-      url += `?reaction_value=${options.reactionValue}`;
+      data.reaction_value = options.reactionValue;
     }
-    return ajax(url, {
+    return ajax(`/discourse-reactions/posts/${postId}/reactions-users.json`, {
       type: "GET",
+      data,
     }).then((result) => {
       const reactionUsers = result.reaction_users.map((reactionUser) => {
         reactionUser.users = reactionUser.users.map((user) =>

@@ -55,6 +55,7 @@ module Jobs
       post.cooked = update_cooked(post.cooked)
 
       post.update_columns(raw: post.raw, cooked: post.cooked)
+      post.sync_first_post_caches
 
       SearchIndexer.index(post, force: true) if post.topic
     rescue => e

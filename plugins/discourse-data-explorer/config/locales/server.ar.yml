@@ -7,6 +7,23 @@
 ar:
   site_settings:
     data_explorer_enabled: "تفعيل مستكشف البيانات"
+    data_explorer_ai_queries_enabled: "تفعيل إنشاء الاستعلام بالذكاء الاصطناعي في مستكشف البيانات"
+  discourse_ai:
+    ai_bot:
+      agents:
+        ai_query_generator:
+          name: "منشئ استعلام مستكشف البيانات"
+          description: "إنشاء استعلامات SQL لمستكشف البيانات من نصوص طبيعية"
+      tool_help:
+        run_sql: "تنفيذ استعلام SQL وإرجاع النتائج"
+      tool_summary:
+        run_sql: "جاري تنفيذ استعلام SQL"
+      tool_description:
+        run_sql: "تم تنفيذ استعلام SQL"
+  discourse_data_explorer:
+    ai:
+      error_agent_not_configured: "وكيل الذكاء الاصطناعي غير مُهيأ. يُرجى التحقق من إعدادات ميزات الذكاء الاصطناعي."
+      error_no_sql_returned: "لم يتمكن الذكاء الاصطناعي من استعادة استعلام SQL صالح. يُرجى المحاولة مرة أخرى أو كتابة الاستعلام يدويًا."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -17,6 +34,7 @@ ar:
         title: جدولة منشور في موضوع باستخدام نتائج مستكشف البيانات
         description: احصل على تقارير مجدولة يتم نشرها في موضوع معيَّن
   data_explorer:
+    admin_dashboard_label: "مستكشف البيانات"
     report_generator:
       private_message:
         title: "تقرير مجدول للاستعلام %{query_name}"

@@ -9,7 +9,7 @@ task "assets:prestage" => :environment do |t|
 
   def get_assets(path)
     Dir
-      .glob("#{Rails.root}/public/assets/#{path}*")
+      .glob("#{Rails.root.join("public/assets/#{path}*")}")
       .map { |f| "/assets/#{path}#{f.split("/")[-1]}" if f =~ /[a-f0-9]{16}\.(css|js)\z/ }
       .compact
   end
@@ -19,7 +19,7 @@ task "assets:prestage" => :environment do |t|
   puts "pre staging: #{assets.join(" ")}"
 
   # makes testing simpler leaving this here
-  config = YAML.safe_load(File.open("#{Rails.root}/config/cdn.yml"))
+  config = YAML.safe_load(File.open("#{Rails.root.join("config/cdn.yml")}"))
 
   start = Time.now
 

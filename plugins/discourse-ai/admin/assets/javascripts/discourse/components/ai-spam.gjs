@@ -6,18 +6,19 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DStatTiles from "discourse/components/d-stat-tiles";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DStatTiles from "discourse/ui-kit/d-stat-tiles";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SpamTestModal from "./modal/spam-test-modal";
 
@@ -110,8 +111,18 @@ export default class AiSpam extends Component {
     return this.args.model?.available_agents || [];
   }
 
+  get toggleDisabled() {
+    return applyValueTransformer("ai-spam-toggle-disabled", false, {
+      spam: this.args.model,
+    });
+  }
+
   @action
   async toggleEnabled() {
+    if (this.toggleDisabled) {
+      return;
+    }
+
     this.isEnabled = !this.isEnabled;
     const data = { is_enabled: this.isEnabled };
     if (this.autoSelectedLLM) {
@@ -222,7 +233,7 @@ export default class AiSpam extends Component {
         <div class="ai-spam__errors">
           {{#each this.errors as |e|}}
             <div class="alert alert-error">
-              {{icon "triangle-exclamation"}}
+              {{dIcon "triangle-exclamation"}}
               <p>{{e.message}}</p>
               <DButton
                 @action={{e.button.action}}
@@ -240,11 +251,16 @@ export default class AiSpam extends Component {
             class="ai-spam__toggle"
             @state={{this.isEnabled}}
             @label="discourse_ai.spam.enable"
+            disabled={{this.toggleDisabled}}
             {{on "click" this.toggleEnabled}}
           />
           <DTooltip
             @icon="circle-question"
-            @content={{i18n "discourse_ai.spam.spam_tip"}}
+            @content={{if
+              this.toggleDisabled
+              (i18n "discourse_ai.spam.enabled_locked_tip")
+              (i18n "discourse_ai.spam.spam_tip")
+            }}
           />
         </div>
 

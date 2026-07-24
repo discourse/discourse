@@ -1,8 +1,8 @@
 import { click, render, triggerKeyEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 
 const noop = () => {};
 

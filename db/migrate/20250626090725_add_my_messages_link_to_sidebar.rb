@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
   def up
+    return if Migration::Helpers.new_site?
+
     # Find the community sidebar section
     community_section =
       DB.query_single(

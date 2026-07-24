@@ -252,10 +252,10 @@ end
 #
 # Table name: post_timings
 #
-#  topic_id    :integer          not null
-#  post_number :integer          not null
-#  user_id     :integer          not null
 #  msecs       :integer          not null
+#  post_number :integer          not null
+#  topic_id    :integer          not null
+#  user_id     :integer          not null
 #
 # Indexes
 #

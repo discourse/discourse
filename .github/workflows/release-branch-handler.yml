@@ -27,10 +27,11 @@ jobs:
       GH_TOKEN: ${{ github.token }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           filter: tree:0
           fetch-depth: 0
+          token: ${{ secrets.GH_PUSH_TOKEN }}
 
       - uses: ./.github/actions/setup-release-environment
 

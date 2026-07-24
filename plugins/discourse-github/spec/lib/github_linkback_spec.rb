@@ -200,14 +200,7 @@ describe GithubLinkback do
   end
 
   describe "#create" do
-    let(:github_api_headers) do
-      {
-        "Authorization" => "token abcdef",
-        "Content-Type" => "application/json",
-        "Host" => "api.github.com",
-        "User-Agent" => "Discourse-Github-Linkback",
-      }
-    end
+    let(:github_api_headers) { { "Authorization" => "Bearer abcdef" } }
 
     before { SiteSetting.github_linkback_projects = "discourse/discourse|discourse/*" }
 

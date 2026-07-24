@@ -1,22 +1,22 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserBadge from "discourse/components/user-badge";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li><LinkTo @route="adminUser" @model={{@controller.user}}>{{icon
+        <li><LinkTo @route="adminUser" @model={{@controller.user}}>{{dIcon
               "angle-left"
             }}
             &nbsp;{{@controller.user.username}}</LinkTo></li>
@@ -24,7 +24,7 @@ export default <template>
     </nav>
   </div>
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     <div class="admin-container user-badges">
       <h2>{{i18n "admin.badges.grant_badge"}}</h2>
       <br />
@@ -89,7 +89,7 @@ export default <template>
                   /></td>
                 <td>
                   <LinkTo @route="adminUser" @model={{userBadge.granted_by}}>
-                    {{avatar userBadge.granted_by imageSize="tiny"}}
+                    {{dAvatar userBadge.granted_by imageSize="tiny"}}
                     {{userBadge.granted_by.username}}
                   </LinkTo>
                 </td>
@@ -98,7 +98,7 @@ export default <template>
                     <a href={{userBadge.postUrl}}>{{userBadge.topic_title}}</a>
                   {{/if}}
                 </td>
-                <td>{{ageWithTooltip userBadge.granted_at}}</td>
+                <td>{{dAgeWithTooltip userBadge.granted_at}}</td>
                 <td>
                   {{#if userBadge.grouped}}
                     <DButton
@@ -128,5 +128,5 @@ export default <template>
         </table>
       </PluginOutlet>
     </div>
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

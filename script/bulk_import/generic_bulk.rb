@@ -99,6 +99,7 @@ class BulkImport::Generic < BulkImport::Base
     update_category_read_restricted
 
     import_topics
+    import_topic_custom_fields
     import_posts
     import_post_custom_fields
 
@@ -597,11 +598,16 @@ class BulkImport::Generic < BulkImport::Base
         original_username: row["original_username"],
         name: row["name"],
         email: row["email"],
+        locale: row["locale"],
         external_id: sso_record&.fetch("external_id", nil),
         created_at: to_datetime(row["created_at"]),
+        staged: row["staged"],
         last_seen_at: to_datetime(row["last_seen_at"]),
         admin: row["admin"],
         moderator: row["moderator"],
+        approved: row["approved"].nil? ? nil : row["approved"] == 1,
+        approved_at: to_datetime(row["approved_at"]),
+        approved_by_id: user_id_from_imported_id(row["approved_by_id"]),
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         trust_level: row["trust_level"],
@@ -671,13 +677,24 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_options
     puts "", "Importing user options..."
 
+    users_columns = table_column_names("users")
+    hide_profile_columns = %w[hide_profile_and_presence hide_profile hide_presence]
+    available_hide_profile_columns =
+      hide_profile_columns.select { |column| users_columns.include?(column) }
+    select_hide_profile_columns =
+      hide_profile_columns.map do |column|
+        available_hide_profile_columns.include?(column) ? column : "NULL AS #{column}"
+      end
+
     users = query(<<~SQL)
-      SELECT id, timezone, email_level, email_messages_level, email_digests
+      SELECT id, timezone, email_level, email_messages_level, email_digests,
+             #{select_hide_profile_columns.join(", ")}
         FROM users
        WHERE timezone IS NOT NULL
           OR email_level IS NOT NULL
           OR email_messages_level IS NOT NULL
           OR email_digests IS NOT NULL
+          #{available_hide_profile_columns.map { |column| "OR #{column} IS NOT NULL" }.join("\n          ")}
        ORDER BY id
     SQL
 
@@ -687,14 +704,19 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next unless user_id && existing_user_ids.add?(user_id)
 
-      {
+      options = {
         user_id: user_id,
         timezone: row["timezone"],
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
-        hide_profile_and_presence: row["hide_profile_and_presence"],
+        hide_profile: row["hide_profile"],
+        hide_presence: row["hide_presence"],
       }
+      options[:hide_profile_and_presence] = row["hide_profile_and_presence"] if !row[
+        "hide_profile_and_presence"
+      ].nil?
+      options
     end
 
     users.close
@@ -852,6 +874,7 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
         category_id: category_id,
         closed: to_boolean(row["closed"]),
+        archived: to_boolean(row["archived"]),
         views: row["views"],
         subtype: row["subtype"],
         pinned_at: to_datetime(row["pinned_at"]),
@@ -861,6 +884,32 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topics.close
+  end
+
+  def import_topic_custom_fields
+    puts "", "Importing topic custom fields..."
+
+    topic_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM topic_custom_fields
+      ORDER BY topic_id, name
+    SQL
+
+    field_names =
+      query("SELECT DISTINCT name FROM topic_custom_fields") { it.map { |row| row["name"] } }
+    existing_topic_custom_fields =
+      TopicCustomField.where(name: field_names).pluck(:topic_id, :name).to_set
+
+    create_topic_custom_fields(topic_custom_fields) do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      next if topic_id.nil?
+
+      next unless existing_topic_custom_fields.add?([topic_id, row["name"]])
+
+      { topic_id: topic_id, name: row["name"], value: row["value"] }
+    end
+
+    topic_custom_fields.close
   end
 
   def import_topic_allowed_users
@@ -1268,7 +1317,7 @@ class BulkImport::Generic < BulkImport::Base
         original_id: row["id"],
         post_id: post_id,
         name: poll_name(row),
-        closed_at: to_datetime(row["closed_at"]),
+        closed_at: to_datetime(row["close_at"]),
         type: row["type"],
         status: row["status"],
         results: row["results"],
@@ -1334,7 +1383,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless poll_id
 
       option_ids = row["option_ids"].split(",")
-      option_ids.each { |option_id| next if poll_option_id_from_original_id(option_id).present? }
+      next if option_ids.all? { |oid| poll_option_id_from_original_id(oid).present? }
 
       {
         original_ids: option_ids,
@@ -2439,19 +2488,35 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_solved_topics = DiscourseSolved::SolvedTopic.pluck(:topic_id).to_set
+    inserted_topic_ids = []
 
     create_solved_topic(solutions) do |row|
-      post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
-      accepter_user_id = user_id_from_imported_id(row["acting_user_id"])
+      next unless topic_id && existing_solved_topics.add?(topic_id)
 
-      next unless post_id && topic_id
-      next unless existing_solved_topics.add?(topic_id)
+      inserted_topic_ids << topic_id
+      { topic_id:, created_at: to_datetime(row["created_at"]) }
+    end
+
+    puts "", "Importing solutions into discourse_solved_topic_answers..."
+
+    solved_topic_id_by_topic_id =
+      DiscourseSolved::SolvedTopic.where(topic_id: inserted_topic_ids).pluck(:topic_id, :id).to_h
+
+    solutions.reset
+
+    create_topic_answers(solutions) do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      solved_topic_id = solved_topic_id_by_topic_id[topic_id]
+      next unless solved_topic_id
+
+      post_id = post_id_from_imported_id(row["post_id"])
+      next unless post_id
 
       {
-        topic_id: topic_id,
+        solved_topic_id:,
         answer_post_id: post_id,
-        accepter_user_id: accepter_user_id,
+        accepter_user_id: user_id_from_imported_id(row["acting_user_id"]),
         created_at: to_datetime(row["created_at"]),
       }
     end
@@ -3117,6 +3182,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       original_message_user_id = user_id_from_imported_id(row["original_message_user_id"])
 
+      next if chat_thread_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || original_message_user_id.blank?
 
       # Messages aren't imported yet. Use a placeholder `original_message_id` for now.
@@ -3192,6 +3258,7 @@ class BulkImport::Generic < BulkImport::Base
       channel_id = chat_channel_id_from_original_id(row["chat_channel_id"])
       user_id = user_id_from_imported_id(row["user_id"])
 
+      next if chat_message_id_from_original_id(row["id"]).present?
       next if channel_id.blank? || user_id.blank?
       next if row["message"].blank? && row["upload_ids"].blank?
 
@@ -3570,6 +3637,14 @@ class BulkImport::Generic < BulkImport::Base
     else
       result_set
     end
+  end
+
+  def table_column_names(table_name, db: @source_db)
+    @table_column_names ||= {}
+    @table_column_names[[db.object_id, table_name]] ||= query(
+      "PRAGMA table_info(#{table_name})",
+      db:,
+    ) { |rows| rows.map { |row| row["name"] }.to_set }
   end
 
   def to_date(text)

@@ -4,16 +4,16 @@ import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import LoadMore from "discourse/components/load-more";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import fullnumber from "../helpers/fullnumber";
 import GamificationLeaderboardRow from "./gamification-leaderboard-row";
@@ -166,7 +166,7 @@ export default class GamificationLeaderboard extends Component {
         />
         {{#if this.currentUser.staff}}
           <a href="/admin/plugins/gamification" class="leaderboard__settings">
-            {{icon "gear"}}
+            {{dIcon "gear"}}
             {{unless
               this.site.mobileView
               (i18n "gamification.leaderboard.link_to_settings")
@@ -190,13 +190,13 @@ export default class GamificationLeaderboard extends Component {
           <div class="podium">
             {{#each this.winners as |winner|}}
               <div class="winner -position{{winner.position}}">
-                <div class="winner__crown">{{icon "crown"}}</div>
+                <div class="winner__crown">{{dIcon "crown"}}</div>
                 <div
                   class="winner__avatar clickable"
                   role="button"
                   data-user-card={{winner.username}}
                 >
-                  {{avatar winner imageSize="huge"}}
+                  {{dAvatar winner imageSize="huge"}}
                   <div class="winner__rank">
                     <span>{{winner.position}}</span>
                   </div>
@@ -219,7 +219,7 @@ export default class GamificationLeaderboard extends Component {
         <div class="ranking">
           <div class="ranking-col-names">
             <span>{{i18n "gamification.leaderboard.rank"}}</span>
-            <span>{{icon "award"}}{{i18n "gamification.score"}}</span>
+            <span>{{dIcon "award"}}{{i18n "gamification.score"}}</span>
           </div>
           <div class="ranking-col-names__sticky-border"></div>
           {{#if this.currentUserRanking.user}}
@@ -228,7 +228,7 @@ export default class GamificationLeaderboard extends Component {
               <div class="user__name">{{i18n "gamification.you"}}</div>
               <div class="user__score">
                 {{#if this.site.mobileView}}
-                  {{number this.currentUserRanking.user.total_score}}
+                  {{dNumber this.currentUserRanking.user.total_score}}
                 {{else}}
                   {{fullnumber this.currentUserRanking.user.total_score}}
                 {{/if}}
@@ -236,12 +236,12 @@ export default class GamificationLeaderboard extends Component {
             </div>
           {{/if}}
 
-          <LoadMore @action={{this.loadMore}}>
+          <DLoadMore @action={{this.loadMore}}>
             {{#each this.ranking as |rank index|}}
               <GamificationLeaderboardRow @rank={{rank}} @index={{index}} />
             {{/each}}
-          </LoadMore>
-          <ConditionalLoadingSpinner @condition={{this.loading}} />
+          </DLoadMore>
+          <DConditionalLoadingSpinner @condition={{this.loading}} />
         </div>
       {{/if}}
     </div>

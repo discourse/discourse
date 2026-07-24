@@ -15,6 +15,7 @@ fr:
         title: Planifier une publication dans un sujet avec les résultats de l'explorateur de données
         description: Recevoir des rapports planifiés sur un sujet spécifique
   data_explorer:
+    admin_dashboard_label: "Explorateur de données"
     report_generator:
       private_message:
         title: "Rapport planifié pour %{query_name}"

@@ -20,6 +20,7 @@ module Patreon
       Patreon.set("pledges", all.except(patron_id))
       Decline.set(Decline.all.except(patron_id))
       Patreon.set("users", Patreon::Patron.all.except(patron_id))
+      reward_users["0"] = all.keys
       Patreon.set("reward-users", reward_users)
     end
 

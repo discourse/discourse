@@ -1,160 +1,105 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "pathname"
-require "open3"
+require "bundler/setup"
+require "webrick"
 
-RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
-PORT = ENV["UNICORN_PORT"] ||= "3000"
-HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
-CUSTOM_ARGS = %w[--try --test --build --server --unicorn -u --forward-host]
-PROXY =
-  if ARGV.include?("--try")
-    "https://try.discourse.org"
-  else
-    "http://#{HOSTNAME}:#{PORT}"
-  end
-
-def process_running?(pid)
-  !!Process.kill(0, pid)
-rescue Errno::ESRCH
-  false
-end
-
-command =
-  if ARGV.include?("--test")
-    "test"
-  elsif ARGV.include?("--build")
-    "build"
-  else
-    "server"
-  end
-
-class String
-  def cyan
-    "\e[36m#{self}\e[0m"
-  end
-
-  def red
-    "\033[31m#{self}\e[0m"
-  end
-end
+ALLOWED_ARGS = %w[-u --build]
+EXTRA_ARGS = ARGV - ALLOWED_ARGS
 
 if ARGV.include?("-h") || ARGV.include?("--help")
-  puts "ember-cli OPTIONS"
-  puts "#{"--try".cyan} To proxy try.discourse.org"
-  puts "#{"--test".cyan} To run the test suite"
-  puts "#{"--server, -u".cyan} To run a server as well"
-  puts "The rest of the arguments are passed to ember server per:", ""
-  exec "pnpm ember #{command} --help"
+  puts <<~MSG
+    bin/ember-cli is deprecated. Use bin/dev instead.
+
+    Usage (backwards-compatible):
+      bin/ember-cli           Runs `bin/dev --only ember` (frontend bundler only)
+      bin/ember-cli -u        Runs `bin/dev` (Rails + frontend bundler)
+      bin/ember-cli --build   Runs `pnpm build` (one-off frontend build, no watching)
+  MSG
+  exit 0
 end
 
-args = ["--dir=frontend/discourse", "ember", command] + (ARGV - CUSTOM_ARGS)
+abort <<~MSG if !EXTRA_ARGS.empty?
+    bin/ember-cli no longer accepts arguments: #{EXTRA_ARGS.join(" ")}
 
-if !args.include?("test") && !args.include?("build") && !args.include?("--proxy")
-  args << "--proxy"
-  args << PROXY
-end
+    Discourse now runs from a single port via `bin/dev`. Please switch to:
+      bin/dev
 
-node_modules_outdated =
-  begin
-    File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
-  rescue Errno::ENOENT
-    true
+    bin/ember-cli is retained only for backwards compatibility and supports:
+      bin/ember-cli           (equivalent to `bin/dev --only ember`)
+      bin/ember-cli -u        (equivalent to `bin/dev`)
+      bin/ember-cli --build   (equivalent to `pnpm build`)
+  MSG
+
+child_command, display_command, run_stub_server =
+  if ARGV.include?("--build")
+    [%w[pnpm build], "pnpm build", false]
+  elsif ARGV.include?("-u")
+    [[File.expand_path("dev", __dir__)], "bin/dev", true]
+  else
+    [[File.expand_path("dev", __dir__), "--only", "ember"], "bin/dev --only ember", true]
   end
 
-if node_modules_outdated
-  puts "[bin/ember-cli] Detected outdated or missing node_modules. Running pnpm install..."
+warn "\e[31m[bin/ember-cli] DEPRECATED: please use `#{display_command}` instead...\e[0m"
 
-  if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
-    if !system("command -v pnpm >/dev/null;")
-      abort "pnpm is not installed. run `npm install -g pnpm`"
-    end
-    exit 1
-  end
-end
+stub_port = (ENV["EMBER_CLI_STUB_PORT"] || 4200).to_i
+target_port = ENV["UNICORN_PORT"] || "3000"
 
-pnpm_env = {
-  "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
-}
-pnpm_env["FORWARD_HOST"] = "true" if ARGV.include?("--forward-host")
+stub_message = <<~MSG
+  <!doctype html>
+  <html>
+    <head>
+      <title>Ember CLI Removed</title>
+      <style>
+        body { font-family: system-ui, sans-serif; max-width: 36rem; margin: 4rem auto; padding: 0 1rem; color: #222; line-height: 1.5; }
+        h1 { font-size: 1.25rem; margin-bottom: 1rem; }
+        code { background: #f3f3f3; padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.95em; }
+        a { color: #08c; }
+      </style>
+    </head>
+    <body>
+      <h1>Ember CLI has been replaced with Rolldown</h1>
+      <p>Discourse is now served from a single port in development. Visit <a href="http://localhost:#{target_port}">http://localhost:#{target_port}</a>.</p>
+      <p>To start Rails and the Rolldown build in a single command, use <code>bin/dev</code>.</p>
+      <p>To launch the standalone frontend bundler, use <code>bin/dev --only ember</code>.</p>
+    </body>
+  </html>
+MSG
 
-if ARGV.include?("-u") || ARGV.include?("--server") || ARGV.include?("--unicorn")
-  server_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
-
-  if command == "server" && ENV["CODESPACE_NAME"]
-    server_env.merge!(
-      {
-        "DISCOURSE_PORT" => "443",
-        "DISCOURSE_FORCE_HTTPS" => "1",
-        "DISCOURSE_FORCE_HOSTNAME" =>
-          "#{ENV["CODESPACE_NAME"]}-4200.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-      },
-    )
-  end
-
-  server_pid = spawn(server_env, "#{__dir__}/pitchfork")
-  ember_cli_pid = nil
-  sigint_received = false
-
-  Thread.new do
-    Open3.popen2e(pnpm_env, "pnpm", *args.to_a.flatten) do |i, oe, t|
-      ember_cli_pid = t.pid
-      puts "Ember CLI running on PID: #{ember_cli_pid}"
-      oe.each do |line|
-        if line.include?("\e[32m200\e") || line.include?("\e[36m304\e[0m") ||
-             line.include?("POST /message-bus")
-          # skip 200s and 304s and message bus
-        else
-          puts "[ember-cli] #{line}"
-        end
-      end
-    end
-    # Only send TERM to the server if ember exited on its own (not from
-    # Ctrl+C). When the user presses Ctrl+C, all processes in the foreground
-    # group already received INT directly from the terminal. Sending an
-    # additional TERM races with the server's hard shutdown and can cause it
-    # to fall back to a slow graceful shutdown, making the process appear
-    # stuck for up to 60 seconds.
-    if !sigint_received && process_running?(server_pid)
-      puts "[bin/ember-cli] ember-cli process stopped. Terminating server."
-      Process.kill("TERM", server_pid)
+stub_server =
+  if run_stub_server
+    begin
+      WEBrick::HTTPServer.new(
+        Port: stub_port,
+        BindAddress: "0.0.0.0",
+        Logger: WEBrick::Log.new(File::NULL),
+        AccessLog: [],
+      )
+    rescue Errno::EADDRINUSE
+      warn "[bin/ember-cli] Port #{stub_port} already in use; skipping deprecation stub server."
+      nil
     end
   end
 
-  int_count = 0
-  trap("INT") do
-    sigint_received = true
-    int_count += 1
-    case int_count
-    when 1
-      # Swallowed to give children time to handle it
-    when 2
-      puts "\n[bin/ember-cli] Interrupt again to force shutdown..."
-    else
-      puts "\n[bin/ember-cli] Forcing shutdown..."
-      begin
-        Process.kill("KILL", server_pid)
-      rescue StandardError
-        nil
-      end
-      if ember_cli_pid
-        begin
-          Process.kill("KILL", ember_cli_pid)
-        rescue StandardError
-          nil
-        end
-      end
-      exit!(1)
-    end
+if stub_server
+  stub_server.mount_proc "/" do |_req, res|
+    res.status = 410
+    res["Content-Type"] = "text/html; charset=utf-8"
+    res.body = stub_message
   end
-
-  Process.wait(server_pid)
-
-  if ember_cli_pid && process_running?(ember_cli_pid)
-    puts "[bin/ember-cli] server process stopped. Terminating ember-cli."
-    Process.kill("TERM", ember_cli_pid)
-  end
-else
-  exec(pnpm_env, "pnpm", *args.to_a.flatten)
+  Thread.new { stub_server.start }
 end
+
+child_pid = spawn(*child_command)
+
+# Children in the foreground process group already receive INT from the terminal;
+# swallow it here so we can clean up the stub server.
+trap("INT") {}
+
+begin
+  Process.wait(child_pid)
+ensure
+  stub_server&.shutdown
+end
+
+exit($?.exitstatus || 0)

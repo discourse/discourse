@@ -1,10 +1,10 @@
 import { trustHTML } from "@ember/template";
-import EmptyState from "discourse/components/empty-state";
 import getUrl from "discourse/lib/get-url";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import { i18n } from "discourse-i18n";
 
 const ChatNotificationsListEmptyState = <template>
-  <EmptyState
+  <DEmptyState
     @title={{i18n "user_menu.no_chat_notifications_title"}}
     @body={{trustHTML
       (i18n

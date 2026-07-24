@@ -356,6 +356,9 @@
         "category_types": {
           "type": "object"
         },
+        "category_type_settings": {
+          "type": "object"
+        },
         "available_category_types": {
           "type": "array",
           "items": {
@@ -380,6 +383,9 @@
               "available": {
                 "type": "boolean"
               },
+              "visible": {
+                "type": "boolean"
+              },
               "configuration_schema": {
                 "type": "object"
               }
@@ -391,6 +397,7 @@
               "description",
               "icon",
               "available",
+              "visible",
               "configuration_schema"
             ]
           }

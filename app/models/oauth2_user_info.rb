@@ -17,13 +17,13 @@ end
 # Table name: oauth2_user_infos
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  uid        :string           not null
-#  provider   :string           not null
 #  email      :string
 #  name       :string
+#  provider   :string           not null
+#  uid        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

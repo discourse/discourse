@@ -98,6 +98,17 @@ describe Topic do
     expect(topic.last_answerer.id).to eq(expected)
   end
 
+  describe "#is_post_voting?" do
+    before { SiteSetting.post_voting_enabled = true }
+
+    it "returns false when the topic renders as nested" do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+
+      expect(topic).not_to be_is_post_voting
+    end
+  end
+
   describe ".post_voting_votes" do
     it "should return nil if user is blank" do
       expect(Topic.post_voting_votes(topic, nil)).to eq(nil)

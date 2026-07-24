@@ -36,6 +36,39 @@ module DiscourseAi
         end
       end
 
+      def self.promote_post_reviewable_to_flagged!(post)
+        reviewable = ReviewablePost.pending.find_by(target: post)
+        return if reviewable.blank?
+        return if ReviewableFlaggedPost.exists?(target: post)
+
+        reviewable.update!(
+          type: ReviewableFlaggedPost.name,
+          potential_spam: true,
+          reviewable_by_moderator: true,
+          payload: {
+            targets_topic: false,
+          },
+        )
+      rescue ActiveRecord::RecordNotUnique
+        raise if !ReviewableFlaggedPost.exists?(target: post)
+      end
+      private_class_method :promote_post_reviewable_to_flagged!
+
+      def self.review_reviewable_for(post)
+        # If a spam triage rule already flagged this post, reuse that reviewable
+        # instead of creating a separate ReviewablePost. This mirrors
+        # `promote_post_reviewable_to_flagged!` for the opposite ordering, so
+        # moderators always see a single review item regardless of which rule
+        # ran first.
+        ReviewableFlaggedPost.pending.find_by(target: post) ||
+          ReviewablePost.needs_review!(
+            target: post,
+            created_by: Discourse.system_user,
+            reviewable_by_moderator: true,
+          )
+      end
+      private_class_method :review_reviewable_for
+
       def self.handle(
         post:,
         triage_agent_id:,
@@ -89,9 +122,18 @@ module DiscourseAi
             strict: SiteSetting.ai_strict_token_counting,
           ) if max_post_tokens.present?
 
-        if post.upload_ids.present? && triage_agent.vision_enabled
+        upload_ids =
+          DiscourseAi::Completions::PromptMessagesBuilder.filtered_upload_ids_for_prompt(
+            post.upload_ids,
+            include_image_uploads: triage_agent.vision_enabled,
+            include_document_uploads: model.allowed_attachment_types.present?,
+            allowed_attachment_types: model.allowed_attachment_types,
+            guardian: Guardian.new(post.user),
+          )
+
+        if upload_ids.present?
           input = [input]
-          input.concat(post.upload_ids.map { |upload_id| { upload_id: upload_id } })
+          input.concat(upload_ids.map { |upload_id| { upload_id: upload_id } })
         end
 
         bot_ctx =
@@ -188,22 +230,36 @@ module DiscourseAi
             already_flagged = flagged_by_another_triage_rule?(post)
 
             score_reason =
-              I18n.t(
-                "discourse_automation.scriptables.llm_triage.flagged_post",
-                base_path: Discourse.base_path,
-                llm_response: ERB::Util.html_escape(result),
+              DiscourseAi::Automation.flag_post_reason(
+                reason: result,
                 automation_id: automation&.id.to_s,
-                automation_name: ERB::Util.html_escape(automation&.name.to_s),
+                automation_name: automation&.name,
               )
 
             if !flagged_by_tool
               if flag_type == :spam || flag_type == :spam_silence
+                spam_score_reason =
+                  DiscourseAi::Automation.spam_score_reason(
+                    automation_id: automation&.id.to_s,
+                    automation_name: automation&.name,
+                  )
+
+                spam_post_action_message =
+                  DiscourseAi::Automation.spam_post_action_message(
+                    reason: result,
+                    automation_id: automation&.id.to_s,
+                    automation_name: automation&.name,
+                  )
+
+                promote_post_reviewable_to_flagged!(post)
+
                 result =
                   PostActionCreator.new(
                     Discourse.system_user,
                     post,
                     PostActionType.types[:spam],
-                    message: score_reason,
+                    message: spam_post_action_message,
+                    reason: spam_score_reason,
                     queue_for_review: true,
                   ).perform
 
@@ -217,12 +273,7 @@ module DiscourseAi
                   end
                 end
               else
-                reviewable =
-                  ReviewablePost.needs_review!(
-                    target: post,
-                    created_by: Discourse.system_user,
-                    reviewable_by_moderator: true,
-                  )
+                reviewable = review_reviewable_for(post)
 
                 reviewable.add_score(
                   Discourse.system_user,

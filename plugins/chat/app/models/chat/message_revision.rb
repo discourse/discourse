@@ -17,11 +17,11 @@ end
 # Table name: chat_message_revisions
 #
 #  id              :bigint           not null, primary key
-#  chat_message_id :bigint
-#  old_message     :text             not null
 #  new_message     :text             not null
+#  old_message     :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  chat_message_id :bigint
 #  user_id         :integer          not null
 #
 # Indexes

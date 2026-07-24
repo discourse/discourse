@@ -1,17 +1,18 @@
 import { hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
+import CodeLoginForm from "discourse/components/code-login-form";
 import LocalLoginForm from "discourse/components/local-login-form";
 import LoginButtons from "discourse/components/login-buttons";
 import LoginPageCta from "discourse/components/login-page-cta";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and } from "discourse/truth-helpers";
+import { and, not } from "discourse/truth-helpers";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -20,12 +21,12 @@ export default <template>
   {{bodyClass "login-page"}}
 
   <div class="login-fullpage">
-    <FlashMessage
+    <DFlashMessage
       @flash={{@controller.flash}}
       @type={{@controller.flashType}}
     />
 
-    <div class={{concatClass "login-body" @controller.bodyClasses}}>
+    <div class={{dConcatClass "login-body" @controller.bodyClasses}}>
       <PluginOutlet
         @name="login-before-modal-body"
         @connectorTagName="div"
@@ -58,7 +59,11 @@ export default <template>
               @outletArgs={{lazyHash createAccount=@controller.createAccount}}
             />
           </WelcomeHeader>
-          {{#if @controller.showLoginButtons}}
+          {{#if
+            (and
+              @controller.showLoginButtons (not @controller.showCodeLoginForm)
+            )
+          }}
 
             <LoginButtons
               @externalLogin={{@controller.externalLogin}}
@@ -86,33 +91,48 @@ export default <template>
               @name="login-wrapper"
               @outletArgs={{lazyHash externalLogin=@controller.externalLogin}}
             >
-              <LocalLoginForm
-                @loginName={{@controller.loginName}}
-                @loginNameChanged={{@controller.loginNameChanged}}
-                @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
-                @canUsePasskeys={{@controller.canUsePasskeys}}
-                @passkeyLogin={{@controller.passkeyLogin}}
-                @loginPassword={{@controller.loginPassword}}
-                @loginPasswordChanged={{@controller.loginPasswordChanged}}
-                @secondFactorMethod={{@controller.secondFactorMethod}}
-                @secondFactorToken={{@controller.secondFactorToken}}
-                @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
-                @backupEnabled={{@controller.backupEnabled}}
-                @totpEnabled={{@controller.totpEnabled}}
-                @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
-                @securityKeyChallenge={{@controller.securityKeyChallenge}}
-                @showSecurityKey={{@controller.showSecurityKey}}
-                @otherMethodAllowed={{@controller.otherMethodAllowed}}
-                @showSecondFactor={{@controller.showSecondFactor}}
-                @handleForgotPassword={{@controller.handleForgotPassword}}
-                @login={{@controller.localLogin}}
-                @flashChanged={{@controller.flashChanged}}
-                @flashTypeChanged={{@controller.flashTypeChanged}}
-                @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
-              />
+              {{#if @controller.showCodeLoginForm}}
+                <CodeLoginForm
+                  @initialEmail={{@controller.loginName}}
+                  @onUsePassword={{@controller.usePassword}}
+                />
+              {{else}}
+                <LocalLoginForm
+                  @onShowCodeLogin={{if
+                    @controller.canUseCodeLogin
+                    @controller.showCodeLogin
+                  }}
+                  @loginName={{@controller.loginName}}
+                  @loginNameChanged={{@controller.loginNameChanged}}
+                  @canLoginLocalWithEmail={{@controller.canLoginLocalWithEmail}}
+                  @canUsePasskeys={{@controller.canUsePasskeys}}
+                  @passkeyLogin={{@controller.passkeyLogin}}
+                  @loginPassword={{@controller.loginPassword}}
+                  @loginPasswordChanged={{@controller.loginPasswordChanged}}
+                  @secondFactorMethod={{@controller.secondFactorMethod}}
+                  @secondFactorToken={{@controller.secondFactorToken}}
+                  @secondFactorTokenChanged={{@controller.secondFactorTokenChanged}}
+                  @backupEnabled={{@controller.backupEnabled}}
+                  @totpEnabled={{@controller.totpEnabled}}
+                  @securityKeyAllowedCredentialIds={{@controller.securityKeyAllowedCredentialIds}}
+                  @securityKeyChallenge={{@controller.securityKeyChallenge}}
+                  @showSecurityKey={{@controller.showSecurityKey}}
+                  @otherMethodAllowed={{@controller.otherMethodAllowed}}
+                  @showSecondFactor={{@controller.showSecondFactor}}
+                  @handleForgotPassword={{@controller.handleForgotPassword}}
+                  @login={{@controller.localLogin}}
+                  @flashChanged={{@controller.flashChanged}}
+                  @flashTypeChanged={{@controller.flashTypeChanged}}
+                  @securityKeyCredentialChanged={{@controller.securityKeyCredentialChanged}}
+                />
+              {{/if}}
             </PluginOutlet>
 
-            {{#if @controller.site.desktopView}}
+            {{#if
+              (and
+                @controller.site.desktopView (not @controller.showCodeLoginForm)
+              )
+            }}
               <LoginPageCta
                 @canLoginLocal={{@controller.canLoginLocal}}
                 @showSecurityKey={{@controller.showSecurityKey}}
@@ -128,7 +148,13 @@ export default <template>
           </div>
         {{/if}}
 
-        {{#if (and @controller.showLoginButtons @controller.site.desktopView)}}
+        {{#if
+          (and
+            @controller.showLoginButtons
+            @controller.site.desktopView
+            (not @controller.showCodeLoginForm)
+          )
+        }}
 
           {{#unless @controller.canLoginLocal}}
             <div class="login-left-side">
@@ -148,7 +174,9 @@ export default <template>
         {{/if}}
       {{/if}}
 
-      {{#if @controller.site.mobileView}}
+      {{#if
+        (and @controller.site.mobileView (not @controller.showCodeLoginForm))
+      }}
         {{#unless @controller.hasNoLoginOptions}}
           <LoginPageCta
             @canLoginLocal={{@controller.canLoginLocal}}

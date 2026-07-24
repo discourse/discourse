@@ -279,4 +279,48 @@ RSpec.describe ExcerptParser do
       end
     end
   end
+
+  describe ".to_plain_text" do
+    it "decodes the entities emitted by the excerpt generator" do
+      excerpt =
+        ExcerptParser.get_excerpt("<p>Tom &amp; Jerry&rsquo;s \"tale\" of 1 &lt; 2</p>", 100, {})
+
+      expect(excerpt).to eq("Tom &amp; Jerry’s &quot;tale&quot; of 1 &lt; 2")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq(%(Tom & Jerry’s "tale" of 1 < 2))
+    end
+
+    it "decodes the &hellip; truncation marker" do
+      excerpt = ExcerptParser.get_excerpt("<p>Lorem ipsum dolor</p>", 5, {})
+
+      expect(excerpt).to eq("Lorem&hellip;")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("Lorem…")
+    end
+
+    it "keeps entities the user literally typed" do
+      excerpt = ExcerptParser.get_excerpt("<p>the &amp;hellip; entity</p>", 100, {})
+
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("the &hellip; entity")
+    end
+
+    it "strips the markup the parser keeps for hashtags" do
+      html =
+        '<p>see <a class="hashtag-cooked" href="/c/general"><span class="hashtag-icon-placeholder"><svg class="fa d-icon"><use href="#folder"></use></svg></span><span>general</span></a> please</p>'
+      excerpt = ExcerptParser.get_excerpt(html, 100, strip_links: true, strip_images: true)
+
+      expect(excerpt).to include("<span")
+      expect(ExcerptParser.to_plain_text(excerpt)).to eq("see general please")
+    end
+
+    it "neutralizes markup in values that bypassed the generator" do
+      expect(ExcerptParser.to_plain_text(%(pwned "><script>alert(1)</script>))).to eq(
+        %(pwned ">alert(1)),
+      )
+    end
+
+    it "returns nil when nothing is left" do
+      expect(ExcerptParser.to_plain_text(nil)).to be_nil
+      expect(ExcerptParser.to_plain_text("")).to be_nil
+      expect(ExcerptParser.to_plain_text("<span></span>")).to be_nil
+    end
+  end
 end

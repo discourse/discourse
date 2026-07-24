@@ -1,4 +1,4 @@
-import avatar from "discourse/helpers/avatar";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 
 const User = <template>
   {{#if @ctx.user}}
@@ -6,7 +6,7 @@ const User = <template>
       href="{{@ctx.baseuri}}/u/{{@ctx.user.username}}/activity"
       data-user-card={{@ctx.user.username}}
     >
-      {{avatar @ctx.user imageSize="tiny"}}
+      {{dAvatar @ctx.user imageSize="tiny"}}
       {{@ctx.user.username}}
     </a>
   {{else}}

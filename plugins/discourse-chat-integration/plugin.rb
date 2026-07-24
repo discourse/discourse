@@ -20,6 +20,7 @@ end
 
 # Site setting validators must be loaded before initialize
 require_relative "lib/discourse_chat_integration/provider/slack/slack_enabled_setting_validator"
+require_relative "lib/discourse_chat_integration/provider/telegram/telegram_api_base_url_setting_validator"
 require_relative "lib/discourse_chat_integration/chat_integration_reference_post"
 
 after_initialize do

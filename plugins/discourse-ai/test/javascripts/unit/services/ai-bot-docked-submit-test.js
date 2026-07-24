@@ -20,13 +20,18 @@ module("Unit | Service | ai-bot-docked-submit", function (hooks) {
     assert.strictEqual(result, null);
   });
 
-  test("returns null when raw is missing", async function (assert) {
+  test("returns null when raw is empty and no uploads", async function (assert) {
     const service = getOwner(this).lookup("service:ai-bot-docked-submit");
-    const result = await service.submitReply({ topicId: 42, raw: "" });
+    const result = await service.submitReply({
+      topicId: 42,
+      raw: "",
+      uploads: [],
+      inProgressUploadsCount: 0,
+    });
     assert.strictEqual(result, null);
   });
 
-  test("returns null and alerts when raw is shorter than min length", async function (assert) {
+  test("returns null and alerts when raw is shorter than min length and no uploads", async function (assert) {
     const service = getOwner(this).lookup("service:ai-bot-docked-submit");
     let requestsCount = 0;
     pretender.post("/posts.json", () => {
@@ -43,6 +48,76 @@ module("Unit | Service | ai-bot-docked-submit", function (hooks) {
 
     assert.strictEqual(result, null);
     assert.strictEqual(requestsCount, 0, "no POST when too short");
+  });
+
+  test("submits with only uploads and no raw text", async function (assert) {
+    const service = getOwner(this).lookup("service:ai-bot-docked-submit");
+    let rawSent;
+    pretender.post("/posts.json", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      rawSent = params.get("raw");
+      return response(200, { id: 1, topic_id: 42 });
+    });
+
+    const result = await service.submitReply({
+      topicId: 42,
+      raw: "",
+      uploads: [
+        {
+          short_url: "upload://abc123.pdf",
+          original_filename: "document.pdf",
+          extension: "pdf",
+          filesize: 1024,
+        },
+      ],
+      inProgressUploadsCount: 0,
+    });
+
+    assert.notStrictEqual(
+      result,
+      null,
+      "submission succeeds with only uploads"
+    );
+    assert.true(
+      rawSent.includes("upload://abc123.pdf"),
+      "upload markdown is sent"
+    );
+  });
+
+  test("skips min length check when uploads are present", async function (assert) {
+    const service = getOwner(this).lookup("service:ai-bot-docked-submit");
+    let rawSent;
+    pretender.post("/posts.json", (request) => {
+      const params = new URLSearchParams(request.requestBody);
+      rawSent = params.get("raw");
+      return response(200, { id: 1, topic_id: 42 });
+    });
+
+    const result = await service.submitReply({
+      topicId: 42,
+      raw: "hi",
+      uploads: [
+        {
+          short_url: "upload://abc123.png",
+          original_filename: "screenshot.png",
+          extension: "png",
+          width: 400,
+          height: 300,
+        },
+      ],
+      inProgressUploadsCount: 0,
+    });
+
+    assert.notStrictEqual(
+      result,
+      null,
+      "submission succeeds with short text + uploads"
+    );
+    assert.true(rawSent.includes("hi"), "raw text preserved");
+    assert.true(
+      rawSent.includes("upload://abc123.png"),
+      "upload markdown appended"
+    );
   });
 
   test("returns null when uploads are still in progress", async function (assert) {

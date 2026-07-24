@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -23,7 +23,7 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching"}}
+      <label>{{dIcon "d-watching"}}
         {{i18n "groups.notifications.watching.title"}}</label>
 
       <TagChooser
@@ -40,7 +40,7 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-tracking"}}
+      <label>{{dIcon "d-tracking"}}
         {{i18n "groups.notifications.tracking.title"}}</label>
 
       <TagChooser
@@ -57,7 +57,7 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-watching-first"}}
+      <label>{{dIcon "d-watching-first"}}
         {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
       <TagChooser
@@ -74,7 +74,7 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-regular"}}
+      <label>{{dIcon "d-regular"}}
         {{i18n "groups.notifications.regular.title"}}</label>
 
       <TagChooser
@@ -91,7 +91,7 @@ export default <template>
     </div>
 
     <div class="control-group">
-      <label>{{icon "d-muted"}}
+      <label>{{dIcon "d-muted"}}
         {{i18n "groups.notifications.muted.title"}}</label>
 
       <TagChooser

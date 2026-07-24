@@ -197,6 +197,22 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
     assert.dom("ul.form-kit__collection").doesNotExist();
   });
 
+  test("renders nothing when collection is missing", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash}} as |form|>
+          <form.Collection @name="foo" @tagName="ul" as |collection|>
+            <collection.Field @type="input" @title="Bar" as |field|>
+              <field.Control />
+            </collection.Field>
+          </form.Collection>
+        </Form>
+      </template>
+    );
+
+    assert.dom("ul.form-kit__collection").doesNotExist();
+  });
+
   test("emptying a collection field", async function (assert) {
     const onSubmit = (data) => {
       assert.deepEqual(

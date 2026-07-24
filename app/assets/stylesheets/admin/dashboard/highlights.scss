@@ -1,0 +1,63 @@
+@use "lib/viewport";
+
+.db-kpi {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  &:first-of-type {
+    border-top-left-radius: var(--d-border-radius-large);
+    border-bottom-left-radius: var(--d-border-radius-large);
+  }
+
+  &:last-of-type {
+    border-top-right-radius: var(--d-border-radius-large);
+    border-bottom-right-radius: var(--d-border-radius-large);
+  }
+
+  .db-link-arrow {
+    top: var(--space-4);
+    inset-inline-end: var(--space-4);
+  }
+
+  &:hover {
+    background: var(--primary-very-low);
+
+    .db-link-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &__value-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  &__value {
+    font-size: var(--font-up-3-rem);
+    font-weight: 500;
+    color: var(--primary);
+  }
+
+  &__label {
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-medium);
+  }
+}
+
+.--kpi .db-section__intro {
+  font-size: var(--font-up-1-rem);
+}
+
+.--highlights {
+  @include viewport.until(sm) {
+    .db-section__row-block {
+      border-radius: var(--d-border-radius-large);
+      flex-basis: calc(50% - var(--space-1));
+      border: 1px solid var(--content-border-color);
+    }
+  }
+}

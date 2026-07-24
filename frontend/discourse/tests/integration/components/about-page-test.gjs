@@ -23,7 +23,7 @@ function createModelObject({
   );
 }
 
-module("Integration | Component | about-page", function (hooks) {
+module("Integration | Component | AboutPage", function (hooks) {
   setupRenderingTest(hooks);
 
   test("custom site activities registered via the plugin API", async function (assert) {

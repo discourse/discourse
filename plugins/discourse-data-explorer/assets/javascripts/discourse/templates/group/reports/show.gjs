@@ -1,7 +1,7 @@
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import ParamInputForm from "../../../components/param-input-form";
 import QueryResult from "../../../components/query-result";
 import QueryResultDownloadButtons from "../../../components/query-result-download-buttons";
@@ -35,7 +35,8 @@ export default <template>
             @action={{@controller.toggleBookmark}}
             @translatedLabel={{@controller.bookmarkLabel}}
             @icon={{@controller.bookmarkIcon}}
-            class={{@controller.bookmarkClassName}}
+            class="btn-default query-group-bookmark
+              {{if @controller.queryGroupBookmark 'bookmarked'}}"
           />
         </div>
 
@@ -54,7 +55,7 @@ export default <template>
 
     <hr />
 
-    <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+    <DConditionalLoadingSpinner @condition={{@controller.loading}} />
 
     {{#if @controller.results}}
       <div class="query-results">

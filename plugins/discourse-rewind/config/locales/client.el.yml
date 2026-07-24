@@ -8,6 +8,11 @@ el:
   js:
     discourse_rewind:
       placeholder: Discourse Rewind
+      viewing_other_user: "Βλέπετε την αναφορά Discourse Rewind του χρήστη <strong>%{username}</strong>."
+      cannot_view_rewind: >
+        Δεν μπορείτε να δείτε αυτήν την αναφορά Discourse Rewind. Ίσως ο κάτοχος δεν την έχει κοινοποιήσει δημόσια;<br><br> $> _<br><br>
+      preferences:
+        cannot_share_when_profile_hidden: "Για να κοινοποιήσετε το Rewind, πρέπει να επιτρέψετε σε άλλους να δουν το δημόσιο προφίλ σας."
       share:
         toggle_label:
           private: "Ιδιωτική"
@@ -58,5 +63,6 @@ el:
         new_user_interactions:
           likes_given: Μου αρέσει που δόθηκαν
           mentions: Επισημάνσεις
+          contributions_helped_others: "Οι συνεισφορές του χρήστη %{username} βοήθησαν"
         writing_analysis:
           menu_other: Άλλα

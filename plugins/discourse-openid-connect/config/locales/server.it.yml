@@ -18,7 +18,6 @@ it:
     openid_connect_allow_association_change: "Consenti agli utenti di disconnettersi e riconnettersi ai propri account Discourse dal provider OpenID Connect"
     openid_connect_verbose_logging: "Registra informazioni dettagliate sull'autenticazione openid-connect in `/logs`. Mantenere questa opzione disabilitata durante il normale utilizzo."
     openid_connect_authorize_parameters: "Parametri URL che verranno inclusi nel reindirizzamento da /auth/oidc all'endpoint di autorizzazione dell'IDP"
-    openid_connect_overrides_email: "Ad ogni accesso, sovrascrive l'e-mail dell'utente utilizzando il valore openid-connect. Funziona allo stesso modo dell'impostazione `auth_overrides_email`, ma è specifico per gli accessi OpenID Connect."
     openid_connect_claims: "Definisce in modo esplicito le attestazioni da usare con i provider che non restituiscono i dati in base agli ambiti. (JSON)"
     openid_connect_match_by_email: "Utilizza l'indirizzo e-mail per abbinare le autenticazioni OpenID Connect agli account utente Discourse esistenti."
     openid_connect_use_pkce: "Abilita Proof Key for Code Exchange (PKCE) per l'autenticazione OpenID Connect."

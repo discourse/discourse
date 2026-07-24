@@ -90,10 +90,8 @@ TopicStatusUpdater =
       # remove featured topics if we close/archive/make them invisible. Previously we used
       # to run the whole featuring logic but that could be very slow and have concurrency
       # errors on large sites with many autocloses and topics being created.
-      if (
-           (status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
-             (status.disabled? && status.visible?)
-         )
+      if (status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
+           (status.disabled? && status.visible?)
         CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
       end
 

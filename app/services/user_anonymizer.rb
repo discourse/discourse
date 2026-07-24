@@ -15,7 +15,7 @@ class UserAnonymizer
   end
 
   def self.make_anonymous(user, actor = nil, opts = nil)
-    self.new(user, actor, opts).make_anonymous
+    new(user, actor, opts).make_anonymous
   end
 
   def make_anonymous

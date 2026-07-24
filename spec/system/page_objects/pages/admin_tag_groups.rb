@@ -35,7 +35,7 @@ module PageObjects
       end
 
       def has_name?(name)
-        find(".group-name input").value == name
+        within(".group-name") { page.has_field?(with: name) }
       end
 
       def has_tag_in_group?(tag_name)
@@ -116,7 +116,7 @@ module PageObjects
       end
 
       def click_tag_group(name)
-        find(".tag-groups-sidebar li", text: name).click
+        find(".tag-groups-sidebar li a", text: name).click
         self
       end
     end

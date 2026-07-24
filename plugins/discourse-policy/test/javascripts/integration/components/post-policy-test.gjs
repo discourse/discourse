@@ -18,7 +18,7 @@ function fabricatePolicy(options = {}) {
 }
 
 module(
-  "Discourse Policy | Integration | Component | post-policy",
+  "Discourse Policy | Integration | Component | PostPolicy",
   function (hooks) {
     setupRenderingTest(hooks);
 

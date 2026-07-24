@@ -8,14 +8,9 @@ import { trackedArray } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PostList from "discourse/components/post-list";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import bodyClass from "discourse/helpers/body-class";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -24,13 +19,17 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import { and } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import AiSentimentHorizontalBar from "./ai-sentiment-horizontal-bar";
 import DoughnutChart from "./doughnut-chart";
 
 export default class AdminReportSentimentAnalysis extends Component {
   @service router;
-  @service siteSettings;
 
   @tracked selectedChart = null;
   @tracked posts = [];
@@ -144,7 +143,7 @@ export default class AdminReportSentimentAnalysis extends Component {
       list = [];
     } else {
       list = this.posts.filter((post) => {
-        post.topic_title = replaceEmoji(post.topic_title);
+        post.topic_title = dReplaceEmoji(post.topic_title);
         post.category = Category.findById(post.category_id);
 
         if (this.activeFilter === "all") {
@@ -331,109 +330,55 @@ export default class AdminReportSentimentAnalysis extends Component {
     <span {{didInsert this.openToChart}}></span>
 
     {{#unless this.showingSelectedChart}}
-      {{#if this.siteSettings.reporting_improvements}}
-        <table class="sentiment-analysis-table md-table">
-          <thead>
-            <th>{{this.groupingType}}</th>
-            <th>{{i18n
-                "discourse_ai.sentiments.sentiment_analysis.table.total_count"
-              }}</th>
-            <th>{{i18n
-                "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
-              }}</th>
-          </thead>
+      <table class="sentiment-analysis-table md-table">
+        <thead>
+          <th>{{this.groupingType}}</th>
+          <th>{{i18n
+              "discourse_ai.sentiments.sentiment_analysis.table.total_count"
+            }}</th>
+          <th>{{i18n
+              "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
+            }}</th>
+        </thead>
 
-          <tbody>
-            {{#each this.transformedData as |data|}}
-              <tr
-                class="sentiment-analysis-table__row"
-                role="button"
-                {{on "click" (fn this.showDetails data)}}
-              >
-                <td class="sentiment-analysis-table__title">
-                  {{#if data.category}}
-                    {{categoryBadge data.category}}
-                  {{else}}
-                    {{data.title}}
-                  {{/if}}
-                </td>
-                <td
-                  class="sentiment-analysis-table__total-score"
-                >{{data.total_score}}</td>
-                <td class="sentiment-horizontal-bar">
-                  <AiSentimentHorizontalBar
-                    @type="positive"
-                    @score={{data.score_map.positive}}
-                    @width={{data.widths.positive}}
-                  />
-                  <AiSentimentHorizontalBar
-                    @type="negative"
-                    @score={{data.score_map.negative}}
-                    @width={{data.widths.negative}}
-                  />
-                  <AiSentimentHorizontalBar
-                    @type="neutral"
-                    @score={{data.score_map.neutral}}
-                    @width={{data.widths.neutral}}
-                  />
-                </td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      {{else}}
-        <div class="admin-report-sentiment-analysis">
-          <table class="sentiment-analysis-table md-table">
-            <thead>
-              <th>{{this.groupingType}}</th>
-              <th>{{i18n
-                  "discourse_ai.sentiments.sentiment_analysis.table.total_count"
-                }}</th>
-              <th>{{i18n
-                  "discourse_ai.sentiments.sentiment_analysis.table.sentiment"
-                }}</th>
-            </thead>
-
-            <tbody>
-              {{#each this.transformedData as |data|}}
-                <tr
-                  class="sentiment-analysis-table__row"
-                  role="button"
-                  {{on "click" (fn this.showDetails data)}}
-                >
-                  <td class="sentiment-analysis-table__title">
-                    {{#if data.category}}
-                      {{categoryBadge data.category}}
-                    {{else}}
-                      {{data.title}}
-                    {{/if}}
-                  </td>
-                  <td
-                    class="sentiment-analysis-table__total-score"
-                  >{{data.total_score}}</td>
-                  <td class="sentiment-horizontal-bar">
-                    <AiSentimentHorizontalBar
-                      @type="positive"
-                      @score={{data.score_map.positive}}
-                      @width={{data.widths.positive}}
-                    />
-                    <AiSentimentHorizontalBar
-                      @type="negative"
-                      @score={{data.score_map.negative}}
-                      @width={{data.widths.negative}}
-                    />
-                    <AiSentimentHorizontalBar
-                      @type="neutral"
-                      @score={{data.score_map.neutral}}
-                      @width={{data.widths.neutral}}
-                    />
-                  </td>
-                </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      {{/if}}
+        <tbody>
+          {{#each this.transformedData as |data|}}
+            <tr
+              class="sentiment-analysis-table__row"
+              role="button"
+              {{on "click" (fn this.showDetails data)}}
+            >
+              <td class="sentiment-analysis-table__title">
+                {{#if data.category}}
+                  {{dCategoryBadge data.category}}
+                {{else}}
+                  {{data.title}}
+                {{/if}}
+              </td>
+              <td
+                class="sentiment-analysis-table__total-score"
+              >{{data.total_score}}</td>
+              <td class="sentiment-horizontal-bar">
+                <AiSentimentHorizontalBar
+                  @type="positive"
+                  @score={{data.score_map.positive}}
+                  @width={{data.widths.positive}}
+                />
+                <AiSentimentHorizontalBar
+                  @type="negative"
+                  @score={{data.score_map.negative}}
+                  @width={{data.widths.negative}}
+                />
+                <AiSentimentHorizontalBar
+                  @type="neutral"
+                  @score={{data.score_map.neutral}}
+                  @width={{data.widths.neutral}}
+                />
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     {{/unless}}
 
     {{#if (and this.selectedChart this.showingSelectedChart)}}
@@ -468,7 +413,7 @@ export default class AdminReportSentimentAnalysis extends Component {
 
       </div>
       <div class="admin-report-sentiment-analysis-details">
-        <HorizontalOverflowNav
+        <DHorizontalOverflowNav
           {{this.setActiveFilter}}
           class="admin-report-sentiment-analysis-details__filters"
         >
@@ -482,7 +427,7 @@ export default class AdminReportSentimentAnalysis extends Component {
               />
             </li>
           {{/each}}
-        </HorizontalOverflowNav>
+        </DHorizontalOverflowNav>
 
         <PostList
           @posts={{this.filteredPosts}}
@@ -499,7 +444,7 @@ export default class AdminReportSentimentAnalysis extends Component {
                 class="admin-report-sentiment-analysis-details__post-score"
                 data-sentiment-score={{sentiment.id}}
               >
-                {{icon sentiment.icon}}
+                {{dIcon sentiment.icon}}
                 {{sentiment.text}}
               </span>
             {{/let}}

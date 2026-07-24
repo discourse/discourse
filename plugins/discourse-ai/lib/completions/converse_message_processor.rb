@@ -36,8 +36,7 @@ class DiscourseAi::Completions::ConverseMessageProcessor
     end
 
     def to_tool_call
-      parameters = {}
-      parameters = JSON.parse(raw_json, symbolize_names: true) if raw_json.present?
+      parameters = DiscourseAi::Completions::ToolArgumentsParser.parse(raw_json)
       @tool_call = @tool_call.dup
       @tool_call.partial = false
       @tool_call.parameters = parameters

@@ -21,6 +21,3 @@ es:
     other: "%{count} respuestas"
   theme_metadata:
     description: "Un tema sencillo y bonito que mejora la experiencia inigualable de los sitios de Discourse."
-    settings:
-      topic_card_high_context:
-        description: "Cuando está activada, muestra contexto adicional en las tarjetas de los temas, incluyendo etiquetas, extractos, estado resuelto, usuarios asignados y recuento de votos (experimental)"

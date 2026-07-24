@@ -14,6 +14,7 @@ describe "Assign | Assigning posts" do
     SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     SiteSetting.prioritize_full_name_in_ux = false
 
+    admin.update!(last_seen_at: 1.day.ago)
     sign_in(admin)
   end
 

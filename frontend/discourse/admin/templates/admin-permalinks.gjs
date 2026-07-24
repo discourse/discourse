@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -26,12 +26,12 @@ export default <template>
         />
       </:actions>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="adminPermalinks.settings"
           @label="admin.permalink.nav.settings"
           class="admin-permalinks-tabs__settings"
         />
-        <NavItem
+        <DNavItem
           @route="adminPermalinks.index"
           @label="admin.permalink.nav.permalinks"
           class="admin-permalins-permalinks"

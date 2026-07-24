@@ -9,7 +9,6 @@ ja:
     chat_separate_sidebar_mode: "フォーラムとチャットに個別のサイドバーモードを表示します。"
     chat_enabled: "チャットを有効にする。"
     enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
-    chat_allowed_groups: "これらのグループのユーザーがチャットできます。管理者とモデレーターはいつでもチャットにアクセスできます。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_auto_silence_duration: "チャットメッセージの作成速度制限を超えた場合にユーザーが投稿禁止になる分数。自動投稿禁止を無効にするには '0' に設定します。"
@@ -30,7 +29,6 @@ ja:
     chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
     chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     chat_preferred_index: "/chat を読み込む際の優先タブ。"
-    allow_chat_in_anonymous_mode: "この設定を有効にすると、匿名でサイトを閲覧しているユーザーがチャットを使用できるようになります。この設定には、`allow anonymous mode` を有効にする必要があります。"
     chat_search_enabled: "この設定を有効にすると、ユーザーはチャットメッセージを検索できるようになります。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
@@ -220,6 +218,10 @@ ja:
     scriptables:
       send_chat_message:
         title: チャットメッセージを送信する
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "承認"
+      default_deny_label: "拒否"
   reviewable_score_types:
     needs_review:
       title: "要レビュー"

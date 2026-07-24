@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import DateInput from "discourse/components/date-input";
-import DatePicker from "discourse/components/date-picker";
-import DateTimeInput from "discourse/components/date-time-input";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
-import FutureDateInput from "discourse/components/future-date-input";
-import TimeInput from "discourse/components/time-input";
+import DDateInput from "discourse/ui-kit/d-date-input";
+import DDatePicker from "discourse/ui-kit/d-date-picker";
+import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DTimeInput from "discourse/ui-kit/d-time-input";
 import CalendarDateTimeInput from "discourse/plugins/styleguide/discourse/components/styleguide/calendar-date-time-input";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -81,40 +81,40 @@ import DatePicker from "discourse/components/date-picker";
 
   <template>
     <StyleguideExample @title="TimeInput" @code={{this.timeInputCode}}>
-      <TimeInput />
+      <DTimeInput />
     </StyleguideExample>
 
     <StyleguideExample @title="DateInput" @code={{this.dateInputCode}}>
-      <DateInput />
+      <DDateInput />
     </StyleguideExample>
 
     <StyleguideExample @title="DateTimeInput" @code={{this.dateTimeInputCode}}>
-      <DateTimeInput @clearable={{true}} />
+      <DDateTimeInput @clearable={{true}} />
     </StyleguideExample>
 
     <StyleguideExample
       @title="DateTimeInputRange"
       @code={{this.dateTimeInputRangeCode}}
     >
-      <DateTimeInputRange />
+      <DDateTimeInputRange />
     </StyleguideExample>
 
     <StyleguideExample
       @title="DateTimeInputRange without time"
       @code={{this.dateTimeInputRangeNoTimeCode}}
     >
-      <DateTimeInputRange @showFromTime={{false}} @showToTime={{false}} />
+      <DDateTimeInputRange @showFromTime={{false}} @showToTime={{false}} />
     </StyleguideExample>
 
     <StyleguideExample
       @title="FutureDateInput"
       @code={{this.futureDateInputCode}}
     >
-      <FutureDateInput @displayLabelIcon="far-clock" @clearable={{true}} />
+      <DFutureDateInput @displayLabelIcon="far-clock" @clearable={{true}} />
     </StyleguideExample>
 
     <StyleguideExample @title="DatePicker" @code={{this.datePickerCode}}>
-      <DatePicker @defaultDate="YYYY-MM-DD" />
+      <DDatePicker @defaultDate="YYYY-MM-DD" />
     </StyleguideExample>
 
     <CalendarDateTimeInput />

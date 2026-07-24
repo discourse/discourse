@@ -42,7 +42,10 @@
   --token-color-background-accent-subtler: var(--tertiary-400);
   --token-color-background-accent-subtler-hovered: var(--tertiary-500);
   --token-color-background-accent-subtler-pressed: var(--tertiary-600);
-  --token-color-background-accent-subtle: var(--tertiary-600);
+  --token-color-background-accent-subtle: light-dark(
+    var(--tertiary-600),
+    var(--tertiary)
+  );
   --token-color-background-accent-subtle-hovered: var(--tertiary-700);
   --token-color-background-accent-subtle-pressed: var(--tertiary-800);
   --token-color-background-accent-bolder: var(--tertiary);

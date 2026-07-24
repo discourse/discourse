@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ro:
+  category_types:
+    support:
+      title: "suport"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permite inițiatorului subiectului și personalului să marcheze un răspuns ca soluție"
   site_settings:
     solved_enabled: "Activează extensia \"Rezolvat\", permite utilizatorilor să selecteze soluții pentru subiecte"
     accept_all_solutions_trust_level: "Nivelul minim de încredere necesar pentru a accepta soluții la fiecare subiect (chiar dacă nu este OP)."
