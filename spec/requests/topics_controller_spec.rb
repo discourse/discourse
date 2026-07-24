@@ -7519,6 +7519,36 @@ RSpec.describe TopicsController do
             expect(response.body).to include(ja_subcategory.name)
           end
 
+          it "does not show a stale post translation after author deletion" do
+            deleted_post = page_1_posts.find { |post| !post.is_first_post? }
+            deleted_post.update!(locale: "en")
+            localization =
+              Fabricate(
+                :post_localization,
+                post: deleted_post,
+                locale: "ja",
+                cooked: "<p>削除された投稿の翻訳</p>",
+              )
+            PostDestroyer.new(
+              deleted_post.user,
+              deleted_post,
+              delete_removed_posts_after: 1,
+            ).destroy
+
+            get topic.relative_url,
+                env: {
+                  "HTTP_USER_AGENT" => bot_user_agent,
+                },
+                params: {
+                  tl: "ja",
+                }
+
+            expect(response.body).to include(
+              I18n.t("js.post.deleted_by_author_simple", locale: "ja"),
+            )
+            expect(response.body).not_to include(localization.cooked)
+          end
+
           it "does not persist localized fancy_title to the database when topic fancy_title is null" do
             topic.update_column(:fancy_title, nil)
 

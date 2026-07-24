@@ -442,11 +442,17 @@ module Oneboxer
       title = topic_localization.title.presence || title
     end
 
-    if (post_localization = post.get_localization(locale, fallback: false)) &&
-         post_localization.cooked.present?
+    localized_cooked =
+      if post.user_deleted?
+        ContentLocalization.user_deleted_post_cooked(post, locale: locale)
+      else
+        post.get_localization(locale, fallback: false)&.cooked
+      end
+
+    if localized_cooked.present?
       excerpt =
         Post.excerpt(
-          post_localization.cooked,
+          localized_cooked,
           SiteSetting.post_onebox_maxlength,
           keep_svg: true,
           post: post,
