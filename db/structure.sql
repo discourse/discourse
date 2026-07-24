@@ -11971,6 +11971,37 @@ ALTER SEQUENCE public.user_uploads_id_seq OWNED BY public.user_uploads.id;
 
 
 --
+-- Name: user_visit_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_visit_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    dau bigint NOT NULL,
+    mau bigint NOT NULL
+);
+
+
+--
+-- Name: user_visit_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_visit_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_visit_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_visit_daily_rollups_id_seq OWNED BY public.user_visit_daily_rollups.id;
+
+
+--
 -- Name: user_visits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14503,6 +14534,13 @@ ALTER TABLE ONLY public.user_statuses ALTER COLUMN user_id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public.user_uploads ALTER COLUMN id SET DEFAULT nextval('public.user_uploads_id_seq'::regclass);
+
+
+--
+-- Name: user_visit_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_visit_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.user_visit_daily_rollups_id_seq'::regclass);
 
 
 --
@@ -17101,6 +17139,14 @@ ALTER TABLE ONLY public.user_statuses
 
 ALTER TABLE ONLY public.user_uploads
     ADD CONSTRAINT user_uploads_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_visit_daily_rollups user_visit_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_visit_daily_rollups
+    ADD CONSTRAINT user_visit_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -22288,6 +22334,13 @@ CREATE INDEX index_user_uploads_on_user_id_and_upload_id ON public.user_uploads 
 
 
 --
+-- Name: index_user_visit_daily_rollups_on_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_visit_daily_rollups_on_date ON public.user_visit_daily_rollups USING btree (date);
+
+
+--
 -- Name: index_user_visits_on_user_id_and_visited_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22828,6 +22881,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260723013754'),
 ('20260722140539'),
 ('20260722140536'),
 ('20260721122254'),

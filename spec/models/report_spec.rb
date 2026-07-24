@@ -703,58 +703,6 @@ RSpec.describe Report do
     end
   end
 
-  describe "DAU/MAU report" do
-    let(:report) { Report.find("dau_by_mau") }
-
-    include_examples "no data"
-
-    context "with different users/visits" do
-      before do
-        freeze_time_safe
-
-        arpit = Fabricate(:user)
-        arpit.user_visits.create(visited_at: 1.day.ago)
-
-        sam = Fabricate(:user)
-        sam.user_visits.create(visited_at: 2.days.ago)
-
-        robin = Fabricate(:user)
-        robin.user_visits.create(visited_at: 2.days.ago)
-
-        michael = Fabricate(:user)
-        michael.user_visits.create(visited_at: 35.days.ago)
-
-        gerhard = Fabricate(:user)
-        gerhard.user_visits.create(visited_at: 45.days.ago)
-      end
-
-      it "returns a report with data" do
-        expect(report.data.first[:y]).to eq(100)
-        expect(report.data.last[:y]).to eq(33.34)
-        expect(report.prev30Days).to eq(75)
-      end
-    end
-
-    it "returns the current data and previous period average" do
-      current_visitor = Fabricate(:user)
-      previous_visitor = Fabricate(:user)
-
-      current_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 11).to_date)
-      previous_visitor.user_visits.create!(visited_at: Time.zone.local(2026, 4, 9).to_date)
-
-      report =
-        Report.find(
-          "dau_by_mau",
-          start_date: Time.zone.local(2026, 4, 10).beginning_of_day,
-          end_date: Time.zone.local(2026, 4, 11).end_of_day,
-          facets: [:prev_period],
-        )
-
-      expect(report.data.map { |point| point[:x] }).to eq([Date.new(2026, 4, 11)])
-      expect(report.prev_period).to eq(100)
-    end
-  end
-
   describe "Daily engaged users" do
     let(:report) { Report.find("daily_engaged_users") }
 

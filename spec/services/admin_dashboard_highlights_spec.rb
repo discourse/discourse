@@ -54,8 +54,8 @@ describe AdminDashboardHighlights do
     end
 
     it "averages dau_mau values rather than summing them when there is data" do
-      Fabricate(:user_visit, visited_at: Time.zone.local(2026, 4, 10).to_date)
-      Fabricate(:user_visit, visited_at: Time.zone.local(2026, 4, 15).to_date)
+      Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 4, 10))
+      Fabricate(:user_visit_daily_rollup, date: Date.new(2026, 4, 15), mau: 2)
 
       result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
       dau = result[:kpis].find { |k| k[:type] == :dau_mau }
