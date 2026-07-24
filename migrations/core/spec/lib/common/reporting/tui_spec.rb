@@ -357,7 +357,7 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(notice).to start_with("Posts")
       end
 
-      it "renders an unattributed notice when there is no step title" do
+      it "renders a notice with no owning step" do
         renderer.apply([:notice, nil, "Run starting"])
         renderer.repaint
         expect(screen.content_rows).to include("Run starting")

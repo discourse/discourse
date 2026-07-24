@@ -194,7 +194,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Differ, :rails do
       expect(names).to contain_exactly("created_at", "email")
     end
 
-    it "uses source table name when attributing unconfigured columns for copied tables" do
+    it "uses source table name for unconfigured columns in copied tables" do
       manifest = instance_double(Migrations::Tooling::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)
       allow(manifest).to receive(:plugin_for_table).and_return(nil)

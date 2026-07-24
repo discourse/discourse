@@ -55,16 +55,16 @@ module Migrations
       #   `original_id`, when the converter knows it.
       # @param quoted_topic_id [Integer, String, nil] the quoted post's source
       #   topic id. Together with `quoted_post_number` it forms the source
-      #   coordinates — the way the attribution identifies the post when
+      #   coordinates — the way the quote header identifies the post when
       #   `quoted_post_id` is unknown.
       # @param quoted_post_number [Integer, nil] see `quoted_topic_id`.
       # @param quoted_user_id [Integer, String, nil] the quoted user's source
       #   `original_id`.
-      # @param quoted_username [String, nil] the attribution's display fallback, used
+      # @param quoted_username [String, nil] the header's display fallback, used
       #   when the quoted user can't be mapped to a Discourse user; when
       #   `quoted_user_id` is nil, the importer also resolves it to the user.
       # @param quoted_name [String, nil] like `quoted_username`, for sources that
-      #   attribute quotes by full name.
+      #   name the quoted user by full name.
       # @return [String] the token for the opening tag.
       def quote(
         quoted_post_id: nil,

@@ -63,13 +63,13 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
     let(:link_renderer) { described_class.new(format: :bbcode, embeds: buffer, defer: %i[link]) }
 
-    it "defers an attributed quote, recording the linkage and preserving the body" do
+    it "defers a quote that carries a source reference, recording the linkage and preserving the body" do
       raw =
         renderer.to_markdown('[quote="John, post:12, topic:34, username:john"]quoted body[/quote]')
 
       expect(buffer.quotes.size).to eq(1)
       descriptor = buffer.quotes.first
-      # The Discourse attribution format carries coordinates: `post:` is a post
+      # The Discourse quote header carries coordinates: `post:` is a post
       # number, `topic:` a topic id.
       expect(descriptor[:quoted_post_id]).to be_nil
       expect(descriptor[:quoted_topic_id]).to eq(34)
@@ -85,7 +85,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include("[/quote]")
     end
 
-    it "drops an attribution number too large for an id column" do
+    it "drops a quote id too large for an id column" do
       # Meta really has a post titled like this; SQLite raises binding a bignum.
       raw = renderer.to_markdown('[quote="A, post:77777777777777777789999, topic:2"]q[/quote]')
 
@@ -96,7 +96,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(descriptor[:placeholder])
     end
 
-    it "renders an unattributed quote natively (nothing to remap)" do
+    it "renders a quote with no header natively (nothing to remap)" do
       raw = renderer.to_markdown("[quote]just text[/quote]")
 
       expect(buffer).to be_empty
@@ -122,7 +122,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "defers a link whose label is inline code carrying a language" do
-      # A language attribute alone never makes code a block, so code-with-a-
+      # A language alone never makes code a block, so code-with-a-
       # language still renders inline inside a link and stays deferrable — only
       # multi-line code is hoisted out.
       raw =
@@ -297,7 +297,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
 
     it "maps a Quote node's ids to quoted_post_id and quoted_user_id" do
-      # BBCode can't carry them (phpBB-style id attribution arrives via the
+      # BBCode can't carry them (phpBB-style id references arrive via the
       # TextFormatter parser), so exercise the method directly.
       _node_class, extract = renderer.embed_handlers.fetch(:quote)
       node = Markbridge::AST::Quote.new(username: "alice", post_id: 9001, user_id: 12)
