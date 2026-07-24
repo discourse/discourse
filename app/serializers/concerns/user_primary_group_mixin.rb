@@ -26,7 +26,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_name?
-    object&.flair_group.present?
+    object&.flair_group.present? && can_see_flair?
   end
 
   def flair_url
@@ -34,7 +34,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_url?
-    object&.flair_group&.flair_url.present?
+    object&.flair_group&.flair_url.present? && can_see_flair?
   end
 
   def flair_bg_color
@@ -42,7 +42,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_bg_color?
-    object&.flair_group&.flair_bg_color.present?
+    object&.flair_group&.flair_bg_color.present? && can_see_flair?
   end
 
   def flair_group_id
@@ -50,7 +50,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_group_id?
-    object&.flair_group_id.present?
+    object&.flair_group_id.present? && can_see_flair?
   end
 
   def flair_color
@@ -58,7 +58,7 @@ module UserPrimaryGroupMixin
   end
 
   def include_flair_color?
-    object&.flair_group&.flair_color.present?
+    object&.flair_group&.flair_color.present? && can_see_flair?
   end
 
   def include_admin?
@@ -75,5 +75,14 @@ module UserPrimaryGroupMixin
 
   def moderator
     true
+  end
+
+  private
+
+  # Flair visibility is gated by the viewer's group membership. When no scope is
+  # present (e.g. serializing without a guardian), fall back to an anonymous
+  # guardian so the flair_visible_groups setting is still honoured.
+  def can_see_flair?
+    (scope || Guardian.new).can_see_flair?
   end
 end

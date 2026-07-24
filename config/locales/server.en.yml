@@ -2591,6 +2591,7 @@ en:
     public_user_custom_fields: "A list of user custom fields that can be retrieved with the API."
     staff_user_custom_fields: "A list of user custom fields that can be retrieved for staff members with the API."
     enable_user_directory: "Provide a directory of users for browsing"
+    flair_visible_groups: "Only allow members of these groups to see other users' avatar flairs. Defaults to everyone."
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"

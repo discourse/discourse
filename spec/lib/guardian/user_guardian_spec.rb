@@ -34,6 +34,55 @@ RSpec.describe UserGuardian do
   fab!(:trust_level_1)
   fab!(:trust_level_2)
 
+  describe "#can_see_flair?" do
+    fab!(:allowed_group, :group)
+    fab!(:member) { Fabricate(:user, groups: [allowed_group]) }
+    fab!(:non_member, :user)
+
+    it "is true for everyone, including anonymous viewers, when the everyone group is configured" do
+      SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+      expect(Guardian.new.can_see_flair?).to eq(true)
+      expect(non_member.guardian.can_see_flair?).to eq(true)
+    end
+
+    it "is true only for members of the configured groups when restricted" do
+      SiteSetting.flair_visible_groups = allowed_group.id.to_s
+
+      expect(member.guardian.can_see_flair?).to eq(true)
+      expect(non_member.guardian.can_see_flair?).to eq(false)
+    end
+
+    it "is false for anonymous viewers when the everyone group is not configured" do
+      SiteSetting.flair_visible_groups = allowed_group.id.to_s
+
+      expect(Guardian.new.can_see_flair?).to eq(false)
+    end
+
+    it "does not exempt staff who are not in a configured group" do
+      SiteSetting.flair_visible_groups = allowed_group.id.to_s
+
+      expect(admin.guardian.can_see_flair?).to eq(false)
+    end
+
+    context "when granular_anonymous_and_logged_in_groups_permissions is enabled" do
+      before { SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true }
+
+      it "treats the everyone group as logged-in users, excluding anonymous viewers" do
+        SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+        expect(non_member.guardian.can_see_flair?).to eq(true)
+        expect(Guardian.new.can_see_flair?).to eq(false)
+      end
+
+      it "lets anonymous viewers see flairs when the anonymous_users group is configured" do
+        SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:anonymous_users].to_s
+
+        expect(Guardian.new.can_see_flair?).to eq(true)
+      end
+    end
+  end
+
   describe "#can_claim_reviewable_topic?" do
     fab!(:topic)
     context "with anon user" do

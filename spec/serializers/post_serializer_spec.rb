@@ -3,6 +3,38 @@
 RSpec.describe PostSerializer do
   fab!(:post)
 
+  describe "flair fields" do
+    fab!(:flair_group) do
+      Fabricate(:group, flair_bg_color: "#111111", flair_color: "#999999", flair_icon: "icon")
+    end
+    fab!(:flair_author) { Fabricate(:user, flair_group: flair_group) }
+    fab!(:flair_post) { Fabricate(:post, user: flair_author) }
+    fab!(:allowed_group, :group)
+    fab!(:viewer) { Fabricate(:user, groups: [allowed_group]) }
+
+    let(:flair_keys) { %i[flair_name flair_url flair_bg_color flair_color flair_group_id] }
+
+    def flair_present_for?(scope)
+      json = described_class.new(flair_post, scope: scope, root: false).as_json
+      flair_keys.any? { |key| json.key?(key) }
+    end
+
+    it "includes flair for any viewer when the everyone group is configured" do
+      SiteSetting.flair_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+
+      expect(flair_present_for?(Guardian.new)).to eq(true)
+      expect(flair_present_for?(Guardian.new(viewer))).to eq(true)
+    end
+
+    it "omits flair for non-members and anonymous viewers when restricted" do
+      SiteSetting.flair_visible_groups = allowed_group.id.to_s
+
+      expect(flair_present_for?(Guardian.new(viewer))).to eq(true)
+      expect(flair_present_for?(Guardian.new(Fabricate(:user)))).to eq(false)
+      expect(flair_present_for?(Guardian.new)).to eq(false)
+    end
+  end
+
   context "with a post with lots of actions" do
     fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)

@@ -1143,6 +1143,13 @@ users:
     client: true
     default: true
     area: "users"
+  flair_visible_groups:
+    type: group_list
+    list_type: compact
+    default: "0" # auto group everyone
+    allow_any: false
+    refresh: true
+    area: "users"
   directory_hourly_refresh_max_users:
     default: 100
     hidden: true
