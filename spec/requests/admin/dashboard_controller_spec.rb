@@ -125,14 +125,18 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with highlights_data" do
-        let(:highlights_data) { section_payloads["highlights"]&.dig("data") }
+        let(:highlights_data) { response.parsed_body["data"] }
 
         it "returns the highlights payload for the selected dates" do
           Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
           Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
           Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
 
-          get "/admin/dashboard.json", params: { start_date: "2026-04-01", end_date: "2026-04-28" }
+          get "/admin/dashboard/sections/highlights.json",
+              params: {
+                start_date: "2026-04-01",
+                end_date: "2026-04-28",
+              }
 
           expect(response.status).to eq(200)
           expect(highlights_data).to eq(
@@ -178,7 +182,7 @@ RSpec.describe Admin::DashboardController do
       context "with traffic_data" do
         before { SiteSetting.persist_browser_pageview_events = false }
 
-        let(:traffic_data) { section_payloads["traffic"]&.dig("data") }
+        let(:traffic_data) { response.parsed_body["data"] }
 
         it "returns the site traffic payload for the selected dates" do
           SiteSetting.use_legacy_pageviews = false
@@ -194,7 +198,11 @@ RSpec.describe Admin::DashboardController do
           Fabricate(:embedded_application_request, date: "2026-05-02", count: 4)
           Fabricate(:crawler_application_request, date: "2026-05-03", count: 3)
 
-          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+          get "/admin/dashboard/sections/traffic.json",
+              params: {
+                start_date: "2026-05-01",
+                end_date: "2026-05-03",
+              }
 
           expect(traffic_data).to eq(
             "kpis" => {
@@ -280,11 +288,14 @@ RSpec.describe Admin::DashboardController do
           BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
           BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
 
-          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+          get "/admin/dashboard/sections/traffic.json",
+              params: {
+                start_date: "2026-05-01",
+                end_date: "2026-05-03",
+              }
 
           expect(response.status).to eq(200)
-          admin_traffic_data =
-            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          admin_traffic_data = response.parsed_body["data"]
           expect(admin_traffic_data.dig("top_countries", "rows", 0, "country_code")).to eq(
             country_code,
           )
@@ -294,11 +305,14 @@ RSpec.describe Admin::DashboardController do
 
           sign_in(moderator)
 
-          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-03" }
+          get "/admin/dashboard/sections/traffic.json",
+              params: {
+                start_date: "2026-05-01",
+                end_date: "2026-05-03",
+              }
 
           expect(response.status).to eq(200)
-          moderator_traffic_data =
-            response.parsed_body["sections"].find { |section| section["id"] == "traffic" }["data"]
+          moderator_traffic_data = response.parsed_body["data"]
           expect(moderator_traffic_data).not_to have_key("top_countries")
           expect(moderator_traffic_data).not_to have_key("top_referrers")
           expect(response.body).not_to include(normalized_referrer)
@@ -306,7 +320,7 @@ RSpec.describe Admin::DashboardController do
       end
 
       context "with search_data" do
-        let(:search_data) { section_payloads["search"]&.dig("data") }
+        let(:search_data) { response.parsed_body["data"] }
 
         it "returns the search payload for the selected dates" do
           configure_dashboard_sections(%w[search])
@@ -314,7 +328,11 @@ RSpec.describe Admin::DashboardController do
           Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
           Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
 
-          get "/admin/dashboard.json", params: { start_date: "2026-05-01", end_date: "2026-05-07" }
+          get "/admin/dashboard/sections/search.json",
+              params: {
+                start_date: "2026-05-01",
+                end_date: "2026-05-07",
+              }
 
           expect(response.status).to eq(200)
           expect(search_data).to eq(
@@ -388,61 +406,33 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_nil
       end
 
-      it "falls back to default dates when date params are malformed" do
-        get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
+      it "falls back to default dates when section date params are malformed" do
+        get "/admin/dashboard/sections/highlights.json",
+            params: {
+              start_date: "garbage",
+              end_date: "also-garbage",
+            }
 
         expect(response.status).to eq(200)
-        expect(section_payloads.keys).to contain_exactly(
-          "highlights",
-          "reports",
-          "traffic",
-          "engagement",
-          "search",
-        )
-        expect(section_payloads.dig("highlights", "data")).to be_present
-        expect(section_payloads.dig("traffic", "data")).to be_present
+        expect(response.parsed_body["data"]).to be_present
+
+        get "/admin/dashboard/sections/traffic.json",
+            params: {
+              start_date: "garbage",
+              end_date: "also-garbage",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["data"]).to be_present
       end
 
-      it "returns the sections as an ordered array of {id, data}" do
+      it "returns the sections as an ordered array of descriptors" do
         configure_dashboard_sections(%w[reports highlights])
 
         get "/admin/dashboard.json"
 
         ids = response.parsed_body["sections"].map { |s| s["id"] }
         expect(ids).to eq(%w[reports highlights])
-      end
-
-      it "returns successful sections when another section fails to build" do
-        error = StandardError.new("boom")
-        configure_dashboard_sections(%w[highlights search])
-        AdminDashboardHighlights.stubs(:build).returns({ value: "highlights" })
-        AdminDashboardSearch.stubs(:build).raises(error)
-        Discourse.expects(:warn_exception).with(
-          error,
-          message: "Failed to build admin dashboard section",
-          env: {
-            section_id: "search",
-          },
-        )
-
-        get "/admin/dashboard.json"
-
-        expect(response.status).to eq(200)
-        expect(section_payloads).to eq(
-          "highlights" => {
-            "id" => "highlights",
-            "data" => {
-              "value" => "highlights",
-            },
-          },
-          "search" => {
-            "id" => "search",
-            "data" => nil,
-            "error" => true,
-          },
-        )
-        expect(response.parsed_body["configuration"]).to be_present
-        expect(response.parsed_body).to have_key("problems")
       end
 
       it "omits hidden sections from the data payload" do
@@ -454,23 +444,23 @@ RSpec.describe Admin::DashboardController do
         expect(ids).not_to include("traffic", "engagement")
       end
 
-      it "includes built engagement data when the section is enabled" do
+      it "returns built engagement data from its section endpoint" do
         configure_dashboard_sections(%w[highlights engagement])
-        get "/admin/dashboard.json"
 
-        engagement = response.parsed_body["sections"].find { |s| s["id"] == "engagement" }
-        expect(engagement["data"]).to include("kpis", "headline")
+        get "/admin/dashboard/sections/engagement.json"
+
+        expect(response.parsed_body["data"]).to include("kpis", "headline")
       end
 
       describe "reports section data" do
         before { AdminDashboardReport.delete_all }
 
         def reports_data
-          response.parsed_body["sections"].find { |s| s["id"] == "reports" }&.dig("data")
+          response.parsed_body["data"]
         end
 
         it "returns an empty items list when no rows exist" do
-          get "/admin/dashboard.json"
+          get "/admin/dashboard/sections/reports.json"
 
           expect(response.status).to eq(200)
           expect(reports_data["items"]).to eq([])
@@ -479,7 +469,7 @@ RSpec.describe Admin::DashboardController do
         it "serializes configured rows resolved via the registered providers" do
           AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
-          get "/admin/dashboard.json"
+          get "/admin/dashboard/sections/reports.json"
 
           items = reports_data["items"]
           expect(items.size).to eq(1)

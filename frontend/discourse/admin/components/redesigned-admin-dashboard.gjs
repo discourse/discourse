@@ -151,7 +151,7 @@ export default class RedesignedAdminDashboard extends Component {
                   @data={{section.data}}
                   @startDate={{or section.startDate @loadedSections.startDate}}
                   @endDate={{or section.endDate @loadedSections.endDate}}
-                  @refreshSections={{@refreshSections}}
+                  @refreshSection={{fn @refreshSection section.id}}
                 />
               {{else if (eq section.id "traffic")}}
                 <DashboardTraffic
