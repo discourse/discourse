@@ -145,7 +145,7 @@
     "discourse-markdown-it": "workspace:1.0.0",
     "ember-async-data": "^2.0.1",
     "ember-buffered-proxy": "^2.1.1",
-    "ember-cli": "~7.0.1",
+    "ember-cli": "~7.1.0",
     "ember-cli-deprecation-workflow": "^4.0.1",
     "ember-cli-htmlbars": "^7.0.1",
     "ember-exam": "^10.1.0",
