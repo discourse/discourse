@@ -6,6 +6,23 @@ function resolveKeys(dag: DAG) {
   return dag.resolve().map((entry) => entry.key);
 }
 
+/**
+ * Options matching the surfaces that point their default position at a
+ * single key, which gives that key an in-degree equal to the item count.
+ */
+function hubOptions() {
+  return { defaultPosition: { before: "hub" }, throwErrorOnCycle: false };
+}
+
+/** Three items before the hub plus one after it, in registration order. */
+function addHubGroup(dag: DAG) {
+  dag.add("first", 1, { before: ["hub"] });
+  dag.add("second", 2, { before: ["hub"] });
+  dag.add("third", 3, { before: ["hub"] });
+  dag.add("hub", 4, {});
+  dag.add("trailing", 5, { after: ["hub"] });
+}
+
 module("Unit | Lib | DAG", function (hooks) {
   setupTest(hooks);
 
@@ -438,8 +455,8 @@ module("Unit | Lib | DAG", function (hooks) {
   });
 
   test("after chain stays together", function (assert) {
-    // a->b->c forms a chain. The successor-boost mechanism ensures
-    // each link is visited immediately after its predecessor.
+    // a->b->c forms a chain. Anchoring is recursive, so each link
+    // ranks immediately after its predecessor.
     const dag = new DAG();
     dag.add("a", 1);
     dag.add("b", 2, { after: "a" });
@@ -450,8 +467,8 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("after chain with branch: chain stays together, branch at end", function (assert) {
     // Both b and c depend on a. b also has a successor d.
-    // The algorithm follows the deeper chain a->b->d first,
-    // then places the shorter branch c.
+    // d nests inside b's group, and b outranks c by registration
+    // order, so the a->b->d chain comes before c.
     //
     //   a -> b -> d
     //    \-> c
@@ -488,8 +505,8 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("unrelated items do not drift between anchor and after items", function (assert) {
     // "unrelated" has no constraints. Without locality, a naive sort
-    // could place it between a and b. The algorithm prioritizes
-    // constrained nodes over unconstrained ones, keeping a->b together.
+    // could place it between a and b. Anchored items rank right next
+    // to their anchor, keeping a->b together.
     //
     // Expected: a, b, unrelated
     const dag = new DAG();
@@ -515,10 +532,10 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(resolveKeys(dag), ["b", "a"]);
   });
 
-  test("multiple items before same target: grouped via sibling boost", function (assert) {
-    // Both first and second say { before: "target" }. The sibling-boost
-    // mechanism pulls all of target's ready predecessors together so
-    // they're placed consecutively before target.
+  test("multiple items before same target: grouped in insertion order", function (assert) {
+    // Both first and second say { before: "target" }. They share the
+    // same anchor side, so they rank consecutively before target in
+    // registration order.
     //
     // Expected: first, second, target
     const dag = new DAG();
@@ -543,10 +560,9 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("unrelated items do not drift between before items and target", function (assert) {
     // b and c both say { before: a }. "unrelated" has no constraints.
-    // Without sibling-boost, the naive insertion-order queue would
-    // place "unrelated" between the before-items and their target.
-    // The algorithm boosts b's sibling c onto the stack so both
-    // predecessors are placed together, keeping unrelated at the end.
+    // A naive insertion-order sort would place "unrelated" between the
+    // before-items and their target; anchoring ranks b and c right
+    // before a instead, keeping unrelated at the end.
     //
     // Expected: b, c, a, unrelated
     const dag = new DAG();
@@ -568,9 +584,8 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("before with many predecessors and unrelated items", function (assert) {
     // p1, p2, p3 all say { before: "target" }. "unrelated" sits
-    // between p1 and p2 in insertion order. Sibling-boost pulls
-    // p2 and p3 next to p1 so all three are grouped before target,
-    // and unrelated is pushed to the end.
+    // between p1 and p2 in insertion order, but the anchored items
+    // are grouped right before target, pushing unrelated to the end.
     //
     // Expected: p1, p2, p3, target, unrelated
     const dag = new DAG();
@@ -636,7 +651,7 @@ module("Unit | Lib | DAG", function (hooks) {
     // Each pair should be immediately adjacent, and the pairs
     // should not interleave.
     //
-    // Expected: b, afterB, beforeA, a
+    // Expected: beforeA, a, b, afterB
     const dag = new DAG();
     dag.add("a", 1);
     dag.add("b", 2);
@@ -677,8 +692,8 @@ module("Unit | Lib | DAG", function (hooks) {
   test("long chain with plugins inserting at different points", function (assert) {
     // Core defines a 5-item chain: a -> b -> c -> d -> e.
     // Three plugins each attach to a different point in the chain.
-    // The core chain stays together because b has a deeper successor
-    // chain than p1, so the algorithm follows a->b->c->d->e first.
+    // The core chain stays together because within each anchor group
+    // the earlier-registered chain link outranks the plugin item.
     const dag = new DAG();
     dag.add("a", 1);
     dag.add("b", 2, { after: "a" });
@@ -700,7 +715,7 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("multiple plugins with before constraints on the same target", function (assert) {
     // Core: header -> content -> footer. Four plugins say { before: "footer" }.
-    // Sibling-boost groups all four before footer, sidebar at the end.
+    // All four group right before footer, sidebar at the end.
     const dag = new DAG();
     dag.add("header", 1);
     dag.add("content", 2, { after: "header" });
@@ -805,7 +820,7 @@ module("Unit | Lib | DAG", function (hooks) {
 
   test("wide fan-in: many independent predecessors converge on one target", function (assert) {
     // 6 predecessors before target, with unrelated items interspersed.
-    // Sibling-boost groups all predecessors before target.
+    // All predecessors group contiguously before target.
     const dag = new DAG();
     dag.add("target", 0);
     dag.add("p1", 1, { before: "target" });
@@ -938,6 +953,294 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.true(result.indexOf("bookmark") < showMoreIdx);
     assert.true(result.indexOf("reply") < showMoreIdx);
     assert.true(result.indexOf("plugin-btn") < showMoreIdx);
+  });
+
+  /* Hub graphs: a defaultPosition pointing at one key gives that key a
+     very high in-degree. Locality must survive that shape. */
+
+  test("hub fan-in: before/after pair stays adjacent under a hub", function (assert) {
+    // a, b, and unrelated all point at the hub. attached anchors after a,
+    // so it must sit right between a and b; unrelated must not drift in.
+    const dag = new DAG();
+    dag.add("a", 1, { before: "hub" });
+    dag.add("b", 2, { before: "hub" });
+    dag.add("hub", 3);
+    dag.add("unrelated", 4, { before: "hub" });
+    dag.add("attached", 5, { after: "a", before: "b" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "a",
+      "attached",
+      "b",
+      "unrelated",
+      "hub",
+    ]);
+  });
+
+  test("hub fan-in: item registered last with before-first leads the group", function (assert) {
+    // prepended anchors before the group's first item, so registration
+    // order must not sink it into the middle of the hub's predecessors.
+    const dag = new DAG();
+    dag.add("first", 1, { before: "hub" });
+    dag.add("second", 2, { before: "hub" });
+    dag.add("third", 3, { before: "hub" });
+    dag.add("hub", 4);
+    dag.add("prepended", 5, { before: "first" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "prepended",
+      "first",
+      "second",
+      "third",
+      "hub",
+    ]);
+  });
+
+  test("hub via defaultPosition: anchored items keep their anchors adjacent", function (assert) {
+    // Mirrors the post menu: every core button gets { before: "showMore" },
+    // so showMore is a hub. Items added later with explicit anchors must
+    // land next to those anchors, not where registration order puts them.
+    const dag = new DAG({
+      defaultPosition: { before: "showMore" },
+      throwErrorOnCycle: false,
+    });
+    dag.add("read", 1, { before: ["showMore"] });
+    dag.add("like", 2, { before: ["showMore"] });
+    dag.add("copyLink", 3, { before: ["showMore"] });
+    dag.add("showMore", 4, {});
+    dag.add("reply", 5, { after: ["showMore"] });
+    dag.add("plugin-first", 6, { before: "read" });
+    dag.add("plugin-last", 7);
+    dag.add("plugin-mid", 8, { after: "like", before: "copyLink" });
+    dag.add("plugin-orphan", 9, { after: "absent-key" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "plugin-first",
+      "read",
+      "like",
+      "plugin-mid",
+      "copyLink",
+      "plugin-last",
+      "showMore",
+      "reply",
+      "plugin-orphan",
+    ]);
+  });
+
+  test("absent after-anchor: item sorts at the end", function (assert) {
+    // "missing" is referenced but never added, so it renders nothing and
+    // sorts past every real item; the item anchored after it follows it
+    // there instead of staying where it was registered, which would give
+    // a, ghost-follower, b
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("ghost-follower", 2, { after: "missing" });
+    dag.add("b", 3);
+
+    assert.deepEqual(resolveKeys(dag), ["a", "b", "ghost-follower"]);
+  });
+
+  test("hub: a lone after-anchor lands adjacent, not past the hub", function (assert) {
+    // A single anchor has to be enough on its own. The anchor's edge into
+    // the hub must not drag its follower along: reaching "attached" only
+    // through the hub would sort it last, giving
+    // first, second, third, hub, trailing, attached
+    const dag = new DAG(hubOptions());
+    addHubGroup(dag);
+    dag.add("attached", 6, { after: "first" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "first",
+      "attached",
+      "second",
+      "third",
+      "hub",
+      "trailing",
+    ]);
+  });
+
+  test("hub: anchoring after the last item before the hub", function (assert) {
+    // "third" is the last item before the hub, so its follower belongs in
+    // the gap between the two rather than beyond the hub's own successors,
+    // which would give first, second, third, hub, trailing, attached
+    const dag = new DAG(hubOptions());
+    addHubGroup(dag);
+    dag.add("attached", 6, { after: "third" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "first",
+      "second",
+      "third",
+      "attached",
+      "hub",
+      "trailing",
+    ]);
+  });
+
+  /* Single-anchor sufficiency: one anchor fully determines placement, so a
+     second opposing anchor is redundant rather than load-bearing. */
+
+  test("one anchor places an item identically to an anchor pair", function (assert) {
+    // Callers should not have to name an opposing anchor to pin an item
+    // down. Both forms resolve to
+    // first, attached, second, third, hub, trailing
+    // where a sort that honours only the pair would leave the single form
+    // at first, second, third, hub, trailing, attached
+    const single = new DAG(hubOptions());
+    addHubGroup(single);
+    single.add("attached", 6, { after: "first" });
+
+    const pair = new DAG(hubOptions());
+    addHubGroup(pair);
+    pair.add("attached", 6, { after: "first", before: "second" });
+
+    assert.deepEqual(
+      resolveKeys(single),
+      resolveKeys(pair),
+      "the redundant before-anchor does not change the result"
+    );
+  });
+
+  test("sequential surface: a lone after-anchor does not displace its anchor", function (assert) {
+    // Surfaces without a defaultPosition add their items unconstrained.
+    // Giving "gamma" a follower must not move "gamma" itself: pushing the
+    // pair to the end would reorder the untouched items too, giving
+    // alpha, beta, delta, epsilon, gamma, inserted
+    const dag = new DAG();
+    for (const key of ["alpha", "beta", "gamma", "delta", "epsilon"]) {
+      dag.add(key, key);
+    }
+    dag.add("inserted", 9, { after: "gamma" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "alpha",
+      "beta",
+      "gamma",
+      "inserted",
+      "delta",
+      "epsilon",
+    ]);
+  });
+
+  test("chain of after-links stays contiguous", function (assert) {
+    // Each link anchors to the previous one, so the whole chain trails the
+    // item it was appended to.
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2);
+    dag.add("c", 3);
+    dag.add("x1", 4, { after: "c" });
+    dag.add("x2", 5, { after: "x1" });
+    dag.add("x3", 6, { after: "x2" });
+
+    assert.deepEqual(resolveKeys(dag), ["a", "b", "c", "x1", "x2", "x3"]);
+  });
+
+  test("contested anchor: followers group in registration order", function (assert) {
+    // Two items claim the slot after the same anchor. Both join the
+    // anchor's group, earlier registration first, rather than the later
+    // one being left at its registration point:
+    // anchor, early-follower, tail, late-follower
+    const dag = new DAG();
+    dag.add("anchor", 1);
+    dag.add("early-follower", 2, { after: "anchor" });
+    dag.add("tail", 3);
+    dag.add("late-follower", 4, { after: "anchor" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "anchor",
+      "early-follower",
+      "late-follower",
+      "tail",
+    ]);
+  });
+
+  /* Before-side mirrors of the guarantees above. The two sides are ranked
+     by separate branches, so each needs its own coverage. */
+
+  test("hub: a lone before-anchor lands adjacent", function (assert) {
+    const dag = new DAG(hubOptions());
+    addHubGroup(dag);
+    dag.add("attached", 6, { before: "third" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "first",
+      "second",
+      "attached",
+      "third",
+      "hub",
+      "trailing",
+    ]);
+  });
+
+  test("sequential surface: a lone before-anchor does not displace its anchor", function (assert) {
+    const dag = new DAG();
+    for (const key of ["alpha", "beta", "gamma", "delta", "epsilon"]) {
+      dag.add(key, key);
+    }
+    dag.add("inserted", 9, { before: "gamma" });
+
+    assert.deepEqual(resolveKeys(dag), [
+      "alpha",
+      "beta",
+      "inserted",
+      "gamma",
+      "delta",
+      "epsilon",
+    ]);
+  });
+
+  test("chain of before-links stays contiguous", function (assert) {
+    // Each link anchors before the previous one, so the chain builds
+    // backwards and lands ahead of the item it was anchored to.
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2);
+    dag.add("c", 3);
+    dag.add("x1", 4, { before: "a" });
+    dag.add("x2", 5, { before: "x1" });
+    dag.add("x3", 6, { before: "x2" });
+
+    assert.deepEqual(resolveKeys(dag), ["x3", "x2", "x1", "a", "b", "c"]);
+  });
+
+  test("a lone before array anchors to the nearest listed key", function (assert) {
+    // Listing several keys means "ahead of all of them"; the item settles
+    // against the closest one rather than the furthest.
+    const dag = new DAG();
+    dag.add("p", 1);
+    dag.add("q", 2);
+    dag.add("r", 3);
+    dag.add("multi", 4, { before: ["q", "r"] });
+
+    assert.deepEqual(resolveKeys(dag), ["p", "multi", "q", "r"]);
+  });
+
+  test("absent before-anchor is ignored", function (assert) {
+    // Mirrors "absent after-anchor" and is deliberately asymmetric: an
+    // absent key sorts past every real item, so a before-constraint on it
+    // is vacuous and the item keeps its own position, while an
+    // after-constraint on it would carry the item to the end.
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("ghost", 2, { before: "missing" });
+    dag.add("b", 3);
+
+    assert.deepEqual(resolveKeys(dag), ["a", "ghost", "b"]);
+  });
+
+  test("before and after together: the after anchor decides placement", function (assert) {
+    // Both anchors are honoured as ordering edges, but they disagree about
+    // where the item belongs. It hugs what it follows, so it sits against
+    // "w" rather than drifting down to "z".
+    const dag = new DAG();
+    dag.add("w", 1);
+    dag.add("x", 2);
+    dag.add("y", 3);
+    dag.add("z", 4);
+    dag.add("mid", 5, { after: "w", before: "z" });
+
+    assert.deepEqual(resolveKeys(dag), ["w", "mid", "x", "y", "z"]);
   });
 
   /* replace/reposition cycle handling */

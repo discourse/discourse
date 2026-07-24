@@ -61,12 +61,89 @@ interface DAGVertex<T> {
   inEdges: Set<string>;
   outEdges: Set<string>;
   insertionIdx: number;
+
+  /**
+   * The before/after constraints actually applied to the graph for this
+   * vertex. They can differ from the item's declared position when a
+   * cycle forced a fallback to the default position, and they drive the
+   * placement ranks computed by the sort.
+   */
+  appliedBefore?: string | string[];
+  appliedAfter?: string | string[];
 }
 
-const WAITING = 0;
-const READY_QUEUE = 1;
-const READY_STACK = 2;
-const PLACED = 3;
+/* Placement-rank slots: a rank extended with BEFORE_ANCHOR sorts just
+   before its anchor, with AFTER_ANCHOR just after it. The anchor itself
+   compares as 0 (the implicit padding value in compareRanks). */
+const BEFORE_ANCHOR = -1;
+const AFTER_ANCHOR = 1;
+
+/**
+ * Lexicographic comparison of placement ranks. A rank that runs out of
+ * elements compares as 0 from then on, ordering an anchor between its
+ * before-extensions (-1, ...) and its after-extensions (1, ...).
+ */
+function compareRanks(a: number[], b: number[]): number {
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    const av = i < a.length ? a[i] : 0;
+    const bv = i < b.length ? b[i] : 0;
+    if (av !== bv) {
+      return av < bv ? -1 : 1;
+    }
+  }
+  return 0;
+}
+
+/** Binary min-heap over numbers, used to pop the lowest rank ordinal. */
+class MinHeap {
+  #heap: number[] = [];
+
+  get size(): number {
+    return this.#heap.length;
+  }
+
+  push(value: number): void {
+    const heap = this.#heap;
+    heap.push(value);
+    let i = heap.length - 1;
+    while (i > 0) {
+      const parent = Math.floor((i - 1) / 2);
+      if (heap[parent] <= heap[i]) {
+        break;
+      }
+      [heap[parent], heap[i]] = [heap[i], heap[parent]];
+      i = parent;
+    }
+  }
+
+  pop(): number {
+    const heap = this.#heap;
+    const top = heap[0];
+    const last = heap.pop();
+    if (heap.length > 0) {
+      heap[0] = last;
+      let i = 0;
+      for (;;) {
+        const left = 2 * i + 1;
+        const right = left + 1;
+        let min = i;
+        if (left < heap.length && heap[left] < heap[min]) {
+          min = left;
+        }
+        if (right < heap.length && heap[right] < heap[min]) {
+          min = right;
+        }
+        if (min === i) {
+          break;
+        }
+        [heap[min], heap[i]] = [heap[i], heap[min]];
+        i = min;
+      }
+    }
+    return top;
+  }
+}
 
 class DAGCycleError extends Error {
   constructor(message: string) {
@@ -396,6 +473,11 @@ export default class DAG<T = unknown> {
       }
       throw e;
     }
+
+    // Recorded only on success so a cycle fallback re-records the
+    // constraints that actually made it into the graph.
+    v.appliedBefore = before;
+    v.appliedAfter = after;
   }
 
   #addEdge(from: DAGVertex<T>, to: DAGVertex<T>): boolean {
@@ -524,14 +606,35 @@ export default class DAG<T = unknown> {
   /* Sorting */
 
   /**
-   * Locality-preserving topological sort using modified Kahn's algorithm.
+   * Locality-preserving topological sort.
    *
-   * Two mechanisms keep constrained nodes close together:
-   * - Successor boost: when a node is placed, its newly-ready successors
-   *   go onto a stack so they're visited next.
-   * - Sibling boost: when a successor isn't ready yet, its OTHER ready
-   *   predecessors are pulled onto the stack so all predecessors are
-   *   grouped together.
+   * Every vertex gets a placement rank, and the output is the topological
+   * order closest to rank order: Kahn's algorithm always emits the
+   * lowest-ranked ready vertex, so the result deviates from rank order
+   * only where an edge contradicts it, and only for the vertices that
+   * edge touches. The output is always a valid topological order.
+   *
+   * A rank is a path of `(side, insertionIdx)` steps rooted at an
+   * unanchored vertex. Each vertex anchors to at most ONE key from its
+   * applied position — the anchor decides where the vertex prefers to
+   * sit, while every declared key remains a hard ordering edge:
+   *
+   * - `after: X` extends X's rank on the after side: the item sorts
+   *   immediately after X (and after X's whole after-group, in insertion
+   *   order), before anything unrelated to X.
+   * - `before: X` extends X's rank on the before side: the item sorts
+   *   immediately before X, again in insertion order within the group.
+   * - With both `before` and `after`, the `after` anchor wins: the item
+   *   hugs the item it follows.
+   * - With multiple keys on one side, `after` anchors to the
+   *   highest-ranked key and `before` to the lowest-ranked one — the
+   *   nearest end of the window the constraints allow.
+   * - Anchors never added to the DAG are ignored (an item constrained
+   *   only relative to absent keys ranks by its own insertion index, and
+   *   an absent key itself sorts past every real item, so anything
+   *   `after` it lands at the end). Mutually recursive anchor references
+   *   (e.g. `x after a` + `a before x`) break the loop at the vertex
+   *   reached last, which then ranks by insertion index.
    */
   #sort(): string[] {
     const vertices = this.#vertices;
@@ -540,75 +643,31 @@ export default class DAG<T = unknown> {
       return [];
     }
 
-    const inDegree = new Map<string, number>();
-    const state = new Map<string, number>();
+    const sortedKeys = this.#keysInRankOrder();
+    const ordinals = new Map<string, number>();
+    for (let i = 0; i < sortedKeys.length; i++) {
+      ordinals.set(sortedKeys[i], i);
+    }
 
+    const inDegree = new Map<string, number>();
+    const ready = new MinHeap();
     for (const [key, v] of vertices) {
       inDegree.set(key, v.inEdges.size);
-      state.set(key, v.inEdges.size === 0 ? READY_QUEUE : WAITING);
-    }
-
-    const queue: string[] = [];
-    for (const [key, s] of state) {
-      if (s === READY_QUEUE) {
-        queue.push(key);
+      if (v.inEdges.size === 0) {
+        ready.push(ordinals.get(key));
       }
     }
-    queue.sort((a, b) => this.#compareKeys(a, b));
 
-    const stack: string[] = [];
     const result: string[] = [];
-    let queueIdx = 0;
-
-    while (stack.length > 0 || queueIdx < queue.length) {
-      let key: string;
-      if (stack.length > 0) {
-        key = stack.pop();
-      } else {
-        while (
-          queueIdx < queue.length &&
-          state.get(queue[queueIdx]) !== READY_QUEUE
-        ) {
-          queueIdx++;
-        }
-        if (queueIdx >= queue.length) {
-          break;
-        }
-        key = queue[queueIdx++];
-      }
-
-      const v = vertices.get(key);
-      state.set(key, PLACED);
+    while (ready.size > 0) {
+      const key = sortedKeys[ready.pop()];
       result.push(key);
 
-      const ready: string[] = [];
-
-      for (const succKey of v.outEdges) {
+      for (const succKey of vertices.get(key).outEdges) {
         const d = inDegree.get(succKey) - 1;
         inDegree.set(succKey, d);
-
         if (d === 0) {
-          ready.push(succKey);
-          state.set(succKey, READY_STACK);
-        } else {
-          /* Sibling boost: pull the successor's other ready predecessors
-             onto the stack so all predecessors are grouped together. */
-          const succ = vertices.get(succKey);
-          for (const predKey of succ.inEdges) {
-            if (state.get(predKey) === READY_QUEUE) {
-              state.set(predKey, READY_STACK);
-              ready.push(predKey);
-            }
-          }
-        }
-      }
-
-      if (ready.length > 0) {
-        if (ready.length > 1) {
-          ready.sort((a, b) => this.#compareKeys(a, b));
-        }
-        for (let i = ready.length - 1; i >= 0; i--) {
-          stack.push(ready[i]);
+          ready.push(ordinals.get(succKey));
         }
       }
     }
@@ -628,18 +687,88 @@ export default class DAG<T = unknown> {
     return result;
   }
 
-  #compareKeys(a: string, b: string): number {
-    const va = this.#vertices.get(a);
-    const vb = this.#vertices.get(b);
+  #keysInRankOrder(): string[] {
+    const ranks = this.#computeRanks();
+    const keys = [...this.#vertices.keys()];
+    keys.sort((a, b) => compareRanks(ranks.get(a), ranks.get(b)));
+    return keys;
+  }
 
-    const aHasOut = va.outEdges.size > 0 ? 0 : 1;
-    const bHasOut = vb.outEdges.size > 0 ? 0 : 1;
-    if (aHasOut !== bHasOut) {
-      return aHasOut - bHasOut;
+  /**
+   * Computes the placement rank of every vertex (see the sort method's
+   * doc for the rank semantics).
+   * Memoized per call; anchor chains are followed recursively with an
+   * in-progress guard so mutually recursive anchor references terminate.
+   */
+  #computeRanks(): Map<string, number[]> {
+    const ranks = new Map<string, number[]>();
+    const inProgress = new Set<string>();
+
+    const selectAnchor = (
+      refs: string | string[] | undefined,
+      latest: boolean
+    ): string | null => {
+      if (!refs) {
+        return null;
+      }
+
+      let best: string | null = null;
+      let bestRank: number[] | null = null;
+
+      for (const ref of makeArray(refs)) {
+        const anchor = this.#vertices.get(ref);
+        if (!anchor || anchor.insertionIdx === -1 || inProgress.has(ref)) {
+          continue;
+        }
+
+        const anchorRank = rankOf(ref);
+        if (
+          best === null ||
+          (latest
+            ? compareRanks(anchorRank, bestRank) > 0
+            : compareRanks(anchorRank, bestRank) < 0)
+        ) {
+          best = ref;
+          bestRank = anchorRank;
+        }
+      }
+
+      return best;
+    };
+
+    const rankOf = (key: string): number[] => {
+      let rank = ranks.get(key);
+      if (rank !== undefined) {
+        return rank;
+      }
+
+      const v = this.#vertices.get(key);
+      // Placeholder vertices (referenced but never added) sort past every
+      // real insertion index.
+      const idx = v.insertionIdx === -1 ? Infinity : v.insertionIdx;
+
+      inProgress.add(key);
+
+      const afterAnchor = selectAnchor(v.appliedAfter, true);
+      if (afterAnchor !== null) {
+        rank = [...rankOf(afterAnchor), AFTER_ANCHOR, idx];
+      } else {
+        const beforeAnchor = selectAnchor(v.appliedBefore, false);
+        rank =
+          beforeAnchor !== null
+            ? [...rankOf(beforeAnchor), BEFORE_ANCHOR, idx]
+            : [idx];
+      }
+
+      inProgress.delete(key);
+      ranks.set(key, rank);
+      return rank;
+    };
+
+    for (const key of this.#vertices.keys()) {
+      rankOf(key);
     }
 
-    const idxA = va.insertionIdx === -1 ? 2147483647 : va.insertionIdx;
-    const idxB = vb.insertionIdx === -1 ? 2147483647 : vb.insertionIdx;
-    return idxA - idxB;
+    return ranks;
   }
 }
