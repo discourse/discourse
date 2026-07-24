@@ -280,8 +280,133 @@
   }
 }
 
+.select-examples__control {
+  width: min(100%, 24rem);
+}
+
+.select-showcases {
+  margin-block-start: 3rem;
+
+  &__title {
+    margin-block-end: 0.5rem;
+  }
+
+  &__control {
+    width: min(100%, 28rem);
+  }
+
+  &__reviewer,
+  &__category,
+  &__notification {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__category,
+  &__notification {
+    align-items: flex-start;
+  }
+
+  &__details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__primary {
+    color: var(--token-color-text-default);
+    font-weight: var(--token-font-weight-semibold);
+    overflow-wrap: anywhere;
+  }
+
+  &__secondary,
+  &__meta {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+  }
+
+  &__reviewer-selection,
+  &__category-selection,
+  &__notification-selection,
+  &__group-header,
+  &__tag,
+  &__tag-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  &__tag {
+    color: var(--token-color-text-default);
+  }
+
+  &__tag-row .d-icon-plus {
+    color: var(--token-color-icon-default);
+  }
+
+  &__notification > .d-icon {
+    color: var(--token-color-icon-subtle);
+    margin-block-start: 0.15rem;
+  }
+}
+
 .more-topics-examples {
   .more-topics__container {
     flex-grow: 1;
+  }
+}
+
+.styleguide-virtual-list {
+  // The consumer owns the viewport height, set on the scroll element via CSS;
+  // the primitive only supplies overflow and positioning.
+  .d-virtual-list {
+    height: 400px;
+    border: 1px solid var(--primary-low);
+  }
+
+  &--tall .d-virtual-list {
+    height: 600px;
+  }
+
+  &__note {
+    color: var(--primary-medium);
+  }
+
+  &__controls {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+  }
+
+  &__status {
+    color: var(--primary-medium);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+
+    &--selected {
+      background: var(--tertiary-low);
+      font-weight: bold;
+    }
+  }
+
+  // Intrinsic (measured) height rather than a fixed one, so wrapped text of varying
+  // length gives each row a different height and forces re-measurement.
+  &__vrow {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-very-low);
+    line-height: 1.4;
   }
 }

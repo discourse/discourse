@@ -32,7 +32,9 @@ export function enableLoadMoreObserver() {
  *   during initial content load. Pass this to avoid race conditions during page initialization.
  * @param {string} [rootMargin="0px 0px 0px 0px"] - Margin around the root element for intersection detection
  * @param {number} [threshold=0.0] - Threshold at which the intersection callback is triggered
- * @param {string} [root=null] - CSS selector for the root element to observe intersection within
+ * @param {string|Element} [root=null] - The element to observe intersection within, or a CSS
+ *   selector for it. Pass the element itself when it mounts in the same render as the
+ *   sentinel, since a selector cannot resolve a root that does not exist yet.
  *
  * @example Basic usage with a block:
  * ```gjs
@@ -76,9 +78,21 @@ export function enableLoadMoreObserver() {
  */
 export default class DLoadMore extends Component {
   observer;
-  root = this.args.root || null;
-  rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
-  threshold = this.args.threshold || 0.0;
+
+  // Getters, not fields: a field snapshots the argument at construction, so an `@root` that
+  // is captured after this component mounts (its container and the sentinel rendering in the
+  // same pass) would never reach the observer, silently leaving it rooted at the wrong node.
+  get root() {
+    return this.args.root || null;
+  }
+
+  get rootMargin() {
+    return this.args.rootMargin || "0px 0px 0px 0px";
+  }
+
+  get threshold() {
+    return this.args.threshold || 0.0;
+  }
 
   get enabled() {
     return this.args.enabled ?? true;

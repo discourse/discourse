@@ -3283,6 +3283,44 @@ en:
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
 
+    d_select:
+      placeholder: "Select…"
+      add_placeholder: "Add…"
+      search_placeholder: "Search…"
+      no_results: "No results found"
+      label: "Options"
+      footer_label: "Actions"
+      clear: "Clear selection"
+      clear_all: "Clear all"
+      min_chars:
+        one: "Keep typing %{count} more character…"
+        other: "Keep typing %{count} more characters…"
+      max_reached:
+        one: "You can only select %{count} item. Remove one to add another."
+        other: "You can only select %{count} items. Remove one to add another."
+      min_not_reached:
+        one: "Select at least %{count} item."
+        other: "Select at least %{count} items."
+      remove_hint: "Press Backspace or Delete to remove"
+      selected_items: "Selected items"
+      chips_hint: "Press Left arrow to reach selected items."
+      item_added: "Added %{item}"
+      item_removed: "Removed %{item}"
+      expand: "Show options"
+      load_error: "Couldn't load results."
+      retry: "Retry"
+      unresolved: "Unavailable"
+      unresolved_value: "%{value} (unavailable)"
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
+      results_loaded:
+        one: "%{count} result loaded"
+        other: "%{count} results loaded"
+      filter_to_narrow: "Showing the first results only. Keep typing to narrow them down."
+      loading_more: "Loading more results…"
+      loading_complete: "More results loaded"
+
     shared_drafts:
       title: "Shared Drafts"
       notice: "This topic is only visible to those who can publish shared drafts."

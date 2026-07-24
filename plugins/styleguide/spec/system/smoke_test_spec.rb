@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Styleguide Smoke Test" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   # keep this hash updated when adding, removing or renaming components
@@ -29,6 +31,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/navigation-bar", title: "Navigation Bar" },
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
+      { href: "/molecules/select", title: "Select" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
@@ -37,6 +40,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
+      { href: "/molecules/virtual-list", title: "Virtual List" },
     ],
     "ORGANISMS" => [
       { href: "/organisms/post", title: "Post" },
@@ -59,6 +63,122 @@ RSpec.describe "Styleguide Smoke Test" do
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
+  end
+
+  it "lets the user view the select examples" do
+    visit "/styleguide/molecules/select"
+
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    screenshot_marker(label: "styleguide-select")
+
+    select =
+      PageObjects::Components::UiKit::DSelect.new(".select-examples__default .d-combobox__trigger")
+    select.open
+    expect(page).to have_text("Orange")
+    screenshot_marker(label: "styleguide-select-open", only: :desktop)
+  end
+
+  it "shows the large virtualized list at the top and scrolled deep into the list" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    large_list =
+      PageObjects::Components::UiKit::DSelect.new(
+        ".select-examples__large-list .d-combobox__trigger",
+      )
+    large_list.open
+    expect(page).to have_css("[role='listbox'] [role='option']")
+    screenshot_marker(label: "styleguide-select-large-window", only: :desktop)
+
+    large_list.reveal_to_index(999)
+    screenshot_marker(label: "styleguide-select-large-deep", only: :desktop)
+  end
+
+  it "shows options grouped under section headers" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    grouped =
+      PageObjects::Components::UiKit::DSelect.new(
+        "[data-test-select-showcase='grouped'] .d-combobox__trigger",
+      )
+    grouped.open
+    expect(page).to have_css("[role='listbox'] .d-combobox__group-header", minimum: 2)
+    screenshot_marker(label: "styleguide-select-grouped", only: :desktop)
+  end
+
+  it "shows a pinned footer below the option list" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    footer =
+      PageObjects::Components::UiKit::DSelect.new(
+        "[data-test-select-showcase='footer'] .d-combobox__trigger",
+      )
+    footer.open
+    expect(page).to have_css(".d-combobox__panel > .d-combobox__footer")
+    screenshot_marker(label: "styleguide-select-footer", only: :desktop)
+  end
+
+  it "shows the muted source-error state" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    # A button-variant trigger has no inline input, so open it directly rather than via the
+    # typeahead-oriented page object.
+    find(".select-examples__error .d-combobox__trigger").click
+    expect(page).to have_css(".d-combobox__error .d-icon-triangle-exclamation", wait: 5)
+    screenshot_marker(label: "styleguide-select-error", only: :desktop)
+  end
+
+  it "shows disabled options and a limit message at the selection maximum" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    maximum =
+      PageObjects::Components::UiKit::DSelect.new(".select-examples__maximum .d-combobox__trigger")
+    maximum.open
+    expect(page).to have_css(".d-combobox__panel .d-combobox__limit")
+    expect(page).to have_css("[role='option'][aria-disabled='true']")
+    screenshot_marker(label: "styleguide-select-maximum", only: :desktop)
+  end
+
+  it "places the caret in the typeahead on click instead of selecting the whole value" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    # The first example is the default typeahead: the chosen label renders inside the input.
+    typeahead = first(".select-examples__control")
+    typeahead.find(".d-combobox__input").click
+    find("[role='option']", text: "Orange").click
+    expect(typeahead).to have_field(with: "Orange")
+
+    label_fully_selected = lambda { page.evaluate_script(<<~JS) }
+          (() => {
+            const input = document.querySelector(
+              ".select-examples__control .d-combobox__input"
+            );
+            return (
+              document.activeElement === input &&
+              input.value.length > 0 &&
+              input.selectionStart === 0 &&
+              input.selectionEnd === input.value.length
+            );
+          })()
+        JS
+
+    # Clicking directly on the label text must place the caret there, not select the whole
+    # value (the reported bug: a click ends up highlighting the entire label).
+    find(".styleguide-contents h1.section-title").click # blur to a resting, filled field
+    typeahead.find(".d-combobox__input").click
+    expect(page).to have_css("[role='listbox']")
+    expect(label_fully_selected.call).to eq(false)
+
+    # Clicking the chevron opens via a programmatic focus; it must not select-all either.
+    find(".styleguide-contents h1.section-title").click
+    typeahead.find(".d-combobox__caret").click
+    expect(page).to have_css("[role='listbox']")
+    expect(label_fully_selected.call).to eq(false)
   end
 
   # this test will check if the index page is rendering correctly and also ensures that all component pages are

@@ -69,6 +69,23 @@ export function applyOnChangePluginApiCallbacks(value, items, component) {
   });
 }
 
+// Whether any prepend/append/replace-content callback is registered for any of the
+// given identifiers. Read-only; lets the ui-kit compat bridge skip building a facade
+// (and emitting a deprecation) when nothing would fire.
+export function hasContentPluginApiCallbacks(identifiers) {
+  return makeArray(identifiers).some(
+    (key) =>
+      _prependContentCallbacks[key]?.length ||
+      _appendContentCallbacks[key]?.length ||
+      _replaceContentCallbacks[key]?.length
+  );
+}
+
+// Whether any onChange callback is registered for any of the given identifiers.
+export function hasOnChangePluginApiCallbacks(identifiers) {
+  return makeArray(identifiers).some((key) => _onChangeCallbacks[key]?.length);
+}
+
 export function modifySelectKit(targetedIdentifier) {
   return {
     appendContent: (callback) => {

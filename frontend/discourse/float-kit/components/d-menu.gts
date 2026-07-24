@@ -3,7 +3,6 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
 import { type ComponentLike } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
@@ -15,8 +14,6 @@ import {
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { isTesting } from "discourse/lib/environment";
-import type Site from "discourse/models/site";
-import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -31,6 +28,8 @@ export interface DMenuComponentArgs<Data = unknown> {
 
   /** The `@data` passed to the menu. */
   data?: Data;
+  /** Whether the menu is currently open — reflects the live instance state. */
+  expanded: boolean;
 }
 
 // The subset of arguments that mirror a menu's option bag. Built as a
@@ -77,7 +76,12 @@ interface DMenuSignature<Data = unknown> {
     /** The title for the default trigger button. */
     title?: string;
 
-    /** Whether the default trigger button is disabled. */
+    /**
+     * Disables the menu: the default trigger button renders disabled, and — for any trigger,
+     * including a custom `@triggerComponent` — a trigger event (click/focus/hover/hold) no longer
+     * opens the menu. It does not touch the trigger's focusability or ARIA; that stays the
+     * caller's concern.
+     */
     disabled?: boolean;
 
     /** Whether the default trigger button shows a loading state. */
@@ -106,8 +110,6 @@ interface DMenuSignature<Data = unknown> {
 export default class DMenu<Data = unknown> extends Component<
   DMenuSignature<Data>
 > {
-  @service declare site: Site;
-
   menuInstance = new DMenuInstance(getOwner(this)!, {
     ...this.allowedProperties,
     autoUpdate: true,
@@ -129,6 +131,19 @@ export default class DMenu<Data = unknown> extends Component<
     return () => {
       this.#body = null;
     };
+  });
+
+  // Keeps the instance's open-veto in sync with `@disabled` reactively. The instance wires its
+  // trigger listeners once (at registration), so the disabled state cannot ride in through the
+  // one-time options snapshot; this re-runs whenever `@disabled` changes and gates the open.
+  // Becoming disabled while open also closes the menu — a disabled control must not keep an
+  // already-open overlay live (its content would stay interactive).
+  syncDisabled = modifier((_element: HTMLElement, [disabled]: [boolean?]) => {
+    const value = disabled ?? false;
+    this.menuInstance.disabled = value;
+    if (value && this.menuInstance.expanded) {
+      this.menuInstance.close();
+    }
   });
 
   #body: HTMLElement | null = null;
@@ -168,10 +183,16 @@ export default class DMenu<Data = unknown> extends Component<
   }
 
   get componentArgs(): DMenuComponentArgs<Data> {
+    const instance = this.menuInstance;
     return {
-      close: this.menuInstance.close,
-      show: this.menuInstance.show,
+      close: instance.close,
+      show: instance.show,
       data: this.options.data as Data,
+      // A getter (not a snapshot) so a consumer reading `expanded` subscribes to the
+      // live tracked state and re-renders on open/close, without churning this object.
+      get expanded() {
+        return instance.expanded;
+      },
     };
   }
 
@@ -221,6 +242,7 @@ export default class DMenu<Data = unknown> extends Component<
   <template>
     <this.triggerComponent
       {{this.registerTrigger}}
+      {{this.syncDisabled @disabled}}
       class={{dConcatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
@@ -242,7 +264,7 @@ export default class DMenu<Data = unknown> extends Component<
     </this.triggerComponent>
 
     {{#if this.menuInstance.expanded}}
-      {{#if (and this.site.mobileView this.options.modalForMobile)}}
+      {{#if this.menuInstance.renderInModal}}
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}

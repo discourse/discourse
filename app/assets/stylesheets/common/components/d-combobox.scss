@@ -1,0 +1,316 @@
+// Styles for the ui-kit DSelect combobox family. Uses the temporary `.d-combobox`
+// BEM root; this flips to `.d-select` when the family claims that name (after the
+// native `<select>` wrapper is renamed to `DNativeSelect`).
+.d-combobox__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  width: 100%;
+  justify-content: space-between;
+  background: var(--d-input-bg-color);
+  color: var(--d-input-text-color);
+  border: var(--d-input-border);
+  border-radius: var(--d-input-border-radius);
+}
+
+// Typeahead: the trigger is a composite [presentation] · [input] · [caret] box. The box
+// owns border/background/padding; the query input is transparent and grows to fill.
+.d-combobox__trigger.--typeahead {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  cursor: text;
+
+  &:focus-within {
+    @include default-focus;
+  }
+
+  .d-combobox__input {
+    flex: 1 1 4em;
+    min-width: 4em;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+
+    &::placeholder {
+      color: var(--primary-medium);
+      opacity: 1;
+    }
+  }
+}
+
+.d-combobox__trigger.--multiple {
+  justify-content: flex-start;
+}
+
+.d-combobox__trigger.--control {
+  @include form-item-sizing;
+  border: var(--d-input-border);
+  cursor: pointer;
+
+  &:focus-visible {
+    @include default-focus;
+  }
+}
+
+// Disabled dims the whole trigger and blocks the pointer; readonly stays visually active
+// (it is focusable and readable, just not editable — the aria/native state carries that).
+.d-combobox__trigger.--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// Leading icon and the growing value keep the trailing clear + caret pinned to the end.
+.d-combobox__leading-icon {
+  flex-shrink: 0;
+  color: var(--primary-medium);
+}
+
+.d-combobox__value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.d-combobox__clear {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.d-combobox__presentation {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.d-combobox__placeholder {
+  color: var(--primary-medium);
+
+  // As a direct trigger child (control empty state) it grows so the caret stays pinned right;
+  // nested inside a non-flex `.d-combobox__presentation` (mobile typeahead) this is inert.
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.d-combobox__unresolved {
+  color: var(--primary-medium);
+
+  .d-icon {
+    margin-inline-end: 0.25em;
+  }
+}
+
+.d-combobox__caret {
+  color: var(--primary-medium);
+  flex-shrink: 0;
+}
+
+.d-combobox__content > .fk-d-menu__inner-content {
+  width: 100%;
+}
+
+.d-combobox__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.d-combobox__filter {
+  width: 100%;
+}
+
+.d-combobox__listbox {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// The scroll viewport is capped and contains its own overscroll. In the content state the
+// list renders through DVirtualList, whose OUTER element is the scroller (the inner sizer ul
+// also carries d-combobox__listbox but must not scroll); the first-load skeleton renders in
+// a plain ul that scrolls itself.
+.d-combobox__panel .d-virtual-list,
+.d-combobox__listbox--loading {
+  max-height: 20em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.d-combobox__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  cursor: pointer;
+
+  // The roving highlight (keyboard) and hover share one visual treatment.
+  &.--active,
+  .discourse-no-touch &:hover {
+    background: var(--primary-low);
+  }
+
+  &.--selected {
+    font-weight: 700;
+  }
+
+  &[aria-disabled="true"] {
+    color: var(--primary-medium);
+    cursor: not-allowed;
+  }
+
+  &.--create {
+    color: var(--tertiary);
+  }
+}
+
+.d-combobox__option-selected-icon {
+  flex: none;
+  visibility: hidden;
+  color: var(--tertiary);
+}
+
+.d-combobox__option.--selected .d-combobox__option-selected-icon {
+  visibility: visible;
+}
+
+.d-combobox__skeleton {
+  padding: 0.5em 0.75em;
+}
+
+// A group header: a non-interactive section label. The top rule separates it from the rows
+// above; at the list's top edge it reads as a subtle inset.
+.d-combobox__group-header {
+  padding: 0.5em 0.75em 0.25em;
+  border-top: 1px solid var(--primary-low);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  font-weight: 700;
+  cursor: default;
+}
+
+.d-combobox__divider {
+  height: 1px;
+  padding: 0;
+  background: var(--primary-low);
+}
+
+.d-combobox__empty,
+.d-combobox__min-chars,
+.d-combobox__narrow,
+.d-combobox__limit,
+.d-combobox__error {
+  padding: 0.75em;
+  color: var(--primary-medium);
+}
+
+// Sits below the scrolling listbox, so it needs its own separation from the last row.
+.d-combobox__narrow {
+  border-top: 1px solid var(--primary-low);
+}
+
+// Sits above the scrolling listbox, so it separates from the first row instead.
+.d-combobox__limit {
+  border-bottom: 1px solid var(--primary-low);
+}
+
+.d-combobox__error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.d-combobox__error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+// Pinned below the scrolling option list (a flex:none panel child), separated by a top rule.
+.d-combobox__footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  border-top: 1px solid var(--primary-low);
+}
+
+// Multi-select chips (rendered in the trigger)
+.d-combobox__chips {
+  // No inline-start padding: the chips box sits inside a `form-item-sizing` typeahead
+  // trigger that already provides the field inset, so the box aligns the first chip (or the
+  // inline input) with where a single-select value would sit. Adding $hpad here would
+  // double the inset.
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.d-combobox__chip-list {
+  // The chips need real list semantics (ul/li) so assistive tech announces them as a
+  // collection, but they must also flow inline with the query input, which is a sibling of
+  // the list (an <input> cannot be a child of a <ul>). display:contents drops the <ul>'s own
+  // box so its <li> chips participate directly in the parent flex row alongside the input,
+  // keeping the token-input layout while the list role is preserved in the accessibility tree.
+  display: contents;
+}
+
+.d-combobox__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.15em 0.4em;
+  background: var(--primary-low);
+  color: var(--primary);
+  border-radius: var(--d-input-border-radius, 0.25em);
+
+  &:hover {
+    background: var(--primary-low-mid);
+  }
+
+  // The roving cursor lands on the inner remove button; ring the whole chip so the focus
+  // indicator frames the token being acted on, not just the × control.
+  &:has(.d-combobox__chip-remove:focus-visible) {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 1px;
+  }
+}
+
+.d-combobox__chip-remove {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--primary-medium);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  // The whole-chip ring above is the focus indicator, so suppress the button's own
+  // outline to avoid a second ring around the × while it holds the roving focus.
+  &:focus-visible {
+    outline: none;
+  }
+}

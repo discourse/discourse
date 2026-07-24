@@ -28,6 +28,103 @@ en:
           title: "Menus"
         multi_select:
           title: "Multi select"
+        select:
+          title: "Select"
+          description: "Interactive examples of the current DSelect family for visual, responsive, keyboard, screen-reader, asynchronous-state, and theme testing."
+          mobile_guidance: "Resize to a mobile viewport to verify that the typeahead query input opens inside the modal."
+          default_example: "Default synchronous typeahead"
+          async_button_example: "Async button with loading state"
+          static_example: "Static select"
+          multi_example: "Multi-select"
+          maximum_example: "Multi-select with a maximum"
+          empty_example: "Async empty results"
+          error_example: "First-request error and retry"
+          clearable_example: "Clearable single-select"
+          clearable_multi_example: "Clearable multi-select"
+          icon_example: "Leading icon"
+          caret_example: "Custom caret pair"
+          disabled_example: "Disabled"
+          readonly_example: "Readonly"
+          min_chars_example: "Minimum query length"
+          custom_empty_example: "Custom empty block"
+          custom_empty_body: "Nothing matches. Try another term."
+          placement_example: "Placement and offset"
+          debounce_example: "Debounced input"
+          events_example: "Open and close callbacks"
+          large_list_example: "Large virtualized list"
+          paged_example: "Paginated server source"
+          paged_note: "Pages of 50 from a deliberately slow source that reports a total. Scroll to fetch the next page and listen for the loading announcement while the listbox is busy."
+          paged_cursor_example: "Paginated server source reporting only more-ness"
+          paged_cursor_note: "The same source returning hasMore instead of a total, as a cursor-based API would. Rows report a size of -1 while pages remain, which is the only way a set size stays unknown. Filter to a narrow term so the source runs out within one page, and the size becomes the real count."
+          large_list_note: "5000 options rendered in full. Only the rows in view are mounted; scroll all the way to the last option, and a screen reader still hears the true total of 5000."
+          events_note: "Opened %{opened} times, closed %{closed} times."
+          placeholder: "Choose an option"
+          multi_placeholder: "Choose options"
+          empty_label: "No matching options"
+          request_error: "The first request failed."
+          showcases:
+            title: "Real-world compositions"
+            description: "Composite examples that combine rich presentation, custom data contracts, asynchronous resolution, and less common interaction modes."
+            reviewers:
+              title: "Assign reviewers"
+              placeholder: "Search for reviewers"
+              deleted_name: "Deleted account"
+              deleted_description: "This reviewer is no longer available"
+              deleted_username: "deleted-user"
+            reviewer_roles:
+              design: "Design systems"
+              frontend: "Frontend"
+              accessibility: "Accessibility"
+              security: "Security"
+              performance: "Performance"
+              documentation: "Documentation"
+              unavailable: "Unavailable"
+            categories:
+              title: "Choose a category"
+              placeholder: "Choose a category"
+              uncategorized: "Uncategorized"
+              uncategorized_description: "Topics without a category"
+              topic_count:
+                one: "%{count} topic"
+                other: "%{count} topics"
+            tags:
+              title: "Add or create tags"
+              placeholder: "Choose tags"
+              search_placeholder: "Search or create a tag"
+              create: "Create “%{tag}”"
+            notifications:
+              title: "Choose a notification level"
+              placeholder: "Choose a notification level"
+              muted: "Muted"
+              muted_description: "Never notify me about this topic."
+              normal: "Normal"
+              normal_description: "Notify me only when someone mentions me."
+              tracking: "Tracking"
+              tracking_description: "Show a count of new replies."
+              watching: "Watching"
+              watching_description: "Notify me about every new reply."
+              mentions: "Mentions only"
+              mentions_description: "Unavailable while digest mode is enabled."
+              manage: "Manage notification settings"
+              manage_description: "Open the full notification preferences."
+              event_idle: "The action row has not been used."
+              action_count:
+                one: "The action row was used %{count} time without changing the selection."
+                other: "The action row was used %{count} times without changing the selection."
+            grouped:
+              title: "Group options into sections"
+              placeholder: "Assign to a teammate"
+              teams:
+                design: "Design"
+                engineering: "Engineering"
+                support: "Support"
+            footer:
+              title: "Pinned footer actions"
+              placeholder: "Assign to a teammate"
+              view_all: "View directory"
+              count:
+                one: "%{count} teammate"
+                other: "%{count} teammates"
         toasts:
           title: "Toasts"
         font_scale:
@@ -71,6 +168,8 @@ en:
           title: "Signup CTA"
         topic_timer_info:
           title: "Topic Timers"
+        virtual_list:
+          title: "Virtual List"
         topic_footer_buttons:
           title: "Topic Footer Buttons"
         topic_notifications:
