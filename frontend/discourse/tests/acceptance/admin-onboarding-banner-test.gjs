@@ -28,6 +28,8 @@ const withStep = (id, assert) => {
 };
 
 acceptance("Admin - Onboarding Banner", function (needs) {
+  let loggedEvents = [];
+
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
@@ -40,11 +42,18 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     default_composer_category: 1,
   });
 
+  needs.hooks.beforeEach(() => (loggedEvents = []));
+
   needs.pretender((server, helper) => {
     server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
       return helper.response(200, {
         success: "OK",
       });
+    });
+
+    server.post("/admin/onboarding/events", (request) => {
+      loggedEvents.push(helper.parsePostData(request.requestBody));
+      return helper.response(200, { success: "OK" });
     });
 
     server.post("/invites", () => {
@@ -93,6 +102,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".admin-onboarding-banner .btn-close");
     assert.dom(".admin-onboarding-banner").doesNotExist();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "dismissed" }],
+      "logs a dismissed staff action"
+    );
   });
 
   test("it can complete `start_posting` step with predefined data", async function (assert) {
@@ -223,6 +237,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await click(".modal-close");
 
     step.isChecked();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "invite_collaborators" }],
+      "logs a step_completed staff action once"
+    );
   });
 
   test("it can open `select_theme` step", async function (assert) {
@@ -256,6 +275,10 @@ acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
 
   needs.pretender((server, helper) => {
     server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
+      return helper.response(200, { success: "OK" });
+    });
+
+    server.post("/admin/onboarding/events", () => {
       return helper.response(200, { success: "OK" });
     });
 
