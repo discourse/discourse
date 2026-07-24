@@ -10,6 +10,7 @@ plugins:
       allow_enabled_for:
         - everyone
       requires_plugin_enabled: false
+      permanent_warning: false
   discourse_workflows_ai_authoring_enabled:
     default: false
     client: true
