@@ -5,6 +5,11 @@ module PageObjects
     class AdminDashboardSupport < PageObjects::Components::Base
       SELECTOR = ".db-main [data-section-id='support']"
 
+      def scroll_into_view
+        page.scroll_to(find(SELECTOR), align: :center)
+        self
+      end
+
       def has_section?
         has_css?(SELECTOR)
       end
