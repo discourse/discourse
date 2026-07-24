@@ -26,7 +26,7 @@ describe "Admin dashboard progressive loading" do
       .resize_viewport(height: 600)
       .hold_next_section_request("reports")
       .track_section_requests
-      .visit
+      .visit_while_request_pending
 
     dashboard.wait_for_section_request("highlights").wait_for_section_request("reports")
 
@@ -63,12 +63,14 @@ describe "Admin dashboard progressive loading" do
     dashboard.visit
     expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 30 days")
 
-    dashboard.hold_next_section_request("traffic").select_preset("last_7_days")
+    dashboard.hold_next_section_request("traffic").select_preset_while_request_pending(
+      "last_7_days",
+    )
 
     expect(dashboard).to have_no_section_loading("traffic")
     expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 30 days")
 
-    dashboard.select_preset("last_3_months")
+    dashboard.select_preset_while_request_pending("last_3_months")
 
     expect(dashboard.site_traffic).to have_headline("30 pageviews in the last 3 months")
 
