@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
-  def self.aggregate(start_date:, end_date:, source: BrowserPageviewEvent.rollup_source)
+  def self.aggregate(start_date:, end_date:)
     start_date = start_date.to_date
     end_date = end_date.to_date + 1
 
-    DB.exec(<<~SQL, start_date:, end_date:, source:)
+    DB.exec(<<~SQL, start_date:, end_date:)
       INSERT INTO browser_pageview_referrer_daily_rollups (date, normalized_referrer, count, logged_in_count)
       SELECT
         created_at::date AS date,
@@ -15,7 +15,7 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
       FROM browser_pageview_events
       WHERE created_at >= :start_date
         AND created_at < :end_date
-        AND source = :source
+        AND #{BrowserPageviewEvent.rollup_source_condition}
       GROUP BY date, normalized_referrer
       ON CONFLICT (date, normalized_referrer) DO UPDATE
       SET count = EXCLUDED.count,
@@ -27,13 +27,11 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
     dates = Array(dates).map(&:to_date).uniq
     return if dates.empty?
 
-    source = BrowserPageviewEvent.rollup_source
-
     # The rollups are the permanent record, but their source events are pruned
     # after a retention period (CleanUpBrowserPageviewEvents). Only rebuild
     # dates that still have events so we never delete a rollup we can no longer
     # reconstruct from events.
-    dates = DB.query_single(<<~SQL, dates:, source:)
+    dates = DB.query_single(<<~SQL, dates:)
       SELECT d.date
       FROM unnest(ARRAY[:dates]::date[]) AS d(date)
       WHERE EXISTS (
@@ -41,7 +39,7 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
         FROM browser_pageview_events e
         WHERE e.created_at >= d.date
           AND e.created_at < d.date + 1
-          AND e.source = :source
+          AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
       )
     SQL
     return if dates.empty?
@@ -52,7 +50,7 @@ class BrowserPageviewReferrerDailyRollup < ActiveRecord::Base
         WHERE date IN (:dates)
       SQL
 
-      dates.each { |date| aggregate(start_date: date, end_date: date, source:) }
+      dates.each { |date| aggregate(start_date: date, end_date: date) }
     end
   end
 end
