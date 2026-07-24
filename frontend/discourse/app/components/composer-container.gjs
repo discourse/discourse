@@ -207,7 +207,8 @@ export default class ComposerContainer extends Component {
 
     editor.style.transform = `translateY(${delta}px)`;
     editor.getBoundingClientRect();
-    editor.style.transition = "transform 250ms var(--composer-slide-easing)";
+    editor.style.transition =
+      "transform 250ms var(--composer-slide-easing, ease)";
     editor.style.transform = "";
 
     let settled = false;

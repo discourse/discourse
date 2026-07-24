@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DVirtualHeight from "discourse/components/d-virtual-height";
 import { forceMobile } from "discourse/lib/mobile";
@@ -53,7 +59,7 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
+    const editableEl = find("textarea");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -74,7 +80,7 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
+    const editableEl = find("textarea");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -82,8 +88,9 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     await triggerEvent("#ember-testing .inert-content", "touchstart");
     editableEl.blur();
 
-    // asserted before any timers can run
-    assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+    assert
+      .dom(docEl)
+      .doesNotHaveClass("keyboard-visible", "torn down before any timers run");
   });
 
   test("focus moving to another editable element keeps the keyboard state", async function (assert) {
@@ -96,8 +103,8 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const inputEl = document.querySelector("#ember-testing input");
+    const editableEl = find("textarea");
+    const inputEl = find("input");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -119,8 +126,8 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const target = document.querySelector("#ember-testing .target");
+    const editableEl = find("textarea");
+    const target = find(".target");
 
     let activations = 0;
     target.addEventListener("click", () => activations++);
@@ -150,8 +157,8 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const target = document.querySelector("#ember-testing .target");
+    const editableEl = find("textarea");
+    const target = find(".target");
 
     let activations = 0;
     target.addEventListener("click", () => activations++);
@@ -182,7 +189,7 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
+    const editableEl = find("textarea");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -222,8 +229,8 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const inputEl = document.querySelector("#ember-testing input");
+    const editableEl = find("textarea");
+    const inputEl = find("input");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -246,14 +253,22 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
       assert.dom(docEl).hasClass("keyboard-visible");
       assert.deepEqual(received, [true]);
 
-      // no real keyboard ever reported: the optimistic state reverts
       await settled();
-      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+      assert
+        .dom(docEl)
+        .doesNotHaveClass(
+          "keyboard-visible",
+          "no real keyboard ever reported: the optimistic state reverts"
+        );
       assert.deepEqual(received, [true, false]);
 
-      // and prediction stays disabled until a real keyboard is seen
       editableEl.focus();
-      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+      assert
+        .dom(docEl)
+        .doesNotHaveClass(
+          "keyboard-visible",
+          "prediction stays disabled until a real keyboard is seen"
+        );
     } finally {
       appEvents.off("keyboard-visibility-change", recorder);
     }
@@ -270,8 +285,8 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const inputEl = document.querySelector("#ember-testing input");
+    const editableEl = find("textarea");
+    const inputEl = find("input");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -285,33 +300,36 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     // synchronously so no await runs the pending revert timer early
     inputEl.focus();
     assert.dom(docEl).hasClass("keyboard-visible", "predictive show applies");
-    document
-      .querySelector("#ember-testing .inert-content")
-      .dispatchEvent(new TouchEvent("touchstart", { bubbles: true }));
+    find(".inert-content").dispatchEvent(
+      new Event("touchstart", { bubbles: true })
+    );
     inputEl.blur();
     assert.dom(docEl).doesNotHaveClass("keyboard-visible");
 
-    // the restored snapshot descends from an unconfirmed prediction, so it
-    // must revert too instead of persisting as phantom state
     editableEl.focus();
     assert.dom(docEl).hasClass("keyboard-visible", "snapshot restores");
 
     await settled();
-    assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+    assert
+      .dom(docEl)
+      .doesNotHaveClass(
+        "keyboard-visible",
+        "a snapshot descending from an unconfirmed prediction reverts too"
+      );
   });
 
-  test("focusing a select does not predict a keyboard", async function (assert) {
+  test("focusing a non-keyboard field does not predict a keyboard", async function (assert) {
     await render(
       <template>
         <DVirtualHeight />
         <textarea></textarea>
         <select><option>a</option></select>
+        <input type="checkbox" />
       </template>
     );
 
     const docEl = document.documentElement;
-    const editableEl = document.querySelector("#ember-testing textarea");
-    const selectEl = document.querySelector("#ember-testing select");
+    const editableEl = find("textarea");
 
     editableEl.focus();
     docEl.classList.add("keyboard-visible");
@@ -321,8 +339,15 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     window.visualViewport.dispatchEvent(new Event("resize"));
     await settled();
 
-    selectEl.focus();
-    assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+    find("select").focus();
+    assert
+      .dom(docEl)
+      .doesNotHaveClass("keyboard-visible", "a select opens a picker");
+
+    find("[type=checkbox]").focus();
+    assert
+      .dom(docEl)
+      .doesNotHaveClass("keyboard-visible", "a checkbox summons no keyboard");
   });
 
   test("window blur tears down the keyboard state immediately", async function (assert) {

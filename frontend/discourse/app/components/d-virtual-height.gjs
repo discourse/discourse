@@ -30,9 +30,25 @@ const VIEWPORT_CONFIRM_MS = 800;
 const FOCUS_CAPABLE_SELECTOR =
   "a, button, input, textarea, select, summary, label, [contenteditable], [tabindex], [role='button']";
 
-// select is excluded: focusing one opens a picker, not a keyboard
+// only fields that summon a soft keyboard; the rest (select, checkbox,
+// date, ...) open pickers or nothing
+const KEYBOARD_INPUT_TYPES = [
+  "text",
+  "search",
+  "email",
+  "url",
+  "tel",
+  "password",
+  "number",
+];
+
 function isEditable(el) {
-  return el && (el.matches("input, textarea") || el.isContentEditable);
+  return (
+    el &&
+    (el.isContentEditable ||
+      el.matches("textarea") ||
+      (el.matches("input") && KEYBOARD_INPUT_TYPES.includes(el.type)))
+  );
 }
 
 export default class DVirtualHeight extends Component {
@@ -156,7 +172,6 @@ export default class DVirtualHeight extends Component {
     this.onKeyboardWillHide();
   }
 
-  // once focus settles outside any editable, the keyboard can't stay up
   @bind
   onFocusOut() {
     if (!document.documentElement.classList.contains("keyboard-visible")) {
@@ -337,7 +352,6 @@ export default class DVirtualHeight extends Component {
 
   @bind
   onViewportResize() {
-    // the viewport speaking is the source of truth again
     this.pendingHide = null;
     cancel(this.showConfirmHandler);
 
