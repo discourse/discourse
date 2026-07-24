@@ -3269,7 +3269,7 @@ en:
       clear: "Clear filter"
 
     filter_controls:
-      reset: "Reset filter"
+      reset: "Reset"
       toggle: "Toggle dropdown filters"
 
     d_icon_grid_picker:
