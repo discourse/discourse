@@ -145,6 +145,40 @@ async function performRollup(modules, opts) {
     ),
   ];
 
+  const routeVirtualPrefix = `${basePath}virtual:route:`;
+
+  const routeNameByFile = {};
+  for (const chunk of bundle.output) {
+    if (chunk.facadeModuleId?.startsWith(routeVirtualPrefix)) {
+      routeNameByFile[chunk.fileName] = chunk.facadeModuleId.slice(
+        routeVirtualPrefix.length
+      );
+    }
+  }
+
+  // Ties each lazy route chunk back to the route it was split at, so Ruby can preload it on a
+  // direct navigation to that route's URL. The `import()` calls live in the entrypoint's own
+  // module, which rollup is free to hoist into a shared chunk — so find the chunk that module
+  // actually landed in rather than assuming it is the entry chunk. Doing this per entrypoint
+  // keeps an admin route chunk from being attributed to `main`.
+  function routeBundlesForEntry(entryName) {
+    const entrypointModuleId = `${basePath}virtual:entrypoint:${entryName}`;
+
+    const owner = bundle.output.find((chunk) =>
+      chunk.moduleIds?.includes(entrypointModuleId)
+    );
+
+    const routeBundles = {};
+
+    for (const fileName of owner?.dynamicImports ?? []) {
+      if (routeNameByFile[fileName]) {
+        routeBundles[routeNameByFile[fileName]] = fileName;
+      }
+    }
+
+    return routeBundles;
+  }
+
   const chunks = Object.fromEntries(
     bundle.output
       .filter((c) => c.code)
@@ -159,6 +193,9 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            routeBundles: chunk.isEntry
+              ? routeBundlesForEntry(chunk.name)
+              : undefined,
             externalPluginImports,
           },
         ];

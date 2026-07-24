@@ -4,5 +4,16 @@
       "discourse-lazy-videos",
       "spoiler-alert"
     ]
+  },
+  "frontend": {
+    "staticModules": true,
+    "sharedModules": [
+      "discourse/components/channel-title",
+      "discourse/components/chat-channel",
+      "discourse/models/chat-channel"
+    ],
+    "splitAtRoutes": {
+      "chat/*": "chat.*"
+    }
   }
 }
