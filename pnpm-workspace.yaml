@@ -25,7 +25,7 @@ packages:
 - "plugins/discourse-apple-auth"
 - "plugins/discourse-assign"
 - "plugins/discourse-cakeday"
-- "plugins/discourse-calendar"
+- "plugins/discourse-events"
 - "plugins/discourse-chat-integration"
 - "plugins/discourse-data-explorer"
 - "plugins/discourse-details"
