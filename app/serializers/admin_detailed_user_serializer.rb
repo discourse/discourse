@@ -153,6 +153,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     object.api_keys.active.count
   end
 
+  def include_external_ids?
+    scope.is_admin?
+  end
+
   def external_ids
     external_ids = {}
 
@@ -196,5 +200,9 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def include_upcoming_changes_stats?
     scope.is_staff?
+  end
+
+  def groups
+    scope.user.visible_groups
   end
 end
