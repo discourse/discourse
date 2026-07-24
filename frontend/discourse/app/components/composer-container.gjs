@@ -181,9 +181,8 @@ export default class ComposerContainer extends Component {
     editor.style.marginTop = "";
   }
 
-  // the reflow on blur shifts the layout under the released editor, so the
-  // margin transition would settle it toward its pre-reflow spot; glide it
-  // into the new layout from where the drag left it instead
+  // glide the released editor into the post-reflow layout; the stylesheet
+  // margin transition would target its pre-reflow spot
   #settleDismissedEditor(editor) {
     const draggedTop = editor.getBoundingClientRect().top;
 

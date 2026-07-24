@@ -179,6 +179,36 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     assert.strictEqual(activations, 1, "drags synthesize no click to swallow");
   });
 
+  test("a new touch releases the ghost click suppression", async function (assert) {
+    await render(
+      <template>
+        <DVirtualHeight />
+        <textarea></textarea>
+        <div class="inert-content">plain text</div>
+        <button type="button" class="target">target</button>
+      </template>
+    );
+
+    const docEl = document.documentElement;
+    const editableEl = find("textarea");
+    const target = find(".target");
+
+    let activations = 0;
+    target.addEventListener("click", () => activations++);
+
+    editableEl.focus();
+    docEl.classList.add("keyboard-visible");
+
+    await triggerEvent("#ember-testing .inert-content", "touchstart");
+    editableEl.blur();
+    assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+
+    // a deliberate follow-up tap within the ghost window
+    await triggerEvent("#ember-testing .target", "touchstart");
+    await click("#ember-testing .target");
+    assert.strictEqual(activations, 1, "the new tap's click lands");
+  });
+
   test("refocusing an editable right after a dismiss restores the keyboard state", async function (assert) {
     await render(
       <template>
@@ -216,6 +246,91 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
       assert.deepEqual(received, [true]);
     } finally {
       appEvents.off("keyboard-visibility-change", recorder);
+    }
+  });
+
+  test("a restored keyboard state reverts when the keyboard stays hidden", async function (assert) {
+    await render(
+      <template>
+        <DVirtualHeight />
+        <textarea></textarea>
+        <div class="inert-content">plain text</div>
+      </template>
+    );
+
+    const docEl = document.documentElement;
+    const editableEl = find("textarea");
+
+    editableEl.focus();
+
+    try {
+      // a real keyboard: the viewport reports shorter than the window
+      Object.defineProperty(window.visualViewport, "height", {
+        value: window.innerHeight - 300,
+        configurable: true,
+      });
+      window.visualViewport.dispatchEvent(new Event("resize"));
+      await settled();
+      assert.dom(docEl).hasClass("keyboard-visible", "keyboard is confirmed");
+
+      // the keyboard leaves the geometry, dismissed by an inert tap
+      delete window.visualViewport.height;
+      await triggerEvent("#ember-testing .inert-content", "touchstart");
+      editableEl.blur();
+      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+
+      editableEl.focus();
+      assert.dom(docEl).hasClass("keyboard-visible", "snapshot restores");
+
+      await settled();
+      assert
+        .dom(docEl)
+        .doesNotHaveClass(
+          "keyboard-visible",
+          "a restore the viewport geometry contradicts reverts"
+        );
+    } finally {
+      delete window.visualViewport.height;
+    }
+  });
+
+  test("a restored keyboard state is kept while the viewport still reports one", async function (assert) {
+    await render(
+      <template>
+        <DVirtualHeight />
+        <textarea></textarea>
+        <div class="inert-content">plain text</div>
+      </template>
+    );
+
+    const docEl = document.documentElement;
+    const editableEl = find("textarea");
+
+    editableEl.focus();
+
+    try {
+      Object.defineProperty(window.visualViewport, "height", {
+        value: window.innerHeight - 300,
+        configurable: true,
+      });
+      window.visualViewport.dispatchEvent(new Event("resize"));
+      await settled();
+      assert.dom(docEl).hasClass("keyboard-visible", "keyboard is confirmed");
+
+      // dismissed and refocused mid-hide: the keyboard never actually left
+      await triggerEvent("#ember-testing .inert-content", "touchstart");
+      editableEl.blur();
+      assert.dom(docEl).doesNotHaveClass("keyboard-visible");
+
+      editableEl.focus();
+      assert.dom(docEl).hasClass("keyboard-visible", "snapshot restores");
+
+      await settled();
+      assert
+        .dom(docEl)
+        .hasClass("keyboard-visible", "the geometry-backed restore holds");
+    } finally {
+      delete window.visualViewport.height;
     }
   });
 
@@ -296,8 +411,7 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
     window.visualViewport.dispatchEvent(new Event("resize"));
     await settled();
 
-    // predictive show (unconfirmed), dismissed by an inert tap; dispatched
-    // synchronously so no await runs the pending revert timer early
+    // dispatched synchronously so no await runs the pending revert timer early
     inputEl.focus();
     assert.dom(docEl).hasClass("keyboard-visible", "predictive show applies");
     find(".inert-content").dispatchEvent(
@@ -314,7 +428,7 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
       .dom(docEl)
       .doesNotHaveClass(
         "keyboard-visible",
-        "a snapshot descending from an unconfirmed prediction reverts too"
+        "a restored snapshot the viewport never confirms reverts too"
       );
   });
 

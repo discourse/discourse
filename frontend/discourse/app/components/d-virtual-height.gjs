@@ -8,8 +8,7 @@ import isZoomed from "discourse/lib/zoom-check";
 
 const KEYBOARD_DETECT_THRESHOLD = 150;
 
-// long enough for an async refocus (e.g. a dropdown autofocusing its search
-// input) to land; well under the OS hide animation
+// long enough for an async refocus to land; well under the OS hide animation
 const FOCUS_SETTLE_MS = 100;
 
 // ties a focus loss to the touch that caused it
@@ -21,17 +20,14 @@ const GHOST_TAP_MS = 400;
 // a release this far from the start is a drag, which synthesizes no click
 const TAP_SLOP_PX = 8;
 
-// optimistic keyboard state is provisional this long, until the viewport
-// reports; covers the OS animation, its late report, and the resize debounce
+// covers the OS animation, its late report, and the resize debounce
 const VIEWPORT_CONFIRM_MS = 800;
 
-// a tap on these may hand focus back to an editable, so it can't be
-// trusted as a keyboard dismiss
+// a tap on these may hand focus back to an editable
 const FOCUS_CAPABLE_SELECTOR =
   "a, button, input, textarea, select, summary, label, [contenteditable], [tabindex], [role='button']";
 
-// only fields that summon a soft keyboard; the rest (select, checkbox,
-// date, ...) open pickers or nothing
+// input types that summon a soft keyboard, rather than a picker or nothing
 const KEYBOARD_INPUT_TYPES = [
   "text",
   "search",
@@ -131,6 +127,9 @@ export default class DVirtualHeight extends Component {
 
   @bind
   onTouchStart(event) {
+    // a click that follows a new touch is that tap's own, not a ghost
+    this.clearGhostTapSuppression?.();
+
     const touch = event.touches?.[0];
     this.lastTouch = {
       at: Date.now(),
@@ -183,8 +182,8 @@ export default class DVirtualHeight extends Component {
     if (this.#focusLostToInertTouch()) {
       this.onKeyboardWillHide();
 
-      // a tap's synthesized click would land on controls the reflow just
-      // moved under the finger; drags synthesize none
+      // the tap's synthesized click would land on controls the reflow just
+      // moved; drags synthesize none
       if (!this.lastTouch.moved) {
         this.#suppressGhostTap();
       }
@@ -249,7 +248,6 @@ export default class DVirtualHeight extends Component {
       at: Date.now(),
       composerVh: docEl.style.getPropertyValue("--composer-vh"),
       height: this.previousHeight,
-      confirmed: this.keyboardConfirmed,
     };
 
     this.previousHeight = Math.round(window.innerHeight);
@@ -278,15 +276,8 @@ export default class DVirtualHeight extends Component {
     const pending = this.pendingHide;
     if (pending && Date.now() - pending.at <= VIEWPORT_CONFIRM_MS) {
       this.pendingHide = null;
-      this.keyboardConfirmed = pending.confirmed;
       this.#showKeyboardState(pending.height, pending.composerVh);
-
-      // a snapshot of a keyboard the viewport never confirmed must stay
-      // provisional, or a predict -> dismiss -> refocus loop keeps a
-      // phantom keyboard state alive indefinitely
-      if (!pending.confirmed) {
-        this.#armShowConfirm();
-      }
+      this.#armShowConfirm();
       return;
     }
 
@@ -307,8 +298,6 @@ export default class DVirtualHeight extends Component {
   }
 
   #armShowConfirm() {
-    this.keyboardConfirmed = false;
-
     cancel(this.showConfirmHandler);
     this.showConfirmHandler = discourseLater(
       this,
@@ -318,6 +307,15 @@ export default class DVirtualHeight extends Component {
   }
 
   revertUnconfirmedShow() {
+    // a cancelled hide leaves the viewport unchanged with nothing to
+    // report; check the geometry directly
+    if (
+      window.innerHeight - window.visualViewport.height >
+      KEYBOARD_DETECT_THRESHOLD
+    ) {
+      return;
+    }
+
     this.onKeyboardWillHide();
 
     // no keyboard came (e.g. a hardware keyboard); stop predicting until a
@@ -370,7 +368,6 @@ export default class DVirtualHeight extends Component {
     if (viewportWindowDiff > KEYBOARD_DETECT_THRESHOLD) {
       keyboardVisible = true;
       this.lastKeyboardHeight = this.previousHeight;
-      this.keyboardConfirmed = true;
     }
 
     this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
