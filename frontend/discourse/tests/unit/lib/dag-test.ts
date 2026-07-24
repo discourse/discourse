@@ -413,6 +413,21 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
+  test("resolve() returns a frozen array", function (assert) {
+    const dag = new DAG();
+    dag.add("a", 1);
+    dag.add("b", 2);
+
+    const resolved = dag.resolve();
+
+    assert.true(Object.isFrozen(resolved), "the resolved array is frozen");
+    assert.throws(
+      () => resolved.push({ key: "c", value: 3, position: {} }),
+      /extensible/,
+      "mutating the resolved array throws"
+    );
+  });
+
   /* after locality */
 
   test("single after: item placed immediately after anchor", function (assert) {

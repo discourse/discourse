@@ -250,6 +250,8 @@ export default class DAG<T = unknown> {
     }
 
     this.#dirty = false;
+    // Frozen so callers can't mutate the shared cached array in place.
+    Object.freeze(result);
     this.#cachedResolve = result;
     return result;
   }
