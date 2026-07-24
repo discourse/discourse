@@ -111,6 +111,8 @@ module DiscourseWorkflows
       select
       tags
       textarea
+      time
+      timezone
       url_preview
       user
       user_seen_trigger_options

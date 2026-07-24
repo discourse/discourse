@@ -3,6 +3,178 @@
 module DiscourseAi
   module Translation
     class TopicCandidates < BaseCandidates
+      def self.progress_summary
+        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+        eligible_topics_sql = get.select(:id, :locale).to_sql
+
+        sql = <<~SQL
+          WITH #{DiscourseAi::Translation.supported_locale_bases_cte},
+          eligible_topics AS (
+            SELECT id,
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS source_base
+            FROM (#{eligible_topics_sql}) candidates
+          ),
+          localization_coverage AS (
+            SELECT tl.topic_id,
+                   array_agg(
+                     split_part(
+                       lower(replace(tl.locale, '-', '_')), '_', 1
+                     )
+                   ) AS bases
+            FROM topic_localizations tl
+            GROUP BY tl.topic_id
+          )
+          SELECT
+            COUNT(*)::bigint AS total_count,
+            COUNT(*) FILTER (
+              WHERE et.locale IS NOT NULL
+                AND supported.bases <@ (
+                  COALESCE(lc.bases, ARRAY[]::text[]) || et.source_base
+                )
+            )::bigint AS translated_count,
+            COUNT(*) FILTER (
+              WHERE et.locale IS NULL
+            )::bigint AS needs_language_detection_count
+          FROM eligible_topics et
+          CROSS JOIN supported
+          LEFT JOIN localization_coverage lc ON lc.topic_id = et.id
+        SQL
+
+        result = DB.query(sql, supported_locales:).first
+
+        {
+          target_type: "topic",
+          total_count: result.total_count,
+          translated_count: result.translated_count,
+          needs_language_detection_count: result.needs_language_detection_count,
+        }
+      end
+
+      def self.progress_details
+        main_topics =
+          Topic.where(
+            "topics.created_at > ?",
+            SiteSetting.ai_translation_backfill_max_age_days.days.ago,
+          ).where(deleted_at: nil)
+        main_topics =
+          main_topics.where(
+            "topics.user_id > 0",
+          ) unless SiteSetting.ai_translation_include_bot_content
+
+        category_condition, category_params =
+          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
+        main_topics =
+          main_topics.where(
+            "topics.archetype = :pm OR (#{category_condition})",
+            category_params.merge(pm: Archetype.private_message),
+          )
+
+        case SiteSetting.ai_translation_personal_messages
+        when "group"
+          main_topics =
+            main_topics.where(
+              "topics.archetype != :pm OR topics.id IN (SELECT topic_id FROM topic_allowed_groups)",
+              pm: Archetype.private_message,
+            )
+        when "none", nil
+          main_topics = main_topics.where.not(archetype: Archetype.private_message)
+        end
+
+        banner_topics = Topic.where(archetype: Archetype.banner, deleted_at: nil)
+        eligible_topics_sql =
+          "(#{main_topics.select("topics.id, topics.locale").to_sql}) UNION " \
+            "(#{banner_topics.select("topics.id, topics.locale").to_sql})"
+        supported_locales =
+          ActiveRecord::Base.connection.quote(SiteSetting.content_localization_supported_locales)
+
+        sql = <<~SQL
+          WITH supported AS MATERIALIZED (
+            SELECT DISTINCT ON (
+                     split_part(lower(replace(locale, '-', '_')), '_', 1)
+                   )
+                   locale,
+                   split_part(
+                     lower(replace(locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM unnest(string_to_array(#{supported_locales}, '|'))
+              WITH ORDINALITY configured(locale, position)
+            ORDER BY split_part(
+                       lower(replace(locale, '-', '_')), '_', 1
+                     ),
+                     position
+          ),
+          eligible_topics AS MATERIALIZED (
+            SELECT topics.id,
+                   topics.locale,
+                   split_part(
+                     lower(replace(topics.locale, '-', '_')), '_', 1
+                   ) AS base
+            FROM (#{eligible_topics_sql}) topics
+          ),
+          totals AS (
+            SELECT COUNT(*)::bigint AS total
+            FROM eligible_topics
+          ),
+          source_locale_counts AS (
+            SELECT base,
+                   COUNT(*)::bigint AS count
+            FROM eligible_topics
+            WHERE locale IS NOT NULL
+            GROUP BY base
+          ),
+          translated_counts AS (
+            SELECT supported.base,
+                   COUNT(DISTINCT topics.id)::bigint AS count
+            FROM eligible_topics topics
+            JOIN topic_localizations localization
+              ON localization.topic_id = topics.id
+            JOIN supported
+              ON supported.base = split_part(
+                lower(replace(localization.locale, '-', '_')), '_', 1
+              )
+            WHERE topics.locale IS NOT NULL
+              AND topics.base <> supported.base
+            GROUP BY supported.base
+          )
+          SELECT supported.locale,
+                 COALESCE(translated.count, 0)::bigint AS translated_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0) -
+                   COALESCE(translated.count, 0)
+                 )::bigint AS pending_count,
+                 (
+                   totals.total -
+                   COALESCE(source_locales.count, 0)
+                 )::bigint AS eligible_count
+          FROM supported
+          CROSS JOIN totals
+          LEFT JOIN translated_counts translated
+            ON translated.base = supported.base
+          LEFT JOIN source_locale_counts source_locales
+            ON source_locales.base = supported.base
+          ORDER BY supported.locale
+        SQL
+
+        {
+          target_type: "topic",
+          locales:
+            DB
+              .query(sql)
+              .map do |row|
+                {
+                  locale: row.locale,
+                  translated_count: row.translated_count,
+                  pending_count: row.pending_count,
+                  eligible_count: row.eligible_count,
+                }
+              end,
+        }
+      end
+
       def self.needs_localization(limit:)
         locales = DiscourseAi::Translation.locales
         return [] if locales.blank?

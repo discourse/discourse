@@ -69,6 +69,7 @@ export default class WorkflowCanvas extends Component {
   #pendingInsertHighlights = new Set();
   #syncedNodeClientIds = null;
   #outsideClickAbort = null;
+  #pendingDragPositions = new Map();
   #ZOOM_STEP = 0.1;
   #ZOOM_MIN = 0.25;
   #ZOOM_MAX = 4;
@@ -292,7 +293,11 @@ export default class WorkflowCanvas extends Component {
 
   #reteCallbacks() {
     return {
-      onNodeDragged: (...a) => this.args.onUpdateNodePosition?.(...a),
+      onNodeDragged: (clientId, position) =>
+        this.#pendingDragPositions.set(clientId, {
+          x: position.x,
+          y: position.y,
+        }),
       onNodePicked: () => this.selectionVersion++,
       onCanvasPointerDown: () => {
         this.selectionVersion++;
@@ -302,7 +307,10 @@ export default class WorkflowCanvas extends Component {
       },
       onSelectionDragFinished: (selectionRect) =>
         this.#selectStickyNotesInRect(selectionRect),
-      onNodeDragEnd: () => this.args.onNodeDragEnd?.(),
+      onNodeDragEnd: () => {
+        this.#flushPendingDragPositions();
+        this.args.onNodeDragEnd?.();
+      },
       onConnectionCreated: (...a) => this.args.onCreateConnection?.(...a),
       onNodeDelete: (clientId) => this.args.onRemoveNodes?.([clientId]),
       onManualTrigger: (clientId) => this.#handleManualTrigger(clientId),
@@ -310,6 +318,16 @@ export default class WorkflowCanvas extends Component {
       onNodeDoubleClick: (clientId) => this.args.onEditNode?.(clientId),
       onTransformChanged: (t) => (this.areaTransform = t),
     };
+  }
+
+  #flushPendingDragPositions() {
+    if (this.#pendingDragPositions.size === 0) {
+      return;
+    }
+
+    const positions = this.#pendingDragPositions;
+    this.#pendingDragPositions = new Map();
+    this.args.onUpdateNodePositions?.(positions);
   }
 
   #nodes() {

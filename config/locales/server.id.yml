@@ -1254,7 +1254,6 @@ id:
     content_security_policy_script_src: "Sumber skrip tambahan yang diizinkan. Host dan CDN saat ini disertakan secara bawaan. Lihat <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mengurangi Serangan XSS dengan Kebijakan Keamanan Konten.</a> (CSP). Sumber host lain diabaikan karena strict-dynamic diaktifkan."
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
-    top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
     hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."

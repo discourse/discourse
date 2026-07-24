@@ -67,6 +67,9 @@ en:
     added: "Added %{added}"
     removed: "Removed %{removed}"
 
+  topics_bulk_action:
+    too_many_topic_ids: "You can only perform a bulk action on up to %{limit} topics at once."
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -312,7 +315,7 @@ en:
       exclusion: is reserved
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "has already been used"
+      topic_title_already_used: "This title has already been used by <a href='%{url}'>another topic</a>."
       in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
@@ -1917,6 +1920,7 @@ en:
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     remove_and_replace_uncategorized: "Replaces the special Uncategorized category with a standard category of the same name, and migrates all topics over to it."
+    duplicate_topic_titles: "Whether a topic can be created with a title already used by another topic. When allowed across categories, a title can be reused as long as the topics are in different categories. Topics the author cannot see are never counted as duplicates."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. {{setting:allow_duplicate_topic_titles}} must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1938,7 +1942,7 @@ en:
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "A tl0 or tl1 author can edit their post for (n) minutes after posting. Set to 0 for forever."
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members and category group moderators (for posts in their moderated categories) can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
@@ -2083,7 +2087,8 @@ en:
     suppress_secured_categories_from_admin: "Suppress private topics and PMs in some parts of UI for admins. Content will still be visible in some places. This is not a security feature: admins can always access all content on the site."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order."
+    default_homepage: "The page people land on when they visit the site. When not set, the first item in {{setting:top_menu}} is used. Individuals can override this in their preferences."
+    top_menu: "Determine which navigation items appear on the discovery pages, and in what order."
     custom_homepage_crawler_route: "Route shown to web crawlers when a custom homepage is enabled."
     post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
@@ -2925,7 +2930,6 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in {{setting:content_localization_supported_locales}}."
@@ -3232,6 +3236,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     blank_id_error: "The `external_id` is required but was blank"
+    banned_id_error: "The `external_id` value is not allowed"
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."

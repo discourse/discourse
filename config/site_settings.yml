@@ -315,6 +315,13 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  default_homepage:
+    client: true
+    refresh: true
+    type: enum
+    default: ""
+    enum: "HomepageSiteSetting"
+    area: "interface"
   custom_homepage_crawler_route:
     type: enum
     default: "latest"
@@ -711,6 +718,7 @@ login:
       status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/407068"
+      permanent_warning: false
       allow_enabled_for:
         - everyone
   enable_passkeys:
@@ -1413,12 +1421,17 @@ posting:
         - allow_uncategorized_topics
         - suppress_uncategorized_badge
       learn_more_url: "https://meta.discourse.org/t/-/406373"
+  duplicate_topic_titles:
+    default: "disallowed"
+    type: enum
+    enum: "DuplicateTopicTitlesSiteSetting"
+    area: "posts_and_topics"
   allow_duplicate_topic_titles:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   allow_duplicate_topic_titles_category:
     default: false
-    area: "posts_and_topics"
+    hidden: true
   min_title_similar_length:
     client: true
     default: 10
@@ -1911,11 +1924,6 @@ posting:
     type: integer
     min: 1
     hidden: true
-  rich_editor:
-    client: true
-    default: true
-    hidden: true
-    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
@@ -4680,7 +4688,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   prioritize_recently_used_tags:

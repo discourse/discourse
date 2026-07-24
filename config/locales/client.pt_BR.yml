@@ -2113,7 +2113,7 @@ pt_BR:
         default: "(padrão)"
         any: "qualquer"
       homepage:
-        default: "(padrão)"
+        default: "Padrão"
       password_confirmation:
         title: "Senha outra vez"
       invite_code:
@@ -6278,7 +6278,6 @@ pt_BR:
               posts: "Postagens"
               share: "Compartilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Equipe"
             trust_level_pipeline:
               trust_levels:

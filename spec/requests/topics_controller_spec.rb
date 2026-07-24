@@ -5379,6 +5379,41 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["errors"]).to eq(nil)
       end
 
+      it "deduplicates explicit topic IDs before processing them" do
+        sign_in(trust_level_0)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: Array.new(5, 0),
+              operation: {
+                type: "dismiss_posts",
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"].size).to eq(1)
+        expect(response.parsed_body["topic_ids"].first).to eq(0)
+      end
+
+      it "rejects more than 1,000 unique explicit topic IDs" do
+        sign_in(trust_level_0)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: (1..1_001).to_a,
+              operation: {
+                type: "dismiss_posts",
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("topics_bulk_action.too_many_topic_ids", limit: 1_000),
+        )
+      end
+
       it "can pin multiple topics with pinned_until" do
         sign_in(moderator)
         pinned_until = 3.days.from_now.beginning_of_minute.iso8601
@@ -6373,14 +6408,14 @@ RSpec.describe TopicsController do
 
       context "with some errors" do
         it "returns the error messages" do
-          Fabricate(:topic, title: topic.title, category: category)
+          existing_topic = Fabricate(:topic, title: topic.title, category: category)
 
           sign_in(admin)
           put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
           expect(response.status).to eq(422)
           expect(response.parsed_body["errors"][0]).to end_with(
-            I18n.t("errors.messages.has_already_been_used"),
+            I18n.t("errors.messages.topic_title_already_used", url: existing_topic.url),
           )
         end
       end
@@ -7228,6 +7263,37 @@ RSpec.describe TopicsController do
         expect(response.body).not_to include("<script>alert(1)</script>")
         meta = Nokogiri::HTML5.parse(response.body).at("meta[name='description']")
         expect(meta["content"]).to eq(%(Tom & Jerry's tale… ">alert(1)))
+      end
+    end
+
+    context "with a tagged personal message rendered in the crawler layout" do
+      fab!(:participant) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:pm_tag, :tag)
+      fab!(:pm) { Fabricate(:private_message_topic, user: user, recipient: participant) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm, user: user) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        pm.tags << pm_tag
+      end
+
+      it "does not include the tags in the print view for participants who cannot tag PMs" do
+        sign_in(participant)
+
+        get "#{pm.relative_url}/print"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(pm_tag.name)
+      end
+
+      it "includes the tags in the print view for participants who can tag PMs" do
+        SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+        sign_in(participant)
+
+        get "#{pm.relative_url}/print"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(pm_tag.name)
       end
     end
 

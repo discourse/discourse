@@ -72,6 +72,8 @@ zh_CN:
         title: "数据库架构"
         filter: "搜索…"
         search_tables: "搜索表"
+        hide: "隐藏架构"
+        show: "显示架构"
         sensitive: "此列的内容可能包含特别敏感或私人的信息。使用此列的内容时请谨慎。"
       types:
         bool:
@@ -93,7 +95,10 @@ zh_CN:
       chart:
         form:
           label: "图表类型"
+          line: "折线"
           bar: "条形图"
+          stacked: "堆叠"
+          dual_axis: "双轴"
         tooltip:
           total: "总计： %{count}"
       chart_empty:

@@ -67,6 +67,13 @@ RSpec.describe Admin::EmojiController do
         end
       end
 
+      it "returns a controlled validation error without an upload" do
+        post "/admin/config/emoji.json", params: { name: "test" }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to eq(["File can't be blank"])
+      end
+
       context "when emoji name already exists" do
         it "should publish the right error" do
           CustomEmoji.create!(name: "test", upload: upload)
@@ -615,6 +622,9 @@ RSpec.describe Admin::EmojiController do
         expect do
           delete "/admin/config/emoji/#{custom_emoji.name}.json", params: { name: "test" }
         end.to change { CustomEmoji.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
       end
 
       it "should log the action" do

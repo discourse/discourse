@@ -294,7 +294,7 @@ ar:
   discourse_workflows:
     chat_approval:
       default_approve_label: "الموافقة"
-      default_deny_label: "رفض"
+      default_deny_label: "الرفض"
   reviewable_score_types:
     needs_review:
       title: "بحاجة إلى المراجعة"

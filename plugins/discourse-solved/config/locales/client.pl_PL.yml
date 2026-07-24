@@ -20,8 +20,7 @@ pl_PL:
           support:
             title: "Wsparcie"
             fetch_error: "Nie udało się załadować danych pomocniczych."
-            filter:
-              all_categories: "Wszystkie kategorie"
+            save_error: "Nie udało się zapisać wyboru na następny raz."
             headline:
               healthy:
                 title: "Społeczność rozwiązuje swoje problemy sama."

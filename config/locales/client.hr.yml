@@ -2013,7 +2013,7 @@ hr:
         default: "(zadano)"
         any: "bilo koji"
       homepage:
-        default: "(zadano)"
+        default: "Zadano"
       password_confirmation:
         title: "Ponoviti zaporku"
       invite_code:
@@ -5878,7 +5878,6 @@ hr:
               posts: "Postovi"
               share: "Podijeli"
             whos_posting:
-              all_categories: "Sve kategorije"
               staff: "Osoblje"
             trust_level_pipeline:
               trust_levels:

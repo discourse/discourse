@@ -51,6 +51,9 @@ zh_CN:
     use_local_event_date: "在话题标题后使用本地日期而不是相对时间。"
     discourse_post_event_allowed_on_groups: "允许创建活动的群组。"
     discourse_post_event_allowed_custom_fields: "允许让每个活动设置自定义字段的值。"
+    discourse_post_event_allowed_custom_fields_invalid: "以下自定义字段名称无效：%{names}。名称必须以字母或数字开头和结尾，并使用单个点号、连字符或下划线作为分隔符（例如：dress_code、live-stream、q.and.a）。"
+    discourse_post_event_allowed_custom_fields_collision: "在对点号、连字符和字母大小写进行标准化处理后，这些自定义字段名称会解析为相同的名称：%{names}。每个自定义字段都必须唯一。"
+    discourse_post_event_allowed_custom_fields_reserved: "这些自定义字段名称被内置事件选项（例如：名称、URL、状态、位置）保留：%{names}。请选择其他名称。"
     discourse_post_event_edit_notifications_time_extension: "活动结束后延长一段时间（以分钟为单位），让“参加”的受邀者仍可以收到原始帖子的编辑通知。"
     holiday_calendar_topic_id: "管理人员假期/缺勤日历的话题 ID。"
     holiday_status_emoji: 给节日状态设置表情图片。

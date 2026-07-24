@@ -355,7 +355,7 @@ class TopicView
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
         title += " - #{@topic.category.name}"
-      elsif SiteSetting.tagging_enabled && visible_tags.exists?
+      elsif visible_tags.exists?
         title +=
           " - #{visible_tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
@@ -927,6 +927,10 @@ class TopicView
       .compact
   end
 
+  def visible_tags
+    @visible_tags ||= guardian.can_see_tags?(topic) ? topic.tags.visible(guardian) : Tag.none
+  end
+
   protected
 
   def read_posts_set
@@ -1205,9 +1209,5 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
-  end
-
-  def visible_tags
-    @visible_tags ||= topic.tags.visible(guardian)
   end
 end

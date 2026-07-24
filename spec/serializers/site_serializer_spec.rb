@@ -16,6 +16,13 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#homepage_choices" do
+    it "exposes the eligible homepage choices" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:homepage_choices]).to eq(TopMenu.homepage_choices)
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true

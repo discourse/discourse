@@ -59,6 +59,7 @@ en:
         add_group: "Add user or group"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
+        disallowed: "Disallowed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -2298,7 +2299,7 @@ en:
         any: "any"
 
       homepage:
-        default: "(default)"
+        default: "Default"
 
       password_confirmation:
         title: "Password Again"
@@ -8197,6 +8198,14 @@ en:
         header_dropdown: "Header Dropdown"
         legacy: "Legacy"
 
+      homepage:
+        top_menu_default: "First item in top menu"
+
+      duplicate_topic_titles:
+        disallowed: "Disallowed"
+        allowed_across_categories: "Allowed across categories"
+        allowed: "Allowed"
+
       backups:
         title: "Backups"
         files_title: "Backup files"
@@ -8368,6 +8377,8 @@ en:
           default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
+          maximize_editor: "Maximize editor"
+          minimize_editor: "Minimize editor"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
@@ -9897,6 +9908,9 @@ en:
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
+        all_groups: "All groups"
+        filter_placeholder: "Search emojis by name"
+        no_results: "No emojis found."
         created_by: "Created By"
         image: "Image"
         alt: "custom emoji preview"

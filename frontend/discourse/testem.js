@@ -72,17 +72,12 @@ class Reporter extends TapReporter {
         this.strictSpecCompliance
       );
 
-      const string = this.reformatTapLine(rawString, prefix);
+      let string = this.reformatTapLine(rawString, prefix);
 
       const color = this.colorForResult(result);
-      const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
+      string = string.replace(/\n\s+---\n\s+browser\slog:[\S\s]+/, "\n");
 
-      if (matches) {
-        this.out.write(color(matches[1]));
-        this.out.write(colors.cyan(matches[2]));
-      } else {
-        this.out.write(color(string));
-      }
+      this.out.write(color(string));
     }
   }
 
@@ -275,6 +270,7 @@ module.exports = {
       ? parseInt(process.env.QUNIT_BROWSER_START_TIMEOUT, 10)
       : 120,
   browser_disconnect_timeout: 30,
+  chrome_stderr_info_only: true,
   browser_args: {
     Chromium: [
       // --no-sandbox is needed when running Chromium inside a container or when explicitly requested

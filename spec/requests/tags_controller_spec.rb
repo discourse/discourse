@@ -50,6 +50,12 @@ RSpec.describe TagsController do
         expect(serialized_tag["count"]).to eq(1)
         expect(serialized_tag["pm_count"]).to eq(nil)
         expect(serialized_tag["pm_only"]).to eq(false)
+
+        serialized_tag = tags.find { |t| t["name"] == pm_only_tag.name }
+
+        expect(serialized_tag["count"]).to eq(0)
+        expect(serialized_tag["pm_count"]).to eq(nil)
+        expect(serialized_tag["pm_only"]).to eq(true)
       end
 
       it "does not include pm_count attribute when user cannot tag PM topics even if display_personal_messages_tag_counts site setting has been enabled" do
@@ -157,12 +163,25 @@ RSpec.describe TagsController do
       end
 
       context "when disabled" do
-        before do
-          SiteSetting.pm_tags_allowed_for_groups = ""
+        before { SiteSetting.pm_tags_allowed_for_groups = "" }
+
+        it "shows tags only used in personal messages to admins" do
           sign_in(admin)
+
+          get "/tags.json"
+
+          expect(response.parsed_body["tags"]).to match(
+            [
+              include(name: test_tag.name, id: test_tag.id, pm_only: true),
+              include(name: topic_tag.name, id: topic_tag.id),
+              include(name: pm_only_tag.name, id: pm_only_tag.id, pm_only: true),
+            ],
+          )
         end
 
-        it "hides pm tags" do
+        it "hides tags only used in personal messages from regular users" do
+          sign_in(user)
+
           get "/tags.json"
 
           expect(response.parsed_body["tags"]).to match(
@@ -175,6 +194,31 @@ RSpec.describe TagsController do
     context "with tags_listed_by_group enabled" do
       before { SiteSetting.tags_listed_by_group = true }
       include_examples "retrieves the right tags"
+
+      it "hides tags only used in personal messages from grouped lists for regular users" do
+        Fabricate(:tag_group, tags: [topic_tag, pm_only_tag])
+
+        sign_in(user)
+
+        get "/tags.json"
+
+        group = response.parsed_body.dig("extras", "tag_groups").first
+        expect(group["tags"].map { |tag| tag["name"] }).to contain_exactly(topic_tag.name)
+      end
+
+      it "shows tags only used in personal messages in grouped lists to admins" do
+        Fabricate(:tag_group, tags: [topic_tag, pm_only_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        group = response.parsed_body.dig("extras", "tag_groups").first
+        expect(group["tags"].map { |tag| tag["name"] }).to contain_exactly(
+          topic_tag.name,
+          pm_only_tag.name,
+        )
+      end
 
       it "works for tags in groups" do
         _tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
@@ -240,6 +284,31 @@ RSpec.describe TagsController do
       before { SiteSetting.tags_listed_by_group = false }
       include_examples "retrieves the right tags"
 
+      it "hides tags only used in personal messages from category tag lists for regular users" do
+        category.update!(tags: [topic_tag, pm_only_tag])
+
+        sign_in(user)
+
+        get "/tags.json"
+
+        category_tags = response.parsed_body.dig("extras", "categories").first
+        expect(category_tags["tags"].map { |tag| tag["name"] }).to contain_exactly(topic_tag.name)
+      end
+
+      it "shows tags only used in personal messages in category tag lists to admins" do
+        category.update!(tags: [topic_tag, pm_only_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        category_tags = response.parsed_body.dig("extras", "categories").first
+        expect(category_tags["tags"].map { |tag| tag["name"] }).to contain_exactly(
+          topic_tag.name,
+          pm_only_tag.name,
+        )
+      end
+
       it "returns the right tags and categories tags for admin user" do
         category.update!(tags: [test_tag])
 
@@ -251,7 +320,7 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        expect(tags.length).to eq(2)
+        expect(tags.length).to eq(3)
 
         expect(tags[0]["name"]).to eq(test_tag.name)
         expect(tags[0]["text"]).to eq(test_tag.name)
@@ -261,6 +330,9 @@ RSpec.describe TagsController do
         expect(tags[0]["target_tag"]).to eq(nil)
 
         expect(tags[1]["name"]).to eq(topic_tag.name)
+
+        expect(tags[2]["name"]).to eq(pm_only_tag.name)
+        expect(tags[2]["pm_only"]).to eq(true)
 
         categories = response.parsed_body["extras"]["categories"]
 
@@ -285,8 +357,10 @@ RSpec.describe TagsController do
 
         tags = response.parsed_body["tags"]
 
-        expect(tags.length).to eq(2)
-        expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+        expect(tags.length).to eq(3)
+        expect(tags.map { |tag| tag["name"] }).to eq(
+          [test_tag.name, topic_tag.name, pm_only_tag.name],
+        )
 
         initial_sql_queries_count =
           track_sql_queries do
@@ -296,8 +370,10 @@ RSpec.describe TagsController do
 
             tags = response.parsed_body["tags"]
 
-            expect(tags.length).to eq(2)
-            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+            expect(tags.length).to eq(3)
+            expect(tags.map { |tag| tag["name"] }).to eq(
+              [test_tag.name, topic_tag.name, pm_only_tag.name],
+            )
 
             categories = response.parsed_body["extras"]["categories"]
 
@@ -316,8 +392,10 @@ RSpec.describe TagsController do
 
             tags = response.parsed_body["tags"]
 
-            expect(tags.length).to eq(2)
-            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+            expect(tags.length).to eq(3)
+            expect(tags.map { |tag| tag["name"] }).to eq(
+              [test_tag.name, topic_tag.name, pm_only_tag.name],
+            )
 
             categories = response.parsed_body["extras"]["categories"]
 
@@ -705,6 +783,15 @@ RSpec.describe TagsController do
 
     it "can return a tag's synonyms" do
       synonym
+      get "/tag/#{tag.name}/info.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.dig("tag_info", "synonyms").map { |t| t["text"] }).to eq(
+        [synonym.name],
+      )
+    end
+
+    it "returns synonyms only used in personal messages to users who cannot tag PMs" do
+      synonym.update!(pm_topic_count: 1)
       get "/tag/#{tag.name}/info.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body.dig("tag_info", "synonyms").map { |t| t["text"] }).to eq(

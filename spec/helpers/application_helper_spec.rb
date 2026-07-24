@@ -224,13 +224,13 @@ RSpec.describe ApplicationHelper do
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
       helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
@@ -569,8 +569,11 @@ RSpec.describe ApplicationHelper do
           login_method: nil,
         )
 
-      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
-      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
+      @application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
+      expect(helper.preloaded_json).to include(
+        %{"test":"[\\"\\u003c\\\\/script\\u003e\\u003cscript\\u003e \uFFFD\\"]"},
+      )
+      expect(helper.preloaded_json).not_to include("</script>")
     end
   end
 

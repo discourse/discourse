@@ -1439,7 +1439,7 @@ sl:
         default: "(privzeto)"
         any: "katerokoli"
       homepage:
-        default: "(privzeto)"
+        default: "Privzeto"
       password_confirmation:
         title: "Geslo - ponovno"
       invite_code:
@@ -3979,7 +3979,6 @@ sl:
               posts: "Prispevki"
               share: "Deli"
             whos_posting:
-              all_categories: "Vse kategorije"
               staff: "Osebje"
             trust_level_pipeline:
               trust_levels:

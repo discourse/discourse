@@ -18,18 +18,22 @@ RSpec.describe Chat::CreateCategoryChannel do
     let(:params) { { category_id:, name: name } }
     let(:dependencies) { { guardian: } }
 
-    context "when public channels are disabled" do
-      fab!(:current_user, :user)
-
-      before { SiteSetting.enable_public_channels = false }
-
-      it { is_expected.to fail_a_policy(:public_channels_enabled) }
-    end
-
     context "when the current user cannot make a channel" do
       fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_create_channel) }
+
+      context "when public channels are also disabled" do
+        before { SiteSetting.enable_public_channels = false }
+
+        it { is_expected.to fail_a_policy(:can_create_channel) }
+      end
+    end
+
+    context "when public channels are disabled" do
+      before { SiteSetting.enable_public_channels = false }
+
+      it { is_expected.to fail_a_policy(:public_channels_enabled) }
     end
 
     context "when the current user can make a channel" do

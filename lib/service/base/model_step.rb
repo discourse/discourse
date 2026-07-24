@@ -15,9 +15,10 @@ module Service
       end
 
       def run_step
-        context[name] = super
-        raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
-        if context[name].try(:has_changes_to_save?) && context[name].try(:invalid?)
+        model = context[name] = super
+        raise NotFound if !optional && (!model || model.try(:empty?))
+
+        if model.try(:has_changes_to_save?) && (model.errors.present? || model.invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end

@@ -3,7 +3,7 @@
 class Stylesheet::Manager::Builder
   attr_reader :theme
 
-  def initialize(target: :desktop, theme: nil, color_scheme: nil, manager:)
+  def initialize(target:, theme: nil, color_scheme: nil, manager:)
     @target = target
     @theme = theme
     @color_scheme = color_scheme

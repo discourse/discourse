@@ -2109,7 +2109,7 @@ tr_TR:
         default: "(varsayılan)"
         any: "herhangi"
       homepage:
-        default: "(varsayılan)"
+        default: "Varsayılan"
       password_confirmation:
         title: "Şifreyi Tekrarlayın"
       invite_code:
@@ -6412,7 +6412,6 @@ tr_TR:
               posts: "Gönderi"
               share: "Paylaş"
             whos_posting:
-              all_categories: "Tüm kategoriler"
               staff: "Personel"
             trust_level_pipeline:
               trust_levels:

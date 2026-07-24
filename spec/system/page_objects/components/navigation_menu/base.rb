@@ -136,15 +136,6 @@ module PageObjects
           expect(tag_section_links.map(&:text)).to eq(tag_names)
         end
 
-        def has_tag_section_link_with_title?(tag, title)
-          section_link =
-            find(
-              ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name='#{tag.name}'] .sidebar-section-link",
-            )
-
-          expect(section_link["title"]).to eq(title)
-        end
-
         def find_section_link(name)
           find(".#{SIDEBAR_SECTION_LINK_SELECTOR}[data-link-name='#{name}']")
         end

@@ -84,7 +84,6 @@ describe "Image Carousel" do
   end
 
   it "allows changing modes in the rich text editor", js: true do
-    SiteSetting.rich_editor = true
     SiteSetting.post_menu_hidden_items = ""
     current_user.user_option.update!(composition_mode: 1)
 

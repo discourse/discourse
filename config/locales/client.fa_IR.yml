@@ -1777,7 +1777,7 @@ fa_IR:
         default: "(پیش‌فرض)"
         any: "هر"
       homepage:
-        default: "(پیش‌فرض)"
+        default: "پیش‌فرض"
       password_confirmation:
         title: "رمز عبور را مجدد وارد نمایید"
       invite_code:
@@ -5193,7 +5193,6 @@ fa_IR:
               posts: "فرسته‌ها"
               share: "اشتراک‌گذاری"
             whos_posting:
-              all_categories: "همه‌ی دسته‌بندی‌ها"
               staff: "همکاران"
             trust_level_pipeline:
               trust_levels:

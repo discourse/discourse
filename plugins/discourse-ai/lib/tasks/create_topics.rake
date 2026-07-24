@@ -20,7 +20,7 @@ namespace :ai do
       creator = TopicGenerator.new(title)
       first_post = creator.get_first_post
       replies_count = rand(4..10)
-      replies = creator.get_replies(replies_count)
+      replies = creator.get_replies(replies_count, first_post)
 
       post = create_topic(category, first_post, title, users)
       replies.each_with_index { |reply, i| create_post(users[i + 1], post.topic_id, reply) }
@@ -48,38 +48,88 @@ namespace :ai do
   end
 
   class TopicGenerator
+    FIRST_POST_RESPONSE_FORMAT = {
+      type: "json_schema",
+      json_schema: {
+        name: "topic_generator_first_post",
+        schema: {
+          type: "object",
+          properties: {
+            first_post: {
+              type: "string",
+            },
+          },
+          required: %w[first_post],
+          additionalProperties: false,
+        },
+        strict: true,
+      },
+    }.freeze
+
+    REPLIES_RESPONSE_FORMAT = {
+      type: "json_schema",
+      json_schema: {
+        name: "topic_generator_replies",
+        schema: {
+          type: "object",
+          properties: {
+            replies: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+            },
+          },
+          required: %w[replies],
+          additionalProperties: false,
+        },
+        strict: true,
+      },
+    }.freeze
+
     def initialize(title)
       @title = title
     end
 
     def get_first_post
-      TopicGenerator.generate(<<~PROMPT)
-        Write and opening topic about title: #{@title}.
+      prompt = <<~PROMPT
+        Write and opening topic about title: #{@title}. The title is likely regarding a fictional piece of work.
         - content must be in the same language as title
         - content in markdown
         - content should exclude the title
         - maximum of 200 words
       PROMPT
+
+      response = TopicGenerator.generate(prompt, response_format: FIRST_POST_RESPONSE_FORMAT)
+
+      TopicGenerator.structured_value(response, :first_post).to_s
     end
 
-    def get_replies(count)
-      JSON.parse(
-        TopicGenerator.generate(<<~PROMPT).gsub(/```json\n?|\```/, "").gsub(/,\n\n/, ",\n").strip,
-                Write #{count} replies to a topic with title #{@title}.
-                - respond in an array of strings within double quotes ["", "", ""]
-                - each with a maximum of 100 words
-                - keep to same language of title
-                - each reply may contain markdown to bold, italicize, link, or bullet point
-                - do not return anything else other than the array
-                - the last item in the array should not have a trailing comma
-                - Example return value ["I agree with you. So and so...", "It is fun ... etc"]
-              PROMPT
-      )
+    def get_replies(count, first_post)
+      prompt = <<~PROMPT
+        Write #{count} replies to a topic with title #{@title}. The title is likely regarding a fictional piece of work.
+
+        ________________
+
+        The topic's first post has this content:
+        #{first_post}
+
+        ________________
+
+        The replies
+        - must each have a maximum of 100 words
+        - keep to same language of title
+        - may contain markdown to bold, italicize, link, or bullet point
+      PROMPT
+
+      response = TopicGenerator.generate(prompt, response_format: REPLIES_RESPONSE_FORMAT)
+
+      TopicGenerator.structured_replies(response).filter_map { |reply| reply.to_s.presence }
     end
 
     private
 
-    def self.generate(prompt)
+    def self.generate(prompt, response_format:)
       return "" if prompt.blank?
 
       prompt =
@@ -92,10 +142,36 @@ namespace :ai do
         prompt,
         user: Discourse.system_user,
         feature_name: "topic-generator",
+        response_format: response_format,
       )
     rescue => e
       Rails.logger.error("AI TopicGenerator Error: #{e.message}")
       ""
+    end
+
+    def self.structured_value(response, key)
+      return response.read_buffered_property(key) if response.respond_to?(:read_buffered_property)
+
+      parsed_response =
+        response.is_a?(Hash) || response.is_a?(Array) ? response : JSON.parse(response)
+
+      if parsed_response.is_a?(Hash)
+        parsed_response[key.to_s] || parsed_response[key]
+      else
+        parsed_response
+      end
+    rescue JSON::ParserError
+      response
+    end
+
+    def self.structured_replies(response)
+      replies = structured_value(response, :replies)
+      return replies if replies.is_a?(Array)
+
+      parsed_replies = JSON.parse(replies) if replies.is_a?(String)
+      parsed_replies.is_a?(Array) ? parsed_replies : Array(replies)
+    rescue JSON::ParserError
+      Array(replies)
     end
   end
 end

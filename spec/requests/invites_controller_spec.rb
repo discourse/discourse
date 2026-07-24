@@ -25,8 +25,8 @@ RSpec.describe InvitesController do
         ),
       )
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq("")
         expect(invite_info["email"]).to eq("i*****g@a***********e.ooo")
@@ -38,8 +38,8 @@ RSpec.describe InvitesController do
       expect(response.status).to eq(200)
       expect(response.body).to include(invite.email)
 
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq("") # Default is that we don't use emails to suggest usernames
         expect(invite_info["email"]).to eq(invite.email)
@@ -65,8 +65,8 @@ RSpec.describe InvitesController do
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).not_to eq(staged_user.username)
         expect(invite_info["user_fields"]).to be_nil
@@ -82,8 +82,8 @@ RSpec.describe InvitesController do
       server_session[:authentication] = { email: invite.email, email_valid: false }
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email"]).to eq(invite.email)
         expect(invite_info["user_fields"]).to be_nil
@@ -99,8 +99,8 @@ RSpec.describe InvitesController do
       server_session[:authentication] = { email: invite.email, email_valid: true }
 
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq(staged_user.username)
         expect(invite_info["user_fields"][user_field.id.to_s]).to eq("some value")
@@ -114,8 +114,8 @@ RSpec.describe InvitesController do
       staged_user.save_custom_fields
 
       get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["username"]).to eq(staged_user.username)
         expect(invite_info["user_fields"][user_field.id.to_s]).to eq("some value")
@@ -124,15 +124,15 @@ RSpec.describe InvitesController do
 
     it "includes token validity boolean" do
       get "/invites/#{invite.invite_key}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email_verified_by_link"]).to eq(false)
       end
 
       get "/invites/#{invite.invite_key}?t=#{invite.email_token}"
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        json = JSON.parse(element.current_scope.text)
         invite_info = JSON.parse(json["invite_info"])
         expect(invite_info["email_verified_by_link"]).to eq(true)
       end
@@ -213,8 +213,8 @@ RSpec.describe InvitesController do
           ),
         )
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["username"]).to eq(user.username)
           expect(invite_info["email"]).to eq(user.email)
@@ -238,8 +238,8 @@ RSpec.describe InvitesController do
           ),
         )
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["username"]).to eq(user.username)
           expect(invite_info["email"]).to eq(user.email)
@@ -255,8 +255,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
           expect(invite_info["existing_user_can_redeem_error"]).to eq(
@@ -271,8 +271,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
         end
@@ -285,8 +285,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_id"]).to eq(user.id)
           expect(invite_info["existing_user_can_redeem"]).to eq(false)
@@ -302,8 +302,8 @@ RSpec.describe InvitesController do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           invite_info = JSON.parse(json["invite_info"])
           expect(invite_info["existing_user_id"]).to eq(user.id)
           expect(invite_info["existing_user_can_redeem"]).to eq(true)

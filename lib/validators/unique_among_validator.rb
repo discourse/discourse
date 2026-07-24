@@ -1,27 +1,18 @@
 # frozen_string_literal: true
 
-class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
+class UniqueAmongValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    old_errors = []
-    record.errors.each { |error| old_errors << error if error.attribute == attribute }
+    return if !duplicates(record.class, record, attribute, value).exists?
 
-    # look for any duplicates at all
-    super
+    dupe = duplicates(options[:collection].call(record), record, attribute, value).first
+    record.errors.add(:base, options[:message], url: dupe.url) if dupe
+  end
 
-    new_errors = []
-    record.errors.each { |error| new_errors << error if error.attribute == attribute }
+  private
 
-    # do nothing further unless there were some duplicates.
-    if new_errors.size - old_errors.size != 0
-      # now look only in the collection we care about.
-      dupes = options[:collection].call(record).where("lower(#{attribute}) = ?", value.downcase)
-      dupes = dupes.where.not(id: record.id) if record.persisted?
-
-      # pop off the error, if it was a false positive
-      if !dupes.exists?
-        record.errors.delete(attribute)
-        old_errors.each { |error| record.errors.add(error.attribute, error.type, **error.options) }
-      end
-    end
+  def duplicates(scope, record, attribute, value)
+    scope = scope.where("lower(#{attribute}) = ?", value.downcase)
+    scope = scope.where.not(id: record.id) if record.persisted?
+    scope
   end
 end

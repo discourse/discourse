@@ -926,7 +926,7 @@ ar:
         channel_id: "القناة"
       send_chat_message:
         channel_id: "القناة"
-        message: "رسالة"
+        message: "الرسالة"
       chat_approval:
-        message: "رسالة"
+        message: "الرسالة"
         channel_id: "القناة"

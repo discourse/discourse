@@ -1297,7 +1297,7 @@ id:
         default: "(standar)"
         any: "apa saja"
       homepage:
-        default: "(bawaan)"
+        default: "Asal"
       password_confirmation:
         title: "Kata Sandi Lagi"
       auth_tokens:
@@ -2530,7 +2530,6 @@ id:
               topics: "Topik"
               posts: "Pos"
             whos_posting:
-              all_categories: "Semua kategori"
               staff: "Staf"
             trust_level_pipeline:
               trust_levels:

@@ -8,6 +8,8 @@ require "http_user_agent_encoder"
 
 module Middleware
   class AnonymousCache
+    CACHEABLE_ENV = "discourse.anonymous_cache.cacheable"
+
     def self.cache_key_segments
       @@cache_key_segments ||= {
         m: "key_is_mobile?",
@@ -361,6 +363,7 @@ module Middleware
     PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
 
     def call(env)
+      env[CACHEABLE_ENV] = false
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
@@ -400,8 +403,9 @@ module Middleware
         end
       end
 
+      cacheable = env[CACHEABLE_ENV] = helper.cacheable?
       result =
-        if helper.cacheable?
+        if cacheable
           helper.cached(env) || helper.cache(@app.call(env), env)
         else
           @app.call(env)
