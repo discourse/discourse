@@ -63,16 +63,6 @@ interface DAGVertex<T> {
   insertionIdx: number;
 }
 
-/**
- * Module-level cache for sort results. Keyed by a fingerprint of the
- * resolved graph (vertices, insertion order, and edges), stores the
- * sorted key order. Different DAG instances with the same structure
- * share the cached order, which matters for hot paths like the post
- * menu where the same button set is resolved per post.
- */
-const sortCache = new Map<string, string[]>();
-const SORT_CACHE_MAX = 50;
-
 const WAITING = 0;
 const READY_QUEUE = 1;
 const READY_STACK = 2;
@@ -237,12 +227,9 @@ export default class DAG<T = unknown> {
    * pairs is determined by the before/after rules using a
    * locality-preserving topological sort.
    *
-   * Results are cached at two levels:
-   * 1. Instance level: repeated resolve() calls on an unmutated DAG
-   *    return the same result (helps header icons/buttons singletons).
-   * 2. Module level: different DAG instances with the same keys and
-   *    constraints share the cached sort order (helps post menu where
-   *    a new DAG is created per post with the same button set).
+   * The result is memoized per instance: repeated resolve() calls on an
+   * unmutated DAG return the same array (helps the header icon/button
+   * singletons that re-resolve on every render).
    *
    * @returns An array of key/value/position objects.
    */
@@ -252,7 +239,7 @@ export default class DAG<T = unknown> {
       return this.#cachedResolve;
     }
 
-    const sortedKeys = this.#resolveKeyOrder();
+    const sortedKeys = this.#sort();
     const result: DAGResolvedEntry<T>[] = [];
 
     for (let i = 0; i < sortedKeys.length; i++) {
@@ -535,43 +522,6 @@ export default class DAG<T = unknown> {
   }
 
   /* Sorting */
-
-  /**
-   * Returns the sorted key order, using the module-level content cache
-   * when possible. The cache is keyed by a fingerprint of the resolved
-   * graph (values are excluded since they don't affect sort order).
-   */
-  #resolveKeyOrder(): string[] {
-    const fingerprint = this.#contentFingerprint();
-    const cached = sortCache.get(fingerprint);
-    if (cached) {
-      sortCache.delete(fingerprint);
-      sortCache.set(fingerprint, cached);
-      return cached;
-    }
-
-    const sortedKeys = this.#sort();
-
-    if (sortCache.size >= SORT_CACHE_MAX) {
-      sortCache.delete(sortCache.keys().next().value);
-    }
-    sortCache.set(fingerprint, sortedKeys);
-
-    return sortedKeys;
-  }
-
-  #contentFingerprint(): string {
-    // Keys the shared cache on everything #sort() consumes: vertices, insertion order, and resolved edges.
-    let fp = "";
-    for (const [key, v] of this.#vertices) {
-      fp += key + "\x1D" + v.insertionIdx + "\x1D";
-      if (v.outEdges.size > 0) {
-        fp += Array.from(v.outEdges).sort().join("\x1F");
-      }
-      fp += "\n";
-    }
-    return fp;
-  }
 
   /**
    * Locality-preserving topological sort using modified Kahn's algorithm.

@@ -381,56 +381,33 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.notStrictEqual(first, third, "new reference after mutation");
   });
 
-  test("module-level content cache: identical DAGs share sort order", function (assert) {
-    // Two separate DAG instances with the same keys and constraints
-    // should produce the same resolved order without re-sorting.
-    function buildDag() {
-      const dag = new DAG();
-      dag.add("x", 1);
-      dag.add("y", 2, { after: "x" });
-      dag.add("z", 3, { before: "x" });
-      return dag;
-    }
-
-    const dag1 = buildDag();
-    const dag2 = buildDag();
-
-    assert.deepEqual(
-      dag1.resolve().map((e) => e.key),
-      dag2.resolve().map((e) => e.key),
-      "identical structure produces identical order"
-    );
-  });
-
-  test("module-level content cache: fallback order is not shared across differing options", function (assert) {
-    // The cache fingerprint is built from the items' requested before/after
-    // only. When a cycle triggers the fallback path, the resolved order also
-    // depends on defaultPosition (and throwErrorOnCycle), so two DAGs with the
-    // same items but a different defaultPosition must NOT share a sort.
+  test("cycle fallback uses each DAG's own defaultPosition", function (assert) {
+    // Two DAGs with the same items but a different defaultPosition resolve
+    // the same cycle to different orders, each using its own fallback.
     const items: Array<[string, string, DAGPosition]> = [
-      ["cache_a", "a", { after: "cache_b" }],
-      ["cache_b", "b", { after: "cache_a" }], // cycle cache_a <-> cache_b
-      ["cache_c", "c", {}],
+      ["a", "a", { after: "b" }],
+      ["b", "b", { after: "a" }], // cycle a <-> b
+      ["c", "c", {}],
     ];
 
     const first = DAG.from(items, {
       throwErrorOnCycle: false,
-      defaultPosition: { before: "cache_c" },
+      defaultPosition: { before: "c" },
     });
     assert.deepEqual(
       resolveKeys(first),
-      ["cache_b", "cache_a", "cache_c"],
+      ["b", "a", "c"],
       "first DAG resolves the cycle using its own defaultPosition"
     );
 
     const second = DAG.from(items, {
       throwErrorOnCycle: false,
-      defaultPosition: { after: "cache_c" },
+      defaultPosition: { after: "c" },
     });
     assert.deepEqual(
       resolveKeys(second),
-      ["cache_c", "cache_b", "cache_a"],
-      "second DAG must use its own defaultPosition, not the cached order from the first"
+      ["c", "b", "a"],
+      "second DAG uses its own defaultPosition"
     );
   });
 
