@@ -13,6 +13,10 @@ import {
 } from "discourse/lib/model-extensions";
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
+function waitForCallbacks(pending, next) {
+  return pending ? pending.then(next) : next();
+}
+
 export default class RestModel extends EmberObject {
   // Overwrite and JSON will be passed through here before `create` and `update`
   static munge(json) {
@@ -89,12 +93,10 @@ export default class RestModel extends EmberObject {
     this.beforeUpdate(props);
 
     this.set("isSaving", true);
-    return Promise.resolve(
-      applyModelCallbacks(modelName, "beforeUpdate", this, props)
+    return waitForCallbacks(
+      applyModelCallbacks(modelName, "beforeUpdate", this, props),
+      () => this.store.update(this.__type, this.get(this.primaryKey), props)
     )
-      .then(() =>
-        this.store.update(this.__type, this.get(this.primaryKey), props)
-      )
       .then((res) => {
         const payload = this.__munge(res.payload || res.responseJson);
 
@@ -107,12 +109,13 @@ export default class RestModel extends EmberObject {
 
         this.setProperties(payload);
         this.afterUpdate(res);
-        return Promise.resolve(
-          applyModelCallbacks(modelName, "afterUpdate", this, res)
-        ).then(() => {
-          res.target = this;
-          return res;
-        });
+        return waitForCallbacks(
+          applyModelCallbacks(modelName, "afterUpdate", this, res),
+          () => {
+            res.target = this;
+            return res;
+          }
+        );
       })
       .finally(() => this.set("isSaving", false));
   }
@@ -132,10 +135,10 @@ export default class RestModel extends EmberObject {
     const adapter = this.store.adapterFor(this.__type);
 
     this.set("isSaving", true);
-    return Promise.resolve(
-      applyModelCallbacks(modelName, "beforeCreate", this, props)
+    return waitForCallbacks(
+      applyModelCallbacks(modelName, "beforeCreate", this, props),
+      () => adapter.createRecord(this.store, this.__type, props)
     )
-      .then(() => adapter.createRecord(this.store, this.__type, props))
       .then((res) => {
         if (!res) {
           throw new Error("Received no data back from createRecord");
@@ -149,12 +152,13 @@ export default class RestModel extends EmberObject {
         }
 
         this.afterCreate(res);
-        return Promise.resolve(
-          applyModelCallbacks(modelName, "afterCreate", this, res)
-        ).then(() => {
-          res.target = this;
-          return res;
-        });
+        return waitForCallbacks(
+          applyModelCallbacks(modelName, "afterCreate", this, res),
+          () => {
+            res.target = this;
+            return res;
+          }
+        );
       })
       .finally(() => this.set("isSaving", false));
   }
