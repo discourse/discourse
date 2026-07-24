@@ -709,14 +709,6 @@ class ApplicationController < ActionController::Base
     false
   end
 
-  def mini_profiler_flamegraph_request?
-    return false if !mini_profiler_enabled?
-
-    mini_profiler_matches_action?("flamegraph") ||
-      mini_profiler_matches_action?("async-flamegraph") ||
-      request.referer.to_s.match?(/pp=async-flamegraph/)
-  end
-
   def authorize_mini_profiler
     MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
   end
