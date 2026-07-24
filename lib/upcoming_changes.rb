@@ -174,7 +174,7 @@ module UpcomingChanges
   end
 
   def self.exists?(change_setting_name)
-    change_metadata(change_setting_name.to_sym).present?
+    settings_provider.upcoming_change_metadata.key?(change_setting_name.to_sym)
   end
 
   # An upcoming change owned by a plugin that is not configurable on this site,

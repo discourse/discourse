@@ -84,7 +84,22 @@ class SiteSettings::DefaultsProvider
   end
 
   def get(name, locale = DEFAULT_LOCALE)
-    all(locale)[name.to_sym]
+    if DiscoursePluginRegistry.modifiers_registered?(:site_setting_defaults)
+      return all(locale)[name.to_sym]
+    end
+
+    name = name.to_sym
+
+    if (override = @site_setting.upcoming_change_default_overrides[name]) &&
+         @active_upcoming_change_overrides.include?(override[:upcoming_change])
+      return override[:new_default]
+    end
+
+    if locale && (locale_defaults = @defaults[locale.to_sym]) && locale_defaults.key?(name)
+      return locale_defaults[name]
+    end
+
+    @defaults[DEFAULT_LOCALE.to_sym][name]
   end
   alias [] get
 
