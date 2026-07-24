@@ -234,6 +234,37 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("root pagination uses the effective sort", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    let requestedSort;
+
+    pretender.get(`/n/${topic.slug}/${topic.id}.json`, (request) => {
+      requestedSort = request.queryParams.sort;
+      return response({ roots: [], page: 1, has_more_roots: false });
+    });
+
+    this.controller.setProperties({
+      topic,
+      page: 0,
+      hasMoreRoots: true,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+
+    await this.controller.loadMoreRoots();
+
+    assert.strictEqual(
+      requestedSort,
+      "top",
+      "continues the ordering selected by the initial response"
+    );
+    assert.strictEqual(
+      this.controller.sort,
+      "hot",
+      "keeps the requested sort selected"
+    );
+  });
+
   test("deletePost delegates first post deletion to the topic controller", function (assert) {
     const topic = buildTopic(this.store, 724);
     const op = buildPost(this.store, topic, 1001, 1);
@@ -322,6 +353,66 @@ module("Unit | Controller | nested", function (hooks) {
     }
   });
 
+  test("acted event refreshes actionByName so the flag modal stays in sync", async function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const postId = 3001;
+
+    const post = this.store.createRecord("post", {
+      id: postId,
+      post_number: 2,
+      topic,
+      actions_summary: [
+        { id: 3, can_act: true }, // off_topic
+        { id: 4, can_act: true }, // inappropriate
+        { id: 6, can_act: true }, // notify_user
+        { id: 7, can_act: true }, // notify_moderators
+        { id: 8, can_act: true }, // spam
+      ],
+    });
+    post.topic = topic;
+
+    this.controller.topic = topic;
+    this.controller.subscribe();
+    this.controller.postRegistry.set(post.post_number, post);
+
+    pretender.get(`/posts/${postId}.json`, () =>
+      response({
+        id: postId,
+        post_number: 2,
+        topic_id: topic.id,
+        actions_summary: [{ id: 6, acted: true, count: 1 }],
+      })
+    );
+
+    this.controller._onMessage(
+      { type: "acted", id: postId, updated_at: "2026-01-02T00:00:00.000Z" },
+      null,
+      200
+    );
+    await settled();
+
+    assert.strictEqual(
+      typeof post.actions_summary[0].act,
+      "function",
+      "rebuilds actions_summary as ActionSummary instances so postActionFor().act() works"
+    );
+
+    assert.strictEqual(
+      post.actionByName.spam,
+      undefined,
+      "refreshes actionByName so flagsAvailable no longer offers types the server dropped"
+    );
+    assert.strictEqual(
+      post.actionByName.off_topic,
+      undefined,
+      "clears every trimmed flag type, not just notify_user"
+    );
+    assert.true(
+      post.actionByName.notify_user.acted,
+      "reflects the newly-recorded flag on actionByName"
+    );
+  });
+
   test("scroll position persistence avoids full cache snapshots", function (assert) {
     const topic = buildTopic(this.store, 725);
     const anchor = { postNumber: 2, offsetFromTop: 80, scrollY: 1600 };
@@ -392,5 +483,23 @@ module("Unit | Controller | nested", function (hooks) {
       "stores the post URL cache entry under the focused post number"
     );
     assert.strictEqual(cached.modelData.context, 0, "preserves context depth");
+  });
+
+  test("cache snapshots preserve the effective sort", function (assert) {
+    const topic = buildTopic(this.store, 726);
+    const cacheKey = this.nestedViewCache.buildKey(topic.id, { sort: "hot" });
+
+    this.controller.setProperties({
+      topic,
+      sort: "hot",
+      effectiveSort: "top",
+    });
+    this.controller.saveToCache();
+
+    assert.strictEqual(
+      this.nestedViewCache.get(cacheKey).modelData.effectiveSort,
+      "top",
+      "restored pagination continues using the original effective sort"
+    );
   });
 });

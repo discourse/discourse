@@ -18,9 +18,13 @@ module Migrations
         I18n.t("progressbar.#{kind}", count:, number: format_count(count))
       end
 
-      # Formats a duration as whole seconds, rounded up (so any real work shows at
-      # least 0:01). Switches to H:MM:SS once it passes an hour.
+      # Formats a duration as M:SS, switching to H:MM:SS past an hour.
+      # Sub-second durations show as "<1s": rounding them up to "0:01" would
+      # overstate them, and actual milliseconds would mix units into the time
+      # column, which makes it hard to scan.
       def format_duration(seconds)
+        return "<1s" if seconds < 1
+
         whole = seconds.ceil
         if whole >= 3600
           format("%d:%02d:%02d", whole / 3600, whole % 3600 / 60, whole % 60)

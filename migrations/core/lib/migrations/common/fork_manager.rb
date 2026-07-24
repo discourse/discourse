@@ -9,27 +9,41 @@ module Migrations
   # hook lists. A fork copies the child hooks under that mutex, so the child always
   # runs a consistent list.
   module ForkManager
+    # The batching flag is per-thread: a batch belongs to the thread that opened
+    # it, so the module stays correct even if callers stop serializing their
+    # forks behind a shared mutex (today the coordinators do).
+    BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
+    private_constant :BATCHED_FORKS_KEY
+
     @before_fork_hooks = []
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
-    @execute_parent_forks = true
     @mutex = Mutex.new
 
     class << self
       def with_batched_forks
-        @execute_parent_forks = false
-        @mutex.synchronize { run_before_fork_hooks }
+        previous = Thread.current[BATCHED_FORKS_KEY]
 
-        # Always run the after-fork hooks and reset the flag, even if forking
-        # raises (e.g. `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
-        # before-fork hooks' effects — a locked writer mutex, a closed run
-        # connection — would never be undone and the run would hang instead of
-        # failing the step.
+        # Restore the flag no matter what. If a before-fork hook raises, the flag
+        # would otherwise stick as true on this thread, and every later plain
+        # `fork` on it would silently skip its parent-side hooks.
         begin
-          yield
+          Thread.current[BATCHED_FORKS_KEY] = true
+          @mutex.synchronize { run_before_fork_hooks }
+
+          # Always run the after-fork hooks even if forking raises (e.g.
+          # `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
+          # before-fork hooks' effects — a locked writer mutex, a closed run
+          # connection — would never be undone and the run would hang instead of
+          # failing the step. If a before-fork hook raises, these after-fork
+          # hooks don't run — the batch never started.
+          begin
+            yield
+          ensure
+            @mutex.synchronize { run_after_fork_parent_hooks }
+          end
         ensure
-          @mutex.synchronize { run_after_fork_parent_hooks }
-          @execute_parent_forks = true
+          Thread.current[BATCHED_FORKS_KEY] = previous
         end
       end
 
@@ -64,10 +78,13 @@ module Migrations
       end
 
       def fork
+        # In a batch the parent-side hooks already ran around the whole batch.
+        execute_parent = !Thread.current[BATCHED_FORKS_KEY]
+
         # Snapshot the child hooks under the lock for a consistent list, but fork
         # outside it so the child can't inherit the mutex held.
         child_hooks =
-          if @execute_parent_forks
+          if execute_parent
             @mutex.synchronize do
               run_before_fork_hooks
               @after_fork_child_hooks.dup
@@ -82,7 +99,7 @@ module Migrations
             yield
           end
 
-        @mutex.synchronize { run_after_fork_parent_hooks } if @execute_parent_forks
+        @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent
 
         pid
       end

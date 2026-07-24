@@ -9,6 +9,7 @@ import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { or } from "discourse/truth-helpers";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
@@ -20,11 +21,13 @@ const MIN_QUERY_LENGTH = 3;
 export default class GifsModal extends Component {
   @service appEvents;
   @service dialog;
+  @service interfaceColor;
   @service siteSettings;
 
   @tracked categories = [];
   @tracked loading = false;
   @tracked loadingCategories = false;
+  @tracked searchPending = false;
   @tracked offset = 0;
   @tracked query = "";
   @tracked hasMore = true;
@@ -37,6 +40,16 @@ export default class GifsModal extends Component {
 
   get showingCategories() {
     return this.query.length < MIN_QUERY_LENGTH && this.categories.length > 0;
+  }
+
+  get darkMediaQuery() {
+    if (this.interfaceColor.darkModeForced) {
+      return "all";
+    } else if (this.interfaceColor.lightModeForced) {
+      return "none";
+    } else {
+      return "(prefers-color-scheme: dark)";
+    }
   }
 
   @action
@@ -63,6 +76,7 @@ export default class GifsModal extends Component {
   @action
   refresh(event) {
     this.query = event.target.value;
+    this.searchPending = this.query.length >= MIN_QUERY_LENGTH;
     discourseDebounce(this, this.search, 700);
   }
 
@@ -126,6 +140,8 @@ export default class GifsModal extends Component {
   }
 
   async search(clearResults = true, skipLengthCheck = false) {
+    this.searchPending = false;
+
     if (clearResults) {
       this.currentGifs = [];
       this.offset = 0;
@@ -265,7 +281,9 @@ export default class GifsModal extends Component {
           />
 
           {{#if this.loading}}
-            {{dLoadingSpinner size="small"}}
+            <div class="gifs-modal__input-spinner">
+              {{dLoadingSpinner size="small"}}
+            </div>
           {{/if}}
         </div>
 
@@ -294,8 +312,8 @@ export default class GifsModal extends Component {
               />
             </div>
           </div>
-        {{else if this.loadingCategories}}
-          <div class="gifs-modal__loading-categories">
+        {{else if (or this.loading this.searchPending this.loadingCategories)}}
+          <div class="gifs-modal__loading">
             {{dLoadingSpinner size="medium"}}
           </div>
         {{else}}
@@ -304,11 +322,17 @@ export default class GifsModal extends Component {
       </:body>
 
       <:footer>
-        <img
-          class="gifs-modal__branding"
-          src={{getURL "/images/klipy-logo.png"}}
-          alt={{i18n "gifs.powered_by"}}
-        />
+        <picture>
+          <source
+            srcset={{getURL "/images/klipy-logo-dark.png"}}
+            media={{this.darkMediaQuery}}
+          />
+          <img
+            class="gifs-modal__branding"
+            src={{getURL "/images/klipy-logo.png"}}
+            alt={{i18n "gifs.powered_by"}}
+          />
+        </picture>
       </:footer>
     </DModal>
   </template>

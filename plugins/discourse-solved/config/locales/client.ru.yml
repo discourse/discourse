@@ -19,8 +19,6 @@ ru:
         sections:
           support:
             title: "Поддержать"
-            filter:
-              all_categories: "Все категории"
             answerers:
               staff: "Персонал"
               member: "Участники"

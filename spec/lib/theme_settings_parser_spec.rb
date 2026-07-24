@@ -87,6 +87,25 @@ RSpec.describe ThemeSettingsParser do
       list_type = loader.find_by_name(:compact_list_setting)[:opts][:list_type]
       expect(list_type).to eq("compact")
     end
+
+    it "supports disallowed groups metadata" do
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          disallowed_groups: "0|1"
+          default: "2|3"
+      YAML
+
+      field = ThemeField.create!(theme_id: -1, target_id: 3, name: "yaml", value: yaml)
+      parsed = []
+      ThemeSettingsParser
+        .new(field)
+        .load { |name, default, type, opts| parsed << { name: name, opts: opts } }
+
+      setting = parsed.find { |parsed_setting| parsed_setting[:name] == :groups_setting }
+      expect(setting[:opts][:disallowed_groups]).to eq("0|1")
+    end
   end
 
   describe "resolve_group_membership" do

@@ -5,6 +5,24 @@ module DiscourseWorkflows
     module Badge
       class V1 < NodeType
         OPERATIONS = %w[grant revoke].freeze
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "user_id" => {
+              "type" => "integer",
+            },
+            "username" => {
+              "type" => "string",
+            },
+            "badge_id" => {
+              "type" => "integer",
+            },
+            "badge_name" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
 
         description(
           name: "action:badge",
@@ -17,6 +35,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
             operation: {
               type: :options,

@@ -15,24 +15,98 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
   end
 
   describe "#execute" do
-    before { allow(Oneboxer).to receive(:preview) }
-
-    it "does nothing with blank or missing pr_url" do
-      expect { described_class.new.execute(pr_url: nil) }.not_to raise_error
-      expect { described_class.new.execute(pr_url: "") }.not_to raise_error
+    def seed_onebox_caches(url)
+      Discourse.cache.write(
+        Oneboxer.send(:onebox_cache_key, url),
+        { onebox: "stale", preview: "stale" },
+      )
+      Discourse.cache.write(InlineOneboxer.send(:cache_key, url), { url:, title: "stale" })
     end
 
-    it "invalidates the onebox cache for the PR URL" do
-      described_class.new.execute(pr_url:)
+    it "does nothing for a blank, malformed, or non-PR pr_url" do
+      create_post_with_link(<<~HTML)
+        <aside class="onebox githubpullrequest"><a href="#{pr_url}">PR</a></aside>
+      HTML
+      seed_onebox_caches(pr_url)
 
-      expect(Oneboxer).to have_received(:preview).with(pr_url, invalidate_oneboxes: true)
+      expect_any_instance_of(Post).not_to receive(:rebake!)
+      bad_urls = [
+        "",
+        nil,
+        "https:// bad",
+        "https://github.com",
+        "#{pr_url}/../../456",
+        "mailto:x@y.com",
+      ]
+      bad_urls.each { |bad| expect { described_class.new.execute(pr_url: bad) }.not_to raise_error }
+
+      expect(Oneboxer.cached_onebox(pr_url)).to eq("stale")
     end
 
-    it "invalidates the inline onebox cache for the PR URL" do
-      allow(InlineOneboxer).to receive(:invalidate)
+    it "clears the onebox caches for the exact PR URL variant a post used (e.g. /changes)" do
+      variant = "#{pr_url}/changes"
+      post = Fabricate(:post, topic:, user:, cooked: <<~HTML)
+        <aside class="onebox githubpullrequest"><a href="#{variant}">PR</a></aside>
+      HTML
+      TopicLink.create!(topic:, post:, user:, url: variant, domain:)
+      seed_onebox_caches(variant)
+      allow_any_instance_of(Post).to receive(:rebake!)
+
       described_class.new.execute(pr_url:)
 
-      expect(InlineOneboxer).to have_received(:invalidate).with(pr_url)
+      expect(Oneboxer.cached_onebox(variant)).to be_blank
+      expect(InlineOneboxer.cache_lookup(variant)).to be_blank
+    end
+
+    it "refreshes links using scheme and host variants (http, www)" do
+      www_url = pr_url.sub("https://", "https://www.")
+      http_url = pr_url.sub("https://", "http://")
+      post = Fabricate(:post, topic:, user:, cooked: <<~HTML)
+        <aside class="onebox githubpullrequest"><a href="#{www_url}">PR</a></aside>
+      HTML
+      TopicLink.create!(topic:, post:, user:, url: www_url, domain: "www.github.com")
+      TopicLink.create!(topic:, post:, user:, url: http_url, domain:)
+      seed_onebox_caches(www_url)
+      seed_onebox_caches(http_url)
+
+      expect_any_instance_of(Post).to receive(:rebake!)
+      described_class.new.execute(pr_url:)
+
+      expect(Oneboxer.cached_onebox(www_url)).to be_blank
+      expect(Oneboxer.cached_onebox(http_url)).to be_blank
+    end
+
+    it "clears the normalized-encoding cache key used by full oneboxes" do
+      raw = "#{pr_url}#r\u00e9view"
+      normalized = UrlHelper.normalized_encode(raw).to_s
+      post = Fabricate(:post, topic:, user:, cooked: <<~HTML)
+        <aside class="onebox githubpullrequest"><a href="#{raw}">PR</a></aside>
+      HTML
+      TopicLink.create!(topic:, post:, user:, url: raw, domain:)
+      Discourse.cache.write(
+        Oneboxer.send(:onebox_cache_key, normalized),
+        { onebox: "stale", preview: "stale" },
+      )
+      allow_any_instance_of(Post).to receive(:rebake!)
+
+      described_class.new.execute(pr_url:)
+
+      expect(normalized).not_to eq(raw)
+      expect(Oneboxer.cached_onebox(normalized)).to be_blank
+    end
+
+    it "leaves a different PR that only shares a number prefix untouched" do
+      other_pr = "#{pr_url}4" # ...pull/123 must not match ...pull/1234
+      post = Fabricate(:post, topic:, user:, cooked: <<~HTML)
+        <aside class="onebox githubpullrequest"><a href="#{other_pr}">PR</a></aside>
+      HTML
+      TopicLink.create!(topic:, post:, user:, url: other_pr, domain:)
+      seed_onebox_caches(other_pr)
+
+      expect_any_instance_of(Post).not_to receive(:rebake!)
+      described_class.new.execute(pr_url:)
+
+      expect(Oneboxer.cached_onebox(other_pr)).to eq("stale")
     end
 
     it "rebakes posts with full GitHub PR oneboxes" do
@@ -130,6 +204,21 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
         )
 
         described_class.new.execute(pr_url:)
+      end
+
+      it "clears the onebox caches for the exact PR URL variant a chat message used" do
+        variant = "#{pr_url}/files"
+        message = Fabricate(:chat_message, chat_channel:, user:, cooked: <<~HTML)
+          <aside class="onebox githubpullrequest"><a href="#{variant}">PR</a></aside>
+        HTML
+        Chat::MessageLink.create!(chat_message: message, url: variant)
+        seed_onebox_caches(variant)
+        allow_any_instance_of(Chat::Message).to receive(:rebake!)
+
+        described_class.new.execute(pr_url:)
+
+        expect(Oneboxer.cached_onebox(variant)).to be_blank
+        expect(InlineOneboxer.cache_lookup(variant)).to be_blank
       end
     end
   end

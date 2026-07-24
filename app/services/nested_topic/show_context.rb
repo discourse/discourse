@@ -134,6 +134,7 @@ class NestedTopic::ShowContext
   end
 
   def serialize_context(
+    params:,
     loader:,
     serializer:,
     target_post:,
@@ -157,6 +158,7 @@ class NestedTopic::ShowContext
         end,
       target_post:
         serializer.serialize_tree(target_post, children_map, reply_counts, descendant_counts),
+      effective_sort: loader.effective_sort(params.sort),
       message_bus_last_id: topic_view.message_bus_last_id,
     }
   end

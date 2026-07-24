@@ -33,4 +33,4 @@ en:
       header: "The conversion finished with errors:"
       step_failed: "%{title} failed: %{error_class}: %{error_message}"
       step_skipped: "%{title} was skipped because a dependency failed."
-      merge_failed: "Merging a step's shard into the run database failed: %{error_class}: %{error_message}"
+      finalization_failed: "Error while finishing up: %{error_class}: %{error_message}"

@@ -41,7 +41,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
     let(:item) { { "json" => {} } }
 
     context "with assign operation" do
-      it "assigns the topic to a user" do
+      it "assigns the topic to a user", :aggregate_failures do
         config = {
           "operation" => "assign",
           "topic_id" => topic.id.to_s,
@@ -54,9 +54,10 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
         expect(result["assignee"]["user"]["id"]).to eq(user.id)
         expect(result["assignee"]["user"]["username"]).to eq(user.username)
         expect(Assignment.exists?(target: topic, assigned_to: user)).to eq(true)
+        expect(result).to match_node_output_schema(described_class)
       end
 
-      it "assigns the topic to a group" do
+      it "assigns the topic to a group", :aggregate_failures do
         SiteSetting.assign_allowed_on_groups = "#{assign_allowed_group.id}|#{group.id}"
         group.update!(assignable_level: Group::ALIAS_LEVELS[:everyone])
 
@@ -68,6 +69,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
         expect(result["assignee"]["group"]["id"]).to eq(group.id)
         expect(result["assignee"]["group"]["name"]).to eq(group.name)
         expect(Assignment.exists?(target: topic, assigned_to: group)).to eq(true)
+        expect(result).to match_node_output_schema(described_class)
       end
 
       it "raises when assignee does not exist" do
@@ -87,7 +89,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
 
         before { ::Assigner.new(topic, Discourse.system_user).assign(other_user) }
 
-        it "replaces the existing assignment by default" do
+        it "replaces the existing assignment by default", :aggregate_failures do
           config = {
             "operation" => "assign",
             "topic_id" => topic.id.to_s,
@@ -100,6 +102,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
           expect(result["previously_assigned"]["type"]).to eq("user")
           expect(result["previously_assigned"]["user"]["username"]).to eq(other_user.username)
           expect(Assignment.find_by(target: topic).assigned_to).to eq(user)
+          expect(result).to match_node_output_schema(described_class)
         end
 
         it "replaces the existing assignment when replace_existing is true" do

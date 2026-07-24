@@ -75,7 +75,6 @@ fr:
     ai_summarization_enabled: "Activer la fonction de synthèse"
     ai_pm_summarization_allowed_groups: "Groupes autorisés à créer et à afficher des résumés dans les MP."
     ai_summary_gists_enabled: "Générez automatiquement de brefs résumés des dernières réponses dans les sujets"
-    ai_summary_backfill_maximum_topics_per_hour: "Nombre de résumés de sujets à compléter par heure."
     ai_bot_enabled: "Activez le module du robot IA."
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
@@ -99,7 +98,6 @@ fr:
       description: "Ce rapport fournit une analyse du sentiment pour les publications, regroupées par catégorie, avec des scores positifs, négatifs et neutres pour chaque publication et catégorie."
     overall_sentiment:
       title: "Sentiment général"
-      description: 'Le graphique compare les nombres de publications classées comme positives ou négatives. Ces nombres sont calculés lorsque les scores positifs ou négatifs dépassent le score seuil défini. Cela signifie que les publications neutres ne sont pas affichées. Les messages privés (MP) sont également exclus. Classé dans « cardiffnlp/twitter-roberta-base-sentiment-latest »'
       xaxis: "Positif (%)"
       yaxis: "Date"
     emotion_admiration:
@@ -228,8 +226,6 @@ fr:
         explain: "Expliquer"
         illustrate_post: "Illustrer la publication"
         replace_dates: "Dates intelligentes"
-      image_caption:
-        attribution: "Légende par l'IA"
     share_ai:
       read_more: "Lire la transcription complète"
       onebox_title: "Conversation IA avec %{llm_name}"

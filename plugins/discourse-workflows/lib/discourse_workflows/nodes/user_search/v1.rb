@@ -4,6 +4,16 @@ module DiscourseWorkflows
   module Nodes
     module UserSearch
       class V1 < NodeType
+        OUTPUT_SCHEMA = {
+          "$schema" => Schema::DRAFT_URI,
+          "type" => "object",
+          "properties" => {
+            "query" => {
+              "type" => "string",
+            },
+          },
+        }.freeze
+
         description(
           name: "trigger:user_search",
           version: "1.0",
@@ -13,6 +23,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:user_search],
+          output_contracts: [{ schema: OUTPUT_SCHEMA }],
         )
 
         def initialize(query, *)

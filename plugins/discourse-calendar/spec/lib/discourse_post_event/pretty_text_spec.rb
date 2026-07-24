@@ -312,5 +312,58 @@ describe PrettyText do
         end
       end
     end
+
+    describe "An event is summarized in an excerpt (used by oneboxes)" do
+      fab!(:user_1, :user) { Fabricate(:user, admin: true) }
+
+      def excerpt_for(post)
+        PrettyText.excerpt(post.cooked, SiteSetting.post_onebox_maxlength, post: post)
+      end
+
+      it "summarizes the event with its formatted start date" do
+        excerpt = excerpt_for(create_post_with_event(user_1))
+
+        expect(excerpt).to include("📅")
+        expect(excerpt).to include("June 5, 2018 6:39 PM (UTC)")
+      end
+
+      it "includes the end date when present" do
+        excerpt = excerpt_for(create_post_with_event(user_1, 'end="2018-06-22"'))
+
+        expect(excerpt).to include("→")
+        expect(excerpt).to include("June 22, 2018 12:00 AM (UTC)")
+      end
+
+      it "uses the event timezone" do
+        excerpt = excerpt_for(create_post_with_event(user_1, 'timezone="America/New_York"'))
+
+        expect(excerpt).to include("(America/New_York)")
+      end
+
+      it "includes the location" do
+        excerpt = excerpt_for(create_post_with_event(user_1, 'location="Conference Room A"'))
+
+        expect(excerpt).to include("Conference Room A")
+      end
+
+      it "includes the event name when it differs from the topic title" do
+        excerpt = excerpt_for(create_post_with_event(user_1, 'name="Pancakes event"'))
+
+        expect(excerpt).to include("Pancakes event")
+      end
+
+      it "escapes html in the event data" do
+        excerpt = excerpt_for(create_post_with_event(user_1, 'name="Pancakes <b>bold</b>"'))
+
+        expect(excerpt).not_to include("<b>")
+      end
+
+      it "does nothing when the plugin is disabled" do
+        post = create_post_with_event(user_1)
+        SiteSetting.discourse_post_event_enabled = false
+
+        expect(excerpt_for(post)).not_to include("📅")
+      end
+    end
   end
 end

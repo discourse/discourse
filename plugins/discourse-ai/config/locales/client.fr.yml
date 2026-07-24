@@ -18,7 +18,6 @@ fr:
       dashboard:
         emotion:
           title: "Émotion"
-          description: "Le tableau répertorie le nombre de publications classées selon une émotion déterminée. Cette classification est réalisée avec le modèle « Samlowe/Roberta-Base-Go_Emotions »."
         reports:
           filters:
             group_by:
@@ -227,11 +226,13 @@ fr:
           translate: "Traduire"
           markdown_tables: "Générer un tableau Markdown"
           custom_prompt: "Invite personnalisée"
-          image_caption: "Images de légende"
           translator: "Traducteur"
           post_illustrator: "Illustrateur de publications"
           setting_groups:
             automation: "Automatisation"
+        image_caption:
+          setting_groups:
+            settings: "Paramètres"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -364,8 +365,6 @@ fr:
         overwrite: "Remplacer"
         description: "Description"
         no_llm_selected: "Aucun modèle linguistique sélectionné"
-        max_context_posts: "Nombre maximal de publications contextuelles"
-        max_context_posts_help: "Le nombre maximal de publications à utiliser comme contexte pour l'IA lorsqu'elle répond à un utilisateur. (vide par défaut)"
         vision_max_pixel_sizes:
           low: Qualité faible - moins cher (256x256)
           medium: Qualité moyenne (512x512)
@@ -557,7 +556,7 @@ fr:
         usage:
           ai_bot: "Robot IA"
           ai_helper: "Assistant (%{agent})"
-          ai_helper_image_caption: "Légende de l'image"
+          ai_image_caption: "Légende de l'image"
           ai_summarization: "Résumer"
           ai_embeddings_semantic_search: "Recherche IA"
           ai_spam: "Contenu indésirable"
@@ -570,7 +569,6 @@ fr:
           anthropic-claude-opus-4-7: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-6: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
-          open_ai-gpt-5-4-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
         configured:
           title: "LLM configurés"
@@ -613,7 +611,7 @@ fr:
           fake: "Personnalisé"
         provider_fields:
           access_key_id: "ID de clé d'accès AWS Bedrock"
-          region: "Région AWS Bedrock"
+          region: "Région"
           organization: "ID d'organisation OpenAI facultatif"
           disable_system_prompt: "Désactiver le message système dans les invites"
           enable_native_tool: "Activer la prise en charge des outils natifs"
@@ -668,11 +666,6 @@ fr:
           select: "Sélectionner"
           selected: "Sélectionné"
           try_again: "Réessayer"
-        image_caption:
-          button_label: "Légende avec IA"
-          generating: "Génération de la légende..."
-          credits: "Légende par l'IA"
-          save_caption: "Enregistrer"
         no_content_error: "Ajoutez d'abord du contenu pour y effectuer des actions d'IA"
       reviewables:
         model_used: "Modèle utilisé :"
@@ -744,7 +737,7 @@ fr:
         click_to_run_label: "Exécuter l'artefact"
       ai_bot:
         title: "Robot IA"
-        llm: "Modèle"
+        llm: "Modèle:"
         pm_warning: "Les messages du chatbot IA sont surveillés régulièrement par les modérateurs."
         cancel_streaming: "Arrêter de répondre"
         try_again: "Réessayer"

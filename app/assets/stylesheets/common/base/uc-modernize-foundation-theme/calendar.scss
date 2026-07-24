@@ -1,4 +1,4 @@
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .fc .fc-button-primary {
     --fc-button-bg-color: var(--secondary);
     --fc-button-border-color: var(--primary-200);

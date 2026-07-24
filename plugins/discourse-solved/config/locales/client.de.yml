@@ -18,8 +18,6 @@ de:
         sections:
           support:
             title: "Support"
-            filter:
-              all_categories: "Alle Kategorien"
             answerers:
               staff: "Team"
               member: "Mitglieder"

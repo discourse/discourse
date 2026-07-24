@@ -9,29 +9,18 @@ en:
       sort_options:
         votes: "Votes"
     topic_voting:
-      category_type_ideas:
-        title: "Ideas"
       notification_label:
         vote_released: "Vote returned"
-      title: "Topic voting"
-      reached_limit: "You are out of votes, remove an existing vote!"
-      list_votes: "List your votes"
-      votes_nav_help: "topics with the all time most votes"
       hot_nav_help: "top recent topics, including those with recent votes"
       voted: "You voted on this topic"
-      allow_topic_voting: "Allow users to vote on topics in this category"
       vote_title: "Vote"
       vote_title_plural: "Votes"
       voting_closed_description: "Voting is closed for this topic"
       see_votes: "You have %{count}/%{max} votes left"
-      locked: "Locked"
       locked_description: "Increase your trust level to vote"
       votes:
         one: "%{count} vote"
         other: "%{count} votes"
-      anonymous_button:
-        one: "Vote"
-        other: "Votes"
       remove_vote: "Remove vote"
       watch_topic: "Notify me about new posts"
       no_votes_yet: "No one has voted for this yet"
@@ -49,10 +38,6 @@ en:
         help: "topics you voted on"
     search:
       most_votes: "Most Votes"
-      advanced:
-        vote:
-          count:
-            label: "Minimum Vote Count"
     admin:
       web_hooks:
         voting_event:

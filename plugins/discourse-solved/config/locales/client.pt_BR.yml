@@ -18,8 +18,6 @@ pt_BR:
         sections:
           support:
             title: "Apoio"
-            filter:
-              all_categories: "Todas as categorias"
             answerers:
               staff: "Equipe"
               member: "Membros"

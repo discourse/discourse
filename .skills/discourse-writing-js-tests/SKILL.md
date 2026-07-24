@@ -213,9 +213,15 @@ Beyond [qunit-dom](https://github.com/mainmatter/qunit-dom/blob/master/API.md)'s
 bin/qunit --help                       # full options
 bin/qunit path/to/some-test.gjs        # one file
 bin/qunit path/to/integration/components  # a directory
-bin/qunit -f "BookmarkIcon"            # filter by module/test name
+bin/qunit --filter "BookmarkIcon"      # case-insensitive substring of "module: test name"
+bin/qunit --filter "/Foo|Bar/i"        # slash-wrapped value is a regex; use for alternation
 bin/qunit --target chat                # a specific plugin
 ```
+
+`--filter` is forwarded to QUnit: a plain value matches as a case-insensitive substring,
+and a slash-wrapped value like `/foo/i` matches as a regular expression. Include the `i`
+flag for case-insensitive regex matching, and use the regex form when you need alternation
+or other patterns.
 
 Requires a running Rails server (or pass `--standalone` to spin up an isolated one).
 

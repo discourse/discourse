@@ -2,7 +2,10 @@ import { later } from "@ember/runloop";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 
-export function setupComposerPosition(editor) {
+export function setupComposerPosition(
+  editor,
+  { swipeToCollapse = false } = {}
+) {
   // This component contains two composer positioning adjustments
   // for Safari iOS/iPad and Firefox on Android
   // The fixes here go together with styling in base/compose.css
@@ -28,16 +31,36 @@ export function setupComposerPosition(editor) {
     return [
       editor,
       replyControl?.querySelector(".d-editor-preview-wrapper"),
-      replyControl?.querySelector(".d-editor-button-bar__wrap"),
+      replyControl?.querySelector(".d-editor-button-bar"),
     ].filter(Boolean);
+  }
+
+  function selectionTouchmoveGuard(event) {
+    // the rich editor is a contenteditable, without selectionStart/End
+    const selection = window.getSelection();
+    const hasSelection =
+      editor.selectionStart !== undefined
+        ? editor.selectionStart !== editor.selectionEnd
+        : !selection.isCollapsed && editor.contains(selection.anchorNode);
+
+    if (hasSelection) {
+      event.stopImmediatePropagation();
+    }
   }
 
   function refreshScrollLock() {
     if (shouldLockScroll() && !scrollLocked) {
       scrollLockTargets = getAllowedScrollTargets();
+      editor.addEventListener("touchmove", selectionTouchmoveGuard, {
+        capture: true,
+        passive: false,
+      });
       lock(scrollLockTargets);
       scrollLocked = true;
     } else if (!shouldLockScroll() && scrollLocked) {
+      editor.removeEventListener("touchmove", selectionTouchmoveGuard, {
+        capture: true,
+      });
       unlock(scrollLockTargets);
       scrollLockTargets = null;
       scrollLocked = false;
@@ -63,7 +86,12 @@ export function setupComposerPosition(editor) {
       const selection = window.getSelection();
       if (notScrollable && selection.toString() === "") {
         event.preventDefault();
-        event.stopPropagation();
+
+        // stopPropagation would swallow the composer's swipe-to-dismiss gesture
+        // on an ancestor; preventDefault alone still blocks the body scroll
+        if (!swipeToCollapse) {
+          event.stopPropagation();
+        }
       }
     });
   }
@@ -101,6 +129,9 @@ export function setupComposerPosition(editor) {
       editor.removeEventListener("blur", onBlur);
 
       if (scrollLocked) {
+        editor.removeEventListener("touchmove", selectionTouchmoveGuard, {
+          capture: true,
+        });
         unlock(scrollLockTargets);
         scrollLockTargets = null;
         scrollLocked = false;

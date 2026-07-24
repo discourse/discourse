@@ -6,8 +6,8 @@ import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
@@ -159,7 +159,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   <template>
-    <AdminFilterControls
+    <DFilterControls
       @array={{this.upcomingChanges}}
       @searchableProps={{array
         "humanized_name"
@@ -206,7 +206,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           </tbody>
         </table>
       </:content>
-    </AdminFilterControls>
+    </DFilterControls>
 
     {{#unless this.upcomingChanges}}
       <AdminConfigAreaEmptyList

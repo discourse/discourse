@@ -25,6 +25,7 @@ class Tags::Search
     attribute :filterForInput, :boolean
     attribute :excludeSynonyms, :boolean
     attribute :excludeHasSynonyms, :boolean
+    attribute :prioritizeRecentTags, :boolean
 
     validate :limit_is_valid
 
@@ -112,6 +113,10 @@ class Tags::Search
   def search_tags(params:, category:, guardian:)
     filter_options = params.filter_options.merge(category: category)
 
+    if (recent_tag_ids = recent_priority_tag_ids(params:, guardian:))
+      filter_options[:order_recent_tag_ids] = recent_tag_ids
+    end
+
     tags_with_counts, filter_result_context =
       DiscourseTagging.filter_allowed_tags(guardian, **filter_options, with_context: true)
 
@@ -121,6 +126,14 @@ class Tags::Search
     context[:required_tag_group] = filter_result_context[:required_tag_group]
     context[:forbidden] = nil
     context[:forbidden_message] = nil
+  end
+
+  def recent_priority_tag_ids(params:, guardian:)
+    return unless params.prioritizeRecentTags && params.term.blank?
+    return if guardian.anonymous?
+    return unless UpcomingChanges.enabled_for_user?(:prioritize_recently_used_tags, guardian.user)
+
+    Tag.recently_used_by(guardian.user).presence
   end
 
   def append_disabled_tags(params:, category:, tags:, guardian:)

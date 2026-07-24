@@ -7,15 +7,18 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import KeyValueStore from "discourse/lib/key-value-store";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { dataExplorerAiQueriesEnabled } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-query-availability";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+import {
+  dataExplorerStore,
+  rememberMode,
+} from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
 const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
@@ -143,7 +146,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get aiQueriesEnabled() {
-    return this.siteSettings.data_explorer_ai_queries_enabled;
+    return dataExplorerAiQueriesEnabled(this.siteSettings);
   }
 
   get regenerateDisabled() {
@@ -196,6 +199,7 @@ export default class PluginsExplorerController extends Controller {
   @action
   setMode(value) {
     this.mode = value;
+    rememberMode(value);
     if (value !== "ai") {
       this._teardownAi();
       this.aiPrompt = "";

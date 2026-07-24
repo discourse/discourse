@@ -10,8 +10,6 @@ lv:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Visas sadaļas"
             answerers:
               staff: "Personāls"
               member: "Dalībnieki"

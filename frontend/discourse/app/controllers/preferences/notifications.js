@@ -29,6 +29,7 @@ export default class NotificationsController extends Controller {
         "new_topic_duration_minutes",
         "notification_level_when_replying",
         "notify_on_linked_posts",
+        "push_notification_level",
         "enable_upcoming_change_available_notifications",
         "user_notification_schedule",
       ],

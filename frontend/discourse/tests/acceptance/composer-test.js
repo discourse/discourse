@@ -150,6 +150,35 @@ acceptance(`Composer`, function (needs) {
     );
   });
 
+  test("restores the resized height when resuming a minimized draft", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "this draft has been resized");
+
+    // drag past the minimum so the height clamps to a known value
+    await triggerEvent(".grippie", "mousedown", { clientY: 500 });
+    await triggerEvent(".grippie", "mousemove", { clientY: 3000 });
+    await triggerEvent(".grippie", "mouseup");
+
+    const resizedHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+    assert.strictEqual(resizedHeight, "255px", "applies the dragged height");
+
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "40px",
+      "minimizes to the draft bar"
+    );
+
+    await click(".toggle-fullscreen");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      resizedHeight,
+      "restores the resized height instead of the default when resumed"
+    );
+  });
+
   test("fires resize event after width transition", async function (assert) {
     await visit("/");
     await click("#create-topic");
@@ -1463,7 +1492,7 @@ acceptance(`Composer - default category not set`, function (needs) {
     assert.strictEqual(selectKit(".category-chooser").header().value(), null);
     assert.strictEqual(
       selectKit(".category-chooser").header().name(),
-      "category&hellip;"
+      i18n("category.choose")
     );
   });
 });

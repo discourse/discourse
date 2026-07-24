@@ -261,6 +261,18 @@ module Discourse
   class InvalidParameters < StandardError
   end
 
+  # Same as InvalidParameters, but carries an HTML-rendered variant of the
+  # message for surfaces that can render it (e.g. the admin settings UI).
+  # The plain #message stays free of markup so generic rescuers can display it.
+  class InvalidHTMLParameters < InvalidParameters
+    attr_reader :html_message
+
+    def initialize(message = nil, html_message: nil)
+      super(message)
+      @html_message = html_message || message
+    end
+  end
+
   # When they don't have permission to do something
   class InvalidAccess < StandardError
     attr_reader :obj

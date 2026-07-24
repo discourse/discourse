@@ -14,8 +14,6 @@ nb_NO:
               label: "Godtatte løsninger"
         sections:
           support:
-            filter:
-              all_categories: "Alle kategorier"
             answerers:
               staff: "Stab"
               member: "Medlemmer"

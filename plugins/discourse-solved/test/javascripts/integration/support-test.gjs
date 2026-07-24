@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import SupportSection from "discourse/plugins/discourse-solved/admin/components/dashboard/support";
 
 function buildData(overrides = {}) {
@@ -245,5 +246,28 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     );
 
     assert.dom(".db-support__filter").exists("shown with multiple categories");
+    assert.dom(".category-selector").exists();
+  });
+
+  test("prefills the selector with the persisted category selection", async function (assert) {
+    const data = buildData({
+      category_options: [
+        { id: 1, name: "Support" },
+        { id: 2, name: "Help" },
+      ],
+      category_ids: [1, 2],
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.strictEqual(selectKit(".category-selector").header().value(), "1,2");
   });
 });

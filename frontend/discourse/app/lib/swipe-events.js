@@ -47,6 +47,49 @@ export function shouldCloseMenu(e, origin) {
   return false;
 }
 
+export function dampenedOverdrag(distance) {
+  return Math.max(0, 8 * (Math.log(distance + 1) - 2));
+}
+
+export function shouldDeferSwipeToContent(swipeState, container) {
+  if (swipeState.direction === "left" || swipeState.direction === "right") {
+    return true;
+  }
+
+  let element = swipeState.originalEvent?.target;
+
+  while (element && element !== container) {
+    if (element.scrollHeight > element.clientHeight) {
+      const style = window.getComputedStyle(element);
+
+      if (style.overflowY === "auto" || style.overflowY === "scroll") {
+        // column-reverse scrollers rest at scrollTop 0 and go negative when
+        // scrolled back, so normalize scrollTop to a distance from the top
+        // edge before checking for remaining room
+        const maxScroll = element.scrollHeight - element.clientHeight;
+        const reversed =
+          style.display.includes("flex") &&
+          style.flexDirection === "column-reverse";
+        const distanceFromTop = reversed
+          ? maxScroll + element.scrollTop
+          : element.scrollTop;
+
+        if (swipeState.direction === "down" && distanceFromTop > 0) {
+          return true;
+        }
+
+        if (swipeState.direction === "up" && distanceFromTop < maxScroll) {
+          return true;
+        }
+      }
+    }
+
+    element = element.parentElement;
+  }
+
+  return false;
+}
+
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
    It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event.

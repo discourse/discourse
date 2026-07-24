@@ -69,7 +69,6 @@ interface DButtonSignature {
     class?: string;
   };
 
-  // Root element type (enables ...attributes type checking)
   Element: HTMLButtonElement;
 
   // Optional yield

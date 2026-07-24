@@ -230,14 +230,16 @@ describe "Admin User Page" do
         )
       end
 
-      it "suspends and unsuspends the user" do
+      it "suspends the user along with selected similar users and unsuspends the user" do
         admin_user_page.click_suspend_button
+        suspend_user_modal.select_similar_user(similar_user.username)
         suspend_user_modal.fill_in_suspend_reason("spamming")
         suspend_user_modal.set_future_date("tomorrow")
         suspend_user_modal.perform
         expect(suspend_user_modal).to be_closed
 
         expect(page).to have_css(".suspension-info")
+        expect(similar_user.reload).to be_suspended
 
         admin_user_page.click_unsuspend_button
         expect(page).not_to have_css(".suspension-info")

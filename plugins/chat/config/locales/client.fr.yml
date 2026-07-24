@@ -245,8 +245,6 @@ fr:
       no_public_channels_cta: "Parcourir les canaux"
       kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       chat_notifications_title: "Notifications de discussion"
-      only_chat_push_notifications:
-        title: "Envoyer uniquement des notifications push de discussion"
       ignore_channel_wide_mention:
         title: "Ignorer les mentions à l'échelle du canal"
       show_thread_title_prompts:
@@ -324,6 +322,8 @@ fr:
         filter_closed: Fermé
         filter_archived: Archivé
         filter_input_placeholder: Rechercher un canal par nom
+        filter_joined_all: "Tout"
+        filter_joined_joined: "Rejoint"
       chat_message_separator:
         today: Aujourd'hui
         yesterday: Hier
@@ -390,6 +390,9 @@ fr:
         memberships_count:
           one: "%{count} membre"
           other: "%{count} membres"
+        preview_card:
+          log_in: "Se connecter"
+          sign_up: "S'inscrire"
       create_channel:
         threading:
           label: "Activer le fil"
@@ -702,7 +705,7 @@ fr:
         chat_reviewable_message:
           title: "Message de discussion signalé"
         reviewable_chat_message:
-          title: "Message de discussion marqué"
+          title: "Message de discussion signalé"
           noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:

@@ -1,15 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import {
+  normalizeSourceOutputIndex,
+  normalizeTargetInputIndex,
+} from "./graph-constants";
+import {
   inputForRun,
   latestRunWithInput,
   latestRunWithOutput,
   outputForRun,
-} from "./data-schema";
-import {
-  normalizeSourceOutputIndex,
-  normalizeTargetInputIndex,
-} from "./graph-constants";
+} from "./run-data";
 
 function compactObject(object) {
   return Object.fromEntries(

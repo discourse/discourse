@@ -14,7 +14,7 @@ const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
 let siteInitialized = false;
 
 /**
- * @typedef {_Capabilities} Capabilities
+ * @typedef {_Capabilities} CapabilitiesService
  */
 class _Capabilities {
   isAndroid = ua.includes("Android");

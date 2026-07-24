@@ -3,7 +3,7 @@
 RSpec.describe NestedTopicsController, type: :request do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:admin)
-  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:topic) { Fabricate(:topic, user: user, last_posted_at: Time.current) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
 
   before { SiteSetting.nested_replies_enabled = true }
@@ -20,6 +20,15 @@ RSpec.describe NestedTopicsController, type: :request do
     url = "/n/#{topic.slug}/#{topic.id}/context/#{post_number}.json?sort=#{sort}"
     url += "&context=#{context}" if context
     url
+  end
+
+  def set_cached_hot_scores(score_by_post)
+    score_by_post.each { |post, score| DB.exec(<<~SQL, post_id: post.id, score: score) }
+          UPDATE nested_hot_post_scores
+          SET hot_score = :score,
+              thread_hot_score = :score
+          WHERE post_id = :post_id
+        SQL
   end
 
   describe "GET respond" do
@@ -143,6 +152,253 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json).to have_key("message_bus_last_id")
       expect(json["roots"].length).to eq(2)
       expect(json["page"]).to eq(0)
+    end
+
+    it "keeps hot selected while a missing snapshot safely uses top and requests a refresh" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      low_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 1)
+      high_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
+      3.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreQueue.clear
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sort"]).to eq("hot")
+      expect(response.parsed_body["effective_sort"]).to eq("top")
+      expect(response.parsed_body["roots"].map { |root| root["id"] }.first(2)).to eq(
+        [high_root.id, low_root.id],
+      )
+      expect(NestedReplies::HotScoreQueue.pop).to eq(topic.id)
+    ensure
+      NestedReplies::HotScoreQueue.clear
+    end
+
+    it "orders a deleted placeholder by the heat of its public descendant" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      deleted_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hot_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: deleted_root.post_number)
+      liked_root =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 20)
+      2.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      deleted_root.update_columns(deleted_at: Time.current)
+      hot_child.update_columns(like_score: 100, created_at: 1.hour.ago)
+      liked_root.update_columns(like_score: 10, created_at: 1.hour.ago)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      expect(response.status).to eq(200)
+      deleted_root_json = response.parsed_body["roots"].first
+      expect(deleted_root_json["id"]).to eq(deleted_root.id)
+      expect(deleted_root_json["deleted_post_placeholder"]).to eq(true)
+      expect(deleted_root_json["children"].map { |child| child["id"] }).to eq([hot_child.id])
+    end
+
+    it "spends the hot preload budget on the strongest branch" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hot_child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      cold_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      hot_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_child.post_number)
+      hot_great_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_grandchild.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: cold_child.post_number)
+      topic.update_columns(posts_count: 7)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        root => 100.0,
+        hot_child => 100.0,
+        cold_child => 40.0,
+        hot_grandchild => 100.0,
+        hot_great_grandchild => 100.0,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 4) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      hot_child_json = root_json["children"].find { |child| child["id"] == hot_child.id }
+      cold_child_json = root_json["children"].find { |child| child["id"] == cold_child.id }
+      hot_grandchild_json =
+        hot_child_json["children"].find { |child| child["id"] == hot_grandchild.id }
+      expect(root_json["children"].map { |child| child["id"] }).to eq([hot_child.id, cold_child.id])
+      expect(hot_child_json["children"].map { |child| child["id"] }).to eq([hot_grandchild.id])
+      expect(hot_grandchild_json["children"].map { |child| child["id"] }).to eq(
+        [hot_great_grandchild.id],
+      )
+      expect(cold_child_json["children"]).to eq([])
+    end
+
+    it "uses depth penalty to return to another hot sibling branch" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.nested_replies_hot_preload_depth_penalty = 1.0
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      first_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      second_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      first_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: first_child.post_number)
+      second_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: second_child.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: first_grandchild.post_number)
+      topic.update_columns(posts_count: 7)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        root => 100.0,
+        first_child => 100.0,
+        second_child => 99.9,
+        first_grandchild => 100.0,
+        second_grandchild => 99.9,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 4) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      first_child_json = root_json["children"].find { |child| child["id"] == first_child.id }
+      second_child_json = root_json["children"].find { |child| child["id"] == second_child.id }
+      first_grandchild_json =
+        first_child_json["children"].find { |child| child["id"] == first_grandchild.id }
+      expect(first_grandchild_json["children"]).to eq([])
+      expect(second_child_json["children"].map { |child| child["id"] }).to eq(
+        [second_grandchild.id],
+      )
+    end
+
+    it "caps each hot root branch and spends the remaining budget on other roots" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      hottest_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      other_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      hottest_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hottest_root.post_number)
+      hottest_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: hottest_child.post_number)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: user,
+        reply_to_post_number: hottest_grandchild.post_number,
+      )
+      other_child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: other_root.post_number)
+      other_grandchild =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: other_child.post_number)
+      topic.update_columns(posts_count: 8)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      set_cached_hot_scores(
+        hottest_root => 100.0,
+        hottest_child => 100.0,
+        hottest_grandchild => 100.0,
+        other_root => 90.0,
+        other_child => 90.0,
+        other_grandchild => 90.0,
+      )
+      sign_in(user)
+
+      stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_POST_BUDGET, 4) do
+        stub_const(NestedReplies::TreeLoader, :HOT_PRELOAD_PER_ROOT_BUDGET, 2) do
+          get show_url(topic, sort: "hot")
+        end
+      end
+
+      roots = response.parsed_body["roots"]
+      hottest_root_json = roots.find { |json_root| json_root["id"] == hottest_root.id }
+      hottest_child_json =
+        hottest_root_json["children"].find { |child| child["id"] == hottest_child.id }
+      hottest_grandchild_json =
+        hottest_child_json["children"].find { |child| child["id"] == hottest_grandchild.id }
+      other_root_json = roots.find { |json_root| json_root["id"] == other_root.id }
+      other_child_json = other_root_json["children"].find { |child| child["id"] == other_child.id }
+      expect(hottest_child_json["children"].map { |child| child["id"] }).to eq(
+        [hottest_grandchild.id],
+      )
+      expect(hottest_grandchild_json["children"]).to eq([])
+      expect(other_child_json["children"].map { |child| child["id"] }).to eq([other_grandchild.id])
+    end
+
+    it "preloads replies created after the hot snapshot" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      Fabricate(:nested_topic, topic: topic)
+      root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      4.times { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      new_child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      root_json = response.parsed_body["roots"].find { |json_root| json_root["id"] == root.id }
+      expect(root_json["children"].map { |child| child["id"] }).to eq([new_child.id])
+    end
+
+    it "preloads visible whisper branches for whisperers when sorting by hot" do
+      SiteSetting.nested_replies_hot_sort_enabled = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      Fabricate(:nested_topic, topic: topic)
+      regular_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      whisper_child =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: regular_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      whisper_root =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: nil,
+          post_type: Post.types[:whisper],
+        )
+      whisper_grandchild =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: admin,
+          reply_to_post_number: whisper_root.post_number,
+          post_type: Post.types[:whisper],
+        )
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
+      topic.update_columns(posts_count: 6)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      sign_in(admin)
+
+      get show_url(topic, sort: "hot")
+
+      roots = response.parsed_body["roots"]
+      regular_root_json = roots.find { |root| root["id"] == regular_root.id }
+      whisper_root_json = roots.find { |root| root["id"] == whisper_root.id }
+      expect(regular_root_json["children"].map { |child| child["id"] }).to eq([whisper_child.id])
+      expect(whisper_root_json["children"].map { |child| child["id"] }).to eq(
+        [whisper_grandchild.id],
+      )
     end
 
     it "piggybacks suggested topics at the top level when the first page is the last page" do
@@ -933,6 +1189,33 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(child_ids).to eq([first.id, second.id])
       end
 
+      it "sorts children by a fresh hot snapshot" do
+        SiteSetting.nested_replies_hot_sort_enabled = true
+        Fabricate(:nested_topic, topic: topic)
+        liked_child =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            reply_to_post_number: root.post_number,
+            like_count: 20,
+          )
+        hot_branch =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+        hot_grandchild =
+          Fabricate(:post, topic: topic, user: user, reply_to_post_number: hot_branch.post_number)
+        liked_child.update_columns(like_score: 10, created_at: 1.hour.ago)
+        hot_grandchild.update_columns(like_score: 100, created_at: 1.hour.ago)
+        topic.update_columns(posts_count: 6)
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+        sign_in(user)
+
+        get children_url(topic, root.post_number, sort: "hot")
+
+        child_ids = response.parsed_body["children"].map { |child| child["id"] }
+        expect(child_ids).to eq([hot_branch.id, liked_child.id])
+      end
+
       it "respects sort at max nesting depth" do
         SiteSetting.nested_replies_max_depth = 2
         child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
@@ -1139,6 +1422,7 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(json).to have_key("ancestor_chain")
       expect(json).to have_key("siblings")
       expect(json).to have_key("target_post")
+      expect(json["effective_sort"]).to eq("top")
       expect(json).to have_key("message_bus_last_id")
     end
 

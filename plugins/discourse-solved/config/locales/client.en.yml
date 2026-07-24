@@ -14,8 +14,7 @@ en:
           support:
             title: "Support"
             fetch_error: "Support data couldn't be loaded."
-            filter:
-              all_categories: "All categories"
+            save_error: "Couldn't save your selection for next time."
             headline:
               healthy:
                 title: "The community is solving its own problems."

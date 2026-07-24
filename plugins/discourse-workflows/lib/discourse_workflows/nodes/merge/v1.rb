@@ -14,6 +14,23 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "all_items",
           },
+          output_contracts: [
+            {
+              mode: :passthrough,
+              variants: [
+                {
+                  display_options: {
+                    show: {
+                      mode: ["combine"],
+                    },
+                    hide: {
+                      resolve_clash: %w[prefer_first prefer_last],
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           inputs: [
             { key: "main", type: "main", display_name: "Input", required: false, multiple: true },
           ],

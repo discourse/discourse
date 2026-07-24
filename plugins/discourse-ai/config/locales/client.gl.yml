@@ -61,6 +61,9 @@ gl:
           reset: "Restabelecer"
         search:
           name: "Buscar"
+        image_caption:
+          setting_groups:
+            settings: "Configuración"
         spam:
           name: "Lixo"
       modals:
@@ -190,8 +193,6 @@ gl:
           cancel: "Cancelar"
         thumbnail_suggestions:
           try_again: "Tentar de novo"
-        image_caption:
-          save_caption: "Gardar"
       embeddings:
         save: "Gardar"
         delete: "Eliminar"

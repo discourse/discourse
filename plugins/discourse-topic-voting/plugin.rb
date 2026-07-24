@@ -227,6 +227,18 @@ after_initialize do
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
   end
 
+  on(:upcoming_change_enabled) do |setting_name|
+    if setting_name == :enable_topic_voting_badges
+      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: true)
+    end
+  end
+
+  on(:upcoming_change_disabled) do |setting_name|
+    if setting_name == :enable_topic_voting_badges
+      DiscourseTopicVoting::EnableTopicVotingBadgesToggled.call(enabled: false)
+    end
+  end
+
   Discourse::Application.routes.prepend do
     get "c/*category_slug_path_with_id/l/votes.rss" => "list#votes_feed", :format => :rss
   end

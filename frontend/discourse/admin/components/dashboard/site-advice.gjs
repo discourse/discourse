@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { compare } from "@ember/utils";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -79,7 +80,10 @@ export default class DashboardSiteAdvice extends Component {
                 class=(concat "db-site-advice__icon --" problem.priority)
               }}
 
-              <div class="db-site-advice__message">
+              <div
+                class="db-site-advice__message"
+                {{linkifySettingLinks problem.message}}
+              >
                 {{trustHTML problem.message}}
               </div>
 

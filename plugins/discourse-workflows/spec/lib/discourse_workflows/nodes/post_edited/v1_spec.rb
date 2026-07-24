@@ -89,12 +89,46 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       expect(reply_trigger.matches?(trigger_context("post_scope" => "replies"))).to eq(true)
     end
 
-    it "matches the configured category including parent categories" do
+    it "matches the configured category including subcategories by default" do
       trigger = described_class.new(first_post, "<p>Cooked</p>")
 
-      expect(trigger.matches?(trigger_context("category_id" => parent_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [parent_category.id.to_s]))).to eq(
         true,
       )
+      expect(trigger.matches?(trigger_context("category_ids" => [category.id.to_s]))).to eq(true)
+    end
+
+    it "does not match parent-category selections when subcategories are excluded" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
+      expect(
+        trigger.matches?(
+          trigger_context(
+            "category_ids" => [parent_category.id.to_s],
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [category.id.to_s], "include_subcategories" => false),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches any of the configured categories" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
+      expect(
+        trigger.matches?(
+          trigger_context("category_ids" => [Fabricate(:category).id.to_s, category.id.to_s]),
+        ),
+      ).to eq(true)
+    end
+
+    it "supports the legacy scalar category_id parameter" do
+      trigger = described_class.new(first_post, "<p>Cooked</p>")
+
       expect(trigger.matches?(trigger_context("category_id" => category.id.to_s))).to eq(true)
     end
 
@@ -110,7 +144,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostEdited::V1 do
       other_category = Fabricate(:category)
       trigger = described_class.new(first_post, "<p>Cooked</p>")
 
-      expect(trigger.matches?(trigger_context("category_id" => other_category.id.to_s))).to eq(
+      expect(trigger.matches?(trigger_context("category_ids" => [other_category.id.to_s]))).to eq(
         false,
       )
       expect(trigger.matches?(trigger_context("tag_names" => ["missing"]))).to eq(false)

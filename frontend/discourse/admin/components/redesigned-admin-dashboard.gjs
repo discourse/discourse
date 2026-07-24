@@ -78,7 +78,11 @@ export default class RedesignedAdminDashboard extends Component {
     />
 
     <div class="db-main">
-      {{#if @loadedSections}}
+      {{#if @sectionsFetchError}}
+        <div class="db-main__error" role="alert">
+          {{i18n "admin.dashboard.fetch_error"}}
+        </div>
+      {{else if @loadedSections}}
         <DashboardSiteAdvice
           @problems={{@problems}}
           @onRefresh={{@onRefreshProblems}}
@@ -93,7 +97,7 @@ export default class RedesignedAdminDashboard extends Component {
               @highlights={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
-              @fetchError={{@sectionsFetchError}}
+              @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
             />
@@ -105,6 +109,7 @@ export default class RedesignedAdminDashboard extends Component {
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
               @refreshSections={{@refreshSections}}
+              @fetchError={{section.error}}
             />
           {{else if (eq section.id "traffic")}}
             <DashboardTraffic
@@ -113,7 +118,7 @@ export default class RedesignedAdminDashboard extends Component {
               @traffic={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
-              @fetchError={{@sectionsFetchError}}
+              @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
             />
@@ -124,7 +129,7 @@ export default class RedesignedAdminDashboard extends Component {
               @engagement={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
-              @fetchError={{@sectionsFetchError}}
+              @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
             />
@@ -135,7 +140,7 @@ export default class RedesignedAdminDashboard extends Component {
               @search={{section.data}}
               @period={{@loadedSections.period}}
               @loading={{@loadingSections}}
-              @fetchError={{@sectionsFetchError}}
+              @fetchError={{section.error}}
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
             />
@@ -148,7 +153,7 @@ export default class RedesignedAdminDashboard extends Component {
                   @data={{section.data}}
                   @period={{@loadedSections.period}}
                   @loading={{@loadingSections}}
-                  @fetchError={{@sectionsFetchError}}
+                  @fetchError={{section.error}}
                   @startDate={{@loadedSections.startDate}}
                   @endDate={{@loadedSections.endDate}}
                 />

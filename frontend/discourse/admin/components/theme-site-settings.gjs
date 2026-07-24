@@ -4,12 +4,12 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
 import { eq } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
@@ -92,7 +92,7 @@ export default class ThemeSiteSettings extends Component {
 
       <DAsyncContent @asyncData={{this.loadThemeSiteSettings}}>
         <:content as |content|>
-          <AdminFilterControls
+          <DFilterControls
             @array={{this.filterableSettings content}}
             @searchableProps={{array
               "humanized_name"
@@ -162,7 +162,7 @@ export default class ThemeSiteSettings extends Component {
                 </tbody>
               </table>
             </:content>
-          </AdminFilterControls>
+          </DFilterControls>
         </:content>
       </DAsyncContent>
     </div>

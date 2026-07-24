@@ -56,20 +56,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if %i[title site_description].include?(name)
     topics = SeedData::Topics.with_default_locale
     topics.update(site_setting_names: ["welcome_topic_id"], skip_changed: true)
-  elsif %i[company_name contact_email governing_law city_for_disputes].include?(name)
-    topics = SeedData::Topics.with_default_locale
-    %w[tos_topic_id privacy_topic_id].each do |site_setting|
-      topic_id = SiteSetting.get(site_setting)
-      if topic_id > 0 && Topic.with_deleted.exists?(id: topic_id)
-        if SiteSetting.company_name.blank?
-          topics.delete(site_setting_names: [site_setting], skip_changed: true)
-        else
-          topics.update(site_setting_names: [site_setting], skip_changed: true)
-        end
-      elsif SiteSetting.company_name.present?
-        topics.create(site_setting_names: [site_setting])
-      end
-    end
   end
 
   Theme.expire_site_cache! if name == :default_theme_id
@@ -86,6 +72,10 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
       on_success { Rails.logger.info("Successfully updated #{name} SVG") }
       on_failure { Rails.logger.error("Failed to update #{name} SVG") }
     end
+  end
+
+  if name == :simple_email_subject
+    SiteSetting::Action::SimpleEmailSubjectToggled.call(enabled: new_value)
   end
 
   if name == :content_localization_enabled && new_value == true

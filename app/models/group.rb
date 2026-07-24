@@ -89,7 +89,6 @@ class Group < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
-  # TODO (martin) Also do this for User when following up access_control_list
   def clear_acls
     Jobs.enqueue(:cleanup_acls_for_deleted, group_id: id)
   end

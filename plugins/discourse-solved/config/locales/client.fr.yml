@@ -18,8 +18,6 @@ fr:
         sections:
           support:
             title: "Soutenir"
-            filter:
-              all_categories: "Toutes les catégories"
             answerers:
               staff: "Responsable"
               member: "Membres"

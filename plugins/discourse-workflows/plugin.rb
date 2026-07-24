@@ -39,7 +39,9 @@ register_svg_icon "note-sticky"
 register_svg_icon "palette"
 register_svg_icon "reply"
 register_svg_icon "triangle-exclamation"
+register_svg_icon "flag"
 register_svg_icon "clock"
+register_svg_icon "business-time"
 register_svg_icon "dollar-sign"
 register_svg_icon "comments"
 register_svg_icon "pause"
@@ -120,6 +122,15 @@ after_initialize do
                     :topic_admin_button_workflows,
                     include_condition: -> { scope.is_admin? } do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
+  end
+
+  add_to_serializer :site,
+                    :post_button_workflows,
+                    include_condition: -> do
+                      scope.user.present? &&
+                        DiscourseWorkflows::WorkflowDependency.cached_post_buttons.present?
+                    end do
+    DiscourseWorkflows::WorkflowDependency.post_buttons_for(scope.user)
   end
 
   add_to_serializer :current_user,

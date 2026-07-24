@@ -10,25 +10,16 @@ he:
       sort_options:
         votes: "הצבעות"
     topic_voting:
-      reached_limit: "נגמרו לך ההצבעות, עליך להסיר הצבעה קיימת!"
-      list_votes: "הצגת ההצבעות שלך"
       voted: "הצבעת לנושא זה"
-      allow_topic_voting: "לאפשר למשתמשים להצביע על נושאים בקטגוריה זו"
       vote_title: "הצבעה"
       vote_title_plural: "הצבעות"
       see_votes: "נותרו לך %{count}/%{max} הצבעות"
-      locked: "נעול"
       locked_description: "יש להעלות את דרגת האמון שלך כדי להצביע"
       votes:
         one: "הצבעה"
         two: "שתי הצבעות"
         many: "%{count} הצבעות"
         other: "%{count} הצבעות"
-      anonymous_button:
-        one: "הצבעה"
-        two: "הצבעות"
-        many: "הצבעות"
-        other: "הצבעות"
       remove_vote: "הסרת הצבעה"
       and_more_voters: "ו־%{count} נוספות..."
       show_voters: "להציג מי המצביעים"
@@ -43,10 +34,6 @@ he:
         help: "נושאים שהצבעת עליהם"
     search:
       most_votes: "רוב ההצבעות"
-      advanced:
-        vote:
-          count:
-            label: "ספירת הצבעות מינימלית"
     admin:
       web_hooks:
         voting_event:

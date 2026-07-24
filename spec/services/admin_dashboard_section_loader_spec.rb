@@ -44,6 +44,30 @@ describe AdminDashboardSectionLoader do
         ],
       )
     end
+
+    it "returns partial section data when a section fails to build" do
+      error = StandardError.new("boom")
+      AdminDashboardSiteTraffic.stubs(:build).returns({ value: "traffic" })
+      AdminDashboardSearch.stubs(:build).raises(error)
+      Discourse.expects(:warn_exception).with(
+        error,
+        message: "Failed to build admin dashboard section",
+        env: {
+          section_id: "search",
+        },
+      )
+
+      expect(
+        described_class.build(
+          section_ids: %w[traffic search],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        ),
+      ).to eq(
+        [{ id: "traffic", data: { value: "traffic" } }, { id: "search", data: nil, error: true }],
+      )
+    end
   end
 
   describe "plugin sections" do

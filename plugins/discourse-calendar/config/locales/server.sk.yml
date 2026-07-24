@@ -78,6 +78,8 @@ sk:
     holiday_status:
       description: "Na dovolenke"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     notifications:
       before_event_reminder: "%{title} sa práve začína."
       after_event_reminder: "%{title} sa skončila."

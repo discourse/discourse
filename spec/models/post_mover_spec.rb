@@ -138,6 +138,15 @@ RSpec.describe PostMover do
       end
 
       context "with errors" do
+        it "raises when the mover can see a duplicate title the first post's author cannot" do
+          SiteSetting.duplicate_topic_titles = "disallowed"
+          secure_topic =
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect { topic.move_posts(user, [p2.id], title: secure_topic.title) }.to raise_error(
+            ActiveRecord::RecordInvalid,
+          )
+        end
+
         it "raises an error when one of the posts doesn't exist" do
           non_existent_post_id = Post.maximum(:id)&.next || 1
           expect {
@@ -779,6 +788,75 @@ RSpec.describe PostMover do
 
             topic.reload
             expect(topic).to_not be_closed
+          end
+
+          context "with an action whisper that has no content" do
+            fab!(:action_whisper) do
+              Fabricate(
+                :post,
+                topic:,
+                user:,
+                post_type: Post.types[:whisper],
+                action_code: "some_action",
+              ).tap { |post| post.update_columns(raw: "", cooked: "") }
+            end
+
+            it "closes the topic when all other posts were moved" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+            end
+
+            it "closes the topic when the whisper id is included in the move" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id, action_whisper.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+              expect(action_whisper.reload.topic_id).to eq(topic.id)
+            end
+          end
+
+          context "with a whisper that has content" do
+            fab!(:content_whisper) do
+              Fabricate(:post, topic:, user:, post_type: Post.types[:whisper])
+            end
+
+            it "closes the topic when the whisper is moved along with all posts" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id, content_whisper.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to be_closed
+              expect(content_whisper.reload.topic_id).to eq(destination_topic.id)
+            end
+
+            it "doesn't close the topic when the whisper is left behind" do
+              posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+              topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+              topic.reload
+              expect(topic).to_not be_closed
+            end
+          end
+
+          it "closes the topic when moving all posts and a whisper from an earlier move to a message" do
+            split_topic_whisper =
+              Fabricate(
+                :post,
+                topic:,
+                user:,
+                post_type: Post.types[:whisper],
+                action_code: "split_topic",
+              )
+
+            posts_to_move = [p1.id, p2.id, p3.id, p4.id, split_topic_whisper.id]
+            topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+
+            topic.reload
+            expect(topic).to be_closed
           end
 
           it "schedules topic deleting when all posts were moved" do

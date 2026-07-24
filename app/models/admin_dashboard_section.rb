@@ -12,6 +12,7 @@ end
 #
 #  id         :bigint           not null, primary key
 #  position   :integer          not null
+#  settings   :jsonb            not null
 #  visible    :boolean          default(TRUE), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

@@ -10,8 +10,6 @@ sr:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Sve kategorije"
             answerers:
               staff: "Osoblje"
               member: "Članovi"

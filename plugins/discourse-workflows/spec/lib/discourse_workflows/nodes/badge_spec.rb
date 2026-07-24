@@ -43,7 +43,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
     let(:item) { { "json" => {} } }
 
     context "with grant operation" do
-      it "grants the badge to the user" do
+      it "grants the badge to the user", :aggregate_failures do
         config = {
           "operation" => "grant",
           "username" => user.username,
@@ -57,6 +57,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Badge::V1 do
         expect(result["badge_id"]).to eq(badge.id)
         expect(result["badge_name"]).to eq(badge.name)
         expect(UserBadge.exists?(user: user, badge: badge)).to be(true)
+        expect(result).to match_node_output_schema(described_class)
       end
 
       it "does not duplicate a non-multiple-grant badge" do

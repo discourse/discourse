@@ -22,8 +22,6 @@ zh_CN:
     first_reaction:
       name: 首次回应
       description: 回应了帖子
-      long_description: |
-        您第一次回应帖子时会被授予此徽章。回应帖子是让您的社区成员知道他们发布的内容有趣、有用、酷或好玩的绝佳方式。分享您的回应！
   reports:
     reactions:
       title: "回应"

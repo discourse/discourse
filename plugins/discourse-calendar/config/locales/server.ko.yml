@@ -22,6 +22,8 @@ ko:
         year: "년"
     invite_user_notification: "%{username}님이 사용자님을 초대했습니다: %{description}"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%B %-d, %Y"
     errors:
       bulk_invite:
         error: "해당 파일을 업로드하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오."

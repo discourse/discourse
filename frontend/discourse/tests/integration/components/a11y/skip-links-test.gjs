@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, focus, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
@@ -66,7 +66,8 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
       </template>
     );
 
-    const skipLink = document.querySelector("#skip-link");
+    const skipLink = find("#skip-link");
+    skipLink.style.transition = "none";
 
     let computedStyle = window.getComputedStyle(skipLink);
     assert.strictEqual(
@@ -75,8 +76,8 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
       "skip link is hidden with -75px offset before focus"
     );
 
-    skipLink.style.transition = "none";
-    skipLink.focus();
+    await focus(skipLink);
+    assert.dom(skipLink).isFocused("skip link receives focus");
 
     computedStyle = window.getComputedStyle(skipLink);
     assert.strictEqual(

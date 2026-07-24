@@ -11,6 +11,20 @@ module DiscourseAi
       SiteSetting.content_localization_locales
     end
 
+    def self.supported_locale_bases_cte
+      <<~SQL
+        supported AS MATERIALIZED (
+          SELECT COALESCE(
+            array_agg(
+              DISTINCT split_part(lower(replace(locale, '-', '_')), '_', 1)
+            ) FILTER (WHERE locale IS NOT NULL),
+            ARRAY[]::text[]
+          ) AS bases
+          FROM unnest(ARRAY[:supported_locales]::text[]) configured(locale)
+        )
+      SQL
+    end
+
     def self.has_llm_model?
       agent_ids = [
         SiteSetting.ai_translation_locale_detector_agent,
@@ -186,6 +200,10 @@ module DiscourseAi
     end
 
     def self.credits_available_for_tag_localization?
+      credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
+    end
+
+    def self.credits_available_for_sidebar_localization?
       credits_available_for_agent_ids?([SiteSetting.ai_translation_short_text_translator_agent])
     end
   end

@@ -38,6 +38,28 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
       "settings",
       "first group should be settings"
     );
+    assert.false(
+      groups.some((group) => group.settings.includes("ai_image_caption_agent")),
+      "bot should not include the image caption agent"
+    );
+  });
+
+  test("returns correct groups for image caption", function (assert) {
+    const groups = getSettingGroupsForFeature("image_caption");
+
+    assert.strictEqual(groups.length, 1, "image caption should have 1 group");
+    assert.strictEqual(
+      groups[0].key,
+      "settings",
+      "first group should be settings"
+    );
+    assert.deepEqual(groups[0].settings, [
+      "ai_post_image_captions_enabled",
+      "ai_image_caption_agent",
+      "ai_post_image_captions_per_post_limit",
+      "ai_post_image_captions_backfill_hourly_rate",
+      "ai_post_image_captions_backfill_max_age_days",
+    ]);
   });
 
   test("returns correct groups for summarization", function (assert) {

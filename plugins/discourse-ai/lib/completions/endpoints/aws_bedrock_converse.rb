@@ -10,6 +10,14 @@ module DiscourseAi
           llm_model.provider == "aws_bedrock_converse"
         end
 
+        def self.supports_environment_credentials?
+          true
+        end
+
+        def self.requires_configured_url?
+          false
+        end
+
         def provider_id
           AiApiAuditLog::Provider::BedrockConverse
         end

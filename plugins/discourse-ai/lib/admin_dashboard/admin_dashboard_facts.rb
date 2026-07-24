@@ -463,7 +463,7 @@ module DiscourseAi
               AND e.created_at < (:end_date::date + 1)
               AND e.topic_id IS NOT NULL
               AND e.normalized_referrer IS NOT NULL
-              AND e.source = :source
+              AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
               AND #{topic_conditions}
             GROUP BY e.topic_id, t.title
             ORDER BY visits DESC
@@ -471,7 +471,6 @@ module DiscourseAi
           SQL
             start_date: @start_date,
             end_date: @end_date,
-            source: BrowserPageviewEvent.rollup_source,
             category_ids: scoped_category_ids,
           ).first
         return if row.nil? || row.visits.to_i < 50

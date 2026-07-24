@@ -11,6 +11,8 @@ require "tokenizers"
 require "tiktoken_ruby"
 require "discourse_ai/tokenizers"
 require "ed25519"
+require "smarter_json"
+require "json_completer"
 
 enabled_site_setting :discourse_ai_enabled
 
@@ -126,6 +128,7 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiImageCaptionAgent
   #register_problem_check ProblemCheck::AiCreditSoftLimit
   #register_problem_check ProblemCheck::AiCreditHardLimit
 
@@ -156,6 +159,7 @@ after_initialize do
   on(:post_destroyed) do |post|
     if !Post.with_deleted.exists?(post.id)
       DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
+      DiscourseAi::PostImageCaptions.delete_for_post(post.id)
     end
   end
 
@@ -189,6 +193,26 @@ after_initialize do
       # even though this can be shortened this is the clearest way to express it
       nil
     end
+  end
+
+  on(:post_process_cooked) do |doc, post|
+    DiscourseAi::PostImageCaptions.process_cooked(
+      doc,
+      post,
+      locale: DiscourseAi::PostImageCaptions.original_locale(post),
+    )
+  end
+
+  on(:post_process_localized_cooked) do |doc, post, post_localization|
+    DiscourseAi::PostImageCaptions.process_cooked(doc, post, locale: post_localization.locale)
+  end
+
+  register_modifier(:post_search_index_text) do |text, post_id, cooked, locale|
+    DiscourseAi::PostImageCaptions.append_to_search_text(text, post_id, cooked, locale: locale)
+  end
+
+  on(:reduce_cooked) do |doc, _post|
+    DiscourseAi::PostImageCaptions.remove_existing_caption_metadata(doc)
   end
 
   add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })

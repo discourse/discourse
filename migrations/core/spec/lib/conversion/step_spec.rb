@@ -353,7 +353,7 @@ RSpec.describe Migrations::Conversion::Step do
         end
       RUBY
 
-    after { Object.send(:remove_const, :StepConstantsFixture) }
+    after { remove_test_const(:StepConstantsFixture) }
 
     it "resolves `IntermediateDB` and `Enums` inside role blocks via the step's ancestry" do
       expected = [Migrations::Database::IntermediateDB, Migrations::Database::IntermediateDB::Enums]
@@ -486,7 +486,7 @@ RSpec.describe Migrations::Conversion::Step do
       )
     end
 
-    after { Object.send(:remove_const, "TemporaryStepsModule") }
+    after { remove_test_const("TemporaryStepsModule") }
 
     it "exposes the StepDependencies macros at class level" do
       expect(described_class).to be_a(Migrations::StepDependencies)

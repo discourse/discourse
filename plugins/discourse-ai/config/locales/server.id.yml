@@ -47,8 +47,6 @@ id:
     ai_helper:
       prompts:
         custom_prompt: "Perintah Khusus"
-      image_caption:
-        attribution: "Keterangan oleh AI"
     ai_bot:
       default_pm_prefix: "[PM bot AI tanpa judul]"
       agents:

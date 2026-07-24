@@ -23,9 +23,11 @@ module Migrations
                  default: [],
                  type: STEP_LIST
           option "--max-parallel-steps <count>",
-                 "Maximum number of steps to run at the same time. " \
-                   "Caps the source DB connections a run opens; " \
-                   "defaults to the worker budget (usable CPUs minus one).",
+                 "Maximum number of worker processes (forks) running at the same time. " \
+                   "This caps forks, not steps: a partitioned step runs on several forks " \
+                   "at once, so it can consume the whole cap on its own. It also bounds " \
+                   "the source DB connections a run opens. Defaults to the worker budget " \
+                   "(usable CPUs minus one).",
                  type: Integer
           option "--no-fork",
                  "Run each step inline in one process instead of forking workers. " \

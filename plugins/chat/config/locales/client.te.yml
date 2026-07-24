@@ -58,6 +58,8 @@ te:
         back: "వెనుకకు"
         filter_all: అన్ని
         filter_closed: మూసివేయబడినవి
+        filter_joined_all: "అన్నీ"
+        filter_joined_joined: "చేరినారు"
       chat_message_separator:
         today: ఈరోజు
         yesterday: నిన్న
@@ -80,6 +82,9 @@ te:
       direct_message_creator:
         title: కొత్త సందేశం
         no_results: ఫలితాలు లేవు
+      channel:
+        preview_card:
+          log_in: "లాగిన్ అవ్వండి"
       create_channel:
         description: "వివరణ"
         type: "రకం"

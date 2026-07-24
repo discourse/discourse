@@ -68,7 +68,7 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    ContentSecurityPolicy.nonce_placeholder(response.headers)
+    ContentSecurityPolicy.nonce_placeholder(response.headers, request_env: request.env)
   end
 
   def track_view_session_id_placeholder
@@ -82,8 +82,11 @@ module ApplicationHelper
       sk = "shared_session_key"
       return request.env[sk] if request.env[sk]
 
+      token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
+      return if !token || token.user != current_user
+
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
       key
     end
   end

@@ -1,36 +1,88 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
+import {
+  mapEveryoneToLoggedInUsersIds,
+  mapLoggedInUsersToEveryoneForStorage,
+} from "discourse/lib/group-list-setting-aliasing";
 import { splitString } from "discourse/lib/utilities";
-import GroupChooser from "discourse/select-kit/components/group-chooser";
+import ListSetting from "discourse/select-kit/components/list-setting";
+
+const TOKEN_SEPARATOR = "|";
 
 export default class SettingFieldGroupList extends Component {
   @service site;
+  @service siteSettings;
 
-  get groupContent() {
-    return this.site.groups;
+  get granularPermissionsEnabled() {
+    return this.siteSettings
+      .granular_anonymous_and_logged_in_groups_permissions;
   }
 
-  toGroupIdArray(value) {
-    if (Array.isArray(value)) {
-      return value.map(Number);
+  get groupChoices() {
+    const disallowed = splitString(
+      this.args.definition.disallowed_groups,
+      TOKEN_SEPARATOR
+    );
+    const groups = (this.site.groups || []).filter(
+      (group) => !disallowed.includes(group.id.toString())
+    );
+    const groupsById = Object.fromEntries(
+      groups.map((group) => [group.id.toString(), group])
+    );
+
+    return mapEveryoneToLoggedInUsersIds(
+      groups.map((group) => group.id.toString()),
+      this.granularPermissionsEnabled
+    )
+      .map((id) => {
+        const group = groupsById[id];
+        return group ? { name: group.name, id } : null;
+      })
+      .filter(Boolean);
+  }
+
+  get selectedIds() {
+    const value = this.args.field.value;
+    const ids = Array.isArray(value)
+      ? value.map(String)
+      : splitString(value, TOKEN_SEPARATOR);
+
+    return mapEveryoneToLoggedInUsersIds(ids, this.granularPermissionsEnabled);
+  }
+
+  get storedValueReference() {
+    const saved = this.args.definition.currentSavedValue;
+    if (saved !== undefined) {
+      return saved;
     }
-    return splitString(value, "|").map(Number);
+
+    const value = this.args.field.value;
+    return Array.isArray(value) ? value.join(TOKEN_SEPARATOR) : value;
   }
 
   @bind
-  setGroupIdString(field, ids) {
-    field.set((ids ?? []).join("|"));
+  onChange(ids) {
+    const storedIds = mapLoggedInUsersToEveryoneForStorage(
+      ids ?? [],
+      this.granularPermissionsEnabled,
+      this.storedValueReference,
+      TOKEN_SEPARATOR
+    );
+
+    this.args.field.set(storedIds.join(TOKEN_SEPARATOR));
   }
 
   <template>
     <@field.Control>
-      <GroupChooser
-        @content={{this.groupContent}}
-        @value={{this.toGroupIdArray @field.value}}
-        @labelProperty="name"
-        @onChange={{fn this.setGroupIdString @field}}
+      <ListSetting
+        @value={{this.selectedIds}}
+        @choices={{this.groupChoices}}
+        @settingName={{@definition.key}}
+        @mandatoryValues={{@definition.mandatory_values}}
+        @nameProperty="name"
+        @valueProperty="id"
+        @onChange={{this.onChange}}
       />
     </@field.Control>
   </template>

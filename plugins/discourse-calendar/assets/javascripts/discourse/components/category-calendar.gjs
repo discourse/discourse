@@ -38,6 +38,14 @@ export default class CategoryCalendar extends Component {
     });
   }
 
+  get includeSubcategories() {
+    return !this.router.currentRoute?.attributes?.noSubcategories;
+  }
+
+  get refreshKey() {
+    return `${this.category.id}-${this.includeSubcategories}`;
+  }
+
   @bind
   async loadEvents(info) {
     try {
@@ -46,8 +54,11 @@ export default class CategoryCalendar extends Component {
         before: info.endStr,
         include_ongoing: true,
         category_id: this.category.id,
-        include_subcategories: true,
       };
+
+      if (this.includeSubcategories) {
+        params.include_subcategories = true;
+      }
 
       const events = await this.discoursePostEventService.fetchEvents(params);
       return this.formattedEvents(events);
@@ -148,7 +159,7 @@ export default class CategoryCalendar extends Component {
         @height="650px"
         @initialView={{this.categorySetting.defaultView}}
         @weekends={{this.renderWeekends}}
-        @refreshKey={{this.category.id}}
+        @refreshKey={{this.refreshKey}}
       />
     {{/if}}
   </template>

@@ -97,6 +97,8 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        next if group && !t.topic_allowed_groups.exists?(group_id: group.id)
+
         if group
           GroupArchivedMessage.move_to_inbox!(group.id, t, acting_user_id: @user.id)
         else
@@ -111,6 +113,8 @@ class TopicsBulkAction
     group = find_group
     topics.each do |t|
       if guardian.can_see?(t) && t.private_message?
+        next if group && !t.topic_allowed_groups.exists?(group_id: group.id)
+
         if group
           GroupArchivedMessage.archive!(group.id, t, acting_user_id: @user.id)
         else

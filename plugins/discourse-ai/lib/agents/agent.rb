@@ -20,10 +20,6 @@ module DiscourseAi
           1_048_576
         end
 
-        def execution_mode
-          "default"
-        end
-
         def max_turn_tokens
           nil
         end
@@ -115,6 +111,8 @@ module DiscourseAi
             Tools::DbSchema,
             Tools::SearchSettings,
             Tools::SettingContext,
+            Tools::ReadSiteSetting,
+            Tools::ChangeSiteSetting,
             Tools::RandomPicker,
             Tools::DiscourseMetaSearch,
             Tools::GithubFileContent,
@@ -244,6 +242,7 @@ module DiscourseAi
             SentimentClassifier => -36,
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
+            DiscourseAdminAssistant => -39,
           }.freeze
         end
       end

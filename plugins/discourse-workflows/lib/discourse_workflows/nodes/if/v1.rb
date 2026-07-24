@@ -18,6 +18,7 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [{ mode: :passthrough }, { mode: :passthrough }],
           properties: {
             combinator: {
               type: :options,

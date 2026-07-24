@@ -13,6 +13,16 @@ module DiscourseChatIntegration::Provider::TelegramProvider
                        only: :command
 
     def command
+      send_reply
+
+      # Always give telegram a success message, otherwise we'll stop receiving webhooks
+      data = { success: true }
+      render json: data
+    end
+
+    private
+
+    def send_reply
       # If it's a new message (telegram also sends hooks for other reasons that we don't care about)
       if params.key?("message")
         chat_id = params["message"]["chat"]["id"]
@@ -48,13 +58,9 @@ module DiscourseChatIntegration::Provider::TelegramProvider
 
         DiscourseChatIntegration::Provider::TelegramProvider.sendMessage(message)
       end
-
-      # Always give telegram a success message, otherwise we'll stop receiving webhooks
-      data = { success: true }
-      render json: data
+    rescue DiscourseChatIntegration::ProviderError => e
+      Rails.logger.warn("Failed to send telegram command reply: #{e.info.to_json}")
     end
-
-    private
 
     def process_command(message)
       return unless message["text"] # No command to be processed

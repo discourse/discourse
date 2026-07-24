@@ -15,6 +15,8 @@ RSpec.describe "Data explorer query runner" do
   context "with the mode switch in the header" do
     fab!(:query) { Fabricate(:query, name: "Query", sql: "SELECT 1", user: admin) }
 
+    before { SiteSetting.discourse_ai_enabled = true }
+
     it "hides the switch when AI queries are disabled" do
       SiteSetting.data_explorer_ai_queries_enabled = false
       visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")

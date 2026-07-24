@@ -576,6 +576,9 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.user_deleted).to eq(true)
       expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_notes.last.content).to eq(
+        I18n.t("reviewables.post_deleted_by_author_after_penalty"),
+      )
 
       PostDestroyer.new(reply.user, reply).recover
 

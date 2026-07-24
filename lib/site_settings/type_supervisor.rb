@@ -306,7 +306,16 @@ class SiteSettings::TypeSupervisor
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
+        error = validator.error_message
+        if SiteSettings::LabelFormatter.contains_setting_links?(error)
+          raise Discourse::InvalidHTMLParameters.new(
+                  "#{name}: #{SiteSettings::LabelFormatter.plain_setting_links(error)}",
+                  html_message:
+                    "#{name}: #{SiteSettings::LabelFormatter.expand_setting_links(error, escape_text: true)}",
+                )
+        end
+
+        raise Discourse::InvalidParameters, "#{name}: #{error}"
       end
     end
 

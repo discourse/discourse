@@ -18,8 +18,6 @@ tr_TR:
     first_reaction:
       name: İlk Tepki
       description: Gönderiye tepki verdi
-      long_description: |
-        Bu rozet, bir gönderiye ilk kez tepki verdiğinizde verilir. Gönderilere tepki vermek, topluluk üyesi arkadaşlarınıza gönderdikleri şeyin ilginç, yararlı, havalı veya eğlenceli olduğunu bildirmenin harika bir yoludur. Tepkinizi paylaşın!
   reports:
     reactions:
       title: "Tepkiler"

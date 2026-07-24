@@ -9,6 +9,16 @@ export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
 
   type = "groups";
 
+  get groupChoices() {
+    const disallowed = (this.args.spec.disallowed_groups || "")
+      .split("|")
+      .filter(Boolean);
+
+    return (this.site.groups || []).filter(
+      (group) => !disallowed.includes(group.id.toString())
+    );
+  }
+
   get groupChooserOptions() {
     return {
       clearable: !this.required,
@@ -19,7 +29,7 @@ export default class SchemaSettingTypeGroups extends SchemaSettingTypeModels {
 
   <template>
     <GroupChooser
-      @content={{this.site.groups}}
+      @content={{this.groupChoices}}
       @value={{this.value}}
       @onChange={{this.onInput}}
       @options={{this.groupChooserOptions}}

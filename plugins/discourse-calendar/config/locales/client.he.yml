@@ -27,6 +27,9 @@ he:
             topic_id:
               label: מזהה נושא
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "צ׳אט"
       invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
       on_holiday: "בחג"
       disable_holiday: "השבתה"

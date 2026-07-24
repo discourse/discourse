@@ -18,7 +18,6 @@ sk:
       dashboard:
         emotion:
           title: "Emócia"
-          description: "Tabuľka uvádza počet príspevkov klasifikovaných s určenou emóciou. Klasifikácia bola vykonaná pomocou modelu „SamLowe/roberta-base-go_emotions“."
         reports:
           filters:
             group_by:
@@ -226,11 +225,13 @@ sk:
           translate: "Preložiť"
           markdown_tables: "Generovanie tabuľky Markdown"
           custom_prompt: "Vlastný prompt"
-          image_caption: "Obrázky s popismi"
           translator: "Prekladač"
           post_illustrator: "Ilustrátor príspevkov"
           setting_groups:
             automation: "Automatizácia"
+        image_caption:
+          setting_groups:
+            settings: "Nastavení"
         translation:
           name: "Preklad"
           description: "Prekladá obsah do podporovaných jazykov"
@@ -367,8 +368,6 @@ sk:
         overwrite: "Prepísať"
         description: "Popis"
         no_llm_selected: "Nie je vybraný žiadny jazykový model"
-        max_context_posts: "Maximálny počet kontextových príspevkov"
-        max_context_posts_help: "Maximálny počet príspevkov, ktoré sa majú použiť ako kontext pre AI pri odpovedi používateľovi. (predvolene prázdne)"
         vision_max_pixel_sizes:
           low: Nízka kvalita - najlacnejšie (256x256)
           medium: Stredná kvalita (512x512)
@@ -559,7 +558,7 @@ sk:
           max_usages_help: "Maximálny počet použití modelu AI pre každého používateľa v tejto skupine v rámci zadaného trvania. Táto kvóta sa sleduje pre jednotlivých používateľov a nezdieľa sa v rámci skupiny."
         usage:
           ai_bot: "AI bot"
-          ai_helper_image_caption: "Popis obrázka"
+          ai_image_caption: "Popis obrázka"
           ai_summarization: "Zhrnúť"
           ai_embeddings_semantic_search: "Vyhľadávanie pomocou AI"
           ai_spam: "Spam"
@@ -574,7 +573,6 @@ sk:
           anthropic-claude-opus-4-7: "Najinteligentnejší model spoločnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
-          open_ai-gpt-5-4-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
         configured:
           title: "Nakonfigurované LLM"
@@ -617,7 +615,7 @@ sk:
           fake: "Vlastné"
         provider_fields:
           access_key_id: "ID prístupového kľúča AWS Bedrock"
-          region: "Región AWS Bedrock"
+          region: "Región"
           organization: "Voliteľné ID organizácie OpenAI"
           disable_system_prompt: "Zakázať systémové správy vo výzvach"
           enable_native_tool: "Povoliť podporu natívnych nástrojov"
@@ -672,11 +670,6 @@ sk:
           select: "Vyberte"
           selected: "Vybrané"
           try_again: "Skúsiť znova"
-        image_caption:
-          button_label: "Titulky s AI"
-          generating: "Generovanie titulkov..."
-          credits: "S titulkami od AI"
-          save_caption: "Uložiť"
         no_content_error: "Najprv pridajte obsah, aby ste na ňom mohli vykonávať akcie AI"
       reviewables:
         model_used: "Použitý model:"
@@ -748,7 +741,7 @@ sk:
         click_to_run_label: "Spustiť artefakt"
       ai_bot:
         title: "AI bot"
-        llm: "Model"
+        llm: "Model:"
         pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
         cancel_streaming: "Zastaviť odpoveď"
         try_again: "Skúste to znova"

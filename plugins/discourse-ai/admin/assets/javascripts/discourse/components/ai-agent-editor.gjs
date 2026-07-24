@@ -69,6 +69,8 @@ export default class AgentEditor extends Component {
         data.toolOptions = this.mapToolOptions(data.toolOptions, data.tools);
       }
 
+      data.compression_threshold ??= 80;
+
       return data;
     }
   }
@@ -92,19 +94,6 @@ export default class AgentEditor extends Component {
       { name: l("low"), id: 65536 },
       { name: l("medium"), id: 262144 },
       { name: l("high"), id: 1048576 },
-    ];
-  }
-
-  get executionModes() {
-    return [
-      {
-        id: "default",
-        name: i18n("discourse_ai.ai_agent.execution_mode_options.default"),
-      },
-      {
-        id: "agentic",
-        name: i18n("discourse_ai.ai_agent.execution_mode_options.agentic"),
-      },
     ];
   }
 
@@ -278,17 +267,6 @@ export default class AgentEditor extends Component {
         (fct) => !removedTools.includes(fct)
       );
       form.set("forcedTools", updatedForcedTools);
-    }
-  }
-
-  @action
-  onExecutionModeChange(mode, { set }) {
-    set("execution_mode", mode);
-    if (mode === "default") {
-      set("max_turn_tokens", null);
-      set("compression_threshold", null);
-    } else {
-      set("compression_threshold", 80);
     }
   }
 
@@ -1118,59 +1096,27 @@ export default class AgentEditor extends Component {
           {{/if}}
 
           <form.Field
-            @name="execution_mode"
-            @title={{i18n "discourse_ai.ai_agent.execution_mode"}}
-            @tooltip={{i18n "discourse_ai.ai_agent.execution_mode_help"}}
+            @name="max_turn_tokens"
+            @title={{i18n "discourse_ai.ai_agent.max_turn_tokens"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
             @format="large"
-            @onSet={{this.onExecutionModeChange}}
-            @type="select"
+            @type="input-number"
             as |field|
           >
-            <field.Control @includeNone={{false}} as |select|>
-              {{#each this.executionModes as |mode|}}
-                <select.Option @value={{mode.id}}>{{mode.name}}</select.Option>
-              {{/each}}
-            </field.Control>
+            <field.Control @min={{1}} lang="en" />
           </form.Field>
 
-          {{#if (eq data.execution_mode "agentic")}}
-            <form.Field
-              @name="max_turn_tokens"
-              @title={{i18n "discourse_ai.ai_agent.max_turn_tokens"}}
-              @tooltip={{i18n "discourse_ai.ai_agent.max_turn_tokens_help"}}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control @min={{1}} lang="en" />
-            </form.Field>
-
-            <form.Field
-              @name="compression_threshold"
-              @title={{i18n "discourse_ai.ai_agent.compression_threshold"}}
-              @tooltip={{i18n
-                "discourse_ai.ai_agent.compression_threshold_help"
-              }}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control @min={{20}} @max={{99}} lang="en" />
-            </form.Field>
-          {{/if}}
-
-          {{#unless (eq data.execution_mode "agentic")}}
-            <form.Field
-              @name="max_context_posts"
-              @title={{i18n "discourse_ai.ai_agent.max_context_posts"}}
-              @tooltip={{i18n "discourse_ai.ai_agent.max_context_posts_help"}}
-              @format="large"
-              @type="input-number"
-              as |field|
-            >
-              <field.Control lang="en" />
-            </form.Field>
-          {{/unless}}
+          <form.Field
+            @name="compression_threshold"
+            @title={{i18n "discourse_ai.ai_agent.compression_threshold"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.compression_threshold_help"}}
+            @showOptional={{false}}
+            @format="large"
+            @type="input-number"
+            as |field|
+          >
+            <field.Control @min={{20}} @max={{99}} lang="en" />
+          </form.Field>
 
           {{#if (gt data.tools.length 0)}}
             <AiAgentToolOptions

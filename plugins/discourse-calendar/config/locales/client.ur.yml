@@ -13,6 +13,9 @@ ur:
             topic_id:
               label: ٹاپک ID
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "گفتگو"
       disable_holiday: "غیر فعال کریں"
       enable_holiday: "فعال کریں"
       date: "تاریخ"

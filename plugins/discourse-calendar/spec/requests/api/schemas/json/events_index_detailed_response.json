@@ -241,6 +241,9 @@
               "null"
             ]
           },
+          "is_zoom_livestream": {
+            "type": "boolean"
+          },
           "max_attendees": {
             "type": [
               "integer",
@@ -290,13 +293,17 @@
                   },
                   "tags_descriptions": {
                     "type": "object"
+                  },
+                  "slug": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "id",
                   "title",
                   "tags",
-                  "tags_descriptions"
+                  "tags_descriptions",
+                  "slug"
                 ]
               }
             },

@@ -66,9 +66,7 @@ export default {
         addVotingNavItem("my_votes", "state=my_votes", {
           requiresUser: true,
         });
-      }
 
-      if (siteSettings.topic_voting_enabled) {
         api.addSearchSuggestion("order:votes");
       }
 

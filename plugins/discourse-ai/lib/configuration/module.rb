@@ -8,6 +8,7 @@ module DiscourseAi
       DISCORD = "discord"
       INFERENCE = "inference"
       AI_HELPER = "ai_helper"
+      IMAGE_CAPTION = "image_caption"
       TRANSLATION = "translation"
       BOT = "bot"
       SPAM = "spam"
@@ -22,6 +23,7 @@ module DiscourseAi
         DISCORD,
         INFERENCE,
         AI_HELPER,
+        IMAGE_CAPTION,
         TRANSLATION,
         BOT,
         SPAM,
@@ -43,6 +45,7 @@ module DiscourseAi
       AUTOMATION_REPORTS_ID = 10
       AUTOMATION_TRIAGE_ID = 11
       ADMIN_DASHBOARD_ID = 12
+      IMAGE_CAPTION_ID = 13
 
       class << self
         def external_module_id(module_name)
@@ -80,6 +83,12 @@ module DiscourseAi
               AI_HELPER,
               enabled_by_setting: "ai_helper_enabled",
               features: DiscourseAi::Configuration::Feature.ai_helper_features,
+            ),
+            new(
+              IMAGE_CAPTION_ID,
+              IMAGE_CAPTION,
+              enabled_by_setting: "ai_post_image_captions_enabled",
+              features: DiscourseAi::Configuration::Feature.image_caption_features,
             ),
             new(
               TRANSLATION_ID,

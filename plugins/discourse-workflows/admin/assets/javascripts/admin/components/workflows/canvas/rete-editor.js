@@ -26,6 +26,8 @@ import {
 } from "../../../lib/workflows/node-utils";
 import { createCustomRenderer } from "./custom-renderer";
 
+export const DRAG_LENIENCE_PX = 4;
+
 export class ReteEditorBridge {
   static async create(container, { callbacks, nodeTypes = [] }) {
     const {
@@ -114,6 +116,7 @@ export class ReteEditorBridge {
     const connectionPlugin = new ConnectionPlugin();
     const renderer = new CustomRenderer();
     renderer.onManualTrigger = callbacks.onManualTrigger;
+    renderer.onExecuteStep = callbacks.onExecuteStep;
 
     connectionPlugin.addPreset(ConnectionPresets.classic.setup());
 
@@ -268,6 +271,7 @@ export class ReteEditorBridge {
     this.selectionBoxElement = null;
     this.lastPickedId = null;
     this.lastPickedTime = 0;
+    this.nodeDragOrigin = null;
   }
 
   setupPipes() {
@@ -282,6 +286,23 @@ export class ReteEditorBridge {
             return;
           }
           break;
+
+        case "nodetranslate": {
+          const origin = this.nodeDragOrigin;
+          if (origin && origin.id === context.data.id) {
+            const { position } = context.data;
+            const { k } = this.area.area.transform;
+            const distance = Math.hypot(
+              (position.x - origin.x) * k,
+              (position.y - origin.y) * k
+            );
+            if (distance < DRAG_LENIENCE_PX) {
+              return;
+            }
+            this.nodeDragOrigin = null;
+          }
+          break;
+        }
 
         case "nodetranslated":
           this.callbacks.onNodeDragged?.(
@@ -301,9 +322,13 @@ export class ReteEditorBridge {
         }
 
         case "nodepicked": {
+          const pickedId = context.data.id;
+          const view = this.area.nodeViews.get(pickedId);
+          this.nodeDragOrigin = view
+            ? { id: pickedId, x: view.position.x, y: view.position.y }
+            : null;
           this.callbacks.onNodePicked?.();
           const now = Date.now();
-          const pickedId = context.data.id;
           if (
             pickedId === this.lastPickedId &&
             now - this.lastPickedTime < 500
@@ -325,6 +350,8 @@ export class ReteEditorBridge {
           break;
 
         case "pointerup":
+          this.nodeDragOrigin = null;
+
           if (this.selectionDrag) {
             await this.finishSelectionDrag(context.data);
             return;
@@ -355,12 +382,14 @@ export class ReteEditorBridge {
 
     this.connectionPlugin.addPipe((context) => {
       if (context.type === "connectionpick") {
-        const pickedSide = context.data.socket?.side;
+        const pickedSocket = context.data.socket;
         this.container.classList.add("is-connection-dragging");
-        this.updateInvalidConnectionTargets(pickedSide);
+        this.updateInvalidConnectionTargets(pickedSocket?.side);
+        this.markConnectionSourceNode(pickedSocket?.nodeId);
       } else if (context.type === "connectiondrop") {
         this.container.classList.remove("is-connection-dragging");
         this.clearInvalidConnectionTargets();
+        this.clearConnectionSourceNode();
       }
       return context;
     });
@@ -425,6 +454,23 @@ export class ReteEditorBridge {
         "is-invalid-connection-target",
         isLoopSocket || socketSide === pickedSide
       );
+    }
+  }
+
+  markConnectionSourceNode(nodeId) {
+    this.clearConnectionSourceNode();
+    if (nodeId) {
+      this.area.nodeViews
+        .get(nodeId)
+        ?.element.classList.add("is-connection-source");
+    }
+  }
+
+  clearConnectionSourceNode() {
+    for (const element of this.container.querySelectorAll(
+      ".workflow-rete-node-view.is-connection-source"
+    )) {
+      element.classList.remove("is-connection-source");
     }
   }
 
@@ -500,7 +546,7 @@ export class ReteEditorBridge {
 
     await this.selector.unselectAll();
 
-    if (distance < 4) {
+    if (distance < DRAG_LENIENCE_PX) {
       return;
     }
 
@@ -1068,17 +1114,21 @@ export class ReteEditorBridge {
       });
     }
 
-    for (const conn of this.editor.getConnections()) {
-      if (
-        conn.source !== conn.target &&
-        graph.hasNode(conn.source) &&
-        graph.hasNode(conn.target)
-      ) {
-        graph.setEdge(conn.source, conn.target);
-      }
+    const connections = this.editor
+      .getConnections()
+      .filter(
+        (conn) =>
+          conn.source !== conn.target &&
+          graph.hasNode(conn.source) &&
+          graph.hasNode(conn.target)
+      );
+    for (const conn of connections) {
+      graph.setEdge(conn.source, conn.target);
     }
 
-    this.dagre.layout(graph);
+    this.dagre.layout(graph, {
+      constraints: this.branchOrderConstraints(connections),
+    });
 
     await Promise.all(
       nodes.map((node) => {
@@ -1089,6 +1139,59 @@ export class ReteEditorBridge {
         });
       })
     );
+  }
+
+  // Dagre has no notion of ports and stacks a node's branch targets in an
+  // arbitrary order; constrain siblings to follow the output port order
+  // (e.g. if yes above no), like elk's port support used to.
+  branchOrderConstraints(connections) {
+    const constraints = [];
+    const rightsByLeft = new Map();
+
+    const wouldCycle = (left, right) => {
+      const stack = [right];
+      const seen = new Set();
+      while (stack.length) {
+        const current = stack.pop();
+        if (current === left) {
+          return true;
+        }
+        if (seen.has(current)) {
+          continue;
+        }
+        seen.add(current);
+        stack.push(...(rightsByLeft.get(current) || []));
+      }
+      return false;
+    };
+
+    for (const [sourceId, conns] of buildOutgoingIndex(connections, "source")) {
+      const sourceNode = this.editor.getNode(sourceId);
+      const targets = conns
+        .sort(
+          (a, b) =>
+            this.outputIndexFor(sourceNode, a) -
+              this.outputIndexFor(sourceNode, b) ||
+            normalizeTargetInputIndex(a) - normalizeTargetInputIndex(b)
+        )
+        .map((conn) => conn.target)
+        .filter((target, index, list) => list.indexOf(target) === index);
+
+      for (let i = 0; i < targets.length - 1; i++) {
+        const left = targets[i];
+        const right = targets[i + 1];
+        if (rightsByLeft.get(left)?.has(right) || wouldCycle(left, right)) {
+          continue;
+        }
+        if (!rightsByLeft.has(left)) {
+          rightsByLeft.set(left, new Set());
+        }
+        rightsByLeft.get(left).add(right);
+        constraints.push({ left, right });
+      }
+    }
+
+    return constraints;
   }
 
   get areaContentElement() {

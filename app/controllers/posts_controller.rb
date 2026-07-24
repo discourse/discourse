@@ -43,6 +43,8 @@ class PostsController < ApplicationController
   end
 
   def latest
+    discourse_expires_in 1.minute
+
     params.permit(:before)
     last_post_id = params[:before].to_i
     last_post_id = nil if last_post_id <= 0
@@ -172,6 +174,7 @@ class PostsController < ApplicationController
   def raw_email
     params.require(:id)
     post = Post.unscoped.find(params[:id].to_i)
+    guardian.ensure_can_see!(post)
     guardian.ensure_can_view_raw_email!(post)
     text, html = Email.extract_parts(post.raw_email)
     render json: { raw_email: post.raw_email, text_part: text, html_part: html }

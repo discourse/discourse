@@ -280,5 +280,20 @@ RSpec.describe "Topic voting" do
       topic_page.remove_vote
       expect(topic_page.vote_count).to have_text("0")
     end
+
+    it "still offers the watch notification prompt after voting" do
+      visit("/t/#{voting_topic1.slug}/#{voting_topic1.id}")
+
+      topic_page.vote
+      expect(topic_page.vote_count).to have_text("1")
+      expect(topic_page).to have_watch_toggle_off
+      expect(page).to have_no_css(".see-votes")
+
+      topic_page.click_watch_toggle
+      expect(topic_page).to have_watch_toggle_on
+      expect(TopicUser.find_by(user: admin, topic: voting_topic1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
+      )
+    end
   end
 end

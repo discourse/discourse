@@ -224,13 +224,13 @@ RSpec.describe ApplicationHelper do
     end
 
     it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
 
     it "adds resources as the correct type" do
-      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.discourse_stylesheet_link_tag(:common)
       helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
@@ -569,8 +569,11 @@ RSpec.describe ApplicationHelper do
           login_method: nil,
         )
 
-      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
-      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
+      @application_layout_preloader.store_preloaded("test", %{["</script><script> \x80"]})
+      expect(helper.preloaded_json).to include(
+        %{"test":"[\\"\\u003c\\\\/script\\u003e\\u003cscript\\u003e \uFFFD\\"]"},
+      )
+      expect(helper.preloaded_json).not_to include("</script>")
     end
   end
 
@@ -1330,6 +1333,78 @@ RSpec.describe ApplicationHelper do
       expect(result).to include('itemprop="comment"')
       expect(result).to include("itemscope")
       expect(result).to include('itemtype="http://schema.org/Comment"')
+    end
+  end
+
+  describe "#shared_session_key" do
+    fab!(:user)
+
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    context "when the request carries an auth token" do
+      let(:auth_token) { UserAuthToken.generate!(user_id: user.id) }
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the auth token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the auth token does not belong to the current user" do
+      fab!(:other_user, :user)
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[
+          Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY
+        ] = UserAuthToken.generate!(user_id: other_user.id)
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
+    end
+
+    context "when the auth token is impersonating the current user" do
+      fab!(:admin)
+
+      let(:auth_token) do
+        UserAuthToken
+          .generate!(user_id: admin.id)
+          .tap do |token|
+            token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+          end
+      end
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the impersonating token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the request carries no auth token" do
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = nil
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
     end
   end
 end

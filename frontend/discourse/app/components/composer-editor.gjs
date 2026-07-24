@@ -149,7 +149,7 @@ export default class ComposerEditor extends Component {
       );
 
       let key;
-      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+      if (this.currentUser.useRichEditor) {
         key = allowImages
           ? "reply_placeholder_rte"
           : "reply_placeholder_rte_no_images";
@@ -323,7 +323,9 @@ export default class ComposerEditor extends Component {
       this.textManipulation.putCursorAtEnd();
     }
 
-    const destroyComposerPosition = setupComposerPosition(input);
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
 
     return () => {
       destroyComposerPosition();
@@ -802,10 +804,12 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
+    const composerRedesign = this.siteSettings.enable_composer_redesign;
+
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&
-      this.site.desktopView
+      (composerRedesign || this.site.desktopView)
     ) {
       toolbar.addButton({
         id: "upload",
@@ -819,7 +823,7 @@ export default class ComposerEditor extends Component {
     toolbar.addButton({
       id: "options",
       group: "extras",
-      icon: "circle-plus",
+      icon: composerRedesign ? "discourse-circle-plus" : "circle-plus",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
       popupMenu: {
@@ -1000,6 +1004,7 @@ export default class ComposerEditor extends Component {
         @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
+        @toolbarPortalTarget={{this.toolbarPortalTarget}}
         {{didInsert this._composerEditorInitEditor}}
         {{willDestroy this._composerEditorDestroyEditor}}
         {{didInsert this._composerEditorInitPreview}}

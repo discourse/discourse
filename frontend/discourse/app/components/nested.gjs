@@ -663,7 +663,9 @@ export default class Nested extends Component {
 
   <template>
     <div
+      id="topic"
       class={{this.viewClass}}
+      data-topic-id={{@topic.id}}
       {{didInsert this.scheduleTargetScroll}}
       {{didInsert this.restoreStoredScrollAnchor}}
       {{didUpdate this.scheduleTargetScroll @targetPostNumber @rootNodes}}
@@ -761,7 +763,7 @@ export default class Nested extends Component {
                 @topic={{@topic}}
                 @depth={{0}}
                 @path={{this.ancestorPath}}
-                @sort={{@sort}}
+                @sort={{@effectiveSort}}
                 @replyToPost={{@replyToPost}}
                 @editPost={{@editPost}}
                 @deletePost={{@deletePost}}
@@ -901,7 +903,7 @@ export default class Nested extends Component {
               @topic={{@topic}}
               @depth={{0}}
               @path={{this.emptyPath}}
-              @sort={{@sort}}
+              @sort={{@effectiveSort}}
               @isPinned={{includes @pinnedPostIds node.post.id}}
               @replyToPost={{@replyToPost}}
               @editPost={{@editPost}}

@@ -121,6 +121,35 @@ describe "Composer" do
       expect(topic_page).to have_topic_title("Test topic with tags")
       expect(topic_page.topic_tags).to include(tag.name)
     end
+
+    it "creates a new numeric-name tag rather than reusing an existing tag with that id" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      # A pre-existing tag whose id (as a string) will collide with what the
+      # user types. If serialization ever treats the typed name as an id, the
+      # backend would attach this tag instead of creating a new one.
+      existing_tag = Fabricate(:tag, name: "existing-tag-name")
+      numeric_name = existing_tag.id.to_s
+
+      page.visit "/new-topic"
+      expect(composer).to be_opened
+
+      composer.fill_title("Test topic with numeric-name tag")
+      composer.fill_content("This is a test topic with a numeric-name tag")
+      composer.switch_category(category.name)
+
+      mini_tag_chooser.expand
+      mini_tag_chooser.search(numeric_name)
+      mini_tag_chooser.select_row_by_name(numeric_name)
+      mini_tag_chooser.collapse
+
+      composer.create
+
+      expect(topic_page).to have_topic_title("Test topic with numeric-name tag")
+      expect(topic_page.topic_tags).to eq([numeric_name])
+      expect(topic_page.topic_tags).not_to include(existing_tag.name)
+      expect(Tag.exists?(name: numeric_name)).to eq(true)
+    end
   end
 
   context "with fixed category positions" do

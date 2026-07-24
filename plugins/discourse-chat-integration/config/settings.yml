@@ -40,6 +40,9 @@ chat_integration:
   chat_integration_telegram_access_token:
     default: ''
     secret: true
+  chat_integration_telegram_api_base_url:
+    default: 'https://api.telegram.org'
+    validator: "ChatIntegrationTelegramApiBaseUrlSettingValidator"
   chat_integration_telegram_excerpt_length:
     default: 400
   chat_integration_telegram_enable_slash_commands:

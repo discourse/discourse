@@ -900,6 +900,59 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to be_nil
         end
       end
+
+      context "when a full name is required at signup" do
+        before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+        it "asks for the name without consuming the code, then creates the user with it" do
+          post "/session/login-code/verify.json", params: { email: "newuser@example.com", code: }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["name_required"]).to eq(true)
+          expect(response.parsed_body["user_fields_required"]).to eq(false)
+          expect(session[:current_user_id]).to be_nil
+          expect(EmailLoginCode.active.for_email("newuser@example.com")).to be_present
+
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "Jane Doe",
+               }
+
+          new_user = User.find_by_email("newuser@example.com")
+          expect(new_user.name).to eq("Jane Doe")
+          expect(session[:current_user_id]).to eq(new_user.id)
+        end
+
+        it "renders the contract errors when the name is too long" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "a" * 256,
+               }
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"].join).to include("Name")
+          expect(session[:current_user_id]).to be_nil
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+        end
+
+        it "asks for the name again when a blank name is submitted" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 name: "   ",
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["name_required"]).to eq(true)
+          expect(session[:current_user_id]).to be_nil
+          expect(User.find_by_email("newuser@example.com")).to be_nil
+        end
+      end
     end
 
     context "when the user has TOTP enabled" do

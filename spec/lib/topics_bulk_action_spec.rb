@@ -155,6 +155,26 @@ RSpec.describe TopicsBulkAction do
     end
   end
 
+  describe "group message operations" do
+    fab!(:other_user, :user)
+    fab!(:group) { Fabricate(:group).tap { |group| group.add(user) } }
+    fab!(:private_message) { Fabricate(:private_message_topic, user: user, recipient: other_user) }
+
+    %w[archive_messages move_messages_to_inbox].each do |operation|
+      it "rejects #{operation} when the selected group is not a message recipient" do
+        topic_ids =
+          TopicsBulkAction.new(
+            user,
+            [private_message.id],
+            { type: operation },
+            group: group.name,
+          ).perform!
+
+        expect(topic_ids).to be_empty
+      end
+    end
+  end
+
   describe "change_category" do
     fab!(:category)
     fab!(:first_post) { Fabricate(:post, topic: topic) }

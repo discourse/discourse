@@ -33,7 +33,10 @@ module("Unit | Utility | category-badge", function (hooks) {
     const label = tag.children[0];
     assert
       .dom(label)
-      .hasAttribute("title", "cool description", "has the correct title");
+      .doesNotHaveAttribute(
+        "title",
+        "does not expose the description as a tooltip"
+      );
     assert.dom(label.children[0]).hasText("hello", "has the category name");
   });
 

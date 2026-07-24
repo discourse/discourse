@@ -10,18 +10,12 @@ sv:
       sort_options:
         votes: "Röster"
     topic_voting:
-      reached_limit: "Du har inga fler röster, ta bort en befintlig röst!"
-      list_votes: "Visa en lista över dina röster"
       voted: "Du röstade i detta ämne"
-      allow_topic_voting: "Låt användare rösta om ämnen i denna kategori"
       vote_title: "Rösta"
       vote_title_plural: "Röster"
       votes:
         one: "%{count} röst"
         other: "%{count} röster"
-      anonymous_button:
-        one: "Rösta"
-        other: "Röster"
       remove_vote: "Ta bort röst"
       and_more_voters: "och %{count} till..."
       show_voters: "Visa vem som röstat"
@@ -36,7 +30,3 @@ sv:
         help: "ämnen du röstade i"
     search:
       most_votes: "Flest röster"
-      advanced:
-        vote:
-          count:
-            label: "Minsta röstantal"

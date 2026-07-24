@@ -27,6 +27,9 @@ pt_BR:
             topic_id:
               label: ID do tópico
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} convidou para participar de %{description}"
       on_holiday: "No feriado"
       disable_holiday: "Desativar"
