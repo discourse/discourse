@@ -153,6 +153,13 @@ export default <template>
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
+
+      {{#if @controller.rightSidebarEnabled}}
+        <div class="sidebar-right">
+          <PluginOutlet @name="sidebar-right" />
+          <BlockOutlet @name="sidebar-right" />
+        </div>
+      {{/if}}
     </div>
 
     <PluginOutlet

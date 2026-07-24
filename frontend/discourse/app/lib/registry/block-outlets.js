@@ -42,6 +42,7 @@ export const BLOCK_OUTLETS = Object.freeze([
   "main-outlet-blocks",
   "sidebar-blocks",
   "sidebar-discovery",
+  "sidebar-right",
 ]);
 
 // Validate outlet names follow the kebab-case pattern.
