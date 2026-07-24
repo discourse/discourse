@@ -599,8 +599,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.0
       message-bus-client:
-        specifier: ^4.4.1
-        version: 4.4.1(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9)
+        specifier: ^4.5.2
+        version: 4.5.2(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9)
       pretender:
         specifier: ^3.4.7
         version: 3.4.7
@@ -6084,8 +6084,8 @@ packages:
   mersenne-twister@1.1.0:
     resolution: {integrity: sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==}
 
-  message-bus-client@4.4.1:
-    resolution: {integrity: sha512-6Ny8Ei6dt4dhjHgD/HjmCTDelPxiN+dO7PxhncUqfKhHKpcVqFpctrhxXK5sYmxkpPNxEjRNw9kEvftxsMGeFw==}
+  message-bus-client@4.5.2:
+    resolution: {integrity: sha512-wC5XGnsDfUBoI7iv1v7xEybxaDWbmqy1wR2mDs94rsIV8lgBJVDm7o1BZNYI1ikvujHnjMV9Tong83B9Bd6iwg==}
 
   micromatch@4.0.8:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
@@ -14716,7 +14716,7 @@ snapshots:
 
   mersenne-twister@1.1.0: {}
 
-  message-bus-client@4.4.1(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9): {}
+  message-bus-client@4.5.2(patch_hash=b9b55d2643b1af05bfbcab2388fe5b68f20ed4ef8bcea9647ab82405bccc20f9): {}
 
   micromatch@4.0.8:
     dependencies:
