@@ -1856,7 +1856,6 @@ nl:
     suppress_secured_categories_from_admin: "Onderdruk privétopics en PB's in sommige delen van de gebruikersinterface voor beheerders. Content zal op sommige plaatsen nog zichtbaar zijn. Dit is geen beveiligingsfunctie: beheerders hebben altijd toegang tot alle content op de site."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
-    top_menu: "Bepaal welke items in de startpaginanavigatie worden weergegeven en in welke volgorde."
     post_menu: "Configureer de zichtbaarheid en volgorde van standaardopties in het plaatsingsmenu. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     post_menu_hidden_items: "De menuopties die standaard worden verborgen in het plaatsingsmenu tenzij er op een uitvouwellips wordt geklikt. Aanvullende opties die zijn toegevoegd door plug-ins of thema's worden afzonderlijk beheerd en komen niet voor in deze lijst."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."

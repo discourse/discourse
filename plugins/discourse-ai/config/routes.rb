@@ -160,6 +160,8 @@ Discourse::Application.routes.draw do
 
     get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
     get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
+    get "/ai-translations/progress/:target_type",
+        to: "discourse_ai/admin/ai_translations#progress_detail"
     post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
 
     resources :ai_llms,

@@ -1799,7 +1799,6 @@ fi:
     suppress_secured_categories_from_admin: "Estä yksityiset ketjut ja yksityisviestit joissakin ylläpitäjien käyttöliittymän osissa. Sisältö näkyy edelleen joissain paikoissa. Tämä ei ole turvallisuusominaisuus: ylläpitäjillä on aina pääsy kaikkeen sivuston sisältöön."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen henkilökohtaisten viestien määrä näytetään."
-    top_menu: "Määritä, mitkä kohteet näytetään aloitussivun navigoinnissa ja missä järjestyksessä."
     post_menu: "Määritä oletusviestivalikkokohteiden näkyvyys ja järjestys. Lisäosien tai teemojen lisäämiä kohteita hallitaan erikseen, eivätkä ne näy tässä luettelossa."
     post_menu_hidden_items: "Viestivalikossa oletusarvoisesti piilotettavat valikkokohteet, ellei laajennusvalintaa ole napsautettu. Lisäosien tai teemojen lisäämiä kohteita hallitaan erikseen, eivätkä ne näy tässä luettelossa."
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."

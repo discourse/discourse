@@ -1712,7 +1712,7 @@ da:
         default: "(standard)"
         any: "alle"
       homepage:
-        default: "(standard)"
+        default: "Standard"
       password_confirmation:
         title: "Gentag adgangskode"
       invite_code:
@@ -4691,7 +4691,6 @@ da:
               posts: "Indlæg"
               share: "Del"
             whos_posting:
-              all_categories: "Alle kategorier"
               staff: "Personale"
             trust_level_pipeline:
               trust_levels:

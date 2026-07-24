@@ -1908,7 +1908,7 @@ fi:
         default: "(oletus)"
         any: "mikä tahansa"
       homepage:
-        default: "(oletus)"
+        default: "Oletus"
       password_confirmation:
         title: "Salasana uudelleen"
       invite_code:
@@ -5689,7 +5689,6 @@ fi:
               posts: "Viestejä"
               share: "Jaa"
             whos_posting:
-              all_categories: "Kaikki alueet"
               staff: "Henkilökunta"
             trust_level_pipeline:
               trust_levels:

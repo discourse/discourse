@@ -1749,7 +1749,7 @@ zh_TW:
         default: "(預設)"
         any: "任何"
       homepage:
-        default: "(預設)"
+        default: "預設"
       password_confirmation:
         title: "再次輸入密碼"
       invite_code:
@@ -5067,7 +5067,6 @@ zh_TW:
               posts: "新發表的貼文"
               share: "分享"
             whos_posting:
-              all_categories: "所有分類"
               staff: "管理員"
             trust_level_pipeline:
               trust_levels:

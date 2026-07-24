@@ -375,8 +375,8 @@ RSpec.describe UsersController do
         )
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
             '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
           )
@@ -532,8 +532,8 @@ RSpec.describe UsersController do
 
           get "/u/password-reset/#{email_token.token}"
 
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
               '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
             )
@@ -589,8 +589,8 @@ RSpec.describe UsersController do
         end
 
         it "preloads with a security key challenge and allowed credential ids" do
-          expect(response.body).to have_tag("div#data-preloaded") do |element|
-            json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+          expect(response.body).to have_tag("script#data-preloaded") do |element|
+            json = JSON.parse(element.current_scope.text)
             password_reset = JSON.parse(json["password_reset"])
             expect(password_reset["challenge"]).not_to eq(nil)
             expect(password_reset["allowed_credential_ids"]).to eq(
@@ -5463,6 +5463,54 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "staged user email visibility" do
+    fab!(:staged_user) { Fabricate(:staged, email: "staged-primary@example.com") }
+    fab!(:secondary_email) do
+      Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+    end
+    fab!(:email_change_request) do
+      Fabricate(
+        :email_change_request,
+        user: staged_user,
+        new_email: "staged-unconfirmed@example.com",
+      )
+    end
+
+    before do
+      SiteSetting.moderators_view_emails = false
+      sign_in(moderator)
+    end
+
+    it "respects email visibility for staged users" do
+      paths = ["/u/#{staged_user.username}.json", "/u/#{staged_user.username}/card.json"]
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(nil)
+        expect(user_json["secondary_emails"]).to eq(nil)
+        expect(user_json["unconfirmed_emails"]).to eq(nil)
+        expect(response.body).not_to include(staged_user.email)
+        expect(response.body).not_to include(secondary_email.email)
+        expect(response.body).not_to include(email_change_request.new_email)
+      end
+
+      SiteSetting.moderators_view_emails = true
+
+      paths.each do |path|
+        get path
+
+        expect(response).to have_http_status(:ok)
+        user_json = response.parsed_body["user"]
+        expect(user_json["email"]).to eq(staged_user.email)
+        expect(user_json["secondary_emails"]).to contain_exactly(secondary_email.email)
+        expect(user_json["unconfirmed_emails"]).to contain_exactly(email_change_request.new_email)
+      end
+    end
+  end
+
   describe "#cards" do
     fab!(:user) { Discourse.system_user }
     fab!(:user2, :user)
@@ -5560,8 +5608,8 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag("div#data-preloaded") do |element|
-          json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        expect(response.body).to have_tag("script#data-preloaded") do |element|
+          json = JSON.parse(element.current_scope.text)
           expect(json["accountCreated"]).to include(
             "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
           )

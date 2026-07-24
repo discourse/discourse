@@ -1,13 +1,31 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { Promise } from "rsvp";
-import PreloadStore from "discourse/lib/preload-store";
+import PreloadStore, { readPreloadedData } from "discourse/lib/preload-store";
 
 module("Unit | Utility | preload-store", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     PreloadStore.store("bane", "evil");
+  });
+
+  hooks.afterEach(function () {
+    document.getElementById("data-preloaded")?.remove();
+  });
+
+  test("readPreloadedData reads JSON script content", function (assert) {
+    const element = document.createElement("script");
+    element.id = "data-preloaded";
+    element.type = "application/json";
+    element.textContent = JSON.stringify({ site: "{}" });
+    document.body.append(element);
+
+    assert.deepEqual(
+      readPreloadedData(),
+      { site: "{}" },
+      "reads the preloaded data"
+    );
   });
 
   test("get", function (assert) {

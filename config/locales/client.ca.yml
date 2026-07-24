@@ -1265,7 +1265,7 @@ ca:
         default: "(per defecte)"
         any: "qualsevol"
       homepage:
-        default: "(per defecte)"
+        default: "Per defecte"
       password_confirmation:
         title: "Contrasenya una altra vegada"
       auth_tokens:
@@ -3347,7 +3347,6 @@ ca:
               posts: "Publicacions"
               share: "Comparteix"
             whos_posting:
-              all_categories: "Totes les categories"
               staff: "Equip responsable"
             trust_level_pipeline:
               trust_levels:

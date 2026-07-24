@@ -1667,7 +1667,7 @@ hy:
         default: "(լռելյայն)"
         any: "ցանկացած"
       homepage:
-        default: "(լռելյայն)"
+        default: "Լռելյայն"
       password_confirmation:
         title: "Կրկնել Գաղտաբառը "
       invite_code:
@@ -4060,7 +4060,6 @@ hy:
               posts: "Գրառումներ"
               share: "Կիսվել"
             whos_posting:
-              all_categories: "Բոլոր կատեգորիաները"
               staff: "Անձնակազմ"
             trust_level_pipeline:
               trust_levels:

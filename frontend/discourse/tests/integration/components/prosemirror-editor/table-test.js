@@ -30,7 +30,6 @@ module(
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
-        this.siteSettings.rich_editor = true;
         await testMarkdown(assert, markdown, html, expectedMarkdown);
       });
     });

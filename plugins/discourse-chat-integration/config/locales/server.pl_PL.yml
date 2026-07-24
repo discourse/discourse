@@ -19,8 +19,10 @@ pl_PL:
     chat_integration_slack_transcript_quote: Czy zamieścić transkrypt Slacka w tagach [cytat]?
     errors:
       chat_integration_slack_api_configs_are_empty: "Musisz wpisać URL wychodzącego webhooka albo token dostępu."
+      chat_integration_telegram_api_base_url_invalid: "Podstawowy adres URL interfejsu API serwisu Telegram musi być poprawnym adresem HTTPS bez danych uwierzytelniających, ciągu zapytania ani fragmentu adresu"
     chat_integration_telegram_enabled: "Włącz integrację z Telegramem"
     chat_integration_telegram_access_token: "Token dostępu Twojego bota od botfathera Telegramu"
+    chat_integration_telegram_api_base_url: "Podstawowy adres URL używany do wysyłania żądań do API bota Telegram. Zmień tę wartość tylko wtedy, gdy żądania są kierowane przez zaufany serwer proxy HTTPS. Hosty w sieciach prywatnych muszą być również dodane do ustawienia „Dozwolone hosty wewnętrzne”."
     chat_integration_telegram_excerpt_length: "Długość skrótu wpisu na Telegramie"
     chat_integration_telegram_enable_slash_commands: "Zezwól na zarządzanie subskrypcjami Telegramu przy użyciu komend ze slashem"
     chat_integration_discord_enabled: "Włącz integrację z Discordem"

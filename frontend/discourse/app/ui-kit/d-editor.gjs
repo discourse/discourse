@@ -126,38 +126,16 @@ export default class DEditor extends Component {
       return;
     }
 
-    if (this.siteSettings.rich_editor) {
-      // TODO (martin) Remove this once we are sure all users have migrated
-      // to the new rich editor preference, or a few months after the 3.5 release.
-      await this.handleOldRichEditorPreference();
-
-      if (this.currentUser.useRichEditor) {
-        this.editorComponent = await loadRichEditor();
-      }
+    if (this.currentUser.useRichEditor) {
+      this.editorComponent = await loadRichEditor();
     }
 
     this.editorComponent ??= TextareaEditor;
   }
 
-  async handleOldRichEditorPreference() {
-    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
-
-    if (!oldValue) {
-      return;
-    }
-
-    await this.#saveRichEditorPreference(
-      oldValue === "true"
-        ? USER_OPTION_COMPOSITION_MODES.rich
-        : USER_OPTION_COMPOSITION_MODES.markdown
-    ).finally(() => {
-      this.keyValueStore.remove("d-editor-prefers-rich-editor");
-    });
-  }
-
-  @computed("siteSettings.rich_editor", "forceEditorMode")
+  @computed("forceEditorMode")
   get showEditorModeToggle() {
-    return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
+    return isNone(this.forceEditorMode);
   }
 
   _readyNow() {
@@ -234,7 +212,7 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor && isNone(this.forceEditorMode)) {
+    if (isNone(this.forceEditorMode)) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -839,7 +817,7 @@ export default class DEditor extends Component {
                 <ToolbarButtons
                   @data={{this.toolbar}}
                   @rovingButtonBar={{this.rovingButtonBar}}
-                  @isFirst={{not this.siteSettings.rich_editor}}
+                  @isFirst={{not this.showEditorModeToggle}}
                 />
               </DOverflowControls>
             {{/if}}

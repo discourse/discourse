@@ -369,7 +369,7 @@ ar:
       thinking: "التفكير"
       tool_pending_approval: "يتطلب هذا الإجراء موافقة أحد المشرفين قبل تنفيذه."
       chat_tool_approval:
-        unexpected_error: "حدث خطأ غير متوقع"
+        unexpected_error: "حدث خطأ غير متوقَّع"
       agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى تعطيلها بدلًا من ذلك"
@@ -861,7 +861,7 @@ ar:
       add_reviewable_note:
         errors:
           not_allowed: "لا تملك صلاحية الوصول إلى قائمة انتظار المراجعة"
-          not_found: "تعذّر العثور على عنصر في قائمة انتظار المراجعة"
+          not_found: "تعذَّر العثور على عنصر في قائمة انتظار المراجعة"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"
@@ -873,7 +873,7 @@ ar:
         tool_not_found: "لم تعد الأداة '%{tool_name}' متاحة."
         bot_user_missing: "لم يعد مستخدم الروبوت موجودًا."
         execution_error: "فشل تنفيذ الأداة: %{error}"
-        execution_error_unknown: "حدث خطأ غير متوقع"
+        execution_error_unknown: "حدث خطأ غير متوقَّع"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"

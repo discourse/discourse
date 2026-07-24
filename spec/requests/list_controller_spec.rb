@@ -19,8 +19,8 @@ RSpec.describe ListController do
 
       expect(response.status).to eq(200)
       expect(response.body).not_to include(SiteSetting.klipy_api_key)
-      expect(response.body).to have_tag("div#data-preloaded") do |element|
-        data_preloaded = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+      expect(response.body).to have_tag("script#data-preloaded") do |element|
+        data_preloaded = JSON.parse(element.current_scope.text)
         site_settings = JSON.parse(data_preloaded["siteSettings"])
 
         expect(site_settings).not_to have_key("klipy_api_key")

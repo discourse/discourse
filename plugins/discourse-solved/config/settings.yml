@@ -4,7 +4,7 @@ discourse_solved:
     client: true
   solved_allow_multiple_solutions:
     default: false
-    client: true 
+    client: true
     hidden: true
   show_who_marked_solved:
     default: false
@@ -81,6 +81,7 @@ discourse_solved:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/402498"
+      permanent_warning: false
   enable_solved_badges:
     default: false
     hidden: true
@@ -89,6 +90,7 @@ discourse_solved:
       status: "alpha"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/406386"
+      permanent_warning: false
   discourse_solved_admin_dashboard_seeded:
     default: false
     hidden: true

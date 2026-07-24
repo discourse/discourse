@@ -1466,7 +1466,7 @@ sr:
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
       homepage:
-        default: "(zadano)"
+        default: "Подразумевано"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -2991,8 +2991,6 @@ sr:
               empty: "Nema aktivnosti u izabranom periodu."
             whos_posting:
               title: "Ko objavljuje?"
-              all_categories: "Sve kategorije"
-              include_subcategories: "Uključi potkategorije"
               new_members: "Novi članovi"
               returning: "Vraćajući"
               staff: "Osoblje"

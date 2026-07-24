@@ -4,6 +4,8 @@ class TopicsController < ApplicationController
   include TagParamLimit
   include EmbedModeHandler
 
+  MAX_BULK_TOPIC_IDS = 1_000
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -1156,7 +1158,12 @@ class TopicsController < ApplicationController
       unless Array === params[:topic_ids]
         raise Discourse::InvalidParameters.new("Expecting topic_ids to contain a list of topic ids")
       end
-      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_ids = params[:topic_ids].map { |topic_id| topic_id.to_i }.uniq
+      if topic_ids.size > MAX_BULK_TOPIC_IDS
+        raise Discourse::InvalidParameters.new(
+                I18n.t("topics_bulk_action.too_many_topic_ids", limit: MAX_BULK_TOPIC_IDS),
+              )
+      end
     elsif params[:filter] == "unread"
       topic_ids = bulk_unread_topic_ids
     else

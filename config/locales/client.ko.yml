@@ -1498,7 +1498,7 @@ ko:
         default: "(기본)"
         any: "모두"
       homepage:
-        default: "(기본)"
+        default: "기본"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -4077,7 +4077,6 @@ ko:
               posts: "글"
               share: "공유하기"
             whos_posting:
-              all_categories: "모든 카테고리"
               staff: "스태프"
             trust_level_pipeline:
               trust_levels:

@@ -18,8 +18,6 @@ he:
         sections:
           support:
             title: "תמיכה"
-            filter:
-              all_categories: "כל הקטגוריות"
             answerers:
               staff: "סגל"
               member: "חברים"

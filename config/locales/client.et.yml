@@ -1100,7 +1100,7 @@ et:
         default: "(vaikimisi)"
         any: "iga"
       homepage:
-        default: "(vaikimisi)"
+        default: "Vaikimisi"
       password_confirmation:
         title: "Salasõna uuesti"
       auth_tokens:
@@ -2967,7 +2967,6 @@ et:
               posts: "Postitust"
               share: "Jaga"
             whos_posting:
-              all_categories: "Kõik foorumid"
               staff: "Meeskond"
             trust_level_pipeline:
               trust_levels:

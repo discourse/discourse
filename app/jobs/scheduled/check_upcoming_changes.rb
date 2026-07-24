@@ -85,7 +85,12 @@ module Jobs
                 :error
               end
 
-            backtrace = (status[:backtrace] || status[:result_inspect_steps])&.join("\n") || "N/A"
+            backtrace =
+              if status[:backtrace].present?
+                backtrace = status[:backtrace]&.join("\n")
+              else
+                backtrace = status[:result_inspect_steps] || "N/A"
+              end
 
             verbose_log(
               site,

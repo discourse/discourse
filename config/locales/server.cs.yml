@@ -1972,7 +1972,6 @@ cs:
     suppress_secured_categories_from_admin: "Potlačit soukromá témata a SZ v některých částech uživatelského rozhraní pro administrátory. Obsah bude na některých místech stále viditelný. Toto není bezpečnostní funkce: administrátoři mají vždy přístup k celému obsahu tohoto webu."
     include_secure_categories_in_tag_counts: "Pokud je tato možnost povolena, počet témat pro daný štítek bude zahrnovat i témata, která jsou v kategoriích s omezeným čtením pro všechny uživatele. Pokud je tato možnost zakázána, běžným uživatelům se zobrazí pouze počet témat pro štítek, u kterého jsou všechna témata ve veřejných kategoriích."
     display_personal_messages_tag_counts: "Pokud je tato možnost povolena, zobrazí se počet soukromých zpráv označených daným štítkem."
-    top_menu: "Určete, které položky se zobrazují v navigaci na domovské stránce a v jakém pořadí."
     post_menu: "Nastavení viditelnosti a pořadí výchozích položek nabídky příspěvků. Další položky přidané pluginy nebo motivy jsou spravovány samostatně a v tomto seznamu se nezobrazí."
     post_menu_hidden_items: "Položky nabídky, které se mají ve výchozím nastavení skrýt v nabídce příspěvku, pokud se na ně neklikne rozbalením menu tlačítkem s třemi tečkami. Další položky přidané pluginy nebo motivy jsou spravovány samostatně a v tomto seznamu se nezobrazí."
     share_links: "Určete, které položky se zobrazí v dialogovém okně sdílení a v jakém pořadí."

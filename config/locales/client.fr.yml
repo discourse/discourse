@@ -1919,7 +1919,7 @@ fr:
         default: "(par défaut)"
         any: "tous"
       homepage:
-        default: "(par défaut)"
+        default: "Par défaut"
       password_confirmation:
         title: "Confirmation du mot de passe"
       invite_code:
@@ -5714,7 +5714,6 @@ fr:
               posts: "Publications"
               share: "Partager"
             whos_posting:
-              all_categories: "Toutes les catégories"
               staff: "Responsable"
             trust_level_pipeline:
               trust_levels:

@@ -1671,7 +1671,7 @@ ro:
         default: "(implicit)"
         any: "oricare"
       homepage:
-        default: "(implicit)"
+        default: "Implicit"
       password_confirmation:
         title: "Confirmă parola"
       invite_code:
@@ -4319,7 +4319,6 @@ ro:
               posts: "Articole"
               share: "Partajează"
             whos_posting:
-              all_categories: "Toate categoriile"
               staff: "Echipa"
             trust_level_pipeline:
               trust_levels:

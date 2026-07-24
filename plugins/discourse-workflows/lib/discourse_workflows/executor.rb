@@ -560,6 +560,7 @@ module DiscourseWorkflows
         resolver: resolver,
         vars: preloaded_vars,
         workflow: @workflow,
+        workflow_version: @options.workflow_version,
         execution_id: @store.execution&.id,
         resume_token: @context.resume_token,
         node_id: node.id.to_s,

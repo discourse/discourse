@@ -10,6 +10,19 @@ module PageObjects
         self
       end
 
+      def visit_editor(theme, target: "common", field: "scss")
+        page.visit("/admin/customize/themes/#{theme.id}/#{target}/#{field}/edit")
+        self
+      end
+
+      def click_editor_field(field)
+        find(".nav-pills.fields a[href$='/#{field}/edit']").click
+      end
+
+      def has_editor_field_description?(field)
+        has_css?(".field-info", text: I18n.t("admin_js.admin.customize.theme.#{field}.title"))
+      end
+
       def has_colors_tab?
         header.has_tab?("colors")
       end
