@@ -143,6 +143,7 @@ export default class AdminDashboardController extends Controller {
             loaded: cachedData !== undefined,
             loading: false,
             error: false,
+            stale: false,
           };
         }),
       configuration: { sections: nextConfig },
@@ -187,13 +188,23 @@ export default class AdminDashboardController extends Controller {
         period,
         startDate,
         endDate,
-        sections: this.loadedSections.sections.map((section) => ({
-          id: section.id,
-          data: null,
-          loaded: false,
-          loading: false,
-          error: false,
-        })),
+        sections: this.loadedSections.sections.map((section) =>
+          section.loaded
+            ? {
+                ...section,
+                loading: false,
+                error: false,
+                stale: true,
+              }
+            : {
+                id: section.id,
+                data: null,
+                loaded: false,
+                loading: false,
+                error: false,
+                stale: false,
+              }
+        ),
       };
     }
 
@@ -229,6 +240,7 @@ export default class AdminDashboardController extends Controller {
               loaded: false,
               loading: false,
               error: false,
+              stale: false,
             }
         ),
         configuration: model.configuration,
@@ -260,7 +272,7 @@ export default class AdminDashboardController extends Controller {
     const section = this.loadedSections?.sections.find(
       (candidate) => candidate.id === sectionId
     );
-    if (!section || section.loaded || section.loading) {
+    if (!section || section.loading || (section.loaded && !section.stale)) {
       return;
     }
 
@@ -284,13 +296,18 @@ export default class AdminDashboardController extends Controller {
         loaded: true,
         loading: false,
         error: false,
+        stale: false,
+        period: this.loadedSections.period,
+        startDate: this.loadedSections.startDate,
+        endDate: this.loadedSections.endDate,
       });
     } catch {
       if (loadId === this._sectionsLoadId) {
         this.#updateSection(sectionId, {
-          loaded: false,
+          loaded: section.loaded,
           loading: false,
           error: true,
+          stale: section.loaded,
         });
       }
     }

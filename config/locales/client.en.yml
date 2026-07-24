@@ -7246,6 +7246,7 @@ en:
         loading_section: "Loading %{section}…"
         fetch_error: "Couldn't load the dashboard. Try refreshing the page."
         section_fetch_error: "Couldn't load this section."
+        section_refresh_error: "Couldn't update this section. Showing previous data."
         retry_section: "Retry"
         stable: "stable"
 
