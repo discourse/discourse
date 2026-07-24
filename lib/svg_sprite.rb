@@ -265,6 +265,7 @@ module SvgSprite
         tag
         tags
         temperature-three-quarters
+        text-height
         thumbs-down
         thumbs-up
         thumbtack

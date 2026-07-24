@@ -228,17 +228,25 @@ export default class Toolbar extends ToolbarBase {
       id: "heading",
       group: "fontStyles",
       active: ({ state }) => {
-        if (!state || !state.inHeading) {
+        if (!state) {
           return false;
         }
 
-        if (state.inHeadingLevel > 4) {
+        if (state.inSmall) {
+          return true;
+        }
+
+        if (!state.inHeading || state.inHeadingLevel > 4) {
           return false;
         }
 
         return true;
       },
       icon: ({ state }) => {
+        if (state?.inSmall) {
+          return "text-height";
+        }
+
         if (!state || !state.inHeading) {
           return "discourse-text";
         }
@@ -249,7 +257,7 @@ export default class Toolbar extends ToolbarBase {
 
         return `discourse-h${state.inHeadingLevel}`;
       },
-      title: "composer.heading_title",
+      title: "composer.text_size_title",
       popupMenu: {
         options: () => {
           const headingOptions = [];
@@ -289,8 +297,21 @@ export default class Toolbar extends ToolbarBase {
             condition: true,
             showActiveIcon: true,
             shortcut: "Alt+0",
-            active: ({ state }) => state?.inParagraph,
+            active: ({ state }) => state?.inParagraph && !state?.inSmall,
             action: (toolbarEvent) => toolbarEvent.applyHeading(0, "heading"),
+          });
+          headingOptions.push({
+            name: "small",
+            icon: "text-height",
+            label: "composer.small_label",
+            title: "composer.small_title",
+            condition: true,
+            showActiveIcon: true,
+            active: ({ state }) => state?.inSmall,
+            action: (toolbarEvent) =>
+              toolbarEvent.applySurround("<small>", "</small>", "small_text", {
+                multiline: false,
+              }),
           });
           return headingOptions;
         },

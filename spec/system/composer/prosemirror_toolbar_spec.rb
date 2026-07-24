@@ -308,5 +308,24 @@ describe "Composer - ProseMirror - Toolbar" do
       composer.type_content("This is a test")
       expect(rich).to have_css("h2", text: "This is a test")
     end
+
+    it "can wrap a selection in small text and toggle the active state" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='small']").click
+
+      expect(rich).to have_css("small", text: "This is a test")
+
+      rich.find("small").click
+      expect(page).to have_css(".toolbar__button.heading.--active")
+
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+    end
   end
 end

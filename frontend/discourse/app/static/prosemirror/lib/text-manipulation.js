@@ -580,6 +580,9 @@ export default class ProsemirrorTextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      inSmall: isNodeActive(this.view.state, this.schema.nodes.html_inline, {
+        tag: "small",
+      }),
       ...this.customState(this.view.state),
     });
   }

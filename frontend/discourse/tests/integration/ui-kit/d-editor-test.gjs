@@ -781,6 +781,56 @@ third line`
     }
   );
 
+  testCase("small button with no selection", async function (assert, textarea) {
+    this.set("value", "");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 0;
+
+    await click("button.heading");
+    await click('.btn[data-name="small"]');
+
+    assert.strictEqual(
+      this.value,
+      "<small>small text</small>",
+      "it adds a placeholder and selects it"
+    );
+    assert.strictEqual(textarea.selectionStart, 7);
+    assert.strictEqual(textarea.selectionEnd, 17);
+  });
+
+  testCase("small button with a selection", async function (assert, textarea) {
+    this.set("value", "Hello world");
+    textarea.selectionStart = 0;
+    textarea.selectionEnd = 11;
+
+    await click("button.heading");
+    await click('.btn[data-name="small"]');
+
+    assert.strictEqual(
+      this.value,
+      "<small>Hello world</small>",
+      "it wraps the selection and reselects the text"
+    );
+    assert.strictEqual(textarea.selectionStart, 7);
+    assert.strictEqual(textarea.selectionEnd, 18);
+  });
+
+  testCase(
+    "small button with a selection already wrapped",
+    async function (assert, textarea) {
+      this.set("value", "<small>Hello world</small>");
+      textarea.selectionStart = 7;
+      textarea.selectionEnd = 18;
+
+      await click("button.heading");
+      await click('.btn[data-name="small"]');
+
+      assert.strictEqual(this.value, "Hello world", "it unwraps the selection");
+      assert.strictEqual(textarea.selectionStart, 0);
+      assert.strictEqual(textarea.selectionEnd, 11);
+    }
+  );
+
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
