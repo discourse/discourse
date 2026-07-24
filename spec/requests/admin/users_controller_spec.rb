@@ -2650,6 +2650,16 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
       end
 
+      it "handles a payload whose base64 contains a '+'" do
+        encoded = Base64.strict_encode64("external_id=1&email=bob@bob.com&username=bob&name=Bob~~~")
+        expect(encoded).to include("+")
+        sig = OpenSSL::HMAC.hexdigest("sha256", sso_secret, encoded)
+
+        post "/admin/users/sync_sso.json", params: { sso: encoded, sig: sig }
+        expect(response.status).to eq(200)
+        expect(User.find_by(username: "bob").name).to eq("Bob~~~")
+      end
+
       it "should create new users" do
         sso.name = "Dr. Claw"
         sso.username = "dr_claw"
@@ -2715,6 +2725,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(422)
         expect(response.parsed_body["message"]).to include(
           I18n.t("discourse_connect.blank_id_error"),
+        )
+      end
+
+      it "returns the right message if the external id is banned" do
+        sso.name = "Dr. Claw"
+        sso.username = "dr_claw"
+        sso.email = "dr@claw.com"
+        sso.external_id = "none"
+        post "/admin/users/sync_sso.json", params: Rack::Utils.parse_query(sso.payload)
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["message"]).to include(
+          I18n.t("discourse_connect.banned_id_error"),
         )
       end
     end
