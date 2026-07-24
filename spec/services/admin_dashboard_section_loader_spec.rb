@@ -3,14 +3,6 @@
 describe AdminDashboardSectionLoader do
   fab!(:admin)
 
-  after do
-    if thread_pool = described_class.instance_variable_get(:@thread_pool)
-      thread_pool.shutdown
-      thread_pool.wait_for_termination(timeout: 1)
-      described_class.remove_instance_variable(:@thread_pool)
-    end
-  end
-
   describe ".build" do
     it "ensures the sections are built in order with current user and dates" do
       AdminDashboardSiteTraffic
@@ -43,6 +35,79 @@ describe AdminDashboardSectionLoader do
           { id: "search", data: { value: "search" } },
         ],
       )
+    end
+
+    it "includes report card payloads in the reports section data" do
+      provider =
+        Class.new(AdminDashboard::Reports::SourceProvider) do
+          def self.source_name = "section_loader_test"
+          def self.label = "Test"
+
+          def self.resolve_many(identifiers, guardian:)
+            identifiers.index_with do |identifier|
+              AdminDashboard::Reports::ResolvedReport.new(
+                source: source_name,
+                identifier: identifier.to_s,
+                title: "Report #{identifier}",
+                description: nil,
+                label: label,
+                url: "/reports/#{identifier}",
+              )
+            end
+          end
+
+          def self.fetch_many(identifiers, guardian:, filters:)
+            identifiers.index_with { |identifier| { identifier:, filters: } }
+          end
+        end
+      plugin = Plugin::Instance.new
+      DiscoursePluginRegistry.register_admin_dashboard_report_source(provider, plugin)
+      AdminDashboardReport.delete_all
+      AdminDashboardReport.create!(
+        source: provider.source_name,
+        identifier: "activity",
+        position: 0,
+      )
+
+      result =
+        described_class.build(
+          section_ids: ["reports"],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        )
+
+      expect(result).to eq(
+        [
+          {
+            id: "reports",
+            data: {
+              items: [
+                {
+                  source: provider.source_name,
+                  identifier: "activity",
+                  title: "Report activity",
+                  description: nil,
+                  label: "Test",
+                  url: "/reports/activity",
+                  key: "#{provider.source_name}:activity",
+                  payload: {
+                    identifier: "activity",
+                    filters: {
+                      start_date: "2026-05-01",
+                      end_date: "2026-05-07",
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      )
+    ensure
+      DiscoursePluginRegistry._raw_admin_dashboard_report_sources.reject! do |entry|
+        entry[:value] == provider
+      end
     end
 
     it "returns partial section data when a section fails to build" do
@@ -100,62 +165,6 @@ describe AdminDashboardSectionLoader do
           end_date: "2026-05-07",
         ),
       ).to eq([{ id: "frobnitz", data: nil }])
-    end
-  end
-
-  describe ".pool_size" do
-    it "caps at the DB connection pool, reserving one for the request thread" do
-      ActiveRecord::Base.connection_pool.stubs(:size).returns(3)
-      expect(described_class.pool_size).to eq(2)
-    end
-
-    it "uses the desired count when the pool has room to spare" do
-      ActiveRecord::Base.connection_pool.stubs(:size).returns(100)
-      desired =
-        AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
-          DiscoursePluginRegistry.admin_dashboard_sections.size
-      expect(described_class.pool_size).to eq(desired)
-    end
-
-    it "never drops below one" do
-      ActiveRecord::Base.connection_pool.stubs(:size).returns(1)
-      expect(described_class.pool_size).to eq(1)
-    end
-  end
-end
-
-describe AdminDashboardSectionLoader do
-  self.use_transactional_tests = false
-
-  after do
-    if thread_pool = described_class.instance_variable_get(:@thread_pool)
-      thread_pool.shutdown
-      thread_pool.wait_for_termination(timeout: 1)
-      described_class.remove_instance_variable(:@thread_pool)
-    end
-  end
-
-  it "returns database connections to the pool once a section finishes building" do
-    worker_thread = nil
-    loader = ->(start_date:, end_date:, current_user:) do
-      worker_thread = Thread.current
-      ActiveRecord::Base.connection.execute("SELECT 1")
-      { value: "leaky" }
-    end
-    DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
-      [{ id: "leaky", enabled: -> { true }, loader: loader }],
-    )
-
-    described_class.build(
-      section_ids: ["leaky"],
-      current_user: Discourse.system_user,
-      start_date: "2026-05-01",
-      end_date: "2026-05-07",
-    )
-
-    expect(worker_thread).not_to eq(Thread.current)
-    wait_for do
-      ActiveRecord::Base.connection_pool.connections.none? { |c| c.owner == worker_thread }
     end
   end
 end

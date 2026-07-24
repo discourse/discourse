@@ -3,6 +3,14 @@
 module PageObjects
   module Pages
     class AdminDashboard < PageObjects::Pages::Base
+      SECTION_TITLES = {
+        "highlights" => "Highlights",
+        "reports" => "Reports",
+        "traffic" => "Site traffic",
+        "engagement" => "Engagement",
+        "search" => "Search",
+      }.freeze
+
       def visit
         page.visit("/admin")
         has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
@@ -12,6 +20,17 @@ module PageObjects
       def visit_with_query(params)
         page.visit("/admin?#{params.to_query}")
         has_css?(".db-main [data-section-id], .db-main__empty, .nav-pills")
+        self
+      end
+
+      def visit_while_request_pending
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.goto("#{page.server_url}/admin")
+          playwright_page
+            .locator(".db-main [data-section-id], .db-main__empty, .nav-pills")
+            .first
+            .wait_for(state: "attached")
+        end
         self
       end
 
@@ -119,6 +138,14 @@ module PageObjects
         self
       end
 
+      def select_preset_while_request_pending(period)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.locator(".db-date-range__trigger").click
+          playwright_page.get_by_role("button", name: preset_label(period), exact: true).click
+        end
+        self
+      end
+
       def has_configure_button?
         has_css?(".btn[data-identifier='db-configure']")
       end
@@ -202,7 +229,156 @@ module PageObjects
         self
       end
 
+      def resize_viewport(height:)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.set_viewport_size(width: 1000, height:)
+        end
+        self
+      end
+
+      def track_section_requests
+        @section_requests = []
+        @reports_bulk_request_count = 0
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.on(
+            "request",
+            lambda do |request|
+              match = request.url.match(%r{/admin/dashboard/sections/([^/?]+)\.json})
+              @section_requests << match[1] if match
+              if request.url.match?(%r{/admin/dashboard/reports/bulk(?:\.json)?})
+                @reports_bulk_request_count += 1
+              end
+            end,
+          )
+        end
+        self
+      end
+
+      def requested_section_ids
+        Array(@section_requests).dup
+      end
+
+      def reports_bulk_request_count
+        @reports_bulk_request_count || 0
+      end
+
+      def section_request_count(id)
+        requested_section_ids.count(id)
+      end
+
+      def wait_for_section_request(id)
+        wait_until { requested_section_ids.include?(id) }
+        self
+      end
+
+      def wait_for_section_request_count(id, count)
+        wait_until { section_request_count(id) >= count }
+        self
+      end
+
+      def has_section_loading?(id)
+        has_css?(
+          "[data-section-id='#{id}'] [role='status'][aria-label='Loading #{SECTION_TITLES.fetch(id)}…']",
+        )
+      end
+
+      def has_no_section_loading?(id)
+        has_no_css?("[data-section-id='#{id}'] [role='status']")
+      end
+
+      def has_highlights_content?
+        has_css?("[data-section-id='highlights'] .db-kpi")
+      end
+
+      def has_section_error?(id)
+        within("[data-section-id='#{id}']") do
+          has_css?("[role='alert']") && has_button?("Retry", exact: true)
+        end
+      end
+
+      def has_no_section_error?(id)
+        has_no_css?("[data-section-id='#{id}'] [role='alert']")
+      end
+
+      def retry_section(id)
+        within("[data-section-id='#{id}']") { click_button("Retry", exact: true) }
+        self
+      end
+
+      def scroll_to_section(id)
+        scroll_to(find("[data-section-id='#{id}']"))
+        self
+      end
+
+      def hold_next_section_request(id)
+        @held_section_routes ||= {}
+        @held_section_routes[id] = []
+        held = false
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.route(
+            section_request_pattern(id),
+            lambda do |route, _request|
+              if held
+                route.continue
+              else
+                held = true
+                @held_section_routes[id] << route
+              end
+            end,
+          )
+        end
+        self
+      end
+
+      def release_section_requests(id)
+        page.driver.with_playwright_page do |playwright_page|
+          @held_section_routes
+            .fetch(id)
+            .each do |route|
+              response = route.fetch
+              route.fulfill(response:)
+            end
+          playwright_page.evaluate(
+            "() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))",
+          )
+          playwright_page.unroute(section_request_pattern(id))
+        end
+        self
+      end
+
+      def fail_next_section_request(id)
+        failed = false
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.route(
+            section_request_pattern(id),
+            lambda do |route, _request|
+              if failed
+                route.continue
+              else
+                failed = true
+                route.fulfill(
+                  status: 500,
+                  headers: {
+                    "Content-Type" => "application/json",
+                  },
+                  body: %({"id":"#{id}","error":true}),
+                )
+              end
+            end,
+          )
+        end
+        self
+      end
+
       private
+
+      def section_request_pattern(id)
+        "**/admin/dashboard/sections/#{id}.json*"
+      end
+
+      def wait_until
+        Timeout.timeout(Capybara.default_max_wait_time) { sleep 0.01 until yield }
+      end
 
       def custom_range_params(from:, to:)
         { range: "custom", start_date: from, end_date: to }

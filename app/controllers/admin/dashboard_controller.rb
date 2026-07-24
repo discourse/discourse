@@ -10,6 +10,7 @@ class Admin::DashboardController < Admin::StaffController
                   update_configuration
                   update_section_settings
                 ]
+  before_action :ensure_dashboard_improvements_enabled, only: %i[section]
 
   def index
     if dashboard_improvements?
@@ -23,6 +24,19 @@ class Admin::DashboardController < Admin::StaffController
     end
 
     render json: data
+  end
+
+  def section
+    section_id = params.require(:section_id)
+    if AdminDashboardSectionConfiguration.visible_section_ids.exclude?(section_id)
+      raise Discourse::NotFound
+    end
+
+    if section_id == "reports"
+      hijack { render_dashboard_section(section_id) }
+    else
+      render_dashboard_section(section_id)
+    end
   end
 
   def update_configuration
@@ -150,23 +164,29 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  def render_dashboard_section(section_id)
+    result =
+      AdminDashboardSectionLoader.build(
+        section_ids: [section_id],
+        current_user: current_user,
+        start_date: params[:start_date],
+        end_date: params[:end_date],
+      ).first
+
+    if result[:error]
+      render_json_dump({ id: section_id, error: true }, status: :internal_server_error)
+    else
+      render_json_dump(result)
+    end
+  end
+
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
   end
 
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
-    data = {
-      sections:
-        AdminDashboardSectionLoader.build(
-          section_ids: visible_ids,
-          current_user: current_user,
-          start_date: params[:start_date],
-          end_date: params[:end_date],
-          parallel: !mini_profiler_flamegraph_request?,
-        ),
-      problems: serialized_problems,
-    }
+    data = { sections: visible_ids.map { |id| { id: } }, problems: serialized_problems }
     if current_user.admin?
       data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
     end

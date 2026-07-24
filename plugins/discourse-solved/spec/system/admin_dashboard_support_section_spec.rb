@@ -34,6 +34,7 @@ describe "Admin dashboard Support section" do
 
   it "shows support analytics for the community's support topics" do
     dashboard.visit
+    support.scroll_into_view
 
     expect(support).to have_section
     expect(support).to have_kpi("Resolution rate")
@@ -59,6 +60,7 @@ describe "Admin dashboard Support section" do
 
     it "saves an admin's category selection when the picker closes, and persists it across a refresh" do
       dashboard.visit
+      support.scroll_into_view
       expect(support).to have_category_filter
       expect(support).to have_no_selected_category(support_category)
 
@@ -69,6 +71,7 @@ describe "Admin dashboard Support section" do
       expect(support).to have_selected_category(support_category)
 
       dashboard.visit
+      support.scroll_into_view
 
       support.expand_category_filter
       expect(support).to have_selected_category(support_category)
@@ -78,10 +81,12 @@ describe "Admin dashboard Support section" do
       sign_in(moderator)
 
       dashboard.visit
+      support.scroll_into_view
       support.select_category(support_category)
       support.close_category_filter
 
       dashboard.visit
+      support.scroll_into_view
       support.expand_category_filter
 
       expect(support).to have_no_selected_category(support_category)

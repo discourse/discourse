@@ -18,7 +18,9 @@ export default <template>
       @loadedSections={{@controller.loadedSections}}
       @toggleSection={{@controller.toggleSection}}
       @reorderSections={{@controller.reorderSections}}
-      @refreshSections={{@controller.fetchSections}}
+      @refreshSection={{@controller.refreshSection}}
+      @loadSection={{@controller.loadSection}}
+      @retrySection={{@controller.retrySection}}
       @loadingSections={{@controller.loadingSections}}
       @sectionsFetchError={{@controller.sectionsFetchError}}
       @problems={{@controller.problems}}
