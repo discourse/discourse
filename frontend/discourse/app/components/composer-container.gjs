@@ -856,18 +856,6 @@ export default class ComposerContainer extends Component {
                     </span>
                   </div>
                 {{/if}}
-
-                {{#if (and this.composer.allowPreview this.site.desktopView)}}
-                  <DButton
-                    @action={{this.composer.togglePreview}}
-                    @translatedTitle={{this.composer.toggleText}}
-                    @icon="angles-left"
-                    class={{dConcatClass
-                      "btn-transparent btn-small toggle-preview"
-                      (unless this.composer.isPreviewVisible "active")
-                    }}
-                  />
-                {{/if}}
               </div>
             {{/if}}
           </div>
