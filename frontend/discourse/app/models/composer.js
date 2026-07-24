@@ -14,7 +14,10 @@ import deprecated from "discourse/lib/deprecated";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Draft from "discourse/models/draft";
@@ -229,6 +232,19 @@ export default class Composer extends RestModel {
 
   @tracked _archetypesOverride;
 
+  @tracked _user;
+
+  @dependentKeyCompat
+  get user() {
+    return applyValueTransformer("composer-user", this._user, {
+      composer: this,
+    });
+  }
+
+  set user(value) {
+    this._user = value;
+  }
+
   @computed("site.archetypes")
   get archetypes() {
     if (this._archetypesOverride !== undefined) {
@@ -395,7 +411,9 @@ export default class Composer extends RestModel {
 
   @dependentKeyCompat
   get editingPost() {
-    return isEdit(this.get("action"));
+    return applyValueTransformer("composer-editing-post", isEdit(this.action), {
+      composer: this,
+    });
   }
 
   @computed("category.minimumRequiredTags")
@@ -903,29 +921,35 @@ export default class Composer extends RestModel {
   }
 
   applyTopicTemplate(oldCategoryId, categoryId) {
-    if (this.action !== CREATE_TOPIC) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "composer-apply-topic-template",
+      () => {
+        if (this.action !== CREATE_TOPIC) {
+          return;
+        }
 
-    let reply = this.reply;
+        let reply = this.reply;
 
-    // If the user didn't change the template, clear it
-    if (oldCategoryId) {
-      const oldCat = Category.findById(oldCategoryId);
-      if (oldCat && oldCat.topic_template === reply) {
-        reply = "";
-      }
-    }
+        // If the user didn't change the template, clear it
+        if (oldCategoryId) {
+          const oldCat = Category.findById(oldCategoryId);
+          if (oldCat && oldCat.topic_template === reply) {
+            reply = "";
+          }
+        }
 
-    if (!isEmpty(reply)) {
-      return;
-    }
+        if (!isEmpty(reply)) {
+          return;
+        }
 
-    const category = Category.findById(categoryId);
-    if (category) {
-      this.set("reply", category.topic_template || "");
-      this.set("originalText", category.topic_template || "");
-    }
+        const category = Category.findById(categoryId);
+        if (category) {
+          this.set("reply", category.topic_template || "");
+          this.set("originalText", category.topic_template || "");
+        }
+      },
+      { composer: this, oldCategoryId, categoryId }
+    );
   }
 
   /**
@@ -953,11 +977,18 @@ export default class Composer extends RestModel {
    @param {String} [opts.title]
    **/
   open(opts) {
-    let promise = Promise.resolve();
-
     if (!opts) {
       opts = {};
     }
+
+    return applyBehaviorTransformer("composer-open", () => this._open(opts), {
+      composer: this,
+      opts,
+    });
+  }
+
+  _open(opts) {
+    let promise = Promise.resolve();
 
     this.set("loading", true);
 

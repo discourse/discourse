@@ -1346,13 +1346,19 @@ export default class PostStream extends RestModel {
   }
 
   _setSuggestedTopics(result) {
-    if (!result.suggested_topics) {
-      return;
-    }
+    applyBehaviorTransformer(
+      "post-stream-suggested-topics",
+      () => {
+        if (!result.suggested_topics) {
+          return;
+        }
 
-    this.topic.setProperties({
-      suggested_topics: result.suggested_topics,
-      suggested_group_name: result.suggested_group_name,
-    });
+        this.topic.setProperties({
+          suggested_topics: result.suggested_topics,
+          suggested_group_name: result.suggested_group_name,
+        });
+      },
+      { postStream: this, result }
+    );
   }
 }

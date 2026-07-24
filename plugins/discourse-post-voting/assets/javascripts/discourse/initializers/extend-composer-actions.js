@@ -1,5 +1,3 @@
-/* eslint-disable ember/no-observers */
-import { observer } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { CREATE_TOPIC } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
@@ -143,33 +141,32 @@ export default {
         }
       );
 
-      api.modifyClass("model:composer", {
-        pluginId: "discourse-post-voting",
-
-        categoryCreateAsPostVotingDefault: observer("categoryId", function () {
-          const createAsPostVoting =
-            this.category?.create_as_post_voting_default;
-
-          const onlyPostVotingInThisCategory =
-            this.category?.only_post_voting_in_this_category;
-
-          if (this.creatingTopic && onlyPostVotingInThisCategory) {
-            this.set("createAsPostVoting", true);
-            this.set(
-              "onlyPostVotingInThisCategory",
-              onlyPostVotingInThisCategory
-            );
-            this.notifyPropertyChange("replyOptions");
-            this.notifyPropertyChange("action");
-          } else if (
+      // Purely derived from the category.
+      api.addModelGetter(
+        "composer",
+        "onlyPostVotingInThisCategory",
+        function () {
+          return (
             this.creatingTopic &&
-            createAsPostVoting !== this.createAsPostVoting
-          ) {
-            this.set("createAsPostVoting", createAsPostVoting);
-            this.notifyPropertyChange("replyOptions");
-            this.notifyPropertyChange("action");
+            !!this.category?.only_post_voting_in_this_category
+          );
+        }
+      );
+
+      // Defaults from the category (forced on when it's post-voting-only),
+      // resets on category change, and is user-toggleable until then.
+      api.addModelField("composer", "createAsPostVoting", {
+        resettable: true,
+        defaultValue() {
+          if (!this.creatingTopic) {
+            return false;
           }
-        }),
+
+          return (
+            this.onlyPostVotingInThisCategory ||
+            !!this.category?.create_as_post_voting_default
+          );
+        },
       });
     });
   },
