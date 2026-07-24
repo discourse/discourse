@@ -95,6 +95,10 @@ module PageObjects
         page.has_selector?(SEARCH_FIELD_SELECTOR, visible: true)
       end
 
+      def has_header_search_menu?
+        page.has_css?("#{SEARCH_FIELD_SELECTOR} .search-menu-panel", visible: false)
+      end
+
       def has_no_search_field?
         page.has_no_selector?(SEARCH_FIELD_SELECTOR)
       end
