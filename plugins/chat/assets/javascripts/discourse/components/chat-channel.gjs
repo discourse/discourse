@@ -34,6 +34,7 @@ import {
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatChannelEmptyState from "./chat/channel/empty-state";
 import ChatComposerChannel from "./chat/composer/channel";
+import ChatPinnedMessageBar from "./chat/pinned-message-bar";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import ChatChannelFilter from "./chat-channel-filter";
@@ -63,6 +64,8 @@ export default class ChatChannel extends Component {
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
+  // bottom-most visible message, so the pinned bar can anchor to the view
+  @tracked lastVisibleMessageId = null;
 
   scroller = null;
 
@@ -71,6 +74,9 @@ export default class ChatChannel extends Component {
     onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
+  jumpToPinnedMessage = (messageId) => {
+    this.highlightOrFetchMessage(messageId, { position: "center" });
+  };
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -111,6 +117,8 @@ export default class ChatChannel extends Component {
   @action
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
+    // cleared on teardown (not setup) so a pins-panel click can set it pre-mount
+    this.args.channel.activePinnedMessageId = null;
     this.#cancelHandlers();
     this.paneState.teardown();
     this.subscriptionManager.teardown();
@@ -523,6 +531,10 @@ export default class ChatChannel extends Component {
         return;
       }
 
+      // a genuine scroll re-anchors the bar and drops any tap override
+      this.lastVisibleMessageId = firstVisibleMessageId(this.scroller);
+      this.args.channel.activePinnedMessageId = null;
+
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
         scroller: this.scroller,
@@ -550,6 +562,8 @@ export default class ChatChannel extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.lastVisibleMessageId =
+      state.firstVisibleId ?? this.lastVisibleMessageId;
     this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
@@ -781,6 +795,12 @@ export default class ChatChannel extends Component {
         @onToggleFilter={{@onToggleFilter}}
         @channel={{@channel}}
         @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+      />
+
+      <ChatPinnedMessageBar
+        @channel={{@channel}}
+        @onJumpToMessage={{this.jumpToPinnedMessage}}
+        @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
 
       <ChatMessagesScroller
