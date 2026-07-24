@@ -90,9 +90,10 @@ export default class AdminBackupsLogs extends Component {
       {{else}}
         <p>{{i18n "admin.backups.logs.none"}}</p>
       {{/if}}
-      {{#if @status.isOperationRunning}}
-        <div class="spinner small"></div>
-      {{/if}}
+      <DConditionalLoadingSpinner
+          @size="small"
+          @condition={{@status.isOperationRunning}}
+        />
     </div>
   </template>
 }
