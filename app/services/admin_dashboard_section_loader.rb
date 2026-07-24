@@ -111,13 +111,13 @@ class AdminDashboardSectionLoader
 
   def reports_section_data(user)
     section = AdminDashboard::Reports::Section.build(guardian: user.guardian)
-    fetched =
+    fetched_items =
       AdminDashboard::Reports::BulkFetch.call(
         items: section[:items],
         filters: { start_date:, end_date: }.compact,
         guardian: user.guardian,
-      )
-    payloads = fetched[:items].index_by { |item| item[:key] }
+      ).fetch(:items)
+    payloads = fetched_items.index_by { |item| item[:key] }
 
     { items: section[:items].map { |item| item.merge(payload: payloads.dig(item[:key], :data)) } }
   end
