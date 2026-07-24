@@ -114,10 +114,11 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
       configuration: { sections: [{ id: "traffic", visible: true }] },
     };
     pretender.put("/admin/dashboard/configuration.json", () => response({}));
+    const fetchSection = sinon.stub(AdminDashboard, "fetchSection");
 
     controller.toggleSection("traffic");
-    controller.toggleSection("traffic");
     await settled();
+    controller.toggleSection("traffic");
 
     const restored = controller.loadedSections.sections[0];
     assert.deepEqual(restored.data, { pageviews: 30 });
@@ -125,6 +126,13 @@ module("Unit | Controller | admin-dashboard", function (hooks) {
     assert.strictEqual(restored.startDate, oldStartDate);
     assert.strictEqual(restored.endDate, oldEndDate);
     assert.true(restored.stale);
+    assert.true(restored.configurationPending);
+
+    await controller.loadSection("traffic");
+    assert.strictEqual(fetchSection.callCount, 0);
+
+    await settled();
+    assert.false(controller.loadedSections.sections[0].configurationPending);
   });
 
   test("a failed hidden refresh restores an actionable stale section", async function (assert) {
