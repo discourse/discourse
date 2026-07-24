@@ -1953,6 +1953,15 @@ RSpec.describe CookedPostProcessor do
       expect(cpp.html).to have_tag("a", with: { href: "https://google.com/?u=bar" })
       expect(cpp.html).to have_tag("a", with: { href: "https://www.example.com/#123#4" })
     end
+
+    it "preserves encoded characters in the remaining query params" do
+      post = Fabricate(:post, user: user_with_auto_groups, raw: "link: #{topic.url}?ref=a%26b&u=99")
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
+
+      cpp.remove_user_ids
+
+      expect(cpp.html).to have_tag("a", with: { href: "#{topic.url}?ref=a%26b" })
+    end
   end
 
   describe "#is_a_hyperlink?" do
