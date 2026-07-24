@@ -315,4 +315,119 @@ RSpec.describe UsernameValidator do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &add_error_block)
     end
   end
+
+  describe "watched words validation" do
+    after { WatchedWord.destroy_all }
+
+    it "is invalid when username contains a blocked watched word" do
+      WatchedWord.create!(word: "blocked", action: WatchedWord.actions[:block])
+
+      expect_invalid(
+        "blocked",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "blocked"),
+      )
+    end
+
+    it "is invalid when username contains a blocked watched word with wildcard" do
+      WatchedWord.create!(word: "*bad*", action: WatchedWord.actions[:block])
+
+      validator = UsernameValidator.new("bad")
+      expect(validator.valid_format?).to eq(false)
+      expect(validator.errors.first).to include("blocked word")
+
+      validator = UsernameValidator.new("bad_user")
+      expect(validator.valid_format?).to eq(false)
+      expect(validator.errors.first).to include("blocked word")
+
+      validator = UsernameValidator.new("mybadname")
+      expect(validator.valid_format?).to eq(false)
+      expect(validator.errors.first).to include("blocked word")
+    end
+
+    it "is invalid when username contains a censored watched word" do
+      WatchedWord.create!(word: "*censor*", action: WatchedWord.actions[:censor])
+
+      expect_invalid(
+        "censor_user",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "censor_user"),
+      )
+    end
+
+    it "is invalid when username contains a flagged watched word" do
+      WatchedWord.create!(word: "*flag*", action: WatchedWord.actions[:flag])
+
+      expect_invalid(
+        "flag_user",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "flag_user"),
+      )
+    end
+
+    it "is invalid when username contains a silenced watched word" do
+      WatchedWord.create!(word: "*silence*", action: WatchedWord.actions[:silence])
+
+      expect_invalid(
+        "silence_user",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "silence_user"),
+      )
+    end
+
+    it "is invalid when username contains a require approval watched word" do
+      WatchedWord.create!(word: "*approve*", action: WatchedWord.actions[:require_approval])
+
+      expect_invalid(
+        "approve_user",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "approve_user"),
+      )
+    end
+
+    it "is invalid when username contains multiple watched words" do
+      WatchedWord.create!(word: "*bad*", action: WatchedWord.actions[:block])
+      WatchedWord.create!(word: "*evil*", action: WatchedWord.actions[:block])
+
+      validator = UsernameValidator.new("bad_evil_user")
+      expect(validator.valid_format?).to eq(false)
+      expect(validator.errors.first).to include("blocked word")
+    end
+
+    it "is valid when username does not contain any watched words" do
+      WatchedWord.create!(word: "*bad*", action: WatchedWord.actions[:block])
+
+      expect_valid("gooduser", "nice_name")
+    end
+
+    it "is invalid when username matches watched word with word boundaries" do
+      WatchedWord.create!(word: "test", action: WatchedWord.actions[:block])
+
+      expect_invalid(
+        "test",
+        error_message: I18n.t(:"user.username.contains_blocked_word", word: "test"),
+      )
+    end
+
+    it "is valid when username contains watched word but not as complete word" do
+      WatchedWord.create!(word: "test", action: WatchedWord.actions[:block])
+
+      expect_valid("testing", "mytest", "protest")
+    end
+
+    it "is invalid when username contains watched word from any action type" do
+      WatchedWord.create!(word: "*block*", action: WatchedWord.actions[:block])
+      WatchedWord.create!(word: "*censor*", action: WatchedWord.actions[:censor])
+      WatchedWord.create!(word: "*flag*", action: WatchedWord.actions[:flag])
+      WatchedWord.create!(word: "*silence*", action: WatchedWord.actions[:silence])
+      WatchedWord.create!(word: "*approve*", action: WatchedWord.actions[:require_approval])
+
+      %w[
+        user_with_block
+        user_with_censor
+        user_with_flag
+        user_with_silence
+        user_with_approve
+      ].each do |username|
+        validator = UsernameValidator.new(username)
+        expect(validator.valid_format?).to eq(false), "Expected #{username} to be invalid"
+        expect(validator.errors.first).to include("blocked word")
+      end
+    end
+  end
 end
