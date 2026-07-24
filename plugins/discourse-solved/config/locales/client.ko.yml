@@ -14,8 +14,6 @@ ko:
               label: "허용되는 솔루션"
         sections:
           support:
-            filter:
-              all_categories: "모든 카테고리"
             answerers:
               staff: "스태프"
               member: "회원"

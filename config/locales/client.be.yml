@@ -1083,7 +1083,7 @@ be:
         default: "(Прадвызначаная)"
         any: "любая"
       homepage:
-        default: "(Прадвызначаная)"
+        default: "Прадвызначаная"
       password_confirmation:
         title: "Пароль яшчэ раз"
       auth_tokens:
@@ -2242,7 +2242,6 @@ be:
               posts: "Допісы"
               share: "Абагуліць"
             whos_posting:
-              all_categories: "Усе катэгорыі"
               staff: "Персанал"
             trust_level_pipeline:
               trust_levels:

@@ -5379,6 +5379,41 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["errors"]).to eq(nil)
       end
 
+      it "deduplicates explicit topic IDs before processing them" do
+        sign_in(trust_level_0)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: Array.new(5, 0),
+              operation: {
+                type: "dismiss_posts",
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_ids"].size).to eq(1)
+        expect(response.parsed_body["topic_ids"].first).to eq(0)
+      end
+
+      it "rejects more than 1,000 unique explicit topic IDs" do
+        sign_in(trust_level_0)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: (1..1_001).to_a,
+              operation: {
+                type: "dismiss_posts",
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to include(
+          I18n.t("topics_bulk_action.too_many_topic_ids", limit: 1_000),
+        )
+      end
+
       it "can pin multiple topics with pinned_until" do
         sign_in(moderator)
         pinned_until = 3.days.from_now.beginning_of_minute.iso8601

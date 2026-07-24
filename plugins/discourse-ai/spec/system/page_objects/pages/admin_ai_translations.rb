@@ -32,7 +32,7 @@ module PageObjects
       end
 
       def has_locale_selector?
-        page.has_css?(".alert.alert-info .multi-select")
+        page.has_css?(".ai-translations__settings-panel .multi-select")
       end
 
       def has_translation_settings_button?

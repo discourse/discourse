@@ -1742,7 +1742,7 @@ lt:
         default: "(numatyta)"
         any: "bet kuris"
       homepage:
-        default: "(numatyta)"
+        default: "Numatytasis"
       password_confirmation:
         title: "Pakartokite slaptažodį"
       invite_code:
@@ -4434,7 +4434,6 @@ lt:
               posts: "Pranešimai"
               share: "Dalintis"
             whos_posting:
-              all_categories: "Visos kategorijos"
               staff: "Personalas"
             trust_level_pipeline:
               trust_levels:

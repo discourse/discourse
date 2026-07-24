@@ -1577,7 +1577,7 @@ sv:
         default: "(förvalt värde)"
         any: "något"
       homepage:
-        default: "(förvalt värde)"
+        default: "Standard"
       password_confirmation:
         title: "Lösenord igen"
       invite_code:
@@ -4639,7 +4639,6 @@ sv:
               posts: "Inlägg"
               share: "Dela"
             whos_posting:
-              all_categories: "Alla kategorier"
               staff: "Personal"
             trust_level_pipeline:
               trust_levels:

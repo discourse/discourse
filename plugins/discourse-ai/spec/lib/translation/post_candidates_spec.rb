@@ -239,6 +239,17 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(result[:posts_with_detected_locale]).to eq(0)
     end
 
+    it "returns the time when the progress result was cached" do
+      Post.delete_all
+      cached_at = Time.zone.parse("2026-07-23 09:00:00 UTC")
+
+      freeze_time(cached_at) { described_class.get_completion_all_locales }
+
+      freeze_time(cached_at + 5.minutes) do
+        expect(described_class.get_completion_all_locales[:cached_at]).to eq(cached_at.utc.iso8601)
+      end
+    end
+
     it "uses category scope in the cache key" do
       Post.delete_all
       scoped_category = Fabricate(:category)

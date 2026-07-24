@@ -1908,7 +1908,7 @@ it:
         default: "(default)"
         any: "tutti"
       homepage:
-        default: "(predefinita)"
+        default: "Predefinito"
       password_confirmation:
         title: "Ripeti la password"
       invite_code:
@@ -5686,7 +5686,6 @@ it:
               posts: "Messaggi"
               share: "Condividi"
             whos_posting:
-              all_categories: "Tutte le categorie"
               staff: "Staff"
             trust_level_pipeline:
               trust_levels:

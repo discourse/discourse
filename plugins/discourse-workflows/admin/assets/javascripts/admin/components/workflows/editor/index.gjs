@@ -701,13 +701,13 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  updateNodePosition(clientId, position) {
+  updateNodePositions(positions) {
+    if (!positions?.size) {
+      return;
+    }
+
     this.#captureUndo();
-    const nodes = this.formApi.get("nodes");
-    this.formApi.set(
-      "nodes",
-      nodes.map((n) => (n.clientId === clientId ? { ...n, position } : n))
-    );
+    this.#applyNodePositions(positions);
   }
 
   @action
@@ -1485,7 +1485,7 @@ export default class WorkflowsEditor extends Component {
           @stickyNotes={{transientData.stickyNotes}}
           @workflowId={{@workflow.id}}
           @autoArrangeRequest={{this.autoArrangeRequest}}
-          @onUpdateNodePosition={{this.updateNodePosition}}
+          @onUpdateNodePositions={{this.updateNodePositions}}
           @onEditNode={{this.editNode}}
           @onRemoveNodes={{this.removeNodes}}
           @onCreateConnection={{this.createConnection}}

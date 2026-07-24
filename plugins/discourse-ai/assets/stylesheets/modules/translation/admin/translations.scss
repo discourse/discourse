@@ -8,6 +8,35 @@
     margin-top: 2em;
   }
 
+  &__settings-panel {
+    background: var(--primary-very-low);
+    margin-block: var(--space-4);
+    padding: var(--space-2);
+  }
+
+  &__toggle-container {
+    margin-block-end: var(--space-3);
+  }
+
+  &__progress-meta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-block-end: var(--space-4);
+  }
+
+  &__cached-results {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline-start: auto;
+    text-align: end;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
   &__locale-input-row,
   &__category-input-row {
     display: flex;

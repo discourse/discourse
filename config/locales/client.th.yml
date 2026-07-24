@@ -1064,7 +1064,7 @@ th:
         default: "(ค่าเริ่มต้น)"
         any: "ใดๆ"
       homepage:
-        default: "(ค่าเริ่มต้น)"
+        default: "ค่าเริ่มต้น"
       password_confirmation:
         title: "ยืนยันรหัสผ่าน"
       invite_code:
@@ -2819,7 +2819,6 @@ th:
               posts: "โพส"
               share: "แบ่งปัน"
             whos_posting:
-              all_categories: "หมวดหมู่ทั้งหมด"
               staff: "ทีมงาน"
             trust_level_pipeline:
               trust_levels:

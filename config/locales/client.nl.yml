@@ -2096,7 +2096,7 @@ nl:
         default: "(standaard)"
         any: "alle"
       homepage:
-        default: "(standaard)"
+        default: "Standaard"
       password_confirmation:
         title: "Wachtwoord opnieuw"
       invite_code:
@@ -6386,7 +6386,6 @@ nl:
               posts: "Berichten"
               share: "Delen"
             whos_posting:
-              all_categories: "Alle categorieën"
               staff: "Medewerker"
             trust_level_pipeline:
               trust_levels:

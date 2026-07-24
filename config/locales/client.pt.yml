@@ -1912,7 +1912,7 @@ pt:
         default: "(predefinição)"
         any: "qualquer"
       homepage:
-        default: "(predefinição)"
+        default: "Predefinição"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -4870,7 +4870,6 @@ pt:
               posts: "Mensagens"
               share: "Partilhar"
             whos_posting:
-              all_categories: "Todas as categorias"
               staff: "Pessoal"
             trust_level_pipeline:
               trust_levels:

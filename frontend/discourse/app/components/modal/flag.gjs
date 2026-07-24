@@ -17,8 +17,6 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-const NOTIFY_MODERATORS_KEY = "notify_moderators";
-
 export default class Flag extends Component {
   @service adminTools;
   @service currentUser;
@@ -127,10 +125,6 @@ export default class Flag extends Component {
     );
   }
 
-  get notifyModeratorsFlag() {
-    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_KEY);
-  }
-
   get canTakeAction() {
     return (
       !this.args.model.flagTarget.targetsTopic() &&
@@ -217,7 +211,6 @@ export default class Flag extends Component {
 
   @action
   flagForReview() {
-    this.selected ||= this.notifyModeratorsFlag;
     this.createFlag({ queue_for_review: true });
     this.args.model.setHidden();
   }
@@ -297,7 +290,7 @@ export default class Flag extends Component {
           <DButton
             class="btn-danger flag-modal__flag-for-review"
             @action={{this.flagForReview}}
-            @disabled={{not this.submitEnabled this.notifyModeratorsFlag}}
+            @disabled={{not this.submitEnabled}}
             @icon="triangle-exclamation"
             @label="flagging.flag_for_review"
           />

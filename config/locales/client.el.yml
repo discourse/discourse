@@ -2088,7 +2088,7 @@ el:
         default: "(προεπιλογή)"
         any: "καθένα"
       homepage:
-        default: "(προεπιλογή)"
+        default: "Προεπιλογή"
       password_confirmation:
         title: "Επανάληψη του κωδικού πρόσβασης"
       invite_code:
@@ -6311,8 +6311,6 @@ el:
               empty: "Δεν υπάρχει δραστηριότητα στην επιλεγμένη περίοδο."
             whos_posting:
               title: "Ποιός δημοσιεύει;"
-              all_categories: "Όλες οι κατηγορίες"
-              include_subcategories: "Συμπερίληψη υποκατηγοριών"
               new_members: "Νέα μέλη"
               returning: "Επιστρέφοντες"
               staff: "Προσωπικό"

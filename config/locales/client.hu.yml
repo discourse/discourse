@@ -2067,7 +2067,7 @@ hu:
         default: "(alapértelmezett)"
         any: "bármely"
       homepage:
-        default: "(alapértelmezett)"
+        default: "Alapértelmezett"
       password_confirmation:
         title: "Jelszó újra"
       invite_code:
@@ -6195,7 +6195,6 @@ hu:
               posts: "Bejegyzések"
               share: "Megosztás"
             whos_posting:
-              all_categories: "Minden kategória"
               staff: "Stáb"
             trust_level_pipeline:
               trust_levels:

@@ -149,7 +149,7 @@ export default class ComposerEditor extends Component {
       );
 
       let key;
-      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+      if (this.currentUser.useRichEditor) {
         key = allowImages
           ? "reply_placeholder_rte"
           : "reply_placeholder_rte_no_images";
@@ -323,7 +323,9 @@ export default class ComposerEditor extends Component {
       this.textManipulation.putCursorAtEnd();
     }
 
-    const destroyComposerPosition = setupComposerPosition(input);
+    const destroyComposerPosition = setupComposerPosition(input, {
+      swipeToCollapse: this.siteSettings.enable_composer_redesign,
+    });
 
     return () => {
       destroyComposerPosition();

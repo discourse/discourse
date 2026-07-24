@@ -1308,7 +1308,7 @@ gl:
         default: "(predeterminado)"
         any: "calquera"
       homepage:
-        default: "(predeterminado)"
+        default: "Predeterminado"
       password_confirmation:
         title: "O contrasinal outra vez"
       invite_code:
@@ -3674,7 +3674,6 @@ gl:
               posts: "Publicacións"
               share: "Compartir"
             whos_posting:
-              all_categories: "Todas as categorías"
               staff: "Equipo"
             trust_level_pipeline:
               trust_levels:

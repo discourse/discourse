@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import moment from "moment";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
 import { ajax } from "discourse/lib/ajax";
@@ -31,6 +32,7 @@ export default class AiTranslations extends Component {
   @tracked done = null;
   @tracked total = null;
   @tracked loadingProgress = false;
+  @tracked progressCachedAt = null;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -80,6 +82,7 @@ export default class AiTranslations extends Component {
       this.data = response.translation_progress;
       this.total = response.total;
       this.done = response.posts_with_detected_locale;
+      this.progressCachedAt = response.cached_at;
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -124,10 +127,6 @@ export default class AiTranslations extends Component {
     const current = [...this.selectedLocales].sort().join("|");
     const original = [...this.originalLocales].sort().join("|");
     return current !== original;
-  }
-
-  get showLocaleSelector() {
-    return !this.translationEnabled;
   }
 
   get categoriesChanged() {
@@ -353,8 +352,6 @@ export default class AiTranslations extends Component {
       );
 
       if (totalRemaining && totalRemaining > 0) {
-        const hoursRemaining = totalRemaining / this.hourlyRate;
-
         const cutoffDate = new Date();
         cutoffDate.setDate(
           cutoffDate.getDate() - this.args.model.backfill_max_age_days
@@ -366,28 +363,9 @@ export default class AiTranslations extends Component {
           day: "numeric",
         });
 
-        let timeKey;
-        if (hoursRemaining < 1) {
-          const minutes = Math.ceil(hoursRemaining * 60);
-          timeKey = i18n("discourse_ai.translations.stats.eta_minutes", {
-            count: minutes,
-          });
-        } else if (hoursRemaining < 24) {
-          const hours = Math.ceil(hoursRemaining);
-          timeKey = i18n("discourse_ai.translations.stats.eta_hours", {
-            count: hours,
-          });
-        } else {
-          const days = Math.ceil(hoursRemaining / 24);
-          timeKey = i18n("discourse_ai.translations.stats.eta_days", {
-            count: days,
-          });
-        }
-
         return trustHTML(
           i18n("discourse_ai.translations.stats.backfill_message", {
             date: formattedDate,
-            eta: timeKey,
             settingsUrl: this.settingsUrl,
           })
         );
@@ -399,6 +377,16 @@ export default class AiTranslations extends Component {
     }
 
     return null;
+  }
+
+  get cachedResultsNotice() {
+    if (!this.progressCachedAt) {
+      return null;
+    }
+
+    return i18n("discourse_ai.translations.cached_results_notice", {
+      relative_time: moment(this.progressCachedAt).fromNow(),
+    });
   }
 
   get chartColors() {
@@ -557,166 +545,161 @@ export default class AiTranslations extends Component {
         </div>
       {{/if}}
 
-      {{#if this.showLocaleSelector}}
-        <div class="alert alert-info">
-          <div class="settings">
-            <div class="setting">
-              <div class="setting-label">
-                <label>{{i18n
-                    "discourse_ai.translations.supported_locales"
-                  }}</label>
-              </div>
-              <div class="setting-value">
-                <div class="ai-translations__locale-input-row">
-                  <MultiSelect
-                    @value={{this.selectedLocales}}
-                    @content={{this.availableLocales}}
-                    @nameProperty="name"
-                    @valueProperty="value"
-                    @onChange={{this.updateSelectedLocales}}
-                    @options={{hash allowAny=false}}
-                  />
-                  {{#if this.localesChanged}}
-                    <div class="setting-controls">
-                      <DButton
-                        @action={{this.saveLocales}}
-                        @icon="check"
-                        @isLoading={{this.isSavingLocales}}
-                        @ariaLabel="save"
-                        class="ok setting-controls__ok"
-                      />
-                      <DButton
-                        @action={{this.cancelLocales}}
-                        @icon="xmark"
-                        @isLoading={{this.isSavingLocales}}
-                        @ariaLabel="cancel"
-                        class="cancel setting-controls__cancel"
-                      />
-                    </div>
-                  {{else if this.selectedLocales.length}}
-                    <DButton
-                      @action={{this.resetLocales}}
-                      @icon="arrow-rotate-left"
-                      @label="admin.settings.reset"
-                      class="undo setting-controls__undo"
-                    />
-                  {{/if}}
-                </div>
-                <div class="desc">{{i18n
-                    "discourse_ai.translations.supported_locales_description"
-                  }}</div>
-              </div>
+      <div class="ai-translations__settings-panel settings">
+        <div class="setting ai-translations__toggle-container">
+          <DToggleSwitch
+            @state={{this.translationEnabled}}
+            @label="discourse_ai.translations.admin_actions.enable_translations"
+            disabled={{this.isToggleDisabled}}
+            {{on "click" this.toggleTranslationEnabled}}
+          />
+        </div>
+        <div class="ai-translations__settings-fields">
+          <div class="setting">
+            <div class="setting-label">
+              <label>{{i18n
+                  "discourse_ai.translations.supported_locales"
+                }}</label>
             </div>
-            <div class="setting">
-              <div class="setting-label">
-                <label>{{i18n
-                    "discourse_ai.translations.category_scope"
-                  }}</label>
-              </div>
-              <div class="setting-value">
-                <div class="ai-translations__category-input-row">
-                  <div class="ai-translations__category-scope-row">
-                    <ComboBox
-                      @value={{this.categoryScope}}
-                      @content={{this.categoryScopeOptions}}
-                      @onChange={{this.updateCategoryScope}}
-                      @valueProperty="value"
-                      @nameProperty="name"
+            <div class="setting-value">
+              <div class="ai-translations__locale-input-row">
+                <MultiSelect
+                  @value={{this.selectedLocales}}
+                  @content={{this.availableLocales}}
+                  @nameProperty="name"
+                  @valueProperty="value"
+                  @onChange={{this.updateSelectedLocales}}
+                  @options={{hash allowAny=false}}
+                />
+                {{#if this.localesChanged}}
+                  <div class="setting-controls">
+                    <DButton
+                      @action={{this.saveLocales}}
+                      @icon="check"
+                      @isLoading={{this.isSavingLocales}}
+                      @ariaLabel="save"
+                      class="ok setting-controls__ok"
                     />
-                    {{#unless this.showCategorySelector}}
-                      {{#if this.categoriesChanged}}
-                        <div class="setting-controls">
-                          <DButton
-                            @action={{this.saveCategories}}
-                            @icon="check"
-                            @isLoading={{this.isSavingCategories}}
-                            @ariaLabel="save"
-                            class="ok setting-controls__ok"
-                          />
-                          <DButton
-                            @action={{this.cancelCategories}}
-                            @icon="xmark"
-                            @isLoading={{this.isSavingCategories}}
-                            @ariaLabel="cancel"
-                            class="cancel setting-controls__cancel"
-                          />
-                        </div>
-                      {{else if this.categories.length}}
-                        <DButton
-                          @action={{this.resetCategories}}
-                          @icon="arrow-rotate-left"
-                          @label="admin.settings.reset"
-                          class="undo setting-controls__undo"
-                        />
-                      {{/if}}
-                    {{/unless}}
+                    <DButton
+                      @action={{this.cancelLocales}}
+                      @icon="xmark"
+                      @isLoading={{this.isSavingLocales}}
+                      @ariaLabel="cancel"
+                      class="cancel setting-controls__cancel"
+                    />
                   </div>
-                  {{#if this.showCategorySelector}}
-                    <div class="ai-translations__category-selector-row">
-                      <CategorySelector
-                        @categories={{this.categories}}
-                        @onChange={{this.updateCategories}}
-                      />
-                      {{#if this.categoriesChanged}}
-                        <div class="setting-controls">
-                          <DButton
-                            @action={{this.saveCategories}}
-                            @icon="check"
-                            @isLoading={{this.isSavingCategories}}
-                            @ariaLabel="save"
-                            class="ok setting-controls__ok"
-                          />
-                          <DButton
-                            @action={{this.cancelCategories}}
-                            @icon="xmark"
-                            @isLoading={{this.isSavingCategories}}
-                            @ariaLabel="cancel"
-                            class="cancel setting-controls__cancel"
-                          />
-                        </div>
-                      {{else if this.categories.length}}
-                        <DButton
-                          @action={{this.resetCategories}}
-                          @icon="arrow-rotate-left"
-                          @label="admin.settings.reset"
-                          class="undo setting-controls__undo"
-                        />
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                </div>
-                <div class="desc">{{i18n
-                    "discourse_ai.translations.category_scope_description"
-                  }}</div>
+                {{else if this.selectedLocales.length}}
+                  <DButton
+                    @action={{this.resetLocales}}
+                    @icon="arrow-rotate-left"
+                    @label="admin.settings.reset"
+                    class="undo setting-controls__undo"
+                  />
+                {{/if}}
               </div>
             </div>
           </div>
+          <div class="setting">
+            <div class="setting-label">
+              <label>{{i18n "discourse_ai.translations.category_scope"}}</label>
+            </div>
+            <div class="setting-value">
+              <div class="ai-translations__category-input-row">
+                <div class="ai-translations__category-scope-row">
+                  <ComboBox
+                    @value={{this.categoryScope}}
+                    @content={{this.categoryScopeOptions}}
+                    @onChange={{this.updateCategoryScope}}
+                    @valueProperty="value"
+                    @nameProperty="name"
+                  />
+                  {{#unless this.showCategorySelector}}
+                    {{#if this.categoriesChanged}}
+                      <div class="setting-controls">
+                        <DButton
+                          @action={{this.saveCategories}}
+                          @icon="check"
+                          @isLoading={{this.isSavingCategories}}
+                          @ariaLabel="save"
+                          class="ok setting-controls__ok"
+                        />
+                        <DButton
+                          @action={{this.cancelCategories}}
+                          @icon="xmark"
+                          @isLoading={{this.isSavingCategories}}
+                          @ariaLabel="cancel"
+                          class="cancel setting-controls__cancel"
+                        />
+                      </div>
+                    {{else if this.categories.length}}
+                      <DButton
+                        @action={{this.resetCategories}}
+                        @icon="arrow-rotate-left"
+                        @label="admin.settings.reset"
+                        class="undo setting-controls__undo"
+                      />
+                    {{/if}}
+                  {{/unless}}
+                </div>
+                {{#if this.showCategorySelector}}
+                  <div class="ai-translations__category-selector-row">
+                    <CategorySelector
+                      @categories={{this.categories}}
+                      @onChange={{this.updateCategories}}
+                    />
+                    {{#if this.categoriesChanged}}
+                      <div class="setting-controls">
+                        <DButton
+                          @action={{this.saveCategories}}
+                          @icon="check"
+                          @isLoading={{this.isSavingCategories}}
+                          @ariaLabel="save"
+                          class="ok setting-controls__ok"
+                        />
+                        <DButton
+                          @action={{this.cancelCategories}}
+                          @icon="xmark"
+                          @isLoading={{this.isSavingCategories}}
+                          @ariaLabel="cancel"
+                          class="cancel setting-controls__cancel"
+                        />
+                      </div>
+                    {{else if this.categories.length}}
+                      <DButton
+                        @action={{this.resetCategories}}
+                        @icon="arrow-rotate-left"
+                        @label="admin.settings.reset"
+                        class="undo setting-controls__undo"
+                      />
+                    {{/if}}
+                  </div>
+                {{/if}}
+              </div>
+              <div class="desc">{{i18n
+                  "discourse_ai.translations.category_scope_description"
+                }}</div>
+            </div>
+          </div>
         </div>
-      {{/if}}
-
-      <div class="ai-translations__toggle-container">
-        <DToggleSwitch
-          @state={{this.translationEnabled}}
-          @label="discourse_ai.translations.admin_actions.enable_translations"
-          disabled={{this.isToggleDisabled}}
-          {{on "click" this.toggleTranslationEnabled}}
-        />
       </div>
 
       {{#if this.enabled}}
         <DConditionalLoadingSpinner @condition={{this.loadingProgress}}>
           {{#if this.data}}
             <AdminConfigAreaCard class="ai-translations__charts">
-              <:header>
-                {{i18n "discourse_ai.translations.progress_chart.title"}}
-              </:header>
               <:content>
-                <div class="ai-translations__stats-container">
+                <div class="ai-translations__progress-meta">
                   {{#if this.backfillStatusMessage}}
                     <div class="ai-translations__stat-item">
                       <span class="ai-translations__stat-label">
                         {{this.backfillStatusMessage}}
                       </span>
+                    </div>
+                  {{/if}}
+                  {{#if this.cachedResultsNotice}}
+                    <div class="ai-translations__cached-results">
+                      {{dIcon "clock-rotate-left"}}
+                      <span>{{this.cachedResultsNotice}}</span>
                     </div>
                   {{/if}}
                 </div>

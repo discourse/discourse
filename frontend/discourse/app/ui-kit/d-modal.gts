@@ -11,7 +11,11 @@ import { modifier as modifierFn } from "ember-modifier";
 import htmlClass from "discourse/helpers/html-class";
 import { waitForAnimationEnd } from "discourse/lib/animation-utils";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
-import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
+import {
+  dampenedOverdrag,
+  getMaxAnimationTimeMs,
+  shouldDeferSwipeToContent,
+} from "discourse/lib/swipe-events";
 import type Site from "discourse/models/site";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
@@ -36,11 +40,6 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
 const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
-
-// progressive resistance when the modal is dragged past its resting position
-function dampenedOverdrag(distance: number) {
-  return Math.max(0, 8 * (Math.log(distance + 1) - 2));
-}
 
 // The consumer's close handler. DModal invokes it with an `initiatedBy` reason, but the
 // closers consumers pass (the modal service's `close`, or a float that renders DModal as its
@@ -263,7 +262,7 @@ export default class DModal extends Component<DModalSignature> {
 
   @action
   handleSwipeStart(swipeState: SwipeState, event: Event) {
-    if (this.#shouldDeferSwipeToContent(swipeState)) {
+    if (shouldDeferSwipeToContent(swipeState, this.#modalContainer)) {
       event.preventDefault();
     }
   }
@@ -415,48 +414,6 @@ export default class DModal extends Component<DModalSignature> {
     }
 
     return true;
-  }
-
-  // lets inner content consume the gesture instead of dragging the modal:
-  // horizontal swipes, and vertical swipes started within scrollable content
-  // that can still scroll in the gesture's direction
-  #shouldDeferSwipeToContent(swipeState: SwipeState) {
-    if (swipeState.direction === "left" || swipeState.direction === "right") {
-      return true;
-    }
-
-    let element = swipeState.originalEvent?.target as HTMLElement | null;
-
-    while (element && element !== this.#modalContainer) {
-      if (element.scrollHeight > element.clientHeight) {
-        const style = window.getComputedStyle(element);
-
-        if (style.overflowY === "auto" || style.overflowY === "scroll") {
-          // column-reverse scrollers (e.g. chat messages) rest at scrollTop 0
-          // and go negative when scrolled back, so normalize scrollTop to a
-          // distance from the top edge before checking for remaining room
-          const maxScroll = element.scrollHeight - element.clientHeight;
-          const reversed =
-            style.display.includes("flex") &&
-            style.flexDirection === "column-reverse";
-          const distanceFromTop = reversed
-            ? maxScroll + element.scrollTop
-            : element.scrollTop;
-
-          if (swipeState.direction === "down" && distanceFromTop > 0) {
-            return true;
-          }
-
-          if (swipeState.direction === "up" && distanceFromTop < maxScroll) {
-            return true;
-          }
-        }
-      }
-
-      element = element.parentElement;
-    }
-
-    return false;
   }
 
   #animateBackdropOpacity(position: number) {

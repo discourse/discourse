@@ -18,8 +18,6 @@ ar:
         sections:
           support:
             title: "الدعم"
-            filter:
-              all_categories: "كل الفئات"
             answerers:
               staff: "فريق العمل"
               member: "الأعضاء"

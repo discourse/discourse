@@ -6,7 +6,6 @@ describe "Composer - ProseMirror - Event Editor" do
   before do
     SiteSetting.calendar_enabled = true
     SiteSetting.discourse_post_event_enabled = true
-    SiteSetting.rich_editor = true
   end
 
   describe "event rendering" do

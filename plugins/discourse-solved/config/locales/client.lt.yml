@@ -10,8 +10,6 @@ lt:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "Visos kategorijos"
             answerers:
               staff: "Personalas"
               member: "Nariai"
