@@ -5069,6 +5069,22 @@ en:
 
         If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
 
+    signup_first_admin:
+      title: "Signup First Admin"
+      preview: "Confirm your admin account."
+      subject_template: "[%{email_prefix}] Confirm your new admin account"
+      subject_template_improved: "Confirm your new admin account"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        Click the following link to confirm and activate your new administrator account:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Once activated, you can choose a new password for your new administrator account usink this link:
+        %{base_url}/u/password-reset/%{password_reset_token}
+
+        If the above links are not clickable, try copying and pasting them into the address bar of your web browser.
+
     activation_reminder:
       title: "Activation Reminder"
       subject_template: "[%{email_prefix}] Reminder to confirm your account"

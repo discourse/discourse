@@ -10,7 +10,19 @@ class UserNotifications < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def signup(user, opts = {})
-    build_user_email_token_by_template("user_notifications.signup", user, opts[:email_token])
+    template =
+      if opts[:password_reset_token].present?
+        "user_notifications.signup_first_admin"
+      else
+        "user_notifications.signup"
+      end
+
+    build_user_email_token_by_template(
+      template,
+      user,
+      opts[:email_token],
+      password_reset_token: opts[:password_reset_token],
+    )
   end
 
   def activation_reminder(user, opts = {})
@@ -872,13 +884,14 @@ class UserNotifications < ActionMailer::Base
 
   private
 
-  def build_user_email_token_by_template(template, user, email_token)
+  def build_user_email_token_by_template(template, user, email_token, **opts)
     build_email(
       user.email,
       template: template,
       locale: user_locale(user),
       email_token: email_token,
       recipient_user: user,
+      **opts,
     )
   end
 

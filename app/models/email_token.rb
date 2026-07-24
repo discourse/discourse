@@ -85,14 +85,16 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_signup_email(email_token, to_address: nil)
-    Jobs.enqueue(
-      :critical_user_email,
+  def self.enqueue_signup_email(email_token, to_address: nil, password_reset_token: nil)
+    args = {
       type: "signup",
       user_id: email_token.user_id,
       email_token: email_token.token,
       to_address: to_address,
-    )
+    }
+    args[:password_reset_token] = password_reset_token if password_reset_token.present?
+
+    Jobs.enqueue(:critical_user_email, **args)
   end
 
   def self.hash_token(token)
