@@ -1140,6 +1140,31 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "without_pm_only_tags" do
+    fab!(:pm_only_tag) { Fabricate(:tag, pm_topic_count: 1) }
+    fab!(:used_tag) { Fabricate(:tag, public_topic_count: 1, staff_topic_count: 1) }
+    fab!(:unused_tag, :tag)
+    fab!(:staff_seen_tag) { Fabricate(:tag, staff_topic_count: 1, pm_topic_count: 1) }
+
+    let(:all_tags) { Tag.where(id: [pm_only_tag, used_tag, unused_tag, staff_seen_tag]) }
+
+    it "rejects tags only used in personal messages for users who cannot tag PMs" do
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(user))
+      expect(tags).to contain_exactly(used_tag, unused_tag)
+    end
+
+    it "uses the staff topic count for staff users" do
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(admin))
+      expect(tags).to contain_exactly(used_tag, unused_tag, staff_seen_tag)
+    end
+
+    it "keeps all tags for users who can tag PMs" do
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+      tags = DiscourseTagging.without_pm_only_tags(all_tags, Guardian.new(user))
+      expect(tags).to contain_exactly(pm_only_tag, used_tag, unused_tag, staff_seen_tag)
+    end
+  end
+
   describe "tag_topic_by_names" do
     context "with a tag restricted to other categories" do
       fab!(:allowed_category, :category)

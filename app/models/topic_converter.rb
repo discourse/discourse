@@ -21,18 +21,20 @@ class TopicConverter
           .where.not(id: SiteSetting.uncategorized_category_id)
           .first
 
-      PostRevisor.new(@topic.first_post, @topic).revise!(
-        @user,
-        { category_id: @category.id, archetype: Archetype.default },
-        revise_opts,
-      )
+      revised =
+        PostRevisor.new(@topic.first_post, @topic).revise!(
+          @user,
+          { category_id: @category.id, archetype: Archetype.default },
+          revise_opts,
+        )
 
-      raise ActiveRecord::Rollback if !@topic.valid?
+      raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
       update_user_stats
       update_post_uploads_secure_status
       add_small_action("public_topic") unless @silent
-      Tag.update_counters(@topic.tags, { public_topic_count: 1 }) if !@category.read_restricted
+
+      update_tag_counters(1, include_public: !@category.read_restricted)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
@@ -59,18 +61,20 @@ class TopicConverter
       was_public = !@topic.category.read_restricted
       @topic.update_category_topic_count_by(-1) if @topic.visible
 
-      PostRevisor.new(@topic.first_post, @topic).revise!(
-        @user,
-        { category_id: nil, archetype: Archetype.private_message },
-        revise_opts,
-      )
+      revised =
+        PostRevisor.new(@topic.first_post, @topic).revise!(
+          @user,
+          { category_id: nil, archetype: Archetype.private_message },
+          revise_opts,
+        )
 
-      raise ActiveRecord::Rollback if !@topic.valid?
+      raise ActiveRecord::Rollback if !revised || !@topic.valid?
 
       add_allowed_users
       update_post_uploads_secure_status
       add_small_action("private_topic") unless @silent
-      Tag.update_counters(@topic.tags, { public_topic_count: -1 }) if was_public
+
+      update_tag_counters(-1, include_public: was_public)
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
@@ -83,6 +87,12 @@ class TopicConverter
   end
 
   private
+
+  def update_tag_counters(topic_count_delta, include_public:)
+    counters = { staff_topic_count: topic_count_delta, pm_topic_count: -topic_count_delta }
+    counters[:public_topic_count] = topic_count_delta if include_public
+    Tag.update_counters(@topic.tags, counters)
+  end
 
   def revise_opts
     { bypass_bump: @silent, silent: @silent, hidden: true }

@@ -1592,7 +1592,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+        @tags = @topic_view.visible_tags
 
         if SiteSetting.content_localization_enabled && use_crawler_layout?
           helpers.localize_topic_view_content(@topic_view)
