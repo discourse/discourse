@@ -319,7 +319,8 @@ describe "Composer - ProseMirror - Toolbar" do
       heading_menu.expand
       heading_menu.option("[data-name='small']").click
 
-      expect(rich).to have_css("small", text: "This is a test")
+      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_css("p", count: 1)
 
       rich.find("small").click
       expect(page).to have_css(".toolbar__button.heading.--active")

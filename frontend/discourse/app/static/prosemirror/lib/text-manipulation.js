@@ -178,8 +178,15 @@ export default class ProsemirrorTextManipulation {
 
     const doc = this.convertFromMarkdown(head + text + tail);
 
+    // Inline surrounds (e.g. <small>) come back wrapped in a paragraph; insert
+    // their inline content so we don't nest a block inside the current one.
+    const content =
+      doc.content.firstChild.type.name === "paragraph"
+        ? doc.content.firstChild.content
+        : doc.content.firstChild;
+
     this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
+      this.view.state.tr.replaceWith(sel.start, sel.end, content)
     );
   }
 
