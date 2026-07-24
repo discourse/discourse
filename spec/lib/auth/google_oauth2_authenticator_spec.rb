@@ -193,6 +193,29 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           expect(result.associated_groups).to eq(@groups)
         end
 
+        it "preserves groups added by plugins via the modifier" do
+          plugin_group = { id: "plugin-group-id", name: "PluginGroup" }
+
+          modifier_block = ->(groups, auth_token, result) { (groups || []) + [plugin_group] }
+
+          DiscoursePluginRegistry.register_modifier(
+            Plugin::Instance.new,
+            :auth_managed_authenticator_associated_groups,
+            &modifier_block
+          )
+
+          result = described_class.new.after_authenticate(@auth_hash)
+
+          expect(result.associated_groups).to include(plugin_group)
+          expect(result.associated_groups.length).to eq(3) # 2 Google groups + 1 plugin group
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            Plugin::Instance.new,
+            :auth_managed_authenticator_associated_groups,
+            &modifier_block
+          )
+        end
+
         it "handles a blank groups array" do
           group_response[:groups] = []
           result = described_class.new.after_authenticate(@auth_hash)

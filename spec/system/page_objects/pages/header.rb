@@ -17,6 +17,10 @@ module PageObjects
         current_active_element[:id]
       end
 
+      def has_logged_in_user?
+        page.has_css?(".header-dropdown-toggle.current-user")
+      end
+
       def click_outside
         find(".d-modal").click(x: 0, y: 0)
       end
