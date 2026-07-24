@@ -11,6 +11,7 @@ module DiscourseWorkflows
       TIMEOUT_SECONDS = 30
       DEFAULT_MAX_RETRIES = 0
       DEFAULT_RETRY_STATUSES = Set[429, 500, 502, 503, 504].freeze
+      ERROR_BODY_MAX_BYTES = 10.kilobytes
 
       def initialize(exec_ctx, item_index = 0)
         @exec_ctx = exec_ctx
@@ -31,6 +32,7 @@ module DiscourseWorkflows
           filtered_url = filtered_url_for_logging(config["url"], config["query_params"])
           raise_node_error!(
             "HTTP #{config["method"]} #{filtered_url} failed with status #{response.status}",
+            description: error_body_description(response),
           )
         end
 
@@ -49,6 +51,14 @@ module DiscourseWorkflows
       end
 
       private
+
+      def error_body_description(response)
+        body = response.body.to_s.scrub("").strip
+        return if body.empty?
+        return body if body.bytesize <= ERROR_BODY_MAX_BYTES
+
+        "#{body.byteslice(0, ERROR_BODY_MAX_BYTES).scrub("")}…"
+      end
 
       def build_config(method, url, headers, body, options)
         config =
