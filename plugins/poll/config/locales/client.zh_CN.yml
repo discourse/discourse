@@ -13,12 +13,12 @@ zh_CN:
       logs:
         staff_actions:
           actions:
-            poll_closed: "投票已结束"
-            poll_opened: "投票已开始"
+            poll_closed: "投票已关闭"
+            poll_opened: "投票已开放"
   js:
     poll:
       title: "投票"
-      closed_by: "由 %{username} 结束"
+      closed_by: "由 %{username} 关闭"
       dynamic:
         enabled_hint: "可以添加或移除选项。"
       voters:
