@@ -8,7 +8,16 @@ Fabricator(:topic) do
   end
 end
 
-Fabricator(:topic_with_op, from: :topic) { after_create { |topic| Fabricate(:post, topic: topic) } }
+Fabricator(:topic_with_op, from: :topic) do
+  transient :raw
+  after_create do |topic, transient|
+    if transient[:raw].present?
+      Fabricate(:post, topic: topic, user: topic.user, raw: transient[:raw])
+    else
+      Fabricate(:post, topic: topic, user: topic.user)
+    end
+  end
+end
 
 Fabricator(:deleted_topic, from: :topic) { deleted_at { 1.minute.ago } }
 

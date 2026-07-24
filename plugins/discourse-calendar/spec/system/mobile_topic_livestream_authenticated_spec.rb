@@ -3,7 +3,6 @@
 describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mobile: true do
   fab!(:admin)
   fab!(:current_user) { Fabricate(:user, trust_level: TrustLevel[3]) }
-  fab!(:livestream_tag) { Fabricate(:tag, name: "livestream") }
   fab!(:category)
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -24,7 +23,7 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
     end
 
     it "displays the livestream chat icon on livestream topics" do
-      topic_livestream.create_livestream_topic(composer, topic_page, livestream_tag)
+      topic_livestream.create_livestream_event_topic(composer, topic_page)
 
       expect(topic_page).to have_css(".chat-header-icon")
 
@@ -32,7 +31,7 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
     end
 
     it "opens the chat channel and displays the preview after clicking the header icon" do
-      topic_livestream.create_livestream_topic(composer, topic_page, livestream_tag)
+      topic_livestream.create_livestream_event_topic(composer, topic_page)
 
       find(".livestream-header-icon").click
       expect(topic_page).to have_css("#custom-chat-container")
@@ -41,7 +40,7 @@ describe "Discourse Livestream - Topic Livestream - Mobile - Authenticated", mob
 
     context "when the user is going to the event" do
       it "opens the chat channel and allows chatting after clicking the header icon" do
-        topic_livestream.create_livestream_event_topic(composer, topic_page, livestream_tag)
+        topic_livestream.create_livestream_event_topic(composer, topic_page)
 
         find(".going-button").click
         find(".livestream-header-icon").click

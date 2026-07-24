@@ -39,6 +39,7 @@ en:
             one: "The webinar hasn't started yet. Retrying join in %{count} second..."
             other: "The webinar hasn't started yet. Retrying join in %{count} seconds..."
           not_started_trying_again: "Trying to join the webinar again now..."
+          zoom_only: "This event is only available on Zoom"
         chat:
           rsvp_to_event: "RSVP to the event to start chatting"
           rsvp_to_event_with_link: "RSVP to <a href='%{url}'>the event</a> to start chatting"
