@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Discourse JSON:API documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #version-picker {
+        position: fixed;
+        top: 12px;
+        right: 16px;
+        z-index: 100;
+        font: 14px sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Same rendering setup as docs.discourse.org (Redoc standalone), plus a
+         Stripe-style version picker over the per-version generated documents.
+         Serve this directory statically to view, e.g.
+         `ruby -run -e httpd plugins/discourse-data-explorer -p 8080` -->
+    <label id="version-picker">
+      API version
+      <select></select>
+    </label>
+    <div id="redoc"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
+    <script>
+      const select = document.querySelector("#version-picker select");
+      const render = (version) =>
+        Redoc.init(`openapi-jsonapi-${version}.json`, {}, document.getElementById("redoc"));
+
+      fetch("openapi-versions.json")
+        .then((response) => response.json())
+        .then((versions) => {
+          versions.forEach((version, index) => {
+            const option = document.createElement("option");
+            option.value = version;
+            option.textContent = index === 0 ? `${version} (latest)` : version;
+            select.append(option);
+          });
+          select.addEventListener("change", () => render(select.value));
+          render(versions[0]);
+        });
+    </script>
+  </body>
+</html>

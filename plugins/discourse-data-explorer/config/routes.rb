@@ -29,6 +29,17 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
+  # JSON:API Kit spike — read-only, public-shaped JSON:API.
+  # See docs/api-modernization-exploration.md (Part 9).
+  scope "/data-explorer/api", defaults: { format: :json } do
+    get "queries" => "discourse_data_explorer/json_api_kit/queries#index"
+    get "queries/:id" => "discourse_data_explorer/json_api_kit/queries#show",
+        :constraints => {
+          id: /\d+/,
+        }
+    post "queries" => "discourse_data_explorer/json_api_kit/queries#create"
+  end
+
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
   get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
   get "/admin/plugins/explorer/queries" =>

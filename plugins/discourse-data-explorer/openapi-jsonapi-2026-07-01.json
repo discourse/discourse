@@ -1,0 +1,952 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Discourse JSON:API",
+    "version": "2026-07-01",
+    "description": "This is the documentation for Discourse's JSON:API — currently an experiment scoped to\nthe Data Explorer plugin. Responses follow the [JSON:API specification](https://jsonapi.org/format/)\nwith the `application/vnd.api+json` media type.\n\n# Authentication\n\nCreate an API key in the admin panel and pass it with every request:\n\n```\nApi-Key: 714552c6148e1617aeab526d0606184b94a80ec048fc09894ff1a72b740c5f19\nApi-Username: system\n```\n\n# Versioning\n\nEvery request must carry a pinned API version — a date:\n\n```\nApi-Version: 2026-07-08\n```\n\nThe date snaps down to the nearest version at or before it, and the **resolved** version is\nechoed back in the response's `Api-Version` header. The integration ritual: send today's\ndate once, store the echoed value verbatim, and send it from then on — your responses will\nnever change shape, no matter what the API ships later.\n\nPlugins that release independently from Discourse have their own timelines. To opt into a\nnewer version of one, add an override: `Api-Version: 2026-07-08; some-plugin=2026-07-15`.\nThe echo resolves each date against its own timeline; store it as-is.\n\n# Pagination\n\nCollections use cursor pagination (the JSON:API\n[cursor pagination profile](https://jsonapi.org/profiles/ethanresnick/cursor-pagination)):\n`page[size]`, `page[after]`, `page[before]`. Follow the `links.prev` / `links.next` URLs —\nthey are null when there is no page in that direction. There is no offset pagination.\n\n# Errors\n\nErrors are JSON:API error objects. Unknown filters, sorts, includes, or page parameters\nare rejected with a `400` naming the offender; validation failures answer `422` with a\nJSON Pointer (`source.pointer`) per invalid attribute, expressed in your pinned version's\nvocabulary.\n\n\n# Changelog\n\n## 2026-07-08\n\n- The `last_run_at` attribute of the queries resource is renamed to `ran_at`.\n- The `search` filter of the queries resource is renamed to `q`.\n- The `username` sort of the queries resource is renamed to `user.username`.\n\n## 2026-07-01\n\n- The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames.\n\n## 2026-06-15\n\n- The `sql` attribute of the queries resource is renamed to `query`."
+  },
+  "x-changelog": [
+    {
+      "version": "2026-07-08",
+      "changes": [
+        "The `last_run_at` attribute of the queries resource is renamed to `ran_at`.",
+        "The `search` filter of the queries resource is renamed to `q`.",
+        "The `username` sort of the queries resource is renamed to `user.username`."
+      ]
+    },
+    {
+      "version": "2026-07-01",
+      "changes": [
+        "The `username` attribute of the users resource is replaced by `usernames`, an array of the user's known usernames."
+      ]
+    },
+    {
+      "version": "2026-06-15",
+      "changes": [
+        "The `sql` attribute of the queries resource is renamed to `query`."
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Queries",
+      "description": "A saved Data Explorer SQL query: its source, sharing groups, and last-run information."
+    }
+  ],
+  "paths": {
+    "/data-explorer/api/queries": {
+      "get": {
+        "tags": [
+          "Queries"
+        ],
+        "summary": "List queries",
+        "operationId": "listQueries",
+        "parameters": [
+          {
+            "name": "Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "The pinned API version (snap-down date). The resolved version is echoed back.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "filter[search]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Matches the query's name or description."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "-name",
+                  "last_run_at",
+                  "-last_run_at",
+                  "username",
+                  "-username"
+                ]
+              }
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "user",
+                  "groups",
+                  "user.groups"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fields[queries]",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name",
+                  "description",
+                  "created_at",
+                  "updated_at",
+                  "query",
+                  "last_run_at",
+                  "hidden"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fields[users]",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "usernames"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fields[groups]",
+            "in": "query",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "name"
+                ]
+              }
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "page[after]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page[before]",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated collection",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/queries"
+                      }
+                    },
+                    "included": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/users"
+                          },
+                          {
+                            "$ref": "#/components/schemas/groups"
+                          }
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object"
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "prev": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "next": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "1",
+                      "type": "queries",
+                      "attributes": {
+                        "name": "Top referred topics",
+                        "description": "Topics most often linked from other topics.",
+                        "created_at": "2026-06-20T09:00:00.000Z",
+                        "updated_at": "2026-06-20T09:00:00.000Z",
+                        "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
+                        "hidden": false,
+                        "last_run_at": "2026-07-01T10:00:00.000Z"
+                      },
+                      "relationships": {
+                        "user": {
+                          "data": {
+                            "id": "1",
+                            "type": "users"
+                          }
+                        },
+                        "groups": {
+                          "data": [
+                            {
+                              "id": "1",
+                              "type": "groups"
+                            }
+                          ]
+                        }
+                      },
+                      "meta": {
+                        "page": {
+                          "cursor": "opaque-cursor-1"
+                        }
+                      }
+                    },
+                    {
+                      "id": "2",
+                      "type": "queries",
+                      "attributes": {
+                        "name": "Inactive staff",
+                        "description": "description 0",
+                        "created_at": "2026-06-21T09:00:00.000Z",
+                        "updated_at": "2026-06-21T09:00:00.000Z",
+                        "query": "SELECT id, username FROM users WHERE admin",
+                        "hidden": false,
+                        "last_run_at": null
+                      },
+                      "relationships": {
+                        "user": {
+                          "data": {
+                            "id": "1",
+                            "type": "users"
+                          }
+                        },
+                        "groups": {
+                          "data": []
+                        }
+                      },
+                      "meta": {
+                        "page": {
+                          "cursor": "opaque-cursor-2"
+                        }
+                      }
+                    }
+                  ],
+                  "included": [
+                    {
+                      "id": "2",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "trust_level_0"
+                      }
+                    },
+                    {
+                      "id": "3",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "trust_level_1"
+                      }
+                    },
+                    {
+                      "id": "4",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "trust_level_2"
+                      }
+                    },
+                    {
+                      "id": "5",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "trust_level_3"
+                      }
+                    },
+                    {
+                      "id": "6",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "trust_level_4"
+                      }
+                    },
+                    {
+                      "id": "7",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "admins"
+                      }
+                    },
+                    {
+                      "id": "8",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "moderators"
+                      }
+                    },
+                    {
+                      "id": "9",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "staff"
+                      }
+                    },
+                    {
+                      "id": "1",
+                      "type": "users",
+                      "attributes": {
+                        "usernames": [
+                          "query_master"
+                        ]
+                      },
+                      "relationships": {
+                        "groups": {
+                          "data": [
+                            {
+                              "id": "2",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "3",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "4",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "5",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "6",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "7",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "8",
+                              "type": "groups"
+                            },
+                            {
+                              "id": "9",
+                              "type": "groups"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "id": "1",
+                      "type": "groups",
+                      "attributes": {
+                        "name": "sql_writers"
+                      }
+                    }
+                  ],
+                  "links": {
+                    "prev": null,
+                    "next": null
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error document",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Queries"
+        ],
+        "summary": "Create a query",
+        "operationId": "createQuery",
+        "parameters": [
+          {
+            "name": "Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "The pinned API version (snap-down date). The resolved version is echoed back.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "const": "queries"
+                      },
+                      "attributes": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "examples": [
+                              "Top referred topics"
+                            ]
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "query": {
+                            "type": "string",
+                            "maxLength": 10000,
+                            "examples": [
+                              "SELECT id, username FROM users LIMIT 10"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              },
+              "example": {
+                "data": {
+                  "type": "queries",
+                  "attributes": {
+                    "name": "Category health",
+                    "description": "Topics per category over the last 30 days.",
+                    "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created resource",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/queries"
+                    },
+                    "included": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/users"
+                          },
+                          {
+                            "$ref": "#/components/schemas/groups"
+                          }
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "1",
+                    "type": "queries",
+                    "attributes": {
+                      "name": "Category health",
+                      "description": "Topics per category over the last 30 days.",
+                      "created_at": "2026-07-08T12:00:00.000Z",
+                      "updated_at": "2026-07-08T12:00:00.000Z",
+                      "query": "SELECT category_id, COUNT(*) FROM topics GROUP BY 1",
+                      "hidden": false,
+                      "last_run_at": "2026-07-08T12:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error document",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error document",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors"
+                },
+                "example": {
+                  "errors": [
+                    {
+                      "status": "422",
+                      "title": "Invalid attribute",
+                      "detail": "Name can't be blank",
+                      "source": {
+                        "pointer": "/data/attributes/name"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/data-explorer/api/queries/{id}": {
+      "get": {
+        "tags": [
+          "Queries"
+        ],
+        "summary": "Fetch a query",
+        "operationId": "getQuery",
+        "parameters": [
+          {
+            "name": "Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "The pinned API version (snap-down date). The resolved version is echoed back.",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single resource",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/queries"
+                    },
+                    "included": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/users"
+                          },
+                          {
+                            "$ref": "#/components/schemas/groups"
+                          }
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false
+                },
+                "example": {
+                  "data": {
+                    "id": "1",
+                    "type": "queries",
+                    "attributes": {
+                      "name": "Top referred topics",
+                      "description": "Topics most often linked from other topics.",
+                      "created_at": "2026-06-20T09:00:00.000Z",
+                      "updated_at": "2026-06-20T09:00:00.000Z",
+                      "query": "SELECT id, title FROM topics ORDER BY like_count DESC LIMIT 10",
+                      "hidden": false,
+                      "last_run_at": "2026-07-01T10:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error document",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "queries": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "queries"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "Top referred topics"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "created_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "query": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The SQL source of the query.",
+                "examples": [
+                  "SELECT id, username FROM users LIMIT 10"
+                ]
+              },
+              "last_run_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "hidden": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "const": "users"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              },
+              "groups": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "const": "groups"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false,
+        "description": "A saved Data Explorer SQL query: its source, sharing groups, and last-run information."
+      },
+      "users": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "users"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "usernames": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "examples": [
+                  [
+                    "query_master"
+                  ]
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "groups": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "const": "groups"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false,
+        "description": "The author of a query."
+      },
+      "groups": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "const": "groups"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "meta": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false,
+        "description": "A group a query is shared with."
+      },
+      "errors": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "detail": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "object"
+                },
+                "meta": {
+                  "type": "object"
+                },
+                "links": {
+                  "type": "object"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "errors"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
