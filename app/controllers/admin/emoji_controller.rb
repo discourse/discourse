@@ -32,8 +32,8 @@ class Admin::EmojiController < Admin::AdminController
           render json: failed_json.merge(errors: contract.errors.full_messages),
                  status: :unprocessable_entity
         end
-        on_failed_policy(:upload_persisted) do |_, upload_result:|
-          render json: failed_json.merge(errors: upload_result.errors.full_messages),
+        on_model_errors(:upload) do |_, upload:|
+          render json: failed_json.merge(errors: upload.errors.full_messages),
                  status: :unprocessable_entity
         end
         on_model_errors(:custom_emoji) do |custom_emoji|

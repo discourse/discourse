@@ -3,8 +3,6 @@
 class CustomEmoji::Create
   include Service::Base
 
-  UploadResult = Data.define(:upload) { delegate :errors, :persisted?, to: :upload }
-
   params do
     attribute :file
     attribute :files
@@ -25,8 +23,7 @@ class CustomEmoji::Create
     end
   end
 
-  model :upload_result, :create_upload
-  policy :upload_persisted
+  model :upload, :create_upload
 
   transaction do
     model :custom_emoji, :create_custom_emoji
@@ -38,27 +35,15 @@ class CustomEmoji::Create
   private
 
   def create_upload(params:, guardian:)
-    upload =
-      UploadCreator.new(
-        params.file.tempfile,
-        params.file.original_filename,
-        type: "custom_emoji",
-      ).create_for(guardian.user.id)
-
-    UploadResult.new(upload:)
+    UploadCreator.new(
+      params.file.tempfile,
+      params.file.original_filename,
+      type: "custom_emoji",
+    ).create_for(guardian.user.id)
   end
 
-  def upload_persisted(upload_result:)
-    upload_result.persisted?
-  end
-
-  def create_custom_emoji(params:, upload_result:, guardian:)
-    CustomEmoji.create(
-      name: params.name,
-      upload: upload_result.upload,
-      group: params.group,
-      user: guardian.user,
-    )
+  def create_custom_emoji(params:, upload:, guardian:)
+    CustomEmoji.create(name: params.name, upload:, group: params.group, user: guardian.user)
   end
 
   def log_creation(params:, guardian:)

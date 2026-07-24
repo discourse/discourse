@@ -33,7 +33,7 @@ RSpec.describe CustomEmoji::Create do
         Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/images/fake.jpg"), "image/jpeg")
       end
 
-      it { is_expected.to fail_a_policy(:upload_persisted) }
+      it { is_expected.to fail_with_an_invalid_model(:upload) }
     end
 
     context "when the emoji is invalid" do
