@@ -352,10 +352,10 @@ export default class DiscoursePostEvent extends Component {
                 Url=(component Url url=event.url)
                 Description=(component
                   Description
-                  description=event.description
+                  descriptionHtml=event.descriptionHtml
                   clamp=this.clampDescription
                 )
-                Location=(component Location location=event.location)
+                Location=(component Location locationHtml=event.locationHtml)
                 Dates=(component
                   Dates event=event expiredAndRecurring=this.expiredAndRecurring
                 )
@@ -385,7 +385,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location @location={{event.location}} />
+              <Location @locationHtml={{event.locationHtml}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 

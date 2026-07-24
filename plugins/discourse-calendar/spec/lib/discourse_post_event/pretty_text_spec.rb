@@ -85,6 +85,9 @@ describe PrettyText do
       context "when the event has a location" do
         let(:post_1) { create_post_with_event(user_1, 'location="Conference Room A"') }
         let(:post_2) { create_post_with_event(user_1, 'location="https://maps.example.com"') }
+        let(:post_3) do
+          create_post_with_event(user_1, 'location="[RSVP](https://zoom.example.com/j/123)"')
+        end
 
         it "displays the location" do
           cooked = PrettyText.cook(post_1.raw)
@@ -93,11 +96,19 @@ describe PrettyText do
           expect(result).to include("Conference Room A")
         end
 
-        it "cooks links in the location (matching the on-site card)" do
+        it "links bare urls in the location (matching the on-site card)" do
           cooked = PrettyText.cook(post_2.raw)
           result = PrettyText.format_for_email(cooked, post_2)
 
           expect(result).to include('href="https://maps.example.com"')
+        end
+
+        it "renders markdown links in the location (matching the on-site card)" do
+          cooked = PrettyText.cook(post_3.raw)
+          result = PrettyText.format_for_email(cooked, post_3)
+
+          expect(result).to include('href="https://zoom.example.com/j/123"')
+          expect(result).to include(">RSVP</a>")
         end
       end
 
