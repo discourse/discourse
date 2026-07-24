@@ -113,244 +113,53 @@ RSpec.describe Admin::DashboardController do
       end
     end
 
-    describe "sections payload" do
+    describe "redesigned dashboard metadata" do
       before do
         SiteSetting.dashboard_improvements = true
         Discourse.cache.clear
         sign_in(admin)
       end
 
-      let(:section_payloads) do
-        response.parsed_body["sections"].index_by { |section| section["id"] }
-      end
-
-      context "with highlights_data" do
-        let(:highlights_data) { response.parsed_body["data"] }
-
-        it "returns the highlights payload for the selected dates" do
-          Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
-          Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
-          Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
-
-          get "/admin/dashboard/sections/highlights.json",
-              params: {
-                start_date: "2026-04-01",
-                end_date: "2026-04-28",
-              }
-
-          expect(response.status).to eq(200)
-          expect(highlights_data).to eq(
-            "kpis" => [
-              {
-                "type" => "new_signups",
-                "value" => 2,
-                "previous_value" => 1,
-                "percent_change" => 100.0,
-                "report_type" => "signups",
-                "report_query" => {
-                  "start_date" => "2026-04-01",
-                  "end_date" => "2026-04-28",
-                },
-              },
-              {
-                "type" => "dau_mau",
-                "value" => nil,
-                "previous_value" => nil,
-                "percent_change" => nil,
-                "report_type" => "dau_by_mau",
-                "report_query" => {
-                  "start_date" => "2026-04-01",
-                  "end_date" => "2026-04-28",
-                },
-              },
-              {
-                "type" => "new_contributors",
-                "value" => nil,
-                "previous_value" => 0,
-                "percent_change" => nil,
-                "report_type" => "new_contributors",
-                "report_query" => {
-                  "start_date" => "2026-04-01",
-                  "end_date" => "2026-04-28",
-                },
-              },
-            ],
-          )
+      it "returns the ordered section layout without loading core or plugin section data" do
+        plugin_loader_calls = 0
+        plugin = Plugin::Instance.new
+        plugin.register_admin_dashboard_section(id: "support") do
+          plugin_loader_calls += 1
+          { status: "available" }
         end
-      end
+        AdminDashboardSectionConfiguration.update(
+          [
+            { id: "reports", visible: true },
+            { id: "support", visible: true },
+            { id: "highlights", visible: true },
+            { id: "traffic", visible: false },
+            { id: "engagement", visible: false },
+            { id: "search", visible: false },
+          ],
+          actor: admin,
+        )
 
-      context "with traffic_data" do
-        before { SiteSetting.persist_browser_pageview_events = false }
+        get "/admin/dashboard.json"
 
-        let(:traffic_data) { response.parsed_body["data"] }
-
-        it "returns the site traffic payload for the selected dates" do
-          SiteSetting.use_legacy_pageviews = false
-          SiteSetting.embed_topics_list = true
-
-          Fabricate(:embeddable_host)
-          Fabricate(:logged_in_browser_application_request, date: "2026-04-28", count: 1)
-          Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 2)
-
-          Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
-          Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 20)
-
-          Fabricate(:embedded_application_request, date: "2026-05-02", count: 4)
-          Fabricate(:crawler_application_request, date: "2026-05-03", count: 3)
-
-          get "/admin/dashboard/sections/traffic.json",
-              params: {
-                start_date: "2026-05-01",
-                end_date: "2026-05-03",
-              }
-
-          expect(traffic_data).to eq(
-            "kpis" => {
-              "browser_pageviews" => {
-                "value" => 30,
-                "percent_change" => 900,
-                "comparison_period" => {
-                  "start_date" => "2026-04-28",
-                  "end_date" => "2026-04-30",
-                },
-              },
-              "logged_in_share" => {
-                "value" => 33,
-              },
-            },
-            "pageview_series" => [
-              {
-                "req" => "page_view_logged_in_browser",
-                "label" => I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
-                "color" => "#4B3CE0",
-                "data" => [
-                  { "x" => "2026-05-01", "y" => 10 },
-                  { "x" => "2026-05-02", "y" => 0 },
-                  { "x" => "2026-05-03", "y" => 0 },
-                ],
-              },
-              {
-                "req" => "page_view_anon_browser",
-                "label" => I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
-                "color" => "#9C8DEC",
-                "data" => [
-                  { "x" => "2026-05-01", "y" => 0 },
-                  { "x" => "2026-05-02", "y" => 20 },
-                  { "x" => "2026-05-03", "y" => 0 },
-                ],
-              },
-              {
-                "req" => "page_view_embed",
-                "label" => I18n.t("reports.site_traffic.xaxis.page_view_embed"),
-                "color" => "#E6E1F8",
-                "data" => [
-                  { "x" => "2026-05-01", "y" => 0 },
-                  { "x" => "2026-05-02", "y" => 4 },
-                  { "x" => "2026-05-03", "y" => 0 },
-                ],
-              },
-              {
-                "req" => "page_view_crawler",
-                "label" => I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
-                "color" => "#D5CDF7",
-                "data" => [
-                  { "x" => "2026-05-01", "y" => 0 },
-                  { "x" => "2026-05-02", "y" => 0 },
-                  { "x" => "2026-05-03", "y" => 3 },
-                ],
-              },
-            ],
-          )
-        end
-
-        it "does not expose admin-only browser pageview cards to moderators" do
-          SiteSetting.persist_browser_pageview_events = true
-          configure_dashboard_sections(%w[traffic])
-
-          country_code = "US"
-          normalized_referrer = "sensitive-referrer.example"
-          event_date = Time.zone.local(2026, 5, 2, 12)
-
-          2.times do
-            Fabricate(
-              :browser_pageview_event,
-              country_code: country_code,
-              normalized_referrer: normalized_referrer,
-              created_at: event_date,
-              source: "beacon",
-            )
-          end
-
-          rollup_range = {
-            start_date: Date.iso8601("2026-05-01"),
-            end_date: Date.iso8601("2026-05-03"),
-          }
-          BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
-          BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
-
-          get "/admin/dashboard/sections/traffic.json",
-              params: {
-                start_date: "2026-05-01",
-                end_date: "2026-05-03",
-              }
-
-          expect(response.status).to eq(200)
-          admin_traffic_data = response.parsed_body["data"]
-          expect(admin_traffic_data.dig("top_countries", "rows", 0, "country_code")).to eq(
-            country_code,
-          )
-          expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
-            normalized_referrer,
-          )
-
-          sign_in(moderator)
-
-          get "/admin/dashboard/sections/traffic.json",
-              params: {
-                start_date: "2026-05-01",
-                end_date: "2026-05-03",
-              }
-
-          expect(response.status).to eq(200)
-          moderator_traffic_data = response.parsed_body["data"]
-          expect(moderator_traffic_data).not_to have_key("top_countries")
-          expect(moderator_traffic_data).not_to have_key("top_referrers")
-          expect(response.body).not_to include(normalized_referrer)
-        end
-      end
-
-      context "with search_data" do
-        let(:search_data) { response.parsed_body["data"] }
-
-        it "returns the search payload for the selected dates" do
-          configure_dashboard_sections(%w[search])
-          member = Fabricate(:user)
-          Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
-          Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
-
-          get "/admin/dashboard/sections/search.json",
-              params: {
-                start_date: "2026-05-01",
-                end_date: "2026-05-07",
-              }
-
-          expect(response.status).to eq(200)
-          expect(search_data).to eq(
-            "logging_enabled" => true,
-            "headline_state" => "healthy",
-            "kpis" => {
-              "total_searches" => {
-                "value" => 2,
-              },
-              "no_result_rate" => {
-                "value" => 0,
-                "exceeds_threshold" => false,
-              },
-            },
-            "trending" => [{ "term" => "ruby", "searches" => 2 }],
-            "trending_period" => "weekly",
-            "content_gaps" => [],
-          )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to eq(
+          [{ "id" => "reports" }, { "id" => "support" }, { "id" => "highlights" }],
+        )
+        expect(response.parsed_body["configuration"]["sections"]).to eq(
+          [
+            { "id" => "reports", "visible" => true },
+            { "id" => "support", "visible" => true },
+            { "id" => "highlights", "visible" => true },
+            { "id" => "traffic", "visible" => false },
+            { "id" => "engagement", "visible" => false },
+            { "id" => "search", "visible" => false },
+          ],
+        )
+        expect(response.parsed_body).to have_key("problems")
+        expect(plugin_loader_calls).to eq(0)
+      ensure
+        DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+          entry[:value][:id] == "support"
         end
       end
 
@@ -406,26 +215,6 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_nil
       end
 
-      it "falls back to default dates when section date params are malformed" do
-        get "/admin/dashboard/sections/highlights.json",
-            params: {
-              start_date: "garbage",
-              end_date: "also-garbage",
-            }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["data"]).to be_present
-
-        get "/admin/dashboard/sections/traffic.json",
-            params: {
-              start_date: "garbage",
-              end_date: "also-garbage",
-            }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["data"]).to be_present
-      end
-
       it "returns the sections as an ordered array of descriptors" do
         configure_dashboard_sections(%w[reports highlights])
 
@@ -442,40 +231,6 @@ RSpec.describe Admin::DashboardController do
 
         ids = response.parsed_body["sections"].map { |s| s["id"] }
         expect(ids).not_to include("traffic", "engagement")
-      end
-
-      it "returns built engagement data from its section endpoint" do
-        configure_dashboard_sections(%w[highlights engagement])
-
-        get "/admin/dashboard/sections/engagement.json"
-
-        expect(response.parsed_body["data"]).to include("kpis", "headline")
-      end
-
-      describe "reports section data" do
-        before { AdminDashboardReport.delete_all }
-
-        def reports_data
-          response.parsed_body["data"]
-        end
-
-        it "returns an empty items list when no rows exist" do
-          get "/admin/dashboard/sections/reports.json"
-
-          expect(response.status).to eq(200)
-          expect(reports_data["items"]).to eq([])
-        end
-
-        it "serializes configured rows resolved via the registered providers" do
-          AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
-
-          get "/admin/dashboard/sections/reports.json"
-
-          items = reports_data["items"]
-          expect(items.size).to eq(1)
-          expect(items.first).to include("source" => "core_report", "identifier" => "signups")
-          expect(items.first["title"]).to be_present
-        end
       end
 
       it "denies non-staff users" do
@@ -624,6 +379,425 @@ RSpec.describe Admin::DashboardController do
 
         expect(response.parsed_body).not_to have_key("configuration")
       end
+    end
+  end
+
+  describe "#section" do
+    before do
+      SiteSetting.dashboard_improvements = true
+      Discourse.cache.clear
+      sign_in(admin)
+    end
+
+    context "with highlights_data" do
+      let(:highlights_data) { response.parsed_body["data"] }
+
+      it "returns the highlights payload for the selected dates" do
+        Fabricate(:user, created_at: Time.zone.local(2026, 4, 10))
+        Fabricate(:user, created_at: Time.zone.local(2026, 4, 15))
+        Fabricate(:user, created_at: Time.zone.local(2026, 3, 10))
+
+        get "/admin/dashboard/sections/highlights.json",
+            params: {
+              start_date: "2026-04-01",
+              end_date: "2026-04-28",
+            }
+
+        expect(response.status).to eq(200)
+        expect(highlights_data).to eq(
+          "kpis" => [
+            {
+              "type" => "new_signups",
+              "value" => 2,
+              "previous_value" => 1,
+              "percent_change" => 100.0,
+              "report_type" => "signups",
+              "report_query" => {
+                "start_date" => "2026-04-01",
+                "end_date" => "2026-04-28",
+              },
+            },
+            {
+              "type" => "dau_mau",
+              "value" => nil,
+              "previous_value" => nil,
+              "percent_change" => nil,
+              "report_type" => "dau_by_mau",
+              "report_query" => {
+                "start_date" => "2026-04-01",
+                "end_date" => "2026-04-28",
+              },
+            },
+            {
+              "type" => "new_contributors",
+              "value" => nil,
+              "previous_value" => 0,
+              "percent_change" => nil,
+              "report_type" => "new_contributors",
+              "report_query" => {
+                "start_date" => "2026-04-01",
+                "end_date" => "2026-04-28",
+              },
+            },
+          ],
+        )
+      end
+    end
+
+    context "with traffic_data" do
+      before { SiteSetting.persist_browser_pageview_events = false }
+
+      let(:traffic_data) { response.parsed_body["data"] }
+
+      it "returns the site traffic payload for the selected dates" do
+        SiteSetting.use_legacy_pageviews = false
+        SiteSetting.embed_topics_list = true
+
+        Fabricate(:embeddable_host)
+        Fabricate(:logged_in_browser_application_request, date: "2026-04-28", count: 1)
+        Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 2)
+
+        Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+        Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 20)
+
+        Fabricate(:embedded_application_request, date: "2026-05-02", count: 4)
+        Fabricate(:crawler_application_request, date: "2026-05-03", count: 3)
+
+        get "/admin/dashboard/sections/traffic.json",
+            params: {
+              start_date: "2026-05-01",
+              end_date: "2026-05-03",
+            }
+
+        expect(traffic_data).to eq(
+          "kpis" => {
+            "browser_pageviews" => {
+              "value" => 30,
+              "percent_change" => 900,
+              "comparison_period" => {
+                "start_date" => "2026-04-28",
+                "end_date" => "2026-04-30",
+              },
+            },
+            "logged_in_share" => {
+              "value" => 33,
+            },
+          },
+          "pageview_series" => [
+            {
+              "req" => "page_view_logged_in_browser",
+              "label" => I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
+              "color" => "#4B3CE0",
+              "data" => [
+                { "x" => "2026-05-01", "y" => 10 },
+                { "x" => "2026-05-02", "y" => 0 },
+                { "x" => "2026-05-03", "y" => 0 },
+              ],
+            },
+            {
+              "req" => "page_view_anon_browser",
+              "label" => I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
+              "color" => "#9C8DEC",
+              "data" => [
+                { "x" => "2026-05-01", "y" => 0 },
+                { "x" => "2026-05-02", "y" => 20 },
+                { "x" => "2026-05-03", "y" => 0 },
+              ],
+            },
+            {
+              "req" => "page_view_embed",
+              "label" => I18n.t("reports.site_traffic.xaxis.page_view_embed"),
+              "color" => "#E6E1F8",
+              "data" => [
+                { "x" => "2026-05-01", "y" => 0 },
+                { "x" => "2026-05-02", "y" => 4 },
+                { "x" => "2026-05-03", "y" => 0 },
+              ],
+            },
+            {
+              "req" => "page_view_crawler",
+              "label" => I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
+              "color" => "#D5CDF7",
+              "data" => [
+                { "x" => "2026-05-01", "y" => 0 },
+                { "x" => "2026-05-02", "y" => 0 },
+                { "x" => "2026-05-03", "y" => 3 },
+              ],
+            },
+          ],
+        )
+      end
+
+      it "does not expose admin-only browser pageview cards to moderators" do
+        SiteSetting.persist_browser_pageview_events = true
+        configure_dashboard_sections(%w[traffic])
+
+        country_code = "US"
+        normalized_referrer = "sensitive-referrer.example"
+        event_date = Time.zone.local(2026, 5, 2, 12)
+
+        2.times do
+          Fabricate(
+            :browser_pageview_event,
+            country_code: country_code,
+            normalized_referrer: normalized_referrer,
+            created_at: event_date,
+            source: "beacon",
+          )
+        end
+
+        rollup_range = {
+          start_date: Date.iso8601("2026-05-01"),
+          end_date: Date.iso8601("2026-05-03"),
+        }
+        BrowserPageviewCountryDailyRollup.aggregate(**rollup_range)
+        BrowserPageviewReferrerDailyRollup.aggregate(**rollup_range)
+
+        get "/admin/dashboard/sections/traffic.json",
+            params: {
+              start_date: "2026-05-01",
+              end_date: "2026-05-03",
+            }
+
+        expect(response.status).to eq(200)
+        admin_traffic_data = response.parsed_body["data"]
+        expect(admin_traffic_data.dig("top_countries", "rows", 0, "country_code")).to eq(
+          country_code,
+        )
+        expect(admin_traffic_data.dig("top_referrers", "rows", 0, "normalized_referrer")).to eq(
+          normalized_referrer,
+        )
+
+        sign_in(moderator)
+
+        get "/admin/dashboard/sections/traffic.json",
+            params: {
+              start_date: "2026-05-01",
+              end_date: "2026-05-03",
+            }
+
+        expect(response.status).to eq(200)
+        moderator_traffic_data = response.parsed_body["data"]
+        expect(moderator_traffic_data).not_to have_key("top_countries")
+        expect(moderator_traffic_data).not_to have_key("top_referrers")
+        expect(response.body).not_to include(normalized_referrer)
+      end
+    end
+
+    context "with search_data" do
+      let(:search_data) { response.parsed_body["data"] }
+
+      it "returns the search payload for the selected dates" do
+        configure_dashboard_sections(%w[search])
+        member = Fabricate(:user)
+        Fabricate(:clicked_search_log, term: "ruby", user: member, created_at: "2026-05-02 10:00")
+        Fabricate(:search_log, term: "ruby", user: member, created_at: "2026-05-02 11:00")
+
+        get "/admin/dashboard/sections/search.json",
+            params: {
+              start_date: "2026-05-01",
+              end_date: "2026-05-07",
+            }
+
+        expect(response.status).to eq(200)
+        expect(search_data).to eq(
+          "logging_enabled" => true,
+          "headline_state" => "healthy",
+          "kpis" => {
+            "total_searches" => {
+              "value" => 2,
+            },
+            "no_result_rate" => {
+              "value" => 0,
+              "exceeds_threshold" => false,
+            },
+          },
+          "trending" => [{ "term" => "ruby", "searches" => 2 }],
+          "trending_period" => "weekly",
+          "content_gaps" => [],
+        )
+      end
+    end
+
+    it "falls back to default dates when section date params are malformed" do
+      get "/admin/dashboard/sections/highlights.json",
+          params: {
+            start_date: "garbage",
+            end_date: "also-garbage",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["data"]).to be_present
+
+      get "/admin/dashboard/sections/traffic.json",
+          params: {
+            start_date: "garbage",
+            end_date: "also-garbage",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["data"]).to be_present
+    end
+
+    it "returns built engagement data from its section endpoint" do
+      configure_dashboard_sections(%w[highlights engagement])
+
+      get "/admin/dashboard/sections/engagement.json"
+
+      expect(response.parsed_body["data"]).to include("kpis", "headline")
+    end
+
+    describe "reports section data" do
+      before { AdminDashboardReport.delete_all }
+
+      def reports_data
+        response.parsed_body["data"]
+      end
+
+      it "returns an empty items list when no rows exist" do
+        get "/admin/dashboard/sections/reports.json"
+
+        expect(response.status).to eq(200)
+        expect(reports_data["items"]).to eq([])
+      end
+
+      it "serializes configured rows resolved via the registered providers" do
+        AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+
+        get "/admin/dashboard/sections/reports.json"
+
+        items = reports_data["items"]
+        expect(items.size).to eq(1)
+        expect(items.first).to include("source" => "core_report", "identifier" => "signups")
+        expect(items.first["title"]).to be_present
+      end
+    end
+
+    it "returns report card payloads in the reports section response" do
+      AdminDashboardReport.delete_all
+      AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+      sign_in(admin)
+
+      get "/admin/dashboard/sections/reports.json",
+          params: {
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to match(
+        "id" => "reports",
+        "data" => {
+          "items" => [
+            a_hash_including(
+              "source" => "core_report",
+              "identifier" => "signups",
+              "key" => "core_report:signups",
+              "payload" =>
+                a_hash_including(
+                  "type" => "signups",
+                  "start_date" => "2026-04-01T00:00:00Z",
+                  "end_date" => "2026-04-28T23:59:59Z",
+                ),
+            ),
+          ],
+        },
+      )
+    end
+
+    it "returns a registered plugin section through the same staff endpoint" do
+      plugin = Plugin::Instance.new
+      plugin.register_admin_dashboard_section(
+        id: "support",
+      ) do |start_date:, end_date:, current_user:|
+        { start_date:, end_date:, username: current_user.username }
+      end
+      sign_in(moderator)
+
+      get "/admin/dashboard/sections/support.json",
+          params: {
+            start_date: "2026-05-01",
+            end_date: "2026-05-07",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(
+        "id" => "support",
+        "data" => {
+          "start_date" => "2026-05-01",
+          "end_date" => "2026-05-07",
+          "username" => moderator.username,
+        },
+      )
+    ensure
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "support"
+      end
+    end
+
+    it "returns an isolated error response when a section loader fails" do
+      plugin = Plugin::Instance.new
+      plugin.register_admin_dashboard_section(id: "failing_support") do
+        raise StandardError, "private failure detail"
+      end
+      sign_in(admin)
+
+      get "/admin/dashboard/sections/failing_support.json"
+
+      expect(response.status).to eq(500)
+      expect(response.parsed_body).to eq("id" => "failing_support", "error" => true)
+      expect(response.body).not_to include("private failure detail")
+    ensure
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "failing_support"
+      end
+    end
+
+    it "returns 404 for unknown, hidden, and disabled plugin sections" do
+      plugin = Plugin::Instance.new
+      plugin.register_admin_dashboard_section(id: "disabled_support", enabled: -> { false }) do
+        { status: "unavailable" }
+      end
+      AdminDashboardSectionConfiguration.update(
+        [{ id: "reports", visible: true }, { id: "highlights", visible: false }],
+        actor: admin,
+      )
+      sign_in(admin)
+
+      %w[unknown highlights disabled_support].each do |section_id|
+        get "/admin/dashboard/sections/#{section_id}.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    ensure
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "disabled_support"
+      end
+    end
+
+    it "supports the alternate redesigned-dashboard preview and rejects unavailable versions" do
+      SiteSetting.dashboard_improvements = false
+      sign_in(admin)
+
+      get "/admin/dashboard/sections/highlights.json", params: { version: "alt" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq("highlights")
+
+      get "/admin/dashboard/sections/highlights.json"
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+    end
+
+    it "denies section data to non-staff users" do
+      sign_in(user)
+
+      get "/admin/dashboard/sections/highlights.json"
+
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
     end
   end
 
