@@ -27,6 +27,7 @@ const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
 const sectionTitleFor = (id) => i18n(`admin.dashboard.sections.${id}.title`);
 const sectionObservationPaused = (section, loadingSections) =>
   loadingSections ||
+  section.configurationPending ||
   section.loading ||
   section.error ||
   (section.loaded && !section.stale);

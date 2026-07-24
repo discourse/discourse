@@ -94,11 +94,15 @@ export default class AdminDashboardController extends Controller {
   toggleSection(id) {
     const previous = this.loadedSections;
     const current = previous?.configuration?.sections ?? [];
+    const wasVisible = current.find((section) => section.id === id)?.visible;
     const nextConfig = current.map((s) =>
       s.id === id ? { ...s, visible: !s.visible } : s
     );
 
     this.#applyConfigOptimistically(nextConfig);
+    if (wasVisible === false && !this._sectionCache.has(id)) {
+      this.#updateSection(id, { configurationPending: true });
+    }
     this.#persistConfiguration(nextConfig, previous);
   }
 
@@ -159,6 +163,17 @@ export default class AdminDashboardController extends Controller {
         contentType: "application/json",
         data: JSON.stringify({ sections }),
       });
+
+      if (saveId === this._configSaveId) {
+        this.loadedSections = {
+          ...this.loadedSections,
+          sections: this.loadedSections.sections.map((section) =>
+            section.configurationPending
+              ? { ...section, configurationPending: false }
+              : section
+          ),
+        };
+      }
     } catch (e) {
       if (saveId === this._configSaveId) {
         this.loadedSections = revertTo;
@@ -268,7 +283,12 @@ export default class AdminDashboardController extends Controller {
     const section = this.loadedSections?.sections.find(
       (candidate) => candidate.id === sectionId
     );
-    if (!section || section.loading || (section.loaded && !section.stale)) {
+    if (
+      !section ||
+      section.configurationPending ||
+      section.loading ||
+      (section.loaded && !section.stale)
+    ) {
       return;
     }
 
@@ -309,12 +329,17 @@ export default class AdminDashboardController extends Controller {
         loadId === this._sectionsLoadId &&
         requestId === this._sectionRequestIds.get(sectionId)
       ) {
-        this.#updateSection(sectionId, {
+        const failedSection = {
+          ...section,
           loaded: section.loaded,
           loading: false,
           error: true,
           stale: section.loaded,
-        });
+        };
+        if (this._sectionCache.has(sectionId)) {
+          this._sectionCache.set(sectionId, failedSection);
+        }
+        this.#updateSection(sectionId, failedSection);
       }
     }
   }
