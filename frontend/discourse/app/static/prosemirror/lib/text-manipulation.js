@@ -165,6 +165,20 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
+    // Text sizes are mutually exclusive, so drop the heading block before
+    // wrapping the selection in small.
+    if (exampleKey === "small_text") {
+      const inHeading = [1, 2, 3, 4, 5, 6].some((level) =>
+        isNodeActive(this.view.state, this.schema.nodes.heading, { level })
+      );
+      if (inHeading) {
+        setBlockType(this.schema.nodes.paragraph)(
+          this.view.state,
+          this.view.dispatch
+        );
+      }
+    }
+
     const { state } = this.view;
     const { from, to, empty } = state.selection;
 
@@ -178,8 +192,15 @@ export default class ProsemirrorTextManipulation {
 
     const doc = this.convertFromMarkdown(head + text + tail);
 
+    // Inline surrounds (e.g. <small>) come back wrapped in a paragraph; insert
+    // their inline content so we don't nest a block inside the current one.
+    const content =
+      doc.content.firstChild.type.name === "paragraph"
+        ? doc.content.firstChild.content
+        : doc.content.firstChild;
+
     this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
+      this.view.state.tr.replaceWith(sel.start, sel.end, content)
     );
   }
 
@@ -330,6 +351,10 @@ export default class ProsemirrorTextManipulation {
   }
 
   applyHeading(_selection, level) {
+    // Text sizes are mutually exclusive, so drop any inline small wrapping
+    // before changing the block type.
+    this.#removeSmall();
+
     let command;
     if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);
@@ -338,6 +363,35 @@ export default class ProsemirrorTextManipulation {
     }
     command?.(this.view.state, this.view.dispatch);
     this.focus();
+  }
+
+  #removeSmall() {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const ranges = [];
+
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (
+        node.type === this.schema.nodes.html_inline &&
+        node.attrs.tag === "small"
+      ) {
+        ranges.push({
+          from: pos,
+          to: pos + node.nodeSize,
+          content: node.content,
+        });
+      }
+    });
+
+    if (!ranges.length) {
+      return;
+    }
+
+    const tr = state.tr;
+    for (const range of ranges.reverse()) {
+      tr.replaceWith(range.from, range.to, range.content);
+    }
+    this.view.dispatch(tr);
   }
 
   /**
@@ -580,8 +634,47 @@ export default class ProsemirrorTextManipulation {
       inHeading: !!activeHeadingLevel,
       inHeadingLevel: activeHeadingLevel,
       inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      inSmall: this.#inSmall(),
       ...this.customState(this.view.state),
     });
+  }
+
+  // isNodeActive can't reliably detect an inline node nested in a block when the
+  // whole block is selected, so check the selected inline content directly.
+  #inSmall() {
+    const { state } = this.view;
+    const { from, to, empty, $from } = state.selection;
+    const isSmall = (node) =>
+      node.type === this.schema.nodes.html_inline && node.attrs.tag === "small";
+
+    if (empty) {
+      for (let depth = $from.depth; depth > 0; depth--) {
+        if (isSmall($from.node(depth))) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    let hasContent = false;
+    let allSmall = true;
+    state.doc.nodesBetween(from, to, (node) => {
+      if (node.isBlock) {
+        return true;
+      }
+      if (isSmall(node)) {
+        hasContent = true;
+        return false;
+      }
+      if (node.isText && !node.text.trim()) {
+        return false;
+      }
+      hasContent = true;
+      allSmall = false;
+      return false;
+    });
+
+    return hasContent && allSmall;
   }
 }
 

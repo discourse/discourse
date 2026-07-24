@@ -308,5 +308,100 @@ describe "Composer - ProseMirror - Toolbar" do
       composer.type_content("This is a test")
       expect(rich).to have_css("h2", text: "This is a test")
     end
+
+    it "can wrap a selection in small text and toggle the active state" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='small']").click
+
+      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_css("p", count: 1)
+
+      rich.find("small").click
+      expect(page).to have_css(".toolbar__button.heading.--active")
+
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
+      heading_menu.collapse
+
+      composer.select_all
+      expect(page).to have_css(".toolbar__button.heading.--active")
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-paragraph']")).to have_no_css(".d-icon-check")
+    end
+
+    it "removes small text when switching to a paragraph" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='small']").click
+      expect(rich).to have_css("small", text: "This is a test")
+
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-paragraph']").click
+
+      expect(rich).to have_css("p", text: "This is a test")
+      expect(rich).to have_no_css("small")
+    end
+
+    it "removes small text when switching to a heading, keeping a single active size" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='small']").click
+      expect(rich).to have_css("small", text: "This is a test")
+
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+
+      expect(rich).to have_css("h2", text: "This is a test")
+      expect(rich).to have_no_css("small")
+
+      rich.find("h2").click
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='heading-2']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='small']")).to have_no_css(".d-icon-check")
+    end
+
+    it "removes the heading when switching to small text, keeping a single active size" do
+      open_composer
+
+      composer.type_content("This is a test")
+      composer.select_all
+
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+      expect(rich).to have_css("h2", text: "This is a test")
+
+      composer.select_all
+      heading_menu.expand
+      heading_menu.option("[data-name='small']").click
+
+      expect(rich).to have_css("p small", text: "This is a test")
+      expect(rich).to have_no_css("h2")
+
+      rich.find("small").click
+      heading_menu.expand
+      expect(heading_menu.option("[data-name='small']")).to have_css(".d-icon-check")
+      expect(heading_menu.option("[data-name='heading-2']")).to have_no_css(".d-icon-check")
+    end
   end
 end
