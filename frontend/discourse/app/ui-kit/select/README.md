@@ -39,9 +39,11 @@ by mechanism.
   accessible name — drive `@icon` from `@value` for a selection-reactive glyph); caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); `@clearable`; `@disabled` /
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
-- Custom row and selection markup (`:item` / `:selection` blocks); empty state (`@noResultsLabel`
-  / `:empty`); loading skeleton (`@skeletonCount`); a muted source-error state with an optional
-  retry (`@retryable`) and an `:error` consumer block.
+- Custom row and selection markup (`:item` / `:selection` blocks; on the typeahead variant the
+  `:selection` block is the resting/closed display — once the menu opens the built-in input shows
+  the editable label text, so it is not a live-while-editing surface); empty state
+  (`@noResultsLabel` / `:empty`); loading skeleton (`@skeletonCount`); a muted source-error state
+  with an optional retry (`@retryable`) and an `:error` consumer block.
 - A pinned `:footer` block below the option list (labels, links, action buttons), keyboard-reachable
   and yielding live state `{filter, value, hasValue, total, loadedCount, maximum, minimum, atMaximum,
   belowMinimum, remaining, close}` so its content can react (e.g. a "plus N more" from

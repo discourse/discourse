@@ -172,6 +172,22 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-icon-only", only: :desktop)
   end
 
+  it "shows a custom selection that becomes an editable label on open" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    # Resting: the :selection block renders the custom icon + label.
+    expect(page).to have_css(".select-examples__selection .d-combobox__presentation .d-icon")
+    page.scroll_to(find(".select-examples__selection"), align: :center)
+    screenshot_marker(label: "styleguide-select-selection-resting", only: :desktop)
+
+    # Open: the custom markup gives way to the plain editable label in the filter input.
+    find(".select-examples__selection .d-combobox__trigger").click
+    expect(page).to have_css(".d-combobox__panel [role='option']", text: "Watching")
+    expect(page).to have_no_css(".select-examples__selection .d-combobox__presentation")
+    screenshot_marker(label: "styleguide-select-selection-open", only: :desktop)
+  end
+
   it "places the caret in the typeahead on click instead of selecting the whole value" do
     visit "/styleguide/molecules/select"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")

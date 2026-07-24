@@ -41,6 +41,7 @@ en:
           none_label: "None"
           icon_only_example: "Icon-only trigger (icon reflects the selection)"
           icon_only_label: "Notification level"
+          selection_example: "Custom selection markup (editable label on open)"
           empty_example: "Async empty results"
           error_example: "First-request error and retry"
           clearable_example: "Clearable single-select"

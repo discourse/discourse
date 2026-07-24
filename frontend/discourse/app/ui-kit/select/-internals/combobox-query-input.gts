@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import booleanString from "discourse/helpers/boolean-string";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
@@ -20,6 +21,12 @@ interface ComboboxQueryInputSignature {
     placeholder?: string;
     /** Selected label displayed in the input before query editing begins. */
     displayValue?: string;
+    /**
+     * Whether a `@displayValue` that appears (transitions from empty to a label) should be
+     * selected for overtype. True only for a resting-suppressed selection label, which appears
+     * when the field is focused; a stable label that merely resolves late keeps its caret.
+     */
+    selectLabelOnAppear?: boolean;
     /** Whether the input is displaying the active query. */
     editing?: boolean;
     /**
@@ -187,6 +194,18 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
     this.args.onBlur?.(event);
   }
 
+  @action
+  selectOnDisplayValue(element: HTMLInputElement): void {
+    // Fires when `@displayValue` transitions "" -> label — for a custom-selection field this
+    // happens the moment it gains focus, in the same render that patches `value`, so the freshly
+    // shown label is left selected and ready to overtype. Gated on `selectLabelOnAppear` so a
+    // stable label that merely resolves late under an already-focused input keeps its caret. The
+    // remaining focus/editing/empty guards live in the callee.
+    if (this.args.selectLabelOnAppear) {
+      this.#selectDisplayValue(element);
+    }
+  }
+
   #selectDisplayValue(element: HTMLInputElement): void {
     if (
       !this.args.editing &&
@@ -234,6 +253,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       {{on "focus" this.handleFocus}}
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
+      {{didUpdate this.selectOnDisplayValue @displayValue}}
       ...attributes
     />
   </template>

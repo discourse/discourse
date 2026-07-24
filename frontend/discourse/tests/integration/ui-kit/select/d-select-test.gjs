@@ -392,20 +392,98 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasText("First", "the fallback reads the custom label field");
   });
 
-  test("a custom selection stays replaced after the query is emptied", async function (assert) {
-    await render(<template><Host @value={{1}} /></template>);
+  test("emptying the query and closing restores the selection", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button type="button" class="outside">outside</button>
+      </template>
+    );
 
     await fillIn("[role='combobox']", "ban");
     await fillIn("[role='combobox']", "");
-
     assert
       .dom(".d-combobox__presentation")
-      .doesNotExist("editing mode continues until the menu closes");
+      .doesNotExist("hidden while the field is focused");
 
     await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
     assert
+      .dom("[role='combobox']")
+      .hasValue(
+        "Apple",
+        "closing restores the selected label in the focused input"
+      );
+
+    await focus(".outside");
+    assert
       .dom(".d-combobox__presentation")
-      .hasText("Apple", "closing restores the custom selection");
+      .hasText("Apple", "leaving the field restores the custom resting markup");
+  });
+
+  test("a custom selection shows the editable label whenever the field is focused", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button type="button" class="outside">outside</button>
+      </template>
+    );
+
+    // Resting (unfocused): the custom markup shows and the input is empty.
+    assert.dom(".d-combobox__presentation").hasText("Apple");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("", "the input is empty while at rest");
+
+    // Focusing with the keyboard — WITHOUT opening the menu — swaps the custom markup for the
+    // editable label, selected for overtype. This is the same state a click produces, so Tab
+    // and click behave alike rather than showing an empty input on one path and the label on
+    // the other.
+    await focus("[role='combobox']");
+    assert
+      .dom("[role='listbox']")
+      .doesNotExist("focus alone does not open the menu");
+    assert
+      .dom(".d-combobox__presentation")
+      .doesNotExist("the custom markup is hidden while the field is focused");
+    const input = find("[role='combobox']");
+    assert.dom(input).hasValue("Apple", "the label fills the input on focus");
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, "Apple".length],
+      "the label is selected so the first keystroke overtypes it"
+    );
+
+    // Overtyping the selection filters cleanly instead of appending to the label (fillIn can't
+    // express this — it overwrites the whole value).
+    input.setRangeText("ban", input.selectionStart, input.selectionEnd, "end");
+    input.dispatchEvent(new InputEvent("input"));
+    await settled();
+    assert.dom("[role='option']").exists({ count: 1 }).hasText("Banana");
+
+    // Moving focus out of the widget restores the custom resting markup.
+    await focus(".outside");
+    assert.dom(".d-combobox__presentation").hasText("Apple");
+  });
+
+  test("clicking outside the field reverts a custom selection to its resting markup", async function (assert) {
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <div class="outside">outside</div>
+      </template>
+    );
+
+    await click("[role='combobox']");
+    assert
+      .dom(".d-combobox__presentation")
+      .doesNotExist("the editable label shows while the field is active");
+
+    // A pointer press on empty space outside the widget ends the interaction and restores the
+    // custom markup, even though the browser would otherwise leave focus on the input.
+    await triggerEvent(".outside", "pointerdown");
+    assert
+      .dom(".d-combobox__presentation")
+      .hasText("Apple", "clicking outside restores the resting markup");
   });
 
   test("does not open on focus; opens on ArrowDown, on click, and on typing", async function (assert) {
@@ -465,7 +543,9 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await triggerKeyEvent("[role='combobox']", "keydown", "Enter");
 
     assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
-    assert.dom(".d-combobox__presentation").hasText("Apple");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the chosen option fills the focused input");
   });
 
   test("focus stays in the input while navigating with the arrows", async function (assert) {
@@ -531,8 +611,8 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     assert.dom("[role='listbox']").doesNotExist("selecting closes the menu");
     assert
-      .dom(".d-combobox__presentation")
-      .exists("the trigger shows the selection");
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the chosen option fills the focused input");
   });
 
   test("clicking anywhere on the trigger (caret/label) opens and focuses the input", async function (assert) {

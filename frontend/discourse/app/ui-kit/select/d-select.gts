@@ -5,7 +5,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { getOwner } from "@ember/owner";
+import Owner, { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -19,7 +19,7 @@ import booleanString from "discourse/helpers/boolean-string";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
-import { eq, or } from "discourse/truth-helpers";
+import { and, eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -221,6 +221,12 @@ interface DSelectSignature {
   Element: HTMLElement;
   Blocks: {
     item?: [SelectItemModel];
+    /**
+     * Custom markup for the selected item; yields the resolved item. On the button/static
+     * triggers it is the persistent selected display. On the typeahead it is the resting (closed)
+     * display only: once the menu opens the built-in input shows the editable label text instead,
+     * so the block is not a live-while-editing surface.
+     */
     selection?: [SelectItemModel];
     /** Consumer override for a group header's content; yields the header item (with its `label`). */
     groupHeader?: [SelectItemModel];
@@ -313,6 +319,12 @@ export default class DSelect extends Component<DSelectSignature> {
   @tracked activePinnedIndex: number | undefined = undefined;
 
   @tracked queryActive = false;
+
+  // Whether focus is anywhere within the widget (the trigger input, or the open panel's
+  // footer/options). A custom `:selection` block is a resting adornment, shown only while the
+  // field is unfocused; focusing it — by Tab or by opening — reveals the plain editable label,
+  // so keyboard focus and a click behave alike.
+  @tracked triggerFocused = false;
 
   @tracked isExpanded = false;
 
@@ -508,6 +520,44 @@ export default class DSelect extends Component<DSelectSignature> {
     { length: FRONTIER_SKELETON_COUNT },
     (_, i) => ({ key: `__skeleton:${i}`, isSkeleton: true })
   );
+
+  /**
+   * A pointer press anywhere outside the widget ends the interaction: revert a focused
+   * custom-selection field to its resting markup and drop DOM focus. Escape and option-select
+   * keep focus (and the editable label); a click into another focusable element blurs on its
+   * own. The overlay's own close-on-click-outside still fires in parallel.
+   */
+  #handleOutsidePointerDown = (event: PointerEvent): void => {
+    if (!this.triggerFocused) {
+      return;
+    }
+    if (this.#focusEscapedWidget(event.target)) {
+      this.triggerFocused = false;
+      this.filterInput?.blur();
+    }
+  };
+
+  constructor(owner: Owner, args: DSelectSignature["Args"]) {
+    super(owner, args);
+    // A pointer press outside the widget ends the interaction, so a focused custom-selection
+    // field reverts to its resting markup. The browser leaves DOM focus on the input when the
+    // press lands on a non-focusable element, so revert explicitly rather than waiting for a
+    // blur that never comes; the overlay's own close-on-click-outside runs in parallel.
+    document.addEventListener(
+      "pointerdown",
+      this.#handleOutsidePointerDown,
+      true
+    );
+  }
+
+  willDestroy() {
+    super.willDestroy();
+    document.removeEventListener(
+      "pointerdown",
+      this.#handleOutsidePointerDown,
+      true
+    );
+  }
 
   /** The listbox id, wiring `aria-controls`/`aria-activedescendant`. */
   get listboxId(): string {
@@ -1081,7 +1131,21 @@ export default class DSelect extends Component<DSelectSignature> {
   @action
   handleTriggerBlur(event: FocusEvent): void {
     if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.triggerFocused = false;
       this.#menu?.close();
+    }
+  }
+
+  /**
+   * Focus entered the trigger input. Reveal the editable label in place of any custom
+   * `:selection` resting markup (a locked control never becomes editable, so it keeps its
+   * markup). Paired with {@link handleTriggerBlur}, which restores the markup once focus leaves
+   * the whole widget.
+   */
+  @action
+  handleTriggerFocus(): void {
+    if (!this.isLocked) {
+      this.triggerFocused = true;
     }
   }
 
@@ -1098,6 +1162,7 @@ export default class DSelect extends Component<DSelectSignature> {
       return;
     }
     if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.triggerFocused = false;
       this.#menu?.close({ focusTrigger: false });
     }
   }
@@ -1848,7 +1913,7 @@ export default class DSelect extends Component<DSelectSignature> {
                   {{/if}}
                 </span>
               {{else if (has-block "selection")}}
-                {{#if this.engine.hasValue}}
+                {{#if (and this.engine.hasValue (not this.triggerFocused))}}
                   <span class="d-combobox__presentation">
                     <DAsyncContent
                       @asyncData={{this.resolveSingle}}
@@ -1893,10 +1958,11 @@ export default class DSelect extends Component<DSelectSignature> {
                   (or @placeholder (i18n "d_select.placeholder"))
                 }}
                 @displayValue={{if
-                  (has-block "selection")
+                  (and (has-block "selection") (not this.triggerFocused))
                   ""
                   this.fallbackSelectionLabel
                 }}
+                @selectLabelOnAppear={{has-block "selection"}}
                 @editing={{this.queryActive}}
                 @ariaOwns={{true}}
                 @shouldSelectOnFocus={{this.shouldSelectOnFocus}}
@@ -1908,6 +1974,7 @@ export default class DSelect extends Component<DSelectSignature> {
                 @disabled={{this.isDisabled}}
                 @readonly={{this.isReadonly}}
                 {{on "keydown" this.handleInputKeydown}}
+                {{on "focus" this.handleTriggerFocus}}
               />
             {{/if}}
           {{else if this.iconOnly}}

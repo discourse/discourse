@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "../../styleguide-example";
@@ -40,6 +41,7 @@ export default class Select extends Component {
   @tracked caretValue = null;
   @tracked noneValue = 2;
   @tracked iconOnlyValue = "watching";
+  @tracked selectionValue = "watching";
   @tracked disabledValue = 1;
   @tracked readonlyValue = 1;
   @tracked minCharsValue = null;
@@ -148,6 +150,17 @@ export default class Select extends Component {
   @iconOnly={{true}}
   @label="Notification level"
 />`;
+
+  selectionCode = `{{! The :selection block is the resting display; opening the menu shows
+  the plain label in the editable filter input }}
+<DSelect
+  @items={{this.levels}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+>
+  <:selection as |item|>{{icon item.icon}} {{item.name}}</:selection>
+  <:item as |item|>{{icon item.icon}} {{item.name}}</:item>
+</DSelect>`;
 
   emptyCode = `<DSelect
   @load={{this.loadEmpty}}
@@ -414,6 +427,11 @@ export default class Select extends Component {
   }
 
   @action
+  updateSelection(value) {
+    this.selectionValue = value;
+  }
+
+  @action
   updateStatic(value) {
     this.staticValue = value;
   }
@@ -607,6 +625,23 @@ export default class Select extends Component {
           @iconOnly={{true}}
           @label={{i18n "styleguide.sections.select.icon_only_label"}}
         />
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.selection_example"}}
+      @code={{this.selectionCode}}
+    >
+      <div class="select-examples__control select-examples__selection">
+        <DSelect
+          @items={{this.notificationLevels}}
+          @value={{this.selectionValue}}
+          @onChange={{this.updateSelection}}
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        >
+          <:selection as |item|>{{dIcon item.icon}} {{item.name}}</:selection>
+          <:item as |item|>{{dIcon item.icon}} {{item.name}}</:item>
+        </DSelect>
       </div>
     </StyleguideExample>
 
