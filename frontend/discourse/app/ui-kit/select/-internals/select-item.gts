@@ -72,7 +72,9 @@ export default class SelectItem extends Component<SelectItemSignature> {
       {{on "click" this.handleClick}}
       ...attributes
     >
-      {{#if @multiple}}
+      {{! Multi-select always shows a selected indicator (a default check); single-select opts in
+      via the selectedIcon arg, so an ordinary single-select gets no icon column. }}
+      {{#if (or @multiple @selectedIcon)}}
         {{dIcon
           (or @selectedIcon "check")
           class="d-combobox__option-selected-icon"

@@ -8,6 +8,8 @@ interface TriggerFrameSignature {
     icon?: string;
     /** The already-resolved caret icon (open/closed is decided by the parent). */
     caret: string;
+    /** Whether to render the caret (the parent defaults this to `true`). */
+    showCaret?: boolean;
     /** Whether to render the clear control (parent gates this on value + clearable + not locked). */
     showClear?: boolean;
     /** The clear control's accessible name (`"Clear selection"` / `"Clear all"`). */
@@ -55,7 +57,9 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
       {{dIcon "xmark"}}
     </button>
   {{/if}}
-  {{dIcon @caret class="d-combobox__caret"}}
+  {{#if @showCaret}}
+    {{dIcon @caret class="d-combobox__caret"}}
+  {{/if}}
 </template>;
 
 export default TriggerFrame;

@@ -465,3 +465,196 @@ module("Integration | ui-kit | select | DSelect logical nav", function (hooks) {
     );
   });
 });
+
+const GROUP_HEADER_SELECTOR = `${LISTBOX_SELECTOR} > .d-combobox__group-header`;
+const GROUPED_ITEMS = [
+  { id: 1, name: "Carrot", group: "Vegetables" },
+  { id: 2, name: "Apple", group: "Fruits" },
+  { id: 3, name: "Pea", group: "Vegetables" },
+  { id: 4, name: "Pear", group: "Fruits" },
+];
+
+module("Integration | ui-kit | select | DSelect grouping", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    enableVirtualization();
+  });
+
+  hooks.afterEach(function () {
+    disableVirtualization();
+  });
+
+  test("groupBy renders a presentational header before each group, outside the option set", async function (assert) {
+    await render(
+      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+    );
+    await openSelect();
+
+    assert
+      .dom(GROUP_HEADER_SELECTOR)
+      .exists({ count: 2 }, "a header is injected before each non-empty group");
+    findAll(GROUP_HEADER_SELECTOR).forEach((header) =>
+      assert
+        .dom(header)
+        .hasAttribute(
+          "role",
+          "presentation",
+          "a header is presentational, never an option"
+        )
+    );
+    assert
+      .dom(OPTION_SELECTOR)
+      .exists(
+        { count: GROUPED_ITEMS.length },
+        "headers are not part of the option set"
+      );
+    assert.deepEqual(
+      findAll(GROUP_HEADER_SELECTOR).map((header) => header.textContent.trim()),
+      ["Vegetables", "Fruits"],
+      "headers read the group keys in first-appearance order"
+    );
+  });
+
+  test("options carry contiguous logical indices and absolute positions across headers", async function (assert) {
+    await render(
+      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+    );
+    await openSelect();
+
+    const options = findAll(OPTION_SELECTOR);
+    assert.deepEqual(
+      options.map((option) => option.getAttribute("data-logical-index")),
+      ["0", "1", "2", "3"],
+      "logical indices are contiguous over options, skipping headers"
+    );
+    assert.deepEqual(
+      options.map((option) => option.getAttribute("aria-posinset")),
+      ["1", "2", "3", "4"],
+      "aria-posinset numbers options only"
+    );
+    options.forEach((option) =>
+      assert
+        .dom(option)
+        .hasAttribute(
+          "aria-setsize",
+          "4",
+          "aria-setsize is the option count, not the row count"
+        )
+    );
+    findAll(GROUP_HEADER_SELECTOR).forEach((header) =>
+      assert
+        .dom(header)
+        .doesNotHaveAttribute(
+          "aria-posinset",
+          "a header has no position in the option set"
+        )
+    );
+  });
+
+  test("keyboard navigation steps through options and never lands on a header", async function (assert) {
+    await render(
+      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+    );
+    await openSelect();
+
+    const controller = find("[role='combobox']");
+    const visited = [];
+    for (let i = 0; i < GROUPED_ITEMS.length; i++) {
+      await triggerKeyEvent(controller, "keydown", "ArrowDown");
+      const id = controller.getAttribute("aria-activedescendant");
+      const active = id ? document.getElementById(id) : null;
+      assert.strictEqual(
+        active?.getAttribute("role"),
+        "option",
+        "the active descendant is always an option, never a header"
+      );
+      visited.push(active?.textContent.trim());
+    }
+
+    assert.deepEqual(
+      visited,
+      ["Carrot", "Pea", "Apple", "Pear"],
+      "ArrowDown walks the grouped option order, skipping the headers between groups"
+    );
+  });
+
+  test("each option names its own group header via aria-describedby", async function (assert) {
+    await render(
+      <template><DSelect @items={{GROUPED_ITEMS}} @groupBy="group" /></template>
+    );
+    await openSelect();
+
+    // Grouped order is [Vegetables] Carrot, Pea, [Fruits] Apple, Pear.
+    const expectedGroup = ["Vegetables", "Vegetables", "Fruits", "Fruits"];
+    findAll(OPTION_SELECTOR).forEach((option, index) => {
+      const headerId = option.getAttribute("aria-describedby");
+      assert.notStrictEqual(
+        headerId,
+        null,
+        "the option references a group header"
+      );
+      const header = headerId ? document.getElementById(headerId) : null;
+      assert.strictEqual(
+        header?.getAttribute("role"),
+        "presentation",
+        "aria-describedby points at the presentational header"
+      );
+      assert.strictEqual(
+        header?.textContent.trim(),
+        expectedGroup[index],
+        "the referenced header is the option's own group, so a screen reader names the group"
+      );
+    });
+  });
+
+  test("End lands the last logical option across interleaved headers after scrolling it in", async function (assert) {
+    const items = Array.from({ length: 60 }, (_, index) => ({
+      id: index,
+      name: `Item ${index}`,
+      group: index < 30 ? "First" : "Second",
+    }));
+    const lastLogicalSelector = `[role="option"][data-logical-index="${items.length - 1}"]`;
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 200px;
+            overflow-y: auto;
+          }
+        </style>
+        <DSelect @items={{items}} @groupBy="group" @variant="static" />
+      </template>
+    );
+    await openSelect();
+
+    assert.true(
+      findAll(OPTION_SELECTOR).length < items.length,
+      "the bounded viewport mounts only a window of the grouped options"
+    );
+    assert
+      .dom(lastLogicalSelector)
+      .doesNotExist("the last logical option is unmounted before the jump");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "End");
+
+    assert
+      .dom(lastLogicalSelector)
+      .exists(
+        "End translates the logical target across the headers and scrolls the true last option in"
+      );
+    const last = find(lastLogicalSelector);
+    assert
+      .dom(last)
+      .hasClass("--active", "the last logical option becomes the highlight");
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-activedescendant",
+        last.id,
+        "the controller points aria-activedescendant at the last logical option"
+      );
+  });
+});

@@ -32,6 +32,7 @@ export default class Select extends Component {
   @tracked emptyValue = null;
   @tracked errorValue = null;
   @tracked multiValue = [];
+  @tracked maximumValue = [1, 2, 3];
   @tracked staticValue = null;
   @tracked clearableValue = 1;
   @tracked clearableMultiValue = [1, 2];
@@ -103,6 +104,17 @@ export default class Select extends Component {
   multiCode = `<DSelect
   @items={{this.items}}
   @multiple={{true}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+>
+  <:selection as |item|>{{item.name}}</:selection>
+  <:item as |item|>{{item.name}}</:item>
+</DSelect>`;
+
+  maximumCode = `<DSelect
+  @items={{this.items}}
+  @multiple={{true}}
+  @maximum={{3}}
   @value={{this.value}}
   @onChange={{this.onChange}}
 >
@@ -353,6 +365,11 @@ export default class Select extends Component {
   }
 
   @action
+  updateMaximum(value) {
+    this.maximumValue = value;
+  }
+
+  @action
   updateStatic(value) {
     this.staticValue = value;
   }
@@ -490,6 +507,25 @@ export default class Select extends Component {
           @multiple={{true}}
           @value={{this.multiValue}}
           @onChange={{this.updateMulti}}
+          @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+        >
+          <:selection as |item|>{{item.name}}</:selection>
+          <:item as |item|>{{item.name}}</:item>
+        </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.maximum_example"}}
+      @code={{this.maximumCode}}
+    >
+      <div class="select-examples__control select-examples__maximum">
+        <DSelect
+          @items={{this.items}}
+          @multiple={{true}}
+          @maximum={{3}}
+          @value={{this.maximumValue}}
+          @onChange={{this.updateMaximum}}
           @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
         >
           <:selection as |item|>{{item.name}}</:selection>
@@ -790,7 +826,7 @@ export default class Select extends Component {
       @title={{i18n "styleguide.sections.select.error_example"}}
       @code={{this.errorCode}}
     >
-      <div class="select-examples__control">
+      <div class="select-examples__control select-examples__error">
         <DSelect
           @load={{this.loadWithRetry}}
           @value={{this.errorValue}}

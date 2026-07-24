@@ -39,8 +39,8 @@ interface DRovingFocusArgs {
   columns?: number | (() => number) | null;
   /** Called when an item is activated (Enter / Space). */
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
-  /** Called whenever the cursor moves to a new item. */
-  onActiveChange?: (item: HTMLElement) => void;
+  /** Called whenever the cursor moves to a new item, or `null` when the highlight is cleared. */
+  onActiveChange?: (item: HTMLElement | null) => void;
   /** Called at a horizontal edge when `wrap` is false; wrapping suppresses it. */
   onExit?: (direction: "forward" | "backward") => void;
   /**
@@ -135,7 +135,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   itemSelector?: string;
   columnsOverride: number | (() => number) | null = null;
   onActivate?: (item: HTMLElement, event: KeyboardEvent) => void;
-  onActiveChange?: (item: HTMLElement) => void;
+  onActiveChange?: (item: HTMLElement | null) => void;
   onExit?: (direction: "forward" | "backward") => void;
   onEdgeReach?: (direction: "forward" | "backward") => void;
   logicalCount?: number;
@@ -184,15 +184,26 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       if (!items.length) {
         return false;
       }
-      const match = items.find((el) => el.dataset.index === String(index));
+      // Prefer an explicit logical ordinal (`data-logical-index`) where a consumer stamps one,
+      // so a windowed list with non-option rows can address options independently of the raw
+      // virtualizer index; fall back to `data-index` for consumers that stamp neither.
+      const match = items.find(
+        (el) => (el.dataset.logicalIndex ?? el.dataset.index) === String(index)
+      );
       if (match) {
         this.#setActive(match, items);
         return true;
       }
-      // No item carries `data-index` at all: a non-windowed group, so the logical
-      // index IS the positional index. If some do but none matched, the target
-      // sits outside the mounted window and cannot be focused here.
-      if (items.every((el) => el.dataset.index === undefined)) {
+      // No item carries an index at all: a non-windowed group, so the logical index IS the
+      // positional index. If some do but none matched, the target sits outside the mounted
+      // window and cannot be focused here.
+      if (
+        items.every(
+          (el) =>
+            el.dataset.logicalIndex === undefined &&
+            el.dataset.index === undefined
+        )
+      ) {
         return this.#api.focusIndex(index);
       }
       return false;
@@ -446,6 +457,32 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     ).filter((el) => this.#isUsable(el));
   }
 
+  /**
+   * Every item matching the selector, usable or not. The highlight bookkeeping reaches for this
+   * rather than {@link #items} because a row can leave the usable set *while it holds the
+   * highlight* (e.g. it becomes `aria-disabled` on a runtime state change), and its stale
+   * `activeClass` must still be cleared even though navigation no longer visits it.
+   */
+  #allItems(): HTMLElement[] {
+    if (!this.itemSelector || !this.element) {
+      return [];
+    }
+    return Array.from(
+      this.element.querySelectorAll<HTMLElement>(this.itemSelector)
+    );
+  }
+
+  // Strips `activeClass` from every item, usable or not, so a row disabled while active does not
+  // keep the highlight.
+  #clearActiveClass(): void {
+    if (!this.activeClass) {
+      return;
+    }
+    for (const el of this.#allItems()) {
+      el.classList.remove(this.activeClass);
+    }
+  }
+
   #isEditableController(): boolean {
     return this.#isEditableTarget(this.#listenElement);
   }
@@ -555,8 +592,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   }
 
   #currentLogicalIndex(items: HTMLElement[], current: number): number {
-    const dataIndex = items[current]?.dataset.index;
-    return dataIndex === undefined ? current : Number(dataIndex);
+    const element = items[current];
+    const logical = element?.dataset.logicalIndex ?? element?.dataset.index;
+    return logical === undefined ? current : Number(logical);
   }
 
   #jumpToLogicalIndex(
@@ -608,10 +646,9 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   #setActive(target: HTMLElement, items: HTMLElement[]): void {
     if (this.#mode === "active") {
-      const previous = items.find((el) => el.id === this.#activeId);
-      if (previous && this.activeClass) {
-        previous.classList.remove(this.activeClass);
-      }
+      // Sweep all items, not just the usable ones passed in: the previously-active row may have
+      // just been disabled, which drops it from that set while it still carries the class.
+      this.#clearActiveClass();
       const id = this.#ensureId(target);
       this.#activeId = id;
       if (this.activeClass) {
@@ -685,22 +722,20 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   #seedTabStop(): void {
     const items = this.#items();
-    if (!items.length) {
-      return;
-    }
-    if (!this.tabStop) {
-      for (const el of items) {
-        el.tabIndex = -1;
-      }
-      return;
-    }
-    const existing =
+    // Pick the tab stop from the still-usable items first, preserving an already-established one.
+    const preferred =
       items.find((el) => el.tabIndex === 0) ??
       items.find((el) => el.getAttribute("aria-selected") === "true") ??
       items.find((el) => el.hasAttribute("aria-current")) ??
       items[0];
-    for (const el of items) {
-      el.tabIndex = el === existing ? 0 : -1;
+    // Then demote every matching item, usable or not: a row disabled while it held the tab stop
+    // has left the usable set, and seeding only across that set would leave its `tabindex="0"` in
+    // place as a second, unreachable tab stop.
+    for (const el of this.#allItems()) {
+      el.tabIndex = -1;
+    }
+    if (this.tabStop && preferred) {
+      preferred.tabIndex = 0;
     }
   }
 
@@ -729,18 +764,18 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       }
       this.#activeId = null;
       this.#listenElement?.removeAttribute("aria-activedescendant");
-      if (this.activeClass) {
-        for (const el of items) {
-          el.classList.remove(this.activeClass);
-        }
-      }
+      // Sweep all items: the row that lost the highlight may have left the usable set (disabled)
+      // in the same change that cleared the cursor.
+      this.#clearActiveClass();
+      // Notify the consumer too, so a template-driven highlight (a tracked active key rendered as
+      // a class) clears alongside the modifier's own `activeClass` and `aria-activedescendant`.
+      this.onActiveChange?.(null);
       return;
     }
     const target = items.find((el) => el.id === this.#activeId);
     if (this.activeClass) {
-      for (const el of items) {
-        el.classList.toggle(this.activeClass, el === target);
-      }
+      this.#clearActiveClass();
+      target?.classList.add(this.activeClass);
     }
     this.#listenElement?.setAttribute("aria-activedescendant", this.#activeId!);
   }

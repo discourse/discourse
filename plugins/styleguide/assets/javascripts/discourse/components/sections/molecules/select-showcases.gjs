@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import DButton from "discourse/ui-kit/d-button";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -12,6 +13,8 @@ const REVIEWER_IDS = [101, 102, 103, 104, 105, 106, 999];
 
 export default class SelectShowcases extends Component {
   @tracked categoryValue = "vegetables";
+  @tracked footerValue = null;
+  @tracked groupedValue = null;
   @tracked notificationActionCount = 0;
   @tracked notificationValue = "watching";
   @tracked reviewerValue = REVIEWER_IDS;
@@ -100,6 +103,69 @@ export default class SelectShowcases extends Component {
       username: "taylor-kim",
     },
   ];
+
+  groupedMembers = [
+    {
+      id: 1,
+      avatar_template: "/images/avatar.png",
+      name: "Maya Chen",
+      team: "design",
+      username: "maya",
+    },
+    {
+      id: 2,
+      avatar_template: "/images/avatar.png",
+      name: "Alex Rivera",
+      team: "engineering",
+      username: "alex-rivera",
+    },
+    {
+      id: 3,
+      avatar_template: "/images/avatar.png",
+      name: "Priya Shah",
+      team: "design",
+      username: "priya-shah",
+    },
+    {
+      id: 4,
+      avatar_template: "/images/avatar.png",
+      name: "Jordan Lee",
+      team: "engineering",
+      username: "jordan-lee",
+    },
+    {
+      id: 5,
+      avatar_template: "/images/avatar.png",
+      name: "Sam Wilson",
+      team: "support",
+      username: "sam-wilson",
+    },
+  ];
+
+  footerCode = `<DSelect
+  @items={{this.members}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+>
+  <:footer as |state|>
+    <span>{{state.total}} teammates</span>
+    <DButton @action={{state.close}} @label="View directory" />
+  </:footer>
+  <:selection as |member|>…</:selection>
+  <:item as |member|>…</:item>
+</DSelect>`;
+
+  groupedCode = `<DSelect
+  @items={{this.members}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @groupBy="team"
+  @groupLabel={{this.teamLabel}}
+>
+  <:groupHeader as |group|>…</:groupHeader>
+  <:selection as |member|>…</:selection>
+  <:item as |member|>…</:item>
+</DSelect>`;
 
   categoryCode = `<DSelect
   @items={{this.categories}}
@@ -251,6 +317,18 @@ export default class SelectShowcases extends Component {
     return this.reviewers[0];
   }
 
+  get teamLabels() {
+    return {
+      design: i18n("styleguide.sections.select.showcases.grouped.teams.design"),
+      engineering: i18n(
+        "styleguide.sections.select.showcases.grouped.teams.engineering"
+      ),
+      support: i18n(
+        "styleguide.sections.select.showcases.grouped.teams.support"
+      ),
+    };
+  }
+
   @action
   allowCreateTag(filter, items) {
     const slug = this.#tagSlug(filter);
@@ -334,8 +412,23 @@ export default class SelectShowcases extends Component {
   }
 
   @action
+  teamLabel(key) {
+    return this.teamLabels[key] ?? key;
+  }
+
+  @action
   updateCategory(value) {
     this.categoryValue = value;
+  }
+
+  @action
+  updateFooter(value) {
+    this.footerValue = value;
+  }
+
+  @action
+  updateGrouped(value) {
+    this.groupedValue = value;
   }
 
   @action
@@ -594,6 +687,102 @@ export default class SelectShowcases extends Component {
           <p class="styleguide-note" data-test-notification-event>
             {{this.notificationEvent}}
           </p>
+        </div>
+      </StyleguideExample>
+
+      <StyleguideExample
+        @title={{i18n "styleguide.sections.select.showcases.grouped.title"}}
+        @code={{this.groupedCode}}
+      >
+        <div
+          class="select-showcases__control --grouped"
+          data-test-select-showcase="grouped"
+        >
+          <DSelect
+            @items={{this.groupedMembers}}
+            @value={{this.groupedValue}}
+            @onChange={{this.updateGrouped}}
+            @groupBy="team"
+            @groupLabel={{this.teamLabel}}
+            @placeholder={{i18n
+              "styleguide.sections.select.showcases.grouped.placeholder"
+            }}
+          >
+            <:groupHeader as |group|>
+              <span class="select-showcases__group-header">
+                {{dIcon "users"}}
+                <span>{{group.label}}</span>
+              </span>
+            </:groupHeader>
+            <:selection as |member|>
+              <span class="select-showcases__reviewer-selection">
+                {{dAvatar member imageSize="tiny" hideTitle=true}}
+                <span>{{member.name}}</span>
+              </span>
+            </:selection>
+            <:item as |member|>
+              <span class="select-showcases__reviewer">
+                {{dAvatar member imageSize="small" hideTitle=true}}
+                <span class="select-showcases__details">
+                  <span class="select-showcases__primary">{{member.name}}</span>
+                  <span class="select-showcases__secondary">
+                    @{{member.username}}
+                  </span>
+                </span>
+              </span>
+            </:item>
+          </DSelect>
+        </div>
+      </StyleguideExample>
+
+      <StyleguideExample
+        @title={{i18n "styleguide.sections.select.showcases.footer.title"}}
+        @code={{this.footerCode}}
+      >
+        <div
+          class="select-showcases__control --footer"
+          data-test-select-showcase="footer"
+        >
+          <DSelect
+            @items={{this.groupedMembers}}
+            @value={{this.footerValue}}
+            @onChange={{this.updateFooter}}
+            @placeholder={{i18n
+              "styleguide.sections.select.showcases.footer.placeholder"
+            }}
+          >
+            <:footer as |state|>
+              <span class="select-showcases__footer-count">
+                {{i18n
+                  "styleguide.sections.select.showcases.footer.count"
+                  count=state.total
+                }}
+              </span>
+              <DButton
+                class="btn-transparent"
+                @action={{state.close}}
+                @icon="arrow-up-right-from-square"
+                @label="styleguide.sections.select.showcases.footer.view_all"
+              />
+            </:footer>
+            <:selection as |member|>
+              <span class="select-showcases__reviewer-selection">
+                {{dAvatar member imageSize="tiny" hideTitle=true}}
+                <span>{{member.name}}</span>
+              </span>
+            </:selection>
+            <:item as |member|>
+              <span class="select-showcases__reviewer">
+                {{dAvatar member imageSize="small" hideTitle=true}}
+                <span class="select-showcases__details">
+                  <span class="select-showcases__primary">{{member.name}}</span>
+                  <span class="select-showcases__secondary">
+                    @{{member.username}}
+                  </span>
+                </span>
+              </span>
+            </:item>
+          </DSelect>
         </div>
       </StyleguideExample>
     </section>
