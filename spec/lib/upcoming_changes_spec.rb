@@ -1366,5 +1366,35 @@ RSpec.describe UpcomingChanges do
         ).to eq(true)
       end
     end
+
+    describe ".should_display_update_pending_users_reminder_default?" do
+      it "returns false when must_approve_users is disabled" do
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(
+            :update_pending_users_reminder_default,
+          ),
+        ).to eq(false)
+      end
+
+      it "returns true when must_approve_users is enabled" do
+        SiteSetting.must_approve_users = true
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(
+            :update_pending_users_reminder_default,
+          ),
+        ).to eq(true)
+      end
+
+      it "returns false even when the change is enabled, since it has no effect without must_approve_users" do
+        SiteSetting.update_pending_users_reminder_default = true
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(
+            :update_pending_users_reminder_default,
+          ),
+        ).to eq(false)
+      end
+    end
   end
 end

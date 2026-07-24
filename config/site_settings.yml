@@ -981,6 +981,9 @@ login:
     min: -1
     default: 480
     area: "login"
+    upcoming_change_default_override:
+      upcoming_change: "update_pending_users_reminder_default"
+      new_default: 30
   persistent_sessions:
     default: true
     area: "login"
@@ -4815,3 +4818,14 @@ experimental:
       status: "experimental"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/407727"
+  update_pending_users_reminder_default:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/408429"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
