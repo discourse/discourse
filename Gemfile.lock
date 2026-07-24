@@ -250,7 +250,7 @@ GEM
       fiber-storage
     fiber-storage (1.0.1)
     fspath (3.1.2)
-    globalid (1.3.0)
+    globalid (1.4.0)
       activesupport (>= 6.1)
     goldiloader (6.0.0)
       activerecord (>= 7.2, < 8.3)
@@ -283,7 +283,7 @@ GEM
       reline
     htmlentities (4.4.2)
     http_accept_language (2.1.1)
-    i18n (1.14.8)
+    i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     image_optim (0.32.0)
       exifr (~> 1.2, >= 1.2.2)
@@ -1075,7 +1075,7 @@ CHECKSUMS
   fiber-local (1.1.0) sha256=c885f94f210fb9b05737de65d511136ea602e00c5105953748aa0f8793489f06
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
-  globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
+  globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   goldiloader (6.0.0) sha256=613db1b28e9964291255a67a521f04d481b6afd6b9ca56ea1a612fd86e9a89c7
   google-protobuf (4.35.0-aarch64-linux-gnu) sha256=2cabd61b420918aec1564f9f7414e455bf922d20c5f8139d62783df5558a7aea
   google-protobuf (4.35.0-aarch64-linux-musl) sha256=f6b11f3420a4564f68e8233c95eac6924f6a727dfc2f81a56af2e09add551501
@@ -1091,7 +1091,7 @@ CHECKSUMS
   highline (3.1.2) sha256=67cbd34d19f6ef11a7ee1d82ffab5d36dfd5b3be861f450fc1716c7125f4bb4a
   htmlentities (4.4.2) sha256=bbafbdf69f2eca9262be4efef7e43e6a1de54c95eb600f26984f71d2fe96c5c3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
-  i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
+  i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   image_optim (0.32.0) sha256=457d5ea28ee93244c2aabc7134e06455587fb670f210e88e1be40aea882c2ba3
   image_size (3.6.0) sha256=1b9c4196cb658bf503a887920543a3991e927a4b767a5c770fb9665bce0dcb28
   in_threads (1.6.0) sha256=91a7e6138d279dc632f59b8a9a409e47148948e297c0f69c92f9a2479a182149
