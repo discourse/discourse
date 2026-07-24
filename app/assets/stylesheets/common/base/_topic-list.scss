@@ -521,6 +521,12 @@
       padding: var(--d-topic-list-data-padding-y)
         var(--d-topic-list-data-padding-x);
 
+      &.posters {
+        margin: var(--d-topic-list-data-padding-y)
+          var(--d-topic-list-data-padding-x);
+        padding: 2px; // for OP box shadow
+      }
+
       &:first-of-type {
         padding-inline-start: var(--d-topic-list-data-padding-inline-start);
       }
@@ -562,7 +568,16 @@
     .posters {
       // we know there are up to 5 avatars of fixed size
       // will be overridden by media width queries on narrow displays to 1 avatar's width
-      width: 146px;
+      // width: 146px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      overflow: hidden;
+      height: var(--d-topic-list-avatar-size);
+      flex: 1 2 0;
+      gap: 0.25em;
+      min-width: calc(var(--d-topic-list-avatar-size) + 2px);
+      width: auto;
 
       img.avatar {
         height: var(--d-topic-list-avatar-size);
@@ -570,13 +585,12 @@
       }
 
       > a {
-        float: left;
-        margin-right: 4px;
+        // float: left;
+        // margin-right: 4px;
 
-        &:last-of-type {
-          margin-right: 0;
-        }
-
+        // &:last-of-type {
+        //   margin-right: 0;
+        // }
         &.posters-more-count {
           cursor: default;
           color: var(--primary-med-or-secondary-med);
@@ -585,26 +599,26 @@
         }
       }
 
-      @include viewport.until(md) {
-        @include hide-posters;
-      }
+      // @include viewport.until(md) {
+      //   @include hide-posters;
+      // }
 
-      @include viewport.until(lg) {
-        .has-sidebar-page & {
-          @include hide-posters;
-        }
-      }
+      // @include viewport.until(lg) {
+      //   .has-sidebar-page & {
+      //     @include hide-posters;
+      //   }
+      // }
     }
 
-    td.topic-list-data.posters {
-      height: $td-posters-height;
-    }
-
+    // td.topic-list-data.posters {
+    //   height: $td-posters-height;
+    // }
     .posters a:first-child .avatar.latest:not(.single) {
       box-shadow: 0 0 3px 1px rgb(var(--tertiary-rgb), 0.35);
       border: 1px solid rgb(var(--tertiary-rgb), 0.5);
       position: relative;
-      left: -2px;
+
+      // left: -2px;
     }
 
     .likes {
