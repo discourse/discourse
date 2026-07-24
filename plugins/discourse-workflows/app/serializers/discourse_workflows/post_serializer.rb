@@ -20,6 +20,8 @@ module DiscourseWorkflows
                :score,
                :category_id,
                :category_name,
+               :author_group_ids,
+               :author_group_names,
                :tags,
                :upload_ids,
                :raw,
@@ -67,6 +69,14 @@ module DiscourseWorkflows
       topic&.category&.name
     end
 
+    def author_group_ids
+      author_visible_groups.map(&:first)
+    end
+
+    def author_group_names
+      author_visible_groups.map(&:last)
+    end
+
     def tags
       return [] if topic.blank? || !SiteSetting.tagging_enabled
 
@@ -86,6 +96,28 @@ module DiscourseWorkflows
     end
 
     private
+
+    # Only expose the author's groups whose existence AND membership are visible
+    # to the serializer's guardian, mirroring UserSerializer#groups. This keeps
+    # hidden/private group membership from leaking through workflow outputs,
+    # conditions, or logs when a post is serialized under a limited actor.
+    # It returns an array of [id, name] pairs for the groups.
+    # For example, [[1, "staff"], [2, "moderators"]].
+    def author_visible_groups
+      return @author_visible_groups if defined?(@author_visible_groups)
+
+      @author_visible_groups =
+        if object.user
+          object
+            .user
+            .groups
+            .visible_groups(scope&.user)
+            .members_visible_groups(scope&.user)
+            .pluck(:id, :name)
+        else
+          []
+        end
+    end
 
     def topic
       @topic ||= object.topic

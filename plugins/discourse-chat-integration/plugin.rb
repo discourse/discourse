@@ -13,6 +13,7 @@ register_asset "stylesheets/chat-integration.scss"
 
 register_svg_icon "rocket"
 register_svg_icon "arrow-circle-o-right"
+register_svg_icon "paper-plane"
 
 module ::DiscourseChatIntegration
   PLUGIN_NAME = "discourse-chat-integration"
@@ -42,6 +43,15 @@ after_initialize do
   add_admin_route "chat_integration.menu_title",
                   "discourse-chat-integration",
                   use_new_show_route: true
+
+  if respond_to?(:register_discourse_workflows_node)
+    register_discourse_workflows_node do
+      require_relative "lib/discourse_workflows/nodes/channel_selection"
+      require_relative "lib/discourse_workflows/nodes/send_chat_integration_message/v1"
+
+      [DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1]
+    end
+  end
 
   DiscourseChatIntegration::Provider.mount_engines
 

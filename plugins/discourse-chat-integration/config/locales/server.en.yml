@@ -124,6 +124,14 @@ en:
       send_chat_integration_message:
         title: Send Chat-Integration message
 
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Channel not found: %{channel_id}"
+        provider_disabled: "Chat integration provider is disabled or missing: %{provider}"
+        post_not_found: "Post not found: %{post_id}"
+        post_not_allowed: "Post %{post_id} cannot be sent to a chat channel (not visible to the chat integration user, or not a regular post)"
+
   chat_integration:
     all_categories: "(all categories)"
     deleted_category: "(deleted category)"
