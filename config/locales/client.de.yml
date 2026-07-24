@@ -13,6 +13,7 @@ de:
       logged_in_as: "Angemeldet als"
       permissions_header: 'Dies erlaubt „%{application_name}“:'
       redirect_warning: "Bei der Autorisierung wirst du weitergeleitet zu"
+      expiry_notice: 'Dieser Schlüssel für „%{application_name}“ läuft am %{expires_at} ab.'
       copied: "Kopiert!"
       otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
       no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer-API zu nutzen."

@@ -9,12 +9,12 @@ zh_CN:
     chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天。"
     chat_pinned_messages: "在聊天频道中启用置顶消息。"
-    enable_new_chat_reactions_popup: "在聊天消息上启用经过重新设计的回应弹出窗口，通过无限滚动和原生移动体验显示谁做出了回应。"
+    enable_new_chat_reactions_popup: "在聊天消息上启用重新设计的回应弹出窗口，通过无限滚动和原生移动体验显示谁做出了回应。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天内容。请注意，管理员和版主可以随时访问聊天。"
+    chat_allowed_groups: "这些群组中的用户可以聊天，但匿名用户除外，他们只有在被添加到此设置后才能查看聊天。请注意，管理员和版主可以随时访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
-    chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
+    chat_auto_silence_duration: "用户超过聊天消息创建速率限值时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
     chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
     chat_allowed_messages_for_other_trust_levels: "信任级别 1-4 的用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
     chat_silence_user_sensitivity: "聊天中被举报的用户被自动禁言的可能性。"
@@ -237,12 +237,12 @@ zh_CN:
       send_chat_message:
         invalid_params: "无效参数： %{errors}"
         channel_not_found: "未找到频道： %{channel_id}"
-        failed: "聊天消息发送失败。"
+        failed: "无法发送聊天消息。"
       chat_approval:
         channel_not_found: "聊天消息发送失败：未找到频道 %{channel_id}。"
         invalid_params: "聊天消息发送失败： %{errors}"
         failed: "聊天消息发送失败： %{steps}"
-        timeout_must_be_positive: "超时时间必须大于 0 分钟。"
+        timeout_must_be_positive: "超时时长必须大于 0 分钟。"
   reviewable_score_types:
     needs_review:
       title: "需要审核"

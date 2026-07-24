@@ -76,7 +76,7 @@ zh_CN:
     calendar_first_day_of_week: "为日历显示设置一周的第一天。选项为星期六、星期日或星期一。"
     enable_events_category_type_setup: "在创建类别设置期间启用“活动”类别类型选项。"
     livestream_embeddable_chat_allowed_paths: "允许嵌入直播聊天的路径。"
-    livestream_enable_modal_chat_on_mobile: "在移动设备上以模态窗口形式显示直播聊天信息。"
+    livestream_enable_modal_chat_on_mobile: "在移动设备上以模态框形式显示直播聊天信息。"
   discourse_calendar:
     category_type:
       default_calendar_view:
