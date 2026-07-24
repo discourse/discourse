@@ -74,9 +74,19 @@ interface SkeletonRow {
   isSkeleton: true;
 }
 
-/** An engine descriptor stamped as a navigable option row. */
+/**
+ * An engine descriptor stamped for rendering. `logicalIndex` is the option's ordinal among
+ * `[role=option]` rows (undefined for a structural header/divider), so the roving modifier can
+ * address options independently of the virtualizer's raw `data-index`.
+ */
 interface OptionRow extends SelectDescriptor {
   isSkeleton: false;
+  logicalIndex?: number;
+  // Ties an option to its group's header for `aria-describedby`: a header carries `headerId`,
+  // each option in the group carries the same value as `groupHeaderId`, so a screen reader
+  // announces the group name — membership a flat listbox can't convey by structure alone.
+  headerId?: string;
+  groupHeaderId?: string;
 }
 
 /** A rendered list row: a navigable engine descriptor or a frontier skeleton. */
@@ -100,12 +110,24 @@ interface DSelectSignature {
     createItem?: SelectEngineOptions["createItem"];
     createUnresolvedItem?: SelectEngineOptions["createUnresolvedItem"];
     specialItems?: SelectEngineOptions["specialItems"];
+    /**
+     * Groups the options under injected, non-selectable headers: a field name or
+     * `(item) => key`. Client sources only. Empty groups produce no header.
+     */
+    groupBy?: SelectEngineOptions["groupBy"];
+    /** `(key) => string` mapping a group key to its header text. Defaults to `String(key)`. */
+    groupLabel?: SelectEngineOptions["groupLabel"];
     onChange?: SelectEngineOptions["onChange"];
     placeholder?: string;
     searchPlaceholder?: string;
     noResultsLabel?: string;
     label?: string;
     skeletonCount?: number;
+    /**
+     * Icon marking the selected row(s) in the list. Multi-select always shows it (defaulting to a
+     * check); single-select renders it only when this arg is set, so an ordinary single-select has
+     * no icon column.
+     */
     selectedIcon?: string;
     /**
      * The trigger style. `"typeahead"` (default) makes the trigger itself a
@@ -120,6 +142,8 @@ interface DSelectSignature {
      * open (keyed off the overlay's expanded state). Defaults to `angle-up` / `angle-down`.
      */
     caretIcon?: string | { open?: string; closed?: string };
+    /** Whether the trigger shows its caret. Defaults to `true`; set `false` for an icon-only trigger. */
+    showCaret?: boolean;
     /**
      * Show a clear control that empties the whole selection (all variants, whenever there is a
      * value). It is a pointer affordance (`tabindex="-1"`); keyboard users clear from an empty
@@ -131,6 +155,8 @@ interface DSelectSignature {
     disabled?: boolean;
     /** Locks the value: focusable and readable, but cannot open, edit, or mutate. */
     readonly?: boolean;
+    /** Whether a source error offers a retry action. Defaults to `true`. */
+    retryable?: boolean;
     /**
      * Debounce the list source between re-filters: `true` uses the shared input delay, a number
      * sets the milliseconds, `false` is instant. Defaults to whether the source is server-backed,
@@ -143,6 +169,27 @@ interface DSelectSignature {
      * skeleton). `0` (default) searches on any input.
      */
     minChars?: number;
+    /**
+     * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
+     * is disabled (non-interactive and skipped by keyboard navigation) and the limit message
+     * appears. The cap never *newly* disables a selected row, so deselecting one is the way back
+     * under it (a row the consumer marked `disabled` stays disabled either way, though its chip
+     * remains removable); action rows stay enabled too, since they never become a value. Ignored
+     * on a single-select, and unset below `1`.
+     *
+     * A value that arrives already over the cap is never trimmed: every held id still renders
+     * and can still be removed, only additions are refused. The cap is checked against the value
+     * read at activation time, so it assumes `@onChange` is applied synchronously and by
+     * replacement; a consumer that applies it asynchronously or merges additively can still
+     * exceed it. For a single choice use `@multiple={{false}}` rather than `@maximum={{1}}`.
+     */
+    maximum?: number;
+    /**
+     * Advisory minimum for a multi-select: it shows a "select at least N" message and exposes
+     * the state, but never blocks anything — deselecting and clearing always succeed, down to an
+     * empty selection. Submit-time enforcement belongs to the consuming form.
+     */
+    minimum?: number;
     /** The overlay's preferred placement relative to the trigger (forwarded to the menu). */
     placement?: MenuOptions["placement"];
     /** The overlay's offset from the trigger, in pixels (forwarded to the menu). */
@@ -156,9 +203,47 @@ interface DSelectSignature {
   Blocks: {
     item?: [SelectItemModel];
     selection?: [SelectItemModel];
+    /** Consumer override for a group header's content; yields the header item (with its `label`). */
+    groupHeader?: [SelectItemModel];
     /** Consumer override for the no-results state, replacing the default "No results found". */
     empty?: [];
+    /**
+     * Content pinned below the option list (labels, links, action buttons). Yields the live
+     * dropdown state so the content can react (e.g. a "plus N more" from `total - loadedCount`).
+     */
+    footer?: [SelectFooterState];
+    /**
+     * Consumer override for the source-error state, replacing the default muted message + retry.
+     * Yields the rejection reason and a `retry` action.
+     */
+    error?: [Error, () => void];
   };
+}
+
+/** The live state yielded to the `:footer` block so its content can react to the dropdown. */
+interface SelectFooterState {
+  /** The current filter query. */
+  filter: string;
+  /** The current value (id or id array). */
+  value: SelectValue;
+  /** Whether anything is selected. */
+  hasValue: boolean;
+  /** The whole result-set size, or `undefined` when a paginating source hasn't reported one. */
+  total: number | undefined;
+  /** How many options are currently loaded into the list (`total - loadedCount` = "more"). */
+  loadedCount: number;
+  /** The multi-select selection cap, or `null` when uncapped. */
+  maximum: number | null;
+  /** The advisory multi-select minimum (`0` = none). */
+  minimum: number;
+  /** Whether the selection has reached {@link maximum}. */
+  atMaximum: boolean;
+  /** Whether the selection is still short of the advisory {@link minimum}. */
+  belowMinimum: boolean;
+  /** How many more items may still be added, or `undefined` when uncapped. */
+  remaining: number | undefined;
+  /** Dismisses the overlay (for a footer action such as "View all"). */
+  close: () => void;
 }
 
 /**
@@ -203,7 +288,10 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @tracked activeOptionKey: string | null = null;
 
-  @tracked activeLogicalIndex: number | undefined = undefined;
+  // The active row's RAW array index (its virtualizer `data-index`), fed to `@pinnedIndex` to
+  // keep that row mounted. Not a logical option ordinal: with group headers the two diverge, and
+  // the roving modifier addresses options by `data-logical-index` instead (see #optionRawIndices).
+  @tracked activePinnedIndex: number | undefined = undefined;
 
   @tracked queryActive = false;
 
@@ -227,6 +315,8 @@ export default class DSelect extends Component<DSelectSignature> {
     getMultiple: () => this.args.multiple,
     identifiers: this.args.identifiers ?? this.args.identifier,
     getMinChars: () => this.args.minChars,
+    getMaximum: () => this.args.maximum,
+    getMinimum: () => this.args.minimum,
     items: () =>
       typeof this.args.items === "function"
         ? this.args.items()
@@ -242,6 +332,8 @@ export default class DSelect extends Component<DSelectSignature> {
     createItem: this.args.createItem,
     createUnresolvedItem: this.args.createUnresolvedItem,
     specialItems: this.args.specialItems,
+    groupBy: this.args.groupBy,
+    groupLabel: this.args.groupLabel,
     onChange: this.handleChange,
     // Gated on the overlay actually being open: `DMenuInstance.close` focuses the trigger by
     // default, so closing an already-closed menu would steal focus from wherever the user has
@@ -274,9 +366,35 @@ export default class DSelect extends Component<DSelectSignature> {
    * purpose — its output reflects live selection/create/special state, not just `rawItems`.
    */
   buildListItems = (rawItems: SelectItemModel[]): readonly ListRow[] => {
+    // Stamp each option with its logical ordinal (its position among *navigable* options), so the
+    // roving modifier can address it independently of the virtualizer's raw `data-index`. A
+    // structural header/divider gets none — and neither does a disabled option, which the modifier
+    // skips: counting it would make jump keys (Home/End/Page) target an index no reachable row
+    // carries. This keeps the stamp in lockstep with {@link navigableCount}.
+    let logicalIndex = 0;
+    let groupIndex = 0;
+    // Headers and their options are contiguous, so the last header seen names the current
+    // group; each option points back at it via `aria-describedby`. A divider ends the run.
+    let currentGroupHeaderId: string | undefined;
     const items: OptionRow[] = this.engine
       .buildItems(rawItems)
-      .map((item) => ({ ...item, isSkeleton: false }));
+      .map((descriptor) => {
+        if (descriptor.flags.group) {
+          const headerId = `${this.listboxId}-group-${groupIndex++}`;
+          currentGroupHeaderId = headerId;
+          return { ...descriptor, isSkeleton: false, headerId };
+        }
+        if (descriptor.flags.divider) {
+          currentGroupHeaderId = undefined;
+          return { ...descriptor, isSkeleton: false };
+        }
+        return {
+          ...descriptor,
+          isSkeleton: false,
+          logicalIndex: descriptor.flags.disabled ? undefined : logicalIndex++,
+          groupHeaderId: currentGroupHeaderId,
+        };
+      });
     if (this.showRevealPlaceholder) {
       return [...items, ...this.#frontierSkeletons];
     }
@@ -284,13 +402,27 @@ export default class DSelect extends Component<DSelectSignature> {
   };
 
   /**
-   * Frontier skeletons are always a suffix, so navigable logical indices are contiguous
-   * from zero through this count minus one.
+   * The count of navigable options — structural headers/dividers, frontier skeletons, and
+   * disabled options are excluded, so this equals the number of rows the roving modifier can
+   * actually land on. Also records the option→raw index map: a logical jump target is translated
+   * back to the row's raw array index for the virtualizer scroll.
    */
   navigableCount = (rows: readonly ListRow[]): number => {
-    const count = rows.filter((row) => !row.isSkeleton).length;
-    this.#logicalNavCount = count;
-    return count;
+    const optionRawIndices: number[] = [];
+    rows.forEach((row, index) => {
+      const option = this.optionRow(row);
+      if (
+        option &&
+        !option.flags.group &&
+        !option.flags.divider &&
+        !option.flags.disabled
+      ) {
+        optionRawIndices.push(index);
+      }
+    });
+    this.#optionRawIndices = optionRawIndices;
+    this.#logicalNavCount = optionRawIndices.length;
+    return optionRawIndices.length;
   };
 
   optionRow = (row: ListRow): OptionRow | undefined =>
@@ -311,6 +443,9 @@ export default class DSelect extends Component<DSelectSignature> {
   #listboxApi: DVirtualListApi | null = null;
   #listboxRoving: DRovingFocusApi | null = null;
   #jumpTimer?: ReturnType<typeof nextRunloop>;
+  // Maps a logical option ordinal to its raw index in the rendered row array, so a jump target
+  // (logical) can be scrolled through the virtualizer (which addresses rows by raw index).
+  #optionRawIndices: number[] = [];
 
   // The navigable option count, written by `navigableCount` as the list renders and read by
   // the jump handler to clamp a target. Kept off the template so a jump never clamps against a
@@ -334,6 +469,9 @@ export default class DSelect extends Component<DSelectSignature> {
 
   // Whether a "loading more" was announced and still owes its completion.
   #revealAnnounced = false;
+
+  // The last limit message announced, so re-crossing the cap boundary does not re-read it.
+  #lastAnnouncedLimit: string | null = null;
 
   #loadFeedbackTimer?: ReturnType<typeof discourseLater>;
 
@@ -521,6 +659,16 @@ export default class DSelect extends Component<DSelectSignature> {
       : (arg?.closed ?? "angle-down");
   }
 
+  /** The caret shows unless a consumer explicitly opts out (icon-only triggers). */
+  get showCaret(): boolean {
+    return this.args.showCaret ?? true;
+  }
+
+  /** A source error offers a retry action unless a consumer opts out. */
+  get retryable(): boolean {
+    return this.args.retryable ?? true;
+  }
+
   /** Whether the clear control renders: opted in, something selected, and not locked. */
   get showClear(): boolean {
     return !!this.args.clearable && this.engine.hasValue && !this.isLocked;
@@ -580,9 +728,43 @@ export default class DSelect extends Component<DSelectSignature> {
    * first/selected option active on open); static in the mobile modal instead moves DOM focus
    * onto the first option (see `focusListboxIfSimple`), and `button` waits for the user to
    * filter or arrow.
+   *
+   * Suppressed at the cap: there every unselected option is disabled, so the only navigable rows
+   * are the selected ones, and auto-highlighting one would arm Enter to `deselect` and silently
+   * drop a value — the same hazard {@link shouldActivateSelected} avoids for `multiple`.
    */
   get shouldAutoActivateFirst(): boolean {
-    return this.isTypeahead || (this.isStatic && !this.overlayIsModal);
+    return (
+      !this.engine.atMaximum &&
+      (this.isTypeahead || (this.isStatic && !this.overlayIsModal))
+    );
+  }
+
+  /**
+   * The reconcile key for a non-typeahead surface, where re-running on every render would reset
+   * the user's arrow position. Typeahead keys on its freshly rebuilt items array instead (it
+   * re-seeds on each keystroke), but a `button`/`static` list only needs to re-reconcile when the
+   * navigable set changes: the filter, or the cap closing off the unselected options. Keying on
+   * the cap state is what drops a stale `aria-activedescendant` off a now-disabled row.
+   */
+  get rovingNonTypeaheadKey(): string {
+    return `${this.engine.filter}::${this.engine.atMaximum}`;
+  }
+
+  /**
+   * The built-in limit hint, or `undefined` when neither bound applies. At-max wins over
+   * below-min so a `minimum > maximum` misconfiguration still reads sensibly. Rendered in the
+   * panel's top zone (a sibling of the list, not inside it), so it never competes with the
+   * footer or an error body for the same edge.
+   */
+  get limitMessage(): string | undefined {
+    if (this.engine.atMaximum) {
+      return i18n("d_select.max_reached", { count: this.engine.maximum });
+    }
+    if (this.engine.belowMinimum) {
+      return i18n("d_select.min_not_reached", { count: this.engine.minimum });
+    }
+    return undefined;
   }
 
   /**
@@ -704,7 +886,7 @@ export default class DSelect extends Component<DSelectSignature> {
         // before the first arrow keypress would otherwise scroll with nothing pinned, unmount
         // the focused row, and drop focus to `<body>`.
         this.activeOptionKey = target.dataset.optionKey ?? null;
-        this.activeLogicalIndex =
+        this.activePinnedIndex =
           target.dataset.index == null
             ? undefined
             : Number(target.dataset.index);
@@ -860,19 +1042,42 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @action
   handleTriggerBlur(event: FocusEvent): void {
-    const next = event.relatedTarget;
-    if (!(next instanceof Node)) {
+    if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.#menu?.close();
+    }
+  }
+
+  /**
+   * A focusable footer control lost focus. Mirrors {@link handleTriggerBlur} — close when focus
+   * leaves the whole widget — but DESKTOP ONLY: on mobile the overlay is a modal that owns its
+   * dismissal (and whose `content` is undefined, so the containment guard can't run), and closes
+   * with `focusTrigger: false` so a Tab-forward off the last footer control lands on the next page
+   * control rather than being yanked back to the trigger.
+   */
+  @action
+  handleFooterFocusOut(event: FocusEvent): void {
+    if (this.overlayIsModal) {
       return;
+    }
+    if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.#menu?.close({ focusTrigger: false });
+    }
+  }
+
+  // True when focus moved to a real element outside both the trigger and the overlay content — the
+  // signal that the whole widget lost focus. A `null` relatedTarget is treated as "stayed" (an
+  // in-widget non-focusable click; a truly-outside non-focusable click is caught by
+  // close-on-click-outside), matching the documented trigger-blur edge above.
+  #focusEscapedWidget(next: EventTarget | null): boolean {
+    if (!(next instanceof Node)) {
+      return false;
     }
     const trigger = this.#menu?.triggerElement;
     const content = this.#menu?.content;
-    if (
+    return !(
       (trigger && trigger.contains(next)) ||
       (content && content.contains(next))
-    ) {
-      return;
-    }
-    this.#menu?.close();
+    );
   }
 
   @action
@@ -993,14 +1198,18 @@ export default class DSelect extends Component<DSelectSignature> {
 
   /**
    * `dRovingFocus` reports the highlighted option element on every cursor move (and the
-   * initial auto-seed); we record its `key` so each option renders its own `--active` from
-   * state. The element carries the key via `data-option-key` (stamped in the template).
+   * initial auto-seed), or `null` when the highlight is cleared — e.g. the active row was
+   * disabled by the cap. We record its `key` so each option renders its own `--active` from
+   * state; a `null` clears it, so no disabled row keeps the highlight. The element carries the
+   * key via `data-option-key` (stamped in the template).
    */
   @action
-  trackActiveOption(element: HTMLElement): void {
-    this.activeOptionKey = element.dataset.optionKey ?? null;
-    this.activeLogicalIndex =
-      element.dataset.index == null ? undefined : Number(element.dataset.index);
+  trackActiveOption(element: HTMLElement | null): void {
+    this.activeOptionKey = element?.dataset.optionKey ?? null;
+    this.activePinnedIndex =
+      element?.dataset.index == null
+        ? undefined
+        : Number(element.dataset.index);
   }
 
   @action
@@ -1041,7 +1250,10 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   #scrollToJumpTarget(target: number, direction: "forward" | "backward"): void {
-    this.#listboxApi?.scrollToIndex(target, {
+    // `target` is a logical option ordinal; the virtualizer scrolls by raw row index, which
+    // diverges once headers/dividers are interleaved. Translate before scrolling.
+    const rawIndex = this.#optionRawIndices[target] ?? target;
+    this.#listboxApi?.scrollToIndex(rawIndex, {
       align: direction === "forward" ? "end" : "start",
       behavior: "auto",
     });
@@ -1168,7 +1380,7 @@ export default class DSelect extends Component<DSelectSignature> {
     // `--active` (the modifier reports the active option only while it moves the cursor, so
     // it never reports the clearing on teardown).
     this.activeOptionKey = null;
-    this.activeLogicalIndex = undefined;
+    this.activePinnedIndex = undefined;
     this.#listboxApi = null;
     this.#listboxRoving = null;
     this.#jumpTimer = undefined;
@@ -1225,6 +1437,33 @@ export default class DSelect extends Component<DSelectSignature> {
       i18n("d_select.min_chars", { count: remaining }),
       "polite"
     );
+  }
+
+  /**
+   * Announces the limit hint through the shared `a11y` service — the visible node keeps
+   * `role="status"` for sighted users, but a freshly-mounted live region announces unreliably,
+   * so the message is spoken here instead. Deduped on the text while the hint stays mounted, so an
+   * in-place message swap that repeats reads only once.
+   */
+  @action
+  announceLimit(_element: HTMLElement, [message]: [string]): void {
+    if (message === this.#lastAnnouncedLimit) {
+      return;
+    }
+    this.#lastAnnouncedLimit = message;
+    this.a11y.announce(message, "polite");
+  }
+
+  /**
+   * A fresh entry into a limit state (the hint mounting) always announces, even when the message
+   * matches what was last announced before the hint briefly unmounted — otherwise re-reaching the
+   * cap, or reopening a select that is still at the cap, would stay silent. Later in-place updates
+   * keep deduping through {@link announceLimit}.
+   */
+  @action
+  announceLimitOnEntry(element: HTMLElement, args: [string]): void {
+    this.#lastAnnouncedLimit = null;
+    this.announceLimit(element, args);
   }
 
   /**
@@ -1412,6 +1651,7 @@ export default class DSelect extends Component<DSelectSignature> {
         <TriggerFrame
           @icon={{@icon}}
           @caret={{this.caretIcon}}
+          @showCaret={{this.showCaret}}
           @showClear={{this.showClear}}
           @clearLabel={{this.clearLabel}}
           @onClear={{this.handleClear}}
@@ -1695,6 +1935,23 @@ export default class DSelect extends Component<DSelectSignature> {
             />
           {{/if}}
 
+          {{#if this.limitMessage}}
+            {{#unless this.engine.belowMinChars}}
+              {{! A pinned top zone (sibling of the list, above it), so the cap/floor hint never
+                stacks with the footer or an error body. Suppressed while below the query minimum:
+                with no list rendered the hint has nothing to annotate. Announced through the a11y
+                service (a mounted live region speaks unreliably); the node stays role=status. }}
+              <div
+                class="d-combobox__limit"
+                role="status"
+                {{didInsert this.announceLimitOnEntry this.limitMessage}}
+                {{didUpdate this.announceLimit this.limitMessage}}
+              >
+                {{this.limitMessage}}
+              </div>
+            {{/unless}}
+          {{/if}}
+
           {{#if this.engine.belowMinChars}}
             {{! Below the minimum query length: no source call (no request, no skeleton flash),
               and the truthy-`[]` routing / stray create-row are sidestepped by not rendering the
@@ -1743,7 +2000,7 @@ export default class DSelect extends Component<DSelectSignature> {
                       @estimateSize={{this.estimateRowSize}}
                       @onReachEnd={{this.engine.revealMore}}
                       @onRegisterApi={{this.registerListboxApi}}
-                      @pinnedIndex={{this.activeLogicalIndex}}
+                      @pinnedIndex={{this.activePinnedIndex}}
                       class="d-combobox__listbox"
                       id={{this.listboxId}}
                       aria-label={{or @label (i18n "d_select.label")}}
@@ -1794,7 +2051,9 @@ export default class DSelect extends Component<DSelectSignature> {
                           this.usesActiveRoving this.filterInput
                         )
                         itemSelector="[role=option]"
-                        itemsKey=(if this.isTypeahead items this.engine.filter)
+                        itemsKey=(if
+                          this.isTypeahead items this.rovingNonTypeaheadKey
+                        )
                         logicalCount=(this.navigableCount items)
                         onActivate=this.activateElement
                         onActiveChange=this.trackActiveOption
@@ -1812,7 +2071,32 @@ export default class DSelect extends Component<DSelectSignature> {
                       descriptor. }}
                       {{#if descriptor}}
                         {{#let (this.optionRow descriptor) as |option|}}
-                          {{#if option}}
+                          {{#if option.flags.group}}
+                            {{! A group header: presentational, so it is skipped by roving
+                            navigation and carries no option position. }}
+                            <li
+                              class="d-combobox__group-header"
+                              role="presentation"
+                              id={{option.headerId}}
+                              data-option-key={{option.key}}
+                              {{row.place row.start row.index}}
+                              {{row.measure}}
+                            >
+                              {{#if (has-block "groupHeader")}}
+                                {{yield option.item to="groupHeader"}}
+                              {{else}}
+                                {{selectItemLabel option.item "label"}}
+                              {{/if}}
+                            </li>
+                          {{else if option.flags.divider}}
+                            <li
+                              class="d-combobox__divider"
+                              role="presentation"
+                              aria-hidden="true"
+                              {{row.place row.start row.index}}
+                              {{row.measure}}
+                            ></li>
+                          {{else if option}}
                             <SelectItem
                               @descriptor={{option}}
                               @engine={{this.engine}}
@@ -1822,7 +2106,9 @@ export default class DSelect extends Component<DSelectSignature> {
                               @active={{eq option.key this.activeOptionKey}}
                               aria-posinset={{option.posInSet}}
                               aria-setsize={{option.setSize}}
+                              aria-describedby={{option.groupHeaderId}}
                               data-option-key={{option.key}}
+                              data-logical-index={{option.logicalIndex}}
                               {{row.place row.start row.index}}
                               {{row.measure}}
                               {{! Keep focus in the trigger input on pointer-select so the input
@@ -1879,17 +2165,57 @@ export default class DSelect extends Component<DSelectSignature> {
                 {{/let}}
               </:content>
 
-              <:error as |error InlineError|>
-                <div class="d-combobox__error">
-                  <InlineError />
-                  <DButton
-                    class="d-combobox__retry btn-default"
-                    @action={{this.engine.reload}}
-                    @label="d_select.retry"
-                  />
-                </div>
+              <:error as |error|>
+                {{#if (has-block "error")}}
+                  {{yield error this.engine.reload to="error"}}
+                {{else}}
+                  {{! A muted, recoverable state matching the empty/min-chars language — not a
+                    heavy alert box, but still role=alert so the failure is announced (an inserted
+                    role=status is not reliably spoken). Retry is low-emphasis, hidden when the
+                    source isn't retryable. }}
+                  <div class="d-combobox__error" role="alert">
+                    <span class="d-combobox__error-message">
+                      {{dIcon "triangle-exclamation"}}
+                      {{i18n "d_select.load_error"}}
+                    </span>
+                    {{#if this.retryable}}
+                      <DButton
+                        class="d-combobox__retry btn-flat"
+                        @action={{this.engine.reload}}
+                        @label="d_select.retry"
+                      />
+                    {{/if}}
+                  </div>
+                {{/if}}
               </:error>
             </DAsyncContent>
+          {{/if}}
+          {{#if (has-block "footer")}}
+            {{! A labeled region pinned below the list (a sibling of the listbox, never inside it).
+              Keyboard-reachable via float-kit's Tab-forward; a desktop focus-out closes the menu. }}
+            <div
+              class="d-combobox__footer"
+              role="group"
+              aria-label={{i18n "d_select.footer_label"}}
+              {{on "focusout" this.handleFooterFocusOut}}
+            >
+              {{yield
+                (hash
+                  filter=this.engine.filter
+                  value=this.engine.value
+                  hasValue=this.engine.hasValue
+                  total=this.engine.total
+                  loadedCount=this.engine.loadedCount
+                  maximum=this.engine.maximum
+                  minimum=this.engine.minimum
+                  atMaximum=this.engine.atMaximum
+                  belowMinimum=this.engine.belowMinimum
+                  remaining=this.engine.remaining
+                  close=menuArgs.close
+                )
+                to="footer"
+              }}
+            </div>
           {{/if}}
         </div>
       </:content>

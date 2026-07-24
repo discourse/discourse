@@ -94,6 +94,55 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-large-deep", only: :desktop)
   end
 
+  it "shows options grouped under section headers" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    grouped =
+      PageObjects::Components::UiKit::DSelect.new(
+        "[data-test-select-showcase='grouped'] .d-combobox__trigger",
+      )
+    grouped.open
+    expect(page).to have_css("[role='listbox'] .d-combobox__group-header", minimum: 2)
+    screenshot_marker(label: "styleguide-select-grouped", only: :desktop)
+  end
+
+  it "shows a pinned footer below the option list" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    footer =
+      PageObjects::Components::UiKit::DSelect.new(
+        "[data-test-select-showcase='footer'] .d-combobox__trigger",
+      )
+    footer.open
+    expect(page).to have_css(".d-combobox__panel > .d-combobox__footer")
+    screenshot_marker(label: "styleguide-select-footer", only: :desktop)
+  end
+
+  it "shows the muted source-error state" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    # A button-variant trigger has no inline input, so open it directly rather than via the
+    # typeahead-oriented page object.
+    find(".select-examples__error .d-combobox__trigger").click
+    expect(page).to have_css(".d-combobox__error .d-icon-triangle-exclamation", wait: 5)
+    screenshot_marker(label: "styleguide-select-error", only: :desktop)
+  end
+
+  it "shows disabled options and a limit message at the selection maximum" do
+    visit "/styleguide/molecules/select"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+
+    maximum =
+      PageObjects::Components::UiKit::DSelect.new(".select-examples__maximum .d-combobox__trigger")
+    maximum.open
+    expect(page).to have_css(".d-combobox__panel .d-combobox__limit")
+    expect(page).to have_css("[role='option'][aria-disabled='true']")
+    screenshot_marker(label: "styleguide-select-maximum", only: :desktop)
+  end
+
   it "places the caret in the typeahead on click instead of selecting the whole value" do
     visit "/styleguide/molecules/select"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")

@@ -259,4 +259,250 @@ module("Unit | ui-kit | SelectEngine | source normalization", function (hooks) {
       assert.false(engine.canRevealMore, "hasMore false ends paging");
     });
   });
+
+  module("grouping", function () {
+    // Descriptors for the current filtered list, the way the component builds them.
+    function descriptors(engine) {
+      return engine.buildItems(engine.loadItems(engine.loadContext));
+    }
+
+    function kinds(rows) {
+      return rows.map((row) =>
+        row.flags.group
+          ? `H:${row.item.label}`
+          : row.flags.divider
+            ? "DIV"
+            : row.value
+      );
+    }
+
+    function options(rows) {
+      return rows.filter((row) => !row.flags.group && !row.flags.divider);
+    }
+
+    test("groupBy injects a header before each group in first-appearance order", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Carrot", group: "Vegetables" },
+          { id: 2, name: "Apple", group: "Fruits" },
+          { id: 3, name: "Pea", group: "Vegetables" },
+        ],
+        groupBy: "group",
+      });
+
+      assert.deepEqual(
+        kinds(descriptors(engine)),
+        ["H:Vegetables", 1, 3, "H:Fruits", 2],
+        "each group is preceded by its header; group and row order follow first appearance"
+      );
+    });
+
+    test("a header row is non-selectable and carries no ARIA position", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Pear", group: "Fruits" },
+        ],
+        groupBy: "group",
+      });
+      const header = descriptors(engine).find((row) => row.flags.group);
+
+      assert.true(header.flags.group, "the header carries the group flag");
+      assert.false(header.flags.selected, "a header is never selected");
+      assert.strictEqual(
+        header.posInSet,
+        undefined,
+        "a header has no position in the option set"
+      );
+      assert.strictEqual(header.setSize, undefined, "a header has no set size");
+    });
+
+    test("options are numbered over options only, ignoring interleaved headers", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Carrot", group: "Vegetables" },
+          { id: 2, name: "Apple", group: "Fruits" },
+          { id: 3, name: "Pea", group: "Vegetables" },
+        ],
+        groupBy: "group",
+      });
+      const opts = options(descriptors(engine));
+
+      assert.deepEqual(
+        opts.map((option) => option.posInSet),
+        [1, 2, 3],
+        "posInSet counts options across groups, skipping headers"
+      );
+      opts.forEach((option) =>
+        assert.strictEqual(
+          option.setSize,
+          3,
+          "setSize is the option count, not the row count"
+        )
+      );
+    });
+
+    test("groupBy accepts a function and groupLabel maps the key to header text", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "A", level: 2 },
+          { id: 2, name: "B", level: 2 },
+        ],
+        groupBy: (item) => item.level,
+        groupLabel: (key) => `Level ${key}`,
+      });
+      const header = descriptors(engine).find((row) => row.flags.group);
+
+      assert.strictEqual(
+        header.item.label,
+        "Level 2",
+        "groupLabel produces the header text from the group key"
+      );
+    });
+
+    test("a group whose rows all filter out drops its header", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+        ],
+        groupBy: "group",
+      });
+      engine.setFilter("apple");
+      const rows = descriptors(engine);
+
+      assert.deepEqual(
+        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        ["Fruits"],
+        "only the surviving group keeps a header"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.value),
+        [1],
+        "only the surviving option remains"
+      );
+      assert.strictEqual(
+        options(rows)[0].setSize,
+        1,
+        "setSize reflects the one surviving option"
+      );
+    });
+
+    test("without groupBy, descriptor positions are unchanged", function (assert) {
+      const engine = new SelectEngine({ items: items(3) });
+      const rows = descriptors(engine);
+
+      assert.true(
+        rows.every((row) => !row.flags.group && !row.flags.divider),
+        "no structural rows are injected without groupBy"
+      );
+      assert.deepEqual(
+        rows.map((row) => row.posInSet),
+        [1, 2, 3],
+        "options keep their contiguous 1-based positions"
+      );
+      rows.forEach((row) =>
+        assert.strictEqual(row.setSize, 3, "setSize is unchanged")
+      );
+    });
+
+    test("a divider marker row is normalized as a skipped structural row", function (assert) {
+      const engine = new SelectEngine({ items: items(2) });
+      const rows = engine.buildItems([
+        { __divider: true },
+        ...engine.loadItems(engine.loadContext),
+      ]);
+
+      assert.true(rows[0].flags.divider, "the marker sets the divider flag");
+      assert.false(rows[0].flags.selected, "a divider is never selected");
+      assert.strictEqual(
+        rows[0].posInSet,
+        undefined,
+        "a divider has no option position"
+      );
+      assert.deepEqual(
+        options(rows).map((option) => option.posInSet),
+        [1, 2],
+        "options after a divider are numbered from one"
+      );
+    });
+
+    test("a special option is numbered before the grouped options", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Carrot", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        specialItems: () => [{ id: 0, name: "None" }],
+      });
+      const rows = descriptors(engine);
+      const opts = options(rows);
+
+      assert.deepEqual(
+        opts.map((option) => option.value),
+        [0, 1, 2],
+        "the special row leads, then the grouped options"
+      );
+      assert.deepEqual(
+        opts.map((option) => option.posInSet),
+        [1, 2, 3],
+        "the special row is position one; grouped options follow"
+      );
+      opts.forEach((option) =>
+        assert.strictEqual(
+          option.setSize,
+          3,
+          "setSize counts the special plus the grouped options, not the headers"
+        )
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        ["Fruits", "Vegetables"],
+        "each group still gets a header"
+      );
+    });
+
+    test("the create row closes the set after the grouped options", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple", group: "Fruits" },
+          { id: 2, name: "Beet", group: "Vegetables" },
+        ],
+        groupBy: "group",
+        allowCreate: true,
+        createItem: (filter) => ({
+          id: `new:${filter}`,
+          name: filter,
+          __create: true,
+        }),
+      });
+      engine.setFilter("Ap");
+      const rows = descriptors(engine);
+      const opts = options(rows);
+
+      assert.true(
+        rows.at(-1).flags.__create,
+        "the create row is appended after the groups, never inside one"
+      );
+      assert.deepEqual(
+        opts.map((option) => option.flags.__create),
+        [false, true],
+        "the surviving option, then the create row"
+      );
+      assert.deepEqual(
+        opts.map((option) => option.posInSet),
+        [1, 2],
+        "the create row closes the set at the last option position"
+      );
+      opts.forEach((option) =>
+        assert.strictEqual(option.setSize, 2, "setSize counts both options")
+      );
+      assert.deepEqual(
+        rows.filter((row) => row.flags.group).map((row) => row.item.label),
+        ["Fruits"],
+        "only the surviving group keeps a header"
+      );
+    });
+  });
 });

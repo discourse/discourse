@@ -36,6 +36,7 @@ en:
           async_button_example: "Async button with loading state"
           static_example: "Static select"
           multi_example: "Multi-select"
+          maximum_example: "Multi-select with a maximum"
           empty_example: "Async empty results"
           error_example: "First-request error and retry"
           clearable_example: "Clearable single-select"
@@ -110,6 +111,20 @@ en:
               action_count:
                 one: "The action row was used %{count} time without changing the selection."
                 other: "The action row was used %{count} times without changing the selection."
+            grouped:
+              title: "Group options into sections"
+              placeholder: "Assign to a teammate"
+              teams:
+                design: "Design"
+                engineering: "Engineering"
+                support: "Support"
+            footer:
+              title: "Pinned footer actions"
+              placeholder: "Assign to a teammate"
+              view_all: "View directory"
+              count:
+                one: "%{count} teammate"
+                other: "%{count} teammates"
         toasts:
           title: "Toasts"
         font_scale:

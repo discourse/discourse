@@ -48,6 +48,15 @@ export interface SelectItem {
   /** Marks a synthetic fallback for a held value that could not be resolved. */
   __unresolved?: boolean;
 
+  /**
+   * Marks a synthetic group-header row (engine-injected from `groupBy`). A structural row:
+   * it is never selectable, navigable, or counted in the option set. Carries its `label`.
+   */
+  __header?: boolean;
+
+  /** Marks a synthetic divider row. Structural, like a header, but with no label. */
+  __divider?: boolean;
+
   /** Arbitrary domain fields, addressed dynamically by `valueField` / `labelField`. */
   [key: string]: unknown;
 }
@@ -71,8 +80,13 @@ export interface SelectDescriptor {
     selected: boolean;
     /** Whether the row cannot be activated (guards both pointer and keyboard). */
     disabled: boolean;
-    /** Reserved for group headers; always false today. */
+    /**
+     * A group-header row: structural, so it is skipped by selection, navigation, and the
+     * option-position math (no `posInSet`/`setSize`). Rendered outside the option set.
+     */
     group: boolean;
+    /** A divider row: structural like a header, but presentational and label-less. */
+    divider: boolean;
     /** Marks the synthetic create-on-the-fly row. */
     __create: boolean;
     /** True for an unresolved held value; false on list rows. */
@@ -170,6 +184,8 @@ export interface SelectEngineOptions {
    */
   getMultiple?: () => boolean | undefined;
   getMinChars?: () => number | undefined;
+  getMaximum?: () => number | undefined;
+  getMinimum?: () => number | undefined;
   getSelected?: () => SelectItem | SelectItem[] | undefined;
   getAllowCreate?: () =>
     | boolean
@@ -212,6 +228,33 @@ export interface SelectEngineOptions {
    * {@link SelectEngine#belowMinChars}.
    */
   minChars?: number;
+
+  /**
+   * Hard cap on a multi-select's selection count. Ignored when not `multiple`, and treated as
+   * unset below `1`. At the cap every add is refused — pointer, keyboard, create-on-the-fly and
+   * the compat bridge all reach the same guard — and every unselected ordinary option reports
+   * itself disabled. See {@link SelectEngine#atMaximum}.
+   *
+   * The cap is measured against the value read at activation time, so it holds for a consumer
+   * that applies the emitted value synchronously and by replacement (the contract this
+   * controlled component already assumes). One that applies it asynchronously, or merges
+   * additively, can still land over the cap: two activations racing a pending update both read
+   * the pre-update value. The engine deliberately keeps no selection state of its own, so it
+   * cannot reserve a pending slot. Count validation at submit time belongs to the consuming
+   * form, not here.
+   *
+   * It never trims an existing value: a caller that arrives already over the cap keeps every
+   * held id and can still remove them, because silently dropping data on mount is worse than
+   * showing an over-cap selection.
+   */
+  maximum?: number;
+
+  /**
+   * Advisory minimum for a multi-select: it drives {@link SelectEngine#belowMinimum} and the
+   * limit messaging only. It never blocks removal — deselecting and clearing always succeed,
+   * down to an empty selection — so enforcement stays with the consuming form.
+   */
+  minimum?: number;
 
   /** Field holding an item's value. Defaults to `"id"`. */
   valueField?: string;
@@ -268,6 +311,17 @@ export interface SelectEngineOptions {
    * `(snapshot) => item[]` prepended to the list (e.g. a "none"/"uncategorized" item).
    */
   specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
+
+  /**
+   * Groups the (filtered) options and injects a non-selectable header row before each
+   * group: a field name, or `(item) => key`. Client sources only; a source that pages
+   * ignores it (a group can span pages). Empty groups produce no header, since filtering
+   * runs before grouping.
+   */
+  groupBy?: string | ((item: SelectItem) => SelectItemId);
+
+  /** `(key) => string` mapping a group key to its header text. Defaults to `String(key)`. */
+  groupLabel?: (key: SelectItemId) => string;
 
   /** Whether choosing an item closes the overlay. Defaults to `!multiple`. */
   closeOnSelect?: boolean;
@@ -727,6 +781,8 @@ export default class SelectEngine {
   #readMultiple: () => boolean | undefined;
   #identifiers: string[];
   #readMinChars: () => number | undefined;
+  #readMaximum: () => number | undefined;
+  #readMinimum: () => number | undefined;
   #valueField: string;
   #labelField: string;
   #filterBy?: string | ((item: SelectItem, term: string) => boolean);
@@ -751,6 +807,8 @@ export default class SelectEngine {
   #createItem?: (filter: string) => SelectItem;
   #createUnresolvedItem?: (value: SelectItemId) => SelectItem;
   #specialItems?: (snapshot: SelectSnapshot) => SelectItem[];
+  #groupBy?: string | ((item: SelectItem) => SelectItemId);
+  #groupLabelFn?: (key: SelectItemId) => string;
   #readCloseOnSelect: boolean | undefined;
   #onChange?: (
     nextValue: SelectValue,
@@ -778,6 +836,11 @@ export default class SelectEngine {
    *   Defaults to a substring match on `labelField`.
    * @param opts.valueField - Field holding an item's value. Defaults to `"id"`.
    * @param opts.labelField - Field holding an item's label. Defaults to `"name"`.
+   * @param opts.maximum - Hard cap on a multi-select's selection count (multi-only, unset
+   *   below `1`). Blocks additions and disables unselected options at the cap; never trims
+   *   an already over-cap value.
+   * @param opts.minimum - Advisory minimum for a multi-select. Drives messaging only and
+   *   never blocks removal.
    * @param opts.selected - Already-resolved item(s) for the current value, so the
    *   trigger needs no fetch to display them.
    * @param opts.resolveValue - `(value, { signal }) => item | Promise<item>`, used to
@@ -803,6 +866,8 @@ export default class SelectEngine {
     this.#readMultiple = opts.getMultiple ?? (() => opts.multiple);
     this.#identifiers = makeArray(opts.identifiers) as string[];
     this.#readMinChars = opts.getMinChars ?? (() => opts.minChars);
+    this.#readMaximum = opts.getMaximum ?? (() => opts.maximum);
+    this.#readMinimum = opts.getMinimum ?? (() => opts.minimum);
     this.#valueField = opts.valueField ?? "id";
     this.#labelField = opts.labelField ?? "name";
     this.#filterBy = opts.filterBy;
@@ -815,6 +880,8 @@ export default class SelectEngine {
     this.#createItem = opts.createItem;
     this.#createUnresolvedItem = opts.createUnresolvedItem;
     this.#specialItems = opts.specialItems;
+    this.#groupBy = opts.groupBy;
+    this.#groupLabelFn = opts.groupLabel;
     // Kept raw (not defaulted here): `#closeOnSelect` re-derives `!multiple` live, so a
     // runtime `multiple` flip flips the default close behavior with it.
     this.#readCloseOnSelect = opts.closeOnSelect;
@@ -888,6 +955,38 @@ export default class SelectEngine {
   /** How many more characters are needed to reach {@link minChars} (reactive). */
   get remainingMinChars(): number {
     return Math.max(0, this.#minChars - this.#state.filter.length);
+  }
+
+  /** The multi-select selection cap, or `null` when uncapped (always `null` for single). */
+  get maximum(): number | null {
+    return this.#maximum;
+  }
+
+  /** The advisory multi-select minimum (`0` = none, and always `0` for single). */
+  get minimum(): number {
+    return this.#minimum;
+  }
+
+  /**
+   * Whether the selection has reached {@link maximum}. At the cap no further item can be
+   * added, and every unselected ordinary option reports itself disabled.
+   */
+  get atMaximum(): boolean {
+    return this.#atMaximum;
+  }
+
+  /** Whether the selection is still short of the advisory {@link minimum}. */
+  get belowMinimum(): boolean {
+    const minimum = this.#minimum;
+    return minimum > 0 && this.#selectedCount < minimum;
+  }
+
+  /** How many more items may still be added, or `undefined` when uncapped. */
+  get remaining(): number | undefined {
+    const maximum = this.#maximum;
+    return maximum == null
+      ? undefined
+      : Math.max(0, maximum - this.#selectedCount);
   }
 
   getItemLabel(item: SelectItem | null | undefined): string {
@@ -997,6 +1096,17 @@ export default class SelectEngine {
   }
 
   /**
+   * How many SOURCE options are currently loaded — excludes specials and the create row, so it
+   * shares `total`'s population and a footer's `total - loadedCount` is a valid "how many more".
+   * Reads the live source count (a client source has them all; a paginating source has its
+   * accumulated page count), so it stays correct even while the list is unmounted (min-chars /
+   * error), unlike a render-time count of navigable rows.
+   */
+  get loadedCount(): number {
+    return this.#isAsync ? this.#state.serverLoadedCount : (this.total ?? 0);
+  }
+
+  /**
    * Whether a **reload** of an already-settled list is in flight — a new query, a
    * `reload()`, or a reveal — which is what `aria-busy` on the retained listbox reports.
    * The *initial* load is deliberately not pending: the listbox does not exist yet then,
@@ -1062,8 +1172,8 @@ export default class SelectEngine {
 
   /**
    * Builds the final rendered item list from the source's resolved items: applies
-   * plugin `select-content` transformers, appends the create-on-the-fly item, and
-   * prepends any special items.
+   * plugin `select-content` transformers, groups the options, appends the create-on-the-fly
+   * item, and prepends any special items.
    *
    * @param rawItems - The items resolved by the source.
    * @returns The frozen list of normalized descriptors to render.
@@ -1083,32 +1193,49 @@ export default class SelectEngine {
     // does not depend on global transformer registration order.
     items = applyLegacySelectKitContent(this, items);
 
-    const sourceCount = items.length;
-    let createCount = 0;
-    if (this.#shouldOfferCreate(items)) {
-      // `#shouldOfferCreate` already guaranteed a `#createItem` is present.
-      items = [...items, this.#createItem!(this.#state.filter)];
-      createCount = 1;
-    }
+    // The option count never includes structural rows (headers/dividers), whether they come
+    // from grouping below or an upstream injector.
+    const sourceCount = items.filter(
+      (item) => !this.#isStructural(item)
+    ).length;
+
+    const createItem = this.#shouldOfferCreate(items)
+      ? // `#shouldOfferCreate` already guaranteed a `#createItem` is present.
+        this.#createItem!(this.#state.filter)
+      : null;
+
+    // Group the source options before appending create, so the create row is never grouped
+    // and headers never enter the option count.
+    const grouped = this.#shouldGroup() ? this.#groupItems(items) : items;
 
     const special = this.#specialItems?.(this.#snapshot()) ?? [];
     const specialItems = makeArray(special) as SelectItem[];
-    const finalItems = [...specialItems, ...items];
+    const finalItems = createItem
+      ? [...specialItems, ...grouped, createItem]
+      : [...specialItems, ...grouped];
+
+    // Only option rows count toward the set; a special that is itself structural (a seam
+    // escape hatch) is prepended but never numbered.
+    const specialCount = specialItems.filter(
+      (item) => !this.#isStructural(item)
+    ).length;
 
     // Normalize as the final step: everything above operates on raw items (so the
     // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
     return this.#describeList(
       finalItems,
-      specialItems.length,
+      specialCount,
       sourceCount,
-      createCount
+      createItem ? 1 : 0
     );
   }
 
   /**
-   * Normalizes the list rows — specials, then source rows, then create — and stamps each with
-   * its position in the whole result set. Positions come from the engine's own totals rather
-   * than the DOM index, so they stay correct while only a window is mounted.
+   * Normalizes the list rows — specials, then source rows (with any injected group headers),
+   * then create — and stamps each OPTION with its position in the whole result set. Positions
+   * come from the engine's own totals rather than the DOM index, so they stay correct while
+   * only a window is mounted, and they count options only: an interleaved header/divider
+   * shifts no option's `posInSet` and never enters `setSize`.
    */
   #describeList(
     items: SelectItem[],
@@ -1127,21 +1254,34 @@ export default class SelectEngine {
 
     // Loaded source rows are a prefix, so positions are known even while the set size is not.
     // `-1` with real positions is the unknown-size encoding ARIA describes.
-    const lastSourceIndex = specialCount + sourceCount;
+    const lastOptionOrdinal = specialCount + sourceCount;
 
+    // Hoisted: the cap is a property of the selection, not of a row, and `#atMaximum` reads the
+    // deduped value array — so evaluating it per row would repeat that work for every option.
+    const atMaximum = this.#atMaximum;
+
+    let optionOrdinal = 0;
     return Object.freeze(
-      items.map((item, index) => ({
-        ...this.#normalize(item, index),
-        setSize,
-        posInSet:
-          index < lastSourceIndex
-            ? index + 1
-            : // The create row closes the set, wherever the window ends — but only a known
-              // set has a last slot to close.
-              sourceTotal == null
-              ? undefined
-              : setSize,
-      }))
+      items.map((item, index) => {
+        const descriptor = this.#normalize(item, index, atMaximum);
+        if (descriptor.flags.group || descriptor.flags.divider) {
+          // A structural row carries no ARIA position and does not advance the option count.
+          return { ...descriptor, setSize: undefined, posInSet: undefined };
+        }
+        const ordinal = optionOrdinal++;
+        return {
+          ...descriptor,
+          setSize,
+          posInSet:
+            ordinal < lastOptionOrdinal
+              ? ordinal + 1
+              : // The create row closes the set, wherever the window ends — but only a known
+                // set has a last slot to close.
+                sourceTotal == null
+                ? undefined
+                : setSize,
+        };
+      })
     );
   }
 
@@ -1153,7 +1293,9 @@ export default class SelectEngine {
   @bind
   describeItems(items: SelectItem[]): readonly SelectDescriptor[] {
     return Object.freeze(
-      items.map((item, index) => this.#normalize(item, index))
+      // Never cap-disabled: these describe the held selection for the trigger, and the cap only
+      // ever closes off rows that are *not* selected.
+      items.map((item, index) => this.#normalize(item, index, false))
     );
   }
 
@@ -1336,6 +1478,13 @@ export default class SelectEngine {
       }
       return;
     }
+    // The item is known to be unselected here, so this rejects genuine additions only. It is
+    // the single chokepoint every add reaches — pointer, keyboard, create-on-the-fly, and the
+    // compat bridge — so the cap cannot be walked around, and rejecting before the resolve
+    // cache leaves no trace of a selection that never happened.
+    if (this.#atMaximum) {
+      return;
+    }
     this.#cacheResolved(item);
     if (this.#multiple) {
       this.#emitChange([...this.#valueArray, this.#itemValue(item)]);
@@ -1423,6 +1572,39 @@ export default class SelectEngine {
 
   get #minChars(): number {
     return this.#readMinChars() ?? 0;
+  }
+
+  // Multi-only, and `null` for anything below one — which also absorbs `0`, negatives, and
+  // `NaN`, all of which mean "no cap" rather than "cap of nothing".
+  get #maximum(): number | null {
+    if (!this.#multiple) {
+      return null;
+    }
+    const raw = this.#readMaximum();
+    return raw != null && raw >= 1 ? Math.floor(raw) : null;
+  }
+
+  get #minimum(): number {
+    if (!this.#multiple) {
+      return 0;
+    }
+    const raw = this.#readMinimum();
+    return raw != null && raw >= 1 ? Math.floor(raw) : 0;
+  }
+
+  /**
+   * The count the limits are measured against: every held id, deduped. A nullish entry counts
+   * like any other — it still resolves to a displayed, removable chip, so excluding it would
+   * let the visible selection exceed the cap, and the user can always reclaim its slot by
+   * removing that chip.
+   */
+  get #selectedCount(): number {
+    return this.#valueArray.length;
+  }
+
+  get #atMaximum(): boolean {
+    const maximum = this.#maximum;
+    return maximum != null && this.#selectedCount >= maximum;
   }
 
   get #selected(): SelectItem | SelectItem[] | undefined {
@@ -1734,8 +1916,13 @@ export default class SelectEngine {
     }
   }
 
-  #normalize(item: SelectItem, index: number): SelectDescriptor {
+  #normalize(
+    item: SelectItem,
+    index: number,
+    atMaximum: boolean
+  ): SelectDescriptor {
     const value = this.#itemValue(item);
+    const selected = this.isSelected(item);
     return {
       // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
       // its position, which is stable within the ordered special/create prefix.
@@ -1743,9 +1930,18 @@ export default class SelectEngine {
       value,
       item,
       flags: {
-        selected: this.isSelected(item),
-        disabled: !!item.disabled,
-        group: false,
+        selected,
+        // At the cap only rows that could actually grow the selection are closed off. A
+        // selected row stays open (deselecting it is how the user gets back under the cap), and
+        // so do action rows and structural rows, neither of which ever becomes a value.
+        disabled:
+          !!item.disabled ||
+          (atMaximum &&
+            !selected &&
+            !this.#isStructural(item) &&
+            typeof item.onSelect !== "function"),
+        group: !!item.__header,
+        divider: !!item.__divider,
         __create: !!item.__create,
         __unresolved: !!item.__unresolved,
       },
@@ -1754,6 +1950,55 @@ export default class SelectEngine {
 
   #itemValue(item: SelectItem | null | undefined): SelectItemId {
     return item?.[this.#valueField];
+  }
+
+  #isStructural(item: SelectItem): boolean {
+    return !!item.__header || !!item.__divider;
+  }
+
+  // Client sources only: a paginating source can split a group across pages, so grouping a
+  // single page would fragment it. Deferred for server sources.
+  #shouldGroup(): boolean {
+    return this.#groupBy != null && !this.#isAsync;
+  }
+
+  #groupKey(item: SelectItem): SelectItemId {
+    return typeof this.#groupBy === "function"
+      ? this.#groupBy(item)
+      : item[this.#groupBy as string];
+  }
+
+  #groupLabel(key: SelectItemId): string {
+    return this.#groupLabelFn ? this.#groupLabelFn(key) : String(key);
+  }
+
+  // Segments options by group key — first-appearance order, preserved by the Map — and injects
+  // a header row before each group. Filtering already ran, so every group here is non-empty and
+  // no header is ever orphaned.
+  #groupItems(options: SelectItem[]): SelectItem[] {
+    const groups = new Map<SelectItemId, SelectItem[]>();
+    for (const item of options) {
+      // Grouping addresses options only. A structural row that reached the source (e.g. an
+      // upstream transformer) is skipped rather than passed to `groupBy`, which would throw on
+      // a synthetic row or spawn an option-less phantom group.
+      if (this.#isStructural(item)) {
+        continue;
+      }
+      const key = this.#groupKey(item);
+      const bucket = groups.get(key);
+      if (bucket) {
+        bucket.push(item);
+      } else {
+        groups.set(key, [item]);
+      }
+    }
+
+    const out: SelectItem[] = [];
+    for (const [key, groupItems] of groups) {
+      out.push({ __header: true, groupKey: key, label: this.#groupLabel(key) });
+      out.push(...groupItems);
+    }
+    return out;
   }
 
   // Two ids denote the same option iff their string forms match, so a bound "5" selects
