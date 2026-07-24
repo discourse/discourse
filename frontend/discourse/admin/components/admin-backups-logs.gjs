@@ -4,6 +4,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel, scheduleOnce } from "@ember/runloop";
 import discourseDebounce from "discourse/lib/debounce";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsLogs extends Component {
@@ -91,9 +92,9 @@ export default class AdminBackupsLogs extends Component {
         <p>{{i18n "admin.backups.logs.none"}}</p>
       {{/if}}
       <DConditionalLoadingSpinner
-          @size="small"
-          @condition={{@status.isOperationRunning}}
-        />
+        @size="small"
+        @condition={{@status.isOperationRunning}}
+      />
     </div>
   </template>
 }
