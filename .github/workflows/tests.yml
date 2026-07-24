@@ -57,7 +57,8 @@ jobs:
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      EMBER_ENV: development
+      EMBER_ENV: ${{ matrix.build_type == 'system' && 'production' || 'development' }}
+      KEEP_TEST_CODE: ${{ matrix.build_type == 'system' && '1' || '' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
       PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
