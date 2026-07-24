@@ -281,13 +281,7 @@ class TopicUser < ActiveRecord::Base
       UPDATE topic_users
       SET
         last_read_post_number =
-          LEAST(
-            CASE WHEN :whisperer
-              THEN highest_staff_post_number
-              ELSE highest_post_number END
-            ,
-            GREATEST(:post_number, tu.last_read_post_number)
-          ),
+          LEAST(:max_post_number, GREATEST(:post_number, tu.last_read_post_number)),
         total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
         notification_level =
            case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
@@ -328,6 +322,10 @@ class TopicUser < ActiveRecord::Base
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
 
+      max_post_number =
+        opts[:max_post_number] ||
+          Topic.highest_post_number_in_stream(topic_id, whisperer: user.whisperer?).to_i
+
       args = {
         user_id: user.id,
         topic_id: topic_id,
@@ -336,7 +334,7 @@ class TopicUser < ActiveRecord::Base
         msecs: msecs,
         tracking: notification_levels[:tracking],
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs,
-        whisperer: user.whisperer?,
+        max_post_number: max_post_number,
       }
 
       rows = DB.query(UPDATE_TOPIC_USER_SQL, args)

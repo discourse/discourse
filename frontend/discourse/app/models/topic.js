@@ -13,7 +13,7 @@ import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import { deepEqual, deepMerge } from "discourse/lib/object";
+import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { serializeTags } from "discourse/lib/serialize-tags";
 import { emojiUnescape } from "discourse/lib/text";
@@ -430,12 +430,15 @@ export default class Topic extends RestModel {
 
   @dependentKeyCompat
   get readLastPost() {
-    return deepEqual(this.last_read_post_number, this.highest_post_number);
+    deprecated("`readLastPost` is deprecated, use `visited` instead", {
+      id: "discourse.topic.readLastPost",
+    });
+    return this.visited;
   }
 
-  @computed("pinned", "readLastPost")
+  @computed("pinned", "visited")
   get canClearPin() {
-    return this.pinned && this.readLastPost;
+    return this.pinned && this.visited;
   }
 
   @computed("details.can_edit", "details.can_edit_tags")

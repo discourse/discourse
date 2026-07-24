@@ -1641,6 +1641,19 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(topic_user.last_read_post_number).to eq(2)
       end
 
+      it "advances past a trailing small action for a nested topic" do
+        Fabricate(:post, topic: topic, post_type: Post.types[:small_action], post_number: 3)
+
+        sign_in(reader)
+        get show_url(topic), params: { track_visit: true }
+        expect(response.status).to eq(200)
+
+        Scheduler::Defer.do_all_work
+
+        topic_user = TopicUser.find_by(topic: topic, user: reader)
+        expect(topic_user.last_read_post_number).to eq(3)
+      end
+
       it "marks the topic's unread notifications as read" do
         reply_notification =
           Fabricate(

@@ -951,6 +951,20 @@ class Topic < ActiveRecord::Base
     "post_type <> #{Post.types[:small_action]}"
   end
 
+  def self.stream_post_types_sql(whisperer:)
+    whisperer ? "TRUE" : "post_type <> #{Post.types[:whisper]}"
+  end
+
+  def self.highest_post_number_in_stream(topic_id, whisperer:)
+    DB.query_single(<<~SQL, topic_id:).first
+      SELECT MAX(post_number)
+      FROM posts
+      WHERE topic_id = :topic_id
+        AND deleted_at IS NULL
+        AND #{stream_post_types_sql(whisperer:)}
+    SQL
+  end
+
   # Atomically creates the next post number
   def self.next_post_number(topic_id, opts = {})
     highest =
@@ -1091,11 +1105,13 @@ class Topic < ActiveRecord::Base
 
     highest = result.first.to_i
 
-    DB.exec(<<~SQL, highest:, topic_id:)
+    max_post_number = highest_post_number_in_stream(topic_id, whisperer: true).to_i
+
+    DB.exec(<<~SQL, topic_id:, max_post_number:)
       UPDATE topic_users
-         SET last_read_post_number = :highest
+         SET last_read_post_number = :max_post_number
        WHERE topic_id = :topic_id
-         AND last_read_post_number > :highest
+         AND last_read_post_number > :max_post_number
     SQL
 
     highest

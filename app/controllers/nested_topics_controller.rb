@@ -244,15 +244,10 @@ class NestedTopicsController < ApplicationController
       next if user.blank? || topic.blank?
       next unless topic.nested_view?
 
-      highest =
-        if user.whisperer?
-          [topic.highest_staff_post_number.to_i, topic.highest_post_number.to_i].max
-        else
-          topic.highest_post_number.to_i
-        end
+      highest = Topic.highest_post_number_in_stream(topic_id, whisperer: user.whisperer?).to_i
       next if highest < 1
 
-      TopicUser.update_last_read(user, topic_id, highest, 0, 0)
+      TopicUser.update_last_read(user, topic_id, highest, 0, 0, max_post_number: highest)
       Notification.mark_posts_read(user, topic_id, (1..highest).to_a)
     end
   end
