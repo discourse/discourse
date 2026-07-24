@@ -30,7 +30,7 @@ RSpec.describe "Data Explorer OpenAPI examples freshness" do
 
   let(:documents) do
     [DiscourseDataExplorer::JsonApiKit.openapi_document] +
-      DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.map do
+      DiscourseDataExplorer::JsonApiKit.plugins.keys.sort.map do
         DiscourseDataExplorer::JsonApiKit.openapi_document_for(it)
       end
   end

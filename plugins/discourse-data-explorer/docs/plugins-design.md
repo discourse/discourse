@@ -1,8 +1,8 @@
 # JSON:API Kit — Plugins Design
 
 **Status:** design settled in pairing sessions (2026-07-15/16) and **proven in the spike**
-via a fake extension registered at spec time
-(`spec/requests/discourse_data_explorer/json_api_kit/plugin_extensions_spec.rb`): ownership
+via the run-stats plugin — first a spec-time fixture, since 2026-07-24 registered for real
+at boot (`spec/requests/discourse_data_explorer/json_api_kit/plugins_spec.rb`): ownership
 enforcement (A), include-gated relationships (B), per-owner version changes with
 auto-namespaced filter renames (D), disabled-plugin strictness (E), and the C resolution —
 core-timeline base snap, per-plugin overrides, per-owner gaps, and `CORE_PLUGINS`-granted
@@ -10,6 +10,14 @@ core-timeline membership (bundled plugin's change advances the advertised versio
 override → 400). Still unbuilt: the plugin-facing `jsonapi` block in plugin.rb (the spike
 registers at the Kit level), `register_sort` projection, date-monotonicity enforcement,
 the repo ⟺ `CORE_PLUGINS` CI consistency check, F (frontend).
+
+**Vocabulary (decided 2026-07-24):** the concept this doc historically calls an
+"extension" is named **plugin** everywhere — code included (`JsonApiKit::Plugin`,
+`register_plugin`, the plugins registry). "Plugin" is the Discourse word, and JSON:API 1.1
+reserves *extension* for its own `ext` media-type mechanism (spec-level members and
+processing rules, e.g. Atomic Operations) — an unrelated concept the Kit may someday
+implement, which must not share a name with this one. Older prose below may still say
+"extension"; read it as "plugin".
 **References:** [versioning design](./versioning-design.md) (the machinery all of this composes with) · [Stripe versioning](./stripe-api-versioning-reference.md) · [JSON:API spec notes](./jsonapi-spec-reference.md).
 
 ---

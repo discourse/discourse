@@ -4,9 +4,9 @@ module DiscourseDataExplorer
   module JsonApiKit
     # One foreign owner's contribution to the API — a namespace plus what it
     # attaches to other owners' types (relationships, namespaced filters) and the
-    # version changes for its own types. Built by the `JsonApiKit.register_extension`
+    # version changes for its own types. Built by the `JsonApiKit.register_plugin`
     # block, then validated and applied as a unit. See docs/plugins-design.md (B/D).
-    class Extension
+    class Plugin
       Error = Class.new(StandardError)
       NamespaceError = Class.new(Error)
       OwnershipError = Class.new(Error)
@@ -21,13 +21,13 @@ module DiscourseDataExplorer
       end
 
       # `resource:` must be a Kit resource class (validated at registration):
-      # extension types are documented from the same declarations as core ones,
+      # plugin types are documented from the same declarations as core ones,
       # and a plain serializer has none to offer.
       def register_relationship(type, resource:, description: nil, &block)
         @relationships[type.to_s] = { resource:, description:, block: }
       end
 
-      # Keys are declared local and wired prefixed — the extension never writes
+      # Keys are declared local and wired prefixed — the plugin never writes
       # (and cannot write) a foreign prefix. Same typed, described declaration
       # as the resource `filter` keyword; the docs derive from it.
       def register_filter(type, key, value_type, description:, &block)
@@ -45,7 +45,7 @@ module DiscourseDataExplorer
 
       def filters_for(type) = @filters.fetch(type.to_s, {})
 
-      # The types this extension introduces (through its relationship resources) —
+      # The types this plugin introduces (through its relationship resources) —
       # the only types its version changes may target.
       def owned_types = relationships.values.map { it[:resource].record_type.to_s }
 

@@ -410,7 +410,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
       end
     end
 
-    context "when an extension's own change renamed a projected filter" do
+    context "when an plugin's own change renamed a projected filter" do
       subject(:downgraded) do
         described_class.down_filter_keys(
           %w[run-stats.stale],

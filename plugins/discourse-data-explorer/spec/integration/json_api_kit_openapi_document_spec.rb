@@ -2,7 +2,7 @@
 
 # The committed OpenAPI documents are contract artifacts (like the Kit contract
 # baseline): they must match what the declarations generate. When a resource,
-# contract, extension, or version change alters the API surface, regenerate with
+# contract, plugin, or version change alters the API surface, regenerate with
 # `bin/rake data_explorer:json_api_docs` and commit the diff — the diff IS the
 # review surface for the docs change. The committed set mirrors the global docs
 # structure (docs/api-docs-generation.md §8): the core document plus one
@@ -41,7 +41,7 @@ RSpec.describe "Data Explorer OpenAPI document freshness" do
       expect(committed_manifest).to eq(
         "versions" => DiscourseDataExplorer::JsonApiKit.openapi_versions,
         "plugins" =>
-          DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.map do |namespace|
+          DiscourseDataExplorer::JsonApiKit.plugins.keys.sort.map do |namespace|
             {
               "namespace" => namespace,
               "versions" => DiscourseDataExplorer::JsonApiKit.openapi_plugin_versions(namespace),
@@ -53,7 +53,7 @@ RSpec.describe "Data Explorer OpenAPI document freshness" do
 
   describe "plugin documents" do
     subject(:stale_plugins) do
-      DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.flat_map do |namespace|
+      DiscourseDataExplorer::JsonApiKit.plugins.keys.sort.flat_map do |namespace|
         stale = []
         if committed_plugin_document(namespace) !=
              DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace)

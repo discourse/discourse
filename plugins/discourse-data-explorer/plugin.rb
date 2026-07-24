@@ -48,7 +48,7 @@ FastJsonapi::SerializationCore::ClassMethods.prepend(
 )
 
 after_initialize do
-  # A stand-in "official plugin" exercising the Kit's extension surface for
+  # A stand-in "official plugin" exercising the Kit's plugin surface for
   # real — its contributions show up in the generated API docs. See
   # lib/discourse_data_explorer/run_stats.rb.
   DiscourseDataExplorer::RunStats.register!

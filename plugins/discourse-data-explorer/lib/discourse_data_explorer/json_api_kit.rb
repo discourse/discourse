@@ -5,7 +5,7 @@ module DiscourseDataExplorer
     # The spike API's v-day zero (docs/versioning-design.md, §1).
     INITIAL_API_VERSION = "2026-05-01"
 
-    # Extensions that ship atomically with core (one repo, one deploy) ride
+    # Plugins that ship atomically with core (one repo, one deploy) ride
     # the core timeline: their changes join the base snap set and cannot be
     # overridden. Membership is GRANTED here — reviewed data in core's
     # codebase, following the `config/official_plugins.json` precedent — and
@@ -32,42 +32,40 @@ module DiscourseDataExplorer
             end
       end
 
-      # ── Extensions (docs/plugins-design.md) ──
+      # ── Plugins (docs/plugins-design.md) ──
       # A foreign owner registers everything in one block; the whole contribution
       # is validated before anything is applied, so failure leaves no partial state.
       # In real plugins this is the target of the plugin.rb `jsonapi` keyword.
 
-      def register_extension(namespace:, &block)
-        extension = Extension.new(namespace:)
-        extension.instance_eval(&block)
-        validate_extension!(extension)
-        apply_extension(extension)
-        extensions[extension.namespace] = extension
+      def register_plugin(namespace:, &block)
+        plugin = Plugin.new(namespace:)
+        plugin.instance_eval(&block)
+        validate_plugin!(plugin)
+        apply_plugin(plugin)
+        plugins[plugin.namespace] = plugin
       end
 
-      def unregister_extension(namespace)
-        extension = extensions.delete(namespace.to_s)
-        return if !extension
+      def unregister_plugin(namespace)
+        plugin = plugins.delete(namespace.to_s)
+        return if !plugin
 
-        extension.attached_types.each do |type|
+        plugin.attached_types.each do |type|
           target = serializer_for(type)
-          target.relationships_to_serialize&.delete(extension.namespace.to_sym)
-          target.relationship_definitions.delete(extension.namespace.to_sym)
+          target.relationships_to_serialize&.delete(plugin.namespace.to_sym)
+          target.relationship_definitions.delete(plugin.namespace.to_sym)
         end
-        extension.version_changes.each { api_versions.unregister(it) }
+        plugin.version_changes.each { api_versions.unregister(it) }
       end
 
-      def extensions = @extensions ||= {}
+      def plugins = @plugins ||= {}
 
-      def extension_filters_for(type)
-        extensions
-          .values
-          .reduce({}) { |merged, extension| merged.merge(extension.filters_for(type)) }
+      def plugin_filters_for(type)
+        plugins.values.reduce({}) { |merged, plugin| merged.merge(plugin.filters_for(type)) }
       end
 
-      def extension_namespaces_for(type)
-        extensions.values.filter_map do |extension|
-          extension.namespace if extension.attached_types.include?(type.to_s)
+      def plugin_namespaces_for(type)
+        plugins.values.filter_map do |plugin|
+          plugin.namespace if plugin.attached_types.include?(type.to_s)
         end
       end
 
@@ -81,7 +79,7 @@ module DiscourseDataExplorer
       end
 
       # The OpenAPI document (docs/api-docs-generation.md) — recomputed per
-      # call, so it reflects live registry/extension state. `scope: :site`
+      # call, so it reflects live registry/plugin state. `scope: :site`
       # (default) composes everything registered here — what this installation
       # serves; `scope: :core` is the global core document (§8). The explicit
       # endpoint map is the spike seam (see the generator's generalization path).
@@ -132,53 +130,52 @@ module DiscourseDataExplorer
         )
       end
 
-      def validate_extension!(extension)
-        if extensions.key?(extension.namespace)
-          raise Extension::NamespaceError,
-                "The `#{extension.namespace}` namespace is already registered"
+      def validate_plugin!(plugin)
+        if plugins.key?(plugin.namespace)
+          raise Plugin::NamespaceError, "The `#{plugin.namespace}` namespace is already registered"
         end
 
-        extension.relationships.each_value do |relationship|
+        plugin.relationships.each_value do |relationship|
           resource = relationship[:resource]
           next if resource.is_a?(Class) && resource < ResourceBase
-          raise Extension::Error,
-                "Extension resources must be Kit resource classes (got `#{resource.inspect}`)"
+          raise Plugin::Error,
+                "Plugin resources must be Kit resource classes (got `#{resource.inspect}`)"
         end
 
-        extension.attached_types.each do |type|
+        plugin.attached_types.each do |type|
           serializer = serializer_for(type)
-          raise Extension::Error, "Unknown resource type `#{type}`" if !serializer
+          raise Plugin::Error, "Unknown resource type `#{type}`" if !serializer
 
-          if member_names(serializer).include?(extension.namespace)
-            raise Extension::NamespaceError,
-                  "The `#{extension.namespace}` namespace collides with a member name on `#{type}`"
+          if member_names(serializer).include?(plugin.namespace)
+            raise Plugin::NamespaceError,
+                  "The `#{plugin.namespace}` namespace collides with a member name on `#{type}`"
           end
         end
 
         foreign_types =
-          extension.version_changes.flat_map(&:resource_types).map(&:to_s) - extension.owned_types
+          plugin.version_changes.flat_map(&:resource_types).map(&:to_s) - plugin.owned_types
         if foreign_types.any?
-          raise Extension::OwnershipError,
+          raise Plugin::OwnershipError,
                 "Version changes may only target owned types (foreign: #{foreign_types.join(", ")})"
         end
       end
 
-      def apply_extension(extension)
-        extension.relationships.each do |type, relationship|
+      def apply_plugin(plugin)
+        plugin.relationships.each do |type, relationship|
           related = relationship[:block]
           serializer_for(type).has_one(
-            extension.namespace.to_sym,
+            plugin.namespace.to_sym,
             resource: relationship[:resource],
             description: relationship[:description],
           ) { |record, _params| related.call(record) }
         end
-        # One union registry per site: the extension's changes join the timeline
+        # One union registry per site: the plugin's changes join the timeline
         # (they only ever transform its own types — enforced above) and leave it
-        # with the extension. A core plugin's changes are core-owned — they enter
-        # the base snap set; an independent extension's changes carry its
+        # with the plugin. A core plugin's changes are core-owned — they enter
+        # the base snap set; an independent plugin's changes carry its
         # namespace and are reached through overrides.
-        owner = core_plugin?(extension.namespace) ? nil : extension.namespace
-        extension.version_changes.each { api_versions.register(it, owner:) }
+        owner = core_plugin?(plugin.namespace) ? nil : plugin.namespace
+        plugin.version_changes.each { api_versions.register(it, owner:) }
       end
 
       def member_names(serializer)

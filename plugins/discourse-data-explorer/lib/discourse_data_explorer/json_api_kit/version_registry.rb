@@ -21,7 +21,7 @@ module DiscourseDataExplorer
         @changes = {}
       end
 
-      # Core-owned changes register with no owner; an extension's changes carry
+      # Core-owned changes register with no owner; an plugin's changes carry
       # its namespace. Owners have disjoint timelines: only core changes form the
       # base snap set, and each owner's changes can be governed by an override.
       def register(change_class, owner: nil)
@@ -36,14 +36,14 @@ module DiscourseDataExplorer
         change_class
       end
 
-      # Extensions come and go with their owner (plugin enabled/disabled); their
+      # Plugins come and go (installed/enabled per site); their
       # changes leave the timeline with them. Core changes are never unregistered.
       def unregister(change_class) = @changes.delete(change_class)
 
       # Oldest→newest; same-date changes keep registration order.
       def changes = @changes.keys.sort_by.with_index { |change, index| [change.version, index] }
 
-      # nil for core-owned changes, the extension's namespace otherwise.
+      # nil for core-owned changes, the plugin's namespace otherwise.
       def owner_of(change) = @changes[change]
 
       # The base snap set is CORE's timeline only: a resolved base date always

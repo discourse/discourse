@@ -2,9 +2,9 @@
 
 module DiscourseDataExplorer
   # A stand-in "official plugin" living inside the spike: it attaches run
-  # statistics to queries through the Kit's extension surface exactly as a
+  # statistics to queries through the Kit's plugin surface exactly as a
   # separate plugin's `jsonapi` block would (docs/plugins-design.md B/D), and
-  # gives the generated docs a real extension to document
+  # gives the generated docs a real plugin to document
   # (docs/api-docs-generation.md §8). Own timeline — not in CORE_PLUGINS.
   module RunStats
     NAMESPACE = "run-stats"
@@ -35,9 +35,9 @@ module DiscourseDataExplorer
       # Idempotent: `after_initialize` runs once per boot, but the Kit registry
       # is process-lifetime state, so dev reloads may re-enter (spike trade-off).
       def register!
-        return if JsonApiKit.extensions.key?(NAMESPACE)
+        return if JsonApiKit.plugins.key?(NAMESPACE)
 
-        JsonApiKit.register_extension(namespace: NAMESPACE) do
+        JsonApiKit.register_plugin(namespace: NAMESPACE) do
           register_relationship(
             :queries,
             resource: StatsResource,

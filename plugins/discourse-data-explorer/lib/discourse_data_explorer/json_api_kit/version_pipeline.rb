@@ -52,7 +52,7 @@ module DiscourseDataExplorer
           up_keys(keys, changes, virtual:) do |change|
             [
               change.field_renames_for(type),
-              change.filter_renames_for(type).merge(extension_filter_renames(change, type)),
+              change.filter_renames_for(type).merge(plugin_filter_renames(change, type)),
             ]
           end
         end
@@ -75,7 +75,7 @@ module DiscourseDataExplorer
           down_keys(keys, changes, virtual:) do |change|
             [
               change.field_renames_for(type),
-              change.filter_renames_for(type).merge(extension_filter_renames(change, type)),
+              change.filter_renames_for(type).merge(plugin_filter_renames(change, type)),
             ]
           end
         end
@@ -104,14 +104,14 @@ module DiscourseDataExplorer
 
         private
 
-        # Extensions' filter renames, projected (namespace-prefixed) onto the
-        # surface type by their owner — see Extension#filter_renames_on.
-        def extension_filter_renames(change, surface_type)
+        # Plugins' filter renames, projected (namespace-prefixed) onto the
+        # surface type by their owner — see Plugin#filter_renames_on.
+        def plugin_filter_renames(change, surface_type)
           JsonApiKit
-            .extensions
+            .plugins
             .values
-            .reduce({}) do |merged, extension|
-              merged.merge(extension.filter_renames_on(surface_type, change:))
+            .reduce({}) do |merged, plugin|
+              merged.merge(plugin.filter_renames_on(surface_type, change:))
             end
         end
 

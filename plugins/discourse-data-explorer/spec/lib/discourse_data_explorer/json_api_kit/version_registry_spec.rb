@@ -45,23 +45,23 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
 
   describe "owner-scoped timelines" do
     let(:core_change) { change_class("2026-06-15") }
-    let(:extension_change) { change_class("2026-07-05") }
+    let(:plugin_change) { change_class("2026-07-05") }
 
     before do
       registry.register(core_change)
-      registry.register(extension_change, owner: "solved")
+      registry.register(plugin_change, owner: "solved")
     end
 
-    it "excludes extension changes from the snap set" do
+    it "excludes plugin changes from the snap set" do
       expect(registry.resolve("2026-07-06", today:).to_s).to eq("2026-06-15")
     end
 
-    it "excludes extension changes from the current version" do
+    it "excludes plugin changes from the current version" do
       expect(registry.current_version.to_s).to eq("2026-06-15")
     end
 
-    it "keeps extension changes in the gap" do
-      expect(registry.gap_for(registry.resolve("2026-06-15", today:))).to eq([extension_change])
+    it "keeps plugin changes in the gap" do
+      expect(registry.gap_for(registry.resolve("2026-06-15", today:))).to eq([plugin_change])
     end
 
     describe "#resolve_for" do

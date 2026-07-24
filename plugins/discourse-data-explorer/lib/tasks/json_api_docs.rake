@@ -26,7 +26,7 @@ task "data_explorer:json_api_docs" => :environment do
     )
   end
   plugins =
-    DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.map do |namespace|
+    DiscourseDataExplorer::JsonApiKit.plugins.keys.sort.map do |namespace|
       write.call(
         "openapi-jsonapi-plugin-#{namespace}.json",
         DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace),

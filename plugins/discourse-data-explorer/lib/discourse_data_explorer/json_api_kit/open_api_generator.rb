@@ -144,9 +144,9 @@ module DiscourseDataExplorer
       # plugin's OWN versions — the downgrade runs through its own gap only
       # (base-governed surfaces never move with a plugin pin).
       def document_for(namespace, at: nil)
-        extension = JsonApiKit.extensions.fetch(namespace)
-        entries = plugin_changelog_entries(extension)
-        description = [plugin_intro(extension), changelog_markdown(entries)].compact.join("\n\n")
+        plugin = JsonApiKit.plugins.fetch(namespace)
+        entries = plugin_changelog_entries(plugin)
+        description = [plugin_intro(plugin), changelog_markdown(entries)].compact.join("\n\n")
         document = {
           "openapi" => "3.1.0",
           "info" => {
@@ -155,17 +155,17 @@ module DiscourseDataExplorer
             "description" => description,
           },
           "x-changelog" => entries,
-          "tags" => plugin_tags(extension),
-          "paths" => plugin_paths(extension),
+          "tags" => plugin_tags(plugin),
+          "paths" => plugin_paths(plugin),
           "components" => {
-            "schemas" => plugin_schemas(extension),
+            "schemas" => plugin_schemas(plugin),
           },
         }
         return document if at.nil?
 
         version = ApiVersion.parse(at)
         document["info"]["version"] = version.to_s
-        downgrade_plugin!(document, extension, version)
+        downgrade_plugin!(document, plugin, version)
       end
 
       private
@@ -245,14 +245,14 @@ module DiscourseDataExplorer
 
       def primary_resource(endpoint) = endpoint[:controller]._jsonapi_config.serializer_class
 
-      # A relationship named after a registered namespace is that extension's
+      # A relationship named after a registered namespace is that plugin's
       # contribution (the name IS the namespace, by design) — excluded from the
       # core projection.
       def relationship_definitions(resource)
         definitions =
           resource.respond_to?(:relationship_definitions) ? resource.relationship_definitions : {}
         return definitions if @scope == :site
-        definitions.reject { |name, _| JsonApiKit.extensions.key?(name.to_s) }
+        definitions.reject { |name, _| JsonApiKit.plugins.key?(name.to_s) }
       end
 
       def attribute_definitions(resource)
@@ -278,7 +278,7 @@ module DiscourseDataExplorer
 
       # The registry is a dated changelog — descriptions are mandatory on every
       # change. Newest first, one chronological list across owners (defaults
-      # resolve one date against every timeline); extension-owned entries carry
+      # resolve one date against every timeline); plugin-owned entries carry
       # their component so readers and machines can tell the clocks apart.
       def changelog_entries
         @changelog_entries ||=
@@ -329,16 +329,16 @@ module DiscourseDataExplorer
 
       # Its own changes only — the component label is redundant inside its own
       # document.
-      def plugin_changelog_entries(extension)
+      def plugin_changelog_entries(plugin)
         changes =
           JsonApiKit.api_versions.changes.select do
-            JsonApiKit.api_versions.owner_of(it) == extension.namespace
+            JsonApiKit.api_versions.owner_of(it) == plugin.namespace
           end
         build_changelog(changes).each { |entry| entry["changes"].each { it.delete("component") } }
       end
 
-      def plugin_intro(extension)
-        namespace = extension.namespace
+      def plugin_intro(plugin)
+        namespace = plugin.namespace
         current = JsonApiKit.api_versions.versions_for(namespace).last
         <<~MD
           What the `#{namespace}` plugin adds to the Discourse JSON:API. This document
@@ -350,41 +350,41 @@ module DiscourseDataExplorer
         MD
       end
 
-      def plugin_tags(extension)
+      def plugin_tags(plugin)
         @endpoints
           .filter_map do |endpoint|
             resource = primary_resource(endpoint)
-            next if !extension.attached_types.include?(resource.record_type.to_s)
+            next if !plugin.attached_types.include?(resource.record_type.to_s)
             { "name" => tag_name(resource) }
           end
           .uniq
       end
 
-      def plugin_paths(extension)
+      def plugin_paths(plugin)
         @endpoints.each_with_object({}) do |endpoint, result|
           resource = primary_resource(endpoint)
-          next if !extension.attached_types.include?(resource.record_type.to_s)
-          result[endpoint[:path]] = { "get" => contribution_operation(endpoint, extension) }
+          next if !plugin.attached_types.include?(resource.record_type.to_s)
+          result[endpoint[:path]] = { "get" => contribution_operation(endpoint, plugin) }
         end
       end
 
       # A valid-but-partial operation: only what the plugin adds to the core
       # endpoint, with prose pointing at the core document for the rest. The
       # operationId is the plugin's own (captured examples key on it).
-      def contribution_operation(endpoint, extension)
+      def contribution_operation(endpoint, plugin)
         resource = primary_resource(endpoint)
         type = resource.record_type.to_s
-        related = extension.relationships[type][:resource]
+        related = plugin.relationships[type][:resource]
         with_examples(
           {
             "tags" => [tag_name(resource)],
-            "summary" => "List #{type.humanize.downcase} — #{extension.namespace} contributions",
-            "operationId" => "list#{type.camelize}#{extension.namespace.tr("-", "_").camelize}",
-            "description" => contribution_description(extension, type),
+            "summary" => "List #{type.humanize.downcase} — #{plugin.namespace} contributions",
+            "operationId" => "list#{type.camelize}#{plugin.namespace.tr("-", "_").camelize}",
+            "description" => contribution_description(plugin, type),
             "parameters" => [
               version_header_parameter,
-              *extension.filters_for(type).map { |name, defn| filter_parameter(name, defn) },
-              list_parameter("include", [extension.namespace]),
+              *plugin.filters_for(type).map { |name, defn| filter_parameter(name, defn) },
+              list_parameter("include", [plugin.namespace]),
               list_parameter(
                 "fields[#{related.record_type}]",
                 attribute_definitions(related).keys.map(&:to_s),
@@ -393,7 +393,7 @@ module DiscourseDataExplorer
             "responses" => {
               "200" =>
                 json_response(
-                  "With `include=#{extension.namespace}`, the plugin's resources appear in " \
+                  "With `include=#{plugin.namespace}`, the plugin's resources appear in " \
                     "the collection document's `included`.",
                   {
                     "type" => "object",
@@ -410,18 +410,18 @@ module DiscourseDataExplorer
         )
       end
 
-      def contribution_description(extension, type)
-        relationship = extension.relationships[type]
+      def contribution_description(plugin, type)
+        relationship = plugin.relationships[type]
         description =
-          "Query-surface parameters the `#{extension.namespace}` plugin adds to this " \
+          "Query-surface parameters the `#{plugin.namespace}` plugin adds to this " \
             "endpoint. Each #{type.singularize} gains an include-gated " \
-            "`#{extension.namespace}` relationship"
+            "`#{plugin.namespace}` relationship"
         return "#{description}." if relationship[:description].blank?
         "#{description} — #{relationship[:description]}"
       end
 
-      def plugin_schemas(extension)
-        extension
+      def plugin_schemas(plugin)
+        plugin
           .relationships
           .values
           .map { it[:resource] }
@@ -429,13 +429,13 @@ module DiscourseDataExplorer
           .to_h { [it.record_type.to_s, resource_schema(it)] }
       end
 
-      def downgrade_plugin!(document, extension, version)
+      def downgrade_plugin!(document, plugin, version)
         gap =
           JsonApiKit
             .api_versions
             .changes
             .select do
-              JsonApiKit.api_versions.owner_of(it) == extension.namespace && it.version > version
+              JsonApiKit.api_versions.owner_of(it) == plugin.namespace && it.version > version
             end
             .reverse
         return document if gap.empty?
@@ -588,7 +588,7 @@ module DiscourseDataExplorer
             version_header_parameter,
             *filter_parameters(resource),
             list_parameter("sort", config.sorts.keys.flat_map { [it, "-#{it}"] }),
-            list_parameter("include", config.allowed_includes + extension_includes(resource)),
+            list_parameter("include", config.allowed_includes + plugin_includes(resource)),
             *fieldset_parameters,
             page_size_parameter(config),
             cursor_parameter("page[after]"),
@@ -775,13 +775,13 @@ module DiscourseDataExplorer
         }
       end
 
-      # Extension filters (auto-namespaced keys) document from the same typed,
+      # Plugin filters (auto-namespaced keys) document from the same typed,
       # described declarations as the resource's own — merged from the registry,
       # mirroring the runtime's filter lookup.
       def filter_parameters(resource)
         definitions = resource.filter_definitions
         if @scope == :site
-          definitions = definitions.merge(JsonApiKit.extension_filters_for(resource.record_type))
+          definitions = definitions.merge(JsonApiKit.plugin_filters_for(resource.record_type))
         end
         definitions.map { |name, definition| filter_parameter(name, definition) }
       end
@@ -812,9 +812,9 @@ module DiscourseDataExplorer
         }
       end
 
-      def extension_includes(resource)
+      def plugin_includes(resource)
         return [] if @scope != :site
-        JsonApiKit.extension_namespaces_for(resource.record_type)
+        JsonApiKit.plugin_namespaces_for(resource.record_type)
       end
 
       def fieldset_parameters

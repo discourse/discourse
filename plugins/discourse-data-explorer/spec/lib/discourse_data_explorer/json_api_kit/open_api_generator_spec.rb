@@ -175,7 +175,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       )
     end
 
-    it "enumerates the allowed include paths, extension namespaces included" do
+    it "enumerates the allowed include paths, plugin namespaces included" do
       expect(include_parameter.dig("schema", "items", "enum")).to contain_exactly(
         "user",
         "groups",
@@ -223,10 +223,10 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     end
   end
 
-  # The run-stats extension is registered for real at boot (docs/plugins-design.md,
-  # docs/api-docs-generation.md §8) — the generator documents extension contributions
+  # The run-stats plugin is registered for real at boot (docs/plugins-design.md,
+  # docs/api-docs-generation.md §8) — the generator documents plugin contributions
   # from the same live registry state the runtime serves.
-  describe "extension contributions" do
+  describe "plugin contributions" do
     let(:parameters) { index_operation["parameters"] }
     let(:run_stats_attribute) do
       schemas.dig("run-stats", "properties", "attributes", "properties", "stale")
@@ -235,7 +235,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       schemas.dig("queries", "properties", "relationships", "properties", "run-stats")
     end
 
-    it "declares the extension resource schema with its typed attribute" do
+    it "declares the plugin resource schema with its typed attribute" do
       expect(run_stats_attribute).to eq(
         "type" => %w[boolean null],
         "description" => "Whether the query has never been run.",
@@ -243,7 +243,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       )
     end
 
-    it "links the extended resource to the extension type" do
+    it "links the extended resource to the plugin type" do
       expect(run_stats_relationship.dig("properties", "data", "properties", "type", "const")).to eq(
         "run-stats",
       )
@@ -271,7 +271,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(include_parameter.dig("schema", "items", "enum")).to include("run-stats")
     end
 
-    it "offers a sparse fieldset for the extension type" do
+    it "offers a sparse fieldset for the plugin type" do
       fields_parameter = parameters.find { it["name"] == "fields[run-stats]" }
       expect(fields_parameter.dig("schema", "items", "enum")).to eq(["stale"])
     end
@@ -330,7 +330,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
 
     # One chronological list — defaults resolve one date against every timeline —
     # with foreign entries labeled by their owning component.
-    it "labels extension-owned changes with their component" do
+    it "labels plugin-owned changes with their component" do
       run_stats_entry = document["x-changelog"].find { it["version"] == "2026-06-20" }
       expect(run_stats_entry["changes"]).to eq(
         [
@@ -346,7 +346,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(document.dig("info", "description")).to include("# Changelog", "## 2026-06-15")
     end
 
-    it "prefixes extension entries with their namespace in the markdown changelog" do
+    it "prefixes plugin entries with their namespace in the markdown changelog" do
       expect(document.dig("info", "description")).to include(
         "- `run-stats`: Renames the run-stats `outdated` attribute to `stale`.",
       )
@@ -537,9 +537,9 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
     # The versioned document is the no-override contract: every component
     # resolved at the pin against its own timeline — exactly what a client
     # sending only `Api-Version: <pin>` receives (docs/api-docs-generation.md §8).
-    context "when pinned before the extension's change" do
+    context "when pinned before the plugin's change" do
       let(:version) { "2026-05-01" }
-      let(:versioned_extension_attributes) do
+      let(:versioned_plugin_attributes) do
         versioned.dig(
           "components",
           "schemas",
@@ -550,15 +550,15 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
         )
       end
 
-      it "renames the extension attribute schema back" do
-        expect(versioned_extension_attributes).to have_key("outdated")
+      it "renames the plugin attribute schema back" do
+        expect(versioned_plugin_attributes).to have_key("outdated")
       end
 
       it "renames the namespaced filter parameter back" do
         expect(versioned_parameters.map { it["name"] }).to include("filter[run-stats.outdated]")
       end
 
-      it "renames the extension fieldset enum back" do
+      it "renames the plugin fieldset enum back" do
         expect(
           versioned_parameters
             .find { it["name"] == "fields[run-stats]" }
@@ -567,10 +567,10 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       end
     end
 
-    context "when pinned past the extension's change" do
+    context "when pinned past the plugin's change" do
       let(:version) { "2026-07-01" }
 
-      it "keeps the extension's latest shape" do
+      it "keeps the plugin's latest shape" do
         expect(
           versioned.dig(
             "components",
@@ -595,7 +595,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       core_document.dig("paths", "/data-explorer/api/queries", "get", "parameters")
     end
 
-    it "excludes extension resource schemas" do
+    it "excludes plugin resource schemas" do
       expect(core_document.dig("components", "schemas").keys).not_to include("run-stats")
     end
 

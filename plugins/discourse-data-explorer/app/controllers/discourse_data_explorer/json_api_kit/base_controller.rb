@@ -63,13 +63,13 @@ module DiscourseDataExplorer
           # Cardinality is the wire-level fact (to-one/to-many) — the gem's
           # has_one/belongs_to labels render identically and must not diff.
           # Core-scoped: a relationship named after a registered namespace is an
-          # extension's contribution — it comes and goes with its owner and
-          # belongs to a per-extension descriptor, never to the core baseline.
+          # plugin's contribution — it comes and goes with its owner and
+          # belongs to a per-plugin descriptor, never to the core baseline.
           "relationships" =>
             serializer
               .relationships_to_serialize
               .filter_map do |name, rel|
-                next if JsonApiKit.extensions.key?(name.to_s)
+                next if JsonApiKit.plugins.key?(name.to_s)
                 kind = rel.relationship_type.to_s == "has_many" ? "to_many" : "to_one"
                 [name.to_s, kind]
               end
@@ -101,9 +101,9 @@ module DiscourseDataExplorer
       def cfg = self.class._jsonapi_config
 
       # Mandatory version header (Stripe-style snap-down): a base date, plus
-      # optional per-extension overrides (`2026-01-31; some-plugin=2026-07-15`).
+      # optional per-plugin overrides (`2026-01-31; some-plugin=2026-07-15`).
       # The base snaps against the core timeline only; each override snaps
-      # against that extension's own timeline. Success: the fully-resolved string
+      # against that plugin's own timeline. Success: the fully-resolved string
       # is echoed back — clients store it verbatim. Failure: 400 whose body
       # teaches the current version. See docs/plugins-design.md (C).
       def resolve_api_version
@@ -111,7 +111,7 @@ module DiscourseDataExplorer
         @api_version = JsonApiKit.api_versions.resolve(base)
         @api_version_overrides =
           overrides.to_h do |namespace, date|
-            if !JsonApiKit.extensions.key?(namespace)
+            if !JsonApiKit.plugins.key?(namespace)
               raise VersionRegistry::UnknownComponent, "unknown component `#{namespace}`"
             end
             if JsonApiKit.core_plugin?(namespace)
@@ -194,7 +194,7 @@ module DiscourseDataExplorer
 
       # The chain of changes separating the caller's version from latest — empty for
       # current clients, so the pipeline is a no-op on the hot path. Overridden
-      # extensions are governed by their own resolved dates.
+      # plugins are governed by their own resolved dates.
       def api_version_gap
         @api_version_gap ||=
           JsonApiKit.api_versions.gap_for(@api_version, overrides: @api_version_overrides)
@@ -275,7 +275,7 @@ module DiscourseDataExplorer
 
       def apply_filters(scope)
         (params[:filter] || {}).each do |name, value|
-          block = cfg.filters[name.to_s] || extension_filters.dig(name.to_s, :block) or next
+          block = cfg.filters[name.to_s] || plugin_filters.dig(name.to_s, :block) or next
           scope = instance_exec(scope, value, &block)
         end
         scope
@@ -283,8 +283,8 @@ module DiscourseDataExplorer
 
       # Foreign owners' contributions to this resource's surface (namespaced filter
       # keys, include-gated relationships) — see docs/plugins-design.md (B/D).
-      def extension_filters = JsonApiKit.extension_filters_for(primary_resource_type)
-      def extension_namespaces = JsonApiKit.extension_namespaces_for(primary_resource_type)
+      def plugin_filters = JsonApiKit.plugin_filters_for(primary_resource_type)
+      def plugin_namespaces = JsonApiKit.plugin_namespaces_for(primary_resource_type)
 
       # The keyset for the request: the requested derived sorts (or the default
       # sort), plus an `id` tiebreak to make the order total. Virtual (block)
@@ -332,10 +332,10 @@ module DiscourseDataExplorer
       # JSON:API: an unsupported filter/sort/include MUST 400. The page family is
       # keyset-only — `page[number]` (or any other member) is unsupported.
       def reject_unknown_query_params!
-        bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys - extension_filters.keys
+        bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys - plugin_filters.keys
         bad +=
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
-        bad += requested_include_paths - cfg.allowed_includes - extension_namespaces
+        bad += requested_include_paths - cfg.allowed_includes - plugin_namespaces
         if params[:page].respond_to?(:keys)
           bad += (params[:page].keys.map(&:to_s) - %w[size after before]).map { "page[#{it}]" }
         end

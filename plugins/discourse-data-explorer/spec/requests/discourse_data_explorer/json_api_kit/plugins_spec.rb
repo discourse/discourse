@@ -7,7 +7,7 @@
 # (unregistered ⇒ strict 400s), the atomic ownership enforcement claimed in A/B,
 # and C's timeline semantics (own timeline frozen at the pin, overrides,
 # CORE_PLUGINS riding the core timeline).
-RSpec.describe "JSON:API Kit plugin extensions" do
+RSpec.describe "JSON:API Kit plugin plugins" do
   fab!(:admin)
   fab!(:ran_query) { Fabricate(:query, hidden: false, last_run_at: Time.utc(2026, 7, 1, 10, 0)) }
   fab!(:never_run_query) { Fabricate(:query, hidden: false, last_run_at: nil) }
@@ -95,7 +95,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     end
   end
 
-  describe "the extension's own timeline" do
+  describe "the plugin's own timeline" do
     context "when an old-pinned client includes the namespace" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-01") }
 
@@ -151,11 +151,11 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     context "when the pinned date falls between the change and the next core version" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-25") }
 
-      it "snaps past the extension's change to the core timeline" do
+      it "snaps past the plugin's change to the core timeline" do
         expect(response.headers["Api-Version"]).to eq("2026-06-15")
       end
 
-      it "keeps the extension frozen at the pin" do
+      it "keeps the plugin frozen at the pin" do
         expect(included_attributes).to contain_exactly(
           { "outdated" => false },
           { "outdated" => true },
@@ -163,12 +163,12 @@ RSpec.describe "JSON:API Kit plugin extensions" do
       end
     end
 
-    context "with an override unfreezing the extension on an old base pin" do
+    context "with an override unfreezing the plugin on an old base pin" do
       before do
         get_queries(params: { include: "run-stats" }, version: "2026-06-01; run-stats=2026-06-25")
       end
 
-      it "serves the extension's latest shape" do
+      it "serves the plugin's latest shape" do
         expect(included_attributes).to contain_exactly({ "stale" => false }, { "stale" => true })
       end
 
@@ -181,12 +181,12 @@ RSpec.describe "JSON:API Kit plugin extensions" do
       end
     end
 
-    context "with an override pinning the extension older than the base" do
+    context "with an override pinning the plugin older than the base" do
       before do
         get_queries(params: { include: "run-stats" }, version: "2026-07-08; run-stats=2026-06-01")
       end
 
-      it "serves the extension's old shape" do
+      it "serves the plugin's old shape" do
         expect(included_attributes).to contain_exactly(
           { "outdated" => false },
           { "outdated" => true },
@@ -207,26 +207,26 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     end
   end
 
-  context "with the extension granted core-timeline membership" do
+  context "with the plugin granted core-timeline membership" do
     around do |example|
-      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      DiscourseDataExplorer::JsonApiKit.unregister_plugin("run-stats")
       stub_const(DiscourseDataExplorer::JsonApiKit, :CORE_PLUGINS, ["run-stats"]) do
         DiscourseDataExplorer::RunStats.register!
         example.run
       end
     ensure
-      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      DiscourseDataExplorer::JsonApiKit.unregister_plugin("run-stats")
       DiscourseDataExplorer::RunStats.register!
     end
 
     context "when the pinned date falls between the change and the next core version" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-25") }
 
-      it "snaps to the extension's change date" do
+      it "snaps to the plugin's change date" do
         expect(response.headers["Api-Version"]).to eq("2026-06-20")
       end
 
-      it "serves the extension's latest shape" do
+      it "serves the plugin's latest shape" do
         expect(included_attributes).to contain_exactly({ "stale" => false }, { "stale" => true })
       end
     end
@@ -234,7 +234,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     context "when the client is pinned before the change" do
       before { get_queries(params: { include: "run-stats" }, version: "2026-06-15") }
 
-      it "serves the extension's old shape" do
+      it "serves the plugin's old shape" do
         expect(included_attributes).to contain_exactly(
           { "outdated" => false },
           { "outdated" => true },
@@ -251,9 +251,9 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     end
   end
 
-  context "without the extension" do
+  context "without the plugin" do
     around do |example|
-      DiscourseDataExplorer::JsonApiKit.unregister_extension("run-stats")
+      DiscourseDataExplorer::JsonApiKit.unregister_plugin("run-stats")
       example.run
     ensure
       DiscourseDataExplorer::RunStats.register!
@@ -290,7 +290,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     let(:foreign_type_registration) do
       version_change = foreign_type_change
       -> do
-        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "query-health") do
+        DiscourseDataExplorer::JsonApiKit.register_plugin(namespace: "query-health") do
           register_version_change version_change
         end
       end
@@ -304,7 +304,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
     let(:colliding_registration) do
       resource = user_stats_resource
       -> do
-        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "user") do
+        DiscourseDataExplorer::JsonApiKit.register_plugin(namespace: "user") do
           register_relationship(:queries, resource:) { nil }
         end
       end
@@ -317,7 +317,7 @@ RSpec.describe "JSON:API Kit plugin extensions" do
           attributes :stale
         end
       -> do
-        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "plain-stats") do
+        DiscourseDataExplorer::JsonApiKit.register_plugin(namespace: "plain-stats") do
           register_relationship(:queries, resource: serializer) { nil }
         end
       end
@@ -325,27 +325,27 @@ RSpec.describe "JSON:API Kit plugin extensions" do
 
     it "rejects a version change targeting a foreign type" do
       expect { foreign_type_registration.call }.to raise_error(
-        DiscourseDataExplorer::JsonApiKit::Extension::OwnershipError,
+        DiscourseDataExplorer::JsonApiKit::Plugin::OwnershipError,
       )
     end
 
     it "rejects a namespace colliding with a member name on the attached type" do
       expect { colliding_registration.call }.to raise_error(
-        DiscourseDataExplorer::JsonApiKit::Extension::NamespaceError,
+        DiscourseDataExplorer::JsonApiKit::Plugin::NamespaceError,
       )
     end
 
     it "rejects a related resource that is not a Kit resource class" do
       expect { plain_serializer_registration.call }.to raise_error(
-        DiscourseDataExplorer::JsonApiKit::Extension::Error,
+        DiscourseDataExplorer::JsonApiKit::Plugin::Error,
         /Kit resource classes/,
       )
     end
 
     it "rejects a second registration of an already-registered namespace" do
       expect {
-        DiscourseDataExplorer::JsonApiKit.register_extension(namespace: "run-stats") {}
-      }.to raise_error(DiscourseDataExplorer::JsonApiKit::Extension::NamespaceError)
+        DiscourseDataExplorer::JsonApiKit.register_plugin(namespace: "run-stats") {}
+      }.to raise_error(DiscourseDataExplorer::JsonApiKit::Plugin::NamespaceError)
     end
   end
 end
