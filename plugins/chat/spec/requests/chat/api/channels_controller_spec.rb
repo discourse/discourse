@@ -391,6 +391,32 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when public channels are disabled" do
+      before { SiteSetting.enable_public_channels = false }
+
+      it "returns an actionable error message" do
+        expect { post "/chat/api/channels", params: }.to not_change { Chat::Channel.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("chat.errors.public_channels_disabled"),
+        )
+      end
+
+      context "when the user is not staff" do
+        fab!(:user)
+
+        before { sign_in(user) }
+
+        it "returns a generic permission error" do
+          post "/chat/api/channels", params: params
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        end
+      end
+    end
+
     it "creates a channel using the user-provided slug" do
       new_params = params.dup
       new_params[:channel][:slug] = "wow-so-cool"

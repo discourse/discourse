@@ -83,6 +83,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
+      on_failed_policy(:public_channels_enabled) do
+        render_json_error(I18n.t("chat.errors.public_channels_disabled"))
+      end
       on_failed_policy(:can_create_channel_in_category) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_channel_does_not_exist) do
         raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
@@ -128,7 +131,6 @@ class Chat::Api::ChannelsController < Chat::ApiController
       end
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:check_channel_permission) { raise Discourse::InvalidAccess }
-      on_failed_policy(:no_direct_message_channel) { raise Discourse::InvalidAccess }
     end
   end
 

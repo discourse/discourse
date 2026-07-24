@@ -275,6 +275,39 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
   end
 
+  describe "#bulk_destroy" do
+    fab!(:other_user, :user)
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, user: other_user) }
+
+    context "when user is staff" do
+      fab!(:current_user, :admin)
+
+      it "deletes the messages" do
+        delete "/chat/api/channels/#{channel.id}/messages",
+               params: {
+                 message_ids: [message_1.id, message_2.id],
+               }
+
+        expect(response.status).to eq(200)
+        expect(Chat::Message.where(id: [message_1.id, message_2.id])).to be_empty
+      end
+    end
+
+    context "when user can't delete the messages" do
+      it "returns a generic permission error" do
+        delete "/chat/api/channels/#{channel.id}/messages",
+               params: {
+                 message_ids: [message_1.id, message_2.id],
+               }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        expect(Chat::Message.where(id: [message_1.id, message_2.id]).count).to eq(2)
+      end
+    end
+  end
+
   describe "#update" do
     context "when message is updated" do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
@@ -319,35 +352,70 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         before { channel.membership_for(current_user).destroy! }
 
         it "returns a 404" do
-          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}"
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(404)
         end
       end
 
       context "when user is not the author" do
         fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
-        it "returns a 422" do
+        it "returns a 403" do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
               params: {
                 message: "abcdefg",
               }
 
-          expect(response.status).to eq(422)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
         end
       end
 
       context "when current user is silenced" do
         before { UserSilencer.new(current_user).silence }
 
-        it "returns a 422" do
+        it "returns a 403" do
+          put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+              params: {
+                message: "abcdefg",
+              }
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the channel is closed" do
+        before { channel.closed!(Discourse.system_user) }
+
+        it "returns an actionable error message" do
           put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
               params: {
                 message: "abcdefg",
               }
 
           expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to contain_exactly(
+            I18n.t("chat.errors.channel_modify_message_disallowed.closed"),
+          )
+          expect(message_1.reload.message).not_to eq("abcdefg")
+        end
+
+        context "when the user is not the author" do
+          fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+          it "returns a 403" do
+            put "/chat/api/channels/#{channel.id}/messages/#{message_1.id}",
+                params: {
+                  message: "abcdefg",
+                }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          end
         end
       end
 
@@ -376,8 +444,8 @@ RSpec.describe Chat::Api::ChannelMessagesController do
                 message: "edited message",
               }
 
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.parsed_body["failed"]).to eq("FAILED")
+          expect(response).to have_http_status(:forbidden)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
           expect(message.reload.message).to eq("original message")
         end
       end

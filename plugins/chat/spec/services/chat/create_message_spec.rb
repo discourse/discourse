@@ -332,7 +332,7 @@ RSpec.describe Chat::CreateMessage do
             context "when user can't create a message in the channel" do
               before { channel.closed!(Discourse.system_user) }
 
-              it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+              it { is_expected.to fail_a_policy(:channel_allows_message_creation) }
             end
 
             context "when user can create a message in the channel" do

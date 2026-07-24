@@ -1050,12 +1050,6 @@ RSpec.describe Chat::UpdateMessage do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when user can't modify a channel message" do
-      before { channel_1.update!(status: :read_only) }
-
-      it { is_expected.to fail_a_policy(:can_modify_channel_message) }
-    end
-
     context "when user is not member of the channel" do
       fab!(:channel_2, :chat_channel)
       fab!(:other_message) { Fabricate(:chat_message, chat_channel: channel_2) }
@@ -1070,6 +1064,24 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       it { is_expected.to fail_to_find_a_model(:membership) }
+    end
+
+    context "when user can't edit the message" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      it { is_expected.to fail_a_policy(:can_edit_message) }
+
+      context "when the channel is also closed" do
+        before { channel_1.update!(status: :closed) }
+
+        it { is_expected.to fail_a_policy(:can_edit_message) }
+      end
+    end
+
+    context "when the channel doesn't allow modifying messages" do
+      before { channel_1.update!(status: :read_only) }
+
+      it { is_expected.to fail_a_policy(:channel_allows_message_modification) }
     end
 
     context "when edit grace period" do
