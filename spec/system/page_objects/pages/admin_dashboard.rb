@@ -23,6 +23,17 @@ module PageObjects
         self
       end
 
+      def visit_while_request_pending
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.goto("#{page.server_url}/admin")
+          playwright_page
+            .locator(".db-main [data-section-id], .db-main__empty, .nav-pills")
+            .first
+            .wait_for(state: "attached")
+        end
+        self
+      end
+
       def visit_with_custom_range(from:, to:)
         visit_with_query(custom_range_params(from: from, to: to))
       end
@@ -124,6 +135,14 @@ module PageObjects
 
       def select_preset(period)
         open_custom_date_range.select_preset(preset_label(period))
+        self
+      end
+
+      def select_preset_while_request_pending(period)
+        page.driver.with_playwright_page do |playwright_page|
+          playwright_page.locator(".db-date-range__trigger").click
+          playwright_page.get_by_role("button", name: preset_label(period), exact: true).click
+        end
         self
       end
 
@@ -248,12 +267,12 @@ module PageObjects
       end
 
       def wait_for_section_request(id)
-        wait_for { requested_section_ids.include?(id) }
+        wait_until { requested_section_ids.include?(id) }
         self
       end
 
       def wait_for_section_request_count(id, count)
-        wait_for { section_request_count(id) >= count }
+        wait_until { section_request_count(id) >= count }
         self
       end
 
@@ -339,7 +358,9 @@ module PageObjects
                 failed = true
                 route.fulfill(
                   status: 500,
-                  content_type: "application/json",
+                  headers: {
+                    "Content-Type" => "application/json",
+                  },
                   body: %({"id":"#{id}","error":true}),
                 )
               end
@@ -353,6 +374,10 @@ module PageObjects
 
       def section_request_pattern(id)
         "**/admin/dashboard/sections/#{id}.json*"
+      end
+
+      def wait_until
+        Timeout.timeout(Capybara.default_max_wait_time) { sleep 0.01 until yield }
       end
 
       def custom_range_params(from:, to:)
