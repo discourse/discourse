@@ -165,6 +165,20 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
+    // Text sizes are mutually exclusive, so drop the heading block before
+    // wrapping the selection in small.
+    if (exampleKey === "small_text") {
+      const inHeading = [1, 2, 3, 4, 5, 6].some((level) =>
+        isNodeActive(this.view.state, this.schema.nodes.heading, { level })
+      );
+      if (inHeading) {
+        setBlockType(this.schema.nodes.paragraph)(
+          this.view.state,
+          this.view.dispatch
+        );
+      }
+    }
+
     const { state } = this.view;
     const { from, to, empty } = state.selection;
 
@@ -337,6 +351,10 @@ export default class ProsemirrorTextManipulation {
   }
 
   applyHeading(_selection, level) {
+    // Text sizes are mutually exclusive, so drop any inline small wrapping
+    // before changing the block type.
+    this.#removeSmall();
+
     let command;
     if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);
@@ -345,6 +363,35 @@ export default class ProsemirrorTextManipulation {
     }
     command?.(this.view.state, this.view.dispatch);
     this.focus();
+  }
+
+  #removeSmall() {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const ranges = [];
+
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (
+        node.type === this.schema.nodes.html_inline &&
+        node.attrs.tag === "small"
+      ) {
+        ranges.push({
+          from: pos,
+          to: pos + node.nodeSize,
+          content: node.content,
+        });
+      }
+    });
+
+    if (!ranges.length) {
+      return;
+    }
+
+    const tr = state.tr;
+    for (const range of ranges.reverse()) {
+      tr.replaceWith(range.from, range.to, range.content);
+    }
+    this.view.dispatch(tr);
   }
 
   /**
