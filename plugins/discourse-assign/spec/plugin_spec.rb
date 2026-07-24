@@ -254,6 +254,33 @@ RSpec.describe DiscourseAssign do
       end
     end
 
+    describe "on 'user_added_to_group'" do
+      fab!(:group)
+      fab!(:user)
+      fab!(:assigned_by_user, :user)
+      fab!(:visible_user, :user)
+      fab!(:private_message_post) do
+        Fabricate(:private_message_post, user: assigned_by_user, recipient: visible_user)
+      end
+      fab!(:assignment) do
+        Fabricate(
+          :topic_assignment,
+          topic: private_message_post.topic,
+          target: private_message_post.topic,
+          assigned_to: group,
+          assigned_by_user: assigned_by_user,
+        )
+      end
+
+      before { Jobs.run_immediately! }
+
+      it "does not create notifications for users who cannot see the assignment target" do
+        expect(Guardian.new(user).can_see_topic?(private_message_post.topic)).to eq(false)
+
+        expect { group.add(user) }.not_to change { user.notifications.assigned.count }
+      end
+    end
+
     describe "on 'topic_status_updated'" do
       context "when closing a topic" do
         let!(:first_assignment) { Fabricate(:topic_assignment) }
