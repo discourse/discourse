@@ -18,6 +18,20 @@ describe DiscourseAi::Translation do
     end
   end
 
+  describe ".supported_locale_bases_cte" do
+    it "normalizes and deduplicates supported locale bases" do
+      sql = <<~SQL
+        WITH #{described_class.supported_locale_bases_cte}
+        SELECT bases
+        FROM supported
+      SQL
+
+      result = DB.query_single(sql, supported_locales: %w[en_GB EN-us pt-BR])
+
+      expect(result.first).to contain_exactly("en", "pt")
+    end
+  end
+
   describe ".category_scope_condition" do
     it "filters categories for all and public scopes", :aggregate_failures do
       public_category = Fabricate(:category)
