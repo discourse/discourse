@@ -55,6 +55,7 @@ export default class CodeLoginForm extends Component {
   @tracked usernameChecking = false;
   @tracked usernameError;
   @tracked usernameEditable = true;
+  @tracked regenerating = false;
   @tracked avatarTemplate;
   @tracked avatarDetailsLoaded = false;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
@@ -360,11 +361,44 @@ export default class CodeLoginForm extends Component {
       can_upload_avatar: result.can_upload_avatar,
     });
     this.usernameEditable = result.can_edit_username;
-    // Only prefill an email-derived suggestion; otherwise the user picks one.
-    this.username = result.prefill_username ? user.username : "";
+    this.username = user.username;
     this.avatarTemplate = user.avatar_template;
-    if (this.usernameEditable && this.username) {
+    if (this.usernameEditable) {
       this.checkUsernameAvailability();
+    }
+  }
+
+  @action
+  async regenerateUsername() {
+    if (this.regenerating) {
+      return;
+    }
+
+    this.regenerating = true;
+    try {
+      const before = this.username;
+      // Hold the rolling state for at least one animation cycle so a fast
+      // response doesn't cut the dice spin (and the text fade) short.
+      const [result] = await Promise.all([
+        ajax("/u/random-username.json"),
+        new Promise((resolve) => discourseLater(resolve, 400)),
+      ]);
+
+      // Don't touch state (or fire the availability check) if the component
+      // was torn down mid-roll, or clobber a name the user typed while the
+      // request was in flight.
+      if (this.isDestroying || this.username !== before) {
+        return;
+      }
+
+      this.username = result.username;
+      this.usernameError = null;
+      this.usernameAvailable = false;
+      await this.checkUsernameAvailability();
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.regenerating = false;
     }
   }
 
@@ -731,18 +765,30 @@ export default class CodeLoginForm extends Component {
                 <label for="code-login-username">
                   {{i18n "code_login.username_label"}}
                 </label>
-                <input
-                  {{on "input" this.usernameChanged}}
-                  type="text"
-                  value={{this.username}}
-                  id="code-login-username"
-                  name="username"
-                  autocomplete="off"
-                  placeholder={{i18n "code_login.username_placeholder"}}
-                  class="code-login-form__new-account-username"
-                  aria-invalid={{if this.usernameError "true"}}
-                  aria-describedby="code-login-username-error"
-                />
+                <div class="code-login-form__username-input">
+                  <input
+                    {{on "input" this.usernameChanged}}
+                    type="text"
+                    value={{this.username}}
+                    id="code-login-username"
+                    name="username"
+                    autocomplete="off"
+                    placeholder={{i18n "code_login.username_placeholder"}}
+                    class="code-login-form__new-account-username
+                      {{if this.regenerating '--swapping'}}"
+                    aria-invalid={{if this.usernameError "true"}}
+                    aria-describedby="code-login-username-error"
+                  />
+                  <DButton
+                    @action={{this.regenerateUsername}}
+                    @icon="dice"
+                    @title="code_login.regenerate_username"
+                    @ariaLabel="code_login.regenerate_username"
+                    aria-busy={{if this.regenerating "true"}}
+                    class="btn-transparent code-login-form__username-regen
+                      {{if this.regenerating '--rolling'}}"
+                  />
+                </div>
                 <div
                   id="code-login-username-error"
                   class="code-login-form__error"

@@ -123,7 +123,6 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
           account_created: true,
           user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
           can_edit_username: true,
-          prefill_username: false,
         });
       }
 
@@ -160,6 +159,81 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
       "the trimmed name is sent"
     );
     assert.dom(".code-login-form__complete-step").exists();
+    assert
+      .dom("#code-login-username")
+      .hasValue("jane", "the assigned username is prefilled");
+  });
+
+  test("regenerates a random username suggestion on the account-ready step", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+      })
+    );
+    pretender.get("/u/random-username.json", () =>
+      response({ username: "QuietFalcon" })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.dom("#code-login-username").hasValue("jane");
+
+    await click(".code-login-form__username-regen");
+
+    assert.dom("#code-login-username").hasValue("QuietFalcon");
+    assert.dom(".code-login-form__continue-to-site").isEnabled();
+  });
+
+  test("keeps continue disabled when the regenerated username is unavailable", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: true,
+      })
+    );
+    // The default pretender handler reports the username "taken" as
+    // unavailable with the suggestion "nottaken".
+    pretender.get("/u/random-username.json", () =>
+      response({ username: "taken" })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    await click(".code-login-form__username-regen");
+
+    assert.dom("#code-login-username").hasValue("taken");
+    assert
+      .dom(".code-login-form__username-field .code-login-form__error")
+      .hasText(
+        i18n("code_login.username_unavailable", { suggestion: "nottaken" })
+      );
+    assert.dom(".code-login-form__continue-to-site").isDisabled();
+  });
+
+  test("shows a fixed username without editing controls when it can't be changed", async function (assert) {
+    stubCodeRequest();
+    pretender.post("/session/login-code/verify", () =>
+      response({
+        account_created: true,
+        user: { id: 1, username: "jane", avatar_template: "/letter/j.png" },
+        can_edit_username: false,
+      })
+    );
+
+    await goToCodeStep();
+    await fillIn(".d-otp-input", "123456");
+
+    assert.dom(".code-login-form__new-account-username").hasText("jane");
+    assert.dom("#code-login-username").doesNotExist();
+    assert.dom(".code-login-form__username-regen").doesNotExist();
+    assert.dom(".code-login-form__continue-to-site").isEnabled();
   });
 
   test("returns to the email step when using a different email", async function (assert) {

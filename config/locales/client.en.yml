@@ -3013,6 +3013,7 @@ en:
       account_ready_continue: "Continue"
       username_label: "Username"
       username_placeholder: "Choose a username"
+      regenerate_username: "Suggest a random username"
       change_avatar: "Change avatar"
       username_taken: "That username is taken. Try another."
       username_unavailable: "That username isn't available. Try %{suggestion}."

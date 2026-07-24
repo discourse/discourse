@@ -645,6 +645,8 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "#{root_path}/random-username" => "users#generate_random_username"
+
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
 
