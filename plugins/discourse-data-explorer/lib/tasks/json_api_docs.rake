@@ -25,13 +25,21 @@ task "data_explorer:json_api_docs" => :environment do
       DiscourseDataExplorer::JsonApiKit.openapi_document_at(version, scope: :core),
     )
   end
-  plugins = DiscourseDataExplorer::JsonApiKit.extensions.keys.sort
-  plugins.each do |namespace|
-    write.call(
-      "openapi-jsonapi-plugin-#{namespace}.json",
-      DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace),
-    )
-  end
+  plugins =
+    DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.map do |namespace|
+      write.call(
+        "openapi-jsonapi-plugin-#{namespace}.json",
+        DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace),
+      )
+      plugin_versions = DiscourseDataExplorer::JsonApiKit.openapi_plugin_versions(namespace)
+      plugin_versions.each do |version|
+        write.call(
+          "openapi-jsonapi-plugin-#{namespace}-#{version}.json",
+          DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace, at: version),
+        )
+      end
+      { "namespace" => namespace, "versions" => plugin_versions }
+    end
   write.call("openapi-versions.json", { "versions" => versions, "plugins" => plugins })
 
   puts "Preview: serve the plugin directory and open openapi-docs.html, e.g."

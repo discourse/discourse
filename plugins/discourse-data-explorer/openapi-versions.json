@@ -6,6 +6,12 @@
     "2026-05-01"
   ],
   "plugins": [
-    "run-stats"
+    {
+      "namespace": "run-stats",
+      "versions": [
+        "2026-06-20",
+        "2026-05-01"
+      ]
+    }
   ]
 }

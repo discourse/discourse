@@ -665,6 +665,12 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(fragment["summary"]).to eq("List queries — run-stats contributions")
     end
 
+    # Distinct from the core operation's id: captured examples are keyed by
+    # operationId, and the fragment's exchange is its own.
+    it "carries a distinct operation id" do
+      expect(fragment["operationId"]).to eq("listQueriesRunStats")
+    end
+
     it "lists only the plugin's contributed parameters" do
       expect(parameter_names).to contain_exactly(
         "Api-Version",
@@ -699,6 +705,106 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::OpenApiGenerator do
       expect(fragment["description"]).to include(
         "Run statistics the run-stats plugin attaches to the query.",
       )
+    end
+
+    context "with a captured example for the fragment" do
+      subject(:plugin_document) do
+        described_class.new(
+          endpoints:,
+          examples: {
+            "listQueriesRunStats" => {
+              "200" => {
+                "data" => [],
+                "included" => [
+                  { "type" => "run-stats", "id" => "1", "attributes" => { "stale" => true } },
+                ],
+              },
+            },
+          },
+        ).document_for("run-stats")
+      end
+
+      it "embeds the example on the fragment" do
+        expect(
+          fragment.dig(
+            "responses",
+            "200",
+            "content",
+            "application/vnd.api+json",
+            "example",
+            "included",
+            0,
+            "attributes",
+          ),
+        ).to eq("stale" => true)
+      end
+    end
+
+    # The plugin document versions on ITS OWN timeline — the picker on its docs
+    # page offers its own dates, downgraded through its own gap only.
+    context "when pinned before the plugin's change" do
+      subject(:plugin_document) do
+        described_class.new(
+          endpoints:,
+          examples: {
+            "listQueriesRunStats" => {
+              "200" => {
+                "data" => [],
+                "included" => [
+                  { "type" => "run-stats", "id" => "1", "attributes" => { "stale" => true } },
+                ],
+              },
+            },
+          },
+        ).document_for("run-stats", at: "2026-05-01")
+      end
+
+      let(:versioned_plugin_attributes) do
+        plugin_document.dig(
+          "components",
+          "schemas",
+          "run-stats",
+          "properties",
+          "attributes",
+          "properties",
+        )
+      end
+
+      it "stamps the pinned version" do
+        expect(plugin_document.dig("info", "version")).to eq("2026-05-01")
+      end
+
+      it "renames the schema attribute back" do
+        expect(versioned_plugin_attributes).to have_key("outdated")
+      end
+
+      it "renames the namespaced filter parameter back" do
+        expect(parameter_names).to include("filter[run-stats.outdated]")
+      end
+
+      it "renames the fieldset enum back" do
+        fields = fragment["parameters"].find { it["name"] == "fields[run-stats]" }
+        expect(fields.dig("schema", "items", "enum")).to eq(["outdated"])
+      end
+
+      it "down-migrates the captured example" do
+        expect(
+          fragment.dig(
+            "responses",
+            "200",
+            "content",
+            "application/vnd.api+json",
+            "example",
+            "included",
+            0,
+            "attributes",
+          ),
+        ).to eq("outdated" => true)
+      end
+
+      it "keeps the full changelog (history, not contract)" do
+        expect(plugin_document["x-changelog"].map { it["version"] }).to include("2026-06-20")
+      end
     end
   end
 

@@ -62,11 +62,18 @@ module DiscourseDataExplorer
           "attributes" => serializer.attributes_to_serialize.keys.map(&:to_s).sort,
           # Cardinality is the wire-level fact (to-one/to-many) — the gem's
           # has_one/belongs_to labels render identically and must not diff.
+          # Core-scoped: a relationship named after a registered namespace is an
+          # extension's contribution — it comes and goes with its owner and
+          # belongs to a per-extension descriptor, never to the core baseline.
           "relationships" =>
-            serializer.relationships_to_serialize.to_h do |name, rel|
-              kind = rel.relationship_type.to_s == "has_many" ? "to_many" : "to_one"
-              [name.to_s, kind]
-            end,
+            serializer
+              .relationships_to_serialize
+              .filter_map do |name, rel|
+                next if JsonApiKit.extensions.key?(name.to_s)
+                kind = rel.relationship_type.to_s == "has_many" ? "to_many" : "to_one"
+                [name.to_s, kind]
+              end
+              .to_h,
           "filters" => config.filters.keys.sort,
           "sorts" => config.sorts.keys.sort,
           "default_sort" => config.default_sort_value&.to_h { |key, dir| [key.to_s, dir.to_s] },

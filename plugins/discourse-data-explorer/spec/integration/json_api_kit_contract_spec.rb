@@ -64,6 +64,13 @@ describe "Data Explorer JSON:API Kit contract" do
     breaks
   end
 
+  # The baseline is a CORE artifact: extension surfaces come and go with their
+  # owner and belong to per-extension descriptors (docs/api-docs-generation.md §8),
+  # never to the core contract.
+  it "keeps the descriptor core-scoped" do
+    expect(current.dig("queries", "relationships")).to eq("user" => "to_one", "groups" => "to_many")
+  end
+
   it "stays backwards-compatible with the committed contract" do
     if File.exist?(contract_path) && ENV["FORCE_SCHEMA"] != "true"
       committed = JSON.parse(File.read(contract_path))

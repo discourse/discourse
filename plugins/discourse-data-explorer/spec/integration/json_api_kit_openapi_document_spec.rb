@@ -40,24 +40,44 @@ RSpec.describe "Data Explorer OpenAPI document freshness" do
     it "keeps the manifest current" do
       expect(committed_manifest).to eq(
         "versions" => DiscourseDataExplorer::JsonApiKit.openapi_versions,
-        "plugins" => DiscourseDataExplorer::JsonApiKit.extensions.keys.sort,
+        "plugins" =>
+          DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.map do |namespace|
+            {
+              "namespace" => namespace,
+              "versions" => DiscourseDataExplorer::JsonApiKit.openapi_plugin_versions(namespace),
+            }
+          end,
       )
     end
   end
 
   describe "plugin documents" do
     subject(:stale_plugins) do
-      DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.reject do |namespace|
-        JSON.parse(
-          Rails
-            .root
-            .join("plugins/discourse-data-explorer/openapi-jsonapi-plugin-#{namespace}.json")
-            .read,
-        ) == DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace)
+      DiscourseDataExplorer::JsonApiKit.extensions.keys.sort.flat_map do |namespace|
+        stale = []
+        if committed_plugin_document(namespace) !=
+             DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace)
+          stale << namespace
+        end
+        DiscourseDataExplorer::JsonApiKit
+          .openapi_plugin_versions(namespace)
+          .each do |version|
+            if committed_plugin_document(namespace, version) ==
+                 DiscourseDataExplorer::JsonApiKit.openapi_document_for(namespace, at: version)
+              next
+            end
+            stale << "#{namespace}@#{version}"
+          end
+        stale
       end
     end
 
-    it "keeps every plugin document current" do
+    def committed_plugin_document(namespace, version = nil)
+      name = ["openapi-jsonapi-plugin-#{namespace}", version].compact.join("-")
+      JSON.parse(Rails.root.join("plugins/discourse-data-explorer/#{name}.json").read)
+    end
+
+    it "keeps every plugin document current, dated versions included" do
       expect(stale_plugins).to eq([])
     end
   end

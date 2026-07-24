@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Discourse JSON:API — run-stats plugin",
-    "version": "2026-06-20",
+    "version": "2026-05-01",
     "description": "What the `run-stats` plugin adds to the Discourse JSON:API. This document\ncovers only the plugin's contributions — the core document describes the full\nendpoints.\n\nThe plugin rides its own timeline: it stays frozen at your base pin unless an\noverride names it — `Api-Version: 2026-07-08; run-stats=2026-06-20`.\n\n\n# Changelog\n\n## 2026-06-20\n\n- Renames the run-stats `outdated` attribute to `stale`."
   },
   "x-changelog": [
@@ -41,7 +41,7 @@
             }
           },
           {
-            "name": "filter[run-stats.stale]",
+            "name": "filter[run-stats.outdated]",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -69,7 +69,7 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "stale"
+                  "outdated"
                 ]
               }
             }
@@ -151,14 +151,14 @@
                       "id": "1",
                       "type": "run-stats",
                       "attributes": {
-                        "stale": false
+                        "outdated": false
                       }
                     },
                     {
                       "id": "2",
                       "type": "run-stats",
                       "attributes": {
-                        "stale": true
+                        "outdated": true
                       }
                     }
                   ],
@@ -188,7 +188,7 @@
           "attributes": {
             "type": "object",
             "properties": {
-              "stale": {
+              "outdated": {
                 "type": [
                   "boolean",
                   "null"

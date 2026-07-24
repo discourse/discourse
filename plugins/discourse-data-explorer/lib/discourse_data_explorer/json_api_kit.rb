@@ -96,8 +96,16 @@ module DiscourseDataExplorer
         openapi_generator(scope:).document_at(version)
       end
 
-      # One plugin's own document — the ownership projection (§8).
-      def openapi_document_for(namespace) = openapi_generator.document_for(namespace)
+      # One plugin's own document — the ownership projection (§8). `at:` pins it
+      # to one of the plugin's own versions.
+      def openapi_document_for(namespace, at: nil)
+        openapi_generator.document_for(namespace, at:)
+      end
+
+      # The plugin's own snap dates (newest first) — its docs-page version picker.
+      def openapi_plugin_versions(namespace)
+        api_versions.versions_for(namespace).map(&:to_s).reverse
+      end
 
       # Spike stand-in for a real resource registry — the resource-level home is a
       # design follow-up (docs/versioning-design.md §3).

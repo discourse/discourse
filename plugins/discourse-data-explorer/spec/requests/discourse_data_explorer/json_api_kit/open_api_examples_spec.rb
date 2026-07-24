@@ -90,6 +90,34 @@ RSpec.describe "JSON:API Kit OpenAPI examples" do
     end
   end
 
+  context "when listing queries with the run-stats include" do
+    let(:plugin_document) { DiscourseDataExplorer::JsonApiKit.openapi_document_for("run-stats") }
+
+    before do
+      get "/data-explorer/api/queries", params: { include: "run-stats" }, headers: api_headers
+    end
+
+    it "answers with a document valid against the plugin fragment schema" do
+      schema =
+        plugin_document.dig(
+          "paths",
+          "/data-explorer/api/queries",
+          "get",
+          "responses",
+          "200",
+          "content",
+          CONTENT_TYPE,
+          "schema",
+        )
+      expect(
+        JSONSchemer
+          .schema(schema.merge("components" => plugin_document["components"]))
+          .validate(parsed_document)
+          .to_a,
+      ).to eq([])
+    end
+  end
+
   context "when fetching a query" do
     before { get "/data-explorer/api/queries/#{ran_query.id}", headers: api_headers }
 
@@ -150,6 +178,9 @@ RSpec.describe "JSON:API Kit OpenAPI examples" do
       "listQueries" => {
         "200" => capture_list,
       },
+      "listQueriesRunStats" => {
+        "200" => capture_run_stats_list,
+      },
       "getQuery" => {
         "200" => capture_show,
       },
@@ -163,6 +194,11 @@ RSpec.describe "JSON:API Kit OpenAPI examples" do
           include: "user,groups,user.groups",
         },
         headers: api_headers
+    normalize(JSON.parse(response.body))
+  end
+
+  def capture_run_stats_list
+    get "/data-explorer/api/queries", params: { include: "run-stats" }, headers: api_headers
     normalize(JSON.parse(response.body))
   end
 

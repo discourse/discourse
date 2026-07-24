@@ -140,12 +140,14 @@ module DiscourseDataExplorer
       # One plugin's document — the third ownership projection
       # (docs/api-docs-generation.md §8): its resource schemas, the core
       # endpoints it touches shown with only its contributions, and its own
-      # changelog on its own timeline.
-      def document_for(namespace)
+      # changelog on its own timeline. `at:` pins the document to one of the
+      # plugin's OWN versions — the downgrade runs through its own gap only
+      # (base-governed surfaces never move with a plugin pin).
+      def document_for(namespace, at: nil)
         extension = JsonApiKit.extensions.fetch(namespace)
         entries = plugin_changelog_entries(extension)
         description = [plugin_intro(extension), changelog_markdown(entries)].compact.join("\n\n")
-        {
+        document = {
           "openapi" => "3.1.0",
           "info" => {
             "title" => "Discourse JSON:API — #{namespace} plugin",
@@ -159,6 +161,11 @@ module DiscourseDataExplorer
             "schemas" => plugin_schemas(extension),
           },
         }
+        return document if at.nil?
+
+        version = ApiVersion.parse(at)
+        document["info"]["version"] = version.to_s
+        downgrade_plugin!(document, extension, version)
       end
 
       private
@@ -362,42 +369,45 @@ module DiscourseDataExplorer
       end
 
       # A valid-but-partial operation: only what the plugin adds to the core
-      # endpoint, with prose pointing at the core document for the rest.
+      # endpoint, with prose pointing at the core document for the rest. The
+      # operationId is the plugin's own (captured examples key on it).
       def contribution_operation(endpoint, extension)
         resource = primary_resource(endpoint)
         type = resource.record_type.to_s
         related = extension.relationships[type][:resource]
-        {
-          "tags" => [tag_name(resource)],
-          "summary" => "List #{type.humanize.downcase} — #{extension.namespace} contributions",
-          "operationId" => "list#{type.camelize}",
-          "description" => contribution_description(extension, type),
-          "parameters" => [
-            version_header_parameter,
-            *extension.filters_for(type).map { |name, defn| filter_parameter(name, defn) },
-            list_parameter("include", [extension.namespace]),
-            list_parameter(
-              "fields[#{related.record_type}]",
-              attribute_definitions(related).keys.map(&:to_s),
-            ),
-          ],
-          "responses" => {
-            "200" =>
-              json_response(
-                "With `include=#{extension.namespace}`, the plugin's resources appear in " \
-                  "the collection document's `included`.",
-                {
-                  "type" => "object",
-                  "properties" => {
-                    "included" => {
-                      "type" => "array",
-                      "items" => resource_ref(related),
+        with_examples(
+          {
+            "tags" => [tag_name(resource)],
+            "summary" => "List #{type.humanize.downcase} — #{extension.namespace} contributions",
+            "operationId" => "list#{type.camelize}#{extension.namespace.tr("-", "_").camelize}",
+            "description" => contribution_description(extension, type),
+            "parameters" => [
+              version_header_parameter,
+              *extension.filters_for(type).map { |name, defn| filter_parameter(name, defn) },
+              list_parameter("include", [extension.namespace]),
+              list_parameter(
+                "fields[#{related.record_type}]",
+                attribute_definitions(related).keys.map(&:to_s),
+              ),
+            ],
+            "responses" => {
+              "200" =>
+                json_response(
+                  "With `include=#{extension.namespace}`, the plugin's resources appear in " \
+                    "the collection document's `included`.",
+                  {
+                    "type" => "object",
+                    "properties" => {
+                      "included" => {
+                        "type" => "array",
+                        "items" => resource_ref(related),
+                      },
                     },
                   },
-                },
-              ),
+                ),
+            },
           },
-        }
+        )
       end
 
       def contribution_description(extension, type)
@@ -417,6 +427,42 @@ module DiscourseDataExplorer
           .map { it[:resource] }
           .uniq
           .to_h { [it.record_type.to_s, resource_schema(it)] }
+      end
+
+      def downgrade_plugin!(document, extension, version)
+        gap =
+          JsonApiKit
+            .api_versions
+            .changes
+            .select do
+              JsonApiKit.api_versions.owner_of(it) == extension.namespace && it.version > version
+            end
+            .reverse
+        return document if gap.empty?
+
+        document
+          .dig("components", "schemas")
+          .each_key do |type|
+            downgrade_attributes!(
+              document.dig("components", "schemas", type, "properties", "attributes"),
+              type,
+              gap,
+            )
+          end
+        @endpoints.each do |endpoint|
+          operation = document.dig("paths", endpoint[:path], "get")
+          next if operation.nil?
+          downgrade_parameters!(
+            operation["parameters"],
+            primary_resource(endpoint).record_type.to_s,
+            endpoint[:controller]._jsonapi_config,
+            gap,
+          )
+          media_targets(operation).each do |media|
+            media["example"] = downgrade_example(media["example"], gap) if media["example"]
+          end
+        end
+        document
       end
 
       def schemas

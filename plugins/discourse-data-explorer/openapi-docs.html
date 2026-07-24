@@ -22,11 +22,9 @@
   </head>
   <body>
     <!-- Same rendering setup as docs.discourse.org (Redoc standalone), plus the
-         global docs structure (docs/api-docs-generation.md §8): the core
-         document with a Stripe-style version picker over its core-timeline
-         versions, and one document per plugin (own timeline — its versions live
-         in its own changelog, so the version picker hides). Serve this
-         directory statically to view, e.g.
+         global docs structure (docs/api-docs-generation.md §8): one document per
+         owner (core + each plugin), each with a Stripe-style version picker over
+         its OWN timeline's dates. Serve this directory statically to view, e.g.
          `ruby -run -e httpd plugins/discourse-data-explorer -p 8080` -->
     <div id="pickers">
       <label id="document-picker">
@@ -42,43 +40,54 @@
     <script src="https://cdn.jsdelivr.net/npm/redoc/bundles/redoc.standalone.js"></script>
     <script>
       const documentSelect = document.querySelector("#document-picker select");
-      const versionPicker = document.querySelector("#version-picker");
-      const versionSelect = versionPicker.querySelector("select");
+      const versionSelect = document.querySelector("#version-picker select");
       const render = (file) => Redoc.init(file, {}, document.getElementById("redoc"));
+      let manifest;
 
-      const renderSelection = () => {
-        const plugin = documentSelect.value !== "core";
-        versionPicker.hidden = plugin;
-        render(
-          plugin
-            ? `openapi-jsonapi-plugin-${documentSelect.value}.json`
-            : `openapi-jsonapi-${versionSelect.value}.json`,
-        );
+      const selectedVersions = () =>
+        documentSelect.value === "core"
+          ? manifest.versions
+          : manifest.plugins.find(({ namespace }) => namespace === documentSelect.value)
+              .versions;
+
+      const populateVersions = () => {
+        versionSelect.replaceChildren();
+        selectedVersions().forEach((version, index) => {
+          const option = document.createElement("option");
+          option.value = version;
+          option.textContent = index === 0 ? `${version} (latest)` : version;
+          versionSelect.append(option);
+        });
       };
+
+      const renderSelection = () =>
+        render(
+          documentSelect.value === "core"
+            ? `openapi-jsonapi-${versionSelect.value}.json`
+            : `openapi-jsonapi-plugin-${documentSelect.value}-${versionSelect.value}.json`,
+        );
 
       fetch("openapi-versions.json")
         .then((response) => response.json())
-        .then(({ versions, plugins }) => {
+        .then((data) => {
+          manifest = data;
           const coreOption = document.createElement("option");
           coreOption.value = "core";
           coreOption.textContent = "Core API";
           documentSelect.append(coreOption);
-          plugins.forEach((namespace) => {
+          manifest.plugins.forEach(({ namespace }) => {
             const option = document.createElement("option");
             option.value = namespace;
             option.textContent = `${namespace} plugin`;
             documentSelect.append(option);
           });
 
-          versions.forEach((version, index) => {
-            const option = document.createElement("option");
-            option.value = version;
-            option.textContent = index === 0 ? `${version} (latest)` : version;
-            versionSelect.append(option);
+          documentSelect.addEventListener("change", () => {
+            populateVersions();
+            renderSelection();
           });
-
-          documentSelect.addEventListener("change", renderSelection);
           versionSelect.addEventListener("change", renderSelection);
+          populateVersions();
           renderSelection();
         });
     </script>

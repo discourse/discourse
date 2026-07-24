@@ -189,11 +189,17 @@ document's intro prose would confuse both audiences.
   namespace). Versioned documents downgrade extension surfaces through the same gap
   machinery (`down_filter_keys` gained the extension projection `up_filter_keys` had).
   The committed set now mirrors §8's global structure: core document + dated versions +
-  `openapi-jsonapi-plugin-run-stats.json`, with `openapi-versions.json` as a
-  `{versions, plugins}` manifest and a document picker next to the version picker in
-  `openapi-docs.html` (the version picker hides on plugin documents — their versions
-  live in their own changelog). All freshness-guarded, contract guard untouched (the
-  extension relationship is additive; the committed core baseline stays extension-free).
+  the plugin document **with its own dated versions**
+  (`openapi-jsonapi-plugin-run-stats[-<date>].json` — `document_for(namespace, at:)`
+  downgrades schema, namespaced params, and examples through the plugin's own gap only),
+  with `openapi-versions.json` as a `{versions, plugins: [{namespace, versions}]}`
+  manifest and a document picker next to the version picker in `openapi-docs.html` —
+  **each document's picker offers its own timeline's dates**. Plugin fragments carry
+  distinct operationIds (`listQueriesRunStats`) and embed **live-captured examples**
+  (an `include=run-stats` exchange recorded alongside the core captures; the examples
+  freshness guard searches plugin documents too). All freshness-guarded; the contract
+  descriptor is **core-scoped** (loic's catch — extension relationships excluded, the
+  baseline stays extension-free; per-extension descriptors remain real-phase work).
 - **Changelog + deprecations built (2026-07-23):** the document carries a machine-readable
   `x-changelog` (registry changes grouped by version, newest first — future food for the
   docs-site assistant) and a `# Changelog` markdown section appended to
@@ -362,10 +368,11 @@ lean on today; could become the emission format later without changing the deriv
   plus store-what's-echoed (any stored date resolves everywhere), but it deserves an
   explicit decision. Mild preference: core-timeline dates always register — the changes
   only transform types that are absent anyway — keeping echoes uniform across sites.
-- **The contract guard needs the same ownership projection.** The guard auto-records
-  additive changes, so registering the run-stats extension wrote `"run-stats": "to_one"`
-  into the committed *core* baseline (2026-07-24) — presence leaking into a core
-  artifact, exactly the axis §8 separates for docs. Right shape: a core-scoped contract
-  baseline plus per-extension contract descriptors, riding the same `scope` projection
-  the generator grew. Tolerated in the spike (the guard still catches accidental
-  breakage; it observed the composed site truthfully).
+- **The contract guard needs the same ownership projection — half done.** The guard
+  auto-records additive changes, so registering the run-stats extension initially wrote
+  `"run-stats": "to_one"` into the committed *core* baseline — presence leaking into a
+  core artifact, exactly the axis §8 separates for docs. **Fixed same day (loic's
+  catch):** the descriptor is now core-scoped (extension-owned relationships — names
+  matching a registered namespace — are excluded; spec'd). The other half remains
+  real-phase work: per-extension contract descriptors, so extension surfaces get their
+  own backwards-compat guard.
