@@ -250,7 +250,7 @@ export default class AiBotConversations extends Component {
     const shiftHeld = this.shiftHeldOnEnter;
     this.shiftHeldOnEnter = false;
     // If the admin has disabled Enter-to-submit, do nothing and allow native line breaks
-    if (!this.siteSettings.ai_bot_chat_composer_submit_on_enter) {
+    if (!this.siteSettings.ai_bot_composer_submit_on_enter) {
       return;
     }
     // Existing forced-submit logic
