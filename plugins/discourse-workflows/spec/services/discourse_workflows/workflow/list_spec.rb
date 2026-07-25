@@ -162,6 +162,82 @@ RSpec.describe DiscourseWorkflows::Workflow::List do
       end
     end
 
+    context "with tags filter" do
+      fab!(:ops_workflow) do
+        Fabricate(:discourse_workflows_workflow, name: "Ops", created_by: user, tags: %w[ops])
+      end
+      fab!(:ops_billing_workflow) do
+        Fabricate(
+          :discourse_workflows_workflow,
+          name: "Ops billing",
+          created_by: user,
+          tags: %w[ops billing],
+        )
+      end
+      fab!(:untagged_workflow) do
+        Fabricate(:discourse_workflows_workflow, name: "Untagged", created_by: user)
+      end
+
+      let(:params) { { tags: "ops" } }
+
+      it { is_expected.to run_successfully }
+
+      it "returns each matching workflow once" do
+        expect(result[:workflows].map(&:name)).to eq(["Ops billing", "Ops"])
+      end
+
+      it "returns filtered total rows" do
+        expect(result[:total_rows]).to eq(2)
+      end
+
+      it "normalizes the tags param" do
+        params[:tags] = " OPS "
+        expect(result[:workflows].map(&:name)).to eq(["Ops billing", "Ops"])
+      end
+
+      context "with multiple tags" do
+        let(:params) { { tags: "ops,billing" } }
+
+        it "only returns workflows carrying all tags" do
+          expect(result[:workflows].map(&:name)).to eq(["Ops billing"])
+          expect(result[:total_rows]).to eq(1)
+        end
+      end
+
+      context "with an unknown tag" do
+        let(:params) { { tags: "nope" } }
+
+        it "returns no workflows" do
+          expect(result[:workflows]).to be_empty
+          expect(result[:total_rows]).to eq(0)
+        end
+      end
+
+      context "with a name filter" do
+        let(:params) { { tags: "ops", filter: "billing" } }
+
+        it "combines both filters" do
+          expect(result[:workflows].map(&:name)).to eq(["Ops billing"])
+        end
+      end
+
+      context "with pagination" do
+        let(:params) { { tags: "ops", limit: 1 } }
+
+        it "preserves the tags filter in the load more url" do
+          expect(result[:load_more_url]).to eq(
+            "/admin/plugins/discourse-workflows/workflows.json?cursor=#{ops_billing_workflow.id}&limit=1&tags=ops",
+          )
+        end
+
+        it "returns the remaining tagged workflows on the next page without repeats" do
+          params[:cursor] = ops_billing_workflow.id
+          expect(result[:workflows].map(&:name)).to eq(["Ops"])
+          expect(result[:load_more_url]).to be_nil
+        end
+      end
+    end
+
     context "with exclude_id" do
       fab!(:workflow_a) do
         Fabricate(:discourse_workflows_workflow, name: "Alpha", created_by: user)

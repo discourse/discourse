@@ -9,14 +9,22 @@ module DiscourseWorkflows
       attribute :nodes, default: -> { [] }
       attribute :connections, default: -> { {} }
       attribute :static_data, default: -> { {} }
+      attribute :tags, default: -> { [] }
+
+      before_validation { self.tags = DiscourseWorkflows::WorkflowTag.normalize_all(tags) }
 
       validates :name, presence: true, length: { maximum: 100 }
       validate :static_data_is_valid_map
+      validate :tags_are_valid
 
       def static_data_is_valid_map
         return if DiscourseWorkflows::Workflow.valid_static_data_map?(static_data)
 
         errors.add(:static_data, :invalid)
+      end
+
+      def tags_are_valid
+        DiscourseWorkflows::WorkflowTag.validate_names(tags, errors)
       end
     end
 
@@ -24,6 +32,7 @@ module DiscourseWorkflows
 
     transaction do
       model :workflow, :create_workflow
+      step :sync_tags
       step :populate_graph
       model :workflow_version, :create_initial_snapshot
       step :index_dependencies
@@ -41,6 +50,12 @@ module DiscourseWorkflows
         created_by: guardian.user,
         updated_by: guardian.user,
       )
+    end
+
+    def sync_tags(workflow:, params:)
+      return if params.tags.blank?
+
+      DiscourseWorkflows::WorkflowTag.sync!(workflow:, names: params.tags)
     end
 
     def populate_graph(workflow:, params:)
