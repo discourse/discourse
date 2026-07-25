@@ -23,6 +23,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     discourse_ai_enabled: true,
     ai_bot_enabled: true,
     min_personal_message_post_length: 10,
+    ai_bot_composer_submit_on_enter: true,
   });
 
   needs.pretender((server, helper) => {
@@ -78,6 +79,17 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     await triggerEvent(INPUT, "beforeinput", {
       inputType: "insertCompositionText",
     });
+
+    assert.strictEqual(conversationRequests, 0, "did not submit");
+  });
+
+  test("Enter does not submit when ai_bot_composer_submit_on_enter is disabled", async function (assert) {
+    this.siteSettings.ai_bot_composer_submit_on_enter = false;
+
+    await prepareDraft();
+
+    await triggerEvent(INPUT, "keydown", { key: "Enter" });
+    await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
 
     assert.strictEqual(conversationRequests, 0, "did not submit");
   });
