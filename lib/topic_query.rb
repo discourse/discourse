@@ -47,6 +47,7 @@ class TopicQuery
           no_subcategories: true_or_false,
           no_tags: true_or_false,
           exclude_tag: string,
+          include_excerpts: true_or_false,
         }
       end
   end
@@ -85,6 +86,7 @@ class TopicQuery
       no_subcategories
       no_tags
       exclude_tag
+      include_excerpts
     ]
   end
 

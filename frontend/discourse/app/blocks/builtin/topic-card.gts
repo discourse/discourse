@@ -3,7 +3,8 @@ import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
-import { fetchTopicCard } from "discourse/lib/blocks/-internals/fetch-topic-card";
+import { topicCardDataSource } from "discourse/lib/blocks/-internals/sources/topic-card";
+import { emojiUnescape } from "discourse/lib/text";
 import { and, not, or } from "discourse/truth-helpers";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import { i18n } from "discourse-i18n";
@@ -21,6 +22,8 @@ interface TopicCardData {
   fancyTitle?: string;
   categoryBadge?: string | null;
   imageUrl?: string | null;
+
+  /** Server-rendered excerpt HTML, carrying entities and emoji shortcodes. */
   excerpt?: string | null;
 }
 
@@ -46,7 +49,8 @@ interface TopicCardSignature {
  * columns) to build a curated topic showcase.
  *
  * Declares its data through the block `data` hook, so the resolved topic
- * arrives as `@data` and the block stays a pure renderer.
+ * arrives as `@data` and the block stays a pure renderer. The source it
+ * declares batches, so a page full of these cards resolves in one request.
  */
 @block("topic-card", {
   thumbnail: () => import("discourse/blocks/thumbnails/topic-card"),
@@ -97,12 +101,11 @@ interface TopicCardSignature {
     },
   },
   data: {
+    source: topicCardDataSource,
     request: (args: { topicId?: number }) => ({
       kind: "topic-card",
       topicId: args.topicId,
     }),
-    resolve: (descriptor: { topicId?: number }) =>
-      fetchTopicCard({ topicId: descriptor.topicId }),
   },
 })
 export default class TopicCard extends Component<TopicCardSignature> {
@@ -132,7 +135,9 @@ export default class TopicCard extends Component<TopicCardSignature> {
               </h3>
 
               {{#if (and @showExcerpt (not bgUrl) topic.excerpt)}}
-                <p class="d-block-topic-card__excerpt">{{topic.excerpt}}</p>
+                <p class="d-block-topic-card__excerpt">
+                  {{trustHTML (emojiUnescape topic.excerpt)}}
+                </p>
               {{/if}}
             </div>
 

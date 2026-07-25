@@ -24,6 +24,28 @@ function preloadCard(topicId, payload) {
   );
 }
 
+// Stubs the list endpoint the cards batch through, recording each request so
+// tests can assert how many were made and which ids they carried.
+function stubTopicList(topics) {
+  const requests = [];
+
+  pretender.get("/latest.json", (request) => {
+    requests.push(request.queryParams);
+
+    const requestedIds = (request.queryParams.topic_ids ?? "")
+      .split(",")
+      .map((id) => parseInt(id, 10));
+
+    return response({
+      topic_list: {
+        topics: topics.filter((topic) => requestedIds.includes(topic.id)),
+      },
+    });
+  });
+
+  return requests;
+}
+
 module("Integration | Blocks | topic-card", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -101,6 +123,33 @@ module("Integration | Blocks | topic-card", function (hooks) {
       .hasText("A helpful excerpt", "shows the excerpt");
   });
 
+  test("renders the excerpt as the server's markup, not escaped source", async function (assert) {
+    preloadCard(7, {
+      id: 7,
+      url: "/t/guide/7",
+      title: "Guide",
+      fancyTitle: "Guide",
+      categoryBadge: null,
+      imageUrl: null,
+      excerpt: "Shipping :tada: today&hellip;",
+    });
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        { block: TopicCard, args: { topicId: 7 } },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+    assert
+      .dom(".d-block-topic-card__excerpt img.emoji")
+      .exists("renders the emoji shortcode as an image");
+    assert
+      .dom(".d-block-topic-card__excerpt")
+      .hasText("Shipping today…", "resolves the entity instead of printing it");
+  });
+
   test("a custom image override takes precedence over the topic image", async function (assert) {
     preloadCard(7, {
       id: 7,
@@ -136,17 +185,17 @@ module("Integration | Blocks | topic-card", function (hooks) {
   });
 
   test("resolves and renders a fetched topic", async function (assert) {
-    pretender.get("/t/42.json", () =>
-      response({
+    stubTopicList([
+      {
         id: 42,
         slug: "welcome",
         title: "Welcome",
         fancy_title: "Welcome",
         category_id: null,
         image_url: "/uploads/topic.png",
-        post_stream: { posts: [{ cooked: "<p>An intro paragraph</p>" }] },
-      })
-    );
+        excerpt: "An intro paragraph",
+      },
+    ]);
 
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
@@ -166,22 +215,88 @@ module("Integration | Blocks | topic-card", function (hooks) {
       .hasAttribute("href", "/t/welcome/42", "links to the fetched topic");
   });
 
+  test("every card on the page resolves through one combined request", async function (assert) {
+    const requests = stubTopicList([
+      {
+        id: 1,
+        slug: "first",
+        title: "First",
+        fancy_title: "First",
+        category_id: null,
+        image_url: null,
+        excerpt: null,
+      },
+      {
+        id: 2,
+        slug: "second",
+        title: "Second",
+        fancy_title: "Second",
+        category_id: null,
+        image_url: null,
+        excerpt: null,
+      },
+    ]);
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        { block: TopicCard, args: { topicId: 1 } },
+        { block: TopicCard, args: { topicId: 2 } },
+        // Repeats an id already in the window, and asks for a topic the
+        // response won't carry.
+        { block: TopicCard, args: { topicId: 1 } },
+        { block: TopicCard, args: { topicId: 3 } },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    await waitFor(".d-block-topic-card__title");
+    await settled();
+
+    assert.strictEqual(requests.length, 1, "made a single combined request");
+    assert.strictEqual(
+      requests[0].topic_ids,
+      "1,2,3",
+      "carried each distinct id once"
+    );
+    assert.strictEqual(
+      requests[0].include_excerpts,
+      "true",
+      "asked the endpoint to serialize excerpts"
+    );
+
+    assert
+      .dom(".d-block-topic-card__title")
+      .exists({ count: 3 }, "paints every card the response carried");
+    assert
+      .dom(".d-block-topic-card__empty")
+      .exists({ count: 1 }, "the topic the response omitted renders empty");
+    assert
+      .dom(".d-block-topic-card__unavailable")
+      .doesNotExist("a missing topic never fails its neighbours");
+  });
+
   test("shows a structural skeleton while the topic loads", async function (assert) {
     let resolveRequest;
     pretender.get(
-      "/t/42.json",
+      "/latest.json",
       () =>
         new Promise((resolve) => {
           resolveRequest = () =>
             resolve(
               response({
-                id: 42,
-                slug: "welcome",
-                title: "Welcome",
-                fancy_title: "Welcome",
-                category_id: null,
-                image_url: null,
-                post_stream: { posts: [{ cooked: "<p>Body</p>" }] },
+                topic_list: {
+                  topics: [
+                    {
+                      id: 42,
+                      slug: "welcome",
+                      title: "Welcome",
+                      fancy_title: "Welcome",
+                      category_id: null,
+                      image_url: null,
+                      excerpt: "Body",
+                    },
+                  ],
+                },
               })
             );
         })
@@ -220,6 +335,8 @@ module("Integration | Blocks | topic-card", function (hooks) {
   });
 
   test("renders an empty box, not a configuration prompt, when no topic is configured", async function (assert) {
+    const requests = stubTopicList([]);
+
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [{ block: TopicCard, args: {} }])
     );
@@ -235,10 +352,15 @@ module("Integration | Blocks | topic-card", function (hooks) {
     assert
       .dom(".d-block-topic-card__unavailable")
       .doesNotExist("an unconfigured card is empty, not an error");
+    assert.strictEqual(
+      requests.length,
+      0,
+      "an unconfigured card asks the endpoint for nothing"
+    );
   });
 
   test("renders the unavailable message when the topic fails to load", async function (assert) {
-    pretender.get("/t/7.json", () => response(404, {}));
+    pretender.get("/latest.json", () => response(500, {}));
 
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
@@ -261,8 +383,32 @@ module("Integration | Blocks | topic-card", function (hooks) {
       .doesNotExist("a failed load is an error, not empty");
   });
 
+  test("renders an empty box when the response omits the topic", async function (assert) {
+    stubTopicList([]);
+
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        { block: TopicCard, args: { topicId: 7 } },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+    await waitFor(".d-block-topic-card__empty");
+    await settled();
+
+    // The list drops topics the viewer muted, and a muted topic should go quiet
+    // rather than announce itself as broken.
+    assert
+      .dom(".d-block-topic-card__empty")
+      .exists("an unresolved topic renders the empty placeholder")
+      .hasText("", "says nothing about the topic it could not resolve");
+    assert
+      .dom(".d-block-topic-card__unavailable")
+      .doesNotExist("only a failed request reads as unavailable");
+  });
+
   test("renders nothing on failure when hideWhenUnavailable is set", async function (assert) {
-    pretender.get("/t/7.json", () => response(404, {}));
+    pretender.get("/latest.json", () => response(500, {}));
 
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [

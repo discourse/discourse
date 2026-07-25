@@ -26,6 +26,20 @@ RSpec.describe TopicListSerializer do
     expect(serializer.options[:filter]).to eq(filter)
   end
 
+  it "serializes topic excerpts when the list was built with include_excerpts" do
+    topic.update!(excerpt: "This is excerrrpt-ional")
+    guardian = Guardian.new(user)
+
+    serialized = described_class.new(TopicList.new(nil, user, [topic]), scope: guardian).as_json
+
+    expect(serialized[:topic_list][:topics].first[:excerpt]).to eq(nil)
+
+    topic_list = TopicList.new(nil, user, [topic], include_excerpts: true)
+    serialized = described_class.new(topic_list, scope: guardian).as_json
+
+    expect(serialized[:topic_list][:topics].first[:excerpt]).to eq("This is excerrrpt-ional")
+  end
+
   describe "has categories" do
     describe "when lazy loading categories enabled" do
       before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
