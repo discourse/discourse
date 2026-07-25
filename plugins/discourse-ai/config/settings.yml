@@ -440,6 +440,11 @@ discourse_ai:
       status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403327"
+  ai_bot_composer_submit_on_enter:
+    default: true
+    client: true
+    type: bool
+    area: "ai-features/bot"
   ai_discover_enabled:
     default: false
     client: true
