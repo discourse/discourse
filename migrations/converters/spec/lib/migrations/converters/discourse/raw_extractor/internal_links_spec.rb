@@ -5,7 +5,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
   describe "internal links" do
     subject(:extractor) do
-      described_class.new(embeds: buffer, internal_link_hosts: Set["forum.example.com"])
+      described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
     end
 
     def link_for(raw)
@@ -17,11 +17,19 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     # stored in — and names no real record: it's a numeric topic title, like the
     # meta.discourse.org post about exactly that, which crashed the insert.
     context "with a digit run too long to be an id" do
-      it "leaves a numeric-title topic URL as literal text" do
+      # A route-less numeric-title URL on the source's own host parses no id, so it
+      # becomes a SITE link (origin rewrite). SITE stores no id, so the overflowing
+      # digit run never reaches an integer bind — it rides along in the suffix.
+      it "records a numeric-title topic URL as a SITE link, not an overflowing id" do
         raw = "this one - https://forum.example.com/t/77777777777777777789999/ fails"
+        link, result = link_for(raw)
 
-        expect(extract(raw)).to eq(raw)
-        expect(buffer.links).to be_empty
+        expect(link).to include(
+          target_type: link_target::SITE,
+          target_id: nil,
+          target_suffix: "/t/77777777777777777789999",
+        )
+        expect(result).to eq("this one - #{link[:placeholder]}/ fails")
       end
 
       it "leaves an oversized /p/ id as literal text" do
@@ -348,7 +356,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     subject(:extractor) do
       described_class.new(
         embeds: buffer,
-        internal_link_hosts: Set["forum.example.com"],
+        internal_link_hosts: {
+          "forum.example.com" => nil,
+        },
         on_foreign_host: ->(host) { foreign_hosts << host },
       )
     end
@@ -401,11 +411,135 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
 
     it "is a no-op when no callback is given" do
-      plain = described_class.new(embeds: buffer, internal_link_hosts: Set["forum.example.com"])
+      plain =
+        described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
 
       expect(plain.extract("elsewhere https://old-forum.example.com/t/slug/99 done")).to eq(
         "elsewhere https://old-forum.example.com/t/slug/99 done",
       )
+    end
+  end
+
+  # An absolute URL on the source's own host whose path parses no route is still
+  # rewritten: only its origin moves to the destination, the rest rides in the
+  # suffix. A relative route-less URL stays literal (it's domain-free already).
+  describe "SITE targets on a root install" do
+    subject(:extractor) do
+      described_class.new(embeds: buffer, internal_link_hosts: { "forum.example.com" => nil })
+    end
+
+    def link_for(raw)
+      result = extract(raw)
+      [buffer.links.first, result]
+    end
+
+    it "records a route-shaped junk path as a SITE link, keeping the whole path in the suffix" do
+      link, = link_for("read https://forum.example.com/t/slug/5a here")
+
+      expect(link).to include(
+        url: "https://forum.example.com/t/slug/5a",
+        target_type: link_target::SITE,
+        target_id: nil,
+        target_suffix: "/t/slug/5a",
+      )
+    end
+
+    it "records a real route-less page as a SITE link" do
+      link, = link_for("[faq](https://forum.example.com/faq)")
+
+      expect(link).to include(target_type: link_target::SITE, target_suffix: "/faq")
+    end
+
+    it "keeps a query string in a SITE link's suffix" do
+      link, = link_for("[search](https://forum.example.com/search?q=cats)")
+
+      expect(link).to include(target_type: link_target::SITE, target_suffix: "/search?q=cats")
+    end
+
+    it "keeps a fragment in a SITE link's suffix" do
+      link, = link_for("[about](https://forum.example.com/about#team)")
+
+      expect(link).to include(target_type: link_target::SITE, target_suffix: "/about#team")
+    end
+
+    it "leaves a relative route-less URL literal" do
+      raw = "[faq](/faq)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+  end
+
+  describe "subdirectory installs" do
+    subject(:extractor) do
+      described_class.new(
+        embeds: buffer,
+        internal_link_hosts: {
+          "www.example.com" => "/forum",
+        },
+        internal_link_base_prefix: "/forum",
+      )
+    end
+
+    def link_for(raw)
+      result = extract(raw)
+      [buffer.links.first, result]
+    end
+
+    it "detects a subfolder absolute link, stripping the prefix before the route" do
+      link, = link_for("[x](https://www.example.com/forum/t/slug/5)")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5, target_suffix: nil)
+    end
+
+    it "detects a subfolder absolute bare URL in prose" do
+      link, = link_for("look https://www.example.com/forum/t/slug/5 now")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+    end
+
+    it "detects a relative link carrying the base prefix" do
+      link, = link_for("[x](/forum/t/slug/5)")
+
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 5)
+    end
+
+    it "records a route-less path inside the prefix as a SITE link with the rest" do
+      link, = link_for("[faq](https://www.example.com/forum/faq)")
+
+      expect(link).to include(target_type: link_target::SITE, target_suffix: "/faq")
+    end
+
+    it "leaves a sibling app's path on the same host literal" do
+      raw = "[x](https://www.example.com/other-app/x)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "does not strip the prefix off a host path that only shares its leading text" do
+      raw = "[x](https://www.example.com/forumxyz/t/slug/5)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "does not fire the foreign-host signal for a sibling app on a prefixed host" do
+      foreign_hosts = []
+      signalling =
+        described_class.new(
+          embeds: buffer,
+          internal_link_hosts: {
+            "www.example.com" => "/forum",
+          },
+          internal_link_base_prefix: "/forum",
+          on_foreign_host: ->(host) { foreign_hosts << host },
+        )
+
+      signalling.extract("[x](https://www.example.com/other-app/t/slug/5)")
+
+      expect(foreign_hosts).to be_empty
+      expect(buffer.links).to be_empty
     end
   end
 end

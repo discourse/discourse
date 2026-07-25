@@ -40,6 +40,25 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved[1]).to eq("x https://dest.example.com/t/42/3 y")
     end
 
+    it "rewrites a SITE link's origin, keeping its path, query and fragment" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: embed_owner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/faq?x=1#y",
+        target_type: link_target::SITE,
+        target_suffix: "/faq?x=1#y",
+      )
+      maps = FakePlaceholderMaps.new
+      resolver = described_class.new(intermediate_db, maps, owner_type: embed_owner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://dest.example.com/faq?x=1#y y")
+      expect(resolver.unresolved_embeds).to be_empty
+    end
+
     it "keeps the source URL for a link without a target" do
       link = placeholder.mint(:link)
       Migrations::Database::IntermediateDB::EmbedLink.create(

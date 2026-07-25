@@ -19,15 +19,26 @@ module Migrations
           # An absolute URL qualifies when its host is one the caller allowlisted (the
           # source's base URL and any former domains); the host match is
           # scheme-insensitive, so `http://`, `https://` and protocol-relative `//host`
-          # all count. A relative URL (a path, no host) qualifies only where it is
-          # actually a link: in link syntax `[text](/t/5)`, or as a bare URL the walk
-          # reaches at a `](…)` link target. A relative URL bare in prose is left
-          # alone, because it stays plain text when the post is cooked, so rewriting it
-          # would turn text into a link.
+          # all count. Each host carries a path prefix: a subdirectory install lives
+          # under `/forum`, so only a path inside that prefix belongs to the forum (the
+          # host may run other apps beside it), while a root-install host (nil prefix)
+          # owns every path. A relative URL (a path, no host) qualifies only where it
+          # is actually a link: in link syntax `[text](/t/5)`, or as a bare URL the
+          # walk reaches at a `](…)` link target; a subfolder site writes its relative
+          # links with the prefix (`/forum/t/5`), stripped via `base_prefix`. A
+          # relative URL bare in prose is left alone, because it stays plain text when
+          # the post is cooked, so rewriting it would turn text into a link.
+          #
+          # An absolute internal URL whose path parses no known route — a real site
+          # page (`/faq`, `/search?q=…`) or junk (`/t/slug/5a`) — is still recorded, as
+          # a `:site` target: only its origin is rewritten to the destination, and the
+          # path/query/fragment ride along in the suffix. A relative route-less URL
+          # stays literal: it is domain-free and already correct on the destination.
           #
           # The full original URL is kept (`url`) as the importer's fallback; the
           # route reveals the target, and everything after the route (further path,
           # query string, fragment) becomes the suffix, reattached verbatim at render.
+          # For a `:site` target the suffix is the whole path (after the prefix).
           class InternalLink < Base
             TRIGGERS = ["[", "h", "/"].freeze
 
@@ -61,8 +72,14 @@ module Migrations
             # rejection left to `split_host`/`parse_route`) costs a MatchData and a
             # string per h-word of every scanned post, which is measurable across a
             # whole conversion.
+            #
+            # The lazy `(?:/…)*?` admits the leading path segments of a subfolder
+            # install (`//host/forum/t/5`) before the route segment, the way
+            # `UploadUrl::URL` does. It stays lazy and demands a real route segment
+            # after, so a plain h-word (no `/`) still fails at the first required `/`
+            # without the group ever expanding.
             BARE =
-              %r{\G(?<url>(?:(?:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
+              %r{\G(?<url>(?:(?:https?:)?//[^/#{Base::URL_TERMINATORS}]+)?(?:/[^/#{Base::URL_TERMINATORS}]+)*?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
             private_constant :BARE
 
             # Splits a URL into its host (nil when relative) and the rest (path, query
@@ -81,6 +98,12 @@ module Migrations
             # A single path segment, up to the next `/`, query `?` or fragment `#`.
             SEGMENT = %r{[^/?#]+}
             private_constant :SEGMENT
+
+            # A real segment boundary right after a host prefix: the remainder begins a
+            # new path segment (`/`), the query (`?`) or the fragment (`#`). This keeps
+            # `/forum` from matching inside `/forumxyz`.
+            PREFIX_BOUNDARY = %r{\A[/?#]}
+            private_constant :PREFIX_BOUNDARY
 
             # A path segment that is entirely an id (see `Base::ID_PATTERN`).
             NUMERIC_SEGMENT = /\A#{Base::ID_PATTERN}\z/
@@ -125,17 +148,23 @@ module Migrations
             BADGE = %r{\A/badges/(?<id>#{Base::ID_PATTERN})(?:/#{SEGMENT})?(?=[/?#]|\z)}
             private_constant :BADGE
 
-            # @param hosts [Set<String>, #include?] the source's own hosts (base URL
-            #   plus former domains), already downcased. An absolute URL is internal
-            #   only when its host is one of these. Empty means relative-only.
+            # @param hosts [Hash{String => (String, nil)}] the source's own hosts (base
+            #   URL plus former domains), each downcased and mapped to its path prefix
+            #   (`"/forum"` for a subfolder install, `nil` for a root install). An
+            #   absolute URL is internal only when its host is a key here; on a prefixed
+            #   host only paths inside the prefix qualify. Empty means relative-only.
+            # @param base_prefix [String, nil] the current site's own path prefix, used
+            #   to strip a subfolder install's prefix from a relative link
+            #   (`/forum/t/5`) before the route is parsed. Nil for a root install.
             # @param on_foreign_host [#call, nil] called with the host (a String)
             #   when an absolute URL is rejected for a foreign host but its path
             #   still parses as an internal route — the "did the operator forget a
             #   former domain?" signal. Nil skips the extra route parse of a foreign
             #   host, so a run that doesn't want the signal pays nothing beyond the
             #   cheap host rejection.
-            def initialize(hosts: Set.new, on_foreign_host: nil)
+            def initialize(hosts: {}, base_prefix: nil, on_foreign_host: nil)
               @hosts = hosts
+              @base_prefix = base_prefix
               @on_foreign_host = on_foreign_host
             end
 
@@ -200,32 +229,81 @@ module Migrations
               return nil unless rest
               return nil if host.nil? && !allow_relative
 
-              if host && !@hosts.include?(host)
-                note_foreign_host(host, rest)
-                return nil
+              if host
+                unless @hosts.key?(host)
+                  note_foreign_host(host, rest)
+                  return nil
+                end
+                prefix = @hosts[host]
+              else
+                prefix = @base_prefix
               end
 
-              target = parse_route(rest)
-              return nil unless target
+              # On a prefixed host only paths inside the prefix belong to the forum;
+              # a sibling app's path (or a relative link that isn't the subfolder
+              # site's own) stays literal — no route, no `:site` rewrite, no signal.
+              path = strip_prefix(rest, prefix)
+              return nil if path.nil?
 
-              # `rest` is the extracted URL's own string (character domain), so its
-              # suffix is a plain character slice — only the input-domain positions in
-              # the `Match` below are byte offsets.
-              suffix = rest[target[:route_length]..]
-
-              node =
-                InternalLinkReference.new(
-                  url:,
-                  text:,
-                  target_type: target[:target_type],
-                  target_id: target[:target_id],
-                  target_name: target[:target_name],
-                  target_topic_id: target[:target_topic_id],
-                  target_post_number: target[:target_post_number],
-                  target_suffix: suffix.presence,
-                )
+              node = route_or_site_node(url:, text:, path:, host:)
+              return nil unless node
 
               Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
+            end
+
+            # A resolved route builds a typed target; an absolute internal URL with no
+            # route builds a `:site` target (origin-only rewrite). A relative route-less
+            # URL is domain-free and already correct on the destination, so it stays
+            # literal (nil node).
+            def route_or_site_node(url:, text:, path:, host:)
+              if (target = parse_route(path))
+                # `path` is the extracted URL's own string (character domain), so the
+                # suffix is a plain character slice — only the input-domain positions
+                # in the `Match` are byte offsets.
+                target_reference(url:, text:, target:, suffix: path[target[:route_length]..])
+              elsif host
+                site_reference(url:, text:, suffix: path)
+              end
+            end
+
+            def target_reference(url:, text:, target:, suffix:)
+              InternalLinkReference.new(
+                url:,
+                text:,
+                target_type: target[:target_type],
+                target_id: target[:target_id],
+                target_name: target[:target_name],
+                target_topic_id: target[:target_topic_id],
+                target_post_number: target[:target_post_number],
+                target_suffix: suffix.presence,
+              )
+            end
+
+            def site_reference(url:, text:, suffix:)
+              InternalLinkReference.new(
+                url:,
+                text:,
+                target_type: :site,
+                target_id: nil,
+                target_name: nil,
+                target_topic_id: nil,
+                target_post_number: nil,
+                target_suffix: suffix.presence,
+              )
+            end
+
+            # The path remainder after the host's prefix, or nil when the URL falls
+            # outside the prefix (it belongs to another app on the same host). A nil
+            # prefix (root install) owns every path, so the whole path is returned. The
+            # prefix must end on a real segment boundary — `/forum/t/…` and `/forum`
+            # itself match, `/forumxyz` does not.
+            def strip_prefix(rest, prefix)
+              return rest if prefix.nil?
+              return "" if rest == prefix
+              return nil unless rest.start_with?(prefix)
+
+              remainder = rest[prefix.length..]
+              PREFIX_BOUNDARY.match?(remainder) ? remainder : nil
             end
 
             # A foreign host is rejected before routing (the cheap check). Only when

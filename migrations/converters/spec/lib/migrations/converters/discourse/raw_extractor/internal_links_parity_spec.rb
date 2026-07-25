@@ -65,7 +65,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
       Migrations::Converters::EmbedBuffer.new(
         owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
       )
-    described_class.new(embeds: buffer, internal_link_hosts: Set[host]).extract(raw)
+    described_class.new(embeds: buffer, internal_link_hosts: { host => nil }).extract(raw)
     buffer.links.any?
   end
 
@@ -94,22 +94,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     expect(deviations).to be_empty, -> { deviations.join("\n") }
   end
 
-  # A trailing ASCII letter or `_` (a word character that isn't a digit) extends
-  # the URL's `/t/slug/5` id into `5a` / `5_`, which names no topic. Core still
-  # linkifies the longer URL, but the detector defers only URLs that parse as a
-  # known route, so it leaves this one for the destination to re-linkify verbatim
-  # — a deliberate divergence, excluded here. Digits keep a valid id, and a
-  # non-ASCII trailing character is trimmed off by the pattern's `\w` tail, so
-  # neither breaks the route.
-  def forward_route_breaking?(char)
-    char.match?(/\A[A-Za-z_]\z/)
-  end
-
   it "records a link exactly when core linkifies, for every character after the URL" do
     deviations =
       boundary_chars.filter_map do |label, char|
-        next if forward_route_breaking?(char)
-
         raw = "a #{url}#{char} b"
         extracted = detector_extracts?(raw)
         linkified = core_links?(raw)
@@ -120,9 +107,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor, :rails do
     expect(deviations).to be_empty, -> { deviations.join("\n") }
   end
 
-  it "leaves a trailing-word URL for the destination, where core linkifies but no route parses" do
+  # A trailing ASCII letter or `_` extends the URL's `/t/slug/5` id into `5a` / `5_`,
+  # which names no topic — so no route parses. On the source's own host the detector
+  # still records it, now as a SITE link (origin rewrite), matching core, which
+  # linkifies the longer URL all the same.
+  it "records a route-less trailing-word URL as a SITE link, matching core's linkify" do
     raw = "a #{url}a b"
-    expect(detector_extracts?(raw)).to be(false)
+    buffer =
+      Migrations::Converters::EmbedBuffer.new(
+        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+      )
+    described_class.new(embeds: buffer, internal_link_hosts: { host => nil }).extract(raw)
+
+    expect(buffer.links.first).to include(
+      target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::SITE,
+    )
     expect(core_links?(raw)).to be(true)
   end
 

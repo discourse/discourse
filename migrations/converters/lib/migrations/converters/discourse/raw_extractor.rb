@@ -42,6 +42,7 @@ module Migrations
           tag: LinkTarget::TAG,
           group: LinkTarget::GROUP,
           badge: LinkTarget::BADGE,
+          site: LinkTarget::SITE,
         }.freeze
         private_constant :LINK_TARGET_TYPES
 
@@ -65,13 +66,21 @@ module Migrations
         #   of them is extracted; standard shortcodes always stay plain text. Without
         #   them the emoji detector is left out entirely, so posts don't pay for its
         #   `:` trigger.
-        # @param internal_link_hosts [Set<String>, #include?] the source's own hosts
-        #   (its base URL and any former domains), already downcased. An absolute link
-        #   is treated as internal only when its host is one of these. A relative link
-        #   is internal wherever it is a real link (link syntax or a bare URL reached
-        #   at a `](…)` target); a relative URL bare in prose stays literal, since it
-        #   isn't a link once cooked. With the set empty (the default), only relative
-        #   links are detected.
+        # @param internal_link_hosts [Hash{String => (String, nil)}] the source's own
+        #   hosts (its base URL and any former domains), each downcased and mapped to
+        #   its path prefix — `"/forum"` for a subdirectory install (no trailing
+        #   slash), or `nil` for a root install. Different hosts may carry different
+        #   prefixes (a former root domain that later moved into a subfolder). An
+        #   absolute link is internal only when its host is a key here AND, for a
+        #   prefixed host, its path sits inside that prefix; on a root-install host
+        #   every path belongs to the forum. A relative link is internal wherever it is
+        #   a real link (link syntax or a bare URL reached at a `](…)` target); a
+        #   relative URL bare in prose stays literal, since it isn't a link once
+        #   cooked. With the map empty (the default), only relative links are detected.
+        # @param internal_link_base_prefix [String, nil] the current site's own path
+        #   prefix, for relative links: on a subfolder install a relative internal link
+        #   is written with the prefix (`/forum/t/slug/5`), so the prefix is stripped
+        #   before the route is parsed. `nil` (the default) for a root install.
         # @param on_foreign_host [#call, nil] called with the host of an absolute,
         #   internal-looking link whose host is not in `internal_link_hosts` — a hint
         #   that a former domain may be missing from the source_site settings. Nil (the
@@ -82,7 +91,8 @@ module Migrations
           mention_names: nil,
           hashtag_names: nil,
           custom_emoji_names: nil,
-          internal_link_hosts: Set.new,
+          internal_link_hosts: {},
+          internal_link_base_prefix: nil,
           on_foreign_host: nil
         )
           @embeds = embeds
@@ -91,7 +101,11 @@ module Migrations
           detectors = [Detectors::Upload.new, Detectors::UploadUrl.new, Detectors::Quote.new]
           # After UploadUrl, so an upload URL still wins over a bare internal link that
           # happens to look like one.
-          detectors << Detectors::InternalLink.new(hosts: internal_link_hosts, on_foreign_host:)
+          detectors << Detectors::InternalLink.new(
+            hosts: internal_link_hosts,
+            base_prefix: internal_link_base_prefix,
+            on_foreign_host:,
+          )
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
           if custom_emoji_names.present?
