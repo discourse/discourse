@@ -391,10 +391,15 @@ export default class AiBotDockedComposer extends Component {
     this.editingPost = null;
     return { ok: true };
   }
-
+  #handleBeforeInput = (event) => {
+    if (!this.siteSettings.ai_bot_composer_submit_on_enter && event.inputType === "insertLineBreak") {
+      event.stopImmediatePropagation();
+    }
+  };
   @action
   setupScrollListener(element) {
     this.#composerEl = element;
+    element.addEventListener("beforeinput", this.#handleBeforeInput, { capture: true });
     window.addEventListener("scroll", this.#checkScroll, { passive: true });
     this.#resizeObserver = new ResizeObserver(this.#checkScroll);
     this.#resizeObserver.observe(document.body);
@@ -420,6 +425,7 @@ export default class AiBotDockedComposer extends Component {
 
   @action
   teardownScrollListener() {
+    this.#composerEl?.removeEventListener("beforeinput", this.#handleBeforeInput, { capture: true });
     this.#composerEl = null;
     window.removeEventListener("scroll", this.#checkScroll);
     this.#resizeObserver?.disconnect();
