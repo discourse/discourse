@@ -5,6 +5,12 @@ variant, and the ad-hoc components are consolidated onto the engine.
 
 See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 
+> **Last reconciled against the code at `ad80441c0c7`** (2026-07-24). The previous reconciliation
+> was `74ab32e3b68`, twenty commits earlier, and this file had drifted badly — it still claimed
+> `DVirtualList` was unwired and listed shipped work as open. Claims below marked ☑/◐ in that
+> catch-up were re-verified against the source, not taken from commit messages. **Re-stamp this
+> line whenever you close an item**, so the next reader can size the drift.
+
 ## Tasks
 
 - ◐ **Typeahead-default rework** (Decision 1) — the single-select desktop and mobile baseline
@@ -80,11 +86,21 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     would re-resolve, re-write, invalidate the render that read it and never settle. The
     original "no tracked-cache write during resolve" note was preventing exactly that loop.
   - ☐ Custom `:unresolved` / `:selectionLoading` / `:loadingItem` blocks; skeleton taxonomy;
-    input-holds-only-query composite trigger; group flag UI (Decision 2).
-  - ☐ Runtime `@multiple` toggling is **not supported**: the engine reads `multiple` once in
-    its constructor, and `isTypeahead` hard-couples arity to variant. Decide whether a
-    select may flip arity at runtime (and what happens to a held array when it flips to
-    single) before any consumer relies on it.
+    input-holds-only-query composite trigger. (Group flag UI landed with `@groupBy` — see
+    the Decision 2 item below.)
+  - ☑ **Runtime input reactivity** (`f6ed1eb9649`). The engine captured every input but
+    `@value` in its constructor, so `@items`, `@selected`, `@multiple`, `@minChars` and
+    `@allowCreate` were inert after mount — a foundation defect for the component meant to
+    back the migration. All five now read through thunk-backed private getters that resolve
+    live and re-apply their defaults, wired from DSelect's args like the existing `getValue`
+    thunk; `closeOnSelect` re-derives `!multiple` with them. `loadContext` reads the effective
+    local items synchronously so a client-source change restarts the list even on the
+    debounced path, where the async function runs outside the cached computation and cannot
+    autotrack the source itself. `#localItems` normalizes through `makeArray`; supplying both
+    `@items` and `@load` warns once, with `@load` winning. `isTypeahead` is now purely
+    variant-derived (no arity coupling), so a runtime arity flip is mechanically supported.
+  - ☐ **Arity-flip semantics** remain undefined: what becomes of a held array when `@multiple`
+    goes true → false. Settle before any consumer relies on flipping.
 - ◐ **`@multiple` + chips** (shadcn `ComboboxChips` model):
   - ☑ **The flip (desktop)** — `@multiple` now routes through the typeahead machinery:
     `isTypeahead` drops its `!multiple` guard; the trigger renders chips inline with the query
@@ -128,8 +144,14 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     hard-wired backward/forward. Add RTL entry (+ its one other consumer + tests) as its own item.
   - ☐ **Mobile M5** (deferred): closed trigger → real `<button aria-haspopup="dialog">` with
     inert chips; composite moves into the modal; the B1a/B1b/B2/B4 fixes.
-  - ☐ Still to do (unchanged from before): `@maximum`/`@minimum`; pipe-paste bulk-add;
-    clear-all (`@clearable`); rewrite on-`main` `DMultiSelect` as a thin `@multiple` alias.
+  - ☑ **`@maximum`/`@minimum`** (`1204ec45981`) — the cap lands at the engine's single
+    `select()` chokepoint, so pointer, keyboard, create-on-the-fly and the compat bridge are
+    all covered by one guard. Unselected options render disabled at the cap, while pre-seeded
+    over-cap values stay displayed and removable rather than being trimmed. `@minimum` is
+    advisory. The limit message renders in a dedicated top-of-panel zone, and `dRovingFocus`
+    now clears a highlight left on a row that became disabled at runtime.
+  - ☐ Still to do: pipe-paste bulk-add; multi clear-all; rewrite on-`main` `DMultiSelect`
+    (still `app/ui-kit/d-multi-select.gjs`) as a thin `@multiple` alias.
   - ☐ Styleguide `@variant="button"`+`@multiple` and 6+-chip wrap examples; RFC line-123 vs
     238-242 mobile contradiction.
 - ☐ **Post-showcase UX follow-ups** — address after the concurrent implementation work lands:
@@ -144,15 +166,21 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     validate that against established multi-select UX before implementing it.
   - Decide whether a multi-select typeahead should retain an input placeholder when it already
     has selected items instead of presenting an empty input.
-  - Add a `title` to each chip's remove button in addition to its accessible name.
+  - Add a `title` to each chip's remove button in addition to its accessible name. (Still
+    absent — no `title=` on `.d-combobox__chip-remove`.)
   - Give disabled options a visually distinct default treatment, potentially reduced opacity,
-    while preserving sufficient text and icon contrast.
-- ☐ **Large-list reveal** (Decision 5): internal render chunk (client) / server
-  page-size auto-detected; hard `MAX_RENDERED` cap; `DLoadMore` reveal → "filter to
-  narrow" at the cap; `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
+    while preserving sufficient text and icon contrast. **Partly there and in tension with the
+    contrast item:** `d-combobox.scss` now styles `[aria-disabled="true"]` as
+    `color: var(--primary-medium); cursor: not-allowed` — but that is the same 3.15:1 token
+    flagged under status-message contrast, so "distinct" is currently bought with contrast that
+    already fails AA. Settle both together.
+- ☐ **Large-list reveal** (Decision 5): server page-size auto-detected; hard `MAX_RENDERED`
+  cap (**server-only** since `199ac768089`); reveal → "filter to narrow" at the cap;
+  `aria-setsize`/`aria-posinset`. 5k-sync performance gate.
   - ☑ Engine: `reveal` cursor, client range-slice and server page accumulator behind one
     `loadItems`, `canRevealMore`/`atCapWithMore`/`total`/`serverPending` gating, window reset
-    on filter and reload.
+    on filter and reload. **Superseded in part**: the client half of this was retired once
+    `DVirtualList` took over windowing (see the engine-unification item below).
   - ☑ Template: listbox `aria-busy`, the `<li role="presentation">` sentinel rooted at the
     listbox (the observer now takes an element, not just a selector), the narrow hint,
     per-option `aria-setsize`/`aria-posinset` from true totals, and count / loading-more
@@ -163,11 +191,13 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     flashes one; a re-query replaces the list, a reveal appends. Paginated styleguide
     examples (reported total, cursor) cover the busy state, the loading announcements, and the
     unknown-set-size encoding.
-  - ☐ **Placeholder placement.** Placeholders append below the last row, so they sit outside
-    the viewport exactly when they matter: arrowing to the last option, scrolling to the
-    bottom, or re-querying above stale rows. The listbox viewport fits 9 rows (320px against a
-    38.4px row). A sticky bottom indicator is position-independent and would supersede the
-    appended rows for reveals.
+  - ◐ **Placeholder placement.** Largely defused by windowing, not fixed: placeholders are
+    still appended (`#frontierSkeletons`, `[...items, ...skeletons]`), but the frontier is now
+    where the viewport *is* when a reveal fires, since reveal is edge-triggered by
+    `@onReachEnd` rather than by a sentinel below the fold. The remaining case is the
+    re-query: a new query resets the windowed scroll to the top while the placeholders sit at
+    the end of the stale list. A sticky bottom indicator is still the position-independent
+    answer if that case proves to matter.
   - ☑ **Separate `hasMore` from `total`, and invert the default.** `SelectLoadResponse` gained
     `hasMore`, and **silence now means complete**: only `hasMore: true` or a `total` above the
     rows returned buys another fetch. A source that cannot say whether more exists is not fit for
@@ -180,15 +210,20 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     discarded non-duplicate row, not merely a full list), so it both withdraws the derived size
     and drives the narrow hint. `hasMore` is per-response; `total` stays sticky and outranks the
     navigable row count.
-  - ☐ **`serverCompletedKey` write ordering on abort** (pre-existing). `#settleServerPage` sets it
-    from `finally` on the abort path, and the generation counter is bumped only by `#resetWindow`,
-    which the reveal path never calls. Two settles racing in one generation can leave the key on
-    the older load, pinning `serverPending` true and `canRevealMore` false.
-  - ☐ **Dedup key collisions across heterogeneous sources.** `#valueKey` is `String(value)` with no
-    type namespace, so a user `id: 5` and a group `id: 5` collide and the second is dropped. This
-    is also why a derived total describes the *navigable* set rather than the source's true count.
-  - ☐ **`atCapWithMore` phrasing under truncation.** "Keep typing to narrow the results" is sound
-    for a client cap; for a server-truncated set, typing may not help.
+  - ◐ **`serverCompletedKey` write ordering on abort** (pre-existing). The `finally` block now
+    guards the write on `generation === this.#serverGeneration` and documents the call
+    deliberately: completion covers rejection *and* abort, because skipping the abort path left
+    the key behind the live one forever, pinning `aria-busy` on and `canRevealMore` false. The
+    accepted cost is that a same-key retry reads as settled while genuinely in flight — a brief
+    missing busy signal rather than a dead control. Re-check whether two settles racing inside
+    one generation can still strand the key on the older load.
+  - ☐ **Dedup key collisions across heterogeneous sources.** Still open: `#valueKey` is
+    `String(value)` with no type namespace, so a user `id: 5` and a group `id: 5` collide and
+    the second is dropped. This is also why a derived total describes the *navigable* set
+    rather than the source's true count.
+  - ☐ **`atCapWithMore` phrasing under truncation.** Now strictly a server concern — the client
+    cap is gone, so every `atCapWithMore` is a server-truncated set, and "Keep typing to narrow
+    the results" (`d_select.filter_to_narrow`) is exactly the case where typing may not help.
   - ☐ **`itemsKey` is conditional** (`d-select.gts`): non-typeahead variants key roving-focus
     reconciliation on the filter, so appended server pages never re-run `modify()`. Latent; the
     first run always sees real rows because the loading block is a separate list without the
@@ -196,13 +231,11 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   - ☐ **`selectKit.triggerSearch()` missing from the compat bridge.** The facade exposes only
     `value`/`filter`/`isLoading`/`close`/`select`/`set`, but at least one plugin calls
     `triggerSearch()`. It will throw once `mini-tag-chooser` moves to `DSelect`.
-  - ☐ **Flaky: "resets the window when the query changes"** (`d_select_bounded_reveal_spec.rb`,
-    client path, pre-existing). Observed failing once with 100 options where it asserts 50, then
-    passing 3/3 isolated and 2/2 paired. After a filter reset the sentinel can already be within
-    the observer's 200px root margin, so a client reveal — which needs no network — fires before
-    the assertion runs. Waiting for a stable count rather than an immediate one would mask a real
-    regression just as well, so the fix is probably to assert the reset synchronously (the window
-    is one chunk at the moment the filter changes) rather than after the DOM settles.
+  - ☑ **Flaky: "resets the window when the query changes"** — dissolved rather than fixed. The
+    flake was a client reveal firing off the observer sentinel before the assertion ran; both
+    the client render window and the sentinel are gone (`199ac768089`, `ab295dfffbc`), and
+    `d_select_bounded_reveal_spec.rb` was rewritten to assert the *loaded frontier* grows on
+    scroll (`c369877b6d1`). Watch for a successor flake now that the assertion is scroll-driven.
   - ☑ **Selected option active on open.** `dRovingFocus` gained `autoActivateSelected`, giving
     active mode the `aria-selected` preference `#seedTabStop` already had in focus mode, so a
     rendered selection is activated and scrolled to (restoring what select-kit's `_scrollToCurrent`
@@ -214,47 +247,112 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     `#requestClose` is gated on the overlay actually being open, since `DMenuInstance.close`
     focuses the trigger by default and the compat bridge lets consumers call `select()` long
     after dismissing the overlay.
-  - ☐ **Selection outside the render window.** Still unreachable: a client selection past
-    `MAX_RENDERED`, or a server selection in no fetched page. Close the client half when DSelect
-    adopts `DVirtualList` (`scrollToIndex` handles any index); a selection at 50–199 is reachable
-    by scrolling today, so no prefix-window stopgap was built. The server half is not solvable by
-    rendering at all — it needs a locate-by-value contract from the source.
-- ☑ **`DVirtualList` folded into this branch** (Decision 5 reversed on the record in the RFC).
-  The windowing primitive, its bridge modifier, the library wall over `@tanstack/virtual-core`
-  (pinned `3.17.5`), its SCSS, both test suites and a 10k-row styleguide demo now live here, so
-  the two engines can be shaped against each other. Nothing is wired to `DSelect` yet.
-  - ☐ **Wire DSelect to the primitive.** `@items` = the accumulated array, `@role="listbox"`,
-    `@itemRole="option"`. Collides with `#describeList`'s own `posInSet`/`setSize` stamping —
-    the primitive's row wrapper owns those once wired, and only a position-aware `@itemRole`
-    stamps them, so the ownership boundary needs settling rather than assuming. `MAX_RENDERED`
-    stops being necessary at that point.
-  - ☐ **Roving focus over a moving window** — the blocker. `dRovingFocus` re-queries
-    `querySelectorAll("[role=option]")` and assumes every navigable option is mounted, which is
-    false once the window moves. An await-based shape was already rejected upstream (six
-    verified defects) in favour of flag-and-reconcile at `#reconcileActive` — the same seam the
-    selected-option restoration uses. Do not rediscover that.
-  - ☐ **Edge-triggered fetching.** The primitive ships no load-more affordance, so the
-    `DLoadMore` sentinel is replaced by comparing the visible range against the row count.
-    `onVisibleRangeChange` fires on any state change, not only range changes, so it needs
-    dedup and a per-edge latch with mount suppression.
-  - ☐ **Primitive defects carried over, none blocking:** the API handle pins the items array on
-    teardown, fractional/negative `@overscan` throws, the render-all fallback still measures
-    every row, `onVisibleRangeChange` over-fires, and symbol-keyed items are held strongly.
-  - ☐ **Engine path unification** (analysis done, not implemented). `this.#load` is branched on
-    at eight sites, each a parallel implementation of accumulate / window / count / exhaustion —
-    against the RFC's async-first intent, where the client case is "the same loader, not a
-    separate path". Two standalone bugs fell out: a server source refetches a value already in
-    its accumulator because the resolve ladder's known-rows rung is client-only, and `reveal`
-    sits inside the load key so a reveal reads as a full re-identification of the query.
-  - ☐ **`Home`/`End`.** Optional per APG, and reserved for the text caret in an editable
-    combobox, so they suit the static variant only. `End` under a bounded window would land on
-    the last rendered row rather than the last of the set; settle with the item above.
-  - ☐ **Status-message contrast.** `--primary-medium` measures 3.15:1 on light (AA needs
-    4.5:1); shared by the empty, keep-typing, narrow and error messages, so it is a
-    token-level decision.
-  - ☐ 5k-sync performance gate; visual pass (Foundation + Horizon, light + dark).
-  - ☐ Deferred to its own cycle: the `dRovingFocus` keyboard-boundary hook. v1 reveals
-    through the prefetch sentinel for both pointer and keyboard.
+  - ◐ **Selection outside the render window.** **Client half closed** as predicted: DSelect
+    adopted `DVirtualList`, the client cap is gone, and the listbox API's `scrollToIndex`
+    reaches any index (`d-select.gts` `#listboxApi.scrollToIndex`, fed by `@pinnedIndex`).
+    **Server half still open** and still not solvable by rendering — a selection sitting in no
+    fetched page needs a locate-by-value contract from the source.
+- ◐ **`DVirtualList` folded into this branch, and now wired** (Decision 5 reversed on the
+  record in the RFC). The windowing primitive, its bridge modifier, the library wall over
+  `@tanstack/virtual-core` (pinned `3.17.5`), its SCSS, both test suites and the styleguide
+  demos live here, and `DSelect`'s option list renders through it.
+  - ☑ **Primitive grown into the windowing surface** (`d2b38dcbbc6`, `faf7aebf36f`). Rows key
+    on a stable `@key` field instead of object identity, so rebuilding item objects no longer
+    orphans measured heights. Rendering is per-row absolute `translateY` with native
+    `@as`/`@ownedRow` elements via `dElement`, so the semantic list tree and ARIA live on the
+    inner container while the outer viewport scrolls. A symmetric edge API
+    (`@onReachStart`/`@onReachEnd`, threshold + hysteresis, mount and initial-fill handling)
+    replaced the over-firing `onVisibleRangeChange` for consumers, and
+    `@initialIndex`/`@pinnedIndex` add flash-free deep-open and off-window pinning, the pinned
+    row merged in index order so DOM and `aria-posinset` stay monotonic. The positioning
+    modifier is one stable instance applied with args, so a re-render updates it in place
+    rather than letting an old instance's teardown strip a reused row's styles. The
+    spacer-vs-per-row spike concluded for per-row (only per-row composes with `@pinnedIndex`)
+    and the spike components were deleted.
+  - ☑ **Wire DSelect to the primitive** (`ab295dfffbc`). The listbox renders in owned-row mode,
+    yielding `SelectItem` rows (plus frontier skeletons during a server reveal) as direct
+    children of the inner listbox; the `DLoadMore` sentinel is gone, replaced by `@onReachEnd`.
+    The roving highlight moved from the modifier's imperative class to tracked state
+    (`SelectItem` `@active`, cleared on close) so it survives the windowed row re-render that
+    the imperative toggle did not. The scroll viewport moved from the listbox to the outer
+    `.d-virtual-list`. **Ownership boundary settled** the other way than assumed: `#describeList`
+    keeps stamping `posInSet`/`setSize` from true engine totals rather than ceding them to the
+    row wrapper — see the partial-load item below.
+  - ☑ **Roving focus over a moving window** — the ex-blocker, closed in two steps.
+    `6ff1de494f1` gave `dRovingFocus` absolute logical navigation: `Home`/`End`/`PageUp`/
+    `PageDown` target logical rows rather than the mounted slice, bounded by a new
+    `logicalCount`, with `onJump(target, direction)` handing an off-window target to the
+    consumer; without `logicalCount` the behaviour is unchanged. `ea1a19bb4da` wired DSelect to
+    it: a jump outside the mounted window scrolls the target in, then refocuses on the next
+    runloop once the new window commits, with the active row pinned so `aria-activedescendant`
+    never dangles. The row block is guarded against a transiently-absent descriptor (a
+    shrinking item array whose published window briefly outruns it), and the mobile static
+    list seeds its pin on initial focus. The earlier `focusLogicalIndex`/`onEdgeReach` seams
+    (`0da85314449`) were the first cut. As predicted, no await-based shape was used.
+  - ☑ **Edge-triggered fetching.** Delivered as the primitive's `@onReachEnd`/`@onReachStart`
+    edge API (with threshold, hysteresis and mount suppression) rather than as consumer-side
+    dedup over `onVisibleRangeChange`. DSelect consumes the edge callbacks and never reads
+    `onVisibleRangeChange`.
+  - ☑ **Contiguity after an item-set change** (`d6f372cba6a`). virtual-core caches its scroll
+    offset and refreshes it only from the scroll element's events, so when `@items` shrinks and
+    then grows — a select filtered to one match and widened again — the browser clamps
+    `scrollTop` without firing an observed event and the window is computed from a stale,
+    out-of-range offset. With `@pinnedIndex` set that painted the pinned row at the top and the
+    window far below it, with a visible gap between. The modifier now re-reads the element's
+    real `scrollTop` on an item-set update whenever it disagrees with the cached offset, and
+    no-ops when they match.
+  - ☑ **Element-cache sweep pinned** (`017610a72f8`). `dVirtualizer` calls
+    `measureElement(null)` each flush to evict disconnected rows from the engine's
+    ResizeObserver, which never fires on removal; without it the cache grows with every row
+    scrolled past. That version-sensitive virtual-core contract now has a unit test.
+  - ☑ **Modifier inert when virtualization is off** (`a649e0b6e3d`). The test toggle gated only
+    the component's rendering, so a disabled modifier still built the engine and fired
+    edge/range callbacks off a zero-height container. `modify()` now returns early and tears
+    down any engine a prior enabled run built, and
+    `disableVirtualization()`/`enableVirtualization()` are wired into the test harness
+    alongside the load-more toggle so rendering tests mount every row.
+  - ☑ **Engine path unification** (`199ac768089`, `fd1f63ffcf1`). The client render window
+    (`#clientWindow`, the client reveal, the 50/200-row client chunk and cap) is gone — a
+    client list renders in full and is windowed by `DVirtualList`. The five source-kind getters
+    plus `#knownRows` collapsed behind a construction-time `#source` strategy
+    (`LocalSource`/`PagedSource`), so no consumer branches on client-vs-paged; server
+    pagination, its accumulator, cap and dedup moved into `PagedSource` unchanged and
+    `MAX_RENDERED` survives as the **server-only** cap. Both fallout bugs are fixed: the
+    resolve ladder's known-rows rung now reads the source-appropriate buffer (`#knownRows`), so
+    a server source no longer refetches a value already in its accumulator. Because the full
+    filtered list drives the window, a new query resets the windowed scroll to the top, which
+    the per-query engine window did implicitly before.
+  - ☑ **`Home`/`End`** — settled with the item above rather than deferred. In active mode the
+    Page keys always page the listbox, while `Home`/`End` stay with the caret for an editable
+    controller and move to the ends for a non-editable one, so the editable-combobox caret
+    reservation is honoured without giving up the static variant. `End` landing short of the
+    true end is now an honest state, not a lie: see partial-load sizing below.
+  - ☑ **Honest `aria-setsize` under partial load** (`6adae1aa620`). A server source that
+    declares more rows than it has loaded cannot size its set, so its descriptors report
+    `aria-setsize="-1"` — each row keeping its own position — until it completes. A client
+    source and a complete server source keep their true, known size. `End` therefore lands on
+    the last loaded row as "option N" rather than a misleading "option N of «declared total»".
+  - ☐ **`itemsKey` is conditional** (`d-select.gts`, unchanged). Non-typeahead variants still
+    key roving-focus reconciliation on the filter (`itemsKey=(if this.isTypeahead items
+    this.rovingNonTypeaheadKey)`), so appended server pages never re-run `modify()`. Latent;
+    the first run always sees real rows because the loading block is a separate list without
+    the modifier.
+  - ☐ **Primitive defects carried over, none blocking** (re-checked, still present): the API
+    handle pins the items array on teardown, fractional/negative `@overscan` throws
+    (`overscan ?? 5`, no validation), the render-all fallback still measures every row, and
+    symbol-keyed items are held strongly. `onVisibleRangeChange` still over-fires but no
+    longer has a consumer — decide whether to fix or drop it.
+  - ☐ **Status-message contrast** (unchanged). `--primary-medium` measures 3.15:1 on light (AA
+    needs 4.5:1); `d-combobox.scss` uses it for the empty, keep-typing, narrow and error
+    messages among others, so it is a token-level decision.
+  - ◐ 5k-sync performance gate still to run. Visual pass: the styleguide showcase was rewritten
+    for the windowed list (`5f069e955ec` — the old copy still described the retired 50-row
+    window, sentinel and hard cap) and gained a desktop screenshot marker that opens the large
+    list and scrolls it deep, so the theme matrix now covers windowed rendering. Reading the
+    resulting shots across Foundation/Horizon × light/dark is outstanding.
+  - ☑ The `dRovingFocus` keyboard-boundary hook is no longer a deferred cycle: the prefetch
+    sentinel is gone, and keyboard reveal now runs through `logicalCount` + `onJump` and the
+    primitive's edge callbacks, the same path as pointer.
 - ☑ **Chrome args** (commit `0f93bdf`): the trigger is unified onto a focusable `div` with
   per-variant WAI-ARIA roles (static select-only combobox, button disclosure, typeahead/multi
   input) and the leading-icon/clear/caret are extracted into one no-wrapper trigger frame. On
@@ -266,8 +364,37 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   roving-focus scrolls the listbox not the page, and DAsyncContent assimilates sync sources.
   **Deferred:** `@openOn` (needs a float-kit `focus` trigger), `@focusWrap`, create-on-the-fly
   (`@validateCreate`).
-- ☐ **Group/section-aware model** (Decision 2): flat engine list + `role="group"` +
-  `@groupBy`; UI exercised later by the category family.
+- ☑ **Group/section-aware model** (Decision 2, `1204ec45981`): `@groupBy` segments a client
+  source into sections with a non-selectable header row per group, each option associated to
+  its header via `aria-describedby`, plus the structural divider seam. Still to be exercised by
+  the category family; grouping a *server* source is untested.
+- ☑ **Capability parity pass** — three commits of select-kit feature catch-up that predate any
+  tracker line of their own:
+  - `1204ec45981`: `@selectedIcon` (selected indicator in single-select), `@showCaret` to
+    suppress the trigger caret, a `:footer` block rendering keyboard-reachable content pinned
+    below the list and yielding live dropdown state, and a default source-error state that is
+    now a muted recoverable message with an optional retry plus an `:error` override block.
+  - `d5bea47065f`: `@noneLabel` gives a single-select a first-class none row — a selectable row
+    (value `null`) that clears the selection and reads as selected while nothing is chosen,
+    injected through the engine's special-row counting path so its ARIA position and keyboard
+    index stay in lockstep, and hidden under an active query so a non-matching search still
+    reaches the empty state. A multi-select now coerces each emitted id to its resolved source
+    item's native type, so a URL-typed `"5"` and a freshly-picked `3` stop leaving as a mixed
+    `["5", 3]`; unresolved ids pass through unchanged and `@value` is never mutated.
+    `@iconOnly` renders a label-less trigger on the `button`/`static` single-select variants,
+    requiring `@label` for the accessible name (debug assertion), and every overlay gained a
+    tunable min-width floor (`--d-combobox-menu-min-width`) so a compact trigger's panel is
+    never clipped.
+  - `ad80441c0c7`: on the typeahead variant a `:selection` block is a **resting adornment**,
+    not a lock. It previously rendered into a non-editable presentation span and pinned the
+    query input empty, so the field could not be typed into. While the trigger input holds
+    focus it now shows the plain selected label, selected for overtype like the block-free
+    typeahead, reverting to the custom markup when focus leaves. A `didUpdate` selects the
+    label as it appears so the first keystroke overtypes rather than appends. Clicking outside
+    reverts too, via a document `pointerdown` listener that drops focus explicitly — the
+    browser leaves the input focused when a press lands on a non-focusable element. Escape and
+    selecting an option both keep focus and therefore keep the label. **Open question for the
+    user:** whether selecting should instead snap straight back to the custom markup.
 - ☑ **Value-equality contract**: the engine matches ids by a normalized string key
   (`#valueKey`), so a bound `"5"` selects item id `5` (both directions) and the resolved
   cache no longer misses on a string/number mismatch. Always-on, no `castInteger` opt-in.
@@ -275,22 +402,43 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
 
 ## Test gate
 
-Run before calling any item done. `--filter` is a **literal substring** here (regex and
-`/slashes/` only work under `--standalone`), so the family is covered by one shared substring
-rather than a union:
+Run before calling any item done. **Correction to the previous note:** `--filter` is a
+case-insensitive substring *or* a slash-wrapped regex (`/foo/i`), and the regex form is **not**
+restricted to `--standalone` — `bin/qunit --help` documents both forms for either mode. One
+shared substring still covers the family more cheaply than an alternation:
 
 ```bash
-bin/qunit --filter "ui-kit"   # 460 tests, ~35s — SelectEngine, the bridge, every DSelect
-                              # module, dRovingFocus, plus ui-kit collateral
-bin/qunit --filter "A11y"     # 17 — the shared live-region service
+bin/qunit --filter "ui-kit"   # 845 tests — SelectEngine, the bridge, every DSelect module,
+                              # dRovingFocus, DVirtualList + the virtualizer, ui-kit collateral
+bin/qunit --filter "A11y"     # 20 — the shared live-region service
 bin/qunit --module "Integration | Component | DIconGridPicker"   # 32 — the other a11y consumer
 ```
 
 The last two matter because the a11y service's own tests are named
 `Integration | Component | A11y | LiveRegions`, not `ui-kit` — a `ui-kit`-only run misses them.
 
-Known pre-existing failure, unrelated to this phase: `Integration | ui-kit | DDateTimeInput:
-allows mutations through actions` (verified red on a pristine HEAD).
+QUnit is not the whole gate. Scroll, real focus order and native activation only exist in a
+browser, so six system specs now ride along — all in the **styleguide plugin**, which is still
+the only surface rendering `DSelect` (they move to core `spec/system` once a real consumer does):
+
+```bash
+bin/rspec plugins/styleguide/spec/system/d_select_bounded_reveal_spec.rb \
+          plugins/styleguide/spec/system/d_select_cursor_source_spec.rb \
+          plugins/styleguide/spec/system/d_select_multi_chip_roving_spec.rb \
+          plugins/styleguide/spec/system/d_select_no_probe_spec.rb \
+          plugins/styleguide/spec/system/d_select_showcases_spec.rb \
+          plugins/styleguide/spec/system/d_select_windowed_nav_spec.rb
+```
+
+They share the core-owned page object `PageObjects::Components::UiKit::DSelect` plus the
+styleguide's `SelectShowcases`. Since windowing landed, the page object no longer counts mounted
+options to measure loading — it reads the loaded frontier from the highest reachable
+`data-index`, and it has helpers for the active/focused option and the windowed reveal
+(`c369877b6d1`).
+
+The previously-noted pre-existing failure (`Integration | ui-kit | DDateTimeInput: allows
+mutations through actions`) is **gone** — it ran and passed in the run above, so it was fixed
+upstream. The gate has no known-red tests.
 
 `pnpm lint:types` does **not** check `.js` tests — `tsconfig-base.json` sets `allowJs` with no
 `checkJs`. A test asserting a typed engine API should be `.ts` so the checker guards it; runtime
