@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import BlockOutlet from "discourse/blocks/block-outlet";
 import {
   blockDataKey,
@@ -31,10 +31,12 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-skeleton-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => {
-          resolveCalls++;
-          return fetchPromise;
-        },
+        source: defineBlockDataSource({
+          resolve: () => {
+            resolveCalls++;
+            return fetchPromise;
+          },
+        }),
         skeleton: () => ({ variant: "rect", count: 2 }),
       },
     })
@@ -93,7 +95,9 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-custom-loading-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => fetchPromise,
+        source: defineBlockDataSource({
+          resolve: () => fetchPromise,
+        }),
       },
     })
     class DataCustomLoadingBlock extends Component {
@@ -132,7 +136,9 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-empty-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => Promise.resolve(null),
+        source: defineBlockDataSource({
+          resolve: () => Promise.resolve(null),
+        }),
       },
     })
     class DataEmptyBlock extends Component {
@@ -167,10 +173,12 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-preload-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => {
-          resolveCalls++;
-          return Promise.resolve("from-network");
-        },
+        source: defineBlockDataSource({
+          resolve: () => {
+            resolveCalls++;
+            return Promise.resolve("from-network");
+          },
+        }),
       },
     })
     class DataPreloadBlock extends Component {
@@ -203,10 +211,12 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-prepare-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => {
-          resolveCalls++;
-          return Promise.resolve("prepared");
-        },
+        source: defineBlockDataSource({
+          resolve: () => {
+            resolveCalls++;
+            return Promise.resolve("prepared");
+          },
+        }),
       },
     })
     class DataPrepareBlock extends Component {
@@ -256,10 +266,12 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-refetch-block", {
       data: {
         request: () => ({ kind: "refetch", count: state.count }),
-        resolve: () => {
-          resolveCalls++;
-          return new Promise((resolve) => pendingResolvers.push(resolve));
-        },
+        source: defineBlockDataSource({
+          resolve: () => {
+            resolveCalls++;
+            return new Promise((resolve) => pendingResolvers.push(resolve));
+          },
+        }),
       },
     })
     class DataRefetchBlock extends Component {
@@ -311,7 +323,9 @@ module("Integration | Blocks | block data", function (hooks) {
     @block("data-error-block", {
       data: {
         request: () => DESCRIPTOR,
-        resolve: () => Promise.reject(new Error("nope")),
+        source: defineBlockDataSource({
+          resolve: () => Promise.reject(new Error("nope")),
+        }),
       },
     })
     class DataErrorBlock extends Component {

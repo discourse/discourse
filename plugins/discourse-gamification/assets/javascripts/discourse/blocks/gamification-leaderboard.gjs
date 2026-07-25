@@ -1,6 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
 /** @type {import("discourse/plugins/discourse-gamification/discourse/components/minimal-gamification-leaderboard-view.gjs")} */
 import MinimalGamificationLeaderboardView from "../components/minimal-gamification-leaderboard-view";
@@ -16,6 +16,15 @@ const PERIODS = [
   "daily",
 ];
 const AVATAR_SIZES = ["small", "medium", "large"];
+
+const gamificationLeaderboardDataSource = defineBlockDataSource({
+  resolve: (descriptor) =>
+    fetchLeaderboard({
+      id: descriptor.leaderboardId,
+      count: descriptor.count,
+      period: descriptor.period,
+    }),
+});
 
 /**
  * Block registration for the gamification leaderboard. Wraps the
@@ -131,18 +140,13 @@ const AVATAR_SIZES = ["small", "medium", "large"];
     footerLinkLabel: "Show all",
   },
   data: {
+    source: gamificationLeaderboardDataSource,
     request: (args) => ({
       kind: "gamification-leaderboard",
       leaderboardId: args.leaderboardId,
       count: args.count ?? 10,
       period: args.period,
     }),
-    resolve: (descriptor) =>
-      fetchLeaderboard({
-        id: descriptor.leaderboardId,
-        count: descriptor.count,
-        period: descriptor.period,
-      }),
     skeleton: (args) => ({ variant: "rect", count: args.count ?? 10 }),
   },
 })

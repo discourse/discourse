@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
 /** @type {import("discourse/plugins/discourse-calendar/discourse/components/upcoming-events-list-view.gjs")} */
 import UpcomingEventsListView from "../components/upcoming-events-list-view";
@@ -10,6 +10,10 @@ import {
   fetchUpcomingEvents,
   upcomingEventsListTitle,
 } from "../lib/upcoming-events";
+
+const upcomingEventsDataSource = defineBlockDataSource({
+  resolve: (descriptor) => fetchUpcomingEvents(descriptor),
+});
 
 /**
  * Block registration for the calendar plugin's upcoming events
@@ -88,6 +92,7 @@ import {
   },
   previewArgs: { count: 8, upcomingDays: 180 },
   data: {
+    source: upcomingEventsDataSource,
     request: (args) => ({
       kind: "upcoming-events",
       count: args.count ?? 8,
@@ -95,7 +100,6 @@ import {
       categoryId: args.categoryId,
       includeSubcategories: args.includeSubcategories ?? false,
     }),
-    resolve: (descriptor) => fetchUpcomingEvents(descriptor),
     skeleton: (args) => ({ variant: "rect", count: args.count ?? 8 }),
   },
 })

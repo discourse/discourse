@@ -11,6 +11,7 @@ import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import type { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
+import type { BlockDataDeclaration } from "discourse/blocks/types";
 import cssIdentifier from "discourse/helpers/css-identifier";
 import BlockData from "discourse/lib/blocks/-internals/components/block-data";
 import { getBlockData } from "discourse/lib/blocks/-internals/data-coordinator";
@@ -36,24 +37,6 @@ interface BlockSkeletonShape {
   count?: number;
   width?: string;
   height?: string;
-}
-
-/**
- * A block's declared data dependency, recorded by the `@block` decorator's
- * `data` option. `request` maps the block's args to a serializable descriptor
- * (or `null` when no async data is needed for the current args); `resolve`
- * turns that descriptor into render-ready data; the optional `hydrate` adapts a
- * server-preloaded payload; and the optional `skeleton` shapes the loading
- * placeholder.
- */
-interface BlockDataMeta {
-  request: (args?: Record<string, unknown> | null) => unknown;
-  resolve: (
-    descriptor: unknown,
-    options: { owner?: Owner; signal?: AbortSignal }
-  ) => unknown;
-  hydrate?: (raw: unknown, options: { owner?: Owner }) => unknown;
-  skeleton?: (args?: Record<string, unknown> | null) => BlockSkeletonShape;
 }
 
 interface WrappedBlockLayoutArgs {
@@ -82,7 +65,7 @@ interface WrappedBlockLayoutArgs {
   // The block's declared data dependency, present when the block declares a
   // data option, otherwise null. When present the wrapper resolves it and
   // hands the block a bound data-region boundary as the Data argument.
-  dataMeta?: BlockDataMeta | null;
+  dataMeta?: Readonly<BlockDataDeclaration> | null;
   // The block's reactive args object, used to derive the request descriptor.
   // Reading named keys keeps the lookup reactive.
   dataArgs?: Record<string, unknown> | null;

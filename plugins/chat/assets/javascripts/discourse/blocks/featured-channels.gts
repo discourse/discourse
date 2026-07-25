@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { type ComponentLike } from "@glint/template";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
@@ -9,6 +9,47 @@ import { i18n } from "discourse-i18n";
 import ChatChannelCardUntyped from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import type ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import FeaturedChannelsThumbnail from "./thumbnails/featured-channels";
+
+const featuredChannelsDataSource = defineBlockDataSource({
+  resolve: async (
+    descriptor: { channels: string },
+    { owner }: { owner: Owner }
+  ) => {
+    const ids = descriptor.channels
+      .split("|")
+      .map((raw) => parseInt(raw, 10))
+      .filter((id) => !Number.isNaN(id));
+    if (!ids.length) {
+      return null;
+    }
+
+    // Fetch the curated set in one guardian-scoped request. We hit the
+    // endpoint directly (rather than the tracked `Collection`) and hydrate
+    // models only after the await, so no tracked state is mutated inside the
+    // data-region's tracked computation.
+    const response = (await ajax("/chat/api/channels", {
+      data: { channel_ids: ids, limit: ids.length },
+    })) as { channels: object[] };
+
+    const manager = owner.lookup(
+      "service:chat-channels-manager"
+    ) as unknown as {
+      store: (channel: object) => ChatChannel;
+    };
+    const byId = new Map<number, ChatChannel>();
+    for (const channelJson of response.channels) {
+      const model = manager.store(channelJson);
+      byId.set(model.id, model);
+    }
+
+    // Preserve the configured order; the server is free to return the
+    // guardian-visible subset in any order.
+    const ordered = ids
+      .map((id) => byId.get(id))
+      .filter((channel): channel is ChatChannel => Boolean(channel));
+    return ordered.length ? ordered : null;
+  },
+});
 
 // TODO(devxp-typescript-pending): drop once ChatChannelCard is authored in
 // .gts with a real Signature, then import it directly.
@@ -74,48 +115,11 @@ interface FeaturedChatChannelsSignature {
     },
   },
   data: {
+    source: featuredChannelsDataSource,
     request: (args: { channels?: string }) => ({
       kind: "chat-channels",
       channels: args.channels ?? "",
     }),
-    resolve: async (
-      descriptor: { channels: string },
-      { owner }: { owner: Owner }
-    ) => {
-      const ids = descriptor.channels
-        .split("|")
-        .map((raw) => parseInt(raw, 10))
-        .filter((id) => !Number.isNaN(id));
-      if (!ids.length) {
-        return null;
-      }
-
-      // Fetch the curated set in one guardian-scoped request. We hit the
-      // endpoint directly (rather than the tracked `Collection`) and hydrate
-      // models only after the await, so no tracked state is mutated inside the
-      // data-region's tracked computation.
-      const response = (await ajax("/chat/api/channels", {
-        data: { channel_ids: ids, limit: ids.length },
-      })) as { channels: object[] };
-
-      const manager = owner.lookup(
-        "service:chat-channels-manager"
-      ) as unknown as {
-        store: (channel: object) => ChatChannel;
-      };
-      const byId = new Map<number, ChatChannel>();
-      for (const channelJson of response.channels) {
-        const model = manager.store(channelJson);
-        byId.set(model.id, model);
-      }
-
-      // Preserve the configured order; the server is free to return the
-      // guardian-visible subset in any order.
-      const ordered = ids
-        .map((id) => byId.get(id))
-        .filter((channel): channel is ChatChannel => Boolean(channel));
-      return ordered.length ? ordered : null;
-    },
     skeleton: () => ({ variant: "rect", count: 3 }),
   },
 })

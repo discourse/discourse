@@ -54,6 +54,12 @@ export interface BlockInfo {
   metadata: BlockMetadata | null;
 }
 
+/** A layout entry paired with its asynchronously resolved block class. */
+interface ResolvedBlockDataEntry {
+  blockClass: BlockClass;
+  entry: LayoutEntry;
+}
+
 /**
  * Unified service for block registry and condition evaluation.
  *
@@ -587,8 +593,10 @@ export default class Blocks extends Service {
   }
 
   /**
-   * Walks layout entries (depth-first into containers), starting resolution for
-   * every block that declares a data dependency and collecting the promises.
+   * Resolves every block class in a depth-first walk, then starts all declared
+   * data dependencies synchronously and collects their promises. Finishing the
+   * asynchronous walk first keeps one layout's source-backed misses in the same
+   * microtask batch window.
    *
    * @param scope - The outlet name.
    * @param entries - Validated layout entries.
@@ -598,9 +606,11 @@ export default class Blocks extends Service {
    * @returns
    */
   async #collectBlockDataPromises(scope, entries, owner, signal, out) {
-    for (const entry of entries ?? []) {
-      const blockClass = await this.#resolveBlockClass(entry.block);
-      const metadata = blockClass ? getBlockMetadata(blockClass) : null;
+    const resolvedEntries: ResolvedBlockDataEntry[] = [];
+    await this.#collectResolvedBlockDataEntries(entries, resolvedEntries);
+
+    for (const { blockClass, entry } of resolvedEntries) {
+      const metadata = getBlockMetadata(blockClass);
       const dataMeta = metadata?.data;
 
       if (dataMeta?.request) {
@@ -620,6 +630,28 @@ export default class Blocks extends Service {
           out.push(cacheEntry.promise);
         }
       }
+    }
+  }
+
+  /**
+   * Resolves layout block classes depth-first and gathers them without starting
+   * data resolution. Explicit children and synthesized composite parts follow
+   * the same traversal rules as the render pipeline.
+   *
+   * @param entries - Validated or synthesized layout entries.
+   * @param out - Accumulator for resolved block-class and entry pairs.
+   * @returns
+   */
+  async #collectResolvedBlockDataEntries(
+    entries,
+    out: ResolvedBlockDataEntry[]
+  ) {
+    for (const entry of entries ?? []) {
+      const blockClass = await this.#resolveBlockClass(entry.block);
+      const metadata = blockClass ? getBlockMetadata(blockClass) : null;
+      if (blockClass) {
+        out.push({ blockClass, entry });
+      }
 
       // Walk into children the same way the render pipeline does: explicit
       // children when present, otherwise the synthesized parts of a
@@ -633,13 +665,7 @@ export default class Blocks extends Service {
       }
 
       if (children?.length) {
-        await this.#collectBlockDataPromises(
-          scope,
-          children,
-          owner,
-          signal,
-          out
-        );
+        await this.#collectResolvedBlockDataEntries(children, out);
       }
     }
   }

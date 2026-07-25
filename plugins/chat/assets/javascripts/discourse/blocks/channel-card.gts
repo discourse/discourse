@@ -1,12 +1,33 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
 import { type ComponentLike } from "@glint/template";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import { i18n } from "discourse-i18n";
 import ChatChannelCardUntyped from "discourse/plugins/chat/discourse/components/chat-channel-card";
 import type ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChannelCardThumbnail from "./thumbnails/channel-card";
+
+const channelCardDataSource = defineBlockDataSource({
+  resolve: (
+    descriptor: { channelId?: number },
+    { owner }: { owner: Owner }
+  ) => {
+    if (!descriptor.channelId) {
+      return null;
+    }
+
+    const manager = owner.lookup(
+      "service:chat-channels-manager"
+    ) as unknown as {
+      find: (
+        id: number,
+        options: { fetchIfNotFound: boolean }
+      ) => Promise<object | undefined>;
+    };
+    return manager.find(descriptor.channelId, { fetchIfNotFound: true });
+  },
+});
 
 // TODO(devxp-typescript-pending): drop once ChatChannelCard is authored in
 // .gts with a real Signature, then import it directly.
@@ -58,28 +79,11 @@ interface ChatChannelCardBlockSignature {
     },
   },
   data: {
+    source: channelCardDataSource,
     request: (args: { channelId?: number }) => ({
       kind: "chat-channel",
       channelId: args.channelId,
     }),
-    resolve: (
-      descriptor: { channelId?: number },
-      { owner }: { owner: Owner }
-    ) => {
-      if (!descriptor.channelId) {
-        return null;
-      }
-
-      const manager = owner.lookup(
-        "service:chat-channels-manager"
-      ) as unknown as {
-        find: (
-          id: number,
-          options: { fetchIfNotFound: boolean }
-        ) => Promise<object | undefined>;
-      };
-      return manager.find(descriptor.channelId, { fetchIfNotFound: true });
-    },
   },
 })
 export default class ChatChannelCardBlock extends Component<ChatChannelCardBlockSignature> {

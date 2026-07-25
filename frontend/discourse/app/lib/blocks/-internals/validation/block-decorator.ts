@@ -5,6 +5,7 @@
  * These validations run at decoration time (not render time) for fail-fast behavior.
  */
 import type { BlockOptions } from "discourse/blocks/types";
+import { isBlockDataSource } from "discourse/lib/blocks/-internals/data-source";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   detectPatternConflicts,
@@ -56,6 +57,7 @@ const VALID_PART_KEYS = Object.freeze(["id", "block", "args", "lock"]);
  */
 const VALID_DATA_KEYS = Object.freeze([
   "request",
+  "source",
   "resolve",
   "hydrate",
   "skeleton",
@@ -175,10 +177,11 @@ export function validateDisplayMetadata(name, options) {
 
 /**
  * Validates the optional `data` declaration (a block's coordinated data
- * dependency). `request` maps args to a serializable descriptor and `resolve`
- * turns a descriptor into render-ready data; both are required when `data` is
- * present. `hydrate` (server payload to render-ready data) and `skeleton`
- * (placeholder shape) are optional.
+ * dependency). `request` maps args to a serializable descriptor and is always
+ * required. Every declaration must select a data source created with
+ * `defineBlockDataSource`; resolution and hydration belong to that source and
+ * cannot be declared inline. `skeleton` remains an optional per-block
+ * presentation hint.
  *
  * @param name - The block name (for error messages).
  * @param data - The decorator's `data` option.
@@ -205,20 +208,34 @@ export function validateBlockDataOption(name, data) {
     );
   }
 
-  // `request` and `resolve` are the contract; without them the declaration
-  // can't produce a descriptor or turn one into data.
-  for (const key of ["request", "resolve"]) {
-    if (typeof data[key] !== "function") {
+  if (typeof data.request !== "function") {
+    raiseBlockError(
+      `Block "${name}": "data.request" is required and must be a function.`
+    );
+  }
+
+  for (const key of ["resolve", "hydrate"]) {
+    if (Object.hasOwn(data, key)) {
       raiseBlockError(
-        `Block "${name}": "data.${key}" is required and must be a function.`
+        `Block "${name}": "data.${key}" must be declared on the block's data source, not inline.`
       );
     }
   }
 
-  for (const key of ["hydrate", "skeleton"]) {
-    if (data[key] != null && typeof data[key] !== "function") {
-      raiseBlockError(`Block "${name}": "data.${key}" must be a function.`);
-    }
+  if (!Object.hasOwn(data, "source")) {
+    raiseBlockError(
+      `Block "${name}": "data.source" is required and must be created with defineBlockDataSource().`
+    );
+  }
+
+  if (!isBlockDataSource(data.source)) {
+    raiseBlockError(
+      `Block "${name}": "data.source" must be a data source created with defineBlockDataSource.`
+    );
+  }
+
+  if (data.skeleton != null && typeof data.skeleton !== "function") {
+    raiseBlockError(`Block "${name}": "data.skeleton" must be a function.`);
   }
 }
 

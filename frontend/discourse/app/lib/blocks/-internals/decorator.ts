@@ -262,13 +262,13 @@ export function block(
   // Validate the optional coordinated data declaration.
   validateBlockDataOption(name, dataDeclaration);
 
-  // `data` is a reserved arg name: the layout wrapper injects the block's
-  // resolved data as `@data`, so a same-named entry in the args schema would
-  // collide with it.
+  // `data` is a reserved arg name: the layout wrapper injects a bound
+  // data-region boundary component as `@Data`, so a same-named entry in the
+  // args schema would collide with it.
   if (argsSchema && Object.prototype.hasOwnProperty.call(argsSchema, "data")) {
     raiseBlockError(
       `Block "${name}": "data" is a reserved arg name (the resolved data ` +
-        `dependency is injected as @data); rename the arg.`
+        `dependency is injected as @Data); rename the arg.`
     );
   }
 

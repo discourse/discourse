@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import type Owner from "@ember/owner";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   fetchUsers,
@@ -11,6 +11,19 @@ import type Store from "discourse/services/store";
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
+
+const featuredUsersDataSource = defineBlockDataSource({
+  resolve: (
+    descriptor: { period: string; order: string; count: number },
+    { owner }: { owner: Owner }
+  ) =>
+    fetchUsers({
+      store: owner.lookup("service:store") as Store,
+      period: descriptor.period,
+      order: descriptor.order,
+      count: descriptor.count,
+    }),
+});
 
 /**
  * A single directory item yielded by the data boundary. Each carries the
@@ -84,22 +97,13 @@ interface FeaturedUsersSignature {
     },
   },
   data: {
+    source: featuredUsersDataSource,
     request: (args: { period?: string; order?: string; count?: number }) => ({
       kind: "user-list",
       period: args.period ?? "weekly",
       order: args.order ?? "likes_received",
       count: args.count ?? 5,
     }),
-    resolve: (
-      descriptor: { period: string; order: string; count: number },
-      { owner }: { owner: Owner }
-    ) =>
-      fetchUsers({
-        store: owner.lookup("service:store") as Store,
-        period: descriptor.period,
-        order: descriptor.order,
-        count: descriptor.count,
-      }),
     skeleton: (args: { count?: number }) => ({
       variant: "rect",
       count: args.count ?? 5,

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { block } from "discourse/blocks";
+import { block, defineBlockDataSource } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import {
   type BadgeGrant,
@@ -10,6 +10,15 @@ import DUserAvatar from "discourse/ui-kit/d-user-avatar";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import { i18n } from "discourse-i18n";
+
+const featuredBadgesDataSource = defineBlockDataSource({
+  resolve: (descriptor: { badgeIds: string; maxDays: number; count: number }) =>
+    fetchBadgeGrants({
+      badgeIds: descriptor.badgeIds,
+      maxDays: descriptor.maxDays,
+      count: descriptor.count,
+    }),
+});
 
 interface FeaturedBadgesSignature {
   Args: {
@@ -77,22 +86,13 @@ interface FeaturedBadgesSignature {
     },
   },
   data: {
+    source: featuredBadgesDataSource,
     request: (args: { badges?: string; maxDays?: number; count?: number }) => ({
       kind: "badge-grants",
       badgeIds: args.badges ?? "",
       maxDays: args.maxDays ?? 0,
       count: args.count ?? 10,
     }),
-    resolve: (descriptor: {
-      badgeIds: string;
-      maxDays: number;
-      count: number;
-    }) =>
-      fetchBadgeGrants({
-        badgeIds: descriptor.badgeIds,
-        maxDays: descriptor.maxDays,
-        count: descriptor.count,
-      }),
     skeleton: (args: { count?: number }) => ({
       variant: "rect",
       count: args.count ?? 10,

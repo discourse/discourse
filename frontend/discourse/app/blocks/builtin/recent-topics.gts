@@ -1,15 +1,10 @@
 import Component from "@glimmer/component";
-import type Owner from "@ember/owner";
 import { block } from "discourse/blocks";
 import type { BlockDataComponent } from "discourse/blocks/types";
 import BasicTopicList from "discourse/components/basic-topic-list";
 import { URL_PATTERN } from "discourse/lib/blocks";
-import {
-  fetchTopicList,
-  VALID_TOPIC_LIST_FILTERS,
-} from "discourse/lib/blocks/-internals/fetch-topic-list";
-import type User from "discourse/models/user";
-import type Store from "discourse/services/store";
+import { VALID_TOPIC_LIST_FILTERS } from "discourse/lib/blocks/-internals/fetch-topic-list";
+import { topicListDataSource } from "discourse/lib/blocks/-internals/sources/topic-list";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -115,6 +110,7 @@ interface RecentTopicsSignature {
     allOrNone: ["linkLabel", "linkHref"],
   },
   data: {
+    source: topicListDataSource,
     request: (args: {
       filter?: string;
       categoryId?: number;
@@ -129,25 +125,6 @@ interface RecentTopicsSignature {
       solved: args.solved ?? false,
       count: args.count ?? 5,
     }),
-    resolve: (
-      descriptor: {
-        filter: string;
-        categoryId?: number;
-        tag?: string;
-        solved: boolean;
-        count: number;
-      },
-      { owner }: { owner: Owner }
-    ) =>
-      fetchTopicList({
-        store: owner.lookup("service:store") as Store,
-        currentUser: owner.lookup("service:current-user") as User | null,
-        filterType: descriptor.filter,
-        categoryId: descriptor.categoryId,
-        tag: descriptor.tag,
-        solved: descriptor.solved,
-        count: descriptor.count,
-      }),
     skeleton: (args: { count?: number }) => ({
       variant: "rect",
       count: args.count ?? 5,

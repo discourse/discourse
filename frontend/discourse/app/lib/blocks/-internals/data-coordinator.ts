@@ -1,12 +1,29 @@
 import type Owner from "@ember/owner";
 import { TrackedAsyncData } from "ember-async-data";
-import type { BlockDataDeclaration } from "discourse/blocks/types";
+import type {
+  BlockDataDeclaration,
+  BlockDataSource,
+} from "discourse/blocks/types";
 import PreloadStore from "discourse/lib/preload-store";
 
 /** A resolved (or in-flight) cache entry: the async data and its promise. */
 interface BlockDataCacheEntry {
   data: TrackedAsyncData<unknown>;
   promise: Promise<unknown>;
+}
+
+/** A promise whose outcome is controlled by a later batch flush. */
+interface Deferred {
+  promise: Promise<unknown>;
+  resolve: (value: unknown) => void;
+  reject: (reason?: unknown) => void;
+}
+
+/** One cache miss waiting for its source's next batch flush. */
+interface PendingBatchItem extends Deferred {
+  descriptor: unknown;
+  owner?: Owner;
+  signal?: AbortSignal;
 }
 
 /** The arguments shared by {@link loadBlockData} and {@link getBlockData}. */
@@ -34,14 +51,17 @@ interface LoadBlockDataOptions {
  * Per-block data coordination.
  *
  * A block declares its data need through the `data` option on the block
- * decorator (a `request` that maps args to a serializable descriptor and a
- * `resolve` that turns a descriptor into data). This module resolves that need
- * and caches the result so the block can render with its data already in hand.
+ * decorator. A declaration maps args to a serializable descriptor and either
+ * resolves it inline or delegates it to a shared source. This module resolves
+ * that need and caches the result so the block can render with its data already
+ * in hand.
  *
  * Resolution prefers a value the server inlined into the preload store — keyed
- * by the block name plus its descriptor — and otherwise runs the block's own
- * resolver. Because the key is derived from the descriptor, the server and the
- * client compute the same key independently.
+ * by the block or named source plus its descriptor — and otherwise runs the
+ * inline or source resolver. Batch-capable sources collect cache misses in the
+ * same microtask window and resolve them together. Because the key is derived
+ * from the descriptor, the server and the client compute the same key
+ * independently.
  *
  * Two entry points share one cache:
  *   - Before render (a route, inside a transition): `loadBlockData` starts
@@ -57,6 +77,10 @@ interface LoadBlockDataOptions {
 
 // scope -> (key -> { data: TrackedAsyncData, promise: Promise })
 const cache = new Map<string, Map<string, BlockDataCacheEntry>>();
+
+// Source identity -> cache misses collected during the current microtask window.
+const pendingBatches = new Map<BlockDataSource, PendingBatchItem[]>();
+let batchFlushScheduled = false;
 
 function scopeCache(scope: string): Map<string, BlockDataCacheEntry> {
   let entries = cache.get(scope);
@@ -99,20 +123,108 @@ async function resolveData(
   owner: Owner | undefined,
   signal: AbortSignal | undefined
 ): Promise<unknown> {
+  const source = dataMeta.source;
+
   // Prefer a server-inlined payload. Read it once and remove it: later
   // requests for the same key hit the cache below, not the preload store.
   if (PreloadStore.has(key)) {
     const raw = PreloadStore.get(key);
     PreloadStore.remove(key);
-    return dataMeta.hydrate ? dataMeta.hydrate(raw, { owner }) : raw;
+    const hydrate = source?.hydrate ?? dataMeta.hydrate;
+    return hydrate ? hydrate(raw, { owner }) : raw;
   }
 
-  return dataMeta.resolve(descriptor, { owner, signal });
+  if (source) {
+    return source.resolve!(descriptor, { owner, signal });
+  }
+
+  return dataMeta.resolve!(descriptor, { owner, signal });
+}
+
+function deferred(): Deferred {
+  let resolve!: (value: unknown) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<unknown>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, resolve, reject };
+}
+
+function sharedSignal(items: PendingBatchItem[]): AbortSignal | undefined {
+  const signal = items[0]?.signal;
+  return signal && items.every((item) => item.signal === signal)
+    ? signal
+    : undefined;
+}
+
+async function flushBatch(
+  source: BlockDataSource,
+  items: PendingBatchItem[]
+): Promise<void> {
+  const batch = source.batch!;
+  const owner = items[0]?.owner;
+
+  try {
+    const request = batch.request(items.map((item) => item.descriptor));
+    const signal = sharedSignal(items);
+    const response = await batch.resolve(request, {
+      owner,
+      ...(signal ? { signal } : {}),
+    });
+
+    for (const item of items) {
+      try {
+        item.resolve(batch.extract(response, item.descriptor, { owner }));
+      } catch (error) {
+        item.reject(error);
+      }
+    }
+  } catch (error) {
+    for (const item of items) {
+      item.reject(error);
+    }
+  }
+}
+
+function flushPendingBatches(): void {
+  batchFlushScheduled = false;
+
+  // Detach this window before resolving it. New misses form a later window,
+  // and clearing a scope cache cannot discard promises already being flushed.
+  const groups = [...pendingBatches];
+  pendingBatches.clear();
+
+  for (const [source, items] of groups) {
+    void flushBatch(source, items);
+  }
+}
+
+function enqueueBatch(
+  source: BlockDataSource,
+  descriptor: unknown,
+  owner: Owner | undefined,
+  signal: AbortSignal | undefined
+): Promise<unknown> {
+  const item = { ...deferred(), descriptor, owner, signal };
+  const items = pendingBatches.get(source);
+  if (items) {
+    items.push(item);
+  } else {
+    pendingBatches.set(source, [item]);
+  }
+
+  if (!batchFlushScheduled) {
+    batchFlushScheduled = true;
+    queueMicrotask(flushPendingBatches);
+  }
+
+  return item.promise;
 }
 
 // Ensures resolution for one descriptor is started and cached, returning the
 // cache entry ({ data, promise }). Returns null when the block declares no
-// data for the current args (a null descriptor) or has no resolver.
+// data for the current args (a null descriptor) or has no resolver or source.
 export function loadBlockData({
   scope,
   blockName,
@@ -121,11 +233,14 @@ export function loadBlockData({
   owner,
   signal,
 }: LoadBlockDataOptions): BlockDataCacheEntry | null {
-  if (descriptor == null || typeof dataMeta?.resolve !== "function") {
+  if (
+    descriptor == null ||
+    (!dataMeta?.source && typeof dataMeta?.resolve !== "function")
+  ) {
     return null;
   }
 
-  const key = blockDataKey(blockName, descriptor);
+  const key = blockDataKey(dataMeta.source?.name ?? blockName, descriptor);
   const entries = scopeCache(scope);
 
   const existing = entries.get(key);
@@ -133,7 +248,12 @@ export function loadBlockData({
     return existing;
   }
 
-  const promise = resolveData(key, descriptor, dataMeta, owner, signal);
+  let promise;
+  if (dataMeta.source?.batch && !PreloadStore.has(key)) {
+    promise = enqueueBatch(dataMeta.source, descriptor, owner, signal);
+  } else {
+    promise = resolveData(key, descriptor, dataMeta, owner, signal);
+  }
   const entry = { data: new TrackedAsyncData(promise), promise };
   entries.set(key, entry);
 

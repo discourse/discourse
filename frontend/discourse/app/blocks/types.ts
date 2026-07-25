@@ -242,17 +242,64 @@ export interface BlockSkeletonShape {
 }
 
 /**
+ * Describes how a data source combines multiple block descriptors into one
+ * request, resolves that request, and extracts each block's result.
+ */
+export interface BlockDataSourceBatch {
+  /** Builds one request descriptor from the block descriptors in a batch. */
+  readonly request: (descriptors: readonly unknown[]) => unknown;
+
+  /** Resolves a batched request descriptor into a shared response. */
+  readonly resolve: (
+    request: unknown,
+    options: { owner?: Owner; signal?: AbortSignal }
+  ) => unknown;
+
+  /** Extracts one block's data from the shared response. */
+  readonly extract: (
+    response: unknown,
+    descriptor: unknown,
+    options: { owner?: Owner }
+  ) => unknown;
+}
+
+/**
+ * A validated, immutable description of where block data comes from. Create
+ * instances with `defineBlockDataSource()` so they carry the runtime brand
+ * required by the `@block` decorator.
+ */
+export interface BlockDataSource {
+  /** An optional name used to identify the source in diagnostics. */
+  readonly name?: string;
+
+  /** Resolves one block descriptor independently. */
+  readonly resolve?: (
+    descriptor: unknown,
+    options: { owner?: Owner; signal?: AbortSignal }
+  ) => unknown;
+
+  /** Optionally hydrates a raw payload into the resolved shape. */
+  readonly hydrate?: (raw: unknown, options: { owner?: Owner }) => unknown;
+
+  /** Defines how this source resolves multiple descriptors together. */
+  readonly batch?: BlockDataSourceBatch;
+}
+
+/**
  * A block's declared data dependency: how to build the request descriptor,
- * resolve it (optionally aborting via a signal), optionally hydrate a raw
- * payload, and shape the loading skeleton. Consumed by the render pipeline's
- * data boundary.
+ * select a shared source or resolve it inline, optionally hydrate a raw payload,
+ * and shape the loading skeleton. Consumed by the render pipeline's data
+ * boundary.
  */
 export interface BlockDataDeclaration {
   /** Builds the request descriptor from the block's args. */
   request: (args?: Record<string, unknown> | null) => unknown;
 
-  /** Resolves the descriptor to the block's data. */
-  resolve: (
+  /** Selects the validated source responsible for resolving the descriptor. */
+  source?: BlockDataSource;
+
+  /** Resolves the descriptor inline. Required when no source is declared. */
+  resolve?: (
     descriptor: unknown,
     options: { owner?: Owner; signal?: AbortSignal }
   ) => unknown;

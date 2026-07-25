@@ -9,6 +9,7 @@
 
 export { block } from "discourse/lib/blocks/-internals/decorator";
 export { BlockCondition } from "discourse/blocks/conditions";
+export { defineBlockDataSource } from "discourse/lib/blocks/-internals/data-source";
 export {
   registerBlockArgRenderer,
   resetBlockArgRenderer,
