@@ -391,15 +391,37 @@ export default class AiBotDockedComposer extends Component {
     this.editingPost = null;
     return { ok: true };
   }
-  #handleBeforeInput = (event) => {
-    if (!this.siteSettings.ai_bot_composer_submit_on_enter && event.inputType === "insertLineBreak") {
+
+#handleKeyDown = (event) => {
+    if (this.siteSettings.ai_bot_composer_submit_on_enter) {
+      return;
+    }
+    
+    if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey && !event.metaKey) {
+      const target = event.target;
+      if (!target || target.tagName !== "TEXTAREA") return;
+
+      event.preventDefault();
       event.stopImmediatePropagation();
+
+      const start = target.selectionStart;
+      const end = target.selectionEnd;
+      const val = target.value;
+
+      target.value = val.substring(0, start) + "\n" + val.substring(end);
+
+      target.selectionStart = target.selectionEnd = start + 1;
+
+      target.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
     }
   };
+
   @action
   setupScrollListener(element) {
     this.#composerEl = element;
-    element.addEventListener("beforeinput", this.#handleBeforeInput, { capture: true });
+    
+    element.addEventListener("keydown", this.#handleKeyDown, { capture: true });
+    
     window.addEventListener("scroll", this.#checkScroll, { passive: true });
     this.#resizeObserver = new ResizeObserver(this.#checkScroll);
     this.#resizeObserver.observe(document.body);
@@ -425,7 +447,7 @@ export default class AiBotDockedComposer extends Component {
 
   @action
   teardownScrollListener() {
-    this.#composerEl?.removeEventListener("beforeinput", this.#handleBeforeInput, { capture: true });
+    this.#composerEl?.removeEventListener("keydown", this.#handleKeyDown, { capture: true });
     this.#composerEl = null;
     window.removeEventListener("scroll", this.#checkScroll);
     this.#resizeObserver?.disconnect();
