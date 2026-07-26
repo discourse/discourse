@@ -496,25 +496,25 @@ class Admin::UsersController < Admin::StaffController
   def sync_sso
     return render body: nil, status: :not_found unless SiteSetting.enable_discourse_connect
 
-    begin
-      sso = DiscourseConnect.parse("sso=#{params[:sso]}&sig=#{params[:sig]}", server_session:)
-    rescue DiscourseConnect::ParseError
-      return(
-        render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
-               status: :unprocessable_entity
+    sso =
+      DiscourseConnect.parse(
+        Rack::Utils.build_query(sso: params[:sso].to_s, sig: params[:sig].to_s),
+        server_session:,
       )
-    end
-
-    begin
-      user = sso.lookup_or_create_user
-      DiscourseEvent.trigger(:sync_sso, user)
-      render_serialized(user, AdminDetailedUserSerializer, root: false)
-    rescue ActiveRecord::RecordInvalid => ex
-      render json: failed_json.merge(message: ex.message), status: :forbidden
-    rescue DiscourseConnect::BlankExternalId => ex
-      render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
-             status: :unprocessable_entity
-    end
+    user = sso.lookup_or_create_user
+    DiscourseEvent.trigger(:sync_sso, user)
+    render_serialized(user, AdminDetailedUserSerializer, root: false)
+  rescue DiscourseConnect::ParseError
+    render json: failed_json.merge(message: I18n.t("discourse_connect.login_error")),
+           status: :unprocessable_entity
+  rescue DiscourseConnect::BlankExternalId
+    render json: failed_json.merge(message: I18n.t("discourse_connect.blank_id_error")),
+           status: :unprocessable_entity
+  rescue DiscourseConnect::BannedExternalId
+    render json: failed_json.merge(message: I18n.t("discourse_connect.banned_id_error")),
+           status: :unprocessable_entity
+  rescue ActiveRecord::RecordInvalid => e
+    render json: failed_json.merge(message: e.message), status: :forbidden
   end
 
   def delete_other_accounts_with_same_ip

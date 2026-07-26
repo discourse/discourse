@@ -45,6 +45,33 @@ module DiscourseWorkflows
       end
     end
 
+    def self.cached_post_buttons
+      cached_published_triggers("trigger:post_button").map do |published_trigger|
+        parameters = NodeData.parameters(published_trigger.trigger_node)
+        {
+          trigger_node_id: published_trigger.trigger_node_id,
+          workflow_id: published_trigger.workflow_id,
+          label: parameters["label"],
+          icon: parameters["icon"],
+          position: DiscourseWorkflows::Nodes::PostButton::V1.resolved_position(parameters),
+          confirmation: parameters["confirmation"] == true,
+          confirmation_message: parameters["confirmation_message"].presence,
+          group_ids: DiscourseWorkflows::Nodes::PostButton::V1.normalized_group_ids(parameters),
+        }
+      end
+    end
+
+    def self.post_buttons_for(user)
+      return [] if user.blank?
+
+      cached_post_buttons.filter_map do |post_button|
+        next if post_button[:group_ids].blank?
+        next if !user.in_any_groups?(post_button[:group_ids])
+
+        post_button.except(:group_ids)
+      end
+    end
+
     def self.active_node_types
       cached_dependency_index[:active_node_types].to_set
     end

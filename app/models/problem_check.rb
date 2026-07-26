@@ -218,13 +218,15 @@ class ProblemCheck
       override_data.merge(
         target.present? ? translation_data(target) : translation_data,
       ).symbolize_keys
+    notice_details = problem_details.merge(details)
+    notice_details[AdminNotice::TRANSLATION_KEY_DETAIL] = override_key if override_key
 
     Problem.new(
       I18n.t(override_key || translation_key, base_path: Discourse.base_path, **problem_details),
       priority: config.priority,
       identifier:,
       target: target_identifier,
-      details: problem_details.merge(details),
+      details: notice_details,
     )
   end
 

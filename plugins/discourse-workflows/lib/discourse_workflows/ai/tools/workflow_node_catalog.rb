@@ -174,6 +174,16 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:topic_category" => [
+            {
+              name: "Move the trigger topic to another category",
+              parameters: {
+                topic_id: "={{ $json.topic.id }}",
+                category_id: 123,
+                actor_username: "system",
+              },
+            },
+          ],
         }.freeze
 
         QUERY_STOP_WORDS = %w[
@@ -200,6 +210,7 @@ module DiscourseWorkflows
             "user profile bio title trust level lock groups fields lookup edit update",
           "action:flag_post" =>
             "flag spam moderation review queue reviewable hide delete silence triage report",
+          "action:topic_category" => "category recategorize move topic uncategorized",
         }.freeze
 
         def self.signature

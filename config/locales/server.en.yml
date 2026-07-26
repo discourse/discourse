@@ -102,6 +102,10 @@ en:
       asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
       theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
+      git_authentication: "The git repository rejected the deploy key. Check that the public key has access to the repository and try again. (If you no longer have the deploy key, delete this theme and install again.)"
+      git_timeout: "The connection to the git repository timed out. Please try again later."
+      git_repository_not_found: "The git repository could not be found. Check the repository URL."
+      git_branch_not_found: "The git branch could not be found. Check the branch name."
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
       unpack_failed: "Failed to unpack file"
@@ -311,7 +315,7 @@ en:
       exclusion: is reserved
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "has already been used"
+      topic_title_already_used: "This title has already been used by <a href='%{url}'>another topic</a>."
       in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
@@ -1916,6 +1920,7 @@ en:
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     remove_and_replace_uncategorized: "Replaces the special Uncategorized category with a standard category of the same name, and migrates all topics over to it."
+    duplicate_topic_titles: "Whether a topic can be created with a title already used by another topic. When allowed across categories, a title can be reused as long as the topics are in different categories. Topics the author cannot see are never counted as duplicates."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. {{setting:allow_duplicate_topic_titles}} must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1937,7 +1942,7 @@ en:
     staff_edit_locks_post: "Posts will be locked from editing if they are edited by staff members"
     post_edit_time_limit: "A tl0 or tl1 author can edit their post for (n) minutes after posting. Set to 0 for forever."
     tl2_post_edit_time_limit: "A tl2+ author can edit their post for (n) minutes after posting. Set to 0 for forever."
-    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members and category group moderators (for posts in their moderated categories) can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
     max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
@@ -3231,6 +3236,7 @@ en:
     timeout_expired: "Account login timed out, please try logging in again."
     no_email: "No email address was provided. Please contact the site's administrator."
     blank_id_error: "The `external_id` is required but was blank"
+    banned_id_error: "The `external_id` value is not allowed"
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
@@ -3241,6 +3247,7 @@ en:
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  recent_poster: "Recent Poster"
   # Example: "Original Poster, Most Recent Poster"
   poster_description_joiner: ", "
 

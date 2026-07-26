@@ -311,6 +311,32 @@ RSpec.describe InvitesController do
       end
     end
 
+    context "when new registrations are disabled" do
+      fab!(:group)
+
+      before do
+        SiteSetting.allow_new_registrations = false
+        invite.update!(email: nil, max_redemptions_allowed: 10)
+        InvitedGroup.create!(invite: invite, group: group)
+      end
+
+      it "blocks anonymous visitors with the registration-disabled error" do
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+      end
+
+      it "still shows the accept invite page to an existing logged-in user" do
+        sign_in(user)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).not_to include(I18n.t("login.new_registrations_disabled"))
+      end
+    end
+
     it "fails if invite does not exist" do
       get "/invites/missing"
       expect(response.status).to eq(200)
@@ -1697,6 +1723,25 @@ RSpec.describe InvitesController do
         expect(invite.reload.invited_users).to be_blank
         expect(invite.redeemed?).to be_falsey
         expect(response.body).to include(I18n.t("login.new_registrations_disabled"))
+      end
+
+      context "when the user is already logged in" do
+        fab!(:group)
+        fab!(:invite) { Fabricate(:invite, email: nil, max_redemptions_allowed: 10) }
+
+        before do
+          group.add_owner(invite.invited_by)
+          InvitedGroup.create!(invite: invite, group: group)
+          sign_in(user)
+        end
+
+        it "redeems the invite and adds the existing user to the group" do
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          expect(invite.reload.invited_users.map(&:user)).to include(user)
+          expect(user.reload.groups).to include(group)
+        end
       end
     end
 

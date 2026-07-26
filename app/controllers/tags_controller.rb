@@ -48,12 +48,11 @@ class TagsController < ::ApplicationController
     @description_meta = I18n.t("tags.title")
     @title = @description_meta
 
-    show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
     preload_localizations = SiteSetting.content_localization_enabled
 
     if SiteSetting.tags_listed_by_group
       ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
-      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
+      ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags?
       ungrouped_tags = ungrouped_tags.order(:id)
       ungrouped_tags = ungrouped_tags.includes(:localizations) if preload_localizations
 
@@ -69,14 +68,15 @@ class TagsController < ::ApplicationController
             {
               id: tag_group.id,
               name: tag_group.name,
-              tags: self.class.tag_counts_json(tag_group.none_synonym_tags, guardian),
+              tags:
+                self.class.tag_counts_json(browsable_tags(tag_group.none_synonym_tags), guardian),
             }
           end
 
       @tags = self.class.tag_counts_json(ungrouped_tags, guardian)
       @extras = { tag_groups: grouped_tag_counts }
     else
-      tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+      tags = show_all_tags? ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
       tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
       unrestricted_tags = unrestricted_tags.includes(:localizations) if preload_localizations
@@ -96,11 +96,9 @@ class TagsController < ::ApplicationController
       category_tag_counts =
         categories
           .map do |c|
-            category_tags =
-              self.class.tag_counts_json(
-                DiscourseTagging.filter_visible(c.none_synonym_tags, guardian),
-                guardian,
-              )
+            visible_category_tags =
+              browsable_tags(DiscourseTagging.filter_visible(c.none_synonym_tags, guardian))
+            category_tags = self.class.tag_counts_json(visible_category_tags, guardian)
 
             next if category_tags.empty?
 
@@ -495,6 +493,15 @@ class TagsController < ::ApplicationController
 
   private
 
+  def show_all_tags?
+    guardian.can_admin_tags? && guardian.is_admin?
+  end
+
+  def browsable_tags(tags)
+    return tags if show_all_tags?
+    DiscourseTagging.without_pm_only_tags(tags, guardian)
+  end
+
   def fetch_tag(raise_not_found: true)
     if params[:tag_id].present?
       # Try finding by ID first
@@ -575,43 +582,39 @@ class TagsController < ::ApplicationController
         .where(id: tags.filter_map(&:target_tag_id).uniq)
         .select(:id, :name, :slug)
 
-    tags
-      .map do |t|
-        topic_count = t.public_send(Tag.topic_count_column(guardian))
+    tags.map do |t|
+      topic_count = t.public_send(Tag.topic_count_column(guardian))
 
-        next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
+      tag_name = t.name
+      tag_description = t.description
 
-        tag_name = t.name
-        tag_description = t.description
-
-        if ContentLocalization.show_translated_tag?(t, guardian)
-          localization = t.get_localization
-          tag_name = localization&.name || tag_name
-          tag_description = localization&.description || tag_description
-        end
-
-        attrs = {
-          id: t.id,
-          text: tag_name,
-          name: tag_name,
-          slug: t.slug.presence || "#{t.id}-tag",
-          description: tag_description,
-          count: topic_count,
-          pm_only: topic_count == 0 && t.pm_topic_count > 0,
-          target_tag:
-            if t.target_tag_id
-              target = target_tags.find { |x| x.id == t.target_tag_id }
-              target ? { id: target.id, name: target.name, slug: target.slug } : nil
-            end,
-        }
-
-        if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
-          attrs[:pm_count] = t.pm_topic_count
-        end
-
-        attrs
+      if ContentLocalization.show_translated_tag?(t, guardian)
+        localization = t.get_localization
+        tag_name = localization&.name || tag_name
+        tag_description = localization&.description || tag_description
       end
-      .compact
+
+      attrs = {
+        id: t.id,
+        text: tag_name,
+        name: tag_name,
+        slug: t.slug.presence || "#{t.id}-tag",
+        description: tag_description,
+        count: topic_count,
+        pm_only: topic_count == 0 && t.pm_topic_count > 0,
+        target_tag:
+          if t.target_tag_id
+            target = target_tags.find { |x| x.id == t.target_tag_id }
+            target ? { id: target.id, name: target.name, slug: target.slug } : nil
+          end,
+      }
+
+      if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
+        attrs[:pm_count] = t.pm_topic_count
+      end
+
+      attrs
+    end
   end
 
   def set_category

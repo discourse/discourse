@@ -124,6 +124,15 @@ after_initialize do
     DiscourseWorkflows::WorkflowDependency.cached_topic_admin_buttons
   end
 
+  add_to_serializer :site,
+                    :post_button_workflows,
+                    include_condition: -> do
+                      scope.user.present? &&
+                        DiscourseWorkflows::WorkflowDependency.cached_post_buttons.present?
+                    end do
+    DiscourseWorkflows::WorkflowDependency.post_buttons_for(scope.user)
+  end
+
   add_to_serializer :current_user,
                     :discourse_workflows_user_modal_last_id,
                     include_condition: -> do

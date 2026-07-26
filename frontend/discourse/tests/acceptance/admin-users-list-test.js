@@ -61,9 +61,11 @@ acceptance("Admin - Users List", function (needs) {
   test("searching users with no matches", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".admin-users-list__search input", "doesntexist");
+    await fillIn(".d-filter-controls__input", "doesntexist");
 
-    assert.dom(".users-list-container").hasText(i18n("search.no_results"));
+    assert
+      .dom(".d-filter-controls__no-results p")
+      .hasText(i18n("search.no_results"));
   });
 
   test("sorts users", async function (assert) {
@@ -158,10 +160,10 @@ acceptance("Admin - Users List", function (needs) {
 
   test("activation filter is only shown on the new tab", async function (assert) {
     await visit("/admin/users/list/active");
-    assert.dom(".admin-users-list__activation-filter").doesNotExist();
+    assert.dom(".d-filter-controls__dropdown").doesNotExist();
 
     await visit("/admin/users/list/new");
-    assert.dom(".admin-users-list__activation-filter").exists();
+    assert.dom(".d-filter-controls__dropdown").exists();
   });
 
   test("filters the new tab by activation status", async function (assert) {
@@ -169,7 +171,7 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists({ count: 2 });
 
-    await fillIn(".admin-users-list__activation-filter", "not_activated");
+    await fillIn(".d-filter-controls__dropdown", "not_activated");
 
     assert.strictEqual(
       lastActivationFilter,
@@ -216,7 +218,7 @@ acceptance("Admin - Users List - bulk search", function (needs) {
   test("searches multiple users at once and reflects the search in the URL", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".admin-users-list__search input", "sam,bob");
+    await fillIn(".d-filter-controls__input", "sam,bob");
 
     assert.strictEqual(
       lastFilter,
@@ -229,10 +231,10 @@ acceptance("Admin - Users List - bulk search", function (needs) {
       "reflects the search in the URL"
     );
     assert
-      .dom(".admin-users-list__search input")
+      .dom(".d-filter-controls__input")
       .isFocused("keeps focus while the URL updates");
 
-    await fillIn(".admin-users-list__search input", "");
+    await fillIn(".d-filter-controls__input", "");
 
     assert.false(
       currentURL().includes("filter="),
@@ -243,7 +245,7 @@ acceptance("Admin - Users List - bulk search", function (needs) {
   test("prefills and applies the search from the URL", async function (assert) {
     await visit("/admin/users/list/active?filter=sam");
 
-    assert.dom(".admin-users-list__search input").hasValue("sam");
+    assert.dom(".d-filter-controls__input").hasValue("sam");
     assert.strictEqual(lastFilter, "sam", "sends the filter from the URL");
     assert.dom(".users-list .user").exists({ count: 1 });
   });
@@ -251,19 +253,19 @@ acceptance("Admin - Users List - bulk search", function (needs) {
   test("prefills the search from the legacy username query param", async function (assert) {
     await visit("/admin/users/list/active?username=sam");
 
-    assert.dom(".admin-users-list__search input").hasValue("sam");
+    assert.dom(".d-filter-controls__input").hasValue("sam");
     assert.strictEqual(lastFilter, "sam", "sends the filter from the URL");
   });
 
   test("clears the search when switching tabs", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".admin-users-list__search input", "sam");
+    await fillIn(".d-filter-controls__input", "sam");
     assert.dom(".users-list .user").exists({ count: 1 });
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.dom(".admin-users-list__search input").hasValue("");
+    assert.dom(".d-filter-controls__input").hasValue("");
     assert.strictEqual(
       lastFilter,
       undefined,
@@ -273,7 +275,7 @@ acceptance("Admin - Users List - bulk search", function (needs) {
     await click('a[href="/admin/users/list/active"]');
 
     assert
-      .dom(".admin-users-list__search input")
+      .dom(".d-filter-controls__input")
       .hasValue("", "does not restore the search when returning to the tab");
     assert.false(
       currentURL().includes("filter="),

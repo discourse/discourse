@@ -37,6 +37,14 @@ describe "Admin Onboarding Banner" do
       banner.close
 
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
+      try_until_success do
+        expect(
+          UserHistory.exists?(
+            action: UserHistory.actions[:admin_onboarding_dismissed],
+            acting_user_id: admin.id,
+          ),
+        ).to eq(true)
+      end
     end
   end
 
@@ -125,6 +133,14 @@ describe "Admin Onboarding Banner" do
       expect(page).to have_css(".admin-onboarding-banner")
       expect(banner.step_completed?("select_theme")).to eq(true)
       expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
+
+      # the reload must not cancel the in-flight audit write
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:admin_onboarding_step_completed],
+          acting_user_id: admin.id,
+        ).pluck(:subject),
+      ).to eq(["select_theme"])
     end
   end
 
@@ -153,6 +169,22 @@ describe "Admin Onboarding Banner" do
       # Page reloads after theme selection; banner disappears when all steps complete
       expect(banner).to be_not_visible
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
+
+      try_until_success do
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:admin_onboarding_step_completed],
+            acting_user_id: admin.id,
+          ).pluck(:subject),
+        ).to contain_exactly("start_posting", "invite_collaborators", "select_theme")
+
+        expect(
+          UserHistory.exists?(
+            action: UserHistory.actions[:admin_onboarding_completed],
+            acting_user_id: admin.id,
+          ),
+        ).to eq(true)
+      end
     end
   end
 
