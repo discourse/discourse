@@ -379,10 +379,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user_for_logs
-    if current_user
-      Logster.add_to_env(request.env, "username", current_user.username)
-      response.headers["X-Discourse-Username"] = current_user.username
-    end
+    Logster.add_to_env(request.env, "username", current_user.username) if current_user
     response.headers["X-Discourse-Route"] = "#{controller_path}/#{action_name}"
   end
 
@@ -1125,6 +1122,19 @@ class ApplicationController < ActionController::Base
     yield
   ensure
     dont_cache_page
+    set_current_user_header_for_logs
+  end
+
+  def set_current_user_header_for_logs
+    return if !current_user
+
+    cache_control = response.cache_control
+    no_store = cache_control[:no_store] || cache_control[:extras]&.include?("no-store")
+    private_response =
+      cache_control[:private] || (cache_control[:max_age] && !cache_control[:public])
+    return if !private_response && !no_store
+
+    response.headers["X-Discourse-Username"] = current_user.username
   end
 
   def persist_locale_param_to_cookie
