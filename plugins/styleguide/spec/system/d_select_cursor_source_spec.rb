@@ -11,17 +11,13 @@
 describe "UiKit | DSelect cursor source" do
   fab!(:admin)
 
-  let(:combobox) do
-    PageObjects::Components::UiKit::DSelect.new(
-      ".select-examples__paged-cursor .d-combobox__trigger",
-    )
-  end
+  let(:combobox) { PageObjects::Components::UiKit::DSelect.by_identifier("sg-paged-cursor") }
 
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
-    visit "/styleguide/molecules/select"
-    expect(page).to have_css(".select-examples__paged-cursor .d-combobox__trigger")
+    visit "/styleguide/molecules/select?group=data"
+    expect(page).to have_css("[data-identifier='sg-paged-cursor'][data-trigger]")
   end
 
   it "reports an unknown set size while pages remain, and the real count once complete" do
@@ -29,13 +25,13 @@ describe "UiKit | DSelect cursor source" do
 
     # A cursor source still paging cannot honestly size its set: the window is bounded and
     # more rows exist behind it, so every mounted option reports an indeterminate size.
-    expect(page).to have_css("[role='listbox'] [role='option']", wait: 10)
+    expect(page).to have_css(combobox.option_selector, wait: 10)
     expect(combobox.options.first[:"aria-setsize"]).to eq("-1")
 
     # Narrow enough that the source exhausts within a single page and declares completeness.
     combobox.input.send_keys("Option 4242")
 
-    expect(page).to have_css("[role='listbox'] [role='option']", count: 1, wait: 10)
+    expect(page).to have_css(combobox.option_selector, count: 1, wait: 10)
     expect(combobox.options.first[:"aria-setsize"]).to eq("1")
   end
 end

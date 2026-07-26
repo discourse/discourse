@@ -68,28 +68,24 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "lets the user view the select examples" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=start"
 
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
     screenshot_marker(label: "styleguide-select")
 
-    select =
-      PageObjects::Components::UiKit::DSelect.new(".select-examples__default .d-combobox__trigger")
+    select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-default")
     select.open
     expect(page).to have_text("Orange")
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
   it "shows the large virtualized list at the top and scrolled deep into the list" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=limits"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    large_list =
-      PageObjects::Components::UiKit::DSelect.new(
-        ".select-examples__large-list .d-combobox__trigger",
-      )
+    large_list = PageObjects::Components::UiKit::DSelect.by_identifier("sg-large-list")
     large_list.open
-    expect(page).to have_css("[role='listbox'] [role='option']")
+    expect(page).to have_css(large_list.option_selector)
     screenshot_marker(label: "styleguide-select-large-window", only: :desktop)
 
     large_list.reveal_to_index(999)
@@ -97,68 +93,64 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "shows options grouped under section headers" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=pickers"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    grouped =
-      PageObjects::Components::UiKit::DSelect.new(
-        "[data-test-select-showcase='grouped'] .d-combobox__trigger",
-      )
+    grouped = PageObjects::Components::UiKit::DSelect.by_identifier("sg-grouped")
     grouped.open
-    expect(page).to have_css("[role='listbox'] .d-combobox__group-header", minimum: 2)
+    expect(page).to have_css(grouped.in_panel(".d-combobox__group-header"), minimum: 2)
     screenshot_marker(label: "styleguide-select-grouped", only: :desktop)
   end
 
   it "shows a pinned footer below the option list" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=pickers"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    footer =
-      PageObjects::Components::UiKit::DSelect.new(
-        "[data-test-select-showcase='footer'] .d-combobox__trigger",
-      )
+    footer = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer")
     footer.open
-    expect(page).to have_css(".d-combobox__panel > .d-combobox__footer")
+    expect(page).to have_css(footer.in_panel(".d-combobox__panel > .d-combobox__footer"))
     screenshot_marker(label: "styleguide-select-footer", only: :desktop)
   end
 
   it "shows the muted source-error state" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=states"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     # A button-variant trigger has no inline input, so open it directly rather than via the
     # typeahead-oriented page object.
-    find(".select-examples__error .d-combobox__trigger").click
-    expect(page).to have_css(".d-combobox__error .d-icon-triangle-exclamation", wait: 5)
+    combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-error")
+    combobox.open_trigger
+    expect(page).to have_css(
+      combobox.in_panel(".d-combobox__error .d-icon-triangle-exclamation"),
+      wait: 5,
+    )
     screenshot_marker(label: "styleguide-select-error", only: :desktop)
   end
 
   it "shows disabled options and a limit message at the selection maximum" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=selection"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    maximum =
-      PageObjects::Components::UiKit::DSelect.new(".select-examples__maximum .d-combobox__trigger")
+    maximum = PageObjects::Components::UiKit::DSelect.by_identifier("sg-maximum")
     maximum.open
-    expect(page).to have_css(".d-combobox__panel .d-combobox__limit")
-    expect(page).to have_css("[role='option'][aria-disabled='true']")
+    expect(page).to have_css(maximum.in_panel(".d-combobox__panel .d-combobox__limit"))
+    expect(page).to have_css(maximum.in_panel("[role='option'][aria-disabled='true']"))
     screenshot_marker(label: "styleguide-select-maximum", only: :desktop)
   end
 
   it "shows a first-class none row in the single-select list" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=selection"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    none =
-      PageObjects::Components::UiKit::DSelect.new(".select-examples__none .d-combobox__trigger")
+    none = PageObjects::Components::UiKit::DSelect.by_identifier("sg-none")
     none.open
     # The listbox renders in a portal, not inside the example wrapper.
-    expect(page).to have_css(".d-combobox__panel [role='option'].--none")
+    expect(page).to have_css(none.in_panel("[role='option'].--none"))
     screenshot_marker(label: "styleguide-select-none", only: :desktop)
   end
 
   it "shows an icon-only trigger whose icon reflects the selection" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=appearance"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     expect(page).to have_css(
@@ -167,13 +159,14 @@ RSpec.describe "Styleguide Smoke Test" do
     page.scroll_to(find(".select-examples__icon-only"), align: :center)
     # Open it: the dropdown must size to its own options, not the compact trigger, so labels
     # are not clipped.
-    find(".select-examples__icon-only .d-combobox__trigger").click
-    expect(page).to have_css(".d-combobox__panel [role='option']", text: "Watching")
+    icon_only = PageObjects::Components::UiKit::DSelect.by_identifier("sg-icon-only")
+    icon_only.open_trigger
+    expect(page).to have_css(icon_only.option_selector, text: "Watching")
     screenshot_marker(label: "styleguide-select-icon-only", only: :desktop)
   end
 
   it "shows a custom selection that becomes an editable label on open" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=appearance"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     # Resting: the :selection block renders the custom icon + label.
@@ -182,14 +175,15 @@ RSpec.describe "Styleguide Smoke Test" do
     screenshot_marker(label: "styleguide-select-selection-resting", only: :desktop)
 
     # Open: the custom markup gives way to the plain editable label in the filter input.
-    find(".select-examples__selection .d-combobox__trigger").click
-    expect(page).to have_css(".d-combobox__panel [role='option']", text: "Watching")
+    selection = PageObjects::Components::UiKit::DSelect.by_identifier("sg-selection")
+    selection.open_trigger
+    expect(page).to have_css(selection.option_selector, text: "Watching")
     expect(page).to have_no_css(".select-examples__selection .d-combobox__presentation")
     screenshot_marker(label: "styleguide-select-selection-open", only: :desktop)
   end
 
   it "places the caret in the typeahead on click instead of selecting the whole value" do
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=start"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     # The first example is the default typeahead: the chosen label renders inside the input.

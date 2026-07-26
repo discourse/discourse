@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "colors";
 @import "typography";
 
@@ -9,8 +10,13 @@
   padding: 0 1rem 1rem;
 
   .styleguide-note {
-    padding: 1em;
-    background-color: var(--tertiary);
+    // Was --tertiary (saturated brand) with no `color`, so text inherited near-black --primary
+    // on top of it — a contrast failure in light mode and wrong in dark. A quiet surface with
+    // an explicit text colour reads as an aside instead of an alert.
+    padding: 0.75rem 1rem;
+    background-color: var(--primary-very-low);
+    color: var(--primary-high);
+    border-inline-start: 2px solid var(--tertiary);
     margin-bottom: 1em;
   }
 
@@ -43,27 +49,113 @@
     }
 
     .styleguide-example {
-      border: 1px dotted var(--content-border-color);
+      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-border-radius);
       background-color: var(--secondary);
       padding: 1rem;
+      margin-bottom: 2em;
 
-      .example-title {
-        color: var(--primary-medium);
-        font-size: var(--font-up-1);
-        border-bottom: 1px dotted var(--content-border-color);
-        margin-bottom: 1rem;
+      &__header {
         display: flex;
-        align-items: center;
+        align-items: baseline;
         justify-content: space-between;
+        gap: var(--space-2);
+
+        // Reserved so a card without a code toggle keeps the same header height as one with,
+        // instead of alternating down the column.
+        min-height: 2rem;
+        margin-bottom: 0.5rem;
       }
 
-      .rendered {
+      &__title {
+        color: var(--primary);
+        font-size: var(--font-0);
+        font-weight: 600;
+        margin: 0;
+      }
+
+      &__description {
+        color: var(--primary-high);
+        margin: 0 0 1rem;
+        max-width: 60ch;
+      }
+
+      &__try-this {
+        display: flex;
+        gap: 0.4rem;
+        color: var(--primary-high);
+        background: var(--primary-very-low);
+        border-inline-start: 2px solid var(--tertiary);
+        padding: 0.5rem 0.75rem;
+        margin: 0 0 1rem;
+      }
+
+      &__try-this-label {
+        color: var(--primary);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      &__body {
         width: 100%;
         position: relative;
-        flex-direction: column;
-        gap: 0.5rem;
+        min-width: 0;
       }
-      margin-bottom: 2em;
+
+      &__code {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+    }
+
+    .styleguide-subnav {
+      position: sticky;
+
+      // Below the site header, mirroring .styleguide-menu's own offset.
+      top: var(--header-offset);
+      z-index: 1;
+
+      // Required, not decorative: the overflow-nav's scroll fades and its scroll buttons both
+      // paint --secondary, so a transparent sticky bar would show content through them.
+      background: var(--secondary);
+      margin-bottom: 1.5rem;
+      padding-block: 0.5rem;
+    }
+
+    .styleguide-group {
+      &__examples {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+        gap: 1.5rem;
+        align-items: start;
+
+        // Cards that own their width — long lists, footers, control strips — opt out and span
+        // the whole row rather than being squeezed into a track.
+        > .styleguide-example--wide {
+          grid-column: 1 / -1;
+        }
+
+        // Inside a grid track the card's own bottom margin fights `gap`.
+        > .styleguide-example {
+          margin-bottom: 0;
+
+          // Grid items default to min-width: auto too, so a wide child (a long code block, an
+          // unbreakable label) would otherwise stretch its track.
+          min-width: 0;
+        }
+      }
+
+      &__title {
+        font-size: var(--font-up-2);
+        font-weight: 600;
+        margin: 0 0 0.25rem;
+      }
+
+      &__description {
+        color: var(--primary-high);
+        max-width: 70ch;
+        margin: 0 0 1.5rem;
+      }
     }
 
     .component-properties {
@@ -143,7 +235,7 @@
   p.reason {
     display: inline;
     color: var(--primary-medium);
-    margin: 0 0 0 10px;
+    margin: 0 0 0 var(--space-2);
   }
 
   &--char-counter {
@@ -153,7 +245,7 @@
   }
 }
 
-.buttons-examples .rendered {
+.buttons-examples .styleguide-example__body {
   button {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
@@ -178,14 +270,16 @@
 
 .styleguide-icons {
   display: grid;
-  grid-template-columns: 150px 150px 150px 150px 150px;
-  gap: 10px;
+
+  // Was a fixed 5 x 150px track list, which overflowed below ~750px.
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-2);
 
   .styleguide-icon {
     background-color: var(--primary-low);
-    margin: 3px;
+    margin: var(--space-1);
     text-align: center;
-    padding: 10px;
+    padding: var(--space-2);
     overflow: hidden;
 
     svg {
@@ -202,7 +296,7 @@
 }
 
 .styleguide__component {
-  border: 1px dotted var(--content-border-color);
+  border: 1px solid var(--content-border-color);
   margin-bottom: 2rem;
   position: relative;
 
@@ -210,7 +304,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 3px 6px;
+    padding: var(--space-1) var(--space-2);
     background: var(--primary-low);
     max-width: 25%;
 
@@ -248,21 +342,131 @@
   }
 }
 
-.select-examples__control {
-  width: min(100%, 24rem);
+/* Example layout ------------------------------------------------------------------------- */
+.select-examples,
+.select-hero {
+  // One control width for the whole page, routed through a property so a single example can
+  // narrow it. NARROWING is safe; widening is not — the reviewer showcase relies on its chips
+  // wrapping, and a wider control stops them wrapping and silently voids that assertion.
+  --styleguide-control-width: 24rem;
 }
 
+.select-examples__control,
+.select-showcases__control {
+  width: min(100%, var(--styleguide-control-width));
+  min-width: 0;
+}
+
+.select-showcases__control {
+  // The rich showcase rows need the wider track in both directions. Widening past this stops
+  // the seven reviewer chips wrapping, which an assertion reads via their offsets; narrowing it
+  // makes the two-line rows wrap far enough to overlap, so a row intercepts the click meant for
+  // the one below it. Both failures are silent-ish, so treat 28rem as fixed.
+  --styleguide-control-width: 28rem;
+}
+
+/* Row archetypes ------------------------------------------------------------------------- */
+
+/* Three shapes, used across every example so ~50 demos read as one designed system rather
+   than fifty improvisations. Structural rows (group header, footer, limit, empty, error) are
+   the component's own chrome and are deliberately NOT restyled here. */
+
+.select-examples__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  width: 100%;
+
+  // Leading glyph + label + optional trailing meta. The archetype most consumers copy.
+  &--glyph {
+    .d-icon {
+      color: var(--primary-medium);
+      flex: none;
+    }
+  }
+
+  // Avatar + two lines + optional trailing badge. Expensive-looking, so used sparingly.
+  &--identity {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+.select-examples__avatar {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.select-examples__details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.select-examples__primary {
+  color: var(--token-color-text-default);
+  font-weight: var(--token-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.select-examples__secondary,
+.select-examples__meta {
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+  overflow-wrap: anywhere;
+}
+
+.select-examples__meta {
+  margin-inline-start: auto;
+  flex: none;
+}
+
+/* The hero --------------------------------------------------------------------------------- */
+.select-hero {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+
+  &__caption {
+    color: var(--primary-high);
+    max-width: 70ch;
+    margin: 0 0 1rem;
+  }
+
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1 1 14rem;
+    min-width: 0;
+
+    &--wide {
+      flex: 2 1 20rem;
+    }
+  }
+
+  &__label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+  }
+}
+
+/* Legacy showcase vocabulary — retained only where the showcase markup still uses it. */
 .select-showcases {
-  margin-block-start: 3rem;
-
-  &__title {
-    margin-block-end: 0.5rem;
-  }
-
-  &__control {
-    width: min(100%, 28rem);
-  }
-
   &__reviewer,
   &__category,
   &__notification {
@@ -376,5 +580,61 @@
     padding: 0.5em 1em;
     border-bottom: 1px solid var(--primary-very-low);
     line-height: 1.4;
+  }
+}
+
+/* The keyboard group ----------------------------------------------------------------------- */
+.select-keyboard {
+  &__steps,
+  &__notes {
+    color: var(--primary-high);
+    margin: 1rem 0 0;
+    padding-inline-start: 1.25rem;
+    max-width: 62ch;
+
+    li {
+      margin-bottom: 0.35rem;
+    }
+  }
+
+  // A transcript, not a console: bounded height, newest first, quiet enough to sit beside the
+  // control it describes without competing with it.
+  &__transcript {
+    margin-top: 1rem;
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    background: var(--primary-very-low);
+    padding: 0.75rem;
+  }
+
+  &__transcript-title {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+  }
+
+  &__transcript-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__transcript-entry {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--primary-low);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  &__transcript-empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin: 0;
   }
 }

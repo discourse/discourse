@@ -7,12 +7,54 @@ module PageObjects
       # instance by its trigger element, so the same page can host several.
       class DSelect < PageObjects::Components::Base
         # @param root [String] a CSS selector for the instance's `.d-combobox__trigger`.
-        def initialize(root)
+        # @param panel [String, nil] a CSS selector for the instance's overlay. Without it
+        #   panel lookups fall back to the whole document, which is only correct when a single
+        #   overlay can be open at a time.
+        def initialize(root, panel: nil)
           @root = root
+          @panel = panel
+        end
+
+        # Identifiers reach both CSS attribute selectors (single-quoted) and double-quoted JS
+        # string literals, so anything outside this set could break either. Rejecting is better
+        # than escaping: every real identifier is a slug, and a silently-mangled selector fails
+        # as a confusing timeout rather than an error.
+        SAFE_IDENTIFIER = /\A[-_a-zA-Z0-9]+\z/
+
+        # Scopes an instance by the `@identifier` it passes to `DMenu`. float-kit stamps that
+        # identifier on the trigger *and* on the portaled overlay — on desktop through
+        # `DFloatBody`, on mobile through `DModal` — so this is the only construction that
+        # reaches the right panel on both.
+        #
+        # Note this scopes *lookups*; it does not make every method mobile-capable. `open` still
+        # clicks an input inside the trigger, which on mobile lives in the modal instead — use
+        # `open_trigger` there.
+        def self.by_identifier(identifier)
+          unless SAFE_IDENTIFIER.match?(identifier)
+            raise ArgumentError, "unsafe DSelect identifier: #{identifier.inspect}"
+          end
+
+          new(
+            "[data-identifier='#{identifier}'][data-trigger]",
+            panel: "[data-identifier='#{identifier}'][data-content]",
+          )
         end
 
         def trigger
           find(@root)
+        end
+
+        # `wait: 0` for the same reason as `press_in_controller`: a predicate on an
+        # already-resolved node, where waiting would only delay a legitimate `false`.
+        def multiple?
+          trigger.matches_css?(".--multiple", wait: 0)
+        end
+
+        # Opens through the trigger itself rather than the query input — the `button` and
+        # `static` variants have no input to click.
+        def open_trigger
+          trigger.click
+          self
         end
 
         def input
@@ -28,15 +70,29 @@ module PageObjects
           input[:"aria-expanded"] == "true"
         end
 
+        # Prefixes a selector with this instance's overlay, so a page hosting several selects
+        # never reads another one's panel. Falls back to the bare selector when the instance
+        # was built without a panel root.
+        def in_panel(selector)
+          @panel ? "#{@panel} #{selector}" : selector
+        end
+
+        # Keeps the `[role='listbox']` ancestor the pre-scoping selector had: a panel may host
+        # consumer markup (a `:footer`, an `:empty` block) that could carry its own option role,
+        # and dropping the ancestor would let it count as a row.
+        def option_selector
+          in_panel("[role='listbox'] [role='option']")
+        end
+
         def options
-          all("[role='listbox'] [role='option']", minimum: 0)
+          all(option_selector, minimum: 0)
         end
 
         # Single-select: open, filter, and click the matching option (closes the overlay).
         def select(name)
           input.click
           input.send_keys(name)
-          find("[role='listbox'] [role='option']", text: name).click
+          find(option_selector, text: name).click
           self
         end
 
@@ -57,7 +113,10 @@ module PageObjects
         def add(name)
           input.click
           input.send_keys(name)
-          find("[role='listbox'][aria-multiselectable='true'] [role='option']", text: name).click
+          find(
+            in_panel("[role='listbox'][aria-multiselectable='true'] [role='option']"),
+            text: name,
+          ).click
         end
 
         def focus_input
@@ -69,10 +128,25 @@ module PageObjects
           page.send_keys(*keys)
         end
 
+        # The elements this instance owns live in two disjoint subtrees: the host trigger, and
+        # the portaled overlay. A focus predicate has to accept either, because the typeahead
+        # input sits in the trigger on desktop and inside the modal on mobile.
+        def owned_scopes
+          @panel ? [@root, @panel] : [@root]
+        end
+
+        # Whether focus rests on THIS instance's query input. The unscoped form accepted a
+        # focused input belonging to any select on the page.
         def input_focused?
-          page.evaluate_script(
-            "document.activeElement?.classList.contains('d-combobox__input') === true",
-          )
+          page.evaluate_script(<<~JS)
+            (function () {
+              const el = document.activeElement;
+              if (!el || !el.classList.contains("d-combobox__input")) {
+                return false;
+              }
+              return #{owned_scopes.to_json}.some((scope) => el.closest(scope));
+            })()
+          JS
         end
 
         # The label of the chip whose remove button holds focus, or nil when a chip is
@@ -82,6 +156,9 @@ module PageObjects
             (function () {
               const el = document.activeElement;
               if (!el || !el.classList.contains("d-combobox__chip-remove")) {
+                return null;
+              }
+              if (!#{owned_scopes.to_json}.some((scope) => el.closest(scope))) {
                 return null;
               }
               const chip = el.closest(".d-combobox__chip");
@@ -96,7 +173,18 @@ module PageObjects
         end
 
         def listbox
-          find("[role='listbox']")
+          find(in_panel("[role='listbox']"))
+        end
+
+        # Presence predicates for THIS instance's overlay. Asserting on a bare `[role='listbox']`
+        # is both over-broad (any open panel satisfies it) and flaky in the negative direction,
+        # since a document-wide `have_no_css` has to wait out every candidate.
+        def has_listbox?
+          page.has_css?(in_panel("[role='listbox']"))
+        end
+
+        def has_no_listbox?
+          page.has_no_css?(in_panel("[role='listbox']"))
         end
 
         def option_count
@@ -106,7 +194,7 @@ module PageObjects
         # Whether the "keep filtering" hint is showing, i.e. a paginated source stopped at its
         # cap with more results behind it. A client source renders in full and never shows it.
         def narrow_hint?
-          page.has_css?(".d-combobox__narrow", wait: 0)
+          page.has_css?(in_panel(".d-combobox__narrow"), wait: 0)
         end
 
         # The listbox is windowed by `DVirtualList`: only a slice of rows is mounted, so
@@ -116,7 +204,7 @@ module PageObjects
         def max_loaded_index
           page.evaluate_script(<<~JS)
             (function () {
-              const indices = [...document.querySelectorAll("[role='listbox'] [role='option']")]
+              const indices = [...document.querySelectorAll("#{option_selector}")]
                 .map((el) => Number(el.dataset.index))
                 .filter((index) => Number.isInteger(index));
               return indices.length ? Math.max(...indices) : -1;
@@ -130,8 +218,19 @@ module PageObjects
         def scroll_listbox_to_bottom
           page.execute_script(<<~JS)
             (function () {
-              const list = document.querySelector(".d-virtual-list");
+              const list = document.querySelector("#{in_panel(".d-virtual-list")}");
               list.scrollTop = list.scrollHeight;
+            })()
+          JS
+        end
+
+        # The scroll offset of this instance's windowed viewport — the assertion that scrolling
+        # stayed inside the listbox rather than moving the page.
+        def list_scroll_top
+          page.evaluate_script(<<~JS)
+            (function () {
+              const list = document.querySelector("#{in_panel(".d-virtual-list")}");
+              return list ? list.scrollTop : null;
             })()
           JS
         end
@@ -190,6 +289,9 @@ module PageObjects
               if (!el || el.getAttribute("role") !== "option") {
                 return null;
               }
+              if (!#{owned_scopes.to_json}.some((scope) => el.closest(scope))) {
+                return null;
+              }
               const index = Number(el.dataset.index);
               return Number.isInteger(index) ? index : null;
             })()
@@ -197,9 +299,21 @@ module PageObjects
         end
 
         # Sends keys to the combobox controller (the trigger input, or the trigger div for a
-        # select-only combobox).
+        # select-only combobox). The `static` variant puts `role="combobox"` on the trigger root
+        # itself, so a descendant-only lookup would never find it.
         def press_in_controller(*keys)
-          find("#{@root} [role='combobox']").send_keys(*keys)
+          # `trigger` does the waiting, so by here the element exists and the role question is
+          # about that resolved node — `wait: 0` is correct and not a race. Without it
+          # `matches_css?` waits the full Capybara duration before answering false, which is a
+          # 5s stall on every typeahead (the variant where the role is on a descendant).
+          root = trigger
+          controller =
+            if root.matches_css?("[role='combobox']", wait: 0)
+              root
+            else
+              root.find("[role='combobox']")
+            end
+          controller.send_keys(*keys)
         end
 
         # A windowed keyboard jump reconciles asynchronously (scroll, then refocus on the next

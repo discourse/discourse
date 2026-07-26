@@ -18,22 +18,20 @@ describe "UiKit | DSelect windowed client list" do
   fab!(:admin)
 
   # The styleguide's large-list example: 5000 client options, windowed by DVirtualList.
-  let(:combobox) do
-    PageObjects::Components::UiKit::DSelect.new(".select-examples__large-list .d-combobox__trigger")
-  end
+  let(:combobox) { PageObjects::Components::UiKit::DSelect.by_identifier("sg-large-list") }
 
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
-    visit "/styleguide/molecules/select"
-    expect(page).to have_css(".select-examples__large-list .d-combobox__trigger")
+    visit "/styleguide/molecules/select?group=limits"
+    expect(page).to have_css("[data-identifier='sg-large-list'][data-trigger]")
   end
 
   it "opens onto a bounded window of a huge list, sized to the honest total" do
     combobox.open
 
     # The window is a small slice near the top, nowhere near the 5000th row.
-    expect(page).to have_css("[role='listbox'] [role='option']")
+    expect(page).to have_css(combobox.option_selector)
     expect(combobox.max_loaded_index).to be < 50
     # The set size a screen reader hears is the real total, not the rendered window.
     expect(combobox.options.first[:"aria-setsize"]).to eq("5000")
@@ -78,6 +76,6 @@ describe "UiKit | DSelect windowed client list" do
     expect(combobox.reveal_to_index(99)).to be >= 99
 
     expect(page.evaluate_script("window.scrollY")).to eq(page_offset)
-    expect(page.evaluate_script("document.querySelector('.d-virtual-list').scrollTop")).to be > 0
+    expect(combobox.list_scroll_top).to be > 0
   end
 end

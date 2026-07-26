@@ -12,16 +12,12 @@
 describe "UiKit | DSelect multi-select chip roving" do
   fab!(:admin)
 
-  let(:combobox) do
-    PageObjects::Components::UiKit::DSelect.new(
-      ".select-examples__multi .d-combobox__trigger.--multiple",
-    )
-  end
+  let(:combobox) { PageObjects::Components::UiKit::DSelect.by_identifier("sg-multi") }
 
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
-    visit "/styleguide/molecules/select"
+    visit "/styleguide/molecules/select?group=start"
     expect(page).to have_css(".select-examples__multi .d-combobox__trigger.--multiple")
   end
 
@@ -117,7 +113,7 @@ describe "UiKit | DSelect multi-select chip roving" do
   it "closes the overlay on Escape from a chip, leaving focus on the chip" do
     add_three_chips
     # The multi overlay stays open across adds.
-    expect(page).to have_css("[role='listbox']")
+    expect(combobox).to have_listbox
 
     combobox.focus_input
     combobox.press(:left) # onto a chip
@@ -127,7 +123,7 @@ describe "UiKit | DSelect multi-select chip roving" do
 
     # float-kit owns Escape (document-level capture); it closes the menu and focus stays
     # on the chip, which remains arrow-navigable with the menu closed.
-    expect(page).to have_no_css("[role='listbox']")
+    expect(combobox).to have_no_listbox
     expect(combobox.focused_chip_label).to eq("Red")
   end
 
@@ -136,13 +132,13 @@ describe "UiKit | DSelect multi-select chip roving" do
     combobox.focus_input
     combobox.press(:left) # onto a chip
     combobox.press(:escape) # close; focus stays on the chip
-    expect(page).to have_no_css("[role='listbox']")
+    expect(combobox).to have_no_listbox
     expect(combobox.focused_chip_label).to eq("Red")
 
     # ArrowDown is the reopen gesture: jump to the input and open the options.
     combobox.press(:down)
 
-    expect(page).to have_css("[role='listbox']")
+    expect(combobox).to have_listbox
     expect(combobox.input_focused?).to eq(true)
   end
 end

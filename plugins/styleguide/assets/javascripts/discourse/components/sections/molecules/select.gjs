@@ -6,7 +6,26 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 import StyleguideExample from "../../styleguide-example";
+import StyleguideGroups from "../../styleguide-groups";
+import SelectHero from "./select-hero";
+import SelectKeyboard from "./select-keyboard";
 import SelectShowcases from "./select-showcases";
+
+/**
+ * The page's group manifest — the single source of truth for both the sub-navigation and the
+ * order groups render in. Each id is also the `?group=` value, so it is part of the page's URL
+ * surface and is what system specs navigate to.
+ */
+const GROUPS = [
+  "start",
+  "data",
+  "states",
+  "appearance",
+  "selection",
+  "keyboard",
+  "limits",
+  "pickers",
+];
 
 function delay(signal, milliseconds = 750) {
   return new Promise((resolve, reject) => {
@@ -29,14 +48,23 @@ function delay(signal, milliseconds = 750) {
 
 export default class Select extends Component {
   @tracked asyncButtonValue = null;
+
   @tracked defaultValue = null;
+
   @tracked emptyValue = null;
+
   @tracked errorValue = null;
+
   @tracked multiValue = [];
+
   @tracked maximumValue = [1, 2, 3];
+
   @tracked staticValue = null;
+
   @tracked clearableValue = 1;
+
   @tracked clearableMultiValue = [1, 2];
+
   @tracked iconValue = null;
   @tracked caretValue = null;
   @tracked noneValue = 2;
@@ -297,6 +325,14 @@ export default class Select extends Component {
   <:item as |item|>{{item.name}}</:item>
 </DSelect>`;
 
+  get groups() {
+    return GROUPS.map((id) => ({
+      id,
+      title: i18n(`styleguide.sections.select.groups.${id}.title`),
+      description: i18n(`styleguide.sections.select.groups.${id}.description`),
+    }));
+  }
+
   get items() {
     return this.args.dummy.options;
   }
@@ -505,452 +541,564 @@ export default class Select extends Component {
     <p class="section-description">
       {{i18n "styleguide.sections.select.description"}}
     </p>
-    <p class="styleguide-note select-examples__mobile-note">
-      {{i18n "styleguide.sections.select.mobile_guidance"}}
-    </p>
 
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.default_example"}}
-      @code={{this.defaultCode}}
-    >
-      <div class="select-examples__control select-examples__default">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.defaultValue}}
-          @onChange={{this.updateDefault}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-      </div>
-    </StyleguideExample>
+    <SelectHero @categories={{@dummy.categories}} />
 
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.async_button_example"}}
-      @code={{this.asyncButtonCode}}
+    <StyleguideGroups
+      @groups={{this.groups}}
+      @section={{@section}}
+      @active={{@group}}
+      @ariaLabel={{i18n "styleguide.sections.select.groups.aria_label"}}
+      as |Group|
     >
-      <div class="select-examples__control select-examples__async-button">
-        <DSelect
-          @load={{this.loadOptions}}
-          @value={{this.asyncButtonValue}}
-          @onChange={{this.updateAsyncButton}}
-          @variant="button"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+      <Group @id="start">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.default_example"}}
+          @description={{i18n "styleguide.sections.select.default_description"}}
+          @tryThis={{i18n "styleguide.sections.select.default_try_this"}}
+          @code={{this.defaultCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.static_example"}}
-      @code={{this.staticCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.staticValue}}
-          @onChange={{this.updateStatic}}
-          @variant="static"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          <div class="select-examples__control select-examples__default">
+            <DSelect
+              @identifier="sg-default"
+              @items={{this.items}}
+              @value={{this.defaultValue}}
+              @onChange={{this.updateDefault}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.static_example"}}
+          @description={{i18n "styleguide.sections.select.static_description"}}
+          @tryThis={{i18n "styleguide.sections.select.static_try_this"}}
+          @code={{this.staticCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.multi_example"}}
-      @code={{this.multiCode}}
-    >
-      <div class="select-examples__control select-examples__multi">
-        <DSelect
-          @items={{this.items}}
-          @multiple={{true}}
-          @value={{this.multiValue}}
-          @onChange={{this.updateMulti}}
-          @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-static"
+              @items={{this.items}}
+              @value={{this.staticValue}}
+              @onChange={{this.updateStatic}}
+              @variant="static"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.multi_example"}}
+          @description={{i18n "styleguide.sections.select.multi_description"}}
+          @tryThis={{i18n "styleguide.sections.select.multi_try_this"}}
+          @code={{this.multiCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
+          <div class="select-examples__control select-examples__multi">
+            <DSelect
+              @identifier="sg-multi"
+              @items={{this.items}}
+              @multiple={{true}}
+              @value={{this.multiValue}}
+              @onChange={{this.updateMulti}}
+              @placeholder={{i18n
+                "styleguide.sections.select.multi_placeholder"
+              }}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+      </Group>
 
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.maximum_example"}}
-      @code={{this.maximumCode}}
-    >
-      <div class="select-examples__control select-examples__maximum">
-        <DSelect
-          @items={{this.items}}
-          @multiple={{true}}
-          @maximum={{3}}
-          @value={{this.maximumValue}}
-          @onChange={{this.updateMaximum}}
-          @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.none_example"}}
-      @code={{this.noneCode}}
-    >
-      <div class="select-examples__control select-examples__none">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.noneValue}}
-          @onChange={{this.updateNone}}
-          @noneLabel={{i18n "styleguide.sections.select.none_label"}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.icon_only_example"}}
-      @code={{this.iconOnlyCode}}
-    >
-      <div class="select-examples__control select-examples__icon-only">
-        <DSelect
-          @items={{this.notificationLevels}}
-          @variant="static"
-          @value={{this.iconOnlyValue}}
-          @onChange={{this.updateIconOnly}}
-          @icon={{this.iconOnlyIcon}}
-          @iconOnly={{true}}
-          @label={{i18n "styleguide.sections.select.icon_only_label"}}
-        />
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.selection_example"}}
-      @code={{this.selectionCode}}
-    >
-      <div class="select-examples__control select-examples__selection">
-        <DSelect
-          @items={{this.notificationLevels}}
-          @value={{this.selectionValue}}
-          @onChange={{this.updateSelection}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{dIcon item.icon}} {{item.name}}</:selection>
-          <:item as |item|>{{dIcon item.icon}} {{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.empty_example"}}
-      @code={{this.emptyCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @load={{this.loadEmpty}}
-          @value={{this.emptyValue}}
-          @onChange={{this.updateEmpty}}
-          @variant="button"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-          @noResultsLabel={{i18n "styleguide.sections.select.empty_label"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.clearable_example"}}
-      @code={{this.clearableCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.clearableValue}}
-          @onChange={{this.updateClearable}}
-          @clearable={{true}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.clearable_multi_example"}}
-      @code={{this.clearableMultiCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @multiple={{true}}
-          @value={{this.clearableMultiValue}}
-          @onChange={{this.updateClearableMulti}}
-          @clearable={{true}}
-          @placeholder={{i18n "styleguide.sections.select.multi_placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.icon_example"}}
-      @code={{this.iconCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.iconValue}}
-          @onChange={{this.updateIcon}}
-          @icon="tag"
-          @variant="static"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.caret_example"}}
-      @code={{this.caretCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.caretValue}}
-          @onChange={{this.updateCaret}}
-          @caretIcon={{hash open="caret-up" closed="caret-down"}}
-          @variant="static"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.disabled_example"}}
-      @code={{this.disabledCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.disabledValue}}
-          @onChange={{this.updateDisabled}}
-          @disabled={{true}}
-          @variant="static"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.readonly_example"}}
-      @code={{this.readonlyCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.readonlyValue}}
-          @onChange={{this.updateReadonly}}
-          @readonly={{true}}
-          @variant="static"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.min_chars_example"}}
-      @code={{this.minCharsCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @load={{this.loadOptions}}
-          @value={{this.minCharsValue}}
-          @onChange={{this.updateMinChars}}
-          @minChars={{3}}
-          @clearable={{true}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.custom_empty_example"}}
-      @code={{this.customEmptyCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @load={{this.loadEmpty}}
-          @value={{this.customEmptyValue}}
-          @onChange={{this.updateCustomEmpty}}
-          @variant="button"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-          <:empty>
-            {{i18n "styleguide.sections.select.custom_empty_body"}}
-          </:empty>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.placement_example"}}
-      @code={{this.placementCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.placementValue}}
-          @onChange={{this.updatePlacement}}
-          @variant="button"
-          @placement="top"
-          @offset={{16}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.debounce_example"}}
-      @code={{this.debounceCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.debounceValue}}
-          @onChange={{this.updateDebounce}}
-          @variant="button"
-          @debounce={{300}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.events_example"}}
-      @code={{this.eventsCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @items={{this.items}}
-          @value={{this.eventsValue}}
-          @onChange={{this.updateEvents}}
-          @onShow={{this.onShow}}
-          @onClose={{this.onClose}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-        <p class="styleguide-note">
-          {{i18n
-            "styleguide.sections.select.events_note"
-            opened=this.openCount
-            closed=this.closeCount
+      <Group @id="data">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.min_chars_example"}}
+          @description={{i18n
+            "styleguide.sections.select.min_chars_description"
           }}
-        </p>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.large_list_example"}}
-      @code={{this.largeListCode}}
-    >
-      <div class="select-examples__control select-examples__large-list">
-        <DSelect
-          @items={{this.largeListItems}}
-          @value={{this.largeListValue}}
-          @onChange={{this.updateLargeList}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-        <p class="styleguide-note">
-          {{i18n "styleguide.sections.select.large_list_note"}}
-        </p>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.paged_example"}}
-      @code={{this.pagedCode}}
-    >
-      <div class="select-examples__control select-examples__paged">
-        <DSelect
-          @load={{this.loadPage}}
-          @value={{this.pagedValue}}
-          @onChange={{this.updatePaged}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          @tryThis={{i18n "styleguide.sections.select.min_chars_try_this"}}
+          @code={{this.minCharsCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-        <p class="styleguide-note">
-          {{i18n "styleguide.sections.select.paged_note"}}
-        </p>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
-      @code={{this.pagedCode}}
-    >
-      <div class="select-examples__control select-examples__paged-cursor">
-        <DSelect
-          @load={{this.loadPageCursor}}
-          @value={{this.pagedCursorValue}}
-          @onChange={{this.updatePagedCursor}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-min-chars"
+              @load={{this.loadOptions}}
+              @value={{this.minCharsValue}}
+              @onChange={{this.updateMinChars}}
+              @minChars={{3}}
+              @clearable={{true}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.debounce_example"}}
+          @description={{i18n
+            "styleguide.sections.select.debounce_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.debounce_try_this"}}
+          @code={{this.debounceCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-        <p class="styleguide-note">
-          {{i18n "styleguide.sections.select.paged_cursor_note"}}
-        </p>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
-      @title={{i18n "styleguide.sections.select.error_example"}}
-      @code={{this.errorCode}}
-    >
-      <div class="select-examples__control select-examples__error">
-        <DSelect
-          @load={{this.loadWithRetry}}
-          @value={{this.errorValue}}
-          @onChange={{this.updateError}}
-          @variant="button"
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-debounce"
+              @items={{this.items}}
+              @value={{this.debounceValue}}
+              @onChange={{this.updateDebounce}}
+              @variant="button"
+              @debounce={{300}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.paged_example"}}
+          @description={{i18n "styleguide.sections.select.paged_description"}}
+          @tryThis={{i18n "styleguide.sections.select.paged_try_this"}}
+          @code={{this.pagedCode}}
         >
-          <:selection as |item|>{{item.name}}</:selection>
-          <:item as |item|>{{item.name}}</:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
+          <div class="select-examples__control select-examples__paged">
+            <DSelect
+              @identifier="sg-paged"
+              @load={{this.loadPage}}
+              @value={{this.pagedValue}}
+              @onChange={{this.updatePaged}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+            <p class="styleguide-note">
+              {{i18n "styleguide.sections.select.paged_note"}}
+            </p>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
+          @description={{i18n
+            "styleguide.sections.select.paged_cursor_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.paged_cursor_try_this"}}
+          @code={{this.pagedCode}}
+        >
+          <div class="select-examples__control select-examples__paged-cursor">
+            <DSelect
+              @identifier="sg-paged-cursor"
+              @load={{this.loadPageCursor}}
+              @value={{this.pagedCursorValue}}
+              @onChange={{this.updatePagedCursor}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+            <p class="styleguide-note">
+              {{i18n "styleguide.sections.select.paged_cursor_note"}}
+            </p>
+          </div>
+        </StyleguideExample>
+      </Group>
 
-    <SelectShowcases @categories={{@dummy.categories}} />
+      <Group @id="states">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.async_button_example"}}
+          @description={{i18n
+            "styleguide.sections.select.async_button_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.async_button_try_this"}}
+          @code={{this.asyncButtonCode}}
+        >
+          <div class="select-examples__control select-examples__async-button">
+            <DSelect
+              @identifier="sg-async-button"
+              @load={{this.loadOptions}}
+              @value={{this.asyncButtonValue}}
+              @onChange={{this.updateAsyncButton}}
+              @variant="button"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.empty_example"}}
+          @description={{i18n "styleguide.sections.select.empty_description"}}
+          @tryThis={{i18n "styleguide.sections.select.empty_try_this"}}
+          @code={{this.emptyCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-empty"
+              @load={{this.loadEmpty}}
+              @value={{this.emptyValue}}
+              @onChange={{this.updateEmpty}}
+              @variant="button"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+              @noResultsLabel={{i18n "styleguide.sections.select.empty_label"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.custom_empty_example"}}
+          @description={{i18n
+            "styleguide.sections.select.custom_empty_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.custom_empty_try_this"}}
+          @code={{this.customEmptyCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-custom-empty"
+              @load={{this.loadEmpty}}
+              @value={{this.customEmptyValue}}
+              @onChange={{this.updateCustomEmpty}}
+              @variant="button"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+              <:empty>
+                {{i18n "styleguide.sections.select.custom_empty_body"}}
+              </:empty>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.error_example"}}
+          @description={{i18n "styleguide.sections.select.error_description"}}
+          @tryThis={{i18n "styleguide.sections.select.error_try_this"}}
+          @code={{this.errorCode}}
+        >
+          <div class="select-examples__control select-examples__error">
+            <DSelect
+              @identifier="sg-error"
+              @load={{this.loadWithRetry}}
+              @value={{this.errorValue}}
+              @onChange={{this.updateError}}
+              @variant="button"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="appearance">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.icon_example"}}
+          @description={{i18n "styleguide.sections.select.icon_description"}}
+          @code={{this.iconCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-icon"
+              @items={{this.items}}
+              @value={{this.iconValue}}
+              @onChange={{this.updateIcon}}
+              @icon="tag"
+              @variant="static"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.icon_only_example"}}
+          @description={{i18n
+            "styleguide.sections.select.icon_only_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.icon_only_try_this"}}
+          @code={{this.iconOnlyCode}}
+        >
+          <div class="select-examples__control select-examples__icon-only">
+            <DSelect
+              @identifier="sg-icon-only"
+              @items={{this.notificationLevels}}
+              @variant="static"
+              @value={{this.iconOnlyValue}}
+              @onChange={{this.updateIconOnly}}
+              @icon={{this.iconOnlyIcon}}
+              @iconOnly={{true}}
+              @label={{i18n "styleguide.sections.select.icon_only_label"}}
+            />
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.caret_example"}}
+          @description={{i18n "styleguide.sections.select.caret_description"}}
+          @tryThis={{i18n "styleguide.sections.select.caret_try_this"}}
+          @code={{this.caretCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-caret"
+              @items={{this.items}}
+              @value={{this.caretValue}}
+              @onChange={{this.updateCaret}}
+              @caretIcon={{hash open="caret-up" closed="caret-down"}}
+              @variant="static"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.selection_example"}}
+          @description={{i18n
+            "styleguide.sections.select.selection_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.selection_try_this"}}
+          @code={{this.selectionCode}}
+        >
+          <div class="select-examples__control select-examples__selection">
+            <DSelect
+              @identifier="sg-selection"
+              @items={{this.notificationLevels}}
+              @value={{this.selectionValue}}
+              @onChange={{this.updateSelection}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{dIcon item.icon}}
+                {{item.name}}</:selection>
+              <:item as |item|>{{dIcon item.icon}} {{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.placement_example"}}
+          @description={{i18n
+            "styleguide.sections.select.placement_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.placement_try_this"}}
+          @code={{this.placementCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-placement"
+              @items={{this.items}}
+              @value={{this.placementValue}}
+              @onChange={{this.updatePlacement}}
+              @variant="button"
+              @placement="top"
+              @offset={{16}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.events_example"}}
+          @description={{i18n "styleguide.sections.select.events_description"}}
+          @tryThis={{i18n "styleguide.sections.select.events_try_this"}}
+          @code={{this.eventsCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-events"
+              @items={{this.items}}
+              @value={{this.eventsValue}}
+              @onChange={{this.updateEvents}}
+              @onShow={{this.onShow}}
+              @onClose={{this.onClose}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+            <p class="styleguide-note">
+              {{i18n
+                "styleguide.sections.select.events_note"
+                opened=this.openCount
+                closed=this.closeCount
+              }}
+            </p>
+          </div>
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="selection">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.maximum_example"}}
+          @description={{i18n "styleguide.sections.select.maximum_description"}}
+          @tryThis={{i18n "styleguide.sections.select.maximum_try_this"}}
+          @code={{this.maximumCode}}
+        >
+          <div class="select-examples__control select-examples__maximum">
+            <DSelect
+              @identifier="sg-maximum"
+              @items={{this.items}}
+              @multiple={{true}}
+              @maximum={{3}}
+              @value={{this.maximumValue}}
+              @onChange={{this.updateMaximum}}
+              @placeholder={{i18n
+                "styleguide.sections.select.multi_placeholder"
+              }}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.none_example"}}
+          @description={{i18n "styleguide.sections.select.none_description"}}
+          @tryThis={{i18n "styleguide.sections.select.none_try_this"}}
+          @code={{this.noneCode}}
+        >
+          <div class="select-examples__control select-examples__none">
+            <DSelect
+              @identifier="sg-none"
+              @items={{this.items}}
+              @value={{this.noneValue}}
+              @onChange={{this.updateNone}}
+              @noneLabel={{i18n "styleguide.sections.select.none_label"}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.clearable_example"}}
+          @description={{i18n
+            "styleguide.sections.select.clearable_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.clearable_try_this"}}
+          @code={{this.clearableCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-clearable"
+              @items={{this.items}}
+              @value={{this.clearableValue}}
+              @onChange={{this.updateClearable}}
+              @clearable={{true}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.clearable_multi_example"}}
+          @description={{i18n
+            "styleguide.sections.select.clearable_multi_description"
+          }}
+          @tryThis={{i18n
+            "styleguide.sections.select.clearable_multi_try_this"
+          }}
+          @code={{this.clearableMultiCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-clearable-multi"
+              @items={{this.items}}
+              @multiple={{true}}
+              @value={{this.clearableMultiValue}}
+              @onChange={{this.updateClearableMulti}}
+              @clearable={{true}}
+              @placeholder={{i18n
+                "styleguide.sections.select.multi_placeholder"
+              }}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.disabled_example"}}
+          @description={{i18n
+            "styleguide.sections.select.disabled_description"
+          }}
+          @code={{this.disabledCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-disabled"
+              @items={{this.items}}
+              @value={{this.disabledValue}}
+              @onChange={{this.updateDisabled}}
+              @disabled={{true}}
+              @variant="static"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.readonly_example"}}
+          @description={{i18n
+            "styleguide.sections.select.readonly_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.readonly_try_this"}}
+          @code={{this.readonlyCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-readonly"
+              @items={{this.items}}
+              @value={{this.readonlyValue}}
+              @onChange={{this.updateReadonly}}
+              @readonly={{true}}
+              @variant="static"
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            >
+              <:selection as |item|>{{item.name}}</:selection>
+              <:item as |item|>{{item.name}}</:item>
+            </DSelect>
+          </div>
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="keyboard">
+        <SelectKeyboard />
+      </Group>
+
+      <Group @id="limits">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.large_list_example"}}
+          @description={{i18n
+            "styleguide.sections.select.large_list_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.large_list_try_this"}}
+          @code={{this.largeListCode}}
+        >
+          <div class="select-examples__control select-examples__large-list">
+            <DSelect
+              @identifier="sg-large-list"
+              @items={{this.largeListItems}}
+              @value={{this.largeListValue}}
+              @onChange={{this.updateLargeList}}
+              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+            <p class="styleguide-note">
+              {{i18n "styleguide.sections.select.large_list_note"}}
+            </p>
+          </div>
+        </StyleguideExample>
+      </Group>
+
+      <Group @id="pickers">
+        <SelectShowcases @categories={{@dummy.categories}} />
+      </Group>
+    </StyleguideGroups>
   </template>
 }

@@ -497,6 +497,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="reviewers"
         >
           <DSelect
+            @identifier="sg-reviewers"
             @load={{this.loadReviewers}}
             @multiple={{true}}
             @value={{this.reviewerValue}}
@@ -545,6 +546,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="categories"
         >
           <DSelect
+            @identifier="sg-categories"
             @items={{this.categories}}
             @value={{this.categoryValue}}
             @onChange={{this.updateCategory}}
@@ -603,6 +605,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="tags"
         >
           <DSelect
+            @identifier="sg-tags"
             @items={{this.tagsSource}}
             @multiple={{true}}
             @value={{this.tagValue}}
@@ -656,6 +659,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="notifications"
         >
           <DSelect
+            @identifier="sg-notifications"
             @items={{this.notificationItems}}
             @value={{this.notificationValue}}
             @onChange={{this.updateNotification}}
@@ -699,6 +703,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="grouped"
         >
           <DSelect
+            @identifier="sg-grouped"
             @items={{this.groupedMembers}}
             @value={{this.groupedValue}}
             @onChange={{this.updateGrouped}}
@@ -744,6 +749,7 @@ export default class SelectShowcases extends Component {
           data-test-select-showcase="footer"
         >
           <DSelect
+            @identifier="sg-footer"
             @items={{this.groupedMembers}}
             @value={{this.footerValue}}
             @onChange={{this.updateFooter}}

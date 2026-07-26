@@ -13,20 +13,18 @@
 describe "UiKit | DSelect windowed navigation" do
   fab!(:admin)
 
-  let(:combobox) do
-    PageObjects::Components::UiKit::DSelect.new(".select-examples__large-list .d-combobox__trigger")
-  end
+  let(:combobox) { PageObjects::Components::UiKit::DSelect.by_identifier("sg-large-list") }
 
   before do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
-    visit "/styleguide/molecules/select"
-    expect(page).to have_css(".select-examples__large-list .d-combobox__trigger")
+    visit "/styleguide/molecules/select?group=limits"
+    expect(page).to have_css("[data-identifier='sg-large-list'][data-trigger]")
   end
 
   it "pages the keyboard cursor down and back up through the window without dangling" do
     combobox.open
-    expect(page).to have_css("[role='listbox'] [role='option']", wait: 5)
+    expect(page).to have_css(combobox.option_selector, wait: 5)
 
     # PageDown jumps past the mounted window: the reconcile scrolls the target in and lands
     # the cursor on it. `active_index_after_change` returns nil for a dangling id and times out
