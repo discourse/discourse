@@ -332,4 +332,3 @@ en:
       send_chat_integration_message:
         channel_id: "Channel"
         message: "Message"
-        message_description: "Supports placeholders such as <code>&#123;&#123; $trigger.post.excerpt &#125;&#125;</code>. Clear it to send the standard post notification instead."
