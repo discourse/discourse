@@ -110,6 +110,19 @@ RSpec.describe Onebox::Preview do
       expect(result).to include ' src="https://thirdparty.example.com"'
     end
 
+    it "sanitizes origins that only share an allowed prefix" do
+      iframe_html = "<iframe src='https://thirdparty.example.com.attacker.test/embed'>"
+      preview =
+        described_class.new(preview_url, allowed_iframe_origins: ["https://thirdparty.example.com"])
+      preview.stubs(:engine_html).returns(iframe_html)
+
+      result = preview.to_s
+      expect(result).to include(
+        ' data-unsanitized-src="https://thirdparty.example.com.attacker.test/embed"',
+      )
+      expect(result).not_to include(' src="https://thirdparty.example.com.attacker.test/embed"')
+    end
+
     it "allows wildcard allowed origins" do
       preview = described_class.new(preview_url, allowed_iframe_origins: ["https://*.example.com"])
       preview.stubs(:engine_html).returns(iframe_html)

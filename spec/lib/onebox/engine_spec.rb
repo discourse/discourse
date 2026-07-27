@@ -47,9 +47,41 @@ RSpec.describe Onebox::Engine do
   end
 
   describe "origins_to_regexes" do
-    it "converts URLs to regexes" do
-      result = Onebox::Engine.origins_to_regexes(%w[https://example.com https://example2.com])
-      expect(result).to eq([%r{\Ahttps://example\.com}i, %r{\Ahttps://example2\.com}i])
+    it "matches URLs from configured origins" do
+      regex = Onebox::Engine.origins_to_regexes(["https://example.com"]).first
+      urls = %w[
+        https://example.com
+        https://example.com/embed
+        https://example.com?key=value
+        https://example.com#fragment
+      ]
+
+      expect(urls.to_h { |url| [url, regex.match?(url)] }).to eq(urls.to_h { |url| [url, true] })
+    end
+
+    it "rejects URLs whose authorities only share a configured origin prefix" do
+      regex = Onebox::Engine.origins_to_regexes(["https://example.com"]).first
+      urls = %w[https://example.com.attacker.test/embed https://example.com@attacker.test/embed]
+
+      expect(urls.to_h { |url| [url, regex.match?(url)] }).to eq(urls.to_h { |url| [url, false] })
+    end
+
+    it "matches wildcard subdomains without crossing URL authority boundaries" do
+      regex = Onebox::Engine.origins_to_regexes(["https://*.example.com"]).first
+      urls = {
+        "https://embed.example.com/video" => true,
+        "https://embed.example.com.attacker.test/video" => false,
+        "https://attacker.test/path/.example.com/video" => false,
+        "https://attacker.test\\path.example.com/video" => false,
+      }
+
+      expect(urls.keys.to_h { |url| [url, regex.match?(url)] }).to eq(urls)
+    end
+
+    it "preserves configured URL prefix matching after the authority" do
+      regex = Onebox::Engine.origins_to_regexes(["https://example.com/embed?"]).first
+
+      expect(regex).to match("https://example.com/embed?key=value")
     end
 
     it "treats '*' as a catch-all" do
