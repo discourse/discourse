@@ -2326,10 +2326,13 @@ export default class DSelect extends Component<DSelectSignature> {
                         this.engine.serverPending
                         omitFalse=false
                       }}
-                      {{! Keyed on the query the rendered rows answer, not the one being typed:
-                    resetting when the keystroke lands would scroll the retained previous
-                    results back to the top and then leave them there for the whole reload. }}
-                      {{didUpdate this.resetListScroll content.filter}}
+                      {{! Keyed on the engine's filter, NOT the resolved payload's. This
+                    modifier does no value comparison; it re-runs whenever a tag it consumed
+                    is dirtied, and reading the payload entangles the async resolution itself,
+                    which dirties on every load. Keyed that way a reveal counts as a change and
+                    throws the reader back to row one at the moment they scrolled for more. The
+                    filter's own tag dirties only on a real query change. }}
+                      {{didUpdate this.resetListScroll this.engine.filter}}
                       {{willDestroy this.releaseListbox}}
                       {{didInsert this.recordRowCount items.length}}
                       {{didUpdate this.recordRowCount items.length}}
