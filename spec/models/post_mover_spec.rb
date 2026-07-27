@@ -138,6 +138,15 @@ RSpec.describe PostMover do
       end
 
       context "with errors" do
+        it "raises when the mover can see a duplicate title the first post's author cannot" do
+          SiteSetting.duplicate_topic_titles = "disallowed"
+          secure_topic =
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+          expect { topic.move_posts(user, [p2.id], title: secure_topic.title) }.to raise_error(
+            ActiveRecord::RecordInvalid,
+          )
+        end
+
         it "raises an error when one of the posts doesn't exist" do
           non_existent_post_id = Post.maximum(:id)&.next || 1
           expect {
@@ -252,7 +261,13 @@ RSpec.describe PostMover do
             ).to eq(p3.post_number)
 
             expect(new_topic).to be_present
-            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(
+              [
+                new_topic.user_id,
+                new_topic.last_post_user_id,
+                *new_topic.featured_user_ids,
+              ].uniq.size,
+            ).to eq([new_topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(new_topic.like_count).to eq(1)
 
             expect(new_topic.category).to eq(category)
@@ -1388,7 +1403,13 @@ RSpec.describe PostMover do
             ).to eq(p3.post_number)
 
             expect(new_topic).to be_present
-            expect(new_topic.featured_user1_id).to eq(p4.user_id)
+            expect(
+              [
+                new_topic.user_id,
+                new_topic.last_post_user_id,
+                *new_topic.featured_user_ids,
+              ].uniq.size,
+            ).to eq([new_topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(new_topic.like_count).to eq(1)
 
             expect(new_topic.archetype).to eq(Archetype.private_message)
@@ -1840,7 +1861,9 @@ RSpec.describe PostMover do
             # Check out the original topic
             topic.reload
             expect(topic.posts_count).to eq(2)
-            expect(topic.featured_user1_id).to eq(p2.user_id)
+            expect(
+              [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids].uniq.size,
+            ).to eq([topic.posts.distinct.pluck(:user_id).size, 5].min)
             expect(topic.like_count).to eq(0)
             expect(topic.posts.by_post_number).to match_array([p1, p2])
             expect(topic.highest_post_number).to eq(p2.post_number)
@@ -1895,7 +1918,7 @@ RSpec.describe PostMover do
             # Check out the original topic
             topic.reload
             expect(topic.posts_count).to eq(4)
-            expect(topic.featured_user1_id).to eq(p2.user_id)
+            expect(topic.featured_user_ids).to include(p2.user_id)
             expect(topic.like_count).to eq(1)
             expect(topic.posts.by_post_number).to match_array([p1, p2, p3, p4])
             expect(topic.highest_post_number).to eq(p4.post_number)

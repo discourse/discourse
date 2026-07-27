@@ -51,6 +51,7 @@ class PostMover
         new_topic =
           Topic.create!(
             user: post.user,
+            acting_user: user,
             title: title,
             category_id: category_id,
             created_at: post.created_at,

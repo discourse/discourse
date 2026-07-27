@@ -352,6 +352,8 @@ cs:
         filter_closed: Zavřené
         filter_archived: Archivované
         filter_input_placeholder: Vyhledat kanál podle názvu
+        filter_joined_all: "Vše"
+        filter_joined_joined: "Účet vytvořen"
       chat_message_separator:
         today: Dnes
         yesterday: Včera
@@ -427,6 +429,9 @@ cs:
           few: "%{count} členové"
           many: "%{count} členů"
           other: "%{count} členů"
+        preview_card:
+          log_in: "Přihlásit se"
+          sign_up: "Registrace"
       create_channel:
         threading:
           label: "Povolit vlákna"

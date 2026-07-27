@@ -322,6 +322,8 @@ fr:
         filter_closed: Fermé
         filter_archived: Archivé
         filter_input_placeholder: Rechercher un canal par nom
+        filter_joined_all: "Tout"
+        filter_joined_joined: "Rejoint"
       chat_message_separator:
         today: Aujourd'hui
         yesterday: Hier
@@ -388,6 +390,9 @@ fr:
         memberships_count:
           one: "%{count} membre"
           other: "%{count} membres"
+        preview_card:
+          log_in: "Se connecter"
+          sign_up: "S'inscrire"
       create_channel:
         threading:
           label: "Activer le fil"
@@ -700,7 +705,7 @@ fr:
         chat_reviewable_message:
           title: "Message de discussion signalé"
         reviewable_chat_message:
-          title: "Message de discussion marqué"
+          title: "Message de discussion signalé"
           noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:

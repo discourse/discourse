@@ -31,9 +31,13 @@ function portSourceMatches(port, sourceNode, outputIndex) {
   );
 }
 
-function latestSuccessfulRun(runData, nodeName, { node } = {}) {
+const RUNS_WITH_FLOWING_OUTPUT = ["success", "filtered", "skipped"];
+
+const EXECUTED_RUN_STATUSES = ["success", "filtered"];
+
+function latestRunWithStatus(runData, nodeName, statuses, { node } = {}) {
   const runs = (runData?.[nodeName] || []).filter(
-    (run) => run.status === "success" && nodeRunMatches(run, node)
+    (run) => statuses.includes(run.status) && nodeRunMatches(run, node)
   );
   if (!runs?.length) {
     return null;
@@ -42,8 +46,16 @@ function latestSuccessfulRun(runData, nodeName, { node } = {}) {
   return runs[runs.length - 1] || null;
 }
 
+function latestExecutedRun(runData, nodeName, { node } = {}) {
+  return latestRunWithStatus(runData, nodeName, EXECUTED_RUN_STATUSES, {
+    node,
+  });
+}
+
 export function latestRunWithOutput(runData, nodeName, { node } = {}) {
-  return latestSuccessfulRun(runData, nodeName, { node });
+  return latestRunWithStatus(runData, nodeName, RUNS_WITH_FLOWING_OUTPUT, {
+    node,
+  });
 }
 
 export function latestRunWithInput(
@@ -51,7 +63,7 @@ export function latestRunWithInput(
   nodeName,
   { inputIndex = 0, node, sourceNode, outputIndex = 0 } = {}
 ) {
-  const run = latestSuccessfulRun(runData, nodeName, { node });
+  const run = latestExecutedRun(runData, nodeName, { node });
   if (!inputForRun(run, inputIndex, { sourceNode, outputIndex })) {
     return null;
   }
@@ -89,7 +101,7 @@ function connectedSourceOutputForInput(
   nodeName,
   { node, sourceNode, outputIndex = 0 } = {}
 ) {
-  if (latestSuccessfulRun(runData, nodeName, { node }) || !sourceNode?.name) {
+  if (latestExecutedRun(runData, nodeName, { node }) || !sourceNode?.name) {
     return null;
   }
 
@@ -115,7 +127,7 @@ export function inputPreviewPort(
     return { port: input, source: "input" };
   }
 
-  if (latestSuccessfulRun(runData, nodeName, { node })) {
+  if (latestExecutedRun(runData, nodeName, { node })) {
     return { port: null, source: null };
   }
 

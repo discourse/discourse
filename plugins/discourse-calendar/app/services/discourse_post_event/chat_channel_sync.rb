@@ -60,6 +60,7 @@ module DiscoursePostEvent
         guardian:,
         params: {
           name:,
+          emoji: "spiral_calendar",
           category_id: event.post.topic.category_id,
         },
       ) do |result|

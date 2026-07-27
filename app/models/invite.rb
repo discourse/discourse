@@ -40,6 +40,7 @@ class Invite < ActiveRecord::Base
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
   validate :email_xor_domain
   validate :ensure_valid_admin_invite, if: :admin?
+  validate :ensure_valid_moderator_invite, if: :moderator?
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -176,9 +177,11 @@ class Invite < ActiveRecord::Base
         updated_at: Time.zone.now,
         expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
         emailed_status: emailed_status,
-        # update_columns skips validations, so the inviter check from
-        # ensure_valid_admin_invite has to be re-applied here
+        # update_columns skips validations, so the inviter checks from
+        # ensure_valid_admin_invite / ensure_valid_moderator_invite have to be
+        # re-applied here
         admin: !!opts[:admin] && !!invited_by&.admin?,
+        moderator: !!opts[:moderator] && !!invited_by&.staff?,
       )
     else
       create_args =
@@ -202,8 +205,8 @@ class Invite < ActiveRecord::Base
 
     DiscourseEvent.trigger(:admin_invite_created, invite) if invite.admin? && !was_admin
 
-    if invite.admin?
-      # admin invites never carry topic or group associations; clear any left
+    if invite.admin? || invite.moderator?
+      # staff invites never carry topic or group associations; clear any left
       # over from a reused member invite
       invite.topic_invites.destroy_all
       invite.invited_groups.destroy_all
@@ -367,6 +370,16 @@ class Invite < ActiveRecord::Base
     # invite redeemed) don't fail if the inviter has since been demoted
     if (new_record? || will_save_change_to_admin?) && !invited_by&.admin?
       errors.add(:base, I18n.t("invite.admin_invite_requires_admin_inviter"))
+    end
+  end
+
+  def ensure_valid_moderator_invite
+    errors.add(:base, I18n.t("invite.moderator_invite_requires_email")) if email.blank?
+
+    # only checked when the flag is set so that later saves (e.g. marking the
+    # invite redeemed) don't fail if the inviter has since been demoted
+    if (new_record? || will_save_change_to_moderator?) && !invited_by&.staff?
+      errors.add(:base, I18n.t("invite.moderator_invite_requires_staff_inviter"))
     end
   end
 

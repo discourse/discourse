@@ -27,11 +27,25 @@ module DiscourseWorkflows
           events: [:topic_tags_changed],
           output_contracts: [{ schema: OUTPUT_SCHEMA }],
           properties: {
-            category_id: {
-              type: :integer,
+            category_ids: {
+              type: :array,
               required: false,
               ui: {
                 control: :category,
+                multiple: true,
+              },
+            },
+            include_subcategories: {
+              type: :boolean,
+              required: false,
+              default: true,
+              ui: {
+                control: :checkbox,
+              },
+              display_options: {
+                show: {
+                  category_ids: [{ condition: { exists: true } }],
+                },
               },
             },
           },
@@ -60,7 +74,11 @@ module DiscourseWorkflows
         end
 
         def matches?(trigger_ctx)
-          matches_category?(trigger_ctx.get_node_parameter("category_id"))
+          matches_category_ids?(
+            @topic.category_id,
+            category_ids_parameter(trigger_ctx),
+            include_subcategories: trigger_ctx.get_node_parameter("include_subcategories", true),
+          )
         end
 
         private
@@ -75,10 +93,6 @@ module DiscourseWorkflows
 
         def topic_data(topic)
           serialize_record(topic, TopicListItemSerializer)
-        end
-
-        def matches_category?(category_id)
-          category_id.blank? || @topic.category_id == category_id.to_i
         end
       end
     end

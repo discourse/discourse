@@ -418,6 +418,10 @@ module Categories
 
         private
 
+        def site_setting_overridden?(setting_name)
+          SiteSetting.provider.find(setting_name.to_sym).present?
+        end
+
         def resolved_configuration_schema
           schema = configuration_schema
           return {} if schema.blank?
@@ -460,6 +464,7 @@ module Categories
               key: setting_name.to_s,
               default:,
               current: SiteSetting.public_send(setting_name),
+              overridden: site_setting_overridden?(setting_name),
               type: custom_type || meta[:type],
               label: custom_label || meta[:humanized_name],
               choices: custom_choices || meta[:choices],

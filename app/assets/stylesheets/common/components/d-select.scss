@@ -16,6 +16,8 @@
   background-size: 16px 12px;
   cursor: pointer;
 
+  @include ellipsis;
+
   &:focus,
   &:focus-visible,
   &:focus:focus-visible,

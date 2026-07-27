@@ -2289,7 +2289,7 @@ ru:
         default: "(по умолчанию)"
         any: "любые"
       homepage:
-        default: "(по умолчанию)"
+        default: "Домашнюю страницу"
       password_confirmation:
         title: "Пароль ещё раз"
       invite_code:
@@ -2502,7 +2502,9 @@ ru:
           member_title: "Пригласите участников"
           sent_title: "Приглашение отправлено"
           member_tab: "Участники"
-          admin_tab: "Администраторы"
+          admin_tab: "Персонал"
+          staff_role_admin: "Администрирование"
+          staff_role_moderator: "Модератор"
           admin_email_label: "Адрес электронной почты"
           email_placeholder: "имя@пример.com"
           invite_by_email: "Эл. почта"
@@ -2513,6 +2515,7 @@ ru:
           summary:
             role_member: "Участник"
             role_admin: "Администрирование"
+            role_moderator: "Модератор"
             method: "Распространение"
             method_email: "Эл. почта"
             restriction: "Ограничено"
@@ -3312,6 +3315,7 @@ ru:
       draft_saved: "Черновик сохранен!"
       users_placeholder: "Добавьте пользователей или группы"
       title_placeholder: "Название: суть темы коротким предложением"
+      title_placeholder_redesign: "Название"
       title_or_link_placeholder: "Введите название или вставьте здесь ссылку"
       edit_reason_placeholder: "Причина редактирования…"
       topic_featured_link_placeholder: "Введите ссылку с названием."
@@ -4019,6 +4023,7 @@ ru:
       sort:
         label: "Сортировать по"
         top: "Обсуждаемые"
+        hot: "Горячие"
         new: "Новое"
       load_more_children:
         one: "Ещё %{count} ответ"
@@ -5534,7 +5539,6 @@ ru:
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"
-      choose_for_topic: "Выберите теги..."
       choose_for_topic_required:
         one: "Выберите минимум %{count} тег…"
         few: "Выберите минимум %{count} тега…"
@@ -5803,6 +5807,10 @@ ru:
           public: "Видно всем"
           always_public: "Контент в этом разделе всегда публичный"
           more_menu: "Меню «Еще»"
+          localizations:
+            title: "Переводы"
+            locale: "Язык"
+            title_label: "Заголовок раздела"
           links:
             add: "Добавить еще ссылку"
             delete: "Удалить ссылку"
@@ -6750,7 +6758,6 @@ ru:
               posts: "Записи"
               share: "Поделиться"
             whos_posting:
-              all_categories: "Все разделы"
               staff: "Персонал"
             trust_level_pipeline:
               trust_levels:
@@ -9178,6 +9185,10 @@ ru:
         alt: "предпросмотр пользовательских эмодзи"
         delete_confirm: "Действительно удалить эмодзи :%{name}:?"
         settings: "Настройки"
+        export: "Экспорт"
+        import: "Импорт"
+        import_category:
+          new: "Новое"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
         delete: "Удалить"

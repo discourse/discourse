@@ -33,10 +33,10 @@ export default class DiscoursePostEventLocation extends Component {
   <template>
     {{#if this.location}}
       {{#if this.isSingleUrlLocation}}
-        <section class="event__section event-location">
-          {{dIcon "location-pin"}}
+        {{#unless @event.isZoomLivestream}}
+          <section class="event__section event-location">
+            {{dIcon "location-pin"}}
 
-          {{#unless @event.isZoomLivestream}}
             <span class="event-location__text">
               <a
                 href={{this.singleUrl}}
@@ -44,8 +44,8 @@ export default class DiscoursePostEventLocation extends Component {
                 rel="noopener noreferrer"
               >{{this.singleUrl}}</a>
             </span>
-          {{/unless}}
-        </section>
+          </section>
+        {{/unless}}
       {{else}}
         <section class="event__section event-location">
           {{dIcon "location-pin"}}

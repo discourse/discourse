@@ -115,7 +115,11 @@ export default class MiniTagChooser extends MultiSelectComponent {
     }
     return tags.map((t) => {
       if (typeof t === "object" && t !== null) {
-        return this.defaultItem(t.id, t.name);
+        const item = this.defaultItem(t.id, t.name);
+        if (t.isNew) {
+          item.isNew = true;
+        }
+        return item;
       }
       return this.defaultItem(t, t);
     });

@@ -34,7 +34,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     expect(dashboard).to have_section("engagement")
     expect(engagement).to have_activity_row(category_alpha)
 
-    engagement.deselect_category(category_alpha)
+    engagement.deselect_activity_category(category_alpha)
 
     expect(engagement).to have_no_activity_row(category_alpha)
     expect(engagement).to have_activity_row(category_bravo)
@@ -52,7 +52,7 @@ describe "Admin Dashboard Redesign | Engagement section" do
     dashboard.visit
     expect(engagement).to have_activity_row(category_alpha)
 
-    engagement.deselect_category(category_alpha)
+    engagement.deselect_activity_category(category_alpha)
 
     expect(engagement).to have_no_activity_row(category_alpha)
 
@@ -78,9 +78,40 @@ describe "Admin Dashboard Redesign | Engagement section" do
     expect(engagement).to have_activity_row(category_alpha)
     expect(engagement).to have_no_activity_row(category_dormant)
 
-    engagement.expand_category_filter
+    engagement.expand_activity_category_filter
 
-    expect(engagement).to have_selected_category(category_alpha)
-    expect(engagement).to have_selected_category(category_dormant)
+    expect(engagement).to have_selected_activity_category(category_alpha)
+    expect(engagement).to have_selected_activity_category(category_dormant)
+  end
+
+  it "saves an admin's 'Who's posting' selection when the picker closes, and persists it across a refresh",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    dashboard.visit
+    expect(dashboard).to have_section("engagement")
+
+    engagement.select_whos_posting_category(category_alpha)
+    engagement.close_whos_posting_category_filter
+
+    engagement.expand_whos_posting_category_filter
+    expect(engagement).to have_selected_whos_posting_category(category_alpha)
+
+    dashboard.visit
+
+    engagement.expand_whos_posting_category_filter
+    expect(engagement).to have_selected_whos_posting_category(category_alpha)
+  end
+
+  it "does not persist a moderator's 'Who's posting' selection",
+     time: Time.zone.local(2026, 6, 15, 12, 0, 0) do
+    sign_in(moderator)
+
+    dashboard.visit
+    engagement.select_whos_posting_category(category_alpha)
+    engagement.close_whos_posting_category_filter
+
+    dashboard.visit
+    engagement.expand_whos_posting_category_filter
+
+    expect(engagement).to have_no_selected_whos_posting_category(category_alpha)
   end
 end

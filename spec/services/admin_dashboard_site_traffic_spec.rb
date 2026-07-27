@@ -41,6 +41,10 @@ RSpec.describe AdminDashboardSiteTraffic do
     response[:pageview_series].find { |traffic_series| traffic_series[:req] == req }[:data]
   end
 
+  def use_beacon_cutover_date(date)
+    BrowserPageviewEvent.stubs(:beacon_cutover_date).returns(date)
+  end
+
   describe ".build" do
     it "returns public-community KPIs and pageview series for selected dates" do
       SiteSetting.embed_topics_list = true
@@ -290,6 +294,92 @@ RSpec.describe AdminDashboardSiteTraffic do
           traffic_series(:anonymous, [traffic_point("2026-05-01", 20)]),
           traffic_series(:crawlers, [traffic_point("2026-05-01", 0)]),
         ],
+      )
+    end
+
+    it "uses beacon browser pageviews starting the day after dashboard improvements was enabled" do
+      use_beacon_cutover_date(Date.new(2026, 5, 3))
+
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-01", count: 10)
+      Fabricate(:anonymous_browser_application_request, date: "2026-05-01", count: 20)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-01", count: 100)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-01", count: 200)
+
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 11)
+      Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 21)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 110)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-02", count: 210)
+
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-03", count: 12)
+      Fabricate(:anonymous_browser_application_request, date: "2026-05-03", count: 22)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-03", count: 120)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-03", count: 220)
+
+      expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")).to eq(
+        kpis: {
+          browser_pageviews: {
+            value: 402,
+          },
+          logged_in_share: {
+            value: 35,
+          },
+        },
+        pageview_series: [
+          traffic_series(
+            :logged_in,
+            [
+              traffic_point("2026-05-01", 10),
+              traffic_point("2026-05-02", 11),
+              traffic_point("2026-05-03", 120),
+            ],
+          ),
+          traffic_series(
+            :anonymous,
+            [
+              traffic_point("2026-05-01", 20),
+              traffic_point("2026-05-02", 21),
+              traffic_point("2026-05-03", 220),
+            ],
+          ),
+          traffic_series(
+            :crawlers,
+            [
+              traffic_point("2026-05-01", 0),
+              traffic_point("2026-05-02", 0),
+              traffic_point("2026-05-03", 0),
+            ],
+          ),
+        ],
+      )
+    end
+
+    it "compares beacon pageviews against piggyback pageviews when the prior period predates the cutover" do
+      use_beacon_cutover_date(Date.new(2026, 5, 1))
+
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-04-28", count: 5)
+
+      Fabricate(:logged_in_browser_application_request, date: "2026-04-29", count: 30)
+      Fabricate(:anonymous_browser_application_request, date: "2026-04-29", count: 70)
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-04-29", count: 1)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-04-29", count: 2)
+
+      Fabricate(:logged_in_browser_beacon_application_request, date: "2026-05-02", count: 60)
+      Fabricate(:anonymous_browser_beacon_application_request, date: "2026-05-02", count: 140)
+      Fabricate(:logged_in_browser_application_request, date: "2026-05-02", count: 3)
+      Fabricate(:anonymous_browser_application_request, date: "2026-05-02", count: 4)
+
+      expect(build_traffic(start_date: "2026-05-01", end_date: "2026-05-03")[:kpis]).to eq(
+        browser_pageviews: {
+          value: 200,
+          percent_change: 100,
+          comparison_period: {
+            start_date: "2026-04-28",
+            end_date: "2026-04-30",
+          },
+        },
+        logged_in_share: {
+          value: 30,
+        },
       )
     end
 

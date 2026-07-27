@@ -45,6 +45,7 @@ export default class CreateInviteWithRoles extends Component {
   @tracked showAdvanced = false;
   @tracked screen = FORM;
   @tracked role;
+  @tracked staffRole = "admin";
   @tracked delivery;
   @tracked submitForcedDisabled = false;
   @tracked flashText;
@@ -62,7 +63,9 @@ export default class CreateInviteWithRoles extends Component {
     super(...arguments);
 
     if (this.inviteCreated) {
-      this.role = this.invite.grants_admin ? "admin" : "member";
+      const isStaff = this.invite.grants_admin || this.invite.grants_moderator;
+      this.role = isStaff ? "admin" : "member";
+      this.staffRole = this.invite.grants_moderator ? "moderator" : "admin";
       this.delivery = this.invite.email ? "email" : "link";
     } else {
       this.role =
@@ -126,10 +129,31 @@ export default class CreateInviteWithRoles extends Component {
       : i18n("user.invited.invite_roles.member_title");
   }
 
+  get isModeratorInvite() {
+    return this.isAdminInvite && this.staffRole === "moderator";
+  }
+
+  get staffRoleItems() {
+    return [
+      {
+        value: "admin",
+        label: i18n("user.invited.invite_roles.staff_role_admin"),
+      },
+      {
+        value: "moderator",
+        label: i18n("user.invited.invite_roles.staff_role_moderator"),
+      },
+    ];
+  }
+
   get roleDescription() {
-    return this.isAdminInvite
-      ? i18n("user.invited.invite_roles.admin_description")
-      : i18n("user.invited.invite_roles.member_description");
+    if (!this.isAdminInvite) {
+      return i18n("user.invited.invite_roles.member_description");
+    }
+
+    return this.isModeratorInvite
+      ? i18n("user.invited.invite_roles.moderator_description")
+      : i18n("user.invited.invite_roles.admin_description");
   }
 
   get descriptionValidation() {
@@ -224,13 +248,23 @@ export default class CreateInviteWithRoles extends Component {
     return data;
   }
 
+  get summaryRoleValue() {
+    if (this.invite.grants_admin) {
+      return i18n("user.invited.invite_roles.summary.role_admin");
+    }
+
+    if (this.invite.grants_moderator) {
+      return i18n("user.invited.invite_roles.summary.role_moderator");
+    }
+
+    return i18n("user.invited.invite_roles.summary.role_member");
+  }
+
   get summaryRows() {
     const rows = [
       {
         label: i18n("user.invited.invite_roles.summary.role"),
-        value: this.invite.grants_admin
-          ? i18n("user.invited.invite_roles.summary.role_admin")
-          : i18n("user.invited.invite_roles.summary.role_member"),
+        value: this.summaryRoleValue,
       },
       {
         label: i18n("user.invited.invite_roles.summary.method"),
@@ -331,6 +365,14 @@ export default class CreateInviteWithRoles extends Component {
   }
 
   @action
+  onStaffRoleChange(value) {
+    if (this.inviteCreated) {
+      return;
+    }
+    this.staffRole = value;
+  }
+
+  @action
   setDelivery(value) {
     this.delivery = value;
   }
@@ -372,7 +414,11 @@ export default class CreateInviteWithRoles extends Component {
     };
 
     if (!wasCreated) {
-      submitData.is_admin = true;
+      if (this.staffRole === "moderator") {
+        submitData.is_moderator = true;
+      } else {
+        submitData.is_admin = true;
+      }
     }
 
     await this.save(submitData, SUMMARY);
@@ -531,6 +577,30 @@ export default class CreateInviteWithRoles extends Component {
               class="create-invite-with-roles-modal__admin-form"
               as |form|
             >
+              {{#unless this.inviteCreated}}
+                <fieldset class="create-invite-with-roles-modal__staff-role">
+                  <legend
+                    class="create-invite-with-roles-modal__staff-role-label"
+                  >{{i18n
+                      "user.invited.invite_roles.staff_role_label"
+                    }}</legend>
+                  {{#each this.staffRoleItems as |item|}}
+                    <label
+                      class="create-invite-with-roles-modal__staff-role-option"
+                    >
+                      <input
+                        type="radio"
+                        name="invite-staff-role"
+                        value={{item.value}}
+                        checked={{eq this.staffRole item.value}}
+                        {{on "change" (fn this.onStaffRoleChange item.value)}}
+                      />
+                      {{item.label}}
+                    </label>
+                  {{/each}}
+                </fieldset>
+              {{/unless}}
+
               <form.Field
                 @name="email"
                 @type="input-email"

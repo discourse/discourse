@@ -109,7 +109,6 @@ tr_TR:
     ai_summarization_agent: "Özetleme özelliği için kullanılacak aracı"
     ai_pm_summarization_allowed_groups: "Kişisel mesajlarda özet oluşturma ve görüntüleme yetkisi olan gruplar."
     ai_summary_gists_enabled: "Konulardaki son yanıtların kısa özetlerini otomatik olarak oluşturun"
-    ai_summary_backfill_maximum_topics_per_hour: "Saat başına doldurulacak konu özeti sayısı."
     ai_bot_enabled: "YZ Bot modülünü etkinleştirin."
     ai_bot_enabled_llms: "AI bot konuşmaları için seçilebilecek LLM'ler"
     ai_bot_enable_chat_warning: "PM sohbeti başlatıldığında bir uyarı göster. Çeviri dizesini düzenleyerek geçersiz kılınabilir: discourse_ai.ai_bot.pm_warning"

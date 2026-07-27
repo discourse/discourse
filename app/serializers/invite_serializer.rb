@@ -16,7 +16,8 @@ class InviteSerializer < ApplicationSerializer
              :updated_at,
              :expires_at,
              :expired,
-             :grants_admin
+             :grants_admin,
+             :grants_moderator
 
   has_many :topics, embed: :object, serializer: BasicTopicSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -86,6 +87,14 @@ class InviteSerializer < ApplicationSerializer
   end
 
   def include_grants_admin?
+    can_see_invite_details?
+  end
+
+  def grants_moderator
+    object.moderator?
+  end
+
+  def include_grants_moderator?
     can_see_invite_details?
   end
 

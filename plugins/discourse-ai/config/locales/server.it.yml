@@ -75,7 +75,6 @@ it:
     ai_summarization_enabled: "Abilita la funzionalità riepilogo"
     ai_pm_summarization_allowed_groups: "Gruppi autorizzati a creare e visualizzare riepiloghi nei messaggi privati."
     ai_summary_gists_enabled: "Genera automaticamente brevi riepiloghi delle ultime risposte negli argomenti"
-    ai_summary_backfill_maximum_topics_per_hour: "Numero di riepiloghi degli argomenti da riempire all'ora."
     ai_bot_enabled: "Abilita il modulo Bot IA."
     ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"

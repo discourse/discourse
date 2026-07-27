@@ -125,6 +125,16 @@
     padding: 2em;
   }
 
+  &__sections-nav-wrap {
+    --fade-color: var(--primary-low);
+    flex: 0 0 auto;
+
+    @include viewport.until(sm) {
+      order: 1;
+      width: 100%;
+    }
+  }
+
   &__sections-nav {
     display: flex;
     flex-direction: column;
@@ -138,7 +148,6 @@
     overscroll-behavior: contain;
 
     @include viewport.until(sm) {
-      order: 1;
       height: 50px;
       width: 100%;
       flex-direction: row;

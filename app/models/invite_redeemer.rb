@@ -246,7 +246,17 @@ class InviteRedeemer
     add_user_to_groups
     send_welcome_message
     notify_invitee
+    grant_moderator_from_invite
     create_admin_grant_confirmation
+  end
+
+  # Moderator invites grant moderator on redemption. Users created from the
+  # invite already have the flag set in create_user_from_invite; this covers
+  # existing users redeeming the invite.
+  def grant_moderator_from_invite
+    return if !invite.moderator? || !invite.invited_by&.staff?
+
+    invited_user.grant_moderation! if !invited_user.moderator?
   end
 
   # Admin invites grant moderator right away; full admin requires the inviter

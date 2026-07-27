@@ -352,6 +352,8 @@ tr_TR:
         filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
+        filter_joined_all: "Tümü"
+        filter_joined_joined: "Katılma Tarihi"
       chat_message_separator:
         today: Bugün
         yesterday: Dün
@@ -423,6 +425,9 @@ tr_TR:
         memberships_count:
           one: "%{count} üye"
           other: "%{count} üye"
+        preview_card:
+          log_in: "Giriş Yap"
+          sign_up: "Kaydol"
       create_channel:
         threading:
           label: "İleti dizisine izin ver"

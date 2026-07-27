@@ -1793,7 +1793,6 @@ it:
     suppress_secured_categories_from_admin: "Sopprimi argomenti privati e MP in alcune parti dell'interfaccia utente per gli amministratori. Il contenuto sarà comunque visibile in alcuni punti. Questa non è una funzionalità di sicurezza: gli amministratori possono sempre accedere a tutti i contenuti del sito."
     include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un'etichetta includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un'etichetta in cui tutti gli argomenti sono nelle categorie pubbliche."
     display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con una determinata etichetta."
-    top_menu: "Determina quali elementi vengono visualizzati nella navigazione della home page e in quale ordine."
     post_menu: "Configura la visibilità e l'ordine delle voci di menu predefinite dei messaggi. Le voci aggiuntive aggiunte da plugin o temi vengono gestite separatamente e non appariranno in questo elenco."
     post_menu_hidden_items: "Le voci di menu da nascondere di default nel menu dei messaggi a meno che non si clicchi su un'ellissi di espansione. Le voci aggiuntive aggiunte da plugin o temi vengono gestite separatamente e non appariranno in questo elenco."
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."

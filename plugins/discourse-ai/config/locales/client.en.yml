@@ -434,17 +434,92 @@ en:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
-        supported_locales_description: "This site setting also allows visitors to contribute post translations."
         category_scope: "Categories"
-        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
+        category_scope_description: "Choose whether automatic translations apply to content in all categories, public categories, or selected categories."
+        cached_results_notice: "Showing cached results from %{relative_time}."
+        model_progress:
+          loading: "Loading translation progress"
+          overview_label: "Translation progress by content type"
+          detail:
+            loading: "Loading %{target} details..."
+            load_error: "%{target} details could not be loaded."
+            retry: "Retry"
+            empty: "No language progress is available."
+            progress_label: "%{translated} of %{total} translated into %{language}"
+            columns:
+              locale: "Locale"
+              translated: "Translated"
+              pending: "Pending"
+              eligible: "Eligible"
+              total: "Total"
+              progress: "Progress"
+            eligible_help: "Content already in this language is excluded."
+            pending_help: "Includes content that still needs language detection."
+          targets:
+            post:
+              title: "Posts"
+              eligible_total:
+                one: "There is %{count} eligible post for translation."
+                other: "There are %{count} eligible posts for translation."
+              translated:
+                one: "%{count} post has been fully translated."
+                other: "%{count} posts have been fully translated."
+              needs_language_detection:
+                one: "%{count} post still needs language detection."
+                other: "%{count} posts still need language detection."
+              all_translated:
+                one: "The eligible post is fully translated."
+                other: "All %{count} eligible posts are fully translated."
+            topic:
+              title: "Topics"
+              eligible_total:
+                one: "There is %{count} eligible topic for translation."
+                other: "There are %{count} eligible topics for translation."
+              translated:
+                one: "%{count} topic has been fully translated."
+                other: "%{count} topics have been fully translated."
+              needs_language_detection:
+                one: "%{count} topic still needs language detection."
+                other: "%{count} topics still need language detection."
+              all_translated:
+                one: "The eligible topic is fully translated."
+                other: "All %{count} eligible topics are fully translated."
+            category:
+              title: "Categories"
+              eligible_total:
+                one: "There is %{count} eligible category for translation."
+                other: "There are %{count} eligible categories for translation."
+              translated:
+                one: "%{count} category has been fully translated."
+                other: "%{count} categories have been fully translated."
+              needs_language_detection:
+                one: "%{count} category still needs language detection."
+                other: "%{count} categories still need language detection."
+              all_translated:
+                one: "The eligible category is fully translated."
+                other: "All %{count} eligible categories are fully translated."
+            tag:
+              title: "Tags"
+              total:
+                one: "There is %{count} tag for translation."
+                other: "There are %{count} tags for translation."
+              translated:
+                one: "%{count} tag has been fully translated."
+                other: "%{count} tags have been fully translated."
+              needs_language_detection:
+                one: "%{count} tag still needs language detection."
+                other: "%{count} tags still need language detection."
+              all_translated:
+                one: "The tag is fully translated."
+                other: "All %{count} tags are fully translated."
         admin_actions:
-          translation_settings: "Translation settings"
-          localization_settings: "Localization settings"
+          translation_settings: "AI settings"
+          localization_settings: "App language settings"
           enable_translations: "Enable automatic translations"
         stats:
           title: "Translation statistics"
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date}."
           eta_minutes:
             one: "%{count} minute"
             other: "%{count} minutes"
@@ -988,9 +1063,9 @@ en:
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-1-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-5: "OpenAI's most capable model with extended context"
-          open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-4-nano: "Fastest, most cost-effective GPT-5 model"
+          open_ai-gpt-5-6-sol: "OpenAI's frontier model for complex professional work"
+          open_ai-gpt-5-6-terra: "Balances intelligence and cost for demanding workloads"
+          open_ai-gpt-5-6-luna: "Optimized for cost-sensitive, high-volume workloads"
           open_router-moonshotai-kimi-k2-6: "Moonshot's multimodal model with vision capabilities"
           open_router-deepseek-deepseek-v4-flash: "DeepSeek's latest high-performance model with 1M context"
           open_router-minimax-minimax-m2-7: "MiniMax's model with large context"
@@ -1067,6 +1142,7 @@ en:
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
+          reasoning_mode: "Reasoning mode"
           service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
           reasoning_parser: "vLLM reasoning parser"
           thinking_override: "Thinking override"
@@ -1086,6 +1162,8 @@ en:
           effort: "Effort level"
 
         provider_field_hints:
+          reasoning_mode: "Standard mode uses the provider default. Pro mode requires the Responses API and support from the selected model, and increases latency and token usage."
+          azure_reasoning_effort: "Available effort levels depend on the model deployed in Azure. Unsupported values are rejected by Azure."
           reasoning_parser: "Must match the vLLM server --reasoning-parser setting. Discourse cannot switch parsers per request; it uses this to shape request options."
           thinking_override: "Optionally force supported vLLM chat templates to enable or disable thinking for each request. Unsupported parsers keep the server default."
           reasoning_effort: "Sends vLLM's reasoning_effort request option for parsers that support it."
@@ -1360,15 +1438,11 @@ en:
           bulk_regen_description: "Choose which type of AI summary to regenerate for the selected topics."
           regenerate_gists_option: "Short summaries (gists)"
           regenerate_summaries_option: "Topic summaries"
-          regenerate_gists_success:
-            one: "Short summary regenerated successfully"
-            other: "%{count} short summaries regenerated successfully"
+          regenerate_gists_started: "Regenerating short summaries…"
           regenerate_gists_error:
             one: "Failed to regenerate short summary"
             other: "Failed to regenerate %{count} short summaries"
-          regenerate_topic_summary_success:
-            one: "Topic summary regenerated successfully"
-            other: "%{count} topic summaries regenerated successfully"
+          regenerate_topic_summaries_started: "Regenerating topic summaries…"
           regenerate_topic_summary_error:
             one: "Failed to regenerate topic summary"
             other: "Failed to regenerate %{count} topic summaries"

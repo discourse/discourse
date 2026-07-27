@@ -691,9 +691,11 @@ class UserApiKeysController < ApplicationController
     current_user.staff? || current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
   end
 
+  # `create` and `create_otp` are the only callers, and both respond in JSON
+  # as well as HTML, so this is relied on by non-browser (API key/User API
+  # key) consumers, not just browser sessions. Don't restrict this to
+  # session auth without accounting for those consumers first.
   def one_time_password(public_key, username)
-    raise Discourse::InvalidAccess if is_api? || is_user_api?
-
     unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
       raise Discourse::InvalidAccess
     end

@@ -1849,7 +1849,6 @@ es:
     suppress_secured_categories_from_admin: "Suprimir temas privados y MPs en algunas partes de la IU para administradores. El contenido seguirá siendo visible en algunos lugares. No se trata de una característica de seguridad: los administradores siempre pueden acceder a todo el contenido del sitio."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
-    top_menu: "Determina qué elementos aparecen en la navegación de la página de inicio y en qué orden."
     post_menu: "Configura la visibilidad y el orden de los elementos predeterminados del menú de la publicación. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
     post_menu_hidden_items: "Los elementos del menú que se ocultarán por defecto en el menú de la publicación a menos que se haga clic en una elipsis de expansión. Los elementos adicionales añadidos por plugins o temas se gestionan por separado y no aparecerán en esta lista."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."

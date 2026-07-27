@@ -5,7 +5,6 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
     order: { refreshModel: true },
     asc: { refreshModel: true },
     username: { refreshModel: true },
-    activation: { refreshModel: true },
   };
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
@@ -24,8 +23,12 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
           asc: transition.to.queryParams.asc,
           // `filter` is deliberately not a registered query param (its name
           // would clash with the :filter segment); `username` is kept as a
-          // legacy fallback for old links
+          // legacy fallback for old links. `initialFilter` seeds the filter
+          // controls input; `listFilter` is the live value sent to the server.
           listFilter:
+            transition.to.queryParams.filter ??
+            transition.to.queryParams.username,
+          initialFilter:
             transition.to.queryParams.filter ??
             transition.to.queryParams.username,
           query: params.filter,

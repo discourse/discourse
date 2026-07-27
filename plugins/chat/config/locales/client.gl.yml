@@ -57,6 +57,8 @@ gl:
         filter_all: Todas
         filter_open: Abrir
         filter_closed: Pechado
+        filter_joined_all: "Todas"
+        filter_joined_joined: "Uniuse"
       chat_message_separator:
         today: Hoxe
         yesterday: Onte

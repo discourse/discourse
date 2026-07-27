@@ -12,6 +12,8 @@ import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channe
   discourseImport: "optional",
 };
 
+export const LIVESTREAM_CHAT_CONTEXT = "livestream-embedded-chat";
+
 export default class EmbedableChatChannel extends Component {
   @service chatChannelsManager;
   @service currentUser;
@@ -42,6 +44,14 @@ export default class EmbedableChatChannel extends Component {
 
   get messageBusChannel() {
     return `/discourse-calendar/livestream/chat-status/${this.currentUser.id}`;
+  }
+
+  get hiddenMessageIds() {
+    // the pinned topic reference message is redundant when the chat is
+    // embedded in the livestream topic it links to
+    const messageId = this.activeChannel?.livestreamTopic?.reference_message_id;
+
+    return messageId ? [Number(messageId)] : [];
   }
 
   @bind
@@ -92,7 +102,11 @@ export default class EmbedableChatChannel extends Component {
       <div class="chat-drawer">
         {{#if (and this.activeChannel ChatChannel)}}
           {{#each (array this.activeChannel) as |channel|}}
-            <ChatChannel @channel={{channel}} />
+            <ChatChannel
+              @channel={{channel}}
+              @context={{LIVESTREAM_CHAT_CONTEXT}}
+              @hiddenMessageIds={{this.hiddenMessageIds}}
+            />
           {{/each}}
         {{/if}}
       </div>

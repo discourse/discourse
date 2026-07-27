@@ -1,24 +1,23 @@
 # frozen_string_literal: true
 
-class SiteSetting::Action::SimpleEmailSubjectToggled
-  include Service::Base
+# Reacts to the `simple_email_subject` site setting being enabled or disabled.
+# See config/initializers/014-track-setting-changes.rb for the dispatch.
 
+class SiteSetting::Action::SimpleEmailSubjectToggled < Service::ActionBase
   SIMPLE_EMAIL_SUBJECT = "%{site_name}: %{topic_title}"
 
-  params { attribute :setting_enabled, :boolean }
+  option :enabled
 
-  step :update_email_subject
-  only_if(:has_setting_enabled) { step :copy_translation_overrides }
-  step :request_refresh
-
-  def has_setting_enabled(params:)
-    params.setting_enabled
+  def call
+    update_email_subject
+    copy_translation_overrides if enabled
+    Discourse.request_refresh!
   end
 
   private
 
-  def update_email_subject(params:)
-    if params.setting_enabled
+  def update_email_subject
+    if enabled
       return if SiteSetting.email_subject != SiteSetting.defaults.get(:email_subject)
       SiteSetting.set_and_log(:email_subject, SIMPLE_EMAIL_SUBJECT)
     else
@@ -48,9 +47,5 @@ class SiteSetting::Action::SimpleEmailSubjectToggled
 
     pluralized = "#{match[1]}_improved.#{match[2]}"
     I18n.exists?(pluralized) ? pluralized : nil
-  end
-
-  def request_refresh
-    Discourse.request_refresh!
   end
 end

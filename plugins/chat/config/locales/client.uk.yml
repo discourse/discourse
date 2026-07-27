@@ -419,6 +419,8 @@ uk:
         filter_closed: Закриті
         filter_archived: Архівовано
         filter_input_placeholder: Пошук каналу за назвою
+        filter_joined_all: "Всі"
+        filter_joined_joined: "Приєднався(лась)"
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
@@ -496,6 +498,9 @@ uk:
           few: "%{count} учасники"
           many: "%{count} учасників"
           other: "%{count} учасників"
+        preview_card:
+          log_in: "Увійти"
+          sign_up: "Зареєструватися"
       create_channel:
         threading:
           label: "Увімкнути потоки/ланцюжки"

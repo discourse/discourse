@@ -109,7 +109,6 @@ es:
     ai_summarization_agent: "Agente que se utilizará para la característica de resumen"
     ai_pm_summarization_allowed_groups: "Grupos autorizados a crear y ver resúmenes en MP."
     ai_summary_gists_enabled: "Genera automáticamente breves resúmenes de las últimas respuestas en los temas"
-    ai_summary_backfill_maximum_topics_per_hour: "Número de resúmenes de temas a completar por hora."
     ai_bot_enabled: "Activar el módulo Bot de IA."
     ai_bot_enabled_llms: "LLM disponibles para seleccionar para conversaciones con bots de IA"
     ai_bot_enable_chat_warning: "Muestra una advertencia cuando se inicia el chat de MP. Se puede anular editando la cadena de traducción: discourse_ai.ai_bot.pm_warning"

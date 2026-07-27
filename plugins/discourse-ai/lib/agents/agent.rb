@@ -242,6 +242,7 @@ module DiscourseAi
             SentimentClassifier => -36,
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
+            DiscourseAdminAssistant => -39,
           }.freeze
         end
       end

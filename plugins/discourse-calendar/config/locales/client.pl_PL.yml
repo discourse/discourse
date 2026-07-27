@@ -48,9 +48,9 @@ pl_PL:
             other: "Webinarium jeszcze się nie rozpoczęło. Ponawiam próbę dołączenia za %{count} sekund..."
           not_started_trying_again: "Próbuję ponownie dołączyć do webinarium..."
         chat:
-          going: "Kliknij „Idę”"
-          join_channel_header: "🌟 Dołącz do nas! 🌟"
-          join_channel_message: "Potwierdź swoją obecność i odblokuj nasz czat wydarzenia. Zanurz się w dyskusjach, podziel się swoim entuzjazmem i połącz się z innymi uczestnikami!"
+          rsvp_to_event: "Potwierdź obecność na wydarzeniu, aby rozpocząć czat"
+          rsvp_to_event_with_link: "Potwierdź obecność na <a href='%{url}'>wydarzeniu</a> , aby rozpocząć czat"
+          rsvp_body: "Nawiąż kontakt z innymi uczestnikami przed, w trakcie i po wydarzeniu."
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
       preferences:
         all_events: "Kalendarz Discourse – wszystkie wydarzenia"

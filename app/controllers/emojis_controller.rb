@@ -2,8 +2,7 @@
 
 class EmojisController < ApplicationController
   def index
-    emojis = Emoji.allowed.group_by(&:group)
-    render json: MultiJson.dump(emojis)
+    render json: MultiJson.dump(Emoji.grouped)
   end
 
   def search_aliases

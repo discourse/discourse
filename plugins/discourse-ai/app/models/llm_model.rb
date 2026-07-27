@@ -9,6 +9,8 @@ class LlmModel < ActiveRecord::Base
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
   GOOGLE_VERTEX_AI_PROVIDER_NAME = "google_vertex_ai"
+  OPEN_AI_PROVIDER_NAME = "open_ai"
+  OPEN_AI_REASONING_MODES = %w[standard pro].freeze
   # Interpolated into the Vertex AI hostname/path — must stay strict to avoid
   # sending environment credentials to an attacker-controlled host.
   GOOGLE_VERTEX_AI_REGION_FORMAT = /\A[a-z](?:[a-z0-9-]*[a-z0-9])?\z/
@@ -241,16 +243,22 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+        },
+        reasoning_mode: {
+          type: :enum,
+          values: ["default", *OPEN_AI_REASONING_MODES],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_mode",
         },
         disable_temperature: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_top_p: {
           type: :checkbox,
-          hidden_if: :reasoning_effort,
+          hidden_if: %i[reasoning_effort reasoning_mode],
         },
         disable_streaming: :checkbox,
         service_tier: {
@@ -330,8 +338,9 @@ class LlmModel < ActiveRecord::Base
         disable_native_tools: :checkbox,
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: %w[default none minimal low medium high xhigh max],
           default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.azure_reasoning_effort",
         },
         disable_temperature: {
           type: :checkbox,
@@ -615,7 +624,12 @@ class LlmModel < ActiveRecord::Base
   end
 
   def required_provider_params
-    if provider == BEDROCK_PROVIDER_NAME
+    reasoning_mode = lookup_custom_param("reasoning_mode")
+    if provider == OPEN_AI_PROVIDER_NAME && reasoning_mode == "pro"
+      if !url.to_s.include?("/v1/responses")
+        errors.add(:base, I18n.t("discourse_ai.llm_models.reasoning_mode_requirements"))
+      end
+    elsif provider == BEDROCK_PROVIDER_NAME
       if lookup_custom_param("region").blank?
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end

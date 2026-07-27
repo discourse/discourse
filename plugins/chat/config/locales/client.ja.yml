@@ -316,6 +316,8 @@ ja:
         filter_closed: 閉鎖
         filter_archived: アーカイブ済み
         filter_input_placeholder: チャンネル名で検索
+        filter_joined_all: "すべて"
+        filter_joined_joined: "参加中"
       chat_message_separator:
         today: 今日
         yesterday: 昨日
@@ -385,6 +387,9 @@ ja:
         no_memberships_found: メンバーが見つかりません
         memberships_count:
           other: "%{count} 人のメンバー"
+        preview_card:
+          log_in: "ログイン"
+          sign_up: "登録"
       create_channel:
         threading:
           label: "スレッドを有効にする"

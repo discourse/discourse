@@ -42,6 +42,7 @@ pl_PL:
         nobody: "Filtruj tematy, które nie są nikomu przypisane"
         anyone: "Filtruj tematy przypisane do dowolnej osoby"
     already_claimed: "Ten temat został już przejęty."
+    no_assignee: "Nie wybrano przypisanej osoby."
     already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
     too_many_assigns_for_topic: "Osiągnięto limit %{limit} przypisań na temat."

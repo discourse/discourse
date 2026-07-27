@@ -11,9 +11,10 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     described_class.new.execute(args)
   end
 
-  it "does nothing when feature is disabled" do
+  it "does nothing when feature is disabled, even during explicit preparation" do
     SiteSetting.nested_replies_enabled = false
     Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    SiteSetting.nested_replies_stats_maintenance_enabled = true
 
     execute
 

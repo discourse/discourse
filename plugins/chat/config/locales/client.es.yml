@@ -352,6 +352,8 @@ es:
         filter_closed: Cerrado
         filter_archived: Archivado
         filter_input_placeholder: Buscar canal por nombre
+        filter_joined_all: "Todo"
+        filter_joined_joined: "Se unió"
       chat_message_separator:
         today: Hoy
         yesterday: Ayer
@@ -423,6 +425,9 @@ es:
         memberships_count:
           one: "%{count} miembro"
           other: "%{count} miembros"
+        preview_card:
+          log_in: "Iniciar sesión"
+          sign_up: "Registrarse"
       create_channel:
         threading:
           label: "Activar el hilado"

@@ -136,6 +136,7 @@ export default class NestedOp extends Component {
               }}
               data-post-id={{@post.id}}
               data-post-number={{@post.post_number}}
+              data-topic-id={{@topic.id}}
               {{@registerPost @post}}
             >
               <PluginOutlet

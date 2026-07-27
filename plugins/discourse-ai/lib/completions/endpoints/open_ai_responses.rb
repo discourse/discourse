@@ -22,6 +22,7 @@ module DiscourseAi
 
           reasoning_payload = { summary: "auto" }
           reasoning_payload[:effort] = reasoning_effort if reasoning_effort
+          reasoning_payload[:mode] = reasoning_mode if reasoning_mode
           payload.merge!(reasoning: reasoning_payload)
           payload[:service_tier] = service_tier if service_tier
 

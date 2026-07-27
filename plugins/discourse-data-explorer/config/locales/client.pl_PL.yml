@@ -50,7 +50,7 @@ pl_PL:
         regenerate_placeholder: "np. zaktualizuj zapytanie, aby ograniczyć je do 50 wyników"
         prompt_label: "Monit"
         generate: "Generuj"
-        regenerate: "Monit aktualizacji"
+        regenerate: "Aktualizuj zapytanie"
         generating: "Generowanie zapytań za pomocą AI..."
         generation_timeout: "Przekroczono limit czasu generowania zapytania AI. Możesz wpisać kod SQL ręcznie."
         generation_error: "Wystąpił błąd podczas generowania zapytania."

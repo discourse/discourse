@@ -69,7 +69,6 @@ export default class RichHashtagAutocompleteResults extends Component {
               <a
                 class="hashtag-autocomplete__link
                   {{if (eq index @selectedIndex) 'selected'}}"
-                title={{result.description}}
                 href
                 {{on "click" (fn this.handleResultClick result index)}}
               >

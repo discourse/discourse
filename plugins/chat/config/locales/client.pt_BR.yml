@@ -367,6 +367,8 @@ pt_BR:
         filter_closed: Fechados
         filter_archived: Arquivados
         filter_input_placeholder: Pesquisar canal por nome
+        filter_joined_all: "Todos"
+        filter_joined_joined: "Entrou"
       chat_message_separator:
         today: Hoje
         yesterday: Ontem
@@ -438,6 +440,9 @@ pt_BR:
         memberships_count:
           one: "%{count} membro"
           other: "%{count} membros"
+        preview_card:
+          log_in: "Entrar"
+          sign_up: "Cadastrando-se"
       create_channel:
         threading:
           label: "Ativar linha de discussão"

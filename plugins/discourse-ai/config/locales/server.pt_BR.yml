@@ -103,7 +103,6 @@ pt_BR:
     ai_summarization_enabled: "Ativar o recurso de resumir"
     ai_pm_summarization_allowed_groups: "Grupos autorizados a criar e visualizar resumos em PMs."
     ai_summary_gists_enabled: "Gera automaticamente resumos breves das respostas mais recentes nos tópicos"
-    ai_summary_backfill_maximum_topics_per_hour: "Quantidade de tópicos para preencher a cada hora."
     ai_bot_enabled: "Ative o módulo de Bot com IA."
     ai_bot_enabled_llms: "LLMs disponíveis para selecionar em conversas com bots de IA"
     ai_bot_enable_chat_warning: "Exibir um aviso quando o chat por mensagem privada for iniciado. Pode ser substituído ao editar a string de tradução: discourse_ai.ai_bot.pm_warning"

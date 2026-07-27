@@ -36,10 +36,6 @@ uk:
       livestream:
         zoom:
           chat: "Чат"
-        chat:
-          going: "Натисніть «Продовжити»"
-          join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"
-          join_channel_message: "Підтвердіть свою присутність та розблокуйте наш чат події. Зануртесь в обговорення, діліться своїми враженнями та спілкуйтеся з іншими учасниками!"
       invite_user_notification: "%{username} запросили Вас на: %{description}"
       preferences:
         all_events: "Discourse Календар - Усі події"

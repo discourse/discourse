@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import { fillIn, find, findAll, render } from "@ember/test-helpers";
+import { fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -40,25 +40,21 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser--group")
-        .doesNotHaveClass("--name-only", "renders the default group row style");
+        .dom(".email-group-user-chooser__group")
+        .hasClass("--group-name-first", "applies the group-name-first style");
       assert
-        .dom(".email-group-user-chooser--group .identifier")
+        .dom(".email-group-user-chooser__group .identifier")
         .hasText("team_a", "renders the group name as the identifier");
       assert
-        .dom(".email-group-user-chooser--group .name")
+        .dom(".email-group-user-chooser__group .name")
         .hasText("Team A", "renders the full group name as the label");
     });
 
-    test("onlyShowGroupFullName renders only the group display name", async function (assert) {
+    test("prioritizeGroupFullNameOrdering renders the full name before the group name", async function (assert) {
       this.set("defaultSearchResults", [
         {
           name: "team_a",
           full_name: "Team A Full Name",
-          isGroup: true,
-        },
-        {
-          name: "team_b",
           isGroup: true,
         },
       ]);
@@ -67,7 +63,48 @@ module(
         <template>
           <EmailGroupUserChooser
             @options={{hash
-              onlyShowGroupFullName=true
+              prioritizeGroupFullNameOrdering=true
+              customSearchOptions=(hash
+                defaultSearchResults=this.defaultSearchResults
+              )
+            }}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      const groupRow = find(".email-group-user-chooser__group");
+
+      assert
+        .dom(groupRow)
+        .hasClass(
+          "--group-full-name-first",
+          "applies the full-name-first style"
+        );
+      assert.deepEqual(
+        [...groupRow.querySelectorAll("span")].map((row) =>
+          row.textContent.trim()
+        ),
+        ["Team A Full Name", "team_a"],
+        "renders the full name before the group name"
+      );
+    });
+
+    test("excludeGroupNameWhenMatchingFullName hides a redundant group name", async function (assert) {
+      this.set("defaultSearchResults", [
+        {
+          name: "team_a",
+          full_name: "Team A",
+          isGroup: true,
+        },
+      ]);
+
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash
+              excludeGroupNameWhenMatchingFullName=true
               customSearchOptions=(hash
                 defaultSearchResults=this.defaultSearchResults
               )
@@ -79,21 +116,11 @@ module(
       await this.subject.expand();
 
       assert
-        .dom(".email-group-user-chooser--group")
-        .hasClass(
-          "--full-name-only",
-          "applies the full-name-only group row style"
-        );
+        .dom(".email-group-user-chooser__group .identifier")
+        .doesNotExist("hides the equivalent group name");
       assert
-        .dom(".email-group-user-chooser--group .identifier")
-        .doesNotExist("hides the group identifier");
-      assert.deepEqual(
-        findAll(".email-group-user-chooser--group .name").map((row) =>
-          row.textContent.trim()
-        ),
-        ["Team A Full Name", "team_b"],
-        "uses the full name when present and falls back to the group name"
-      );
+        .dom(".email-group-user-chooser__group .name")
+        .hasText("Team A", "keeps the full group name visible");
     });
 
     test("prioritizeUserNameOrdering can render the name before username", async function (assert) {
@@ -121,7 +148,7 @@ module(
 
       await this.subject.expand();
 
-      const userRow = find(".email-group-user-chooser--user");
+      const userRow = find(".email-group-user-chooser__user");
 
       assert
         .dom(userRow)
@@ -160,7 +187,7 @@ module(
 
       await this.subject.expand();
 
-      const userRow = find(".email-group-user-chooser--user");
+      const userRow = find(".email-group-user-chooser__user");
 
       assert
         .dom(userRow)

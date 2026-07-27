@@ -111,19 +111,10 @@
     @container db-whos-posting (width < 22rem) {
       width: 100%;
 
-      .select-kit.combo-box.category-chooser {
+      .select-kit.multi-select.category-selector {
         max-width: none;
       }
     }
-  }
-
-  &__subcategories {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
-    cursor: pointer;
   }
 
   &__bars {

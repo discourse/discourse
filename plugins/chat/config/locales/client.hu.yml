@@ -292,6 +292,8 @@ hu:
         filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
+        filter_joined_all: "Összes"
+        filter_joined_joined: "Csatlakozott"
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
@@ -363,6 +365,9 @@ hu:
         memberships_count:
           one: "%{count} tag"
           other: "%{count} tag"
+        preview_card:
+          log_in: "Bejelentkezés"
+          sign_up: "Regisztráció"
       create_channel:
         threading:
           label: "Szálak engedélyezése"

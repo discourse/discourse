@@ -75,7 +75,6 @@ fi:
     ai_summarization_enabled: "Ota yhteenveto-ominaisuus käyttöön"
     ai_pm_summarization_allowed_groups: "Ryhmät voivat luoda ja tarkastella yhteenvetoja yksityisviesteissä."
     ai_summary_gists_enabled: "Luo lyhyitä yhteenvetoja ketjujen uusimmista vastauksista automaattisesti"
-    ai_summary_backfill_maximum_topics_per_hour: "Täydennettävien ketjujen yhteenvetojen määrä tunnissa."
     ai_bot_enabled: "Ota tekoälybottimoduuli käyttöön."
     ai_bot_allowed_groups: "Kun GPT-botilla on yksityisviestin käyttöoikeus, se vastaa näiden ryhmien jäsenille."
     ai_bot_debugging_allowed_groups: "Salli näiden ryhmien nähdä viesteissä virheenkorjauspainike, joka näyttää raa'an tekoälypyynnön ja vastauksen"

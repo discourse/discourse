@@ -18,6 +18,7 @@ ro:
       create: "Creează"
       ai:
         generate: "Generare"
+        regenerate: "Actualizează interogarea"
         optional: "opțional"
       import:
         label: "Importă"

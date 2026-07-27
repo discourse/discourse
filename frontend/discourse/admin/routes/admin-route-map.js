@@ -383,6 +383,7 @@ export default function () {
           { path: "/emoji", resetNamespace: true },
           function () {
             this.route("new");
+            this.route("import");
             this.route("index", { path: "/" });
             this.route("settings");
           }

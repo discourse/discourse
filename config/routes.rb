@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
         put "user_count" => "site_settings#user_count"
       end
 
+      post "onboarding/events" => "onboarding_events#create"
+
       get "reports" => "reports#index"
       get "reports/bulk" => "reports#bulk"
       get "reports/:type" => "reports#show"
@@ -509,9 +511,16 @@ Discourse::Application.routes.draw do
         get "user_fields/:id" => "user_fields#show"
         get "user_fields/:id/edit" => "user_fields#edit"
 
-        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new
+        resources :emoji, only: %i[index create destroy], constraints: AdminConstraint.new do
+          collection do
+            post :export
+            post :import_preview
+            post :import_confirm
+          end
+        end
         get "emoji/new" => "emoji#index"
         get "emoji/settings" => "emoji#index"
+        get "emoji/import" => "emoji#index"
         resources :permalinks, only: %i[index new create show destroy]
       end
 
@@ -1957,7 +1966,7 @@ Discourse::Application.routes.draw do
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 
-    resources :sidebar_sections, only: %i[index create update destroy]
+    resources :sidebar_sections, only: %i[index show create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "/form-templates/:id" => "form_templates#show"

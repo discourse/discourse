@@ -29,7 +29,7 @@ RSpec.describe TopicCreator do
       before do
         TopicCreator.any_instance.expects(:save_topic).returns(true)
         TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
-        SiteSetting.allow_duplicate_topic_titles = true
+        SiteSetting.duplicate_topic_titles = "allowed"
       end
 
       it "should be possible for an admin to create a topic" do
@@ -551,7 +551,7 @@ RSpec.describe TopicCreator do
         before do
           TopicCreator.any_instance.expects(:save_topic).returns(true)
           TopicCreator.any_instance.expects(:apply_pm_recipient_notification_levels).returns(true)
-          SiteSetting.allow_duplicate_topic_titles = true
+          SiteSetting.duplicate_topic_titles = "allowed"
           SiteSetting.enable_staged_users = true
         end
 

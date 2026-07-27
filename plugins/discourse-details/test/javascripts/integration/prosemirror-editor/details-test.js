@@ -45,15 +45,12 @@ module(
     Object.entries(testCases).forEach(([name, tests]) => {
       tests.forEach(([markdown, expectedHtml, expectedMarkdown]) => {
         test(name, async function (assert) {
-          this.siteSettings.rich_editor = true;
-
           await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
         });
       });
     });
 
     test("opens and closes details on click", async function (assert) {
-      this.siteSettings.rich_editor = true;
       const detailsMarkdown = `[details="Summary"]This text will be hidden[/details]`;
       await setupRichEditor(assert, detailsMarkdown);
 

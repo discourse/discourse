@@ -1880,7 +1880,7 @@ vi:
         default: "(mặc định)"
         any: "Bất kỳ"
       homepage:
-        default: "(mặc định)"
+        default: "Mặc định"
       password_confirmation:
         title: "Nhập lại Password"
       invite_code:
@@ -2081,7 +2081,9 @@ vi:
         invite_roles:
           member_title: "Mời thành viên"
           member_tab: "Thành viên kênh"
-          admin_tab: "Quản trị"
+          admin_tab: "Nhân viên"
+          staff_role_admin: "Quản trị viên"
+          staff_role_moderator: "Điều hành"
           admin_email_label: "Địa chỉ email"
           email_placeholder: "name@example.com"
           invite_by_email: "Email"
@@ -2091,6 +2093,7 @@ vi:
           summary:
             role_member: "Nâng Cao"
             role_admin: "Quản trị viên"
+            role_moderator: "Điều hành"
             method: "Chia sẻ"
             method_email: "Email"
             uses: "Sử dụng tối đa"
@@ -2751,6 +2754,7 @@ vi:
       draft_saved: "Đã lưu bản nháp!"
       users_placeholder: "Thêm người dùng hoặc nhóm"
       title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
+      title_placeholder_redesign: "Tiêu đề"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
       edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
@@ -3322,6 +3326,7 @@ vi:
       sort:
         label: "Sắp xếp theo"
         top: "Top"
+        hot: "Nổi bật"
         new: "Chủ đề mới"
       load_more_children:
         other: "còn %{count} câu trả lời"
@@ -4026,7 +4031,7 @@ vi:
     category:
       none: "(chưa có chuyên mục)"
       all: "Tất cả chuyên mục"
-      choose: "chuyênmục&hellip;"
+      choose: "Chuyênmục&hellip;"
       edit: "Sửa"
       edit_title: "Sửa chuyên mục này"
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
@@ -4606,7 +4611,6 @@ vi:
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ điều kiện lọc"
       tags: "Thẻ"
-      choose_for_topic: "Tùy chọn thẻ"
       choose_for_topic_required:
         other: "chọn ít nhất %{count} thẻ…"
       choose_for_topic_required_group:
@@ -4837,6 +4841,10 @@ vi:
           public: "Hiển thị cho mọi người"
           always_public: "Nội dung trong phần này luôn công khai"
           more_menu: "Thêm menu"
+          localizations:
+            title: "Bản dịch"
+            locale: "Ngôn ngữ"
+            title_label: "Tên phần"
           links:
             add: "Thêm một link khác"
             delete: "Xóa link"
@@ -5744,7 +5752,6 @@ vi:
               posts: "Số lượng tút"
               share: "Chia sẻ"
             whos_posting:
-              all_categories: "Tất cả danh mục"
               staff: "Nhân viên"
             trust_level_pipeline:
               trust_levels:
@@ -8020,6 +8027,10 @@ vi:
         alt: "xem trước biểu tượng cảm xúc tùy chỉnh"
         delete_confirm: "Bạn có chắc chắn muốn xóa emoji :%{name}:?"
         settings: "Cài đặt"
+        export: "Xuất"
+        import: "Nhập"
+        import_category:
+          new: "Chủ đề mới"
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         delete: "Xóa"

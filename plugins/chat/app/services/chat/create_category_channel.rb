@@ -30,8 +30,8 @@ module Chat
     #   @option params [String] :emoji
     #   @return [Service::Base::Context]
 
-    policy :public_channels_enabled
     policy :can_create_channel
+    policy :public_channels_enabled
 
     params do
       attribute :name, :string
@@ -65,12 +65,12 @@ module Chat
 
     private
 
-    def public_channels_enabled
-      SiteSetting.enable_public_channels
-    end
-
     def can_create_channel(guardian:)
       guardian.can_create_chat_channel?
+    end
+
+    def public_channels_enabled
+      SiteSetting.enable_public_channels
     end
 
     def fetch_category(params:)

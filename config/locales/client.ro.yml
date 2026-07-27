@@ -1671,7 +1671,7 @@ ro:
         default: "(implicit)"
         any: "oricare"
       homepage:
-        default: "(implicit)"
+        default: "Implicit"
       password_confirmation:
         title: "Confirmă parola"
       invite_code:
@@ -1828,7 +1828,9 @@ ro:
         invite_roles:
           member_title: "Invită membri"
           member_tab: "Membri"
-          admin_tab: "Admini"
+          admin_tab: "Echipa"
+          staff_role_admin: "Administrator"
+          staff_role_moderator: "Moderator"
           admin_email_label: "Adresă email"
           email_placeholder: "nume@exemplu.comb"
           invite_by_email: "E-mail"
@@ -1837,6 +1839,7 @@ ro:
           summary:
             role_member: "Membru"
             role_admin: "Administrator"
+            role_moderator: "Moderator"
             method: "Partajare"
             method_email: "E-mail"
             topic: "Subiect"
@@ -2280,6 +2283,7 @@ ro:
       draft_saved: "Ciornă salvată!"
       users_placeholder: "Adaugă utilizatori sau grupuri"
       title_placeholder: "Despre ce este vorba în acest subiect, pe scurt?"
+      title_placeholder_redesign: "Titlu"
       title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "De ce editezi?"
       topic_featured_link_placeholder: "Introdu link afișat cu titlu."
@@ -2628,6 +2632,7 @@ ro:
       sort:
         label: "Sortează după"
         top: "Top"
+        hot: "Cald"
         new: "Nou"
       load_more_children:
         one: "Încă un răspuns"
@@ -3614,7 +3619,6 @@ ro:
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"
-      choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
       delete_tag: "Șterge etichetă"
       delete_confirm:
@@ -3737,6 +3741,8 @@ ro:
           save: "Salvează"
           delete: "Șterge"
           delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
+          localizations:
+            title: "Traduceri"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -4313,7 +4319,6 @@ ro:
               posts: "Articole"
               share: "Partajează"
             whos_posting:
-              all_categories: "Toate categoriile"
               staff: "Echipa"
             trust_level_pipeline:
               trust_levels:
@@ -5729,6 +5734,10 @@ ro:
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
         settings: "Setări"
+        export: "Exportă"
+        import: "Importă"
+        import_category:
+          new: "Nou"
       embedding:
         get_started: "Dacă dorești să încorporezi Discourse pe un alt website, începe prin a-i adăuga gazda."
         delete: "Șterge"

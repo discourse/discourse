@@ -57,6 +57,31 @@ RSpec.describe "Ideas Category Type Setup" do
     expect(Category.can_vote?(category.id)).to eq(false)
   end
 
+  context "when a related site setting has been customized" do
+    before { SiteSetting.topic_voting_tl0_vote_limit = 10 }
+
+    it "prefills the customized value and keeps it when creating an ideas category" do
+      visit("/new-category/setup")
+      category_type_card.find_type_card("ideas").click
+      find(".edit-category-ideas").click
+
+      expect(form.field("category_type_site_settings.topic_voting_tl0_vote_limit").value).to eq(
+        "10",
+      )
+
+      banner.click_save
+      expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Ideas"))
+
+      expect(SiteSetting.topic_voting_tl0_vote_limit).to eq(10)
+      expect(
+        UserHistory.where(
+          action: UserHistory.actions[:change_site_setting],
+          subject: "topic_voting_tl0_vote_limit",
+        ),
+      ).to be_empty
+    end
+  end
+
   context "when the ideas category type setup is disabled" do
     before { SiteSetting.enable_ideas_category_type_setup = false }
 

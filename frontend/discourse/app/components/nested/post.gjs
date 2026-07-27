@@ -748,6 +748,7 @@ export default class NestedPost extends Component {
                   class="nested-post__article boxed"
                   data-post-id={{@post.id}}
                   data-post-number={{@post.post_number}}
+                  data-topic-id={{@topic.id}}
                   {{@registerPost @post trackOnly=true}}
                 >
                   <PluginOutlet

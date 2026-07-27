@@ -13,7 +13,7 @@ module HasNestedReplyStats
   # are left alone — their total descendant count is unchanged — while
   # ancestors unique to either chain are adjusted by this post's subtree size.
   def nested_replies_apply_reparent(previous_reply_to_post_number)
-    return unless SiteSetting.nested_replies_enabled
+    return unless maintain_nested_reply_stats?
     return if previous_reply_to_post_number == reply_to_post_number
 
     subtree_size, whisper_subtree_size = nested_replies_subtree_sizes
@@ -76,8 +76,12 @@ module HasNestedReplyStats
 
   private
 
+  def maintain_nested_reply_stats?
+    SiteSetting.nested_replies_enabled || SiteSetting.nested_replies_stats_maintenance_enabled
+  end
+
   def nested_replies_increment_stats
-    return unless SiteSetting.nested_replies_enabled
+    return unless maintain_nested_reply_stats?
     return if reply_to_post_number.blank?
 
     ancestors = nested_replies_walk(reply_to_post_number)
@@ -110,7 +114,7 @@ module HasNestedReplyStats
   end
 
   def nested_replies_decrement_stats
-    return unless SiteSetting.nested_replies_enabled
+    return unless maintain_nested_reply_stats?
     if reply_to_post_number.present?
       subtree_size, whisper_subtree_size = nested_replies_subtree_sizes
       is_whisper = post_type == Post.types[:whisper] ? 1 : 0

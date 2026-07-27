@@ -91,7 +91,6 @@ he:
     ai_summarization_enabled: "הפעלת יכולת הסיכום"
     ai_pm_summarization_allowed_groups: "קבוצות שמורשות ליצור ולצפות בתקצירים בהודעות פרטיות."
     ai_summary_gists_enabled: "יצירת תקצירים של התגובות האחרונות בנושאים אוטומטית"
-    ai_summary_backfill_maximum_topics_per_hour: "מספר תקצירי הנושאים למילוי חוזר בשעה."
     ai_bot_enabled: "הפעלת מודול בוט הבינה המלאכותית."
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"

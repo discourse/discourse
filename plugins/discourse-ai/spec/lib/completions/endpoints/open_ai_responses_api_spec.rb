@@ -343,6 +343,40 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     )
   end
 
+  it "records cache-write tokens and configured cost for non-streaming responses" do
+    model.update!(
+      name: "gpt-5.6-luna",
+      input_cost: 1.0,
+      cached_input_cost: 0.1,
+      cache_write_cost: 1.25,
+      output_cost: 6.0,
+    )
+    stub_request(:post, "https://api.openai.com/v1/responses").to_return(
+      status: 200,
+      body: {
+        output: [{ type: "message", content: [{ type: "output_text", text: "ok" }] }],
+        usage: {
+          input_tokens: 2_006,
+          output_tokens: 300,
+          input_tokens_details: {
+            cached_tokens: 1_920,
+            cache_write_tokens: 64,
+          },
+        },
+      }.to_json,
+    )
+
+    result = model.to_llm.generate("hello", user: Discourse.system_user)
+
+    expect(result).to eq("ok")
+    log = AiApiAuditLog.last
+    expect(log.request_tokens).to eq(22)
+    expect(log.response_tokens).to eq(300)
+    expect(log.cache_read_tokens).to eq(1_920)
+    expect(log.cache_write_tokens).to eq(64)
+    expect(log.estimated_cost).to eq(BigDecimal("0.002094"))
+  end
+
   it "accepts xhigh as reasoning_effort for responses API" do
     model.update!(provider_params: { reasoning_effort: "xhigh" })
 
@@ -366,6 +400,118 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     endpoint.perform_completion!(dialect, Discourse.system_user)
 
     expect(parsed_body[:reasoning]).to include(effort: "xhigh", summary: "auto")
+  end
+
+  it "sends native max effort and pro mode for GPT-5.6" do
+    model.update!(
+      name: "gpt-5.6-sol",
+      provider_params: {
+        reasoning_effort: "max",
+        reasoning_mode: "pro",
+      },
+    )
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user, { temperature: 0.7, top_p: 0.9 })
+
+    expect(parsed_body[:reasoning]).to eq(summary: "auto", effort: "max", mode: "pro")
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
+  it "uses the provider's default effort for pro mode" do
+    model.update!(name: "gpt-5.6-sol", provider_params: { reasoning_mode: "pro" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    expect(endpoint.prepare_model_params({})[:reserved_output_tokens]).to eq(25_000)
+    endpoint.perform_completion!(dialect, Discourse.system_user, { temperature: 0.7, top_p: 0.9 })
+
+    expect(parsed_body[:reasoning]).to eq(summary: "auto", mode: "pro")
+    expect(parsed_body).not_to have_key(:temperature)
+    expect(parsed_body).not_to have_key(:top_p)
+  end
+
+  it "sends standard reasoning mode for custom model names" do
+    model.update!(
+      name: "future-reasoning-deployment",
+      provider_params: {
+        reasoning_mode: "standard",
+      },
+    )
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to eq(summary: "auto", mode: "standard")
+  end
+
+  it "omits unsupported reasoning modes" do
+    model.update!(provider_params: { reasoning_mode: "unsupported" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to eq(summary: "auto")
   end
 
   it "accepts none as reasoning_effort for responses API" do

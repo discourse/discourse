@@ -140,7 +140,6 @@ uk:
     ai_summarization_agent: "Агент, який буде використано для функції узагальнення"
     ai_pm_summarization_allowed_groups: "Групи дозволили створювати та переглядати підсумки в особистих повідомленнях."
     ai_summary_gists_enabled: "Автоматично генерувати короткі зведення останніх відповідей у темах"
-    ai_summary_backfill_maximum_topics_per_hour: "Кількість підсумків тем для заповнення на годину."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
     ai_bot_enabled_llms: "LLM доступні для вибору для бесід з AI-ботами"
     ai_bot_enable_chat_warning: "Відображати попередження, коли ініційовано чат особистих повідомлень. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"

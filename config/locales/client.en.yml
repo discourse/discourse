@@ -59,6 +59,7 @@ en:
         add_group: "Add user or group"
         mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
         mandatory: "Mandatory"
+        disallowed: "Disallowed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -2298,7 +2299,7 @@ en:
         any: "any"
 
       homepage:
-        default: "(default)"
+        default: "Default"
 
       password_confirmation:
         title: "Password Again"
@@ -2527,14 +2528,18 @@ en:
 
         invite_roles:
           member_title: "Invite members"
-          admin_title: "Invite admins"
+          admin_title: "Invite staff"
           edit_title: "Editing invite"
           created_title: "Invite created"
           sent_title: "Invitation sent"
           member_tab: "Members"
-          admin_tab: "Admins"
+          admin_tab: "Staff"
           member_description: "Invite people to join this site. Share a link or send an email invitation."
-          admin_description: "Invite people to join your staff as admins. Admins have full access to this site."
+          admin_description: "Invite people to join your staff team. Admins have full access to this site."
+          moderator_description: "Invite people to join your staff team. Moderators can help manage content and members."
+          staff_role_label: "Invite as"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
           admin_email_label: "Email address"
           member_email_label: "Send to"
           member_email_help: "We'll email an invitation link to this address."
@@ -2559,6 +2564,7 @@ en:
             role: "Role"
             role_member: "Member"
             role_admin: "Admin"
+            role_moderator: "Moderator"
             method: "Sharing"
             method_link: "Shareable link"
             method_email: "Email"
@@ -3263,7 +3269,7 @@ en:
       clear: "Clear filter"
 
     filter_controls:
-      reset: "Reset filter"
+      reset: "Reset"
       toggle: "Toggle dropdown filters"
 
     d_icon_grid_picker:
@@ -3475,6 +3481,7 @@ en:
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
+      title_placeholder_redesign: "Title"
       title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
@@ -4253,6 +4260,7 @@ en:
       sort:
         label: "Sort by"
         top: "Top"
+        hot: "Hot"
         new: "New"
         old: "Old"
       load_more_children:
@@ -5185,7 +5193,7 @@ en:
     category:
       none: "(no category)"
       all: "All categories"
-      choose: "category&hellip;"
+      choose: "Category&hellip;"
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
@@ -5918,7 +5926,7 @@ en:
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
-      choose_for_topic: "optional tags"
+      choose_for_topic: "Optional tags…"
       choose_for_topic_required:
         one: "select at least %{count} tag…"
         other: "select at least %{count} tags…"
@@ -6209,7 +6217,16 @@ en:
           public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
+          localizations:
+            title: "Translations"
+            locale: "Language"
+            title_label: "Section title"
+            link_label: "Link name"
+            add_section: "Add section title translation"
+            add_link: "Add link name translation"
+            remove: "Remove translation"
           links:
+            title: "Section links"
             add: "Add another link"
             delete: "Delete link"
             reset: "Reset to default"
@@ -7253,12 +7270,11 @@ en:
               save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
-              all_categories: "All categories"
-              include_subcategories: "Include subcategories"
               new_members: "New members"
               returning: "Returning"
               staff: "Staff"
               empty: "No posts in the selected period."
+              save_error: "Couldn't save your selection for next time."
             trust_level_pipeline:
               title: "Trust level pipeline"
               trust_levels:
@@ -8182,6 +8198,14 @@ en:
         header_dropdown: "Header Dropdown"
         legacy: "Legacy"
 
+      homepage:
+        top_menu_default: "First item in top menu"
+
+      duplicate_topic_titles:
+        disallowed: "Disallowed"
+        allowed_across_categories: "Allowed across categories"
+        allowed: "Allowed"
+
       backups:
         title: "Backups"
         files_title: "Backup files"
@@ -8353,6 +8377,8 @@ en:
           default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
+          maximize_editor: "Maximize editor"
+          minimize_editor: "Minimize editor"
           is_default: "Theme is enabled by default"
           user_selectable: "Theme can be selected by users"
           user_selectable_badge_label: "User selectable"
@@ -8429,10 +8455,13 @@ en:
           import_file_tip: ".tar.gz or .zip file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
+          placeholder_description: "This is a private theme that requires a deploy key to be installed in the repository's configuration. Once that is done, click the button below to finish installation."
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           remote_branch_placeholder: "Choose a specific branch or keep empty"
-          public_key: "Grant the following public key access to the repo:"
+          public_key: "Grant the following public key read-only access to the repo:"
+          public_key_github: "Grant the following public key read-only access to the repo. See %{link} for instructions."
+          deploy_key_instructions: "GitHub deploy key instructions"
           install: "Install"
           installed: "Installed"
           screenshot: "%{name} screenshot"
@@ -8444,7 +8473,7 @@ en:
           installing_message_long_time: "Setting up your new theme is taking a little longer than expected, please hang tight…"
           duplicate_remote_theme: "The theme component “%{name}” is already installed, are you sure you want to install another copy?"
           force_install: "The theme cannot be installed because the Git repository is inaccessible. Are you sure you want to continue installing it?"
-          create_placeholder: "Create Placeholder"
+          create_placeholder: "Create placeholder"
           about_theme: "About"
           license: "License"
           version: "Version:"
@@ -8931,6 +8960,9 @@ en:
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
             change_access_control_list_permissions: "change access control list permissions"
+            admin_onboarding_step_completed: "complete admin onboarding step"
+            admin_onboarding_completed: "complete admin onboarding"
+            admin_onboarding_dismissed: "dismiss admin onboarding"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -9879,11 +9911,39 @@ en:
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
+        all_groups: "All groups"
+        filter_placeholder: "Search emojis by name"
+        no_results: "No emojis found."
         created_by: "Created By"
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
         settings: "Settings"
+        export: "Export"
+        export_count: "Export (%{count} selected)"
+        export_failed: "Export failed. Please try again."
+        select_to_export: "Select to export"
+        import: "Import"
+        import_heading: "Import emojis"
+        import_description: "Upload a ZIP file containing an emojis.csv manifest and image files."
+        import_download_sample: "Download an example template."
+        import_preview_heading: "Review import"
+        import_summary: "%{new} new · %{conflicts} conflicts · %{unchanged} unchanged · %{invalid} errors"
+        import_confirm: "Confirm import"
+        import_unchanged_count: "%{count} unchanged"
+        import_will_skip: "Unchanged — will skip"
+        import_excluded: "Excluded from import"
+        import_incoming_alt: "Incoming: %{name}"
+        import_existing_alt: "Existing: %{name}"
+        import_existing_group_alt: "Existing group"
+        import_use_incoming: "Use new"
+        import_keep_existing: "Keep existing"
+        import_category:
+          new: "New"
+          conflict: "Conflicts"
+          invalid: "Errors"
+        select_all: "Select all emojis"
+        select: "Select %{name}"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

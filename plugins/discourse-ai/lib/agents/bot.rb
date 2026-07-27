@@ -14,15 +14,31 @@ module DiscourseAi
       COMPRESSED_CONTEXT_ACK =
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
-      BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
+      TOKEN_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
+        [The turn token budget has been reached — no further tool calls are available.]
+        Provide your final response now using the information already gathered.
+        Do not describe additional tool calls or future work as though you will perform them.
+        If the task is not fully complete, clearly state what was accomplished
+        and what still needs to be done so the user can continue in a follow-up message.
+      TEXT
+      LEGACY_BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
         Provide your final response using the information already gathered.
         If the task is not fully complete, clearly state what was accomplished
         and what still needs to be done so the user can continue in a follow-up message.
       TEXT
+      BUDGET_EXHAUSTED_HINT = TOKEN_BUDGET_FINAL_ANSWER_HINT
+      TRANSIENT_TOKEN_BUDGET_HINTS = [
+        TOKEN_BUDGET_FINAL_ANSWER_HINT,
+        LEGACY_BUDGET_EXHAUSTED_HINT,
+      ].freeze
+
+      def self.inject_token_budget_final_answer_hint(prompt)
+        prompt.push(type: :user, content: TOKEN_BUDGET_FINAL_ANSWER_HINT)
+      end
 
       def self.inject_budget_exhausted_hint(prompt)
-        prompt.push(type: :user, content: BUDGET_EXHAUSTED_HINT)
+        inject_token_budget_final_answer_hint(prompt)
       end
 
       # When an agent has no explicit max_turn_tokens, default the turn budget
@@ -130,16 +146,10 @@ module DiscourseAi
             break # already ran the final text-only generate
           end
 
-          should_stop = token_usage_tracker.total >= token_budget
-
-          if should_stop
-            if prompt.messages.last&.dig(:type) == :tool
-              self.class.inject_budget_exhausted_hint(prompt)
-              prompt.tool_choice = :none
-              final_answer_requested = true
-            else
-              break
-            end
+          if token_usage_tracker.total >= token_budget
+            self.class.inject_token_budget_final_answer_hint(prompt)
+            prompt.tool_choice = :none
+            final_answer_requested = true
           end
 
           compression_result =
@@ -257,9 +267,6 @@ module DiscourseAi
           total_completions += 1
 
           if !final_answer_requested
-            total_used = token_usage_tracker.total
-            prompt.tool_choice = :none if total_used >= (token_budget * 0.85)
-
             # Safety valve against pathological tool loops.
             break if total_completions >= 100
           end
@@ -570,20 +577,21 @@ module DiscourseAi
         instruction = COMPRESSION_INSTRUCTION
         instruction = "#{instruction}\n#{COMPRESSION_MERGE_INSTRUCTION}" if has_prior_compression
 
-        compression_messages = prompt.messages.map(&:dup)
+        compression_messages =
+          prompt.messages.reject { |message| transient_prompt_hint?(message) }.map(&:dup)
         compression_messages << { type: :user, content: instruction }
-
-        compression_prompt =
-          DiscourseAi::Completions::Prompt.new(
-            messages: compression_messages,
-            tools: prompt.tools,
-            topic_id: prompt.topic_id,
-            post_id: prompt.post_id,
-          )
-        compression_prompt.tool_choice = :none
 
         summary =
           begin
+            compression_prompt =
+              DiscourseAi::Completions::Prompt.new(
+                messages: compression_messages,
+                tools: prompt.tools,
+                topic_id: prompt.topic_id,
+                post_id: prompt.post_id,
+              )
+            compression_prompt.tool_choice = :none
+
             current_llm.generate(
               compression_prompt,
               user: nil,
@@ -664,12 +672,16 @@ module DiscourseAi
             when :tool
               [message[:content], message[:id], "tool", message[:name]]
             when :user
-              [message[:content], message[:id], "user"]
+              [message[:content], message[:id], "user"] if !transient_prompt_hint?(message)
             when :model
               [message[:content], nil, "model", nil, thinking_context(message)]
             end
           end
           .compact
+      end
+
+      def transient_prompt_hint?(message)
+        message[:type] == :user && TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content])
       end
 
       def thinking_context(message)

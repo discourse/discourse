@@ -108,6 +108,8 @@ vi:
         filter_closed: Đã đóng
         filter_archived: Đã lưu trữ
         filter_input_placeholder: Tìm kênh theo tên
+        filter_joined_all: "Tất cả"
+        filter_joined_joined: "Đã tham gia"
       chat_message_separator:
         today: Hôm nay
         yesterday: Hôm qua
@@ -137,6 +139,9 @@ vi:
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"
+      channel:
+        preview_card:
+          log_in: "Đăng nhập"
       create_channel:
         description: "Mô tả"
         type: "Loại"

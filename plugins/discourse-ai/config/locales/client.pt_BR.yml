@@ -718,8 +718,6 @@ pt_BR:
           anthropic-claude-haiku-4-5: "Rápido e econômico"
           google-gemini-3-1-pro: "O modelo mais inteligente do Google"
           google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-4: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
-          open_ai-gpt-5-4-nano: "O modelo do GPT-5 mais rápido e econômico"
           open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
@@ -1019,15 +1017,9 @@ pt_BR:
           bulk_regen_description: "Escolha o tipo de resumo de IA a ser regerado para os tópicos selecionados."
           regenerate_gists_option: "Resumos breves (gists)"
           regenerate_summaries_option: "Resumos de tópicos"
-          regenerate_gists_success:
-            one: "Resumo curto regerado com sucesso"
-            other: "%{count} resumos curtos regerados com sucesso"
           regenerate_gists_error:
             one: "Não foi possível regerar resumos curtos"
             other: "Não foi possível regerar %{count} resumos curtos"
-          regenerate_topic_summary_success:
-            one: "Resumo do tópico regerado com sucesso"
-            other: "%{count} resumos de tópicos regerados com sucesso"
           regenerate_topic_summary_error:
             one: "Não foi possível regerar o resumo do tópico"
             other: "Não foi possível regerar %{count} resumos de tópico"

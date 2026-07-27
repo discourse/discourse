@@ -973,12 +973,8 @@ ja:
           bulk_regen_description: "選択されたトピックに対して再生成する AI 要約の種類を選択します。"
           regenerate_gists_option: "短い要約 (要点)"
           regenerate_summaries_option: "トピックの要約"
-          regenerate_gists_success:
-            other: "%{count} 件の短い要約を再生成しました"
           regenerate_gists_error:
             other: "%{count} 件の短い要約の再生成に失敗しました"
-          regenerate_topic_summary_success:
-            other: "%{count} 件のトピック要約を再生成しました"
           regenerate_topic_summary_error:
             other: "%{count} 件のトピック要約の再生成に失敗しました"
         topic_list_layout:

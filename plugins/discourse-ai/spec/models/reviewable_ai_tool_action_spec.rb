@@ -132,13 +132,51 @@ RSpec.describe ReviewableAiToolAction do
       expect(topic.reload.closed).to eq(true)
     end
 
-    it "rejects inline approval from a different post", :aggregate_failures do
-      post = Fabricate(:post, topic: topic)
-      other_post = Fabricate(:post)
-      tool_action = create_tool_action(post_id: post.id)
+    it "executes inline approval from the bot post containing its approval card" do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
       reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: bot_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      result = reviewable.perform(admin, :approve, post_id: approval_post.id)
+
+      expect(result.success?).to eq(true)
+      expect(result.transition_to).to eq(:approved)
+      expect(topic.reload.closed).to eq(true)
+    end
+
+    it "rejects inline approval from a bot post without its approval card", :aggregate_failures do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      other_post = Fabricate(:post, topic: topic, user: bot_user)
 
       expect { reviewable.perform(admin, :approve, post_id: other_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "rejects inline approval when another user copies its approval card", :aggregate_failures do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
+      reviewable = create_reviewable(tool_action)
+      copied_card_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
+
+      expect { reviewable.perform(admin, :approve, post_id: copied_card_post.id) }.to raise_error(
         Discourse::InvalidAccess,
       )
 
@@ -304,17 +342,44 @@ RSpec.describe ReviewableAiToolAction do
       expect(topic.reload.closed).to eq(false)
     end
 
-    it "rejects inline rejection from a different post" do
-      post = Fabricate(:post, topic: topic)
-      other_post = Fabricate(:post)
-      tool_action = create_tool_action(post_id: post.id)
+    it "accepts inline rejection from the bot post containing its approval card" do
+      source_post = Fabricate(:post, topic: topic)
+      tool_action = create_tool_action(post_id: source_post.id)
       reviewable = create_reviewable(tool_action)
+      approval_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: bot_user,
+          raw: "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>",
+        )
 
-      expect { reviewable.perform(admin, :reject, post_id: other_post.id) }.to raise_error(
-        Discourse::InvalidAccess,
-      )
+      result = reviewable.perform(admin, :reject, post_id: approval_post.id)
 
-      expect(reviewable.reload).to be_pending
+      expect(result.success?).to eq(true)
+      expect(result.transition_to).to eq(:rejected)
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "resolves multiple inline reviews independently from the same bot post" do
+      source_post = Fabricate(:post, topic: topic)
+      first_reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      second_reviewable = create_reviewable(create_tool_action(post_id: source_post.id))
+      approval_post = Fabricate(:post, topic: topic, user: bot_user, raw: <<~RAW)
+            <div data-ai-tool-approval-reviewable-id='#{first_reviewable.id}'></div>
+            <div data-ai-tool-approval-reviewable-id='#{second_reviewable.id}'></div>
+          RAW
+
+      first_result = first_reviewable.perform(admin, :reject, post_id: approval_post.id)
+
+      expect(first_result.success?).to eq(true)
+      expect(first_reviewable.reload).to be_rejected
+      expect(second_reviewable.reload).to be_pending
+
+      second_result = second_reviewable.perform(admin, :reject, post_id: approval_post.id)
+
+      expect(second_result.success?).to eq(true)
+      expect(second_reviewable.reload).to be_rejected
     end
 
     it "raises error when performed_by is a bot account" do

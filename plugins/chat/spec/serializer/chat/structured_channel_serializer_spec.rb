@@ -172,15 +172,17 @@ RSpec.describe Chat::StructuredChannelSerializer do
           .expects(:new)
           .with(
             channel1,
-            root: nil,
-            scope: guardian,
-            membership: membership1,
-            new_messages_message_bus_last_id: 0,
-            new_mentions_message_bus_last_id: 0,
-            kick_message_bus_last_id: 0,
-            channel_message_bus_last_id: 0,
-            can_join_chat_channel: true,
-            post_allowed_category_ids: nil,
+            has_entries(
+              root: nil,
+              scope: guardian,
+              membership: membership1,
+              new_messages_message_bus_last_id: 0,
+              new_mentions_message_bus_last_id: 0,
+              kick_message_bus_last_id: 0,
+              channel_message_bus_last_id: 0,
+              can_join_chat_channel: true,
+              post_allowed_category_ids: nil,
+            ),
           )
           .once
         described_class.new(data, scope: guardian).as_json

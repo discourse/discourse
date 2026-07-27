@@ -10,8 +10,6 @@ th:
       dashboard:
         sections:
           support:
-            filter:
-              all_categories: "หมวดหมู่ทั้งหมด"
             answerers:
               staff: "ทีมงาน"
               member: "สมาชิก"

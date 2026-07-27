@@ -47,6 +47,7 @@ module Migrations
               notification_level_when_replying: item[:notification_level_when_replying],
               notify_on_linked_posts: item[:notify_on_linked_posts],
               oldest_search_log_date: item[:oldest_search_log_date],
+              push_notification_level: item[:push_notification_level],
               seen_popups: item[:seen_popups],
               show_original_content: item[:show_original_content],
               sidebar_link_to_filtered_list: item[:sidebar_link_to_filtered_list],

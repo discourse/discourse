@@ -81,6 +81,8 @@ pt_BR:
     holiday_status:
       description: "De férias"
   discourse_post_event:
+    event_excerpt:
+      date_format: "%-d de %B de %Y"
     notifications:
       before_event_reminder: "%{title} está prestes a começar."
       after_event_reminder: "%{title} terminou."

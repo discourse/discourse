@@ -25,6 +25,10 @@ zh_CN:
     openid_connect_user_field_mappings: "将 OIDC 声明映射到 Discourse 用户字段。每个条目将 OIDC 声明名称与 Discourse 用户字段的数字 ID 配对。"
     openid_connect_match_by_email: "使用电子邮件地址将 OpenID Connect 身份验证与现有 Discourse 用户帐户相匹配。"
     openid_connect_use_pkce: "为 OpenID Connect 身份验证启用代码交换验证密钥 (PKCE)。"
+    openid_connect_mtls_client_cert: "用于与 OIDC 提供商进行 mTLS 客户端身份验证的 X.509 客户端证书。要启用 mTLS，还必须设置 {{setting:openid_connect_mtls_client_key}}。"
+    openid_connect_mtls_client_key: "mTLS 客户端证书对应的 X.509 私钥。要启用 mTLS，还必须设置 {{setting:openid_connect_mtls_client_cert}}。"
+    openid_connect_mtls_client_key_passcode: "mTLS 私钥的密码（可选）"
   login:
     omniauth_error:
       openid_connect_discovery_error: 无法从身份提供商获取配置。请重试。
+      openid_connect_mtls_error: mTLS 客户端证书配置存在问题。请联系管理员。

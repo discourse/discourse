@@ -44,7 +44,7 @@ module PageObjects
       end
 
       def search_input
-        find(".admin-users-list__search input")
+        find(".d-filter-controls__input")
       end
 
       def user_row(id)

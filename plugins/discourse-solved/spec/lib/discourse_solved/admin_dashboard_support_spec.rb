@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSolved::AdminDashboardSupport do
-  fab!(:support_category, :category)
+  fab!(:support_category)
   fab!(:admin)
   fab!(:author) { Fabricate(:user, trust_level: TrustLevel[1]) }
   fab!(:staff_user, :moderator)
   fab!(:member_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
-  before do
-    SiteSetting.solved_enabled = true
-    support_category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "true"
-    support_category.save!
-  end
+  before { SiteSetting.solved_enabled = true }
 
   def build(**opts)
     described_class.build(
@@ -137,12 +133,12 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
       expect(build[:kpis][:resolution_rate][:value]).to eq(33.3)
     end
 
-    it "carries the selected category into the report drill-down query" do
+    it "carries the selected categories into the report drill-down query" do
       solved_topic
 
-      query = build(category_id: support_category.id)[:kpis][:resolution_rate][:report_query]
+      query = build(category_ids: [support_category.id])[:kpis][:resolution_rate][:report_query]
 
-      expect(query[:filters]).to eq(category: support_category.id)
+      expect(query[:filters]).to eq(category_ids: support_category.id.to_s)
     end
 
     it "omits the category filter when viewing all categories" do
@@ -204,21 +200,32 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
   end
 
   describe "category scoping" do
-    fab!(:second_support_category, :category)
-
-    before do
-      second_support_category.custom_fields[
-        DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-      ] = "true"
-      second_support_category.save!
-    end
+    fab!(:second_support_category, :support_category)
 
     it "limits metrics to a single category when one is selected" do
       solved_topic(category: support_category)
       solved_topic(category: second_support_category)
 
       expect(build[:topic_outcomes][:resolved]).to eq(2)
-      expect(build(category_id: support_category.id)[:topic_outcomes][:resolved]).to eq(1)
+      expect(build(category_ids: [support_category.id])[:topic_outcomes][:resolved]).to eq(1)
+    end
+
+    it "limits metrics to the union of multiple selected categories" do
+      solved_topic(category: support_category)
+      solved_topic(category: second_support_category)
+
+      result = build(category_ids: [support_category.id, second_support_category.id])
+
+      expect(result[:topic_outcomes][:resolved]).to eq(2)
+    end
+
+    it "strips ids that don't correspond to a support category" do
+      solved_topic(category: support_category)
+      other_category = Fabricate(:category)
+
+      result = build(category_ids: [support_category.id, other_category.id])
+
+      expect(result[:category_ids]).to contain_exactly(support_category.id)
     end
 
     it "lists both support categories as filter options" do

@@ -73,7 +73,6 @@ sk:
     ai_summarization_enabled: "Povolenie funkcie sumarizácie"
     ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
     ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
-    ai_summary_backfill_maximum_topics_per_hour: "Počet tematických súhrnov na doplnenie za hodinu."
     ai_bot_enabled: "Povolenie modulu AI Bot."
     ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."

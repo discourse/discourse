@@ -13,8 +13,9 @@ import EmailGroupUserChooserRow from "./email-group-user-chooser-row";
   filterComponent: EmailGroupUserChooserFilter,
   fullWidthWrap: false,
   autoWrap: false,
-  onlyShowGroupFullName: false,
   prioritizeUserNameOrdering: false,
+  prioritizeGroupFullNameOrdering: false,
+  excludeGroupNameWhenMatchingFullName: false,
 })
 @pluginApiIdentifiers(["email-group-user-chooser"])
 export default class EmailGroupUserChooser extends UserChooserComponent {

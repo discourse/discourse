@@ -651,7 +651,6 @@ he:
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-1-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-4-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -924,11 +923,6 @@ he:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
           regenerate_summaries_option: "תקצירי נושאים."
-          regenerate_gists_success:
-            one: "התקציר הקצר נוצר מחדש בהצלחה"
-            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
-            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
           regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"

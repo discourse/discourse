@@ -59,6 +59,31 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       expect(capabilities.dig("anthropic", "requires_configured_url")).to eq(true)
     end
 
+    it "includes OpenAI reasoning controls metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      open_ai_params = response.parsed_body.dig("meta", "provider_params", "open_ai")
+      expect(open_ai_params["reasoning_effort"]).to include(
+        "type" => "enum",
+        "values" => %w[default none minimal low medium high xhigh max],
+        "default" => "default",
+      )
+      expect(open_ai_params["reasoning_mode"]).to include(
+        "type" => "enum",
+        "values" => %w[default standard pro],
+        "default" => "default",
+      )
+
+      azure_params = response.parsed_body.dig("meta", "provider_params", "azure")
+      expect(azure_params["reasoning_effort"]).to include(
+        "type" => "enum",
+        "values" => %w[default none minimal low medium high xhigh max],
+        "default" => "default",
+      )
+      expect(azure_params).not_to have_key("reasoning_mode")
+    end
+
     it "includes vLLM reasoning controls metadata" do
       get "/admin/plugins/discourse-ai/ai-llms.json"
       expect(response).to be_successful
@@ -274,6 +299,30 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         )
       end
 
+      it "stores reasoning configuration for custom model names" do
+        provider_params = { reasoning_effort: "max", reasoning_mode: "pro" }
+        attrs =
+          valid_attrs.merge(
+            name: "future-reasoning-deployment",
+            url: "https://api.openai.com/v1/responses",
+            provider_params: provider_params,
+          )
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        expect(LlmModel.last.provider_params).to eq(provider_params.stringify_keys)
+      end
+
+      it "allows standard reasoning mode with Chat Completions" do
+        attrs = valid_attrs.merge(provider_params: { reasoning_mode: "standard" })
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(201)
+        expect(LlmModel.last.provider_params["reasoning_mode"]).to eq("standard")
+      end
+
       it "does not store nested hash values in provider_params" do
         provider_params = { organization: { nested: "injected_value" } }
 
@@ -302,6 +351,17 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     context "with invalid attributes" do
+      it "rejects pro reasoning mode without a Responses API configuration" do
+        attrs = valid_attrs.merge(provider_params: { reasoning_mode: "pro" })
+
+        post "/admin/plugins/discourse-ai/ai-llms.json", params: { ai_llm: attrs }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("discourse_ai.llm_models.reasoning_mode_requirements"),
+        )
+      end
+
       it "doesn't create a model" do
         post "/admin/plugins/discourse-ai/ai-llms.json",
              params: {

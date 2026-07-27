@@ -352,6 +352,8 @@ nl:
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
         filter_input_placeholder: Kanaal zoeken op naam
+        filter_joined_all: "Alles"
+        filter_joined_joined: "Lid sinds"
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
@@ -423,6 +425,9 @@ nl:
         memberships_count:
           one: "%{count} lid"
           other: "%{count} leden"
+        preview_card:
+          log_in: "Aanmelden"
+          sign_up: "Registreren"
       create_channel:
         threading:
           label: "Threads inschakelen"

@@ -58,6 +58,8 @@ hy:
         filter_all: Բոլորը
         filter_open: Բացել
         filter_closed: Փակված
+        filter_joined_all: "Բոլոր"
+        filter_joined_joined: "Միացել է"
       chat_message_separator:
         today: Այսօրվա
         yesterday: Երեկվա

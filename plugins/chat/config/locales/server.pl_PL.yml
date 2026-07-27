@@ -11,7 +11,7 @@ pl_PL:
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
     enable_new_chat_reactions_popup: "Włącz przeprojektowane wyskakujące okienko reakcji na wiadomościach czatu, pokazujące, kto zareagował, z nieskończonym przewijaniem i natywną obsługą urządzeń mobilnych."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować, z wyjątkiem użytkowników anonimowych, którzy mogą przeglądać czat tylko po dodaniu ich do tego ustawienia. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_dm_retention_days: "Wiadomości czatu na prywatnych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."

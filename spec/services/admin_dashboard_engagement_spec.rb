@@ -166,6 +166,75 @@ describe AdminDashboardEngagement do
 
         expect(result[:posters][:total]).to eq(1)
       end
+
+      it "restricts counted posts to the persisted category selection" do
+        selected = Fabricate(:category)
+        other = Fabricate(:category)
+        poster = Fabricate(:user, created_at: Time.zone.local(2026, 3, 1))
+        selected_topic = Fabricate(:topic, category: selected)
+        other_topic = Fabricate(:topic, category: other)
+        Fabricate(
+          :post,
+          user: poster,
+          topic: selected_topic,
+          created_at: Time.zone.local(2026, 4, 10),
+        )
+        Fabricate(:post, user: poster, topic: other_topic, created_at: Time.zone.local(2026, 4, 10))
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [selected.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        expect(result[:posters][:total]).to eq(1)
+      end
+
+      it "omits categories the current user cannot see from the persisted selection" do
+        moderator = Fabricate(:moderator)
+        visible = Fabricate(:category)
+        private_group = Fabricate(:group)
+        restricted = Fabricate(:private_category, group: private_group, read_restricted: true)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [visible.id, restricted.id],
+          },
+        )
+
+        result =
+          described_class.build(
+            start_date: "2026-04-01",
+            end_date: "2026-04-28",
+            current_user: moderator,
+          )
+
+        expect(result[:posters][:category_ids]).to contain_exactly(visible.id)
+      end
+
+      it "preserves the saved order of the persisted category selection" do
+        first = Fabricate(:category)
+        second = Fabricate(:category)
+        third = Fabricate(:category)
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "whos_posting",
+          attrs: {
+            category_ids: [third.id, first.id, second.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        expect(result[:posters][:category_ids]).to eq([third.id, first.id, second.id])
+      end
     end
 
     describe "activity_by_category" do

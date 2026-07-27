@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "V konfiguraci hCaptcha `site_key` nebo `secret_key` došlo k problému."
+  site_settings:
+    hcaptcha_site_key: "hCaptcha Site Key z vašeho účtu <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
+    hcaptcha_secret_key: "hCaptcha Secret Key z vašeho <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> účtu"

@@ -50,7 +50,7 @@ module Jobs
       if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
         earliest_event_date =
           BrowserPageviewEvent
-            .where(source: BrowserPageviewEvent.rollup_source)
+            .where(BrowserPageviewEvent.rollup_source_condition)
             .minimum(:created_at)
             &.to_date
         [earliest_event_date, end_date]
@@ -71,11 +71,7 @@ module Jobs
     end
 
     def next_batch
-      params = {
-        source: BrowserPageviewEvent.rollup_source,
-        version: BrowserPageviewReferrerInspector::VERSION,
-        limit: batch_size,
-      }
+      params = { version: BrowserPageviewReferrerInspector::VERSION, limit: batch_size }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -90,7 +86,7 @@ module Jobs
         SELECT id, referrer
         FROM browser_pageview_events
         WHERE referrer IS NOT NULL
-          AND source = :source
+          AND #{BrowserPageviewEvent.rollup_source_condition}
           AND (
             normalized_referrer_version IS NULL
             OR normalized_referrer_version < :version
@@ -117,11 +113,7 @@ module Jobs
     end
 
     def recomputable_dates(ids)
-      params = {
-        ids: ids,
-        source: BrowserPageviewEvent.rollup_source,
-        version: BrowserPageviewReferrerInspector::VERSION,
-      }
+      params = { ids: ids, version: BrowserPageviewReferrerInspector::VERSION }
 
       retention_clause = ""
       if SiteSetting.clean_up_browser_pageview_events
@@ -145,7 +137,7 @@ module Jobs
           FROM browser_pageview_events e
           WHERE e.created_at >= touched_dates.date
             AND e.created_at < touched_dates.date + 1
-            AND e.source = :source
+            AND #{BrowserPageviewEvent.rollup_source_condition(table: "e")}
             AND e.referrer IS NOT NULL
             AND NOT EXISTS (
               SELECT 1

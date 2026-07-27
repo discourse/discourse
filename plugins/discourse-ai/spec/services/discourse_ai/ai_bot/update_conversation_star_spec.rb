@@ -39,7 +39,6 @@ RSpec.describe DiscourseAi::AiBot::UpdateConversationStar do
 
     before do
       enable_current_plugin
-      SiteSetting.enable_ai_bot_starred_conversations = true
       mark_ai_bot_pm(conversation)
       mark_ai_bot_pm(other_conversation)
       mark_ai_bot_pm(invisible_pm)
@@ -56,16 +55,6 @@ RSpec.describe DiscourseAi::AiBot::UpdateConversationStar do
         let(:params) { { topic_id: conversation.id } }
 
         it { is_expected.to fail_a_contract }
-      end
-    end
-
-    context "when the upcoming change is disabled" do
-      before { SiteSetting.enable_ai_bot_starred_conversations = false }
-
-      it { is_expected.to fail_a_policy(:feature_enabled) }
-
-      it "does not create a star" do
-        expect { result }.not_to change { DiscourseAi::AiBot::ConversationStar.count }
       end
     end
 

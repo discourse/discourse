@@ -43,9 +43,16 @@ export default class Section {
     if (!this.section.public || this.currentUser?.admin) {
       return [
         {
-          action: () => {
+          action: async () => {
+            const json = await ajax(
+              `/sidebar_sections/${this.section.id}.json`
+            );
+
             return this.modal.show(SidebarSectionForm, {
-              model: this,
+              model: {
+                hideSectionHeader: this.hideSectionHeader,
+                section: json.sidebar_section,
+              },
             });
           },
           title: i18n("sidebar.sections.custom.edit"),

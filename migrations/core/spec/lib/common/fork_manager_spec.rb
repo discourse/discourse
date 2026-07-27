@@ -66,5 +66,61 @@ RSpec.describe Migrations::ForkManager do
       )
       expect(ran).to be(true)
     end
+
+    it "restores the batched flag when a before-fork hook raises" do
+      # A raising before-fork hook must not leave the flag stuck as true on this
+      # thread. If it did, a later plain fork would think it is still batched and
+      # silently skip its own parent-side hooks.
+      allow(Process).to receive(:fork).and_return(4242)
+      boom = described_class.before_fork { raise "before-fork exploded" }
+
+      parent_ran = false
+      described_class.after_fork_parent { parent_ran = true }
+
+      expect { described_class.with_batched_forks {} }.to raise_error("before-fork exploded")
+
+      described_class.remove_before_fork(boom)
+      described_class.fork {}
+      expect(parent_ran).to be(true)
+    end
+
+    it "keeps the batched state thread-local so a concurrent batch doesn't leak" do
+      # Observe the parent-hook decision without a real fork: a batched fork skips
+      # the per-fork parent hooks (they run once in `with_batched_forks`), an
+      # unbatched one runs them itself. The hook tags itself with the running
+      # thread so we can tell whose fork ran it.
+      allow(Process).to receive(:fork).and_return(4242)
+      ran = Queue.new
+      described_class.after_fork_parent { ran << Thread.current[:tag] }
+
+      a_batched = Queue.new
+      release_a = Queue.new
+      a =
+        Thread.new do
+          Thread.current[:tag] = :a
+          described_class.with_batched_forks do
+            a_batched << true
+            release_a.pop # stay inside the batch while B forks unbatched
+          end
+        end
+      a_batched.pop
+
+      b_done = Queue.new
+      Thread.new do
+        Thread.current[:tag] = :b
+        described_class.fork {} # not batched: must run the parent hook itself
+        b_done << true
+      end
+      b_done.pop
+
+      # B's unbatched fork ran the parent hook despite A being mid-batch. With a
+      # process-global flag, B would have seen A's batched state and skipped it.
+      collected = []
+      collected << ran.pop until ran.empty?
+      expect(collected).to include(:b)
+
+      release_a << true
+      a.join
+    end
   end
 end

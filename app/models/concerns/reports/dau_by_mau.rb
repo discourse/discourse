@@ -14,7 +14,7 @@ module Reports::DauByMau
       report.percent = true
 
       data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
-      data_points = UserVisit.count_by_active_users(data_start, report.end_date)
+      data_points = dau_mau_data_points(start_date: data_start, end_date: report.end_date)
 
       report.data = []
 
@@ -48,9 +48,15 @@ module Reports::DauByMau
 
       if report.facets.include?(:prev30Days)
         prev30_days_data =
-          UserVisit.count_by_active_users(report.start_date - 30.days, report.start_date)
+          dau_mau_data_points(start_date: report.start_date - 30.days, end_date: report.start_date)
         report.prev30Days = dau_avg.call(prev30_days_data)
       end
+    end
+
+    private
+
+    def dau_mau_data_points(start_date:, end_date:)
+      UserVisitDailyRollup.fetch(start_date: start_date, end_date: end_date)
     end
   end
 end

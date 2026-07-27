@@ -36,9 +36,6 @@ ru:
       livestream:
         zoom:
           chat: "Чат"
-        chat:
-          join_channel_header: "🌟 Присоединяйтесь к обсуждению! 🌟"
-          join_channel_message: "Подтвердите свое участие и откройте чат мероприятия. Присоединяйтесь к обсуждениям, делитесь своими впечатлениями и общайтесь с другими участниками!"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
       preferences:
         all_events: "Discourse Календарь - Все события"

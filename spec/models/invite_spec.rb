@@ -394,7 +394,9 @@ RSpec.describe Invite do
       end
 
       it "will not give the user a moderator flag if the inviter is not staff" do
-        invite.update!(moderator: true)
+        # update_columns skips the ensure_valid_moderator_invite validation so we
+        # can exercise the redeemer's own inviter check in isolation
+        invite.update_columns(moderator: true)
 
         user = invite.redeem
         expect(user).not_to be_moderator
