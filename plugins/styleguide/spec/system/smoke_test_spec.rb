@@ -5,8 +5,8 @@ RSpec.describe "Styleguide Smoke Test" do
 
   # keep this hash updated when adding, removing or renaming components
   sections = {
-    "SYNTAX" => [{ href: "/syntax/bem", title: "BEM" }],
-    "ATOMS" => [
+    "syntax" => [{ href: "/syntax/bem", title: "BEM" }],
+    "atoms" => [
       { href: "/atoms/typography", title: "Typography" },
       { href: "/atoms/font-scale", title: "Font System" },
       { href: "/atoms/buttons", title: "Buttons" },
@@ -20,7 +20,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
     ],
-    "MOLECULES" => [
+    "molecules" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
       { href: "/molecules/categories", title: "Categories" },
       { href: "/molecules/char-counter", title: "Character Counter" },
@@ -38,7 +38,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
       { href: "/molecules/topic-timer-info", title: "Topic Timers" },
     ],
-    "ORGANISMS" => [
+    "organisms" => [
       { href: "/organisms/post", title: "Post" },
       { href: "/organisms/post-list", title: "Post List" },
       { href: "/organisms/post-oneboxes", title: "Post Oneboxes" },
@@ -69,15 +69,24 @@ RSpec.describe "Styleguide Smoke Test" do
 
     existing_sections = {}
     page
-      .all(".styleguide-menu > ul")
+      .all(".sidebar-sections.styleguide-panel .sidebar-section[data-section-name]")
       .each do |section_node|
-        section = section_node.find(".styleguide-heading").text.strip
+        # Keyed on the section name rather than the header's text: the name is the contract the
+        # panel actually declares, where the text depends on translation and on casing applied
+        # by the stylesheet.
+        section = section_node["data-section-name"].delete_prefix("styleguide__")
 
         existing_sections[section] ||= []
         items = existing_sections[section]
 
-        anchors = section_node.all("li a")
-        anchors.each { |anchor| items << { title: anchor.text.strip, href: anchor[:href] } }
+        section_node
+          .all(".sidebar-section-link")
+          .each do |link|
+            items << {
+              title: link.find(".sidebar-section-link-content-text").text.strip,
+              href: link[:href],
+            }
+          end
       end
 
     expect(existing_sections.keys).to match_array(sections.keys)
