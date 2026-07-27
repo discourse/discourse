@@ -1285,11 +1285,16 @@ C ≈ 270. Kit/Graphiti are the clean JSON:API comparison.)
 | GRAPHITI +incl | 3 | 14,516 | 6.1 ms |
 | LEGACY AMS (inline format) | 4 | 8,351 | 5.1 ms |
 
-**Both methods agree: jsonapi-serializer (the Kit's serializer) is the leanest renderer** — fewer allocations and
-less time than *both* Graphiti and Discourse's current AMS, flat and compound. (Graphiti issues
+**Both methods agree: jsonapi-serializer (the Kit's serializer) beats Graphiti** — fewer allocations
+and less time, flat and compound — **and the Kit's endpoints beat the legacy AMS index on
+throughput** in both scenarios (593 vs 266 rps flat, 287 vs 266 +incl). (Graphiti issues
 fewer queries flat — 1 vs 2 — but allocates ~2.2× more; the Kit's win is Ruby/allocation cost, the
 scaling factor, not SQL. Legacy AMS renders a different inline shape, so it's a reference point,
-not a like-for-like.) This is the strongest objective evidence in the whole exploration, and it
+not a like-for-like.) ⚠ **Correction (2026-07-27, caught while fact-checking the RFC):** this
+paragraph previously claimed the Kit was leaner than AMS "flat and compound", which its own
+in-process table contradicts on the compound row — Kit +incl allocates 10,592 vs AMS 8,351 and
+renders 5.6 vs 5.1 ms. Post 1 of the team topic conceded this publicly ("on that row the Kit
+actually allocates somewhat more"); the summary here had not been updated to match. This is the strongest objective evidence in the whole exploration, and it
 points the same way as everything else: the Kit is *not* a performance compromise.
 
 ### Built: the query-surface DSL (punch-list #1) — closes the "ease" gap
