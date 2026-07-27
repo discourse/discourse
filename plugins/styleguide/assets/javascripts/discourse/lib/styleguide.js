@@ -44,6 +44,8 @@ import bem from "../components/sections/syntax/00-bem";
 let _allCategories = null;
 let _sectionsById = {};
 
+export const STYLEGUIDE_PANEL = "styleguide";
+
 export const CATEGORIES = ["syntax", "atoms", "molecules", "organisms"];
 
 const SECTIONS = [
@@ -151,18 +153,20 @@ export function allCategories() {
     return _allCategories;
   }
 
+  const sectionsByCategory = {};
+
   for (const section of SECTIONS) {
     section.priority ??= 100;
 
-    categories[section.category] ||= [];
-    categories[section.category].push(section);
+    sectionsByCategory[section.category] ||= [];
+    sectionsByCategory[section.category].push(section);
 
     _sectionsById[section.id] = section;
   }
 
   _allCategories = [];
   for (const category of CATEGORIES) {
-    const sections = categories[category];
+    const sections = sectionsByCategory[category];
 
     if (sections) {
       _allCategories.push({

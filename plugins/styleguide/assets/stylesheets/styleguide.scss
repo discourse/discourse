@@ -1,11 +1,18 @@
 @import "colors";
 @import "typography";
 
+.styleguide-page-header {
+  position: sticky;
+  top: var(--header-offset);
+  z-index: z("base");
+  background: var(--secondary);
+  padding: 1rem 1rem 0.25rem;
+  border-bottom: 1px solid var(--content-border-color);
+}
+
 .styleguide {
   position: relative;
-  display: flex;
   padding: 1rem;
-  padding-left: 0;
 
   .styleguide-note {
     padding: 1em;
@@ -13,55 +20,7 @@
     margin-bottom: 1em;
   }
 
-  .styleguide-menu {
-    position: sticky;
-    top: calc(var(--header-offset) + 3rem);
-    max-height: calc(100vh - 3rem - var(--header-offset));
-    flex: 1 0 0;
-    overflow-y: auto;
-    margin-right: 2rem;
-
-    ul {
-      list-style: none;
-      margin: 0;
-      margin-bottom: 2em;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      li.styleguide-heading {
-        color: var(--primary-medium);
-        text-transform: uppercase;
-        font-size: 14px;
-      }
-
-      li {
-        margin-bottom: 0.25em;
-
-        a {
-          color: var(--primary);
-          font-size: 14px;
-        }
-
-        a.active {
-          font-weight: bold;
-        }
-      }
-    }
-  }
-
-  .styleguide-contents {
-    flex: 4 0 0;
-  }
-
   .styleguide-section {
-    .section-title {
-      font-size: var(--font-up-5);
-      font-weight: normal;
-      margin-bottom: 0.5em;
-    }
-
     .section-description {
       margin-bottom: 2em;
     }

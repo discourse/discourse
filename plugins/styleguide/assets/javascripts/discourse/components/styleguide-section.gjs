@@ -3,8 +3,6 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import { i18n } from "discourse-i18n";
-import sectionTitle from "discourse/plugins/styleguide/discourse/helpers/section-title";
 
 @tagName("")
 export default class StyleguideSection extends Component {
@@ -25,14 +23,6 @@ export default class StyleguideSection extends Component {
       class={{dConcatClass "styleguide-section" this.sectionClass}}
       ...attributes
     >
-      <h1 class="section-title">
-        {{#if this.section}}
-          {{sectionTitle this.section.id}}
-        {{else}}
-          {{i18n this.title}}
-        {{/if}}
-      </h1>
-
       <div class="styleguide-section-contents">
         {{yield}}
       </div>
