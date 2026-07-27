@@ -11,6 +11,7 @@ end
 #  id                  :bigint           not null, primary key
 #  automation_ua_score :integer          default(0), not null
 #  churn_score         :integer          default(0), not null
+#  engagement_score    :integer          default(0), not null
 #  known_asn_score     :integer          default(0), not null
 #  rapid_nav_score     :integer          default(0), not null
 #  referrer_score      :integer          default(0), not null

@@ -59,7 +59,7 @@ RSpec.describe CrawlerScorer do
     expect(event.reload.score).to eq(15)
   end
 
-  it "scores pageview velocity at or above VELOCITY_LOW threshold at +10" do
+  it "scores pageview velocity at or above VELOCITY_LOW threshold at +15" do
     stub_const(CrawlerScorer, :VELOCITY_LOW, 10) do
       session_id = "burst-session"
       base = 30.minutes.ago
@@ -69,7 +69,7 @@ RSpec.describe CrawlerScorer do
 
       expect(
         BrowserPageviewEvent.where(session_id: session_id).pluck(:score).uniq,
-      ).to contain_exactly(10)
+      ).to contain_exactly(15)
     end
   end
 
@@ -147,13 +147,67 @@ RSpec.describe CrawlerScorer do
     expect(event.reload.score).to eq(120)
   end
 
+  it "discounts events whose session shows human interaction" do
+    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: event.session_id,
+      mouse_move_events: 5,
+      click_events: 2,
+    )
+
+    score!
+
+    expect(event.reload.score).to eq(60)
+    expect(event.browser_pageview_event_score.engagement_score).to eq(-40)
+  end
+
+  it "writes a zero score when the discount cancels all bot signals" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
+    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, scroll_events: 3)
+
+    score!
+
+    expect(event.reload.score).to eq(0)
+    breakdown = event.browser_pageview_event_score
+    expect(breakdown.known_asn_score).to eq(15)
+    expect(breakdown.engagement_score).to eq(-40)
+  end
+
+  it "does not discount engagement rows crafted without interaction counts" do
+    event = make_event(user_agent: "Mozilla/5.0 HeadlessChrome/120.0.0.0")
+    Fabricate(
+      :browser_pageview_session_engagement,
+      session_id: event.session_id,
+      engaged_seconds: 30,
+    )
+
+    score!
+
+    expect(event.reload.score).to eq(100)
+  end
+
+  it "does not lower a previously assigned score when engagement arrives later" do
+    SiteSetting.crawler_asns = "12345"
+    event = make_event(asn: 12_345)
+
+    score!
+    expect(event.reload.score).to eq(15)
+
+    Fabricate(:browser_pageview_session_engagement, session_id: event.session_id, key_events: 4)
+    score!
+
+    expect(event.reload.score).to eq(15)
+  end
+
   it "scores each source but partitions velocity so transports do not inflate each other" do
     stub_const(CrawlerScorer, :VELOCITY_LOW, 10) do
       stub_const(CrawlerScorer, :VELOCITY_MEDIUM, 20) do
         base = 30.minutes.ago
 
         # Same ip+ua, split across two transports with 12 pageviews each. On
-        # its own each source sits in the LOW velocity tier (+10). Combined they
+        # its own each source sits in the LOW velocity tier (+15). Combined they
         # would be 24 pageviews and reach the MEDIUM tier (+20), so equal
         # per-source scores prove the heuristics stay partitioned by source.
         {
@@ -172,13 +226,13 @@ RSpec.describe CrawlerScorer do
             .where(source: BrowserPageviewEvent::SOURCE_PIGGYBACK)
             .pluck(:score)
             .uniq,
-        ).to contain_exactly(10)
+        ).to contain_exactly(15)
         expect(
           BrowserPageviewEvent
             .where(source: BrowserPageviewEvent::SOURCE_BEACON)
             .pluck(:score)
             .uniq,
-        ).to contain_exactly(10)
+        ).to contain_exactly(15)
       end
     end
   end
