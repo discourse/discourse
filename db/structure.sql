@@ -2232,6 +2232,39 @@ CREATE TABLE public.categories_web_hooks (
 
 
 --
+-- Name: category_activity_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.category_activity_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    category_id integer NOT NULL,
+    topics integer DEFAULT 0 NOT NULL,
+    posts integer DEFAULT 0 NOT NULL,
+    page_views bigint DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: category_activity_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.category_activity_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_activity_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.category_activity_daily_rollups_id_seq OWNED BY public.category_activity_daily_rollups.id;
+
+
+--
 -- Name: category_custom_fields; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12766,6 +12799,13 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
+-- Name: category_activity_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_activity_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.category_activity_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: category_custom_fields id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15064,6 +15104,14 @@ ALTER TABLE ONLY public.categories
 
 ALTER TABLE ONLY public.category_search_data
     ADD CONSTRAINT categories_search_pkey PRIMARY KEY (category_id);
+
+
+--
+-- Name: category_activity_daily_rollups category_activity_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_activity_daily_rollups
+    ADD CONSTRAINT category_activity_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -18840,6 +18888,13 @@ CREATE INDEX index_categories_on_topic_count ON public.categories USING btree (t
 --
 
 CREATE UNIQUE INDEX index_categories_web_hooks_on_web_hook_id_and_category_id ON public.categories_web_hooks USING btree (web_hook_id, category_id);
+
+
+--
+-- Name: index_category_activity_daily_rollups_on_date_and_category_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_category_activity_daily_rollups_on_date_and_category_id ON public.category_activity_daily_rollups USING btree (date, category_id);
 
 
 --
@@ -22995,6 +23050,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260727035337'),
 ('20260723100008'),
 ('20260723013754'),
 ('20260722140539'),
