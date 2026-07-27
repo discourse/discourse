@@ -111,7 +111,7 @@
     .styleguide-subnav {
       position: sticky;
 
-      // Below the site header, mirroring .styleguide-menu's own offset.
+      // Below the site header.
       top: var(--header-offset);
       z-index: 1;
 

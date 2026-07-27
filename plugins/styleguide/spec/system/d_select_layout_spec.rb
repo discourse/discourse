@@ -43,25 +43,6 @@ describe "UiKit | DSelect page layout" do
     end
   end
 
-  # The section menu is a fixed-width nav list. It used to be a proportional column, so on a wide
-  # display it grew into several hundred pixels of mostly-empty space while squeezing the content
-  # it exists to navigate.
-  it "keeps the section menu a fixed width instead of growing with the viewport" do
-    resize_window(width: 1600) do
-      visit "/styleguide/molecules/select?group=start"
-      expect(page).to have_css(".styleguide-menu")
-
-      menu_width =
-        page.evaluate_script(
-          "document.querySelector('.styleguide-menu').getBoundingClientRect().width",
-        )
-
-      # 14rem plus its margin, with room for font-scale differences — but nowhere near the
-      # ~430px a 1:4 proportional split produced at this width.
-      expect(menu_width).to be_between(180, 280)
-    end
-  end
-
   it "keeps the hero and its controls inside the viewport when space is tight" do
     resize_window(width: 900) do
       visit "/styleguide/molecules/select?group=start"

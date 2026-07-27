@@ -70,7 +70,7 @@ RSpec.describe "Styleguide Smoke Test" do
   it "lets the user view the select examples" do
     visit "/styleguide/molecules/select?group=start"
 
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
     screenshot_marker(label: "styleguide-select")
 
     select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-default")
@@ -81,7 +81,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows the large virtualized list at the top and scrolled deep into the list" do
     visit "/styleguide/molecules/select?group=limits"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     large_list = PageObjects::Components::UiKit::DSelect.by_identifier("sg-large-list")
     large_list.open
@@ -94,7 +94,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows options grouped under section headers" do
     visit "/styleguide/molecules/select?group=content"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     grouped = PageObjects::Components::UiKit::DSelect.by_identifier("sg-grouped")
     grouped.open
@@ -104,7 +104,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows a pinned footer below the option list" do
     visit "/styleguide/molecules/select?group=content"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     footer = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer")
     footer.open
@@ -114,7 +114,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows the picker gallery and a category row with its badge, count and lock" do
     visit "/styleguide/molecules/select?group=pickers"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
     screenshot_marker(label: "styleguide-select-pickers", only: :desktop)
 
     # The category row is the page's most visible custom row and the one shaped to match core's
@@ -129,7 +129,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows the muted source-error state" do
     visit "/styleguide/molecules/select?group=states"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     # A button-variant trigger has no inline input, so open it directly rather than via the
     # typeahead-oriented page object.
@@ -144,7 +144,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows disabled options and a limit message at the selection maximum" do
     visit "/styleguide/molecules/select?group=selection"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     maximum = PageObjects::Components::UiKit::DSelect.by_identifier("sg-maximum")
     maximum.open
@@ -155,7 +155,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows a first-class none row in the single-select list" do
     visit "/styleguide/molecules/select?group=selection"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     none = PageObjects::Components::UiKit::DSelect.by_identifier("sg-none")
     none.open
@@ -166,7 +166,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows an icon-only trigger whose icon reflects the selection" do
     visit "/styleguide/molecules/select?group=appearance"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     expect(page).to have_css(
       ".select-examples__icon-only .d-combobox__trigger.--icon-only .d-combobox__leading-icon",
@@ -182,7 +182,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "shows a custom selection that becomes an editable label on open" do
     visit "/styleguide/molecules/select?group=content"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     # Resting: the :selection block renders the compact avatar + name summary.
     expect(page).to have_css(
@@ -201,7 +201,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
   it "places the caret in the typeahead on click instead of selecting the whole value" do
     visit "/styleguide/molecules/select?group=start"
-    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    expect(styleguide).to have_heading("Select")
 
     # The first example is the default typeahead: the chosen label renders inside the input.
     typeahead = first(".select-examples__control")
@@ -225,13 +225,13 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # Clicking directly on the label text must place the caret there, not select the whole
     # value (the reported bug: a click ends up highlighting the entire label).
-    find(".styleguide-contents h1.section-title").click # blur to a resting, filled field
+    find(".styleguide-contents .d-page-header__title").click # blur to a resting, filled field
     typeahead.find(".d-combobox__input").click
     expect(page).to have_css("[role='listbox']")
     expect(label_fully_selected.call).to eq(false)
 
     # Clicking the chevron opens via a programmatic focus; it must not select-all either.
-    find(".styleguide-contents h1.section-title").click
+    find(".styleguide-contents .d-page-header__title").click
     typeahead.find(".d-combobox__caret").click
     expect(page).to have_css("[role='listbox']")
     expect(label_fully_selected.call).to eq(false)
