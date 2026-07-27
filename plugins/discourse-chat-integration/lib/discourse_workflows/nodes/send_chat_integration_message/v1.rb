@@ -55,6 +55,10 @@ if defined?(DiscourseWorkflows)
                   dynamic_value: :chat_channel_id,
                 },
                 control_options: {
+                  action_icon: "wrench",
+                  action_label: "discourse_workflows.send_chat_integration_message.configure",
+                  action_route: "adminPlugins.show.discourse-chat-integration-providers.show",
+                  action_route_models: %w[discourse-chat-integration slack],
                   filterable: true,
                   value_property: :id,
                   name_property: :name,

@@ -331,4 +331,5 @@ en:
         "action:send_chat_integration_message": "Send a notification to a chat-integration channel (Slack, Discord, Telegram, etc.)"
       send_chat_integration_message:
         channel_id: "Channel"
+        configure: "Configure"
         message: "Message"

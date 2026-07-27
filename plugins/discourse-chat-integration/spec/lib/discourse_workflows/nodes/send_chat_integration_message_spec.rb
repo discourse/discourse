@@ -51,6 +51,12 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       expect(schema.dig(:channel_id, :control_options, :set_from_option)).to eq(
         channel_name: "name",
       )
+      expect(schema.dig(:channel_id, :control_options)).to include(
+        action_icon: "wrench",
+        action_label: "discourse_workflows.send_chat_integration_message.configure",
+        action_route: "adminPlugins.show.discourse-chat-integration-providers.show",
+        action_route_models: %w[discourse-chat-integration slack],
+      )
       expect(schema.dig(:channel_name, :ui, :hidden)).to eq(true)
       expect(schema).not_to have_key(:post_id)
     end
