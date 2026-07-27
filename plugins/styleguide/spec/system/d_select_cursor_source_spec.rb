@@ -29,7 +29,8 @@ describe "UiKit | DSelect cursor source" do
     expect(combobox.options.first[:"aria-setsize"]).to eq("-1")
 
     # Narrow enough that the source exhausts within a single page and declares completeness.
-    combobox.input.send_keys("Option 4242")
+    # Every topic title ends in a unique "#<id>", so this matches exactly one row.
+    combobox.input.send_keys("#4242")
 
     expect(page).to have_css(combobox.option_selector, count: 1, wait: 10)
     expect(combobox.options.first[:"aria-setsize"]).to eq("1")

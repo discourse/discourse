@@ -21,11 +21,11 @@ describe "UiKit | DSelect multi-select chip roving" do
     expect(page).to have_css(".select-examples__multi .d-combobox__trigger.--multiple")
   end
 
-  # Seeds three chips (Orange, Blue, Red) via the typeahead, leaving focus in the input.
+  # Seeds three chips (Deutsch, Italiano, Nederlands) via the typeahead, leaving focus in the input.
   def add_three_chips
-    combobox.add("Orange")
-    combobox.add("Blue")
-    combobox.add("Red")
+    combobox.add("Deutsch")
+    combobox.add("Italiano")
+    combobox.add("Nederlands")
     expect(combobox.chips.size).to eq(3)
   end
 
@@ -38,23 +38,23 @@ describe "UiKit | DSelect multi-select chip roving" do
     combobox.focus_input
     # ArrowLeft at the start of the (empty) query enters the chip nearest the input.
     combobox.press(:left)
-    expect(combobox.focused_chip_label).to eq("Red")
+    expect(combobox.focused_chip_label).to eq("Nederlands")
 
     combobox.press(:left)
-    expect(combobox.focused_chip_label).to eq("Blue")
+    expect(combobox.focused_chip_label).to eq("Italiano")
 
     combobox.press(:left)
-    expect(combobox.focused_chip_label).to eq("Orange")
+    expect(combobox.focused_chip_label).to eq("Deutsch")
 
     # ArrowLeft at the far (left) edge stays put.
     combobox.press(:left)
-    expect(combobox.focused_chip_label).to eq("Orange")
+    expect(combobox.focused_chip_label).to eq("Deutsch")
 
     # ArrowRight walks back toward the input and steps off its edge into the input.
     combobox.press(:right)
-    expect(combobox.focused_chip_label).to eq("Blue")
+    expect(combobox.focused_chip_label).to eq("Italiano")
     combobox.press(:right)
-    expect(combobox.focused_chip_label).to eq("Red")
+    expect(combobox.focused_chip_label).to eq("Nederlands")
     combobox.press(:right)
     expect(combobox.input_focused?).to eq(true)
   end
@@ -63,13 +63,13 @@ describe "UiKit | DSelect multi-select chip roving" do
     add_three_chips
 
     combobox.focus_input
-    combobox.press(:left) # onto Red (nearest the input)
-    expect(combobox.focused_chip_label).to eq("Red")
+    combobox.press(:left) # onto Nederlands (nearest the input)
+    expect(combobox.focused_chip_label).to eq("Nederlands")
 
     # Enter is the button's NATIVE activation — the case a synthetic keydown can't cover.
     combobox.press(:enter)
 
-    expect(combobox.chip_labels).to eq(%w[Orange Blue])
+    expect(combobox.chip_labels).to eq(%w[Deutsch Italiano])
     expect(combobox.input_focused?).to eq(true)
   end
 
@@ -77,29 +77,29 @@ describe "UiKit | DSelect multi-select chip roving" do
     add_three_chips
 
     combobox.focus_input
-    combobox.press(:left) # Red
-    combobox.press(:left) # Blue
-    expect(combobox.focused_chip_label).to eq("Blue")
+    combobox.press(:left) # Nederlands
+    combobox.press(:left) # Italiano
+    expect(combobox.focused_chip_label).to eq("Italiano")
 
     combobox.press(:backspace)
 
-    expect(combobox.chip_labels).to eq(%w[Orange Red])
+    expect(combobox.chip_labels).to eq(%w[Deutsch Nederlands])
     # Focus moves to the chip before the removed one (Primer behavior).
-    expect(combobox.focused_chip_label).to eq("Orange")
+    expect(combobox.focused_chip_label).to eq("Deutsch")
   end
 
   it "removes a focused chip with Delete" do
     add_three_chips
 
     combobox.focus_input
-    combobox.press(:left) # Red
+    combobox.press(:left) # Nederlands
     combobox.press(:delete)
 
-    expect(combobox.chip_labels).to eq(%w[Orange Blue])
+    expect(combobox.chip_labels).to eq(%w[Deutsch Italiano])
   end
 
   it "returns focus to the input when the last chip is removed by keyboard" do
-    combobox.add("Orange")
+    combobox.add("Deutsch")
     expect(combobox.chips.size).to eq(1)
 
     combobox.focus_input
@@ -117,14 +117,14 @@ describe "UiKit | DSelect multi-select chip roving" do
 
     combobox.focus_input
     combobox.press(:left) # onto a chip
-    expect(combobox.focused_chip_label).to eq("Red")
+    expect(combobox.focused_chip_label).to eq("Nederlands")
 
     combobox.press(:escape)
 
     # float-kit owns Escape (document-level capture); it closes the menu and focus stays
     # on the chip, which remains arrow-navigable with the menu closed.
     expect(combobox).to have_no_listbox
-    expect(combobox.focused_chip_label).to eq("Red")
+    expect(combobox.focused_chip_label).to eq("Nederlands")
   end
 
   it "reopens the menu with ArrowDown from a focused chip, moving focus to the input" do
@@ -133,7 +133,7 @@ describe "UiKit | DSelect multi-select chip roving" do
     combobox.press(:left) # onto a chip
     combobox.press(:escape) # close; focus stays on the chip
     expect(combobox).to have_no_listbox
-    expect(combobox.focused_chip_label).to eq("Red")
+    expect(combobox.focused_chip_label).to eq("Nederlands")
 
     # ArrowDown is the reopen gesture: jump to the input and open the options.
     combobox.press(:down)

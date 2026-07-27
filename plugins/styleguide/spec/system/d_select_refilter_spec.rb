@@ -28,16 +28,17 @@ describe "UiKit | DSelect refiltering" do
     expect(page).to have_css("[data-identifier='sg-paged'][data-trigger]")
   end
 
-  # Rows are "Option <n>" over 1..5000, so a query is a substring match on that number and each
-  # shortening widens the set. The regexes are end-anchored because "Option 12" is also a prefix
-  # of "Option 1234" — an unanchored match would not discriminate at all.
+  # Topic titles end in "#<id>" over 1..5000, and the prose carries no digits, so a numeric query
+  # is a substring match on the id and each shortening widens the set. The regexes are
+  # end-anchored because "#12" is also a prefix of "#1234" — an unanchored match would not
+  # discriminate at all.
   #
   # Each step names a row the *previous* query could not match, which lands at index 0 or 1 of
-  # the widened set and so is always inside the window.
+  # the widened set (ids ascending) and so is always inside the window.
   STEPS = [
-    ["123", /Option 1123$/], # 1123 contains "123" but not "1234"; index 1
-    ["12", /Option 12$/], # 12 contains "12" but not "123";      index 0
-    ["1", /Option 1$/], # 1 contains "1" but not "12";         index 0
+    ["123", /#1123$/], # 1123 contains "123" but not "1234"; index 1
+    ["12", /#12$/], # 12 contains "12" but not "123";      index 0
+    ["1", /#1$/], # 1 contains "1" but not "12";         index 0
   ]
 
   def settle_on_long_query
@@ -46,7 +47,7 @@ describe "UiKit | DSelect refiltering" do
 
     # The source is slow on purpose; wait for it to settle on the long query before deleting.
     # The count pins it: every wider, earlier result set has more than one row.
-    expect(page).to have_css(combobox.option_selector, text: /Option 1234$/, count: 1, wait: 20)
+    expect(page).to have_css(combobox.option_selector, text: /#1234$/, count: 1, wait: 20)
   end
 
   it "shows rows for the shortened query after a backspace" do

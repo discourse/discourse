@@ -10,6 +10,56 @@ what `@onChange` reports.
 See the arg reference in `d-select.gts` (`Args` block) and the option reference in
 `select-engine.ts` (`SelectEngineOptions`).
 
+## Custom row content
+
+Six named blocks control what the component renders: `:item`, `:selection`, `:groupHeader`,
+`:empty`, `:footer` and `:error`.
+
+**Supply a block only when an argument cannot express the content.** `@labelField` picks the
+field to display, `@selectedIcon` marks the chosen row, `@icon` puts a glyph in the trigger, and
+`@noResultsLabel` rewords the empty state. A block that reproduces one of those is not neutral:
+it costs behaviour (see `:selection` below) and it costs the reader a reason to look.
+
+### What each block replaces
+
+Five of the six land **inside** markup the component keeps, so you supply content, not
+structure — the option's `role`, its selected and disabled state, its ARIA position, the group
+header's id, and the empty state's `role="status"` are all still handled for you.
+
+`:error` is the exception. It replaces the **entire** error container, including its
+`role="alert"` and its retry control, so a custom one must supply both or the failure stops being
+announced and stops being recoverable.
+
+### Blocks that interact
+
+Two behaviours only appear once blocks are used together, and both are easy to get wrong:
+
+- **`:footer` outlives the list.** It is a sibling of the async content rather than part of it,
+  so it renders in every panel state — while loading, when populated, when empty, and when the
+  source has failed. Gate its contents on the yielded `total`/`loadedCount` rather than assuming
+  there are rows, or a footer will read "12 results" underneath "Nothing matches".
+- **A `:groupHeader`'s text is read after every option beneath it.** Each option is
+  `aria-describedby` its header, so a count or hint added to the header is announced on every
+  row in the group. Keep headers to a short name.
+
+### Accessibility rules for block content
+
+- Icons rendered through the icon helper are `aria-hidden` by default. Do not give one an
+  `aria-label` in a row whose text already names it.
+- Avatars and other decorative images need an empty `alt`, or the row's name is doubled.
+- In a multi-select, a chip's accessible name is built from what `:selection` renders (the label
+  span is hidden and pulled back in by the remove button). An icon-only or image-only chip is
+  announced as a bare remove button.
+- Never render a trailing bare number; it is announced as part of the option's name ("performance
+  871"). Use a phrase, or hide the visual figure and supply one.
+- `role="option"` forbids interactive descendants, so no buttons or links inside `:item`.
+- `:selection` is the only block whose mere presence changes behaviour. On a desktop typeahead it
+  moves the label out of the input into a sibling element until the field is focused; the input's
+  value is empty at rest, and the control advertises the selection through `aria-describedby`
+  instead.
+
+Worked examples of every point above live on the styleguide's select page, under Row content.
+
 ## Capability parity & gaps
 
 This tracks DSelect against the behaviors it must eventually cover. It is intentionally honest

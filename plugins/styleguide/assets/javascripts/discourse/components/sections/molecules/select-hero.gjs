@@ -1,18 +1,16 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
-import { TAGS } from "../../../lib/select-fixtures";
-
-const NOTIFICATION_LEVELS = [
-  { id: "watching", icon: "eye", key: "watching" },
-  { id: "tracking", icon: "circle", key: "tracking" },
-  { id: "regular", icon: "bell", key: "normal" },
-  { id: "muted", icon: "bell-slash", key: "muted" },
-];
+import {
+  categories,
+  notificationLevels,
+  TAGS,
+} from "../../../lib/select-fixtures";
 
 /**
  * The page's opening statement: three selects side by side at real composer density.
@@ -26,22 +24,31 @@ const NOTIFICATION_LEVELS = [
  * All three rest filled, because a filled trigger is what a user sees almost all of the time.
  */
 export default class SelectHero extends Component {
-  @tracked categoryValue = null;
+  @service store;
+
+  @tracked categoryValue = "feature-requests";
   @tracked notificationValue = "watching";
   @tracked tagValue = ["design-system", "accessibility"];
 
   tags = TAGS;
 
+  @cached
   get categories() {
-    return this.args.categories ?? [];
+    return categories(this.store);
   }
 
   get notificationLevels() {
-    return NOTIFICATION_LEVELS.map((level) => ({
-      ...level,
-      name: i18n(
-        `styleguide.sections.select.showcases.notifications.${level.key}`
-      ),
+    return notificationLevels();
+  }
+
+  get tagItems() {
+    return this.tags.map((tag) => ({
+      ...tag,
+      // Never the bare number: a trailing "12483" would be announced as part of the option's
+      // name, so the row would read "design-system 12483".
+      countLabel: i18n("styleguide.sections.select.hero.tag_topics", {
+        count: tag.count,
+      }),
     }));
   }
 
@@ -66,9 +73,13 @@ export default class SelectHero extends Component {
         {{i18n "styleguide.sections.select.hero.caption"}}
       </p>
 
+      {{! Plain divs, never labels. A label element forwards every click inside it to its first
+      labelable descendant — and a chip's remove button is labelable, so wrapping a multi-select
+      in one made clicking anywhere in the field (the caret included) delete the first chip. The
+      accessible name comes from the label argument instead, matching the visible text. }}
       <div class="select-hero__row">
-        <label class="select-hero__field">
-          <span class="select-hero__label">
+        <div class="select-hero__field">
+          <span class="select-hero__label" aria-hidden="true">
             {{i18n "styleguide.sections.select.hero.category"}}
           </span>
           <DSelect
@@ -77,21 +88,23 @@ export default class SelectHero extends Component {
             @value={{this.categoryValue}}
             @onChange={{this.updateCategory}}
             @valueField="slug"
-            @variant="button"
+            @label={{i18n "styleguide.sections.select.hero.category"}}
             @placeholder={{i18n "styleguide.sections.select.hero.category"}}
           >
+            {{! A category is a badge, not a string — no argument can express it. }}
             <:selection as |item|>{{dCategoryBadge item}}</:selection>
             <:item as |item|>{{dCategoryBadge item}}</:item>
           </DSelect>
-        </label>
+        </div>
 
-        <label class="select-hero__field select-hero__field--wide">
-          <span class="select-hero__label">
+        <div class="select-hero__field select-hero__field--wide">
+          <span class="select-hero__label" aria-hidden="true">
             {{i18n "styleguide.sections.select.hero.tags"}}
           </span>
           <DSelect
+            @label={{i18n "styleguide.sections.select.hero.tags"}}
             @identifier="sg-hero-tags"
-            @items={{this.tags}}
+            @items={{this.tagItems}}
             @multiple={{true}}
             @value={{this.tagValue}}
             @onChange={{this.updateTags}}
@@ -99,40 +112,45 @@ export default class SelectHero extends Component {
             @labelField="label"
             @placeholder={{i18n "styleguide.sections.select.hero.tags"}}
           >
-            <:selection as |item|>{{item.label}}</:selection>
+            {{! No selection block: the chip is a tag name, which is exactly the default. }}
             <:item as |item|>
               <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon "tag"}}
                 <span class="select-examples__primary">{{item.label}}</span>
-                <span class="select-examples__meta">{{item.count}}</span>
+                <span class="select-examples__meta">{{item.countLabel}}</span>
               </span>
             </:item>
           </DSelect>
-        </label>
+        </div>
 
-        <label class="select-hero__field">
-          <span class="select-hero__label">
+        <div class="select-hero__field">
+          <span class="select-hero__label" aria-hidden="true">
             {{i18n "styleguide.sections.select.hero.notifications"}}
           </span>
           <DSelect
+            @label={{i18n "styleguide.sections.select.hero.notifications"}}
             @identifier="sg-hero-notifications"
             @items={{this.notificationLevels}}
             @value={{this.notificationValue}}
             @onChange={{this.updateNotification}}
+            @valueField="level"
+            @labelField="title"
             @variant="static"
           >
+            {{! The icon is how a level is recognised at a glance; it is the same in both
+            surfaces because both are a single line here. }}
             <:selection as |item|>
               <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon item.icon}}{{item.name}}
+                {{dIcon item.icon}}{{item.title}}
               </span>
             </:selection>
             <:item as |item|>
               <span class="select-examples__row select-examples__row--glyph">
-                {{dIcon item.icon}}{{item.name}}
+                {{dIcon item.icon}}{{item.title}}
               </span>
             </:item>
           </DSelect>
-        </label>
+        </div>
       </div>
     </section>
   </template>

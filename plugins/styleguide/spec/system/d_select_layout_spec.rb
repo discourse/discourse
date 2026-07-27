@@ -10,7 +10,7 @@ describe "UiKit | DSelect page layout" do
   fab!(:admin)
 
   # Every group, because a single wide example in any one of them pushes the whole page out.
-  GROUPS = %w[start data states appearance selection keyboard limits pickers]
+  GROUPS = %w[start data states appearance content selection keyboard limits pickers]
 
   before do
     SiteSetting.styleguide_enabled = true

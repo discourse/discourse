@@ -2,11 +2,21 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
+import {
+  ASYNC_BUTTON_DELAY,
+  delay,
+  FOUR_OPTIONS,
+  LOCALES,
+  MAXIMUM,
+  notificationLevels,
+  PAGE_SIZE,
+  topics,
+} from "../../../lib/select-fixtures";
 import StyleguideExample from "../../styleguide-example";
 import StyleguideGroups from "../../styleguide-groups";
+import SelectContent from "./select-content";
 import SelectHero from "./select-hero";
 import SelectKeyboard from "./select-keyboard";
 import SelectShowcases from "./select-showcases";
@@ -15,36 +25,22 @@ import SelectShowcases from "./select-showcases";
  * The page's group manifest — the single source of truth for both the sub-navigation and the
  * order groups render in. Each id is also the `?group=` value, so it is part of the page's URL
  * surface and is what system specs navigate to.
+ *
+ * The order is a narrative: what is this, where do options come from, what happens when it is
+ * slow or broken, how do I make it look right, how do I control what a row renders, what can be
+ * picked, is it accessible, where does it bend, and finally what it looks like doing real work.
  */
 const GROUPS = [
   "start",
   "data",
   "states",
   "appearance",
+  "content",
   "selection",
   "keyboard",
   "limits",
   "pickers",
 ];
-
-function delay(signal, milliseconds = 750) {
-  return new Promise((resolve, reject) => {
-    const onAbort = () => {
-      clearTimeout(timeout);
-      reject(signal.reason ?? new DOMException("Aborted", "AbortError"));
-    };
-    const timeout = setTimeout(() => {
-      signal.removeEventListener("abort", onAbort);
-      resolve();
-    }, milliseconds);
-
-    if (signal.aborted) {
-      onAbort();
-    } else {
-      signal.addEventListener("abort", onAbort, { once: true });
-    }
-  });
-}
 
 export default class Select extends Component {
   @tracked asyncButtonValue = null;
@@ -57,23 +53,21 @@ export default class Select extends Component {
 
   @tracked multiValue = [];
 
-  @tracked maximumValue = [1, 2, 3];
+  @tracked maximumValue = ["en", "es", "pt-BR"];
 
   @tracked staticValue = null;
 
-  @tracked clearableValue = 1;
+  @tracked clearableValue = "es";
 
-  @tracked clearableMultiValue = [1, 2];
+  @tracked clearableMultiValue = ["en", "es"];
 
   @tracked iconValue = null;
   @tracked caretValue = null;
-  @tracked noneValue = 2;
+  @tracked noneValue = "es";
   @tracked iconOnlyValue = "watching";
-  @tracked selectionValue = "watching";
-  @tracked disabledValue = 1;
-  @tracked readonlyValue = 1;
+  @tracked disabledValue = "en";
+  @tracked readonlyValue = "en";
   @tracked minCharsValue = null;
-  @tracked customEmptyValue = null;
   @tracked placementValue = null;
   @tracked debounceValue = null;
   @tracked eventsValue = null;
@@ -87,12 +81,9 @@ export default class Select extends Component {
 
   errorRequestCount = 0;
 
-  notificationLevels = [
-    { id: "watching", name: "Watching", icon: "eye" },
-    { id: "tracking", name: "Tracking", icon: "circle" },
-    { id: "regular", name: "Normal", icon: "bell" },
-    { id: "muted", name: "Muted", icon: "bell-slash" },
-  ];
+  items = LOCALES;
+
+  fourOptions = FOUR_OPTIONS;
 
   defaultCode = `<DSelect
   @items={{this.items}}
@@ -138,30 +129,21 @@ export default class Select extends Component {
   @value={{this.value}}
   @onChange={{this.onChange}}
   @variant="button"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   staticCode = `<DSelect
   @items={{this.items}}
   @value={{this.value}}
   @onChange={{this.onChange}}
   @variant="static"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   multiCode = `<DSelect
   @items={{this.items}}
   @multiple={{true}}
   @value={{this.value}}
   @onChange={{this.onChange}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   maximumCode = `<DSelect
   @items={{this.items}}
@@ -169,10 +151,7 @@ export default class Select extends Component {
   @maximum={{3}}
   @value={{this.value}}
   @onChange={{this.onChange}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   noneCode = `<DSelect
   @items={{this.items}}
@@ -187,31 +166,19 @@ export default class Select extends Component {
   @variant="static"
   @value={{this.value}}
   @onChange={{this.onChange}}
+  @valueField="level"
+  @labelField="title"
   @icon={{this.iconForValue}}
   @iconOnly={{true}}
   @label="Notification level"
 />`;
-
-  selectionCode = `{{! The :selection block is the resting display; opening the menu shows
-  the plain label in the editable filter input }}
-<DSelect
-  @items={{this.levels}}
-  @value={{this.value}}
-  @onChange={{this.onChange}}
->
-  <:selection as |item|>{{icon item.icon}} {{item.name}}</:selection>
-  <:item as |item|>{{icon item.icon}} {{item.name}}</:item>
-</DSelect>`;
 
   emptyCode = `<DSelect
   @load={{this.loadEmpty}}
   @value={{this.value}}
   @onChange={{this.onChange}}
   @variant="button"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   clearableCode = `<DSelect
   @items={{this.items}}
@@ -226,21 +193,15 @@ export default class Select extends Component {
   @value={{this.value}}
   @onChange={{this.onChange}}
   @clearable={{true}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   iconCode = `<DSelect
   @items={{this.items}}
   @value={{this.value}}
   @onChange={{this.onChange}}
-  @icon="tag"
+  @icon="globe"
   @variant="static"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   caretCode = `<DSelect
   @items={{this.items}}
@@ -248,10 +209,7 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @caretIcon={{hash open="caret-up" closed="caret-down"}}
   @variant="static"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   disabledCode = `<DSelect
   @items={{this.items}}
@@ -259,10 +217,7 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @disabled={{true}}
   @variant="static"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   readonlyCode = `<DSelect
   @items={{this.items}}
@@ -270,10 +225,7 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @readonly={{true}}
   @variant="static"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   minCharsCode = `<DSelect
   @load={{this.loadOptions}}
@@ -281,21 +233,7 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @minChars={{3}}
   @clearable={{true}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
-
-  customEmptyCode = `<DSelect
-  @load={{this.loadEmpty}}
-  @value={{this.value}}
-  @onChange={{this.onChange}}
-  @variant="button"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-  <:empty>Nothing matches. Try another term.</:empty>
-</DSelect>`;
+/>`;
 
   placementCode = `<DSelect
   @items={{this.items}}
@@ -304,10 +242,7 @@ export default class Select extends Component {
   @variant="button"
   @placement="top"
   @offset={{16}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   debounceCode = `<DSelect
   @items={{this.items}}
@@ -315,10 +250,7 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @variant="button"
   @debounce={{300}}
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   eventsCode = `<DSelect
   @items={{this.items}}
@@ -333,10 +265,7 @@ export default class Select extends Component {
   @value={{this.value}}
   @onChange={{this.onChange}}
   @variant="button"
->
-  <:selection as |item|>{{item.name}}</:selection>
-  <:item as |item|>{{item.name}}</:item>
-</DSelect>`;
+/>`;
 
   get groups() {
     return GROUPS.map((id) => ({
@@ -346,29 +275,27 @@ export default class Select extends Component {
     }));
   }
 
-  get items() {
-    return this.args.dummy.options;
+  get notificationLevels() {
+    return notificationLevels();
   }
 
   get iconOnlyIcon() {
     return (
-      this.notificationLevels.find((level) => level.id === this.iconOnlyValue)
-        ?.icon ?? "bell"
+      this.notificationLevels.find(
+        (level) => level.level === this.iconOnlyValue
+      )?.icon ?? "bell"
     );
   }
 
   // Far more than a single virtualized window, so scrolling to the true last row is
   // exercised both by hand and by a system spec.
   get largeListItems() {
-    return Array.from({ length: 5000 }, (_, index) => ({
-      id: index + 1,
-      name: `Option ${index + 1}`,
-    }));
+    return topics();
   }
 
-  filterItems(filter) {
+  filterItems(items, filter) {
     const normalizedFilter = filter.toLowerCase();
-    return this.items.filter((item) =>
+    return items.filter((item) =>
       item.name.toLowerCase().includes(normalizedFilter)
     );
   }
@@ -379,10 +306,18 @@ export default class Select extends Component {
     return [];
   }
 
+  // Deliberately over the four-row set: a bare array asserts completeness, and the spec that
+  // guards against the engine probing for a second page counts exactly four rows.
   @action
   async loadOptions(filter, { signal }) {
-    await delay(signal, 1200);
-    return this.filterItems(filter);
+    await delay(signal, ASYNC_BUTTON_DELAY);
+    return this.filterItems(this.fourOptions, filter);
+  }
+
+  @action
+  async loadLocales(filter, { signal }) {
+    await delay(signal, ASYNC_BUTTON_DELAY);
+    return this.filterItems(this.items, filter);
   }
 
   @action
@@ -394,7 +329,7 @@ export default class Select extends Component {
       throw new Error(i18n("styleguide.sections.select.request_error"));
     }
 
-    return this.filterItems(filter);
+    return this.filterItems(this.items, filter);
   }
 
   @action
@@ -410,7 +345,7 @@ export default class Select extends Component {
   // Slow enough that aria-busy and the "loading more" announcement are perceptible while a
   // page is in flight.
   @action
-  async loadPage(filter, { signal, offset = 0, limit = 50 }) {
+  async loadPage(filter, { signal, offset = 0, limit = PAGE_SIZE }) {
     await delay(signal, 900);
     const matches = this.largeListItems.filter((item) =>
       item.name.toLowerCase().includes(filter.toLowerCase())
@@ -424,7 +359,7 @@ export default class Select extends Component {
   // Answers inside the loading-feedback threshold, so a re-query keeps the previous rows and
   // never drops to a skeleton. Paired with `loadPage` (900ms), which sits well outside it.
   @action
-  async loadPageFast(filter, { signal, offset = 0, limit = 50 }) {
+  async loadPageFast(filter, { signal, offset = 0, limit = PAGE_SIZE }) {
     await delay(signal, 120);
     const matches = this.largeListItems.filter((item) =>
       item.name.toLowerCase().includes(filter.toLowerCase())
@@ -500,11 +435,6 @@ export default class Select extends Component {
   }
 
   @action
-  updateSelection(value) {
-    this.selectionValue = value;
-  }
-
-  @action
   updateStatic(value) {
     this.staticValue = value;
   }
@@ -545,11 +475,6 @@ export default class Select extends Component {
   }
 
   @action
-  updateCustomEmpty(value) {
-    this.customEmptyValue = value;
-  }
-
-  @action
   updatePlacement(value) {
     this.placementValue = value;
   }
@@ -579,7 +504,7 @@ export default class Select extends Component {
       {{i18n "styleguide.sections.select.description"}}
     </p>
 
-    <SelectHero @categories={{@dummy.categories}} />
+    <SelectHero />
 
     <StyleguideGroups
       @groups={{this.groups}}
@@ -598,7 +523,7 @@ export default class Select extends Component {
           <div class="select-examples__control select-examples__default">
             <DSelect
               @identifier="sg-default"
-              @items={{this.items}}
+              @items={{this.fourOptions}}
               @value={{this.defaultValue}}
               @onChange={{this.updateDefault}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -619,10 +544,7 @@ export default class Select extends Component {
               @onChange={{this.updateStatic}}
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -634,17 +556,14 @@ export default class Select extends Component {
           <div class="select-examples__control select-examples__multi">
             <DSelect
               @identifier="sg-multi"
-              @items={{this.items}}
+              @items={{this.fourOptions}}
               @multiple={{true}}
               @value={{this.multiValue}}
               @onChange={{this.updateMulti}}
               @placeholder={{i18n
                 "styleguide.sections.select.multi_placeholder"
               }}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
       </Group>
@@ -661,16 +580,13 @@ export default class Select extends Component {
           <div class="select-examples__control">
             <DSelect
               @identifier="sg-min-chars"
-              @load={{this.loadOptions}}
+              @load={{this.loadLocales}}
               @value={{this.minCharsValue}}
               @onChange={{this.updateMinChars}}
               @minChars={{3}}
               @clearable={{true}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -690,10 +606,7 @@ export default class Select extends Component {
               @variant="button"
               @debounce={{300}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -709,10 +622,7 @@ export default class Select extends Component {
               @value={{this.pagedValue}}
               @onChange={{this.updatePaged}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
             <p class="styleguide-note">
               {{i18n "styleguide.sections.select.paged_note"}}
             </p>
@@ -733,10 +643,7 @@ export default class Select extends Component {
               @value={{this.pagedCursorValue}}
               @onChange={{this.updatePagedCursor}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
             <p class="styleguide-note">
               {{i18n "styleguide.sections.select.paged_cursor_note"}}
             </p>
@@ -763,10 +670,7 @@ export default class Select extends Component {
                   @value={{this.fastReloadValue}}
                   @onChange={{this.updateFastReload}}
                   @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-                >
-                  <:selection as |item|>{{item.name}}</:selection>
-                  <:item as |item|>{{item.name}}</:item>
-                </DSelect>
+                />
               </div>
             </div>
             <div class="select-examples__pair-item">
@@ -780,10 +684,7 @@ export default class Select extends Component {
                   @value={{this.slowReloadValue}}
                   @onChange={{this.updateSlowReload}}
                   @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-                >
-                  <:selection as |item|>{{item.name}}</:selection>
-                  <:item as |item|>{{item.name}}</:item>
-                </DSelect>
+                />
               </div>
             </div>
           </div>
@@ -804,10 +705,7 @@ export default class Select extends Component {
               @onChange={{this.updateAsyncButton}}
               @variant="button"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -825,35 +723,7 @@ export default class Select extends Component {
               @variant="button"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
               @noResultsLabel={{i18n "styleguide.sections.select.empty_label"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
-          </div>
-        </StyleguideExample>
-        <StyleguideExample
-          @title={{i18n "styleguide.sections.select.custom_empty_example"}}
-          @description={{i18n
-            "styleguide.sections.select.custom_empty_description"
-          }}
-          @tryThis={{i18n "styleguide.sections.select.custom_empty_try_this"}}
-          @code={{this.customEmptyCode}}
-        >
-          <div class="select-examples__control">
-            <DSelect
-              @identifier="sg-custom-empty"
-              @load={{this.loadEmpty}}
-              @value={{this.customEmptyValue}}
-              @onChange={{this.updateCustomEmpty}}
-              @variant="button"
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-              <:empty>
-                {{i18n "styleguide.sections.select.custom_empty_body"}}
-              </:empty>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -870,10 +740,7 @@ export default class Select extends Component {
               @onChange={{this.updateError}}
               @variant="button"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
       </Group>
@@ -890,13 +757,10 @@ export default class Select extends Component {
               @items={{this.items}}
               @value={{this.iconValue}}
               @onChange={{this.updateIcon}}
-              @icon="tag"
+              @icon="globe"
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -914,6 +778,8 @@ export default class Select extends Component {
               @variant="static"
               @value={{this.iconOnlyValue}}
               @onChange={{this.updateIconOnly}}
+              @valueField="level"
+              @labelField="title"
               @icon={{this.iconOnlyIcon}}
               @iconOnly={{true}}
               @label={{i18n "styleguide.sections.select.icon_only_label"}}
@@ -935,32 +801,7 @@ export default class Select extends Component {
               @caretIcon={{hash open="caret-up" closed="caret-down"}}
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
-          </div>
-        </StyleguideExample>
-        <StyleguideExample
-          @title={{i18n "styleguide.sections.select.selection_example"}}
-          @description={{i18n
-            "styleguide.sections.select.selection_description"
-          }}
-          @tryThis={{i18n "styleguide.sections.select.selection_try_this"}}
-          @code={{this.selectionCode}}
-        >
-          <div class="select-examples__control select-examples__selection">
-            <DSelect
-              @identifier="sg-selection"
-              @items={{this.notificationLevels}}
-              @value={{this.selectionValue}}
-              @onChange={{this.updateSelection}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{dIcon item.icon}}
-                {{item.name}}</:selection>
-              <:item as |item|>{{dIcon item.icon}} {{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -981,10 +822,7 @@ export default class Select extends Component {
               @placement="top"
               @offset={{16}}
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -1014,6 +852,10 @@ export default class Select extends Component {
         </StyleguideExample>
       </Group>
 
+      <Group @id="content">
+        <SelectContent />
+      </Group>
+
       <Group @id="selection">
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.maximum_example"}}
@@ -1026,16 +868,13 @@ export default class Select extends Component {
               @identifier="sg-maximum"
               @items={{this.items}}
               @multiple={{true}}
-              @maximum={{3}}
+              @maximum={{MAXIMUM}}
               @value={{this.maximumValue}}
               @onChange={{this.updateMaximum}}
               @placeholder={{i18n
                 "styleguide.sections.select.multi_placeholder"
               }}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -1095,10 +934,7 @@ export default class Select extends Component {
               @placeholder={{i18n
                 "styleguide.sections.select.multi_placeholder"
               }}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -1117,10 +953,7 @@ export default class Select extends Component {
               @disabled={{true}}
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
         <StyleguideExample
@@ -1140,10 +973,7 @@ export default class Select extends Component {
               @readonly={{true}}
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            >
-              <:selection as |item|>{{item.name}}</:selection>
-              <:item as |item|>{{item.name}}</:item>
-            </DSelect>
+            />
           </div>
         </StyleguideExample>
       </Group>
@@ -1177,7 +1007,7 @@ export default class Select extends Component {
       </Group>
 
       <Group @id="pickers">
-        <SelectShowcases @categories={{@dummy.categories}} />
+        <SelectShowcases />
       </Group>
     </StyleguideGroups>
   </template>

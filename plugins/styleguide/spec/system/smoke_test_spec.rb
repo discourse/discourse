@@ -75,7 +75,7 @@ RSpec.describe "Styleguide Smoke Test" do
 
     select = PageObjects::Components::UiKit::DSelect.by_identifier("sg-default")
     select.open
-    expect(page).to have_text("Orange")
+    expect(page).to have_text("Deutsch")
     screenshot_marker(label: "styleguide-select-open", only: :desktop)
   end
 
@@ -93,7 +93,7 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "shows options grouped under section headers" do
-    visit "/styleguide/molecules/select?group=pickers"
+    visit "/styleguide/molecules/select?group=content"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     grouped = PageObjects::Components::UiKit::DSelect.by_identifier("sg-grouped")
@@ -103,13 +103,28 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "shows a pinned footer below the option list" do
-    visit "/styleguide/molecules/select?group=pickers"
+    visit "/styleguide/molecules/select?group=content"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
     footer = PageObjects::Components::UiKit::DSelect.by_identifier("sg-footer")
     footer.open
     expect(page).to have_css(footer.in_panel(".d-combobox__panel > .d-combobox__footer"))
     screenshot_marker(label: "styleguide-select-footer", only: :desktop)
+  end
+
+  it "shows the picker gallery and a category row with its badge, count and lock" do
+    visit "/styleguide/molecules/select?group=pickers"
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
+    screenshot_marker(label: "styleguide-select-pickers", only: :desktop)
+
+    # The category row is the page's most visible custom row and the one shaped to match core's
+    # own: the badge carries the topic count and the restricted lock, with the description on a
+    # second line.
+    categories = PageObjects::Components::UiKit::DSelect.by_identifier("sg-categories")
+    categories.open_trigger
+    expect(page).to have_css(categories.in_panel(".select-showcases__category-status .topic-count"))
+    expect(page).to have_css(categories.in_panel(".select-showcases__category-desc"))
+    screenshot_marker(label: "styleguide-select-category", only: :desktop)
   end
 
   it "shows the muted source-error state" do
@@ -166,18 +181,20 @@ RSpec.describe "Styleguide Smoke Test" do
   end
 
   it "shows a custom selection that becomes an editable label on open" do
-    visit "/styleguide/molecules/select?group=appearance"
+    visit "/styleguide/molecules/select?group=content"
     expect(page).to have_css(".styleguide-contents h1.section-title", text: "Select")
 
-    # Resting: the :selection block renders the custom icon + label.
-    expect(page).to have_css(".select-examples__selection .d-combobox__presentation .d-icon")
+    # Resting: the :selection block renders the compact avatar + name summary.
+    expect(page).to have_css(
+      ".select-examples__selection .d-combobox__presentation .select-examples__avatar",
+    )
     page.scroll_to(find(".select-examples__selection"), align: :center)
     screenshot_marker(label: "styleguide-select-selection-resting", only: :desktop)
 
     # Open: the custom markup gives way to the plain editable label in the filter input.
     selection = PageObjects::Components::UiKit::DSelect.by_identifier("sg-selection")
     selection.open_trigger
-    expect(page).to have_css(selection.option_selector, text: "Watching")
+    expect(page).to have_css(selection.option_selector, text: "Maya Alvarez")
     expect(page).to have_no_css(".select-examples__selection .d-combobox__presentation")
     screenshot_marker(label: "styleguide-select-selection-open", only: :desktop)
   end
@@ -189,8 +206,8 @@ RSpec.describe "Styleguide Smoke Test" do
     # The first example is the default typeahead: the chosen label renders inside the input.
     typeahead = first(".select-examples__control")
     typeahead.find(".d-combobox__input").click
-    find("[role='option']", text: "Orange").click
-    expect(typeahead).to have_field(with: "Orange")
+    find("[role='option']", text: "Deutsch").click
+    expect(typeahead).to have_field(with: "Deutsch")
 
     label_fully_selected = lambda { page.evaluate_script(<<~JS) }
           (() => {

@@ -1,170 +1,77 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DButton from "discourse/ui-kit/d-button";
-import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import { service } from "@ember/service";
+import { trustHTML } from "@ember/template";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dIconOrImage from "discourse/ui-kit/helpers/d-icon-or-image";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
+import {
+  BADGES,
+  categories,
+  COLOR_SCHEMES,
+  delay,
+  EMOJI,
+  notificationLevels,
+  PEOPLE,
+  REVIEWER_IDS,
+  TAGS,
+  USER_GROUPS,
+} from "../../../lib/select-fixtures";
 import StyleguideExample from "../../styleguide-example";
 
-const REVIEWER_IDS = [101, 102, 103, 104, 105, 106, 999];
-
+/**
+ * The `pickers` group: the component doing real work.
+ *
+ * Every entry here is a job Discourse actually does, not a fixture that looks nice — that is the
+ * rule that keeps this a gallery rather than a catalogue. Each one names, in its own copy, why
+ * its blocks exist and what they buy; a picker whose rows the default label rendering could
+ * express would not have blocks at all.
+ */
 export default class SelectShowcases extends Component {
-  @tracked categoryValue = "vegetables";
-  @tracked footerValue = null;
-  @tracked groupedValue = null;
+  @service store;
+
+  @tracked badgeValue = 3;
+  @tracked categoryValue = "support";
+  @tracked colorSchemeValue = "dark";
+  @tracked emojiValue = "tada";
+  @tracked groupValue = [11];
   @tracked notificationActionCount = 0;
   @tracked notificationValue = "watching";
   @tracked reviewerValue = REVIEWER_IDS;
-  @tracked
-  tagItems = [
-    { slug: "accessibility", label: "accessibility" },
-    { slug: "design", label: "design" },
-    { slug: "documentation", label: "documentation" },
-    { slug: "performance", label: "performance" },
-    { slug: "release-notes", label: "release-notes" },
-    { slug: "security", label: "security" },
-    { slug: "support", label: "support" },
-    { slug: "ux", label: "ux" },
-  ];
+  @tracked tagItems = TAGS;
   @tracked
   tagValue = [
+    "design-system",
     "accessibility",
-    "design",
-    "documentation",
     "performance",
-    "release-notes",
-    "security",
+    "onboarding",
+    "theming",
+    "migrations",
   ];
 
-  reviewers = [
-    {
-      id: 101,
-      avatar_template: "/images/avatar.png",
-      name: "Maya Chen",
-      role: i18n("styleguide.sections.select.showcases.reviewer_roles.design"),
-      username: "maya",
-    },
-    {
-      id: 102,
-      avatar_template: "/images/avatar.png",
-      name: "Alex Rivera",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.frontend"
-      ),
-      username: "alex-rivera",
-    },
-    {
-      id: 103,
-      avatar_template: "/images/avatar.png",
-      name: "Priya Shah",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.accessibility"
-      ),
-      username: "priya-shah",
-    },
-    {
-      id: 104,
-      avatar_template: "/images/avatar.png",
-      name: "Jordan Lee",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.security"
-      ),
-      username: "jordan-lee",
-    },
-    {
-      id: 105,
-      avatar_template: "/images/avatar.png",
-      name: "Sam Wilson",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.performance"
-      ),
-      username: "sam-wilson",
-    },
-    {
-      id: 106,
-      avatar_template: "/images/avatar.png",
-      name: "Morgan Taylor",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.documentation"
-      ),
-      username: "morgan-taylor",
-    },
-    {
-      id: 107,
-      avatar_template: "/images/avatar.png",
-      disabled: true,
-      name: "Taylor Kim",
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewer_roles.unavailable"
-      ),
-      username: "taylor-kim",
-    },
-  ];
+  badges = BADGES;
+  colorSchemes = COLOR_SCHEMES;
+  emoji = EMOJI;
+  people = PEOPLE;
+  userGroups = USER_GROUPS;
 
-  groupedMembers = [
-    {
-      id: 1,
-      avatar_template: "/images/avatar.png",
-      name: "Maya Chen",
-      team: "design",
-      username: "maya",
-    },
-    {
-      id: 2,
-      avatar_template: "/images/avatar.png",
-      name: "Alex Rivera",
-      team: "engineering",
-      username: "alex-rivera",
-    },
-    {
-      id: 3,
-      avatar_template: "/images/avatar.png",
-      name: "Priya Shah",
-      team: "design",
-      username: "priya-shah",
-    },
-    {
-      id: 4,
-      avatar_template: "/images/avatar.png",
-      name: "Jordan Lee",
-      team: "engineering",
-      username: "jordan-lee",
-    },
-    {
-      id: 5,
-      avatar_template: "/images/avatar.png",
-      name: "Sam Wilson",
-      team: "support",
-      username: "sam-wilson",
-    },
-  ];
-
-  footerCode = `<DSelect
-  @items={{this.members}}
+  reviewerCode = `<DSelect
+  @load={{this.loadReviewers}}
   @value={{this.value}}
   @onChange={{this.onChange}}
+  @multiple={{true}}
+  @resolveValues={{this.resolveReviewers}}
+  @createUnresolvedItem={{this.unresolvedReviewer}}
+  @labelField="username"
 >
-  <:footer as |state|>
-    <span>{{state.total}} teammates</span>
-    <DButton @action={{state.close}} @label="View directory" />
-  </:footer>
-  <:selection as |member|>…</:selection>
-  <:item as |member|>…</:item>
-</DSelect>`;
-
-  groupedCode = `<DSelect
-  @items={{this.members}}
-  @value={{this.value}}
-  @onChange={{this.onChange}}
-  @groupBy="team"
-  @groupLabel={{this.teamLabel}}
->
-  <:groupHeader as |group|>…</:groupHeader>
-  <:selection as |member|>…</:selection>
-  <:item as |member|>…</:item>
+  {{! An avatar and a role are what tell two similar names apart. The chip stays
+  one line, because the trigger is one line. }}
+  <:selection as |user|>...</:selection>
+  <:item as |user|>...</:item>
 </DSelect>`;
 
   categoryCode = `<DSelect
@@ -175,36 +82,12 @@ export default class SelectShowcases extends Component {
   @valueField="slug"
   @filterBy={{this.filterCategories}}
   @specialItems={{this.specialCategories}}
-  @selectedIcon="star"
 >
-  <:selection as |category|>…</:selection>
-  <:item as |category|>…</:item>
-</DSelect>`;
-
-  notificationCode = `<DSelect
-  @items={{this.notificationLevels}}
-  @value={{this.value}}
-  @onChange={{this.onChange}}
-  @variant="static"
-  @valueField="level"
-  @labelField="title"
->
-  <:selection as |level|>…</:selection>
-  <:item as |level|>…</:item>
-</DSelect>`;
-
-  reviewerCode = `<DSelect
-  @load={{this.loadReviewers}}
-  @value={{this.value}}
-  @onChange={{this.onChange}}
-  @multiple={{true}}
-  @selected={{this.seededReviewer}}
-  @resolveValues={{this.resolveReviewers}}
-  @createUnresolvedItem={{this.unresolvedReviewer}}
-  @labelField="username"
->
-  <:selection as |user|>…</:selection>
-  <:item as |user|>…</:item>
+  {{! A category is a badge, not a string, and the badge carries its own topic
+  count and restricted lock. The description is aria-hidden: it helps the eye
+  choose, but it would double the length of every announced option. }}
+  <:selection as |category|>{{dCategoryBadge category}}</:selection>
+  <:item as |category|>...</:item>
 </DSelect>`;
 
   tagCode = `<DSelect
@@ -219,114 +102,120 @@ export default class SelectShowcases extends Component {
   @createItem={{this.createTag}}
   @clearable={{true}}
 >
-  <:selection as |tag|>…</:selection>
-  <:item as |tag|>…</:item>
+  {{! The block earns its place on one row only: the create affordance, which
+  swaps the tag icon for a plus and reads as an action rather than a result. }}
+  <:item as |tag|>...</:item>
 </DSelect>`;
 
+  notificationCode = `<DSelect
+  @items={{this.notificationLevels}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @variant="static"
+  @valueField="level"
+  @labelField="title"
+>
+  {{! Each level needs a sentence to be chosen correctly, and the icon is how
+  the choice is recognised again later in the trigger. }}
+  <:selection as |level|>...</:selection>
+  <:item as |level|>...</:item>
+</DSelect>`;
+
+  colorSchemeCode = `{{! The clearest case for a block on the whole page: the value IS a colour,
+  and no argument can render one. }}
+<:item as |scheme|>
+  <span class="select-examples__row select-examples__row--glyph">
+    <span class="select-showcases__swatches" aria-hidden="true">
+      {{#each scheme.swatches as |swatch|}}
+        <span class="select-showcases__swatch" style={{swatch}}></span>
+      {{/each}}
+    </span>
+    <span class="select-examples__primary">{{scheme.name}}</span>
+  </span>
+</:item>`;
+
+  emojiCode = `<DSelect @items={{this.emoji}} @groupBy="group" ...>
+  {{! The glyph is the point, and the shortcode is what the reader will type,
+  so it belongs in the row in monospace rather than only in a tooltip. }}
+  <:item as |item|>
+    <span class="select-examples__row select-examples__row--glyph">
+      {{dEmoji item.name}}
+      <span class="select-examples__primary">{{item.name}}</span>
+      <code class="select-showcases__shortcode">:{{item.name}}:</code>
+    </span>
+  </:item>
+</DSelect>`;
+
+  groupCode = `{{! A trailing pill rather than trailing text: "Automatic" is a property of the
+  group, not a measurement of it, so it should not read as a number. }}
+<:item as |group|>
+  <span class="select-examples__row select-examples__row--glyph">
+    {{dIcon group.icon}}
+    <span class="select-examples__primary">{{group.fullName}}</span>
+    {{#if group.automatic}}
+      <span class="select-showcases__pill">Automatic</span>
+    {{/if}}
+    <span class="select-examples__meta">{{group.memberLabel}}</span>
+  </span>
+</:item>`;
+
+  badgeCode = `{{! dIconOrImage takes a badge directly and renders an icon or an <img alt="">,
+  so the row needs no image handling of its own. Rarity drives the colour. }}
+<:item as |badge|>
+  <span class="select-examples__row select-examples__row--glyph">
+    <span class="select-showcases__badge-icon --{{badge.rarity}}">
+      {{dIconOrImage badge}}
+    </span>
+    <span class="select-examples__primary">{{badge.name}}</span>
+    <span class="select-examples__meta">{{badge.grantLabel}}</span>
+  </span>
+</:item>`;
+
+  @cached
   get categories() {
-    return this.args.categories.map((category, index) => ({
-      color: category.color,
-      description_excerpt: category.description_excerpt,
-      id: category.id,
-      name: category.name,
-      read_restricted: category.read_restricted,
-      slug: category.slug,
-      topic_count: [128, 76, 34][index],
+    return categories(this.store);
+  }
+
+  get badgeItems() {
+    return this.badges.map((badge) => ({
+      ...badge,
+      grantLabel: i18n("styleguide.sections.select.pickers.badges.granted", {
+        count: badge.grantCount,
+      }),
+    }));
+  }
+
+  get colorSchemeItems() {
+    return this.colorSchemes.map((scheme) => ({
+      ...scheme,
+      swatches: scheme.colors.map((color) =>
+        trustHTML(`--swatch-color: #${color}`)
+      ),
+    }));
+  }
+
+  get groupItems() {
+    return this.userGroups.map((group) => ({
+      ...group,
+      memberLabel: i18n("styleguide.sections.select.pickers.groups.members", {
+        count: group.memberCount,
+      }),
     }));
   }
 
   get notificationEvent() {
     if (this.notificationActionCount > 0) {
       return i18n(
-        "styleguide.sections.select.showcases.notifications.action_count",
+        "styleguide.sections.select.pickers.notifications.action_count",
         { count: this.notificationActionCount }
       );
     }
 
-    return i18n(
-      "styleguide.sections.select.showcases.notifications.event_idle"
-    );
+    return i18n("styleguide.sections.select.pickers.notifications.event_idle");
   }
 
   get notificationItems() {
-    return [
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.muted_description"
-        ),
-        icon: "bell-slash",
-        level: "muted",
-        title: i18n("styleguide.sections.select.showcases.notifications.muted"),
-      },
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.normal_description"
-        ),
-        icon: "bell",
-        level: "normal",
-        title: i18n(
-          "styleguide.sections.select.showcases.notifications.normal"
-        ),
-      },
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.tracking_description"
-        ),
-        icon: "circle-dot",
-        level: "tracking",
-        title: i18n(
-          "styleguide.sections.select.showcases.notifications.tracking"
-        ),
-      },
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.watching_description"
-        ),
-        icon: "bell",
-        level: "watching",
-        title: i18n(
-          "styleguide.sections.select.showcases.notifications.watching"
-        ),
-      },
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.mentions_description"
-        ),
-        disabled: true,
-        icon: "at",
-        level: "mentions",
-        title: i18n(
-          "styleguide.sections.select.showcases.notifications.mentions"
-        ),
-      },
-      {
-        description: i18n(
-          "styleguide.sections.select.showcases.notifications.manage_description"
-        ),
-        icon: "gear",
-        level: "manage",
-        onSelect: this.manageNotifications,
-        title: i18n(
-          "styleguide.sections.select.showcases.notifications.manage"
-        ),
-      },
-    ];
-  }
-
-  get seededReviewer() {
-    return this.reviewers[0];
-  }
-
-  get teamLabels() {
-    return {
-      design: i18n("styleguide.sections.select.showcases.grouped.teams.design"),
-      engineering: i18n(
-        "styleguide.sections.select.showcases.grouped.teams.engineering"
-      ),
-      support: i18n(
-        "styleguide.sections.select.showcases.grouped.teams.support"
-      ),
-    };
+    return notificationLevels(this.manageNotifications);
   }
 
   @action
@@ -349,16 +238,16 @@ export default class SelectShowcases extends Component {
 
   @action
   filterCategories(category, filter) {
-    const searchable = `${category.name} ${category.description_excerpt}`;
+    const searchable = `${category.name} ${category.description_excerpt ?? ""}`;
     return searchable.toLowerCase().includes(filter.toLowerCase());
   }
 
   @action
   async loadReviewers(filter, { signal }) {
-    await this.#delay(signal, 650);
+    await delay(signal, 650);
     const normalizedFilter = filter.toLowerCase();
-    return this.reviewers.filter((reviewer) =>
-      `${reviewer.name} ${reviewer.username} ${reviewer.role}`
+    return this.people.filter((person) =>
+      `${person.name} ${person.username} ${person.title ?? ""}`
         .toLowerCase()
         .includes(normalizedFilter)
     );
@@ -371,24 +260,27 @@ export default class SelectShowcases extends Component {
 
   @action
   async resolveReviewers(values, { signal }) {
-    await this.#delay(signal, 500);
-    return this.reviewers.filter((reviewer) => values.includes(reviewer.id));
+    await delay(signal, 500);
+    return this.people.filter((person) => values.includes(person.id));
   }
 
   @action
   specialCategories() {
+    // A real Category record, not a bare object: the badge renderer reads model fields, so a
+    // plain hash would render an empty badge.
     return [
-      {
-        description_excerpt: i18n(
-          "styleguide.sections.select.showcases.categories.uncategorized_description"
-        ),
-        isUncategorized: true,
+      this.store.createRecord("category", {
+        id: 0,
         name: i18n(
-          "styleguide.sections.select.showcases.categories.uncategorized"
+          "styleguide.sections.select.pickers.categories.uncategorized"
         ),
         slug: "uncategorized",
+        color: "0088CC",
+        description_excerpt: i18n(
+          "styleguide.sections.select.pickers.categories.uncategorized_description"
+        ),
         topic_count: 19,
-      },
+      }),
     ];
   }
 
@@ -401,19 +293,19 @@ export default class SelectShowcases extends Component {
   unresolvedReviewer(value) {
     return {
       id: value,
-      name: i18n("styleguide.sections.select.showcases.reviewers.deleted_name"),
-      role: i18n(
-        "styleguide.sections.select.showcases.reviewers.deleted_description"
+      name: i18n("styleguide.sections.select.pickers.reviewers.deleted_name"),
+      title: i18n(
+        "styleguide.sections.select.pickers.reviewers.deleted_description"
       ),
       username: i18n(
-        "styleguide.sections.select.showcases.reviewers.deleted_username"
+        "styleguide.sections.select.pickers.reviewers.deleted_username"
       ),
     };
   }
 
   @action
-  teamLabel(key) {
-    return this.teamLabels[key] ?? key;
+  updateBadge(value) {
+    this.badgeValue = value;
   }
 
   @action
@@ -422,13 +314,18 @@ export default class SelectShowcases extends Component {
   }
 
   @action
-  updateFooter(value) {
-    this.footerValue = value;
+  updateColorScheme(value) {
+    this.colorSchemeValue = value;
   }
 
   @action
-  updateGrouped(value) {
-    this.groupedValue = value;
+  updateEmoji(value) {
+    this.emojiValue = value;
+  }
+
+  @action
+  updateGroup(value) {
+    this.groupValue = value;
   }
 
   @action
@@ -452,25 +349,6 @@ export default class SelectShowcases extends Component {
     }
   }
 
-  #delay(signal, milliseconds) {
-    return new Promise((resolve, reject) => {
-      const onAbort = () => {
-        clearTimeout(timeout);
-        reject(signal.reason ?? new DOMException("Aborted", "AbortError"));
-      };
-      const timeout = setTimeout(() => {
-        signal.removeEventListener("abort", onAbort);
-        resolve();
-      }, milliseconds);
-
-      if (signal.aborted) {
-        onAbort();
-      } else {
-        signal.addEventListener("abort", onAbort, { once: true });
-      }
-    });
-  }
-
   #tagSlug(label) {
     return label
       .trim()
@@ -480,16 +358,17 @@ export default class SelectShowcases extends Component {
   }
 
   <template>
+    {{! No intro paragraph: the group's own description already states what this group is for,
+    and repeating it here put the same claim on screen twice. }}
     <section class="select-showcases">
-      <h2 class="select-showcases__title">
-        {{i18n "styleguide.sections.select.showcases.title"}}
-      </h2>
-      <p class="section-description">
-        {{i18n "styleguide.sections.select.showcases.description"}}
-      </p>
-
       <StyleguideExample
-        @title={{i18n "styleguide.sections.select.showcases.reviewers.title"}}
+        @title={{i18n "styleguide.sections.select.pickers.reviewers.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.reviewers.description"
+        }}
+        @tryThis={{i18n
+          "styleguide.sections.select.pickers.reviewers.try_this"
+        }}
         @code={{this.reviewerCode}}
       >
         <div
@@ -499,36 +378,42 @@ export default class SelectShowcases extends Component {
           <DSelect
             @identifier="sg-reviewers"
             @load={{this.loadReviewers}}
-            @multiple={{true}}
             @value={{this.reviewerValue}}
             @onChange={{this.updateReviewers}}
-            @selected={{this.seededReviewer}}
+            @multiple={{true}}
             @resolveValues={{this.resolveReviewers}}
             @createUnresolvedItem={{this.unresolvedReviewer}}
             @labelField="username"
             @placeholder={{i18n
-              "styleguide.sections.select.showcases.reviewers.placeholder"
+              "styleguide.sections.select.pickers.reviewers.placeholder"
             }}
           >
-            <:selection as |reviewer|>
-              <span class="select-showcases__reviewer-selection">
-                {{#unless reviewer.__unresolved}}
-                  {{dAvatar reviewer imageSize="tiny" hideTitle=true}}
+            <:selection as |person|>
+              <span class="select-examples__row select-examples__row--glyph">
+                {{#unless person.__unresolved}}
+                  <img
+                    class="select-examples__avatar --small"
+                    src={{person.avatar}}
+                    alt=""
+                  />
                 {{/unless}}
-                <span>{{reviewer.username}}</span>
+                {{person.username}}
               </span>
             </:selection>
-            <:item as |reviewer|>
-              <span class="select-showcases__reviewer">
-                {{dAvatar reviewer imageSize="small" hideTitle=true}}
-                <span class="select-showcases__details">
-                  <span class="select-showcases__primary">
-                    {{reviewer.name}}
-                  </span>
-                  <span class="select-showcases__secondary">
-                    @{{reviewer.username}}
-                    ·
-                    {{reviewer.role}}
+            <:item as |person|>
+              <span class="select-examples__row select-examples__row--identity">
+                <img
+                  class="select-examples__avatar"
+                  src={{person.avatar}}
+                  alt=""
+                />
+                <span class="select-examples__details">
+                  <span class="select-examples__primary">{{person.name}}</span>
+                  <span class="select-examples__secondary">
+                    @{{person.username}}{{#if person.title}}
+                      ·
+                      {{person.title}}
+                    {{/if}}
                   </span>
                 </span>
               </span>
@@ -538,7 +423,13 @@ export default class SelectShowcases extends Component {
       </StyleguideExample>
 
       <StyleguideExample
-        @title={{i18n "styleguide.sections.select.showcases.categories.title"}}
+        @title={{i18n "styleguide.sections.select.pickers.categories.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.categories.description"
+        }}
+        @tryThis={{i18n
+          "styleguide.sections.select.pickers.categories.try_this"
+        }}
         @code={{this.categoryCode}}
       >
         <div
@@ -554,42 +445,34 @@ export default class SelectShowcases extends Component {
             @valueField="slug"
             @filterBy={{this.filterCategories}}
             @specialItems={{this.specialCategories}}
-            @selectedIcon="star"
             @placeholder={{i18n
-              "styleguide.sections.select.showcases.categories.placeholder"
+              "styleguide.sections.select.pickers.categories.placeholder"
             }}
           >
             <:selection as |category|>
-              {{#if category.isUncategorized}}
-                <span class="select-showcases__category-selection">
-                  {{dIcon "inbox"}}
-                  <span>{{category.name}}</span>
-                </span>
-              {{else}}
-                {{dCategoryBadge category categoryStyle="bullet"}}
-              {{/if}}
+              {{dCategoryBadge category}}
             </:selection>
+            {{! Shaped like core's own category row: the badge and its counts on one line, the
+            description below. The description is aria-hidden because the badge already names
+            the option, and repeating a full sentence after every row makes the list slower to
+            navigate by ear than by eye. }}
             <:item as |category|>
               <span class="select-showcases__category">
-                <span class="select-showcases__category-selection">
-                  {{#if category.isUncategorized}}
-                    {{dIcon "inbox"}}
-                    <span>{{category.name}}</span>
-                  {{else}}
-                    {{dCategoryBadge category categoryStyle="bullet"}}
-                  {{/if}}
+                <span class="select-showcases__category-status">
+                  {{dCategoryBadge
+                    category
+                    topicCount=category.topic_count
+                    readOnly=category.read_restricted
+                  }}
                 </span>
-                <span class="select-showcases__details">
-                  <span class="select-showcases__secondary">
+                {{#if category.description_excerpt}}
+                  <span
+                    class="select-showcases__category-desc"
+                    aria-hidden="true"
+                  >
                     {{category.description_excerpt}}
                   </span>
-                  <span class="select-showcases__meta">
-                    {{i18n
-                      "styleguide.sections.select.showcases.categories.topic_count"
-                      count=category.topic_count
-                    }}
-                  </span>
-                </span>
+                {{/if}}
               </span>
             </:item>
           </DSelect>
@@ -597,7 +480,11 @@ export default class SelectShowcases extends Component {
       </StyleguideExample>
 
       <StyleguideExample
-        @title={{i18n "styleguide.sections.select.showcases.tags.title"}}
+        @title={{i18n "styleguide.sections.select.pickers.tags.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.tags.description"
+        }}
+        @tryThis={{i18n "styleguide.sections.select.pickers.tags.try_this"}}
         @code={{this.tagCode}}
       >
         <div
@@ -607,9 +494,9 @@ export default class SelectShowcases extends Component {
           <DSelect
             @identifier="sg-tags"
             @items={{this.tagsSource}}
-            @multiple={{true}}
             @value={{this.tagValue}}
             @onChange={{this.updateTags}}
+            @multiple={{true}}
             @variant="button"
             @valueField="slug"
             @labelField="label"
@@ -617,31 +504,30 @@ export default class SelectShowcases extends Component {
             @createItem={{this.createTag}}
             @clearable={{true}}
             @placeholder={{i18n
-              "styleguide.sections.select.showcases.tags.placeholder"
+              "styleguide.sections.select.pickers.tags.placeholder"
             }}
             @searchPlaceholder={{i18n
-              "styleguide.sections.select.showcases.tags.search_placeholder"
+              "styleguide.sections.select.pickers.tags.search_placeholder"
             }}
           >
-            <:selection as |tag|>
-              <span class="select-showcases__tag">
-                {{dIcon "tag"}}
-                <span>{{tag.label}}</span>
-              </span>
-            </:selection>
+            {{! The only reason this block exists: the create row has to read as an action, not
+            as an existing tag. Every other row is the default label. }}
             <:item as |tag|>
-              <span class="select-showcases__tag-row">
+              <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon (if tag.__create "plus" "tag")}}
-                <span>
+                <span class="select-examples__primary">
                   {{#if tag.__create}}
                     {{i18n
-                      "styleguide.sections.select.showcases.tags.create"
+                      "styleguide.sections.select.pickers.tags.create"
                       tag=tag.label
                     }}
                   {{else}}
                     {{tag.label}}
                   {{/if}}
                 </span>
+                {{#unless tag.__create}}
+                  <span class="select-examples__meta">{{tag.count}}</span>
+                {{/unless}}
               </span>
             </:item>
           </DSelect>
@@ -649,8 +535,12 @@ export default class SelectShowcases extends Component {
       </StyleguideExample>
 
       <StyleguideExample
-        @title={{i18n
-          "styleguide.sections.select.showcases.notifications.title"
+        @title={{i18n "styleguide.sections.select.pickers.notifications.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.notifications.description"
+        }}
+        @tryThis={{i18n
+          "styleguide.sections.select.pickers.notifications.try_this"
         }}
         @code={{this.notificationCode}}
       >
@@ -666,22 +556,19 @@ export default class SelectShowcases extends Component {
             @variant="static"
             @valueField="level"
             @labelField="title"
-            @placeholder={{i18n
-              "styleguide.sections.select.showcases.notifications.placeholder"
-            }}
           >
             <:selection as |level|>
-              <span class="select-showcases__notification-selection">
+              <span class="select-examples__row select-examples__row--glyph">
                 {{dIcon level.icon}}
-                <span>{{level.title}}</span>
+                {{level.title}}
               </span>
             </:selection>
             <:item as |level|>
-              <span class="select-showcases__notification">
+              <span class="select-examples__row select-examples__row--identity">
                 {{dIcon level.icon}}
-                <span class="select-showcases__details">
-                  <span class="select-showcases__primary">{{level.title}}</span>
-                  <span class="select-showcases__secondary">
+                <span class="select-examples__details">
+                  <span class="select-examples__primary">{{level.title}}</span>
+                  <span class="select-examples__secondary">
                     {{level.description}}
                   </span>
                 </span>
@@ -695,45 +582,48 @@ export default class SelectShowcases extends Component {
       </StyleguideExample>
 
       <StyleguideExample
-        @title={{i18n "styleguide.sections.select.showcases.grouped.title"}}
-        @code={{this.groupedCode}}
+        @title={{i18n "styleguide.sections.select.pickers.colors.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.colors.description"
+        }}
+        @tryThis={{i18n "styleguide.sections.select.pickers.colors.try_this"}}
+        @code={{this.colorSchemeCode}}
       >
-        <div
-          class="select-showcases__control --grouped"
-          data-test-select-showcase="grouped"
-        >
+        <div class="select-showcases__control --colors">
           <DSelect
-            @identifier="sg-grouped"
-            @items={{this.groupedMembers}}
-            @value={{this.groupedValue}}
-            @onChange={{this.updateGrouped}}
-            @groupBy="team"
-            @groupLabel={{this.teamLabel}}
-            @placeholder={{i18n
-              "styleguide.sections.select.showcases.grouped.placeholder"
-            }}
+            @identifier="sg-colors"
+            @items={{this.colorSchemeItems}}
+            @value={{this.colorSchemeValue}}
+            @onChange={{this.updateColorScheme}}
+            @variant="button"
           >
-            <:groupHeader as |group|>
-              <span class="select-showcases__group-header">
-                {{dIcon "users"}}
-                <span>{{group.label}}</span>
-              </span>
-            </:groupHeader>
-            <:selection as |member|>
-              <span class="select-showcases__reviewer-selection">
-                {{dAvatar member imageSize="tiny" hideTitle=true}}
-                <span>{{member.name}}</span>
+            <:selection as |scheme|>
+              <span class="select-examples__row select-examples__row--glyph">
+                <span class="select-showcases__swatches" aria-hidden="true">
+                  {{#each scheme.swatches key="@index" as |swatch|}}
+                    <span
+                      class="select-showcases__swatch"
+                      style={{swatch}}
+                    ></span>
+                  {{/each}}
+                </span>
+                {{scheme.name}}
               </span>
             </:selection>
-            <:item as |member|>
-              <span class="select-showcases__reviewer">
-                {{dAvatar member imageSize="small" hideTitle=true}}
-                <span class="select-showcases__details">
-                  <span class="select-showcases__primary">{{member.name}}</span>
-                  <span class="select-showcases__secondary">
-                    @{{member.username}}
-                  </span>
+            {{! The swatches are aria-hidden: they are the value made visible, but a screen
+            reader gets nothing from three unnamed colour chips, and the name already
+            identifies the scheme. }}
+            <:item as |scheme|>
+              <span class="select-examples__row select-examples__row--glyph">
+                <span class="select-showcases__swatches" aria-hidden="true">
+                  {{#each scheme.swatches key="@index" as |swatch|}}
+                    <span
+                      class="select-showcases__swatch"
+                      style={{swatch}}
+                    ></span>
+                  {{/each}}
                 </span>
+                <span class="select-examples__primary">{{scheme.name}}</span>
               </span>
             </:item>
           </DSelect>
@@ -741,51 +631,112 @@ export default class SelectShowcases extends Component {
       </StyleguideExample>
 
       <StyleguideExample
-        @title={{i18n "styleguide.sections.select.showcases.footer.title"}}
-        @code={{this.footerCode}}
+        @title={{i18n "styleguide.sections.select.pickers.emoji.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.emoji.description"
+        }}
+        @tryThis={{i18n "styleguide.sections.select.pickers.emoji.try_this"}}
+        @code={{this.emojiCode}}
       >
-        <div
-          class="select-showcases__control --footer"
-          data-test-select-showcase="footer"
-        >
+        <div class="select-showcases__control --emoji">
           <DSelect
-            @identifier="sg-footer"
-            @items={{this.groupedMembers}}
-            @value={{this.footerValue}}
-            @onChange={{this.updateFooter}}
-            @placeholder={{i18n
-              "styleguide.sections.select.showcases.footer.placeholder"
-            }}
+            @identifier="sg-emoji"
+            @items={{this.emoji}}
+            @value={{this.emojiValue}}
+            @onChange={{this.updateEmoji}}
+            @groupBy="group"
+            @variant="button"
           >
-            <:footer as |state|>
-              <span class="select-showcases__footer-count">
-                {{i18n
-                  "styleguide.sections.select.showcases.footer.count"
-                  count=state.total
-                }}
-              </span>
-              <DButton
-                class="btn-transparent"
-                @action={{state.close}}
-                @icon="arrow-up-right-from-square"
-                @label="styleguide.sections.select.showcases.footer.view_all"
-              />
-            </:footer>
-            <:selection as |member|>
-              <span class="select-showcases__reviewer-selection">
-                {{dAvatar member imageSize="tiny" hideTitle=true}}
-                <span>{{member.name}}</span>
+            <:selection as |item|>
+              <span class="select-examples__row select-examples__row--glyph">
+                {{dEmoji item.name}}
+                {{item.name}}
               </span>
             </:selection>
-            <:item as |member|>
-              <span class="select-showcases__reviewer">
-                {{dAvatar member imageSize="small" hideTitle=true}}
-                <span class="select-showcases__details">
-                  <span class="select-showcases__primary">{{member.name}}</span>
-                  <span class="select-showcases__secondary">
-                    @{{member.username}}
+            <:item as |item|>
+              <span class="select-examples__row select-examples__row--glyph">
+                {{dEmoji item.name}}
+                <span class="select-examples__primary">{{item.name}}</span>
+                {{! The shortcode is what a reader types, so it is shown rather than hidden in
+                a tooltip. Hidden from the announcement because it repeats the name. }}
+                <code class="select-showcases__shortcode" aria-hidden="true">
+                  :{{item.name}}:
+                </code>
+              </span>
+            </:item>
+          </DSelect>
+        </div>
+      </StyleguideExample>
+
+      <StyleguideExample
+        @title={{i18n "styleguide.sections.select.pickers.groups.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.groups.description"
+        }}
+        @tryThis={{i18n "styleguide.sections.select.pickers.groups.try_this"}}
+        @code={{this.groupCode}}
+      >
+        <div class="select-showcases__control --groups">
+          <DSelect
+            @identifier="sg-groups"
+            @items={{this.groupItems}}
+            @value={{this.groupValue}}
+            @onChange={{this.updateGroup}}
+            @multiple={{true}}
+            @labelField="fullName"
+            @placeholder={{i18n
+              "styleguide.sections.select.pickers.groups.placeholder"
+            }}
+          >
+            <:item as |group|>
+              <span class="select-examples__row select-examples__row--glyph">
+                {{dIcon group.icon}}
+                <span class="select-examples__primary">{{group.fullName}}</span>
+                {{#if group.automatic}}
+                  <span class="select-showcases__pill">
+                    {{i18n
+                      "styleguide.sections.select.pickers.groups.automatic"
+                    }}
                   </span>
-                </span>
+                {{/if}}
+                <span class="select-examples__meta">{{group.memberLabel}}</span>
+              </span>
+            </:item>
+          </DSelect>
+        </div>
+      </StyleguideExample>
+
+      <StyleguideExample
+        @title={{i18n "styleguide.sections.select.pickers.badges.title"}}
+        @description={{i18n
+          "styleguide.sections.select.pickers.badges.description"
+        }}
+        @tryThis={{i18n "styleguide.sections.select.pickers.badges.try_this"}}
+        @code={{this.badgeCode}}
+      >
+        <div class="select-showcases__control --badges">
+          <DSelect
+            @identifier="sg-badges"
+            @items={{this.badgeItems}}
+            @value={{this.badgeValue}}
+            @onChange={{this.updateBadge}}
+            @variant="button"
+          >
+            <:selection as |badge|>
+              <span class="select-examples__row select-examples__row--glyph">
+                <span
+                  class="select-showcases__badge-icon --{{badge.rarity}}"
+                >{{dIconOrImage badge}}</span>
+                {{badge.name}}
+              </span>
+            </:selection>
+            <:item as |badge|>
+              <span class="select-examples__row select-examples__row--glyph">
+                <span
+                  class="select-showcases__badge-icon --{{badge.rarity}}"
+                >{{dIconOrImage badge}}</span>
+                <span class="select-examples__primary">{{badge.name}}</span>
+                <span class="select-examples__meta">{{badge.grantLabel}}</span>
               </span>
             </:item>
           </DSelect>

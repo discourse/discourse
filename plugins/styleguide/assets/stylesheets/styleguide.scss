@@ -343,11 +343,18 @@
 }
 
 /* Example layout ------------------------------------------------------------------------- */
-.select-examples,
+
+// One control width for the whole page, routed through a property so a single example can
+// narrow it. NARROWING is safe; widening is not — the reviewer showcase relies on its chips
+// wrapping, and a wider control stops them wrapping and silently voids that assertion.
+//
+// Declared on the elements that consume it, not on a `.select-examples` block: no element ever
+// carried that class, so the property was undefined, `min(100%, var(…))` was invalid at
+// computed-value time, and every control silently stretched the full width of its card.
+.select-examples__control,
+.select-showcases__control,
+.select-examples__pair-item,
 .select-hero {
-  // One control width for the whole page, routed through a property so a single example can
-  // narrow it. NARROWING is safe; widening is not — the reviewer showcase relies on its chips
-  // wrapping, and a wider control stops them wrapping and silently voids that assertion.
   --styleguide-control-width: 24rem;
 }
 
@@ -355,6 +362,11 @@
 .select-showcases__control {
   width: min(100%, var(--styleguide-control-width));
   min-width: 0;
+
+  // Long single-line rows (topic titles) need the wider track to be worth reading.
+  &--wide {
+    --styleguide-control-width: 32rem;
+  }
 }
 
 .select-showcases__control {
@@ -418,6 +430,74 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
+
+  // The trigger is one line tall, so a selection reuses the row markup at a size that fits it.
+  &.--small {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+// A category colour as a leading dot, for rows where the category is context rather than the
+// value being chosen.
+.select-examples__bullet {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--bullet-color, var(--primary-medium));
+}
+
+.select-examples__group-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.select-examples__footer-count {
+  color: var(--token-color-text-subtle);
+  font-size: var(--font-down-1);
+}
+
+// A custom :error block replaces the component's whole error container, so the example has to
+// supply this layout as well as the alert role.
+.select-examples__error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.5em 0.75em;
+}
+
+.select-examples__error-message {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--token-color-text-subtle);
+
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
+// Three specimens of one claim, side by side. Narrower than the paired layout because the
+// comparison is between states rather than between two whole examples.
+.select-examples__triple {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+
+  .select-examples__pair-item {
+    --styleguide-control-width: 16rem;
+  }
+}
+
+.styleguide-group__intro {
+  color: var(--primary-high);
+  max-width: 70ch;
+  margin-block-end: var(--space-4);
 }
 
 .select-examples__details {
@@ -485,66 +565,135 @@
   }
 }
 
-/* Legacy showcase vocabulary — retained only where the showcase markup still uses it. */
+/* Picker rows.
+
+   Only the shapes the shared archetypes cannot express live here: a category row (which follows
+   core's own two-line structure so the two do not drift), and the leading or trailing elements
+   specific to one picker. Everything else uses `.select-examples__row`. */
+
 .select-showcases {
-  &__reviewer,
-  &__category,
-  &__notification {
+  /* Category rows, shaped like core's `.category-row`: the badge and its counts on one line,
+     the description below. Kept structurally identical so a change to one is obvious in the
+     other. */
+
+  &__category {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: flex-start;
     min-width: 0;
     width: 100%;
   }
 
-  &__category,
-  &__notification {
-    align-items: flex-start;
-  }
-
-  &__details {
+  &__category-status {
     display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-width: 0;
+    align-items: baseline;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 0 0.5em;
+
+    // The renderer returns the badge, its count and its read-only marker inside ONE wrapper
+    // element, so the gap has to be applied in here rather than on the row. Core gets this from
+    // `.select-kit .category-row`, which a ui-kit row never matches.
+    .badge-category__wrapper {
+      display: inline-flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
+      max-width: 100%;
+    }
+
+    .topic-count {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      font-weight: normal;
+      white-space: nowrap;
+    }
+
+    .read-only {
+      padding: 0.1em 0.5em;
+      border-radius: var(--d-border-radius);
+      background: var(--primary-low-mid);
+      color: var(--secondary);
+      font-size: var(--font-down-1);
+      font-weight: normal;
+      white-space: nowrap;
+    }
   }
 
-  &__primary {
-    color: var(--token-color-text-default);
-    font-weight: var(--token-font-weight-semibold);
-    overflow-wrap: anywhere;
-  }
-
-  &__secondary,
-  &__meta {
+  &__category-desc {
     color: var(--token-color-text-subtle);
     font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
     overflow-wrap: anywhere;
+
+    // The selected option is bold; a full sentence of bold secondary text is not.
+    font-weight: normal;
   }
 
-  &__reviewer-selection,
-  &__category-selection,
-  &__notification-selection,
-  &__group-header,
-  &__tag,
-  &__tag-row {
+  &__group-header {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     min-width: 0;
   }
 
-  &__tag {
-    color: var(--token-color-text-default);
+  /* The colour-scheme swatch strip: the value made visible. */
+  &__swatches {
+    display: inline-flex;
+    flex: none;
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+    border: 1px solid var(--primary-low);
   }
 
-  &__tag-row .d-icon-plus {
-    color: var(--token-color-icon-default);
+  &__swatch {
+    width: 1rem;
+    height: 1rem;
+    background: var(--swatch-color);
   }
 
-  &__notification > .d-icon {
-    color: var(--token-color-icon-subtle);
-    margin-block-start: 0.15rem;
+  &__shortcode {
+    color: var(--token-color-text-subtle);
+    font-size: var(--font-down-2);
+    margin-inline-start: auto;
+    flex: none;
+  }
+
+  /* "Automatic" is a property, not a measurement, so it reads as a pill rather than as the
+     trailing number the other pickers use. */
+
+  &__pill {
+    flex: none;
+    padding: 0.05em 0.4em;
+    border-radius: var(--d-border-radius);
+    background: var(--primary-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  &__badge-icon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+
+    &.--gold .d-icon {
+      color: var(--gold);
+    }
+
+    &.--silver .d-icon {
+      color: var(--silver);
+    }
+
+    &.--bronze .d-icon {
+      color: var(--bronze);
+    }
+
+    img {
+      width: 1.2em;
+      height: 1.2em;
+    }
   }
 }
 
