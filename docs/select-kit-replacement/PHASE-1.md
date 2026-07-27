@@ -399,6 +399,20 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   (`#valueKey`), so a bound `"5"` selects item id `5` (both directions) and the resolved
   cache no longer misses on a string/number mismatch. Always-on, no `castInteger` opt-in.
 - ☐ Re-home `DIconGridPicker` on the engine (grid variant).
+- ☐ **Chase down the `d_select_cursor_source_spec` flake.** A full styleguide run failed it once
+  on `expect(combobox.options.first[:"aria-setsize"]).to eq("1")` with `options.first` nil. It
+  passed in isolation *and* on a re-run under the same seed (39916), so ordering is not the
+  trigger and a plain retry proves nothing. Note the shape before theorising: the preceding
+  `have_css(option_selector, count: 1, wait: 10)` had already *passed*, so the row existed and
+  then was gone by the time `options` re-queried it. That is a check-then-fetch race against a
+  virtualized list that re-renders once the filter settles, not a selector-scope problem — the
+  page object's `in_panel` already scopes every option query to this instance's overlay. Fix it
+  by reading the row once (`find` inside the waiting assertion, or a `have_css` carrying the
+  `aria-setsize` value) instead of waiting on one query and reading from a second. The failing
+  run also logged a 500 and a 404, so rule the environment in or out before assuming the spec
+  is the whole story. Loop the suite afterwards to confirm the flake is gone rather than merely
+  absent. Do not defer this into the Phase 4 test-infra rewrite: it is a live gate spec now,
+  and a gate that fails once in a while is a gate nobody trusts.
 
 ## Test gate
 
@@ -438,7 +452,10 @@ options to measure loading — it reads the loaded frontier from the highest rea
 
 The previously-noted pre-existing failure (`Integration | ui-kit | DDateTimeInput: allows
 mutations through actions`) is **gone** — it ran and passed in the run above, so it was fixed
-upstream. The gate has no known-red tests.
+upstream. No gate test is reliably red, but `d_select_cursor_source_spec` is a known
+intermittent (see the task above): it has failed a full-suite run and then passed the same
+seed, so treat a lone failure there as unproven rather than as either a regression or noise,
+and re-run the seed before drawing a conclusion.
 
 `pnpm lint:types` does **not** check `.js` tests — `tsconfig-base.json` sets `allowJs` with no
 `checkJs`. A test asserting a typed engine API should be `.ts` so the checker guards it; runtime
