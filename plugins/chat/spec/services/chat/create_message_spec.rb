@@ -65,6 +65,35 @@ RSpec.describe Chat::CreateMessage do
 
     before { channel.add(guardian.user) }
 
+    context "with a /me command" do
+      let(:content) { "/me waves" }
+
+      it "preserves the raw message and cooks it as an action by the author" do
+        expect(message.message).to eq("/me waves")
+        expect(message.cooked).to match_html(
+          %(<p><em class="chat-message-action">#{user.username} waves</em></p>),
+        )
+      end
+    end
+
+    context "with a /shrug command" do
+      let(:content) { "/shrug not sure" }
+
+      it "preserves the raw message and expands the command" do
+        expect(message.message).to eq("/shrug not sure")
+        expect(message.cooked).to match_html("<p>not sure ¯\\_(ツ)_/¯</p>")
+      end
+    end
+
+    context "with a /tableflip command" do
+      let(:content) { "/tableflip" }
+
+      it "preserves the raw message and expands the command" do
+        expect(message.message).to eq("/tableflip")
+        expect(message.cooked).to match_html("<p>(╯°□°)╯︵ ┻━┻</p>")
+      end
+    end
+
     shared_examples "creating a new message" do
       it "saves the message" do
         expect { result }.to change { Chat::Message.count }.by(1)
