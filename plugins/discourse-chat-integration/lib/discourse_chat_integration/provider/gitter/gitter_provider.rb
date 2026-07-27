@@ -38,8 +38,10 @@ module DiscourseChatIntegration
           (
             if parent_category
               "[#{parent_category.name}/#{topic.category.name}]"
-            else
+            elsif topic.category
               "[#{topic.category.name}]"
+            else
+              ""
             end
           )
 

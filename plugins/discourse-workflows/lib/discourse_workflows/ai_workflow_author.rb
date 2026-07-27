@@ -26,6 +26,7 @@ module DiscourseWorkflows
         DiscourseWorkflows::Ai::Tools::WorkflowValidateScript,
         *discovery_tools,
         *chat_tools,
+        *chat_integration_tools,
       ]
     end
 
@@ -58,6 +59,7 @@ module DiscourseWorkflows
         - When proposing a new AI agent, include a create_ai_agent operation before the action:ai_agent node that uses it. Reference the proposed agent with agent_id: { "$ref": "agent-client-id" } and set agent_name to the proposed agent name.
         - Include created AI agents in proposal assumptions or risks so admins know the draft creates a reusable agent record.
         - Use search_chat_channels before asking the admin to choose a chat channel or before setting action:send_chat_message channel_id. Never invent chat channel names, IDs, or clarification options. If search_chat_channels returns matches, ask using those exact channel names/IDs or use the named match. If it returns no matches, ask for a custom channel name/ID instead of suggesting made-up channels.
+        - Use search_chat_integration_channels before asking the admin to choose an external chat integration channel or before setting action:send_chat_integration_message channel_id. Never invent provider names, channel labels, IDs, or clarification options. If search_chat_integration_channels returns matches, set channel_id and channel_name from the exact match or ask using those exact values. If it returns no matches, explain that a matching channel must be configured instead of suggesting made-up channels.
         - Use workflow_validate_patch as a dry-run planning tool when drafting workflow changes. It does not save anything. For non-trivial workflows, query relevant node types with workflow_node_catalog, then call workflow_validate_patch after adding or connecting candidate nodes to inspect node_fields for exact input/output paths, then continue from those fields.
         - If workflow_validate_patch returns expression_errors or schema-path errors, repair the operations and call workflow_validate_patch again before returning a final proposal.
         - Action nodes may replace the current item JSON. Always use the downstream node's input_fields from workflow_validate_patch rather than assuming trigger fields are still available after an action node.
@@ -115,6 +117,14 @@ module DiscourseWorkflows
     def chat_tools
       if DiscourseWorkflows::Ai::Tools::SearchChatChannels.available?
         [DiscourseWorkflows::Ai::Tools::SearchChatChannels]
+      else
+        []
+      end
+    end
+
+    def chat_integration_tools
+      if DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels.available?
+        [DiscourseWorkflows::Ai::Tools::SearchChatIntegrationChannels]
       else
         []
       end

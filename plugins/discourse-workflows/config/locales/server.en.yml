@@ -192,6 +192,7 @@ en:
         workflow_authoring_result: "Returns the final workflow authoring result"
         workflow_resolve_entity: "Resolves Discourse names to workflow parameter values"
         search_chat_channels: "Searches chat channel names and IDs for workflow parameters"
+        search_chat_integration_channels: "Searches external chat integration channel labels and IDs for workflow parameters"
         workflow_script_context: "Returns context for writing workflow Code node JavaScript"
         workflow_validate_script: "Validates workflow Code node JavaScript"
       tool_summary:
@@ -203,6 +204,7 @@ en:
         workflow_authoring_result: "Returning workflow authoring result"
         workflow_resolve_entity: "Resolving Discourse entities"
         search_chat_channels: "Searching chat channels"
+        search_chat_integration_channels: "Searching external chat integration channels"
         workflow_script_context: "Loading script context"
         workflow_validate_script: "Validating script"
       tool_description:
@@ -214,5 +216,6 @@ en:
         workflow_authoring_result: "Returned workflow authoring result"
         workflow_resolve_entity: "Resolved Discourse entities"
         search_chat_channels: "Searched chat channels"
+        search_chat_integration_channels: "Searched external chat integration channels"
         workflow_script_context: "Loaded script context"
         workflow_validate_script: "Validated script"
