@@ -16,7 +16,7 @@ class LetterAvatar
   end
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 5
+  VERSION = 6
 
   # CHANGE these values to support more pixel ratios
   FULLSIZE = 120 * 3
@@ -24,7 +24,14 @@ class LetterAvatar
 
   class << self
     def version
-      "#{VERSION}_#{image_magick_version}"
+      @version ||=
+        begin
+          Thread.new do
+            sleep 2
+            cleanup_old
+          end
+          VERSION.to_s
+        end
     end
 
     def cache_path
@@ -66,56 +73,29 @@ class LetterAvatar
     end
 
     def generate_fullsize(identity)
-      color = identity.color
-      letter = identity.letter
-
       filename = fullsize_path(identity)
-
-      # Use NimbusSans-Regular, except for macOS where it is unavailable, use Helvetica there
       font = RbConfig::CONFIG["host_os"].match?(/darwin/i) ? "Helvetica" : "NimbusSans-Regular"
-      # and adjust vertical offset accordingly
       vertical_offset = font == "Helvetica" ? 26 : 34
+      letter = ERB::Util.html_escape(identity.letter)
+      svg = <<~SVG
+        <svg xmlns="http://www.w3.org/2000/svg" width="#{FULLSIZE}" height="#{FULLSIZE}" viewBox="0 0 #{FULLSIZE} #{FULLSIZE}">
+          <rect width="#{FULLSIZE}" height="#{FULLSIZE}" fill="#{to_rgb(identity.color)}"/>
+          <text x="#{FULLSIZE / 2}" y="#{FULLSIZE / 2 + vertical_offset}" text-anchor="middle" dominant-baseline="middle" font-family="#{font}" font-size="#{POINTSIZE}" fill="#FFFFFF" fill-opacity="0.8">#{letter}</text>
+        </svg>
+      SVG
 
-      instructions = %W[
-        -size
-        #{FULLSIZE}x#{FULLSIZE}
-        xc:#{to_rgb(color)}
-        -pointsize
-        #{POINTSIZE}
-        -fill
-        #FFFFFFCC
-        -font
-        #{font}
-        -gravity
-        Center
-        -annotate
-        -0+#{vertical_offset}
-        #{letter}
-        -depth
-        8
-        #{filename}
-      ]
+      Tempfile.create(%w[letter-avatar .svg]) do |svg_file|
+        svg_file.write(svg)
+        svg_file.flush
+        DiscourseImage.convert(input: svg_file.path, output: filename)
+      end
 
-      Discourse::Utils.execute_command("magick", *instructions)
-
-      ## do not optimize image, it will end up larger than original
       filename
     end
 
     def to_rgb(color)
       r, g, b = color
       "rgb(#{r},#{g},#{b})"
-    end
-
-    def image_magick_version
-      @image_magick_version ||=
-        begin
-          Thread.new do
-            sleep 2
-            cleanup_old
-          end
-          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
-        end
     end
 
     def cleanup_old

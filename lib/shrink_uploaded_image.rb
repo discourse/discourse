@@ -41,8 +41,8 @@ class ShrinkUploadedImage
     end
 
     begin
-      w, h = FastImage.size(path, timeout: 15, raise_on_failure: true)
-    rescue FastImage::SizeNotFound
+      w, h = DiscourseImage.size(path, timeout: 15)
+    rescue DiscourseImage::Error
       return false
     end
 

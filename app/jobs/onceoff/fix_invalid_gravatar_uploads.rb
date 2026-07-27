@@ -10,8 +10,8 @@ module Jobs
           # we may need to re-evaluate this
           extension =
             begin
-              FastImage.type(Discourse.store.path_for(upload))
-            rescue StandardError
+              DiscourseImage.type(Discourse.store.path_for(upload))
+            rescue DiscourseImage::Error
               nil
             end
           current_extension = upload.extension

@@ -189,15 +189,12 @@ class Upload < ActiveRecord::Base
       original_path = Discourse.store.path_for(self)
       original_path = Discourse.store.download(self) if original_path.blank?
 
-      image_info =
+      new_extension =
         begin
-          image = FastImage.new(original_path)
-          image.type # eager load to rescue errors early
-          image
-        rescue StandardError
-          nil
+          DiscourseImage.type(original_path).to_s
+        rescue DiscourseImage::Error
+          "unknown"
         end
-      new_extension = image_info&.type&.to_s || "unknown"
 
       if new_extension != extension
         update_columns(extension: new_extension)
@@ -306,19 +303,12 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            Discourse::Utils.execute_command(
-              "identify",
-              "-ping",
-              "-format",
-              "%w %h",
-              "MSVG:#{path}",
-              timeout: MAX_IDENTIFY_SECONDS,
-            ).split(" ")
-          rescue StandardError
+            DiscourseImage.size(path, timeout: MAX_IDENTIFY_SECONDS)
+          rescue DiscourseImage::Error
             [0, 0]
           end
       else
-        w, h = FastImage.new(path, raise_on_failure: true).size
+        w, h = DiscourseImage.size(path)
       end
 
       self.width = w || 0
@@ -394,37 +384,11 @@ class Upload < ActiveRecord::Base
 
       color ||=
         begin
-          data =
-            Discourse::Utils.execute_command(
-              "nice",
-              "-n",
-              "10",
-              "convert",
-              local_path,
-              "-depth",
-              "8",
-              "-resize",
-              "1x1",
-              "-define",
-              "histogram:unique-colors=true",
-              "-format",
-              "%c",
-              "histogram:info:",
-              timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
-            )
-
-          # Output format:
-          # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
-
-          color = data[/#([0-9A-F]{6})/, 1]
-
-          raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
-
-          color
-        rescue Discourse::Utils::CommandError
-          # Timeout or unable to parse image
-          # This can happen due to bad user input - ignore and save
-          # an empty string to prevent re-evaluation
+          DiscourseImage.calculate_dominant_color(
+            local_path,
+            timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
+          )
+        rescue DiscourseImage::Error
           ""
         end
     end
@@ -434,24 +398,6 @@ class Upload < ActiveRecord::Base
     else
       self.dominant_color = color
     end
-  end
-
-  def target_image_quality(local_path, test_quality)
-    @file_quality ||=
-      begin
-        Discourse::Utils.execute_command(
-          "identify",
-          "-ping",
-          "-format",
-          "%Q",
-          local_path,
-          timeout: MAX_IDENTIFY_SECONDS,
-        ).to_i
-      rescue StandardError
-        0
-      end
-
-    test_quality if @file_quality == 0 || @file_quality > test_quality
   end
 
   def self.sha1_from_short_path(path)

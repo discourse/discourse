@@ -36,6 +36,20 @@ RSpec.describe TopicOgImageGenerator do
     end
   end
 
+  describe "#render_png" do
+    it "rasterizes the generated SVG" do
+      generator = described_class.new(topic)
+      svg = generator.send(:build_svg)
+      bytes = generator.send(:render_png, svg)
+      image = StringIO.new(bytes)
+
+      expect(DiscourseImage.type(image)).to eq(:png)
+      expect(DiscourseImage.size(image)).to eq(
+        [TopicOgImageGenerator::OG_WIDTH, TopicOgImageGenerator::OG_HEIGHT],
+      )
+    end
+  end
+
   describe ".eligible?" do
     it "returns true for a public topic in a public category" do
       expect(described_class.eligible?(topic)).to eq(true)

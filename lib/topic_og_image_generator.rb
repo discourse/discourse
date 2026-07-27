@@ -328,29 +328,13 @@ class TopicOgImageGenerator
 
       File.write(svg_path, svg)
 
-      Discourse::Utils.execute_command(
-        "nice",
-        "-n",
-        "10",
-        "convert",
-        "-background",
-        "none",
-        "-size",
-        "#{OG_WIDTH}x#{OG_HEIGHT}",
-        svg_path,
-        "-depth",
-        "8",
-        "-define",
-        "png:compression-level=9",
-        png_path,
-        timeout: 20_000,
-      )
+      DiscourseImage.convert(input: svg_path, output: png_path, timeout: 20_000)
 
       return nil unless File.exist?(png_path)
-      FileHelper.optimize_image!(png_path)
+      DiscourseImage.optimize!(png_path)
       File.binread(png_path)
     end
-  rescue Discourse::Utils::CommandError => e
+  rescue DiscourseImage::Error => e
     Discourse.warn("Failed to render topic OG image", topic_id: @topic.id, error: e.message)
     nil
   end

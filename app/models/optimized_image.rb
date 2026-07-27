@@ -5,7 +5,7 @@ class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
   # BUMP UP if optimized image algorithm changes
-  VERSION = 2
+  VERSION = 3
   URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
 
   def self.lock(upload_id, width, height)
@@ -39,7 +39,7 @@ class OptimizedImage < ActiveRecord::Base
     # no extension so try to guess it
     upload.fix_image_extension if !upload.extension
 
-    if !upload.extension.match?(IM_DECODERS)
+    if !%w[jpg jpeg png ico gif webp avif svg].include?(upload.extension.downcase)
       if opts[:raise_on_error]
         raise InvalidAccess
       else
@@ -96,12 +96,7 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        target_quality =
-          upload.target_image_quality(
-            original_path,
-            SiteSetting.ImageQuality.image_preview_jpg_quality,
-          )
-        opts = opts.merge(quality: target_quality) if target_quality
+        opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
         opts = opts.merge(upload_id: upload.id)
 
         # special case, when "resizing" vectors we simply copy
@@ -195,182 +190,93 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
-
-  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
-    opts ||= {}
-
-    # This logic is a little messy but the result of using mocks for most
-    # of the image tests. The idea here is you shouldn't trust the "original"
-    # path of a file to figure out its extension. However, in certain cases
-    # such as generating the loading upload thumbnail, we force the format,
-    # and this allows us to use the forced format in that case.
-    extension = nil
-    if opts[:format] && path != ext_path
-      extension = File.extname(path)[1..-1]
-    else
-      extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
-    end
-
-    if !extension || !extension.match?(IM_DECODERS)
-      raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
-    end
-    "#{extension}:#{path}"
-  end
-
-  def self.thumbnail_or_resize
-    SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
-  end
-
-  def self.resize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    # note FROM my not be named correctly
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = ["convert", "#{from}[0]"]
-
-    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    # NOTE: ORDER is important!
-    instructions.concat(
-      %W[
-        -auto-orient
-        -gravity
-        center
-        -background
-        transparent
-        -#{thumbnail_or_resize}
-        #{dimensions}^
-        -extent
-        #{dimensions}
-        -interpolate
-        catrom
-        -unsharp
-        2x0.5+0.7+0
-        -interlace
-        none
-        -profile
-        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-        #{to}
-      ],
-    )
-  end
-
-  def self.crop_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = %W{
-      convert
-      #{from}[0]
-      -auto-orient
-      -gravity
-      north
-      -background
-      transparent
-      -#{thumbnail_or_resize}
-      #{dimensions}^
-      -crop
-      #{dimensions}+0+0
-      -unsharp
-      2x0.5+0.7+0
-      -interlace
-      none
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-    }
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    instructions << to
-  end
-
-  def self.downsize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    %W{
-      convert
-      #{from}[0]
-      -auto-orient
-      -gravity
-      center
-      -background
-      transparent
-      -interlace
-      none
-      -resize
-      #{dimensions}
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-      #{to}
-    }
-  end
-
   def self.resize(from, to, width, height, opts = {})
-    optimize("resize", from, to, "#{width}x#{height}", opts)
+    process(from: from, to: to, opts: opts) do |output_path|
+      DiscourseImage.crop(
+        input: from,
+        output: output_path,
+        width: width,
+        height: height,
+        position: :center,
+        maximum_quality: opts[:quality],
+      )
+    end
   end
 
   def self.crop(from, to, width, height, opts = {})
-    optimize("crop", from, to, "#{width}x#{height}", opts)
+    process(from: from, to: to, opts: opts) do |output_path|
+      DiscourseImage.crop(
+        input: from,
+        output: output_path,
+        width: width,
+        height: height,
+        position: :top,
+        maximum_quality: opts[:quality],
+      )
+    end
   end
 
   def self.downsize(from, to, dimensions, opts = {})
-    optimize("downsize", from, to, dimensions, opts)
-  end
-
-  def self.optimize(operation, from, to, dimensions, opts = {})
-    method_name = "#{operation}_instructions"
-
-    instructions = public_send(method_name.to_sym, from, to, dimensions, opts)
-    convert_with(instructions, to, opts)
-  end
-
-  MAX_PNGQUANT_SIZE = 500_000
-  MAX_CONVERT_SECONDS = 20
-
-  def self.convert_with(instructions, to, opts = {})
-    Discourse::Utils.execute_command(
-      "nice",
-      "-n",
-      "10",
-      *instructions,
-      timeout: MAX_CONVERT_SECONDS,
-    )
-
-    allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
-    FileHelper.optimize_image!(to, allow_pngquant: allow_pngquant)
-    true
-  rescue => e
-    if opts[:raise_on_error]
-      raise e
-    else
-      error = +"Failed to optimize image:"
-
-      if e.message =~ /\Aconvert:([^`]+)/
-        error << $1
-      else
-        error << " unknown reason"
-      end
-
-      Discourse.warn(
-        error,
-        upload_id: opts[:upload_id],
-        location: to,
-        error_message: e.message,
-        instructions: instructions,
-      )
-      false
+    process(from: from, to: to, opts: opts) do |output_path|
+      resize_options = parse_resize_options(from: from, dimensions: dimensions)
+      DiscourseImage.resize(input: from, output: output_path, **resize_options)
     end
   end
+
+  def self.process(from:, to:, opts:)
+    extension = output_extension(from: from, to: to, opts: opts)
+    return yield(to) if File.extname(to).delete_prefix(".").casecmp?(extension)
+
+    Tempfile.create(["optimized-image", ".#{extension}"], File.dirname(to), binmode: true) do |file|
+      temporary_path = file.path
+      file.close
+      FileUtils.rm_f(temporary_path)
+      result = yield(temporary_path)
+      FileUtils.mv(temporary_path, to) if result
+      result
+    ensure
+      FileUtils.rm_f(temporary_path) if temporary_path
+    end
+  rescue => error
+    raise if opts[:raise_on_error]
+
+    Discourse.warn(
+      "Failed to optimize image: #{error.message}",
+      upload_id: opts[:upload_id],
+      location: to,
+      error_message: error.message,
+    )
+    false
+  end
+  private_class_method :process
+
+  def self.output_extension(from:, to:, opts:)
+    extension = File.extname(to).delete_prefix(".")
+    return extension if FileHelper.supported_images.include?(extension.downcase)
+
+    hint = opts[:format] || File.extname(opts[:filename].to_s).delete_prefix(".")
+    (hint.presence || DiscourseImage.type(from)).to_s.sub(/\Ajpeg\z/, "jpg")
+  end
+  private_class_method :output_extension
+
+  def self.parse_resize_options(from:, dimensions:)
+    case dimensions
+    when /\A(\d+(?:\.\d+)?)%\z/
+      { scale: $1.to_f / 100, allow_upscale: true }
+    when /\A(\d+)@\z/
+      width, height = DiscourseImage.size(from)
+      { scale: Math.sqrt($1.to_f / (width * height)), allow_upscale: true }
+    when /\A(\d*)x(\d*)>\z/
+      width = $1.presence&.to_i
+      height = $2.presence&.to_i
+      raise ArgumentError, "invalid resize dimensions" if width.nil? && height.nil?
+
+      { width: width, height: height, allow_upscale: false }
+    else
+      raise ArgumentError, "invalid resize dimensions"
+    end
+  end
+  private_class_method :parse_resize_options
 end
 
 # == Schema Information

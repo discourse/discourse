@@ -13,7 +13,12 @@ module Jobs
         .limit(MAX_PROCESSED_GIF_IMAGES)
         .each do |upload|
           uri = Discourse.store.path_for(upload) || upload.url
-          upload.animated = FastImage.animated?(uri)
+          upload.animated =
+            begin
+              DiscourseImage.animated?(uri)
+            rescue DiscourseImage::Error
+              nil
+            end
           upload.save(validate: false)
           upload.optimized_images.destroy_all if upload.animated
         end

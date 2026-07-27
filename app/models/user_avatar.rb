@@ -121,8 +121,7 @@ class UserAvatar < ActiveRecord::Base
 
     return unless tempfile
 
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
+    ext = DiscourseImage.type(tempfile).to_s
 
     upload =
       UploadCreator.new(
@@ -143,7 +142,7 @@ class UserAvatar < ActiveRecord::Base
         user.update!(uploaded_avatar_id: upload.id)
       end
     end
-  rescue Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
+  rescue DiscourseImage::Error, Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
     # Skip saving. We are not connected to the net, or SSRF checks failed.
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)

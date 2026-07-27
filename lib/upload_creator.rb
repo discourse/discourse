@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "fastimage"
-
 class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
@@ -73,16 +71,14 @@ class UploadCreator
       return @upload
     end
 
-    @image_info =
+    @image_type =
       begin
-        image = FastImage.new(@file)
-        image.type # eager load to rescue errors early
-        image
-      rescue StandardError
+        DiscourseImage.type(@file)
+      rescue DiscourseImage::Error
         nil
       end
     is_image = FileHelper.is_supported_image?(@filename)
-    is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
+    is_image ||= @image_type && FileHelper.is_supported_image?("test.#{@image_type}")
     is_image = false if @opts[:for_theme]
     is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
 
@@ -100,23 +96,23 @@ class UploadCreator
     sha1_before_changes = Upload.generate_digest(@file) if @file
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
-      # We need to convert HEIFs early because FastImage does not consider them as images
       if convert_heif_to_jpeg? && !external_upload_too_big
         convert_heif!
-        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
+        is_image = FileHelper.is_supported_image?("test.#{@image_type}")
       end
 
       if is_image && !external_upload_too_big
         extract_image_info!
         return @upload if @upload.errors.present?
 
-        if @image_info.type == :svg
+        if @image_type == :svg
           clean_svg!
-        elsif @image_info.type == :ico
+        elsif @image_type == :ico
           convert_favicon_to_png!
         elsif !Rails.env.test? || @opts[:force_optimize]
-          convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
-          fix_orientation! if should_fix_orientation?
+          recompress_jpeg! if should_recompress_jpeg?
+          convert_to_jpeg! if convert_png_to_jpeg?
+          normalize_orientation! if should_normalize_orientation?
           crop! if should_crop?
           optimize! if should_optimize?
           downsize! if should_downsize?
@@ -124,7 +120,7 @@ class UploadCreator
         end
 
         # conversion may have switched the type
-        image_type = @image_info.type.to_s
+        image_type = @image_type.to_s
       end
 
       # compute the sha of the file and generate a unique hash
@@ -192,32 +188,7 @@ class UploadCreator
       @upload.extension = image_type || File.extname(@filename)[1..10]
 
       if is_image && !external_upload_too_big
-        if @image_info.type.to_s == "svg"
-          w, h = [0, 0]
-
-          # identify can behave differently depending on how it's compiled and
-          # what programs (e.g. inkscape) are installed on your system.
-          # 'MSVG:' forces ImageMagick to use internal routines and behave
-          # consistently whether it's running from our docker container or not
-          begin
-            w, h =
-              Discourse::Utils
-                .execute_command(
-                  "identify",
-                  "-ping",
-                  "-format",
-                  "%w %h",
-                  "MSVG:#{@file.path}",
-                  timeout: Upload::MAX_IDENTIFY_SECONDS,
-                )
-                .split(" ")
-                .map(&:to_i)
-          rescue StandardError
-            # use default 0, 0
-          end
-        else
-          w, h = @image_info.size
-        end
+        w, h = @image_size
 
         @upload.thumbnail_width, @upload.thumbnail_height = ImageSizer.resize(w, h)
         @upload.width, @upload.height = w, h
@@ -300,23 +271,30 @@ class UploadCreator
   end
 
   def extract_image_info!
-    @image_info =
-      begin
-        image = FastImage.new(@file)
-        image.type # eager load to rescue errors early
-        image
-      rescue StandardError
-        nil
-      end
-    @file.rewind
+    begin
+      @image_type = DiscourseImage.type(@file)
+      @image_size =
+        begin
+          DiscourseImage.size(
+            @file,
+            timeout: @image_type == :svg ? Upload::MAX_IDENTIFY_SECONDS : 2,
+          )
+        rescue DiscourseImage::InvalidImageError
+          raise if @image_type != :svg
 
-    if @image_info.nil?
+          [0, 0]
+        end
+    rescue DiscourseImage::Error
+      @image_type = @image_size = nil
+    end
+
+    if @image_type.nil?
       @upload.errors.add(:base, I18n.t("upload.images.not_supported_or_corrupted"))
     elsif filesize <= 0
       @upload.errors.add(:base, I18n.t("upload.empty"))
-    elsif pixels == 0 && @image_info.type.to_s != "svg"
+    elsif pixels == 0 && @image_type != :svg
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    elsif max_image_pixels > 0 && pixels >= max_image_pixels
+    elsif @image_type != :svg && max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
@@ -328,13 +306,8 @@ class UploadCreator
     end
   end
 
-  MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
-
   def convert_png_to_jpeg?
-    return false unless @image_info.type == :png
-    return false if SiteSetting.ImageQuality.png_to_jpg_quality == 100
-    return true if @opts[:pasted]
-    pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
+    @image_type == :png && !animated? && SiteSetting.ImageQuality.png_to_jpg_quality < 100
   end
 
   MIN_CONVERT_TO_JPEG_BYTES_SAVED = 75_000
@@ -342,127 +315,88 @@ class UploadCreator
 
   def convert_favicon_to_png!
     png_tempfile = Tempfile.new(%w[image .png])
-
-    from = @file.path
-    to = png_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    from = "#{from}[-1]" # We only want the last(largest) image of the .ico file
-
-    opts = { flatten: false } # Preserve transparency
-
-    begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
-    end
-
-    @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = png_tempfile
-    extract_image_info!
+    convert_image(input: @file.path, output: png_tempfile.path)
+    replace_file(png_tempfile)
   end
 
   def convert_to_jpeg!
-    return if @opts[:type] == "topic_og_image"
-    return if @opts[:for_site_setting] || ADMIN_ASSET_TYPES.include?(@opts[:type])
-    return if filesize < MIN_CONVERT_TO_JPEG_BYTES_SAVED
+    return if !eligible_for_jpeg_reencoding?
 
     jpeg_tempfile = Tempfile.new(%w[image .jpg])
-
-    from = @file.path
-    to = jpeg_tempfile.path
-
-    OptimizedImage.ensure_safe_paths!(from, to)
-
-    from = OptimizedImage.prepend_decoder!(from, nil, filename: "image.#{@image_info.type}")
-    to = OptimizedImage.prepend_decoder!(to)
-
-    opts = {}
-
-    desired_quality = [
+    maximum_quality = [
       SiteSetting.ImageQuality.png_to_jpg_quality,
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
+    convert_image(input: @file.path, output: jpeg_tempfile.path, maximum_quality: maximum_quality)
+    keep_jpeg_candidate(jpeg_tempfile)
+  end
 
-    target_quality = @upload.target_image_quality(from, desired_quality)
-    opts = { quality: target_quality } if target_quality
+  def should_recompress_jpeg?
+    @image_type == :jpeg && !animated? &&
+      SiteSetting.ImageQuality.recompress_original_jpg_quality < 100
+  end
 
-    begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
-    end
+  def recompress_jpeg!
+    return if !eligible_for_jpeg_reencoding?
 
+    jpeg_tempfile = Tempfile.new(%w[image .jpg])
+    FileUtils.cp(@file.path, jpeg_tempfile.path)
+    changed =
+      DiscourseImage.recompress!(
+        jpeg_tempfile.path,
+        maximum_quality: SiteSetting.ImageQuality.recompress_original_jpg_quality,
+      )
+    changed ? keep_jpeg_candidate(jpeg_tempfile) : jpeg_tempfile.close!
+  end
+
+  def eligible_for_jpeg_reencoding?
+    @opts[:type] != "topic_og_image" && !@opts[:for_site_setting] &&
+      !ADMIN_ASSET_TYPES.include?(@opts[:type]) && filesize >= MIN_CONVERT_TO_JPEG_BYTES_SAVED
+  end
+
+  def keep_jpeg_candidate(jpeg_tempfile)
     new_size = File.size(jpeg_tempfile.path)
-
     keep_jpeg = new_size < filesize * MIN_CONVERT_TO_JPEG_SAVING_RATIO
     keep_jpeg &&= (filesize - new_size) > MIN_CONVERT_TO_JPEG_BYTES_SAVED
 
-    if keep_jpeg
-      @file.respond_to?(:close!) ? @file.close! : @file.close
-      @file = jpeg_tempfile
-      extract_image_info!
-    else
-      jpeg_tempfile.close!
-    end
+    keep_jpeg ? replace_file(jpeg_tempfile) : jpeg_tempfile.close!
   end
 
   def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
+    %i[heic heif].include?(@image_type)
   end
 
   def convert_heif!
     jpeg_tempfile = Tempfile.new(%w[image .jpg])
-    from = @file.path
-    to = jpeg_tempfile.path
-    OptimizedImage.ensure_safe_paths!(from, to)
+    convert_image(input: @file.path, output: jpeg_tempfile.path)
+    replace_file(jpeg_tempfile)
+  end
 
-    begin
-      execute_convert(from, to)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true })
-    end
+  def convert_image(input:, output:, maximum_quality: nil)
+    DiscourseImage.convert(input: input, output: output, maximum_quality: maximum_quality)
+  rescue DiscourseImage::Error => error
+    raise error.class, I18n.t("upload.png_to_jpg_conversion_failure_message")
+  end
 
+  def replace_file(file)
+    file.close
+    file.open
+    file.binmode
     @file.respond_to?(:close!) ? @file.close! : @file.close
-    @file = jpeg_tempfile
+    @file = file
     extract_image_info!
   end
 
-  MAX_CONVERT_FORMAT_SECONDS = 20
-  def execute_convert(from, to, opts = {})
-    command = ["magick", from, "-auto-orient", "-background", "white", "-interlace", "none"]
-    command << "-flatten" unless opts[:flatten] == false
-    command << "-debug" << "all" if opts[:debug]
-    command << "-quality" << opts[:quality].to_s if opts[:quality]
-    command << to
-
-    Discourse::Utils.execute_command(
-      *command,
-      failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
-      timeout: MAX_CONVERT_FORMAT_SECONDS,
-    )
+  def should_normalize_orientation?
+    DiscourseImage.orientation(@file) != :normal
+  rescue DiscourseImage::Error
+    false
   end
 
-  def should_alter_quality?
-    return false if animated?
-
-    desired_quality =
-      (
-        if @image_info.type == :png
-          SiteSetting.ImageQuality.png_to_jpg_quality
-        else
-          SiteSetting.ImageQuality.recompress_original_jpg_quality
-        end
-      )
-
-    @upload.target_image_quality(@file.path, desired_quality).present?
+  def normalize_orientation!
+    transformed_file = Tempfile.new(["oriented", ".#{@image_type}"])
+    convert_image(input: @file.path, output: transformed_file.path)
+    replace_file(transformed_file)
   end
 
   def should_downsize?
@@ -472,19 +406,16 @@ class UploadCreator
   def downsize!
     3.times do
       original_size = filesize
-      down_tempfile = Tempfile.new(["down", ".#{@image_info.type}"])
+      down_tempfile = Tempfile.new(["down", ".#{@image_type}"])
 
-      from = @file.path
-      to = down_tempfile.path
+      DiscourseImage.resize(
+        input: @file.path,
+        output: down_tempfile.path,
+        scale: 0.5,
+        allow_upscale: false,
+      )
 
-      OptimizedImage.ensure_safe_paths!(from, to)
-
-      OptimizedImage.downsize(from, to, "50%", scale_image: true, raise_on_error: true)
-
-      @file.respond_to?(:close!) ? @file.close! : @file.close
-      @file = down_tempfile
-
-      extract_image_info!
+      replace_file(down_tempfile)
 
       return if filesize >= original_size || pixels == 0 || !should_downsize?
     end
@@ -537,30 +468,6 @@ class UploadCreator
     @file.rewind
   end
 
-  def should_fix_orientation?
-    # orientation is between 1 and 8, 1 being the default
-    # cf. http://www.daveperrett.com/articles/2012/07/28/exif-orientation-handling-is-a-ghetto/
-    @image_info.orientation.to_i > 1
-  end
-
-  MAX_FIX_ORIENTATION_TIME = 5
-  def fix_orientation!
-    path = @file.path
-
-    OptimizedImage.ensure_safe_paths!(path)
-    path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
-
-    Discourse::Utils.execute_command(
-      "magick",
-      path,
-      "-auto-orient",
-      path,
-      timeout: MAX_FIX_ORIENTATION_TIME,
-    )
-
-    extract_image_info!
-  end
-
   def should_crop?
     if %w[profile_background card_background custom_emoji].include?(@opts[:type]) && animated?
       return false
@@ -571,73 +478,55 @@ class UploadCreator
 
   def crop!
     max_pixel_ratio = Discourse::PIXEL_RATIOS.max
-    filename_with_correct_ext = "image.#{@image_info.type}"
+    transformed_file = Tempfile.new(["transformed", ".#{@image_type}"])
 
     case @opts[:type]
     when "avatar"
-      width = height = Discourse.avatar_sizes.max
-      OptimizedImage.resize(
-        @file.path,
-        @file.path,
-        width,
-        height,
-        filename: filename_with_correct_ext,
+      size = Discourse.avatar_sizes.max
+      DiscourseImage.crop(
+        input: @file.path,
+        output: transformed_file.path,
+        width: size,
+        height: size,
       )
     when "profile_background"
-      max_width = 850 * max_pixel_ratio
-      width, height =
-        ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
-          max_width: max_width,
-          max_height: max_width,
-        )
-      OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
-        filename: filename_with_correct_ext,
-      )
+      resize_background(output: transformed_file.path, max_width: 850 * max_pixel_ratio)
     when "card_background"
-      max_width = 590 * max_pixel_ratio
-      width, height =
-        ImageSizer.resize(
-          @image_info.size[0],
-          @image_info.size[1],
-          max_width: max_width,
-          max_height: max_width,
-        )
-      OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "#{width}x#{height}\>",
-        filename: filename_with_correct_ext,
-      )
+      resize_background(output: transformed_file.path, max_width: 590 * max_pixel_ratio)
     when "custom_emoji"
-      OptimizedImage.downsize(
-        @file.path,
-        @file.path,
-        "100x100\>",
-        filename: filename_with_correct_ext,
+      DiscourseImage.resize(
+        input: @file.path,
+        output: transformed_file.path,
+        width: 100,
+        height: 100,
+        allow_upscale: false,
       )
     end
 
-    extract_image_info!
+    replace_file(transformed_file)
+  end
+
+  def resize_background(output:, max_width:)
+    width, height =
+      ImageSizer.resize(@image_size[0], @image_size[1], max_width: max_width, max_height: max_width)
+    DiscourseImage.resize(
+      input: @file.path,
+      output: output,
+      width: width,
+      height: height,
+      allow_upscale: false,
+    )
   end
 
   def should_optimize?
-    # GIF is too slow (plus, we'll soon be converting them to MP4)
-    # Optimizing SVG is useless
-    return false if @file.path =~ /\.(gif|svg)\z/i
-    # Safeguard for large PNGs
-    return pixels < 2_000_000 if @file.path =~ /\.png/i
-    # Everything else is fine!
+    return false if !%i[jpeg png].include?(@image_type)
+    return pixels < 2_000_000 if @image_type == :png
+
     true
   end
 
   def optimize!
-    OptimizedImage.ensure_safe_paths!(@file.path)
-    FileHelper.optimize_image!(@file.path)
+    DiscourseImage.optimize!(@file.path)
     extract_image_info!
   end
 
@@ -654,7 +543,7 @@ class UploadCreator
   end
 
   def pixels
-    @image_info.size&.reduce(:*).to_i
+    @image_size&.reduce(:*).to_i
   end
 
   def svg_allowlist_xpath
@@ -679,28 +568,9 @@ class UploadCreator
 
     @animated ||=
       begin
-        is_animated = FastImage.animated?(@file)
-        type = @image_info.type.to_s
-
-        if is_animated != nil
-          # FastImage will return nil if it cannot determine if animated
-          is_animated
-        elsif %w[gif webp avif].include?(type)
-          # Only GIFs, WEBPs and a few other unsupported image types can be animated
-          OptimizedImage.ensure_safe_paths!(@file.path)
-
-          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
-          frames =
-            begin
-              Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i
-            rescue StandardError
-              1
-            end
-
-          frames > 1
-        else
-          false
-        end
+        DiscourseImage.animated?(@file, timeout: Upload::MAX_IDENTIFY_SECONDS)
+      rescue DiscourseImage::Error
+        false
       end
   end
 

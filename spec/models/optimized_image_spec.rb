@@ -74,20 +74,6 @@ RSpec.describe OptimizedImage do
       end
     end
 
-    describe ".resize_instructions" do
-      let(:image) { "#{Rails.root.join("spec/fixtures/images/logo.png")}" }
-
-      it "doesn't return any color options by default" do
-        instructions = described_class.resize_instructions(image, image, "50x50")
-        expect(instructions).to_not include("-colors")
-      end
-
-      it "supports an optional color option" do
-        instructions = described_class.resize_instructions(image, image, "50x50", colors: 12)
-        expect(instructions).to include("-colors")
-      end
-    end
-
     describe ".resize" do
       it "should work correctly when extension is bad" do
         original_path = Dir::Tmpname.create(%w[origin .bin]) { nil }
@@ -154,7 +140,7 @@ RSpec.describe OptimizedImage do
                 5,
                 raise_on_error: true,
               )
-            end.to raise_error(RuntimeError, /improper image header/)
+            end.to raise_error(DiscourseImage::ProcessingFailedError)
           ensure
             File.delete(tmp_path) if File.exist?(tmp_path)
           end
@@ -338,7 +324,9 @@ RSpec.describe OptimizedImage do
       context "when the thumbnail is properly generated" do
         context "with secure uploads disabled" do
           let(:s3_upload) { Fabricate(:upload_s3) }
-          let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
+          let(:optimized_path) do
+            %r{/optimized/\d+X.*/#{s3_upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png}
+          end
 
           before do
             stub_request(:head, "http://#{s3_upload.url}").to_return(status: 200)

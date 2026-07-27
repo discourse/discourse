@@ -117,8 +117,7 @@ class UserProfile < ActiveRecord::Base
 
     return unless tempfile
 
-    ext = FastImage.type(tempfile).to_s
-    tempfile.rewind
+    ext = DiscourseImage.type(tempfile).to_s
 
     is_card_background = !options || options[:is_card_background]
     type = is_card_background ? "card_background" : "profile_background"
@@ -136,7 +135,7 @@ class UserProfile < ActiveRecord::Base
     else
       user.user_profile.upload_profile_background(upload)
     end
-  rescue Net::ReadTimeout, OpenURI::HTTPError
+  rescue DiscourseImage::Error, Net::ReadTimeout, OpenURI::HTTPError
     # skip saving, we are not connected to the net
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)

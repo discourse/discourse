@@ -128,10 +128,7 @@ module UpcomingChanges
 
     full_file_path = File.join(Rails.public_path, image_path(change_setting_name))
 
-    File.open(full_file_path, "rb") do |file|
-      image_info = FastImage.new(file)
-      width, height = image_info.size
-    end
+    File.open(full_file_path, "rb") { |file| width, height = DiscourseImage.size(file) }
 
     data = { url: "#{Discourse.base_url}/#{image_path(change_setting_name)}", width:, height: }
 

@@ -200,11 +200,8 @@ module CookedProcessorMixin
 
     return unless absolute_url
 
-    # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
 
-    # we can't direct FastImage to our secure-uploads url because it bounces
-    # anonymous requests with a 404 error
     if url && Upload.secure_uploads_url?(url)
       absolute_url =
         Upload.signed_url_from_secure_uploads_url(absolute_url, include_content_disposition: false)
@@ -216,10 +213,9 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = DiscourseImage.size(absolute_url)
     end
-  rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
-    # FastImage.size raises BufError for some gifs, leave it.
+  rescue DiscourseImage::Error, Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
   end
 
   def get_filename(upload, src)
