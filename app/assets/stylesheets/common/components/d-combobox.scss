@@ -108,6 +108,13 @@
   text-overflow: ellipsis;
 }
 
+// A badge sizes itself for running text. As a trigger's value it has to match the fields
+// beside it instead, so its own sizing is reset. Trigger-wide, so chips are covered too.
+.d-combobox__trigger .badge-category__wrapper {
+  font-size: var(--font-0);
+  align-items: center;
+}
+
 .d-combobox__placeholder {
   color: var(--primary-medium);
 
@@ -297,7 +304,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
-  padding: 0.15em 0.4em;
+
+  // Horizontal inset only. The trigger has no height of its own, so block padding here makes
+  // a multi-select taller than the single-selects beside it and a row of fields stops
+  // aligning. Inheriting type and line-height keeps them identical without a tuned number.
+  padding: 0 0.4em;
   background: var(--primary-low);
   color: var(--primary);
   border-radius: var(--d-input-border-radius, 0.25em);
