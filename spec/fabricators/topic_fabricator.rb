@@ -12,9 +12,9 @@ Fabricator(:topic_with_op, from: :topic) do
   transient :raw
   after_create do |topic, transient|
     if transient[:raw].present?
-      Fabricate(:post, topic: topic, user: topic.user, raw: transient[:raw])
+      Fabricate(:post, topic: topic, raw: transient[:raw])
     else
-      Fabricate(:post, topic: topic, user: topic.user)
+      Fabricate(:post, topic: topic)
     end
   end
 end
