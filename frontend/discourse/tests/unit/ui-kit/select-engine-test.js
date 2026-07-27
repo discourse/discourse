@@ -805,3 +805,86 @@ module("Unit | ui-kit | SelectEngine | setSize", function (hooks) {
     );
   });
 });
+
+/**
+ * A paged source that records the filters it was asked for, so a test can prove a query was
+ * genuinely re-fetched rather than served from a stale buffer.
+ */
+function recordingLoad(rowsFor) {
+  const filters = [];
+  const load = (filter) => {
+    filters.push(filter);
+    return Promise.resolve({ items: rowsFor(filter), hasMore: false });
+  };
+  return { load, filters };
+}
+
+const rowsFor = (filter) =>
+  filter ? [{ id: `${filter}-a`, name: `${filter} result` }] : [];
+
+module("Unit | ui-kit | SelectEngine | refiltering", function (hooks) {
+  setupTest(hooks);
+
+  // Typing forward only ever produces filters the engine has not seen. Deleting walks back
+  // through filters it HAS seen, which is what made this reachable: the load key is
+  // [filter, nonce, reveal], and resetting for a new query empties the accumulator while
+  // leaving the settled-key pointing at a query that key can equal again.
+  test("re-fetches a filter that was already loaded once, after deleting back to it", async function (assert) {
+    const { load, filters } = recordingLoad(rowsFor);
+    const engine = new SelectEngine({ load });
+
+    engine.setFilter("12");
+    await engine.loadItems(engine.loadContext);
+
+    engine.setFilter("123");
+    await engine.loadItems(engine.loadContext);
+
+    assert.deepEqual(
+      filters,
+      ["12", "123"],
+      "typing forward fetches each new query"
+    );
+
+    // Backspace: back to a filter whose key was already settled.
+    engine.setFilter("12");
+    const items = await engine.loadItems(engine.loadContext);
+
+    assert.deepEqual(
+      filters,
+      ["12", "123", "12"],
+      "deleting back to a previously-loaded query fetches it again"
+    );
+    assert.deepEqual(
+      items.map((item) => item.id),
+      ["12-a"],
+      "and returns that query's rows rather than the emptied accumulator"
+    );
+  });
+
+  test("stays correct across several deletions in a row", async function (assert) {
+    const { load, filters } = recordingLoad(rowsFor);
+    const engine = new SelectEngine({ load });
+
+    for (const filter of ["1", "12", "123"]) {
+      engine.setFilter(filter);
+      await engine.loadItems(engine.loadContext);
+    }
+
+    for (const filter of ["12", "1"]) {
+      engine.setFilter(filter);
+      const items = await engine.loadItems(engine.loadContext);
+
+      assert.deepEqual(
+        items.map((item) => item.id),
+        [`${filter}-a`],
+        `after deleting back to "${filter}" the rows match the query`
+      );
+    }
+
+    assert.deepEqual(
+      filters,
+      ["1", "12", "123", "12", "1"],
+      "every deletion re-fetched instead of reusing a settled key"
+    );
+  });
+});

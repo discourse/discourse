@@ -365,6 +365,26 @@
   --styleguide-control-width: 28rem;
 }
 
+// A card whose subject is a difference keeps both specimens inside it, so the comparison is one
+// claim rather than two half-claims in adjacent cards. Each slot keeps the page's control width
+// and they drop to one column when the card is too narrow to hold both.
+.select-examples__pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.select-examples__pair-item {
+  flex: 1 1 var(--styleguide-control-width);
+  min-width: 0;
+}
+
+.select-examples__pair-label {
+  margin-block-end: var(--space-2);
+  font-size: var(--font-down-1);
+  color: var(--primary-high);
+}
+
 /* Row archetypes ------------------------------------------------------------------------- */
 
 /* Three shapes, used across every example so ~50 demos read as one designed system rather

@@ -3331,6 +3331,41 @@ module(
         );
     });
 
+    test("shortening the query re-seeds the cursor to the top of the widened list", async function (assert) {
+      const many = Array.from({ length: 40 }, (_, i) => ({
+        id: i + 1,
+        name: `Item ${i + 1}`,
+      }));
+
+      await render(
+        <template>
+          <DSelect @items={{many}} @identifier="test-select" />
+        </template>
+      );
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "Item 12");
+      assert.dom("[role='option'].--active").hasText("Item 12");
+
+      // Widening keeps the previously-active row in the set (unlike narrowing, where it drops
+      // out and the cursor re-seeds for free). Tracking that survivor leaves the cursor deep in
+      // the new list and pins the viewport there, so the rows the shortened query just added
+      // above it are scrolled out of sight and the re-query looks like it never happened.
+      await fillIn("[role='combobox']", "Item 1");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Item 1",
+          "the cursor moves to the first row of the new result set"
+        );
+      assert.strictEqual(
+        find(".d-virtual-list").scrollTop,
+        0,
+        "and the list is scrolled to the top so the newly-matching rows are visible"
+      );
+    });
+
     test("keyboard navigation scrolls an off-screen option into view within the listbox", async function (assert) {
       const many = Array.from({ length: 40 }, (_, i) => ({
         id: i + 1,
@@ -5775,6 +5810,62 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
     assert.true(
       find(".d-combobox__panel").offsetWidth > trigger.offsetWidth,
       "the option panel is wider than the compact icon-only trigger, so labels are not clipped"
+    );
+  });
+});
+
+module("Integration | ui-kit | select | DSelect (refilter)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  // Mirrors the styleguide's paginated source: a large set, pages, and a declared total, so the
+  // windowed list and the page accumulator are both in play. Reported symptom: type "123", get
+  // its rows, press backspace, and the list keeps showing the rows for "123".
+  const ALL = Array.from({ length: 5000 }, (_, i) => ({
+    id: i + 1,
+    name: `Option ${i + 1}`,
+  }));
+
+  function pagedLoad(queries) {
+    return (filter, { offset = 0, limit = 50 } = {}) => {
+      queries.push(filter);
+      const matched = filter
+        ? ALL.filter((item) => item.name.includes(filter))
+        : ALL;
+      return Promise.resolve({
+        items: matched.slice(offset, offset + limit),
+        total: matched.length,
+      });
+    };
+  }
+
+  test("re-queries a paginated source when the query is shortened", async function (assert) {
+    const queries = [];
+    const load = pagedLoad(queries);
+
+    await render(<template><DSelect @load={{load}} /></template>);
+
+    await fillIn("[role='combobox']", "123");
+
+    const longQueryRows = findAll("[role='option']").length;
+    assert.true(longQueryRows > 0, "the longer query renders its matches");
+
+    // A real deletion, not `fillIn`: the browser fires keydown, mutates the value, then fires
+    // input. `fillIn` skips the keydown, and DSelect has Backspace handling on that path.
+    const input = find("[role='combobox']");
+    await triggerKeyEvent(input, "keydown", "Backspace");
+    input.value = "12";
+    await triggerEvent(input, "input");
+
+    assert.deepEqual(
+      queries,
+      ["123", "12"],
+      "shortening the query issues a new request"
+    );
+    // "12" matches strictly more of the set than "123" does, so an unchanged row count is the
+    // tell that the list is still showing the previous query's results.
+    assert.true(
+      findAll("[role='option']").length > longQueryRows,
+      "the list re-renders for the shortened query rather than keeping the old rows"
     );
   });
 });

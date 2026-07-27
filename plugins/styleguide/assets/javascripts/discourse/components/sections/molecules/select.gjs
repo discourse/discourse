@@ -80,6 +80,8 @@ export default class Select extends Component {
   @tracked largeListValue = null;
   @tracked pagedValue = null;
   @tracked pagedCursorValue = null;
+  @tracked fastReloadValue = null;
+  @tracked slowReloadValue = null;
   @tracked openCount = 0;
   @tracked closeCount = 0;
 
@@ -112,6 +114,17 @@ export default class Select extends Component {
 //
 // A source that paginates MUST report total or hasMore. Say nothing and the
 // engine takes the first response as complete.`;
+
+  reloadCode = `{{! Nothing to configure: the delay decides which behaviour you get }}
+<DSelect @load={{this.loadPage}} @value={{this.value}} @onChange={{this.onChange}} />
+
+// While a NEW query is in flight the previous rows are kept, so a source that answers
+// quickly never blinks. Past ~250ms they are dropped for the skeleton instead: those
+// rows no longer match what the input says, and they stay clickable, so an Enter would
+// land on a row the query excludes.
+//
+// A reveal (another page for the SAME query) is not affected — its rows are still
+// correct, and they stay put with placeholders appended at the frontier.`;
 
   largeListCode = `{{! 5000 items rendered in full; only the rows in view are mounted }}
 <DSelect
@@ -408,6 +421,20 @@ export default class Select extends Component {
     };
   }
 
+  // Answers inside the loading-feedback threshold, so a re-query keeps the previous rows and
+  // never drops to a skeleton. Paired with `loadPage` (900ms), which sits well outside it.
+  @action
+  async loadPageFast(filter, { signal, offset = 0, limit = 50 }) {
+    await delay(signal, 120);
+    const matches = this.largeListItems.filter((item) =>
+      item.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    return {
+      items: matches.slice(offset, offset + limit),
+      total: matches.length,
+    };
+  }
+
   // A cursor source: it knows another page exists without knowing the set size, so rows
   // report -1 until the last page declares completeness and the real count becomes known.
   @action
@@ -420,6 +447,16 @@ export default class Select extends Component {
   @action
   updatePaged(value) {
     this.pagedValue = value;
+  }
+
+  @action
+  updateFastReload(value) {
+    this.fastReloadValue = value;
+  }
+
+  @action
+  updateSlowReload(value) {
+    this.slowReloadValue = value;
   }
 
   @action
@@ -708,6 +745,49 @@ export default class Select extends Component {
       </Group>
 
       <Group @id="states">
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.reload_example"}}
+          @description={{i18n "styleguide.sections.select.reload_description"}}
+          @tryThis={{i18n "styleguide.sections.select.reload_try_this"}}
+          @code={{this.reloadCode}}
+        >
+          <div class="select-examples__pair">
+            <div class="select-examples__pair-item">
+              <p class="select-examples__pair-label">
+                {{i18n "styleguide.sections.select.reload_fast_label"}}
+              </p>
+              <div class="select-examples__control">
+                <DSelect
+                  @identifier="sg-reload-fast"
+                  @load={{this.loadPageFast}}
+                  @value={{this.fastReloadValue}}
+                  @onChange={{this.updateFastReload}}
+                  @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+                >
+                  <:selection as |item|>{{item.name}}</:selection>
+                  <:item as |item|>{{item.name}}</:item>
+                </DSelect>
+              </div>
+            </div>
+            <div class="select-examples__pair-item">
+              <p class="select-examples__pair-label">
+                {{i18n "styleguide.sections.select.reload_slow_label"}}
+              </p>
+              <div class="select-examples__control">
+                <DSelect
+                  @identifier="sg-reload-slow"
+                  @load={{this.loadPage}}
+                  @value={{this.slowReloadValue}}
+                  @onChange={{this.updateSlowReload}}
+                  @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+                >
+                  <:selection as |item|>{{item.name}}</:selection>
+                  <:item as |item|>{{item.name}}</:item>
+                </DSelect>
+              </div>
+            </div>
+          </div>
+        </StyleguideExample>
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.async_button_example"}}
           @description={{i18n

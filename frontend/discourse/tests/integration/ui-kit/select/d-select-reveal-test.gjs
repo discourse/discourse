@@ -630,5 +630,126 @@ module(
         "the settled query announces its own true count"
       );
     });
+
+    test("a reload's skeleton stands in for the list it replaces", async function (assert) {
+      let releaseQuery;
+      const allItems = buildItems(500);
+      let calls = 0;
+      const load = () => {
+        calls++;
+        if (calls === 1) {
+          // "Item 42" is unique in 1..500 only counting 42, 420-429 — take a small slice so the
+          // outgoing list is short enough to be distinguishable from a viewport-filling default.
+          return { items: allItems.slice(0, 4), total: 4 };
+        }
+        return new Promise((resolve) => (releaseQuery = resolve));
+      };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      assert.dom(OPTION_SELECTOR).exists({ count: 4 }, "four rows are showing");
+
+      const querying = fillIn("[role='combobox']", "Item 4");
+      await waitUntil(() => Boolean(releaseQuery));
+      await waitUntil(() => find(".d-combobox__skeleton"));
+
+      assert
+        .dom(".d-combobox__skeleton")
+        .exists(
+          { count: 4 },
+          "the skeleton matches the outgoing row count rather than filling the viewport"
+        );
+
+      releaseQuery({ items: allItems.slice(0, 2), total: 2 });
+      await querying;
+      await settled();
+    });
+
+    test("a reload from an empty list still shows some skeleton", async function (assert) {
+      let releaseQuery;
+      let calls = 0;
+      const load = () => {
+        calls++;
+        if (calls === 1) {
+          return { items: [], total: 0 };
+        }
+        return new Promise((resolve) => (releaseQuery = resolve));
+      };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+      assert.dom(OPTION_SELECTOR).doesNotExist("the first query found nothing");
+
+      const querying = fillIn("[role='combobox']", "Item 4");
+      await waitUntil(() => Boolean(releaseQuery));
+      await waitUntil(() => find(".d-combobox__skeleton"));
+
+      // Mirroring this one exactly would render a blank panel, which reads as a broken list
+      // rather than a loading one — the floor exists for this case alone.
+      assert
+        .dom(".d-combobox__skeleton")
+        .exists(
+          { count: 1 },
+          "an empty predecessor still gets a visible floor"
+        );
+
+      releaseQuery({ items: buildItems(2), total: 2 });
+      await querying;
+      await settled();
+    });
+
+    test("a slow re-query replaces the superseded rows with the skeleton", async function (assert) {
+      let releaseQuery;
+      const allItems = buildItems(500);
+      let calls = 0;
+      const load = () => {
+        calls++;
+        if (calls === 1) {
+          return { items: allItems.slice(0, 50), total: allItems.length };
+        }
+        return new Promise((resolve) => (releaseQuery = resolve));
+      };
+
+      await render(
+        <template><DSelect @load={{load}} @debounce={{false}} /></template>
+      );
+      await openSelect();
+
+      assert
+        .dom(".d-combobox__skeleton")
+        .doesNotExist("settled rows are shown");
+
+      // Un-awaited: settling would block on the held promise, and the whole point is the
+      // mid-flight state.
+      const querying = fillIn("[role='combobox']", "Item 4");
+      await waitUntil(() => Boolean(releaseQuery));
+
+      // Retention still absorbs the first moments, so a source that answers quickly never
+      // flickers; only a wait long enough to read as stuck gives the rows up.
+      assert
+        .dom("[role='option']")
+        .exists("the previous rows are retained before the threshold");
+
+      await waitUntil(() => find(".d-combobox__skeleton"));
+
+      assert
+        .dom("[role='option']")
+        .doesNotExist(
+          "past the threshold no superseded row is left to click or arrow onto"
+        );
+
+      releaseQuery({ items: allItems.slice(0, 7), total: 7 });
+      await querying;
+      await settled();
+
+      assert.dom(".d-combobox__skeleton").doesNotExist("the skeleton clears");
+      assert
+        .dom(OPTION_SELECTOR)
+        .exists({ count: 7 }, "and the new query's rows replace it");
+    });
   }
 );

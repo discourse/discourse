@@ -71,6 +71,17 @@ interface DRovingFocusArgs {
   activeClass?: string | null;
   /** A reactive key (e.g. the filter string) that re-reconciles the cursor when it changes. */
   itemsKey?: unknown;
+  /**
+   * A reactive key identifying the *question* the items answer. Reconciling normally keeps the
+   * cursor on the active item whenever it survives the change, which is right when rows are
+   * appended or revised but wrong when the list becomes a different result set: a row that
+   * happens to match both queries would hold the cursor deep in the new list. Change this and
+   * the cursor re-seeds from the top instead of tracking the survivor.
+   *
+   * Key it on the query the *rendered* items answer, not the one being typed — a list that
+   * keeps its old rows visible during an async reload would otherwise re-seed against them.
+   */
+  resetKey?: unknown;
   /** Active mode: the element that keeps focus (a text input), by `Element` or selector. */
   controllerElement?: Element | string | null;
   /**
@@ -149,6 +160,11 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
 
   /** The element keydown is bound to: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
+
+  // The last `resetKey` seen. The sentinel is a fresh object so the first `modify()` always
+  // counts as a change — harmless, since there is no cursor yet to preserve, and it keeps the
+  // "unset" case from colliding with a consumer that legitimately passes `undefined`.
+  #resetKey: unknown = Symbol("unset");
 
   #mode: SelectionMode = "focus";
 
@@ -257,6 +273,8 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     // Reading `itemsKey` here keeps `modify()` reactive to it; the value itself
     // isn't used beyond triggering a re-run + reconcile.
     this.itemsKey = named.itemsKey;
+    const resetKeyChanged = named.resetKey !== this.#resetKey;
+    this.#resetKey = named.resetKey;
 
     if (this.#registeredApiCallback !== named.onRegisterApi) {
       this.#registeredApiCallback = named.onRegisterApi;
@@ -277,7 +295,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     }
 
     if (this.#mode === "active") {
-      this.#reconcileActive();
+      this.#reconcileActive(resetKeyChanged);
     } else {
       this.#seedTabStop();
     }
@@ -744,11 +762,16 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    * (`itemsKey`). If the previously-active id is gone (or there was none), clears the
    * highlight so `aria-activedescendant` never points at a removed element; the next
    * Arrow keypress seeds a new active option.
+   *
+   * @param reseed - Treat the cursor as gone even if its row survived, because the items now
+   * answer a different question (`resetKey`).
    */
-  #reconcileActive(): void {
+  #reconcileActive(reseed = false): void {
     const items = this.#items();
     const stillPresent =
-      this.#activeId != null && items.some((el) => el.id === this.#activeId);
+      !reseed &&
+      this.#activeId != null &&
+      items.some((el) => el.id === this.#activeId);
     if (!stillPresent) {
       // Seed the cursor when asked (combobox automatic-selection). The stale `#activeId` can't
       // match any current element, so `#setActive` finds no previous highlight to clear.

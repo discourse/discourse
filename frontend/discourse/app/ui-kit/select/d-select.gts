@@ -16,6 +16,7 @@ import type { MenuOptions } from "discourse/float-kit/lib/constants";
 import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import type Menu from "discourse/float-kit/services/menu";
 import booleanString from "discourse/helpers/boolean-string";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
@@ -60,6 +61,13 @@ export type SelectVariant =
 
 interface SelectListContent {
   rawItems: SelectItemModel[];
+  /**
+   * The query these rows answer, captured when the load resolved. `@retainWhileReloading` keeps
+   * the previous rows mounted while a new query is in flight, so `engine.filter` is the query
+   * being *asked* while this is the query being *shown* — they differ for the whole debounce
+   * plus fetch. Anything reacting to "the results changed" has to key on this one.
+   */
+  filter: string;
 }
 
 // A row's estimated height before measurement (~2.4em option). Windowing refines it from
@@ -67,7 +75,21 @@ interface SelectListContent {
 const ROW_HEIGHT_ESTIMATE = 38;
 // Placeholder rows appended at the loading frontier while a server page is in flight, so a
 // pending fetch reads as "more coming" in the list rather than a silent stop.
+// How far the query input may sit under the keyboard before it is worth scrolling. A pixel or
+// two is rounding, not occlusion.
+const KEYBOARD_OCCLUSION_TOLERANCE = 4;
+
+// Breathing room above the keyboard once corrected, so the input does not end up flush against
+// it. An allowance, not a measurement.
+const KEYBOARD_OCCLUSION_MARGIN = 24;
+
 const FRONTIER_SKELETON_COUNT = 3;
+// Placeholders for a load with nothing on screen to size it: enough to fill the listbox
+// viewport and overflow it slightly.
+const FULL_SKELETON_COUNT = 10;
+// A reload mirrors the outgoing list, stopping only at nothing: a panel with no placeholders at
+// all reads as broken rather than busy.
+const MIN_RELOAD_SKELETON_COUNT = 1;
 
 /** A pending-fetch placeholder row mixed into the windowed list at the loading frontier. */
 interface SkeletonRow {
@@ -536,6 +558,71 @@ export default class DSelect extends Component<DSelectSignature> {
       this.filterInput?.blur();
     }
   };
+  /**
+   * Keeps the focused query input above the iOS software keyboard.
+   *
+   * WebKit decides where to scroll when the keyboard opens, and it does not account for the
+   * overlay this component renders: it intermittently leaves the input underneath the keyboard,
+   * with the panel still correctly positioned against it. Nothing in CSS prevents that — Safari
+   * has already scrolled by then — so the only remedy is to measure afterwards and correct,
+   * which is what `setupComposerPosition` does for the composer.
+   *
+   * The measurement is the whole of it: `visualViewport.height` is the bottom of the visible
+   * area in client coordinates, which is what `getBoundingClientRect()` returns, so the two are
+   * directly comparable and their difference is how far the input is buried.
+   *
+   * `offsetTop` is deliberately NOT added. Treating the visible band as
+   * `[offsetTop, offsetTop + height]` is the correct reading for a pinch-zoomed viewport, but
+   * with the keyboard raised iPadOS reports an `offsetTop` matching nothing clipped off the top.
+   * Adding it pushes the computed bottom below the keyboard's accessory bar, so an input sitting
+   * under that bar measures as clear and no correction runs. The two readings agree whenever
+   * `offsetTop` is zero, which is why the input was hidden only sometimes: same page, same
+   * input, and only the reported offset differing between a working case and a broken one.
+   *
+   * Runs only while the widget holds focus, only where the bug exists, and only when the input
+   * is genuinely occluded, so a correctly-behaving browser is never scrolled.
+   */
+  #keepQueryInputAboveKeyboard = () => {
+    // The platform class, as `setupComposerPosition` reads it. `ios-device` covers iPadOS.
+    if (
+      !document.documentElement.classList.contains("ios-device") ||
+      !this.triggerFocused
+    ) {
+      return;
+    }
+
+    const viewport = window.visualViewport;
+    const input = this.filterInput;
+    if (!viewport || !input?.isConnected) {
+      return;
+    }
+
+    const hidden = input.getBoundingClientRect().bottom - viewport.height;
+    if (hidden <= KEYBOARD_OCCLUSION_TOLERANCE) {
+      return;
+    }
+
+    window.scrollTo({
+      top: window.scrollY + hidden + KEYBOARD_OCCLUSION_MARGIN,
+      behavior: "instant",
+    });
+  };
+
+  /**
+   * Rows the list last rendered, sizing a reload's skeleton. `null` means no list has rendered
+   * in this panel session, which is a different case from one that rendered none.
+   *
+   * Tracked, and therefore recorded from a modifier rather than during render: a plain field
+   * gives {@link skeletonRows} no dependency at all, so it computes once against the initial
+   * `null` and Glimmer never recomputes it — the skeleton would stay at its opening size
+   * forever.
+   */
+  @tracked _lastRenderedRowCount: number | null = null;
+
+  // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
+  // an open-driven programmatic focus (which must NOT select the label) from a genuine
+
+  // Stable placeholder rows for the loading frontier — a fixed identity so a persisting
 
   constructor(owner: Owner, args: DSelectSignature["Args"]) {
     super(owner, args);
@@ -548,6 +635,17 @@ export default class DSelect extends Component<DSelectSignature> {
       this.#handleOutsidePointerDown,
       true
     );
+
+    // Both events matter: `resize` is the keyboard opening or closing, `scroll` is WebKit
+    // moving the page underneath it afterwards.
+    window.visualViewport?.addEventListener(
+      "resize",
+      this.#keepQueryInputAboveKeyboard
+    );
+    window.visualViewport?.addEventListener(
+      "scroll",
+      this.#keepQueryInputAboveKeyboard
+    );
   }
 
   willDestroy() {
@@ -556,6 +654,14 @@ export default class DSelect extends Component<DSelectSignature> {
       "pointerdown",
       this.#handleOutsidePointerDown,
       true
+    );
+    window.visualViewport?.removeEventListener(
+      "resize",
+      this.#keepQueryInputAboveKeyboard
+    );
+    window.visualViewport?.removeEventListener(
+      "scroll",
+      this.#keepQueryInputAboveKeyboard
     );
   }
 
@@ -594,14 +700,37 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
-   * Distinct-keyed placeholder rows for the loading skeleton (`@skeletonCount`,
-   * default 5).
+   * Distinct-keyed placeholder rows for the loading skeleton (`@skeletonCount` overrides).
    */
   get skeletonRows(): Array<{ key: number }> {
-    // Enough to fill the listbox viewport (20em against a ~2.4em row) and overflow it
-    // slightly, so a clipped final placeholder reads as more content rather than a short list.
-    const count = this.args.skeletonCount ?? 10;
+    const count = this.args.skeletonCount ?? this.#skeletonCount;
     return Array.from({ length: count }, (_, key) => ({ key }));
+  }
+
+  /**
+   * How many placeholders a load should stand up.
+   *
+   * Opening onto an empty panel, the skeleton describes an unknown list, so it fills the
+   * viewport (20em against a ~2.4em row) and overflows slightly — a clipped last placeholder
+   * reads as more content rather than as a short list.
+   *
+   * Replacing rows already on screen is a different claim. The list had a height and is about
+   * to have another, and a four-row list that becomes nine placeholders and then two rows has
+   * moved everything under the pointer twice for no reason. Mirroring what it replaces keeps
+   * the panel at its own size, so the only movement is the one the new results actually cause.
+   *
+   * The floor is one, not zero, and exists solely for the outgoing list that was *empty*:
+   * mirroring it exactly would swap the empty message for a blank panel, which reads as a
+   * broken list rather than a loading one.
+   */
+  get #skeletonCount(): number {
+    if (this._lastRenderedRowCount == null) {
+      return FULL_SKELETON_COUNT;
+    }
+    return Math.min(
+      Math.max(this._lastRenderedRowCount, MIN_RELOAD_SKELETON_COUNT),
+      FULL_SKELETON_COUNT
+    );
   }
 
   /** The trigger style; defaults to `typeahead`. */
@@ -1189,9 +1318,14 @@ export default class DSelect extends Component<DSelectSignature> {
     opts?: SelectLoadOptions
   ): SelectListContent | Promise<SelectListContent> {
     const rawItems = this.engine.loadItems(context, opts);
+    // Stamped at resolve time, not call time: an aborted-then-superseded load never reaches
+    // here, so the filter read on resolution is the one these rows were fetched for.
     return rawItems instanceof Promise
-      ? rawItems.then((items) => ({ rawItems: items }))
-      : { rawItems };
+      ? rawItems.then((items) => ({
+          rawItems: items,
+          filter: this.engine.filter,
+        }))
+      : { rawItems, filter: this.engine.filter };
   }
 
   /**
@@ -1313,6 +1447,16 @@ export default class DSelect extends Component<DSelectSignature> {
       element?.dataset.index == null
         ? undefined
         : Number(element.dataset.index);
+  }
+
+  /**
+   * Records how many rows the list is showing, so a reload's skeleton can be sized to what it
+   * replaces. Runs from a render modifier, after render, which is what makes writing a tracked
+   * field here safe.
+   */
+  @action
+  recordRowCount(_element: HTMLElement, [count]: [number]): void {
+    this._lastRenderedRowCount = count;
   }
 
   @action
@@ -1452,8 +1596,38 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
+   * Whether a re-query has been in flight long enough that the previous rows should give way to
+   * the loading skeleton. Excludes a reveal, whose rows are still correct and stay put.
+   */
+  get #replaceRowsWhileReloading(): boolean {
+    return (
+      this.loadFeedbackDue &&
+      this.engine.serverPending &&
+      !this.engine.serverRevealPending
+    );
+  }
+
+  /**
+   * Whether to keep the previous rows mounted while a load is in flight.
+   *
+   * Retention exists to absorb a fast source, where dropping to a skeleton and back reads as a
+   * flicker. Past {@link LOADING_FEEDBACK_DELAY} it stops paying for itself and starts lying: a
+   * re-query's rows are not merely old but *wrong* for what the input now says, and they remain
+   * clickable with the cursor on one of them, so an Enter lands on a row the query excludes.
+   * The skeleton has nothing to select and cannot be mistaken for an answer.
+   */
+  get retainRowsWhileReloading(): boolean {
+    return !this.#replaceRowsWhileReloading;
+  }
+
+  /**
    * Arms the placeholder only once a load has been pending past the threshold, so a source
    * that answers quickly shows nothing at all.
+   *
+   * Tracked from the panel rather than the listbox because the flag decides whether the listbox
+   * exists at all ({@link retainRowsWhileReloading}). Armed from the listbox, raising it would
+   * unmount the element carrying the timer, whose teardown lowers the flag again and remounts
+   * it — a strobe rather than a load state. The panel spans both.
    */
   @action
   trackLoadFeedback(_element: HTMLElement, [pending]: [boolean]): void {
@@ -1465,20 +1639,46 @@ export default class DSelect extends Component<DSelectSignature> {
     this.#loadFeedbackTimer = discourseLater(
       this,
       () => (this.loadFeedbackDue = true),
-      LOADING_FEEDBACK_DELAY
+      this.#loadFeedbackDelay
     );
   }
 
   /**
-   * Cancels the pending load-feedback timer and drops the roving highlight key when the list
-   * unmounts, so a closed menu's timer cannot flip `loadFeedbackDue` on a torn-down instance
-   * and a reopened list does not render a stale `--active`.
+   * How long a load may run before it earns visible feedback.
+   *
+   * The wait being measured is the source's, but pending starts at the keystroke and the
+   * request does not start until the debounce elapses. Counting from the keystroke charges the
+   * source for the debounce, and since the default debounce already exceeds the threshold, every
+   * re-query would trip it — retention would never apply and no source could be "fast".
+   */
+  get #loadFeedbackDelay(): number {
+    const debounce = this.debounce;
+    const debounceDelay =
+      debounce === true ? INPUT_DELAY : debounce === false ? 0 : debounce;
+    return LOADING_FEEDBACK_DELAY + debounceDelay;
+  }
+
+  /**
+   * Cancels the load-feedback timer when the panel closes, so a torn-down instance cannot have
+   * the flag flipped under it.
+   */
+  @action
+  releaseLoadFeedback(): void {
+    cancel(this.#loadFeedbackTimer);
+    this.loadFeedbackDue = false;
+    // Reset here rather than in `releaseListbox`: the listbox also unmounts mid-session when a
+    // reload swaps in the skeleton, which is precisely when the outgoing count is needed.
+    this._lastRenderedRowCount = null;
+  }
+
+  /**
+   * Drops the roving highlight key when the list unmounts, so a reopened list does not render a
+   * stale `--active`. The list also unmounts mid-session when a slow re-query swaps in the
+   * skeleton, which is exactly when the old highlight must not survive.
    */
   @action
   releaseListbox(): void {
-    cancel(this.#loadFeedbackTimer);
     cancel(this.#jumpTimer);
-    this.loadFeedbackDue = false;
     // Drop the roving highlight key on close so a reopened list does not render a stale
     // `--active` (the modifier reports the active option only while it moves the cursor, so
     // it never reports the clearing on teardown).
@@ -2009,7 +2209,12 @@ export default class DSelect extends Component<DSelectSignature> {
       </:trigger>
 
       <:content as |menuArgs|>
-        <div class="d-combobox__panel">
+        <div
+          class="d-combobox__panel"
+          {{didInsert this.trackLoadFeedback this.engine.serverPending}}
+          {{didUpdate this.trackLoadFeedback this.engine.serverPending}}
+          {{willDestroy this.releaseLoadFeedback}}
+        >
           {{#if this.isPanelSearchable}}
             <DFilterInput
               class="d-combobox__filter"
@@ -2084,7 +2289,7 @@ export default class DSelect extends Component<DSelectSignature> {
               @asyncData={{this.loadListContent}}
               @context={{this.engine.loadContext}}
               @debounce={{this.debounce}}
-              @retainWhileReloading={{true}}
+              @retainWhileReloading={{this.retainRowsWhileReloading}}
             >
               <:loading>
                 <ul
@@ -2122,8 +2327,13 @@ export default class DSelect extends Component<DSelectSignature> {
                         this.engine.serverPending
                         omitFalse=false
                       }}
-                      {{didUpdate this.resetListScroll this.engine.filter}}
+                      {{! Keyed on the query the rendered rows answer, not the one being typed:
+                    resetting when the keystroke lands would scroll the retained previous
+                    results back to the top and then leave them there for the whole reload. }}
+                      {{didUpdate this.resetListScroll content.filter}}
                       {{willDestroy this.releaseListbox}}
+                      {{didInsert this.recordRowCount items.length}}
+                      {{didUpdate this.recordRowCount items.length}}
                       {{didInsert
                         this.announceCountOnEntry
                         items.length
@@ -2136,14 +2346,6 @@ export default class DSelect extends Component<DSelectSignature> {
                       }}
                       {{didUpdate
                         this.announceReveal
-                        this.engine.serverPending
-                      }}
-                      {{didInsert
-                        this.trackLoadFeedback
-                        this.engine.serverPending
-                      }}
-                      {{didUpdate
-                        this.trackLoadFeedback
                         this.engine.serverPending
                       }}
                       {{! Static in the mobile modal moves DOM focus into the listbox; every other
@@ -2165,6 +2367,7 @@ export default class DSelect extends Component<DSelectSignature> {
                         itemsKey=(if
                           this.isTypeahead items this.rovingNonTypeaheadKey
                         )
+                        resetKey=content.filter
                         logicalCount=(this.navigableCount items)
                         onActivate=this.activateElement
                         onActiveChange=this.trackActiveOption
@@ -2265,7 +2468,14 @@ export default class DSelect extends Component<DSelectSignature> {
                       </div>
                     {{/if}}
                   {{else}}
-                    <div class="d-combobox__empty" role="status">
+                    {{! Recorded here too, not only on the list: a query that found nothing is a
+                      rendered state with a row count of zero, and leaving the previous count
+                      standing would size the next reload's skeleton to a list that is gone. }}
+                    <div
+                      class="d-combobox__empty"
+                      role="status"
+                      {{didInsert this.recordRowCount 0}}
+                    >
                       {{#if (has-block "empty")}}
                         {{yield to="empty"}}
                       {{else}}
