@@ -52,20 +52,22 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         channel_name: "name",
       )
       expect(schema.dig(:channel_name, :ui, :hidden)).to eq(true)
+      expect(schema).not_to have_key(:post_id)
     end
   end
 
   describe "#execute" do
-    def execute_node(channel_id:, post_id: nil, message: nil)
+    def execute_node(channel_id:, input_post_id: nil, message: nil)
       parameters = { "channel_id" => channel_id.to_s }
-      parameters["post_id"] = post_id.to_s if post_id
       parameters["message"] = message if message
-      resolver_context = { "$json" => {} }
+      input_json = {}
+      input_json["post"] = { "id" => input_post_id } if input_post_id
+      resolver_context = { "$json" => input_json }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
       exec_ctx =
         DiscourseWorkflows::Executor::NodeExecutionContext.new(
-          input_items: [{ "json" => {} }],
+          input_items: [{ "json" => input_json }],
           resolver: resolver,
           parameters: parameters,
           property_schema: described_class.property_schema,
@@ -81,7 +83,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
 
     it "sends the triggering post's standard notification when no message is set",
        :aggregate_failures do
-      output = execute_node(channel_id: channel.id, post_id: reply.id)
+      output = execute_node(channel_id: channel.id, input_post_id: reply.id)
       result = output.first.first.fetch("json")
 
       expect(provider.sent_messages).to contain_exactly(post: reply.id, channel: channel)
@@ -97,7 +99,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "sends a custom ChatIntegrationReferencePost when a message is set" do
       allow(provider).to receive(:trigger_notification).and_call_original
 
-      execute_node(channel_id: channel.id, post_id: reply.id, message: "Custom alert")
+      execute_node(channel_id: channel.id, input_post_id: reply.id, message: "Custom alert")
 
       expect(provider).to have_received(:trigger_notification).with(
         an_instance_of(DiscourseChatIntegration::ChatIntegrationReferencePost),
@@ -142,7 +144,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "raises when the channel does not exist" do
       missing_id = channel.id + 1
 
-      expect { execute_node(channel_id: missing_id, post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: missing_id, input_post_id: reply.id) }.to raise_error(
         include(missing_id.to_s),
       )
       expect(provider.sent_messages).to be_empty
@@ -151,7 +153,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "raises when the provider is disabled" do
       SiteSetting.dummy_provider_enabled = false
 
-      expect { execute_node(channel_id: channel.id, post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
         include("dummy"),
       )
       expect(provider.sent_messages).to be_empty
@@ -166,7 +168,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         ),
       )
 
-      expect { execute_node(channel_id: channel.id, post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
         DiscourseWorkflows::NodeError,
         include("The bot does not have permission to post to that channel"),
       )
@@ -183,14 +185,16 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         ),
       )
 
-      expect { execute_node(channel_id: channel.id, post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
         DiscourseWorkflows::NodeError,
         include("Account inactive"),
       )
     end
 
     it "raises when the post does not exist" do
-      expect { execute_node(channel_id: channel.id, post_id: -1) }.to raise_error(include("-1"))
+      expect { execute_node(channel_id: channel.id, input_post_id: -1) }.to raise_error(
+        include("-1"),
+      )
       expect(provider.sent_messages).to be_empty
     end
 
@@ -199,7 +203,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       SiteSetting.chat_integration_discourse_username = chat_user.username
       pm_post = Fabricate(:post, topic: Fabricate(:private_message_topic))
 
-      expect { execute_node(channel_id: channel.id, post_id: pm_post.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, input_post_id: pm_post.id) }.to raise_error(
         include(pm_post.id.to_s),
       )
       expect(provider.sent_messages).to be_empty
@@ -210,7 +214,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       SiteSetting.chat_integration_discourse_username = Fabricate(:admin).username
       whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
 
-      expect { execute_node(channel_id: channel.id, post_id: whisper.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, input_post_id: whisper.id) }.to raise_error(
         include(whisper.id.to_s),
       )
       expect(provider.sent_messages).to be_empty

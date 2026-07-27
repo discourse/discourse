@@ -69,11 +69,6 @@ if defined?(DiscourseWorkflows)
                   hidden: true,
                 },
               },
-              post_id: {
-                type: :string,
-                required: false,
-                default: "={{ $trigger.post.id }}",
-              },
               message: {
                 type: :string,
                 required: false,
@@ -94,10 +89,10 @@ if defined?(DiscourseWorkflows)
 
           def execute(exec_ctx)
             items =
-              exec_ctx.input_items.map.with_index do |_item, item_index|
+              exec_ctx.input_items.map.with_index do |item, item_index|
                 config = {
                   "channel_id" => exec_ctx.get_node_parameter("channel_id", item_index),
-                  "post_id" => exec_ctx.get_node_parameter("post_id", item_index),
+                  "post_id" => item.dig("json", "post", "id"),
                   "message" => exec_ctx.get_node_parameter("message", item_index),
                 }
                 wrap(process(config, item_index))
@@ -150,8 +145,8 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            # post_id accepts expressions, so enforce visibility and post-type guards
-            # before relaying content to an external service.
+            # Input items can carry post IDs, so enforce visibility and post-type guards
+            # before relaying their content to an external service.
             if post.present? && !sendable_post?(post)
               raise_node_error!(
                 I18n.t(
