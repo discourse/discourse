@@ -5,7 +5,7 @@ class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
   # BUMP UP if optimized image algorithm changes
-  VERSION = 3
+  VERSION = 2
   URL_REGEX = %r{(/optimized/\dX[/\.\w]*/([a-zA-Z0-9]+)[\.\w]*)}
 
   def self.lock(upload_id, width, height)
