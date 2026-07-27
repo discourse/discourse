@@ -224,6 +224,8 @@ gem "rqrcode"
 
 gem "rubyzip", require: false
 
+gem "landlock", require: false
+
 gem "sshkey", require: false
 
 gem "rchardet", require: false
