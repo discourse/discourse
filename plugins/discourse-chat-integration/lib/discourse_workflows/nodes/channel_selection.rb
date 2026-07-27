@@ -9,28 +9,31 @@ if defined?(DiscourseWorkflows)
         def self.channel_label(channel)
           provider = DiscourseChatIntegration::Provider.get_by_name(channel.provider)
 
-          identifier =
-            if provider&.const_defined?(:CHANNEL_IDENTIFIER_KEY)
-              channel.data[provider::CHANNEL_IDENTIFIER_KEY]
-            else
-              channel.data.values.first
-            end
+          "#{channel.provider}: #{channel_identifier(channel, provider)}"
+        end
 
-          # In the Node UI it looks like this:
-          # "Slack: #general" or "Discord: updates"
-          "#{channel.provider}: #{identifier}"
+        def self.channel_identifier(channel, provider = nil)
+          provider ||= DiscourseChatIntegration::Provider.get_by_name(channel.provider)
+
+          if provider&.const_defined?(:CHANNEL_IDENTIFIER_KEY)
+            channel.data[provider::CHANNEL_IDENTIFIER_KEY]
+          else
+            channel.data.values.first
+          end
+        end
+
+        def self.selectable_channels
+          provider_names = DiscourseChatIntegration::Provider.enabled_provider_names
+          return DiscourseChatIntegration::Channel.none if provider_names.empty?
+
+          DiscourseChatIntegration::Channel.where("value::json->>'provider' IN (?)", provider_names)
         end
 
         def self.load_options(context)
           options =
-            DiscourseChatIntegration::Channel.all.map do |channel|
-              { id: channel.id, name: channel_label(channel) }
-            end
+            selectable_channels.map { |channel| { id: channel.id, name: channel_label(channel) } }
 
-          if context.filter.present?
-            filter = context.filter.downcase
-            options = options.select { |option| option[:name].downcase.include?(filter) }
-          end
+          options.select! { |option| context.matches_filter?(option[:name]) }
 
           options.sort_by { |option| option[:name].downcase }.first(MAX_LOAD_OPTIONS)
         end

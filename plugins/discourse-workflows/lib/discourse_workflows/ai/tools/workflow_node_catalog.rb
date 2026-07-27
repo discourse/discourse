@@ -151,6 +151,17 @@ module DiscourseWorkflows
               },
             },
           ],
+          "action:send_chat_integration_message" => [
+            {
+              name: "Send a post excerpt to an external chat integration channel",
+              parameters: {
+                channel_id: 123,
+                channel_name: "Slack: #general",
+                post_id: "={{ $json.post.id }}",
+                message: "={{ $json.post.excerpt }}",
+              },
+            },
+          ],
           "action:ai_agent" => [
             {
               name: "Classify the trigger post with an existing agent",
@@ -200,6 +211,8 @@ module DiscourseWorkflows
 
         SEARCH_ALIASES = {
           "action:send_personal_message" => "dm direct message pm personal private message",
+          "action:send_chat_integration_message" =>
+            "external chat integration notification slack discord telegram mattermost matrix zulip rocket chat gitter groupme teams power automate webex google chat guilded",
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",

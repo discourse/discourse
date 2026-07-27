@@ -16,20 +16,42 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     SiteSetting.dummy_provider_enabled = true
   end
 
+  def load_options(filter: nil)
+    context =
+      DiscourseWorkflows::LoadOptionsContext.new(
+        method_name: "chat_integration_channels",
+        filter: filter,
+        node_class: described_class,
+      )
+
+    described_class.load_options_context(context)
+  end
+
   describe ".load_options_context" do
     it "returns each channel labelled by its provider" do
       channel # force creation before loading options
 
-      context =
-        DiscourseWorkflows::LoadOptionsContext.new(
-          method_name: "chat_integration_channels",
-          filter: nil,
-          node_class: described_class,
-        )
+      expect(load_options).to contain_exactly({ id: channel.id, name: "dummy: " })
+      expect(load_options(filter: "missing")).to be_empty
+    end
 
-      options = described_class.load_options_context(context)
+    it "excludes channels for disabled providers" do
+      channel # force creation before disabling the provider
+      SiteSetting.dummy_provider_enabled = false
 
-      expect(options).to contain_exactly({ id: channel.id, name: "dummy: " })
+      expect(load_options).to be_empty
+    end
+  end
+
+  describe ".property_schema" do
+    it "preserves the selected channel label for dynamic values", :aggregate_failures do
+      schema = described_class.property_schema
+
+      expect(schema.dig(:channel_id, :ui, :dynamic_value)).to eq(:chat_channel_id)
+      expect(schema.dig(:channel_id, :control_options, :set_from_option)).to eq(
+        channel_name: "name",
+      )
+      expect(schema.dig(:channel_name, :ui, :hidden)).to eq(true)
     end
   end
 
@@ -56,10 +78,19 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       sandbox&.dispose
     end
 
-    it "sends the triggering post's standard notification when no message is set" do
-      execute_node(channel_id: channel.id, post_id: reply.id)
+    it "sends the triggering post's standard notification when no message is set",
+       :aggregate_failures do
+      output = execute_node(channel_id: channel.id, post_id: reply.id)
+      result = output.first.first.fetch("json")
 
       expect(provider.sent_messages).to contain_exactly(post: reply.id, channel: channel)
+      expect(result).to include(
+        "channel_id" => channel.id,
+        "provider" => "dummy",
+        "post_id" => reply.id,
+        "custom_message" => false,
+      )
+      expect(result).to match_node_output_schema(described_class)
     end
 
     it "sends a custom ChatIntegrationReferencePost when a message is set" do

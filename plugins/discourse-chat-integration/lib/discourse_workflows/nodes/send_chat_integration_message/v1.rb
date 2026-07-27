@@ -21,6 +21,28 @@ if defined?(DiscourseWorkflows)
             capabilities: {
               run_scope: "per_item",
             },
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "channel_id" => {
+                      "type" => "integer",
+                    },
+                    "provider" => {
+                      "type" => "string",
+                    },
+                    "post_id" => {
+                      "type" => "integer",
+                    },
+                    "custom_message" => {
+                      "type" => "boolean",
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               channel_id: {
                 type: :integer,
@@ -30,11 +52,21 @@ if defined?(DiscourseWorkflows)
                 },
                 ui: {
                   control: :combo_box,
+                  dynamic_value: :chat_channel_id,
                 },
                 control_options: {
                   filterable: true,
                   value_property: :id,
                   name_property: :name,
+                  set_from_option: {
+                    channel_name: "name",
+                  },
+                },
+              },
+              channel_name: {
+                type: :string,
+                ui: {
+                  hidden: true,
                 },
               },
               post_id: {
@@ -109,11 +141,8 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            # Mirror the guards in DiscourseChatIntegration::Manager#trigger_notifications:
-            # never relay a post the chat-integration user cannot see (e.g. a PM or a
-            # restricted-category post) or a non-regular post (whispers, small actions).
-            # post_id is an expression-capable parameter, so this also protects against a
-            # workflow routing arbitrary post ids to an external channel.
+            # post_id accepts expressions, so enforce visibility and post-type guards
+            # before relaying content to an external service.
             unless sendable_post?(post)
               raise_node_error!(
                 I18n.t(

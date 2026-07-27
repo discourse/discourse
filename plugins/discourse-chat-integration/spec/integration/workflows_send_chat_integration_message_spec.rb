@@ -16,13 +16,26 @@ RSpec.describe "Workflow: post created -> if author in group -> send to chat-int
   before do
     SiteSetting.chat_integration_enabled = true
     SiteSetting.dummy_provider_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
     vips.add(member)
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
 
     graph =
       build_workflow_graph do |g|
-        g.node "trigger-1", "trigger:post_created", configuration: { "category_id" => category.id }
+        g.node "trigger-1",
+               "trigger:post_created",
+               configuration: {
+                 "category_ids" => [category.id],
+               }
+        g.node "group-1",
+               "action:group",
+               name: "Check author group",
+               configuration: {
+                 "operation" => "check_membership",
+                 "username" => "={{ $json.user.username }}",
+                 "group_id" => vips.id,
+                 "actor_username" => "system",
+               }
         g.node "condition-1",
                "condition:if",
                name: "Author in group",
@@ -31,11 +44,11 @@ RSpec.describe "Workflow: post created -> if author in group -> send to chat-int
                  "conditions" => [
                    {
                      "id" => "1",
-                     "leftValue" => "={{ $trigger.post.author_group_names }}",
-                     "rightValue" => vips.name,
+                     "leftValue" => "={{ $json.group_membership.in_group }}",
+                     "rightValue" => true,
                      "operator" => {
-                       "type" => "array",
-                       "operation" => "contains",
+                       "type" => "boolean",
+                       "operation" => "equals",
                      },
                    },
                  ],
@@ -45,9 +58,9 @@ RSpec.describe "Workflow: post created -> if author in group -> send to chat-int
                name: "Notify channel",
                configuration: {
                  "channel_id" => channel.id,
-                 "post_id" => "={{ $trigger.post.id }}",
+                 "post_id" => "={{ $json.post.id }}",
                }
-        g.chain "trigger-1", "condition-1"
+        g.chain "trigger-1", "group-1", "condition-1"
         g.connect "condition-1", "action-1", output: "true"
       end
 
