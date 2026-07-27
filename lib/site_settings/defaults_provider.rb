@@ -6,17 +6,18 @@ end
 # A cache for providing default value based on site locale
 class SiteSettings::DefaultsProvider
   DEFAULT_LOCALE = "en"
+  DEFAULT_LOCALE_SYM = :en
 
   def initialize(site_setting)
     @site_setting = site_setting
     @defaults = {}
-    @defaults[DEFAULT_LOCALE.to_sym] = {}
+    @defaults[DEFAULT_LOCALE_SYM] = {}
     @active_upcoming_change_overrides = Set.new
   end
 
   def load_setting(name_arg, value, locale_defaults)
     name = name_arg.to_sym
-    @defaults[DEFAULT_LOCALE.to_sym][name] = value
+    @defaults[DEFAULT_LOCALE_SYM][name] = value
 
     if locale_defaults
       locale_defaults.each do |locale, v|
@@ -42,10 +43,10 @@ class SiteSettings::DefaultsProvider
   # Defaults loaded from yaml files before mutation by upcoming
   # changes and modifiers.
   def all_clean(locale = nil)
-    if locale
-      @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[locale.to_sym] || {})
+    if locale && locale.to_sym != DEFAULT_LOCALE_SYM
+      @defaults[DEFAULT_LOCALE_SYM].merge(@defaults[locale.to_sym] || {})
     else
-      @defaults[DEFAULT_LOCALE.to_sym].dup
+      @defaults[DEFAULT_LOCALE_SYM].dup
     end
   end
 
@@ -111,7 +112,7 @@ class SiteSettings::DefaultsProvider
   private
 
   def has_key?(name)
-    @defaults[DEFAULT_LOCALE.to_sym].key?(name)
+    @defaults[DEFAULT_LOCALE_SYM].key?(name)
   end
 
   def current_db

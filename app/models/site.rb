@@ -156,15 +156,14 @@ class Site
       end
     end
 
+    can_lazy_load_categories = @guardian.can_lazy_load_categories?
+
     @categories ||=
       begin
         categories = []
 
         self.class.all_categories_cache.each do |category|
-          if (
-               !@guardian.can_lazy_load_categories? ||
-                 preloaded_category_ids.include?(category[:id])
-             ) &&
+          if (!can_lazy_load_categories || preloaded_category_ids.include?(category[:id])) &&
                @guardian.can_see_serialized_category?(
                  category_id: category[:id],
                  read_restricted: category[:read_restricted],
