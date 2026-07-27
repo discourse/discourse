@@ -501,6 +501,35 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       );
   });
 
+  // The caret is part of the trigger and is the obvious thing to click to open a closed control.
+  // It worked from cold and then silently did nothing once the input already held focus — which
+  // is every use after the first — because the press blurred the input and the resulting focus
+  // churn swallowed the open. Both paths are covered; the warm one is the regression.
+  test("the caret opens the panel whether or not the input already has focus", async function (assert) {
+    await render(
+      <template>
+        <Host />
+        <button type="button" class="outside">outside</button>
+      </template>
+    );
+
+    await click(".d-combobox__caret");
+    assert
+      .dom("[role='listbox']")
+      .exists("cold: the caret opens a closed panel");
+
+    await triggerKeyEvent("[role='combobox']", "keydown", "Escape");
+    assert.dom("[role='listbox']").doesNotExist();
+    assert
+      .dom("[role='combobox']")
+      .isFocused("Escape leaves focus in the input — the warm state");
+
+    await click(".d-combobox__caret");
+    assert
+      .dom("[role='listbox']")
+      .exists("warm: the caret still opens rather than doing nothing");
+  });
+
   test("a select without a selection block needs no description", async function (assert) {
     await render(
       <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
@@ -1188,6 +1217,51 @@ module(
   "Integration | ui-kit | select | DSelect (multi typeahead)",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    // Wrapping a form control in a `label` is ordinary markup, but a `label` forwards its clicks
+    // to the first LABELABLE descendant — and in a multi-select that is the first chip's remove
+    // button. So clicking the field's text, its padding or its caret silently deleted a
+    // selection. The control has to defend itself: a consumer cannot be expected to know that
+    // one of its internal buttons will absorb every click in the surrounding label.
+    test("a surrounding label does not delete a chip", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Tags</span>
+            <MultiHost @value={{array 1 2}} />
+          </label>
+        </template>
+      );
+
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 2 }, "two chips to start");
+
+      await click(".field-text");
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 2 }, "clicking the label's text removes nothing");
+
+      await click(".field-label");
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 2 }, "nor does clicking the label itself");
+    });
+
+    // The guard above must not cost the chip its own keyboard removal, which produces a click
+    // that looks identical to a forwarded one.
+    test("Enter on a focused chip still removes it", async function (assert) {
+      await render(<template><MultiHost @value={{array 1 2}} /></template>);
+
+      const remove = findAll(".d-combobox__chip-remove")[0];
+      await focus(remove);
+      await triggerKeyEvent(remove, "keydown", "Enter");
+      await click(remove);
+
+      assert
+        .dom(".d-combobox__chip")
+        .exists({ count: 1 }, "the keyboard path still removes a chip");
+    });
 
     test("shows the placeholder when empty", async function (assert) {
       await render(<template><MultiHost /></template>);
