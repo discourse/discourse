@@ -4720,7 +4720,7 @@ experimental:
     client: true
     refresh: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
