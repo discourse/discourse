@@ -8,7 +8,9 @@ describe "Navigation menu states" do
   before { sign_in(current_user) }
 
   context "when navigation_menu is 'header dropdown'" do
-    before { SiteSetting.navigation_menu = "header dropdown" }
+    fab!(:navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
+    end
 
     it "does not show the sidebar" do
       visit "/"
@@ -62,7 +64,9 @@ describe "Navigation menu states" do
   end
 
   context "when navigation_menu is 'sidebar'" do
-    before { SiteSetting.navigation_menu = "sidebar" }
+    fab!(:navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+    end
 
     it "shows the sidebar" do
       visit "/"

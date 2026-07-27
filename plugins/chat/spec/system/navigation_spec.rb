@@ -282,7 +282,9 @@ RSpec.describe "Navigation" do
   end
 
   context "when sidebar is configured as the navigation menu" do
-    before { SiteSetting.navigation_menu = "sidebar" }
+    fab!(:navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+    end
 
     context "when opening channel from sidebar with drawer preferred" do
       it "opens channel in drawer" do

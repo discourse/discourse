@@ -8,10 +8,11 @@ RSpec.describe "Message notifications - with sidebar" do
   let!(:thread_page) { PageObjects::Pages::ChatThread.new }
   let!(:sidebar) { PageObjects::Pages::ChatSidebar.new }
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-    chat_system_bootstrap
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { chat_system_bootstrap }
 
   def create_message(text: nil, channel: nil, thread: nil, creator: Fabricate(:user))
     Fabricate(

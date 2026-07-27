@@ -95,6 +95,10 @@ RSpec.describe "AI Bot - Homepage" do
     agent
   end
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     enable_current_plugin
 
@@ -102,7 +106,6 @@ RSpec.describe "AI Bot - Homepage" do
     pm.save!
 
     toggle_enabled_bots(bots: [claude_2, claude_2_dup])
-    SiteSetting.navigation_menu = "sidebar"
     Jobs.run_immediately!
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
     sign_in(user)
@@ -429,10 +432,15 @@ RSpec.describe "AI Bot - Homepage" do
     end
 
     context "with hamburger menu" do
-      before do
-        SiteSetting.navigation_menu = "header dropdown"
-        SiteSetting.ai_bot_add_to_header = true
+      fab!(:header_dropdown_navigation_menu) do
+        Fabricate(
+          :theme_site_setting_with_service,
+          name: "navigation_menu",
+          value: "header dropdown",
+        )
       end
+
+      before { SiteSetting.ai_bot_add_to_header = true }
 
       it "shows shuffle icon in the header and doesn't display sidebar back link" do
         visit "/"
@@ -454,7 +462,9 @@ RSpec.describe "AI Bot - Homepage" do
   end
 
   context "with header dropdown on mobile", mobile: true do
-    before { SiteSetting.navigation_menu = "header dropdown" }
+    fab!(:header_dropdown_navigation_menu) do
+      Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "header dropdown")
+    end
 
     it "displays the new question button in the menu when viewing a PM" do
       ai_pm_homepage.visit

@@ -240,7 +240,6 @@ RSpec.describe SiteSerializer do
     end
 
     before do
-      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
       SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
