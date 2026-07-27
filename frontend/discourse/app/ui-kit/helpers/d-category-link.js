@@ -118,6 +118,15 @@ export function categoryLinkHTML(category, options) {
     if (options.emoji) {
       categoryOptions.emoji = options.emoji;
     }
+    if (options.topicCount) {
+      categoryOptions.topicCount = options.topicCount;
+    }
+    if (options.subcategoryCount) {
+      categoryOptions.subcategoryCount = options.subcategoryCount;
+    }
+    if (options.readOnly) {
+      categoryOptions.readOnly = options.readOnly;
+    }
   }
   return trustHTML(categoryBadgeHTML(category, categoryOptions));
 }
