@@ -98,24 +98,25 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
 />
 
-// (filter, { offset, limit, signal }) => one of:
-//   { items, total }    a known set size; paging stops when it is reached
-//   { items, hasMore }  more-ness without a size; size is known once hasMore is false
-//   items               a bare array: this IS the whole set, so no second page is fetched
-//
-// A source that paginates MUST report total or hasMore. Say nothing and the
-// engine takes the first response as complete.`;
+{{! The load function is (filter, { offset, limit, signal }) and returns one of:
+
+  { items, total }    a known set size; paging stops when it is reached
+  { items, hasMore }  more-ness without a size; the size is known once hasMore is false
+  items               a bare array: this IS the whole set, so no second page is fetched
+
+  A source that paginates MUST report total or hasMore. Say nothing and the engine
+  takes the first response as complete. }}`;
 
   reloadCode = `{{! Nothing to configure: the delay decides which behaviour you get }}
 <DSelect @load={{this.loadPage}} @value={{this.value}} @onChange={{this.onChange}} />
 
-// While a NEW query is in flight the previous rows are kept, so a source that answers
-// quickly never blinks. Past ~250ms they are dropped for the skeleton instead: those
-// rows no longer match what the input says, and they stay clickable, so an Enter would
-// land on a row the query excludes.
-//
-// A reveal (another page for the SAME query) is not affected — its rows are still
-// correct, and they stay put with placeholders appended at the frontier.`;
+{{! While a NEW query is in flight the previous rows are kept, so a source that answers
+  quickly never blinks. Past ~250ms they are dropped for the skeleton instead: those rows
+  no longer match what the input says, and they stay clickable, so an Enter would land on
+  a row the query excludes.
+
+  A reveal — another page for the SAME query — is not affected. Its rows are still
+  correct, so they stay put with placeholders appended at the frontier. }}`;
 
   largeListCode = `{{! 5000 items rendered in full; only the rows in view are mounted }}
 <DSelect
@@ -520,7 +521,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.default_try_this"}}
           @code={{this.defaultCode}}
         >
-          <div class="select-examples__control select-examples__default">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-default"
               @items={{this.fourOptions}}
@@ -553,7 +554,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.multi_try_this"}}
           @code={{this.multiCode}}
         >
-          <div class="select-examples__control select-examples__multi">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-multi"
               @items={{this.fourOptions}}
@@ -615,18 +616,19 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.paged_try_this"}}
           @code={{this.pagedCode}}
         >
-          <div class="select-examples__control select-examples__paged">
-            <DSelect
-              @identifier="sg-paged"
-              @load={{this.loadPage}}
-              @value={{this.pagedValue}}
-              @onChange={{this.updatePaged}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            />
-            <p class="styleguide-note">
-              {{i18n "styleguide.sections.select.paged_note"}}
-            </p>
-          </div>
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-paged"
+                @load={{this.loadPage}}
+                @value={{this.pagedValue}}
+                @onChange={{this.updatePaged}}
+                @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+              />
+            </div>
+
+          </:default>
+          <:note>{{i18n "styleguide.sections.select.paged_note"}}</:note>
         </StyleguideExample>
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.paged_cursor_example"}}
@@ -636,23 +638,25 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.paged_cursor_try_this"}}
           @code={{this.pagedCode}}
         >
-          <div class="select-examples__control select-examples__paged-cursor">
-            <DSelect
-              @identifier="sg-paged-cursor"
-              @load={{this.loadPageCursor}}
-              @value={{this.pagedCursorValue}}
-              @onChange={{this.updatePagedCursor}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            />
-            <p class="styleguide-note">
-              {{i18n "styleguide.sections.select.paged_cursor_note"}}
-            </p>
-          </div>
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-paged-cursor"
+                @load={{this.loadPageCursor}}
+                @value={{this.pagedCursorValue}}
+                @onChange={{this.updatePagedCursor}}
+                @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+              />
+            </div>
+
+          </:default>
+          <:note>{{i18n "styleguide.sections.select.paged_cursor_note"}}</:note>
         </StyleguideExample>
       </Group>
 
       <Group @id="states">
         <StyleguideExample
+          class="--wide"
           @title={{i18n "styleguide.sections.select.reload_example"}}
           @description={{i18n "styleguide.sections.select.reload_description"}}
           @tryThis={{i18n "styleguide.sections.select.reload_try_this"}}
@@ -697,7 +701,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.async_button_try_this"}}
           @code={{this.asyncButtonCode}}
         >
-          <div class="select-examples__control select-examples__async-button">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-async-button"
               @load={{this.loadOptions}}
@@ -732,7 +736,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.error_try_this"}}
           @code={{this.errorCode}}
         >
-          <div class="select-examples__control select-examples__error">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-error"
               @load={{this.loadWithRetry}}
@@ -749,6 +753,7 @@ export default class Select extends Component {
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.icon_example"}}
           @description={{i18n "styleguide.sections.select.icon_description"}}
+          @tryThis={{i18n "styleguide.sections.select.icon_try_this"}}
           @code={{this.iconCode}}
         >
           <div class="select-examples__control">
@@ -771,7 +776,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.icon_only_try_this"}}
           @code={{this.iconOnlyCode}}
         >
-          <div class="select-examples__control select-examples__icon-only">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-icon-only"
               @items={{this.notificationLevels}}
@@ -831,24 +836,27 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.events_try_this"}}
           @code={{this.eventsCode}}
         >
-          <div class="select-examples__control">
-            <DSelect
-              @identifier="sg-events"
-              @items={{this.items}}
-              @value={{this.eventsValue}}
-              @onChange={{this.updateEvents}}
-              @onShow={{this.onShow}}
-              @onClose={{this.onClose}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            />
-            <p class="styleguide-note">
-              {{i18n
-                "styleguide.sections.select.events_note"
-                opened=this.openCount
-                closed=this.closeCount
-              }}
-            </p>
-          </div>
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-events"
+                @items={{this.items}}
+                @value={{this.eventsValue}}
+                @onChange={{this.updateEvents}}
+                @onShow={{this.onShow}}
+                @onClose={{this.onClose}}
+                @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+              />
+            </div>
+
+          </:default>
+          <:result>
+            {{i18n
+              "styleguide.sections.select.events_note"
+              opened=this.openCount
+              closed=this.closeCount
+            }}
+          </:result>
         </StyleguideExample>
       </Group>
 
@@ -863,7 +871,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.maximum_try_this"}}
           @code={{this.maximumCode}}
         >
-          <div class="select-examples__control select-examples__maximum">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-maximum"
               @items={{this.items}}
@@ -883,7 +891,7 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.none_try_this"}}
           @code={{this.noneCode}}
         >
-          <div class="select-examples__control select-examples__none">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-none"
               @items={{this.items}}
@@ -991,18 +999,19 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.large_list_try_this"}}
           @code={{this.largeListCode}}
         >
-          <div class="select-examples__control select-examples__large-list">
-            <DSelect
-              @identifier="sg-large-list"
-              @items={{this.largeListItems}}
-              @value={{this.largeListValue}}
-              @onChange={{this.updateLargeList}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            />
-            <p class="styleguide-note">
-              {{i18n "styleguide.sections.select.large_list_note"}}
-            </p>
-          </div>
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-large-list"
+                @items={{this.largeListItems}}
+                @value={{this.largeListValue}}
+                @onChange={{this.updateLargeList}}
+                @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+              />
+            </div>
+
+          </:default>
+          <:note>{{i18n "styleguide.sections.select.large_list_note"}}</:note>
         </StyleguideExample>
       </Group>
 

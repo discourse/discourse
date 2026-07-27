@@ -24,6 +24,7 @@ export default class SelectKeyboard extends Component {
   @tracked transcriptValue = [];
   @tracked walkthroughValue = null;
   @tracked clearableValue = "fr";
+  @tracked mobileValue = null;
 
   locales = LOCALES;
 
@@ -55,6 +56,11 @@ export default class SelectKeyboard extends Component {
   }
 
   @action
+  updateMobile(value) {
+    this.mobileValue = value;
+  }
+
+  @action
   updateTranscript(value) {
     this.transcriptValue = value;
   }
@@ -66,33 +72,42 @@ export default class SelectKeyboard extends Component {
 
   <template>
     <StyleguideExample
+      class="--wide"
       @title={{i18n "styleguide.sections.select.keyboard_walkthrough_example"}}
       @description={{i18n
         "styleguide.sections.select.keyboard_walkthrough_description"
       }}
+      @tryThis={{i18n
+        "styleguide.sections.select.keyboard_walkthrough_try_this"
+      }}
     >
-      <div class="select-examples__control">
-        <DSelect
-          @identifier="sg-keyboard-walkthrough"
-          @items={{this.locales}}
-          @value={{this.walkthroughValue}}
-          @onChange={{this.updateWalkthrough}}
-          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-        />
-      </div>
+      <:default>
+        <div class="select-examples__control">
+          <DSelect
+            @identifier="sg-keyboard-walkthrough"
+            @items={{this.locales}}
+            @value={{this.walkthroughValue}}
+            @onChange={{this.updateWalkthrough}}
+            @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          />
+        </div>
 
-      <ol class="select-keyboard__steps" data-test-keyboard-steps>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_open"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_move"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_page"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_home_end"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_choose"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_escape"}}</li>
-        <li>{{i18n "styleguide.sections.select.keyboard_step_tab"}}</li>
-      </ol>
+      </:default>
+      <:note>
+        <ol class="styleguide-example__note-list" data-test-keyboard-steps>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_open"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_move"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_page"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_home_end"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_choose"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_escape"}}</li>
+          <li>{{i18n "styleguide.sections.select.keyboard_step_tab"}}</li>
+        </ol>
+      </:note>
     </StyleguideExample>
 
     <StyleguideExample
+      class="--wide"
       @title={{i18n "styleguide.sections.select.keyboard_transcript_example"}}
       @description={{i18n
         "styleguide.sections.select.keyboard_transcript_description"
@@ -164,21 +179,35 @@ export default class SelectKeyboard extends Component {
       }}
       @tryThis={{i18n "styleguide.sections.select.keyboard_mobile_try_this"}}
     >
-      {{! No live modal demo here on purpose. Whether the overlay is a popover or a modal is
-      decided by a global viewport signal, not per instance, so a modal-presented select cannot
-      be rendered beside a popover-presented one. Narrowing the window is the only honest way to
-      see it, and the deltas are stated rather than faked. }}
-      <ul class="select-keyboard__notes">
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_input"
-          }}</li>
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_static"
-          }}</li>
-        <li>{{i18n
-            "styleguide.sections.select.keyboard_mobile_note_chips"
-          }}</li>
-      </ul>
+      <:default>
+        {{! The control is here to be narrowed, not to demonstrate the modal beside the popover:
+      whether the overlay is a popover or a modal is decided by a global viewport signal rather
+      than per instance, so the two cannot be shown side by side. Resizing is the only honest
+      way to see it, and the deltas are stated rather than faked. }}
+        <div class="select-examples__control">
+          <DSelect
+            @identifier="sg-keyboard-mobile"
+            @items={{this.locales}}
+            @value={{this.mobileValue}}
+            @onChange={{this.updateMobile}}
+            @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+          />
+        </div>
+
+      </:default>
+      <:note>
+        <ul class="styleguide-example__note-list">
+          <li>{{i18n
+              "styleguide.sections.select.keyboard_mobile_note_input"
+            }}</li>
+          <li>{{i18n
+              "styleguide.sections.select.keyboard_mobile_note_static"
+            }}</li>
+          <li>{{i18n
+              "styleguide.sections.select.keyboard_mobile_note_chips"
+            }}</li>
+        </ul>
+      </:note>
     </StyleguideExample>
   </template>
 }

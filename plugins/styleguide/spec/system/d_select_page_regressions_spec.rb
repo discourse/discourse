@@ -12,6 +12,19 @@ describe "UiKit | DSelect page regressions" do
     sign_in(admin)
   end
 
+  # The card prose names arguments and blocks constantly, and they are marked up by backticks in
+  # the translation rather than by markup, so a helper has to turn them into elements. It is easy
+  # for that to half-work — escaping the string before looking for backticks removes the very
+  # character being looked for, and the page then renders literal backticks with no complaint
+  # from any other gate.
+  it "renders backticked identifiers in card prose as inline code" do
+    visit "/styleguide/molecules/select?group=start"
+
+    description = find("[data-test-example-description]", match: :first)
+    expect(description).to have_css("code", text: "@value")
+    expect(description).to have_no_text("`")
+  end
+
   # Closing and reopening is the most ordinary thing a reader does, and it was broken: the panel
   # flashed and shut immediately on the second open.
   # Reopening via the caret after the control has already been used. The caret is the obvious
@@ -96,7 +109,7 @@ describe "UiKit | DSelect page regressions" do
     picker = PageObjects::Components::UiKit::DSelect.by_identifier("sg-content-picker")
 
     card = find(".styleguide-example", text: "The whole picker")
-    expect(card).to have_css("button", text: "Code")
+    expect(card).to have_css("button.styleguide-example__code-toggle")
     expect(picker).to be_present
   end
 end

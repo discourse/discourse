@@ -18,7 +18,7 @@ describe "UiKit | DSelect multi-select chip roving" do
     SiteSetting.styleguide_enabled = true
     sign_in(admin)
     visit "/styleguide/molecules/select?group=start"
-    expect(page).to have_css(".select-examples__multi .d-combobox__trigger.--multiple")
+    expect(page).to have_css("[data-identifier='sg-multi'][data-trigger].--multiple")
   end
 
   # Seeds three chips (Deutsch, Italiano, Nederlands) via the typeahead, leaving focus in the input.

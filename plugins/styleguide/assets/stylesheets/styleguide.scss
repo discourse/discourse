@@ -2,6 +2,20 @@
 @import "colors";
 @import "typography";
 
+// One surface for the page's two card-shaped things, so the hero and an example cannot drift
+// apart the way they had — 1.25rem of padding against 1rem, which no one would defend if asked.
+// The comfortable reading measure, for prose that sits directly on the page with nothing
+// bounding it. Prose INSIDE a box does not get this: the box is already the measure, and
+// capping it there just left obvious dead space inside a drawn border.
+$styleguide-measure: 70ch;
+
+@mixin styleguide-surface {
+  border: 1px solid var(--content-border-color);
+  border-radius: var(--d-border-radius);
+  background-color: var(--secondary);
+  padding: 1rem;
+}
+
 .styleguide {
   position: relative;
 
@@ -37,6 +51,7 @@
 
   .styleguide-section {
     .section-description {
+      max-width: $styleguide-measure;
       margin-bottom: 2em;
     }
 
@@ -49,20 +64,24 @@
     }
 
     .styleguide-example {
-      border: 1px solid var(--content-border-color);
-      border-radius: var(--d-border-radius);
-      background-color: var(--secondary);
-      padding: 1rem;
+      @include styleguide-surface;
+
+      // Ungrouped styleguide pages stack their cards; the card grid overrides this.
       margin-bottom: 2em;
 
+      // The row each slot occupies. Cards in a grid share these rows through subgrid, and a
+      // subgrid places its children in DOM order — so a card missing one slot would pull every
+      // later slot up a row and take the whole band's alignment with it. Placing each slot
+      // explicitly means a missing slot leaves its row empty instead.
       &__header {
+        grid-row: 1;
         display: flex;
         align-items: baseline;
         justify-content: space-between;
         gap: var(--space-2);
 
-        // Reserved so a card without a code toggle keeps the same header height as one with,
-        // instead of alternating down the column.
+        // Keeps the rhythm even between GROUPS. Within a band the shared row already does it,
+        // but a group whose cards all lack a code toggle would otherwise sit tighter.
         min-height: 2rem;
         margin-bottom: 0.5rem;
       }
@@ -74,13 +93,27 @@
         margin: 0;
       }
 
-      &__description {
-        color: var(--primary-high);
-        margin: 0 0 1rem;
-        max-width: 60ch;
+      // Light on purpose: these sentences are mostly identifiers, and a heavier mark would
+      // speckle every paragraph.
+      &__description code,
+      &__try-this code,
+      &__note code {
+        padding: 0 0.2em;
+        background: var(--primary-very-low);
+        border-radius: var(--d-border-radius);
+        color: var(--primary);
+        font-size: 0.9em;
       }
 
+      &__description {
+        grid-row: 2;
+        color: var(--primary-high);
+        margin: 0 0 1rem;
+      }
+
+      // The card's one call to action, and the only thing wearing the accent mark.
       &__try-this {
+        grid-row: 3;
         display: flex;
         gap: 0.4rem;
         color: var(--primary-high);
@@ -97,14 +130,57 @@
       }
 
       &__body {
+        grid-row: 4;
         width: 100%;
         position: relative;
         min-width: 0;
       }
 
+      // Background prose, read passively. Unadorned on purpose: giving it the instruction's
+      // fill and stripe sandwiched the control between two identical bars.
+      &__note {
+        grid-row: 5;
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+        margin: 0.75rem 0 0;
+      }
+
+      // Output the demo produced, not commentary about it. Bordered on all sides rather than
+      // marked on one, so it reads as a panel written into rather than as another aside.
+      &__result {
+        grid-row: 6;
+        display: block;
+        color: var(--primary);
+        background: var(--primary-very-low);
+        border: 1px solid var(--content-border-color);
+        border-radius: var(--d-border-radius);
+        padding: 0.5rem 0.75rem;
+        margin: 0.75rem 0 0;
+      }
+
+      &__note-list {
+        margin: 0;
+        padding-inline-start: 1.25rem;
+
+        li + li {
+          margin-block-start: 0.35rem;
+        }
+      }
+
       &__code {
+        grid-row: 7;
         max-width: 100%;
-        overflow-x: auto;
+        margin-block-start: 1rem;
+        overflow: auto;
+
+        // Bounded deliberately. `pre` wraps rather than scrolls here and the samples are whole
+        // invocations, so an uncapped block in a narrow track is taller than the demo it
+        // documents — and opening one card stretches every card sharing its row.
+        max-block-size: 30rem;
+
+        pre {
+          margin: 0;
+        }
       }
     }
 
@@ -123,25 +199,45 @@
     }
 
     .styleguide-group {
+      /* Cards subgrid over one shared band of rows, so every slot lines up across a row
+         instead of drifting with the prose above it. Two rules make it hold: each slot is
+         placed explicitly (see `.styleguide-example`), because a subgrid auto-places in DOM
+         order and one missing slot would shift every later one; and row spacing is margin,
+         not `row-gap`, on BOTH sides, so an empty row — the code row, almost always — costs
+         nothing. */
+
       &__examples {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
-        gap: 1.5rem;
-        align-items: start;
+        column-gap: 1.5rem;
+        row-gap: 0;
 
-        // Cards that own their width — long lists, footers, control strips — opt out and span
-        // the whole row rather than being squeezed into a track.
-        > .styleguide-example--wide {
-          grid-column: 1 / -1;
-        }
-
-        // Inside a grid track the card's own bottom margin fights `gap`.
         > .styleguide-example {
-          margin-bottom: 0;
+          display: grid;
 
-          // Grid items default to min-width: auto too, so a wide child (a long code block, an
-          // unbreakable label) would otherwise stretch its track.
+          // Rows only: the card is one parent column wide, so subgridding the column axis
+          // would hand it a single track it has no use for.
+          grid-template-columns: 1fr;
+          grid-template-rows: subgrid;
+
+          // header · description · try-this · body · note · result · code
+          grid-row: span 7;
+          gap: 0;
+
+          // Grid items default to min-width: auto, so a long code line or an unbreakable
+          // label would otherwise stretch its track.
           min-width: 0;
+
+          // Carried by the card rather than the parent's row-gap, per the note above. Uniform
+          // across cards, so their bottom edges stay aligned.
+          margin-bottom: 1.5rem;
+
+          // Cards that own their width — a side-by-side comparison, a control strip, the
+          // synthesis picker — take the whole row rather than being squeezed into a track.
+          // They still span the band, so they subgrid against rows only they fill.
+          &.--wide {
+            grid-column: 1 / -1;
+          }
         }
       }
 
@@ -153,7 +249,7 @@
 
       &__description {
         color: var(--primary-high);
-        max-width: 70ch;
+        max-width: $styleguide-measure;
         margin: 0 0 1.5rem;
       }
     }
@@ -344,37 +440,30 @@
 
 /* Example layout ------------------------------------------------------------------------- */
 
-// One control width for the whole page, routed through a property so a single example can
-// narrow it. NARROWING is safe; widening is not — the reviewer showcase relies on its chips
-// wrapping, and a wider control stops them wrapping and silently voids that assertion.
-//
-// Declared on the elements that consume it, not on a `.select-examples` block: no element ever
-// carried that class, so the property was undefined, `min(100%, var(…))` was invalid at
-// computed-value time, and every control silently stretched the full width of its card.
-.select-examples__control,
-.select-showcases__control,
-.select-examples__pair-item,
-.select-hero {
-  --styleguide-control-width: 24rem;
-}
-
-.select-examples__control,
-.select-showcases__control {
-  width: min(100%, var(--styleguide-control-width));
-  min-width: 0;
-
-  // Long single-line rows (topic titles) need the wider track to be worth reading.
-  &--wide {
-    --styleguide-control-width: 32rem;
-  }
-}
-
-.select-showcases__control {
-  // The rich showcase rows need the wider track in both directions. Widening past this stops
-  // the seven reviewer chips wrapping, which an assertion reads via their offsets; narrowing it
-  // makes the two-line rows wrap far enough to overlap, so a row intercepts the click meant for
-  // the one below it. Both failures are silent-ish, so treat 28rem as fixed.
+// One control width for the whole page, declared once on the section root. 28rem rather than a
+// per-family value because it is the only figure with a documented bound in both directions:
+// widening past it stops the seven reviewer chips wrapping, which an assertion reads via their
+// offsets, and narrowing it makes the two-line category rows wrap far enough to overlap, so a
+// row intercepts the click meant for the one below it. Both failures are silent-ish.
+.select-examples {
   --styleguide-control-width: 28rem;
+}
+
+// A control fills its card. The card's track already sets a sensible width, and a second cap
+// inside it only produced a ragged right edge that read as a rendering fault.
+.select-examples__control,
+.select-showcases__control {
+  width: 100%;
+  min-width: 0;
+}
+
+// The exception, and the only place the token is still spent: on a full-row card the container
+// is deliberately far wider than any select should be, so the control keeps a readable cap.
+.styleguide-example.--wide {
+  .select-examples__control,
+  .select-showcases__control {
+    width: min(100%, var(--styleguide-control-width));
+  }
 }
 
 // A card whose subject is a difference keeps both specimens inside it, so the comparison is one
@@ -489,15 +578,11 @@
   flex-wrap: wrap;
   gap: var(--space-4);
 
+  // A flex basis rather than a control width: three specimens rather than two, and these
+  // slots hold the select directly with no __control wrapper to size.
   .select-examples__pair-item {
-    --styleguide-control-width: 16rem;
+    flex-basis: 16rem;
   }
-}
-
-.styleguide-group__intro {
-  color: var(--primary-high);
-  max-width: 70ch;
-  margin-block-end: var(--space-4);
 }
 
 .select-examples__details {
@@ -527,15 +612,14 @@
 
 /* The hero --------------------------------------------------------------------------------- */
 .select-hero {
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
-  background: var(--secondary);
-  padding: 1.25rem;
+  @include styleguide-surface;
+
+  // What sets the hero apart is its position and its content — three controls in a row above
+  // the sub-navigation — not a different inset from the cards below it.
   margin-bottom: 2rem;
 
   &__caption {
     color: var(--primary-high);
-    max-width: 70ch;
     margin: 0 0 1rem;
   }
 

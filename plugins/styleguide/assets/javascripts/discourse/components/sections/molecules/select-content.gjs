@@ -107,14 +107,23 @@ export default class SelectContent extends Component {
   </:item>
 </DSelect>`;
 
-  computedCode = `{{! The block runs when the row renders, so it can derive rather than read. }}
-<:item as |zone|>
-  <span class="select-examples__row select-examples__row--glyph">
-    {{dIcon "clock"}}
-    <span class="select-examples__primary">{{zone.name}}</span>
-    <span class="select-examples__meta">{{localTimeIn zone.id}}</span>
-  </span>
-</:item>`;
+  computedCode = `{{! The block runs when the row renders, so it can derive rather than read.
+  Nothing on the item carries the local time; it is computed per row. }}
+<DSelect
+  @items={{this.timezones}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @valueField="id"
+  @labelField="name"
+>
+  <:item as |zone|>
+    <span class="my-row">
+      {{icon "clock"}}
+      <span class="my-primary">{{zone.name}}</span>
+      <span class="my-meta">{{localTimeIn zone.id}}</span>
+    </span>
+  </:item>
+</DSelect>`;
 
   emptyCode = `{{! The wrapper and its role="status" are kept for you; only the message is yours. }}
 <DSelect @load={{this.load}} @value={{this.value}} @onChange={{this.onChange}}>
@@ -122,32 +131,75 @@ export default class SelectContent extends Component {
 </DSelect>`;
 
   errorCode = `{{! Unlike every other block, :error replaces the WHOLE container — including its
-  role="alert" and its retry button. Supply both or the state stops being
+  role="alert" and its retry control. Supply both, or the failure stops being
   announced and stops being recoverable. }}
-<:error as |error retry|>
-  <div class="select-examples__error" role="alert">
-    <p>{{error.message}}</p>
-    <DButton @action={{retry}} @label="..." />
-  </div>
-</:error>`;
+<DSelect
+  @load={{this.load}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @retryable={{true}}
+>
+  <:error as |error retry|>
+    <div class="my-error" role="alert">
+      <p>{{error.message}}</p>
+      <DButton @action={{retry}} @label="my.retry" />
+    </div>
+  </:error>
+</DSelect>`;
 
-  selectionCode = `{{! Two surfaces, deliberately different: a two-line row in the list, a
-  one-line summary in the trigger, which is only one line tall. }}
-<:item as |person|>
-  <span class="select-examples__row select-examples__row--identity">
-    <img class="select-examples__avatar" src={{person.avatar}} alt="" />
-    <span class="select-examples__details">
-      <span class="select-examples__primary">{{person.name}}</span>
-      <span class="select-examples__secondary">@{{person.username}}</span>
+  selectionCode = `{{! The SAME :selection block in both arities. On the single-select it is the
+  resting trigger; on the multi-select it is each chip. Only the arity differs
+  between these two invocations — the blocks are identical. }}
+<DSelect
+  @items={{this.people}}
+  @value={{this.singleValue}}
+  @onChange={{this.updateSingle}}
+  @labelField="name"
+>
+  <:item as |person|>
+    <span class="my-row">
+      <img class="my-avatar" src={{person.avatar}} alt="" />
+      <span class="my-details">
+        <span class="my-primary">{{person.name}}</span>
+        <span class="my-secondary">@{{person.username}}</span>
+      </span>
     </span>
-  </span>
-</:item>
-<:selection as |person|>
-  <span class="select-examples__row select-examples__row--glyph">
-    <img class="select-examples__avatar --small" src={{person.avatar}} alt="" />
-    {{person.name}}
-  </span>
-</:selection>`;
+  </:item>
+
+  {{! One line, because the trigger is one line — unlike :item, which has room for
+  two. A chip's accessible name is built from this, so it must contain text. }}
+  <:selection as |person|>
+    <span class="my-chip">
+      <img class="my-avatar --small" src={{person.avatar}} alt="" />
+      {{person.name}}
+    </span>
+  </:selection>
+</DSelect>
+
+<DSelect
+  @items={{this.people}}
+  @multiple={{true}}
+  @value={{this.multiValue}}
+  @onChange={{this.updateMulti}}
+  @labelField="name"
+>
+  <:item as |person|>
+    <span class="my-row">
+      <img class="my-avatar" src={{person.avatar}} alt="" />
+      <span class="my-details">
+        <span class="my-primary">{{person.name}}</span>
+        <span class="my-secondary">@{{person.username}}</span>
+      </span>
+    </span>
+  </:item>
+
+  <:selection as |person|>
+    <span class="my-chip">
+      <img class="my-avatar --small" src={{person.avatar}} alt="" />
+      {{person.name}}
+    </span>
+  </:selection>
+</DSelect>`;
 
   groupedCode = `<DSelect
   @items={{this.members}}
@@ -164,25 +216,38 @@ export default class SelectContent extends Component {
       {{dIcon "users"}}{{group.label}}
     </span>
   </:groupHeader>
-  <:item as |person|>...</:item>
+  <:item as |person|>
+    <span class="my-row">
+      <img class="my-avatar" src={{person.avatar}} alt="" />
+      <span class="my-details">
+        <span class="my-primary">{{person.name}}</span>
+        <span class="my-secondary">@{{person.username}}</span>
+      </span>
+    </span>
+  </:item>
 </DSelect>`;
 
   footerCode = `{{! The footer is a SIBLING of the async content, not inside it, so it renders in
-  every panel state — loading, populated, empty and errored. Gate its contents
-  on what it is yielded rather than assuming a populated list. }}
-<:footer as |state|>
-  {{#if state.loadedCount}}
-    <span>{{state.loadedCount}} shown</span>
-  {{else}}
-    <span>Nothing to show</span>
-  {{/if}}
-  <DButton @action={{state.close}} @label="..." />
-</:footer>
+  every panel state: loading, populated, empty and failed. Gate its contents on
+  what it is yielded rather than assuming there are rows.
 
-// Three controls rather than one with a toggle: a DSelect captures @load when its
-// engine is built, so the source of a live control cannot be swapped underneath it.`;
+  The example beside this uses three separate controls rather than one with a
+  toggle, because a DSelect captures its source when its engine is built and it
+  cannot be swapped underneath a live control. }}
+<DSelect @load={{this.load}} @value={{this.value}} @onChange={{this.onChange}}>
+  <:footer as |state|>
+    {{#if state.loadedCount}}
+      <span>{{state.loadedCount}} shown</span>
+    {{else}}
+      <span>Nothing to show</span>
+    {{/if}}
+    <DButton @action={{state.close}} @label="my.done" />
+  </:footer>
+</DSelect>`;
 
-  pickerCode = `<DSelect
+  pickerCode = `{{! Four blocks at once. Nothing new is needed to combine them: the header, the
+  row, the compact chip and the footer each keep the contract they had alone. }}
+<DSelect
   @items={{this.members}}
   @multiple={{true}}
   @value={{this.value}}
@@ -191,13 +256,42 @@ export default class SelectContent extends Component {
   @groupLabel={{this.teamLabel}}
   @labelField="name"
 >
-  {{! Four blocks at once. Nothing new is needed to combine them — the rows, the
-  header, the compact chip and the footer each keep the contract they had
-  on their own. }}
-  <:groupHeader as |group|>…</:groupHeader>
-  <:item as |person|>…</:item>
-  <:selection as |person|>…</:selection>
-  <:footer as |state|>…</:footer>
+  <:groupHeader as |group|>
+    <span class="my-group-header">
+      {{icon "users"}}
+      {{group.label}}
+    </span>
+  </:groupHeader>
+
+  <:item as |person|>
+    <span class="my-row">
+      <img class="my-avatar" src={{person.avatar}} alt="" />
+      <span class="my-details">
+        <span class="my-primary">{{person.name}}</span>
+        <span class="my-secondary">
+          {{if person.status person.status person.title}}
+        </span>
+      </span>
+    </span>
+  </:item>
+
+  {{! The chip is one line while the row is two: the list has room for a second
+  line and the trigger does not. A chip's accessible name is built from what
+  this renders, so it has to contain text. }}
+  <:selection as |person|>
+    <span class="my-chip">
+      <img class="my-avatar --small" src={{person.avatar}} alt="" />
+      {{person.name}}
+    </span>
+  </:selection>
+
+  {{! Gate on the yielded state rather than assuming rows: the footer renders in
+  every panel state, including empty and failed. }}
+  <:footer as |state|>
+    <span class="my-footer-count">
+      {{i18n "my.selected_count" count=state.value.length}}
+    </span>
+  </:footer>
 </DSelect>`;
 
   get glyphItems() {
@@ -296,10 +390,6 @@ export default class SelectContent extends Component {
   }
 
   <template>
-    <p class="styleguide-group__intro">
-      {{i18n "styleguide.sections.select.content.intro"}}
-    </p>
-
     <StyleguideExample
       @title={{i18n "styleguide.sections.select.content.defaults_example"}}
       @description={{i18n
@@ -328,7 +418,7 @@ export default class SelectContent extends Component {
       @tryThis={{i18n "styleguide.sections.select.content.glyph_try_this"}}
       @code={{this.glyphCode}}
     >
-      <div class="select-examples__control select-examples__control--wide">
+      <div class="select-examples__control">
         <DSelect
           @identifier="sg-content-glyph"
           @items={{this.glyphItems}}
@@ -447,6 +537,55 @@ export default class SelectContent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
+      @title={{i18n "styleguide.sections.select.content.grouped_example"}}
+      @description={{i18n
+        "styleguide.sections.select.content.grouped_description"
+      }}
+      @tryThis={{i18n "styleguide.sections.select.content.grouped_try_this"}}
+      @code={{this.groupedCode}}
+    >
+      <div class="select-examples__control">
+        <DSelect
+          @identifier="sg-grouped"
+          @items={{this.teamMembers}}
+          @value={{this.groupedValue}}
+          @onChange={{this.updateGrouped}}
+          @groupBy="team"
+          @groupLabel={{this.teamLabel}}
+          @labelField="name"
+          @placeholder={{i18n
+            "styleguide.sections.select.content.grouped_placeholder"
+          }}
+        >
+          {{! Kept to an icon and the team name. Every option under this header is
+          aria-describedby it, so anything extra here is read again on every row. }}
+          <:groupHeader as |group|>
+            <span class="select-examples__group-header">
+              {{dIcon "users"}}
+              {{group.label}}
+            </span>
+          </:groupHeader>
+          <:item as |person|>
+            <span class="select-examples__row select-examples__row--identity">
+              <img
+                class="select-examples__avatar"
+                src={{person.avatar}}
+                alt=""
+              />
+              <span class="select-examples__details">
+                <span class="select-examples__primary">{{person.name}}</span>
+                <span class="select-examples__secondary">
+                  @{{person.username}}
+                </span>
+              </span>
+            </span>
+          </:item>
+        </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      class="--wide"
       @title={{i18n "styleguide.sections.select.content.selection_example"}}
       @description={{i18n
         "styleguide.sections.select.content.selection_description"
@@ -459,7 +598,7 @@ export default class SelectContent extends Component {
           <p class="select-examples__pair-label">
             {{i18n "styleguide.sections.select.content.selection_single_label"}}
           </p>
-          <div class="select-examples__control select-examples__selection">
+          <div class="select-examples__control">
             <DSelect
               @identifier="sg-selection"
               @items={{this.people}}
@@ -562,54 +701,7 @@ export default class SelectContent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
-      @title={{i18n "styleguide.sections.select.content.grouped_example"}}
-      @description={{i18n
-        "styleguide.sections.select.content.grouped_description"
-      }}
-      @tryThis={{i18n "styleguide.sections.select.content.grouped_try_this"}}
-      @code={{this.groupedCode}}
-    >
-      <div class="select-examples__control">
-        <DSelect
-          @identifier="sg-grouped"
-          @items={{this.teamMembers}}
-          @value={{this.groupedValue}}
-          @onChange={{this.updateGrouped}}
-          @groupBy="team"
-          @groupLabel={{this.teamLabel}}
-          @labelField="name"
-          @placeholder={{i18n
-            "styleguide.sections.select.content.grouped_placeholder"
-          }}
-        >
-          {{! Kept to an icon and the team name. Every option under this header is
-          aria-describedby it, so anything extra here is read again on every row. }}
-          <:groupHeader as |group|>
-            <span class="select-examples__group-header">
-              {{dIcon "users"}}
-              {{group.label}}
-            </span>
-          </:groupHeader>
-          <:item as |person|>
-            <span class="select-examples__row select-examples__row--identity">
-              <img
-                class="select-examples__avatar"
-                src={{person.avatar}}
-                alt=""
-              />
-              <span class="select-examples__details">
-                <span class="select-examples__primary">{{person.name}}</span>
-                <span class="select-examples__secondary">
-                  @{{person.username}}
-                </span>
-              </span>
-            </span>
-          </:item>
-        </DSelect>
-      </div>
-    </StyleguideExample>
-
-    <StyleguideExample
+      class="--wide"
       @title={{i18n "styleguide.sections.select.content.footer_example"}}
       @description={{i18n
         "styleguide.sections.select.content.footer_description"
@@ -671,6 +763,7 @@ export default class SelectContent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
+      class="--wide"
       @title={{i18n "styleguide.sections.select.content.picker_example"}}
       @description={{i18n
         "styleguide.sections.select.content.picker_description"

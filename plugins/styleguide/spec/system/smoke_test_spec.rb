@@ -169,9 +169,9 @@ RSpec.describe "Styleguide Smoke Test" do
     expect(styleguide).to have_heading("Select")
 
     expect(page).to have_css(
-      ".select-examples__icon-only .d-combobox__trigger.--icon-only .d-combobox__leading-icon",
+      "[data-identifier='sg-icon-only'][data-trigger].--icon-only .d-combobox__leading-icon",
     )
-    page.scroll_to(find(".select-examples__icon-only"), align: :center)
+    page.scroll_to(find("[data-identifier='sg-icon-only'][data-trigger]"), align: :center)
     # Open it: the dropdown must size to its own options, not the compact trigger, so labels
     # are not clipped.
     icon_only = PageObjects::Components::UiKit::DSelect.by_identifier("sg-icon-only")
@@ -186,16 +186,18 @@ RSpec.describe "Styleguide Smoke Test" do
 
     # Resting: the :selection block renders the compact avatar + name summary.
     expect(page).to have_css(
-      ".select-examples__selection .d-combobox__presentation .select-examples__avatar",
+      "[data-identifier='sg-selection'][data-trigger] .d-combobox__presentation .select-examples__avatar",
     )
-    page.scroll_to(find(".select-examples__selection"), align: :center)
+    page.scroll_to(find("[data-identifier='sg-selection'][data-trigger]"), align: :center)
     screenshot_marker(label: "styleguide-select-selection-resting", only: :desktop)
 
     # Open: the custom markup gives way to the plain editable label in the filter input.
     selection = PageObjects::Components::UiKit::DSelect.by_identifier("sg-selection")
     selection.open_trigger
     expect(page).to have_css(selection.option_selector, text: "Maya Alvarez")
-    expect(page).to have_no_css(".select-examples__selection .d-combobox__presentation")
+    expect(page).to have_no_css(
+      "[data-identifier='sg-selection'][data-trigger] .d-combobox__presentation",
+    )
     screenshot_marker(label: "styleguide-select-selection-open", only: :desktop)
   end
 
