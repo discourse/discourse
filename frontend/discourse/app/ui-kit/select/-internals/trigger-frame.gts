@@ -16,6 +16,8 @@ interface TriggerFrameSignature {
     clearLabel?: string;
     /** Clears the whole selection; stops the click from toggling the overlay. */
     onClear?: (event: MouseEvent) => void;
+    /** Focuses the control when a wrapping label forwards its activation to the sink. */
+    onLabelActivate: (event: MouseEvent) => void;
   };
   Blocks: {
     /**
@@ -48,18 +50,21 @@ const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
     selection.
 
     Keep it first — tree order is the whole mechanism, and it is what lets a control added here
-    later skip a click guard of its own. Disabled makes it inert and keeps it out of the focus
-    order and out of form submission; hidden keeps it out of the accessibility tree. The display
-    is inline because the trigger is a flex row with a gap, so even a zero-size rendered child
-    shifts the layout, and a stylesheet would make that depend on load order and on no theme
-    overriding it. }}
+    later skip a click guard of its own. Having taken the association it owes the field what a
+    label normally does, so the forwarded click is handed on as a focus rather than swallowed.
+
+    It carries no name, so it is never submitted with a form, and the display is what keeps it
+    unfocusable and untabbable; hidden keeps it out of the accessibility tree. That display is
+    inline rather than in a stylesheet because the trigger is a flex row with a gap, so even a
+    zero-size rendered child shifts the layout, and a stylesheet would make that depend on load
+    order and on no theme overriding it. }}
 
   <input
     type="text"
     class="d-combobox__label-sink"
     style="display: none"
-    disabled
     hidden
+    {{on "click" @onLabelActivate}}
   />
   {{#if @icon}}
     {{dIcon @icon class="d-combobox__leading-icon"}}

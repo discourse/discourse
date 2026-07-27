@@ -533,10 +533,11 @@ export default class DSelect extends Component<DSelectSignature> {
 
   #suppressNextCount = false;
 
-  // True only for the synchronous span of `focusTriggerInput`, so the query input can tell
-  // an open-driven programmatic focus (which must NOT select the label) from a genuine
-  // keyboard focus (Tab-in, which selects the label for replacement).
-  #focusingFromOpen = false;
+  // True only for the synchronous span of a programmatic focus whose caret is owned by
+  // something other than the select-on-focus rule (opening from a pointer, or a label
+  // activation), so the query input can tell those from a genuine keyboard focus (Tab-in,
+  // which selects the label for replacement).
+  #suppressSelectOnFocus = false;
 
   // Stable placeholder rows for the loading frontier — a fixed identity so a persisting
   // pending state does not remount them each render.
@@ -1230,19 +1231,51 @@ export default class DSelect extends Component<DSelectSignature> {
    */
   @action
   focusTriggerInput(): void {
-    this.#focusingFromOpen = true;
+    this.#suppressSelectOnFocus = true;
     this.filterInput?.focus();
-    this.#focusingFromOpen = false;
+    this.#suppressSelectOnFocus = false;
+  }
+
+  /**
+   * Focuses the control when a wrapping label forwards its activation to the trigger's label
+   * sink, so a caption behaves the way it does over a native field.
+   *
+   * The click is stopped short of the trigger root, which would otherwise read it as a trigger
+   * press and open the overlay — a caption should put the user in the field, not in the list.
+   * The caret is placed after the label rather than selecting it: overtype is what a keyboard
+   * focus earns, and this is a pointer.
+   */
+  @action
+  focusFromLabel(event: MouseEvent): void {
+    event.stopPropagation();
+    if (this.isLocked) {
+      return;
+    }
+
+    const input = this.filterInput;
+    if (!input) {
+      this.#menu?.triggerElement?.focus();
+      return;
+    }
+
+    this.#suppressSelectOnFocus = true;
+    input.focus();
+    this.#suppressSelectOnFocus = false;
+
+    if (input instanceof HTMLInputElement) {
+      const end = input.value.length;
+      input.setSelectionRange(end, end);
+    }
   }
 
   /**
    * Whether a focus landing on the query input should select the displayed label (for
-   * overtype). True for a genuine keyboard focus; false for the programmatic focus fired
-   * while opening, where the caret must stay where the pointer put it.
+   * overtype). True for a genuine keyboard focus; false for a programmatic focus whose caret
+   * belongs to the pointer that caused it.
    */
   @action
   shouldSelectOnFocus(): boolean {
-    return !this.#focusingFromOpen;
+    return !this.#suppressSelectOnFocus;
   }
 
   /**
@@ -1997,6 +2030,7 @@ export default class DSelect extends Component<DSelectSignature> {
           @showClear={{this.showClear}}
           @clearLabel={{this.clearLabel}}
           @onClear={{this.handleClear}}
+          @onLabelActivate={{this.focusFromLabel}}
         >
           {{#if @multiple}}
             {{! Desktop multi: the chips are a horizontal arrow-roving group whose remove buttons

@@ -54,11 +54,12 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   871"). Use a phrase, or hide the visual figure and supply one.
 - `role="option"` forbids interactive descendants, so no buttons or links inside `:item`.
 - **Naming the control:** use `@label`, or `aria-labelledby` pointing at your own caption. A
-  wrapping `<label>` is safe but inert — the trigger renders a disabled, unrendered input as its
-  first labelable descendant, so the browser resolves the label to that sink instead of to
-  whichever button happens to come first (a chip's remove control, or the clear control). Without
-  it, clicking a field's caption would silently drop a selection. The sink is why adding a control
-  to the trigger needs no click guard of its own.
+  wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
+  descendant, so the browser resolves the label to that sink instead of to whichever button
+  happens to come first (a chip's remove control, or the clear control) — without it, clicking a
+  field's caption would silently drop a selection. The sink then forwards the activation on as a
+  focus, so a caption puts the caret in the field without opening the panel. It is also why
+  adding a control to the trigger needs no click guard of its own.
 - `:selection` is the only block whose mere presence changes behaviour. On a desktop typeahead it
   moves the label out of the input into a sibling element until the field is focused; the input's
   value is empty at rest, and the control advertises the selection through `aria-describedby`

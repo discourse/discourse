@@ -2249,6 +2249,96 @@ module(
       );
     });
 
+    // Taking the label association is only half the job: having taken it, the sink owes the
+    // field the behaviour a label normally provides.
+    test("a surrounding label focuses the query input without opening the panel", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <FrameHost @value={{1}} />
+          </label>
+        </template>
+      );
+
+      await click(".field-text");
+      assert.strictEqual(
+        document.activeElement,
+        find(".d-combobox__input"),
+        "the query input takes focus"
+      );
+      assert
+        .dom("[role='listbox']")
+        .doesNotExist("clicking the caption does not open the panel");
+    });
+
+    // Focus alone would leave the caret wherever a programmatic focus drops it, and the
+    // overtype select-all that a keyboard focus performs is wrong for a pointer. Rendered
+    // without a selection block so the input carries the label text to put a caret in.
+    test("a surrounding label places the caret rather than selecting the label", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <DSelect @items={{ITEMS}} @value={{1}} @identifier="test-caret" />
+          </label>
+        </template>
+      );
+
+      await click(".field-text");
+      const input = find(".d-combobox__input");
+      assert.strictEqual(input.value, "Apple", "the input shows the selection");
+      // Asserted together: an untouched input already reports a collapsed caret at the end,
+      // so the selection assertions only mean something once focus has actually landed.
+      assert.strictEqual(document.activeElement, input, "the input has focus");
+      assert.strictEqual(
+        input.selectionStart,
+        input.value.length,
+        "the caret sits after the label"
+      );
+      assert.strictEqual(
+        input.selectionEnd,
+        input.value.length,
+        "nothing is selected for overtype"
+      );
+    });
+
+    // The button and static variants have no inner input, so the controller is the trigger.
+    test("a surrounding label focuses a button trigger", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <FrameHost @variant="button" @value={{1}} />
+          </label>
+        </template>
+      );
+
+      await click(".field-text");
+      assert.strictEqual(
+        document.activeElement,
+        find(".d-combobox__trigger"),
+        "the trigger takes focus"
+      );
+    });
+
+    test("a surrounding label does not focus a disabled select", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <FrameHost @disabled={{true}} @value={{1}} />
+          </label>
+        </template>
+      );
+
+      await click(".field-text");
+      assert.false(
+        find(".d-combobox").contains(document.activeElement),
+        "focus stays outside a locked control"
+      );
+    });
+
     test("@clearable shows a clear control only when there is a value, and clearing it does not open the menu", async function (assert) {
       await render(
         <template><FrameHost @clearable={{true}} @value={{1}} /></template>
