@@ -6,8 +6,11 @@ RSpec.describe "Shortcuts | sidebar" do
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
-    SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
     sign_in(current_user)
   end

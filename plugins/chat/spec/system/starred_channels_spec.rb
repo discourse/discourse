@@ -6,9 +6,12 @@ RSpec.describe "Starred channels" do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar) { PageObjects::Pages::Sidebar.new }
 
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
+  end
+
   before do
     chat_system_bootstrap
-    SiteSetting.navigation_menu = "sidebar"
     sign_in(current_user)
   end
 

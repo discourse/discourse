@@ -5,11 +5,11 @@ RSpec.describe "Admin | Sidebar Navigation" do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  before do
-    SiteSetting.navigation_menu = "sidebar"
-
-    sign_in(admin)
+  fab!(:navigation_menu) do
+    Fabricate(:theme_site_setting_with_service, name: "navigation_menu", value: "sidebar")
   end
+
+  before { sign_in(admin) }
 
   it "adds an auto-generated plugin link to the admin sidebar" do
     SiteSetting.enable_markdown_footnotes = true

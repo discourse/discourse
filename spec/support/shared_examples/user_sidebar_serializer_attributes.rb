@@ -5,8 +5,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   let(:serializer) { serializer_klass.new(user, scope: Guardian.new(user), root: false) }
 
-  before { SiteSetting.navigation_menu = "sidebar" }
-
   describe "#sidebar_category_ids" do
     fab!(:group)
     fab!(:category)
@@ -25,9 +23,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       Fabricate(:category_sidebar_section_link, user: user, linkable: private_category)
     end
 
-    it 'serializes only the categories that the user can see when sidebar has been enabled"' do
-      SiteSetting.navigation_menu = "sidebar"
-
+    it "serializes only the categories that the user can see" do
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq([category.id, category_2.id])
@@ -66,7 +62,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
     end
 
     it "is not included when tagging has not been enabled" do
-      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = false
 
       json = serializer.as_json
@@ -74,8 +69,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       expect(json[:sidebar_tags]).to eq(nil)
     end
 
-    it "serializes only the tags that the user can see when sidebar and tagging has been enabled" do
-      SiteSetting.navigation_menu = "sidebar"
+    it "serializes only the tags that the user can see when tagging has been enabled" do
       SiteSetting.tagging_enabled = true
 
       json = serializer.as_json
