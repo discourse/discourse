@@ -38,16 +38,14 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
             a_hash_including(
               channel_id: 123,
               channel_name: "Slack: #general",
-              post_id: "={{ $json.post.id }}",
+              message: "={{ $json.post.excerpt }}",
             ),
         ),
       ],
     )
-    expect(node.dig(:output_contracts, 0, :fields)).to include(
+    expect(node.dig(:output_contracts, 0, :fields)).to eq(
       "channel_id" => "integer",
       "provider" => "string",
-      "post_id" => "integer",
-      "custom_message" => "boolean",
     )
   end
 

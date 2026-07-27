@@ -153,11 +153,10 @@ module DiscourseWorkflows
           ],
           "action:send_chat_integration_message" => [
             {
-              name: "Send a post excerpt to an external chat integration channel",
+              name: "Send a message to an external chat integration channel",
               parameters: {
                 channel_id: 123,
                 channel_name: "Slack: #general",
-                post_id: "={{ $json.post.id }}",
                 message: "={{ $json.post.excerpt }}",
               },
             },
