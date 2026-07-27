@@ -260,10 +260,8 @@ class UserUpdater
           attributes.fetch(:name) { "" },
         )
       end
+
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError
-      # Prevent 500 for crazy url input
-      return saved
     end
 
     if saved
@@ -375,6 +373,10 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /\Ahttp/ ? website : "http://#{website}"
+
+    uri = URI.parse(website)
+    "#{"http://" if uri.scheme.blank?}#{website}"
+  rescue URI::Error
+    website
   end
 end
