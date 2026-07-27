@@ -8,11 +8,6 @@ module PageObjects
         self
       end
 
-      def visit_section(category, section)
-        visit("/styleguide/#{category}/#{section}")
-        self
-      end
-
       # Not `has_title?`: Capybara already defines a `have_title` matcher for the document title,
       # and it would win over this one.
       def has_heading?(text)
@@ -47,10 +42,6 @@ module PageObjects
 
       def has_color_mode?(mode)
         has_css?(".toggle-color-mode[data-current-mode='#{mode}']")
-      end
-
-      def has_color_selector?
-        has_css?(".toggle-color-mode")
       end
 
       def has_no_color_selector?

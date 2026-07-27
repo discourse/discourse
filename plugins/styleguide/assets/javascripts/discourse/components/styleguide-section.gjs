@@ -59,7 +59,7 @@ export default class StyleguideSection extends Component {
         <:title>
           {{#if this.section}}
             {{sectionTitle this.section.id}}
-          {{else}}
+          {{else if this.title}}
             {{i18n this.title}}
           {{/if}}
         </:title>

@@ -105,7 +105,10 @@ export default class ToggleColorMode extends Component {
   @action
   select(mode, dMenu) {
     applyColorMode(mode);
-    this.mode = mode;
+
+    // Read back rather than assume: with the dark stylesheet still loading nothing was applied,
+    // and the trigger has to keep showing the mode that is actually on screen.
+    this.mode = appliedColorMode();
     dMenu.close();
   }
 

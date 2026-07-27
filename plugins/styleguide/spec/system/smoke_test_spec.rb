@@ -127,6 +127,8 @@ RSpec.describe "Styleguide Smoke Test" do
     visit "/styleguide"
 
     expect(styleguide).to have_heading("Styleguide")
+    # There is nothing to switch to, so the selector hides itself rather than offering a no-op.
+    expect(styleguide).to have_no_color_selector
   end
 
   # uses the sections hash to generate a test for each page and check if it renders correctly
