@@ -154,7 +154,14 @@ if defined?(DiscourseWorkflows)
             end
 
             target = build_target(post, config["message"])
-            provider.trigger_notification(target, channel, nil)
+            begin
+              provider.trigger_notification(target, channel, nil)
+            rescue DiscourseChatIntegration::ProviderError => error
+              raise_node_error!(
+                provider_error_message(error, channel.provider),
+                item_index: item_index,
+              )
+            end
 
             {
               "channel_id" => channel.id,
@@ -178,6 +185,46 @@ if defined?(DiscourseWorkflows)
               kind: :workflow,
               raw: message,
             )
+          end
+
+          def provider_error_message(error, provider)
+            details = provider_error_details(error)
+            translation_key = details.present? ? "provider_failed_with_details" : "provider_failed"
+
+            I18n.t(
+              "discourse_workflows.errors.send_chat_integration_message.#{translation_key}",
+              provider: provider.humanize,
+              details: details,
+            )
+          end
+
+          def provider_error_details(error)
+            info = error.info || {}
+            error_key = info[:error_key] || info["error_key"]
+            return I18n.t(error_key) if error_key.present? && I18n.exists?(error_key)
+
+            response_error = provider_response_error(info[:response_body] || info["response_body"])
+            return response_error.humanize if response_error.present?
+            return error_key.split(".").last.humanize if error_key.present?
+
+            error.message if error.message.present? && error.message != error.class.name
+          end
+
+          def provider_response_error(response_body)
+            response =
+              case response_body
+              when Hash
+                response_body
+              when String
+                JSON.parse(response_body)
+              else
+                return
+              end
+
+            value = response["error"] || response[:error]
+            value if value.is_a?(String) && value.match?(/\A[a-zA-Z0-9_.-]{1,100}\z/)
+          rescue JSON::ParserError
+            nil
           end
         end
       end

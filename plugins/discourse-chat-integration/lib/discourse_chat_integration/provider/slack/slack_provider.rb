@@ -313,6 +313,8 @@ module DiscourseChatIntegration::Provider::SlackProvider
           error_key = "chat_integration.provider.slack.errors.channel_not_found"
         elsif json["error"] == "invalid_auth"
           error_key = "chat_integration.provider.slack.errors.auth_error"
+        elsif %w[not_in_channel no_permission restricted_action].include?(json["error"])
+          error_key = "chat_integration.provider.slack.errors.action_prohibited"
         else
           error_key = nil
         end

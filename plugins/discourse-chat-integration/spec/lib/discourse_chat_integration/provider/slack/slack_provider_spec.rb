@@ -187,6 +187,20 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
         expect(@thread_stub).to have_been_requested.times(0)
       end
 
+      it "reports when the bot cannot post to the channel" do
+        stub_request(:post, %r{https://slack.com/api/chat.postMessage}).to_return(
+          body: { ok: false, error: "not_in_channel" }.to_json,
+        )
+
+        expect { described_class.trigger_notification(post, chan1, nil) }.to raise_error(
+          DiscourseChatIntegration::ProviderError,
+        ) do |error|
+          expect(error.info[:error_key]).to eq(
+            "chat_integration.provider.slack.errors.action_prohibited",
+          )
+        end
+      end
+
       it "sends thread id for thread" do
         expect(@thread_stub).to have_been_requested.times(0)
 

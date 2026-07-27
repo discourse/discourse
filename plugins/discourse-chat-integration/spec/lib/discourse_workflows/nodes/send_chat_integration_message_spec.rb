@@ -123,6 +123,38 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       expect(provider.sent_messages).to be_empty
     end
 
+    it "reports translated provider errors" do
+      provider.set_raise_exception(
+        DiscourseChatIntegration::ProviderError.new(
+          info: {
+            error_key: "chat_integration.provider.slack.errors.action_prohibited",
+          },
+        ),
+      )
+
+      expect { execute_node(channel_id: channel.id, post_id: reply.id) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        include("The bot does not have permission to post to that channel"),
+      )
+    end
+
+    it "reports safe API error codes when no translation is available" do
+      provider.set_raise_exception(
+        DiscourseChatIntegration::ProviderError.new(
+          info: {
+            response_body: {
+              error: "account_inactive",
+            },
+          },
+        ),
+      )
+
+      expect { execute_node(channel_id: channel.id, post_id: reply.id) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        include("Account inactive"),
+      )
+    end
+
     it "raises when the post does not exist" do
       expect { execute_node(channel_id: channel.id, post_id: -1) }.to raise_error(include("-1"))
       expect(provider.sent_messages).to be_empty
