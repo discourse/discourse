@@ -58,6 +58,7 @@ RSpec.describe "Workflow: post created -> if author in group -> send to chat-int
                name: "Notify channel",
                configuration: {
                  "channel_id" => channel.id,
+                 "message" => "={{ $trigger.post.excerpt }}",
                }
         g.chain "trigger-1", "group-1", "condition-1"
         g.connect "condition-1", "action-1", output: "true"

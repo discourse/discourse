@@ -131,9 +131,7 @@ en:
         provider_disabled: "Chat integration provider is disabled or missing: %{provider}"
         provider_failed: "The %{provider} provider could not send the message"
         provider_failed_with_details: "The %{provider} provider could not send the message: %{details}"
-        post_or_message_required: "A post or custom message is required"
-        post_not_found: "Post not found: %{post_id}"
-        post_not_allowed: "Post %{post_id} cannot be sent to a chat channel (not visible to the chat integration user, or not a regular post)"
+        message_required: "A message is required"
 
   chat_integration:
     all_categories: "(all categories)"

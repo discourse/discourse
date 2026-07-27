@@ -5,10 +5,6 @@ require_relative "../../../dummy_provider"
 RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
   include_context "with dummy provider"
 
-  fab!(:topic)
-  fab!(:first_post) { Fabricate(:post, topic: topic) }
-  fab!(:reply) { Fabricate(:post, topic: topic, post_number: 2) }
-
   let(:channel) { DiscourseChatIntegration::Channel.create!(provider: "dummy") }
 
   before do
@@ -59,21 +55,23 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       )
       expect(schema.dig(:channel_name, :ui, :hidden)).to eq(true)
       expect(schema).not_to have_key(:post_id)
+      expect(schema.dig(:message, :required)).to eq(true)
+      expect(
+        described_class.output_contracts.first.dig(:schema, "properties").keys,
+      ).to contain_exactly("channel_id", "provider")
     end
   end
 
   describe "#execute" do
-    def execute_node(channel_id:, input_post_id: nil, message: nil)
+    def execute_node(channel_id:, message: nil)
       parameters = { "channel_id" => channel_id.to_s }
       parameters["message"] = message if message
-      input_json = {}
-      input_json["post"] = { "id" => input_post_id } if input_post_id
-      resolver_context = { "$json" => input_json }
+      resolver_context = { "$json" => {} }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
       resolver = DiscourseWorkflows::ExpressionResolver.new(resolver_context, sandbox: sandbox)
       exec_ctx =
         DiscourseWorkflows::Executor::NodeExecutionContext.new(
-          input_items: [{ "json" => input_json }],
+          input_items: [{ "json" => {} }],
           resolver: resolver,
           parameters: parameters,
           property_schema: described_class.property_schema,
@@ -87,34 +85,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       sandbox&.dispose
     end
 
-    it "sends the triggering post's standard notification when no message is set",
-       :aggregate_failures do
-      output = execute_node(channel_id: channel.id, input_post_id: reply.id)
-      result = output.first.first.fetch("json")
-
-      expect(provider.sent_messages).to contain_exactly(post: reply.id, channel: channel)
-      expect(result).to include(
-        "channel_id" => channel.id,
-        "provider" => "dummy",
-        "post_id" => reply.id,
-        "custom_message" => false,
-      )
-      expect(result).to match_node_output_schema(described_class)
-    end
-
-    it "sends a custom ChatIntegrationReferencePost when a message is set" do
-      allow(provider).to receive(:trigger_notification).and_call_original
-
-      execute_node(channel_id: channel.id, input_post_id: reply.id, message: "Custom alert")
-
-      expect(provider).to have_received(:trigger_notification).with(
-        an_instance_of(DiscourseChatIntegration::ChatIntegrationReferencePost),
-        channel,
-        nil,
-      )
-    end
-
-    it "sends a standalone custom message without a post", :aggregate_failures do
+    it "sends a standalone message", :aggregate_failures do
       target = nil
       allow(provider).to receive(:trigger_notification) do |post, sent_channel, rule|
         target = post
@@ -130,19 +101,14 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
       expect(target.topic.title).to eq(SiteSetting.title)
       expect(target.full_url).to eq(Discourse.base_url)
       expect(target.excerpt).to eq("Custom alert")
-      expect(result).to include(
-        "channel_id" => channel.id,
-        "provider" => "dummy",
-        "post_id" => nil,
-        "custom_message" => true,
-      )
+      expect(result).to eq("channel_id" => channel.id, "provider" => "dummy")
       expect(result).to match_node_output_schema(described_class)
     end
 
-    it "raises when neither a post nor a custom message is set" do
+    it "raises when the message is not set" do
       expect { execute_node(channel_id: channel.id) }.to raise_error(
         DiscourseWorkflows::NodeError,
-        include("A post or custom message is required"),
+        include("A message is required"),
       )
       expect(provider.sent_messages).to be_empty
     end
@@ -150,7 +116,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "raises when the channel does not exist" do
       missing_id = channel.id + 1
 
-      expect { execute_node(channel_id: missing_id, input_post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: missing_id, message: "Custom alert") }.to raise_error(
         include(missing_id.to_s),
       )
       expect(provider.sent_messages).to be_empty
@@ -159,7 +125,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
     it "raises when the provider is disabled" do
       SiteSetting.dummy_provider_enabled = false
 
-      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, message: "Custom alert") }.to raise_error(
         include("dummy"),
       )
       expect(provider.sent_messages).to be_empty
@@ -174,7 +140,7 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         ),
       )
 
-      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, message: "Custom alert") }.to raise_error(
         DiscourseWorkflows::NodeError,
         include("The bot does not have permission to post to that channel"),
       )
@@ -191,39 +157,10 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         ),
       )
 
-      expect { execute_node(channel_id: channel.id, input_post_id: reply.id) }.to raise_error(
+      expect { execute_node(channel_id: channel.id, message: "Custom alert") }.to raise_error(
         DiscourseWorkflows::NodeError,
         include("Account inactive"),
       )
-    end
-
-    it "raises when the post does not exist" do
-      expect { execute_node(channel_id: channel.id, input_post_id: -1) }.to raise_error(
-        include("-1"),
-      )
-      expect(provider.sent_messages).to be_empty
-    end
-
-    it "does not relay a private message the chat integration user cannot see" do
-      chat_user = Fabricate(:user)
-      SiteSetting.chat_integration_discourse_username = chat_user.username
-      pm_post = Fabricate(:post, topic: Fabricate(:private_message_topic))
-
-      expect { execute_node(channel_id: channel.id, input_post_id: pm_post.id) }.to raise_error(
-        include(pm_post.id.to_s),
-      )
-      expect(provider.sent_messages).to be_empty
-    end
-
-    it "does not relay a non-regular post such as a whisper" do
-      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
-      SiteSetting.chat_integration_discourse_username = Fabricate(:admin).username
-      whisper = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-
-      expect { execute_node(channel_id: channel.id, input_post_id: whisper.id) }.to raise_error(
-        include(whisper.id.to_s),
-      )
-      expect(provider.sent_messages).to be_empty
     end
   end
 end

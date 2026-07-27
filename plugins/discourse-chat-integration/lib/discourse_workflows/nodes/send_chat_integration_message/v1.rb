@@ -33,12 +33,6 @@ if defined?(DiscourseWorkflows)
                     "provider" => {
                       "type" => "string",
                     },
-                    "post_id" => {
-                      "type" => %w[integer null],
-                    },
-                    "custom_message" => {
-                      "type" => "boolean",
-                    },
                   },
                 },
               },
@@ -75,7 +69,7 @@ if defined?(DiscourseWorkflows)
               },
               message: {
                 type: :string,
-                required: false,
+                required: true,
                 default: "={{ $trigger.post.excerpt }}",
                 ui: {
                   control: :textarea,
@@ -93,10 +87,9 @@ if defined?(DiscourseWorkflows)
 
           def execute(exec_ctx)
             items =
-              exec_ctx.input_items.map.with_index do |item, item_index|
+              exec_ctx.input_items.map.with_index do |_item, item_index|
                 config = {
                   "channel_id" => exec_ctx.get_node_parameter("channel_id", item_index),
-                  "post_id" => item.dig("json", "post", "id"),
                   "message" => exec_ctx.get_node_parameter("message", item_index),
                 }
                 wrap(process(config, item_index))
@@ -129,39 +122,14 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            post = ::Post.find_by(id: config["post_id"]) if config["post_id"].present?
-            if config["post_id"].present? && post.blank?
+            if config["message"].blank?
               raise_node_error!(
-                I18n.t(
-                  "discourse_workflows.errors.send_chat_integration_message.post_not_found",
-                  post_id: config["post_id"],
-                ),
+                I18n.t("discourse_workflows.errors.send_chat_integration_message.message_required"),
                 item_index: item_index,
               )
             end
 
-            if post.blank? && config["message"].blank?
-              raise_node_error!(
-                I18n.t(
-                  "discourse_workflows.errors.send_chat_integration_message.post_or_message_required",
-                ),
-                item_index: item_index,
-              )
-            end
-
-            # Input items can carry post IDs, so enforce visibility and post-type guards
-            # before relaying their content to an external service.
-            if post.present? && !sendable_post?(post)
-              raise_node_error!(
-                I18n.t(
-                  "discourse_workflows.errors.send_chat_integration_message.post_not_allowed",
-                  post_id: config["post_id"],
-                ),
-                item_index: item_index,
-              )
-            end
-
-            target = build_target(post, config["message"])
+            target = build_target(config["message"])
             begin
               provider.trigger_notification(target, channel, nil)
             rescue DiscourseChatIntegration::ProviderError => error
@@ -171,25 +139,12 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            {
-              "channel_id" => channel.id,
-              "provider" => channel.provider,
-              "post_id" => post&.id,
-              "custom_message" => config["message"].present?,
-            }
+            { "channel_id" => channel.id, "provider" => channel.provider }
           end
 
-          def sendable_post?(post)
-            post.post_type == ::Post.types[:regular] &&
-              DiscourseChatIntegration::Manager.guardian.can_see?(post)
-          end
-
-          def build_target(post, message)
-            return post if message.blank?
-
+          def build_target(message)
             DiscourseChatIntegration::ChatIntegrationReferencePost.new(
-              user: post&.user || Discourse.system_user,
-              topic: post&.topic,
+              user: Discourse.system_user,
               kind: :workflow,
               raw: message,
             )
