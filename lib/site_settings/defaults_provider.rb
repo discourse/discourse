@@ -78,7 +78,7 @@ class SiteSettings::DefaultsProvider
     end
 
     {
-      old_default: all_clean[DEFAULT_LOCALE_SYM][setting_name].to_s,
+      old_default: all_clean[setting_name].to_s,
       new_default: upcoming_change_default_override[:new_default].to_s,
       change_setting_name: upcoming_change_default_override[:upcoming_change].to_sym,
     }
