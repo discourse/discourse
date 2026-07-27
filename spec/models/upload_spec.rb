@@ -1027,7 +1027,7 @@ RSpec.describe Upload do
     end
 
     it "correctly handles unparsable ImageMagick output" do
-      Discourse::Utils.stubs(:execute_command).returns("someinvalidoutput")
+      ImageMagick.stubs(:magick).returns("someinvalidoutput")
 
       expect(invalid_image.dominant_color).to eq(nil)
 

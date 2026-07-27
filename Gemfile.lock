@@ -251,6 +251,7 @@ GEM
     jwt (2.10.1)
       base64
     kgio (2.11.4)
+    landlock (0.3)
     language_server-protocol (3.17.0.5)
     libv8-node (24.1.0.0)
     libv8-node (24.1.0.0-aarch64-linux)
@@ -815,6 +816,7 @@ DEPENDENCIES
   iso8601
   json
   json_schemer
+  landlock
   listen
   lograge
   logstash-event
@@ -1038,6 +1040,7 @@ CHECKSUMS
   json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
+  landlock (0.3) sha256=841ae1ef1318082a485ae919b6a481ceb9c2d3ac9294ada27e2a3c529446b23c
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   libv8-node (24.1.0.0) sha256=2f0e9ac629c4c5753eaf7001952bb6dce4eb596f3dc0df3049ee7d9cfb9471cd
   libv8-node (24.1.0.0-aarch64-linux) sha256=fe7787bdb082d1101f65d8f42572ec6c634776a334d82b9fedded152e1d4f358

@@ -311,12 +311,12 @@ class Upload < ActiveRecord::Base
       if extension == "svg"
         w, h =
           begin
-            Discourse::Utils.execute_command(
-              "identify",
+            ImageMagick.identify(
               "-ping",
               "-format",
               "%w %h",
               "MSVG:#{path}",
+              read: [path],
               timeout: MAX_IDENTIFY_SECONDS,
             ).split(" ")
           rescue StandardError
@@ -400,11 +400,7 @@ class Upload < ActiveRecord::Base
       color ||=
         begin
           data =
-            Discourse::Utils.execute_command(
-              "nice",
-              "-n",
-              "10",
-              "convert",
+            ImageMagick.magick(
               local_path,
               "-depth",
               "8",
@@ -415,6 +411,8 @@ class Upload < ActiveRecord::Base
               "-format",
               "%c",
               "histogram:info:",
+              read: [local_path],
+              nice: 10,
               timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS,
             )
 
@@ -444,12 +442,12 @@ class Upload < ActiveRecord::Base
   def target_image_quality(local_path, test_quality)
     @file_quality ||=
       begin
-        Discourse::Utils.execute_command(
-          "identify",
+        ImageMagick.identify(
           "-ping",
           "-format",
           "%Q",
           local_path,
+          read: [local_path],
           timeout: MAX_IDENTIFY_SECONDS,
         ).to_i
       rescue StandardError
