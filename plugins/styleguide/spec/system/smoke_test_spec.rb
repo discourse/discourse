@@ -108,6 +108,13 @@ RSpec.describe "Styleguide Smoke Test" do
     end
   end
 
+  it "shows the not found page for a section that does not exist" do
+    visit "/styleguide/molecules/does-not-exist"
+
+    expect(page).to have_css(".page-not-found")
+    expect(styleguide).to have_no_heading("Styleguide")
+  end
+
   it "shows the reader the trail back to the styleguide index" do
     visit "/styleguide/atoms/buttons"
 
