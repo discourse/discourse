@@ -11,7 +11,6 @@ class ThemeMetadata
         Discourse-easy-footer
         discourse-gifs
         discourse-topic-thumbnails
-        discourse-search-banner
         discourse-unanswered-filter
         discourse-versatile-banner
         DiscoTOC
