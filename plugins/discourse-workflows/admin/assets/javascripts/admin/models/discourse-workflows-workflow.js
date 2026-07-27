@@ -58,6 +58,7 @@ export default class DiscourseWorkflowsWorkflow extends RestModel {
   }
 
   @tracked name;
+  @tracked tags = [];
   @tracked errorWorkflowId;
   @tracked versionId;
   @tracked activeVersionId;

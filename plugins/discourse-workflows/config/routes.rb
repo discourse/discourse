@@ -27,6 +27,7 @@ DiscourseWorkflows::Engine.routes.draw do
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      get "/workflow-tags" => "workflow_tags#index"
       post "/workflows/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
       post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"

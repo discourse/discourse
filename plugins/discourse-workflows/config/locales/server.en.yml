@@ -40,6 +40,9 @@ en:
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
     errors:
+      too_many_tags: "A workflow can have at most %{max} tags."
+      tag_too_long: "Tags can have at most %{max} characters."
+      tag_contains_comma: "Tags cannot contain commas."
       approval_timed_out: "Approval timed out"
       step_execution:
         not_executable: "This node cannot be executed as a single step."
