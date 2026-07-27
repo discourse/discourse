@@ -5,7 +5,9 @@ RSpec.describe "Styleguide sidebar panel" do
 
   fab!(:admin)
 
+  let(:styleguide) { PageObjects::Pages::Styleguide.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+  let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:filter) { PageObjects::Components::Filter.new }
 
   before do
@@ -21,7 +23,7 @@ RSpec.describe "Styleguide sidebar panel" do
     expect(page).to have_css(".sidebar-sections.styleguide-panel")
 
     %w[syntax atoms molecules organisms].each do |category|
-      expect(sidebar).to have_section("styleguide__#{category}")
+      expect(sidebar).to have_section("styleguide-category-#{category}")
     end
 
     # The forum's own sections are displaced rather than merely pushed down.
@@ -33,14 +35,13 @@ RSpec.describe "Styleguide sidebar panel" do
   it "links to a section without leaking a group query param" do
     visit "/styleguide"
 
-    link = page.find(".sidebar-section-link[data-link-name='styleguide___buttons']")
-    expect(link[:href]).to end_with("/styleguide/atoms/buttons")
+    expect(sidebar).to have_section_link("Buttons", href: "/styleguide/atoms/buttons")
   end
 
   it "marks the current section's link as active" do
     visit "/styleguide/atoms/buttons"
 
-    expect(page).to have_css(".sidebar-section-link[data-link-name='styleguide___buttons'].active")
+    expect(styleguide).to have_active_nav_link("Buttons")
   end
 
   it "hands the sidebar back when leaving the styleguide" do
@@ -69,12 +70,29 @@ RSpec.describe "Styleguide sidebar panel" do
     expect(page).to have_css(".sidebar-sections.styleguide-panel")
   end
 
+  # Mobile never renders the fixed sidebar, so the panel reaches the reader through the header
+  # dropdown instead. That is a separate path from the desktop one and needs its own coverage.
+  it "reaches the styleguide navigation through the header dropdown on mobile", mobile: true do
+    visit "/styleguide"
+
+    sidebar_dropdown.click
+
+    expect(page).to have_css(".sidebar-sections.styleguide-panel")
+    expect(sidebar).to have_section("styleguide-category-atoms")
+    expect(sidebar).to have_no_section("categories")
+
+    sidebar.click_link_in_section("styleguide-category-atoms", "styleguide-section-buttons")
+
+    expect(page).to have_current_path("/styleguide/atoms/buttons")
+    expect(sidebar_dropdown).to be_hidden
+  end
+
   it "filters the sections" do
     visit "/styleguide"
 
     filter.filter("typography")
 
-    expect(page).to have_css(".sidebar-section-link[data-link-name='styleguide___typography']")
-    expect(page).to have_no_css(".sidebar-section-link[data-link-name='styleguide___buttons']")
+    expect(sidebar).to have_section_link("Typography")
+    expect(sidebar).to have_no_section_link("Buttons")
   end
 end

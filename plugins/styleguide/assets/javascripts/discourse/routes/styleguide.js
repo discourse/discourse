@@ -15,11 +15,7 @@ export default class Styleguide extends Route {
     this.styleguideSidebar.showSidebar();
   }
 
-  deactivate(transition) {
-    // Only hand the sidebar back when the reader is actually leaving the styleguide. Releasing it
-    // while moving between sections would flash the forum nav in between.
-    if (!transition?.to.name.startsWith("styleguide")) {
-      this.styleguideSidebar.hideSidebar();
-    }
+  deactivate() {
+    this.styleguideSidebar.hideSidebar();
   }
 }

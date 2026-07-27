@@ -3,7 +3,10 @@
 
 .styleguide {
   position: relative;
-  padding: 1rem;
+
+  // No top padding: the page header's breadcrumb brings its own top margin, and that alone lines
+  // it up with the sidebar's "back to forum" row. Adding padding here pushes it out of that band.
+  padding: 0 1rem 1rem;
 
   .styleguide-note {
     padding: 1em;
@@ -11,21 +14,22 @@
     margin-bottom: 1em;
   }
 
+  // The color mode control shares the breadcrumb's row. The spacing moves from the list to this
+  // container so both items centre against each other: a flex parent no longer collapses the
+  // list's margin, which is what keeps the row level with the sidebar's "back to forum".
+  .d-page-header__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: var(--space-2) 0 var(--space-4);
+
+    .d-breadcrumbs {
+      margin: 0;
+    }
+  }
+
   .styleguide-section {
-    .styleguide-section__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1em;
-      margin-bottom: 0.5em;
-    }
-
-    .section-title {
-      font-size: var(--font-up-5);
-      font-weight: normal;
-      margin-bottom: 0;
-    }
-
     .section-description {
       margin-bottom: 2em;
     }

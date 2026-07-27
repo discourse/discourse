@@ -22,7 +22,7 @@ class StyleguideSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get name() {
-    return `${STYLEGUIDE_PANEL}___${this.#section.id}`;
+    return `${STYLEGUIDE_PANEL}-section-${this.#section.id}`;
   }
 
   get route() {
@@ -53,7 +53,7 @@ class StyleguideSectionLink extends BaseCustomSidebarSectionLink {
 function buildCategorySection(category) {
   return class StyleguideCategorySection extends BaseCustomSidebarSection {
     get name() {
-      return `${STYLEGUIDE_PANEL}__${category.id}`;
+      return `${STYLEGUIDE_PANEL}-category-${category.id}`;
     }
 
     get text() {
@@ -91,8 +91,8 @@ const styleguideSidebarPanelBuilder = (BaseCustomSidebarPanel) =>
     scrollActiveLinkIntoView = true;
     filterable = true;
 
-    // Cached because the sidebar rebuilds its sections on every render, and the each-loop keys
-    // on section identity: fresh classes each pass would remount the whole nav.
+    // The sidebar builds a fresh section instance from each of these classes on every render,
+    // so caching keeps that from rebuilding the classes themselves as well.
     @cached
     get sections() {
       return allCategories().map(buildCategorySection);
