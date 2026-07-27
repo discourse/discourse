@@ -20,6 +20,7 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import discourseLater from "discourse/lib/later";
 import type A11y from "discourse/services/a11y";
+import type { CapabilitiesService } from "discourse/services/capabilities";
 import { and, eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
@@ -315,6 +316,7 @@ interface SelectFooterState {
  */
 export default class DSelect extends Component<DSelectSignature> {
   @service declare a11y: A11y;
+  @service declare capabilities: CapabilitiesService;
   @service declare menu: Menu;
 
   /**
@@ -583,11 +585,8 @@ export default class DSelect extends Component<DSelectSignature> {
    * is genuinely occluded, so a correctly-behaving browser is never scrolled.
    */
   #keepQueryInputAboveKeyboard = () => {
-    // The platform class, as `setupComposerPosition` reads it. `ios-device` covers iPadOS.
-    if (
-      !document.documentElement.classList.contains("ios-device") ||
-      !this.triggerFocused
-    ) {
+    // `isIOS` covers iPadOS.
+    if (!this.capabilities.isIOS || !this.triggerFocused) {
       return;
     }
 
