@@ -201,13 +201,13 @@ class UploadCreator
           # consistently whether it's running from our docker container or not
           begin
             w, h =
-              Discourse::Utils
-                .execute_command(
-                  "identify",
+              ImageMagick
+                .identify(
                   "-ping",
                   "-format",
                   "%w %h",
                   "MSVG:#{@file.path}",
+                  read: [@file.path],
                   timeout: Upload::MAX_IDENTIFY_SECONDS,
                 )
                 .split(" ")
@@ -355,11 +355,14 @@ class UploadCreator
 
     opts = { flatten: false } # Preserve transparency
 
+    read = [@file.path]
+    write = [File.dirname(png_tempfile.path)]
+
     begin
-      execute_convert(from, to, opts)
+      execute_convert(from, to, opts, read:, write:)
     rescue StandardError
       # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
+      execute_convert(from, to, opts.merge(debug: true), read:, write:)
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -389,14 +392,17 @@ class UploadCreator
       SiteSetting.ImageQuality.recompress_original_jpg_quality,
     ].compact.min
 
-    target_quality = @upload.target_image_quality(from, desired_quality)
+    target_quality = @upload.target_image_quality(@file.path, desired_quality)
     opts = { quality: target_quality } if target_quality
 
+    read = [@file.path]
+    write = [File.dirname(jpeg_tempfile.path)]
+
     begin
-      execute_convert(from, to, opts)
+      execute_convert(from, to, opts, read:, write:)
     rescue StandardError
       # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
+      execute_convert(from, to, opts.merge(debug: true), read:, write:)
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -423,11 +429,14 @@ class UploadCreator
     to = jpeg_tempfile.path
     OptimizedImage.ensure_safe_paths!(from, to)
 
+    read = [@file.path]
+    write = [File.dirname(jpeg_tempfile.path)]
+
     begin
-      execute_convert(from, to)
+      execute_convert(from, to, {}, read:, write:)
     rescue StandardError
       # retry with debugging enabled
-      execute_convert(from, to, { debug: true })
+      execute_convert(from, to, { debug: true }, read:, write:)
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -436,15 +445,17 @@ class UploadCreator
   end
 
   MAX_CONVERT_FORMAT_SECONDS = 20
-  def execute_convert(from, to, opts = {})
-    command = ["magick", from, "-auto-orient", "-background", "white", "-interlace", "none"]
+  def execute_convert(from, to, opts = {}, read: [], write: [])
+    command = [from, "-auto-orient", "-background", "white", "-interlace", "none"]
     command << "-flatten" unless opts[:flatten] == false
     command << "-debug" << "all" if opts[:debug]
     command << "-quality" << opts[:quality].to_s if opts[:quality]
     command << to
 
-    Discourse::Utils.execute_command(
+    ImageMagick.magick(
       *command,
+      read:,
+      write:,
       failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
       timeout: MAX_CONVERT_FORMAT_SECONDS,
     )
@@ -550,11 +561,12 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(path)
     path = OptimizedImage.prepend_decoder!(path, nil, filename: "image.#{@image_info.type}")
 
-    Discourse::Utils.execute_command(
-      "magick",
+    ImageMagick.magick(
       path,
       "-auto-orient",
       path,
+      read: [@file.path],
+      write: [@file.path, File.dirname(@file.path)],
       timeout: MAX_FIX_ORIENTATION_TIME,
     )
 
@@ -689,10 +701,16 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
           frames =
             begin
-              Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i
+              ImageMagick.identify(
+                "-ping",
+                "-format",
+                "%n\\n",
+                @file.path,
+                read: [@file.path],
+                timeout: Upload::MAX_IDENTIFY_SECONDS,
+              ).to_i
             rescue StandardError
               1
             end

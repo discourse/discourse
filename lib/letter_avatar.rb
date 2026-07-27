@@ -96,7 +96,7 @@ class LetterAvatar
         #{filename}
       ]
 
-      Discourse::Utils.execute_command("magick", *instructions)
+      ImageMagick.magick(*instructions, write: [File.dirname(filename)])
 
       ## do not optimize image, it will end up larger than original
       filename
@@ -114,7 +114,9 @@ class LetterAvatar
             sleep 2
             cleanup_old
           end
-          Digest::MD5.hexdigest(`magick --version` << `magick -list font`)
+          Digest::MD5.hexdigest(
+            ImageMagick.magick("--version") << ImageMagick.magick("-list", "font"),
+          )
         end
     end
 
