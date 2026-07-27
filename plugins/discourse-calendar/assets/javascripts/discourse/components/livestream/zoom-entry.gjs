@@ -36,7 +36,6 @@ export default class LivestreamZoomEntry extends Component {
   get shouldRender() {
     return (
       this.siteSettings.livestream_zoom_enabled &&
-      this.currentUser &&
       this.args.event.livestreamChatChannelId &&
       !this.args.event.pastEventTimeframe
     );
@@ -92,6 +91,12 @@ export default class LivestreamZoomEntry extends Component {
 
   @action
   joinZoom() {
+    if (!this.currentUser) {
+      return getOwner(this)
+        .lookup("route:application")
+        .send("showCreateAccount");
+    }
+
     this.session.join();
   }
 
