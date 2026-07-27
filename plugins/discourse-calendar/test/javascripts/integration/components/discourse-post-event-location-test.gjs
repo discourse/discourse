@@ -1,7 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { i18n } from "discourse-i18n";
 import DiscoursePostEventLocation from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event/location";
 
 module(
@@ -44,7 +43,7 @@ module(
         );
     });
 
-    test("renders a single URL location as Zoom-only text for Zoom livestreams", async function (assert) {
+    test("does not render the URL for Zoom-only livestreams", async function (assert) {
       this.event = {
         location: "https://zoom.us/j/123",
         isZoomLivestream: true,
@@ -57,14 +56,8 @@ module(
       );
 
       assert
-        .dom(".event-location")
-        .hasText(
-          i18n("discourse_calendar.livestream.zoom.zoom_only"),
-          "shows the Zoom-only location text"
-        );
-      assert
         .dom(".event-location a")
-        .doesNotExist("does not link the raw Zoom URL");
+        .doesNotExist("does not show the location URL");
     });
 
     test("links URLs inside surrounding text", async function (assert) {

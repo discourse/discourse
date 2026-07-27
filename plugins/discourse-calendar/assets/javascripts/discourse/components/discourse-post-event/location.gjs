@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 
 const URL_SPLIT_REGEX = /(https?:\/\/\S+)/;
 const URL_TEST_REGEX = /^https?:\/\/\S+$/;
@@ -37,9 +36,7 @@ export default class DiscoursePostEventLocation extends Component {
         <section class="event__section event-location">
           {{dIcon "location-pin"}}
 
-          {{#if @event.isZoomLivestream}}
-            {{i18n "discourse_calendar.livestream.zoom.zoom_only"}}
-          {{else}}
+          {{#unless @event.isZoomLivestream}}
             <span class="event-location__text">
               <a
                 href={{this.singleUrl}}
@@ -47,7 +44,7 @@ export default class DiscoursePostEventLocation extends Component {
                 rel="noopener noreferrer"
               >{{this.singleUrl}}</a>
             </span>
-          {{/if}}
+          {{/unless}}
         </section>
       {{else}}
         <section class="event__section event-location">
