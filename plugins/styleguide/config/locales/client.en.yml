@@ -7,7 +7,7 @@ en:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "To get started, choose a section from the menu on the left."
+      welcome: "To get started, choose a section from the navigation menu."
 
       categories:
         syntax: Syntax
