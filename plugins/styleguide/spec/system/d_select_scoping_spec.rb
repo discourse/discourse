@@ -38,8 +38,10 @@ describe "UiKit | DSelect identifier scoping" do
     expect(opened.input_focused?).to eq(true)
 
     # Focus is genuinely inside `sg-multi`'s input. A predicate that only checked for "some
-    # focused .d-combobox__input on the page" would wrongly answer true here too.
-    expect(other.input_focused?).to eq(false)
+    # focused .d-combobox__input on the page" would wrongly answer true here too. Asserted
+    # through the absence matcher so it settles immediately instead of waiting out the timeout
+    # that a negative `input_focused?` would.
+    expect(other.input_blurred?).to eq(true)
   end
 
   it "rejects an identifier that could break out of a selector" do

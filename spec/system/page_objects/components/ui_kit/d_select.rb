@@ -135,23 +135,34 @@ module PageObjects
           @panel ? [@root, @panel] : [@root]
         end
 
-        # Whether focus rests on THIS instance's query input. The unscoped form accepted a
-        # focused input belonging to any select on the page.
-        def input_focused?
-          page.evaluate_script(<<~JS)
-            (function () {
-              const el = document.activeElement;
-              if (!el || !el.classList.contains("d-combobox__input")) {
-                return false;
-              }
-              return #{owned_scopes.to_json}.some((scope) => el.closest(scope));
-            })()
-          JS
+        # A selector matching `descendant:focus` in either subtree this instance owns, as a
+        # single CSS list so one waiting matcher covers both.
+        def owned_focus_selector(descendant)
+          owned_scopes.map { |scope| "#{scope} #{descendant}:focus" }.join(", ")
         end
 
-        # The label of the chip whose remove button holds focus, or nil when a chip is
-        # not focused — the browser-truthful way to assert where roving landed.
+        # Whether focus rests on THIS instance's query input.
+        #
+        # A waiting matcher, not a `document.activeElement` sample. The component moves focus
+        # from a runloop callback after the keystroke that triggers it, so reading once races
+        # the very transition being asserted: it passes when the machine is idle and fails under
+        # load, which is exactly the shape of an order-dependent flake.
+        def input_focused?
+          page.has_css?(owned_focus_selector(".d-combobox__input"))
+        end
+
+        # The waiting negative. `input_focused?` returning false costs a full timeout and cannot
+        # tell "not yet" from "never", so asserting focus is elsewhere needs the absence matcher.
+        def input_blurred?
+          page.has_no_css?(owned_focus_selector(".d-combobox__input"))
+        end
+
+        # The label of the chip whose remove button holds focus, or nil when no chip takes focus
+        # — the browser-truthful way to assert where roving landed. Waits for the focus move for
+        # the same reason as `input_focused?` before reading the label back.
         def focused_chip_label
+          return nil unless page.has_css?(owned_focus_selector(".d-combobox__chip-remove"))
+
           page.evaluate_script(<<~JS)
             (function () {
               const el = document.activeElement;
