@@ -34,7 +34,7 @@ if defined?(DiscourseWorkflows)
                       "type" => "string",
                     },
                     "post_id" => {
-                      "type" => "integer",
+                      "type" => %w[integer null],
                     },
                     "custom_message" => {
                       "type" => "boolean",
@@ -71,7 +71,7 @@ if defined?(DiscourseWorkflows)
               },
               post_id: {
                 type: :string,
-                required: true,
+                required: false,
                 default: "={{ $trigger.post.id }}",
               },
               message: {
@@ -130,8 +130,8 @@ if defined?(DiscourseWorkflows)
               )
             end
 
-            post = ::Post.find_by(id: config["post_id"])
-            if post.blank?
+            post = ::Post.find_by(id: config["post_id"]) if config["post_id"].present?
+            if config["post_id"].present? && post.blank?
               raise_node_error!(
                 I18n.t(
                   "discourse_workflows.errors.send_chat_integration_message.post_not_found",
@@ -141,9 +141,18 @@ if defined?(DiscourseWorkflows)
               )
             end
 
+            if post.blank? && config["message"].blank?
+              raise_node_error!(
+                I18n.t(
+                  "discourse_workflows.errors.send_chat_integration_message.post_or_message_required",
+                ),
+                item_index: item_index,
+              )
+            end
+
             # post_id accepts expressions, so enforce visibility and post-type guards
             # before relaying content to an external service.
-            unless sendable_post?(post)
+            if post.present? && !sendable_post?(post)
               raise_node_error!(
                 I18n.t(
                   "discourse_workflows.errors.send_chat_integration_message.post_not_allowed",
@@ -166,7 +175,7 @@ if defined?(DiscourseWorkflows)
             {
               "channel_id" => channel.id,
               "provider" => channel.provider,
-              "post_id" => post.id,
+              "post_id" => post&.id,
               "custom_message" => config["message"].present?,
             }
           end
@@ -180,8 +189,8 @@ if defined?(DiscourseWorkflows)
             return post if message.blank?
 
             DiscourseChatIntegration::ChatIntegrationReferencePost.new(
-              user: post.user,
-              topic: post.topic,
+              user: post&.user || Discourse.system_user,
+              topic: post&.topic,
               kind: :workflow,
               raw: message,
             )

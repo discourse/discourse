@@ -332,6 +332,7 @@ en:
       send_chat_integration_message:
         channel_id: "Channel"
         post_id: "Post"
-        post_id_description: "The post to send. Defaults to the post from the trigger."
+        post_id_description: "Optional when a custom message is provided. Defaults to the post from the trigger."
+        post_id_dynamic_hint: "Optional. Must resolve to a post ID when set."
         message: "Message"
         message_description: "Supports placeholders such as <code>&#123;&#123; $trigger.post.excerpt &#125;&#125;</code>. Clear it to send the standard post notification instead."

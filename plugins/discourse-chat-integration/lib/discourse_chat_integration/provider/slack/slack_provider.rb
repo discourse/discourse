@@ -287,7 +287,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
         data[:thread_ts] = message[:thread_ts]
       elsif (match = slack_thread_regex.match(post.raw)) && match.captures[0] == channel
         data[:thread_ts] = match.captures[1]
-        set_slack_thread_ts(post.topic, channel, match.captures[1])
+        set_slack_thread_ts(post.topic, channel, match.captures[1]) if post.topic.id.present?
       end
     end
 
@@ -328,7 +328,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
     end
 
     ts = json.dig("message", "thread_ts") || json["ts"]
-    set_slack_thread_ts(post.topic, channel, ts) if !ts.nil? && !post.nil?
+    set_slack_thread_ts(post.topic, channel, ts) if ts.present? && post&.topic&.id.present?
 
     response
   end

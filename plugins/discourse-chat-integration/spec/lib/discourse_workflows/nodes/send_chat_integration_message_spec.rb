@@ -56,8 +56,9 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
   end
 
   describe "#execute" do
-    def execute_node(channel_id:, post_id:, message: nil)
-      parameters = { "channel_id" => channel_id.to_s, "post_id" => post_id.to_s }
+    def execute_node(channel_id:, post_id: nil, message: nil)
+      parameters = { "channel_id" => channel_id.to_s }
+      parameters["post_id"] = post_id.to_s if post_id
       parameters["message"] = message if message
       resolver_context = { "$json" => {} }
       sandbox = DiscourseWorkflows::JsSandbox.new(resolver_context)
@@ -103,6 +104,39 @@ RSpec.describe DiscourseWorkflows::Nodes::SendChatIntegrationMessage::V1 do
         channel,
         nil,
       )
+    end
+
+    it "sends a standalone custom message without a post", :aggregate_failures do
+      target = nil
+      allow(provider).to receive(:trigger_notification) do |post, sent_channel, rule|
+        target = post
+        expect(sent_channel).to eq(channel)
+        expect(rule).to be_nil
+      end
+
+      output = execute_node(channel_id: channel.id, message: "Custom alert")
+      result = output.first.first.fetch("json")
+
+      expect(target).to be_an_instance_of(DiscourseChatIntegration::ChatIntegrationReferencePost)
+      expect(target.user).to eq(Discourse.system_user)
+      expect(target.topic.title).to eq(SiteSetting.title)
+      expect(target.full_url).to eq(Discourse.base_url)
+      expect(target.excerpt).to eq("Custom alert")
+      expect(result).to include(
+        "channel_id" => channel.id,
+        "provider" => "dummy",
+        "post_id" => nil,
+        "custom_message" => true,
+      )
+      expect(result).to match_node_output_schema(described_class)
+    end
+
+    it "raises when neither a post nor a custom message is set" do
+      expect { execute_node(channel_id: channel.id) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        include("A post or custom message is required"),
+      )
+      expect(provider.sent_messages).to be_empty
     end
 
     it "raises when the channel does not exist" do
