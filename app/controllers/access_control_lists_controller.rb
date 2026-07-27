@@ -23,6 +23,23 @@ class AccessControlListsController < ApplicationController
     end
   end
 
+  def evaluate
+    AccessControlList::ValidateModification.call(service_params) do |result|
+      on_success do |downgraded_permissions:|
+        render json: success_json.merge({ downgraded_permissions: })
+      end
+      on_failed_contract { |contract| render_json_error(contract.errors.full_messages + "KAKAK") }
+      on_failed_policy(:target_type_exists) { raise Discourse::InvalidParameters }
+      # on_model_not_found(:target) { raise Discourse::NotFound }
+      on_failed_policy(:user_will_have_permission) do
+        render_json_error(
+          I18n.t("access_control_list.errors.user_will_not_have_permission"),
+          { extras: { current_user_will_lose_permission: true } },
+        )
+      end
+    end
+  end
+
   private
 
   def serialize_users(users)
