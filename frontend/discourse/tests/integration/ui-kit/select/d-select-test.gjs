@@ -465,6 +465,53 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     assert.dom(".d-combobox__presentation").hasText("Apple");
   });
 
+  test("a resting custom selection is described to assistive tech", async function (assert) {
+    // A `:selection` block empties the input's value at rest and shows the markup in a sibling
+    // span, so without an explicit association the control reads as an empty combobox while the
+    // eye sees a selection. The span is the input's description; the label stays the field name.
+    await render(
+      <template>
+        <Host @value={{1}} />
+        <button type="button" class="outside">outside</button>
+      </template>
+    );
+
+    // Asserted against the span's real id rather than merely "some description exists", so a
+    // dangling reference to a missing element cannot pass.
+    const presentation = find(".d-combobox__presentation");
+    assert
+      .dom("[role='combobox']")
+      .hasAttribute(
+        "aria-describedby",
+        presentation.id,
+        "the resting input points at the visible selection markup"
+      );
+    assert
+      .dom(presentation)
+      .hasText("Apple", "so the selection is conveyed, not just displayed");
+
+    // Once focused the label moves into the input itself, so the description would double it.
+    await focus("[role='combobox']");
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple")
+      .doesNotHaveAttribute(
+        "aria-describedby",
+        "the description drops away once the value is in the input"
+      );
+  });
+
+  test("a select without a selection block needs no description", async function (assert) {
+    await render(
+      <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
+    );
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Apple", "the label is the input's own value")
+      .doesNotHaveAttribute("aria-describedby");
+  });
+
   test("clicking outside the field reverts a custom selection to its resting markup", async function (assert) {
     await render(
       <template>

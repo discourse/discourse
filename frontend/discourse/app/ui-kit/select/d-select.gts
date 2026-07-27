@@ -690,6 +690,17 @@ export default class DSelect extends Component<DSelectSignature> {
   }
 
   /**
+   * Stable id for the resting selection markup, so the combobox can point at it.
+   *
+   * A `:selection` block moves the selected label out of the input and into a sibling span,
+   * leaving the input's value empty until it takes focus. Without this association the control
+   * would read as an empty combobox while the eye sees a selection.
+   */
+  get selectionId() {
+    return `d-combobox-selection-${guidFor(this)}`;
+  }
+
+  /**
    * Chip-shaped placeholder rows while the held values resolve — one per bound id, so
    * the loading state matches the number of chips about to appear.
    */
@@ -2113,7 +2124,10 @@ export default class DSelect extends Component<DSelectSignature> {
                 </span>
               {{else if (has-block "selection")}}
                 {{#if (and this.engine.hasValue (not this.triggerFocused))}}
-                  <span class="d-combobox__presentation">
+                  <span
+                    class="d-combobox__presentation"
+                    id={{this.selectionId}}
+                  >
                     <DAsyncContent
                       @asyncData={{this.resolveSingle}}
                       @context={{@value}}
@@ -2172,6 +2186,18 @@ export default class DSelect extends Component<DSelectSignature> {
                 @registerInput={{this.registerTriggerInput}}
                 @disabled={{this.isDisabled}}
                 @readonly={{this.isReadonly}}
+                {{! Points at the sibling selection markup for exactly as long as that markup is
+                  what carries the value. Once focused the label moves into the input itself, so
+                  keeping the description would announce the selection twice. Mirrors the
+                  condition that renders the presentation span. }}
+                aria-describedby={{if
+                  (and
+                    (has-block "selection")
+                    this.engine.hasValue
+                    (not this.triggerFocused)
+                  )
+                  this.selectionId
+                }}
                 {{on "keydown" this.handleInputKeydown}}
                 {{on "focus" this.handleTriggerFocus}}
               />
