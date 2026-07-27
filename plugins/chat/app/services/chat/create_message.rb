@@ -167,7 +167,12 @@ module Chat
         message: params.message,
         uploads: uploads,
         thread: thread,
-        cooked: ::Chat::Message.cook(params.message, user_id: guardian.user.id),
+        cooked:
+          ::Chat::Message.cook(
+            params.message,
+            user_id: guardian.user.id,
+            author_username: guardian.user.username,
+          ),
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
         blocks: params.blocks,
