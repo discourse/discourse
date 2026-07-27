@@ -1237,6 +1237,15 @@ module(
         .dom(".d-combobox__chip")
         .exists({ count: 2 }, "two chips to start");
 
+      // The mechanism, asserted directly: the label resolves to the sink rather than to any
+      // control inside the trigger. This is what makes the protection structural, so it is what
+      // must fail if a labelable element is ever introduced ahead of the sink.
+      assert.strictEqual(
+        find(".field-label").control,
+        find(".d-combobox__label-sink"),
+        "the label's control is the sink, not a chip's remove button"
+      );
+
       await click(".field-text");
       assert
         .dom(".d-combobox__chip")
@@ -2176,6 +2185,69 @@ module(
   "Integration | ui-kit | select | DSelect (frame args)",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    // The same hazard as a chip's remove button, one control over: on the button and static
+    // variants the yielded value is a span, so the clear button becomes the first LABELABLE
+    // descendant and an enclosing label forwards its clicks straight to it. Clicking a field's
+    // caption would then wipe the selection.
+    test("a surrounding label does not clear the value", async function (assert) {
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <FrameHost @clearable={{true}} @variant="button" @value={{1}} />
+          </label>
+        </template>
+      );
+
+      assert.dom(".d-combobox__clear").exists("the clear control is present");
+      assert.strictEqual(
+        find(".field-label").control,
+        find(".d-combobox__label-sink"),
+        "the label's control is the sink, not the clear button"
+      );
+
+      await click(".field-text");
+      assert
+        .dom(".d-combobox__value")
+        .hasText("Apple", "clicking the label's text keeps the selection");
+    });
+
+    // The panel is portaled out of the trigger, so anything a consumer puts in a footer sits
+    // outside an enclosing label and cannot be reached by its click forwarding.
+    test("a surrounding label cannot reach a footer button", async function (assert) {
+      let footerClicks = 0;
+      const onFooter = () => (footerClicks += 1);
+
+      await render(
+        <template>
+          <label class="field-label">
+            <span class="field-text">Choice</span>
+            <DSelect @items={{ITEMS}} @value={{1}} @identifier="test-footer">
+              <:footer>
+                <button
+                  type="button"
+                  class="footer-action"
+                  {{on "click" onFooter}}
+                >
+                  Act
+                </button>
+              </:footer>
+            </DSelect>
+          </label>
+        </template>
+      );
+
+      await click("[role='combobox']");
+      assert.dom(".footer-action").exists("the footer button is rendered");
+
+      await click(".field-text");
+      assert.strictEqual(
+        footerClicks,
+        0,
+        "the label never activates a control inside the panel"
+      );
+    });
 
     test("@clearable shows a clear control only when there is a value, and clearing it does not open the menu", async function (assert) {
       await render(

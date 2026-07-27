@@ -526,13 +526,6 @@ export default class DSelect extends Component<DSelectSignature> {
   // Whether a "loading more" was announced and still owes its completion.
   #revealAnnounced = false;
 
-  // Set while a chip's remove button is being activated by Enter or Space, so the click that
-  // follows can be told apart from one an enclosing `label` forwarded. See `removeItem`.
-  #chipKeyActivation = false;
-
-  // The remove button a pointer press last landed on, for the same discrimination.
-  #chipPointerTarget: EventTarget | null = null;
-
   // The last limit message announced, so re-crossing the cap boundary does not re-read it.
   #lastAnnouncedLimit: string | null = null;
 
@@ -1874,46 +1867,8 @@ export default class DSelect extends Component<DSelectSignature> {
     if (this.isLocked) {
       return;
     }
-    if (event && !this.#isDirectChipActivation(event)) {
-      return;
-    }
     this.engine.deselect(item);
     this.filterInput?.focus();
-  }
-
-  /**
-   * Records that a pointer press landed on this remove button, so the click that follows can be
-   * recognised as aimed at it. See {@link removeItem}.
-   */
-  @action
-  markChipPointerActivation(event: MouseEvent): void {
-    this.#chipPointerTarget = event.currentTarget;
-  }
-
-  /**
-   * Whether a click on a chip's remove button was really aimed at that button.
-   *
-   * A `label` wrapping the control forwards its clicks to the first labelable descendant, which
-   * for a multi-select is the first chip's remove button — so clicking a field's caption, its
-   * padding or its caret would silently delete a selection. Wrapping a form control in a label is
-   * ordinary markup, so the control defends itself rather than relying on consumers knowing this.
-   *
-   * A real press produces a `mousedown` on the button before its click; a forwarded one produces
-   * only the click, because the press landed on the label instead. Keyboard activation produces
-   * neither, so it announces itself through `handleChipKeydown` first. Deliberately not keyed on
-   * the click's detail count, which test-helper clicks report as zero — that would make the guard
-   * untestable, and this is exactly the behaviour that needs a test.
-   */
-  #isDirectChipActivation(event: MouseEvent): boolean {
-    const pressed = this.#chipPointerTarget;
-    this.#chipPointerTarget = null;
-    if (pressed && pressed === event.currentTarget) {
-      return true;
-    }
-
-    const viaKeyboard = this.#chipKeyActivation;
-    this.#chipKeyActivation = false;
-    return viaKeyboard;
   }
 
   /**
@@ -1954,11 +1909,6 @@ export default class DSelect extends Component<DSelectSignature> {
     index: number,
     event: KeyboardEvent
   ): void {
-    // Recorded before every other branch, including the mobile early-return: Enter and Space are
-    // left to the button's native activation on both, and `removeItem` needs to know that the
-    // click it is about to receive came from this key press. See `#isDirectChipActivation`.
-    this.#chipKeyActivation = event.key === "Enter" || event.key === " ";
-
     if (!this.isDesktopTypeahead) {
       return;
     }
@@ -2115,10 +2065,6 @@ export default class DSelect extends Component<DSelectSignature> {
                           Backspace or Delete to remove") so it reads as a selected item rather
                           than a bare action. }}
                           aria-labelledby="{{this.chipIdPrefix}}-{{index}}-label {{this.chipIdPrefix}}-{{index}}-remove"
-                          {{! Marks a real press, so the removal handler can reject a click an
-                          enclosing label forwarded here. }}
-                          {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
-                          {{on "mousedown" this.markChipPointerActivation}}
                           {{on "click" (fn this.removeItem chip.item)}}
                           {{on
                             "keydown"

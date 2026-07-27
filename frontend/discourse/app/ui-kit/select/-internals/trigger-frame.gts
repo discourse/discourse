@@ -40,6 +40,27 @@ interface TriggerFrameSignature {
  * before/after the yield, never around it.
  */
 const TriggerFrame: TemplateOnlyComponent<TriggerFrameSignature> = <template>
+  {{! Absorbs the click a wrapping label forwards into the trigger.
+
+    A label activates its first labelable descendant, which would otherwise be whichever control
+    comes first: a chip's remove button on a multi-select, or the clear button on the variants
+    whose value renders as a span. Clicking a field's caption would then silently drop a
+    selection.
+
+    Keep it first — tree order is the whole mechanism, and it is what lets a control added here
+    later skip a click guard of its own. Disabled makes it inert and keeps it out of the focus
+    order and out of form submission; hidden keeps it out of the accessibility tree. The display
+    is inline because the trigger is a flex row with a gap, so even a zero-size rendered child
+    shifts the layout, and a stylesheet would make that depend on load order and on no theme
+    overriding it. }}
+
+  <input
+    type="text"
+    class="d-combobox__label-sink"
+    style="display: none"
+    disabled
+    hidden
+  />
   {{#if @icon}}
     {{dIcon @icon class="d-combobox__leading-icon"}}
   {{/if}}
