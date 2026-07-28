@@ -27,8 +27,7 @@ module DiscoursePostEvent
     end
 
     def can_see_event(guardian:, event:)
-      guardian.can_see?(event.post) &&
-        EventSerializer.new(event, scope: guardian).can_display_invitee_details?
+      guardian.can_see?(event.post) && guardian.can_display_invitee_details?(event)
     end
 
     def fetch_invitees(event:, params:)
