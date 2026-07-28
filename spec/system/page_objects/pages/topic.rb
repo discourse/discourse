@@ -59,6 +59,10 @@ module PageObjects
         find(post_by_number_selector(post_number)).has_content?(content)
       end
 
+      def has_exact_post_content?(post_number:, content:)
+        has_css?("#{post_by_number_selector(post_number)} .cooked", exact_text: content)
+      end
+
       def has_deleted_post?(post)
         has_css?(".topic-post.deleted:has(#post_#{post.post_number})")
       end

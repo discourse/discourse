@@ -16,8 +16,16 @@ class ContentLocalization
   # @param post [Post] The post object
   # @return [Boolean]
   def self.show_translated_post?(post, scope)
-    SiteSetting.content_localization_enabled && post.raw.present? && post.locale.present? &&
-      !post.in_user_locale? && !show_original?(scope)
+    SiteSetting.content_localization_enabled && !post.user_deleted? && post.raw.present? &&
+      post.locale.present? && !post.in_user_locale? && !show_original?(scope)
+  end
+
+  def self.user_deleted_post_cooked(post, locale: I18n.locale)
+    locale = SiteSetting.default_locale if !I18n.locale_available?(locale)
+    key =
+      post.is_first_post? ? "js.topic.deleted_by_author_simple" : "js.post.deleted_by_author_simple"
+
+    "<p>#{ERB::Util.html_escape(I18n.t(key, locale: locale))}</p>"
   end
 
   # This method returns true when we should try to show the translated topic.

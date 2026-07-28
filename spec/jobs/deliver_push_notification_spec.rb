@@ -137,6 +137,22 @@ RSpec.describe Jobs::DeliverPushNotification do
       Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
     end
 
+    it "uses the localized deletion notice when the author deleted the post before delivery" do
+      Fabricate(:push_subscription, user: user)
+      Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>削除された投稿の翻訳</p>")
+      PostDestroyer.new(localized_post.user, localized_post, delete_removed_posts_after: 1).destroy
+      type = localized_post.is_first_post? ? "topic" : "post"
+      key = "js.#{type}.deleted_by_author_simple"
+
+      PushNotificationPusher
+        .expects(:push)
+        .with do |_user, delivered_payload|
+          delivered_payload[:excerpt] == I18n.t(key, locale: user.effective_locale)
+        end
+
+      Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: localizable_payload)
+    end
+
     it "localizes payload before delivering to hub push" do
       SiteSetting.allowed_user_api_push_urls = "https://hub.example.com/push"
       client = Fabricate(:user_api_key_client)

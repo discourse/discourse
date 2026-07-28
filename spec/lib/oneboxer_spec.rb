@@ -322,6 +322,17 @@ RSpec.describe Oneboxer do
       expect(html).not_to include("戦わずして勝つ")
     end
 
+    it "shows the deletion notice instead of the linked post's translation when its author deleted it" do
+      localization =
+        Fabricate(:post_localization, post: first_post, locale: "ja", cooked: "削除された投稿の翻訳")
+      PostDestroyer.new(first_post.user, first_post, delete_removed_posts_after: 1).destroy
+
+      html = card(linked_topic.relative_url, locale: "ja")
+
+      expect(html).to include(I18n.t("js.topic.deleted_by_author_simple", locale: "ja"))
+      expect(html).not_to include(localization.cooked)
+    end
+
     it "keeps the preview original when only the title is translated" do
       Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
 

@@ -6,7 +6,7 @@ module DiscourseAi
       include LocalizableQuota
 
       def self.localize(post, target_locale = I18n.locale, llm_model: nil)
-        if post.blank? || target_locale.blank? ||
+        if post.blank? || post.user_deleted? || target_locale.blank? ||
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
           return
         end

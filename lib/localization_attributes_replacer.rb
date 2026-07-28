@@ -38,6 +38,11 @@ module LocalizationAttributesReplacer
   end
 
   def self.replace_post_attributes(post, crawl_locale)
+    if post.user_deleted?
+      post.cooked = ContentLocalization.user_deleted_post_cooked(post, locale: crawl_locale)
+      return
+    end
+
     if loc = get_localization(post, crawl_locale)
       post.cooked = loc.cooked if loc.cooked.present?
     end
