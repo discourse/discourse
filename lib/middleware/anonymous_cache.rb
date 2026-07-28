@@ -20,6 +20,8 @@ module Middleware
         l: "key_locale",
         lso: "key_show_original_content",
         cm: "key_forced_color_mode",
+        cs: "key_color_scheme_id",
+        ds: "key_dark_scheme_id",
       }
     end
 
@@ -185,6 +187,18 @@ module Middleware
       def key_forced_color_mode
         val = @request.cookies["forced_color_mode"]
         %w[light dark].include?(val) ? val : ""
+      end
+
+      def key_color_scheme_id
+        valid_color_scheme_cookie_id("color_scheme_id")
+      end
+
+      def key_dark_scheme_id
+        valid_color_scheme_cookie_id("dark_scheme_id")
+      end
+
+      def valid_color_scheme_cookie_id(cookie_name)
+        ColorScheme.valid_id(@request.cookies[cookie_name])
       end
 
       def key_compress_anon
