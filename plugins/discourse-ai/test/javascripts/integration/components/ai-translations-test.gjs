@@ -167,4 +167,34 @@ module("Integration | Component | AiTranslations", function (hooks) {
       .dom(".ai-translation-locale-progress__translated-value")
       .hasText("8", "the refreshed response is rendered");
   });
+
+  test("shows the fixed backfill start date", async function (assert) {
+    this.owner.lookup("service:router").urlFor = () =>
+      "/admin/plugins/discourse-ai/ai-features/6/edit";
+    const backfillStartDate = "2026-07-01";
+    const formattedDate = new Date(backfillStartDate).toLocaleDateString(
+      undefined,
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "UTC",
+      }
+    );
+    this.model = {
+      ...this.model,
+      backfill_enabled: true,
+      backfill_start_date: backfillStartDate,
+      hourly_rate: 50,
+    };
+
+    await render(<template><AiTranslations @model={{this.model}} /></template>);
+
+    assert
+      .dom(".ai-translations__stat-label")
+      .includesText(
+        formattedDate,
+        "the status uses the configured fixed cutoff date"
+      );
+  });
 });

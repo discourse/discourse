@@ -48,8 +48,15 @@ module DiscourseAi
     end
 
     def self.backfill_enabled?
-      enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 &&
-        SiteSetting.ai_translation_backfill_max_age_days > 0
+      enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 && backfill_start_at.present?
+    end
+
+    def self.backfill_start_at
+      value = SiteSetting.ai_translation_backfill_start_date
+      return if value.blank?
+
+      date = Date.iso8601(value)
+      Time.utc(date.year, date.month, date.day)
     end
 
     def self.category_ids

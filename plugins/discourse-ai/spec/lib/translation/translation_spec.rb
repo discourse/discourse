@@ -18,6 +18,14 @@ describe DiscourseAi::Translation do
     end
   end
 
+  describe ".backfill_start_at" do
+    it "returns midnight UTC on the configured date" do
+      SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
+
+      expect(described_class.backfill_start_at.iso8601).to eq("2026-07-01T00:00:00Z")
+    end
+  end
+
   describe ".supported_locale_bases_cte" do
     it "normalizes and deduplicates supported locale bases" do
       sql = <<~SQL

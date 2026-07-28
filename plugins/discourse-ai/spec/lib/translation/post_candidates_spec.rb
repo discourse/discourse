@@ -2,6 +2,7 @@
 
 describe DiscourseAi::Translation::PostCandidates do
   before do
+    SiteSetting.ai_translation_backfill_start_date = 1.day.ago.utc.to_date.iso8601
     SiteSetting.ai_translation_category_scope = "all"
     SiteSetting.ai_translation_categories = ""
   end
@@ -25,14 +26,16 @@ describe DiscourseAi::Translation::PostCandidates do
       end
     end
 
-    it "does not return posts older than ai_translation_backfill_max_age_days" do
-      post =
-        Fabricate(
-          :post,
-          created_at: SiteSetting.ai_translation_backfill_max_age_days.days.ago - 1.day,
-        )
+    it "returns posts created on or after the backfill start date" do
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
+      start_date = DiscourseAi::Translation.backfill_start_at
+      older_post = Fabricate(:post, created_at: start_date - 1.second)
+      post_at_start_date = Fabricate(:post, created_at: start_date)
+      newer_post = Fabricate(:post, created_at: start_date + 1.second)
 
-      expect(DiscourseAi::Translation::PostCandidates.get).not_to include(post)
+      posts = described_class.get
+      expect(posts).not_to include(older_post)
+      expect(posts).to include(post_at_start_date, newer_post)
     end
 
     it "does not return deleted posts" do
@@ -135,7 +138,7 @@ describe DiscourseAi::Translation::PostCandidates do
     fab!(:target_category, :category)
 
     before do
-      SiteSetting.ai_translation_backfill_max_age_days = 100
+      SiteSetting.ai_translation_backfill_start_date = 100.days.ago.utc.to_date.iso8601
       SiteSetting.content_localization_supported_locales = "en|ja|de"
       SiteSetting.ai_translation_category_scope = "all"
       SiteSetting.ai_translation_categories = ""
@@ -221,7 +224,7 @@ describe DiscourseAi::Translation::PostCandidates do
 
     before do
       SiteSetting.content_localization_supported_locales = "en_GB|fr"
-      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
       SiteSetting.ai_translation_category_scope = "include_strict"
       SiteSetting.ai_translation_categories = target_category.id.to_s
       SiteSetting.ai_translation_personal_messages = "none"
@@ -250,7 +253,7 @@ describe DiscourseAi::Translation::PostCandidates do
 
     before do
       SiteSetting.content_localization_supported_locales = "en_GB|fr"
-      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
       SiteSetting.ai_translation_category_scope = "include_strict"
       SiteSetting.ai_translation_categories = target_category.id.to_s
       SiteSetting.ai_translation_personal_messages = "none"

@@ -65,7 +65,7 @@ module DiscourseAi
       def self.settings_cache_key_parts
         [
           SiteSetting.content_localization_supported_locales,
-          SiteSetting.ai_translation_backfill_max_age_days,
+          SiteSetting.ai_translation_backfill_start_date,
           SiteSetting.ai_translation_include_bot_content,
           SiteSetting.ai_translation_max_post_length,
           SiteSetting.ai_translation_personal_messages,

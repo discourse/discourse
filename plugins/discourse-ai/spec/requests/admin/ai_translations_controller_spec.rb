@@ -23,7 +23,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns base configuration data without progress" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_start_date = "2026-07-01"
         SiteSetting.ai_translation_backfill_hourly_rate = 100
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
@@ -35,6 +35,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["enabled"]).to eq(true)
         expect(json["translation_enabled"]).to eq(true)
         expect(json["hourly_rate"]).to eq(100)
+        expect(json["backfill_start_date"]).to eq("2026-07-01")
         expect(json["backfill_enabled"]).to be_in([true, false])
 
         expect(json).not_to have_key("translation_progress")
@@ -63,7 +64,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns translation_enabled field" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -83,6 +84,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "correctly indicates if backfill is enabled" do
+        SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
         SiteSetting.ai_translation_backfill_hourly_rate = 30
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
@@ -91,6 +93,14 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(response.parsed_body["backfill_enabled"]).to eq(true)
 
         SiteSetting.ai_translation_backfill_hourly_rate = 0
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["backfill_enabled"]).to eq(false)
+
+        SiteSetting.ai_translation_backfill_hourly_rate = 30
+        SiteSetting.ai_translation_backfill_start_date = ""
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -123,14 +133,14 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "correctly indicates if feature is enabled" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["enabled"]).to eq(true)
 
-        SiteSetting.ai_translation_backfill_max_age_days = 0
+        SiteSetting.ai_translation_backfill_start_date = ""
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -230,8 +240,8 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(DiscourseAi::Translation::Progress).to have_received(:fetch)
       end
 
-      it "returns progress when the post backfill age is zero" do
-        SiteSetting.ai_translation_backfill_max_age_days = 0
+      it "returns progress when the backfill start date is blank" do
+        SiteSetting.ai_translation_backfill_start_date = ""
 
         get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
