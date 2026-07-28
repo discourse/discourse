@@ -6163,6 +6163,58 @@ module(
         .dom("[role='option'].--active")
         .hasText("Apple", "it keeps the cursor rather than being skipped");
     });
+
+    // An action row runs a callback; it never becomes a value. Marking it selected because its id
+    // happens to match a held one is wrong on every surface it reaches — it draws the chosen-value
+    // fill and check, announces itself as selected, and gets scrolled to on open as though it were
+    // the selection. It also made the multi cursor step over a row that removes nothing.
+    test("an action row is never flagged selected, even when its id matches a held value", async function (assert) {
+      const onChange = sinon.spy();
+      const onManage = sinon.spy();
+      const items = [
+        { id: 1, name: "Manage notifications", onSelect: onManage },
+        { id: 2, name: "Banana" },
+        { id: 3, name: "Cherry pie" },
+      ];
+
+      await render(
+        <template>
+          <MultiLimitsHost
+            @items={{items}}
+            @value={{array 1}}
+            @onChange={{onChange}}
+          />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      const controller = find("[role='combobox']");
+      const actionRow = findAll("[role='option']")[0];
+
+      assert
+        .dom(actionRow)
+        .hasAttribute(
+          "aria-selected",
+          "false",
+          "the action row is not announced as a chosen value"
+        )
+        .doesNotHaveClass("--selected", "and carries no selected styling");
+
+      // The cursor consequence: it is safe to start on, because activating it removes nothing.
+      assert
+        .dom("[role='option'].--active")
+        .hasText(
+          "Manage notifications",
+          "so the cursor starts on it rather than stepping over it"
+        );
+
+      await triggerKeyEvent(controller, "keydown", "Enter");
+
+      // Both halves: the callback runs, and no value moved. Asserting only the ARIA attribute
+      // would pass an implementation that made the row inert.
+      assert.strictEqual(onManage.callCount, 1, "Enter runs the action");
+      assert.strictEqual(onChange.callCount, 0, "and changes no value");
+    });
   }
 );
 

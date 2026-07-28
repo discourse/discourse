@@ -2036,7 +2036,12 @@ export default class SelectEngine {
     atMaximum: boolean
   ): SelectDescriptor {
     const value = this.#itemValue(item);
-    const selected = this.isSelected(item);
+    // An action row runs a callback and never becomes a value, so it cannot be the selection even
+    // when its id collides with a held one — `isSelected` compares values and cannot tell the two
+    // apart. The public `isSelected` is deliberately left alone: it answers a question about
+    // values, and `activate` short-circuits on `onSelect` before any path that consults it.
+    const selected =
+      this.isSelected(item) && typeof item.onSelect !== "function";
     return {
       // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
       // its position, which is stable within the ordered special/create prefix.
