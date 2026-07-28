@@ -40,6 +40,10 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(propertyLabel("action:topic", "title"), "Title");
     assert.strictEqual(propertyLabel(ifNodeType, "combinator"), "Match mode");
     assert.strictEqual(
+      propertyLabel("condition:filter", "combinator"),
+      "Match mode"
+    );
+    assert.strictEqual(
       propertyLabel("trigger:schedule", "minutesInterval"),
       "Minutes between triggers"
     );
@@ -191,6 +195,14 @@ module("Unit | Utility | workflows property engine", function () {
     assert.strictEqual(
       propertyOptionLabel("action:http_request", "method", { value: "GET" }),
       "GET"
+    );
+    assert.strictEqual(
+      propertyOptionLabel(ifNodeType, "combinator", { value: "and" }),
+      "All conditions must pass"
+    );
+    assert.strictEqual(
+      propertyOptionLabel("condition:filter", "combinator", { value: "or" }),
+      "Any condition can pass"
     );
     assert.strictEqual(
       propertyOptionLabel(dataTableNodeType, "operation", {

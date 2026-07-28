@@ -379,10 +379,6 @@ en:
         field: "Field"
         operator: "Operator"
         value: "Value"
-        combinator:
-          title: "Match mode"
-          all: "All conditions must pass"
-          any: "Any condition can pass"
         operators:
           equals: "equals"
           not_equals: "does not equal"
@@ -661,6 +657,9 @@ en:
           category_ids: "Categories"
           category_ids_description: "Only trigger for topics in these categories. Leave empty to match all categories."
           category_ids_placeholder: "All categories"
+          combinator: "Match mode"
+          combinator_and: "All conditions must pass"
+          combinator_or: "Any condition can pass"
           include_subcategories: "Include subcategories"
         dynamic_values:
           badge_id: "a badge ID"
