@@ -78,16 +78,21 @@ RSpec.describe "Nested view scroll restoration" do
     nested_view.scroll_to_post(target_post)
     saved_position = nested_view.current_scroll_position
 
-    nested_view.visit_nested(topic)
-    expect(nested_view).to have_root_post_count(20)
+    nested_view.with_root_pagination_paused(topic) do |pagination|
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_root_post_count(20)
+      pagination.wait
 
-    restored_position = nested_view.current_scroll_position
-    nested_view.wheel_down.scroll_to_bottom
-    after_bottom_position = nested_view.current_scroll_position
+      restored_position = nested_view.current_scroll_position
+      after_user_scroll_position = nested_view.user_scroll_by(distance: -1000)
+      centered_post_number = nested_view.centered_root_post_number
+      pagination.resume
 
-    expect(restored_position).to be < saved_position
-    expect(after_bottom_position).to be >= restored_position
-    expect(nested_view).to have_root_post_count(40)
-    expect(nested_view.current_scroll_position).to be_within(10).of(after_bottom_position)
+      expect(restored_position).to be < saved_position
+      expect(after_user_scroll_position).to be < restored_position - 500
+      expect(nested_view).to have_root_post_count(40)
+      expect(nested_view.scroll_position_after_restore_window).to be < saved_position
+      expect(nested_view.centered_root_post_number).to eq(centered_post_number)
+    end
   end
 end
