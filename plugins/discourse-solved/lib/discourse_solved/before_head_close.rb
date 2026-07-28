@@ -19,17 +19,16 @@ class DiscourseSolved::BeforeHeadClose
 
     return "" if SiteSetting.solved_add_schema_markup == "never"
 
-    allowed =
-      controller.guardian.allow_accepted_answers?(topic.category_id, topic.tags.pluck(:name))
+    guardian = controller.guardian
+    allowed = guardian.allow_accepted_answers?(topic.category_id, topic.tags.pluck(:name))
     return "" if !allowed
 
     first_post = topic_view.posts&.first
     return "" if first_post&.post_number != 1
 
-    question_json = {
-      "@type" => "Question",
-      "name" => topic.title,
-      "text" => get_schema_text(first_post),
+    question_json = { "@type" => "Question", "name" => topic.title }
+    question_json["text"] = get_schema_text(first_post) if guardian.can_see_post?(first_post)
+    question_json.merge!(
       "upvoteCount" => first_post.like_count,
       "answerCount" => 0,
       "datePublished" => topic.created_at,
@@ -38,7 +37,7 @@ class DiscourseSolved::BeforeHeadClose
         "name" => topic.user&.username,
         "url" => topic.user&.full_url,
       },
-    }
+    )
 
     if accepted_answer = topic.solved&.answer_post
       question_json["answerCount"] = 1
