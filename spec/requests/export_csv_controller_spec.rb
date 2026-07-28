@@ -48,6 +48,18 @@ RSpec.describe ExportCsvController do
         expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
       end
 
+      it "releases the reservation if enqueuing the job raises" do
+        Jobs::ExportUserArchive.stubs(:client_push).raises("boom").once
+        post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+        expect(response.status).to eq(500)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(0)
+
+        Jobs::ExportUserArchive.unstub(:client_push)
+        post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportUserArchive.jobs.size).to eq(1)
+      end
+
       it "returns 404 when normal user tries to export admin entity" do
         post "/export_csv/export_entity.json", params: { entity: "staff_action" }
         expect(response.status).to eq(422)
