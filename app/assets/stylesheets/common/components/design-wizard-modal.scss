@@ -286,9 +286,11 @@
   }
 
   &__more-fonts {
-    width: 100%;
     margin-top: var(--space-2);
-    justify-content: space-between;
+  }
+
+  &__more-fonts-caret {
+    margin-left: var(--space-1);
   }
 
   &__text-sizes {

@@ -12,7 +12,15 @@ import { fontClass } from "discourse/lib/design-wizard-preview";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const MoreFontsTrigger = <template>
+  <button class="btn btn-default btn-icon-text" type="button" ...attributes>
+    <span class="d-button-label">{{@label}}</span>
+    {{dIcon "angle-down" class="design-wizard-modal__more-fonts-caret"}}
+  </button>
+</template>;
 
 export default class DesignWizardFontsSection extends Component {
   get baseMoreFontsLabel() {
@@ -60,10 +68,12 @@ export default class DesignWizardFontsSection extends Component {
       </span>
       <DMenu
         @identifier="design-wizard-modal__more-fonts"
-        @label={{this.baseMoreFontsLabel}}
-        @icon="angle-down"
-        @triggerClass="btn-default design-wizard-modal__more-fonts"
+        @triggerClass="design-wizard-modal__more-fonts"
         @modalForMobile={{true}}
+        @triggerComponent={{component
+          MoreFontsTrigger
+          label=this.baseMoreFontsLabel
+        }}
       >
         <:content as |dMenu|>
           <DDropdownMenu
@@ -111,10 +121,12 @@ export default class DesignWizardFontsSection extends Component {
       </span>
       <DMenu
         @identifier="design-wizard-more-heading-fonts"
-        @label={{this.headingMoreFontsLabel}}
-        @icon="angle-down"
-        @triggerClass="btn-default design-wizard-modal__more-fonts"
+        @triggerClass="design-wizard-modal__more-fonts"
         @modalForMobile={{true}}
+        @triggerComponent={{component
+          MoreFontsTrigger
+          label=this.headingMoreFontsLabel
+        }}
       >
         <:content as |dMenu|>
           <DDropdownMenu
