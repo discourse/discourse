@@ -19,9 +19,9 @@ import {
 } from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
 
 const INDICATOR_WINDOW = 4;
-const INDICATOR_HEIGHT = 30; // px
-const SEGMENT_GAP = 2; // px
-const INDICATOR_FADE = 8; // px
+const INDICATOR_HEIGHT_PX = 30;
+const SEGMENT_GAP_PX = 2;
+const INDICATOR_FADE_PX = 8;
 
 export default class ChatPinnedMessageBar extends Component {
   @service chatApi;
@@ -116,15 +116,15 @@ export default class ChatPinnedMessageBar extends Component {
   get indicatorStyle() {
     const visible = this.visibleSegments;
     const segment = Math.floor(
-      (INDICATOR_HEIGHT - SEGMENT_GAP * (visible - 1)) / visible
+      (INDICATOR_HEIGHT_PX - SEGMENT_GAP_PX * (visible - 1)) / visible
     );
-    const height = segment * visible + SEGMENT_GAP * (visible - 1);
+    const height = segment * visible + SEGMENT_GAP_PX * (visible - 1);
     const top = this.indicatorTop;
-    const fadeTop = top > 0 ? INDICATOR_FADE : 0;
-    const fadeBottom = top < this.pins.length - visible ? INDICATOR_FADE : 0;
+    const fadeTop = top > 0 ? INDICATOR_FADE_PX : 0;
+    const fadeBottom = top < this.pins.length - visible ? INDICATOR_FADE_PX : 0;
     return trustHTML(
       `--chat-pinned-bar-seg: ${segment}px; ` +
-        `--chat-pinned-bar-gap: ${SEGMENT_GAP}px; ` +
+        `--chat-pinned-bar-gap: ${SEGMENT_GAP_PX}px; ` +
         `--chat-pinned-bar-indicator-height: ${height}px; ` +
         `--chat-pinned-bar-indicator-top: ${top}; ` +
         `--chat-pinned-bar-active: ${this.currentIndex}; ` +
