@@ -1081,7 +1081,7 @@ module ApplicationHelper
   end
 
   def can_sign_up?
-    SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
+    !@readonly_mode && SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
       !SiteSetting.enable_discourse_connect
   end
 

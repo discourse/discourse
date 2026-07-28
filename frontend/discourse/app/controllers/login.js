@@ -6,7 +6,7 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isReadOnlyError, popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
@@ -318,11 +318,8 @@ export default class LoginPageController extends Controller {
       this.flashType = "error";
       if (e.jqXHR?.status === 429) {
         this.flash = i18n("login.rate_limit");
-      } else if (
-        e.jqXHR?.status === 503 &&
-        e.jqXHR?.responseJSON?.error_type === "read_only"
-      ) {
-        this.flash = i18n("read_only_mode.login_disabled");
+      } else if (isReadOnlyError(e)) {
+        this.flash = this.login.readOnlyLoginMessage;
       } else if (!areCookiesEnabled()) {
         this.flash = i18n("login.cookies_error");
       } else {
