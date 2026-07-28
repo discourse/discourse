@@ -16,7 +16,7 @@ module Chat
         chat_channel = Chat::Channel.find_by(id: route[:channel_id])
         return if !chat_channel
 
-        thread = Chat::Thread.find_by(id: route[:thread_id]) if route[:thread_id]
+        thread = chat_channel.threads.find_by(id: route[:thread_id]) if route[:thread_id]
       end
 
       return if !Guardian.new.can_preview_chat_channel?(chat_channel)
