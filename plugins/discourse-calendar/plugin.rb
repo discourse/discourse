@@ -265,6 +265,26 @@ after_initialize do
     user && user.can_act_on_discourse_post_event?(event)
   end
 
+  add_to_class(:guardian, :can_display_invitee_details?) do |event|
+    return true if !event.private? || can_act_on_discourse_post_event?(event)
+
+    raw_invitees = Array(event.raw_invitees).uniq
+
+    if user &&
+         (event.invitees.exists?(user_id: user.id) || user.groups.where(name: raw_invitees).exists?)
+      return true
+    end
+
+    return false if raw_invitees.blank?
+
+    Group
+      .visible_groups(user)
+      .members_visible_groups(user)
+      .where(name: raw_invitees)
+      .distinct
+      .count == raw_invitees.length
+  end
+
   add_class_method(:group, :discourse_post_event_allowed_groups) do
     where(id: SiteSetting.discourse_post_event_allowed_on_groups.split("|").compact)
   end

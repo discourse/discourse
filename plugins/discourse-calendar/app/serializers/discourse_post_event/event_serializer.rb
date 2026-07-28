@@ -147,35 +147,7 @@ module DiscoursePostEvent
 
     def can_display_invitee_details?
       return @can_display_invitee_details if defined?(@can_display_invitee_details)
-
-      @can_display_invitee_details =
-        if !object.private? || scope.can_act_on_discourse_post_event?(object)
-          true
-        else
-          user = scope.current_user
-          if user && invited_user?(user)
-            true
-          else
-            visible_invited_groups?(user)
-          end
-        end
-    end
-
-    def visible_invited_groups?(user)
-      raw_invitees = Array(object.raw_invitees).uniq
-      return false if raw_invitees.blank?
-
-      Group
-        .visible_groups(user)
-        .members_visible_groups(user)
-        .where(name: raw_invitees)
-        .distinct
-        .count == raw_invitees.length
-    end
-
-    def invited_user?(user)
-      object.invitees.exists?(user_id: user.id) ||
-        user.groups.where(name: Array(object.raw_invitees)).exists?
+      @can_display_invitee_details = scope.can_display_invitee_details?(object)
     end
 
     def should_display_invitees
