@@ -22,6 +22,10 @@ function themeDescription(themeId) {
   }
 }
 
+function withDescription(theme) {
+  return { ...theme, description: themeDescription(theme.id) };
+}
+
 const DesignWizardThemeSection = <template>
   <div class="design-wizard-modal__theme-cards">
     {{#each @themes as |theme|}}
@@ -38,10 +42,7 @@ const DesignWizardThemeSection = <template>
             {{i18n "admin_onboarding_banner.design_wizard.theme.selected"}}
           </span>
         {{/if}}
-        <ThemeCardPreview @theme={{theme}} />
-        <span class="design-wizard-modal__theme-description">
-          {{themeDescription theme.id}}
-        </span>
+        <ThemeCardPreview @theme={{withDescription theme}} />
       </div>
     {{/each}}
   </div>
