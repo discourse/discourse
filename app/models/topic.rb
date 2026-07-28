@@ -552,6 +552,10 @@ class Topic < ActiveRecord::Base
     subtype == TopicSubtype.moderator_warning
   end
 
+  def notify_moderators?
+    subtype == TopicSubtype.notify_moderators
+  end
+
   # all users (in groups or directly targeted) that are going to get the pm
   def all_allowed_users
     moderators_sql = " UNION #{User.moderators.to_sql}" if private_message? &&
