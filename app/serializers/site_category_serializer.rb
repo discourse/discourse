@@ -1,32 +1,10 @@
 # frozen_string_literal: true
 
 class SiteCategorySerializer < BasicCategorySerializer
-  attributes :allowed_tags,
-             :allowed_tag_groups,
-             :allow_global_tags,
-             :read_only_banner,
-             :form_template_ids
-
-  has_many :category_required_tag_groups, key: :required_tag_groups, embed: :objects
+  attributes :allow_global_tags, :read_only_banner, :form_template_ids, :required_tag_groups
 
   def form_template_ids
     object.form_template_ids.sort
-  end
-
-  def include_allowed_tags?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tags
-    object.tags.pluck(:name)
-  end
-
-  def include_allowed_tag_groups?
-    SiteSetting.tagging_enabled
-  end
-
-  def allowed_tag_groups
-    object.tag_groups.pluck(:name)
   end
 
   def include_allow_global_tags?
@@ -35,6 +13,14 @@ class SiteCategorySerializer < BasicCategorySerializer
 
   def include_required_tag_groups?
     SiteSetting.tagging_enabled
+  end
+
+  def required_tag_groups
+    object.category_required_tag_groups.map do |crtg|
+      entry = { min_count: crtg.min_count }
+      entry[:name] = crtg.tag_group&.name if can_edit_tags?
+      entry
+    end
   end
 
   def name
@@ -59,5 +45,12 @@ class SiteCategorySerializer < BasicCategorySerializer
       end
 
     translated_description || object.description
+  end
+
+  private
+
+  def can_edit_tags?
+    return @can_edit_tags if defined?(@can_edit_tags)
+    @can_edit_tags = SiteSetting.tagging_enabled && scope&.can_edit?(object)
   end
 end
