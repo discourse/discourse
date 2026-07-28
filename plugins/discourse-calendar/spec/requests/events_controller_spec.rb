@@ -131,6 +131,26 @@ module DiscoursePostEvent
         expect(body).to include("URL:https://example.com/event-info")
       end
 
+      it "preserves URI delimiters in URL fields while escaping text fields" do
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            name: "Conference, day; one",
+            location: "Room A, floor 2; west",
+            description: "Agenda, demos; questions",
+            url: "https://example.com/events?tags=one,two;sort=asc&name=tom",
+          )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("SUMMARY:Conference\\, day\\; one")
+        expect(response.body).to include("LOCATION:Room A\\, floor 2\\; west")
+        expect(response.body).to include("DESCRIPTION:Agenda\\, demos\\; questions")
+        expect(response.body).to include("URL:#{event.url}")
+      end
+
       it "should not HTML-encode ampersands in ics format" do
         Fabricate(
           :event,

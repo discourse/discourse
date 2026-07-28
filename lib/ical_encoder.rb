@@ -17,4 +17,10 @@ module IcalEncoder
       .gsub("\n", "\\n")
       .html_safe
   end
+
+  def self.encode_uri(uri)
+    return "" if uri.blank?
+
+    CGI.unescapeHTML(uri.to_s).delete("\r\n").html_safe
+  end
 end
