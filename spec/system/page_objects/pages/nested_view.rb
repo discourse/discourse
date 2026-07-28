@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
-      SCROLL_RESTORE_WINDOW_MS = 1300
-
       def visit_nested(topic, query: nil)
         url = "/t/#{topic.slug}/#{topic.id}"
         url += "?#{query}" if query
@@ -267,21 +265,26 @@ module PageObjects
       end
 
       def user_scroll_by(distance:)
+        start_position = current_scroll_position
+
         page.driver.with_playwright_page do |playwright_page|
           viewport = playwright_page.viewport_size
           playwright_page.mouse.move(viewport[:width] * 0.65, viewport[:height] * 0.5)
           playwright_page.mouse.wheel(0, distance)
         end
 
-        page.evaluate_async_script(<<~JS)
-          const done = arguments[0];
+        page.evaluate_async_script(<<~JS, start_position)
+          const [startPosition, done] = arguments;
           let previousPosition;
           let stableFrames = 0;
 
           const finishWhenStable = () => {
             const currentPosition = window.scrollY;
+            const hasMoved = currentPosition !== startPosition;
             stableFrames =
-              currentPosition === previousPosition ? stableFrames + 1 : 0;
+              hasMoved && currentPosition === previousPosition
+                ? stableFrames + 1
+                : 0;
             previousPosition = currentPosition;
 
             if (stableFrames === 2) {
@@ -623,7 +626,8 @@ module PageObjects
       def scroll_position_after_restore_window
         page.evaluate_async_script(<<~JS)
           const done = arguments[0];
-          setTimeout(() => done(window.scrollY), #{SCROLL_RESTORE_WINDOW_MS});
+          const { SCROLL_RESTORE_WINDOW_MS } = require("discourse/components/nested");
+          setTimeout(() => done(window.scrollY), SCROLL_RESTORE_WINDOW_MS + 50);
         JS
       end
 
