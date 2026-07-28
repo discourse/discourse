@@ -32,7 +32,15 @@ acceptance("Chat | Anonymous", function (needs) {
   });
 
   test("new message redirects anonymous users to public channels", async function (assert) {
-    await visit("/chat/new-message");
+    try {
+      await visit("/chat/new-message");
+    } catch (error) {
+      assert.strictEqual(
+        error.message,
+        "TransitionAborted",
+        "it aborts the transition"
+      );
+    }
 
     assert.strictEqual(
       currentURL(),
@@ -52,7 +60,15 @@ acceptance("Chat | Anonymous", function (needs) {
   });
 
   test("starred channels redirects anonymous users to public channels", async function (assert) {
-    await visit("/chat/starred-channels");
+    try {
+      await visit("/chat/starred-channels");
+    } catch (error) {
+      assert.strictEqual(
+        error.message,
+        "TransitionAborted",
+        "it aborts the transition"
+      );
+    }
 
     assert.strictEqual(
       currentURL(),
