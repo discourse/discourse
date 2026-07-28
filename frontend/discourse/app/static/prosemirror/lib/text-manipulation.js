@@ -145,42 +145,81 @@ export default class ProsemirrorTextManipulation {
     );
   }
 
-  applySurroundSelection(head, tail, exampleKey) {
-    this.applySurround(this.getSelected(), head, tail, exampleKey);
+  applySurroundSelection(head, tail, exampleKey, opts) {
+    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
   }
 
-  applySurround(sel, head, tail, exampleKey) {
-    const applySurroundMap = {
-      italic_text: this.schema.marks.em,
-      bold_text: this.schema.marks.strong,
-      code_title: this.schema.marks.code,
-    };
-
-    if (applySurroundMap[exampleKey]) {
-      toggleMark(applySurroundMap[exampleKey])(
-        this.view.state,
-        this.view.dispatch
-      );
-
+  applySurround(_sel, head, tail, exampleKey, opts) {
+    // Empty selection: insert placeholder text via round-trip.
+    // toggleMark would only set stored marks without inserting content.
+    if (this.view.state.selection.empty) {
+      this.#applySurroundFallback(head, tail, exampleKey, opts);
+      this.focus();
       return;
     }
 
-    const { state } = this.view;
-    const { from, to, empty } = state.selection;
+    const probe = this.#probeMarkup(head, tail);
 
-    let text;
-    if (empty) {
-      text = i18n(`composer.${exampleKey}`);
-    } else {
-      const selectedFragment = state.doc.slice(from, to).content;
-      text = this.convertToMarkdown(selectedFragment);
+    if (probe.kind === "mark") {
+      toggleMark(probe.marks[0])(this.view.state, this.view.dispatch);
+      this.focus();
+      return;
     }
 
-    const doc = this.convertFromMarkdown(head + text + tail);
+    if (probe.kind === "node") {
+      const activeType = [probe.nodeType, probe.inlineNodeType]
+        .filter(Boolean)
+        .find((type) => inNode(this.view.state, type, probe.attrs));
 
-    this.view.dispatch(
-      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
-    );
+      if (activeType) {
+        this.#unwrapNode(activeType, probe.attrs);
+        this.focus();
+        return;
+      }
+
+      // openStart/openEnd > 0 means the selection cuts into a textblock (inline)
+      const slice = this.view.state.selection.content();
+      const isInline = slice.openStart > 0 || slice.openEnd > 0;
+
+      if (isInline && probe.inlineNodeType) {
+        this.#wrapInlineNode(probe.inlineNodeType, probe.attrs);
+      } else if (!wrapIn(probe.nodeType)(this.view.state, this.view.dispatch)) {
+        this.#applySurroundFallback(head, tail, exampleKey, opts);
+      }
+
+      this.focus();
+      return;
+    }
+
+    this.#applySurroundFallback(head, tail, exampleKey, opts);
+    this.focus();
+  }
+
+  #applySurroundFallback(head, tail, exampleKey, opts) {
+    const { from, to } = this.view.state.selection;
+    const text = this.#selectedMarkdownOr(exampleKey);
+
+    let effectiveHead = head;
+    let effectiveTail = tail;
+    if (opts?.useBlockMode && text.includes("\n")) {
+      if (!effectiveHead.endsWith("\n")) {
+        effectiveHead += "\n";
+      }
+      if (!effectiveTail.startsWith("\n")) {
+        effectiveTail = "\n" + effectiveTail;
+      }
+    }
+
+    const doc = this.convertFromMarkdown(effectiveHead + text + effectiveTail);
+
+    // Single paragraph → insert inline content to avoid block nesting
+    const result =
+      doc.content.childCount === 1 &&
+      doc.content.firstChild.type.name === "paragraph"
+        ? doc.content.firstChild.content
+        : doc.content;
+
+    this.view.dispatch(this.view.state.tr.replaceWith(from, to, result));
   }
 
   applyLink(url) {
@@ -225,108 +264,220 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
-  applyList(_selection, head, exampleKey) {
-    let command;
+  applyList(_sel, head, exampleKey, opts) {
+    // head can be a function (e.g. for ordered lists: i => `${i+1}. `).
+    // Pass null to get the default prefix for parser probing.
+    const hval = typeof head === "function" ? head(null) : head;
 
-    const findParentList = () => {
-      const $from = this.view.state.selection.$from;
-      for (let depth = $from.depth; depth > 0; depth--) {
-        const node = $from.node(depth);
-        if (
-          node.type === this.schema.nodes.bullet_list ||
-          node.type === this.schema.nodes.ordered_list
-        ) {
-          return {
-            node,
-            pos: $from.before(depth),
-            type: node.type,
-          };
-        }
-      }
-      return null;
-    };
-
-    const replaceSelectionWithList = (targetType) => {
-      const { state } = this.view;
-      const selectedContent = state.selection.content().content;
-
-      if (!isPlainTextFragment(selectedContent, this.schema)) {
-        return false;
-      }
-
-      const selectedText = state.doc.textBetween(
-        state.selection.from,
-        state.selection.to,
-        "\n",
-        "\n"
-      );
-      const lines = this.splitNonEmptyLines(selectedText);
-
-      if (lines.length <= 1) {
-        return false;
-      }
-
-      const listNode = this.buildListNode(this.schema, targetType, lines);
-
-      this.view.dispatch(
-        state.tr.replaceSelectionWith(listNode).scrollIntoView()
-      );
-
-      return true;
-    };
-
-    if (exampleKey === "list_item") {
-      const targetType =
-        head === "* "
-          ? this.schema.nodes.bullet_list
-          : this.schema.nodes.ordered_list;
-
-      const parentList = findParentList();
-
-      if (parentList) {
-        if (parentList.type === targetType) {
-          // Same list type - toggle off (lift)
-          command = liftListItem(this.schema.nodes.list_item);
-        } else {
-          // Different list type - convert selection
-          // We achieve this by lifting out of the current list, then wrapping in the new type
-          command = (state, dispatch) => {
-            if (dispatch) {
-              const liftCmd = liftListItem(this.schema.nodes.list_item);
-              let lifted = false;
-              liftCmd(state, (tr) => {
-                dispatch(tr);
-                lifted = true;
-              });
-
-              if (lifted) {
-                // If lift succeeded, now wrap in the new list type
-                // We need to re-fetch state from view since dispatch updated it
-                wrapInList(targetType)(this.view.state, dispatch);
-              }
-            }
-            return true;
-          };
-        }
-      } else {
-        if (replaceSelectionWithList(targetType)) {
-          this.focus();
-          return;
-        }
-
-        // Not in a list - wrap in the target type
-        command = wrapInList(targetType);
-      }
-    } else if (exampleKey === "blockquote_text") {
-      command = inNode(this.view.state, this.schema.nodes.blockquote)
-        ? lift
-        : wrapIn(this.schema.nodes.blockquote);
-    } else {
-      throw new Error("Unknown exampleKey");
+if (hval == null) {
+      this.#applyListFallback(head, exampleKey, opts);
+      return;
     }
 
-    command?.(this.view.state, this.view.dispatch);
+    const probeType = this.convertFromMarkdown(hval + "x").content.firstChild
+      ?.type;
+
+    if (
+      probeType === this.schema.nodes.bullet_list ||
+      probeType === this.schema.nodes.ordered_list
+    ) {
+      this.#toggleListType(probeType);
+      this.focus();
+      return;
+    }
+
+    if (probeType === this.schema.nodes.blockquote) {
+      const command = inNode(this.view.state, this.schema.nodes.blockquote)
+        ? lift
+        : wrapIn(this.schema.nodes.blockquote);
+      command(this.view.state, this.view.dispatch);
+      this.focus();
+      return;
+    }
+
+    this.#applyListFallback(head, exampleKey, opts);
+  }
+
+  #toggleListType(targetType) {
+    const { state } = this.view;
+    const { $from } = state.selection;
+
+    let currentListType = null;
+    for (let depth = $from.depth; depth > 0; depth--) {
+      const node = $from.node(depth);
+      if (
+        node.type === this.schema.nodes.bullet_list ||
+        node.type === this.schema.nodes.ordered_list
+      ) {
+        currentListType = node.type;
+        break;
+      }
+    }
+
+    if (!currentListType) {
+      wrapInList(targetType)(state, this.view.dispatch);
+      return;
+    }
+
+    if (currentListType === targetType) {
+      liftListItem(this.schema.nodes.list_item)(state, this.view.dispatch);
+      return;
+    }
+
+    // Compose lift + wrap into a single transaction for one undo step
+    const tr = state.tr;
+
+    liftListItem(this.schema.nodes.list_item)(state, (liftTr) => {
+      liftTr.steps.forEach((step) => tr.step(step));
+    });
+
+    const liftedState = state.apply(tr);
+    wrapInList(targetType)(liftedState, (wrapTr) => {
+      wrapTr.steps.forEach((step) => tr.step(step));
+    });
+
+    if (tr.steps.length) {
+      this.view.dispatch(tr);
+    }
+  }
+
+  #applyListFallback(head, exampleKey, opts) {
+    const { from, to } = this.view.state.selection;
+    const text = this.#selectedMarkdownOr(exampleKey);
+
+    const result = text
+      .split("\n")
+      .map((line, i) => {
+        if (!opts?.applyEmptyLines && !line.length) {
+          return line;
+        }
+        const lineHead =
+          typeof head === "function" ? head(i === 0 ? null : String(i)) : head;
+        return lineHead + line;
+      })
+      .join("\n");
+
+    const doc = this.convertFromMarkdown(result);
+    this.view.dispatch(this.view.state.tr.replaceWith(from, to, doc.content));
     this.focus();
+  }
+
+  #selectedMarkdownOr(exampleKey) {
+    const { from, to, empty } = this.view.state.selection;
+    return empty
+      ? i18n(`composer.${exampleKey}`)
+      : this.convertToMarkdown(this.view.state.doc.slice(from, to));
+  }
+
+  #probeMarkup(head, tail) {
+    const doc = this.convertFromMarkdown(head + "x" + tail);
+
+    // We expect a single top-level block; multiple blocks mean the markup
+    // creates complex structure that doesn't map to a simple probe
+    if (doc.content.childCount !== 1) {
+      return {};
+    }
+
+    const outer = doc.content.firstChild;
+
+    // Block node: also probe in inline context since some plugins define both
+    // block and inline variants (e.g. spoiler/inline_spoiler) and standalone
+    // parsing always picks the block variant.
+    if (outer.type.name !== "paragraph") {
+      const inlineVariant = this.#probeInlineVariant(head, tail);
+      return {
+        kind: "node",
+        nodeType: outer.type,
+        inlineNodeType: inlineVariant?.nodeType,
+      };
+    }
+
+    if (outer.content.childCount !== 1) {
+      return {};
+    }
+
+    const child = outer.content.firstChild;
+
+    if (child.isText && child.text === "x" && child.marks.length) {
+      return { kind: "mark", marks: child.marks.map((m) => m.type) };
+    }
+
+    if (child.type.isInline && child.textContent === "x") {
+      return { kind: "node", nodeType: child.type, attrs: child.attrs };
+    }
+
+    return {};
+  }
+
+  // Re-probe in inline context: embedding markup inside text forces the
+  // inline BBCode rule, which may produce a different node type.
+  #probeInlineVariant(head, tail) {
+    const doc = this.convertFromMarkdown("text " + head + "x" + tail + " text");
+    if (doc.content.childCount !== 1) {
+      return null;
+    }
+
+    const para = doc.content.firstChild;
+    if (para?.type.name !== "paragraph") {
+      return null;
+    }
+
+    let found = null;
+    para.content.forEach((child) => {
+      if (!child.isText && child.type.isInline && child.textContent === "x") {
+        found = { nodeType: child.type, attrs: child.attrs };
+      }
+    });
+    return found;
+  }
+
+  #unwrapNode(nodeType, attrs = {}) {
+    const { state } = this.view;
+    const { $from } = state.selection;
+
+    for (let depth = $from.depth; depth > 0; depth--) {
+      const node = $from.node(depth);
+      if (
+        node.type === nodeType &&
+        Object.keys(attrs).every((key) => node.attrs[key] === attrs[key])
+      ) {
+        const pos = $from.before(depth);
+
+        const tr = state.tr.replaceWith(pos, pos + node.nodeSize, node.content);
+
+        const resolvedPos = tr.doc.resolve(pos);
+        tr.setSelection(new TextSelection(resolvedPos));
+
+        this.view.dispatch(tr);
+        return;
+      }
+    }
+  }
+
+  #wrapInlineNode(nodeType, attrs = {}) {
+    const { state } = this.view;
+    const { from, to } = state.selection;
+    const slice = state.selection.content();
+
+    const content = [];
+    slice.content.forEach((node) =>
+      node.isBlock
+        ? node.content.forEach((child) => content.push(child))
+        : content.push(node)
+    );
+
+    const wrappedNode = nodeType.createAndFill(attrs, content);
+    if (wrappedNode) {
+      const tr = state.tr.replaceWith(from, to, wrappedNode);
+      tr.setSelection(
+        TextSelection.create(
+          tr.doc,
+          from + 1,
+          from + 1 + wrappedNode.content.size
+        )
+      );
+      this.view.dispatch(tr);
+    }
   }
 
   applyHeading(_selection, level) {
