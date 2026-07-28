@@ -19,6 +19,8 @@ describe "Local dates" do
   end
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:local_date) { PageObjects::Components::LocalDate.new }
+  let(:markup) { "<img src=x>" }
 
   def formatted_date_for_year(month, day)
     Date.parse("#{year}-#{month}-#{day}").strftime("%A, %B %-d, %Y")
@@ -73,6 +75,20 @@ describe "Local dates" do
       )
       page.send_keys(:escape)
     end
+  end
+
+  it "renders a custom date format containing markup as plain text" do
+    create_post(
+      user: current_user,
+      topic: topic,
+      raw:
+        %(<span class="discourse-local-date" data-date="2025-01-01" data-time="05:00:00" data-format="[#{CGI.escapeHTML(markup)}]"></span>),
+    )
+    sign_in(current_user)
+    topic_page.visit_topic(topic)
+
+    expect(local_date).to have_rendered_date
+    expect(local_date).to have_text_in_date(markup)
   end
 
   describe "insert modal" do
