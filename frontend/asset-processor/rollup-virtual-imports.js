@@ -207,16 +207,21 @@ function renderMap(name, records, identifiers) {
 }
 
 export default {
-  "virtual:entrypoint": (moduleFilenames, opts) => {
+  "virtual:entrypoint": (moduleFilenames, opts, extra) => {
     const { themeId, pluginName, frontend } = opts;
     const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
 
     const { records, warnings } = normalizeModules(moduleFilenames, label);
 
+    // QUnit discovers tests by executing the module that registers them, and a test bundle has
+    // nothing to lazily route to. Every test module must therefore be imported eagerly, so the
+    // test entrypoint opts out of `staticModules` tree-shaking even when the plugin declares it.
+    const isTestEntrypoint = extra?.entrypointName === "test";
+
     // `compatModules` is what core registers with `define()`; the default export is the
     // cross-bundle lookup table that `babel-resolve-plugin-imports` indexes into. Without
     // `staticModules` they are the same object, and every module is eagerly imported.
-    if (!frontend?.staticModules) {
+    if (isTestEntrypoint || !frontend?.staticModules) {
       const identifiers = new Map(
         records.map((record, i) => [record, `Mod${i + 1}`])
       );

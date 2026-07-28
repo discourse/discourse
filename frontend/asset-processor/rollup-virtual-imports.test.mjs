@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import rollupVirtualImports from "./rollup-virtual-imports";
 
-function entrypoint(moduleFilenames, opts = {}) {
-  return rollupVirtualImports["virtual:entrypoint"](moduleFilenames, {
-    pluginName: "chat",
-    ...opts,
-  });
+function entrypoint(moduleFilenames, opts = {}, extra) {
+  return rollupVirtualImports["virtual:entrypoint"](
+    moduleFilenames,
+    {
+      pluginName: "chat",
+      ...opts,
+    },
+    extra
+  );
 }
 
 const MODULES = [
@@ -125,6 +129,47 @@ describe("virtual:entrypoint", () => {
 
     it("emits no routes export when nothing is split", () => {
       expect(output).toContain("export const routes = [\n];");
+    });
+  });
+
+  describe("test entrypoint", () => {
+    const TEST_MODULES = [
+      "acceptance/chat-message-test.gjs",
+      "components/chat-channel-test.gjs",
+      "unit/lib/chat-utils-test.js",
+      "unit/services/chat-test.js",
+      "integration/components/user-menu/chat-test.gjs",
+      "helpers/chat-fixtures.js",
+    ];
+
+    // QUnit finds a test only by running the module that registers it, so a test bundle can never
+    // tree-shake — every module must be imported eagerly even when the plugin is `staticModules`.
+    it("eagerly imports every module despite staticModules", () => {
+      const output = entrypoint(
+        TEST_MODULES,
+        { frontend: { staticModules: true, sharedModules: [] } },
+        { entrypointName: "test" }
+      );
+
+      for (const filename of TEST_MODULES) {
+        const importPath = filename.replace(/\.\w+$/, "");
+        expect(output, filename).toContain(`from "./${importPath}"`);
+      }
+
+      expect(output).toContain("export default compatModules;");
+      expect(output).not.toContain("sharedModules");
+    });
+
+    it("still tree-shakes the same modules for a non-test entrypoint", () => {
+      const output = entrypoint(
+        TEST_MODULES,
+        { frontend: { staticModules: true, sharedModules: [] } },
+        { entrypointName: "main" }
+      );
+
+      // Components and lib are reached through static imports, so they stay out of the eager set.
+      expect(output).not.toContain('from "./components/chat-channel-test"');
+      expect(output).not.toContain('from "./unit/lib/chat-utils-test"');
     });
   });
 

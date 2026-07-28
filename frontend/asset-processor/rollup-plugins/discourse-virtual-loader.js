@@ -41,6 +41,7 @@ export default function discourseVirtualLoader({
           {
             basePath,
             context: this,
+            entrypointName,
           }
         );
       } else if (fromBase.startsWith("virtual:route:")) {
