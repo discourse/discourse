@@ -345,6 +345,31 @@ module("Integration | Component | DVirtualHeight", function (hooks) {
       .doesNotHaveClass("keyboard-visible", "no phantom keyboard layout");
   });
 
+  test("a programmatic focus right after an inferred hide restores the keyboard state", async function (assert) {
+    editable.focus();
+    setViewportKeyboard(300);
+    await reportViewport();
+    assert.dom(docEl).hasClass("keyboard-visible", "keyboard is confirmed");
+
+    // e.g. a toolbar tap opening a modal: focus settles outside any editable
+    // before the modal autofocuses its input, and that refocus cancels the
+    // keyboard hide, so the unchanged viewport never reports back
+    touch(find(".target"), "touchstart");
+    editable.blur();
+    await settled();
+    assert.dom(docEl).doesNotHaveClass("keyboard-visible", "hide is inferred");
+
+    find(".field").focus();
+    assert
+      .dom(docEl)
+      .hasClass("keyboard-visible", "the interrupted state is restored");
+
+    await settled();
+    assert
+      .dom(docEl)
+      .hasClass("keyboard-visible", "the geometry-backed restore holds");
+  });
+
   test("focusing a non-keyboard field does not predict a keyboard", async function (assert) {
     await learnKeyboardHeight();
 

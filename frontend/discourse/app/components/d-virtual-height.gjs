@@ -238,6 +238,7 @@ export default class DVirtualHeight extends Component {
     cancel(this.showConfirmHandler);
     this.showPredicted = false;
 
+    this.inferredHideAt = Date.now();
     this.lastKeyboardHeight = this.previousHeight;
     this.#applyHeight(Math.round(window.innerHeight));
     this.#announceKeyboard(false);
@@ -255,12 +256,17 @@ export default class DVirtualHeight extends Component {
 
     cancel(this.focusSettleHandler);
 
-    // apply the last known keyboard height ahead of its show animation, but
-    // only when the tap landed on the field being focused — a tap that
-    // programmatically focuses something else (a chooser's filter input)
-    // raises no keyboard. a wrong guess is corrected by the revert timer or
-    // the next real viewport report
-    if (this.lastKeyboardHeight && this.#tappedInto(event.target)) {
+    // apply the last known keyboard height ahead of its show animation, when
+    // the tap landed on the field being focused — a tap that programmatically
+    // focuses something else (a chooser's filter input) may raise no
+    // keyboard — or right after an inferred hide: a refocus mid-hide (e.g. a
+    // modal autofocusing its input) cancels the OS animation and the
+    // unchanged viewport never reports back. a wrong guess is corrected by
+    // the revert timer or the next real viewport report
+    if (
+      this.lastKeyboardHeight &&
+      (this.#tappedInto(event.target) || this.#midInferredHide())
+    ) {
       this.#showKeyboardState(this.lastKeyboardHeight);
       this.#armShowConfirm();
     }
@@ -272,6 +278,13 @@ export default class DVirtualHeight extends Component {
       this.#recentTouch() &&
       !!touch.target &&
       (focused === touch.target || focused.contains(touch.target))
+    );
+  }
+
+  #midInferredHide() {
+    return (
+      !!this.inferredHideAt &&
+      Date.now() - this.inferredHideAt < VIEWPORT_CONFIRM_MS
     );
   }
 
@@ -338,6 +351,7 @@ export default class DVirtualHeight extends Component {
   onViewportResize() {
     // the real viewport report supersedes any optimistic guess
     cancel(this.showConfirmHandler);
+    this.inferredHideAt = null;
 
     // when this report is correcting a predicted show, the composer has
     // already glided to the predicted height; snap the (small) correction so
