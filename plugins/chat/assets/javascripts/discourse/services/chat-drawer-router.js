@@ -330,6 +330,7 @@ export default class ChatDrawerRouter extends Service {
       popupAjaxError(e);
     }
 
+    this.component = null;
     const drawerRoutes = await waitForPromise(loadDrawerRoutes());
     this.component = drawerRoutes[this.drawerRoute?.component || "Channels"];
     this.currentRouteName = route.name;
