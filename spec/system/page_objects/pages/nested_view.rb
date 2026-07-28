@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class NestedView < PageObjects::Pages::Base
+      SCROLL_RESTORE_WINDOW_MS = 1300
+
       def visit_nested(topic, query: nil)
         url = "/t/#{topic.slug}/#{topic.id}"
         url += "?#{query}" if query
@@ -247,6 +249,11 @@ module PageObjects
         page.evaluate_script("window.scrollY")
       end
 
+      def with_root_pagination_paused(topic, &block)
+        pattern = %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}\.json\?.*\bpage=1(?:&|$)}
+        PageObjects::CDP.new.with_paused_request(pattern, &block)
+      end
+
       def disable_cloaking
         page.execute_script(
           'require("discourse/modifiers/post-stream-viewport-tracker").disableCloaking()',
@@ -259,12 +266,52 @@ module PageObjects
         self
       end
 
-      def wheel_down
+      def user_scroll_by(distance:)
         page.driver.with_playwright_page do |playwright_page|
-          playwright_page.mouse.move(200, 200)
-          playwright_page.mouse.wheel(0, 1000)
+          viewport = playwright_page.viewport_size
+          playwright_page.mouse.move(viewport[:width] * 0.65, viewport[:height] * 0.5)
+          playwright_page.mouse.wheel(0, distance)
         end
-        self
+
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          let previousPosition;
+          let stableFrames = 0;
+
+          const finishWhenStable = () => {
+            const currentPosition = window.scrollY;
+            stableFrames =
+              currentPosition === previousPosition ? stableFrames + 1 : 0;
+            previousPosition = currentPosition;
+
+            if (stableFrames === 2) {
+              done(currentPosition);
+            } else {
+              requestAnimationFrame(finishWhenStable);
+            }
+          };
+
+          requestAnimationFrame(finishWhenStable);
+        JS
+      end
+
+      def centered_root_post_number
+        page.evaluate_script(<<~JS)
+          (() => {
+            const roots = document.querySelector(".nested-view__roots");
+            const rootsRect = roots.getBoundingClientRect();
+            const element = document.elementFromPoint(
+              rootsRect.left + rootsRect.width / 2,
+              window.innerHeight / 2
+            );
+            const root = element?.closest(".nested-post");
+            const article = root?.querySelector(
+              ":scope > .nested-post__main > [data-post-number]"
+            );
+
+            return Number(article?.dataset.postNumber);
+          })()
+        JS
       end
 
       def scroll_to_post(post)
@@ -570,6 +617,13 @@ module PageObjects
             positions.afterRetries = window.scrollY;
             done(positions);
           }, 250);
+        JS
+      end
+
+      def scroll_position_after_restore_window
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          setTimeout(() => done(window.scrollY), #{SCROLL_RESTORE_WINDOW_MS});
         JS
       end
 
