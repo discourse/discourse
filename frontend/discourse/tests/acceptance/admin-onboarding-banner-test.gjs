@@ -62,6 +62,10 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       });
     });
 
+    server.put("/admin/config/design-wizard.json", () =>
+      helper.response(200, { success: "OK" })
+    );
+
     server.get("/color-scheme-stylesheet/:id", () =>
       helper.response(200, {
         color_scheme_id: -1,

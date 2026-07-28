@@ -183,14 +183,7 @@ export default class DesignWizardService extends Service {
     try {
       await ajax("/admin/config/design-wizard.json", {
         type: "PUT",
-        data: {
-          theme_id: this.themeId,
-          light_palette_id: this.selectedPair?.light?.id,
-          dark_palette_id: this.selectedPair?.dark?.id,
-          palettes_user_selectable: this.palettesUserSelectable,
-          base_font: this.bodyFont,
-          heading_font: this.headingFont,
-        },
+        data: this.#selectionsPayload,
       });
 
       this.keyValueStore.remove(STATE_KEY);
@@ -207,6 +200,36 @@ export default class DesignWizardService extends Service {
       this.saving = false;
       popupAjaxError(error);
     }
+  }
+
+  // persists the selections made so far without finishing the wizard, so
+  // closing mid-flow only discards the step being worked on
+  async saveProgress() {
+    this.saving = true;
+
+    try {
+      await ajax("/admin/config/design-wizard.json", {
+        type: "PUT",
+        data: this.#selectionsPayload,
+      });
+      return true;
+    } catch (error) {
+      popupAjaxError(error);
+      return false;
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  get #selectionsPayload() {
+    return {
+      theme_id: this.themeId,
+      light_palette_id: this.selectedPair?.light?.id,
+      dark_palette_id: this.selectedPair?.dark?.id,
+      palettes_user_selectable: this.palettesUserSelectable,
+      base_font: this.bodyFont,
+      heading_font: this.headingFont,
+    };
   }
 
   get #storedState() {

@@ -160,8 +160,6 @@ describe "Admin Onboarding Banner" do
       design_wizard_sidebar.next_step
       design_wizard_sidebar.select_body_font("lato")
 
-      expect(SiteSetting.default_theme_id).not_to eq(Theme.horizon_theme.id)
-
       design_wizard_sidebar.save
 
       # Page reloads after saving; wait for it to complete

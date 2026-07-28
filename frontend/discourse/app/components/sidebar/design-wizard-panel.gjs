@@ -38,10 +38,12 @@ export default class SidebarDesignWizardPanel extends Component {
   }
 
   @action
-  next() {
-    this.designWizard.setStepIndex(
-      Math.min(this.designWizard.stepIndex + 1, STEPS.length - 1)
-    );
+  async next() {
+    if (await this.designWizard.saveProgress()) {
+      this.designWizard.setStepIndex(
+        Math.min(this.designWizard.stepIndex + 1, STEPS.length - 1)
+      );
+    }
   }
 
   @action
@@ -167,6 +169,7 @@ export default class SidebarDesignWizardPanel extends Component {
           <DButton
             @action={{this.next}}
             @label="admin_onboarding_banner.design_wizard.next"
+            @isLoading={{this.designWizard.saving}}
             class="btn-primary sidebar-design-wizard__next"
           />
         {{/if}}
