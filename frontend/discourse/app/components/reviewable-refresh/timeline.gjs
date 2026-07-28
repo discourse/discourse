@@ -16,6 +16,7 @@ import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
+import { sanitize } from "discourse/lib/text";
 import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -108,7 +109,7 @@ export default class ReviewableTimeline extends Component {
           user: score.user,
           icon: "flag",
           titleKey: "review.timeline.flagged_as_by",
-          description: htmlSafe(flaggedDescription),
+          description: htmlSafe(sanitize(flaggedDescription)),
           score: {
             count: 0,
             type: score.score_type.type,
