@@ -92,6 +92,9 @@ interface DRovingFocusArgs {
    * (initial render, or the active item dropped out on a re-filter), so Enter selects it
    * without an ArrowDown. The WAI-ARIA "list autocomplete with automatic selection"
    * combobox pattern. Default `false` (the cursor starts empty until an Arrow keypress).
+   *
+   * Constrained by {@link activationRemovesSelected}, which excludes items the seed must not
+   * land on.
    */
   autoActivateFirst?: boolean;
   /**
@@ -104,6 +107,17 @@ interface DRovingFocusArgs {
    * does in focus mode. Default `false`.
    */
   autoActivateSelected?: boolean;
+  /**
+   * Active mode only — whether activating an already-selected item *removes* it, as a
+   * multi-select toggle does. When true, {@link autoActivateFirst} skips selected items, because
+   * seeding one would arm the very first Enter to discard a value the reader never navigated to.
+   * Arrow keys still reach those items, where removing them is deliberate.
+   *
+   * Distinct from {@link autoActivateSelected} being off, which is a *preference* (a filtering
+   * single-select wants the top match rather than the held row) and not a hazard: there,
+   * activating the held item merely re-confirms it. Default `false`.
+   */
+  activationRemovesSelected?: boolean;
 }
 
 interface DRovingFocusSignature {
@@ -163,6 +177,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
   itemsKey: unknown;
   autoActivateFirst = false;
   autoActivateSelected = false;
+  activationRemovesSelected = false;
 
   /** The element keydown is bound to: the container (focus) or controller (active). */
   #listenElement: HTMLElement | null = null;
@@ -277,6 +292,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
     this.activeClass = named.activeClass ?? null;
     this.autoActivateFirst = named.autoActivateFirst ?? false;
     this.autoActivateSelected = named.autoActivateSelected ?? false;
+    this.activationRemovesSelected = named.activationRemovesSelected ?? false;
     // Reading `itemsKey` here keeps `modify()` reactive to it; the value itself
     // isn't used beyond triggering a re-run + reconcile.
     this.itemsKey = named.itemsKey;
@@ -801,7 +817,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       const selected = this.autoActivateSelected
         ? items.find((el) => el.getAttribute("aria-selected") === "true")
         : undefined;
-      const seed = selected ?? (this.autoActivateFirst ? items[0] : undefined);
+      const seed = selected ?? this.#autoFirstSeed(items);
       if (seed) {
         this.#setActive(seed, items);
         return;
@@ -822,6 +838,23 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
       target?.classList.add(this.activeClass);
     }
     this.#listenElement?.setAttribute("aria-activedescendant", this.#activeId!);
+  }
+
+  /**
+   * The first item the cursor may safely start on, honouring `activationRemovesSelected`.
+   *
+   * Returns nothing when every *mounted usable* item is selected — which a windowed list reaches
+   * while unselected rows still exist offscreen. The cursor then stays empty until an Arrow moves
+   * it, rather than falling back to a row whose activation would discard a value.
+   */
+  #autoFirstSeed(items: HTMLElement[]): HTMLElement | undefined {
+    if (!this.autoActivateFirst) {
+      return undefined;
+    }
+    if (!this.activationRemovesSelected) {
+      return items[0];
+    }
+    return items.find((el) => el.getAttribute("aria-selected") !== "true");
   }
 
   /**

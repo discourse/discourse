@@ -6037,6 +6037,104 @@ module(
           "the keyboard resumes from the row the pointer acted on"
         );
     });
+
+    // Auto-highlighting the first row is right for "type, then Enter takes the top match". But in
+    // a multi-select, activating a held row REMOVES it, so when the first row happened to be one
+    // of the held ones a reflexive Enter dropped a value the reader never navigated to. The cursor
+    // starts at the first row Enter cannot remove instead, which keeps the affordance pointing at
+    // an add rather than trading it away for an inert list.
+    //
+    // Two rows are held deliberately: with only one, an implementation that stepped to `items[1]`
+    // rather than scanning would pass and the bug would come back on the second held row.
+    test("opening a multi scans past every held row", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiLimitsHost @value={{array 1 2}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      const controller = find("[role='combobox']");
+
+      const rows = findAll("[role='option']");
+      assert
+        .dom(rows[0])
+        .hasAttribute("aria-selected", "true", "row 1 is held");
+      assert
+        .dom(rows[1])
+        .hasAttribute("aria-selected", "true", "row 2 is held");
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Cherry pie", "the cursor lands past both of them");
+      assert
+        .dom("[role='option'].--active")
+        .hasAttribute(
+          "aria-selected",
+          "false",
+          "the highlighted row is one Enter cannot remove"
+        );
+      assert.strictEqual(
+        controller.getAttribute("aria-activedescendant"),
+        find("[role='option'].--active").id,
+        "the highlight is what assistive tech is pointed at"
+      );
+
+      await triggerKeyEvent(controller, "keydown", "Enter");
+
+      assert.strictEqual(onChange.callCount, 1, "Enter emits exactly once");
+      assert.deepEqual(
+        onChange.lastCall?.args[0],
+        [1, 2, 3],
+        "Enter adds the highlighted row rather than dropping a held one"
+      );
+    });
+
+    // The degenerate end of the same rule: nothing is safe to seed, so the cursor stays empty
+    // rather than falling back to a held row.
+    test("opening a multi with every row held leaves the cursor empty", async function (assert) {
+      const onChange = sinon.spy();
+      await render(
+        <template>
+          <MultiLimitsHost @value={{array 1 2 3}} @onChange={{onChange}} />
+        </template>
+      );
+
+      await click(".d-combobox__input");
+      const controller = find("[role='combobox']");
+
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("no row is safe to highlight");
+      assert.false(
+        Boolean(controller.getAttribute("aria-activedescendant")),
+        "nothing is advertised as active"
+      );
+
+      await triggerKeyEvent(controller, "keydown", "Enter");
+      assert.strictEqual(onChange.callCount, 0, "Enter drops nothing");
+    });
+
+    // The counterweight: skipping held rows is a MULTI rule, keyed on activation being
+    // destructive — not on the cursor merely preferring the top match. A filtering single-select
+    // also declines to restore the selection, but activating its held row just re-confirms it, so
+    // the top match keeps the cursor even when the top match IS the held value. Deriving the skip
+    // from that preference instead silently retargeted Enter onto the second-best match.
+    test("filtering a single-select keeps the cursor on a held top match", async function (assert) {
+      await render(
+        <template><DSelect @items={{ITEMS}} @value={{1}} /></template>
+      );
+
+      await click("[role='combobox']");
+      await fillIn("[role='combobox']", "a");
+
+      assert
+        .dom(findAll("[role='option']")[0])
+        .hasAttribute("aria-selected", "true", "the top match is the held row");
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Apple", "it keeps the cursor rather than being skipped");
+    });
   }
 );
 

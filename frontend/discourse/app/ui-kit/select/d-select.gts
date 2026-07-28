@@ -2586,6 +2586,7 @@ export default class DSelect extends Component<DSelectSignature> {
                         onRegisterApi=this.registerListboxRoving
                         autoActivateFirst=this.shouldAutoActivateFirst
                         autoActivateSelected=this.shouldActivateSelected
+                        activationRemovesSelected=@multiple
                       }}
                       as |descriptor row|
                     >
