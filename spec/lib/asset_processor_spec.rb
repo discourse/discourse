@@ -237,6 +237,31 @@ RSpec.describe AssetProcessor do
       context&.dispose
     end
 
+    it "can import the source of a template-only module" do
+      sources = {
+        "discourse/components/tmpl.hbs" => "<div>Hello {{name}}</div>",
+        "discourse/initializers/example-source.js" => <<~JS,
+          import exampleSource from "../components/tmpl.hbs?source=file";
+
+          globalThis.exampleSource = exampleSource;
+        JS
+      }
+
+      result =
+        AssetProcessor.new.rollup(
+          sources,
+          { entrypoints: { main: { modules: ["discourse/initializers/example-source.js"] } } },
+        )
+
+      context = MiniRacer::Context.new
+      code = entrypoint(result, "main")["code"].sub(/export \{.*\};\s*\z/, "")
+      context.eval(code)
+
+      expect(context.eval("globalThis.exampleSource")).to eq("<div>Hello {{name}}</div>")
+    ensure
+      context&.dispose
+    end
+
     it "rejects source imports it cannot read" do
       # `discourse-colocation` resolves a .js id for a component that only exists as a
       # colocated .hbs, so this reaches the source plugin with nothing behind it.

@@ -60,16 +60,20 @@ export default function discourseSourceImports({ readSource, preprocessor }) {
           this.error(`Cannot import source from "${sourcePath}".`);
         }
 
-        return `${VIRTUAL_PREFIX}${modes[0]}:${resolved.id}`;
+        // The mode goes last so the id cannot end in the source file's extension.
+        // Template transforms match on how an id ends and ignore the \0 marker, so
+        // an id ending in .hbs or .gjs gets compiled as a template and the string
+        // this plugin produced is overwritten.
+        return `${VIRTUAL_PREFIX}${resolved.id}:${modes[0]}`;
       },
     },
 
     load: {
       filter: { id: /^\0discourse-source:/ },
       handler(id) {
-        const separator = id.indexOf(":", VIRTUAL_PREFIX.length);
-        const mode = id.slice(VIRTUAL_PREFIX.length, separator);
-        const sourceId = id.slice(separator + 1);
+        const separator = id.lastIndexOf(":");
+        const mode = id.slice(separator + 1);
+        const sourceId = id.slice(VIRTUAL_PREFIX.length, separator);
         const source = readSource(sourceId);
 
         // The virtual id never changes, so without this a watch-mode edit to the
