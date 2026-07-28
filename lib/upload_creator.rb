@@ -100,12 +100,6 @@ class UploadCreator
     sha1_before_changes = Upload.generate_digest(@file) if @file
 
     DistributedMutex.synchronize("upload_#{user_id}_#{@filename}") do
-      # We need to convert HEIFs early because FastImage does not consider them as images
-      if convert_heif_to_jpeg? && !external_upload_too_big
-        convert_heif!
-        is_image = FileHelper.is_supported_image?("test.#{@image_info.type}")
-      end
-
       if is_image && !external_upload_too_big
         extract_image_info!
         return @upload if @upload.errors.present?
@@ -115,6 +109,7 @@ class UploadCreator
         elsif @image_info.type == :ico
           convert_favicon_to_png!
         elsif !Rails.env.test? || @opts[:force_optimize]
+          convert_heif! if %i[heic heif].include?(@image_info.type)
           convert_to_jpeg! if convert_png_to_jpeg? || should_alter_quality?
           fix_orientation! if should_fix_orientation?
           crop! if should_crop?
@@ -417,10 +412,6 @@ class UploadCreator
     else
       jpeg_tempfile.close!
     end
-  end
-
-  def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
   end
 
   def convert_heif!
