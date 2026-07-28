@@ -69,6 +69,27 @@ RSpec.describe Middleware::AnonymousCache do
       end
     end
 
+    describe "per color scheme cache" do
+      it "handles valid color scheme keys only", :aggregate_failures do
+        color_scheme = Fabricate(:color_scheme)
+
+        with_no_scheme_key = new_helper.cache_key
+        with_bad_scheme_key =
+          new_helper(
+            "HTTP_COOKIE" => %(color_scheme_id=#{color_scheme.id}"><link rel="modulepreload">),
+          ).cache_key
+        with_color_scheme_key =
+          new_helper("HTTP_COOKIE" => "color_scheme_id=#{color_scheme.id}").cache_key
+        with_dark_scheme_key =
+          new_helper("HTTP_COOKIE" => "dark_scheme_id=#{color_scheme.id}").cache_key
+
+        expect(with_bad_scheme_key).to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_dark_scheme_key).not_to eq(with_no_scheme_key)
+        expect(with_color_scheme_key).not_to eq(with_dark_scheme_key)
+      end
+    end
+
     context "with header or cookie based custom locale" do
       it "handles different languages" do
         # Normally does not check the language header
