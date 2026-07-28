@@ -54,6 +54,11 @@ module Chat
       if !base.method_defined?(:chat_quick_reaction_type_frequent?)
         base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
       end
+
+      if !base.method_defined?(:chat_send_shortcut)
+        base.define_method(:chat_send_shortcut) { send_shortcut }
+        base.define_method(:chat_send_shortcut=) { |value| self.send_shortcut = value }
+      end
     end
   end
 end

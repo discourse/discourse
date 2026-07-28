@@ -94,6 +94,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
+  UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
   # When a user opts into chat-only push notifications, suppress every push that
   # isn't a chat message/mention. Registered here (rather than in core) so it's
