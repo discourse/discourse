@@ -60,7 +60,6 @@ describe "Admin AI translations" do
       SiteSetting.ai_translation_enabled = true
       SiteSetting.content_localization_supported_locales = "en|fr|es"
       SiteSetting.ai_translation_backfill_hourly_rate = 10
-      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
       translations_page.visit
     end
@@ -170,7 +169,6 @@ describe "Admin AI translations" do
       SiteSetting.content_localization_supported_locales = "en|fr|es"
       SiteSetting.ai_translation_category_scope = "include"
       SiteSetting.ai_translation_categories = category.id.to_s
-      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
       translations_page.visit
     end
@@ -196,7 +194,6 @@ describe "Admin AI translations" do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = ""
-      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
       translations_page.visit
     end
@@ -234,7 +231,6 @@ describe "Admin AI translations" do
       SiteSetting.content_localization_supported_locales = "en|fr"
       SiteSetting.ai_translation_category_scope = "include"
       SiteSetting.ai_translation_categories = ""
-      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
 
       visit "/admin/plugins/discourse-ai/ai-translations"
     end
@@ -261,7 +257,6 @@ describe "Admin AI translations" do
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.content_localization_supported_locales = "en|fr"
-      SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
     end
 
     it "displays the translation toggle" do

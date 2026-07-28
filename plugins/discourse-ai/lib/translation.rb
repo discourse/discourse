@@ -47,8 +47,9 @@ module DiscourseAi
       end
     end
 
-    def self.backfill_enabled?
-      enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 && backfill_start_at.present?
+    def self.backfill_enabled?(target: nil)
+      enabled? && SiteSetting.ai_translation_backfill_hourly_rate > 0 &&
+        (![Post, Topic].include?(target) || backfill_start_at.present?)
     end
 
     def self.backfill_start_at

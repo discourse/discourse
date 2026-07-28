@@ -6,7 +6,6 @@ describe Jobs::TagLocalizationBackfill do
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
-    SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
     SiteSetting.content_localization_supported_locales = "pt_BR|zh_CN"
   end
 

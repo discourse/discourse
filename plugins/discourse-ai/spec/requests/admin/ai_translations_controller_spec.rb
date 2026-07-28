@@ -64,8 +64,6 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns translation_enabled field" do
-        SiteSetting.ai_translation_backfill_start_date = 30.days.ago.utc.to_date.iso8601
-
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
         expect(response.status).to eq(200)
