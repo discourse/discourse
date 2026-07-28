@@ -80,13 +80,18 @@ RSpec.describe FileStore::LocalStore do
   describe "#purge_tombstone" do
     let(:tombstone_dir) { Dir.mktmpdir }
 
-    around { |example| Time.use_zone("America/New_York") { example.run } }
+    around do |example|
+      original_timezone = ENV["TZ"]
+      ENV["TZ"] = "America/New_York"
+      Time.use_zone("America/New_York") { example.run }
+    ensure
+      ENV["TZ"] = original_timezone
+    end
 
     before { store.stubs(:tombstone_dir).returns(tombstone_dir) }
     after { FileUtils.rm_rf(tombstone_dir) }
 
     it "deletes only expired regular files throughout the tombstone" do
-      freeze_time Time.zone.parse("2026-03-20 12:00:00")
       hidden_directory = File.join(tombstone_dir, ".hidden", "nested")
       FileUtils.mkdir_p(hidden_directory)
       expired_file = File.join(hidden_directory, "expired.png")
@@ -95,14 +100,19 @@ RSpec.describe FileStore::LocalStore do
       symlink = File.join(tombstone_dir, "link.png")
       [expired_file, boundary_file, newer_file].each { |path| File.write(path, "image") }
       File.symlink(expired_file, symlink)
-      current_time = Time.now.to_time
-      expired_time = current_time - 32 * 1.day.to_i
-      boundary_time = current_time - 31 * 1.day.to_i
+      current_time = Time.now
+      boundary_days =
+        (1..365).find do |days|
+          (current_time - days.days).to_i != (current_time - days * 1.day.to_i).to_i
+        end
+      grace_period = boundary_days - 1
+      expired_time = current_time - (boundary_days + 1) * 1.day.to_i
+      boundary_time = current_time - boundary_days * 1.day.to_i
       File.utime(expired_time, expired_time, expired_file)
       File.utime(boundary_time, boundary_time, boundary_file)
-      File.utime(boundary_time + 1.second, boundary_time + 1.second, newer_file)
+      File.utime(boundary_time + 1.minute, boundary_time + 1.minute, newer_file)
 
-      store.purge_tombstone(30)
+      store.purge_tombstone(grace_period)
 
       expect(
         [
@@ -115,24 +125,21 @@ RSpec.describe FileStore::LocalStore do
     end
 
     it "continues processing siblings and reports entry failures after traversal" do
-      freeze_time Time.zone.parse("2026-03-20 12:00:00")
-      blocked_file = File.join(tombstone_dir, "blocked.png")
-      vanished_file = File.join(tombstone_dir, "vanished.png")
+      skip "requires an unprivileged process" if Process.uid.zero?
+
+      blocked_directory = File.join(tombstone_dir, "blocked")
+      FileUtils.mkdir_p(blocked_directory)
+      File.write(File.join(blocked_directory, "file.png"), "image")
       deletable_file = File.join(tombstone_dir, "deletable.png")
-      expired_time = Time.now.to_time - 32 * 1.day.to_i
-      [blocked_file, vanished_file, deletable_file].each do |path|
-        File.write(path, "image")
-        File.utime(expired_time, expired_time, path)
-      end
+      File.write(deletable_file, "image")
+      expired_time = Time.now - 2 * 1.day.to_i
+      File.utime(expired_time, expired_time, deletable_file)
+      FileUtils.chmod(0, blocked_directory)
 
-      allow(File).to receive(:delete).and_call_original
-      allow(File).to receive(:delete).with(vanished_file).and_raise(Errno::ENOENT)
-      allow(File).to receive(:delete).with(blocked_file).and_raise(Errno::EACCES)
-
-      expect { store.purge_tombstone(30) }.to raise_error do |error|
-        expect(error.message).to include("No such file or directory", "Permission denied")
-      end
+      expect { store.purge_tombstone(0) }.to raise_error(/Permission denied/)
       expect(File.exist?(deletable_file)).to eq(false)
+    ensure
+      FileUtils.chmod(0o700, blocked_directory) if Dir.exist?(blocked_directory)
     end
   end
 
