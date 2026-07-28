@@ -1,3 +1,5 @@
+/* eslint-disable qunit/require-expect */
+import { Preprocessor } from "content-tag";
 import {
   mkdirSync,
   mkdtempSync,
@@ -7,11 +9,10 @@ import {
 } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
-import { Preprocessor } from "content-tag";
 import { rolldown } from "rolldown";
 import { expect, test } from "vitest";
-import createDiskSourceReader from "../discourse/lib/disk-source-reader.mjs";
 import discourseSourceImports from "../discourse/lib/discourse-source-imports.mjs";
+import createDiskSourceReader from "../discourse/lib/disk-source-reader.mjs";
 
 const preprocessor = new Preprocessor();
 
