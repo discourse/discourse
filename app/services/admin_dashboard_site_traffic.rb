@@ -8,6 +8,7 @@ class AdminDashboardSiteTraffic
     anonymous: "page_view_anon_browser",
     embedded: "page_view_embed",
     crawlers: "page_view_crawler",
+    likely_crawlers: "page_view_likely_crawler",
   }.freeze
   private_constant :DEFAULT_RANGE_DAYS
   private_constant :TOP_CARD_LIMIT
@@ -93,13 +94,18 @@ class AdminDashboardSiteTraffic
   def series_ids(include_embedded:)
     series = %i[logged_in]
 
-    return series if login_required?
-
-    series << :anonymous
-    series << :embedded if include_embedded
-    series << :crawlers
+    series << :anonymous if !login_required?
+    series << :embedded if !login_required? && include_embedded
+    series << :likely_crawlers if likely_crawlers_enabled?
+    series << :crawlers if !login_required?
 
     series
+  end
+
+  def likely_crawlers_enabled?
+    return @likely_crawlers_enabled if defined?(@likely_crawlers_enabled)
+
+    @likely_crawlers_enabled = UpcomingChanges.enabled?(:improved_crawler_detection)
   end
 
   def kpis(totals, prior_rows)
@@ -199,7 +205,7 @@ class AdminDashboardSiteTraffic
   end
 
   def series_req(id)
-    selected_request_type_names.fetch(id)
+    selected_request_type_names.fetch(id) { series_label_req(id) }
   end
 
   def series_label(id)
@@ -312,31 +318,52 @@ class AdminDashboardSiteTraffic
             CAST(:end_date AS date),
             INTERVAL '1 day'
           ) request_date
+        ),
+        likely_crawlers AS (
+          SELECT
+            date,
+            COALESCE(SUM(count) FILTER (WHERE logged_in), 0)::bigint AS logged_in,
+            COALESCE(SUM(count) FILTER (WHERE NOT logged_in), 0)::bigint AS anonymous
+          FROM browser_pageview_crawler_daily_rollups
+          WHERE :likely_crawlers_enabled
+            AND date >= CAST(:start_date AS date)
+            AND date <= CAST(:end_date AS date)
+          GROUP BY date
         )
         SELECT
           dates.date,
-          COALESCE(
-            SUM(
-              CASE
-                WHEN dates.date < :beacon_cutover_date AND ar.req_type = :logged_in_req_type THEN ar.count
-                WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :logged_in_beacon_req_type THEN ar.count
-                ELSE 0
-              END
-            ),
-            0
+          GREATEST(
+            0,
+            COALESCE(
+              SUM(
+                CASE
+                  WHEN dates.date < :beacon_cutover_date AND ar.req_type = :logged_in_req_type THEN ar.count
+                  WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :logged_in_beacon_req_type THEN ar.count
+                  ELSE 0
+                END
+              ),
+              0
+            ) - COALESCE(MAX(lc.logged_in), 0)
           )::bigint AS logged_in,
-          COALESCE(
-            SUM(
-              CASE
-                WHEN dates.date < :beacon_cutover_date AND ar.req_type = :anonymous_req_type THEN ar.count
-                WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :anonymous_beacon_req_type THEN ar.count
-                ELSE 0
-              END
-            ),
-            0
+          GREATEST(
+            0,
+            COALESCE(
+              SUM(
+                CASE
+                  WHEN dates.date < :beacon_cutover_date AND ar.req_type = :anonymous_req_type THEN ar.count
+                  WHEN dates.date >= :beacon_cutover_date AND ar.req_type = :anonymous_beacon_req_type THEN ar.count
+                  ELSE 0
+                END
+              ),
+              0
+            ) - COALESCE(MAX(lc.anonymous), 0)
           )::bigint AS anonymous,
           COALESCE(SUM(CASE WHEN ar.req_type = :crawler_req_type THEN ar.count ELSE 0 END), 0)::bigint AS crawlers,
-          COALESCE(SUM(CASE WHEN ar.req_type = :embedded_req_type THEN ar.count ELSE 0 END), 0)::bigint AS embedded
+          COALESCE(SUM(CASE WHEN ar.req_type = :embedded_req_type THEN ar.count ELSE 0 END), 0)::bigint AS embedded,
+          (
+            COALESCE(MAX(lc.logged_in), 0)
+            + CASE WHEN :login_required THEN 0 ELSE COALESCE(MAX(lc.anonymous), 0) END
+          )::bigint AS likely_crawlers
         FROM dates
         LEFT JOIN application_requests ar
           ON ar.date = dates.date
@@ -348,11 +375,14 @@ class AdminDashboardSiteTraffic
             :crawler_req_type,
             :embedded_req_type
           )
+        LEFT JOIN likely_crawlers lc ON lc.date = dates.date
         GROUP BY dates.date
         ORDER BY dates.date ASC
       SQL
       start_date: range_start_date,
       end_date: range_end_date,
+      likely_crawlers_enabled: likely_crawlers_enabled?,
+      login_required: login_required?,
       beacon_cutover_date: cutover_date,
       logged_in_req_type: selected_request_types[:logged_in],
       anonymous_req_type: selected_request_types[:anonymous],
@@ -374,6 +404,7 @@ class AdminDashboardSiteTraffic
       anonymous: anonymous,
       embedded: embedded,
       crawlers: crawlers,
+      likely_crawlers: likely_crawlers_enabled? ? sum_rows(rows, :likely_crawlers) : 0,
       human: logged_in + anonymous,
     }
   end

@@ -7,6 +7,7 @@ module Reports::SiteTraffic
     "page_view_logged_in_browser" => "#4B3CE0",
     "page_view_anon_browser" => "#9C8DEC",
     "page_view_crawler" => "#D5CDF7",
+    "page_view_likely_crawler" => "#B3AAC9",
     "page_view_embed" => "#E6E1F8",
     "page_view_other" => "#E84A5F",
   }.freeze
