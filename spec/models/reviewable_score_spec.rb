@@ -206,4 +206,49 @@ RSpec.describe ReviewableScore, type: :model do
       expect(ReviewableScore.calculate_score(user, 2, 3)).to eq(flag_score + 2 + 3)
     end
   end
+
+  describe "#notify_moderators_flag_message?" do
+    subject(:score) { result.reviewable_score }
+
+    fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:post)
+
+    let(:result) { PostActionCreator.notify_moderators(flagger, post, "flag reason") }
+
+    context "when the meta topic is the flag's own notify_moderators message" do
+      it { is_expected.to be_notify_moderators_flag_message }
+    end
+
+    context "when there is no meta topic" do
+      before { score.update!(meta_topic: nil) }
+
+      it { is_expected.not_to be_notify_moderators_flag_message }
+    end
+
+    context "when the meta topic is a regular private message" do
+      let(:regular_pm) { Fabricate(:private_message_topic) }
+
+      before { score.update!(meta_topic: regular_pm) }
+
+      it { is_expected.not_to be_notify_moderators_flag_message }
+    end
+
+    context "when the reviewable does not target a post" do
+      let(:non_post_target) { Fabricate(:user) }
+
+      before { score.reviewable.update!(target: non_post_target) }
+
+      it { is_expected.not_to be_notify_moderators_flag_message }
+    end
+
+    context "when the meta topic belongs to a different flag" do
+      let(:other_result) do
+        PostActionCreator.notify_moderators(flagger, Fabricate(:post), "other flag reason")
+      end
+
+      before { score.update!(meta_topic: other_result.reviewable_score.meta_topic) }
+
+      it { is_expected.not_to be_notify_moderators_flag_message }
+    end
+  end
 end
