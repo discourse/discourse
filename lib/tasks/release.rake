@@ -226,8 +226,8 @@ namespace :release do
 
     selected =
       if (ghsa_ids = ENV["SECURITY_FIX_GHSA_IDS"])
-        requested = ghsa_ids.split(",").map(&:strip)
-        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"]) }
+        requested = ghsa_ids.split(",").map(&:strip).map(&:downcase)
+        choices.select { |pr| pr["ghsa_id"] && requested.include?(pr["ghsa_id"].downcase) }
       else
         prompt = TTY::Prompt.new
         prompt_choices =
