@@ -137,7 +137,7 @@ discourse_calendar:
     hidden: true
     client: true
     upcoming_change:
-      status: "stable"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/401309"
       requires_plugin_enabled: false
