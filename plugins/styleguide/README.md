@@ -22,13 +22,15 @@ import spinnerSmallSource from "../../examples/spinner-small.gjs?template-source
 ```
 
 Use `?source` when the imports or the backing class are part of what the reader
-needs. It returns the whole file verbatim, and works on any module, not just GJS:
+needs. It returns the dedented contents of the whole file:
 
 ```js
 import CharCounterExample from "../../examples/char-counter";
 import charCounterSource from "../../examples/char-counter.gjs?source";
 ```
 
-Either query must resolve within the same plugin or theme bundle. Keep using an
-explicit `@code` string for curated samples that intentionally differ from the
-rendered implementation.
+Both queries support `.js`, `.ts`, `.gjs`, and `.gts` files, must resolve within
+the same plugin or theme bundle, and cannot be combined on one import. The path
+resolves the same way as a normal import, so the file extension is optional.
+Keep using an explicit `@code` string for curated samples that intentionally
+differ from the rendered implementation.
