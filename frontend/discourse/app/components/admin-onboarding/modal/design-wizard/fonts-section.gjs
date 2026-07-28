@@ -27,7 +27,7 @@ export default class DesignWizardFontsSection extends Component {
     const font = MORE_FONTS.find((moreFont) => moreFont.key === selectedKey);
     return (
       font?.name ??
-      i18n("admin_onboarding_banner.design_wizard.fonts.more_fonts")
+      i18n("admin_onboarding_banner.design_wizard.fonts.select_more_fonts")
     );
   }
 
@@ -55,6 +55,9 @@ export default class DesignWizardFontsSection extends Component {
           </button>
         {{/each}}
       </div>
+      <span class="design-wizard-modal__font-group-label">
+        {{i18n "admin_onboarding_banner.design_wizard.fonts.more_fonts"}}
+      </span>
       <DMenu
         @identifier="design-wizard-more-base-fonts"
         @translatedLabel={{this.baseMoreFontsLabel}}
@@ -103,6 +106,9 @@ export default class DesignWizardFontsSection extends Component {
           </button>
         {{/each}}
       </div>
+      <span class="design-wizard-modal__font-group-label">
+        {{i18n "admin_onboarding_banner.design_wizard.fonts.more_fonts"}}
+      </span>
       <DMenu
         @identifier="design-wizard-more-heading-fonts"
         @translatedLabel={{this.headingMoreFontsLabel}}
