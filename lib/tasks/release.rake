@@ -254,7 +254,7 @@ namespace :release do
 
         ReleaseUtils.git "merge", "--squash", "privatemirror/#{pr["headRefName"]}"
 
-        commit_message = "#{pr["title"]}\n\n#{pr["body"]}".strip
+        commit_message = pr["title"].strip
         author =
           ReleaseUtils.git(
             "log",
