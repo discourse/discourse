@@ -24,6 +24,10 @@ class CrawlerScorer
   RAPID_NAV_MAX_MEDIAN_SECONDS = 5
   RAPID_NAV_SCORE = 15
 
+  IP_ROTATION_MIN_IPS = 3
+  IP_ROTATION_MAX_SECONDS_PER_CHANGE = 300
+  IP_ROTATION_SCORE = 30
+
   REFERRER_MIN_EVENTS = 5
   REFERRER_LOW_RATIO = 0.5
   REFERRER_HIGH_RATIO = 0.8
@@ -59,6 +63,9 @@ class CrawlerScorer
         rapid_nav_min_gaps: RAPID_NAV_MIN_GAPS,
         rapid_nav_max_median_seconds: RAPID_NAV_MAX_MEDIAN_SECONDS,
         rapid_nav_score: RAPID_NAV_SCORE,
+        ip_rotation_min_ips: IP_ROTATION_MIN_IPS,
+        ip_rotation_max_seconds_per_change: IP_ROTATION_MAX_SECONDS_PER_CHANGE,
+        ip_rotation_score: IP_ROTATION_SCORE,
         referrer_min_events: REFERRER_MIN_EVENTS,
         referrer_low_ratio: REFERRER_LOW_RATIO,
         referrer_high_ratio: REFERRER_HIGH_RATIO,
@@ -122,6 +129,16 @@ class CrawlerScorer
       GROUP BY ip_address, user_agent, source
     ),
 
+    session_stats AS (
+      SELECT
+        session_id,
+        source,
+        COUNT(DISTINCT ip_address) AS distinct_ips,
+        EXTRACT(EPOCH FROM MAX(created_at) - MIN(created_at)) AS span_seconds
+      FROM events
+      GROUP BY session_id, source
+    ),
+
     breakdown AS (
       SELECT
         e.id,
@@ -155,6 +172,13 @@ class CrawlerScorer
           ELSE 0
         END AS rapid_nav_score,
         CASE
+          WHEN ss.distinct_ips >= :ip_rotation_min_ips
+            AND (ss.distinct_ips - 1) * :ip_rotation_max_seconds_per_change
+                  > GREATEST(ss.span_seconds, 1)
+            THEN :ip_rotation_score
+          ELSE 0
+        END AS ip_rotation_score,
+        CASE
           WHEN iu.pageviews >= :referrer_min_events
             AND iu.bad_referrer_ratio >= :referrer_high_ratio THEN :referrer_high_score
           WHEN iu.pageviews >= :referrer_min_events
@@ -168,6 +192,7 @@ class CrawlerScorer
       FROM events e
       LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
       LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
+      LEFT JOIN session_stats ss USING (session_id, source)
       LEFT JOIN browser_pageview_session_engagements se
         ON se.session_id = e.session_id
         AND (
@@ -183,16 +208,17 @@ class CrawlerScorer
         velocity_score,
         churn_score,
         rapid_nav_score,
+        ip_rotation_score,
         referrer_score,
         engagement_score,
         GREATEST(
           0,
           automation_ua_score + known_asn_score + velocity_score + churn_score
-            + rapid_nav_score + referrer_score + engagement_score
+            + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
         ) AS score
       FROM breakdown
       WHERE automation_ua_score + known_asn_score + velocity_score + churn_score
-        + rapid_nav_score + referrer_score > 0
+        + rapid_nav_score + ip_rotation_score + referrer_score > 0
     ),
 
     updated AS (
@@ -207,6 +233,7 @@ class CrawlerScorer
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
+                t.ip_rotation_score,
                 t.referrer_score,
                 t.engagement_score
     )
@@ -218,6 +245,7 @@ class CrawlerScorer
       velocity_score,
       churn_score,
       rapid_nav_score,
+      ip_rotation_score,
       referrer_score,
       engagement_score
     )
@@ -228,6 +256,7 @@ class CrawlerScorer
       velocity_score,
       churn_score,
       rapid_nav_score,
+      ip_rotation_score,
       referrer_score,
       engagement_score
     FROM updated
@@ -237,6 +266,7 @@ class CrawlerScorer
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,
+        ip_rotation_score   = EXCLUDED.ip_rotation_score,
         referrer_score      = EXCLUDED.referrer_score,
         engagement_score    = EXCLUDED.engagement_score;
   SQL
