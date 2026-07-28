@@ -18,6 +18,10 @@
     animation: none;
   }
 
+  &.--no-entrance {
+    animation: none;
+  }
+
   &__close {
     position: absolute;
     z-index: 1;

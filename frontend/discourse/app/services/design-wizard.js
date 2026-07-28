@@ -38,6 +38,9 @@ export default class DesignWizardService extends Service {
   @tracked saving = false;
   @tracked selectedPairKeys = new Map();
   @tracked stepIndex = 0;
+  // resuming an in-progress wizard (e.g. after a theme-preview reload)
+  // should not replay the sheet's entrance animation
+  @tracked animateEntrance = true;
 
   #onComplete;
 
@@ -60,6 +63,7 @@ export default class DesignWizardService extends Service {
       this.#initFromData();
     }
 
+    this.animateEntrance = !stored;
     this.active = true;
     await this.#previewSelections();
   }

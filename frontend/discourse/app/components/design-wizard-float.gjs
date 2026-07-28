@@ -14,7 +14,10 @@ export default class DesignWizardFloat extends Component {
 
   <template>
     {{#if this.designWizard.active}}
-      <div class="design-wizard-float">
+      <div
+        class="design-wizard-float
+          {{unless this.designWizard.animateEntrance '--no-entrance'}}"
+      >
         <DButton
           @action={{this.close}}
           @icon="xmark"
