@@ -1,4 +1,11 @@
-import { click, focus, triggerEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  focus,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -57,20 +64,28 @@ acceptance("Composer - swipe to collapse", function (needs) {
     assert.dom(".d-editor-input").isFocused();
   });
 
-  test("a swipe is deferred while text is selected", async function (assert) {
+  test("a swipe is deferred while text is selected in the editor", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await fillIn(".d-editor-input", "some text");
+    find(".d-editor-input").setSelectionRange(0, 4);
+
+    await swipeDown(".composer-footer");
+    assert.dom(".d-editor-input").isFocused();
+  });
+
+  test("a selection outside the composer does not defer the swipe", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post[data-post-number='1'] button.reply");
     await focus(".d-editor-input");
 
     window
       .getSelection()
-      .selectAllChildren(
-        document.querySelector(".topic-post[data-post-number='1'] .cooked p")
-      );
+      .selectAllChildren(find(".topic-post[data-post-number='1'] .cooked p"));
 
     try {
       await swipeDown(".composer-footer");
-      assert.dom(".d-editor-input").isFocused();
+      assert.dom(".d-editor-input").isNotFocused();
     } finally {
       window.getSelection().removeAllRanges();
     }

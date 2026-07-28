@@ -125,10 +125,13 @@ export default class ComposerContainer extends Component {
       ".d-editor-textarea-wrapper.in-focus, .d-editor-textarea-wrapper:focus-within"
     );
 
-    // dragging a selection handle emits the same touch moves as a swipe
+    // dragging a selection handle emits the same touch moves as a swipe;
+    // selections elsewhere on the page have no handles near the composer
     const active = document.activeElement;
+    const selection = window.getSelection();
     const hasTextSelection =
-      !window.getSelection().isCollapsed ||
+      (!selection.isCollapsed &&
+        state.element.contains(selection.anchorNode)) ||
       (active?.selectionStart ?? 0) !== (active?.selectionEnd ?? 0);
 
     if (
@@ -195,32 +198,23 @@ export default class ComposerContainer extends Component {
     this.appEvents.trigger("keyboard:will-hide");
 
     const delta = draggedTop - editor.getBoundingClientRect().top;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
 
-    if (!delta || reduceMotion) {
+    if (
+      !delta ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       editor.style.transition = "";
       return;
     }
 
     editor.style.transform = `translateY(${delta}px)`;
+    // flush so the transition below starts from the dragged offset
     editor.getBoundingClientRect();
     editor.style.transition =
       "transform 250ms var(--composer-slide-easing, ease)";
     editor.style.transform = "";
 
-    let settled = false;
-    const cleanup = (event) => {
-      if (settled || (event && event.target !== editor)) {
-        return;
-      }
-      settled = true;
-      editor.removeEventListener("transitionend", cleanup);
-      editor.style.transition = "";
-    };
-    editor.addEventListener("transitionend", cleanup);
-    discourseLater(cleanup, 300);
+    discourseLater(() => (editor.style.transition = ""), 300);
   }
 
   @action

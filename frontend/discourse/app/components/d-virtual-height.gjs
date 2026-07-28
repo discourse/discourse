@@ -3,6 +3,7 @@ import { cancel, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { summonsSoftKeyboard } from "discourse/lib/dom-utils";
 import discourseLater from "discourse/lib/later";
 import isZoomed from "discourse/lib/zoom-check";
 
@@ -27,32 +28,12 @@ const VIEWPORT_CONFIRM_MS = 800;
 const FOCUS_CAPABLE_SELECTOR =
   "a, button, input, textarea, select, summary, label, [contenteditable], [tabindex], [role='button']";
 
-// input types that summon a soft keyboard, rather than a picker or nothing
-const KEYBOARD_INPUT_TYPES = [
-  "text",
-  "search",
-  "email",
-  "url",
-  "tel",
-  "password",
-  "number",
-];
-
-function isEditable(el) {
-  return (
-    el &&
-    (el.isContentEditable ||
-      el.matches("textarea") ||
-      (el.matches("input") && KEYBOARD_INPUT_TYPES.includes(el.type)))
-  );
-}
-
 export default class DVirtualHeight extends Component {
   @service site;
   @service capabilities;
   @service appEvents;
 
-  #enabled = false;
+  #removeListeners = [];
 
   constructor() {
     super(...arguments);
@@ -65,64 +46,57 @@ export default class DVirtualHeight extends Component {
       return;
     }
 
-    this.#enabled = true;
-
     scheduleOnce("afterRender", this, this.debouncedOnViewportResize);
 
-    window.visualViewport.addEventListener(
+    this.appEvents.on("keyboard:will-hide", this, this.onKeyboardWillHide);
+
+    this.#listen(
+      window.visualViewport,
       "resize",
       this.debouncedOnViewportResize
     );
+    this.#listen(document, "focusout", this.onFocusOut);
+    this.#listen(document, "focusin", this.onFocusIn);
 
-    this.appEvents.on("keyboard:will-hide", this, this.onKeyboardWillHide);
-    document.addEventListener("focusout", this.onFocusOut);
-    document.addEventListener("focusin", this.onFocusIn);
-    document.addEventListener("touchstart", this.onTouchStart, {
-      passive: true,
-      capture: true,
-    });
-    document.addEventListener("touchend", this.onTouchEnd, {
-      passive: true,
-      capture: true,
-    });
-    document.addEventListener("touchcancel", this.onTouchCancel, {
-      passive: true,
-      capture: true,
-    });
+    const touchOptions = { passive: true, capture: true };
+    this.#listen(document, "touchstart", this.onTouchStart, touchOptions);
+    this.#listen(document, "touchend", this.onTouchEnd, touchOptions);
+    this.#listen(document, "touchcancel", this.onTouchCancel, touchOptions);
+
     // browser-chrome taps (e.g. the address bar) dismiss with no page event
-    window.addEventListener("blur", this.onWindowBlur);
+    this.#listen(window, "blur", this.onWindowBlur);
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-
-    if (!this.#enabled) {
-      return;
-    }
 
     cancel(this.debouncedHandler);
     cancel(this.focusSettleHandler);
     cancel(this.showConfirmHandler);
     this.clearGhostTapSuppression?.();
 
-    window.visualViewport.removeEventListener(
-      "resize",
-      this.debouncedOnViewportResize
-    );
-
     this.appEvents.off("keyboard:will-hide", this, this.onKeyboardWillHide);
-    document.removeEventListener("focusout", this.onFocusOut);
-    document.removeEventListener("focusin", this.onFocusIn);
-    document.removeEventListener("touchstart", this.onTouchStart, {
-      capture: true,
-    });
-    document.removeEventListener("touchend", this.onTouchEnd, {
-      capture: true,
-    });
-    document.removeEventListener("touchcancel", this.onTouchCancel, {
-      capture: true,
-    });
-    window.removeEventListener("blur", this.onWindowBlur);
+    this.#removeListeners.forEach((remove) => remove());
+  }
+
+  #listen(target, type, handler, options) {
+    target.addEventListener(type, handler, options);
+    this.#removeListeners.push(() =>
+      target.removeEventListener(type, handler, options)
+    );
+  }
+
+  #applyHeight(height) {
+    this.previousHeight = height;
+    document.documentElement.style.setProperty(
+      "--composer-vh",
+      `${height / 100}px`
+    );
+  }
+
+  #announceKeyboard(visible) {
+    this.appEvents.trigger("keyboard-visibility-change", visible);
+    document.documentElement.classList.toggle("keyboard-visible", visible);
   }
 
   @bind
@@ -131,14 +105,14 @@ export default class DVirtualHeight extends Component {
     this.clearGhostTapSuppression?.();
 
     const touch = event.touches?.[0];
+    const target = event.target instanceof Element ? event.target : null;
     this.lastTouch = {
       at: Date.now(),
       x: touch?.clientX ?? 0,
       y: touch?.clientY ?? 0,
+      target,
       moved: false,
-      inert:
-        event.target instanceof Element &&
-        !event.target.closest(FOCUS_CAPABLE_SELECTOR),
+      inert: !!target && !target.closest(FOCUS_CAPABLE_SELECTOR),
     };
   }
 
@@ -168,7 +142,23 @@ export default class DVirtualHeight extends Component {
   @bind
   onWindowBlur() {
     cancel(this.focusSettleHandler);
+
+    const hadKeyboard =
+      document.documentElement.classList.contains("keyboard-visible");
     this.onKeyboardWillHide();
+
+    // an in-page chrome tap (e.g. the address bar) keeps DOM focus, so no
+    // focus event would correct the stranded editor; release it so a later
+    // tap refocuses. backgrounding stays visible=hidden and is left for the
+    // OS to restore
+    if (
+      hadKeyboard &&
+      document.visibilityState === "visible" &&
+      !this.#recentTouch() &&
+      summonsSoftKeyboard(document.activeElement)
+    ) {
+      document.activeElement.blur();
+    }
   }
 
   @bind
@@ -179,13 +169,13 @@ export default class DVirtualHeight extends Component {
 
     cancel(this.focusSettleHandler);
 
-    if (this.#focusLostToInertTouch()) {
+    if (this.#recentTouch() && this.lastTouch.inert) {
       this.onKeyboardWillHide();
 
       // the tap's synthesized click would land on controls the reflow just
       // moved; drags synthesize none
       if (!this.lastTouch.moved) {
-        this.#suppressGhostTap();
+        this.#suppressGhostTap(this.lastTouch.target);
       }
       return;
     }
@@ -197,17 +187,20 @@ export default class DVirtualHeight extends Component {
     );
   }
 
-  #focusLostToInertTouch() {
-    const touch = this.lastTouch;
-    return touch?.inert && Date.now() - touch.at < RECENT_TOUCH_MS;
+  #recentTouch() {
+    return !!this.lastTouch && Date.now() - this.lastTouch.at < RECENT_TOUCH_MS;
   }
 
-  #suppressGhostTap() {
+  #suppressGhostTap(touchedTarget) {
     this.clearGhostTapSuppression?.();
 
     const swallow = (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+      // let the tap through if it still lands on what was touched; only the
+      // reflow displacing a control under the finger is a ghost
+      if (event.target !== touchedTarget) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       this.clearGhostTapSuppression();
     };
 
@@ -226,7 +219,7 @@ export default class DVirtualHeight extends Component {
   }
 
   onFocusSettled() {
-    if (!isEditable(document.activeElement)) {
+    if (!summonsSoftKeyboard(document.activeElement)) {
       this.onKeyboardWillHide();
     }
   }
@@ -234,36 +227,27 @@ export default class DVirtualHeight extends Component {
   // reflow immediately instead of waiting for the visualViewport resize,
   // which only fires after the OS hide animation
   onKeyboardWillHide() {
-    const docEl = document.documentElement;
-
-    if (!docEl.classList.contains("keyboard-visible") || isZoomed()) {
+    if (
+      !document.documentElement.classList.contains("keyboard-visible") ||
+      isZoomed()
+    ) {
       return;
     }
 
     cancel(this.debouncedHandler);
     cancel(this.showConfirmHandler);
+    this.showPredicted = false;
 
     this.lastKeyboardHeight = this.previousHeight;
-    this.pendingHide = {
-      at: Date.now(),
-      composerVh: docEl.style.getPropertyValue("--composer-vh"),
-      height: this.previousHeight,
-    };
-
-    this.previousHeight = Math.round(window.innerHeight);
-    docEl.style.setProperty("--composer-vh", `${this.previousHeight / 100}px`);
-
-    this.appEvents.trigger("keyboard-visibility-change", false);
-    docEl.classList.remove("keyboard-visible");
+    this.#applyHeight(Math.round(window.innerHeight));
+    this.#announceKeyboard(false);
   }
 
   @bind
   onFocusIn(event) {
-    const docEl = document.documentElement;
-
     if (
-      !isEditable(event.target) ||
-      docEl.classList.contains("keyboard-visible") ||
+      !summonsSoftKeyboard(event.target) ||
+      document.documentElement.classList.contains("keyboard-visible") ||
       isZoomed()
     ) {
       return;
@@ -271,30 +255,38 @@ export default class DVirtualHeight extends Component {
 
     cancel(this.focusSettleHandler);
 
-    // a refocus mid-hide cancels the OS animation, and the unchanged
-    // viewport never reports back — restore the interrupted state
-    const pending = this.pendingHide;
-    if (pending && Date.now() - pending.at <= VIEWPORT_CONFIRM_MS) {
-      this.pendingHide = null;
-      this.#showKeyboardState(pending.height, pending.composerVh);
-      this.#armShowConfirm();
-      return;
-    }
-
-    // the keyboard only reports after its show animation; apply the last
-    // known keyboard height now and revert if the viewport never confirms
-    if (this.lastKeyboardHeight) {
+    // apply the last known keyboard height ahead of its show animation, but
+    // only when the tap landed on the field being focused — a tap that
+    // programmatically focuses something else (a chooser's filter input)
+    // raises no keyboard. a wrong guess is corrected by the revert timer or
+    // the next real viewport report
+    if (this.lastKeyboardHeight && this.#tappedInto(event.target)) {
       this.#showKeyboardState(this.lastKeyboardHeight);
       this.#armShowConfirm();
     }
   }
 
-  #showKeyboardState(height, composerVh = `${height / 100}px`) {
-    this.previousHeight = height;
-    document.documentElement.style.setProperty("--composer-vh", composerVh);
+  #tappedInto(focused) {
+    const touch = this.lastTouch;
+    return (
+      this.#recentTouch() &&
+      !!touch.target &&
+      (focused === touch.target || focused.contains(touch.target))
+    );
+  }
 
-    this.appEvents.trigger("keyboard-visibility-change", true);
-    document.documentElement.classList.add("keyboard-visible");
+  #showKeyboardState(height) {
+    // a hide-report resize may still sit in the debounce; it would strip
+    // the state we are applying right here
+    cancel(this.debouncedHandler);
+
+    this.#applyHeight(height);
+    this.#announceKeyboard(true);
+
+    // this optimistic height animates the composer up in step with the
+    // keyboard; the real viewport report that follows only corrects it, and
+    // that correction must not re-animate (see onViewportResize)
+    this.showPredicted = true;
   }
 
   #armShowConfirm() {
@@ -321,7 +313,6 @@ export default class DVirtualHeight extends Component {
     // no keyboard came (e.g. a hardware keyboard); stop predicting until a
     // real one is observed again
     this.lastKeyboardHeight = null;
-    this.pendingHide = null;
   }
 
   setVH() {
@@ -335,12 +326,7 @@ export default class DVirtualHeight extends Component {
       return false;
     }
 
-    this.previousHeight = height;
-
-    document.documentElement.style.setProperty(
-      "--composer-vh",
-      `${height / 100}px`
-    );
+    this.#applyHeight(height);
   }
 
   @bind
@@ -350,30 +336,39 @@ export default class DVirtualHeight extends Component {
 
   @bind
   onViewportResize() {
-    this.pendingHide = null;
+    // the real viewport report supersedes any optimistic guess
     cancel(this.showConfirmHandler);
 
-    const setVHresult = this.setVH();
+    // when this report is correcting a predicted show, the composer has
+    // already glided to the predicted height; snap the (small) correction so
+    // it doesn't run a second, visible height animation
+    const composer =
+      this.showPredicted && document.getElementById("reply-control");
+    this.showPredicted = false;
 
-    if (setVHresult === false) {
+    if (composer) {
+      composer.style.transition = "none";
+    }
+
+    const changed = this.setVH() !== false;
+
+    if (composer) {
+      composer.offsetHeight; // flush the snapped height before restoring
+      composer.style.transition = "";
+    }
+
+    if (!changed) {
       return;
     }
 
-    const docEl = document.documentElement;
+    const keyboardVisible =
+      window.innerHeight - window.visualViewport.height >
+      KEYBOARD_DETECT_THRESHOLD;
 
-    let keyboardVisible = false;
-
-    let viewportWindowDiff = window.innerHeight - window.visualViewport.height;
-
-    if (viewportWindowDiff > KEYBOARD_DETECT_THRESHOLD) {
-      keyboardVisible = true;
+    if (keyboardVisible) {
       this.lastKeyboardHeight = this.previousHeight;
     }
 
-    this.appEvents.trigger("keyboard-visibility-change", keyboardVisible);
-
-    keyboardVisible
-      ? docEl.classList.add("keyboard-visible")
-      : docEl.classList.remove("keyboard-visible");
+    this.#announceKeyboard(keyboardVisible);
   }
 }
