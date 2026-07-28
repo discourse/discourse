@@ -1,3 +1,65 @@
+@import "common/foundation/colors";
+@import "common/foundation/color_transformations";
+
+// pins a neutral light skin on the wizard chrome (the sheet and its floating
+// menus): the page behind it is the live preview, but the tool itself should
+// not restyle as palettes, fonts and text sizes are previewed. Explicit font
+// classes inside (typeface samples) still apply.
+.design-wizard-float,
+.design-wizard-modal__font-select-content {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --tertiary: #{$tertiary};
+  --tertiary-hover: #{$tertiary-hover};
+  --tertiary-low: #{$tertiary-low};
+  --primary-very-low: #{$primary-very-low};
+  --primary-low: #{$primary-low};
+  --primary-low-mid: #{$primary-low-mid};
+  --primary-medium: #{$primary-medium};
+  --primary-high: #{$primary-high};
+  --primary-very-high: #{$primary-very-high};
+  --d-hover: #{$hover};
+  --content-border-color: #{$primary-low};
+  --token-color-surface: #{$secondary};
+  --token-color-text-default: #{$primary};
+  --token-color-text-subtle: #{$primary-high};
+  --token-color-text-subtlest: #{$primary-medium};
+  --token-color-border-default: #{$primary-low};
+  --token-color-background-accent-bolder: #{$tertiary};
+  --d-button-default-text-color: #{$primary};
+  --d-button-default-text-color--hover: #{$secondary};
+  --d-button-default-bg-color: #{$primary-low};
+  --d-button-default-bg-color--hover: #{$primary-medium};
+  --d-button-default-icon-color: #{$primary-high};
+  --d-button-default-icon-color--hover: #{$primary-low};
+  --d-button-primary-text-color: #{$secondary};
+  --d-button-primary-text-color--hover: #{$secondary};
+  --d-button-primary-bg-color: #{$tertiary};
+  --d-button-primary-bg-color--hover: #{$tertiary-hover};
+  --d-button-primary-icon-color: #{$secondary};
+  --d-button-primary-icon-color--hover: #{$secondary};
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  // text-size-normal baseline, immune to text size previews
+  font-size: 15px;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: inherit;
+  }
+}
+
 .design-wizard-float {
   position: fixed;
   z-index: z("usercard");
