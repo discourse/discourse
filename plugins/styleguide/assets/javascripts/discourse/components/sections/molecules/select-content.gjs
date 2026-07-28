@@ -11,11 +11,13 @@ import {
   delay,
   localTimeIn,
   makeFailingLoader,
+  notificationLevels,
   PEOPLE,
   TEAM_MEMBERS,
   teamLabels,
   TIMEZONES,
   topics,
+  USER_GROUPS,
 } from "../../../lib/select-fixtures";
 import StyleguideExample from "../../styleguide-example";
 
@@ -69,21 +71,27 @@ export default class SelectContent extends Component {
   @tracked footerEmptyValue = null;
   @tracked footerErrorValue = null;
   @tracked footerValue = null;
+  @tracked chipIconsValue = [1, 3];
   @tracked glyphValue = null;
+  @tracked rowIconValue = "tracking";
+  @tracked statusValue = null;
   @tracked groupedValue = null;
   @tracked pickerValue = [];
   @tracked selectionValue = 101;
 
   people = PEOPLE;
+  userGroups = USER_GROUPS;
   teamMembers = TEAM_MEMBERS;
   timezones = TIMEZONES;
   glyphTopics = GLYPH_TOPICS;
 
-  // `alternate` rather than `first`: an error you can only reach once per page load reads as a
-  // broken example to anyone who opens it twice.
+  // `first` paired with a reset on close, rather than `alternate`. Alternating made the failure
+  // reachable twice but tied it to the parity of a request counter, so an open that happened to
+  // issue two requests landed on success and the card looked broken. Resetting makes every open
+  // start from the failure, which is the loop the card's instruction describes.
   failingLoader = makeFailingLoader({
     items: PEOPLE,
-    failOn: "alternate",
+    failOn: "first",
     delayMs: 600,
   });
 
@@ -130,9 +138,9 @@ export default class SelectContent extends Component {
   <:empty>Nothing matches that yet. Try a shorter term.</:empty>
 </DSelect>`;
 
-  errorCode = `{{! Unlike every other block, :error replaces the WHOLE container — including its
-  role="alert" and its retry control. Supply both, or the failure stops being
-  announced and stops being recoverable. }}
+  errorCode = `{{! Like every other block, :error supplies contents, not structure: the container
+  and its role="alert" are kept for you, so the failure stays announced whatever
+  you render. Retry is yielded for a block that wants its own control. }}
 <DSelect
   @load={{this.load}}
   @value={{this.value}}
@@ -140,11 +148,69 @@ export default class SelectContent extends Component {
   @retryable={{true}}
 >
   <:error as |error retry|>
-    <div class="my-error" role="alert">
-      <p>{{error.message}}</p>
-      <DButton @action={{retry}} @label="my.retry" />
-    </div>
+    <span class="my-error-message">{{error.message}}</span>
+    <DButton @action={{retry}} @label="my.retry" />
   </:error>
+</DSelect>`;
+
+  rowIconCode = `{{! Each option carries its own icon, so the row renders from the data rather
+  than from a fixed adornment. }}
+<DSelect
+  @items={{this.levels}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @valueField="level"
+  @labelField="title"
+>
+  <:item as |level|>
+    <span class="my-row">
+      {{icon level.icon}}
+      <span class="my-details">
+        <span class="my-primary">{{level.title}}</span>
+        <span class="my-secondary">{{level.description}}</span>
+      </span>
+    </span>
+  </:item>
+</DSelect>`;
+
+  chipIconCode = `{{! :item and :selection both render the glyph, so a chip looks like the row it
+  came from. Keep the text in :selection — a chip's accessible name is built from
+  it, and an icon-only chip is announced as a bare remove button. }}
+<DSelect
+  @items={{this.groups}}
+  @multiple={{true}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @labelField="fullName"
+>
+  <:item as |group|>
+    <span class="my-row">{{icon group.icon}}{{group.fullName}}</span>
+  </:item>
+  <:selection as |group|>
+    <span class="my-chip">{{icon group.icon}}{{group.fullName}}</span>
+  </:selection>
+</DSelect>`;
+
+  statusIconCode = `{{! A TRAILING glyph states something the row's text does not, so it needs a
+  name of its own. A title attribute will not do it: focus sits on the option, not
+  on the icon, so it is never announced. }}
+<DSelect
+  @items={{this.groups}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @labelField="fullName"
+>
+  <:item as |group|>
+    <span class="my-row">
+      <span class="my-primary">{{group.fullName}}</span>
+      {{#if group.automatic}}
+        <span class="my-status">
+          {{icon "gear"}}
+          <span class="sr-only">Managed automatically</span>
+        </span>
+      {{/if}}
+    </span>
+  </:item>
 </DSelect>`;
 
   selectionCode = `{{! The SAME :selection block in both arities. On the single-select it is the
@@ -323,9 +389,35 @@ export default class SelectContent extends Component {
   //
   // The empty and always-failing sources below need no counterpart: nothing is ever selectable
   // from them, so they can never hold a value to resolve.
+  get notificationLevels() {
+    return notificationLevels();
+  }
+
   @action
   resolvePerson(value) {
     return this.people.find((person) => person.id === value);
+  }
+
+  // The failure is the whole point of the card, so every open has to start from it. The fixture
+  // exposes this precisely so the state is not a one-shot accident of request ordering.
+  @action
+  updateChipIcons(value) {
+    this.chipIconsValue = value;
+  }
+
+  @action
+  updateRowIcon(value) {
+    this.rowIconValue = value;
+  }
+
+  @action
+  updateStatus(value) {
+    this.statusValue = value;
+  }
+
+  @action
+  resetFailingLoader() {
+    this.failingLoader.reset();
   }
 
   @action
@@ -457,6 +549,115 @@ export default class SelectContent extends Component {
     </StyleguideExample>
 
     <StyleguideExample
+      @title={{i18n "styleguide.sections.select.content.row_icon_example"}}
+      @description={{i18n
+        "styleguide.sections.select.content.row_icon_description"
+      }}
+      @tryThis={{i18n "styleguide.sections.select.content.row_icon_try_this"}}
+      @code={{this.rowIconCode}}
+    >
+      <div class="select-examples__control">
+        <DSelect
+          @identifier="sg-row-icons"
+          @items={{this.notificationLevels}}
+          @value={{this.rowIconValue}}
+          @onChange={{this.updateRowIcon}}
+          @valueField="level"
+          @labelField="title"
+        >
+          <:item as |level|>
+            <span class="select-examples__row">
+              {{! Not aria-hidden: this glyph is the row's only distinguishing mark beyond its
+              name, and the name already carries the meaning, so hiding it loses nothing while
+              labelling it would say the same thing twice. }}
+              {{dIcon level.icon}}
+              <span class="select-examples__details">
+                <span class="select-examples__primary">{{level.title}}</span>
+                <span
+                  class="select-examples__secondary"
+                >{{level.description}}</span>
+              </span>
+            </span>
+          </:item>
+        </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.content.chip_icon_example"}}
+      @description={{i18n
+        "styleguide.sections.select.content.chip_icon_description"
+      }}
+      @tryThis={{i18n "styleguide.sections.select.content.chip_icon_try_this"}}
+      @code={{this.chipIconCode}}
+    >
+      <div class="select-examples__control">
+        <DSelect
+          @identifier="sg-chip-icons"
+          @items={{this.userGroups}}
+          @multiple={{true}}
+          @value={{this.chipIconsValue}}
+          @onChange={{this.updateChipIcons}}
+          @labelField="fullName"
+        >
+          <:item as |group|>
+            <span class="select-examples__row">
+              {{dIcon group.icon}}
+              <span class="select-examples__primary">{{group.fullName}}</span>
+            </span>
+          </:item>
+          {{! The chip's accessible name is built from whatever this renders, so the text has to
+          stay: an icon-only chip is announced as a bare remove button. }}
+          <:selection as |group|>
+            <span class="select-examples__chip">
+              {{dIcon group.icon}}
+              {{group.fullName}}
+            </span>
+          </:selection>
+        </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title={{i18n "styleguide.sections.select.content.status_icon_example"}}
+      @description={{i18n
+        "styleguide.sections.select.content.status_icon_description"
+      }}
+      @tryThis={{i18n
+        "styleguide.sections.select.content.status_icon_try_this"
+      }}
+      @code={{this.statusIconCode}}
+    >
+      <div class="select-examples__control">
+        <DSelect
+          @identifier="sg-status-icons"
+          @items={{this.userGroups}}
+          @value={{this.statusValue}}
+          @onChange={{this.updateStatus}}
+          @labelField="fullName"
+          @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+        >
+          <:item as |group|>
+            <span class="select-examples__row">
+              <span class="select-examples__primary">{{group.fullName}}</span>
+              {{#if group.automatic}}
+                {{! A trailing glyph carries meaning the row's text does not, so unlike a leading
+                decorative icon it needs a name of its own — the visually hidden text, since a
+                title on an icon inside an option is never announced. }}
+                <span class="select-examples__status">
+                  {{dIcon "gear"}}
+                  <span class="sr-only">{{i18n
+                      "styleguide.sections.select.content.status_icon_automatic"
+                    }}</span>
+                </span>
+              {{/if}}
+            </span>
+          </:item>
+        </DSelect>
+      </div>
+    </StyleguideExample>
+
+    <StyleguideExample
       @title={{i18n "styleguide.sections.select.content.computed_example"}}
       @description={{i18n
         "styleguide.sections.select.content.computed_description"
@@ -522,6 +723,7 @@ export default class SelectContent extends Component {
         <DSelect
           @identifier="sg-content-error"
           @load={{this.failingLoader}}
+          @onClose={{this.resetFailingLoader}}
           @resolveValue={{this.resolvePerson}}
           @value={{this.errorValue}}
           @onChange={{this.updateError}}
@@ -529,20 +731,19 @@ export default class SelectContent extends Component {
           @labelField="name"
           @placeholder={{i18n "styleguide.sections.select.placeholder"}}
         >
-          {{! This block replaces the entire error container, so the alert role and the retry
-          control have to be supplied here or they are simply gone. }}
+          {{! Contents only: the container and its alert role belong to the component, so a
+          failure stays announced whatever this block renders. Retry is still yielded, so a
+          block that wants its own recovery control can render one. }}
           <:error as |error retry|>
-            <div class="select-examples__error" role="alert">
-              <span class="select-examples__error-message">
-                {{dIcon "triangle-exclamation"}}
-                {{error.message}}
-              </span>
-              <DButton
-                class="btn-flat"
-                @action={{retry}}
-                @label="styleguide.sections.select.content.error_retry"
-              />
-            </div>
+            <span class="select-examples__error-message">
+              {{dIcon "triangle-exclamation"}}
+              {{error.message}}
+            </span>
+            <DButton
+              class="d-combobox__retry btn-flat"
+              @action={{retry}}
+              @label="styleguide.sections.select.content.error_retry"
+            />
           </:error>
         </DSelect>
       </div>

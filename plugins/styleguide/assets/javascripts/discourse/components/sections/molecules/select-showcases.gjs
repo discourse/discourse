@@ -631,6 +631,9 @@ export default class SelectShowcases extends Component {
         <div class="select-showcases__control">
           <DSelect
             @identifier="sg-notifications"
+            {{! Opens upward: the Manage row is an action row, so it runs WITHOUT closing the
+            panel, and its readout sits below the control. }}
+            @placement="top-start"
             @items={{this.notificationItems}}
             @value={{this.notificationValue}}
             @onChange={{this.updateNotification}}

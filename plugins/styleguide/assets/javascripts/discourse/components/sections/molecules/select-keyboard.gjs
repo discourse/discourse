@@ -86,6 +86,7 @@ export default class SelectKeyboard extends Component {
           <DSelect
             @identifier="sg-keyboard-walkthrough"
             @items={{this.locales}}
+            @placement="top-start"
             @value={{this.walkthroughValue}}
             @onChange={{this.updateWalkthrough}}
             @placeholder={{i18n "styleguide.sections.select.placeholder"}}
@@ -122,6 +123,7 @@ export default class SelectKeyboard extends Component {
         <DSelect
           @identifier="sg-keyboard-transcript"
           @items={{this.locales}}
+          @placement="top-start"
           @multiple={{true}}
           @value={{this.transcriptValue}}
           @onChange={{this.updateTranscript}}

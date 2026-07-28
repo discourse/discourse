@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
@@ -62,6 +63,7 @@ export default class Select extends Component {
   @tracked clearableMultiValue = ["en", "es"];
 
   @tracked iconValue = null;
+  @tracked iconFollowsValue = "tracking";
   @tracked caretValue = null;
   @tracked noneValue = "es";
   @tracked iconOnlyValue = "watching";
@@ -70,6 +72,8 @@ export default class Select extends Component {
   @tracked minCharsValue = null;
   @tracked placementValue = null;
   @tracked debounceValue = null;
+  @tracked debounceKeystrokes = 0;
+  @tracked debounceQueries = [];
   @tracked eventsValue = null;
   @tracked largeListValue = null;
   @tracked pagedValue = null;
@@ -82,15 +86,12 @@ export default class Select extends Component {
   errorRequestCount = 0;
 
   items = LOCALES;
-
   fourOptions = FOUR_OPTIONS;
-
   defaultCode = `<DSelect
   @items={{this.items}}
   @value={{this.value}}
   @onChange={{this.onChange}}
 />`;
-
   pagedCode = `{{! The source pages; the engine accumulates and caps }}
 <DSelect
   @load={{this.loadPage}}
@@ -107,7 +108,6 @@ export default class Select extends Component {
 
   A source that paginates MUST report total or hasMore. Say nothing and the engine
   takes the first response as complete. }}`;
-
   reloadCode = `{{! Nothing to configure: the delay decides which behaviour you get }}
 <DSelect
   @load={{this.loadPage}}
@@ -123,14 +123,12 @@ export default class Select extends Component {
 
   A reveal — another page for the SAME query — is not affected. Its rows are still
   correct, so they stay put with placeholders appended at the frontier. }}`;
-
   largeListCode = `{{! 5000 items rendered in full; only the rows in view are mounted }}
 <DSelect
   @items={{this.hugeList}}
   @value={{this.value}}
   @onChange={{this.onChange}}
 />`;
-
   asyncButtonCode = `<DSelect
   @load={{this.loadOptions}}
   @value={{this.value}}
@@ -138,21 +136,18 @@ export default class Select extends Component {
   @onChange={{this.onChange}}
   @variant="button"
 />`;
-
   staticCode = `<DSelect
   @items={{this.items}}
   @value={{this.value}}
   @onChange={{this.onChange}}
   @variant="static"
 />`;
-
   multiCode = `<DSelect
   @items={{this.items}}
   @multiple={{true}}
   @value={{this.value}}
   @onChange={{this.onChange}}
 />`;
-
   maximumCode = `<DSelect
   @items={{this.items}}
   @multiple={{true}}
@@ -211,6 +206,18 @@ export default class Select extends Component {
   @variant="static"
 />`;
 
+  iconFollowsCode = `{{! @icon is derived from @value by the consumer; the component never picks
+  a glyph for you. Contrast the fixed icon above, which names the field. }}
+<DSelect
+  @items={{this.levels}}
+  @value={{this.value}}
+  @onChange={{this.onChange}}
+  @valueField="level"
+  @labelField="title"
+  @icon={{this.iconForValue}}
+  @variant="static"
+/>`;
+
   caretCode = `<DSelect
   @items={{this.items}}
   @value={{this.value}}
@@ -254,11 +261,13 @@ export default class Select extends Component {
 />`;
 
   debounceCode = `<DSelect
-  @items={{this.items}}
+  @load={{this.load}}
   @value={{this.value}}
+  @resolveValue={{this.resolveValue}}
   @onChange={{this.onChange}}
   @variant="button"
   @debounce={{300}}
+  @placement="top-start"
 />`;
 
   eventsCode = `<DSelect
@@ -277,6 +286,9 @@ export default class Select extends Component {
   @variant="button"
 />`;
 
+  // Identity counter for the debounce dispatch log; see `loadDebounced`.
+  #debounceSeq = 0;
+
   get groups() {
     return GROUPS.map((id) => ({
       id,
@@ -287,6 +299,17 @@ export default class Select extends Component {
 
   get notificationLevels() {
     return notificationLevels();
+  }
+
+  // The consumer owns @value, so it owns the glyph too: the component never derives one. This is
+  // the counterpart to the fixed globe beside it, where the icon names the FIELD rather than the
+  // value and correctly never changes.
+  get iconFollowsIcon() {
+    return (
+      this.notificationLevels.find(
+        (level) => level.level === this.iconFollowsValue
+      )?.icon ?? "bell"
+    );
   }
 
   get iconOnlyIcon() {
@@ -350,6 +373,43 @@ export default class Select extends Component {
   //
   // They return synchronously on purpose: a resolver does not have to be async, and one that
   // answers from data already in hand costs no request.
+  // Counts what the reader typed, against what the component actually sent. `input` bubbles out
+  // of the query input to the trigger root, which is where `...attributes` land, so the card can
+  // observe typing without the component exposing a keystroke hook.
+  @action
+  countDebounceKeystroke() {
+    this.debounceKeystrokes++;
+  }
+
+  // A real source rather than a client array: the point of the card is which queries were
+  // DISPATCHED, and a client filter dispatches nothing to observe. Each call appends the query
+  // it was given, so the gap between keystrokes and entries IS the debounce.
+  @action
+  async loadDebounced(filter, { signal }) {
+    await delay(signal, 250);
+    // Each entry gets its own id: the same query can legitimately be dispatched twice, so the
+    // text is not an identity, and the log is reset as well as appended to.
+    this.debounceQueries = [
+      ...this.debounceQueries,
+      { id: (this.#debounceSeq += 1), query: filter },
+    ];
+    return this.filterItems(this.items, filter);
+  }
+
+  @action
+  resetDebounceLog() {
+    this.debounceKeystrokes = 0;
+    this.debounceQueries = [];
+  }
+
+  // The failure IS the card, so it has to be reachable more than once. Without this the source
+  // succeeds for the rest of the page's life after the first retry, and a reader who closes the
+  // panel before reading it finds a card demonstrating nothing.
+  @action
+  resetErrorSource() {
+    this.errorRequestCount = 0;
+  }
+
   @action
   resolveLocale(value) {
     return this.items.find((item) => item.id === value);
@@ -480,6 +540,11 @@ export default class Select extends Component {
   @action
   updateClearableMulti(value) {
     this.clearableMultiValue = value;
+  }
+
+  @action
+  updateIconFollows(value) {
+    this.iconFollowsValue = value;
   }
 
   @action
@@ -631,17 +696,40 @@ export default class Select extends Component {
           @tryThis={{i18n "styleguide.sections.select.debounce_try_this"}}
           @code={{this.debounceCode}}
         >
-          <div class="select-examples__control">
-            <DSelect
-              @identifier="sg-debounce"
-              @items={{this.items}}
-              @value={{this.debounceValue}}
-              @onChange={{this.updateDebounce}}
-              @variant="button"
-              @debounce={{300}}
-              @placeholder={{i18n "styleguide.sections.select.placeholder"}}
-            />
-          </div>
+          <:default>
+            <div class="select-examples__control">
+              <DSelect
+                @identifier="sg-debounce"
+                {{! Opens upward: the dispatch tally sits below the control, and it is what the
+                reader is meant to watch WHILE typing, so a downward panel would cover it. }}
+                @placement="top-start"
+                @load={{this.loadDebounced}}
+                @resolveValue={{this.resolveLocale}}
+                @value={{this.debounceValue}}
+                @onChange={{this.updateDebounce}}
+                @onShow={{this.resetDebounceLog}}
+                @variant="button"
+                @debounce={{300}}
+                @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+                {{on "input" this.countDebounceKeystroke}}
+              />
+            </div>
+          </:default>
+
+          <:result>
+            {{i18n
+              "styleguide.sections.select.debounce_result"
+              keystrokes=this.debounceKeystrokes
+              requests=this.debounceQueries.length
+            }}
+            {{#if this.debounceQueries}}
+              <ol class="select-examples__query-log">
+                {{#each this.debounceQueries key="id" as |entry|}}
+                  <li>&ldquo;{{entry.query}}&rdquo;</li>
+                {{/each}}
+              </ol>
+            {{/if}}
+          </:result>
         </StyleguideExample>
         <StyleguideExample
           @title={{i18n "styleguide.sections.select.paged_example"}}
@@ -778,6 +866,7 @@ export default class Select extends Component {
             <DSelect
               @identifier="sg-error"
               @load={{this.loadWithRetry}}
+              @onClose={{this.resetErrorSource}}
               @resolveValue={{this.resolveLocale}}
               @value={{this.errorValue}}
               @onChange={{this.updateError}}
@@ -804,6 +893,27 @@ export default class Select extends Component {
               @icon="globe"
               @variant="static"
               @placeholder={{i18n "styleguide.sections.select.placeholder"}}
+            />
+          </div>
+        </StyleguideExample>
+        <StyleguideExample
+          @title={{i18n "styleguide.sections.select.icon_follows_example"}}
+          @description={{i18n
+            "styleguide.sections.select.icon_follows_description"
+          }}
+          @tryThis={{i18n "styleguide.sections.select.icon_follows_try_this"}}
+          @code={{this.iconFollowsCode}}
+        >
+          <div class="select-examples__control">
+            <DSelect
+              @identifier="sg-icon-follows"
+              @items={{this.notificationLevels}}
+              @value={{this.iconFollowsValue}}
+              @onChange={{this.updateIconFollows}}
+              @valueField="level"
+              @labelField="title"
+              @icon={{this.iconFollowsIcon}}
+              @variant="static"
             />
           </div>
         </StyleguideExample>
@@ -879,6 +989,9 @@ export default class Select extends Component {
             <div class="select-examples__control">
               <DSelect
                 @identifier="sg-events"
+                {{! Opens upward: the tally below counts opens, so it changes at the exact moment
+                a downward panel would cover it. }}
+                @placement="top-start"
                 @items={{this.items}}
                 @value={{this.eventsValue}}
                 @onChange={{this.updateEvents}}

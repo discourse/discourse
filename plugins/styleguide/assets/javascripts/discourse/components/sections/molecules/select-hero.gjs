@@ -28,7 +28,7 @@ export default class SelectHero extends Component {
 
   @tracked categoryValue = "feature-requests";
   @tracked notificationValue = "watching";
-  @tracked tagValue = ["design-system", "accessibility"];
+  @tracked tagValue = ["theming", "accessibility"];
 
   tags = TAGS;
 

@@ -89,17 +89,17 @@ describe "UiKit | DSelect page regressions" do
     tags = PageObjects::Components::UiKit::DSelect.by_identifier("sg-hero-tags")
     caret = "[data-identifier='sg-hero-tags'][data-trigger] .d-combobox__caret"
 
-    expect(tags.chip_labels).to eq(%w[design-system accessibility])
+    expect(tags.chip_labels).to eq(%w[theming accessibility])
 
     tags.trigger.click
     sleep 0.6
-    expect(tags.chip_labels).to eq(%w[design-system accessibility])
+    expect(tags.chip_labels).to eq(%w[theming accessibility])
 
     tags.press(:escape)
     sleep 0.4
     find(caret).click
     sleep 0.6
-    expect(tags.chip_labels).to eq(%w[design-system accessibility])
+    expect(tags.chip_labels).to eq(%w[theming accessibility])
   end
 
   # The footer card's control strip is the only way to reach the empty and error states it
@@ -126,6 +126,44 @@ describe "UiKit | DSelect page regressions" do
     broken.open
     expect(page).to have_css(broken.in_panel(".d-combobox__error"), wait: 10)
     expect(page).to have_css(broken.in_panel(".d-combobox__footer"))
+  end
+
+  # A selected row was marked only by `font-weight`, which is inherited — so any custom `:item`
+  # that styled its own label overrode it and the selection stopped being visible. That is every
+  # rich row, so a reader could not tell what was already chosen. The marker is now the row's own
+  # surface, which consumer markup cannot reach.
+  it "marks the selected row even when the consumer styles the row content" do
+    visit "/styleguide/molecules/select?group=content"
+    combobox = PageObjects::Components::UiKit::DSelect.by_identifier("sg-selection")
+
+    combobox.open
+    expect(page).to have_css(combobox.option_selector, wait: 10)
+
+    marked = page.evaluate_script(<<~JS)
+        (function () {
+          const row = document.querySelector(
+            "#{combobox.option_selector}[aria-selected='true']"
+          );
+          if (!row) {
+            return null;
+          }
+          return { background: getComputedStyle(row).backgroundColor };
+        })()
+      JS
+
+    expect(marked).not_to be_nil, "no row reported itself selected"
+
+    # Compared against a sibling rather than a literal, so it holds across themes and colour
+    # modes rather than pinning today's palette.
+    unselected = page.evaluate_script(<<~JS)
+        (function () {
+          const row = document.querySelector(
+            "#{combobox.option_selector}:not([aria-selected='true'])"
+          );
+          return row ? getComputedStyle(row).backgroundColor : null;
+        })()
+      JS
+    expect(marked["background"]).not_to eq(unselected)
   end
 
   # Every example that shows a block should show the source for it; the synthesis card shipped

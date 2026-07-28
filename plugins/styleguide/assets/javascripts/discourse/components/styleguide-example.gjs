@@ -91,11 +91,17 @@ export default class StyleguideExample extends Component {
           <span class="styleguide-example__try-this-label">
             {{i18n "styleguide.example.try_this"}}
           </span>
-          {{#if (has-block "tryThis")}}
-            {{yield to="tryThis"}}
-          {{else}}
-            {{inlineCode @tryThis}}
-          {{/if}}
+          {{! One element around the whole instruction, because the row is a flex container:
+          prose containing inline code is a mix of text nodes and elements, and each would
+          otherwise become its own flex item and be laid out as a separate box, scrambling the
+          sentence. }}
+          <span class="styleguide-example__try-this-text">
+            {{#if (has-block "tryThis")}}
+              {{yield to="tryThis"}}
+            {{else}}
+              {{inlineCode @tryThis}}
+            {{/if}}
+          </span>
         </p>
       {{/if}}
 

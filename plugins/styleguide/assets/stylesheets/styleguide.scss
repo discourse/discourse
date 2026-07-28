@@ -129,6 +129,14 @@ $styleguide-measure: 70ch;
         white-space: nowrap;
       }
 
+      // The instruction as ONE flex item, so a sentence containing inline code still wraps as a
+      // sentence. min-width:0 lets it shrink below the intrinsic width of a long code span
+      // instead of pushing the row wider.
+      &__try-this-text {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
       &__body {
         grid-row: 4;
         width: 100%;
@@ -492,6 +500,30 @@ $styleguide-measure: 70ch;
    than fifty improvisations. Structural rows (group header, footer, limit, empty, error) are
    the component's own chrome and are deliberately NOT restyled here. */
 
+// A chip mirroring its row's glyph. The gap is the chip's own, not the row's: a chip sits inside
+// the trigger's tighter rhythm.
+.select-examples__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// Trailing status, pushed to the far edge so it reads as a property of the row rather than as
+// part of the name.
+.select-examples__status {
+  margin-inline-start: auto;
+  color: var(--primary-medium);
+  flex: none;
+}
+
+// The debounce dispatch log: what the source was actually asked, in order.
+.select-examples__query-log {
+  margin: 0.35rem 0 0;
+  padding-inline-start: 1.25rem;
+  font-family: var(--d-font-family--monospace);
+  font-size: var(--font-down-1);
+}
+
 .select-examples__row {
   display: flex;
   align-items: center;
@@ -547,17 +579,6 @@ $styleguide-measure: 70ch;
 .select-examples__footer-count {
   color: var(--token-color-text-subtle);
   font-size: var(--font-down-1);
-}
-
-// A custom :error block replaces the component's whole error container, so the example has to
-// supply this layout as well as the alert role.
-.select-examples__error {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0.5em 0.75em;
 }
 
 .select-examples__error-message {
