@@ -13,7 +13,6 @@ uk:
   js:
     styleguide:
       title: "Styleguide"
-      welcome: "Для початку оберіть розділ у меню ліворуч."
       categories:
         syntax: Синтаксис
         atoms: Атоми

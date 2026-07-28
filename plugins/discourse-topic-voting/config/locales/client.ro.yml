@@ -31,3 +31,6 @@ ro:
         help: "subiecte la care ai votat"
     search:
       most_votes: "Cele mai multe evaluări"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Etichete"

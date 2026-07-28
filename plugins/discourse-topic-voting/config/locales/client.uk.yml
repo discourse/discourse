@@ -52,3 +52,6 @@ uk:
           group_name: "Подія голосування за тему "
           topic_upvote: "Коли користувач голосує за тему"
           topic_unvote: "Коли користувач скасовує голосування з теми"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Теґи"

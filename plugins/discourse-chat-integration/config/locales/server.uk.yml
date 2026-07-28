@@ -68,6 +68,10 @@ uk:
         title: Надіслати Slack повідомлення
       send_chat_integration_message:
         title: Надіслати повідомлення про чат-інтеграцію
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Канал не знайдено: %{channel_id}"
   chat_integration:
     all_categories: "(усі розділи)"
     deleted_category: "(видалена категорія)"
@@ -84,6 +88,10 @@ uk:
       setting_update_failed: "Не вдалося оновити налаштування: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Наданий токен автентифікації недійсний"
+          action_prohibited: "Бот не має дозволу на публікацію в цьому каналі"
+          channel_not_found: "Зазначений канал не існує в Slack"
         status:
           header: |
             *Правила для цього каналу*

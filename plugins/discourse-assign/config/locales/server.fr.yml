@@ -9,7 +9,7 @@ fr:
     assign_enabled: "Activer l'extension d'attribution"
     assigns_public: "Autoriser le grand public à voir les attributions des sujets"
     assigns_user_url_path: "Chemin vers les sujets attribués aux utilisateurs (utilisez {username} pour remplacer le nom d'utilisateur)"
-    assigns_by_staff_mention: "Si un membre du personnel mentionne un autre membre du personnel, le sujet est automatiquement attribué"
+    assigns_by_staff_mention: "Si un responsable mentionne un autre responsable, le sujet est automatiquement attribué"
     unassign_creates_tracking_post: "Si vous annulez l'attribution d'un sujet, un murmure ou une petite action sera créée pour suivre le changement"
     assign_self_regex: "Expression régulière qui doit être validée pour permettre l'attribution d'un sujet à soi-même. Par exemple : « ma liste »"
     assign_other_regex: "Expression régulière qui doit être validée pour permettre l'attribution d'un sujet à d'autres utilisateurs via une mention. Par exemple : « votre liste »"

@@ -2227,6 +2227,8 @@ ro:
       default: Emojii personalizate
     filter_input:
       clear: "Elimină filtrul"
+    filter_controls:
+      reset: "Resetare"
     composer:
       emoji: "Emoji :)"
       options: "Opțiuni"
@@ -5730,6 +5732,7 @@ ro:
         choose_files: "Alege fișiere"
         name: "Nume"
         group: "Grup"
+        all_groups: "Toate grupurile"
         created_by: "Creat de"
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"

@@ -7,14 +7,14 @@
 fr:
   site_settings:
     policy_enabled: "Autoriser les politiques ?"
-    policy_restrict_to_staff_posts: "Les politiques ne peuvent apparaître que sur les messages du personnel"
+    policy_restrict_to_staff_posts: "Les politiques ne peuvent apparaître que dans les publications des responsables"
     policy_easy_revoke: "Afficher les boutons d'acceptation et de révocation en même temps"
   discourse_policy:
     errors:
       user_missing: "L'utilisateur n'existe pas dans le groupe"
       group_not_found: "Groupe introuvable pour la politique"
       no_policy: "Aucune politique n'existe pour le message"
-      staff_only: "Les politiques ne peuvent s'appliquer qu'aux messages du personnel"
+      staff_only: "Les politiques ne peuvent s'appliquer qu'aux publications des responsables"
     error:
       no_permission: "Non autorisé"
   reports:

@@ -118,6 +118,20 @@ id:
         select_option: "Memilih sebuah pilihan..."
       translations:
         category_scope: "Kategori"
+        model_progress:
+          detail:
+            columns:
+              pending: "tertunda"
+              total: "Jumlah"
+          targets:
+            post:
+              title: "Pos"
+            topic:
+              title: "Topik"
+            category:
+              title: "Kategori"
+            tag:
+              title: "Label"
         stats:
           eta_minutes:
             other: "%{count} menit"

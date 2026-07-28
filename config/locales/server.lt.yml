@@ -136,7 +136,6 @@ lt:
       exclusion: yra rezervuotas
       greater_than: turi būti didesnis nei %{count}
       greater_than_or_equal_to: turi būti didesnis arba lygus %{count}
-      has_already_been_used: "jau yra naudojamas"
       inclusion: yra neitrauktas i sąrasą
       invalid: netinkamas
       is_invalid: "atrodo neaišku, ar tai visas sakinys?"
@@ -1253,7 +1252,6 @@ lt:
     editing_grace_period_max_diff_high_trust: "Didžiausias leidžiamas simbolių pakeitimų skaičius per redagavimo atidėjimo laikotarpį, jei pakeitimų daugiau, išsaugokite kitą įrašo versiją (2 pasitikėjimo lygis ir aukštesnis)"
     staff_edit_locks_post: "Pranešimai bus užrakinti nuo redagavimo, jei juos redaguos darbuotojai"
     post_edit_time_limit: "tl0 arba tl1 autorius gali redaguoti savo įrašą (n) minučių po paskelbimo. Nustatykite 0 visam laikui."
-    edit_history_visible_to_public: "Leisti visiems matyti ankstesnes redaguoto įrašo versijas. Kai išjungta, peržiūrėti gali tik darbuotojai."
     delete_removed_posts_after: "Autoriaus pašalintos žinutės bus automatiškai ištrintos po (n) valandų. Jei nustatytas 0, įrašai bus nedelsiant ištrinti."
     fixed_category_positions: "Jei pažymėsite, galėsite suskirstyti kategorijas į nustatytą tvarką. Jei nepažymėta, kategorijos pateikiamos pagal veiklos eilę."
     show_pinned_excerpt_mobile: "Rodyti ištrauką apie prisegtas temas mobiliojo įrenginio rodinyje."

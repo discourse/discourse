@@ -2064,6 +2064,8 @@ ko:
       medium_dark_tone: 중간 정도 어두운 피부색
       dark_tone: 어두운 피부색
       default: 사용자 지정 이모티콘
+    filter_controls:
+      reset: "리셋"
     shared_drafts:
       title: "공유 초안"
       notice: "이 글은 공유 초안을 게시할 수 있는 사용자만 볼 수 있습니다."
@@ -4471,6 +4473,8 @@ ko:
           reset: "리셋"
       navigation_menu:
         sidebar: "사이드바"
+      duplicate_topic_titles:
+        allowed: "허용됨"
       backups:
         title: "백업"
         menu:
@@ -4638,7 +4642,6 @@ ko:
           is_private: "테마는 비공개 Git 저장소에 있습니다"
           finish_install: "테마 설치 완료"
           remote_branch: "브랜치 이름(선택사항)"
-          public_key: "다음 공개 키 액세스를 저장소에 부여하세요."
           install: "설치"
           installed: "설치됨"
           install_popular: "인기"
@@ -5536,6 +5539,7 @@ ko:
         delete: "삭제하기"
         name: "이름"
         group: "그룹"
+        all_groups: "모든 그룹"
         image: "이미지"
         alt: "맞춤 이모티콘 미리보기"
         delete_confirm: ":%{name}: 이모티콘을 삭제할까요?"

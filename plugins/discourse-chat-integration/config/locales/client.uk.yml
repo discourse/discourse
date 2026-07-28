@@ -273,3 +273,8 @@ uk:
               description: "Назву каналу ви можете знайти в налаштуваннях інтеграції чату"
             provider:
               label: Провайдер
+    discourse_workflows:
+      send_chat_integration_message:
+        channel_id: "Канал"
+        configure: "Налаштувати"
+        message: "Повідомлення"

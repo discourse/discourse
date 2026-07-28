@@ -2919,7 +2919,7 @@ es:
     filter_input:
       clear: "Limpiar filtro"
     filter_controls:
-      reset: "Quitar filtro"
+      reset: "Restablecer"
       toggle: "Activar/desactivar filtros desplegables"
     d_icon_grid_picker:
       select_icon: "Seleccionar icono"
@@ -7042,6 +7042,8 @@ es:
         sidebar: "Barra lateral"
         header_dropdown: "Menú desplegable de encabezado"
         legacy: "Heredado"
+      duplicate_topic_titles:
+        allowed: "Permitidos"
       backups:
         title: "Copias de seguridad"
         files_title: "Archivos de copia de seguridad"
@@ -7285,7 +7287,6 @@ es:
           finish_install: "Terminar la instalación del tema"
           last_attempt: "La instalación no ha terminado, último intento:"
           remote_branch: "Nombre de la rama (opcional)"
-          public_key: "Conceda la siguiente clave pública de acceso al repositorio:"
           install: "Instalar"
           installed: "Instalado"
           install_popular: "Popular"
@@ -8641,6 +8642,7 @@ es:
         uploading: "Subiendo…"
         name: "Nombre"
         group: "Grupo"
+        all_groups: "Todos los grupos"
         created_by: "Creado por"
         image: "Imagen"
         alt: "vista previa de emoji personalizado"

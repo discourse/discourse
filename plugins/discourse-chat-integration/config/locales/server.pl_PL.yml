@@ -70,6 +70,10 @@ pl_PL:
         title: Wyślij wiadomość Slack
       send_chat_integration_message:
         title: Wyślij wiadomość dotyczącą integracji czatu
+  discourse_workflows:
+    errors:
+      send_chat_integration_message:
+        channel_not_found: "Nie znaleziono kanału: %{channel_id}"
   chat_integration:
     all_categories: "(wszystkie kategorie)"
     deleted_category: "(usunięta kategoria)"
@@ -86,6 +90,10 @@ pl_PL:
       setting_update_failed: "Nie udało się zaktualizować ustawień: %{errors}"
     provider:
       slack:
+        errors:
+          auth_error: "Podany token uwierzytelniania jest nieprawidłowy"
+          action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
+          channel_not_found: "Podany kanał nie istnieje w Slacku"
         status:
           header: |
             *Reguły dla tego kanału*

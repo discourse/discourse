@@ -42,3 +42,6 @@ cs:
           group_name: "Událost hlasování o tématu"
           topic_upvote: "Když uživatel hlasuje o tématu"
           topic_unvote: "Když uživatel odebere hlas z tématu"
+    discourse_workflows:
+      topic_received_vote:
+        tag_names: "Tagy"

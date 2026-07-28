@@ -9,9 +9,13 @@ de:
     discourse_reactions_like_icon: "Definiert das Symbol, das für die Hauptreaktionsschaltfläche verwendet wird. Dies sollte ein <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a>-Symbolname sein, kein Emoji-Name."
     discourse_reactions_reaction_for_like: "Legt die Reaktion fest, die mit der „Gefällt mir“-Aktion verbunden ist. Historische „Gefällt mir“-Datensätze werden nicht geändert, wenn diese Einstellung geändert wird. Es wird <strong>dringend empfohlen</strong>, diese Einstellung nie zu ändern."
     discourse_reactions_enabled: "Aktiviere das discourse-reactions-Plug-in"
+    enable_new_post_reply_count_position: "Verschiebe die Zusammenfassung der Reaktionen auf den Beitrag in den Beitragsoptionen vor die Anzahl der Antworten."
     discourse_reactions_enabled_reactions: "Definiert eine Liste von aktivierten Reaktionen. Jedes Emoji ist hier erlaubt."
     discourse_reactions_desaturated_reaction_panel: "Stellt Reaktionen weniger ablenkend in Graustufen dar, bis sie im Fokus des Zeigers stehen."
     discourse_reactions_excluded_from_like: "Reaktionen, die nicht als „Gefällt mir“ gelten. Alle Reaktionen, die nicht auf dieser Liste stehen, werden in Bezug auf Abzeichen, Berichte und andere Zwecke als „Gefällt mir“ gewertet."
+    discourse_reactions_like_sync_enabled: "Wenn diese Option aktiviert ist, werden für vorherige Reaktionen die entsprechenden „Gefällt mir“-Einträge erstellt, außer für die Reaktionen, die in {{setting:discourse_reactions_excluded_from_like}} definiert sind. Dieser Abgleich findet regelmäßig im Hintergrund statt und auch, wenn du {{setting:discourse_reactions_excluded_from_like}} änderst."
+    discourse_reactions_allow_any_emoji: "Wenn diese Option aktiviert ist, wird eine Schaltfläche hinzugefügt, mit der Benutzer ein beliebiges Emoji in der Reaktionsauswahl auswählen können. Mitglieder können jedes beliebige Emoji, einschließlich benutzerdefinierter Emojis, für Reaktionen auswählen. Nutze die Website-Einstellung {{setting:emoji_deny_list}}, um die verfügbaren Reaktionen einzuschränken."
+    enable_discourse_reactions_by_default: "Ändert den Standardwert für die Einstellung {{setting:discourse_reactions_enabled}} von „deaktiviert“ auf „aktiviert“, sobald diese bevorstehende Änderung aktiviert wird."
     errors:
       invalid_excluded_emoji: "Du kannst keine Emojis ausschließen, die nicht in „discourse reactions enabled reactions“ enthalten sind (außer den standardmäßig ausgeschlossenen), und du kannst das Emoji nicht ausschließen, das für „discourse reactions reaction for like“ verwendet wird."
   badges:
