@@ -3,10 +3,7 @@
 RSpec.describe "Admin dashboard" do
   fab!(:admin)
 
-  before do
-    enable_current_plugin
-    SiteSetting.dashboard_improvements = false
-  end
+  before { enable_current_plugin }
 
   it "displays the sentiment dashboard" do
     SiteSetting.ai_sentiment_enabled = true

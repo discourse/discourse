@@ -3,10 +3,7 @@
 describe "Admin Dashboard Community Health" do
   fab!(:current_user, :admin)
 
-  before do
-    SiteSetting.dashboard_improvements = false
-    sign_in(current_user)
-  end
+  before { sign_in(current_user) }
 
   describe "Pageview Report" do
     context "when use_legacy_pageviews is true" do
