@@ -109,6 +109,13 @@ class AdminDashboardEngagement
   def build_posters
     args = { start_date: start_date, end_date: end_date, current_user: current_user }
 
+    selected_category_ids =
+      AdminDashboardSectionConfiguration.settings_for("engagement").dig(
+        "whos_posting",
+        "category_ids",
+      )
+    args[:filters] = { category_ids: selected_category_ids } if selected_category_ids.present?
+
     report = Report.find_cached("posters_by_member_type", args)
     if report.nil?
       report = Report.find("posters_by_member_type", args)
@@ -117,11 +124,22 @@ class AdminDashboardEngagement
 
     return nil if report.nil? || report_error?(report)
 
-    { rows: report_data(report), total: report.is_a?(Hash) ? report[:total] : report.total }
+    {
+      rows: report_data(report),
+      total: report.is_a?(Hash) ? report[:total] : report.total,
+      category_ids: visible_category_ids(selected_category_ids),
+    }
   end
 
   def build_activity_by_category
     args = { start_date: start_date, end_date: end_date, current_user: current_user }
+
+    selected_category_ids =
+      AdminDashboardSectionConfiguration.settings_for("engagement").dig(
+        "activity_by_category",
+        "category_ids",
+      )
+    args[:filters] = { category_ids: selected_category_ids } if selected_category_ids.present?
 
     report = Report.find_cached("activity_by_category", args)
     if report.nil?
@@ -131,6 +149,16 @@ class AdminDashboardEngagement
 
     return nil if report.nil? || report_error?(report)
 
-    { rows: report_data(report), total: report.is_a?(Hash) ? report[:total] : report.total }
+    {
+      rows: report_data(report),
+      total: report.is_a?(Hash) ? report[:total] : report.total,
+      category_ids: visible_category_ids(selected_category_ids),
+    }
+  end
+
+  def visible_category_ids(category_ids)
+    return category_ids if category_ids.blank?
+
+    Category.secured(Guardian.new(current_user)).in_order_of(:id, category_ids).pluck(:id)
   end
 end

@@ -161,14 +161,18 @@ module("Integration | Component | workflows property engine", function (hooks) {
   test("renders checkbox controls from metadata", async function (assert) {
     this.setProperties({
       configuration: {
-        category_id: 1,
+        category_ids: [1],
         include_subcategories: true,
       },
       formApi: null,
       nodeType: "trigger:topic_created",
       schema: {
-        category_id: {
-          type: "integer",
+        category_ids: {
+          type: "array",
+          ui: {
+            control: "category",
+            multiple: true,
+          },
         },
         include_subcategories: {
           type: "boolean",
@@ -177,7 +181,7 @@ module("Integration | Component | workflows property engine", function (hooks) {
           },
           display_options: {
             show: {
-              category_id: [{ condition: { exists: true } }],
+              category_ids: [{ condition: { exists: true } }],
             },
           },
         },
@@ -213,7 +217,204 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.false(this.formApi.get("include_subcategories"));
   });
 
+  test("hides fields conditioned on a category list when it is empty", async function (assert) {
+    this.setProperties({
+      configuration: {
+        category_ids: [],
+        include_subcategories: true,
+      },
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_ids: {
+          type: "array",
+          ui: {
+            control: "category",
+            multiple: true,
+          },
+        },
+        include_subcategories: {
+          type: "boolean",
+          ui: {
+            control: "checkbox",
+          },
+          display_options: {
+            show: {
+              category_ids: [{ condition: { exists: true } }],
+            },
+          },
+        },
+      },
+    });
+
+    await render(
+      <template>
+        <Form @data={{this.configuration}} as |form transientData|>
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    assert.dom(".category-selector").exists();
+    assert.dom("input[type='checkbox']").doesNotExist();
+  });
+
+  test("renders user seen trigger options as a compact condition group", async function (assert) {
+    this.setProperties({
+      configuration: {
+        group_ids: [],
+        trigger_on_first_seen: true,
+        trigger_on_not_seen_for_more_than: false,
+        not_seen_for_amount: 30,
+        not_seen_for_unit: "days",
+      },
+      formApi: null,
+      nodeType: "trigger:user_seen",
+      nodeTypes: [
+        {
+          identifier: "trigger:user_seen",
+          name: "trigger:user_seen",
+          version: "1.0",
+          metadata: {
+            groups: [
+              { id: 1, name: "support" },
+              { id: 2, name: "moderators" },
+            ],
+          },
+        },
+      ],
+      schema: {
+        trigger_conditions: {
+          type: "custom",
+          ui: {
+            control: "user_seen_trigger_options",
+          },
+        },
+        group_ids: {
+          type: "multi_options",
+          default: [],
+          type_options: {
+            load_options_method: "groups",
+          },
+          control_options: {
+            filterable: true,
+            name_property: "name",
+            value_property: "id",
+          },
+        },
+        trigger_on_first_seen: {
+          type: "boolean",
+          default: true,
+          ui: {
+            hidden: true,
+          },
+        },
+        trigger_on_not_seen_for_more_than: {
+          type: "boolean",
+          default: false,
+          ui: {
+            hidden: true,
+          },
+        },
+        not_seen_for_amount: {
+          type: "integer",
+          default: 30,
+          min: 1,
+          ui: {
+            hidden: true,
+          },
+        },
+        not_seen_for_unit: {
+          type: "options",
+          default: "days",
+          options: ["hours", "days", "weeks", "months"],
+          ui: {
+            hidden: true,
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await waitFor("input[name='trigger_on_first_seen']:checked");
+
+    assert.dom(".form-kit__control-checkbox-description").exists({ count: 2 });
+    assert.deepEqual(
+      findAll(".form-kit__control-checkbox-description").map((description) =>
+        description.textContent.trim()
+      ),
+      [
+        "The user has never been seen before.",
+        "Only applies to users with a previous seen date.",
+      ],
+      "checkbox descriptions render through FormKit"
+    );
+    assert.dom(".multi-select").exists("the group limiter field renders");
+    assert.dom("input[type='checkbox']").exists({ count: 2 });
+    assert.dom("input[name='trigger_on_first_seen']").isChecked();
+    assert
+      .dom("input[name='trigger_on_not_seen_for_more_than']")
+      .isNotChecked();
+    assert.dom("input[name='not_seen_for_amount']").doesNotExist();
+    assert.dom("select[name='not_seen_for_unit']").doesNotExist();
+
+    const groupSelector = selectKit(".multi-select");
+    await groupSelector.expand();
+    await groupSelector.selectRowByValue("2");
+
+    assert.deepEqual(
+      this.formApi.get("group_ids").map(String),
+      ["2"],
+      "selected group IDs are saved"
+    );
+
+    await click("input[name='trigger_on_not_seen_for_more_than']");
+    await waitFor("input[name='not_seen_for_amount']");
+
+    assert.true(this.formApi.get("trigger_on_not_seen_for_more_than"));
+    assert.strictEqual(this.formApi.get("not_seen_for_amount"), 30);
+    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "days");
+    assert.dom(".form-kit__container.workflows-user-seen-duration").exists();
+    assert.dom("input[name='not_seen_for_amount']").hasValue("30");
+    assert.dom("select[name='not_seen_for_unit']").hasValue("days");
+
+    await fillIn("input[name='not_seen_for_amount']", "45");
+    await select("select[name='not_seen_for_unit']", "weeks");
+
+    assert.strictEqual(String(this.formApi.get("not_seen_for_amount")), "45");
+    assert.strictEqual(this.formApi.get("not_seen_for_unit"), "weeks");
+  });
+
   test("can clear optional category controls", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = true;
+
     this.setProperties({
       configuration: {
         category_id: 2,
@@ -262,6 +463,57 @@ module("Integration | Component | workflows property engine", function (hooks) {
     await click(header.el().querySelector(".btn-clear"));
 
     assert.strictEqual(this.formApi.get("category_id"), "");
+  });
+
+  test("hides the clear button on category controls when uncategorized topics are disallowed", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = false;
+
+    this.setProperties({
+      configuration: {
+        category_id: 2,
+      },
+      formApi: null,
+      nodeType: "trigger:topic_created",
+      schema: {
+        category_id: {
+          type: "integer",
+          required: false,
+          ui: {
+            control: "category",
+          },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @nodeType={{this.nodeType}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    const categoryChooser = selectKit(".category-chooser");
+    const header = categoryChooser.header();
+
+    assert.strictEqual(header.value(), "2");
+    assert
+      .dom(".btn-clear", header.el())
+      .doesNotExist("clearing would move the topic to uncategorized");
   });
 
   test("can clear optional group controls", async function (assert) {
@@ -820,6 +1072,126 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.strictEqual(
       this.formApi.get("conditions.0.leftValue"),
       '={{ $json["topic title"]["post-count"] }}'
+    );
+  });
+
+  test("condition builder supports declared integer and array fields", async function (assert) {
+    this.setProperties({
+      configuration: { conditions: [] },
+      formApi: null,
+      node: {
+        clientId: "branch",
+        type: "condition:if",
+        name: "Branch",
+      },
+      nodes: [
+        {
+          clientId: "trigger",
+          type: "trigger:sample",
+          typeVersion: "1.0",
+          name: "Trigger",
+        },
+        {
+          clientId: "branch",
+          type: "condition:if",
+          name: "Branch",
+        },
+      ],
+      connections: [
+        {
+          sourceClientId: "trigger",
+          targetClientId: "branch",
+        },
+      ],
+      nodeTypes: [
+        {
+          name: "trigger:sample",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      post: {
+                        type: "object",
+                        properties: {
+                          id: { type: "integer" },
+                          mixed: { type: ["integer", "string"] },
+                          tags: {
+                            type: "array",
+                            items: { type: "string" },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+      nodeType: "condition:if",
+      schema: {
+        conditions: {
+          type: "array",
+          ui: { control: "condition_builder" },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @connections={{this.connections}}
+            @node={{this.node}}
+            @nodes={{this.nodes}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".workflows-empty-state .btn-primary");
+
+    assert
+      .dom("option[value='$json.post.tags']")
+      .exists("offers the array itself for array operators");
+    assert
+      .dom("option[value='$json.post.tags[0]']")
+      .exists("also offers the declared array item path");
+    assert
+      .dom("option[value='$json.post.mixed']")
+      .doesNotExist("does not guess an operator type for union fields");
+
+    await select(
+      ".workflows-property-engine__collection-row select",
+      "$json.post.id"
+    );
+
+    assert.deepEqual(
+      this.formApi.get("conditions.0.operator"),
+      {
+        operation: "equals",
+        type: "number",
+        singleValue: false,
+      },
+      "stores the runtime-supported number type for declared integers"
     );
   });
 

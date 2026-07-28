@@ -229,6 +229,16 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
+    it "orders channels by lower-cased name by default" do
+      category_channel.update!(name: "Support")
+      Fabricate(:category_channel, name: "banana")
+      Fabricate(:category_channel, name: "Apple")
+
+      channels = described_class.secured_public_channels(guardian, following: following)
+
+      expect(channels.map(&:name)).to eq(%w[Apple banana Support])
+    end
+
     context "with match_quality when filtering" do
       fab!(:exact_channel) { Fabricate(:category_channel, name: "dev") }
       fab!(:prefix_channel) { Fabricate(:category_channel, name: "devops") }

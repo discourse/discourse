@@ -18,8 +18,6 @@ hu:
         sections:
           support:
             title: "Támogatás"
-            filter:
-              all_categories: "Összes kategória"
             answerers:
               staff: "Stáb"
               member: "Tagok"

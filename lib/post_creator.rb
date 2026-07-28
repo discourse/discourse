@@ -35,6 +35,7 @@ class PostCreator
   #                             call `enqueue_jobs` after the transaction is committed.
   #   hidden_reason_id        - Reason for hiding the post (optional)
   #   skip_validations        - Do not validate any of the content in the post
+  #   skip_staff_author_pm_membership_sync - Do not add the post author to private message allowed users when a staff guardian authorizes the post
   #   draft_key               - the key of the draft we are creating (will be deleted on success)
   #   advance_draft           - Destroy draft after creating post or topic
   #   silent                  - Do not update topic stats and fields like last_post_user_id
@@ -86,6 +87,10 @@ class PostCreator
 
   def skip_validations?
     @opts[:skip_validations]
+  end
+
+  def skip_staff_author_pm_membership_sync?
+    @opts[:skip_staff_author_pm_membership_sync]
   end
 
   def guardian
@@ -210,7 +215,7 @@ class PostCreator
         create_embedded_topic
         @post.link_post_uploads
         delete_owned_bookmarks
-        ensure_in_allowed_users if guardian.is_staff?
+        ensure_in_allowed_users if guardian.is_staff? && !skip_staff_author_pm_membership_sync?
         unarchive_message if !@opts[:import_mode]
         DraftSequence.next!(@user, draft_key) if !@opts[:import_mode] && @opts[:advance_draft]
         @post.save_reply_relationships

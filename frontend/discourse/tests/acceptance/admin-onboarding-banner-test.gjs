@@ -1,13 +1,35 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
+const withStep = (id, assert) => {
+  return {
+    checkbox() {
+      return assert.dom(`div#${id} .onboarding-step__checkbox > svg`);
+    },
+    clickAction() {
+      return click(`div#${id} .onboarding-step__action .btn`);
+    },
+    isChecked() {
+      return this.checkbox().hasClass("checked", `${id} step is completed`);
+    },
+    isNotChecked() {
+      return this.checkbox().doesNotHaveClass(
+        "checked",
+        `${id} step is not completed`
+      );
+    },
+  };
+};
+
 acceptance("Admin - Onboarding Banner", function (needs) {
+  let loggedEvents = [];
+
   needs.user({
     admin: true,
     groups: [AUTO_GROUPS.admins],
@@ -20,11 +42,18 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     default_composer_category: 1,
   });
 
+  needs.hooks.beforeEach(() => (loggedEvents = []));
+
   needs.pretender((server, helper) => {
     server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
       return helper.response(200, {
         success: "OK",
       });
+    });
+
+    server.post("/admin/onboarding/events", (request) => {
+      loggedEvents.push(helper.parsePostData(request.requestBody));
+      return helper.response(200, { success: "OK" });
     });
 
     server.post("/invites", () => {
@@ -62,26 +91,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     });
   });
 
-  const withStep = (id, assert) => {
-    return {
-      checkbox() {
-        return assert.dom(`div#${id} .onboarding-step__checkbox > svg`);
-      },
-      clickAction() {
-        return click(`div#${id} .onboarding-step__action .btn`);
-      },
-      isChecked() {
-        return this.checkbox().hasClass("checked", `${id} step is completed`);
-      },
-      isNotChecked() {
-        return this.checkbox().doesNotHaveClass(
-          "checked",
-          `${id} step is not completed`
-        );
-      },
-    };
-  };
-
   test("it shows onboarding banner", async function (assert) {
     await visit("/");
     assert.dom(".admin-onboarding-banner").exists("shows onboarding banner");
@@ -93,6 +102,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".admin-onboarding-banner .btn-close");
     assert.dom(".admin-onboarding-banner").doesNotExist();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "dismissed" }],
+      "logs a dismissed staff action"
+    );
   });
 
   test("it can complete `start_posting` step with predefined data", async function (assert) {
@@ -223,6 +237,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await click(".modal-close");
 
     step.isChecked();
+    assert.deepEqual(
+      loggedEvents,
+      [{ event: "step_completed", step: "invite_collaborators" }],
+      "logs a step_completed staff action once"
+    );
   });
 
   test("it can open `select_theme` step", async function (assert) {
@@ -238,6 +257,66 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom(".theme-picker-modal__card")
       .exists({ count: 2 }, "shows Foundation and Horizon");
+  });
+});
+
+acceptance("Admin - Onboarding Banner - admin invites", function (needs) {
+  needs.user({
+    admin: true,
+    groups: [AUTO_GROUPS.admins],
+    show_site_owner_onboarding: true,
+    can_create_admin_invite: true,
+  });
+
+  needs.settings({
+    enable_site_owner_onboarding: true,
+    enable_invite_modal_with_roles: true,
+  });
+
+  needs.pretender((server, helper) => {
+    server.put("/admin/site_settings/enable_site_owner_onboarding", () => {
+      return helper.response(200, { success: "OK" });
+    });
+
+    server.post("/admin/onboarding/events", () => {
+      return helper.response(200, { success: "OK" });
+    });
+
+    server.post("/invites", () => {
+      return helper.response(200, {
+        id: 42,
+        invite_key: "abc123",
+        link: "http://example.com/invites/abc123",
+        email: "new-admin@example.com",
+        grants_admin: true,
+        expires_at: "2100-01-01 00:00",
+      });
+    });
+  });
+
+  test("the invite step opens the role-based modal defaulted to admins and completes", async function (assert) {
+    const step = withStep("invite_collaborators", assert);
+    await visit("/");
+
+    step.isNotChecked();
+
+    await step.clickAction();
+
+    assert
+      .dom(".create-invite-with-roles-modal")
+      .exists("opens the role-based invite modal");
+    assert
+      .dom(".create-invite-with-roles-modal__role-toggle input[value='admin']")
+      .isChecked("defaults to the admins tab");
+
+    await fillIn(
+      ".create-invite-with-roles-modal input[name='email']",
+      "new-admin@example.com"
+    );
+    await click(".create-invite-with-roles-modal .save-invite");
+    await click(".modal-close");
+
+    step.isChecked();
   });
 });
 

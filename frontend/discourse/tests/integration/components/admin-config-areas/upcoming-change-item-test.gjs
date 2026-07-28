@@ -197,13 +197,14 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
       );
   });
 
-  test("does not render the permanent soon notice when impact_type is site_setting_default", async function (assert) {
+  test("does not render the permanent soon notice when permanent_warning is false", async function (assert) {
     const change = buildChange({
       upcoming_change: {
         status: "stable",
         impact: "site_setting_default,all_members",
         impact_type: "site_setting_default",
         impact_role: "all_members",
+        permanent_warning: false,
         enabled_for: "everyone",
       },
     });
@@ -219,7 +220,7 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     assert
       .dom(".upcoming-change__status-notice")
       .doesNotExist(
-        "does not show the permanent soon notice for site setting default changes"
+        "does not show the permanent soon notice when the change opts out of it"
       );
   });
 

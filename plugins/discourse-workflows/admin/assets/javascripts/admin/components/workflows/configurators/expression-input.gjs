@@ -6,18 +6,22 @@ import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import {
+  schemaFieldsForNodeInput,
+  schemaFieldsForNodeOutput,
+} from "../../../lib/workflows/data-preview";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
+import {
+  inputIndexForConnection,
+  nodeOutputJsonPath,
+  outputIndexForConnection,
+} from "../../../lib/workflows/expression-paths";
+import { schemaFieldsForItems } from "../../../lib/workflows/schema-fields";
+import {
   ancestorOutputNodes,
   inputConnectionsForNode,
-  inputIndexForConnection,
-  inputSummaryForNode,
-  nodeOutputFirstJsonPath,
-  nodeOutputLinkedItemJsonPath,
-  outputIndexForConnection,
   previousNodeForConnection,
-  schemaFieldsForItems,
-  schemaFieldsForNodeInput,
-} from "../../../lib/workflows/data-schema";
-import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
+  resolveDeclaredOutputSchemas,
+} from "../../../lib/workflows/schema-graph";
 import ExpressionPreview from "../variable/expression-preview";
 import VariableInput from "../variable/input";
 import ReferencePropertyPicker from "../variable/reference-property-picker";
@@ -70,6 +74,7 @@ export default class ExpressionInput extends Component {
     const itemPrefix =
       this.workflowsNodeTypes.expressionContext.item_prefix || "$json";
     const runData = session?.lastExecutionRunData || {};
+    const declaredOutputSchemas = resolveDeclaredOutputSchemas(graph);
     const previousConnection = node
       ? inputConnectionsForNode(node, graph)[0]
       : null;
@@ -77,42 +82,49 @@ export default class ExpressionInput extends Component {
     const currentInputIndex = previousConnection
       ? inputIndexForConnection(previousConnection)
       : 0;
-    const currentInputSummary = node
-      ? inputSummaryForNode(runData, node.name, currentInputIndex, {
+    const previousOutputIndex = previousConnection
+      ? outputIndexForConnection(previousConnection)
+      : 0;
+    const pinnedInputItems =
+      previousOutputIndex === 0
+        ? session?.pinnedItemsForNode(previousNode?.name)
+        : undefined;
+    const inputFields = node
+      ? schemaFieldsForNodeInput(runData, node.name, {
+          inputIndex: currentInputIndex,
           node,
           sourceNode: previousNode,
-          outputIndex: previousConnection
-            ? outputIndexForConnection(previousConnection)
-            : 0,
+          outputIndex: previousOutputIndex,
+          prefix: itemPrefix,
+          graph,
+          pinnedItems: pinnedInputItems,
+          declaredOutputSchemas,
         })
-      : null;
-    let inputFields = [];
-    if (currentInputSummary) {
-      inputFields = schemaFieldsForNodeInput(runData, node.name, {
-        inputIndex: currentInputIndex,
-        node,
-        sourceNode: previousNode,
-        outputIndex: previousConnection
-          ? outputIndexForConnection(previousConnection)
-          : 0,
-        prefix: itemPrefix,
-      });
-    }
+      : [];
     // Pinned sample data, falling back to the last run.
     const ancestorNodes = node
       ? ancestorOutputNodes(node, graph).map((ancestor) => {
-          const items =
-            session?.outputItemsForNode(ancestor.node, ancestor.outputIndex) ||
-            [];
-          const prefix =
-            items.length === 1
-              ? nodeOutputFirstJsonPath(ancestor.node.name, {
-                  outputIndex: ancestor.outputIndex,
-                })
-              : nodeOutputLinkedItemJsonPath(ancestor.node.name);
+          const pinnedItems =
+            ancestor.outputIndex === 0
+              ? session?.pinnedItemsForNode(ancestor.node.name)
+              : undefined;
+          const prefix = nodeOutputJsonPath(runData, ancestor.node.name, {
+            outputIndex: ancestor.outputIndex,
+            node: ancestor.node,
+            itemCount: pinnedItems?.length,
+          });
           return {
             node: ancestor.node,
-            fields: schemaFieldsForItems(items, { prefix }),
+            fields:
+              pinnedItems === undefined
+                ? schemaFieldsForNodeOutput(runData, ancestor.node.name, {
+                    outputIndex: ancestor.outputIndex,
+                    node: ancestor.node,
+                    prefix,
+                    graph,
+                    declaredOutputSchemas,
+                  })
+                : schemaFieldsForItems(pinnedItems, { prefix }),
           };
         })
       : [];

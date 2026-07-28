@@ -34,6 +34,7 @@ export default class NestedController extends Controller {
   @service nestedViewCache;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked topic;
   @tracked opPost;
@@ -42,6 +43,7 @@ export default class NestedController extends Controller {
   @tracked hasMoreRoots = false;
   @tracked loadingMore = false;
   @tracked sort;
+  @tracked effectiveSort;
   @tracked messageBusLastId;
   @tracked postNumber;
   @tracked context = null;
@@ -257,7 +259,7 @@ export default class NestedController extends Controller {
       const nextPage = this.page + 1;
       const query = new URLSearchParams({
         page: nextPage,
-        sort: this.sort || "top",
+        sort: this.effectiveSort || this.sort || "top",
       });
       const data = await ajax(
         `/n/${this.topic.slug}/${this.topic.id}.json?${query}`
@@ -365,6 +367,7 @@ export default class NestedController extends Controller {
       page: this.page,
       hasMoreRoots: this.hasMoreRoots,
       sort: this.sort,
+      effectiveSort: this.effectiveSort,
       messageBusLastId: this.messageBusLastId,
       pinnedPostIds: this.pinnedPostIds,
       postNumber: this.postNumber,
@@ -784,7 +787,10 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
         return;
       }
 
@@ -811,7 +817,7 @@ export default class NestedController extends Controller {
         this.appEvents.trigger("nested-replies:child-created", {
           topicId,
           post: node.post,
-          parentPostNumber: replyTo,
+          parentPostNumber: this.#visibleParentPostNumber(postData),
           isOwnPost: data.user_id === this.currentUser?.id,
         });
       }
@@ -834,6 +840,35 @@ export default class NestedController extends Controller {
       return false;
     }
     return true;
+  }
+
+  #visibleParentPostNumber(postData) {
+    const replyTo = postData.reply_to_post_number;
+    if (!this.siteSettings.nested_replies_cap_nesting_depth) {
+      return replyTo;
+    }
+
+    const ancestors = [];
+    let postNumber = replyTo;
+
+    while (postNumber && postNumber !== 1) {
+      ancestors.unshift(postNumber);
+      const post = this.postRegistry.get(postNumber);
+      if (!post) {
+        return replyTo;
+      }
+      postNumber = post.reply_to_post_number;
+    }
+
+    const maxDepth = this.siteSettings.nested_replies_max_depth;
+    return ancestors.length > maxDepth ? ancestors[maxDepth - 1] : replyTo;
+  }
+
+  #postBelongsToTopic(postData, topicId = this.topic?.id) {
+    return (
+      postData?.topic_id != null &&
+      String(postData.topic_id) === String(topicId)
+    );
   }
 
   #isPostKnown(postId) {
@@ -860,7 +895,10 @@ export default class NestedController extends Controller {
     const topicId = this.topic?.id;
     try {
       const postData = await ajax(`/posts/${data.id}.json`);
-      if (this.topic?.id !== topicId) {
+      if (
+        this.topic?.id !== topicId ||
+        !this.#postBelongsToTopic(postData, topicId)
+      ) {
         return;
       }
 
@@ -868,7 +906,13 @@ export default class NestedController extends Controller {
         (p) => p.id === data.id
       );
       if (existing) {
-        existing.setProperties(postData);
+        // Route through the store so Post.munge runs — it rebuilds
+        // actions_summary as ActionSummary instances and repopulates
+        // actionByName. Without this, flagsAvailable (reads actionByName)
+        // and postActionFor (reads actions_summary) drift apart after an
+        // "acted" event, which crashes the flag modal on the next submit.
+        const updated = this.store.createRecord("post", postData);
+        existing.updateFromPost(updated);
         if (!postData.deleted_at) {
           existing.set("deleted_post_placeholder", false);
         }
@@ -912,7 +956,10 @@ export default class NestedController extends Controller {
 
     const newNodes = [];
     for (const result of results) {
-      if (result.status === "fulfilled") {
+      if (
+        result.status === "fulfilled" &&
+        this.#postBelongsToTopic(result.value, topicId)
+      ) {
         newNodes.push(this.#processNode({ ...result.value, children: [] }));
       }
     }

@@ -294,8 +294,6 @@ ru:
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       chat_notifications_title: "Уведомления чата"
-      only_chat_push_notifications:
-        title: "Отправлять только push-уведомления в чате"
       personalization_title: "Персонализация"
       ignore_channel_wide_mention:
         title: "Игнорировать на канале массовые упоминания"
@@ -378,6 +376,8 @@ ru:
         filter_closed: Закрытые
         filter_archived: Архивные
         filter_input_placeholder: Поиск канала по названию
+        filter_joined_all: "Все"
+        filter_joined_joined: "Регистрация"
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
@@ -453,6 +453,9 @@ ru:
           few: "%{count} участника"
           many: "%{count} участников"
           other: "%{count} участников"
+        preview_card:
+          log_in: "Войти"
+          sign_up: "Регистрация"
       create_channel:
         threading:
           label: "Включить цепочки сообщений"

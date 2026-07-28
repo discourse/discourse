@@ -17,6 +17,13 @@ export default class TopicLocalization extends RestModel {
     });
   }
 
+  static updateLocale(topicId, locale) {
+    return ajax(`/topic_localizations/${topicId}/locale`, {
+      type: "PUT",
+      data: { locale: locale ?? "" },
+    });
+  }
+
   static destroy(topicId, locale) {
     return ajax("/topic_localizations/destroy", {
       type: "DELETE",

@@ -11,7 +11,7 @@ module DiscourseWorkflows
 
       delegate :workflow, :trigger_data, to: :@execution_context
 
-      attr_reader :trigger_node_id, :execution, :workflow_snapshot
+      attr_reader :trigger_node_id, :execution, :workflow_snapshot, :existing_run_data
 
       def initialize(trigger_node_id:, execution_context:, execution_mode:, options:)
         @trigger_node_id = trigger_node_id.to_s
@@ -38,6 +38,7 @@ module DiscourseWorkflows
         )
         @execution = create_execution!
         reset_collaborators!
+        restore_seeded_run_data!
         @execution
       end
 
@@ -157,6 +158,25 @@ module DiscourseWorkflows
       def reset_collaborators!
         @execution_context.execution = @execution
         @execution_context.reset!
+      end
+
+      def restore_seeded_run_data!
+        seeded = @options.existing_execution&.execution_data&.run_data
+        return if seeded.blank?
+
+        @existing_run_data = seeded_runs_matching_snapshot(seeded)
+        restore_node_runs_from_run_data
+      end
+
+      def seeded_runs_matching_snapshot(seeded)
+        seeded.each_with_object({}) do |(node_name, runs), result|
+          node = @workflow_snapshot.find_node_by_name(node_name)
+          next if node.nil?
+
+          matching_runs =
+            Array(runs).select { |run| StepExecutionPlan.run_matches_node?(run, node) }
+          result[node_name] = matching_runs if matching_runs.any?
+        end
       end
 
       def restore_from!(execution_data)
@@ -350,13 +370,11 @@ module DiscourseWorkflows
 
         node_runs.each_with_object({}) do |(node_name, runs), result|
           existing_run_count = Array(@existing_run_data[node_name]).length
-          result[node_name] = Array(runs)
-            .drop(existing_run_count)
-            .map
-            .with_index do |run, index|
-              step = Array(steps_by_name[node_name])[existing_run_count + index]
-              serialize_node_run(node_name, run, step, existing_run_count + index)
-            end
+          new_runs = Array(runs).drop(existing_run_count)
+          node_steps = Array(steps_by_name[node_name]).last(new_runs.length)
+          result[node_name] = new_runs.map.with_index do |run, index|
+            serialize_node_run(node_name, run, node_steps[index], existing_run_count + index)
+          end
         end
       end
 

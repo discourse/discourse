@@ -5,6 +5,7 @@ RSpec.describe EmailLoginCode::Redeem do
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_presence_of(:code) }
     it { is_expected.not_to allow_values("12345", "abcdef").for(:code) }
+    it { is_expected.to validate_length_of(:name).is_at_most(255) }
   end
 
   describe ".call" do
@@ -126,6 +127,20 @@ RSpec.describe EmailLoginCode::Redeem do
         expect(result[:user].username).to eq("jane")
       end
 
+      it "defaults the name to the generated username" do
+        user = result[:user]
+
+        expect(user.name).to eq(user.username)
+      end
+
+      context "when a name is provided" do
+        let(:params) { { email:, code:, name: "Jane Doe" } }
+
+        it "saves the name even though it isn't required" do
+          expect(result[:user].name).to eq("Jane Doe")
+        end
+      end
+
       it "enqueues the welcome message" do
         expect { result }.to change {
           Jobs::SendSystemMessage.jobs.count do |job|
@@ -202,6 +217,42 @@ RSpec.describe EmailLoginCode::Redeem do
       end
 
       context "when the email belongs to an existing user" do
+        fab!(:user)
+
+        let(:email) { user.email }
+
+        it { is_expected.to run_successfully }
+      end
+    end
+
+    context "when a full name is required at signup" do
+      before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+      it { is_expected.to fail_a_policy(:required_full_name_provided) }
+
+      it "does not consume the code" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+      end
+
+      context "when the name is only whitespace" do
+        let(:params) { { email:, code:, name: "   " } }
+
+        it { is_expected.to fail_a_policy(:required_full_name_provided) }
+      end
+
+      context "when a name is provided" do
+        let(:params) { { email:, code:, name: "Jane Doe" } }
+
+        it { is_expected.to run_successfully }
+
+        it "saves the name on the new user" do
+          expect(result[:user].name).to eq("Jane Doe")
+        end
+      end
+
+      context "when the email belongs to an existing active user" do
         fab!(:user)
 
         let(:email) { user.email }

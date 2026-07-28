@@ -284,7 +284,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           mcp_server_tool_names: {
             ai_mcp_server.id.to_s => ["search_issues"],
           },
-          execution_mode: "agentic",
           max_turn_tokens: 5000,
           compression_threshold: 80,
           response_format: [{ key: "summary", type: "string" }],
@@ -309,7 +308,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
           expect(agent_json["thinking_effort"]).to eq("high")
           expect(agent_json["default_llm_id"]).to eq(llm_model.id)
           expect(agent_json["forced_tool_count"]).to eq(2)
-          expect(agent_json["execution_mode"]).to eq("agentic")
           expect(agent_json["max_turn_tokens"]).to eq(5000)
 
           expect(agent_json["allow_topic_mentions"]).to eq(true)
@@ -561,13 +559,12 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(agent.rag_llm_model_id).to eq(llm_model.id)
     end
 
-    it "supports updating agentic params" do
+    it "supports updating token budget params" do
       agent = Fabricate(:ai_agent, name: "test_bot2")
 
       put "/admin/plugins/discourse-ai/ai-agents/#{agent.id}.json",
           params: {
             ai_agent: {
-              execution_mode: "agentic",
               max_turn_tokens: 8000,
               compression_threshold: 75,
             },
@@ -576,7 +573,6 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       expect(response).to have_http_status(:ok)
       agent.reload
 
-      expect(agent.execution_mode).to eq("agentic")
       expect(agent.max_turn_tokens).to eq(8000)
 
       expect(agent.compression_threshold).to eq(75)

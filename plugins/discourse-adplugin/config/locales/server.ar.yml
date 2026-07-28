@@ -29,7 +29,7 @@ ar:
   site_settings:
     discourse_adplugin_enabled: تفعيل discourse-adplugin
     no_ads_for_personal_messages: "عدم عرض الإعلانات عند عرض الرسائل الشخصية"
-    no_ads_for_restricted_categories: "عدم عرض الإعلانات في الفئات غير المرئية للجميع"
+    no_ads_for_restricted_categories: "عدم عرض الإعلانات في الفئات غير المُشاهَدة للجميع"
     no_ads_for_groups: "عدم عرض الإعلانات للمستخدمين في هذه المجموعات"
     no_ads_for_categories: "عدم عرض الإعلانات في قائمة الموضوعات وصفحات الموضوعات التي تنتمي إلى تلك الفئات"
     no_ads_for_tags: "عدم عرض الإعلانات في قائمة الموضوعات وصفحات الموضوعات التي تنتمي إلى تلك الوسوم."

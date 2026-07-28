@@ -10,7 +10,6 @@ hu:
     chat_enabled: "Csevegés engedélyezése."
     chat_pinned_messages: "Rögzített üzenetek engedélyezése a csevegőcsatornákban."
     enable_public_channels: "Nyilvános csatornák engedélyezése kategóriák alapján."
-    chat_allowed_groups: "A csoportok felhasználói cseveghetnek. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig hozzáférhetnek a csevegéshez."
     chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."

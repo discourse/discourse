@@ -16,8 +16,6 @@ vi:
     first_reaction:
       name: Lần Đầu Biểu Cảm
       description: Lần đầu tiên biểu cảm với tút
-      long_description: |
-        Huy hiệu này được trao cho lần đầu tiên bạn biểu cảm với một tút. Biểu cảm với tút là một cách tuyệt vời để cho các thành viên cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ cảm xúc của bạn!
   reports:
     reactions:
       title: "Cảm xúc"

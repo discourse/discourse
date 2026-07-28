@@ -7,7 +7,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import InstallComponentModal from "discourse/admin/components/modal/install-theme";
 import { COMPONENTS } from "discourse/admin/models/theme";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -23,6 +22,7 @@ import { searchParamsFromPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -261,7 +261,7 @@ export default class AdminConfigAreasComponents extends Component {
     </DPageSubheader>
     <div class="container">
       {{#if this.hasComponents}}
-        <AdminFilterControls
+        <DFilterControls
           @array={{this.components}}
           @dropdownOptions={{STATUS_FILTER_OPTIONS}}
           @initialTextFilter={{this.nameFilter}}
@@ -315,7 +315,7 @@ export default class AdminConfigAreasComponents extends Component {
               <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
             </DLoadMore>
           </:content>
-        </AdminFilterControls>
+        </DFilterControls>
       {{/if}}
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#unless this.hasComponents}}

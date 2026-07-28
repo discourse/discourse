@@ -67,6 +67,7 @@
     .bottom-row {
       display: flex;
       flex-wrap: wrap;
+      align-items: baseline;
       gap: 0 0.5em;
     }
   }

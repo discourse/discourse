@@ -20,6 +20,7 @@ module DiscourseAi
               DiscourseAi::Completions::Dialects::Ollama,
               DiscourseAi::Completions::Dialects::Mistral,
               DiscourseAi::Completions::Dialects::Nova,
+              DiscourseAi::Completions::Dialects::Vllm,
               DiscourseAi::Completions::Dialects::OpenAiCompatible,
             ]
           end

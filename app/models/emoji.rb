@@ -47,6 +47,14 @@ class Emoji
     Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
   end
 
+  def self.grouped
+    groups = allowed.group_by(&:group)
+    pinned = SiteSetting.emoji_picker_pinned_groups_map
+    return groups if pinned.empty?
+
+    groups.sort_by { |key, _| pinned.index(key) || pinned.length }.to_h
+  end
+
   def self.aliases
     aliases_db
   end

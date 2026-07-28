@@ -23,7 +23,7 @@ ar:
           edit: تعديل
           delete: حذف
           save: حفظ
-          confirm_delete: "هل أنت متأكد أنك تريد حذف هذا الموجز؟"
+          confirm_delete: "هل تريد بالتأكيد حذف هذا الموجز؟"
         test:
           title: معاينة
           dismiss: تجاهل

@@ -11,18 +11,7 @@ module DiscourseAi
       before_action :ensure_can_request_stream_suggestions, only: :stream_suggestion
       before_action :rate_limiter_performed!
 
-      include SecureUploadEndpointHelpers
-
-      RATE_LIMITS = {
-        "default" => {
-          amount: 6,
-          interval: 3.minutes,
-        },
-        "caption_image" => {
-          amount: 20,
-          interval: 1.minute,
-        },
-      }.freeze
+      RATE_LIMITS = { "default" => { amount: 6, interval: 3.minutes } }.freeze
 
       def suggest
         input = get_text_param!
@@ -233,41 +222,6 @@ module DiscourseAi
 
         render json: { success: true, progress_channel: }, status: :ok
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
-        render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
-                          status: 502
-      end
-
-      def caption_image
-        image_url = params[:image_url]
-        image_url_type = params[:image_url_type]
-
-        raise Discourse::InvalidParameters.new(:image_url) if !image_url
-        raise Discourse::InvalidParameters.new(:image_url) if !image_url_type
-
-        if image_url_type == "short_path"
-          image = Upload.find_by(sha1: Upload.sha1_from_short_path(image_url))
-        elsif image_url_type == "short_url"
-          image = Upload.find_by(sha1: Upload.sha1_from_short_url(image_url))
-        else
-          image = upload_from_full_url(image_url)
-        end
-
-        raise Discourse::NotFound if image.blank?
-
-        check_secure_upload_permission(image) if image.secure?
-        user = current_user
-        assistant = DiscourseAi::AiHelper::Assistant.new
-        assistant.ensure_mode_access!(DiscourseAi::AiHelper::Assistant::IMAGE_CAPTION, user)
-
-        hijack do
-          caption = assistant.generate_image_caption(image, user)
-          render json: {
-                   caption:
-                     "#{caption} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})",
-                 },
-                 status: :ok
-        end
-      rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed, Net::HTTPBadResponse
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
                           status: 502
       end

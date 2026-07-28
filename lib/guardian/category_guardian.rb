@@ -31,7 +31,7 @@ module CategoryGuardian
     read_restricted = true unless !!read_restricted == read_restricted
 
     return true if !read_restricted
-    secure_category_ids.include?(category_id)
+    secure_category_ids_set.include?(category_id)
   end
 
   def can_see_category?(category)
@@ -39,7 +39,7 @@ module CategoryGuardian
     return true if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
     return true if !category.read_restricted
     return true if is_staged? && category.email_in.present? && category.email_in_allow_strangers
-    secure_category_ids.include?(category.id)
+    secure_category_ids_set.include?(category.id)
   end
 
   def can_post_in_category?(category)
@@ -80,6 +80,10 @@ module CategoryGuardian
   end
 
   private
+
+  def secure_category_ids_set
+    @secure_category_ids_set ||= secure_category_ids.to_set
+  end
 
   def posting_review_required?(category, post_type)
     return false if category.nil?

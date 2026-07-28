@@ -139,7 +139,10 @@ acceptance("Topic - Edit timer", function (needs) {
     await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
-    assert.strictEqual(categoryChooser.header().label(), "category…");
+    assert.strictEqual(
+      categoryChooser.header().label(),
+      i18n("category.choose").replace("&hellip;", "…")
+    );
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
@@ -171,7 +174,10 @@ acceptance("Topic - Edit timer", function (needs) {
     await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
-    assert.strictEqual(categoryChooser.header().label(), "category…");
+    assert.strictEqual(
+      categoryChooser.header().label(),
+      i18n("category.choose").replace("&hellip;", "…")
+    );
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
@@ -208,7 +214,10 @@ acceptance("Topic - Edit timer", function (needs) {
     await select(".timer-type", "publish_to_category");
     const categoryChooser = selectKit(".d-modal__body .category-chooser");
 
-    assert.strictEqual(categoryChooser.header().label(), "category…");
+    assert.strictEqual(
+      categoryChooser.header().label(),
+      i18n("category.choose").replace("&hellip;", "…")
+    );
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();

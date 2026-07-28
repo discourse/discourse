@@ -212,6 +212,14 @@ $db-bar-height: var(--space-2);
   border-radius: var(--d-border-radius);
 }
 
+.db-main__error {
+  padding: var(--space-8);
+  text-align: center;
+  color: var(--primary-medium);
+  background: var(--primary-very-low);
+  border-radius: var(--d-border-radius);
+}
+
 .db-link-arrow {
   position: absolute;
   opacity: 0;
@@ -235,6 +243,7 @@ $db-bar-height: var(--space-2);
 
   &__header-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -250,6 +259,17 @@ $db-bar-height: var(--space-2);
   &__intro {
     max-width: 60ch;
     margin: 0;
+  }
+
+  &__error {
+    grid-column: 1 / -1;
+    flex: 1;
+    padding: var(--space-8);
+    text-align: center;
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1-rem);
   }
 
   &__subheader {

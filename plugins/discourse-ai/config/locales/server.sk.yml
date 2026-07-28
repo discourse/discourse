@@ -73,7 +73,6 @@ sk:
     ai_summarization_enabled: "Povolenie funkcie sumarizácie"
     ai_pm_summarization_allowed_groups: "Skupiny môžu vytvárať a zobrazovať súhrny v PM."
     ai_summary_gists_enabled: "Automatické generovanie stručných zhrnutí najnovších odpovedí v témach"
-    ai_summary_backfill_maximum_topics_per_hour: "Počet tematických súhrnov na doplnenie za hodinu."
     ai_bot_enabled: "Povolenie modulu AI Bot."
     ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
@@ -97,7 +96,6 @@ sk:
       description: "Táto správa poskytuje analýzu nálad pre príspevky zoskupené podľa kategórií s pozitívnym, negatívnym a neutrálnym hodnotením pre každý príspevok a kategóriu."
     overall_sentiment:
       title: "Celkový sentiment"
-      description: 'V grafe je porovnaný počet príspevkov klasifikovaných ako pozitívne alebo negatívne. Tie sa vypočítajú, keď pozitívne alebo negatívne skóre > nastavené prahové skóre. To znamená, že neutrálne príspevky sa nezobrazujú. Osobné správy (PM) sú tiež vylúčené. Klasifikované pomocou "cardiffnlp/twitter-roberta-base-sentiment-latest"'
       xaxis: "Pozitívne (%)"
       yaxis: "Dátum"
     emotion_admiration:
@@ -228,8 +226,6 @@ sk:
         explain: "Vysvetlite"
         illustrate_post: "Ilustrovať príspevok"
         replace_dates: "Inteligentné dátumy"
-      image_caption:
-        attribution: "S titulkami od AI"
     share_ai:
       read_more: "Prečítať celý prepis"
       onebox_title: "Konverzácia AI s %{llm_name}"

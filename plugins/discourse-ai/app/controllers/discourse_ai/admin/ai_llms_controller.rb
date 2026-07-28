@@ -20,6 +20,7 @@ module DiscourseAi
                    ).as_json,
                  meta: {
                    provider_params: LlmModel.provider_params,
+                   provider_capabilities: DiscourseAi::Completions::Llm.provider_capabilities,
                    presets: DiscourseAi::Completions::Llm.presets,
                    providers: DiscourseAi::Completions::Llm.provider_names,
                    tokenizers:

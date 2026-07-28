@@ -32,6 +32,7 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatChannelEmptyState from "./chat/channel/empty-state";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
@@ -88,6 +89,13 @@ export default class ChatChannel extends Component {
     return this.args.channel.messagesManager;
   }
 
+  get isEmpty() {
+    return (
+      this.messagesLoader.fetchedOnce &&
+      this.messagesManager.messages.length === 0
+    );
+  }
+
   get currentUserMembership() {
     return this.args.channel?.currentUserMembership;
   }
@@ -102,7 +110,7 @@ export default class ChatChannel extends Component {
 
   @action
   teardown() {
-    document.removeEventListener("keydown", this._autoFocus);
+    document.removeEventListener("keydown", this._captureKeystroke);
     this.#cancelHandlers();
     this.paneState.teardown();
     this.subscriptionManager.teardown();
@@ -130,7 +138,10 @@ export default class ChatChannel extends Component {
   @action
   setup(element) {
     this.uploadDropZone = element;
-    document.addEventListener("keydown", this._autoFocus);
+
+    if (!this.args.disableKeystrokeCapture) {
+      document.addEventListener("keydown", this._captureKeystroke);
+    }
 
     this.messagesManager.clear();
 
@@ -147,7 +158,10 @@ export default class ChatChannel extends Component {
         user: this.currentUser,
       });
 
-    this.composer.focus();
+    if (!this.args.disableAutoFocus) {
+      this.composer.focus();
+    }
+
     this.loadMessages();
 
     // We update this value server-side when we load the Channel
@@ -342,6 +356,13 @@ export default class ChatChannel extends Component {
     const messages = [];
     let foundFirstNew = false;
 
+    const hiddenMessageIds = new Set(
+      (this.args.hiddenMessageIds ?? []).map(Number)
+    );
+    const messagesData = (result?.messages ?? []).filter(
+      (messageData) => !hiddenMessageIds.has(messageData.id)
+    );
+
     // Only compute the newest message marker on a full load.
     // In an already loaded list we need to preserve the "last visit" line.
     const hasNewest = this.messagesManager.messages.some(
@@ -351,7 +372,7 @@ export default class ChatChannel extends Component {
       channel.newestMessage = null;
     }
 
-    result?.messages?.forEach((messageData, index) => {
+    messagesData.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
       if (this.currentUser?.ignored_users) {
@@ -685,11 +706,7 @@ export default class ChatChannel extends Component {
   }
 
   @bind
-  _autoFocus(event) {
-    if (this.chatStateManager.isDrawerActive) {
-      return;
-    }
-
+  _captureKeystroke(event) {
     const { key, metaKey, ctrlKey, code, target } = event;
 
     if (
@@ -751,6 +768,7 @@ export default class ChatChannel extends Component {
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (if this.messagesLoader.fetchedOnce "--loaded")
+        (if this.isEmpty "is-empty")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}
@@ -782,14 +800,20 @@ export default class ChatChannel extends Component {
               @context="channel"
             />
           {{else}}
-            {{#unless this.messagesLoader.fetchedOnce}}
+            {{#if this.messagesLoader.fetchedOnce}}
+              <ChatChannelEmptyState @channel={{@channel}} />
+            {{else}}
               <ChatSkeleton />
-            {{/unless}}
+            {{/if}}
           {{/each}}
         </ChatMessagesContainer>
 
         {{! at bottom even if shown at top due to column-reverse  }}
-        {{#if this.messagesLoader.loadedPast}}
+        {{#if
+          (and
+            this.messagesLoader.loadedPast this.messagesManager.messages.length
+          )
+        }}
           <div class="all-loaded-message">
             {{i18n "chat.all_loaded"}}
           </div>
@@ -813,7 +837,7 @@ export default class ChatChannel extends Component {
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
-          <ChatChannelPreviewCard @channel={{@channel}} />
+          <ChatChannelPreviewCard @channel={{@channel}} @context={{@context}} />
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}

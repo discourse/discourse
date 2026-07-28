@@ -44,10 +44,18 @@ module UpcomingChanges
       end
 
       def show_file(commit_sha, path)
+        return if !file_exists_at?(commit_sha, path)
+
         capture("show", "#{commit_sha}:#{path}")
       end
 
       private
+
+      def file_exists_at?(commit_sha, path)
+        _stdout, _stderr, status =
+          Open3.capture3("git", "-C", @repo_path, "cat-file", "-e", "#{commit_sha}:#{path}")
+        status.success?
+      end
 
       def capture(*args)
         stdout, stderr, status = Open3.capture3("git", "-C", @repo_path, *args)

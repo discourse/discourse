@@ -17,6 +17,9 @@ vi:
             topic_id:
               label: ID Chủ đề
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       disable_holiday: "Tắt"
       enable_holiday: "Bật"
       date: "Ngày"

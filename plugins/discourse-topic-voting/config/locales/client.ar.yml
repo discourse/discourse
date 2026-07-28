@@ -15,22 +15,14 @@ ar:
       sort_options:
         votes: "الأصوات"
     topic_voting:
-      category_type_ideas:
-        title: "الأفكار"
       notification_label:
         vote_released: "تم إرجاع التصويت"
-      title: "التصويت على الموضوع"
-      reached_limit: "لم يعُد بإمكانك التصويت الآن، يُرجى إزالة صوت حالي!"
-      list_votes: "قائمة بأصواتك"
-      votes_nav_help: "الموضوعات الأكثر تصويتًا على الإطلاق"
       hot_nav_help: "أحدث الموضوعات الأعلى تصويتًا، بما في ذلك الموضوعات التي حصلت على أصوات مؤخرًا"
       voted: "لقد صوَّت على هذا الموضوع"
-      allow_topic_voting: "السماح للمستخدمين بالتصويت على الموضوعات في هذه الفئة"
       vote_title: "تصويت"
       vote_title_plural: "الأصوات"
       voting_closed_description: "انتهى التصويت على هذا الموضوع"
       see_votes: "لديك %{count}/%{max} من الأصوات المتبقية"
-      locked: "مغلق"
       locked_description: "زد مستوى الثقة لديك لتتمكن من التصويت"
       votes:
         zero: "%{count} من الأصوات"
@@ -39,13 +31,6 @@ ar:
         few: "%{count} أصوات"
         many: "%{count} صوتًا"
         other: "%{count} صوت"
-      anonymous_button:
-        zero: "أصوات"
-        one: "صوت واحد"
-        two: "صوتان"
-        few: "أصوات"
-        many: "صوتًا"
-        other: "صوت"
       remove_vote: "إزالة الصوت"
       watch_topic: "أبلغني بالمنشورات الجديدة"
       no_votes_yet: "لم يصوت أحد لهذا بعد"
@@ -63,10 +48,6 @@ ar:
         help: "الموضوعات التي صوَّت عليها"
     search:
       most_votes: "معظم الأصوات"
-      advanced:
-        vote:
-          count:
-            label: "أقل عدد من الأصوات"
     admin:
       web_hooks:
         voting_event:

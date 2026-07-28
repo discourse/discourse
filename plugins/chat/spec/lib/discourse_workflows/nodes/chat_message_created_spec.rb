@@ -46,7 +46,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatMessageCreated::V1 do
     end
   end
 
-  it "serializes the message, channel, and user" do
+  it "serializes the message, channel, and user", :aggregate_failures do
     output = described_class.new(message, channel, user).output
 
     expect(output[:message]).to include(
@@ -60,6 +60,7 @@ RSpec.describe DiscourseWorkflows::Nodes::ChatMessageCreated::V1 do
       username: user.username,
       avatar_template: user.avatar_template,
     )
+    expect(output).to match_node_output_schema(described_class)
   end
 
   it "matches nodes with no channel filter or the same channel" do

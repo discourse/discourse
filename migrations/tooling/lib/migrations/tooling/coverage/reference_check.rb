@@ -19,9 +19,9 @@ module Migrations
         # structural, not a configurable role, so it is hardcoded.
         REFERENCE_CONVERTER = "discourse"
 
-        # The post-embed linkage tables are written by the shared
+        # The embed linkage tables are written by the shared
         # `Migrations::Converters::EmbedBuffer#write_for`, not by per-converter
-        # `IntermediateDB::Post*.create` call sites. The scanner only reads each
+        # `IntermediateDB::Embed*.create` call sites. The scanner only reads each
         # converter's own source, so it never sees those writes, and the tables
         # would otherwise look uncovered forever. So they're held out of the
         # reference "writes every column" check, by model name.
@@ -32,12 +32,14 @@ module Migrations
         # removal. The drift protection this check would otherwise give (a schema
         # column nothing writes) lives in EmbedBuffer's own spec instead.
         EMBED_BUFFER_TABLES = %w[
-          PostEvent
-          PostLink
-          PostMention
-          PostPoll
-          PostQuote
-          PostUpload
+          EmbedEmoji
+          EmbedEvent
+          EmbedHashtag
+          EmbedLink
+          EmbedMention
+          EmbedPoll
+          EmbedQuote
+          EmbedUpload
         ].freeze
 
         class Error < StandardError

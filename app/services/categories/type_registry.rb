@@ -87,6 +87,14 @@ module Categories
         end
       end
 
+      def non_discussion_category_ids
+        types
+          .values
+          .reject { |type| type.type_id == :discussion }
+          .flat_map { |type| type.find_matches.pluck(:id) }
+          .uniq
+      end
+
       private
 
       def types

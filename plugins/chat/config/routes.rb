@@ -94,6 +94,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/disabled" => "chat#respond"
   get "/search" => "chat#respond"
   get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"

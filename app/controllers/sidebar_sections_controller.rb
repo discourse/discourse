@@ -8,7 +8,7 @@ class SidebarSectionsController < ApplicationController
     sections =
       SidebarSection
         .strict_loading
-        .includes(:sidebar_urls)
+        .includes(:localizations, sidebar_urls: :localizations)
         .where("public OR user_id = ?", current_user.id)
         .order("section_type IS NOT NULL DESC, public DESC, title ASC")
 
@@ -21,6 +21,16 @@ class SidebarSectionsController < ApplicationController
       )
 
     render json: sections
+  end
+
+  def show
+    sidebar_section =
+      SidebarSection.includes(:localizations, sidebar_urls: :localizations).find(params[:id])
+    @guardian.ensure_can_edit!(sidebar_section)
+
+    render_serialized(sidebar_section, SidebarSectionEditSerializer, root: "sidebar_section")
+  rescue Discourse::InvalidAccess
+    render json: failed_json, status: :forbidden
   end
 
   def create
@@ -41,32 +51,18 @@ class SidebarSectionsController < ApplicationController
   end
 
   def update
-    sidebar_section = SidebarSection.find(section_params["id"])
+    sidebar_section = SidebarSection.find(params[:id])
     @guardian.ensure_can_edit!(sidebar_section)
+    ensure_localization_params_allowed(sidebar_section) if localization_params_present?
+    permitted_section_params = section_params(sidebar_section)
+    permitted_links_params = links_params(sidebar_section)
 
-    ActiveRecord::Base.transaction do
-      sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
-      sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
-
-      order =
-        sidebar_section
-          .sidebar_urls
-          .sort_by do |url|
-            links_params.index { |link| link["name"] == url.name && link["value"] == url.value } ||
-              -1
-          end
-          .each_with_index
-          .map { |url, index| [url.id, index] }
-          .to_h
-
-      set_order(sidebar_section, order)
-    end
-
-    if sidebar_section.public?
-      StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
-      MessageBus.publish("/refresh-sidebar-sections", nil)
-      Site.clear_anon_cache!
-    end
+    SidebarSectionUpdater.update!(
+      sidebar_section:,
+      user: current_user,
+      section_params: permitted_section_params,
+      links_params: permitted_links_params,
+    )
 
     render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
@@ -105,14 +101,53 @@ class SidebarSectionsController < ApplicationController
     render json: failed_json, status: :forbidden
   end
 
-  def section_params
-    section_params = params.permit(:id, :title, :public)
-    section_params.merge!(user: current_user) if !params[:public]
+  def section_params(sidebar_section = nil)
+    section_params = params.permit(:id, :title).to_h.with_indifferent_access
+
+    if current_user.admin?
+      section_params.merge!(params.permit(:public).to_h.with_indifferent_access)
+
+      if SiteSetting.content_localization_enabled &&
+           (sidebar_section.blank? || guardian.can_localize_sidebar_section_title?(sidebar_section))
+        section_params.merge!(
+          params
+            .permit(:locale, localizations: %i[id locale title _destroy])
+            .to_h
+            .with_indifferent_access,
+        )
+      end
+    end
+
+    section_is_public = ActiveModel::Type::Boolean.new.cast(section_params[:public])
+    section_params.merge!(user: current_user) if !section_is_public
+    if section_params[:localizations]
+      section_params[:localizations_attributes] = prepare_localization_attributes(
+        section_params.delete(:localizations),
+      )
+    end
     section_params
   end
 
-  def links_params
-    params.permit(links: %i[icon name value id _destroy segment])["links"]
+  def links_params(sidebar_section = nil)
+    permitted_link_params = %i[icon name value id _destroy segment]
+    if current_user.admin? && SiteSetting.content_localization_enabled
+      permitted_link_params << { localizations: %i[id locale name _destroy] }
+    end
+
+    links = params.permit(links: permitted_link_params)["links"]
+
+    links&.each do |link|
+      next if link[:localizations].blank?
+      if sidebar_section.present? &&
+           !guardian.can_localize_sidebar_section_link?(sidebar_section, link[:value])
+        link.delete(:localizations)
+        next
+      end
+
+      link[:localizations_attributes] = prepare_localization_attributes(link.delete(:localizations))
+    end
+
+    links
   end
 
   def reorder_params
@@ -121,23 +156,39 @@ class SidebarSectionsController < ApplicationController
 
   private
 
-  def set_order(sidebar_section, order)
-    position_generator =
-      (0..sidebar_section.sidebar_section_links.count * 2).excluding(
-        sidebar_section.sidebar_section_links.map(&:position),
-      ).each
+  def check_access_if_public
+    public_section = ActiveModel::Type::Boolean.new.cast(params[:public])
+    return true if !public_section
 
-    links =
-      sidebar_section
-        .sidebar_section_links
-        .sort_by { |link| order[link.linkable_id] }
-        .map { |link| link.attributes.merge(position: position_generator.next) }
-
-    sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
+    raise Discourse::InvalidAccess.new if !guardian.can_create_public_sidebar_section?
   end
 
-  def check_access_if_public
-    return true if !params[:public]
-    raise Discourse::InvalidAccess.new if !guardian.can_create_public_sidebar_section?
+  def localization_params_present?
+    params[:localizations].present? || params[:links]&.any? { |link| link[:localizations].present? }
+  end
+
+  def ensure_localization_params_allowed(sidebar_section)
+    if params[:localizations].present? &&
+         !guardian.can_localize_sidebar_section_title?(sidebar_section)
+      raise Discourse::InvalidAccess
+    end
+
+    params[:links]&.each do |link|
+      next if link[:localizations].blank?
+      next if guardian.can_localize_sidebar_section_link?(sidebar_section, link[:value])
+
+      raise Discourse::InvalidAccess
+    end
+  end
+
+  def prepare_localization_attributes(localizations)
+    localizations.filter_map do |localization|
+      destroy = ActiveModel::Type::Boolean.new.cast(localization[:_destroy])
+      if !destroy && LocaleNormalizer.is_same?(localization[:locale], SiteSetting.default_locale)
+        next
+      end
+
+      localization
+    end
   end
 end

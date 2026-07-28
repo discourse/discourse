@@ -276,10 +276,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
           "typeVersion" => "1.0",
         )
       ensure
-        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          entry[:value] == node_class
-        end
-        DiscourseWorkflows::Registry.reset_indexes!
+        unregister_workflow_nodes(node_class)
       end
     end
 
@@ -311,10 +308,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Action::PopulateGraph do
         expect(result).to eq(true)
         expect(workflow.reload.nodes.first["typeVersion"]).to eq("2.0")
       ensure
-        DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-          [v1, v2].include?(entry[:value])
-        end
-        DiscourseWorkflows::Registry.reset_indexes!
+        unregister_workflow_nodes(v1, v2)
       end
     end
 

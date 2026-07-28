@@ -56,6 +56,8 @@ th:
         filter_all: ทั้งหมด
         filter_open: เปิด
         filter_closed: ปิด
+        filter_joined_all: "ทั้งหมด"
+        filter_joined_joined: "สมัครสมาชิกเมื่อ"
       chat_message_separator:
         today: วันนี้
         yesterday: เมื่อวาน

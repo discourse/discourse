@@ -8,8 +8,6 @@ RSpec.describe Acl::User do
 
   fab!(:other_topic, :topic)
 
-  # The flattened permissions a single user has across multiple targets: view +
-  # edit on a Category, and view on a Topic.
   let(:flattened_acl_list) do
     [
       { type: :group, id: 10, permission: "view", target_type: "Category", target_id: category.id },
@@ -71,6 +69,12 @@ RSpec.describe Acl::User do
     it "returns an empty array when the class has no entry for the permission" do
       expect(user_acl.target_ids_with_permission(Topic, "edit")).to eq([])
     end
+
+    it "returns a defensive copy" do
+      user_acl.target_ids_with_permission(Category, "view").clear
+
+      expect(user_acl.target_ids_with_permission(Category, "view")).to contain_exactly(category.id)
+    end
   end
 
   describe "#target_ids_with_any_permissions" do
@@ -83,6 +87,14 @@ RSpec.describe Acl::User do
     it "scopes the combined ids to the requested target class" do
       expect(user_acl.target_ids_with_any_permissions(Topic, %w[view edit])).to contain_exactly(
         topic.id,
+      )
+    end
+
+    it "returns a defensive copy" do
+      user_acl.target_ids_with_any_permissions(Category, %w[view edit]).clear
+
+      expect(user_acl.target_ids_with_any_permissions(Category, %w[view edit])).to contain_exactly(
+        category.id,
       )
     end
   end

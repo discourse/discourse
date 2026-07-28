@@ -214,8 +214,6 @@ hu:
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       chat_notifications_title: "Csevegési értesítések"
-      only_chat_push_notifications:
-        title: "Csak csevegési leküldéses értesítések küldése"
       personalization_title: "Személyre szabás"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
@@ -294,6 +292,8 @@ hu:
         filter_closed: Lezárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
+        filter_joined_all: "Összes"
+        filter_joined_joined: "Csatlakozott"
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
@@ -365,6 +365,9 @@ hu:
         memberships_count:
           one: "%{count} tag"
           other: "%{count} tag"
+        preview_card:
+          log_in: "Bejelentkezés"
+          sign_up: "Regisztráció"
       create_channel:
         threading:
           label: "Szálak engedélyezése"

@@ -1001,6 +1001,14 @@ RSpec.describe Upload do
       expect(not_an_image.dominant_color).to eq("")
     end
 
+    it "stores an empty string when the file is missing from the store" do
+      File.delete(Discourse.store.path_for(white_image))
+
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
+    end
+
     it "correctly handles invalid image files" do
       expect(invalid_image.dominant_color).to eq(nil)
       expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
@@ -1008,7 +1016,7 @@ RSpec.describe Upload do
     end
 
     it "correctly handles unparsable ImageMagick output" do
-      Discourse::Utils.stubs(:execute_command).returns("someinvalidoutput")
+      ImageMagick.stubs(:magick).returns("someinvalidoutput")
 
       expect(invalid_image.dominant_color).to eq(nil)
 

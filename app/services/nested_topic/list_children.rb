@@ -70,7 +70,7 @@ class NestedTopic::ListChildren
             .where(reply_to_post_number: params.parent_post_number)
             .where(post_number: 2..)
         scope = loader.apply_visibility(scope)
-        scope = NestedReplies::Sort.apply(scope, params.sort)
+        scope = loader.apply_sort(scope, params.sort)
         scope.offset(params.page * per_page).limit(per_page)
       end
 

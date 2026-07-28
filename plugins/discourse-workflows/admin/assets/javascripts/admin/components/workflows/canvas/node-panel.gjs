@@ -74,6 +74,15 @@ export function sortNodeTypesByLabel(nodeTypes) {
   );
 }
 
+export function nodeTypesForPalette(nodeTypes) {
+  return sortNodeTypesByLabel(
+    (nodeTypes || []).filter(
+      (nodeType) =>
+        nodeType.available !== false && nodeType.palette_visible !== false
+    )
+  );
+}
+
 export default class NodePanel extends Component {
   @tracked selectedCategory = null;
   @tracked selectedOperationNodeType = null;
@@ -83,11 +92,7 @@ export default class NodePanel extends Component {
   }
 
   get availableNodeTypes() {
-    return sortNodeTypesByLabel(
-      (this.args.nodeTypes || []).filter(
-        (nodeType) => nodeType.available !== false
-      )
-    );
+    return nodeTypesForPalette(this.args.nodeTypes);
   }
 
   get categories() {

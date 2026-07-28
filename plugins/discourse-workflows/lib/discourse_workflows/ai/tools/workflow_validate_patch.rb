@@ -8,7 +8,7 @@ module DiscourseWorkflows
           {
             name: name,
             description:
-              "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output schemas, proposed created resources, and a diff summary without saving anything.",
+              "Dry-runs a workflow patch and returns validation errors, normalized graph data, inferred node input/output fields, proposed created resources, and a diff summary without saving anything.",
             json_schema: {
               type: "object",
               additionalProperties: false,
@@ -52,11 +52,11 @@ module DiscourseWorkflows
             )
 
           if result[:valid]
-            schemas = node_schemas(result[:nodes], result[:connections])
+            node_fields = resolved_node_fields(result[:nodes], result[:connections])
             graph_errors = connection_validation_errors(result[:nodes], result[:connections])
-            expression_errors = expression_validation_errors(result[:nodes], schemas)
+            expression_errors = expression_validation_errors(result[:nodes], node_fields)
           else
-            schemas = []
+            node_fields = []
             graph_errors = []
             expression_errors = []
           end
@@ -72,7 +72,7 @@ module DiscourseWorkflows
             expression_errors: expression_errors,
             normalized_graph:
               result[:valid] ? { nodes: result[:nodes], connections: result[:connections] } : nil,
-            node_schemas: schemas,
+            node_fields: node_fields,
             diff: result[:diff],
             created_resources: Array.wrap(result[:created_resources]),
           }
@@ -80,43 +80,24 @@ module DiscourseWorkflows
 
         private
 
-        PASS_THROUGH_NODE_TYPES = %w[condition:filter condition:if action:limit flow:wait].freeze
         CONDITION_NODE_TYPES = %w[condition:filter condition:if].freeze
 
-        JSON_REFERENCE_REGEX = /\$json(?:\.[A-Za-z_][A-Za-z0-9_]*)+/
+        JSON_REFERENCE_REGEX =
+          /
+          \$json
+          (?:
+            \.[A-Za-z_$][A-Za-z0-9_$]*
+            |
+            \[(?:\d+|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')\]
+          )+
+        /x
         MAX_AVAILABLE_PATHS = 12
 
-        FIXED_OUTPUT_SCHEMAS = {
-          "action:send_chat_message" => {
-            "channel_id" => "integer",
-            "message" => "string",
-          },
-        }.freeze
-
-        def node_schemas(nodes, connections)
-          connection_records =
-            DiscourseWorkflows::WorkflowDocument.connection_records(nodes, connections)
-          output_schemas = {}
-          input_schemas = {}
-
-          (nodes.length + 1).times do
-            changed = false
-
-            nodes.each do |node|
-              node_id = node["id"].to_s
-              next_input_schema = input_schema_for(node_id, connection_records, output_schemas)
-              next_output_schema = output_schema_for(node, next_input_schema)
-
-              if input_schemas[node_id] != next_input_schema ||
-                   output_schemas[node_id] != next_output_schema
-                input_schemas[node_id] = next_input_schema
-                output_schemas[node_id] = next_output_schema
-                changed = true
-              end
-            end
-
-            break if !changed
-          end
+        def resolved_node_fields(nodes, connections)
+          resolution = DiscourseWorkflows::Schema.resolve_graph(nodes, connections)
+          connection_records = resolution[:connection_records]
+          input_schemas = resolution[:input_schemas]
+          output_schemas = resolution[:output_schemas]
 
           nodes.map do |node|
             node_id = node["id"].to_s
@@ -124,33 +105,11 @@ module DiscourseWorkflows
               node_id: node_id,
               node_name: node["name"],
               node_type: node["type"],
-              input_schema: expression_schema(input_schemas[node_id] || {}),
-              output_schema: expression_schema(output_schemas[node_id] || {}),
+              input_fields: expression_fields(input_schemas[node_id] || []),
+              output_fields: expression_fields(output_schemas[node_id] || []),
               input_sources: input_sources(node_id, nodes, connection_records, output_schemas),
             }
           end
-        end
-
-        def input_schema_for(node_id, connection_records, output_schemas)
-          incoming = incoming_connections(node_id, connection_records)
-          return {} if incoming.blank?
-
-          incoming.each_with_object({}) do |connection, result|
-            result.merge!(output_schemas[connection["source_node_id"].to_s] || {})
-          end
-        end
-
-        def output_schema_for(node, input_schema)
-          catalog_schema =
-            DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog.output_schema_for(
-              node["type"],
-              parameters: node["parameters"] || {},
-              input_schema: input_schema,
-            )
-          return catalog_schema if catalog_schema.present?
-          return input_schema if PASS_THROUGH_NODE_TYPES.include?(node["type"].to_s)
-
-          FIXED_OUTPUT_SCHEMAS.fetch(node["type"].to_s, {})
         end
 
         def input_sources(node_id, nodes, connection_records, output_schemas)
@@ -163,7 +122,13 @@ module DiscourseWorkflows
               source_node_type: source_node&.dig("type"),
               output_index: connection["source_output_index"],
               input_index: connection["target_input_index"],
-              schema: expression_schema(output_schemas[connection["source_node_id"].to_s] || {}),
+              fields:
+                expression_fields_for_schema(
+                  output_schemas.fetch(connection["source_node_id"].to_s, []).fetch(
+                    connection["source_output_index"].to_i,
+                    {},
+                  ),
+                ),
             }
           end
         end
@@ -202,21 +167,31 @@ module DiscourseWorkflows
             end
         end
 
-        def expression_schema(schema)
-          schema.transform_keys { |key| key.to_s.start_with?("$json") ? key.to_s : "$json.#{key}" }
+        def expression_fields_for_schema(schema)
+          DiscourseAi::WorkflowSchemaFields
+            .convert(schema)
+            .transform_keys { |key| expression_path(key) }
         end
 
-        def expression_validation_errors(nodes, schemas)
-          schemas_by_node_id = schemas.index_by { |schema| schema[:node_id].to_s }
+        def expression_fields(schemas)
+          schemas.map { |schema| expression_fields_for_schema(schema) }
+        end
+
+        def expression_path(path)
+          path.start_with?("[") ? "$json#{path}" : "$json.#{path}"
+        end
+
+        def expression_validation_errors(nodes, node_fields)
+          fields_by_node_id = node_fields.index_by { |fields| fields[:node_id].to_s }
 
           nodes.flat_map do |node|
-            schema = schemas_by_node_id[node["id"].to_s] || {}
-            input_schema = schema[:input_schema] || {}
-            expression_errors_for_node(node, input_schema) + condition_configuration_errors(node)
+            fields = fields_by_node_id[node["id"].to_s] || {}
+            input_fields = Array(fields[:input_fields]).reduce({}, &:merge)
+            expression_errors_for_node(node, input_fields) + condition_configuration_errors(node)
           end
         end
 
-        def expression_errors_for_node(node, input_schema)
+        def expression_errors_for_node(node, input_fields)
           parameter_values(node["parameters"] || {}).flat_map do |path, value|
             next [] if !value.is_a?(String)
 
@@ -229,7 +204,7 @@ module DiscourseWorkflows
               errors << "#{node_label(node)} parameter #{path} references $json in an expression string without {{ }}. Use ={{ $json.field }} for whole-field values or =Text {{ $json.field }} for template strings."
             end
 
-            errors + unavailable_json_path_errors(node, path, value, input_schema)
+            errors + unavailable_json_path_errors(node, path, value, input_fields)
           end
         end
 
@@ -258,9 +233,26 @@ module DiscourseWorkflows
               errors << "#{node_label(node)} condition #{condition_index} must set operator.operation."
             end
 
-            if !operator[:singleValue] && !condition.key?(:rightValue)
+            operator_type = operator[:type].to_s
+            operation = operator[:operation].to_s
+            if operator[:type].present? &&
+                 !DiscourseWorkflows::Executor::FilterParameter.supported_types.include?(
+                   operator_type,
+                 )
+              errors << "#{node_label(node)} condition #{condition_index} operator.type #{operator_type.inspect} is unsupported."
+            elsif operator[:operation].present? &&
+                  !DiscourseWorkflows::Executor::FilterParameter.supported_operation?(
+                    operator_type,
+                    operation,
+                  )
+              errors << "#{node_label(node)} condition #{condition_index} operator.operation #{operation.inspect} is invalid for #{operator_type.presence || "this type"}."
+            end
+
+            needs_right_value =
+              DiscourseWorkflows::Executor::FilterParameter.operation_needs_value?(operation)
+            if needs_right_value && !condition.key?(:rightValue)
               hint = condition.key?(:right) ? " Use rightValue instead of right." : ""
-              errors << "#{node_label(node)} condition #{condition_index} must set rightValue for #{operator[:operation].presence || "this"} comparisons.#{hint}"
+              errors << "#{node_label(node)} condition #{condition_index} must set rightValue for #{operation} comparisons.#{hint}"
             elsif condition.key?(:rightValue) && invalid_condition_value?(condition[:rightValue])
               errors << "#{node_label(node)} condition #{condition_index} rightValue must be a scalar or expression string, not an object."
             end
@@ -296,33 +288,41 @@ module DiscourseWorkflows
           value.start_with?("=") && value.include?("$json") && !value.include?("{{")
         end
 
-        def unavailable_json_path_errors(node, parameter_path, value, input_schema)
+        def unavailable_json_path_errors(node, parameter_path, value, input_fields)
           references = value.scan(JSON_REFERENCE_REGEX).uniq
-          return [] if references.blank? || input_schema.blank?
+          return [] if references.blank? || input_fields.blank?
 
           references.filter_map do |reference|
-            next if schema_path_available?(reference, input_schema)
+            next if field_path_available?(reference, input_fields)
 
-            "#{node_label(node)} parameter #{parameter_path} references #{reference}, but that path is not available in this node's input schema. Available paths: #{available_paths_summary(input_schema)}."
+            "#{node_label(node)} parameter #{parameter_path} references #{reference}, but that path is not available in this node's input fields. Available paths: #{available_paths_summary(input_fields)}."
           end
         end
 
-        def schema_path_available?(reference, input_schema)
-          schema_paths = input_schema.keys.map(&:to_s)
-          return true if schema_paths.include?(reference)
-          return true if schema_paths.any? { |path| path.start_with?("#{reference}.") }
-
-          segments = reference.split(".")
-          while segments.length > 2
-            segments.pop
-            return true if schema_paths.include?(segments.join("."))
+        def field_path_available?(reference, input_fields)
+          reference = normalize_json_reference(reference)
+          input_fields.keys.any? do |path|
+            path = normalize_json_reference(path.to_s)
+            path == reference || descendant_path?(path, reference) ||
+              descendant_path?(reference, path)
           end
-
-          false
         end
 
-        def available_paths_summary(input_schema)
-          paths = input_schema.keys.map(&:to_s).sort
+        def normalize_json_reference(reference)
+          reference
+            .gsub(/\[\d+\]/, "[]")
+            .gsub(/\['((?:\\.|[^'\\])*)'\]/) do
+              segment = Regexp.last_match(1).gsub(/\\(['\\])/, "\\1")
+              "[#{JSON.generate(segment)}]"
+            end
+        end
+
+        def descendant_path?(path, parent)
+          path.start_with?("#{parent}.") || path.start_with?("#{parent}[")
+        end
+
+        def available_paths_summary(input_fields)
+          paths = input_fields.keys.map(&:to_s).sort
           summary = paths.first(MAX_AVAILABLE_PATHS).join(", ")
           summary += ", ..." if paths.length > MAX_AVAILABLE_PATHS
           summary.presence || "none"

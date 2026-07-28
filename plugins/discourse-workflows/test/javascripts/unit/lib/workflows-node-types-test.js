@@ -130,6 +130,16 @@ module("Unit | Utility | workflows node types", function () {
       "old",
     ]);
     assert.deepEqual(nodeTypeOutputKeys(nodeType), ["new"]);
+    assert.strictEqual(
+      resolveNodeTypeVersion(nodeType, "3.0"),
+      null,
+      "an unregistered version does not fall back to latest"
+    );
+    assert.deepEqual(
+      nodeTypeOutputKeys(nodeType, {}),
+      ["old"],
+      "a node without a typeVersion uses the default version, not latest"
+    );
   });
 
   test("detects configurable node type fields from metadata", function (assert) {

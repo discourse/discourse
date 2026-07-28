@@ -17,6 +17,30 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            {
+              variants: [
+                {
+                  schema: Schema.merge(Schema::GROUP_SCHEMA, Schema::BASIC_USER_SCHEMA),
+                  display_options: {
+                    show: {
+                      operation: %w[add remove],
+                    },
+                  },
+                },
+                { schema: Schema::GROUP_SCHEMA, display_options: { show: { operation: ["get"] } } },
+                {
+                  schema: Schema::GROUP_MEMBERSHIP_SCHEMA,
+                  mode: :merge,
+                  display_options: {
+                    show: {
+                      operation: ["check_membership"],
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           properties: {
             operation: {
               type: :options,

@@ -22,7 +22,7 @@ import EventStatus from "./event-status";
 import Image from "./image";
 import Invitees from "./invitees";
 import Livestream from "./livestream";
-import Location from "./location";
+import DiscoursePostEventLocation from "./location";
 import MoreMenu from "./more-menu";
 import Status from "./status";
 import Url from "./url";
@@ -83,6 +83,7 @@ const StatusPlaceholder = <template>
 export default class DiscoursePostEvent extends Component {
   @service currentUser;
   @service discoursePostEventApi;
+  @service embeddableChat;
   @service messageBus;
   @service siteSettings;
 
@@ -113,6 +114,14 @@ export default class DiscoursePostEvent extends Component {
 
   get event() {
     return this.fetchedEvent ?? this.args.event;
+  }
+
+  get useLivestreamLayout() {
+    return (
+      this.event.livestream &&
+      this.embeddableChat.chatChannelId &&
+      !this.embeddableChat.isChannelOpenInDrawer
+    );
   }
 
   get isPartialEvent() {
@@ -346,7 +355,9 @@ export default class DiscoursePostEvent extends Component {
                   description=event.description
                   clamp=this.clampDescription
                 )
-                Location=(component Location location=event.location)
+                Location=(component
+                  DiscoursePostEventLocation event=event location=event.location
+                )
                 Dates=(component
                   Dates event=event expiredAndRecurring=this.expiredAndRecurring
                 )
@@ -376,10 +387,7 @@ export default class DiscoursePostEvent extends Component {
                   {{this.recurrenceLabel}}
                 </InfoSection>
               {{/if}}
-              <Location
-                @location={{event.location}}
-                @livestream={{event.livestream}}
-              />
+              <DiscoursePostEventLocation @event={{event}} />
               <Url @url={{event.url}} />
               <ChatChannel @event={{event}} />
 
@@ -402,10 +410,12 @@ export default class DiscoursePostEvent extends Component {
                 <StatusPlaceholder />
               {{/if}}
 
-              {{#if event.livestream}}
-                {{bodyClass "livestream-topic"}}
-              {{/if}}
-              <Livestream @event={{event}} />
+              {{#unless @hideLivestreamVideo}}
+                {{#if this.useLivestreamLayout}}
+                  {{bodyClass "livestream-topic"}}
+                {{/if}}
+                <Livestream @event={{event}} />
+              {{/unless}}
             </PluginOutlet>
           {{/if}}
         </div>

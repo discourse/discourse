@@ -4,6 +4,8 @@ class TopicsController < ApplicationController
   include TagParamLimit
   include EmbedModeHandler
 
+  MAX_BULK_TOPIC_IDS = 1_000
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -1156,7 +1158,12 @@ class TopicsController < ApplicationController
       unless Array === params[:topic_ids]
         raise Discourse::InvalidParameters.new("Expecting topic_ids to contain a list of topic ids")
       end
-      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_ids = params[:topic_ids].map { |topic_id| topic_id.to_i }.uniq
+      if topic_ids.size > MAX_BULK_TOPIC_IDS
+        raise Discourse::InvalidParameters.new(
+                I18n.t("topics_bulk_action.too_many_topic_ids", limit: MAX_BULK_TOPIC_IDS),
+              )
+      end
     elsif params[:filter] == "unread"
       topic_ids = bulk_unread_topic_ids
     else
@@ -1205,6 +1212,12 @@ class TopicsController < ApplicationController
       render_json_dump result
     rescue Discourse::InvalidParameters => ex
       render_json_error(ex, status: 400)
+    rescue ActiveRecord::RecordInvalid => ex
+      render_json_error(ex, type: :record_invalid, status: 422)
+    rescue Discourse::InvalidAccess
+      render_json_error(I18n.t("invalid_access"), type: :invalid_access, status: 403)
+    rescue Discourse::NotFound
+      render_json_error(I18n.t("not_found"), type: :not_found, status: 404)
     end
   end
 
@@ -1579,7 +1592,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+        @tags = @topic_view.visible_tags
 
         if SiteSetting.content_localization_enabled && use_crawler_layout?
           helpers.localize_topic_view_content(@topic_view)

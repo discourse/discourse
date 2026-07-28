@@ -9,6 +9,19 @@ module DiscourseWorkflows
         DEFAULT_LIMIT = 30
         CUSTOM_FIELD_OPTIONS_LIMIT = 100
 
+        TOPIC_POST_SCHEMA =
+          Schema.entity(
+            "post",
+            Schema::POST_PROPERTIES.except(
+              "category_name",
+              "excerpt",
+              "like_count",
+              "tags",
+              "upload_ids",
+            ).merge("category_slug" => { "type" => "string" }),
+            "WebHookPostSerializer payload",
+          )
+
         description(
           name: "action:topic",
           version: "1.0",
@@ -20,6 +33,9 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, TOPIC_POST_SCHEMA) },
+          ],
           properties: {
             operation: {
               type: :options,

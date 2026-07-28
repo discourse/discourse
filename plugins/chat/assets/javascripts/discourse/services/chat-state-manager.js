@@ -195,8 +195,10 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownChatURL() {
-    if (this._chatURL) {
-      return this._chatURL;
+    const url = this._chatURL;
+
+    if (url) {
+      return withoutPrefix(url);
     }
 
     // On mobile or drawer mode, default to starred channels if user has any

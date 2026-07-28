@@ -115,6 +115,10 @@ class FinalDestination
     @limit < @max_redirects
   end
 
+  def bot_challenge?
+    !!@bot_challenge
+  end
+
   def request_headers
     result = {
       "User-Agent" => @user_agent,
@@ -384,6 +388,9 @@ class FinalDestination
     # this is weird an exception seems better
     @status = :failure
     @status_code = response.status
+    @bot_challenge =
+      response.headers["x-amzn-waf-action"].present? ||
+        response.headers["cf-mitigated"] == "challenge"
 
     log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}")
     nil

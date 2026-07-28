@@ -16,7 +16,6 @@ import { Promise } from "rsvp";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import ToolbarScrollContainer from "discourse/components/composer/toolbar-scroll-container";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
@@ -43,7 +42,9 @@ import {
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DOverflowControls from "discourse/ui-kit/d-overflow-controls";
 import DPopupInputTip from "discourse/ui-kit/d-popup-input-tip";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import {
@@ -125,38 +126,16 @@ export default class DEditor extends Component {
       return;
     }
 
-    if (this.siteSettings.rich_editor) {
-      // TODO (martin) Remove this once we are sure all users have migrated
-      // to the new rich editor preference, or a few months after the 3.5 release.
-      await this.handleOldRichEditorPreference();
-
-      if (this.currentUser.useRichEditor) {
-        this.editorComponent = await loadRichEditor();
-      }
+    if (this.currentUser.useRichEditor) {
+      this.editorComponent = await loadRichEditor();
     }
 
     this.editorComponent ??= TextareaEditor;
   }
 
-  async handleOldRichEditorPreference() {
-    const oldValue = this.keyValueStore.get("d-editor-prefers-rich-editor");
-
-    if (!oldValue) {
-      return;
-    }
-
-    await this.#saveRichEditorPreference(
-      oldValue === "true"
-        ? USER_OPTION_COMPOSITION_MODES.rich
-        : USER_OPTION_COMPOSITION_MODES.markdown
-    ).finally(() => {
-      this.keyValueStore.remove("d-editor-prefers-rich-editor");
-    });
-  }
-
-  @computed("siteSettings.rich_editor", "forceEditorMode")
+  @computed("forceEditorMode")
   get showEditorModeToggle() {
-    return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
+    return isNone(this.forceEditorMode);
   }
 
   _readyNow() {
@@ -233,7 +212,7 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor && isNone(this.forceEditorMode)) {
+    if (isNone(this.forceEditorMode)) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -787,41 +766,62 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
-
-          {{#if this.replacedToolbarInstance}}
-            <ToolbarScrollContainer @class="--replaced-toolbar">
-              <DButton
-                @action={{this.resetToolbar}}
-                @icon="angle-left"
-                @preventFocus={{true}}
-                @onKeyDown={{this.rovingButtonBar}}
-                class="d-editor-button-bar__back"
-              />
-              <ToolbarButtons
-                @data={{this.replacedToolbarInstance}}
-                @rovingButtonBar={{this.rovingButtonBar}}
-                @isFirst={{false}}
-              />
-            </ToolbarScrollContainer>
-          {{else}}
-            <ToolbarScrollContainer>
-              {{#if this.showEditorModeToggle}}
-                <ToggleSwitch
+          <DConditionalInElement
+            @inline={{not @toolbarPortalTarget}}
+            @element={{@toolbarPortalTarget}}
+            @append={{true}}
+          >
+            {{#if this.replacedToolbarInstance}}
+              <DOverflowControls
+                @wrapperClass="d-editor-button-bar__wrap"
+                @class={{dConcatClass
+                  "d-editor-button-bar"
+                  "--replaced-toolbar"
+                  (if this.disabled "--disabled")
+                }}
+                @buttonClass="d-editor-button-bar__scroll-btn"
+                role="toolbar"
+              >
+                <DButton
+                  @action={{this.resetToolbar}}
+                  @icon="angle-left"
                   @preventFocus={{true}}
-                  @disabled={{@disableSubmit}}
-                  @state={{this.isRichEditorEnabled}}
-                  {{on "click" this.toggleRichEditor}}
-                  {{on "keydown" this.rovingButtonBar}}
+                  @onKeyDown={{this.rovingButtonBar}}
+                  class="d-editor-button-bar__back"
                 />
-              {{/if}}
-
-              <ToolbarButtons
-                @data={{this.toolbar}}
-                @rovingButtonBar={{this.rovingButtonBar}}
-                @isFirst={{not this.siteSettings.rich_editor}}
-              />
-            </ToolbarScrollContainer>
-          {{/if}}
+                <ToolbarButtons
+                  @data={{this.replacedToolbarInstance}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
+                  @isFirst={{false}}
+                />
+              </DOverflowControls>
+            {{else}}
+              <DOverflowControls
+                @wrapperClass="d-editor-button-bar__wrap"
+                @class={{dConcatClass
+                  "d-editor-button-bar"
+                  (if this.disabled "--disabled")
+                }}
+                @buttonClass="d-editor-button-bar__scroll-btn"
+                role="toolbar"
+              >
+                {{#if this.showEditorModeToggle}}
+                  <ToggleSwitch
+                    @preventFocus={{true}}
+                    @disabled={{@disableSubmit}}
+                    @state={{this.isRichEditorEnabled}}
+                    {{on "click" this.toggleRichEditor}}
+                    {{on "keydown" this.rovingButtonBar}}
+                  />
+                {{/if}}
+                <ToolbarButtons
+                  @data={{this.toolbar}}
+                  @rovingButtonBar={{this.rovingButtonBar}}
+                  @isFirst={{not this.showEditorModeToggle}}
+                />
+              </DOverflowControls>
+            {{/if}}
+          </DConditionalInElement>
 
           <DConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent

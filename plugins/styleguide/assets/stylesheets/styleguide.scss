@@ -3,9 +3,10 @@
 
 .styleguide {
   position: relative;
-  display: flex;
-  padding: 1rem;
-  padding-left: 0;
+
+  // No top padding: the page header's breadcrumb brings its own top margin, and that alone lines
+  // it up with the sidebar's "back to forum" row. Adding padding here pushes it out of that band.
+  padding: 0 1rem 1rem;
 
   .styleguide-note {
     padding: 1em;
@@ -13,55 +14,22 @@
     margin-bottom: 1em;
   }
 
-  .styleguide-menu {
-    position: sticky;
-    top: calc(var(--header-offset) + 3rem);
-    max-height: calc(100vh - 3rem - var(--header-offset));
-    flex: 1 0 0;
-    overflow-y: auto;
-    margin-right: 2rem;
+  // The color mode control shares the breadcrumb's row. The spacing moves from the list to this
+  // container so both items centre against each other: a flex parent no longer collapses the
+  // list's margin, which is what keeps the row level with the sidebar's "back to forum".
+  .d-page-header__breadcrumbs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin: var(--space-2) 0 var(--space-4);
 
-    ul {
-      list-style: none;
+    .d-breadcrumbs {
       margin: 0;
-      margin-bottom: 2em;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      li.styleguide-heading {
-        color: var(--primary-medium);
-        text-transform: uppercase;
-        font-size: 14px;
-      }
-
-      li {
-        margin-bottom: 0.25em;
-
-        a {
-          color: var(--primary);
-          font-size: 14px;
-        }
-
-        a.active {
-          font-weight: bold;
-        }
-      }
     }
-  }
-
-  .styleguide-contents {
-    flex: 4 0 0;
   }
 
   .styleguide-section {
-    .section-title {
-      font-size: var(--font-up-5);
-      font-weight: normal;
-      margin-bottom: 0.5em;
-    }
-
     .section-description {
       margin-bottom: 2em;
     }

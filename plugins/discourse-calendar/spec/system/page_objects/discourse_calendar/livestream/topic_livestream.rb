@@ -3,22 +3,13 @@
 module PageObjects
   module Pages
     class TopicLivestream < PageObjects::Pages::Base
-      def create_livestream_topic(composer, topic_page, tag)
-        visit("/latest")
-        topic_page.open_new_topic
+      LIVESTREAM_URL = "https://example.com/live"
 
-        composer.fill_title("Creating a livestream topic")
-        tag_chooser = PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
-        tag_chooser.expand
-        tag_chooser.select_row_by_name(tag.name)
-        tag_chooser.collapse
-
-        tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
-        composer.fill_content <<~MD
-          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
-          [/event]
-        MD
-        composer.create
+      def cache_livestream_onebox
+        Discourse.cache.write(
+          Oneboxer.onebox_cache_key(LIVESTREAM_URL),
+          { onebox: "<aside>cached livestream</aside>" },
+        )
       end
 
       def create_regular_topic(composer, topic_page)
@@ -30,19 +21,19 @@ module PageObjects
         composer.create
       end
 
-      def create_livestream_event_topic(composer, topic_page, tag)
+      def create_livestream_event_topic(composer, topic_page, opts = {})
         visit("/latest")
         topic_page.open_new_topic
 
-        composer.fill_title("Creating a livestream event topic")
-        tag_chooser = PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
-        tag_chooser.expand
-        tag_chooser.select_row_by_name(tag.name)
-        tag_chooser.collapse
+        opts = {
+          location: LIVESTREAM_URL,
+          start: 1.day.from_now.strftime("%Y-%m-%d") + " 13:37",
+        }.merge!(opts)
 
-        tomorrow = 1.day.from_now.strftime("%Y-%m-%d")
+        composer.fill_title("Creating a livestream event topic")
+
         composer.fill_content <<~MD
-          [event start="#{tomorrow} 13:37" status="public" livestream="true" location="https://example.com/live"]
+          [event start="#{opts[:start]}" status="public" livestream="true" location="#{opts[:location]}"]
           [/event]
         MD
         composer.create

@@ -62,6 +62,63 @@ RSpec.describe "Nested view real-time updates" do
     end
   end
 
+  describe "stale events from another topic" do
+    fab!(:other_topic) { Fabricate(:topic, user: other_user, title: "Topic with stale replies") }
+    fab!(:other_op) { Fabricate(:post, topic: other_topic, user: other_user, post_number: 1) }
+    fab!(:other_root) do
+      Fabricate(:post, topic: other_topic, user: other_user, raw: "Other topic root reply")
+    end
+    fab!(:other_sibling) do
+      Fabricate(:post, topic: other_topic, user: other_user, raw: "Other topic sibling reply")
+    end
+    fab!(:wrong_topic_reply) do
+      Fabricate(
+        :post,
+        topic: other_topic,
+        user: other_user,
+        raw: "Wrong topic leaked reply",
+        reply_to_post_number: other_root.post_number,
+      )
+    end
+    fab!(:existing_child) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: user,
+        raw: "Legitimate child reply",
+        reply_to_post_number: root_reply.post_number,
+      )
+    end
+
+    before { Fabricate(:nested_topic, topic: other_topic) }
+
+    it "ignores stale created events for posts from a different topic" do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_nested_view
+      expect(page).to have_content("Legitimate child reply")
+
+      page.execute_script(<<~JS)
+        window.__stalePostLookupFinished = false;
+        jQuery(document).one("ajaxComplete", (_event, _xhr, settings) => {
+          if (settings.url.includes("/posts/#{wrong_topic_reply.id}.json")) {
+            window.__stalePostLookupFinished = true;
+          }
+        });
+        Discourse.lookup("controller:nested")._onMessage({
+          type: "created",
+          id: #{wrong_topic_reply.id},
+          user_id: #{other_user.id}
+        });
+      JS
+
+      try_until_success(reason: "stale post lookup finishes") do
+        expect(page.evaluate_script("window.__stalePostLookupFinished")).to eq(true)
+      end
+
+      expect(page).to have_no_content("Wrong topic leaked reply")
+    end
+  end
+
   describe "small_action posts" do
     it "does not insert close/open small_actions into the tree" do
       nested_view.visit_nested(topic)

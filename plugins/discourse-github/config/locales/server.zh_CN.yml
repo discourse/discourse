@@ -21,7 +21,9 @@ zh_CN:
     github_gold_badge_min_commits: "黄金徽章的最低提交次数"
     errors:
       invalid_badge_repo: "您必须提供 GitHub URL 或格式为 github_user/repository_name 的仓库名称"
+      invalid_badge_repo_value: "'%{repo}' 不是有效的 GitHub URL 或仓库名称。请使用 github_user/repository_name 格式。"
       invalid_github_linkback_access_token: "您必须提供有效的 GitHub 反向链接访问令牌，该令牌应该可以访问您提供的徽章仓库。"
+      invalid_github_linkback_access_token_for_repo: "GitHub Linkback 访问令牌无法访问仓库 '%{repo}'。请确认访问令牌有效，并确保仓库名称正确，且当前令牌具有访问权限。"
   github_linkback:
     commit_template: |
       此提交已在 **%{title}** 上被提及。那里可能有相关详细信息：

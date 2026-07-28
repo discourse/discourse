@@ -95,6 +95,7 @@ module DiscourseWorkflows
           pinned: !params.unpin?,
           pinned_node_names: workflow.pinned_node_names,
         },
+        group_ids: [Group::AUTO_GROUPS[:admins]],
       )
     end
 

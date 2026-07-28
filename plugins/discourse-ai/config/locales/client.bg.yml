@@ -61,6 +61,9 @@ bg:
           reset: "Нулиране"
         search:
           name: "Търсене"
+        image_caption:
+          setting_groups:
+            settings: "Настройки"
         spam:
           name: "Спам"
       modals:
@@ -185,8 +188,6 @@ bg:
           cancel: "Отмени"
         thumbnail_suggestions:
           try_again: "Опитайте отново"
-        image_caption:
-          save_caption: "Запази"
       embeddings:
         save: "Запази"
         delete: "Изтрий"

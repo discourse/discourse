@@ -18,6 +18,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
 import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -57,12 +58,20 @@ export default class InstallThemeModal extends Component {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
   }
 
+  get showGithubDeployKeyHelp() {
+    return /^(?:ssh:\/\/)?git@github\.com[:/]/.test(this.uploadUrl?.trim());
+  }
+
   get submitLabel() {
     if (this.themeCannotBeInstalled) {
       return "admin.customize.theme.create_placeholder";
     }
 
     return `admin.customize.theme.${this.create ? "create" : "install"}`;
+  }
+
+  get showStageButton() {
+    return this.remote && this.showPublicKey && !this.themeCannotBeInstalled;
   }
 
   get component() {
@@ -97,6 +106,7 @@ export default class InstallThemeModal extends Component {
     return (
       this.loading ||
       (this.remote && !this.uploadUrl) ||
+      (this.remote && this.showPublicKey && !this.publicKey) ||
       (this.local && !this.localFile) ||
       (this.create && this.nameTooShort)
     );
@@ -189,6 +199,15 @@ export default class InstallThemeModal extends Component {
 
   @action
   async installTheme() {
+    return this.#installTheme();
+  }
+
+  @action
+  async stageTheme() {
+    return this.#installTheme({ placeholder: true });
+  }
+
+  async #installTheme({ placeholder = false } = {}) {
     if (this.create) {
       return this.#createTheme();
     }
@@ -222,6 +241,10 @@ export default class InstallThemeModal extends Component {
         branch: this.branch,
         public_key: this.publicKey,
       };
+
+      if (placeholder) {
+        options.data.placeholder = true;
+      }
     }
 
     // User knows that theme cannot be installed, but they want to continue
@@ -244,7 +267,7 @@ export default class InstallThemeModal extends Component {
       this.args.model.addTheme(theme);
       this.args.closeModal();
     } catch (err) {
-      if (!this.publicKey || this.themeCannotBeInstalled) {
+      if (placeholder || !this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(err);
       }
       this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
@@ -432,7 +455,24 @@ export default class InstallThemeModal extends Component {
                 {{#if this.showPublicKey}}
                   <div class="public-key">
                     <div class="label">
-                      {{i18n "admin.customize.theme.public_key"}}
+                      {{#if this.showGithubDeployKeyHelp}}
+                        <DInterpolatedTranslation
+                          @key="admin.customize.theme.public_key_github"
+                          as |Placeholder|
+                        >
+                          <Placeholder @name="link">
+                            <a
+                              href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >{{i18n
+                                "admin.customize.theme.deploy_key_instructions"
+                              }}</a>
+                          </Placeholder>
+                        </DInterpolatedTranslation>
+                      {{else}}
+                        {{i18n "admin.customize.theme.public_key"}}
+                      {{/if}}
                     </div>
                     <div class="public-key-text-wrapper">
                       <textarea
@@ -507,9 +547,17 @@ export default class InstallThemeModal extends Component {
           <DButton
             @action={{this.installTheme}}
             @disabled={{this.installDisabled}}
-            class={{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}
+            class={{if this.themeCannotBeInstalled "btn-default" "btn-primary"}}
             @label={{this.submitLabel}}
           />
+          {{#if this.showStageButton}}
+            <DButton
+              @action={{this.stageTheme}}
+              @disabled={{this.installDisabled}}
+              class="btn-default create-placeholder"
+              @label="admin.customize.theme.create_placeholder"
+            />
+          {{/if}}
           <DButton
             class="btn-flat d-modal-cancel"
             @action={{@closeModal}}

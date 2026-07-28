@@ -900,7 +900,13 @@ class SessionController < ApplicationController
       end
     end
 
-    return render json: { user_fields_required: true } if needs_signup_user_fields?(matched_user)
+    if matched_user.nil? && registration_via_login_code_open?
+      user_fields_required = signup_user_fields_missing?
+      name_required = signup_full_name_missing?
+      if user_fields_required || name_required
+        return render json: { user_fields_required:, name_required: }
+      end
+    end
 
     EmailLoginCode::Redeem.call(
       service_params.deep_merge(ip_address: request.remote_ip),
@@ -914,17 +920,29 @@ class SessionController < ApplicationController
       on_failed_policy(:required_fields_provided) do
         render json: { error: I18n.t("login.missing_user_field") }
       end
+      on_failed_policy(:required_full_name_provided) do
+        render json: { error: I18n.t("login.missing_full_name") }
+      end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
       on_failure { render json: invalid_login_code }
     end
   end
 
-  # Required signup fields are only collected once the code has proven
-  # ownership of the inbox, so this response can't be used to probe whether
+  # Required signup details are only collected once the code has proven
+  # ownership of the inbox, so these responses can't be used to probe whether
   # an account exists.
-  def needs_signup_user_fields?(matched_user)
-    matched_user.nil? && params[:user_fields].blank? &&
-      UserField.required.where(show_on_signup: true).exists? &&
-      SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
+  def signup_user_fields_missing?
+    params[:user_fields].blank? && UserField.required.where(show_on_signup: true).exists?
+  end
+
+  def signup_full_name_missing?
+    params[:name].blank? && Site.full_name_required_for_signup
+  end
+
+  def registration_via_login_code_open?
+    SiteSetting.allow_new_registrations && !SiteSetting.invite_only &&
       !SiteSetting.require_invite_code
   end
 

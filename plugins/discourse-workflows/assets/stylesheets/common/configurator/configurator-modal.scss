@@ -189,6 +189,19 @@
     }
   }
 
+  &__run-scope {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
   &__node {
     border: 1px solid var(--content-border-color);
     padding: var(--space-2);

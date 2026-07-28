@@ -111,6 +111,13 @@ uk:
     holiday_status:
       description: "У відпустці"
   discourse_post_event:
+    event_excerpt:
+      summary: "📅 %{summary}"
+      separator: " · "
+      date_range: "%{from} → %{to}"
+      date_with_timezone: "%{date} (%{timezone})"
+      date_format: "%B %-d, %Y"
+      datetime_format: "%B %-d, %Y %-I:%M %p"
     notifications:
       before_event_reminder: "%{title} ось-ось розпочнеться."
       after_event_reminder: "%{title} закінчилась."

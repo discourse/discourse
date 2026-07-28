@@ -13,6 +13,14 @@ module DiscourseAi
 
         attr_reader :target, :opts
 
+        def locale
+          nil
+        end
+
+        def output_tool
+          nil
+        end
+
         # The summary type differentiates instances of `AiSummary` pointing to a single target.
         # See the `summary_type` enum for available options.
         def type
@@ -50,6 +58,27 @@ module DiscourseAi
         # We'll pass this as the feature_name when doing LLM calls.
         def feature
           "summarize"
+        end
+
+        private
+
+        def output_locale
+          LocaleNormalizer.normalize_to_i18n(
+            locale || target.locale.presence || SiteSetting.default_locale,
+          ).to_s
+        end
+
+        def output_language
+          language =
+            LocaleSiteSetting.language_names[output_locale] ||
+              LocaleSiteSetting.language_names[output_locale.split("_").first]
+          names = [language&.dig("name"), language&.dig("nativeName")].compact_blank.uniq
+
+          if names.length > 1
+            "#{names.first} (#{names.second})"
+          else
+            names.first || output_locale
+          end
         end
       end
     end

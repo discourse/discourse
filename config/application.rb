@@ -113,6 +113,10 @@ module Discourse
     config.autoload_paths << "#{root}/lib/i18n"
     config.autoload_paths << "#{root}/lib/validators"
 
+    # `lib` directories under a service namespace hold supporting classes
+    # (value objects, caches, etc.) without adding a `Lib` constant.
+    Rails.autoloaders.main.collapse("#{root}/app/services/*/lib")
+
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
     # config.plugins = [ :exception_notification, :ssl_requirement, :all ]

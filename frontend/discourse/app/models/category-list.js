@@ -6,6 +6,7 @@ import { number } from "discourse/lib/formatter";
 import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -131,18 +132,29 @@ export default class CategoryList extends LegacyArrayLikeObject {
         if (parentCategory) {
           data.parent_category_id = parentCategory.id;
         }
-        return ajax("/categories.json", { data });
+        return ajax("/categories.json", {
+          data: applyValueTransformer("category-list-request", data, {
+            parentCategory,
+          }),
+        });
       }
     );
 
     const categoryList = result?.category_list || {};
-    return CategoryList.create({
-      store,
-      categories: this.categoriesFrom(store, result, parentCategory).content,
-      parentCategory,
-      can_create_category: categoryList.can_create_category,
-      can_create_topic: categoryList.can_create_topic,
-    });
+    return CategoryList.create(
+      applyValueTransformer(
+        "category-list-attributes",
+        {
+          store,
+          categories: this.categoriesFrom(store, result, parentCategory)
+            .content,
+          parentCategory,
+          can_create_category: categoryList.can_create_category,
+          can_create_topic: categoryList.can_create_topic,
+        },
+        { result, parentCategory }
+      )
+    );
   }
 
   /**

@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "Il y a un problème avec la configuration de votre hCaptcha `site_key` ou `secret_key`"
+  site_settings:
+    hcaptcha_site_key: "Clé de site hCaptcha de votre compte <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
+    hcaptcha_secret_key: "Clé secrète hCaptcha de votre compte <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"

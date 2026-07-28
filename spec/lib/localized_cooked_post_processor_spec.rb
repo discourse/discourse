@@ -30,6 +30,16 @@ RSpec.describe LocalizedCookedPostProcessor do
       processor.post_process
     end
 
+    it "triggers the localized cooked post-process event", :aggregate_failures do
+      events =
+        DiscourseEvent.track_events(:post_process_localized_cooked) { processor.post_process }
+
+      expect(events.size).to eq(1)
+      expect(events.first[:params].first.to_html).to include(upload1.base62_sha1)
+      expect(events.first[:params].second).to eq(post)
+      expect(events.first[:params].third).to eq(localization)
+    end
+
     it "creates upload references for uploads in the localization" do
       processor.post_process
 

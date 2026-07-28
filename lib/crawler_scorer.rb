@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
 class CrawlerScorer
+  BOT_SCORE_THRESHOLD = 60
+
   AUTOMATION_UA_SCORE = 100
 
   KNOWN_ASN_SCORE = 15
 
-  VELOCITY_LOW = 120
+  VELOCITY_LOW = 150
   VELOCITY_MEDIUM = 300
   VELOCITY_HIGH = 600
-  VELOCITY_LOW_SCORE = 10
+  VELOCITY_LOW_SCORE = 15
   VELOCITY_MEDIUM_SCORE = 20
-  VELOCITY_HIGH_SCORE = 35
+  VELOCITY_HIGH_SCORE = 50
 
   CHURN_LOW_MIN_SESSIONS = 5
   CHURN_HIGH_MIN_SESSIONS = 10
@@ -22,11 +24,17 @@ class CrawlerScorer
   RAPID_NAV_MAX_MEDIAN_SECONDS = 5
   RAPID_NAV_SCORE = 15
 
+  IP_ROTATION_MIN_IPS = 3
+  IP_ROTATION_MAX_SECONDS_PER_CHANGE = 300
+  IP_ROTATION_SCORE = 30
+
   REFERRER_MIN_EVENTS = 5
   REFERRER_LOW_RATIO = 0.5
   REFERRER_HIGH_RATIO = 0.8
   REFERRER_LOW_SCORE = 5
   REFERRER_HIGH_SCORE = 10
+
+  HUMAN_ACTIVITY_SCORE = -40
 
   def self.score!(window_start:, window_end:)
     crawler_asns = SiteSetting.crawler_asns_map.map(&:to_i)
@@ -55,11 +63,15 @@ class CrawlerScorer
         rapid_nav_min_gaps: RAPID_NAV_MIN_GAPS,
         rapid_nav_max_median_seconds: RAPID_NAV_MAX_MEDIAN_SECONDS,
         rapid_nav_score: RAPID_NAV_SCORE,
+        ip_rotation_min_ips: IP_ROTATION_MIN_IPS,
+        ip_rotation_max_seconds_per_change: IP_ROTATION_MAX_SECONDS_PER_CHANGE,
+        ip_rotation_score: IP_ROTATION_SCORE,
         referrer_min_events: REFERRER_MIN_EVENTS,
         referrer_low_ratio: REFERRER_LOW_RATIO,
         referrer_high_ratio: REFERRER_HIGH_RATIO,
         referrer_low_score: REFERRER_LOW_SCORE,
         referrer_high_score: REFERRER_HIGH_SCORE,
+        human_activity_score: HUMAN_ACTIVITY_SCORE,
       )
     end
   end
@@ -117,6 +129,16 @@ class CrawlerScorer
       GROUP BY ip_address, user_agent, source
     ),
 
+    session_stats AS (
+      SELECT
+        session_id,
+        source,
+        COUNT(DISTINCT ip_address) AS distinct_ips,
+        EXTRACT(EPOCH FROM MAX(created_at) - MIN(created_at)) AS span_seconds
+      FROM events
+      GROUP BY session_id, source
+    ),
+
     breakdown AS (
       SELECT
         e.id,
@@ -150,15 +172,32 @@ class CrawlerScorer
           ELSE 0
         END AS rapid_nav_score,
         CASE
+          WHEN ss.distinct_ips >= :ip_rotation_min_ips
+            AND (ss.distinct_ips - 1) * :ip_rotation_max_seconds_per_change
+                  > GREATEST(ss.span_seconds, 1)
+            THEN :ip_rotation_score
+          ELSE 0
+        END AS ip_rotation_score,
+        CASE
           WHEN iu.pageviews >= :referrer_min_events
             AND iu.bad_referrer_ratio >= :referrer_high_ratio THEN :referrer_high_score
           WHEN iu.pageviews >= :referrer_min_events
             AND iu.bad_referrer_ratio >= :referrer_low_ratio  THEN :referrer_low_score
           ELSE 0
-        END AS referrer_score
+        END AS referrer_score,
+        CASE
+          WHEN se.session_id IS NOT NULL THEN :human_activity_score
+          ELSE 0
+        END AS engagement_score
       FROM events e
       LEFT JOIN ipua_stats iu USING (ip_address, user_agent, source)
       LEFT JOIN median_gap mg USING (ip_address, user_agent, source)
+      LEFT JOIN session_stats ss USING (session_id, source)
+      LEFT JOIN browser_pageview_session_engagements se
+        ON se.session_id = e.session_id
+        AND (
+          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column} > 0" }.join(" OR ")}
+        )
     ),
 
     totals AS (
@@ -169,10 +208,17 @@ class CrawlerScorer
         velocity_score,
         churn_score,
         rapid_nav_score,
+        ip_rotation_score,
         referrer_score,
-        automation_ua_score + known_asn_score + velocity_score
-          + churn_score + rapid_nav_score + referrer_score AS score
+        engagement_score,
+        GREATEST(
+          0,
+          automation_ua_score + known_asn_score + velocity_score + churn_score
+            + rapid_nav_score + ip_rotation_score + referrer_score + engagement_score
+        ) AS score
       FROM breakdown
+      WHERE automation_ua_score + known_asn_score + velocity_score + churn_score
+        + rapid_nav_score + ip_rotation_score + referrer_score > 0
     ),
 
     updated AS (
@@ -180,15 +226,16 @@ class CrawlerScorer
       SET score = t.score
       FROM totals t
       WHERE e.id = t.id
-        AND t.score > 0
-        AND t.score > COALESCE(e.score, 0)
+        AND (e.score IS NULL OR t.score > e.score)
       RETURNING e.id,
                 t.automation_ua_score,
                 t.known_asn_score,
                 t.velocity_score,
                 t.churn_score,
                 t.rapid_nav_score,
-                t.referrer_score
+                t.ip_rotation_score,
+                t.referrer_score,
+                t.engagement_score
     )
 
     INSERT INTO browser_pageview_event_scores (
@@ -198,7 +245,9 @@ class CrawlerScorer
       velocity_score,
       churn_score,
       rapid_nav_score,
-      referrer_score
+      ip_rotation_score,
+      referrer_score,
+      engagement_score
     )
     SELECT
       id,
@@ -207,7 +256,9 @@ class CrawlerScorer
       velocity_score,
       churn_score,
       rapid_nav_score,
-      referrer_score
+      ip_rotation_score,
+      referrer_score,
+      engagement_score
     FROM updated
     ON CONFLICT (event_id) DO UPDATE
     SET automation_ua_score = EXCLUDED.automation_ua_score,
@@ -215,6 +266,8 @@ class CrawlerScorer
         velocity_score      = EXCLUDED.velocity_score,
         churn_score         = EXCLUDED.churn_score,
         rapid_nav_score     = EXCLUDED.rapid_nav_score,
-        referrer_score      = EXCLUDED.referrer_score;
+        ip_rotation_score   = EXCLUDED.ip_rotation_score,
+        referrer_score      = EXCLUDED.referrer_score,
+        engagement_score    = EXCLUDED.engagement_score;
   SQL
 end

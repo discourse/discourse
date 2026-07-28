@@ -195,6 +195,25 @@ describe "Telegram Command Controller", type: :request do
         expect(stub).to have_been_requested.times(1)
       end
 
+      it "still returns success when the reply cannot be sent" do
+        SiteSetting.stubs(:chat_integration_telegram_api_base_url).returns(
+          "http://telegram.example.com",
+        )
+
+        post "/chat-integration/telegram/command/shhh.json",
+             params: {
+               message: {
+                 chat: {
+                   id: 123,
+                 },
+                 text: "/help",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(stub).to have_been_requested.times(0)
+      end
+
       context "when 'text' is missing" do
         it "does not break" do
           post "/chat-integration/telegram/command/shhh.json",

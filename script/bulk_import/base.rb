@@ -559,8 +559,10 @@ class BulkImport::Base
     username
     username_lower
     name
+    locale
     title
     active
+    staged
     trust_level
     admin
     moderator
@@ -1388,6 +1390,7 @@ class BulkImport::Base
     user[:username_lower] = user[:username].downcase
     user[:trust_level] ||= TrustLevel[1]
     user[:active] = true unless user.has_key?(:active)
+    user[:staged] = false if user[:staged].nil?
     user[:admin] ||= false
     user[:moderator] ||= false
     user[:last_emailed_at] ||= NOW
@@ -1500,7 +1503,7 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
-    if user_option.key?(:hide_profile_and_presence)
+    if !user_option[:hide_profile_and_presence].nil?
       hide_profile_and_presence = user_option[:hide_profile_and_presence]
       user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
     end

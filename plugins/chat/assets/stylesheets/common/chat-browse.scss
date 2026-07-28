@@ -34,15 +34,16 @@
 
   &__actions {
     display: flex;
-    justify-content: space-between;
-    align-items: end;
+    align-items: center;
+    gap: 1rem;
 
     .c-drawer-routes.--browse & {
       flex-direction: column;
       gap: 1rem;
       align-items: flex-start;
 
-      .filter-input {
+      .chat-browse-view__filter-controls,
+      .filter-input-container {
         width: 100%;
       }
     }
@@ -50,15 +51,46 @@
     @include viewport.until(md) {
       flex-direction: column;
 
-      .filter-input-container {
+      .chat-browse-view__filter-controls {
         margin-top: 1rem;
       }
 
+      .chat-browse-view__filter-controls,
       .filter-input-container,
       nav {
         width: 100%;
       }
     }
+
+    .chat-browse-view__filter-controls {
+      .filter-input,
+      .filter-input:focus {
+        width: 100%;
+      }
+    }
+  }
+
+  &__filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 1 32rem;
+    margin-inline-start: auto;
+    min-width: 0;
+
+    .filter-input-container {
+      width: 100%;
+      min-width: 0;
+    }
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
+  }
+
+  &__filter-select,
+  &__filter-controls .filter-input-container {
+    flex: 1 1 0;
   }
 
   &__filters {

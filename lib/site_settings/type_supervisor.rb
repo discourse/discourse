@@ -75,6 +75,7 @@ class SiteSettings::TypeSupervisor
         topic: 30,
         datetime: 31,
         icon: 32,
+        date: 33,
       )
   end
 
@@ -198,7 +199,8 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string], self.class.types[:datetime], self.class.types[:icon]
+    when self.class.types[:string], self.class.types[:datetime], self.class.types[:icon],
+         self.class.types[:date]
       value.to_s
     else
       return value if self.class.types[type]
@@ -306,7 +308,16 @@ class SiteSettings::TypeSupervisor
     if (v = @validators[name])
       validator = v[:class].new(v[:opts])
       unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
+        error = validator.error_message
+        if SiteSettings::LabelFormatter.contains_setting_links?(error)
+          raise Discourse::InvalidHTMLParameters.new(
+                  "#{name}: #{SiteSettings::LabelFormatter.plain_setting_links(error)}",
+                  html_message:
+                    "#{name}: #{SiteSettings::LabelFormatter.expand_setting_links(error, escape_text: true)}",
+                )
+        end
+
+        raise Discourse::InvalidParameters, "#{name}: #{error}"
       end
     end
 
@@ -403,6 +414,8 @@ class SiteSettings::TypeSupervisor
       TopicSettingValidator
     when self.class.types[:datetime]
       DatetimeSettingValidator
+    when self.class.types[:date]
+      DateSettingValidator
     else
       nil
     end

@@ -320,9 +320,15 @@ const WORD_REVIEW_SELECTORS = [
   "del",
 ].join(", ");
 
+// Word for the web has no mso-* markers; it uses these class names and
+// data-ccp-* attributes. Anchored to class/attribute form so unrelated HTML
+// that merely mentions the words isn't misread as Word.
+const WAC_MARKERS =
+  /class=["'][^"']*\b(?:OutlineElement|NormalTextRun|WACImageContainer)\b|data-ccp-[\w-]*=/;
+
 /**
- * Detects whether an HTML string originated from Microsoft Word, so that
- * Word-only cleanup (e.g. review markup) is not applied to other sources.
+ * Detects whether an HTML string originated from Microsoft Word (desktop or
+ * Word for the web), so that Word-only cleanup is not applied to other sources.
  *
  * @param {string} html - The HTML string to inspect
  * @returns {boolean}
@@ -331,7 +337,8 @@ function isWordHtml(html) {
   return (
     html.includes("mso-") ||
     html.includes("urn:schemas-microsoft-com") ||
-    /class=["']?Mso/.test(html)
+    /class=["']?Mso/.test(html) ||
+    WAC_MARKERS.test(html)
   );
 }
 
@@ -345,6 +352,17 @@ export function stripWordReviewMarkup(container) {
   container
     .querySelectorAll(WORD_REVIEW_SELECTORS)
     .forEach((el) => el.remove());
+}
+
+// Word for the web stamps lang on every text span (<span class="TextRun" lang>),
+// which the editor keeps and surfaces as literal <span lang> markup. Strip it
+// from Word's own spans only, so a lang the user added on purpose survives.
+const WORD_LANG_RUN_SELECTOR = "span[class*='TextRun'][lang]";
+
+export function stripWordLangAttributes(container) {
+  container
+    .querySelectorAll(WORD_LANG_RUN_SELECTOR)
+    .forEach((el) => el.removeAttribute("lang"));
 }
 
 /**
@@ -381,6 +399,7 @@ export function transformWordHtml(html) {
 
   if (isWord) {
     stripWordReviewMarkup(doc.body);
+    stripWordLangAttributes(doc.body);
   }
 
   return doc.body.innerHTML;

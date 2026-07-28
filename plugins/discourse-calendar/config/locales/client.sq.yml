@@ -13,6 +13,9 @@ sq:
             topic_id:
               label: ID e temës
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Biseda"
       disable_holiday: "Çaktivizoni"
       enable_holiday: "Aktivizo"
       region:

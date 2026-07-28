@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 describe BackupRestore::Creator do
+  describe "#pg_dump_command" do
+    it "excludes disposable nested hot score data" do
+      command = described_class.new(Discourse.system_user.id).send(:pg_dump_command)
+
+      expect(command).to include(
+        "--exclude-table-data=public.nested_hot_post_scores",
+        "--exclude-table-data=public.nested_hot_score_snapshots",
+      )
+    end
+  end
+
   describe "#add_remote_uploads_to_archive" do
     fab!(:user)
 

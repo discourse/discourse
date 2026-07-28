@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -14,6 +13,7 @@ import { gt } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -219,7 +219,7 @@ export default class AiAgentListEditor extends Component {
           </:actions>
         </DPageSubheader>
         {{#if @agents.content}}
-          <AdminFilterControls
+          <DFilterControls
             @array={{@agents.content}}
             @searchableProps={{this.searchableProps}}
             @dropdownOptions={{this.dropdownOptions}}
@@ -346,7 +346,7 @@ export default class AiAgentListEditor extends Component {
                 </tbody>
               </table>
             </:content>
-          </AdminFilterControls>
+          </DFilterControls>
         {{else}}
           <AdminConfigAreaEmptyList
             @ctaLabel="discourse_ai.ai_agent.new"

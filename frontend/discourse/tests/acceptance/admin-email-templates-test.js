@@ -36,11 +36,11 @@ acceptance("Admin - Email Templates - URL filters", function (needs) {
   test("seeds and updates the URL filters", async function (assert) {
     await visit("/admin/email/templates?filter=login&overridden=true");
 
-    assert.dom(".admin-filter-controls__input").hasValue("login");
+    assert.dom(".d-filter-controls__input").hasValue("login");
     assert.dom("#toggle-overridden").isChecked();
     assert.dom("tr.email-templates-list__row").exists({ count: 1 });
 
-    await fillIn(".admin-filter-controls__input", "sign");
+    await fillIn(".d-filter-controls__input", "sign");
     assert.strictEqual(
       currentURL(),
       "/admin/email/templates?filter=sign&overridden=true"

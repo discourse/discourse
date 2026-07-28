@@ -192,4 +192,87 @@ RSpec.describe "Nested view replying" do
       expect(nested_view).to have_children_visible_for(child_reply)
     end
   end
+
+  describe "replying to a capped-depth post with hidden replies" do
+    fab!(:root_reply) { Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Root reply") }
+
+    fab!(:second_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Second-level reply",
+        reply_to_post_number: root_reply.post_number,
+      )
+    end
+
+    fab!(:third_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Third-level reply",
+        reply_to_post_number: second_level_reply.post_number,
+      )
+    end
+
+    fab!(:fourth_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Fourth-level reply",
+        reply_to_post_number: third_level_reply.post_number,
+      )
+    end
+
+    fab!(:fifth_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Fifth-level reply",
+        reply_to_post_number: third_level_reply.post_number,
+      )
+    end
+
+    fab!(:sixth_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Sixth-level reply",
+        reply_to_post_number: third_level_reply.post_number,
+      )
+    end
+
+    fab!(:seventh_level_reply) do
+      Fabricate(
+        :post,
+        topic: topic,
+        user: Fabricate(:user),
+        raw: "Seventh-level reply",
+        reply_to_post_number: third_level_reply.post_number,
+      )
+    end
+
+    before do
+      SiteSetting.nested_replies_cap_nesting_depth = true
+      SiteSetting.nested_replies_max_depth = 3
+      SiteSetting.nested_replies_default_sort = "old"
+    end
+
+    it "shows a reply to a capped-depth post without expanding hidden replies" do
+      nested_view.visit_nested(topic)
+      expect(nested_view).to have_post(fourth_level_reply)
+      expect(nested_view).to have_load_more_children_for(third_level_reply)
+
+      nested_view.click_reply_on_post(fourth_level_reply)
+      composer.fill_content("Reply shown immediately at the capped depth")
+      composer.submit
+
+      expect(composer).to be_closed
+      expect(nested_view).to have_post_text("Reply shown immediately at the capped depth")
+    end
+  end
 end

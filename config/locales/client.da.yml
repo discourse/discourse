@@ -1346,6 +1346,9 @@ da:
       notifications: "Notifikationer"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Deaktiveret"
+          all: "Aktiveret"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         each_browser_note: "Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle notifikationer vil blive deaktiveret, hvis du pauserer notifikationer fra brugermenuen, uanset denne indstilling."
@@ -1709,7 +1712,7 @@ da:
         default: "(standard)"
         any: "alle"
       homepage:
-        default: "(standard)"
+        default: "Standard"
       password_confirmation:
         title: "Gentag adgangskode"
       invite_code:
@@ -1881,6 +1884,30 @@ da:
           cancel: "Annuller"
           create_link: "Opret link"
           create_link_and_send_email: "Opret link og send e-mail"
+        invite_roles:
+          member_title: "Inviter medlemmer"
+          sent_title: "Invitation sendt"
+          member_tab: "Brugere"
+          admin_tab: "Personale"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          admin_email_label: "E-mail adresse"
+          email_placeholder: "navn@eksempel.dk"
+          invite_by_email: "E-mail"
+          restrict_domain: "Begræns til domæne"
+          more_options: "Flere muligheder"
+          update: "Opdater"
+          summary:
+            role_member: "Bruger"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method: "Deling"
+            method_email: "E-mail"
+            uses: "Maks. anvendelser"
+            expires: "Udløber"
+            topic: "Emne"
+            groups: "Grupper"
+            edit: "Rediger invitation"
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2415,6 +2442,7 @@ da:
       draft_saved: "Kladde gemt!"
       users_placeholder: "Tilføj brugere eller grupper"
       title_placeholder: "Hvad handler diskussionen om i korte træk?"
+      title_placeholder_redesign: "Titel"
       title_or_link_placeholder: "Skriv titel eller indsæt et link her"
       edit_reason_placeholder: "Hvorfor redigerer du?"
       topic_featured_link_placeholder: "Indtast link som vises med titel."
@@ -2907,6 +2935,7 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
+      sr_read: "læst"
       participant_groups: "Deltagergrupper"
       created_at: "Oprettet: %{date}"
       bumped_at: "Senest: %{date}"
@@ -3311,6 +3340,8 @@ da:
           edit: "Rediger"
           delete: "Slet"
         add: "Tilføj ny oversættelse"
+        modal:
+          title: "Oversættelser"
         post_language_selector:
           none: "Ikke indstillet"
       errors:
@@ -3486,7 +3517,7 @@ da:
     category:
       none: "(ingen kategori)"
       all: "Alle kategorier"
-      choose: "kategori&hellip;"
+      choose: "Kategori&hellip;"
       edit: "Rediger"
       edit_title: "Rediger denne kategori"
       edit_dialog_title: "Rediger: %{categoryName}"
@@ -3953,7 +3984,6 @@ da:
       selector_no_tags: "ingen tags"
       selector_remove_filter: "fjern filter"
       tags: "Tags"
-      choose_for_topic: "valgfri tags"
       choose_for_topic_required:
         one: "vælg mindst %{count} mærke…"
         other: "vælg mindst %{count} tags…"
@@ -4148,6 +4178,10 @@ da:
           delete: "Slet"
           public: "Synlig for alle"
           more_menu: "Mere menu"
+          localizations:
+            title: "Oversættelser"
+            locale: "Sprog"
+            title_label: "Sektionens titel"
           links:
             add: "Tilføj endnu et link"
             delete: "Slet link"
@@ -4514,6 +4548,21 @@ da:
               title: "Deling"
             posts_and_topics:
               title: "Indlæg & emner"
+        category_management:
+          tabs:
+            settings: "Indstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          filter_placeholder: "Filtrer kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighed"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalinks"
           header_description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet"
@@ -4642,7 +4691,6 @@ da:
               posts: "Indlæg"
               share: "Del"
             whos_posting:
-              all_categories: "Alle kategorier"
               staff: "Personale"
             trust_level_pipeline:
               trust_levels:
@@ -4657,6 +4705,7 @@ da:
               searches: "søgninger"
               status: "Status"
         reports_section:
+          header_action: "Administrér"
           no_data: "Ingen data at vise"
           modal:
             enabled_heading: "Aktiveret"
@@ -6344,6 +6393,10 @@ da:
         alt: "brugerdefineret humøikons forhåndsvisning"
         delete_confirm: "Er du sikker på du vil slette emojien: %{name} ?"
         settings: "Indstillinger"
+        export: "Eksporter"
+        import: "Importer"
+        import_category:
+          new: "Nye"
       embedding:
         get_started: "Hvis du vil indlejre Discourse på et andet website, skal du starte med at tilføje dets server."
         delete: "Slet"

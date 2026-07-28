@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  include Localizable
+
   enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
 
   MAX_ICON_LENGTH = 40
@@ -55,6 +57,7 @@ class SidebarUrl < ActiveRecord::Base
     },
     { name: "Filter", path: "/filter", icon: "filter", segment: SidebarUrl.segments["secondary"] },
   ]
+  COMMUNITY_SECTION_LINK_PATHS = COMMUNITY_SECTION_LINKS.map { |link| link[:path] }.freeze
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }
@@ -62,7 +65,10 @@ class SidebarUrl < ActiveRecord::Base
 
   validate :path_validator
 
+  accepts_nested_attributes_for :localizations, allow_destroy: true
+
   before_validation :remove_internal_hostname, :set_external
+  before_validation :set_default_locale
 
   def path_validator
     return true if !external?
@@ -81,6 +87,20 @@ class SidebarUrl < ActiveRecord::Base
   def set_external
     self.external = value.start_with?("http://", "https://")
   end
+
+  def set_default_locale
+    self.locale ||= SiteSetting.default_locale.to_s
+  end
+
+  def self.built_in_community_section_link_value?(value)
+    normalized_value =
+      value.to_s.sub(%r{\Ahttps?://#{Regexp.escape(Discourse.current_hostname)}}, "")
+    COMMUNITY_SECTION_LINK_PATHS.include?(normalized_value)
+  end
+
+  def built_in_community_section_link?
+    self.class.built_in_community_section_link_value?(value)
+  end
 end
 
 # == Schema Information
@@ -90,6 +110,7 @@ end
 #  id         :bigint           not null, primary key
 #  external   :boolean          default(FALSE), not null
 #  icon       :string(40)       not null
+#  locale     :string(20)
 #  name       :string(80)       not null
 #  segment    :integer          default("primary"), not null
 #  value      :string(1000)     not null

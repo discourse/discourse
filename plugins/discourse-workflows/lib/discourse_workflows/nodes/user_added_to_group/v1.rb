@@ -13,6 +13,7 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:user_added_to_group],
+          output_contracts: [{ schema: Schema::USER_ADDED_TO_GROUP_SCHEMA }],
           properties: {
             group_id: {
               type: :integer,

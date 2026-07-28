@@ -7,13 +7,13 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
-import { and, eq, not } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class VoteBox extends Component {
+export default class VoteButton extends Component {
   @service currentUser;
 
   @tracked hasVoted = false;
@@ -39,6 +39,10 @@ export default class VoteBox extends Component {
 
   get showVotedMenu() {
     return this.hasVoted && !this.hasSeenSuccessMenu;
+  }
+
+  get showVotedActions() {
+    return this.showVotedMenu || this.topic.user_voted;
   }
 
   get buttonClasses() {
@@ -84,42 +88,15 @@ export default class VoteBox extends Component {
         return;
       }
 
-      // When limits are disabled and user has voted, toggle off
-      if (!this.limitsEnabled && this.topic.user_voted) {
-        this.args.removeVote();
-        this.hasVoted = false;
-        this.hasSeenSuccessMenu = false;
-        return;
-      }
-
-      // If user has already voted and seen the success menu, don't do anything
-      // The menu will show with the "remove vote" option
-      if (this.topic.user_voted && this.hasSeenSuccessMenu) {
-        return;
-      }
-
       if (
         !this.topic.closed &&
         !this.topic.user_voted &&
         !this.currentUser.votes_exceeded
       ) {
         this.args.addVote();
-
-        // When limits are disabled, no menu needed
-        if (!this.limitsEnabled) {
-          return;
-        }
-
         this.hasVoted = true;
-        // Don't set hasSeenSuccessMenu yet - it will be set when menu closes
       }
     });
-  }
-
-  @action
-  addVote() {
-    this.args.addVote();
-    this.hasVoted = true;
   }
 
   @action
@@ -165,7 +142,7 @@ export default class VoteBox extends Component {
           {{i18n "topic_voting.voting_closed_description"}}
         </:content>
       </DTooltip>
-    {{else if this.limitsEnabled}}
+    {{else if this.currentUser}}
       <DMenu
         @identifier="topic-voting-menu"
         @icon={{this.buttonIcon}}
@@ -179,69 +156,27 @@ export default class VoteBox extends Component {
       >
         <:content>
           <DDropdownMenu as |dropdown|>
-            {{#if this.showVotedMenu}}
-              <dropdown.item class="topic-voting-menu__votes-left">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.remove_vote"}}
-                  @action={{this.removeVote}}
-                  @icon="arrow-rotate-left"
-                  class="btn-transparent remove-vote topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              <dropdown.item class="topic-voting-menu__watch-toggle">
-                <DButton
-                  @translatedLabel={{i18n "topic_voting.watch_topic"}}
-                  @action={{this.toggleWatching}}
-                  @icon={{if this.isWatching "toggle-on" "toggle-off"}}
-                  class="btn-transparent topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-            {{else if (eq this.currentUser.vote_limit 0)}}
+            {{#if (eq this.currentUser.vote_limit 0)}}
               <dropdown.item class="topic-voting-menu__title --locked">
                 {{dIcon "lock"}}
                 <span>{{i18n "topic_voting.locked_description"}}</span>
               </dropdown.item>
-            {{else if
-              (and this.currentUser.votes_exceeded (not this.topic.user_voted))
-            }}
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
             {{else}}
-              <dropdown.item class="topic-voting-menu__row">
-                <DButton
-                  @translatedLabel={{i18n
-                    "topic_voting.see_votes"
-                    count=this.currentUser.votes_left
-                    max=this.currentUser.vote_limit
-                  }}
-                  @href="/my/activity/votes"
-                  @icon="check-to-slot"
-                  class="btn-transparent see-votes topic-voting-menu__row-btn"
-                />
-              </dropdown.item>
-              {{#if this.topic.user_voted}}
+              {{#if this.limitsEnabled}}
+                <dropdown.item class="topic-voting-menu__votes-left">
+                  <DButton
+                    @translatedLabel={{i18n
+                      "topic_voting.see_votes"
+                      count=this.currentUser.votes_left
+                      max=this.currentUser.vote_limit
+                    }}
+                    @href="/my/activity/votes"
+                    @icon="check-to-slot"
+                    class="btn-transparent see-votes topic-voting-menu__row-btn"
+                  />
+                </dropdown.item>
+              {{/if}}
+              {{#if this.showVotedActions}}
                 <dropdown.item class="topic-voting-menu__row">
                   <DButton
                     @translatedLabel={{i18n "topic_voting.remove_vote"}}

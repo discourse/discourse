@@ -319,6 +319,29 @@ class StaffActionLogger
     )
   end
 
+  def log_admin_onboarding_step_completed(step, opts = {})
+    raise Discourse::InvalidParameters.new(:step) if step.blank?
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        subject: step,
+      ),
+    )
+  end
+
+  def log_admin_onboarding_completed(opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:admin_onboarding_completed]),
+    )
+  end
+
+  def log_admin_onboarding_dismissed(opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:admin_onboarding_dismissed]),
+    )
+  end
+
   def log_update_site_setting_localizations(locale:, setting_names:, opts: {})
     raise Discourse::InvalidParameters.new(:locale) if locale.blank?
     raise Discourse::InvalidParameters.new(:setting_names) if setting_names.blank?

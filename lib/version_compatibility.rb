@@ -29,6 +29,8 @@ module Discourse
     rescue Psych::SyntaxError, Psych::DisallowedClass
     end
 
+    return if version_list.blank?
+
     raise InvalidVersionListError unless version_list.is_a?(Hash)
 
     version_list =

@@ -103,6 +103,20 @@ RSpec.describe Reviewable, type: :model do
       r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
       expect(r1.pending?).to eq(true)
     end
+
+    it "will not resurrect an approved queued reviewable when reusing a flagged reviewable for the same target" do
+      r0 = Fabricate(:reviewable_queued_post)
+      r0.perform(admin, :approve_post)
+      expect(r0.reload.status).to eq("approved")
+
+      r1 = ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+      expect(r1.pending?).to eq(true)
+
+      ReviewableFlaggedPost.needs_review!(created_by: admin, target: r0.target)
+
+      expect(r1.reload.pending?).to eq(true)
+      expect(r0.reload.status).to eq("approved")
+    end
   end
 
   describe ".list_for" do

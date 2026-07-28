@@ -709,8 +709,23 @@ class ApplicationController < ActionController::Base
     false
   end
 
+  def mini_profiler_flamegraph_request?
+    return false if !mini_profiler_enabled?
+
+    mini_profiler_matches_action?("flamegraph") ||
+      mini_profiler_matches_action?("async-flamegraph") ||
+      request.referer.to_s.match?(/pp=async-flamegraph/)
+  end
+
   def authorize_mini_profiler
     MINI_PROFILER_CLASS.authorize_request if mini_profiler_enabled?
+  end
+
+  def mini_profiler_matches_action?(action)
+    profile_parameter = Regexp.escape(MINI_PROFILER_CLASS.config.profile_parameter)
+
+    request.query_string.match?(/#{profile_parameter}=#{Regexp.escape(action)}/) ||
+      request.get_header("HTTP_X_RACK_MINI_PROFILER") == action
   end
 
   def check_xhr
@@ -1063,6 +1078,10 @@ class ApplicationController < ActionController::Base
 
   def fetch_limit_from_params(params: self.params, default:, max:)
     fetch_int_from_params(:limit, params: params, default: default, max: max)
+  end
+
+  def fetch_page_from_params(params: self.params, default: 0, max: nil)
+    fetch_int_from_params(:page, params: params, default: default, min: 0, max: max)
   end
 
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)

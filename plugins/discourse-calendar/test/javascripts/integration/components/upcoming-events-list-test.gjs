@@ -637,6 +637,46 @@ module("Integration | Component | UpcomingEventsList", function (hooks) {
     assert.true(eventTime.includes("8"), "contains end day");
     assert.true(eventTime.includes("2100"), "contains year");
   });
+
+  test("respects the category list's subcategory filter", async function (assert) {
+    let lastQuery;
+    pretender.get("/discourse-post-event/events", ({ queryParams }) => {
+      lastQuery = queryParams;
+      return response({ events: [] });
+    });
+
+    const router = this.owner.lookup("service:router");
+    const setNoSubcategories = (noSubcategories) => {
+      router.currentRoute = {
+        attributes: {
+          category: { id: 1, slug: "announcements" },
+          noSubcategories,
+        },
+      };
+    };
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    setNoSubcategories(false);
+    this.appEvents.trigger("page:changed", { url: "/c/announcements/1" });
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert.strictEqual(
+      lastQuery.include_subcategories,
+      "true",
+      "includes subcategory events when the category list shows subcategory topics"
+    );
+
+    setNoSubcategories(true);
+    this.appEvents.trigger("page:changed", { url: "/c/announcements/1/none" });
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert.strictEqual(
+      lastQuery.include_subcategories,
+      undefined,
+      "excludes subcategory events when the category list hides subcategory topics"
+    );
+  });
 });
 
 function twoEventsResponseHandler({ queryParams }) {

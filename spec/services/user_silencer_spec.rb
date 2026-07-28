@@ -32,6 +32,14 @@ RSpec.describe UserSilencer do
       expect(count).to eq(1)
     end
 
+    it "removes featured rows for hidden topics" do
+      CategoryFeaturedTopic.create!(category: post.topic.category, topic: post.topic)
+
+      expect { UserSilencer.silence(user, admin) }.to change {
+        CategoryFeaturedTopic.exists?(topic_id: post.topic_id)
+      }.from(true).to(false)
+    end
+
     it "skips sending the email for the silence PM via post alert" do
       NotificationEmailer.enable
       Jobs.run_immediately!

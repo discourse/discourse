@@ -348,6 +348,26 @@ RSpec.describe Categories::Types::Base do
       expect(entry[:label]).to be_present
     end
 
+    it "reflects whether the site setting has been overridden" do
+      test_type =
+        build_test_type(
+          :test_overridden,
+          configuration_schema: {
+            site_settings: {
+              title: "My Forum",
+            },
+          },
+        )
+
+      entry = test_type.send(:resolved_configuration_schema)[:site_settings].first
+      expect(entry[:overridden]).to eq(false)
+
+      SiteSetting.title = "Customized"
+
+      entry = test_type.send(:resolved_configuration_schema)[:site_settings].first
+      expect(entry[:overridden]).to eq(true)
+    end
+
     it "passes through category settings" do
       test_type =
         build_test_type(

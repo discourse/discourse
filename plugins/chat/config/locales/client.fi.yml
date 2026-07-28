@@ -192,8 +192,6 @@ fi:
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       chat_notifications_title: "Chat-ilmoitukset"
-      only_chat_push_notifications:
-        title: "Lähetä vain chatin push-ilmoituksia"
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
       show_thread_title_prompts:
@@ -271,6 +269,8 @@ fi:
         filter_closed: Suljettu
         filter_archived: Arkistoitu
         filter_input_placeholder: Hae kanavaa nimellä
+        filter_joined_all: "Kaikki"
+        filter_joined_joined: "Liittyi"
       chat_message_separator:
         today: Tänään
         yesterday: Eilen
@@ -337,6 +337,9 @@ fi:
         memberships_count:
           one: "%{count} jäsen"
           other: "%{count} jäsentä"
+        preview_card:
+          log_in: "Kirjaudu"
+          sign_up: "Rekisteröityminen"
       create_channel:
         threading:
           label: "Käytä ketjutusta"

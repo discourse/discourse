@@ -228,6 +228,25 @@ RSpec.describe "Drawer" do
       expect(page).to have_current_path("/discuss/categories")
       expect(page).to have_no_css("body.has-full-page-chat")
     end
+
+    it "does not double the subfolder when returning to a chat channel via the header icon after a programmatic navigation" do
+      visit("/discuss/chat")
+      expect(page).to have_css("html.has-chat")
+
+      find(".title a").click
+      expect(page).to have_current_path("/discuss/")
+
+      find(".sidebar-section-link.channel-#{channel.id}").click
+      expect(page).to have_css("body.has-drawer-chat")
+
+      drawer_page.close
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_current_path("/discuss/")
+      expect(page).to have_css("body.has-drawer-chat")
+      expect(page).to have_css(".chat-channel.--loaded[data-id='#{channel.id}']")
+    end
   end
 
   context "when sending a message from a thread while viewing a topic" do

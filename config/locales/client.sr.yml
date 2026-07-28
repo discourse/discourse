@@ -1221,6 +1221,9 @@ sr:
       statistics: "Statistike"
       desktop_notifications:
         label: "Obaveštenja uživo"
+        push_level:
+          none: "Isključeno"
+          all: "Omogućeno"
         not_supported: "Notifikacije nisu podržane u ovom pregledaču. Izvinite."
         perm_default: "Uključi obaveštenja"
         perm_denied_btn: "Dozvola odbijena"
@@ -1463,7 +1466,7 @@ sr:
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
       homepage:
-        default: "(zadano)"
+        default: "Подразумевано"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -1547,6 +1550,22 @@ sr:
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
+        invite_roles:
+          member_title: "Pozovi članove"
+          member_tab: "Članovi"
+          admin_tab: "Osoblje"
+          staff_role_admin: "Admin"
+          staff_role_moderator: "Moderator"
+          email_placeholder: "ime@primer.com"
+          invite_by_email: "E-mail"
+          more_options: "Više opcija"
+          summary:
+            role_member: "Član"
+            role_admin: "Admin"
+            role_moderator: "Moderator"
+            method_email: "E-mail"
+            topic: "Tema"
+            groups: "Grupe"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1819,6 +1838,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
+      title_placeholder_redesign: "Naslov"
       edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
@@ -2078,6 +2098,7 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
+      sr_read: "pročitano"
       suggest_create_topic: Spremni da <a href>otvorite novu temu?</a>
       deleted: "Tema je obrisana"
       slow_mode_update:
@@ -2625,7 +2646,6 @@ sr:
       download: "Preuzmi"
     tagging:
       selector_remove_filter: "uklonite filter"
-      choose_for_topic: "opcione oznake"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
       description: "Opis"
@@ -2887,6 +2907,17 @@ sr:
               title: "Podešavanje"
         badges:
           title: "Značke"
+        category_management:
+          tabs:
+            settings: "Podešavanje"
+          types:
+            all:
+              title: "Sve kategorije"
+          table:
+            category: "Kategorija"
+            topics: "Teme"
+          visibility_filter:
+            all: "Sve kategorije"
         emoji:
           title: "Emoji"
         email_logs:
@@ -2960,8 +2991,6 @@ sr:
               empty: "Nema aktivnosti u izabranom periodu."
             whos_posting:
               title: "Ko objavljuje?"
-              all_categories: "Sve kategorije"
-              include_subcategories: "Uključi potkategorije"
               new_members: "Novi članovi"
               returning: "Vraćajući"
               staff: "Osoblje"
@@ -3012,6 +3041,7 @@ sr:
             table:
               status: "Status"
         reports_section:
+          header_action: "Uredi"
           modal:
             enabled_heading: "Omogućeno"
             apply: "Primeni"
@@ -3818,6 +3848,9 @@ sr:
         image: "Slika"
         delete_confirm: "Jeste li sigurni da želite izbrisati :%{name}: emoji?"
         settings: "Podešavanja"
+        export: "Izvoz"
+        import_category:
+          new: "Novo"
       embedding:
         delete: "Obriši"
         title: "Ugrađivanje"

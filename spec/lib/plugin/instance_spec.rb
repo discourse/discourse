@@ -1176,6 +1176,82 @@ TEXT
     end
   end
 
+  describe "#register_admin_dashboard_section" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry._raw_admin_dashboard_sections.reject! do |entry|
+        entry[:value][:id] == "fake_section"
+      end
+    end
+
+    it "registers a section without settings" do
+      plugin.register_admin_dashboard_section(id: "fake_section") { {} }
+
+      entry = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == "fake_section" }
+      expect(entry[:settings]).to be_nil
+    end
+
+    it "registers a section with settings, normalizing keys to strings" do
+      setting_class =
+        Class.new do
+          def self.permit
+            [:category_id]
+          end
+
+          def self.validate(attrs)
+            attrs
+          end
+        end
+
+      plugin.register_admin_dashboard_section(
+        id: "fake_section",
+        settings: {
+          category_id: setting_class,
+        },
+      ) { {} }
+
+      entry = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == "fake_section" }
+      expect(entry[:settings]).to eq({ "category_id" => setting_class })
+    end
+
+    it "raises when a setting class doesn't respond to .validate" do
+      setting_class =
+        Class.new do
+          def self.permit
+            []
+          end
+        end
+
+      expect {
+        plugin.register_admin_dashboard_section(
+          id: "fake_section",
+          settings: {
+            "x" => setting_class,
+          },
+        ) { {} }
+      }.to raise_error(ArgumentError, /must respond to .permit and .validate/)
+    end
+
+    it "raises when a setting class doesn't respond to .permit" do
+      setting_class =
+        Class.new do
+          def self.validate(attrs)
+            attrs
+          end
+        end
+
+      expect {
+        plugin.register_admin_dashboard_section(
+          id: "fake_section",
+          settings: {
+            "x" => setting_class,
+          },
+        ) { {} }
+      }.to raise_error(ArgumentError, /must respond to .permit and .validate/)
+    end
+  end
+
   describe "#register_modifier" do
     let(:plugin) { Plugin::Instance.new }
 

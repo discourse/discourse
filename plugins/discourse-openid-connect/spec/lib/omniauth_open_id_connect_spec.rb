@@ -259,4 +259,88 @@ describe OmniAuth::Strategies::OpenIDConnect do
       end
     end
   end
+
+  context "with mTLS client certificate configured" do
+    before do
+      key = OpenSSL::PKey::RSA.new(2048)
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = key.public_key
+      cert.sign(key, OpenSSL::Digest.new("SHA256"))
+
+      strategy.options.client_options[:auth_scheme] = :tls_client_auth
+      strategy.options.client_options[:connection_opts] ||= {}
+      strategy.options.client_options[:connection_opts][:ssl] = {
+        client_cert: cert,
+        client_key: key,
+      }
+    end
+
+    before do
+      strategy.stubs(:full_host).returns("https://example.com")
+      strategy.stubs(:request).returns(mock)
+      strategy.request.stubs(:params).returns({})
+
+      auth_params = strategy.authorize_params
+      strategy
+        .request
+        .stubs(:params)
+        .returns("state" => auth_params[:state], "code" => "supersecretcode")
+
+      payload = {
+        iss: "https://id.example.com/",
+        sub: "someuserid",
+        aud: "appid",
+        iat: Time.now.to_i - 30,
+        exp: Time.now.to_i + 120,
+        nonce: auth_params[:nonce],
+        name: "My Auth Token Name",
+        email: "tokenemail@example.com",
+      }
+      @token = ::JWT.encode payload, nil, "none"
+
+      stub_request(:post, "https://id.example.com/token")
+        .with { |request| @request_body = request.body }
+        .to_return(
+          status: 200,
+          body: { access_token: "MTLSAccessToken", expires_in: 3600, id_token: @token }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      stub_request(:get, "https://id.example.com/userinfo").with(
+        headers: {
+          "Authorization" => "Bearer MTLSAccessToken",
+        },
+      ).to_return(
+        status: 200,
+        body: {
+          sub: "someuserid",
+          name: "My Userinfo Name",
+          email: "userinfoemail@example.com",
+        }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+    end
+
+    it "uses mTLS authentication instead of client_secret" do
+      expect(strategy.options.client_options.auth_scheme).to eq(:tls_client_auth)
+
+      ssl = strategy.options.client_options.connection_opts[:ssl]
+      expect(ssl[:client_cert]).to be_a(OpenSSL::X509::Certificate)
+      expect(ssl[:client_key]).to be_a(OpenSSL::PKey::RSA)
+
+      callback_response = strategy.callback_phase
+      expect(callback_response[0]).to eq(200)
+
+      expect(@request_body).to include("client_id")
+      expect(@request_body).not_to include("client_secret")
+    end
+  end
 end

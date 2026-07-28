@@ -1,0 +1,49 @@
+@use "lib/viewport";
+
+.d-filter-controls {
+  display: flex;
+  gap: var(--space-2);
+  margin-block: var(--space-2);
+
+  .filter-input-container {
+    flex: 1 1 auto;
+  }
+
+  &.--multiple-dropdowns {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__inputs {
+    display: flex;
+    gap: var(--space-2);
+    flex: 1 1 auto;
+  }
+
+  &__dropdowns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10em, 1fr));
+    gap: var(--space-2);
+  }
+
+  &__dropdown {
+    flex: 1 1 auto;
+
+    &.--active {
+      border-color: var(--tertiary);
+    }
+  }
+
+  &__no-results {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    padding: var(--space-4);
+    gap: var(--space-2);
+
+    .btn {
+      align-self: center;
+    }
+  }
+}

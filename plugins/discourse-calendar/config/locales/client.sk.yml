@@ -25,6 +25,9 @@ sk:
             topic_id:
               label: ID témy
     discourse_calendar:
+      livestream:
+        zoom:
+          chat: "Chat"
       invite_user_notification: "%{username} vás pozval na: %{description}"
       on_holiday: "Na dovolenke"
       disable_holiday: "Zakázať"

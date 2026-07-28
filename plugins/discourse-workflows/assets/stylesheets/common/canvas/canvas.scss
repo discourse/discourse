@@ -315,6 +315,8 @@
 }
 
 .workflow-rete-node {
+  --icon-block-size: 56px;
+  --icon-block-width: var(--icon-block-size);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -323,13 +325,21 @@
   user-select: none;
   width: 130px;
 
+  &__icon-block,
+  &__socket,
+  &__label,
+  &__description,
+  &__unavailable-pill {
+    pointer-events: auto;
+  }
+
   &__icon-row {
     position: relative;
   }
 
   &__icon-block {
-    width: 56px;
-    height: 56px;
+    width: var(--icon-block-width);
+    height: var(--icon-block-size);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,9 +357,7 @@
   &.is-selected &__icon-block {
     border-color: var(--tertiary);
     background: color-mix(in srgb, var(--tertiary) 12%, var(--secondary));
-    box-shadow:
-      0 0 0 2px var(--secondary),
-      0 0 0 5px var(--tertiary);
+    box-shadow: 0 0 0 1px var(--tertiary);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -360,8 +368,11 @@
     }
   }
 
+  &.is-trigger {
+    --icon-block-width: 74px;
+  }
+
   &.is-trigger &__icon-block {
-    width: 74px;
     border-width: 2px;
     border-color: var(--node-icon-color, var(--primary-medium));
     border-radius: 999px 14px 14px 999px;
@@ -376,24 +387,6 @@
 
   &.is-trigger.is-selected &__icon-block {
     border-color: var(--tertiary);
-  }
-
-  &__run-scope-tooltip {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 2rem);
-    transform: translateX(-50%);
-    z-index: calc(var(--z-canvas-elements) + 2);
-    padding: var(--space-half) var(--space-2);
-    border-radius: var(--d-border-radius);
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    box-shadow: var(--shadow-dropdown);
-    color: var(--primary);
-    font-size: var(--font-down-3);
-    line-height: 1.2;
-    white-space: nowrap;
-    pointer-events: none;
   }
 
   &__icon {
@@ -648,8 +641,40 @@
   transform: scale(0.75);
 }
 
+.is-connection-dragging
+  .workflow-rete-node-view:not(.is-connection-source)
+  .workflow-rete-node {
+  .workflow-rete-node__inputs:not(.has-multiple-inputs)
+    .workflow-rete-node__socket.--input::after,
+  &:not(.is-branching)
+    .workflow-rete-node__socket.--output:not(.--loop)::after {
+    content: "";
+    position: absolute;
+    top: calc((var(--socket-size) - var(--icon-block-size)) / 2);
+    width: calc(var(--node-width) + var(--socket-size));
+    height: var(--node-height);
+  }
+
+  .workflow-rete-node__inputs:not(.has-multiple-inputs)
+    .workflow-rete-node__socket.--input::after {
+    left: calc((var(--icon-block-width) - var(--node-width)) / 2);
+  }
+
+  &:not(.is-branching)
+    .workflow-rete-node__socket.--output:not(.--loop)::after {
+    left: calc(2px - (var(--node-width) + var(--icon-block-width)) / 2);
+  }
+}
+
+.is-connection-dragging
+  .workflow-rete-node:has(.workflow-rete-node__socket:hover)
+  .workflow-rete-node__icon-block {
+  border-color: var(--tertiary);
+}
+
 .workflow-rete-node-view {
   z-index: var(--z-canvas-elements);
+  pointer-events: none;
 }
 
 @keyframes workflow-socket-connectable-pulse {

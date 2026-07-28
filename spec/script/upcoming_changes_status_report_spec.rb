@@ -35,6 +35,22 @@ RSpec.describe UpcomingChanges::StatusReport do
       author_email: "alice@example.com",
     )
 
+    remove_plugin_settings
+    commit_shas[:plugin_removed] = commit(
+      "DEV: Remove plugin settings",
+      date: "2026-04-15T12:00:00Z",
+      author_name: "Alice Example",
+      author_email: "alice@example.com",
+    )
+
+    write_plugin_settings("plugin_alpha_change" => "alpha")
+    commit_shas[:plugin_restored] = commit(
+      "DEV: Restore plugin settings",
+      date: "2026-04-20T12:00:00Z",
+      author_name: "Alice Example",
+      author_email: "alice@example.com",
+    )
+
     write_settings(
       "experimental_change" => "experimental",
       "alpha_change" => "alpha",
@@ -129,6 +145,7 @@ RSpec.describe UpcomingChanges::StatusReport do
         next_status: "beta",
         eligible: true,
         original_commit: commit_shas[:original],
+        last_status_change_commit: commit_shas[:original],
       )
     end
   end
@@ -229,5 +246,9 @@ RSpec.describe UpcomingChanges::StatusReport do
         file.write("      learn_more_url: \"https://meta.discourse.org/t/-/123\"\n")
       end
     end
+  end
+
+  def remove_plugin_settings
+    FileUtils.rm_rf(File.join(repo_path, "plugins/chat"))
   end
 end
