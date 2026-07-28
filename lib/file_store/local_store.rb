@@ -60,29 +60,17 @@ module FileStore
     end
 
     def purge_tombstone(grace_period)
-      return if !Dir.exist?(tombstone_dir)
-
-      cutoff_time = Time.now - (grace_period + 1) * 1.day.to_i
-      paths = [tombstone_dir]
-      failures = []
-
-      until paths.empty?
-        path = paths.pop
-
-        begin
-          stat = File.lstat(path)
-
-          if stat.directory?
-            Dir.each_child(path) { |entry| paths << File.join(path, entry) }
-          elsif stat.file? && stat.mtime <= cutoff_time
-            File.delete(path)
-          end
-        rescue SystemCallError => error
-          failures << error
-        end
+      if Dir.exist?(Discourse.store.tombstone_dir)
+        Discourse::Utils.execute_command(
+          "find",
+          tombstone_dir,
+          "-mtime",
+          "+#{grace_period}",
+          "-type",
+          "f",
+          "-delete",
+        )
       end
-
-      raise failures.map(&:message).join("\n") if failures.present?
     end
 
     def get_path_for(type, upload_id, sha, extension)
