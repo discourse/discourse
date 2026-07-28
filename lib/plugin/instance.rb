@@ -888,7 +888,7 @@ class Plugin::Instance
     if Dir.exist?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
 
-      Discourse::Utils.execute_command("mkdir", "-p", target)
+      FileUtils.mkdir_p(target)
       target << name.gsub(/\s/, "_")
 
       Discourse::Utils.atomic_ln_s(public_data, target)
